@@ -358,12 +358,7 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
                 }
             }
         }
-        if (mDataMap.containsKey("adstyle")) {
-            String adStyle = mDataMap.get("adstyle");
-            if (!TextUtils.isEmpty(adStyle) && adStyle.equals("ad")) {
-                mIsAd = true;
-            }
-        }
+        mIsAd = TextUtils.equals("ad", mDataMap.get("adstyle"));
         if (mIsAd) {
             if (mAdControlParent != null && !mDataMap.containsKey("isADShow")) {
                 mAdControlParent.onAdShow(mDataMap, this);

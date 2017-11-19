@@ -30,10 +30,10 @@ public class HomeAdapter extends RvBaseAdapter<Map<String, String>> {
     public final static int type_levelImage = 5;//蒙版图
     public final static int type_anyImage = 6;//任意图 限宽不限高
 
-    private Activity mAct;
-    private HomeModuleBean moduleBean;
+    protected Activity mAct;
+    protected HomeModuleBean moduleBean;
 
-    private AdControlParent mAdControlParent;
+    protected AdControlParent mAdControlParent;
 
     public HomeAdapter(Activity mActivity, @Nullable List<Map<String, String>> data, AdControlParent adControlParent) {
         super(mActivity, data);
@@ -194,7 +194,7 @@ public class HomeAdapter extends RvBaseAdapter<Map<String, String>> {
         public void viewOnClick(boolean isOnClick);
     }
 
-    private ViewClickCallBack viewClickCallBack;
+    protected ViewClickCallBack viewClickCallBack;
 
     public void setViewOnClickCallBack(ViewClickCallBack viewClickCallBack) {
         this.viewClickCallBack = viewClickCallBack;

@@ -19,11 +19,11 @@ import java.util.Map;
 import acore.logic.AppCommon;
 import acore.logic.XHClick;
 import acore.tools.StringManager;
-import acore.tools.Tools;
 import acore.widget.rvlistview.RvListView;
 import acore.widget.rvlistview.adapter.RvBaseAdapter;
 import amodule._common.delegate.IBindMap;
 import amodule._common.delegate.IStatictusData;
+import amodule._common.helper.WidgetDataHelper;
 import amodule._common.widget.baseview.BaseSubTitleView;
 import amodule.home.adapter.HorizontalAdapter1;
 import amodule.home.adapter.HorizontalAdapter2;
@@ -73,8 +73,8 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,I
             mSubTitleView.setData(map);
             isResetData = true;
         }
-        Map<String,String> dataMap = StringManager.getFirstMap(map.get("data"));
-        ArrayList<Map<String, String>> list = StringManager.getListMapByJson(dataMap.get("list"));
+        Map<String,String> dataMap = StringManager.getFirstMap(map.get(WidgetDataHelper.KEY_DATA));
+        ArrayList<Map<String, String>> list = StringManager.getListMapByJson(dataMap.get(WidgetDataHelper.KEY_LIST));
         if (mRecyclerAdapter != null) {
             mRecyclerAdapter.updateData(list);
             isResetData = true;
@@ -112,7 +112,7 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,I
             mRecyclerView.setLayoutManager(layoutManager);
             mRecyclerView.setAdapter(mRecyclerAdapter);
             mRecyclerView.setOnItemClickListener((view, holder, position) -> {
-                String url = list.get(position).get("url");
+                String url = list.get(position).get(WidgetDataHelper.KEY_URL);
                 AppCommon.openUrl((Activity)HorizontalRecyclerView.this.getContext(), url, true);
                 if(!TextUtils.isEmpty(id) && !TextUtils.isEmpty(twoLevel)){
                     XHClick.mapStat(getContext(),id,twoLevel,threeLevel+position);

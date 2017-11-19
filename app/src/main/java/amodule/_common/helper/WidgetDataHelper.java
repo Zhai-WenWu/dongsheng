@@ -19,6 +19,9 @@ public class WidgetDataHelper {
     public static final String KEY_WIDGET_EXTRA = "widgetExtra";
 
     public static final String KEY_DATA = "data";
+    public static final String KEY_LIST = "list";
+    public static final String KEY_URL = "url";
+    public static final String KEY_TITLE = "title";
 
     public static final String KEY_PARAMETER = "parameter";
     /**widget start方向插入数据*/

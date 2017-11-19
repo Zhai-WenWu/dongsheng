@@ -28,6 +28,7 @@ import acore.widget.banner.Banner;
 import acore.widget.banner.BannerAdapter;
 import amodule._common.delegate.IBindMap;
 import amodule._common.delegate.IStatictusData;
+import amodule._common.helper.WidgetDataHelper;
 import third.ad.scrollerAd.XHAllAdControl;
 
 import static third.ad.tools.AdPlayIdConfig.ARTICLE_CONTENT_BOTTOM;
@@ -74,8 +75,8 @@ public class BannerView extends Banner implements IBindMap, IStatictusData {
             setVisibility(GONE);
             return;
         }
-        Map<String, String> dataMap = StringManager.getFirstMap(data.get("data"));
-        arrayList = StringManager.getListMapByJson(dataMap.get("list"));
+        Map<String, String> dataMap = StringManager.getFirstMap(data.get(WidgetDataHelper.KEY_DATA));
+        arrayList = StringManager.getListMapByJson(dataMap.get(WidgetDataHelper.KEY_LIST));
         if (arrayList.isEmpty()) {
             setVisibility(GONE);
             return;
