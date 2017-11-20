@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.utils.GSYVideoType;
+import com.shuyu.gsyvideoplayer.video.GSYBaseVideoPlayer;
 import com.xiangha.R;
 import com.example.gsyvideoplayer.listener.SampleListener;
 import com.shuyu.gsyvideoplayer.GSYVideoPlayer;
@@ -62,6 +63,7 @@ public class VideoPlayerController {
     public boolean isNetworkDisconnect = false;
     public int autoRetryCount = 0;
     public boolean isPortrait = false;
+    public boolean isFullScreenAuto = false;
 
     public StandardGSYVideoPlayer videoPlayer;
     protected OrientationUtils orientationUtils;
@@ -103,7 +105,11 @@ public class VideoPlayerController {
                     return;
                 }
                 //第一个true是否需要隐藏actionbar，第二个true是否需要隐藏statusbar
-                videoPlayer.startWindowFullscreen(context, true, true);
+                GSYBaseVideoPlayer gsyBaseVideoPlayer = videoPlayer.startWindowFullscreen(context, true, true);
+                if(isFullScreenAuto){
+                    OrientationUtils orientationUtils = new OrientationUtils(context, gsyBaseVideoPlayer);
+                    orientationUtils.setRotateWithSystem(true);
+                }
             }
         });
         videoPlayer.setStandardVideoAllCallBack(new SampleListener(){
@@ -137,6 +143,7 @@ public class VideoPlayerController {
             public void onQuitFullscreen(String url, Object... objects) {
                 super.onQuitFullscreen(url, objects);
                 orientationUtils.backToProtVideo();
+                orientationUtils.setRotateWithSystem(false);
             }
         });
 
@@ -298,12 +305,12 @@ public class VideoPlayerController {
                     if(isAutoPaly){//当前wifi
                         removeTipView();
                     }else{
-//                        removeDishView();
+                        removeDishView();
                         hideVideoImage();
                         return;
                     }
                 }
-//                removeDishView();
+                removeDishView();
                 hideVideoImage();
                 removeTipView();
                 videoPlayer.startPlayLogic();

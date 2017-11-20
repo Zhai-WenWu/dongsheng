@@ -45,7 +45,7 @@ public class GSYVideoBuilder {
 
     protected boolean mShowPauseCover = true;//是否显示暂停图片
 
-    protected boolean mRotateWithSystem = true; //旋转使能后是否跟随系统设置
+    protected boolean mRotateWithSystem = false; //旋转使能后是否跟随系统设置
 
     protected float mSeekRatio = 1; //触摸滑动进度的比例系数
 
