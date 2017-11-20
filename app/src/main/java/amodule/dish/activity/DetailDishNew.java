@@ -6,8 +6,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import com.xiangha.R;
 
@@ -16,21 +18,28 @@ import java.util.HashMap;
 import java.util.Map;
 
 import acore.logic.LoginManager;
+import acore.logic.SpecialWebControl;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.override.activity.base.BaseAppCompatActivity;
+import acore.tools.IObserver;
+import acore.tools.ObserverManager;
+import acore.tools.StringManager;
 import acore.tools.Tools;
 import amodule.dish.adapter.AdapterDishNew;
 import amodule.dish.db.DataOperate;
 import amodule.dish.view.manager.DetailDishDataManager;
 import amodule.dish.view.manager.DetailDishViewManager;
+import amodule.main.Main;
+import aplug.web.tools.WebviewManager;
+import aplug.web.view.XHWebView;
 
 import static amodule.dish.activity.DetailDish.tongjiId;
 
 /**
  * 菜谱详情页原生标准
  */
-public class DetailDishNew extends BaseAppCompatActivity {
+public class DetailDishNew extends BaseAppCompatActivity implements IObserver {
     private String data_type = "";
     private String module_type = "";
     private String img = "";//预加载图片
@@ -48,7 +57,7 @@ public class DetailDishNew extends BaseAppCompatActivity {
     private Map<String,String> mapBase = new HashMap<>();
     private boolean isHasVideo;//当前是否是视频
     private String customerCode;
-
+    private RelativeLayout dredgeVipFullLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,6 +102,7 @@ public class DetailDishNew extends BaseAppCompatActivity {
         //sufureView页面闪烁
         getWindow().setFormat(PixelFormat.TRANSLUCENT);
         XHClick.track(XHApplication.in(), "浏览菜谱详情页");
+        ObserverManager.getInstence().registerObserver(this,ObserverManager.NOTIFY_LOGIN,ObserverManager.NOTIFY_FOLLOW,ObserverManager.NOTIFY_PAYFINISH);
     }
 
     /**
@@ -114,11 +124,11 @@ public class DetailDishNew extends BaseAppCompatActivity {
             detailDishViewManager.initBeforeData(img);
         }
 
-        if (detailDishDataManager == null) detailDishDataManager = new DetailDishDataManager(code);
+        if (detailDishDataManager == null) detailDishDataManager = new DetailDishDataManager(code,this);
         detailDishDataManager.setDishDataCallBack(new DetailDishDataManager.DishDataCallBack() {
             @Override
-            public void handlerTypeData(String type, ArrayList<Map<String,String>> list) {
-                dishTypeData(type,list);
+            public void handlerTypeData(String type, ArrayList<Map<String,String>> list,Map<String,String> PermissionMap) {
+                dishTypeData(type,list,PermissionMap);
             }
         });
         adapterDishNew.setClickCallBack(new AdapterDishNew.ItemOnClickCallBack() {
@@ -153,19 +163,20 @@ public class DetailDishNew extends BaseAppCompatActivity {
             }
         });
     }
-    private void dishTypeData(String type,ArrayList<Map<String,String>> list){
+    private void dishTypeData(String type,ArrayList<Map<String,String>> list,Map<String,String> map){
         switch (type){
             case DetailDishDataManager.DISH_DATA_TOP:
                 mapTop= list.get(0);
                 dishName= mapTop.get("name");
                 isHasVideo = "2".equals(mapTop.get("type"));
-                detailDishViewManager.handlerHeaderView(list,null);
+                detailDishViewManager.handlerHeaderView(list,map);
                 detailDishViewManager.handlerHoverViewCode(code);
                 customerCode= mapTop.get("customerCode");
                 if (!TextUtils.isEmpty(customerCode)&&LoginManager.userInfo != null && customerCode.equals(LoginManager.userInfo.get("code"))){
                         state = "";
                 }
                 detailDishViewManager.handlerTitle(mapTop,code,isHasVideo,mapTop.get("dishState"),loadManager,state);
+                requestWeb(mapTop);
                 break;
             case DetailDishDataManager.DISH_DATA_BASE:
                 mapBase = list.get(0);
@@ -210,6 +221,8 @@ public class DetailDishNew extends BaseAppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        //反注册。
+        ObserverManager.getInstence().unRegisterObserver(ObserverManager.NOTIFY_LOGIN,ObserverManager.NOTIFY_FOLLOW,ObserverManager.NOTIFY_PAYFINISH);
         if(detailDishViewManager!=null)detailDishViewManager.onDestroy();
     }
 
@@ -224,5 +237,60 @@ public class DetailDishNew extends BaseAppCompatActivity {
             }
         }
         return false;
+    }
+    /**
+     * 页面限制：显示h5页面，例如：显示一个开通会员页面
+     * @param pagePermission
+     * @return
+     */
+    public boolean analyzePagePermissionData(Map<String,String> pagePermission){
+        dredgeVipFullLayout = (RelativeLayout)findViewById(R.id.dredge_vip_full_layout);
+        if(pagePermission.containsKey("url") && !TextUtils.isEmpty(pagePermission.get("url"))){
+            //xhwebView
+            WebviewManager manager = new WebviewManager(this,loadManager,true);
+            XHWebView pageXhWebView = manager.createWebView(R.id.XHWebview);
+            String url = pagePermission.get("url");
+            pageXhWebView.loadUrl(url);
+            RelativeLayout bar_title_2 = (RelativeLayout) dredgeVipFullLayout.findViewById(R.id.dish_title_page);
+            bar_title_2.findViewById(R.id.back).setOnClickListener(backClickListener);
+            bar_title_2.findViewById(R.id.leftClose).setOnClickListener(backClickListener);
+            bar_title_2.findViewById(R.id.leftClose).setVisibility(View.VISIBLE);
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) bar_title_2.getLayoutParams();
+            int statusBarHeight = Tools.getStatusBarHeight(this);
+            layoutParams.height = Tools.getDimen(this,R.dimen.dp_45) + statusBarHeight;
+            View title_state_bar_page = findViewById(R.id.title_state_bar_page);
+             layoutParams.height = statusBarHeight;
+            dredgeVipFullLayout.setVisibility(View.VISIBLE);
+            return false;
+        }
+        if(dredgeVipFullLayout!=null)
+            dredgeVipFullLayout.setVisibility(View.GONE);
+        return true;
+    }
+    private View.OnClickListener backClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()){
+                case R.id.back:
+                    XHClick.mapStat(DetailDishNew.this, tongjiId, "顶部导航栏", "返回点击量");
+                    DetailDishNew.this.finish();
+                    break;
+                case R.id.leftClose:
+                    XHClick.mapStat(DetailDishNew.this, tongjiId, "顶部导航栏", "关闭点击量");
+                    Main.colse_level = 1;
+                    DetailDishNew.this.finish();
+                    break;
+            }
+        }
+    };
+    private void requestWeb(Map<String,String> map) {
+        if(map != null){
+            SpecialWebControl.initSpecialWeb(this,rl,"dishInfo",map.get("name"),code);
+        }
+    }
+
+    @Override
+    public void notify(String name, Object sender, Object data) {
+
     }
 }

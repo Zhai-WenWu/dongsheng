@@ -11,6 +11,7 @@ import java.util.Map;
 import acore.override.helper.XHActivityManager;
 import acore.tools.StringManager;
 import amodule.dish.activity.DetailDish;
+import amodule.dish.activity.DetailDishNew;
 import amodule.main.Main;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
@@ -39,9 +40,12 @@ public class DetailDishDataManager {
     private boolean hasPermission = true;
     private boolean contiunRefresh = true;
     private boolean loadOver = false;
+    private DetailDishNew detailAct;
 
-    public DetailDishDataManager(String code) {
+    public DetailDishDataManager(String code, DetailDishNew detailAct) {
         dishCode = code;
+        this.detailAct = detailAct;
+        resetData();
         reqTopInfo();
     }
     //重置权限数据
@@ -65,7 +69,6 @@ public class DetailDishDataManager {
 
     public void reqTwo() {
         reqStep();
-        reqOtherTieData();
         reqOtherData();
     }
 
@@ -78,10 +81,18 @@ public class DetailDishDataManager {
             @Override
             public void loaded(int flag, String url, Object object) {
                 if(flag>=UtilInternet.REQ_OK_STRING) {
+                    if(!hasPermission || !contiunRefresh) return;
                     customerCode= StringManager.getFirstMap(object).get("customerCode");
-                    handleDataSuccess(flag, DISH_DATA_TOP, object);
-                    reqOne();
-                    reqTwo();
+                    if (!TextUtils.isEmpty(object.toString()) && !object.toString().equals("[]")) {
+                        handleDataSuccess(flag, DISH_DATA_TOP, object);
+                        reqOne();
+                        reqTwo();
+                        Map<String,String> maps= StringManager.getFirstMap(object);
+                        if(maps.containsKey("isHide")&&!"2".equals(maps.get("isHide"))){
+                            reqOtherTieData();
+                        }
+                    }
+
                 }
             }
 
@@ -99,7 +110,7 @@ public class DetailDishDataManager {
                     permissionMap = StringManager.getFirstMap(obj);
                     if(permissionMap.containsKey("page")){
                         Map<String,String> pagePermission = StringManager.getFirstMap(permissionMap.get("page"));
-//                        hasPermission = dishActivityViewControl.analyzePagePermissionData(pagePermission);
+                        hasPermission = detailAct.analyzePagePermissionData(pagePermission);
                         if(!hasPermission) return;
                     }
                     if(permissionMap.containsKey("detail"))
@@ -218,7 +229,9 @@ public class DetailDishDataManager {
     public void handleDataSuccess(int flag, String type,Object object){
         if (flag >= UtilInternet.REQ_OK_STRING && dishDataCallBack != null) {
             ArrayList<Map<String,String>> list=StringManager.getListMapByJson(object);
-            if(list.size()>0)dishDataCallBack.handlerTypeData(type,list);
+            if(list.size()>0) {
+                    dishDataCallBack.handlerTypeData(type, list,type.equals(DISH_DATA_TOP)?detailPermissionMap:null);
+            }
         }
     }
 
@@ -227,7 +240,7 @@ public class DetailDishDataManager {
      * 接口请求数据回调
      */
     public interface DishDataCallBack {
-        public void handlerTypeData(String type, ArrayList<Map<String,String>> list);
+        public void handlerTypeData(String type, ArrayList<Map<String,String>> list,Map<String,String> permissionMap);
     }
     public void setDishDataCallBack(DishDataCallBack callBack) {
         dishDataCallBack = callBack;

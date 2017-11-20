@@ -6,7 +6,10 @@ import android.content.Intent;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.xiangha.R;
@@ -54,6 +57,7 @@ public class DishTitleViewControl implements View.OnClickListener{
     private PopWindowDialog mFavePopWindowDialog;
     private LoadManager loadManager;
     private String nickName = "";
+    private RelativeLayout bar_title_1;
 
     public DishTitleViewControl(Context context){
         this.context= context;
@@ -75,6 +79,7 @@ public class DishTitleViewControl implements View.OnClickListener{
         favImg = (ImageView) detailDish.findViewById(R.id.img_fav);
         detailDish.findViewById(R.id.leftClose).setOnClickListener(this);
         detailDish.findViewById(R.id.leftClose).setVisibility(View.VISIBLE);
+        bar_title_1 = (RelativeLayout) detailDish.findViewById(R.id.a_dish_detail_new_title);
     }
     /**
      * 设置数据

@@ -120,7 +120,12 @@ public class DishHeaderViewNew extends LinearLayout {
         this.addView(videoViewGroup);
 //        INVisibiHeaderView();
     }
-
+    public void setDistance(int distances){
+        this.distance = distances;
+    }
+    public RelativeLayout getViewLayout(){
+        return  dishVidioLayout;
+    }
     /**
      * 设置当前header的callback回调
      */
