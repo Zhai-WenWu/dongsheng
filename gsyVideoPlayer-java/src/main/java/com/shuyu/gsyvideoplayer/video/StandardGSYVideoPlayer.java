@@ -1171,8 +1171,11 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
 
     public void setClingClickListener(OnClickListener clickListener) {
         this.mClingClickListener = clickListener;
-        if (this.mClingClickListener != null && mClingBtn != null)
-            mClingBtn.setVisibility(VISIBLE);
+    }
+
+    public void showClingBtn(boolean show) {
+        if (mClingBtn != null)
+            mClingBtn.setVisibility(show ? VISIBLE : GONE);
     }
 
     /**

@@ -67,6 +67,7 @@ public class VideoPlayerController {
     protected OrientationUtils orientationUtils;
 
     private OnClickListener mClingClickListener;
+    private OnClickListener mFullScreenClickListener;
 
     public VideoPlayerController(Context context) {
         this.mContext = context;
@@ -97,6 +98,10 @@ public class VideoPlayerController {
         videoPlayer.getFullscreenButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (mFullScreenClickListener != null) {
+                    mFullScreenClickListener.onClick(videoPlayer.getFullscreenButton());
+                    return;
+                }
                 //第一个true是否需要隐藏actionbar，第二个true是否需要隐藏statusbar
                 videoPlayer.startWindowFullscreen(context, true, true);
             }
@@ -105,6 +110,7 @@ public class VideoPlayerController {
             @Override
             public void onAutoComplete(String url, Object... objects) {
                 super.onAutoComplete(url, objects);
+                showVideoImage();
                 if(onPlayingCompletionListener != null)
                     onPlayingCompletionListener.onPlayingCompletion();
             }
@@ -199,8 +205,17 @@ public class VideoPlayerController {
             setShowMedia(true);
     }
 
+    public void setFullScreenClickListener(OnClickListener clickListener) {
+        mFullScreenClickListener = clickListener;
+    }
+
     public void setClingClickListener(OnClickListener clickListener) {
         this.mClingClickListener = clickListener;
+    }
+
+    public void showClingBtn(boolean show) {
+        if (videoPlayer != null)
+            videoPlayer.showClingBtn(show);
     }
 
     private void setNetworkCallback(){
@@ -283,11 +298,13 @@ public class VideoPlayerController {
                     if(isAutoPaly){//当前wifi
                         removeTipView();
                     }else{
-                        removeDishView();
+//                        removeDishView();
+                        hideVideoImage();
                         return;
                     }
                 }
-                removeDishView();
+//                removeDishView();
+                hideVideoImage();
                 removeTipView();
                 videoPlayer.startPlayLogic();
                 if (mStatisticsPlayCountCallback != null) {
@@ -296,6 +313,18 @@ public class VideoPlayerController {
         } else {
             Tools.showToast(mContext, "努力获取视频信息中...");
             initVideoView(mVideoUnique, mUserUnique);
+        }
+    }
+
+    private void hideVideoImage() {
+        if (mImageView != null && mImageView.getVisibility() == View.VISIBLE) {
+            mImageView.setVisibility(View.GONE);
+        }
+    }
+
+    private void showVideoImage() {
+        if (mImageView != null) {
+            mImageView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -426,6 +455,16 @@ public class VideoPlayerController {
         mHasVideoInfo = true;
     }
 
+    /**
+     * 设置视频播放地址
+     * @param videoUrl
+     */
+    public void setVideoUrl(String videoUrl) {
+        this.mVideoUrl = videoUrl;
+        videoPlayer.setUp(mVideoUrl, false, "");
+        mHasVideoInfo = true;
+    }
+
     public String getVideoUrl() {
         return mVideoUrl;
     }
@@ -533,6 +572,15 @@ public class VideoPlayerController {
             videoPlayer.onVideoResume();
         Log.i("tzy","width = " + GSYVideoManager.instance().getMediaPlayer().getVideoWidth());
         Log.i("tzy","height = " + GSYVideoManager.instance().getMediaPlayer().getVideoHeight());
+    }
+
+    public void onPause(boolean showVideoImage) {
+        if(null != videoPlayer)
+            videoPlayer.onVideoPause();
+        if (showVideoImage)
+            showVideoImage();
+        else
+            hideVideoImage();
     }
 
     public void onPause() {

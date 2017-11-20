@@ -181,6 +181,11 @@ public class  DishActivityViewControlNew {
         this.mClingClickListener = clickListener;
     }
 
+    public void showClingBtn(boolean show) {
+        if (dishHeaderView != null)
+            dishHeaderView.showClingBtn(show);
+    }
+
     /**
      * 设置监听。
      */

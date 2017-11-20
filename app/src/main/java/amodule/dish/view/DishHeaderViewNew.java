@@ -368,6 +368,12 @@ public class DishHeaderViewNew extends LinearLayout {
         this.mClingClickListener = clickListener;
     }
 
+    public void showClingBtn(boolean show) {
+        if (mVideoPlayerController != null) {
+            mVideoPlayerController.showClingBtn(show);
+        }
+    }
+
     private RelativeLayout dredgeVipLayout;
     private VideoDredgeVipView vipView;
 
