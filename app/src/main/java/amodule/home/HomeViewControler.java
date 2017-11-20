@@ -173,8 +173,14 @@ public class HomeViewControler {
      * 保存刷新数据
      */
     public void setStatisticShowNum() {
+        //头部统计数据存储
+        if(mHeaderControler != null){
+            mHeaderControler.saveStatisticData();
+        }
+        //列表
         if (scrollDataIndex > 0) {
             XHClick.saveStatictisFile("home", MainHome.recommedType_statictus, "", "", String.valueOf(scrollDataIndex), "list", "", "", "", "", "");
+//            XHClick.saveStatictisFile("home", "horizatal", "", "", String.valueOf(scrollDataIndex), "list", "", "", "", "", "");
             scrollDataIndex = -1;
         }
     }

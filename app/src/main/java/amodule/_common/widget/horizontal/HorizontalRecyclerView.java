@@ -7,7 +7,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -22,12 +21,15 @@ import acore.tools.StringManager;
 import acore.widget.rvlistview.RvListView;
 import acore.widget.rvlistview.adapter.RvBaseAdapter;
 import amodule._common.delegate.IBindMap;
+import amodule._common.delegate.IHandlerClickEvent;
+import amodule._common.delegate.ISaveStatistic;
 import amodule._common.delegate.IStatictusData;
 import amodule._common.helper.WidgetDataHelper;
 import amodule._common.widget.baseview.BaseSubTitleView;
 import amodule.home.adapter.HorizontalAdapter1;
 import amodule.home.adapter.HorizontalAdapter2;
 import amodule.home.adapter.HorizontalAdapter3;
+import amodule.main.activity.MainHome;
 
 import static amodule._common.helper.WidgetDataHelper.KEY_PARAMETER;
 import static amodule._common.helper.WidgetDataHelper.KEY_STYLE;
@@ -40,7 +42,8 @@ import static amodule._common.helper.WidgetDataHelper.KEY_STYLE;
  * E_mail : ztanzeyu@gmail.com
  */
 
-public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,IStatictusData {
+public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,
+        IStatictusData,ISaveStatistic,IHandlerClickEvent {
 
     private RvListView mRecyclerView;
     private BaseSubTitleView mSubTitleView;
@@ -108,7 +111,7 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,I
 
             mRecyclerView = (RvListView) findViewById(R.id.recycler_view);
             mRecyclerView.setFocusable(false);
-            LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+            final LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
             mRecyclerView.setLayoutManager(layoutManager);
             mRecyclerView.setAdapter(mRecyclerAdapter);
             mRecyclerView.setOnItemClickListener((view, holder, position) -> {
@@ -135,9 +138,23 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,I
                     }
                 }
             });
+            mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                    int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
+                    isScrollData = true;
+                    if (scrollDataIndex < (lastVisibleItemPosition - 1)) {
+                        scrollDataIndex = (lastVisibleItemPosition - 1);
+                    }
+                }
+            });
         }
         setVisibility(VISIBLE);
     }
+
+    protected boolean isScrollData = false;//是否滚动数据
+    protected int scrollDataIndex = -1;//滚动数据的位置
 
     private int getPxByDp(int resId) {
         return getResources().getDimensionPixelSize(resId);
@@ -153,5 +170,15 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,I
         if(mSubTitleView != null){
             mSubTitleView.setStatictusData(id,twoLevel,threeLevel);
         }
+    }
+
+    @Override
+    public void saveStatisticData() {
+        XHClick.saveStatictisFile("home", MainHome.recommedType_statictus, "", "", String.valueOf(scrollDataIndex), "list", "", "", "", "", "");
+    }
+
+    @Override
+    public boolean handlerClickEvent(String url, String moduleType, String dataType, int position) {
+        return false;
     }
 }

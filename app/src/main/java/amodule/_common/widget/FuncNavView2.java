@@ -17,6 +17,8 @@ import acore.logic.XHClick;
 import acore.override.helper.XHActivityManager;
 import acore.tools.StringManager;
 import amodule._common.delegate.IBindMap;
+import amodule._common.delegate.IHandlerClickEvent;
+import amodule._common.delegate.ISaveStatistic;
 import amodule._common.delegate.IStatictusData;
 import amodule._common.utility.WidgetUtility;
 import amodule.home.view.HomeFuncNavView2;
@@ -29,7 +31,7 @@ import amodule.home.view.HomeFuncNavView2;
  * E_mail : ztanzeyu@gmail.com
  */
 
-public class FuncNavView2 extends HomeFuncNavView2 implements IBindMap, IStatictusData {
+public class FuncNavView2 extends HomeFuncNavView2 implements IBindMap, IStatictusData,ISaveStatistic,IHandlerClickEvent {
     public FuncNavView2(Context context) {
         super(context);
     }
@@ -107,5 +109,15 @@ public class FuncNavView2 extends HomeFuncNavView2 implements IBindMap, IStatict
         this.id = id;
         this.twoLevel = twoLevel;
         this.threeLevel = threeLevel;
+    }
+
+    @Override
+    public void saveStatisticData() {
+
+    }
+
+    @Override
+    public boolean handlerClickEvent(String url, String moduleType, String dataType, int position) {
+        return false;
     }
 }

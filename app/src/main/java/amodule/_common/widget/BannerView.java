@@ -3,7 +3,6 @@ package amodule._common.widget;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +26,8 @@ import acore.tools.ToolsDevice;
 import acore.widget.banner.Banner;
 import acore.widget.banner.BannerAdapter;
 import amodule._common.delegate.IBindMap;
+import amodule._common.delegate.IHandlerClickEvent;
+import amodule._common.delegate.ISaveStatistic;
 import amodule._common.delegate.IStatictusData;
 import amodule._common.helper.WidgetDataHelper;
 import third.ad.scrollerAd.XHAllAdControl;
@@ -41,7 +42,7 @@ import static third.ad.tools.AdPlayIdConfig.ARTICLE_CONTENT_BOTTOM;
  * E_mail : ztanzeyu@gmail.com
  */
 
-public class BannerView extends Banner implements IBindMap, IStatictusData {
+public class BannerView extends Banner implements IBindMap, IStatictusData,ISaveStatistic,IHandlerClickEvent {
 
     private OnBannerItemClickCallback mOnBannerItemClickCallback;
     private LayoutInflater mInflater;
@@ -222,6 +223,16 @@ public class BannerView extends Banner implements IBindMap, IStatictusData {
         this.id = id;
         this.twoLevel = twoLevel;
         this.threeLevel = threeLevel;
+    }
+
+    @Override
+    public void saveStatisticData() {
+
+    }
+
+    @Override
+    public boolean handlerClickEvent(String url, String moduleType, String dataType, int position) {
+        return false;
     }
 
     public interface OnBannerItemClickCallback {

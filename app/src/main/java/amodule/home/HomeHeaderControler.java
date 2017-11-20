@@ -8,6 +8,7 @@ import com.xiangha.R;
 import java.util.List;
 import java.util.Map;
 
+import amodule._common.delegate.ISaveStatistic;
 import amodule._common.plugin.WidgetVerticalLayout;
 import amodule.main.activity.MainHomePage;
 
@@ -19,7 +20,7 @@ import amodule.main.activity.MainHomePage;
  * E_mail : ztanzeyu@gmail.com
  */
 
-public class HomeHeaderControler {
+public class HomeHeaderControler implements ISaveStatistic {
 
     private View mHeaderView;
 
@@ -38,6 +39,7 @@ public class HomeHeaderControler {
         mLayouts[3] = (WidgetVerticalLayout) header.findViewById(R.id.horizontal1_widget);
         mLayouts[4] = (WidgetVerticalLayout) header.findViewById(R.id.horizontal2_widget);
         mLayouts[5] = (WidgetVerticalLayout) header.findViewById(R.id.horizontal3_widget);
+
 
     }
 
@@ -63,5 +65,11 @@ public class HomeHeaderControler {
         for(WidgetVerticalLayout itemLayout:mLayouts){
             itemLayout.setVisibility(isShow?View.VISIBLE:View.GONE);
         }
+    }
+
+    @Override
+    public void saveStatisticData() {
+        for(WidgetVerticalLayout layout:mLayouts)
+            layout.saveStatisticData();
     }
 }
