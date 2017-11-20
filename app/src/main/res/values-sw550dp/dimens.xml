@@ -430,6 +430,7 @@
     <dimen name="dp_200">320dp</dimen>
     <dimen name="dp_203">324.8dp</dimen>
     <dimen name="dp_208">332.8dp</dimen>
+    <dimen name="dp_335">536dp</dimen>
     <dimen name="dp_336">537.6dp</dimen>
     <dimen name="dp_213">340.8dp</dimen>
     <dimen name="dp_215">344dp</dimen>

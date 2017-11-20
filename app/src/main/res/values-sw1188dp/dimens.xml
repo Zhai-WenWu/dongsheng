@@ -442,6 +442,7 @@
     <dimen name="dp_285">1026dp</dimen>
     <dimen name="dp_290">1044dp</dimen>
     <dimen name="dp_300">1080dp</dimen>
+    <dimen name="dp_335">1206dp</dimen>
     <dimen name="dp_336">1209.6dp</dimen>
     <dimen name="dp_340">1224dp</dimen>
     <dimen name="dp_345">1242dp</dimen>

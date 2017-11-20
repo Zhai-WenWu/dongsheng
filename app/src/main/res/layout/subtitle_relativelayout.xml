@@ -22,7 +22,6 @@
         android:layout_marginRight="@dimen/dp_20"
         android:textSize="@dimen/sp_13"
         android:textColor="@color/c_gray_999999"
-        android:textStyle="bold"
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"/>
 

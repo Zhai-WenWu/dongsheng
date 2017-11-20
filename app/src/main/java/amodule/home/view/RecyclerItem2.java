@@ -3,11 +3,10 @@ package amodule.home.view;
 import android.content.Context;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.TextUtils;
 import android.text.style.StrikethroughSpan;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.xiangha.R;
@@ -45,6 +44,13 @@ public class RecyclerItem2 extends BaseRecyclerItem {
         mTextView1 = (TextView) findViewById(R.id.textview1);
         mTextView2 = (TextView) findViewById(R.id.textview2);
         mTextView3 = (TextView) findViewById(R.id.textview3);
+        int[] wh = computeItemWH(326, 326, getContext().getResources().getDimensionPixelSize(R.dimen.dp_50), 2);
+        setLayoutParams(new RelativeLayout.LayoutParams(wh[0], LayoutParams.WRAP_CONTENT));
+        RelativeLayout.LayoutParams params = (LayoutParams) mImageView1.getLayoutParams();
+        params.width = wh[0];
+        params.height = wh[1];
+        mImageView1.setLayoutParams(params);
+        invalidate();
     }
 
     @Override

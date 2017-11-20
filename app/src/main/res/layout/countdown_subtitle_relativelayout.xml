@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/dp_20"
-        android:layout_marginRight="@dimen/dp_10"
+        android:layout_marginRight="@dimen/dp_9"
         tools:text="限时抢购"
         android:textSize="@dimen/sp_17"
         android:textColor="@color/c_black_text"
