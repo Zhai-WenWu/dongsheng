@@ -50,6 +50,7 @@ public class RecyclerItem1 extends BaseRecyclerItem {
         mTextView1 = (TextView) findViewById(R.id.textview1);
         mTextView2 = (TextView) findViewById(R.id.textview2);
         mTextView3 = (TextView) findViewById(R.id.textview3);
+        mTextView4 = (TextView) findViewById(R.id.textview4);
     }
 
 
