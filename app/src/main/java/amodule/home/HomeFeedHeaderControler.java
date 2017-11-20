@@ -1,5 +1,6 @@
 package amodule.home;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -31,13 +32,13 @@ import static amodule.home.HomeViewControler.MODULETOPTYPE;
  */
 
 public class HomeFeedHeaderControler {
-    Context mContext;
+    private Context mContext;
 
     private View mFeedTitleView;
     private LinearLayout layout, linearLayoutOne, linearLayoutTwo, linearLayoutThree;
     private HomeModuleBean mHomeModuleBean;
 
-    public HomeFeedHeaderControler(Context context) {
+    HomeFeedHeaderControler(Context context) {
         this.mContext = context;
         mHomeModuleBean = new HomeModuleControler().getHomeModuleByType(mContext, null);
         initFeedHeaderView();
@@ -46,6 +47,7 @@ public class HomeFeedHeaderControler {
     /**
      * 初始化header布局
      */
+    @SuppressLint("InflateParams")
     private void initFeedHeaderView() {
         //initHeaderView
         layout = new LinearLayout(mContext);
@@ -71,7 +73,8 @@ public class HomeFeedHeaderControler {
         layout.addView(linearLayoutThree);
     }
 
-    public void setTopData(List<Map<String, String>> data) {
+    @SuppressLint("InflateParams")
+    void setTopData(List<Map<String, String>> data) {
         linearLayoutThree.removeAllViews();
         if (null == data || data.isEmpty()) return;
         LayoutInflater inflater = LayoutInflater.from(mContext);
@@ -91,38 +94,41 @@ public class HomeFeedHeaderControler {
      *
      * @param map 置顶数据
      *
-     * @return
+     * @return 对应的View
      */
     private HomeItem handlerTopView(Map<String, String> map, int position) {
-        HomeItem viewTop = null;
-        if (map.containsKey("style") && !TextUtils.isEmpty(map.get("style"))) {
-            int type = TextUtils.isEmpty(map.get("style")) ? HomeAdapter.type_noImage : Integer.parseInt(map.get("style"));
-            switch (type) {
-                case HomeAdapter.type_tagImage:
-                    viewTop = new HomeRecipeItem(mContext);
-                    break;
-                case HomeAdapter.type_levelImage:
-                    viewTop = new HomeAlbumItem(mContext);
-                    break;
-                case HomeAdapter.type_threeImage:
-                    viewTop = new HomePostItem(mContext);
-                    break;
-                case HomeAdapter.type_anyImage:
-                    viewTop = new HomeAnyImgStyleItem(mContext);
-                    break;
-                case HomeAdapter.type_rightImage:
-                case HomeAdapter.type_noImage:
-                default:
-                    viewTop = new HomeTxtItem(mContext);
-                    break;
+        HomeItem viewTop;
+        String styleValue = map.get("style");
+        int type = HomeAdapter.type_noImage;
+        if (!TextUtils.isEmpty(styleValue))
+            try {
+                type = Integer.parseInt(styleValue);
+            } catch (Exception ignored) {
+                ignored.printStackTrace();
             }
-            viewTop.setViewType(MODULETOPTYPE);
-            viewTop.setHomeModuleBean(mHomeModuleBean);
-            viewTop.setData(map, position);
+        switch (type) {
+            case HomeAdapter.type_tagImage:
+                viewTop = new HomeRecipeItem(mContext);
+                break;
+            case HomeAdapter.type_levelImage:
+                viewTop = new HomeAlbumItem(mContext);
+                break;
+            case HomeAdapter.type_threeImage:
+                viewTop = new HomePostItem(mContext);
+                break;
+            case HomeAdapter.type_anyImage:
+                viewTop = new HomeAnyImgStyleItem(mContext);
+                break;
+            case HomeAdapter.type_rightImage:
+            case HomeAdapter.type_noImage:
+            default:
+                viewTop = new HomeTxtItem(mContext);
+                break;
         }
-        if (viewTop != null) {
-            viewTop.setOnClickListener(v -> ((HomeItem) v).onClickEvent(v));
-        }
+        viewTop.setViewType(MODULETOPTYPE);
+        viewTop.setHomeModuleBean(mHomeModuleBean);
+        viewTop.setData(map, position);
+        viewTop.setOnClickListener(v -> ((HomeItem) v).onClickEvent(v));
         return viewTop;
     }
 
@@ -130,7 +136,7 @@ public class HomeFeedHeaderControler {
         return layout;
     }
 
-    public void setFeedheaderVisibility(boolean feedheaderVisibility) {
+    void setFeedheaderVisibility(boolean feedheaderVisibility) {
         mFeedTitleView.setVisibility(feedheaderVisibility ? View.VISIBLE : View.GONE);
     }
 }

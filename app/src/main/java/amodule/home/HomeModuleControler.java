@@ -24,46 +24,46 @@ import aplug.basic.ReqInternet;
  */
 
 public class HomeModuleControler {
-    public static boolean isRequest = false;
+    private static boolean isRequest = false;
 
     /**
      * 获取数据模块
      *
-     * @param context
-     * @param mType
+     * @param context 上下文
+     * @param mType 模块类型，默认null为首页
      *
-     * @return
+     * @return 数据类型对象
      */
     @Nullable
-    public HomeModuleBean getHomeModuleByType(Context context, @Nullable String mType) {
+    public HomeModuleBean getHomeModuleByType(@Nullable Context context, @Nullable String mType) {
         HomeModuleBean mModuleBean = null;
-        if(null == context) return mModuleBean;
+        if(null == context) return null;
         final String modulePath = FileManager.getDataDir() + FileManager.file_homeTopModle;
         String moduleJson = FileManager.readFile(modulePath);
         if (TextUtils.isEmpty(moduleJson)) {
             moduleJson = FileManager.getFromAssets(context, "homeTopModle");
             final String finalModuleJson = moduleJson;
-            FileManager.saveFileToCompletePath(modulePath, finalModuleJson.toString(), false);
+            FileManager.saveFileToCompletePath(modulePath, finalModuleJson, false);
         }
         ArrayList<Map<String, String>> listModule = StringManager.getListMapByJson(moduleJson);
-        int size = listModule.size();
+        final int size = listModule.size();
         for (int i = 0; i < size; i++) {
+            Map<String,String> moduleMap = listModule.get(i);
             if (TextUtils.isEmpty(mType)
-                    || TextUtils.equals(listModule.get(i).get("type"), mType)) {
+                    || TextUtils.equals(moduleMap.get("type"), mType)) {
                 mModuleBean = new HomeModuleBean();
-                mModuleBean.setTitle(listModule.get(i).get("title"));
-                mModuleBean.setType(listModule.get(i).get("type"));
-                mModuleBean.setWebUrl(listModule.get(i).get("webUrl"));
-                mModuleBean.setIsSelf(listModule.get(i).get("isSelf"));
-                mModuleBean.setOpenMode(listModule.get(i).get("openMode"));
-                String level = listModule.get(i).get("level");
-                if (!TextUtils.isEmpty(level)) {
-                    mModuleBean.setTwoData(level);//设置二级数据内容
-                }
+                mModuleBean.setTitle(moduleMap.get("title"));
+                mModuleBean.setType(moduleMap.get("type"));
+                mModuleBean.setWebUrl(moduleMap.get("webUrl"));
+                mModuleBean.setIsSelf(moduleMap.get("isSelf"));
+                mModuleBean.setOpenMode(moduleMap.get("openMode"));
+                //设置二级数据内容
+                String level = moduleMap.get("level");
+                if (!TextUtils.isEmpty(level)) mModuleBean.setTwoData(level);
+                //设置position
                 mModuleBean.setPosition(i);
                 return mModuleBean;
             }
-            continue;
         }
         setRequestModuleData();
         return mModuleBean;

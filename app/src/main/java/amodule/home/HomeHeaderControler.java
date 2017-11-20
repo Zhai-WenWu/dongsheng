@@ -1,7 +1,6 @@
 package amodule.home;
 
 import android.view.View;
-import android.view.ViewStub;
 
 import com.xiangha.R;
 
@@ -24,11 +23,10 @@ public class HomeHeaderControler implements ISaveStatistic {
 
     private View mHeaderView;
 
-    WidgetVerticalLayout[] mLayouts = new WidgetVerticalLayout[6];
+    private WidgetVerticalLayout[] mLayouts = new WidgetVerticalLayout[6];
 
-    public HomeHeaderControler(View header){
+    HomeHeaderControler(View header){
         this.mHeaderView = header;
-
         //banner
         mLayouts[0] = (WidgetVerticalLayout) header.findViewById(R.id.banner_widget);
         //功能导航 4按钮
@@ -39,8 +37,6 @@ public class HomeHeaderControler implements ISaveStatistic {
         mLayouts[3] = (WidgetVerticalLayout) header.findViewById(R.id.horizontal1_widget);
         mLayouts[4] = (WidgetVerticalLayout) header.findViewById(R.id.horizontal2_widget);
         mLayouts[5] = (WidgetVerticalLayout) header.findViewById(R.id.horizontal3_widget);
-
-
     }
 
     public void setData(List<Map<String,String>> array,boolean isShowCache){

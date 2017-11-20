@@ -13,7 +13,6 @@ import java.util.Map;
 import acore.logic.XHClick;
 import acore.override.helper.XHActivityManager;
 import acore.tools.StringManager;
-import amodule.main.activity.MainHome;
 import aplug.web.FullScreenWeb;
 import aplug.web.ShowWeb;
 import third.mall.activity.CommodDetailActivity;
