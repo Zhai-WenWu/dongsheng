@@ -182,7 +182,6 @@ public class DishAboutView extends ItemBaseView {
      * 修改关注状态
      */
     private void setFollowState(Map<String, String> cursterMap) {
-
         if (cursterMap.containsKey("isFav") && "1".equals(cursterMap.get("isFav"))) {//未关注
             findViewById(R.id.dish_follow_rela).setVisibility(View.VISIBLE);
             int dp_10 = Tools.getDimen(context, R.dimen.dp_10);

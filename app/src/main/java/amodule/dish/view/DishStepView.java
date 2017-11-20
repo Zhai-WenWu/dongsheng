@@ -6,6 +6,7 @@ import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -20,7 +21,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.resource.gif.GifDrawable;
 import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.Target;
 import com.xiangha.R;
 
@@ -30,10 +30,7 @@ import java.util.Map;
 import acore.override.view.ItemBaseView;
 import acore.tools.StringManager;
 import acore.tools.Tools;
-import amodule.dish.activity.DetailDish;
-import amodule.dish.view.manager.DetailDishViewManager;
 import aplug.basic.LoadImage;
-import aplug.basic.SubBitmapTarget;
 
 /**
  * adapter菜谱详情页
@@ -180,13 +177,14 @@ public class DishStepView extends ItemBaseView {
             loadProgress.setVisibility(VISIBLE);
             itemImg1.setVisibility(VISIBLE);
             itemGifHint.setVisibility(View.GONE);
-            final GifRequestBuilder requestBuilder = Glide.with(getContext())
+            GifRequestBuilder requestBuilder =  Glide.with(getContext())
                     .load(gifUrl)
                     .asGif()
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .listener(new RequestListener<String, GifDrawable>() {
                         @Override
                         public boolean onException(Exception e, String s, Target<GifDrawable> target, boolean b) {
+                            Log.i("xianghaTag","e"+e.getMessage());
                             return false;
                         }
                         @Override
@@ -201,9 +199,11 @@ public class DishStepView extends ItemBaseView {
                             return false;
                         }
                     });
+
             if(itemGif != null){
                 if (itemGif.getTag(TAG_ID).equals(gifUrl)){
-                    requestBuilder.into(itemGif);
+                   requestBuilder.into(itemGif);
+                    itemGif.setVisibility(VISIBLE);
                 }
             }
         }

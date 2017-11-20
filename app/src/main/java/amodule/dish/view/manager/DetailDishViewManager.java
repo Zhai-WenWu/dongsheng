@@ -30,15 +30,12 @@ import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.dish.view.DishADBannerView;
 import amodule.dish.view.DishAboutView;
-import amodule.dish.view.DishActivityViewControlNew;
 import amodule.dish.view.DishExplainView;
 import amodule.dish.view.DishHeaderViewNew;
 import amodule.dish.view.DishHoverViewControl;
 import amodule.dish.view.DishIngreDataShow;
 import amodule.dish.view.DishRecommedAndAdView;
 import amodule.dish.view.DishTitleViewControl;
-import amodule.dish.view.DishTitleViewControlNew;
-import amodule.dish.view.DishWebview;
 import third.video.VideoPlayerController;
 
 /**
@@ -126,11 +123,8 @@ public class DetailDishViewManager {
         dishExplainView.setVisibility(View.GONE);
         dishRecommedAndAdView= new DishRecommedAndAdView(mAct);
         dishRecommedAndAdView.setVisibility(View.GONE);
-        DishWebview dishWebview = new DishWebview(mAct);
-        dishWebview.initWeb(mAct);
 
         layoutFooter.addView(dishExplainView);
-        layoutFooter.addView(dishWebview);
         layoutFooter.addView(dishRecommedAndAdView);
         listView.addHeaderView(dishHeaderViewNew);
         listView.addHeaderView(layoutHeader);

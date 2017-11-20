@@ -291,6 +291,14 @@ public class DetailDishNew extends BaseAppCompatActivity implements IObserver {
 
     @Override
     public void notify(String name, Object sender, Object data) {
+        switch (name){
+            case ObserverManager.NOTIFY_LOGIN://登陆
+                break;
+            case ObserverManager.NOTIFY_FOLLOW://关注
 
+                break;
+            case ObserverManager.NOTIFY_PAYFINISH://支付
+                break;
+        }
     }
 }
