@@ -129,7 +129,7 @@ public class MyMessage extends MainBaseActivity{
 				setRefresh();
 			}
 			AppCommon.quanMessage = 0;
-			Main.setNewMsgNum(3,AppCommon.quanMessage);
+			Main.setNewMsgNum(2,AppCommon.quanMessage);
 		}else{
 			findViewById(R.id.no_login_rela).setVisibility(View.VISIBLE);
 			findViewById(R.id.tv_login_notify).setVisibility(View.VISIBLE);
@@ -188,7 +188,7 @@ public class MyMessage extends MainBaseActivity{
 					case R.id.my_qa:
 						if (mMyQANum != null && mMyQANum.getVisibility() == View.VISIBLE) {
 							AppCommon.myQAMessage = 0;
-							Main.setNewMsgNum(3, AppCommon.myQAMessage);
+							Main.setNewMsgNum(2, AppCommon.myQAMessage);
 							mMyQANum.setText("");
 							mMyQANum.setVisibility(View.GONE);
 						}
@@ -200,7 +200,7 @@ public class MyMessage extends MainBaseActivity{
 						Map<String, String> customMap = new HashMap<String, String>();
 						customMap.put("pageTitle", "消息列表页");
 						QiYvHelper.getInstance().startServiceAcitivity(MyMessage.this, null, null, customMap);
-						Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage);
+						Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage);
 						break;
 				}
 			}

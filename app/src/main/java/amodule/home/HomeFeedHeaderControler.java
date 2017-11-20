@@ -89,7 +89,7 @@ public class HomeFeedHeaderControler {
     /**
      * 处理置顶数据View类型
      *
-     * @param map
+     * @param map 置顶数据
      *
      * @return
      */

@@ -111,7 +111,7 @@ public class AppCommon {
                             QiYvHelper.getInstance().getUnreadCount(new QiYvHelper.NumberCallback() {
                                 @Override
                                 public void onNumberReady(int count) {
-                                    Main.setNewMsgNum(3, quanMessage + feekbackMessage + myQAMessage + count);
+                                    Main.setNewMsgNum(2, quanMessage + feekbackMessage + myQAMessage + count);
                                 }
                             });
                             // tok值

@@ -8,8 +8,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.xiangha.R;
@@ -24,9 +22,7 @@ import acore.tools.ToolsDevice;
 import acore.widget.rvlistview.RvListView;
 import amodule.home.HomeModuleControler;
 import amodule.home.adapter.HomeSecondRecyclerAdapter;
-import amodule.main.adapter.HomeAdapter;
 import amodule.main.bean.HomeModuleBean;
-import amodule.main.view.HomeTabHScrollView;
 import amodule.main.view.item.HomeItem;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;

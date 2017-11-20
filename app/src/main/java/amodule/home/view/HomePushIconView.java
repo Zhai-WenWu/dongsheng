@@ -44,12 +44,13 @@ public class HomePushIconView extends AppCompatImageView {
 
     private String statictusID = "";
     PopupWindow mPopupWindow;
+
     public HomePushIconView(Context context) {
-        this(context,null);
+        this(context, null);
     }
 
     public HomePushIconView(Context context, @Nullable AttributeSet attrs) {
-        this(context, attrs,0);
+        this(context, attrs, 0);
     }
 
     public HomePushIconView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
@@ -61,10 +62,8 @@ public class HomePushIconView extends AppCompatImageView {
 
     }
 
-    private int xoff = 0;
-    private void initPopuWindow(){
-        xoff = getMeasuredWidth() - 10;
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.a_home_popup_layout,null,true);
+    private void initPopuWindow() {
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.a_home_popup_layout, null, true);
         mPopupWindow = new PopupWindow(view, WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT);
         mPopupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -73,30 +72,30 @@ public class HomePushIconView extends AppCompatImageView {
         mPopupWindow.setOutsideTouchable(true);
 
         RvListView rvListView = (RvListView) view.findViewById(R.id.rvListview);
-        int[] images = {R.drawable.pulish_subject_popup,R.drawable.pulish_dish_popup,R.drawable.pulish_article_popup,R.drawable.pulish_video_popup};
-        String[] texts = {"晒美食","写菜谱","发文章","短视频"};
-        List<Map<String,String>> data = new ArrayList<>();
-        for(int index = 0; index < images.length;index++){
-            Map<String,String> map = new HashMap<>();
-            map.put("image",String.valueOf(images[index]));
-            map.put("text",texts[index]);
+        int[] images = {R.drawable.pulish_subject_popup, R.drawable.pulish_dish_popup, R.drawable.pulish_article_popup, R.drawable.pulish_video_popup};
+        String[] texts = {"晒美食", "写菜谱", "发文章", "短视频"};
+        List<Map<String, String>> data = new ArrayList<>();
+        for (int index = 0; index < images.length; index++) {
+            Map<String, String> map = new HashMap<>();
+            map.put("image", String.valueOf(images[index]));
+            map.put("text", texts[index]);
             data.add(map);
         }
-        RvBaseSimpleAdapter adapter = new RvBaseSimpleAdapter(getContext(),data,
+        RvBaseSimpleAdapter adapter = new RvBaseSimpleAdapter(getContext(), data,
                 R.layout.a_home_popup_item,
-                new String[]{"image","text"},
-                new int[]{R.id.image,R.id.text});
+                new String[]{"image", "text"},
+                new int[]{R.id.image, R.id.text});
         rvListView.setAdapter(adapter);
         DividerItemDecoration itemDecoration = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
         itemDecoration.setDrawable(getResources().getDrawable(R.drawable.divider_black));
         rvListView.addItemDecoration(itemDecoration);
         rvListView.setOnItemClickListener((view1, holder, position) -> {
             //统计
-            if(!TextUtils.isEmpty(statictusID) && position < texts.length){
-                XHClick.mapStat(getContext(),statictusID,texts[position],"");
+            if (!TextUtils.isEmpty(statictusID) && position < texts.length) {
+                XHClick.mapStat(getContext(), statictusID, texts[position], "");
             }
             mPopupWindow.dismiss();
-            switch(position){
+            switch (position) {
                 case 0:
                     Intent subIntent = new Intent(getContext(), UploadSubjectNew.class);
                     subIntent.putExtra("skip", true);
@@ -132,14 +131,14 @@ public class HomePushIconView extends AppCompatImageView {
     }
 
     public void showPulishMenu() {
-        if (mPopupWindow == null){
+        if (mPopupWindow == null) {
             initPopuWindow();
         }
         mPopupWindow.showAsDropDown(this, -100, 0);
     }
 
-    /**去登录*/
-    private void gotoLogin(){
+    /** 去登录 */
+    private void gotoLogin() {
         getContext().startActivity(new Intent(getContext(), LoginByAccout.class));
     }
 

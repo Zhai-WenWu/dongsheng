@@ -41,8 +41,8 @@ public class HomeFuncNavView1 extends LinearLayout {
         initialize();
     }
 
-    protected List<Integer> navIds = Arrays.asList(new Integer[]{R.id.nav_1, R.id.nav_2, R.id.nav_3, R.id.nav_4});
-    protected List<Integer> lineIds = Arrays.asList(new Integer[]{R.id.line_1, R.id.line_2, R.id.line_3});
+    protected List<Integer> navIds = Arrays.asList(R.id.nav_1, R.id.nav_2, R.id.nav_3, R.id.nav_4);
+    protected List<Integer> lineIds = Arrays.asList(R.id.line_1, R.id.line_2, R.id.line_3);
 
     private void initialize() {
         //填充UI
@@ -64,9 +64,7 @@ public class HomeFuncNavView1 extends LinearLayout {
             View navView = findViewById(navIds.get(index));
             setResToView(navView, textArray[index], iconArray[index]);
             String url = urls[index];
-            navView.setOnClickListener(v -> {
-                AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), url, true);
-            });
+            navView.setOnClickListener(v -> AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), url, true));
         }
         setVisibility(VISIBLE);
     }
@@ -79,7 +77,7 @@ public class HomeFuncNavView1 extends LinearLayout {
         WidgetUtility.setResToImage(imageView, icon, false);
     }
 
-    public void setNavItemVisibility(int id, boolean isShow) {
+    protected void setNavItemVisibility(int id, boolean isShow) {
         if (id <= 0) return;
         findViewById(id).setVisibility(isShow ? VISIBLE : GONE);
         final int index = navIds.indexOf(id);

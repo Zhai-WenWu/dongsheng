@@ -182,7 +182,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
     private void initQiYvUnreadCount() {
         QiYvHelper.getInstance().getUnreadCount(count -> {
             int messageNum = AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + (count > 0 ? count : 0);
-            Main.setNewMsgNum(3, messageNum);
+            Main.setNewMsgNum(2, messageNum);
         });
     }
 
@@ -211,7 +211,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
                         MyMessage myMessage = (MyMessage) allTab.get("MyMessage");
                         myMessage.setQiYvNum(count);
                     }
-                    Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + count);
+                    Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + count);
                 }
             };
         }
@@ -853,7 +853,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
                                 myMessage.setQiYvNum(count);
                             }
                         }
-                        Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + (count > 0 ? count : 0));
+                        Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + (count > 0 ? count : 0));
                     }
                 });
             }

@@ -9,13 +9,12 @@ import android.os.Looper;
 import android.text.TextUtils;
 import android.view.View;
 
-import com.tencent.smtt.sdk.CookieSyncManager;
+import com.tencent.smtt.sdk.CookieManager;
 import com.xh.manager.DialogManager;
 import com.xh.manager.ViewManager;
 import com.xh.view.HButtonView;
 import com.xh.view.MessageView;
 import com.xh.view.TitleView;
-import com.tencent.smtt.sdk.CookieManager;
 import com.xiangha.R;
 
 import java.util.ArrayList;
@@ -183,7 +182,7 @@ public class LoginManager {
                     UtilFile.delShared(mAct, FileManager.xmlFile_userInfo, "");
                     //清空消息数角标
                     AppCommon.quanMessage = 0;
-                    Main.setNewMsgNum(3, AppCommon.quanMessage);
+                    Main.setNewMsgNum(2, AppCommon.quanMessage);
                     //XG解绑
                     new XGPushServer(mAct).initPush();
                     //如果是用户设置页面finish掉自己

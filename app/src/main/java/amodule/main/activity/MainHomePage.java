@@ -162,7 +162,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
                     }
                 }
                 if(!LoadOver){
-                    EntryptData(!LoadOver);
+                    EntryptData(true);
                 }
             }
         };
