@@ -50,8 +50,8 @@ public class HomeActivityIconView extends AppCompatImageView {
         setPadding(padding,0,padding,0);
         //请求数据
         postDelayed(() -> {
-//            initData();
-//            loadData();
+            initData();
+            loadData();
         },200);
     }
 
