@@ -134,7 +134,7 @@ public class HomePushIconView extends AppCompatImageView {
         if (mPopupWindow == null) {
             initPopuWindow();
         }
-        mPopupWindow.showAsDropDown(this, -100, 0);
+        mPopupWindow.showAsDropDown(this, 0, -6);
     }
 
     /** 去登录 */

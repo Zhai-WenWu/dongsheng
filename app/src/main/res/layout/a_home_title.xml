@@ -7,7 +7,7 @@
 
     <amodule.home.view.HomeActivityIconView
         android:id="@+id/home_act_btn"
-        android:layout_width="@dimen/dp_57"
+        android:layout_width="@dimen/dp_52"
         android:layout_height="match_parent"/>
 
     <RelativeLayout
@@ -45,11 +45,11 @@
 
     <amodule.home.view.HomePushIconView
         android:id="@+id/home_publish_btn"
-        android:layout_width="@dimen/dp_57"
+        android:layout_width="@dimen/dp_52"
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"
-        android:paddingLeft="@dimen/dp_17"
+        android:paddingLeft="@dimen/dp_12"
         android:paddingRight="@dimen/dp_20"
-        android:src="@drawable/circle_mycircle_jion"/>
+        android:src="@drawable/home_pulish"/>
 
 </RelativeLayout>

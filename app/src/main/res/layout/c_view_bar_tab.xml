@@ -20,12 +20,12 @@
         android:addStatesFromChildren="true"
         android:gravity="center"
         android:orientation="vertical"
-        android:paddingTop="@dimen/dp_5">
+        android:paddingTop="@dimen/dp_9">
 
         <ImageView
             android:id="@+id/iv_itemIsFine"
-            android:layout_width="@dimen/dp_22"
-            android:layout_height="@dimen/dp_22"
+            android:layout_width="@dimen/dp_27"
+            android:layout_height="@dimen/dp_24"
             android:layout_gravity="center"
             android:scaleType="fitXY"/>
 
@@ -33,6 +33,7 @@
             android:id="@+id/textView1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingTop="@dimen/dp_2"
             android:gravity="center"
             android:text="TextView"
             android:textColor="#929292"

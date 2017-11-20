@@ -46,7 +46,7 @@ public class HomeFuncNavView2 extends LinearLayout {
         mLeftView = findViewById(R.id.left_nav);
         mRightView = findViewById(R.id.right_nav);
 
-        int height = (int) (((ToolsDevice.getWindowPx(getContext()).widthPixels - Tools.getDimen(getContext(),R.dimen.dp_50)) / 2) * 140 / 325f);
+        int height = (int) (((ToolsDevice.getWindowPx(getContext()).widthPixels - Tools.getDimen(getContext(),R.dimen.dp_50)) / 2) * 144 / 325f);
         mLeftView.getLayoutParams().height = height;
         mRightView.getLayoutParams().height = height;
     }

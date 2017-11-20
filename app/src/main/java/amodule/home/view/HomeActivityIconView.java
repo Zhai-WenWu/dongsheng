@@ -50,8 +50,8 @@ public class HomeActivityIconView extends AppCompatImageView {
         setPadding(padding,0,padding,0);
         //请求数据
         postDelayed(() -> {
-            initData();
-            loadData();
+//            initData();
+//            loadData();
         },200);
     }
 
@@ -82,8 +82,9 @@ public class HomeActivityIconView extends AppCompatImageView {
         if (dataMap.isEmpty()) {
             return;
         }
-        int padding = Tools.getDimen(getContext(), R.dimen.dp_20);
-        setPadding(padding,0,padding,0);
+        int padding_20 = Tools.getDimen(getContext(), R.dimen.dp_20);
+        int padding_15 = Tools.getDimen(getContext(), R.dimen.dp_15);
+        setPadding(padding_20,0,padding_15,0);
         this.mUrl = dataMap.get("url");
         Glide.with(getContext())
                 .load(dataMap.get("img"))

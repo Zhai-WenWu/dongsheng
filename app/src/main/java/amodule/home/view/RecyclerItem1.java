@@ -3,6 +3,7 @@ package amodule.home.view;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -41,7 +42,7 @@ public class RecyclerItem1 extends BaseRecyclerItem {
 
     @Override
     protected void initView() {
-        int[] wh = computeItemWH(312, 388, getContext().getResources().getDimensionPixelSize(R.dimen.dp_50), 2);
+        int[] wh = computeItemWH(326, 406, getContext().getResources().getDimensionPixelSize(R.dimen.dp_50), 2);
         setLayoutParams(new RelativeLayout.LayoutParams(wh[0], wh[1]));
         invalidate();
         mLinearLayout = (LinearLayout) findViewById(R.id.linearlayout1);
@@ -49,8 +50,8 @@ public class RecyclerItem1 extends BaseRecyclerItem {
         mTextView1 = (TextView) findViewById(R.id.textview1);
         mTextView2 = (TextView) findViewById(R.id.textview2);
         mTextView3 = (TextView) findViewById(R.id.textview3);
-        mTextView4 = (TextView) findViewById(R.id.textview4);
     }
+
 
     @Override
     protected void onDataReady(Map<String, String> data) {

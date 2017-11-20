@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="@dimen/dp_335"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="@dimen/dp_336"
     android:layout_height="@dimen/dp_181">
 
     <ImageView
@@ -33,11 +35,14 @@
             android:lineSpacingExtra="@dimen/dp_7"
             android:gravity="center"
             android:textStyle="bold"
+            tools:text="啊啊啊啊"
             android:maxLines="2"
             android:ellipsize="end"/>
 
         <TextView
             android:id="@+id/textview2"
+            tools:text="啊啊啊啊"
+            android:layout_marginTop="@dimen/dp__2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/sp_15"

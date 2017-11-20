@@ -1,7 +1,9 @@
 package amodule.home.view;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -36,7 +38,7 @@ public class RecyclerItem3 extends BaseRecyclerItem {
 
     @Override
     protected void initView() {
-        int[] wh = computeItemWH(642, 344, getContext().getResources().getDimensionPixelSize(R.dimen.dp_40), 1);
+        int[] wh = computeItemWH(670, 360, getContext().getResources().getDimensionPixelSize(R.dimen.dp_40), 1);
         setLayoutParams(new RelativeLayout.LayoutParams(wh[0], wh[1]));
         invalidate();
         mImageView1 = (ImageView) findViewById(R.id.imageview1);
