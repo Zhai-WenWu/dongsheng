@@ -89,11 +89,6 @@ public class BannerView extends Banner implements IBindMap, IStatictusData,ISave
             map.put("isAd", "1");
             map.put("title", "");
         });
-        //TODO
-        Map<String,String> map = arrayList.get(2);
-        map.put("isAd", "2");
-        map.put("title", "这是一条测试广告数据");
-        arrayList.add(map);
         BannerAdapter<Map<String, String>> bannerAdapter = new BannerAdapter<Map<String, String>>(arrayList) {
             @Override
             protected void bindTips(TextView tv, Map<String, String> stringStringMap) {
