@@ -114,7 +114,15 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
     long startLoadTime;
     public void loadData() {
         startLoadTime = System.currentTimeMillis();
+        loadCacheData();
+        loadRemoteData();
+    }
+
+    private void loadCacheData(){
         mDataControler.loadCacheHomeData(getHeaderCallback(true));
+    }
+
+    private void loadRemoteData(){
         mDataControler.loadServiceHomeData(getHeaderCallback(false));
         mDataControler.loadServiceTopData(new InternetCallback(this) {
             @Override
@@ -137,7 +145,6 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
             loadManager.getSingleLoadMore(mViewContrloer.getRvListView()).setVisibility(View.GONE);
             mViewContrloer.addOnScrollListener();
         }
-
     }
 
     /**
@@ -279,7 +286,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
         if (mViewContrloer != null) {
             mViewContrloer.refreshBouy();
         }
-        loadData();
+        loadRemoteData();
         EntryptData(true);
     }
 

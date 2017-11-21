@@ -1,7 +1,6 @@
-package amodule.main.activity;
+package amodule.quan.activity;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -25,10 +24,9 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.PagerSlidingTabStrip;
+import amodule.home.view.HomePushIconView;
 import amodule.main.view.circle.CircleMainFragment;
 import amodule.quan.db.PlateData;
-import amodule.search.avtivity.HomeSearch;
-import amodule.search.data.SearchConstant;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
 
@@ -44,10 +42,10 @@ public class MainCircle extends BaseAppCompatActivity implements View.OnClickLis
     /** ViewPager */
     private ViewPager mViewPager;
 
+    private HomePushIconView mPushIconView;
+
     /** 板块信息集合 */
     private ArrayList<PlateData> mPlateDataArray = new ArrayList<>();
-    /** PagerAdapter */
-    private CirclePagerAdapter mAdapter;
     /***/
     private int index = 0;
 
@@ -58,15 +56,13 @@ public class MainCircle extends BaseAppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         //sufureView页面闪烁
         getWindow().setFormat(PixelFormat.TRANSLUCENT);
-        setContentView(R.layout.a_circle_home);
+        initActivity("", 2, 0, 0, R.layout.a_circle_home);
 
-        //初始化状态栏
-//        initStatusBar();
         //
         initView();
 
         defaultHasUser = LoginManager.isLogin();
-        XHClick.track(MainCircle.this,"浏览美食圈列表页");
+        XHClick.track(MainCircle.this, "浏览美食圈列表页");
     }
 
     /** 初始化UI */
@@ -75,29 +71,27 @@ public class MainCircle extends BaseAppCompatActivity implements View.OnClickLis
         mViewPager = (ViewPager) findViewById(R.id.circle_viewpager);
         mViewPager.setOffscreenPageLimit(5);
 
+        mPushIconView = (HomePushIconView) findViewById(R.id.circle_pulish);
         //设置监听
-        findViewById(R.id.top_bar_search).setOnClickListener(this);
+
+        mPushIconView.setOnClickListener(this);
+        findViewById(R.id.back).setOnClickListener(this);
         //获取模块数据
-        loadModuleData();
+        loadManager.setLoading(v -> loadModuleData());
     }
 
-    private void loadModuleData() {
-        loadManager.setLoading(new View.OnClickListener() {
+    private void loadModuleData(){
+        ReqInternet.in().doGet(StringManager.api_indexModules, new InternetCallback(XHApplication.in()) {
             @Override
-            public void onClick(View v) {
-                ReqInternet.in().doGet(StringManager.api_indexModules, new InternetCallback(XHApplication.in()) {
-                    @Override
-                    public void loaded(int flag, String url, Object msg) {
-                        if (flag >= ReqInternet.REQ_OK_STRING) {
-                            List<Map<String, String>> returnData = StringManager.getListMapByJson(msg);
-                            if (returnData.size() > 0) {
-                                Map<String, String> circleInfo = returnData.get(0);
-                                initPlate(circleInfo.get("indexRecTabQuan"));
-                            }
-                        }
-                        loadManager.loadOver(flag, 1, true);
+            public void loaded(int flag, String url, Object msg) {
+                if (flag >= ReqInternet.REQ_OK_STRING) {
+                    List<Map<String, String>> returnData = StringManager.getListMapByJson(msg);
+                    if (returnData.size() > 0) {
+                        Map<String, String> circleInfo = returnData.get(0);
+                        initPlate(circleInfo.get("indexRecTabQuan"));
                     }
-                });
+                }
+                loadManager.loadOver(flag, 1, true);
             }
         });
     }
@@ -105,7 +99,7 @@ public class MainCircle extends BaseAppCompatActivity implements View.OnClickLis
     /**
      * 初始化板块
      *
-     * @param moduleStr
+     * @param moduleStr json数据
      */
     private void initPlate(String moduleStr) {
         if (!TextUtils.isEmpty(moduleStr)) {
@@ -162,10 +156,10 @@ public class MainCircle extends BaseAppCompatActivity implements View.OnClickLis
                 }
                 mPlateDataArray.add(plateData);
             }
-            if(mPlateDataArray.size() == 3
-                    && datLength == 3){
+            if (mPlateDataArray.size() == 3
+                    && datLength == 3) {
                 index = 1;
-            }else{
+            } else {
                 index = 0;
             }
         }
@@ -175,8 +169,9 @@ public class MainCircle extends BaseAppCompatActivity implements View.OnClickLis
             loadManager.showLoadFaildBar();
             return;
         }
-        mAdapter = new CirclePagerAdapter(getSupportFragmentManager(), mPlateDataArray);
-        mViewPager.setAdapter(mAdapter);
+        /* PagerAdapter */
+        CirclePagerAdapter adapter = new CirclePagerAdapter(getSupportFragmentManager(), mPlateDataArray);
+        mViewPager.setAdapter(adapter);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -195,38 +190,33 @@ public class MainCircle extends BaseAppCompatActivity implements View.OnClickLis
         mTabs.setViewPager(mViewPager);
         mTabs.setListener();
         //设置选中当前tab是的点击事件
-        mTabs.setOnTabReselectedListener(new PagerSlidingTabStrip.OnTabReselectedListener() {
-            @Override
-            public void onTabReselected(int position) {
-                refreshFragment(position);
-            }
-        });
+        mTabs.setOnTabReselectedListener(this::refreshFragment);
 
-        mTabs.post(new Runnable() {
-            @Override
-            public void run() {
-                int screenWidth = ToolsDevice.getWindowPx(MainCircle.this).widthPixels;
-                int dp_45 = Tools.getDimen(MainCircle.this, R.dimen.dp_45);
-                int realWidth = mTabs.getmTabsContainer().getWidth();
-                if ((screenWidth - realWidth) / 2 < dp_45) {
-                    View view = findViewById(R.id.marginLeftView);
-                    view.getLayoutParams().width = 0;
-                }
-            }
-        });
-        if(index < mPlateDataArray.size()){
+        mTabs.post(this::setLeftMargin);
+        if (index < mPlateDataArray.size()) {
             mViewPager.setCurrentItem(index);
+        }
+    }
+
+    private void setLeftMargin(){
+        int screenWidth = ToolsDevice.getWindowPx(MainCircle.this).widthPixels;
+        int dp_45 = Tools.getDimen(MainCircle.this, R.dimen.dp_45);
+        int realWidth = mTabs.getmTabsContainer().getWidth();
+        if ((screenWidth - realWidth) / 2 < dp_45) {
+            View view = findViewById(R.id.marginLeftView);
+            view.getLayoutParams().width = 0;
         }
     }
 
     /**
      * 刷新
-     * @param position
+     *
+     * @param position 下标
      */
-    private void refreshFragment(final int position){
+    private void refreshFragment(final int position) {
         //调用页面的刷新方法
         @SuppressLint("RestrictedApi") List<Fragment> fragments = getSupportFragmentManager().getFragments();
-        if(fragments!=null&&fragments.size()>0) {
+        if (fragments != null && fragments.size() > 0) {
             for (Fragment fragment : fragments) {
                 if (fragment instanceof CircleMainFragment) {
                     CircleMainFragment circleMainFragment = (CircleMainFragment) fragment;
@@ -241,15 +231,16 @@ public class MainCircle extends BaseAppCompatActivity implements View.OnClickLis
 
     /**
      * 刷新
-     * @param position
+     *
+     * @param position 小标
      */
-    private void setFragmentCurrentPage(final int position){
+    private void setFragmentCurrentPage(final int position) {
         //调用页面的刷新方法
         @SuppressLint("RestrictedApi") List<Fragment> fragments = getSupportFragmentManager().getFragments();
-        for(Fragment fragment:fragments){
+        for (Fragment fragment : fragments) {
             if (fragment instanceof CircleMainFragment) {
                 CircleMainFragment circleMainFragment = (CircleMainFragment) fragment;
-                if(circleMainFragment.getmPlateData().getPosition() == position){
+                if (circleMainFragment.getmPlateData().getPosition() == position) {
                     circleMainFragment.setQuanmCurrentPage();
                 }
             }
@@ -272,7 +263,7 @@ public class MainCircle extends BaseAppCompatActivity implements View.OnClickLis
 
     /** 刷新 */
     public void refresh() {
-        if(mViewPager != null){
+        if (mViewPager != null) {
             final int position = mViewPager.getCurrentItem();
             refreshFragment(position);
         }
@@ -281,15 +272,13 @@ public class MainCircle extends BaseAppCompatActivity implements View.OnClickLis
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            //跳转搜索美食贴
-            case R.id.top_bar_search:
-                XHClick.mapStat(MainCircle.this, STATISTICS_ID, "搜索", null);
-                Intent searchIntent = new Intent(this, HomeSearch.class);
-                searchIntent.putExtra(SearchConstant.SEARCH_TYPE, SearchConstant.SEARCH_MEISHITIE);
-                startActivity(searchIntent);
+            case R.id.circle_pulish:
+                mPushIconView.showPulishMenu();
+                break;
+            case R.id.back:
+                onBackPressed();
                 break;
             default:
-
                 break;
         }
     }
@@ -298,7 +287,7 @@ public class MainCircle extends BaseAppCompatActivity implements View.OnClickLis
     public class CirclePagerAdapter extends FragmentStatePagerAdapter {
         private ArrayList<PlateData> mPlates;
 
-        public CirclePagerAdapter(FragmentManager fm, ArrayList<PlateData> titles) {
+        CirclePagerAdapter(FragmentManager fm, ArrayList<PlateData> titles) {
             super(fm);
             this.mPlates = titles;
         }

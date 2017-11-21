@@ -594,7 +594,7 @@
 
         <!-- quan start -->
         <activity
-            android:name="amodule.main.activity.MainCircle"
+            android:name="amodule.quan.activity.MainCircle"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"

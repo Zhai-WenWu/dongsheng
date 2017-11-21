@@ -91,7 +91,7 @@ public class FuncNavView2 extends HomeFuncNavView2 implements IBindMap, IStatict
                 Glide.with(getContext()).load(rightMap.get("img")).into(rightIcon);
             }
             String rightUrl = rightMap.get("url");
-            mLeftView.setOnClickListener(v -> {
+            mRightView.setOnClickListener(v -> {
                 AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), rightUrl, true);
                 if (!TextUtils.isEmpty(id) && !TextUtils.isEmpty(twoLevel)) {
                     XHClick.mapStat(getContext(), id, twoLevel, rightMap.get("text1"));

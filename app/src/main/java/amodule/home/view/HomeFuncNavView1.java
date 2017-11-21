@@ -56,7 +56,7 @@ public class HomeFuncNavView1 extends LinearLayout {
         String[] textArray = {"菜谱分类", "VIP名厨课", "视频", "本周佳作"};
         String[] urls = {
                 "xiangha://welcome?fenlei.app",
-                "xiangha://welcome?fenlei.app",
+                "xiangha://welcome?url=http://appweb.ixiangha.com:8806/recom/xiangHaSchool",
                 "xiangha://welcome?HomeSecond.app?type=video",
                 "xiangha://welcome?WeekDish.app",
         };
