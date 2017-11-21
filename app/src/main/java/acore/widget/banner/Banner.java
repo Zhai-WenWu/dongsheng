@@ -161,7 +161,7 @@ public class Banner extends RelativeLayout {
         //默认点指示器的左右Margin3dp
         mPointLeftRightMargin = dp2px(context, 2);
         //默认点指示器的上下margin为6dp
-        mPointTopBottomMargin = dp2px(context, 15);
+        mPointTopBottomMargin = dp2px(context, 13);
         //默认点容器的左右padding为10dp
         mPointContainerLeftRightPadding = dp2px(context, 8);
         //默认指示器提示文字大小8sp

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/main_root_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main_root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -14,23 +15,23 @@
             android:id="@+id/xiangha_tabhost"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="@dimen/dp_43"/>
+            android:layout_marginBottom="@dimen/dp_50"/>
         <!-- TabWidget这个组件的ID 必须是@android:id/tabs -->
 
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_0.5"
-            android:background="#e6e6e6"
             android:layout_above="@+id/show_tab"
-            android:visibility="gone"
+            android:background="#F1F1F1"
+            android:visibility="visible"
             />
 
         <FrameLayout
             android:id="@+id/show_tab"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_50"
-            android:layout_gravity="bottom"
             android:layout_alignParentBottom="true"
+            android:layout_gravity="bottom"
             android:background="#F2F2F2">
 
             <LinearLayout

@@ -92,7 +92,7 @@ import static com.xiangha.R.id.iv_itemIsFine;
 public class Main extends Activity implements OnClickListener, IObserver {
     public static final String TAG="xianghaTag";
 
-    private String[] tabTitle = {"首页", "商城", "消息", "我的"};
+    private String[] tabTitle = {"香哈", "商城", "消息", "我的"};
     private Class<?>[] classes = new Class<?>[]{MainHomePage.class, MainMall.class, MyMessage.class, MainMyself.class};
     private int[] tabImgs = new int[]{R.drawable.tab_index, R.drawable.tab_mall, R.drawable.tab_four, R.drawable.tab_myself};
 
@@ -119,7 +119,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
     private int doExit = 0;
     private int defaultTab = 0;
     private String url = null;
-    private int everyReq = 4 * 60;
+    private final int everyReq = 4 * 60;
 
     private boolean WelcomeDialogstate = false;//false表示当前无显示,true已经显示
     private boolean mainOnResumeState = false;//false 无焦点，true 获取焦点

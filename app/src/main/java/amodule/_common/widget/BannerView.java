@@ -62,7 +62,7 @@ public class BannerView extends Banner implements IBindMap, IStatictusData,ISave
     public BannerView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mInflater = LayoutInflater.from(context);
-        int height = (int) (ToolsDevice.getWindowPx(context).widthPixels * 32 / 75f);
+        int height = (int) (ToolsDevice.getWindowPx(context).widthPixels * 336 / 750f);
         setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height));
         setVisibility(GONE);
     }
