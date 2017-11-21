@@ -39,7 +39,7 @@ public class HomeSecondRecipeItem extends HomeRecipeItem implements IDataSetDele
         if (mDataMap == null)
             return;
         LayoutParams containerParams = (LayoutParams) mContainer.getLayoutParams();
-        containerParams.topMargin = (mPosition == 0 && mModuleBean != null && (TextUtils.equals("day", mModuleBean.getType()) || TextUtils.equals("video", mModuleBean.getType()))) ? 0 : getResources().getDimensionPixelSize(R.dimen.dp_15);
+        containerParams.topMargin = (mPosition == 0 && mModuleBean != null && (TextUtils.equals("day", mModuleBean.getType()) || TextUtils.equals("video", mModuleBean.getType()))) ? 0 : getResources().getDimensionPixelSize(R.dimen.dp_20);
         Map<String, String> videoMap = StringManager.getFirstMap(mDataMap.get("video"));
         String videoTime = videoMap.get("videoTime");
         if (!TextUtils.isEmpty(videoTime) && !"00:00".equals(videoTime) && mVideoTime != null) {
