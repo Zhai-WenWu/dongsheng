@@ -50,7 +50,6 @@ public class HomeWeekListActivity extends BaseAppCompatActivity {
     private String mBackUrl = "";//向上拉取数据集合
     private String mNextUrl = "";//下页拉取数据集合
     private String mStatisticKey = null;
-    private String mType;
     private boolean mLoadOver = false;
     private boolean mNeedRefCurrData = false;
     private boolean mCompelClearData = false;//强制清除数据
@@ -74,17 +73,7 @@ public class HomeWeekListActivity extends BaseAppCompatActivity {
     }
 
     private void initData() {
-        Bundle bundle = getIntent().getExtras();
-        if (bundle == null) {
-            finish();
-            return;
-        }
-        mType = bundle.getString(TAG);
-        if (TextUtils.isEmpty(mType)) {
-            finish();
-            return;
-        }
-        mModuleBean = new HomeModuleControler().getHomeModuleByType(this,mType);
+        mModuleBean = new HomeModuleControler().getHomeModuleByType(this,"dish");
         mAdControl = getAdControl();
     }
 

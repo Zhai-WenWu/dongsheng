@@ -18,7 +18,6 @@ package acore.widget;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.database.DataSetObserver;
@@ -46,7 +45,6 @@ import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.WindowManager;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.xiangha.R;
@@ -117,7 +115,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
     private int mLastScrollX = 0;
 
     private int mTabBackgroundResId = R.drawable.psts_background_tab;
-    private int mTabInnerBackground = R.drawable.psts_background_tab;
+    private int mTabInnerBackground = 0;
     private int mTop, mLeft, mRight, mBottom;
     private int mTextPaddingLeftRight, mTextPaddingTopBottom, mTabItemIntervalSize,
             mTabItemMarginTopBottom, mTabItemStartLeftMargin, mTabItemEndRightMargin;
@@ -264,14 +262,6 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 
     public void notifyDataSetChanged() {
         mTabsContainer.removeAllViews();
-        if (mTabItemMarginTopBottom > 0) {
-            mTabLayoutParams.topMargin = mTabItemMarginTopBottom;
-            mTabLayoutParams.bottomMargin = mTabItemMarginTopBottom;
-        }
-        if (mTabWidth > 0)
-            mTabLayoutParams.width = mTabWidth;
-        if (mTabHeight > 0)
-            mTabLayoutParams.height = mTabHeight;
         if (isCustomTabs) {
             ((CustomTabProvider) mPager.getAdapter()).onRemoveAllTabView();
         }
@@ -288,6 +278,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         }
 
         updateTabStyles();
+        requestLayout();
     }
 
     private void addTab(final int position, CharSequence title, final View tabView) {
@@ -339,19 +330,23 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
             }
         });
 
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) textView.getLayoutParams();
-        if (position == 0 && mTabItemStartLeftMargin > 0) {
-//            params.leftMargin = mTabItemStartLeftMargin;
-            mTabLayoutParams.leftMargin = mTabItemStartLeftMargin;
-        } else if (position == mTabCount - 1 && mTabItemEndRightMargin > 0) {
-//            params.rightMargin = mTabItemEndRightMargin;
-            mTabLayoutParams.rightMargin = mTabItemEndRightMargin;
-        } else if (mTabItemIntervalSize > 0) {
-//            params.leftMargin = mTabItemIntervalSize;
-            mTabLayoutParams.leftMargin = mTabItemIntervalSize;
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(mWidth, mHeight);
+        if (mTabItemMarginTopBottom > 0) {
+            params.topMargin = mTabItemMarginTopBottom;
+            params.bottomMargin = mTabItemMarginTopBottom;
         }
-
-        mTabsContainer.addView(tabView, position, mTabLayoutParams);
+        if (mTabWidth > 0)
+            params.width = mTabWidth;
+        if (mTabHeight > 0)
+            params.height = mTabHeight;
+        if (position == 0 && mTabItemStartLeftMargin > 0) {
+            params.leftMargin = mTabItemStartLeftMargin;
+        } else if (position == mTabCount - 1 && mTabItemEndRightMargin > 0) {
+            params.rightMargin = mTabItemEndRightMargin;
+        } else if (mTabItemIntervalSize > 0) {
+            params.leftMargin = mTabItemIntervalSize;
+        }
+        mTabsContainer.addView(tabView, position, params);
     }
 
     private void updateTabStyles() {
@@ -403,7 +398,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
             return;
         }
 
-        int newScrollX = mTabsContainer.getChildAt(position).getLeft() + offset;
+        int newScrollX = mTabsContainer.getChildAt(position).getLeft() - mTabsContainer.getChildAt(0).getLeft() + offset;
         if (position > 0 || offset > 0) {
             // Half screen offset.
             // - Either tabs start at the middle of the view scrolling straight
@@ -515,7 +510,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 
             setPadding(mPaddingLeft, getPaddingTop(), mPaddingRight, getPaddingBottom());
             if (mScrollOffset == 0)
-                mScrollOffset = getWidth() / 2 - mPaddingLeft;
+                mScrollOffset = getWidth() / 2 - mPaddingLeft - view.getLeft();
             mCurrentPosition = mPager.getCurrentItem();
             mCurrentPositionOffset = 0f;
             scrollToChild(mCurrentPosition, 0);

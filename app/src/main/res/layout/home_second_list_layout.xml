@@ -17,7 +17,7 @@
         android:visibility="visible"
         app:pstsIndicatorColor="@color/comment_color"
         app:pstsIndicatorWidthFollowText="true"
-        app:pstsIndicatorHeight="0px"
+        app:pstsIndicatorHeight="5px"
         app:pstsTabTextColor="@color/selector_hometabscroll_item_textcolor"
         app:pstsTabTextSize="@dimen/sp_13"
         app:pstsShouldExpand="true"

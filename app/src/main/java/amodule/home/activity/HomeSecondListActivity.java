@@ -31,7 +31,7 @@ import amodule.main.bean.HomeModuleBean;
 
 public class HomeSecondListActivity extends BaseAppCompatActivity {
 
-    public static final String TAG = "type1";
+    public static final String TAG = "type";
 
     private String mType;//视频、三餐
 
@@ -55,7 +55,7 @@ public class HomeSecondListActivity extends BaseAppCompatActivity {
             finish();
             return;
         }
-        mType = bundle.getString("type1");
+        mType = bundle.getString(TAG);
         if (TextUtils.isEmpty(mType)) {
             finish();
             return;
