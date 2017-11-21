@@ -107,7 +107,7 @@ public class Banner extends RelativeLayout {
     /**
      * 页面切换的时间（从下一页开始出现，到完全出现的时间）
      */
-    private int mPageChangeDuration = 400;
+    private int mPageChangeDuration = 700;
     /**
      * 是否正在播放
      */
@@ -161,7 +161,7 @@ public class Banner extends RelativeLayout {
         //默认点指示器的左右Margin3dp
         mPointLeftRightMargin = dp2px(context, 2);
         //默认点指示器的上下margin为6dp
-        mPointTopBottomMargin = dp2px(context, 13);
+        mPointTopBottomMargin = dp2px(context, 17);
         //默认点容器的左右padding为10dp
         mPointContainerLeftRightPadding = dp2px(context, 8);
         //默认指示器提示文字大小8sp

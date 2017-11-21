@@ -128,7 +128,7 @@ public class BuoyControler {
             int width = Tools.getDimen(mAct, R.dimen.dp_45);
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(width, width);
             DisplayMetrics dm = ToolsDevice.getWindowPx(mAct);
-            params.setMargins(params.leftMargin, dm.heightPixels / 7 * 2 ,params.rightMargin, params.bottomMargin);
+            params.setMargins(params.leftMargin, dm.heightPixels / 2 - 40 ,params.rightMargin, params.bottomMargin);
             params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
             RelativeLayout rootLayout = (RelativeLayout) mAct.findViewById(R.id.activityLayout);
             if(rootLayout == null){

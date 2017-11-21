@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
 
 import com.annimon.stream.Stream;
 import com.xiangha.R;
@@ -46,6 +47,8 @@ public class HomeViewControler {
 
     private HomeTitleLayout mTitleLayout;
     private RvListView mRvListView;
+
+    private TextView mTipMessage;
     //feed头部view
     private View mHeaderView;
 
@@ -73,6 +76,7 @@ public class HomeViewControler {
         Log.i("tzy","HomeHeaderControler init time : " + (endtime2) + "ms");
         mHomeFeedHeaderControler = new HomeFeedHeaderControler(mActivity);
 
+        mTipMessage = (TextView) mActivity.findViewById(R.id.tip_message);
         long endtime3 = System.currentTimeMillis() - startTime - endtime2;
         Log.i("tzy","HomeFeedHeaderControler init time : " + (endtime3) + "ms");
         mTitleLayout = (HomeTitleLayout) mActivity.findViewById(R.id.home_title);
@@ -173,9 +177,18 @@ public class HomeViewControler {
         //列表
         if (scrollDataIndex > 0) {
             XHClick.saveStatictisFile("home", MainHome.recommedType_statictus, "", "", String.valueOf(scrollDataIndex), "list", "", "", "", "", "");
-//            XHClick.saveStatictisFile("home", "horizatal", "", "", String.valueOf(scrollDataIndex), "list", "", "", "", "", "");
             scrollDataIndex = -1;
         }
+    }
+
+    public void setTipMessage(){
+        String configData = AppCommon.getConfigByLocal("");
+        Map<String, String> data = StringManager.getFirstMap(configData);
+        if(null == mTipMessage || null == data || data.isEmpty()){
+            return;
+        }
+        //TODO 设置文本&文字颜色&背景颜色
+
     }
 
     /*--------------------------------------------- Get&Set ---------------------------------------------*/

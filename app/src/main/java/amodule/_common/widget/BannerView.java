@@ -3,6 +3,7 @@ package amodule._common.widget;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,7 +89,11 @@ public class BannerView extends Banner implements IBindMap, IStatictusData,ISave
             map.put("isAd", "1");
             map.put("title", "");
         });
-
+        //TODO
+        Map<String,String> map = arrayList.get(2);
+        map.put("isAd", "2");
+        map.put("title", "这是一条测试广告数据");
+        arrayList.add(map);
         BannerAdapter<Map<String, String>> bannerAdapter = new BannerAdapter<Map<String, String>>(arrayList) {
             @Override
             protected void bindTips(TextView tv, Map<String, String> stringStringMap) {
@@ -170,6 +175,7 @@ public class BannerView extends Banner implements IBindMap, IStatictusData,ISave
     protected void sendAdMessage(String adStr, int type) {
         Map<String, String> adDataMap = StringManager.getFirstMap(adStr);
         post(() -> {
+            Log.i("tzy","adDataMap = " + adDataMap);
             String imageUrl = adDataMap.get("imgUrl");
             if(TextUtils.isEmpty(imageUrl)) return;
             adMap = new HashMap<>();

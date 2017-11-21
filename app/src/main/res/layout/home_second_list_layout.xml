@@ -3,22 +3,25 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activityLayout"
-    style="@style/layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@android:color/transparent">
+
     <acore.widget.PagerSlidingTabStrip
         android:id="@+id/home_tab"
-        android:layout_below="@+id/all_title_rela"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/all_title_rela"
         android:layout_gravity="center_horizontal"
         android:background="@android:color/white"
         android:visibility="visible"
         app:pstsIndicatorColor="@color/comment_color"
-        app:pstsIndicatorWidthFollowText="true"
         app:pstsIndicatorHeight="0px"
+        app:pstsIndicatorWidthFollowText="true"
+        app:pstsShouldExpand="true"
         app:pstsTabTextColor="@color/selector_hometabscroll_item_textcolor"
-        app:pstsTabTextSize="@dimen/sp_13"
-        app:pstsShouldExpand="true"/>
+        app:pstsTabTextSize="@dimen/sp_13"/>
+
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
