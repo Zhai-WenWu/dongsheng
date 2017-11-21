@@ -10,19 +10,15 @@
         android:layout_below="@+id/all_title_rela"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/dp_5"
-        android:paddingBottom="@dimen/dp_5"
         android:layout_gravity="center_horizontal"
         android:background="@android:color/white"
         android:visibility="visible"
         app:pstsIndicatorColor="@color/comment_color"
         app:pstsIndicatorWidthFollowText="true"
-        app:pstsIndicatorHeight="5px"
+        app:pstsIndicatorHeight="0px"
         app:pstsTabTextColor="@color/selector_hometabscroll_item_textcolor"
         app:pstsTabTextSize="@dimen/sp_13"
-        app:pstsShouldExpand="true"
-        app:pstsUnderlineColor="#e9e9e9"
-        app:pstsUnderlineHeight="1px"/>
+        app:pstsShouldExpand="true"/>
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
