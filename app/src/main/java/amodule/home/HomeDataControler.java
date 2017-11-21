@@ -64,18 +64,20 @@ public class HomeDataControler {
 
     //读取缓存数据
     public void loadCacheHomeData(InternetCallback callback) {
-        final Handler handler = new Handler(Looper.getMainLooper());
-        new Thread(() -> {
+//        final Handler handler = new Handler(Looper.getMainLooper());
+//        new Thread(() -> {
             String hoemDataStr = FileManager.readFile(CACHE_PATH).trim();
             if (!TextUtils.isEmpty(hoemDataStr)) {
-                handler.post(() -> callback.loaded(ReqEncyptInternet.REQ_OK_STRING, "", hoemDataStr));
+//                handler.post(() ->
+                        callback.loaded(ReqEncyptInternet.REQ_OK_STRING, "", hoemDataStr);
+//                );
             }
-        }).start();
+//        }).start();
     }
 
     public void saveCacheHomeData(String data) {
         if (TextUtils.isEmpty(data) || data.trim().length() < 10) return;
-        FileManager.saveFileToCompletePath(CACHE_PATH, data, false);
+        new Thread(() -> FileManager.saveFileToCompletePath(CACHE_PATH, data, false)).start();
     }
 
     //获取服务端首页数据

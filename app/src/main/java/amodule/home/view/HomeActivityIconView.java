@@ -52,7 +52,7 @@ public class HomeActivityIconView extends AppCompatImageView {
         postDelayed(() -> {
             initData();
             loadData();
-        },200);
+        },2000);
     }
 
     //初始化数据

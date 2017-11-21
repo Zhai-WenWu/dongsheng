@@ -59,7 +59,12 @@ public abstract class InternetCallback extends InterCallback {
 		String theUrl = statTime(url);
 		String msg = "";
 		// 解析API中的res与data
-		if (url.contains(StringManager.apiUrl) || url.contains(StringManager.api_uploadUserLog) || url.contains(StringManager.api_uploadImg)) {
+		if (url.contains(StringManager.apiUrl)
+				|| url.contains(StringManager.api_uploadUserLog)
+				|| url.contains(StringManager.api_uploadImg)
+				//TODO test
+				|| url.contains("http://api.ixiangha.com:8806")
+				) {
 			ArrayList<Map<String, String>> resultList = StringManager.getListMapByJson(str);
 			// 解析过程
 			if (resultList.size() > 0) {
