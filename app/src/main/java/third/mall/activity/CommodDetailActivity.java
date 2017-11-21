@@ -365,6 +365,9 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
         if(LoginManager.isLogin() && isNeedResume){
             MallCommon.getShoppingNum(this,mall_news_num,mall_news_num_two);
         }
+        if(null != mVideoPlayerController){
+            mVideoPlayerController.onResume();
+        }
     }
 
 
@@ -544,20 +547,6 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
                 mVideoPlayerController = new VideoPlayerController(this, videoLayout, imgUrl);
                 mVideoUrl = StringManager.getFirstMap(StringManager.getFirstMap(images.get(i).get("video")).get("video_url")).get("default_url");
                 mVideoPlayerController.setVideoUrl(mVideoUrl);
-                mVideoPlayerController.isFullScreenAuto = true;
-                mVideoPlayerController.setPortrait(true);
-//                mVideoPlayerController.setFullScreenClickListener(new OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        if (mVideoPlayerController.isPlaying())
-//                            mVideoPlayerController.onPause(true);
-//                        Intent intent = new Intent();
-//                        intent.putExtra("url", mVideoUrl);
-//                        intent.setClass(CommodDetailActivity.this, PlayVideo.class);
-//                        CommodDetailActivity.this.startActivity(intent);
-//                        XHClick.mapStat(CommodDetailActivity.this, "a_mail_goods", "商品视频播放量", "");
-//                    }
-//                });
             } else {
                 topView.findViewById(R.id.image).setVisibility(View.VISIBLE);
                 ImageView iv = (ImageView) topView.findViewById(R.id.image);
@@ -917,6 +906,13 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
         if (level == TRIM_MEMORY_UI_HIDDEN) {//是否ui资源
 
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(null != mVideoPlayerController && mVideoPlayerController.onBackPressed())
+            return;
+        super.onBackPressed();
     }
 
     @Override

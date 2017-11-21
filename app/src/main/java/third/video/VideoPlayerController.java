@@ -105,11 +105,7 @@ public class VideoPlayerController {
                     return;
                 }
                 //第一个true是否需要隐藏actionbar，第二个true是否需要隐藏statusbar
-                GSYBaseVideoPlayer gsyBaseVideoPlayer = videoPlayer.startWindowFullscreen(context, true, true);
-                if(isFullScreenAuto){
-                    OrientationUtils orientationUtils = new OrientationUtils(context, gsyBaseVideoPlayer);
-                    orientationUtils.setRotateWithSystem(true);
-                }
+                videoPlayer.startWindowFullscreen(context, true, true);
             }
         });
         videoPlayer.setStandardVideoAllCallBack(new SampleListener(){
@@ -143,7 +139,6 @@ public class VideoPlayerController {
             public void onQuitFullscreen(String url, Object... objects) {
                 super.onQuitFullscreen(url, objects);
                 orientationUtils.backToProtVideo();
-                orientationUtils.setRotateWithSystem(false);
             }
         });
 
