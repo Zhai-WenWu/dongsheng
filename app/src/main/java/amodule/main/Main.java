@@ -446,6 +446,9 @@ public class Main extends Activity implements OnClickListener, IObserver {
 
             ImageView imgView = (ImageView) tabViews[i].findViewById(iv_itemIsFine);
             imgView.setImageResource(tabImgs[i]);
+            if(1 == i){
+                imgView.getLayoutParams().width = Tools.getDimen(this,R.dimen.dp_30);
+            }
 
             if (url != null && i == 0) {
                 Intent homePage = new Intent(this, classes[i]);

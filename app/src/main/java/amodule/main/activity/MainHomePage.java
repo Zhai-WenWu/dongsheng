@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 
 import com.xiangha.R;
 
@@ -114,7 +115,25 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
     long startLoadTime;
     public void loadData() {
         startLoadTime = System.currentTimeMillis();
+        if (!LoadOver) {
+            assert mViewContrloer != null;
+            loadManager.setLoading(mViewContrloer.getRvListView(),
+                    mHomeAdapter,
+                    true,
+                    v -> {
+                        if (HeaderDataLoaded)
+                            EntryptData(!LoadOver);
+                    }
+            );
+            loadManager.getSingleLoadMore(mViewContrloer.getRvListView()).setVisibility(View.GONE);
+            mViewContrloer.addOnScrollListener();
+        }
         loadCacheData();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         loadRemoteData();
     }
 
@@ -132,19 +151,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
                     mViewContrloer.setTopData(StringManager.getListMapByJson(o));
             }
         });
-        if (!LoadOver) {
-            assert mViewContrloer != null;
-            loadManager.setLoading(mViewContrloer.getRvListView(),
-                    mHomeAdapter,
-                    true,
-                    v -> {
-                        if (HeaderDataLoaded)
-                            EntryptData(!LoadOver);
-                    }
-            );
-            loadManager.getSingleLoadMore(mViewContrloer.getRvListView()).setVisibility(View.GONE);
-            mViewContrloer.addOnScrollListener();
-        }
+
     }
 
     /**
@@ -211,7 +218,10 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
                     loadManager.hideProgressBar();
                     mViewContrloer.returnListTop();
                 }
-                loadManager.getSingleLoadMore(mViewContrloer.getRvListView()).setVisibility(View.VISIBLE);
+                Button loadmore = loadManager.getSingleLoadMore(mViewContrloer.getRvListView());
+                if(null != loadmore){
+                    loadmore.setVisibility(View.VISIBLE);
+                }
                 loadManager.changeMoreBtn(mViewContrloer.getRvListView(), ReqInternet.REQ_OK_STRING, -1, -1, LoadOver ? 2 : 1, refresh);
             }
 

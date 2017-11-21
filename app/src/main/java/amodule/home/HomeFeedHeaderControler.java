@@ -34,7 +34,6 @@ import static amodule.home.HomeViewControler.MODULETOPTYPE;
 public class HomeFeedHeaderControler {
     private Context mContext;
 
-    private View mFeedTitleView;
     private LinearLayout layout, linearLayoutOne, linearLayoutTwo, linearLayoutThree;
     private HomeModuleBean mHomeModuleBean;
 
@@ -53,9 +52,6 @@ public class HomeFeedHeaderControler {
         layout = new LinearLayout(mContext);
 
         layout.setOrientation(LinearLayout.VERTICAL);
-        mFeedTitleView = LayoutInflater.from(mContext).inflate(R.layout.a_home_feed_title, null, true);
-        mFeedTitleView.setVisibility(View.GONE);
-        layout.addView(mFeedTitleView);
 
         linearLayoutOne = new LinearLayout(mContext);
         linearLayoutOne.setOrientation(LinearLayout.VERTICAL);
@@ -136,7 +132,4 @@ public class HomeFeedHeaderControler {
         return layout;
     }
 
-    void setFeedheaderVisibility(boolean feedheaderVisibility) {
-        mFeedTitleView.setVisibility(feedheaderVisibility ? View.VISIBLE : View.GONE);
-    }
 }

@@ -12,7 +12,7 @@
         android:background="#F2F2F2"/>
 
     <TextView
-        android:id="@+id/title"
+        android:id="@+id/feed_title"
         tools:text="热门推荐"
         android:text="热门推荐"
         android:layout_below="@+id/line"

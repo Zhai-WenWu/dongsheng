@@ -80,7 +80,7 @@ public class HomeViewControler {
         mTitleLayout.postDelayed(()->{
             mBuoy = new BuoyControler.Buoy(mActivity,BuoyControler.TYPE_HOME);
             mBuoy.setClickCallback(() -> XHClick.mapStat(mActivity,MainHomePage.STATICTUS_ID_PULISH,"首页右侧侧边栏浮动图标",""));
-        },2000);
+        },4000);
 
         long endtime4 = System.currentTimeMillis() - startTime - endtime2 - endtime3;
         Log.i("tzy","HomeTitleLayout init time : " + (endtime4) + "ms");
@@ -107,17 +107,6 @@ public class HomeViewControler {
         if (layoutManager != null && layoutManager instanceof LinearLayoutManager) {
             final LinearLayoutManager linearLayoutManager = (LinearLayoutManager) layoutManager;
             mRvListView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                @Override
-                public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                    super.onScrollStateChanged(recyclerView, newState);
-//                    if(newState == RecyclerView.SCROLL_STATE_IDLE
-//                            || newState == RecyclerView.SCROLL_STATE_TOUCH_SCROLL){
-//                        Glide.with(getContext()).resumeRequests();
-//                    }else{
-//                        Glide.with(getContext()).pauseRequests();
-//                    }
-                }
-
                 @Override
                 public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                     super.onScrolled(recyclerView, dx, dy);
@@ -166,7 +155,11 @@ public class HomeViewControler {
     }
 
     public void setFeedheaderVisibility(boolean isShow) {
-        mHomeFeedHeaderControler.setFeedheaderVisibility(isShow);
+        mHeaderControler.setFeedheaderVisibility(isShow);
+    }
+
+    public void setFeedTitleText(String text){
+        mHeaderControler.setFeedTitleText(text);
     }
 
     /**

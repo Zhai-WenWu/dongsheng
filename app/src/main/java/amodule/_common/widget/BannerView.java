@@ -33,6 +33,7 @@ import amodule._common.helper.WidgetDataHelper;
 import third.ad.scrollerAd.XHAllAdControl;
 
 import static third.ad.tools.AdPlayIdConfig.ARTICLE_CONTENT_BOTTOM;
+import static third.ad.tools.AdPlayIdConfig.FULLSCREEN;
 
 /**
  * Description :
@@ -151,6 +152,7 @@ public class BannerView extends Banner implements IBindMap, IStatictusData,ISave
 
     public void initAdData(){
         if(mAdControl == null && ToolsDevice.isNetworkAvailable(getContext())){
+            //TODO test
             mAdIDArray.add(ARTICLE_CONTENT_BOTTOM);
             mAdControl = new XHAllAdControl(mAdIDArray,
                     (final Map<String, String> map) ->
@@ -173,7 +175,7 @@ public class BannerView extends Banner implements IBindMap, IStatictusData,ISave
             adMap = new HashMap<>();
             adMap.put("isAd","2");
             adMap.put("img",imageUrl);
-            adMap.put("title",adDataMap.get("title") + adDataMap.get("title"));
+            adMap.put("title",adDataMap.get("title"));
             if(!arrayList.isEmpty()
                     && !adMap.isEmpty()
                     && !arrayList.contains(adMap)){

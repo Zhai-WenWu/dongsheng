@@ -1,6 +1,8 @@
 package amodule.home;
 
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.TextView;
 
 import com.xiangha.R;
 
@@ -9,6 +11,7 @@ import java.util.Map;
 
 import amodule._common.delegate.ISaveStatistic;
 import amodule._common.plugin.WidgetVerticalLayout;
+import amodule._common.utility.WidgetUtility;
 import amodule.main.activity.MainHomePage;
 
 /**
@@ -21,7 +24,9 @@ import amodule.main.activity.MainHomePage;
 
 public class HomeHeaderControler implements ISaveStatistic {
 
-    private View mHeaderView;
+    private View mHeaderView,mFeedHeaderView;
+
+    private TextView mFeedTitle;
 
     private WidgetVerticalLayout[] mLayouts = new WidgetVerticalLayout[6];
 
@@ -37,6 +42,9 @@ public class HomeHeaderControler implements ISaveStatistic {
         mLayouts[3] = (WidgetVerticalLayout) header.findViewById(R.id.horizontal1_widget);
         mLayouts[4] = (WidgetVerticalLayout) header.findViewById(R.id.horizontal2_widget);
         mLayouts[5] = (WidgetVerticalLayout) header.findViewById(R.id.horizontal3_widget);
+
+        mFeedHeaderView = header.findViewById(R.id.a_home_feed_title);
+        mFeedTitle = (TextView) header.findViewById(R.id.feed_title);
     }
 
     public void setData(List<Map<String,String>> array,boolean isShowCache){
@@ -67,5 +75,16 @@ public class HomeHeaderControler implements ISaveStatistic {
     public void saveStatisticData() {
         for(WidgetVerticalLayout layout:mLayouts)
             layout.saveStatisticData();
+    }
+
+    void setFeedheaderVisibility(boolean feedheaderVisibility) {
+        mFeedHeaderView.setVisibility(feedheaderVisibility ? View.VISIBLE : View.GONE);
+    }
+
+    void setFeedTitleText(String text){
+        if(null == mFeedTitle || TextUtils.isEmpty(text)){
+            return;
+        }
+        mFeedTitle.setText(text);
     }
 }
