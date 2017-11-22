@@ -102,6 +102,15 @@ public class HomeViewControler {
             final LinearLayoutManager linearLayoutManager = (LinearLayoutManager) layoutManager;
             mRvListView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override
+                public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                    super.onScrollStateChanged(recyclerView, newState);
+                    if(RecyclerView.SCROLL_STATE_IDLE == newState){
+                        if(mBuoy != null && !mBuoy.isMove())
+                            mBuoy.executeOpenAnim();
+                    }
+                }
+
+                @Override
                 public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                     super.onScrolled(recyclerView, dx, dy);
                     int lastVisibleItemPosition = linearLayoutManager.findLastVisibleItemPosition();
