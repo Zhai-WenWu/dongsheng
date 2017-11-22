@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/dp_20">
+
+    <RelativeLayout
+        android:id="@+id/content_rela"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/content_one"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#333333"
+            android:textSize="@dimen/dp_18" />
+        <TextView
+            android:layout_width="@dimen/dp_18"
+            android:layout_height="@dimen/dp_19"
+            android:paddingBottom="@dimen/dp_1"
+            android:textColor="#fffffe"
+            android:text="问"
+            android:gravity="center"
+            android:textSize="@dimen/dp_14"
+            android:background="@drawable/bg_circle_red_1"
+            />
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_below="@+id/content_rela"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="已回答"
+            android:textColor="#999999"
+            android:textSize="@dimen/dp_13"/>
+        <TextView
+            android:id="@+id/content_two"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="加载中"
+            android:layout_marginLeft="@dimen/dp_14"
+            android:textColor="#999999"
+            android:textSize="@dimen/dp_13"/>
+    </LinearLayout>
+</RelativeLayout>

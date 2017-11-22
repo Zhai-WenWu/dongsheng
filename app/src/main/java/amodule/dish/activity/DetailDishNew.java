@@ -195,6 +195,7 @@ public class DetailDishNew extends BaseAppCompatActivity implements IObserver {
                 break;
             case DetailDishDataManager.DISH_DATA_STEP://步骤
                 maplist.addAll(list);
+                detailDishViewManager.handlerStepView();
                 break;
             case DetailDishDataManager.DISH_DATA_TIE:
                 detailDishViewManager.handlerRecommedAndAd(list,code,dishName);

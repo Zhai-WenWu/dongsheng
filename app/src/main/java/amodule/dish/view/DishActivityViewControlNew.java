@@ -195,7 +195,6 @@ public class  DishActivityViewControlNew {
             @Override
             public void scrollOritention(int scrollState) {
                 if(scrollState==XhScrollView.SCROLL_DOWN){//向下滑动
-
                     bar_title_1.setVisibility(View.GONE);
                 }else if(scrollState==XhScrollView.SCROLL_UP){//向上滑动
                     bar_title_1.setVisibility(View.VISIBLE);

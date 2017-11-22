@@ -23,7 +23,7 @@
 
     <include
         android:id="@+id/a_dish_detail_new_footer_hover"
-        layout="@layout/a_dish_detail_new_footer_hover"
+        layout="@layout/a_dish_detail_hove_viewr"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_50"
         android:background="@android:color/transparent"

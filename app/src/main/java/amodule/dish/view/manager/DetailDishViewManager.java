@@ -36,6 +36,7 @@ import amodule.dish.view.DishHoverViewControl;
 import amodule.dish.view.DishIngreDataShow;
 import amodule.dish.view.DishRecommedAndAdView;
 import amodule.dish.view.DishTitleViewControl;
+import amodule.dish.view.XhScrollView;
 import third.video.VideoPlayerController;
 
 /**
@@ -58,6 +59,7 @@ public class DetailDishViewManager {
     public LinearLayout layoutHeader;
     public LinearLayout layoutFooter;
     public Activity mAct;
+    private TextView textStep;
     //广告所用bar高度;图片/视频高度
     private int statusBarHeight = 0, headerLayoutHeight;
     private int titleHeight;//标题高度
@@ -68,6 +70,7 @@ public class DetailDishViewManager {
     public DishRecommedAndAdView dishRecommedAndAdView;
     public DishExplainView dishExplainView;
     public DishADBannerView dishADBannerView;
+
 
     /**
      * 对view进行基础初始化
@@ -109,14 +112,15 @@ public class DetailDishViewManager {
         layoutHeader.addView(dishAboutView);
         layoutHeader.addView(dishADBannerView);
         layoutHeader.addView(dishIngreDataShow);
-        TextView text = new TextView(activity);
-        text.setPadding(Tools.getDimen(activity, R.dimen.dp_20), Tools.getDimen(activity, R.dimen.dp_20), 0, 0);
-        text.setTextSize(Tools.getDimenSp(activity, R.dimen.sp_18));
-        text.setTextColor(Color.parseColor("#333333"));
-        TextPaint tp = text.getPaint();
+        textStep = new TextView(activity);
+        textStep.setPadding(Tools.getDimen(activity, R.dimen.dp_20), Tools.getDimen(activity, R.dimen.dp_20), 0, 0);
+        textStep.setTextSize(Tools.getDimenSp(activity, R.dimen.sp_18));
+        textStep.setTextColor(Color.parseColor("#333333"));
+        TextPaint tp = textStep.getPaint();
         tp.setFakeBoldText(true);
-        text.setText("做法");
-        layoutHeader.addView(text);
+        textStep.setText("做法");
+        textStep.setVisibility(View.GONE);
+        layoutHeader.addView(textStep);
 
         //foot
         dishExplainView = new DishExplainView(mAct);
@@ -231,6 +235,13 @@ public class DetailDishViewManager {
      */
     public void handlerBannerView(ArrayList<Map<String, String>> list) {
             if(dishADBannerView!=null)dishADBannerView.setData(list.get(0));
+    }
+
+    /**
+     * 处理步骤相关view
+     */
+    public void handlerStepView(){
+        textStep.setVisibility(View.VISIBLE);
     }
     /**
      * 处理小贴士信息
@@ -371,6 +382,7 @@ public class DetailDishViewManager {
                                 isRecored = true;
                             }
                         }
+                        oneY=(int) event.getY();
                         break;
                     case MotionEvent.ACTION_MOVE:
                         if (!isHasVideo) {
@@ -380,7 +392,7 @@ public class DetailDishViewManager {
                                 startY = tempY;
                             } else if (firstItemIndex == 0) {
                                 int y = tempY - startY;
-                                if (wm_height > 0) {
+                                if (wm_height > 0 && y > 0) {
                                     if (headerLayoutHeight + y <= wm_height * 2 / 3) {
                                         mMoveLen = y;
                                         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, headerLayoutHeight + y);
@@ -389,6 +401,9 @@ public class DetailDishViewManager {
                                 }
                             }
                         }
+                        if(oneY==0)oneY=(int) event.getY();
+                        int nowY = (int) event.getY();
+                        scrollviewState(oneY,nowY);
                         break;
                     case MotionEvent.ACTION_CANCEL:
                     case MotionEvent.ACTION_UP:
@@ -399,11 +414,21 @@ public class DetailDishViewManager {
                                 mTimer.schedule(2);
                             }
                         }
+                        oneY=0;
                         break;
                 }
                 return false;
             }
         });
+    }
+    private int oneY = 0;
+    private void scrollviewState(int oneY,int nowY){
+        Log.i("xianghaTag","oneY::"+oneY+":::nowY:::"+nowY);
+        if(nowY < oneY && ((oneY - nowY) > 1)){//向下滑动
+            bar_title_1.setVisibility(View.GONE);
+        }else if(nowY > oneY && (nowY - oneY) >=1){//向上滑动
+            bar_title_1.setVisibility(View.VISIBLE);
+        }
     }
     private int mMoveLen = 0;
     private MyTimer mTimer;

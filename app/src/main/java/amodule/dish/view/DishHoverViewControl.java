@@ -38,7 +38,7 @@ public class DishHoverViewControl implements View.OnClickListener{
     //处理底部浮动view
     private LinearLayout goodLayoutParent,hoverLayout;
     private ImageView mGoodImg,mNoLikeImg,hoverGoodImg;
-    private TextView mHoverNum,mHoverTv;
+    private TextView mHoverNum,mHoverTv,showCaipuTv;
     private String askStatus="";
     private String code,authorCode;
 
@@ -65,7 +65,9 @@ public class DishHoverViewControl implements View.OnClickListener{
         mAct.findViewById(R.id.a_dish_detail_new_footer_hover_good).setOnClickListener(this);
         mAct.findViewById(R.id.a_dish_detail_new_footer_hover_trample).setOnClickListener(this);
         mHoverTv= (TextView) mAct.findViewById(R.id.a_dish_detail_new_footer_hover_tv);
+        showCaipuTv= (TextView) mAct.findViewById(R.id.a_dish_detail_hover_show_caipu);
         mHoverTv.setOnClickListener(this);
+        showCaipuTv.setOnClickListener(this);
         mAct.findViewById(R.id.a_dish_detail_new_footer_hover_good_linear).setOnClickListener(this);
         mHoverNum = (TextView) mAct.findViewById(R.id.a_dish_detail_new_footer_hover_number);
         mGoodImg = (ImageView) mAct.findViewById(R.id.a_dish_hover_good_img);
@@ -131,6 +133,8 @@ public class DishHoverViewControl implements View.OnClickListener{
                 hoverLayout.setVisibility(View.GONE);
                 goodLayoutParent.setVisibility(View.VISIBLE);
                 break;
+            case R.id.a_dish_detail_hover_show_caipu:
+                break;
         }
     }
     /**
@@ -183,7 +187,6 @@ public class DishHoverViewControl implements View.OnClickListener{
             mGoodImg.setImageResource(R.drawable.i_good_activity);
             mNoLikeImg.setImageResource(R.drawable.i_not_good);
             hoverGoodImg.setImageResource(R.drawable.i_dish_detail_zan_good);
-
         }else if("1".equals(dishStatus)){//点踩
             mNoLikeImg.setImageResource(R.drawable.i_not_good_activity);
             mGoodImg.setImageResource(R.drawable.i_good_black);
