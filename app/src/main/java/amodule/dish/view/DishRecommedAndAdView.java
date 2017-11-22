@@ -51,7 +51,6 @@ public class DishRecommedAndAdView extends ItemBaseView implements View.OnClickL
     private RelativeLayout mRecomentLayout;
     private TextView mRecommentNum,mRelevantTv;
     private String code,mDishName;
-    private DishAdDataViewNew dishAdDataView;
     public DishRecommedAndAdView(Context context) {
         super(context, R.layout.a_dish_detail_new_footer);
     }
@@ -74,8 +73,6 @@ public class DishRecommedAndAdView extends ItemBaseView implements View.OnClickL
         mRecommentNum = (TextView)findViewById(R.id.a_dish_detail_new_tv_num);
         mRelevantTv = (TextView)findViewById(R.id.a_dish_detail_new_relevantTv);
 
-        dishAdDataView = new DishAdDataViewNew(context);
-        dishAdDataView.getRequest(XHActivityManager.getInstance().getCurrentActivity(), mAdLayout);
         mRecomentLayout.setOnClickListener(this);
         mRelevantTv.setOnClickListener(this);
         mRecommentNum.setOnClickListener(this);

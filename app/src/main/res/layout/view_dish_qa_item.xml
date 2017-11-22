@@ -14,6 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="#333333"
+            android:lineSpacingExtra="@dimen/dp_3"
             android:textSize="@dimen/dp_18" />
         <TextView
             android:layout_width="@dimen/dp_18"
@@ -23,6 +24,7 @@
             android:text="问"
             android:gravity="center"
             android:textSize="@dimen/dp_14"
+            android:visibility="gone"
             android:background="@drawable/bg_circle_red_1"
             />
     </RelativeLayout>

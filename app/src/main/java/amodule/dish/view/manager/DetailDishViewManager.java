@@ -34,6 +34,7 @@ import amodule.dish.view.DishExplainView;
 import amodule.dish.view.DishHeaderViewNew;
 import amodule.dish.view.DishHoverViewControl;
 import amodule.dish.view.DishIngreDataShow;
+import amodule.dish.view.DishQAView;
 import amodule.dish.view.DishRecommedAndAdView;
 import amodule.dish.view.DishTitleViewControl;
 import amodule.dish.view.XhScrollView;
@@ -70,6 +71,7 @@ public class DetailDishViewManager {
     public DishRecommedAndAdView dishRecommedAndAdView;
     public DishExplainView dishExplainView;
     public DishADBannerView dishADBannerView;
+    public DishQAView dishQAView;
 
 
     /**
@@ -121,7 +123,8 @@ public class DetailDishViewManager {
         textStep.setText("做法");
         textStep.setVisibility(View.GONE);
         layoutHeader.addView(textStep);
-
+        dishQAView = new DishQAView(mAct);
+        dishQAView.setVisibility(View.GONE);
         //foot
         dishExplainView = new DishExplainView(mAct);
         dishExplainView.setVisibility(View.GONE);
@@ -129,6 +132,7 @@ public class DetailDishViewManager {
         dishRecommedAndAdView.setVisibility(View.GONE);
 
         layoutFooter.addView(dishExplainView);
+        layoutFooter.addView(dishQAView);
         layoutFooter.addView(dishRecommedAndAdView);
         listView.addHeaderView(dishHeaderViewNew);
         listView.addHeaderView(layoutHeader);
@@ -253,6 +257,16 @@ public class DetailDishViewManager {
         }
     }
 
+    /**
+     * 处理问答
+     * @param list
+     */
+    public void handlerQAView(ArrayList<Map<String, String>> list){
+        if(dishQAView!=null){
+            dishQAView.setData(list);
+            dishQAView.setVisibility(View.VISIBLE);
+        }
+    }
     /**
      * 处理底部推荐
      * @param list
