@@ -3,14 +3,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activityLayout"
-    style="@style/layout"
-    android:background="@color/comment_back_color">
+    style="@style/layout">
 
     <ListView
         android:id="@+id/listview"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
-        android:background="#fffffe"
         android:divider="@android:color/transparent"
         android:dividerHeight="0dp"
         android:paddingLeft="0dp"
@@ -19,7 +17,9 @@
         android:visibility="gone"/>
     <include
         android:id="@+id/a_dish_detail_new_title"
-        layout="@layout/a_dish_detail_bar_title_new" />
+        layout="@layout/a_dish_detail_bar_title_new"
+        android:background="@color/transparent"
+         />
 
     <include
         android:id="@+id/a_dish_detail_new_footer_hover"

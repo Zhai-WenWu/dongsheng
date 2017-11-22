@@ -15,18 +15,18 @@
             style="@style/d_showDishTitle"
             android:paddingBottom="@dimen/dp_16"
             android:paddingTop="@dimen/dp_25"
-            android:paddingLeft="@dimen/dp_15"
+            android:paddingLeft="@dimen/dp_20"
             android:text="用料"
             android:textStyle="bold" />
 
         <third.mall.widget.ListViewForScrollView
             android:id="@+id/listview_scroll"
             style="@style/listNoDivider"
+            android:background="@color/transparent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/dp_15"
-            android:paddingRight="@dimen/dp_15"
-            android:background="#fffffe"
+            android:paddingLeft="@dimen/dp_20"
+            android:paddingRight="@dimen/dp_20"
             android:scrollbars="none"></third.mall.widget.ListViewForScrollView>
         <LinearLayout
             android:id="@+id/ingre_all"
