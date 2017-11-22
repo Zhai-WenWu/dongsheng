@@ -91,7 +91,7 @@ public class DishRecommedAndAdView extends ItemBaseView implements View.OnClickL
      * 处理用户相关推荐数据
      */
     public void initUserDish(ArrayList<Map<String, String>> arrayList){
-        mRelevantTv.setVisibility(View.VISIBLE);
+//        mRelevantTv.setVisibility(View.VISIBLE);
         if(arrayList.size() > 0) {
             Map<String, String> TieMap = arrayList.get(0);
             mRecommentNum.setText(TieMap.get("totalNum") + "个作品");
