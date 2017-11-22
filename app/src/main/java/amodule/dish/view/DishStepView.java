@@ -21,6 +21,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.resource.gif.GifDrawable;
 import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.Target;
 import com.xiangha.R;
 
@@ -31,6 +32,7 @@ import acore.override.view.ItemBaseView;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import aplug.basic.LoadImage;
+import aplug.basic.SubBitmapTarget;
 
 /**
  * adapter菜谱详情页
@@ -39,7 +41,7 @@ public class DishStepView extends ItemBaseView {
     public static String DISH_STYLE_STEP="dish_style_step";
     public static final  int DISH_STYLE_STEP_INDEX=1;
     private TextView itemText1;
-
+    private Map<String,String> map;
     private ImageView loadProgress;
     private ImageView itemImg1,itemGif,itemGifHint;
     private StepViewCallBack callback;
@@ -69,7 +71,8 @@ public class DishStepView extends ItemBaseView {
         itemGifHint = (ImageView) findViewById(R.id.dish_step_gif_hint);
     }
 
-    public void setData(Map<String, String> map, StepViewCallBack stepViewCallBack, int position) {
+    public void setData(Map<String, String> maps, StepViewCallBack stepViewCallBack, int position) {
+        this.map = maps;
         imgWidth=Tools.getPhoneWidth()-Tools.getDimen(context,R.dimen.dp_40);
         this.position= position;
         this.callback = stepViewCallBack;
@@ -194,7 +197,7 @@ public class DishStepView extends ItemBaseView {
                                 loadProgress.setVisibility(GONE);
                                 itemImg1.setVisibility(View.GONE);
                                 itemGifHint.setVisibility(View.GONE);
-                                setImageWH(itemGif, itemImg1.getHeight());
+//                                setImageWH(itemGif, itemImg1.getHeight());
                             }
                             return false;
                         }
@@ -216,9 +219,9 @@ public class DishStepView extends ItemBaseView {
         if(isHasVideo){
             imgView.setMinimumHeight(0);
             layoutParams = new RelativeLayout.LayoutParams((int) (imgHeight / 9.0 * 16),imgHeight);
-        }
-        else layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, imgHeight > dp_290 ? dp_290 : imgHeight);
-        int dp_12= Tools.getDimen(context, R.dimen.dp_12);
+        }else {
+            layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, imgHeight > dp_290 ? dp_290 : imgHeight);
+        }int dp_12= Tools.getDimen(context, R.dimen.dp_12);
         int dp_8= Tools.getDimen(context, R.dimen.dp_8);
         layoutParams.setMargins(0,dp_12,0,0);
         imgView.setLayoutParams(layoutParams);
