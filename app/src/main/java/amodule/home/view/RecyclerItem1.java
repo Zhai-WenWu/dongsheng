@@ -42,7 +42,7 @@ public class RecyclerItem1 extends BaseRecyclerItem {
 
     @Override
     protected void initView() {
-        int[] wh = computeItemWH(326, 406, getContext().getResources().getDimensionPixelSize(R.dimen.dp_50), 2);
+        int[] wh = computeItemWH(325, 445, getContext().getResources().getDimensionPixelSize(R.dimen.dp_50), 2);
         setLayoutParams(new RelativeLayout.LayoutParams(wh[0], wh[1]));
         invalidate();
         mLinearLayout = (LinearLayout) findViewById(R.id.linearlayout1);

@@ -45,7 +45,7 @@ import static third.ad.tools.AdPlayIdConfig.FULLSCREEN;
  */
 
 public class BannerView extends Banner implements IBindMap, IStatictusData,ISaveStatistic,IHandlerClickEvent {
-
+    public static final String KEY_ALREADY_SHOW = "alreadyshow";
     private OnBannerItemClickCallback mOnBannerItemClickCallback;
     private LayoutInflater mInflater;
     private XHAllAdControl mAdControl;
@@ -110,7 +110,10 @@ public class BannerView extends Banner implements IBindMap, IStatictusData,ISave
                             AppCommon.setAdHintClick(XHActivityManager.getInstance().getCurrentActivity(), v, mAdControl, 0, "")
                     );
                     icon.setVisibility(VISIBLE );
-                    mAdControl.onAdBind(0,view,"");
+                    if(!adMap.containsKey(KEY_ALREADY_SHOW)){
+                        adMap.put(KEY_ALREADY_SHOW,"2");
+                        mAdControl.onAdBind(0,view,"");
+                    }
                 }else{
                     view.findViewById(R.id.ad_layout).setVisibility(GONE);
                 }

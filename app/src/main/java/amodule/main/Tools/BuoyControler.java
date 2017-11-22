@@ -84,7 +84,6 @@ public class BuoyControler {
         private OnClickCallback mClickCallback;
 
         public Buoy(Activity act, @NonNull final String type){
-            Log.i("tzy","create Buoy");
             this.mAct = act;
             this.mType = type;
             // 浮动按钮
@@ -151,7 +150,6 @@ public class BuoyControler {
             open.setAnimationListener(new Animation.AnimationListener() {
                 @Override
                 public void onAnimationStart(Animation animation) {
-
                 }
 
                 @Override
@@ -161,7 +159,6 @@ public class BuoyControler {
 
                 @Override
                 public void onAnimationRepeat(Animation animation) {
-
                 }
             });
         }
