@@ -60,10 +60,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
     protected void onCreate(Bundle savedInstanceState) {
         mViewContrloer = new HomeViewControler(this);
         super.onCreate(savedInstanceState);
-        long startTime = System.currentTimeMillis();
         setContentView(R.layout.a_home_page);
-        long endtime1 = System.currentTimeMillis() - startTime;
-        Log.i("tzy","setContentView time : " + (endtime1) + "ms");
         getWindow().setFormat(PixelFormat.TRANSLUCENT);
         Main.allMain.allTab.put(KEY, this);//这个Key值不变
         //初始化
@@ -129,6 +126,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
             mViewContrloer.addOnScrollListener();
         }
         loadCacheData();
+        mViewContrloer.setTipMessage();
     }
 
     @Override
@@ -293,9 +291,6 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
     }
 
     public void refresh() {
-        if (mViewContrloer != null) {
-            mViewContrloer.refreshBouy();
-        }
         loadRemoteData();
         EntryptData(true);
     }

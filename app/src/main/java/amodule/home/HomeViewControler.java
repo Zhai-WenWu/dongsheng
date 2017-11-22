@@ -5,8 +5,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.annimon.stream.Stream;
@@ -18,13 +20,16 @@ import java.util.Map;
 import acore.logic.AppCommon;
 import acore.logic.XHClick;
 import acore.tools.StringManager;
+import acore.tools.Tools;
 import acore.widget.rvlistview.RvListView;
 import amodule._common.helper.WidgetDataHelper;
+import amodule._common.utility.WidgetUtility;
 import amodule.home.view.HomeTitleLayout;
 import amodule.main.Tools.BuoyControler;
 import amodule.main.activity.MainHome;
 import amodule.main.activity.MainHomePage;
 import amodule.main.view.item.HomeItem;
+import third.umeng.OnlineConfigControler;
 
 /**
  * Description :
@@ -36,7 +41,7 @@ import amodule.main.view.item.HomeItem;
 
 public class HomeViewControler {
 
-    public static String MODULETOPTYPE = "moduleTopType";//置顶数据的类型
+    static String MODULETOPTYPE = "moduleTopType";//置顶数据的类型
 
     private HomeHeaderControler mHeaderControler;
     private HomeFeedHeaderControler mHomeFeedHeaderControler;
@@ -45,22 +50,17 @@ public class HomeViewControler {
 
     private BuoyControler.Buoy mBuoy;
 
-    private HomeTitleLayout mTitleLayout;
     private RvListView mRvListView;
 
-    private TextView mTipMessage;
     //feed头部view
     private View mHeaderView;
 
-    protected boolean isScrollData = false;//是否滚动数据
-    protected int scrollDataIndex = -1;//滚动数据的位置
+    private boolean isScrollData = false;//是否滚动数据
+    private int scrollDataIndex = -1;//滚动数据的位置
 
     public HomeViewControler(MainHomePage activity) {
         this.mActivity = activity;
-        long startTime = System.currentTimeMillis();
         mHeaderView = LayoutInflater.from(mActivity).inflate(R.layout.a_home_header_layout, null, true);
-        long endtime1 = System.currentTimeMillis() - startTime;
-        Log.i("tzy","inflate time : " + (endtime1) + "ms");
     }
 
     public void onCreate(){
@@ -69,25 +69,16 @@ public class HomeViewControler {
 
     @SuppressLint("InflateParams")
     private void initUI() {
-        long startTime = System.currentTimeMillis();
         mHeaderControler = new HomeHeaderControler(mHeaderView);
 
-        long endtime2 = System.currentTimeMillis() - startTime;
-        Log.i("tzy","HomeHeaderControler init time : " + (endtime2) + "ms");
         mHomeFeedHeaderControler = new HomeFeedHeaderControler(mActivity);
 
-        mTipMessage = (TextView) mActivity.findViewById(R.id.tip_message);
-        long endtime3 = System.currentTimeMillis() - startTime - endtime2;
-        Log.i("tzy","HomeFeedHeaderControler init time : " + (endtime3) + "ms");
-        mTitleLayout = (HomeTitleLayout) mActivity.findViewById(R.id.home_title);
-        mTitleLayout.setStatictusData(MainHomePage.STATICTUS_ID_PULISH,"顶部topbar","");
-        mTitleLayout.postDelayed(()->{
+        HomeTitleLayout titleLayout = (HomeTitleLayout) mActivity.findViewById(R.id.home_title);
+        titleLayout.setStatictusData(MainHomePage.STATICTUS_ID_PULISH,"顶部topbar","");
+        titleLayout.postDelayed(()->{
             mBuoy = new BuoyControler.Buoy(mActivity,BuoyControler.TYPE_HOME);
             mBuoy.setClickCallback(() -> XHClick.mapStat(mActivity,MainHomePage.STATICTUS_ID_PULISH,"首页右侧侧边栏浮动图标",""));
         },4000);
-
-        long endtime4 = System.currentTimeMillis() - startTime - endtime2 - endtime3;
-        Log.i("tzy","HomeTitleLayout init time : " + (endtime4) + "ms");
 
         mRvListView = (RvListView) mActivity.findViewById(R.id.rvListview);
         mRvListView.addHeaderView(mHeaderView);
@@ -98,9 +89,8 @@ public class HomeViewControler {
             }
         });
 
-
         //设置活动icon点击
-        mTitleLayout.setOnClickActivityIconListener((v, url) -> {
+        titleLayout.setOnClickActivityIconListener((v, url) -> {
             if (TextUtils.isEmpty(url)) return;
             AppCommon.openUrl(mActivity, url, true);
         });
@@ -128,6 +118,7 @@ public class HomeViewControler {
 
     //
     public void setHeaderData(List<Map<String, String>> data, boolean isShowCache) {
+        long startTime = System.currentTimeMillis();
         if(data == null || data.isEmpty()){
             mHeaderControler.setVisibility(false);
             return;
@@ -136,6 +127,7 @@ public class HomeViewControler {
             Map<String,String> temp = StringManager.getFirstMap(map.get(WidgetDataHelper.KEY_WIDGET_DATA));
             map.put("cache","2".equals(temp.get("isCache"))?"2":"1");
         });
+        Log.i("tzy","setHeaderData handler data time = " + (System.currentTimeMillis() - startTime) + "ms");
         mHeaderControler.setData(data, isShowCache);
     }
 
@@ -181,14 +173,48 @@ public class HomeViewControler {
         }
     }
 
+    private TextView mTipMessage;
     public void setTipMessage(){
-        String configData = AppCommon.getConfigByLocal("");
+        OnlineConfigControler.getInstance().getConfigByKey(
+                OnlineConfigControler.KEY_HOMENOTICE,
+                value -> initTipMessage(value)
+        );
+    }
+
+    private void initTipMessage(String configData){
         Map<String, String> data = StringManager.getFirstMap(configData);
-        if(null == mTipMessage || null == data || data.isEmpty()){
+        if(null == data || data.isEmpty() || !"2".equals(data.get("isShow"))){
+            if(null != mTipMessage){
+                mTipMessage.setVisibility(View.GONE);
+            }
             return;
         }
-        //TODO 设置文本&文字颜色&背景颜色
-
+        if(null == mTipMessage){
+            mTipMessage = new TextView(mActivity);
+            mTipMessage.setGravity(Gravity.CENTER);
+            mTipMessage.setTextSize(16);
+            int padding = Tools.getDimen(mActivity,R.dimen.dp_20);
+            mTipMessage.setPadding(padding,padding,padding,padding);
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+            layoutParams.addRule(RelativeLayout.BELOW,R.id.home_title);
+            mTipMessage.setLayoutParams(layoutParams);
+        }
+        //获取文本
+        String textValue = data.get("text");
+        if(TextUtils.isEmpty(textValue)){
+            return;
+        }
+        mTipMessage.setText(textValue);
+        //设置背景颜色
+        String bgColorValue = data.get("backColor");
+        mTipMessage.setBackgroundColor(WidgetUtility.parseColor(bgColorValue));
+        //设置文本颜色
+        String textColorValue = data.get("textColor");
+        mTipMessage.setTextColor(WidgetUtility.parseColor(textColorValue));
+        if(null != mActivity && null != mActivity.rl){
+            if(mActivity.rl.indexOfChild(mTipMessage) < 0)
+                mActivity.rl.addView(mTipMessage);
+        }
     }
 
     /*--------------------------------------------- Get&Set ---------------------------------------------*/
