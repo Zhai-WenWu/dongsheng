@@ -89,10 +89,13 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,
         if (getChildCount() == 0 && style != null) {
             switch (style) {
                 case "1":
+                case "6":
                     inflate(getContext(), R.layout.horizontal_recyclerview_layout1, this);
                     mRecyclerAdapter = new HorizontalAdapter1(getContext(), list);
                     break;
                 case "2":
+                case "4":
+                case "5":
                     inflate(getContext(), R.layout.horizontal_recyclerview_layout2, this);
                     mRecyclerAdapter = new HorizontalAdapter2(getContext(), list);
                     break;
