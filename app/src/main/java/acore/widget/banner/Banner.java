@@ -620,8 +620,12 @@ public class Banner extends RelativeLayout {
         initPoints();
         mViewPager.getAdapter().notifyDataSetChanged();
         mViewPager.setCurrentItem(0, false);
-        if (mData.size() > 1)
+        if (mData.size() > 1){
             goScroll();
+            mPointContainerLl.setVisibility(VISIBLE);
+        }else{
+            mPointContainerLl.setVisibility(INVISIBLE);
+        }
     }
 
 

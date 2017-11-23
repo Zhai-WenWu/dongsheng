@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical">
 
     <amodule._common.plugin.WidgetVerticalLayout
         android:id="@+id/banner_widget"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -18,6 +20,7 @@
 
     <amodule._common.plugin.WidgetVerticalLayout
         android:id="@+id/funcnav1_widget"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -30,6 +33,7 @@
 
     <amodule._common.plugin.WidgetVerticalLayout
         android:id="@+id/funcnav2_widget"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -42,6 +46,7 @@
 
     <amodule._common.plugin.WidgetVerticalLayout
         android:id="@+id/horizontal1_widget"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -54,6 +59,7 @@
 
     <amodule._common.plugin.WidgetVerticalLayout
         android:id="@+id/horizontal2_widget"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -66,6 +72,7 @@
 
     <amodule._common.plugin.WidgetVerticalLayout
         android:id="@+id/horizontal3_widget"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="@dimen/dp_20">

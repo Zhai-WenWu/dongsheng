@@ -63,7 +63,7 @@ public class HomeViewControler {
         mHeaderView = LayoutInflater.from(mActivity).inflate(R.layout.a_home_header_layout, null, true);
     }
 
-    public void onCreate(){
+    public void onCreate() {
         initUI();
     }
 
@@ -74,11 +74,11 @@ public class HomeViewControler {
         mHomeFeedHeaderControler = new HomeFeedHeaderControler(mActivity);
 
         HomeTitleLayout titleLayout = (HomeTitleLayout) mActivity.findViewById(R.id.home_title);
-        titleLayout.setStatictusData(MainHomePage.STATICTUS_ID_PULISH,"顶部topbar","");
-        titleLayout.postDelayed(()->{
-            mBuoy = new BuoyControler.Buoy(mActivity,BuoyControler.TYPE_HOME);
-            mBuoy.setClickCallback(() -> XHClick.mapStat(mActivity,MainHomePage.STATICTUS_ID_PULISH,"首页右侧侧边栏浮动图标",""));
-        },4000);
+        titleLayout.setStatictusData(MainHomePage.STATICTUS_ID_PULISH, "顶部topbar", "");
+        titleLayout.postDelayed(() -> {
+            mBuoy = new BuoyControler.Buoy(mActivity, BuoyControler.TYPE_HOME);
+            mBuoy.setClickCallback(() -> XHClick.mapStat(mActivity, MainHomePage.STATICTUS_ID_PULISH, "首页右侧侧边栏浮动图标", ""));
+        }, 4000);
 
         mRvListView = (RvListView) mActivity.findViewById(R.id.rvListview);
         mRvListView.addHeaderView(mHeaderView);
@@ -96,7 +96,7 @@ public class HomeViewControler {
         });
     }
 
-    public void addOnScrollListener(){
+    public void addOnScrollListener() {
         RecyclerView.LayoutManager layoutManager = mRvListView.getLayoutManager();
         if (layoutManager != null && layoutManager instanceof LinearLayoutManager) {
             final LinearLayoutManager linearLayoutManager = (LinearLayoutManager) layoutManager;
@@ -104,9 +104,10 @@ public class HomeViewControler {
                 @Override
                 public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                     super.onScrollStateChanged(recyclerView, newState);
-                    if(RecyclerView.SCROLL_STATE_IDLE == newState){
-                        if(mBuoy != null && !mBuoy.isMove())
-                            mBuoy.executeOpenAnim();
+                    if (RecyclerView.SCROLL_STATE_IDLE == newState
+                            && mBuoy != null
+                            && !mBuoy.isMove()){
+                        mBuoy.executeOpenAnim();
                     }
                 }
 
@@ -118,7 +119,7 @@ public class HomeViewControler {
                     if (scrollDataIndex < (lastVisibleItemPosition - 1)) {
                         scrollDataIndex = (lastVisibleItemPosition - 1);
                     }
-                    if(mBuoy != null && mBuoy.isMove())
+                    if (mBuoy != null && mBuoy.isMove())
                         mBuoy.executeCloseAnim();
                 }
             });
@@ -128,15 +129,15 @@ public class HomeViewControler {
     //
     public void setHeaderData(List<Map<String, String>> data, boolean isShowCache) {
         long startTime = System.currentTimeMillis();
-        if(data == null || data.isEmpty()){
+        if (data == null || data.isEmpty()) {
             mHeaderControler.setVisibility(false);
             return;
         }
         Stream.of(data).forEach(map -> {
-            Map<String,String> temp = StringManager.getFirstMap(map.get(WidgetDataHelper.KEY_WIDGET_DATA));
-            map.put("cache","2".equals(temp.get("isCache"))?"2":"1");
+            Map<String, String> temp = StringManager.getFirstMap(map.get(WidgetDataHelper.KEY_WIDGET_DATA));
+            map.put("cache", "2".equals(temp.get("isCache")) ? "2" : "1");
         });
-        Log.i("tzy","setHeaderData handler data time = " + (System.currentTimeMillis() - startTime) + "ms");
+        Log.i("tzy", "setHeaderData handler data time = " + (System.currentTimeMillis() - startTime) + "ms");
         mHeaderControler.setData(data, isShowCache);
     }
 
@@ -151,11 +152,11 @@ public class HomeViewControler {
         }
     }
 
-    public void refreshBouy(){
-        if(mBuoy != null){
+    public void refreshBouy() {
+        if (mBuoy != null) {
             mBuoy.refresh(true);
-        }else{
-            mBuoy = new BuoyControler.Buoy(mActivity,BuoyControler.TYPE_HOME);
+        } else {
+            mBuoy = new BuoyControler.Buoy(mActivity, BuoyControler.TYPE_HOME);
         }
     }
 
@@ -163,7 +164,7 @@ public class HomeViewControler {
         mHeaderControler.setFeedheaderVisibility(isShow);
     }
 
-    public void setFeedTitleText(String text){
+    public void setFeedTitleText(String text) {
         mHeaderControler.setFeedTitleText(text);
     }
 
@@ -172,7 +173,7 @@ public class HomeViewControler {
      */
     public void setStatisticShowNum() {
         //头部统计数据存储
-        if(mHeaderControler != null){
+        if (mHeaderControler != null) {
             mHeaderControler.saveStatisticData();
         }
         //列表
@@ -183,34 +184,35 @@ public class HomeViewControler {
     }
 
     private TextView mTipMessage;
-    public void setTipMessage(){
+
+    public void setTipMessage() {
         OnlineConfigControler.getInstance().getConfigByKey(
                 OnlineConfigControler.KEY_HOMENOTICE,
                 value -> initTipMessage(value)
         );
     }
 
-    private void initTipMessage(String configData){
+    private void initTipMessage(String configData) {
         Map<String, String> data = StringManager.getFirstMap(configData);
-        if(null == data || data.isEmpty() || !"2".equals(data.get("isShow"))){
-            if(null != mTipMessage){
+        if (null == data || data.isEmpty() || !"2".equals(data.get("isShow"))) {
+            if (null != mTipMessage) {
                 mTipMessage.setVisibility(View.GONE);
             }
             return;
         }
-        if(null == mTipMessage){
+        if (null == mTipMessage) {
             mTipMessage = new TextView(mActivity);
             mTipMessage.setGravity(Gravity.CENTER);
             mTipMessage.setTextSize(16);
-            int padding = Tools.getDimen(mActivity,R.dimen.dp_20);
-            mTipMessage.setPadding(padding,padding,padding,padding);
-            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
-            layoutParams.addRule(RelativeLayout.BELOW,R.id.home_title);
+            int padding = Tools.getDimen(mActivity, R.dimen.dp_20);
+            mTipMessage.setPadding(padding, padding, padding, padding);
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+            layoutParams.addRule(RelativeLayout.BELOW, R.id.home_title);
             mTipMessage.setLayoutParams(layoutParams);
         }
         //获取文本
         String textValue = data.get("text");
-        if(TextUtils.isEmpty(textValue)){
+        if (TextUtils.isEmpty(textValue)) {
             return;
         }
         mTipMessage.setText(textValue);
@@ -220,8 +222,8 @@ public class HomeViewControler {
         //设置文本颜色
         String textColorValue = data.get("textColor");
         mTipMessage.setTextColor(WidgetUtility.parseColor(textColorValue));
-        if(null != mActivity && null != mActivity.rl){
-            if(mActivity.rl.indexOfChild(mTipMessage) < 0)
+        if (null != mActivity && null != mActivity.rl) {
+            if (mActivity.rl.indexOfChild(mTipMessage) < 0)
                 mActivity.rl.addView(mTipMessage);
         }
     }

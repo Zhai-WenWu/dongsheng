@@ -247,12 +247,9 @@ public class HomeDataControler {
             });
             //去掉全部的广告位置
             ArrayList<Map<String, String>> listTemp = new ArrayList<>();
-            Stream.of(mData).forEach(map -> {
-                if (map.containsKey("adstyle")
-                        && "ad".equals(map.get("adstyle"))) {
-                    listTemp.add(map);
-                }
-            });
+            Stream.of(mData)
+                    .filter(map -> map.containsKey("adstyle") && "ad".equals(map.get("adstyle")))
+                    .forEach(map -> listTemp.add(map));
             Log.i(tag_yu, "删除广告");
             if (listTemp.size() > 0) {
                 mData.removeAll(listTemp);

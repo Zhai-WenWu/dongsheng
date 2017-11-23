@@ -35,7 +35,6 @@ import amodule._common.helper.WidgetDataHelper;
 import third.ad.scrollerAd.XHAllAdControl;
 
 import static third.ad.tools.AdPlayIdConfig.ARTICLE_CONTENT_BOTTOM;
-import static third.ad.tools.AdPlayIdConfig.FULLSCREEN;
 
 /**
  * Description :
@@ -47,7 +46,6 @@ import static third.ad.tools.AdPlayIdConfig.FULLSCREEN;
 
 public class BannerView extends Banner implements IBindMap, IStatictusData,ISaveStatistic,IHandlerClickEvent {
     public static final String KEY_ALREADY_SHOW = "alreadyshow";
-    private OnBannerItemClickCallback mOnBannerItemClickCallback;
     private LayoutInflater mInflater;
     private XHAllAdControl mAdControl;
     private ArrayList<String> mAdIDArray = new ArrayList<>();
@@ -89,6 +87,10 @@ public class BannerView extends Banner implements IBindMap, IStatictusData,ISave
             setVisibility(GONE);
             return;
         }
+        //TODO
+        Map<String,String> only = arrayList.get(0);
+        arrayList.clear();
+        arrayList.add(only);
         //添加数据
         Stream.of(arrayList).forEach(map -> {
             map.put("isAd", "1");
@@ -165,12 +167,8 @@ public class BannerView extends Banner implements IBindMap, IStatictusData,ISave
                 mAdControl.onAdClick(adView,0,"");
                 return;
             }
-            if (mOnBannerItemClickCallback != null) {
-                mOnBannerItemClickCallback.onBannerItemClick(position, arrayList.get(position));
-            } else {
-                String url = arrayList.get(position).get("url");
-                AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), url, true);
-            }
+            String url = arrayList.get(position).get("url");
+            AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), url, true);
             if (!TextUtils.isEmpty(id) && !TextUtils.isEmpty(twoLevel)) {
                 XHClick.mapStat(getContext(), id, twoLevel, threeLevel + position);
             }
@@ -187,14 +185,14 @@ public class BannerView extends Banner implements IBindMap, IStatictusData,ISave
                     (final Map<String, String> map) ->
                             Stream.of(mAdIDArray).forEach(key -> {
                                 String adStr = map.get(key);
-                                sendAdMessage(adStr,mAdIDArray.indexOf(key));
+//                                sendAdMessage(adStr);
                             }),
                     XHActivityManager.getInstance().getCurrentActivity(),
                     "wz_wz");
         }
     }
 
-    protected void sendAdMessage(String adStr, int type) {
+    protected void sendAdMessage(String adStr) {
         Map<String, String> adDataMap = StringManager.getFirstMap(adStr);
         post(() -> {
             Log.i("tzy","adDataMap = " + adDataMap);
@@ -265,11 +263,4 @@ public class BannerView extends Banner implements IBindMap, IStatictusData,ISave
         return false;
     }
 
-    public interface OnBannerItemClickCallback {
-        void onBannerItemClick(int position, Map<String, String> map);
-    }
-
-    public void setOnBannerItemClickCallback(OnBannerItemClickCallback onBannerItemClickCallback) {
-        mOnBannerItemClickCallback = onBannerItemClickCallback;
-    }
 }

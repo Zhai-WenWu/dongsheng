@@ -9,6 +9,7 @@
         android:id="@+id/line"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_5"
+        android:visibility="gone"
         android:background="#F2F2F2"/>
 
     <TextView

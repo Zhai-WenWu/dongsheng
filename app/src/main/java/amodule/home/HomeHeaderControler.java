@@ -50,7 +50,7 @@ public class HomeHeaderControler implements ISaveStatistic {
         if(null == array || array.isEmpty()) return;
         String[] twoLevelArray = {"轮播banner","功能入口","功能入口","精品厨艺","限时抢购","精选菜单"};
         String[] threeLevelArray = {"轮播banner位置","","","精品厨艺位置","限时抢购位置","精选菜单位置"};
-        setVisibility(true);
+        setVisibility(false);
         final int length = Math.min(array.size(),mLayouts.length);
         for(int index = 0 ; index < length ; index ++){
             Map<String,String> map = array.get(index);
@@ -61,6 +61,13 @@ public class HomeHeaderControler implements ISaveStatistic {
             mLayouts[index].setData(map);
             mLayouts[index].setStatictusData(MainHomePage.STATICTUS_ID_HOMEPAGE,twoLevelArray[index],threeLevelArray[index]);
             mLayouts[index].setVisibility(View.VISIBLE);
+        }
+        mHeaderView.findViewById(R.id.line).setVisibility(View.GONE);
+        for(WidgetVerticalLayout itemLayout:mLayouts){
+            if(itemLayout.getVisibility() == View.VISIBLE){
+                mHeaderView.findViewById(R.id.line).setVisibility(View.VISIBLE);
+                break;
+            }
         }
     }
 
