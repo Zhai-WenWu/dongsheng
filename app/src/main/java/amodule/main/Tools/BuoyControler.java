@@ -160,7 +160,7 @@ public class BuoyControler {
             imageButton = new ImageView(mAct);
             int width = Tools.getDimen(mAct, R.dimen.dp_45);
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(width, width);
-            params.setMargins(params.leftMargin, params.topMargin, params.rightMargin, Tools.getDimen(mAct,R.dimen.dp_40));
+            params.setMargins(params.leftMargin, params.topMargin, Tools.getDimen(mAct,R.dimen.dp_11), Tools.getDimen(mAct,R.dimen.dp_34));
             params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
             params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
             RelativeLayout rootLayout = (RelativeLayout) mAct.findViewById(R.id.activityLayout);

@@ -11,7 +11,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:padding="@dimen/dp_20"
+        android:paddingLeft="@dimen/dp_20"
+        android:paddingRight="@dimen/dp_20"
+        android:paddingTop="@dimen/dp_10"
+        android:paddingBottom="@dimen/dp_10"
         android:visibility="gone"
         tools:text="服务器升级中，请您稍后重试"
         tools:visibility="visible"/>
@@ -85,7 +88,6 @@
         android:id="@+id/horizontal3_widget"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/dp_20"
         android:visibility="gone">
 
         <include
@@ -100,6 +102,6 @@
         layout="@layout/a_home_feed_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"/>
+        android:visibility="visible"/>
 
 </LinearLayout>

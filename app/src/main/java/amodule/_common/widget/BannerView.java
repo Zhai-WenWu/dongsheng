@@ -87,10 +87,6 @@ public class BannerView extends Banner implements IBindMap, IStatictusData,ISave
             setVisibility(GONE);
             return;
         }
-        //TODO
-        Map<String,String> only = arrayList.get(0);
-        arrayList.clear();
-        arrayList.add(only);
         //添加数据
         Stream.of(arrayList).forEach(map -> {
             map.put("isAd", "1");
@@ -180,7 +176,6 @@ public class BannerView extends Banner implements IBindMap, IStatictusData,ISave
 
     public void initAdData(){
         if(mAdControl == null && ToolsDevice.isNetworkAvailable(getContext())){
-            //TODO test
             mAdControl = new XHAllAdControl(mAdIDArray,
                     (final Map<String, String> map) ->
                             Stream.of(mAdIDArray).forEach(key -> {
@@ -195,7 +190,6 @@ public class BannerView extends Banner implements IBindMap, IStatictusData,ISave
     protected void sendAdMessage(String adStr) {
         Map<String, String> adDataMap = StringManager.getFirstMap(adStr);
         post(() -> {
-            Log.i("tzy","adDataMap = " + adDataMap);
             String imageUrl = adDataMap.get("imgUrl");
             if(TextUtils.isEmpty(imageUrl)) return;
             adMap = new HashMap<>();
