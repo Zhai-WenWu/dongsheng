@@ -139,6 +139,12 @@ public class VideoPlayerController {
             public void onQuitFullscreen(String url, Object... objects) {
                 super.onQuitFullscreen(url, objects);
                 orientationUtils.backToProtVideo();
+                Resources resources = context.getResources();
+                videoPlayer.setBottomProgressBarDrawable(resources.getDrawable(R.drawable.video_new_progress));
+                videoPlayer.setDialogVolumeProgressBar(resources.getDrawable(R.drawable.video_new_volume_progress_bg));
+                videoPlayer.setDialogProgressBar(resources.getDrawable(R.drawable.video_new_progress));
+                videoPlayer.setBottomShowProgressBarDrawable(resources.getDrawable(R.drawable.video_new_seekbar_progress),
+                        resources.getDrawable(R.drawable.video_new_seekbar_thumb));
             }
         });
 
