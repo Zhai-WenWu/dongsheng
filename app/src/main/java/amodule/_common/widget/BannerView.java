@@ -1,6 +1,7 @@
 package amodule._common.widget;
 
 import android.content.Context;
+import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -50,7 +51,9 @@ public class BannerView extends Banner implements IBindMap, IStatictusData,ISave
     private LayoutInflater mInflater;
     private XHAllAdControl mAdControl;
     private ArrayList<String> mAdIDArray = new ArrayList<>();
+    private int showMinH,showMaxH;
 
+    private View adView = null;
     private Map<String,String> adMap = new HashMap<>();
 
     public BannerView(Context context) {
@@ -67,13 +70,15 @@ public class BannerView extends Banner implements IBindMap, IStatictusData,ISave
         int height = (int) (ToolsDevice.getWindowPx(context).widthPixels * 336 / 750f);
         setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height));
         setVisibility(GONE);
+        mAdIDArray.add(ARTICLE_CONTENT_BOTTOM);
+        showMinH = Tools.getStatusBarHeight(context) + Tools.getDimen(context,R.dimen.dp_45) - height;
+        showMaxH = ToolsDevice.getWindowPx(getContext()).heightPixels - Tools.getDimen(context,R.dimen.dp_50);
     }
 
     ArrayList<Map<String, String>> arrayList = new ArrayList<>();
     @Override
     public void setData(Map<String, String> data) {
         initAdData();
-//        Log.i("tzy","banner data = " + data.toString());
         if (null == data || data.isEmpty()) {
             setVisibility(GONE);
             return;
@@ -84,11 +89,12 @@ public class BannerView extends Banner implements IBindMap, IStatictusData,ISave
             setVisibility(GONE);
             return;
         }
-
+        //添加数据
         Stream.of(arrayList).forEach(map -> {
             map.put("isAd", "1");
             map.put("title", "");
         });
+        //创建数据适配器
         BannerAdapter<Map<String, String>> bannerAdapter = new BannerAdapter<Map<String, String>>(arrayList) {
             @Override
             protected void bindTips(TextView tv, Map<String, String> stringStringMap) {
@@ -103,6 +109,7 @@ public class BannerView extends Banner implements IBindMap, IStatictusData,ISave
                         .error(R.drawable.i_nopic)
                         .into(imageView);
                 if("2".equals(data.get("isAd"))){
+                    adView = view;
                     TextView textView = (TextView) view.findViewById(R.id.title);
                     textView.setText(TextUtils.isEmpty(data.get("title")) ? "" : data.get("title"));
                     ImageView icon = (ImageView) view.findViewById(R.id.ad_icon);
@@ -110,10 +117,6 @@ public class BannerView extends Banner implements IBindMap, IStatictusData,ISave
                             AppCommon.setAdHintClick(XHActivityManager.getInstance().getCurrentActivity(), v, mAdControl, 0, "")
                     );
                     icon.setVisibility(VISIBLE );
-                    if(!adMap.containsKey(KEY_ALREADY_SHOW)){
-                        adMap.put(KEY_ALREADY_SHOW,"2");
-                        mAdControl.onAdBind(0,view,"");
-                    }
                 }else{
                     view.findViewById(R.id.ad_layout).setVisibility(GONE);
                 }
@@ -131,11 +134,35 @@ public class BannerView extends Banner implements IBindMap, IStatictusData,ISave
         }
         setBannerAdapter(bannerAdapter);
         notifyDataHasChanged();
+        addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                int[] location = new int[2];
+                getLocationInWindow(location);
+                if(location[1] > showMinH && location[1] < showMaxH
+                        && arrayList.contains(adMap)
+                        && arrayList.indexOf(adMap) == position
+                        && !adMap.isEmpty()
+                        && !adMap.containsKey(KEY_ALREADY_SHOW)){
+                    adMap.put(KEY_ALREADY_SHOW,"2");
+                    mAdControl.onAdBind(0,adView,"");
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         setOnBannerItemClickListener(position -> {
             if (position < 0 || position >= arrayList.size()) return;
             Map<String, String> dataMapTemp = arrayList.get(position);
             if ("2".equals(dataMapTemp.get("isAd"))) {
-                mAdControl.onAdClick(0,"0");
+                mAdControl.onAdClick(adView,0,"");
                 return;
             }
             if (mOnBannerItemClickCallback != null) {
@@ -156,17 +183,14 @@ public class BannerView extends Banner implements IBindMap, IStatictusData,ISave
     public void initAdData(){
         if(mAdControl == null && ToolsDevice.isNetworkAvailable(getContext())){
             //TODO test
-            mAdIDArray.add(ARTICLE_CONTENT_BOTTOM);
             mAdControl = new XHAllAdControl(mAdIDArray,
                     (final Map<String, String> map) ->
                             Stream.of(mAdIDArray).forEach(key -> {
                                 String adStr = map.get(key);
                                 sendAdMessage(adStr,mAdIDArray.indexOf(key));
-                            })
-                    ,
+                            }),
                     XHActivityManager.getInstance().getCurrentActivity(),
-                    "");
-            mAdControl.getAllAdData();
+                    "wz_wz");
         }
     }
 

@@ -64,15 +64,10 @@ public class HomeDataControler {
 
     //读取缓存数据
     public void loadCacheHomeData(InternetCallback callback) {
-//        final Handler handler = new Handler(Looper.getMainLooper());
-//        new Thread(() -> {
-            String hoemDataStr = FileManager.readFile(CACHE_PATH).trim();
-            if (!TextUtils.isEmpty(hoemDataStr)) {
-//                handler.post(() ->
-                        callback.loaded(ReqEncyptInternet.REQ_OK_STRING, "", hoemDataStr);
-//                );
-            }
-//        }).start();
+        String hoemDataStr = FileManager.readFile(CACHE_PATH).trim();
+        if (!TextUtils.isEmpty(hoemDataStr)) {
+            callback.loaded(ReqEncyptInternet.REQ_OK_STRING, "", hoemDataStr);
+        }
     }
 
     public void saveCacheHomeData(String data) {

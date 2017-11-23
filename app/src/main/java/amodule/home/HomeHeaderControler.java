@@ -1,6 +1,5 @@
 package amodule.home;
 
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
@@ -73,8 +72,9 @@ public class HomeHeaderControler implements ISaveStatistic {
 
     @Override
     public void saveStatisticData() {
-        for(WidgetVerticalLayout layout:mLayouts)
+        for(WidgetVerticalLayout layout:mLayouts){
             layout.saveStatisticData();
+        }
     }
 
     void setFeedheaderVisibility(boolean feedheaderVisibility) {
@@ -82,9 +82,6 @@ public class HomeHeaderControler implements ISaveStatistic {
     }
 
     void setFeedTitleText(String text){
-        if(null == mFeedTitle || TextUtils.isEmpty(text)){
-            return;
-        }
-        mFeedTitle.setText(text);
+        WidgetUtility.setTextToView(mFeedTitle,text);
     }
 }

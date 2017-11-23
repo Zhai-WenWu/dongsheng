@@ -59,11 +59,17 @@ public class RecyclerItem2 extends BaseRecyclerItem {
     protected void onDataReady(Map<String, String> data) {
         setViewImage(mImageView1, data.get("img"));
         WidgetUtility.setTextToView(mTextView1, data.get("text1"));
-        WidgetUtility.setTextToView(mTextView2, "¥" + data.get("text2"));
-        String t3 = "¥" + data.get("text3");
-        Spannable spanStrikethrough = new SpannableString(t3);
-        StrikethroughSpan stSpan = new StrikethroughSpan();  //设置删除线样式
-        spanStrikethrough.setSpan(stSpan, 0, t3.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
-        WidgetUtility.setTextToView(mTextView3, spanStrikethrough);
+        WidgetUtility.setTextToView(mTextView2, data.get("text2"));
+        String t3 = data.get("text3");
+        if(null != mTextView3){
+            if(!TextUtils.isEmpty(t3)){
+                Spannable spanStrikethrough = new SpannableString(t3);
+                StrikethroughSpan stSpan = new StrikethroughSpan();  //设置删除线样式
+                spanStrikethrough.setSpan(stSpan, 0, t3.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+                WidgetUtility.setTextToView(mTextView3, spanStrikethrough);
+            }else{
+                mTextView3.setVisibility(GONE);
+            }
+        }
     }
 }

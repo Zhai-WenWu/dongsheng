@@ -16,6 +16,7 @@ import java.util.Map;
 
 import acore.tools.StringManager;
 import amodule._common.helper.WidgetDataHelper;
+import amodule._common.utility.WidgetUtility;
 import amodule._common.widget.baseview.BaseSubTitleView;
 
 /**
@@ -66,31 +67,15 @@ public class CountDownSubTitleView extends BaseSubTitleView {
     @Override
     protected void onDataReady(Map<String, String> map) {
         Map<String, String> titleMap = StringManager.getFirstMap(map.get(WidgetDataHelper.KEY_TITLE));
-        setTitle1Text(titleMap.get("text1"));
+        WidgetUtility.setTextToView(mTitle1,titleMap.get("text1"));
         String millisInFuture = titleMap.get("endTime");
-        if(TextUtils.isEmpty(millisInFuture))
+        if(TextUtils.isEmpty(millisInFuture)){
+            findViewById(R.id.time_layout).setVisibility(GONE);
             return;
+        }
         mMillisInFuture = Integer.parseInt(millisInFuture) * 1000;
         mDataReady = true;
         startCountDownTime();
-    }
-
-    public void setTitle1Text(@Nullable CharSequence text) {
-        if (mTitle1 != null) {
-            mTitle1.setText(text);
-        }
-    }
-
-    public void setTitle1Text(int resid) {
-        if (mTitle1 != null) {
-            mTitle1.setText(resid);
-        }
-    }
-
-    public void setTitle1TextColor(int color) {
-        if (mTitle1 != null) {
-            mTitle1.setTextColor(color);
-        }
     }
 
     public void startCountDownTime() {

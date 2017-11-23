@@ -177,6 +177,7 @@ public class BuoyControler {
             close.setFillEnabled(true);
             close.setFillAfter(true);
             close.setDuration(300);
+
             open = new TranslateAnimation(0 + floatAnimation, 0, 0, 0);
             open.setFillEnabled(true);
             open.setFillAfter(true);
@@ -209,7 +210,7 @@ public class BuoyControler {
             imageButton.setOnClickListener(v -> {
                 if (isMove) {
                     AppCommon.openUrl(mAct, floatUrl, true);
-                    executeCloseAnim();
+//                    executeCloseAnim();
                     if (mClickCallback != null) {
                         mClickCallback.onClick();
                     }
