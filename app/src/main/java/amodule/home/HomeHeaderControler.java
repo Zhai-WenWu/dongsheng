@@ -1,5 +1,6 @@
 package amodule.home;
 
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.TextView;
 
@@ -25,7 +26,7 @@ public class HomeHeaderControler implements ISaveStatistic {
 
     private View mHeaderView,mFeedHeaderView;
 
-    private TextView mFeedTitle;
+    private TextView mFeedTitle,mTipMessage;
 
     private WidgetVerticalLayout[] mLayouts = new WidgetVerticalLayout[6];
 
@@ -44,6 +45,7 @@ public class HomeHeaderControler implements ISaveStatistic {
 
         mFeedHeaderView = header.findViewById(R.id.a_home_feed_title);
         mFeedTitle = (TextView) header.findViewById(R.id.feed_title);
+        mTipMessage = (TextView) header.findViewById(R.id.tip_message);
     }
 
     public void setData(List<Map<String,String>> array,boolean isShowCache){
@@ -90,5 +92,10 @@ public class HomeHeaderControler implements ISaveStatistic {
 
     void setFeedTitleText(String text){
         WidgetUtility.setTextToView(mFeedTitle,text);
+    }
+
+    @NonNull
+    public TextView getTipMessage() {
+        return mTipMessage;
     }
 }

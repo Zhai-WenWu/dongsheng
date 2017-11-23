@@ -126,7 +126,8 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
             mViewContrloer.addOnScrollListener();
         }
         loadCacheData();
-        //TODO mViewContrloer.setTipMessage();
+        //TODO
+        mViewContrloer.setTipMessage();
     }
 
     @Override

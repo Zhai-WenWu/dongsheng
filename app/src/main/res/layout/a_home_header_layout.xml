@@ -1,15 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tip_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="@dimen/dp_20"
+        android:visibility="gone"
+        tools:text="服务器升级中，请您稍后重试"
+        tools:visibility="visible"/>
 
     <amodule._common.plugin.WidgetVerticalLayout
         android:id="@+id/banner_widget"
-        android:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:visibility="gone">
 
         <include
             layout="@layout/widget_banner"
@@ -20,9 +31,9 @@
 
     <amodule._common.plugin.WidgetVerticalLayout
         android:id="@+id/funcnav1_widget"
-        android:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:visibility="gone">
 
         <include
             layout="@layout/widget_func_nav1"
@@ -33,9 +44,9 @@
 
     <amodule._common.plugin.WidgetVerticalLayout
         android:id="@+id/funcnav2_widget"
-        android:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:visibility="gone">
 
         <include
             layout="@layout/widget_func_nav2"
@@ -46,9 +57,9 @@
 
     <amodule._common.plugin.WidgetVerticalLayout
         android:id="@+id/horizontal1_widget"
-        android:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:visibility="gone">
 
         <include
             layout="@layout/widget_horizontal"
@@ -59,9 +70,9 @@
 
     <amodule._common.plugin.WidgetVerticalLayout
         android:id="@+id/horizontal2_widget"
-        android:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:visibility="gone">
 
         <include
             layout="@layout/widget_horizontal"
@@ -72,10 +83,10 @@
 
     <amodule._common.plugin.WidgetVerticalLayout
         android:id="@+id/horizontal3_widget"
-        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/dp_20">
+        android:paddingBottom="@dimen/dp_20"
+        android:visibility="gone">
 
         <include
             layout="@layout/widget_horizontal"

@@ -207,8 +207,8 @@ public class Main extends Activity implements OnClickListener, IObserver {
         if (mUnreadCountListener == null) {
             mUnreadCountListener = count -> {
                 if (count >= 0) {
-                    if (nowTab == 3 || allTab.containsKey("MyMessage")) {
-                        MyMessage myMessage = (MyMessage) allTab.get("MyMessage");
+                    if (nowTab == 3 || allTab.containsKey(MyMessage.KEY)) {
+                        MyMessage myMessage = (MyMessage) allTab.get(MyMessage.KEY);
                         myMessage.setQiYvNum(count);
                     }
                     Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + count);
@@ -673,12 +673,12 @@ public class Main extends Activity implements OnClickListener, IObserver {
             }
         }
         if (nowTab == 0 && index != 0) {//当前是首页，切换到其他页面
-            if (allTab.containsKey("MainIndex")) {
+            if (allTab.containsKey(MainHomePage.KEY)) {
                 XHClick.newHomeStatictis(true, null);
             }
         } else if (nowTab != 0 && index == 0) {//当前是其他页面，切换到首页
-            if (allTab.containsKey("MainIndex")) {
-//                MainHomePage mainIndex = (MainHomePage) allTab.get("MainIndex");
+            if (allTab.containsKey(MainHomePage.KEY)) {
+//                MainHomePage mainIndex = (MainHomePage) allTab.get(MainHomePage.KEY);
 //                mainIndex.onResumeFake();
             }
         }
@@ -748,19 +748,19 @@ public class Main extends Activity implements OnClickListener, IObserver {
     public void onClick(View v) {
         for (int i = 0; i < tabViews.length; i++) {
             if (v == tabViews[i].findViewById(R.id.tab_linearLayout) && allTab.size() > 0) {
-                if (i == 0 && allTab.containsKey("MainIndex") && i == nowTab) {
-                    MainHomePage mainIndex = (MainHomePage) allTab.get("MainIndex");
+                if (i == 0 && allTab.containsKey(MainHomePage.KEY) && i == nowTab) {
+                    MainHomePage mainIndex = (MainHomePage) allTab.get(MainHomePage.KEY);
                     mainIndex.refresh();
-                } else if (i == 1 && allTab.containsKey("MainMall") && tabHost.getCurrentTab() == i) {  //当所在页面正式你要刷新的页面,就直接刷新
-                    MainMall mall = (MainMall) allTab.get("MainMall");
+                } else if (i == 1 && allTab.containsKey(MainMall.KEY) && tabHost.getCurrentTab() == i) {  //当所在页面正式你要刷新的页面,就直接刷新
+                    MainMall mall = (MainMall) allTab.get(MainMall.KEY);
                     mall.scrollTop();
                     mall.refresh();
-                } else if (i == 3 && allTab.containsKey("MainMyself")) {
+                } else if (i == 3 && allTab.containsKey(MainMyself.KEY)) {
                     //在onResume方法添加了刷新方法
-//                    MainMyself mainMyself = (MainMyself) allTab.get("MainMyself");
+//                    MainMyself mainMyself = (MainMyself) allTab.get(MainMyself.KEY);
 //                    mainMyself.scrollToTop();
-                } else if (i == 2 && allTab.containsKey("MyMessage") && i == nowTab) {
-//                    MyMessage myMessage = (MyMessage) allTab.get("MyMessage");
+                } else if (i == 2 && allTab.containsKey(MyMessage.KEY) && i == nowTab) {
+//                    MyMessage myMessage = (MyMessage) allTab.get(MyMessage.KEY);
 //                    myMessage.onRefresh();
                 }
                 try {
@@ -840,8 +840,8 @@ public class Main extends Activity implements OnClickListener, IObserver {
         if (ObserverManager.NOTIFY_LOGIN.equals(name)) {
             if (data != null && data instanceof Boolean && (Boolean)data) {
                 addQiYvListener();
-                if (nowTab == 2 || allTab.containsKey("MyMessage")) {
-                    MyMessage myMessage = (MyMessage) allTab.get("MyMessage");
+                if (nowTab == 2 || allTab.containsKey(MyMessage.KEY)) {
+                    MyMessage myMessage = (MyMessage) allTab.get(MyMessage.KEY);
                     if(myMessage != null){
                         myMessage.onRefresh();
                     }
@@ -850,8 +850,8 @@ public class Main extends Activity implements OnClickListener, IObserver {
                 QiYvHelper.getInstance().getUnreadCount(new QiYvHelper.NumberCallback() {
                     @Override
                     public void onNumberReady(int count) {
-                        if (nowTab == 3 || allTab.containsKey("MyMessage")) {
-                            MyMessage myMessage = (MyMessage) allTab.get("MyMessage");
+                        if (nowTab == 3 || allTab.containsKey(MyMessage.KEY)) {
+                            MyMessage myMessage = (MyMessage) allTab.get(MyMessage.KEY);
                             if(myMessage != null){
                                 myMessage.setQiYvNum(count);
                             }
@@ -863,8 +863,8 @@ public class Main extends Activity implements OnClickListener, IObserver {
         } else if (ObserverManager.NOTIFY_LOGOUT.equals(name)) {
             if (data != null && data instanceof Boolean) {
                 if ((Boolean)data) {
-                    if (nowTab == 3 || allTab.containsKey("MyMessage")) {
-                        MyMessage myMessage = (MyMessage) allTab.get("MyMessage");
+                    if (nowTab == 3 || allTab.containsKey(MyMessage.KEY)) {
+                        MyMessage myMessage = (MyMessage) allTab.get(MyMessage.KEY);
                         myMessage.onRefresh();
                     }
                     QiYvHelper.getInstance().onUserLogout();

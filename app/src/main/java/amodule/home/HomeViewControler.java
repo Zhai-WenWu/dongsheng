@@ -1,13 +1,16 @@
 package amodule.home;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -20,7 +23,7 @@ import java.util.Map;
 import acore.logic.AppCommon;
 import acore.logic.XHClick;
 import acore.tools.StringManager;
-import acore.tools.Tools;
+import acore.tools.ToolsDevice;
 import acore.widget.rvlistview.RvListView;
 import amodule._common.helper.WidgetDataHelper;
 import amodule._common.utility.WidgetUtility;
@@ -29,6 +32,7 @@ import amodule.main.Tools.BuoyControler;
 import amodule.main.activity.MainHome;
 import amodule.main.activity.MainHomePage;
 import amodule.main.view.item.HomeItem;
+import aplug.web.ShowWeb;
 import third.umeng.OnlineConfigControler;
 
 /**
@@ -106,7 +110,7 @@ public class HomeViewControler {
                     super.onScrollStateChanged(recyclerView, newState);
                     if (RecyclerView.SCROLL_STATE_IDLE == newState
                             && mBuoy != null
-                            && !mBuoy.isMove()){
+                            && !mBuoy.isMove()) {
                         mBuoy.executeOpenAnim();
                     }
                 }
@@ -195,20 +199,15 @@ public class HomeViewControler {
     private void initTipMessage(String configData) {
         Map<String, String> data = StringManager.getFirstMap(configData);
         if (null == data || data.isEmpty() || !"2".equals(data.get("isShow"))) {
-            if (null != mTipMessage) {
-                mTipMessage.setVisibility(View.GONE);
+            if (null == mTipMessage) {
+                mTipMessage = mHeaderControler.getTipMessage();
             }
+            mTipMessage.setVisibility(View.GONE);
             return;
         }
         if (null == mTipMessage) {
-            mTipMessage = new TextView(mActivity);
-            mTipMessage.setGravity(Gravity.CENTER);
-            mTipMessage.setTextSize(16);
-            int padding = Tools.getDimen(mActivity, R.dimen.dp_20);
-            mTipMessage.setPadding(padding, padding, padding, padding);
-            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-            layoutParams.addRule(RelativeLayout.BELOW, R.id.home_title);
-            mTipMessage.setLayoutParams(layoutParams);
+            mTipMessage = mHeaderControler.getTipMessage();
+            mTipMessage.getLayoutParams().width = ToolsDevice.getWindowPx(mActivity).widthPixels;
         }
         //获取文本
         String textValue = data.get("text");
@@ -222,9 +221,50 @@ public class HomeViewControler {
         //设置文本颜色
         String textColorValue = data.get("textColor");
         mTipMessage.setTextColor(WidgetUtility.parseColor(textColorValue));
-        if (null != mActivity && null != mActivity.rl) {
-            if (mActivity.rl.indexOfChild(mTipMessage) < 0)
-                mActivity.rl.addView(mTipMessage);
+        mTipMessage.setOnClickListener(v -> openUri(data.get("type"),data.get("clickUrl")));
+        mTipMessage.setVisibility(View.VISIBLE);
+    }
+
+    private void openUri(String type, String clickUrl) {
+        if(TextUtils.isEmpty(clickUrl) || null == mActivity) return;
+        switch (type) {
+            //原生打开H5
+            case "1":
+                Intent showWeb = new Intent(mActivity, ShowWeb.class);
+                showWeb.putExtra("url",clickUrl);
+                mActivity.startActivity(showWeb);
+                break;
+            //外部吊起
+            case "2":
+                AppCommon.openUrl(mActivity, clickUrl, true);
+                break;
+            //默认浏览器
+            case "3":
+                Intent intentLink = new Intent();
+                intentLink.setAction("android.intent.action.VIEW");
+                Uri content_url = Uri.parse(clickUrl);
+                intentLink.setData(content_url);
+                mActivity.startActivity(intentLink);
+                break;
+            //跳转其他App
+            case "4":
+                //包名
+                try{
+                    Intent launchIntent = mActivity.getPackageManager().getLaunchIntentForPackage(clickUrl);
+                    if(null != launchIntent){
+                        mActivity.startActivity(launchIntent);
+                    }
+                    //通过Scheme
+//                    Intent intent = new Intent();
+//                    intent.setData(Uri.parse(clickUrl));
+//                    mActivity.startActivity(intent);
+                }catch (Exception ignored){
+                    ignored.printStackTrace();
+                }
+
+                break;
+            default:
+                AppCommon.openUrl(mActivity, clickUrl, true);
         }
     }
 

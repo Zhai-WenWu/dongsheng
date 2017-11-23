@@ -37,6 +37,7 @@ import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilString;
 
 public class MyMessage extends MainBaseActivity{
+	public static final String KEY = "MyMessage";
 	private DownRefreshList listMessage;
 	private TextView feekback_msg_num,msg_title_sort;
 	
@@ -60,7 +61,7 @@ public class MyMessage extends MainBaseActivity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.a_common_message);
-		Main.allMain.allTab.put("MyMessage", this);
+		Main.allMain.allTab.put(KEY, this);
 		init();
 		XHClick.track(this, "浏览消息列表页");
 	}
