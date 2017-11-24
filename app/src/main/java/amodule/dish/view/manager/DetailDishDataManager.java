@@ -28,7 +28,8 @@ public class DetailDishDataManager {
     public final static String DISH_DATA_STEP = "dish_step";//步骤
     public final static String DISH_DATA_TIE = "dish_tie";//用户信息
     public final static String DISH_DATA_QA = "dish_qa";//问答
-    public final static String DISH_DATA_LIKE = "dish_like";//菜谱点赞处理
+    public final static String DISH_DATA_RELATION = "dish_relation";//菜谱公共数据接口
+    public final static String DISH_DATA_RNTIC = "dish_rntic";//菜谱小技巧
     private String dishCode;//菜谱code
     private Context mContext = XHActivityManager.getInstance().getCurrentActivity().getApplicationContext();
     private String customerCode;//用户code
@@ -60,13 +61,14 @@ public class DetailDishDataManager {
      * 第一次请求接口合集
      */
     public void reqOne() {
+        reqPublicData();
         reqIngre();
         reqBanner();
+        reqAnticData();
     }
 
     public void reqTwo() {
         reqStep();
-        reqOtherData();
         reqQAData();
     }
 
@@ -173,7 +175,7 @@ public class DetailDishDataManager {
         });
     }
     /**
-     * 请求帖子数据
+     * 请求问答数据
      */
     private void reqQAData(){
         String params = "dishCode=" + dishCode;
@@ -186,27 +188,33 @@ public class DetailDishDataManager {
         });
     }
     /**
-     * 请求其他接口数据
+     * 请求小技巧
      */
-    private void reqOtherData(){
-        String params = "code=" + dishCode;
-        //获取点赞数据
-        ReqEncyptInternet.in().doEncypt(StringManager.api_getDishLikeNumStatus, params, new InternetCallback(mContext) {
+    private void reqAnticData(){
+        String params = "dishCode=" + dishCode;
+        //获取帖子数据
+        ReqEncyptInternet.in().doEncypt(StringManager.API_MAIN8_ANTIC,params, new InternetCallback(mContext) {
             @Override
             public void loaded(int flag, String s, Object object) {
-                handleDataSuccess(flag,DISH_DATA_LIKE,object);
-            }
-        });
-
-        ReqEncyptInternet.in().doEncypt(StringManager.api_getDishstatusValue, params, new InternetCallback(mContext) {
-            @Override
-            public void loaded(int i, String s, Object o) {
-                if (i >= ReqInternet.REQ_OK_STRING){
-//                    saveApiData(o.toString());
-                }
+                handleDataSuccess(flag,DISH_DATA_RNTIC,object);
             }
         });
     }
+
+    /**
+     * 公共接口数据
+     */
+    private void reqPublicData(){
+        String params = "dishCode=" + dishCode;
+        //获取点赞数据
+        ReqEncyptInternet.in().doEncypt(StringManager.API_MAIN8_RELATIONBYCODE, params, new InternetCallback(mContext) {
+            @Override
+            public void loaded(int flag, String s, Object object) {
+                handleDataSuccess(flag,DISH_DATA_RELATION,object);
+            }
+        });
+    }
+
     /**
      * 集中处理接口返回数据
      * @param flag

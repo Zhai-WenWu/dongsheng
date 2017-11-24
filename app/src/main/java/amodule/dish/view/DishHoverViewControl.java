@@ -3,7 +3,9 @@ package amodule.dish.view;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -41,16 +43,12 @@ public class DishHoverViewControl implements View.OnClickListener{
     private TextView mHoverNum,mHoverTv,showCaipuTv;
     private String askStatus="";
     private String code,authorCode;
-
+    private Map<String,String> mapQA;
     public DishHoverViewControl(Activity activity){
         mAct=activity;
     }
     public void initView(){
         initFudongView();
-    }
-    public void setCode(String code){
-        this.code=code;
-        setRequestAskButtonStatus();
     }
     public void setAuthorCode(String authorCode){
         this.authorCode = authorCode;
@@ -77,18 +75,32 @@ public class DishHoverViewControl implements View.OnClickListener{
     }
 
     /**
-     * 处理点赞数据
+     * 处理数据
+     * @param maps
      */
-    public void initLikeState(ArrayList<Map<String,String>> arrayList){
-        if(arrayList.size() > 0){
-            Map<String,String> map = arrayList.get(0);
-            mHoverNum.setText(map.get("num"));
-            //点赞/点踩的状态(1:点踩，2:点赞，3:无)
-            dishLikeStatus=map.get("status");
-        }else{
-            mHoverNum.setText("0");
-        }
-        handlerDishLikeState(dishLikeStatus);
+    public void initData(Map<String,String> maps){
+        mAct.findViewById(R.id.a_dish_detail_new_footer_hover).setVisibility(View.VISIBLE);
+        String temp = maps.get("likeNum");
+        Log.i("xianghaTag","temp:::"+temp);
+        mHoverNum.setText("有用"+temp);
+        handlerDishLikeState(maps.get("likeStatus"));
+        initStateButton(StringManager.getFirstMap(maps.get("qaButton")));
+    }
+
+    private void initStateButton(Map<String,String> mapQA){
+        if(mapQA==null||mapQA.size()<=0)return;
+        this.mapQA= mapQA;
+        int roundRadius = Tools.getDimen(mAct,R.dimen.dp_3); // 8dp 圆角半径
+        int fillColor = Color.parseColor(mapQA.containsKey("bgColor")&&!TextUtils.isEmpty(mapQA.get("bgColor"))?mapQA.get("bgColor"):"#ff533c");//内部填充颜色
+//        int fillColor = Color.parseColor("#ff533c");//内部填充颜色
+
+        GradientDrawable gd = new GradientDrawable();//创建drawable
+        gd.setColor(fillColor);
+        gd.setCornerRadius(roundRadius);
+
+        mHoverTv.setBackgroundDrawable(gd);
+        mHoverTv.setTextColor(Color.parseColor(mapQA.containsKey("color")&&!TextUtils.isEmpty(mapQA.get("color"))?mapQA.get("color"):"#fffffe"));
+        mHoverTv.setText(mapQA.get("text"));
     }
     @Override
     public void onClick(View v) {
@@ -98,14 +110,13 @@ public class DishHoverViewControl implements View.OnClickListener{
                     mAct.startActivity(new Intent(mAct,LoginByAccout.class));
                     return;
                 }
-                if("2".equals(askStatus)){
-                    Intent intentAsk= new Intent(mAct, AskEditActivity.class);
-                    intentAsk.putExtra("code",code);
-                    intentAsk.putExtra("authorCode",authorCode);
-                    mAct.startActivity(intentAsk);
-                }else if("3".equals(askStatus)){
+                if(mapQA!=null&&mapQA.containsKey("isJump")&&"2".equals(mapQA.get("isJump"))){
+                   AppCommon.openUrl(mAct,mapQA.get("url"),false);
+                }else{
                     XHClick.mapStat(mAct, tongjiId, "底部浮动", "向作者提问点击量");
-                    Tools.showToast(mAct,"已提醒作者");
+                    if(mapQA.containsKey("toast")&&!TextUtils.isEmpty(mapQA.get("toast"))){
+                        Tools.showToast(mAct,mapQA.get("toast"));
+                    }
                 }
 
                 break;

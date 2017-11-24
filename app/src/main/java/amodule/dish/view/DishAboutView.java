@@ -45,7 +45,7 @@ public class DishAboutView extends ItemBaseView {
     private boolean showExplainState= false;
     private TextView dish_work_exp_tv;
     private Map<String,String> mapAbout;
-    private Map<String,String> mapUser;
+    private Map<String,String> mapUser,mapPower;
     private TextView dish_follow_tv;
     private Activity activity;
     public DishAboutView(Context context) {
@@ -93,7 +93,42 @@ public class DishAboutView extends ItemBaseView {
      * @param map
      */
     public void setUserPowerData(Map<String,String> map){
-
+        if(map==null||map.size()<=0)return;
+        this.mapPower= map;
+        dish_follow_tv= (TextView) findViewById(R.id.dish_follow_tv);
+        findViewById(R.id.cusType).setVisibility(mapPower.containsKey("isGourmet")&&"2".equals(mapPower.get("isGourmet"))?View.VISIBLE:View.GONE);
+        setFollowState(mapPower);
+        //点击关注
+        findViewById(R.id.dish_follow_rela).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!LoginManager.isLogin()) {
+                    Intent intent = new Intent(context, LoginByAccout.class);
+                    context.startActivity(intent);
+                    return;
+                }
+                if(mapUser.containsKey("isFav")&&mapUser.get("isFav").equals("1")){
+                    XHClick.mapStat(activity, DetailDish.tongjiId, "用户点击", "关注点击");
+                    AppCommon.onAttentionClick(mapUser.get("customerCode"), "follow");
+                    mapPower.put("isFav","2");
+                    Tools.showToast(context,"已关注");
+                    setFollowState(mapPower);
+                }else{
+                    XHClick.mapStat(activity, DetailDish.tongjiId, "用户点击", "已关注点击");
+                    Intent intent = new Intent(activity, FriendHome.class);
+                    intent.putExtra("code",mapUser.get("customerCode"));
+                    activity.startActivityForResult(intent,1000);
+//                    AppCommon.openUrl(activity,"userIndex.app?code="+lists.get(0).get("code"),true);
+                }
+            }
+        });
+        if(LoginManager.isLogin()
+                && LoginManager.userInfo.get("code") != null
+                && LoginManager.userInfo.get("code").equals(mapUser.get("customerCode"))){
+            findViewById(R.id.dish_follow_rela).setVisibility(View.GONE);
+        } else {
+            findViewById(R.id.dish_follow_rela).setVisibility(View.VISIBLE);
+        }
     }
     /**
      * 设置菜谱数据
@@ -127,39 +162,6 @@ public class DishAboutView extends ItemBaseView {
         String userIntro = handleUserIntro(mapUser.get("info"));
         dish_user_time.setText(TextUtils.isEmpty(userIntro) ? getResources().getString(R.string.user_intro_def) : userIntro);
 
-        dish_follow_tv= (TextView) findViewById(R.id.dish_follow_tv);
-        setFollowState(mapUser);
-        //点击关注
-        findViewById(R.id.dish_follow_rela).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!LoginManager.isLogin()) {
-                    Intent intent = new Intent(context, LoginByAccout.class);
-                    context.startActivity(intent);
-                    return;
-                }
-                if(mapUser.containsKey("isFav")&&mapUser.get("isFav").equals("1")){
-                    XHClick.mapStat(activity, DetailDish.tongjiId, "用户点击", "关注点击");
-                    AppCommon.onAttentionClick(mapUser.get("customerCode"), "follow");
-                    mapUser.put("isFav","2");
-                    Tools.showToast(context,"已关注");
-                    setFollowState(mapUser);
-                }else{
-                    XHClick.mapStat(activity, DetailDish.tongjiId, "用户点击", "已关注点击");
-                    Intent intent = new Intent(activity, FriendHome.class);
-                    intent.putExtra("code",mapUser.get("customerCode"));
-                    activity.startActivityForResult(intent,1000);
-//                    AppCommon.openUrl(activity,"userIndex.app?code="+lists.get(0).get("code"),true);
-                }
-            }
-        });
-        if(LoginManager.isLogin()
-                && LoginManager.userInfo.get("code") != null
-                && LoginManager.userInfo.get("code").equals(mapUser.get("customerCode"))){
-            findViewById(R.id.dish_follow_rela).setVisibility(View.GONE);
-        } else {
-            findViewById(R.id.dish_follow_rela).setVisibility(View.VISIBLE);
-        }
         cusImg.setOnClickListener(onClickListener);
         dish_user_name.setOnClickListener(onClickListener);
         dish_user_name.setOnClickListener(onClickListener);

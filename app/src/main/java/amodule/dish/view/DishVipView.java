@@ -38,23 +38,23 @@ public class DishVipView extends ItemBaseView{
         super.init();
         text_vip= (TextView) findViewById(R.id.text_vip);
     }
-    public void setData(final ArrayList<Map<String,String>> list){
-        int strokeWidth = 5; // 3dp 边框宽度
+    public void setData(final Map<String,String> maps){
+//        int strokeWidth = 5; // 3dp 边框宽度
         int roundRadius = 15; // 8dp 圆角半径
-        int strokeColor = Color.parseColor("#2E3135");//边框颜色
-        int fillColor = Color.parseColor("#DFDFE0");//内部填充颜色
+//        int strokeColor = Color.parseColor("#2E3135");//边框颜色
+        int fillColor = Color.parseColor("#ff533c");//内部填充颜色
 
         GradientDrawable gd = new GradientDrawable();//创建drawable
         gd.setColor(fillColor);
         gd.setCornerRadius(roundRadius);
-        gd.setStroke(strokeWidth, strokeColor);
+//        gd.setStroke(strokeWidth, strokeColor);
 
         text_vip.setBackgroundDrawable(gd);
-        text_vip.setText(list.get(0).get("name"));
+        text_vip.setText(maps.get("name"));
         text_vip.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(),list.get(0).get("url"),false);
+                AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(),maps.get("url"),false);
             }
         });
     }

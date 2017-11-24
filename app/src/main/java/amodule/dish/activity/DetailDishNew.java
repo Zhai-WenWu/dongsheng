@@ -165,7 +165,6 @@ public class DetailDishNew extends BaseAppCompatActivity implements IObserver {
                 dishName= mapTop.get("name");
                 isHasVideo = "2".equals(mapTop.get("type"));
                 detailDishViewManager.handlerHeaderView(list,map);//header
-                detailDishViewManager.handlerHoverViewCode(code);
                 customerCode= StringManager.getFirstMap(mapTop.get("customer")).get("customerCode");
                 if (!TextUtils.isEmpty(customerCode)&&LoginManager.userInfo != null && customerCode.equals(LoginManager.userInfo.get("code"))){
                         state = "";
@@ -187,10 +186,20 @@ public class DetailDishNew extends BaseAppCompatActivity implements IObserver {
                 break;
             case DetailDishDataManager.DISH_DATA_TIE://帖子
                 detailDishViewManager.handlerRecommedAndAd(list,code,dishName);
+                break;
             case DetailDishDataManager.DISH_DATA_QA://问答
                 detailDishViewManager.handlerQAView(list);
-            case DetailDishDataManager.DISH_DATA_LIKE://点赞
-                detailDishViewManager.handlerHoverViewLike(list);
+                break;
+            case DetailDishDataManager.DISH_DATA_RNTIC://技巧
+                detailDishViewManager.handlerSkillView(list);
+                break;
+            case DetailDishDataManager.DISH_DATA_RELATION://公共数据
+                Map<String,String> relation= list.get(0);
+                detailDishViewManager.handlerUserPowerData(relation);//用户权限
+                detailDishViewManager.handlerHoverView(relation);
+                if(relation.containsKey("isShow")&&"2".equals(relation.get("isShow"))){
+                    detailDishViewManager.handlerVipView(StringManager.getFirstMap(relation.get("isShow")));
+                }
                 break;
             default:
                 break;

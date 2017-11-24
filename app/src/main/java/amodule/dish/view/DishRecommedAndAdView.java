@@ -93,6 +93,7 @@ public class DishRecommedAndAdView extends ItemBaseView implements View.OnClickL
     public void initUserDish(ArrayList<Map<String, String>> arrayList){
 //        mRelevantTv.setVisibility(View.VISIBLE);
         if(arrayList.size() > 0) {
+            findViewById(R.id.qa_line).setVisibility(View.VISIBLE);
             Map<String, String> TieMap = arrayList.get(0);
             mRecommentNum.setText(TieMap.get("totalNum") + "个作品");
             LayoutInflater inflater = LayoutInflater.from(context);
@@ -190,7 +191,7 @@ public class DishRecommedAndAdView extends ItemBaseView implements View.OnClickL
             }
         }else{
             userDishLayout.removeAllViews();
-
+            findViewById(R.id.qa_line).setVisibility(View.GONE);
             mRecomentLayout.setVisibility(View.GONE);
             findViewById(R.id.a_dish_detail_new_xiangguan_scroll).setVisibility(View.GONE);
         }

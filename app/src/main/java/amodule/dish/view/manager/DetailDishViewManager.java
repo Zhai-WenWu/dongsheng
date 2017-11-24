@@ -39,6 +39,7 @@ import amodule.dish.view.DishModuleScrollView;
 import amodule.dish.view.DishQAView;
 import amodule.dish.view.DishRecommedAndAdView;
 import amodule.dish.view.DishTitleViewControl;
+import amodule.dish.view.DishVipView;
 import amodule.dish.view.XhScrollView;
 import third.video.VideoPlayerController;
 
@@ -68,6 +69,7 @@ public class DetailDishViewManager {
     private int titleHeight;//标题高度
     //头部信息
     public DishHeaderViewNew dishHeaderViewNew;
+    public DishVipView dishVipView;
     public DishAboutView dishAboutView;
     public DishIngreDataShow dishIngreDataShow;
     public DishRecommedAndAdView dishRecommedAndAdView;
@@ -105,6 +107,8 @@ public class DetailDishViewManager {
         //图片视频信息
         dishHeaderViewNew = new DishHeaderViewNew(mAct);
         dishHeaderViewNew.initView(mAct, headerLayoutHeight);
+        dishVipView = new DishVipView(mAct);
+        dishVipView.setVisibility(View.GONE);
         //用户信息和菜谱基础信息
         dishAboutView= new DishAboutView(mAct);
         dishAboutView.setVisibility(View.GONE);
@@ -117,7 +121,7 @@ public class DetailDishViewManager {
         //小技巧
         dishModuleScrollView= new DishModuleScrollView(mAct);
         dishModuleScrollView.setVisibility(View.GONE);
-
+        layoutHeader.addView(dishVipView);
         layoutHeader.addView(dishAboutView);
         layoutHeader.addView(dishADBannerView);
         layoutHeader.addView(dishIngreDataShow);
@@ -167,6 +171,9 @@ public class DetailDishViewManager {
     public void initBeforeData(String img){
         if (dishHeaderViewNew != null&& !TextUtils.isEmpty(img))dishHeaderViewNew.setImg(img);
     }
+    public void handlerRelationData(ArrayList<Map<String,String>> list){
+
+    }
     /**
      * 处理标题信息数据
      */
@@ -215,6 +222,7 @@ public class DetailDishViewManager {
             dishVidioLayout=dishHeaderViewNew.getViewLayout();
         }
     }
+
     /**
      * 处理菜谱基本信息
      */
@@ -233,9 +241,19 @@ public class DetailDishViewManager {
     /**
      * 处理用户权限信息
      */
-    public void handlerUserPowerData(ArrayList<Map<String, String>> list) {
+    public void handlerUserPowerData(Map<String,String> map) {
         if(dishAboutView!=null) {
-            dishAboutView.setUserPowerData(list.get(0));
+            dishAboutView.setUserPowerData(map);
+        }
+    }
+    /**
+     * 处理vip按钮
+     * @param map
+     */
+    public void handlerVipView(Map<String,String> map){
+        if(dishVipView != null){
+            dishVipView.setVisibility(View.VISIBLE);
+            dishVipView.setData(map);
         }
     }
     /**
@@ -315,15 +333,15 @@ public class DetailDishViewManager {
      */
     public void handlerHoverViewCode(String code){
         if(dishHoverViewControl!=null){
-            dishHoverViewControl.setCode(code);
+//            dishHoverViewControl.setCode(code);
         }
     }
     /**
      * 处理浮动推荐
      */
-    public void handlerHoverViewLike(ArrayList<Map<String, String>> list){
+    public void handlerHoverView(Map<String,String> map){
         if(dishHoverViewControl!=null){
-            dishHoverViewControl.initLikeState(list);
+            dishHoverViewControl.initData(map);
         }
     }
     public void onResume(){

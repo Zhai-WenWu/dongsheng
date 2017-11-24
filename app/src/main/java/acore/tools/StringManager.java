@@ -370,6 +370,8 @@ public class StringManager extends UtilString {
     public final static String API_MAIN8_DISHMAKE = apiUrl  + "main8/Dish/getDishMakeByCode";//菜谱详情页做法
     public final static String API_MAIN8_QAINFO = apiUrl + "main8/Dish/getQaInfo";//菜谱详情页做法
     public final static String API_MAIN8_TIEINFO = apiUrl + "main8/Dish/tieInfo";//菜谱详情页做法
+    public final static String API_MAIN8_RELATIONBYCODE = apiUrl + "main8/Dish/getDishRelationByCode";//菜谱详情页公共
+    public final static String API_MAIN8_ANTIC = apiUrl + "main8/Dish/getDishAntic";//菜谱详情页小技巧
 
 
 

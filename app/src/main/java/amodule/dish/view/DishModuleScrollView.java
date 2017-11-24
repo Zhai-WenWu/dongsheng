@@ -46,7 +46,8 @@ public class DishModuleScrollView extends ItemBaseView{
             View view=LayoutInflater.from(context).inflate(R.layout.dish_module_skill,null);
             ImageView img_skill= (ImageView) view.findViewById(R.id.img_skill);
             TextView text1= (TextView) view.findViewById(R.id.text1);
-
+            setViewImage(img_skill,listMaps.get(i),"img");
+            text1.setText(listMaps.get(i).get("text"));
             view.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
