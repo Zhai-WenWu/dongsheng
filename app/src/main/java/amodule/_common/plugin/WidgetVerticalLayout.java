@@ -64,7 +64,11 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
 
     @Override
     public void setData(Map<String, String> data) {
-        if (null == data || data.isEmpty()) return;
+        initTopLayout();
+        initBootomLayout();
+        if (null == data || data.isEmpty()){
+            return;
+        }
         String widgetType = data.get(KEY_WIDGET_TYPE);
         String widgetData = data.get(KEY_WIDGET_DATA);
         Map<String, String> dataMap = StringManager.getFirstMap(widgetData);
@@ -104,7 +108,6 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
 
     @Override
     public void updateTopView(List<Map<String, String>> array) {
-        initTopLayout();
         if (null == array || array.isEmpty()) {
             return;
         }
@@ -131,7 +134,6 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
 
     @Override
     public void updateBottom(List<Map<String, String>> array) {
-        initBootomLayout();
         if (null == array || array.isEmpty()) {
             return;
         }

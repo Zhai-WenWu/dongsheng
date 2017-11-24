@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.xiangha.R;
@@ -95,6 +96,7 @@ public class HomeSecondListActivity extends BaseAppCompatActivity {
         mPagerAdapter = new HomeSecondListPagerAdapter(getSupportFragmentManager(), mSecondModules, mModuleBean, new HomeSecondListFragment.OnTabDataReadyCallback() {
             @Override
             public void onTabDataReady(String selectedType) {
+                Log.i("tzy","selectedType = " + selectedType);
                 if (mInitTabData)
                     return;
                 mInitTabData = true;

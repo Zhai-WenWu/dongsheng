@@ -34,6 +34,7 @@ public class CountDownSubTitleView extends BaseSubTitleView {
     private TextView mTitle2;
     private TextView mTitle3;
     private TextView mTitle4;
+    private TextView mTitle5;
     private LinearLayout mLinearLayout1;
 
     private long mMillisInFuture;
@@ -66,6 +67,7 @@ public class CountDownSubTitleView extends BaseSubTitleView {
         mTitle2 = (TextView) findViewById(R.id.text2);
         mTitle3 = (TextView) findViewById(R.id.text3);
         mTitle4 = (TextView) findViewById(R.id.text4);
+        mTitle5 = (TextView) findViewById(R.id.text5);
     }
 
     @Override
@@ -84,13 +86,14 @@ public class CountDownSubTitleView extends BaseSubTitleView {
         }
         mDataReady = true;
         startCountDownTime();
+        mLinearLayout1.setVisibility(VISIBLE);
     }
 
     public void startCountDownTime() {
         if (mTaskRunning || !mDataReady || !mIsAttachedToWindow || mIsDetachedFromWindow)
             return;
         if (mSdf == null) {
-            mSdf = new SimpleDateFormat("HH:mm:ss");
+            mSdf = new SimpleDateFormat("DD:HH:mm:ss");
             mSdf.setTimeZone(TimeZone.getTimeZone("GMT+0:00"));
         }
         mCountDownTimer = new CountDownTimer(mMillisInFuture, mMillisInterval) {
@@ -133,9 +136,15 @@ public class CountDownSubTitleView extends BaseSubTitleView {
         if (TextUtils.isEmpty(formatTime))
             return;
         String[] times = formatTime.split(":");
-        mTitle2.setText(times[0]);
+        if("0".equals(times[0])){
+            mTitle2.setVisibility(GONE);
+        }else{
+            mTitle2.setText(times[0] + "天");
+            mTitle2.setVisibility(VISIBLE);
+        }
         mTitle3.setText(times[1]);
         mTitle4.setText(times[2]);
+        mTitle5.setText(times[3]);
     }
 
     @Override

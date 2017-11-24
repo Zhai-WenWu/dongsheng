@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import acore.logic.AppCommon;
+import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.helper.XHActivityManager;
 import acore.tools.StringManager;
@@ -66,8 +67,8 @@ public class BannerView extends Banner implements IBindMap, IStatictusData,ISave
         super(context, attrs, defStyleAttr);
         mInflater = LayoutInflater.from(context);
         int height = (int) (ToolsDevice.getWindowPx(context).widthPixels * 336 / 750f);
-//        Log.i("tzy","width = " + ToolsDevice.getWindowPx(context).widthPixels + " , height = " + height);
-        setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height));
+        Log.i("tzy","width = " + ToolsDevice.getWindowPx(context).widthPixels + " , height = " + height);
+        setMinimumHeight(height);
         setVisibility(GONE);
         mAdIDArray.add(ARTICLE_CONTENT_BOTTOM);
         showMinH = Tools.getStatusBarHeight(context) + Tools.getDimen(context,R.dimen.dp_45) - height;
@@ -83,6 +84,7 @@ public class BannerView extends Banner implements IBindMap, IStatictusData,ISave
             return;
         }
         Map<String, String> dataMap = StringManager.getFirstMap(data.get(WidgetDataHelper.KEY_DATA));
+        arrayList.clear();
         arrayList = StringManager.getListMapByJson(dataMap.get(WidgetDataHelper.KEY_LIST));
         if (arrayList.isEmpty()) {
             setVisibility(GONE);
@@ -128,7 +130,8 @@ public class BannerView extends Banner implements IBindMap, IStatictusData,ISave
         };
         if(!arrayList.isEmpty()
                 && !adMap.isEmpty()
-                && !arrayList.contains(adMap)){
+                && !arrayList.contains(adMap)
+                && LoginManager.isShowAd()){
             arrayList.add(adMap);
         }
         setBannerAdapter(bannerAdapter);
@@ -199,7 +202,8 @@ public class BannerView extends Banner implements IBindMap, IStatictusData,ISave
             adMap.put("title",adDataMap.get("title"));
             if(!arrayList.isEmpty()
                     && !adMap.isEmpty()
-                    && !arrayList.contains(adMap)){
+                    && !arrayList.contains(adMap)
+                    && LoginManager.isShowAd()){
                 arrayList.add(adMap);
                 notifyDataHasChanged();
             }

@@ -71,18 +71,26 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,
             setVisibility(GONE);
             return;
         }
+        Map<String,String> dataMap = StringManager.getFirstMap(map.get(WidgetDataHelper.KEY_DATA));
+        if (null == dataMap || dataMap.isEmpty()){
+            setVisibility(GONE);
+            return;
+        }
         boolean isResetData = false;
         Map<String,String> parameterMap = StringManager.getFirstMap(map.get(KEY_PARAMETER));
         if (mSubTitleView != null) {
             mSubTitleView.setData(parameterMap);
             isResetData = true;
         }
-        Map<String,String> dataMap = StringManager.getFirstMap(map.get(WidgetDataHelper.KEY_DATA));
         ArrayList<Map<String, String>> list = StringManager.getListMapByJson(dataMap.get(WidgetDataHelper.KEY_LIST));
         if (mRecyclerAdapter != null) {
             mRecyclerAdapter.updateData(list);
             isResetData = true;
             mRecyclerView.scrollToPosition(0);
+        }
+        if(list.isEmpty()){
+            setVisibility(GONE);
+            return;
         }
         if (isResetData)
             return;

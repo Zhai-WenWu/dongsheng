@@ -299,6 +299,7 @@ public class Banner extends RelativeLayout {
         mTipTextView.setEllipsize(TextUtils.TruncateAt.END);
         mTipTextView.setTextColor(mTipTextColor);
         mTipTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTipTextSize);
+        mTipTextView.setVisibility(GONE);
         //将TieTextView存放于指示器容器中
         indicatorContainerRl.addView(mTipTextView, tipLp);
         int horizontalGravity = mPointGravity & Gravity.HORIZONTAL_GRAVITY_MASK;

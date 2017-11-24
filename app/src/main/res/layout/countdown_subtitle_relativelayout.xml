@@ -9,25 +9,35 @@
         android:id="@+id/text1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/dp_20"
         android:layout_marginRight="@dimen/dp_9"
-        tools:text="限时抢购"
-        android:textSize="@dimen/sp_17"
         android:textColor="@color/c_black_text"
+        android:textSize="@dimen/sp_17"
         android:textStyle="bold"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"/>
+        tools:text="限时抢购"/>
 
     <LinearLayout
         android:id="@+id/linearlayout1"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
         android:layout_toRightOf="@id/text1"
         android:orientation="horizontal"
-        android:layout_centerVertical="true"
-        android:layout_height="wrap_content">
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/text2"
+            style="@style/count_down_time"/>
+
+        <TextView
+            android:id="@+id/title_3"
+            android:text=" "
+            style="@style/time_point"/>
+
+        <TextView
+            android:id="@+id/text3"
             style="@style/count_down_time"/>
 
         <TextView
@@ -35,15 +45,15 @@
             style="@style/time_point"/>
 
         <TextView
-            android:id="@+id/text3"
-            style="@style/count_down_time" />
+            android:id="@+id/text4"
+            style="@style/count_down_time"/>
 
         <TextView
             android:id="@+id/title_2"
-            style="@style/time_point" />
+            style="@style/time_point"/>
 
         <TextView
-            android:id="@+id/text4"
+            android:id="@+id/text5"
             style="@style/count_down_time"/>
 
     </LinearLayout>

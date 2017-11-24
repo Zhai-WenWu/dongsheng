@@ -174,6 +174,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
                     Log.i("tzy" , "setHeaderData " + (isCache ? "cacheTime = " : "serviceTime = ") + (System.currentTimeMillis() - startLoadTime) + "ms");
                     if (!isCache && mDataControler != null) {
                         mDataControler.saveCacheHomeData((String) o);
+                        isRefreshingHeader = false;
                     }
                 }
                 if(!LoadOver){
@@ -228,6 +229,9 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
 
             @Override
             public void onAfter(boolean refresh, int flag, int loadCount) {
+                if(refresh){
+                    isRefreshingFeed = false;
+                }
                 loadManager.hideProgressBar();
                 mViewContrloer.setFeedheaderVisibility(!mDataControler.getData().isEmpty());
                 if (ToolsDevice.isNetworkAvailable(MainHomePage.this)) {
@@ -287,13 +291,21 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
         if (!TextUtils.isEmpty(name)) {
             switch (name) {
                 case ObserverManager.NOTIFY_VIPSTATE_CHANGED://VIP 状态发生改变需要刷新
+                    Log.i("tzy","VIP 状态发生改变需要刷新");
                     mNeedRefCurrFm = true;
                     break;
             }
         }
     }
 
+    boolean isRefreshingHeader = false;
+    boolean isRefreshingFeed = false;
     public void refresh() {
+        if(isRefreshingHeader || isRefreshingFeed){
+            return;
+        }
+        isRefreshingHeader = true;
+        isRefreshingFeed = true;
         loadRemoteData();
         EntryptData(true);
     }
