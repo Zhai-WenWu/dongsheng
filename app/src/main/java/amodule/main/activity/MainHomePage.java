@@ -102,9 +102,9 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
         String logPostTime = AppCommon.getConfigByLocal("logPostTime");
         if (!TextUtils.isEmpty(logPostTime)) {
             Map<String, String> map = StringManager.getFirstMap(logPostTime);
-            if (map.containsKey("postTime")
-                    && !TextUtils.isEmpty(map.get("postTime"))) {
-                XHClick.HOME_STATICTIS_TIME = Integer.parseInt(map.get("postTime"), 10) * 1000;
+            String postTimeValue = map.get("postTime");
+            if (!TextUtils.isEmpty(postTimeValue)) {
+                XHClick.HOME_STATICTIS_TIME = Integer.parseInt(postTimeValue, 10) * 1000;
             }
         }
     }
@@ -114,7 +114,8 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
         startLoadTime = System.currentTimeMillis();
         if (!LoadOver) {
             assert mViewContrloer != null;
-            loadManager.setLoading(mViewContrloer.getRvListView(),
+            loadManager.setLoading(
+                    mViewContrloer.getRvListView(),
                     mHomeAdapter,
                     true,
                     v -> {

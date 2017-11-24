@@ -34,7 +34,7 @@ import static amodule.home.HomeViewControler.MODULETOPTYPE;
 public class HomeFeedHeaderControler {
     private Context mContext;
 
-    private LinearLayout layout, linearLayoutOne, linearLayoutTwo, linearLayoutThree;
+    private LinearLayout layout, linearLayoutThree;
     private HomeModuleBean mHomeModuleBean;
 
     HomeFeedHeaderControler(Context context) {
@@ -50,18 +50,7 @@ public class HomeFeedHeaderControler {
     private void initFeedHeaderView() {
         //initHeaderView
         layout = new LinearLayout(mContext);
-
         layout.setOrientation(LinearLayout.VERTICAL);
-
-        linearLayoutOne = new LinearLayout(mContext);
-        linearLayoutOne.setOrientation(LinearLayout.VERTICAL);
-        linearLayoutOne.setVisibility(View.GONE);
-        layout.addView(linearLayoutOne);
-
-        linearLayoutTwo = new LinearLayout(mContext);
-        linearLayoutTwo.setOrientation(LinearLayout.VERTICAL);
-        linearLayoutTwo.setVisibility(View.GONE);
-        layout.addView(linearLayoutTwo);
 
         linearLayoutThree = new LinearLayout(mContext);
         linearLayoutThree.setOrientation(LinearLayout.VERTICAL);
@@ -74,8 +63,7 @@ public class HomeFeedHeaderControler {
         linearLayoutThree.removeAllViews();
         if (null == data || data.isEmpty()) return;
         LayoutInflater inflater = LayoutInflater.from(mContext);
-        int size = data.size();
-        for (int i = 0; i < size; i++) {
+        for (int i = 0 , size = data.size(); i < size; i++) {
             HomeItem view = handlerTopView(data.get(i), i);
             if (view != null) {
                 linearLayoutThree.addView(view);

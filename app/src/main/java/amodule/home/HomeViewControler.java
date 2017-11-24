@@ -55,9 +55,9 @@ public class HomeViewControler {
     //feed头部view
     private View mHeaderView;
 
-    private boolean isScrollData = false;//是否滚动数据
     private int scrollDataIndex = -1;//滚动数据的位置
 
+    @SuppressLint("InflateParams")
     public HomeViewControler(MainHomePage activity) {
         this.mActivity = activity;
         mHeaderView = LayoutInflater.from(mActivity).inflate(R.layout.a_home_header_layout, null, true);
@@ -115,7 +115,6 @@ public class HomeViewControler {
                 public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                     super.onScrolled(recyclerView, dx, dy);
                     int lastVisibleItemPosition = linearLayoutManager.findLastVisibleItemPosition();
-                    isScrollData = true;
                     if (scrollDataIndex < (lastVisibleItemPosition - 1)) {
                         scrollDataIndex = (lastVisibleItemPosition - 1);
                     }
@@ -128,7 +127,6 @@ public class HomeViewControler {
 
     //
     public void setHeaderData(List<Map<String, String>> data, boolean isShowCache) {
-        long startTime = System.currentTimeMillis();
         if (data == null || data.isEmpty()) {
             mHeaderControler.setVisibility(false);
             return;
@@ -187,7 +185,7 @@ public class HomeViewControler {
     public void setTipMessage() {
         OnlineConfigControler.getInstance().getConfigByKey(
                 OnlineConfigControler.KEY_HOMENOTICE,
-                value -> initTipMessage(value)
+                this::initTipMessage
         );
     }
 

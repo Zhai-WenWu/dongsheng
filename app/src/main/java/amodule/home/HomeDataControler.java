@@ -158,29 +158,6 @@ public class HomeDataControler {
                                         mData = mInsertADCallback.insertAD(mData, false);
                                     }
                                 }
-                                //读取历史记录
-//                                String historyUrl = (String) FileManager.loadShared(mActivity, mHomeModuleBean.getType(), mHomeModuleBean.getType());
-//                                if (!TextUtils.isEmpty(historyUrl)) {
-//                                    Map<String, String> map = StringManager.getMapByString(historyUrl, "&", "=");
-//                                    final String markValue = map.get("mark");
-//                                    final String timeValue = map.get("reset_time");
-//                                    final int length = mData.size();
-//                                    Map<String, String> backMap = StringManager.getMapByString(backUrl, "&", "=");
-//                                    String nowTime = backMap.get("reset_time");
-//                                    //设置显示参数
-//                                    for(int index = 0 ; index < length ; index ++){
-//                                        Map<String,String> tempMap = mData.get(index);
-//                                        if(index != 0
-//                                                && EqualsData(tempMap.get("mark"),markValue)
-//                                                && !TextUtils.isEmpty(nowTime)
-//                                                && !TextUtils.isEmpty(timeValue)){
-//                                            Log.i("zhangyujian", "mak:" + tempMap.get("mark") + "::;" + tempMap.get("name"));
-//                                            tempMap.put("refreshTime", Tools.getTimeDifferent(Long.parseLong(nowTime), Long.parseLong(timeValue)));
-//                                        }else{
-//                                            tempMap.put("refreshTime", "");
-//                                        }
-//                                    }
-//                                }
                                 //提示刷新UI
                                 if (mNotifyDataSetChangedCallback != null)
                                     mNotifyDataSetChangedCallback.notifyDataSetChanged();
