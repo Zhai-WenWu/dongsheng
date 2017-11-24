@@ -120,7 +120,8 @@ public class DetailDishViewManager {
         dishADBannerView.setVisibility(View.GONE);
         //小技巧
         dishModuleScrollView= new DishModuleScrollView(mAct);
-        dishModuleScrollView.setVisibility(View.GONE);
+        dishModuleScrollView.setData(null);
+//        dishModuleScrollView.setVisibility(View.GONE);
         layoutHeader.addView(dishVipView);
         layoutHeader.addView(dishAboutView);
         layoutHeader.addView(dishADBannerView);
