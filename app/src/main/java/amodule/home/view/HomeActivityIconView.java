@@ -45,18 +45,22 @@ public class HomeActivityIconView extends AppCompatImageView {
 
     private void initialize() {
         setScaleType(ScaleType.CENTER_INSIDE);
-        setImageResource(R.drawable.home_default_icon);
-        int padding = Tools.getDimen(getContext(), R.dimen.dp_10);
-        setPadding(padding,0,padding,0);
+        initData();
         //请求数据
         postDelayed(() -> {
-            initData();
+            initCacheData();
             loadData();
         },2000);
     }
 
+    private void initData(){
+        setImageResource(R.drawable.home_default_icon);
+        int padding = Tools.getDimen(getContext(), R.dimen.dp_10);
+        setPadding(padding,0,padding,0);
+    }
+
     //初始化数据
-    private void initData() {
+    private void initCacheData() {
         String cacheData = FileManager.readFile(CACHE_PATH).trim();
         handlerData(true, cacheData);
     }
@@ -76,6 +80,7 @@ public class HomeActivityIconView extends AppCompatImageView {
 
     private void handlerData(boolean isCache, String dataStr) {
         if (TextUtils.isEmpty(dataStr)) {
+            FileManager.delDirectoryOrFile(CACHE_PATH);
             return;
         }
         Map<String, String> dataMap = StringManager.getFirstMap(dataStr);

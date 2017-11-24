@@ -24,6 +24,7 @@ import java.util.Map;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.activity.base.BaseLoginActivity;
+import acore.tools.Tools;
 import acore.widget.rvlistview.RvListView;
 import acore.widget.rvlistview.adapter.RvBaseSimpleAdapter;
 import amodule.article.activity.edit.ArticleEidtActivity;
@@ -58,8 +59,9 @@ public class HomePushIconView extends AppCompatImageView {
         initialize();
     }
 
+    int paddingTop = 6;
     private void initialize() {
-
+        paddingTop = Tools.getDimen(getContext(),R.dimen.dp_3);
     }
 
     private void initPopuWindow() {
@@ -134,7 +136,7 @@ public class HomePushIconView extends AppCompatImageView {
         if (mPopupWindow == null) {
             initPopuWindow();
         }
-        mPopupWindow.showAsDropDown(this, 0, -6);
+        mPopupWindow.showAsDropDown(this, 0, -paddingTop);
     }
 
     /** 去登录 */

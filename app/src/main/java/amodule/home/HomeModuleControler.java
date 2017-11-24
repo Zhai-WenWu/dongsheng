@@ -27,6 +27,10 @@ import aplug.basic.ReqInternet;
 public class HomeModuleControler {
     private static boolean isRequest = false;
 
+    public HomeModuleBean getHomeModuleByType(@Nullable Context context, @Nullable String mType) {
+        return getHomeModuleByType(false,context,mType);
+    }
+
     /**
      * 获取数据模块
      *
@@ -36,7 +40,7 @@ public class HomeModuleControler {
      * @return 数据类型对象
      */
     @Nullable
-    public HomeModuleBean getHomeModuleByType(@Nullable Context context, @Nullable String mType) {
+    public HomeModuleBean getHomeModuleByType(boolean isRefresh,@Nullable Context context, @Nullable String mType) {
         HomeModuleBean mModuleBean = null;
         if(null == context) return null;
         final String modulePath = FileManager.getDataDir() + FileManager.file_homeTopModle;
@@ -64,15 +68,15 @@ public class HomeModuleControler {
                 return mModuleBean;
             }
         }
-        setRequestModuleData();
+        setRequestModuleData(isRefresh);
         return mModuleBean;
     }
 
     /**
      * 请求模块数据
      */
-    private void setRequestModuleData() {
-        if (isRequest) return;
+    private void setRequestModuleData(boolean isRefresh) {
+        if (isRequest && !isRefresh) return;
         final String modulePath = FileManager.getDataDir() + FileManager.file_homeTopModle;
         ReqEncyptInternet.in().doEncyptAEC(StringManager.API_GET_LEVEL, "version=" + "v1",
                 new InternetCallback(Main.allMain) {

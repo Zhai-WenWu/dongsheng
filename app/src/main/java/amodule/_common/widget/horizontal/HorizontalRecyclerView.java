@@ -72,8 +72,9 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,
             return;
         }
         boolean isResetData = false;
+        Map<String,String> parameterMap = StringManager.getFirstMap(map.get(KEY_PARAMETER));
         if (mSubTitleView != null) {
-            mSubTitleView.setData(map);
+            mSubTitleView.setData(parameterMap);
             isResetData = true;
         }
         Map<String,String> dataMap = StringManager.getFirstMap(map.get(WidgetDataHelper.KEY_DATA));
@@ -109,7 +110,6 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,
                     break;
             }
             mSubTitleView = (BaseSubTitleView) findViewById(R.id.subtitle_view);
-            Map<String,String> parameterMap = StringManager.getFirstMap(map.get(KEY_PARAMETER));
             mSubTitleView.setData(parameterMap);
 
             mRecyclerView = (RvListView) findViewById(R.id.recycler_view);
