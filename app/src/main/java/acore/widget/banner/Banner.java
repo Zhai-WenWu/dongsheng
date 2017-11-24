@@ -103,7 +103,7 @@ public class Banner extends RelativeLayout {
     /**
      * 自动播放的间隔
      */
-    private int mAutoPlayInterval = 6;
+    private int mAutoPlayInterval = 5;
 
     /**
      * 页面切换的时间（从下一页开始出现，到完全出现的时间）

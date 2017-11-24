@@ -10,6 +10,7 @@ import com.xiangha.R;
 import java.util.List;
 import java.util.Map;
 
+import acore.tools.Tools;
 import amodule._common.delegate.ISaveStatistic;
 import amodule._common.plugin.WidgetVerticalLayout;
 import amodule._common.utility.WidgetUtility;
@@ -69,9 +70,6 @@ public class HomeHeaderControler implements ISaveStatistic {
             mLayouts[index].setVisibility(View.VISIBLE);
         }
         View.OnLayoutChangeListener onLayoutChangeListener = (v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
-            Log.i("tzy","mHeaderView.getHeight() = " + mHeaderView.getHeight());
-            Log.i("tzy","mFeedHeaderView.getHeight() = " + mFeedHeaderView.getHeight());
-            Log.i("tzy","mTipMessage.getHeight() = " + mTipMessage.getHeight());
             hasHeaderData = mHeaderView.getHeight() - mTipMessage.getHeight() > mFeedHeaderView.getHeight();
             mFeedHeaderView.setVisibility((hasFeedData && hasHeaderData) ? View.VISIBLE : View.GONE);
         };

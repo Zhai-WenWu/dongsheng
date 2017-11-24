@@ -133,6 +133,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
     @Override
     protected void onStart() {
         super.onStart();
+        startLoadTime = System.currentTimeMillis();
         loadRemoteData();
     }
 

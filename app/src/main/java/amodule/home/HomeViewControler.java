@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -136,9 +135,8 @@ public class HomeViewControler {
         }
         Stream.of(data).forEach(map -> {
             Map<String, String> temp = StringManager.getFirstMap(map.get(WidgetDataHelper.KEY_WIDGET_DATA));
-            map.put("cache", "2".equals(temp.get("isCache")) ? "2" : "1");
+            map.put("cache", "2".equals(temp.get("appFixed")) ? "2" : "1");
         });
-        Log.i("tzy", "setHeaderData handler data time = " + (System.currentTimeMillis() - startTime) + "ms");
         mHeaderControler.setData(data, isShowCache);
     }
 

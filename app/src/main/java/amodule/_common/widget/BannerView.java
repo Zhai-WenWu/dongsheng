@@ -66,6 +66,7 @@ public class BannerView extends Banner implements IBindMap, IStatictusData,ISave
         super(context, attrs, defStyleAttr);
         mInflater = LayoutInflater.from(context);
         int height = (int) (ToolsDevice.getWindowPx(context).widthPixels * 336 / 750f);
+//        Log.i("tzy","width = " + ToolsDevice.getWindowPx(context).widthPixels + " , height = " + height);
         setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height));
         setVisibility(GONE);
         mAdIDArray.add(ARTICLE_CONTENT_BOTTOM);
@@ -180,7 +181,7 @@ public class BannerView extends Banner implements IBindMap, IStatictusData,ISave
                     (final Map<String, String> map) ->
                             Stream.of(mAdIDArray).forEach(key -> {
                                 String adStr = map.get(key);
-//                                sendAdMessage(adStr);
+                                sendAdMessage(adStr);
                             }),
                     XHActivityManager.getInstance().getCurrentActivity(),
                     "wz_wz");
@@ -219,14 +220,21 @@ public class BannerView extends Banner implements IBindMap, IStatictusData,ISave
                 weightArray[index] = 0;
                 continue;
             }
-            String weightStr = map.get("weight");
-            int currentWeight = TextUtils.isEmpty(weightStr) || "null".equals(weightStr) ? 0 : Integer.parseInt(weightStr);
-            weightSum += currentWeight;
-            weightArray[index] = weightSum;
+            try {
+                String weightStr = map.get("weight");
+                if(TextUtils.isEmpty(weightStr) || "null".equals(weightStr)){
+                    weightStr = "0";
+                }else if(weightStr.indexOf(".") > 0){
+                    weightStr = weightStr.substring(0,weightStr.indexOf("."));
+                }
+                int currentWeight = Integer.parseInt(weightStr);
+                weightSum += currentWeight;
+                weightArray[index] = weightSum;
+            }catch (Exception ignored){
+                weightArray[index] = weightSum;
+                ignored.printStackTrace();
+            }
         }
-        //TODO
-//        setCurrentItem(weightArray.length-1);
-//        Log.i("tzy","index = " + (weightArray.length-1));
         //随机权重
         final int randomWeight = Tools.getRandom(0, weightSum);
         for (int index = 0; index < weightArray.length; index++) {
