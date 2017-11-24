@@ -34,7 +34,7 @@ dependencies {
     compile 'com.android.support:multidex:1.0.1'
     //    compile 'com.google.code.gson:gson:2.7'
     compile 'com.meituan.android.walle:library:1.0.3'
-    compile 'com.growingio.android:vds-android-agent:0.9.103@aar'
+    compile 'com.growingio.android:vds-android-agent:1.1.1@aar'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.qiyukf.unicorn:unicorn:3.10.0'
     compile project(':gsyVideoPlayer-java')
