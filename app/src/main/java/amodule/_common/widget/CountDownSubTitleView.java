@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.CountDownTimer;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -136,10 +137,11 @@ public class CountDownSubTitleView extends BaseSubTitleView {
         if (TextUtils.isEmpty(formatTime))
             return;
         String[] times = formatTime.split(":");
-        if("0".equals(times[0])){
+        int day = Integer.parseInt(times[0]);
+        if(1 >= day){
             mTitle2.setVisibility(GONE);
         }else{
-            mTitle2.setText(times[0] + "天");
+            mTitle2.setText((day - 1) + "天");
             mTitle2.setVisibility(VISIBLE);
         }
         mTitle3.setText(times[1]);
