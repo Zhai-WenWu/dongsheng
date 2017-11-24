@@ -2,14 +2,16 @@ package amodule.home.adapter;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
 import android.view.ViewGroup;
+
+import com.xiangha.R;
 
 import java.util.List;
 import java.util.Map;
 
 import acore.widget.rvlistview.adapter.RvBaseAdapter;
 import acore.widget.rvlistview.holder.RvBaseViewHolder;
-import amodule.home.view.RecyclerItem1;
 import amodule.home.viewholder.ViewHolder1;
 
 /**
@@ -25,7 +27,7 @@ public class HorizontalAdapter1 extends RvBaseAdapter<Map<String, String>> {
 
     @Override
     public RvBaseViewHolder<Map<String, String>> onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder1(new RecyclerItem1(getContext()));
+        return new ViewHolder1(LayoutInflater.from(mContext).inflate(R.layout.recyclerview_item1, null));
     }
 
     @Override
