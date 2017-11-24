@@ -19,7 +19,7 @@
         android:layout_centerVertical="true"/>
 
     <LinearLayout
-        android:id="@+id/time_layout"
+        android:id="@+id/linearlayout1"
         android:layout_width="wrap_content"
         android:layout_toRightOf="@id/text1"
         android:orientation="horizontal"
