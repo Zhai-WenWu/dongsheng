@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.xiangha.R;
 
 import java.text.SimpleDateFormat;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
 

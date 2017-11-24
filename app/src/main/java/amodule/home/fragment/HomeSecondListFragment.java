@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,7 +24,6 @@ import acore.tools.StringManager;
 import acore.widget.rvlistview.RvListView;
 import amodule.home.adapter.HomeSecondRecyclerAdapter;
 import amodule.home.module.HomeSecondModule;
-import amodule.main.adapter.HomeAdapter;
 import amodule.main.bean.HomeModuleBean;
 import amodule.main.view.item.HomeItem;
 import aplug.basic.InternetCallback;
@@ -49,7 +47,7 @@ public class HomeSecondListFragment extends Fragment {
 
     private static final String KEY_HOMEMODULE = "home_module";
     private static final String KEY_SECONDMODULE = "second_module";
-    private static final String KEY_POSITION = "second_module";
+    private static final String KEY_POSITION = "position";
 
     private int mScrollDataIndex=-1;//滚动数据的位置
     private ArrayList<Map<String, String>> mListData = new ArrayList<>();
@@ -63,7 +61,6 @@ public class HomeSecondListFragment extends Fragment {
     private boolean mIsPrepared = false;
     /** 是否显示 */
     private boolean mIsVisible;
-    private boolean mIsloadTwodata;
 
     private AdControlParent mAdControl;
     private BaseAppCompatActivity mActivity;
@@ -115,6 +112,9 @@ public class HomeSecondListFragment extends Fragment {
         addListener();
         mLoadOver = false;
         mIsPrepared = true;
+        mHomeAdapter = new HomeSecondRecyclerAdapter(mActivity,mListData,mAdControl);
+        mHomeAdapter.setHomeModuleBean(mModuleBean);
+        mHomeAdapter.setViewOnClickCallBack(isOnClick -> refresh());
         requestData();
         return view;
     }
@@ -175,10 +175,7 @@ public class HomeSecondListFragment extends Fragment {
         }
     }
     private void requestData() {
-        mHomeAdapter = new HomeSecondRecyclerAdapter(mActivity,mListData,mAdControl);
-        mHomeAdapter.setHomeModuleBean(mModuleBean);
-        mHomeAdapter.setViewOnClickCallBack(isOnClick -> refresh());
-        if(!mLoadOver){
+        if(!mLoadOver && mIsVisible){
             mLoadManager.setLoading(mPtrFrameLayout, mRv, mHomeAdapter, true, mIsVisible,
                     v -> entryptData(true),
                     v -> entryptData(!mLoadOver));
@@ -273,11 +270,12 @@ public class HomeSecondListFragment extends Fragment {
 
                         }
                         //初始化二级
-                        initContextView(dataMap.get("trigger_two_type"));
+                        if (mCallback != null) {
+                            mCallback.onTabDataReady(dataMap.get("trigger_two_type"));
+                        }
                         ArrayList<Map<String, String>> listDatas = StringManager.getListMapByJson(dataMap.get("list"));
                         if (listDatas != null && listDatas.size() > 0) {
                             loadCount=listDatas.size();
-                            int oldDayDishIndex = -1;
                             if (refresh && mListData.size() > 0) {
                                 //如果需要加广告，插入广告
                                 if (mAdControl != null) {
@@ -404,18 +402,6 @@ public class HomeSecondListFragment extends Fragment {
             if(mHomeAdapter!=null)
                 mHomeAdapter.notifyDataSetChanged();
         });
-    }
-
-    /**
-     * 初始化二级内容视图
-     * @param type 选中的类型
-     */
-    protected void initContextView(String type){
-        if(!mIsloadTwodata && !TextUtils.isEmpty(mModuleBean.getTwoData()) && !TextUtils.isEmpty(type) && mCallback != null){
-            mIsloadTwodata = true;
-            mCallback.onTabDataReady(type);
-        }
-
     }
     
     @Override
