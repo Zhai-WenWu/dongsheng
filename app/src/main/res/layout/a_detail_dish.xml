@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activityLayout"
-    style="@style/layout">
+    style="@style/layout"
+    android:background="@color/transparent">
 
     <ListView
         android:id="@+id/listview"
@@ -13,6 +14,7 @@
         android:dividerHeight="0dp"
         android:paddingLeft="0dp"
         android:paddingRight="0dp"
+        android:background="@color/transparent"
         android:layout_marginBottom="@dimen/dp_50"
         android:scrollbars="none"
         android:visibility="gone"/>

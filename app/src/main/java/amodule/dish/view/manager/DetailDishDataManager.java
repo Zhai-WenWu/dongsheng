@@ -23,12 +23,11 @@ import xh.basic.internet.UtilInternet;
  */
 public class DetailDishDataManager {
     public final static String DISH_DATA_TOP = "dish_top";//topInfo数据类型
-    public final static String DISH_DATA_BASE = "dish_base";//菜谱基础数据类型接口
     public final static String DISH_DATA_INGRE = "dish_ingre";//用料
     public final static String DISH_DATA_BANNER = "dish_banner";//banner
     public final static String DISH_DATA_STEP = "dish_step";//步骤
-    public final static String DISH_DATA_USER = "dish_user";//用户信息
     public final static String DISH_DATA_TIE = "dish_tie";//用户信息
+    public final static String DISH_DATA_QA = "dish_qa";//问答
     public final static String DISH_DATA_LIKE = "dish_like";//菜谱点赞处理
     private String dishCode;//菜谱code
     private Context mContext = XHActivityManager.getInstance().getCurrentActivity().getApplicationContext();
@@ -61,8 +60,6 @@ public class DetailDishDataManager {
      * 第一次请求接口合集
      */
     public void reqOne() {
-        reqDishBase();
-        reqDishUser();
         reqIngre();
         reqBanner();
     }
@@ -70,14 +67,15 @@ public class DetailDishDataManager {
     public void reqTwo() {
         reqStep();
         reqOtherData();
+        reqQAData();
     }
 
     /**
      * 请求topInfo数据---第一请求，有权限请求
      */
     private void reqTopInfo() {
-        String params = "code=" + dishCode;
-        ReqEncyptInternet.in().doEncypt(StringManager.api_getDishTopInfo, params, new InternetCallback(mContext) {
+        String params = "dishCode=" + dishCode;
+        ReqEncyptInternet.in().doEncypt(StringManager.API_MAIN8_TOPINFP, params, new InternetCallback(mContext) {
             @Override
             public void loaded(int flag, String url, Object object) {
                 if(flag>=UtilInternet.REQ_OK_STRING) {
@@ -123,30 +121,6 @@ public class DetailDishDataManager {
     }
 
     /**
-     * 请求菜谱基本信息
-     */
-    private void reqDishBase() {
-        String params = "code=" + dishCode;
-        ReqEncyptInternet.in().doEncypt(StringManager.API_GETDISHBASICINFOBYCODE, params, new InternetCallback(mContext) {
-            @Override
-            public void loaded(int flag, String url, Object object) {
-                handleDataSuccess(flag,DISH_DATA_BASE,object);
-            }
-        });
-    }
-    /**
-     * 请求用户信息
-     */
-    private void reqDishUser() {
-        String params = "code=" + customerCode;
-        ReqEncyptInternet.in().doEncypt(StringManager.API_GETUSERINFOBYCODE, params, new InternetCallback(mContext) {
-            @Override
-            public void loaded(int flag, String url, Object object) {
-                handleDataSuccess(flag,DISH_DATA_USER,object);
-            }
-        });
-    }
-    /**
      * 请求用料数据
      */
     private void reqIngre() {
@@ -176,8 +150,8 @@ public class DetailDishDataManager {
      * 请求步骤数据
      */
     private void reqStep() {
-        String params = "code=" + dishCode;
-        ReqEncyptInternet.in().doEncypt(StringManager.API_getDishMakeByCode, params, new InternetCallback(mContext) {
+        String params = "dishCode=" + dishCode;
+        ReqEncyptInternet.in().doEncypt(StringManager.API_MAIN8_DISHMAKE, params, new InternetCallback(mContext) {
             @Override
             public void loaded(int flag, String url, Object object) {
                 handleDataSuccess(flag,DISH_DATA_STEP,object);
@@ -189,12 +163,25 @@ public class DetailDishDataManager {
      * 请求帖子数据
      */
     private void reqOtherTieData(){
-        String params = "code=" + dishCode;
+        String params = "dishCode=" + dishCode;
         //获取帖子数据
-        ReqEncyptInternet.in().doEncypt(StringManager.api_getDishTieInfo,params, new InternetCallback(mContext) {
+        ReqEncyptInternet.in().doEncypt(StringManager.API_MAIN8_TIEINFO,params, new InternetCallback(mContext) {
             @Override
             public void loaded(int flag, String s, Object object) {
                 handleDataSuccess(flag,DISH_DATA_TIE,object);
+            }
+        });
+    }
+    /**
+     * 请求帖子数据
+     */
+    private void reqQAData(){
+        String params = "dishCode=" + dishCode;
+        //获取帖子数据
+        ReqEncyptInternet.in().doEncypt(StringManager.API_MAIN8_QAINFO,params, new InternetCallback(mContext) {
+            @Override
+            public void loaded(int flag, String s, Object object) {
+                handleDataSuccess(flag,DISH_DATA_QA,object);
             }
         });
     }

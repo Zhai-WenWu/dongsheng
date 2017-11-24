@@ -27,6 +27,7 @@ import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.view.ItemBaseView;
+import acore.tools.StringManager;
 import acore.tools.Tools;
 import amodule.dish.activity.DetailDish;
 import amodule.user.activity.FriendHome;
@@ -45,7 +46,6 @@ public class DishAboutView extends ItemBaseView {
     private TextView dish_work_exp_tv;
     private Map<String,String> mapAbout;
     private Map<String,String> mapUser;
-    private ImageView dish_follow_img;
     private TextView dish_follow_tv;
     private Activity activity;
     public DishAboutView(Context context) {
@@ -76,16 +76,24 @@ public class DishAboutView extends ItemBaseView {
         this.activity= activitys;
         setDishData();
         setExplainData(map.get("info"));
+        setUserData(StringManager.getFirstMap(map.get("customer")));
     }
 
     /**
      * 设置用户数据
      * @param map
-     * @param activitys
      */
-    public void setUserData(Map<String,String> map, Activity activitys){
+    public void setUserData(Map<String,String> map){
         this.mapUser= map;
         setUserData();
+    }
+
+    /**
+     * 设置用户权限信息
+     * @param map
+     */
+    public void setUserPowerData(Map<String,String> map){
+
     }
     /**
      * 设置菜谱数据
@@ -119,7 +127,6 @@ public class DishAboutView extends ItemBaseView {
         String userIntro = handleUserIntro(mapUser.get("info"));
         dish_user_time.setText(TextUtils.isEmpty(userIntro) ? getResources().getString(R.string.user_intro_def) : userIntro);
 
-        dish_follow_img= (ImageView) findViewById(R.id.dish_follow_img);
         dish_follow_tv= (TextView) findViewById(R.id.dish_follow_tv);
         setFollowState(mapUser);
         //点击关注
@@ -133,14 +140,14 @@ public class DishAboutView extends ItemBaseView {
                 }
                 if(mapUser.containsKey("isFav")&&mapUser.get("isFav").equals("1")){
                     XHClick.mapStat(activity, DetailDish.tongjiId, "用户点击", "关注点击");
-                    AppCommon.onAttentionClick(mapUser.get("code"), "follow");
+                    AppCommon.onAttentionClick(mapUser.get("customerCode"), "follow");
                     mapUser.put("isFav","2");
                     Tools.showToast(context,"已关注");
                     setFollowState(mapUser);
                 }else{
                     XHClick.mapStat(activity, DetailDish.tongjiId, "用户点击", "已关注点击");
                     Intent intent = new Intent(activity, FriendHome.class);
-                    intent.putExtra("code",mapUser.get("code"));
+                    intent.putExtra("code",mapUser.get("customerCode"));
                     activity.startActivityForResult(intent,1000);
 //                    AppCommon.openUrl(activity,"userIndex.app?code="+lists.get(0).get("code"),true);
                 }
@@ -148,7 +155,7 @@ public class DishAboutView extends ItemBaseView {
         });
         if(LoginManager.isLogin()
                 && LoginManager.userInfo.get("code") != null
-                && LoginManager.userInfo.get("code").equals(mapUser.get("code"))){
+                && LoginManager.userInfo.get("code").equals(mapUser.get("customerCode"))){
             findViewById(R.id.dish_follow_rela).setVisibility(View.GONE);
         } else {
             findViewById(R.id.dish_follow_rela).setVisibility(View.VISIBLE);
@@ -184,24 +191,12 @@ public class DishAboutView extends ItemBaseView {
     private void setFollowState(Map<String, String> cursterMap) {
         if (cursterMap.containsKey("isFav") && "1".equals(cursterMap.get("isFav"))) {//未关注
             findViewById(R.id.dish_follow_rela).setVisibility(View.VISIBLE);
-            int dp_10 = Tools.getDimen(context, R.dimen.dp_10);
-            LinearLayout.LayoutParams layoutParams=new LinearLayout.LayoutParams(dp_10,dp_10);
-            layoutParams.gravity= Gravity.CENTER_VERTICAL;
-            dish_follow_img.setLayoutParams(layoutParams);
-            dish_follow_img.setBackgroundResource(R.drawable.dish_follow_a);
-            findViewById(R.id.dish_follow_rela).setBackgroundResource(R.drawable.bg_circle_follow_5);
+            findViewById(R.id.dish_follow_rela).setBackgroundResource(R.drawable.bg_circle_red_stroke_5);
             dish_follow_tv.setText("关注");
             String color = Tools.getColorStr(context, R.color.comment_color);
             dish_follow_tv.setTextColor(Color.parseColor(color));
         } else if (cursterMap.containsKey("isFav") && "2".equals(cursterMap.get("isFav"))) {//已关注
             findViewById(R.id.dish_follow_rela).setVisibility(View.VISIBLE);
-            int dp_12 = Tools.getDimen(context, R.dimen.dp_12);
-            int dp_9 = Tools.getDimen(context, R.dimen.dp_9);
-            LinearLayout.LayoutParams layoutParams=new LinearLayout.LayoutParams(dp_12,dp_9);
-            layoutParams.gravity= Gravity.CENTER_VERTICAL;
-            layoutParams.setMargins(0, Tools.getDimen(context, R.dimen.dp_1),0,0);
-            dish_follow_img.setLayoutParams(layoutParams);
-            dish_follow_img.setBackgroundResource(R.drawable.circle_follow_user_right);
             dish_follow_tv.setText("已关注");
             dish_follow_tv.setTextColor(Color.parseColor("#999999"));
             findViewById(R.id.dish_follow_rela).setBackgroundColor(Color.parseColor("#fffffe"));

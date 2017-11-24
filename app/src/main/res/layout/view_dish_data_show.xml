@@ -8,16 +8,26 @@
         android:id="@+id/linear_data"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingTop="@dimen/dp_35"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/zhu_tv"
             style="@style/d_showDishTitle"
             android:paddingBottom="@dimen/dp_16"
-            android:paddingTop="@dimen/dp_25"
             android:paddingLeft="@dimen/dp_20"
+            android:paddingTop="0dp"
             android:text="用料"
+            android:textSize="@dimen/dp_18"
+            android:textColor="#333333"
             android:textStyle="bold" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_0.5"
+            android:background="#ececec"
+            android:layout_marginLeft="@dimen/dp_20"
+            android:layout_marginRight="@dimen/dp_20"
+            android:layout_alignParentBottom="true"/>
 
         <third.mall.widget.ListViewForScrollView
             android:id="@+id/listview_scroll"
@@ -44,6 +54,12 @@
                 android:text="展开全部"
                 android:textColor="#333333"
                 android:textSize="@dimen/dp_16" />
+            <ImageView
+                android:id="@+id/ingre_all_img"
+                android:layout_width="@dimen/dp_12"
+                android:layout_height="@dimen/dp_6"
+                android:layout_marginLeft="@dimen/dp_3"
+                android:background="@drawable/dish_ingre_show"/>
         </LinearLayout>
     </LinearLayout>
 

@@ -10,6 +10,7 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ImageSpan;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -74,9 +75,9 @@ public class DishQAView extends ItemBaseView{
      */
     public void setData(ArrayList<Map<String,String>> list){
         maptemp= list.get(0);
-        text_answer.setText(maptemp.get("answerNum"));
-        text_degree.setText(maptemp.get("satisfyRate"));
-        text_time.setText(maptemp.get("avgRespondTime"));
+//        text_answer.setText(maptemp.get("answerNum"));
+//        text_degree.setText(maptemp.get("satisfyRate"));
+//        text_time.setText(maptemp.get("avgRespondTime"));
         ArrayList<Map<String,String>> listQA = StringManager.getListMapByJson(maptemp.get("list"));
         if(listQA!=null&&listQA.size()>0){
             for(int i=0;i<listQA.size();i++){

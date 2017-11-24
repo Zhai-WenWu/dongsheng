@@ -26,6 +26,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import acore.logic.load.LoadManager;
+import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.dish.view.DishADBannerView;
@@ -34,6 +35,7 @@ import amodule.dish.view.DishExplainView;
 import amodule.dish.view.DishHeaderViewNew;
 import amodule.dish.view.DishHoverViewControl;
 import amodule.dish.view.DishIngreDataShow;
+import amodule.dish.view.DishModuleScrollView;
 import amodule.dish.view.DishQAView;
 import amodule.dish.view.DishRecommedAndAdView;
 import amodule.dish.view.DishTitleViewControl;
@@ -72,6 +74,7 @@ public class DetailDishViewManager {
     public DishExplainView dishExplainView;
     public DishADBannerView dishADBannerView;
     public DishQAView dishQAView;
+    public DishModuleScrollView dishModuleScrollView;
 
 
     /**
@@ -110,10 +113,15 @@ public class DetailDishViewManager {
         dishIngreDataShow.setVisibility(View.GONE);
         //banner
         dishADBannerView= new DishADBannerView(mAct);
+        dishADBannerView.setVisibility(View.GONE);
+        //小技巧
+        dishModuleScrollView= new DishModuleScrollView(mAct);
+        dishModuleScrollView.setVisibility(View.GONE);
 
         layoutHeader.addView(dishAboutView);
         layoutHeader.addView(dishADBannerView);
         layoutHeader.addView(dishIngreDataShow);
+        layoutHeader.addView(dishModuleScrollView);
         textStep = new TextView(activity);
         textStep.setPadding(Tools.getDimen(activity, R.dimen.dp_20), Tools.getDimen(activity, R.dimen.dp_20), 0, 0);
         textStep.setTextSize(Tools.getDimenSp(activity, R.dimen.sp_18));
@@ -214,15 +222,20 @@ public class DetailDishViewManager {
         if(dishAboutView!=null) {
             dishAboutView.setVisibility(View.VISIBLE);
             dishAboutView.setData(list.get(0), mAct);
+            //设置标题用户名：
+            if(list.get(0).containsKey("customer")){
+                Map<String,String> map = StringManager.getFirstMap(list.get(0).get("customer"));
+                handlerQAUserView(map);
+                if(map.containsKey("nickName")&&!TextUtils.isEmpty(map.get("nickName")))handlerTitleName(map.get("nickName"));
+            }
         }
     }
     /**
-     * 处理用户信息
+     * 处理用户权限信息
      */
-    public void handlerUserData(ArrayList<Map<String, String>> list) {
+    public void handlerUserPowerData(ArrayList<Map<String, String>> list) {
         if(dishAboutView!=null) {
-            dishAboutView.setVisibility(View.VISIBLE);
-            dishAboutView.setUserData(list.get(0),mAct);
+            dishAboutView.setUserPowerData(list.get(0));
         }
     }
     /**
@@ -238,13 +251,24 @@ public class DetailDishViewManager {
      * 处理广告信息
      */
     public void handlerBannerView(ArrayList<Map<String, String>> list) {
-            if(dishADBannerView!=null)dishADBannerView.setData(list.get(0));
+            if(dishADBannerView!=null&& list!=null && list.size()>0&&!TextUtils.isEmpty(list.get(0).get("img"))){
+                dishADBannerView.setVisibility(View.VISIBLE);
+                dishADBannerView.setData(list.get(0));
+            }
     }
-
+    /**
+     * 处理小技巧view
+     */
+    public void handlerSkillView(ArrayList<Map<String, String>> list) {
+        if(dishModuleScrollView!=null)dishModuleScrollView.setData(list);
+    }
     /**
      * 处理步骤相关view
      */
-    public void handlerStepView(){
+    public void handlerStepView(ArrayList<Map<String,String>> list){
+        if(list!=null&&list.size()>0&&"1".equals(list.get(0).get("isShow"))) {
+            textStep.setText(list.get(0).get("promptMsg"));
+        }
         textStep.setVisibility(View.VISIBLE);
     }
     /**
@@ -257,6 +281,14 @@ public class DetailDishViewManager {
         }
     }
 
+    /**
+     * 处理用户信息问答
+     */
+    private void handlerQAUserView(Map<String,String> maps){
+        if(dishQAView!=null){
+            dishQAView.setUserMap(maps);
+        }
+    }
     /**
      * 处理问答
      * @param list

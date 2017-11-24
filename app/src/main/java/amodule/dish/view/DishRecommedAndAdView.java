@@ -121,7 +121,7 @@ public class DishRecommedAndAdView extends ItemBaseView implements View.OnClickL
                     Map<String, String> customerMap = customerArray.get(0);
                     userName.setText(customerMap.get("nickName"));
                     setViewImage(userImg, customerMap.get("img"), 500);
-                    String userCode = customerMap.get("code");
+                    String userCode = customerMap.get("customerCode");
                     setGotoFriendHome(userImg, userCode);
                     setGotoFriendHome(userName, userCode);
                 }

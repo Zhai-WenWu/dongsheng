@@ -54,7 +54,6 @@ public class DetailDishNew extends BaseAppCompatActivity implements IObserver {
     private AdapterDishNew adapterDishNew;
     private ArrayList<Map<String,String>> maplist = new ArrayList<>();
     private Map<String,String> mapTop = new HashMap<>();
-    private Map<String,String> mapBase = new HashMap<>();
     private boolean isHasVideo;//当前是否是视频
     private String customerCode;
     private RelativeLayout dredgeVipFullLayout;
@@ -137,22 +136,18 @@ public class DetailDishNew extends BaseAppCompatActivity implements IObserver {
                 if(!getStateMakes(maplist)){//无图时不执行
                     return;
                 }
-//                if(!isOnClickImageShow){
-//                    isOnClickImageShow=true;
-//                    ++showNumLookImage;
-//                }
                 XHClick.mapStat(DetailDishNew.this, tongjiId, "菜谱区域的点击", "步骤图点击");
                 Intent intent = new Intent(DetailDishNew.this, MoreImageShow.class);
                 ArrayList<Map<String, String>> listdata = new ArrayList<Map<String, String>>();
                 listdata.addAll(maplist);
-                if (!TextUtils.isEmpty(mapBase.get("remark"))) {
+                if (!TextUtils.isEmpty(mapTop.get("remark"))) {
                     Map<String, String> map_temp = new HashMap<String, String>();
                     if(mapTop != null){
                         map_temp.put("img", mapTop.get("img"));
                     }else{
                         map_temp.put("img", "");
                     }
-                    map_temp.put("info", "小贴士：\n" + mapBase.get("remark"));
+                    map_temp.put("info", "小贴士：\n" + mapTop.get("remark"));
                     map_temp.put("num", String.valueOf(maplist.size() + 1));
                     listdata.add(map_temp);
                 }
@@ -165,41 +160,36 @@ public class DetailDishNew extends BaseAppCompatActivity implements IObserver {
     }
     private void dishTypeData(String type,ArrayList<Map<String,String>> list,Map<String,String> map){
         switch (type){
-            case DetailDishDataManager.DISH_DATA_TOP:
+            case DetailDishDataManager.DISH_DATA_TOP://topInfo,菜谱的基本信息和用户的基本信息
                 mapTop= list.get(0);
                 dishName= mapTop.get("name");
                 isHasVideo = "2".equals(mapTop.get("type"));
-                detailDishViewManager.handlerHeaderView(list,map);
+                detailDishViewManager.handlerHeaderView(list,map);//header
                 detailDishViewManager.handlerHoverViewCode(code);
-                customerCode= mapTop.get("customerCode");
+                customerCode= StringManager.getFirstMap(mapTop.get("customer")).get("customerCode");
                 if (!TextUtils.isEmpty(customerCode)&&LoginManager.userInfo != null && customerCode.equals(LoginManager.userInfo.get("code"))){
                         state = "";
                 }
-                detailDishViewManager.handlerTitle(mapTop,code,isHasVideo,mapTop.get("dishState"),loadManager,state);
+                detailDishViewManager.handlerTitle(mapTop,code,isHasVideo,mapTop.get("dishState"),loadManager,state);//title导航
+                detailDishViewManager.handlerDishData(list);//菜谱基本信息
+                detailDishViewManager.handlerExplainView(list);//小贴士
                 requestWeb(mapTop);
                 break;
-            case DetailDishDataManager.DISH_DATA_BASE:
-                mapBase = list.get(0);
-                detailDishViewManager.handlerDishData(list);
-                detailDishViewManager.handlerExplainView(list);
-                break;
-            case DetailDishDataManager.DISH_DATA_USER:
-                detailDishViewManager.handlerUserData(list);
-                detailDishViewManager.handlerTitleName(list.get(0).get("nickName"));
-                break;
-            case DetailDishDataManager.DISH_DATA_INGRE:
+            case DetailDishDataManager.DISH_DATA_INGRE://用料
                 detailDishViewManager.handlerIngreView(list);
                 break;
-            case DetailDishDataManager.DISH_DATA_BANNER:
+            case DetailDishDataManager.DISH_DATA_BANNER://banner
                 detailDishViewManager.handlerBannerView(list);
                 break;
             case DetailDishDataManager.DISH_DATA_STEP://步骤
-                maplist.addAll(list);
-                detailDishViewManager.handlerStepView();
+                if(list!=null&&list.size()>0&&!TextUtils.isEmpty(list.get(0).get("list")))maplist.addAll(StringManager.getListMapByJson(list.get(0).get("list")));
+                detailDishViewManager.handlerStepView(list);
                 break;
-            case DetailDishDataManager.DISH_DATA_TIE:
+            case DetailDishDataManager.DISH_DATA_TIE://帖子
                 detailDishViewManager.handlerRecommedAndAd(list,code,dishName);
-            case DetailDishDataManager.DISH_DATA_LIKE:
+            case DetailDishDataManager.DISH_DATA_QA://问答
+                detailDishViewManager.handlerQAView(list);
+            case DetailDishDataManager.DISH_DATA_LIKE://点赞
                 detailDishViewManager.handlerHoverViewLike(list);
                 break;
             default:
@@ -294,9 +284,9 @@ public class DetailDishNew extends BaseAppCompatActivity implements IObserver {
     public void notify(String name, Object sender, Object data) {
         switch (name){
             case ObserverManager.NOTIFY_LOGIN://登陆
+
                 break;
             case ObserverManager.NOTIFY_FOLLOW://关注
-
                 break;
             case ObserverManager.NOTIFY_PAYFINISH://支付
                 break;

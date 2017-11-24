@@ -366,6 +366,13 @@ public class StringManager extends UtilString {
     public final static String API_getDishMakeByCode = apiUrl + "main7/Dish/getDishMakeByCode";//做法
     public final static String API_GETUSERINFOBYCODE = apiUrl + "main7/Dish/getUserInfoByCode";//用户信息
 
+    public final static String API_MAIN8_TOPINFP = apiUrl  + "main8/Dish/topInfo";//菜谱详情页顶部
+    public final static String API_MAIN8_DISHMAKE = apiUrl  + "main8/Dish/getDishMakeByCode";//菜谱详情页做法
+    public final static String API_MAIN8_QAINFO = apiUrl + "main8/Dish/getQaInfo";//菜谱详情页做法
+    public final static String API_MAIN8_TIEINFO = apiUrl + "main8/Dish/tieInfo";//菜谱详情页做法
+
+
+
     //替换url
     public final static String replaceUrl(String url) {
         if (defaultDomain != domain || defaultProtocol != protocol) {
