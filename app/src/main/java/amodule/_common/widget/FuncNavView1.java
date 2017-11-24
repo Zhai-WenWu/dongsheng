@@ -91,14 +91,16 @@ public class FuncNavView1 extends HomeFuncNavView1 implements IBindMap,IStatictu
         ImageView imageView = (ImageView) itemView.findViewById(R.id.icon);
 
         WidgetUtility.setTextToView(textView,data.get("text1"),false);
-        if(null != imageView)
-            Glide.with(getContext()).load(data.get("img")).into(imageView);
-        imageView.setOnClickListener(v->{
-            AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(),data.get("url"),true);
-            if(!TextUtils.isEmpty(id) && !TextUtils.isEmpty(twoLevel)){
-                XHClick.mapStat(getContext(),id,twoLevel,data.get("text1"));
-            }
-        });
+        if(null != imageView){
+            if(!TextUtils.isEmpty(data.get("img")))
+                Glide.with(getContext()).load(data.get("img")).into(imageView);
+            imageView.setOnClickListener(v->{
+                AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(),data.get("url"),true);
+                if(!TextUtils.isEmpty(id) && !TextUtils.isEmpty(twoLevel)){
+                    XHClick.mapStat(getContext(),id,twoLevel,data.get("text1"));
+                }
+            });
+        }
         return true;
     }
 

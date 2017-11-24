@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -102,12 +103,12 @@ public class Banner extends RelativeLayout {
     /**
      * 自动播放的间隔
      */
-    private int mAutoPlayInterval = 6;
+    private int mAutoPlayInterval = 5;
 
     /**
      * 页面切换的时间（从下一页开始出现，到完全出现的时间）
      */
-    private int mPageChangeDuration = 400;
+    private int mPageChangeDuration = 700;
     /**
      * 是否正在播放
      */
@@ -161,7 +162,7 @@ public class Banner extends RelativeLayout {
         //默认点指示器的左右Margin3dp
         mPointLeftRightMargin = dp2px(context, 2);
         //默认点指示器的上下margin为6dp
-        mPointTopBottomMargin = dp2px(context, 13);
+        mPointTopBottomMargin = dp2px(context, 17);
         //默认点容器的左右padding为10dp
         mPointContainerLeftRightPadding = dp2px(context, 8);
         //默认指示器提示文字大小8sp
@@ -390,18 +391,18 @@ public class Banner extends RelativeLayout {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        int action = ev.getAction();
-        switch (action) {
-            case MotionEvent.ACTION_DOWN:
-                pauseScroll();
-                break;
-            case MotionEvent.ACTION_UP:
-                goScroll();
-                break;
-            case MotionEvent.ACTION_CANCEL:
-                goScroll();
-                break;
-        }
+//        int action = ev.getAction();
+//        switch (action) {
+//            case MotionEvent.ACTION_DOWN:
+//                pauseScroll();
+//                break;
+//            case MotionEvent.ACTION_UP:
+//                goScroll();
+//                break;
+//            case MotionEvent.ACTION_CANCEL:
+//                goScroll();
+//                break;
+//        }
         return super.dispatchTouchEvent(ev);
     }
 
@@ -600,6 +601,11 @@ public class Banner extends RelativeLayout {
         mViewPager.addOnPageChangeListener(new ChangePointListener());
     }
 
+    public void addOnPageChangeListener(ViewPager.OnPageChangeListener listener){
+        if(null != mViewPager && null != listener)
+            mViewPager.addOnPageChangeListener(listener);
+    }
+
     public void setBannerAdapter(BannerAdapter adapter) {
         mBannerAdapter = adapter;
         setSource();
@@ -614,8 +620,12 @@ public class Banner extends RelativeLayout {
         initPoints();
         mViewPager.getAdapter().notifyDataSetChanged();
         mViewPager.setCurrentItem(0, false);
-        if (mData.size() > 1)
+        if (mData.size() > 1){
             goScroll();
+            mPointContainerLl.setVisibility(VISIBLE);
+        }else{
+            mPointContainerLl.setVisibility(INVISIBLE);
+        }
     }
 
 
@@ -626,7 +636,7 @@ public class Banner extends RelativeLayout {
         WeakReference<Banner> mWeakBanner;
 
         public PlayHandler(Banner banner) {
-            this.mWeakBanner = new WeakReference<Banner>(banner);
+            this.mWeakBanner = new WeakReference<>(banner);
         }
 
         @Override

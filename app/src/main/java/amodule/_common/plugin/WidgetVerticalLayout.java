@@ -37,6 +37,7 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
 
     public static final int LLM = LinearLayout.LayoutParams.MATCH_PARENT;
     public static final int LLW = LinearLayout.LayoutParams.WRAP_CONTENT;
+    private int viewPaddingTop,viewPaddingBottom;
 
     LayoutInflater mInflater;
 
@@ -112,6 +113,7 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
             addViewByData(mExtraTop, data, false);
         });
         requestLayout();
+        mExtraTop.setVisibility(mExtraTop.getChildCount() > 0 ? VISIBLE : GONE);
     }
 
     private void initTopLayout(){
@@ -119,6 +121,7 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
             mExtraTop = new LinearLayout(getContext());
             mExtraTop.setLayoutParams(new LinearLayout.LayoutParams(LLM,LLW));
             mExtraTop.setOrientation(VERTICAL);
+            mExtraTop.setPadding(0,0,0,viewPaddingTop);
             addView(mExtraTop, 0);
         }else if(mExtraTop.getChildCount() > 0){
             mExtraTop.removeAllViews();
@@ -137,12 +140,14 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
             addViewByData(mExtraBottom, data, true);
         });
         requestLayout();
+        mExtraBottom.setVisibility(mExtraBottom.getChildCount() > 0 ? VISIBLE : GONE);
     }
     private void initBootomLayout(){
         if(mExtraBottom == null){
             mExtraBottom = new LinearLayout(getContext());
             mExtraBottom.setLayoutParams(new LinearLayout.LayoutParams(LLM,LLW));
             mExtraBottom.setOrientation(VERTICAL);
+            mExtraBottom.setPadding(0,viewPaddingBottom,0,0);
             addView(mExtraBottom);
         }else if(mExtraBottom.getChildCount() > 0){
             mExtraBottom.removeAllViews();
@@ -189,5 +194,13 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
                 ((ISaveStatistic)view).saveStatisticData();
             }
         }
+    }
+
+    public void setViewPaddingTop(int viewPaddingTop) {
+        this.viewPaddingTop = viewPaddingTop;
+    }
+
+    public void setViewPaddingBottom(int viewPaddingBottom) {
+        this.viewPaddingBottom = viewPaddingBottom;
     }
 }

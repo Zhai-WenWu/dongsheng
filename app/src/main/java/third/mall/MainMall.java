@@ -1,6 +1,7 @@
 package third.mall;
 
 import android.content.Intent;
+import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -41,6 +42,7 @@ import xh.basic.tool.UtilFile;
  *
  */
 public class MainMall extends MainBaseActivity implements OnClickListener{
+	public static final String KEY = "MainMall";
 
 	// 加载管理
 	private TextView mall_news_num;
@@ -53,8 +55,9 @@ public class MainMall extends MainBaseActivity implements OnClickListener{
 	protected void onCreate(Bundle arg0) {
 		super.onCreate(arg0);
 		setContentView(R.layout.a_mall);
+		getWindow().setFormat(PixelFormat.TRANSLUCENT);
 		//在Main中保存首页的对象
-		Main.allMain.allTab.put("MainMall", this);
+		Main.allMain.allTab.put(KEY, this);
 //		initActivity("电商首页",2, 0, 0, R.layout.a_mall);
 		common= new MallCommon(this);
 		initView();

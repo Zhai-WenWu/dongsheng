@@ -39,6 +39,7 @@ dependencies {
     compile 'com.qiyukf.unicorn:unicorn:3.10.0'
     compile project(':gsyVideoPlayer-java')
     compile project(':xh_dialog')
+    //Java8的stream API第三方兼容包
     compile 'com.annimon:stream:1.0.3'
 }
 
@@ -107,6 +108,10 @@ android {
             // 移除无用的resource文件
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard.pro'
             signingConfig signingConfigs.MainXiangha
+        }
+        staging.initWith(buildTypes.debug)
+        staging {
+            applicationIdSuffix ".staging"
         }
     }
 

@@ -55,9 +55,11 @@
     android:layout_height="wrap_content"
     android:layout_marginRight="@dimen/dp_15"
     android:layout_marginTop="@dimen/dp_24"
+    android:visibility="gone"
     android:layout_alignParentRight="true"
     android:orientation="horizontal">
-    <acore.widget.TagTextView xmlns:tagTextView="http://schemas.android.com/apk/res-auto"
+    <acore.widget.TagTextView
+        xmlns:tagTextView="http://schemas.android.com/apk/res-auto"
         android:id="@+id/ad_vip_lead"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/dp_30"

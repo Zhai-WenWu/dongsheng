@@ -3,19 +3,21 @@ package amodule._common.widget;
 import android.app.Activity;
 import android.content.Context;
 import android.os.CountDownTimer;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.xiangha.R;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Map;
+import java.util.TimeZone;
 
 import acore.tools.StringManager;
 import amodule._common.helper.WidgetDataHelper;
+import amodule._common.utility.WidgetUtility;
 import amodule._common.widget.baseview.BaseSubTitleView;
 
 /**
@@ -32,6 +34,7 @@ public class CountDownSubTitleView extends BaseSubTitleView {
     private TextView mTitle2;
     private TextView mTitle3;
     private TextView mTitle4;
+    private LinearLayout mLinearLayout1;
 
     private long mMillisInFuture;
     private long mMillisInterval = 1000;
@@ -42,6 +45,7 @@ public class CountDownSubTitleView extends BaseSubTitleView {
     private boolean mTaskRunning;
 
     private CountDownTimer mCountDownTimer;
+    private SimpleDateFormat mSdf;
 
     public CountDownSubTitleView(Context context) {
         super(context, R.layout.countdown_subtitle_relativelayout);
@@ -57,6 +61,7 @@ public class CountDownSubTitleView extends BaseSubTitleView {
 
     @Override
     protected void initView() {
+        mLinearLayout1 = (LinearLayout) findViewById(R.id.linearlayout1);
         mTitle1 = (TextView) findViewById(R.id.text1);
         mTitle2 = (TextView) findViewById(R.id.text2);
         mTitle3 = (TextView) findViewById(R.id.text3);
@@ -66,37 +71,28 @@ public class CountDownSubTitleView extends BaseSubTitleView {
     @Override
     protected void onDataReady(Map<String, String> map) {
         Map<String, String> titleMap = StringManager.getFirstMap(map.get(WidgetDataHelper.KEY_TITLE));
-        setTitle1Text(titleMap.get("text1"));
+        WidgetUtility.setTextToView(mTitle1,titleMap.get("text1"));
         String millisInFuture = titleMap.get("endTime");
-        if(TextUtils.isEmpty(millisInFuture))
+        if(TextUtils.isEmpty(millisInFuture)){
+            mLinearLayout1.setVisibility(GONE);
             return;
-        mMillisInFuture = Integer.parseInt(millisInFuture) * 1000;
+        }
+        mMillisInFuture = (Integer.parseInt(millisInFuture) + 1) * 1000;
+        if (mMillisInFuture <= 0) {
+            mLinearLayout1.setVisibility(View.GONE);
+            return;
+        }
         mDataReady = true;
         startCountDownTime();
-    }
-
-    public void setTitle1Text(@Nullable CharSequence text) {
-        if (mTitle1 != null) {
-            mTitle1.setText(text);
-        }
-    }
-
-    public void setTitle1Text(int resid) {
-        if (mTitle1 != null) {
-            mTitle1.setText(resid);
-        }
-    }
-
-    public void setTitle1TextColor(int color) {
-        if (mTitle1 != null) {
-            mTitle1.setTextColor(color);
-        }
     }
 
     public void startCountDownTime() {
         if (mTaskRunning || !mDataReady || !mIsAttachedToWindow || mIsDetachedFromWindow)
             return;
-        setTimeText(mMillisInFuture);
+        if (mSdf == null) {
+            mSdf = new SimpleDateFormat("HH:mm:ss");
+            mSdf.setTimeZone(TimeZone.getTimeZone("GMT+0:00"));
+        }
         mCountDownTimer = new CountDownTimer(mMillisInFuture, mMillisInterval) {
             @Override
             public void onTick(long millisUntilFinished) {
@@ -106,6 +102,7 @@ public class CountDownSubTitleView extends BaseSubTitleView {
 
             @Override
             public void onFinish() {
+                setTimeText(0);
                 endCountDownTime();
             }
         };
@@ -132,8 +129,7 @@ public class CountDownSubTitleView extends BaseSubTitleView {
     }
 
     private void setTimeText(long millis) {
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-        String formatTime = sdf.format(new Date(millis));
+        String formatTime = mSdf.format(millis);
         if (TextUtils.isEmpty(formatTime))
             return;
         String[] times = formatTime.split(":");

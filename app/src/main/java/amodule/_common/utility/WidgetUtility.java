@@ -1,6 +1,7 @@
 package amodule._common.utility;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
@@ -76,62 +77,18 @@ public class WidgetUtility {
         }
     }
 
-    public static boolean handlerClickEvent(String mTransferUrl,String moduleType,String dataType,int position){
-        if(TextUtils.isEmpty(mTransferUrl))
-            return false;
-        if (!TextUtils.isEmpty(mTransferUrl)) {
-                if (!mTransferUrl.contains("data_type=") && !mTransferUrl.contains("module_type=")) {
-                    if (!mTransferUrl.startsWith("http")) {
-                        if (mTransferUrl.contains("?"))
-                            mTransferUrl += "&data_type=" + dataType;
-                        else
-                            mTransferUrl += "?data_type=" + dataType;
-                        mTransferUrl += "&module_type=" + moduleType;
-                    }
-                    //TODO
-//                Log.i("zhangyujian", "点击：" + mDataMap.get("code") + ":::" + mTransferUrl);
-//                XHClick.saveStatictisFile("home", moduleType, dataType, mDataMap.get("code"), "", "click", "", "", String.valueOf(position + 1), "", "");
-                XHClick.saveStatictisFile("home", moduleType, dataType, "", "", "click", "", "", String.valueOf(position + 1), "", "");
-            }
-            if (mTransferUrl.contains("dishInfo.app")
-                    && !TextUtils.isEmpty(dataType)
-                    && !"2".equals(dataType)) {
-                //TODO
-//                mTransferUrl += "&img=" + mDataMap.get("img");
-            }
-            String params = mTransferUrl.substring(mTransferUrl.indexOf("?") + 1, mTransferUrl.length());
-            Log.i("zhangyujian", "mTransferUrl:::" + params);
-            Map<String, String> map = StringManager.getMapByString(params, "&", "=");
-            Class c = null;
-            Intent intent = new Intent();
-            if (mTransferUrl.startsWith("http")) {//我的香豆、我的会员页面
-                if (mTransferUrl.contains("fullScreen=2")) {
-                    c = FullScreenWeb.class;
-                    intent.putExtra("url", mTransferUrl);
-                    intent.putExtra("code", map.containsKey("code") ? map.get("code") : "");
-                } else {
-                    c = ShowWeb.class;
-                    intent.putExtra("url", mTransferUrl);
-                    intent.putExtra("code", map.get("code"));
-                }
-            } else if (mTransferUrl.contains("xhds.product.info.app?")) {//商品详情页，原生
-                c = CommodDetailActivity.class;
-                for(String key : map.keySet()){//取全部参数。
-                    intent.putExtra(key, map.get(key));
-                }
-            } else if (mTransferUrl.contains("nousInfo.app")) {
-                c = ShowWeb.class;
-                intent.putExtra("url", StringManager.api_nouseInfo);
-                intent.putExtra("code", map.get("code"));
-            }
-            if (c != null) {
-                intent.putExtra("data_type", dataType);
-                intent.putExtra("module_type", moduleType);
-                intent.setClass(XHActivityManager.getInstance().getCurrentActivity(), c);
-                XHActivityManager.getInstance().getCurrentActivity().startActivity(intent);
-                return true;
-            }
+    /**
+     * 解析颜色
+     * @param colorStr
+     * @return 不符合规则的返回透明色
+     */
+    public static int parseColor(String colorStr){
+        int color = Color.parseColor("#00FFFFFE");
+        if(!TextUtils.isEmpty(colorStr)
+                && colorStr.startsWith("#")
+                && (colorStr.length() == 7 || colorStr.length() == 9)){
+            color = Color.parseColor(colorStr);
         }
-        return false;
+        return color;
     }
 }

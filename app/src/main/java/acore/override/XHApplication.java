@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.multidex.MultiDex;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.ProgressBar;
 
 import com.baidu.mobads.AdView;
 import com.baidu.mobads.AppActivity;
@@ -14,6 +15,8 @@ import com.mob.MobApplication;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.tencent.smtt.sdk.QbSdk;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.onlineconfig.OnlineConfigAgent;
+import com.umeng.onlineconfig.OnlineConfigLog;
 import com.xiangha.R;
 
 import java.util.Map;

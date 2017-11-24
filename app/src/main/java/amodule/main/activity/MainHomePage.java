@@ -40,7 +40,7 @@ import third.ad.control.AdControlParent;
 public class MainHomePage extends MainBaseActivity implements IObserver {
     public final static String KEY = "MainIndex";
     public final static String recommedType_statictus = "recom";//推荐类型-用于统计
-    public final static String STATICTUS_ID_HOMEPAGE = "a_index";
+    public final static String STATICTUS_ID_HOMEPAGE = "a_index580";
     public final static String STATICTUS_ID_PULISH = "a_post_button580";
 
     //数据控制
@@ -60,10 +60,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
     protected void onCreate(Bundle savedInstanceState) {
         mViewContrloer = new HomeViewControler(this);
         super.onCreate(savedInstanceState);
-        long startTime = System.currentTimeMillis();
         setContentView(R.layout.a_home_page);
-        long endtime1 = System.currentTimeMillis() - startTime;
-        Log.i("tzy","setContentView time : " + (endtime1) + "ms");
         getWindow().setFormat(PixelFormat.TRANSLUCENT);
         Main.allMain.allTab.put(KEY, this);//这个Key值不变
         //初始化
@@ -105,9 +102,9 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
         String logPostTime = AppCommon.getConfigByLocal("logPostTime");
         if (!TextUtils.isEmpty(logPostTime)) {
             Map<String, String> map = StringManager.getFirstMap(logPostTime);
-            if (map.containsKey("postTime")
-                    && !TextUtils.isEmpty(map.get("postTime"))) {
-                XHClick.HOME_STATICTIS_TIME = Integer.parseInt(map.get("postTime"), 10) * 1000;
+            String postTimeValue = map.get("postTime");
+            if (!TextUtils.isEmpty(postTimeValue)) {
+                XHClick.HOME_STATICTIS_TIME = Integer.parseInt(postTimeValue, 10) * 1000;
             }
         }
     }
@@ -117,7 +114,8 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
         startLoadTime = System.currentTimeMillis();
         if (!LoadOver) {
             assert mViewContrloer != null;
-            loadManager.setLoading(mViewContrloer.getRvListView(),
+            loadManager.setLoading(
+                    mViewContrloer.getRvListView(),
                     mHomeAdapter,
                     true,
                     v -> {
@@ -129,11 +127,14 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
             mViewContrloer.addOnScrollListener();
         }
         loadCacheData();
+        //TODO
+        mViewContrloer.setTipMessage();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        startLoadTime = System.currentTimeMillis();
         loadRemoteData();
     }
 
@@ -293,9 +294,6 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
     }
 
     public void refresh() {
-        if (mViewContrloer != null) {
-            mViewContrloer.refreshBouy();
-        }
         loadRemoteData();
         EntryptData(true);
     }

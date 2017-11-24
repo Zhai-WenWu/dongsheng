@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import acore.tools.FileManager;
@@ -42,12 +43,10 @@ public class HomeModuleControler {
         String moduleJson = FileManager.readFile(modulePath);
         if (TextUtils.isEmpty(moduleJson)) {
             moduleJson = FileManager.getFromAssets(context, "homeTopModle");
-            final String finalModuleJson = moduleJson;
-            FileManager.saveFileToCompletePath(modulePath, finalModuleJson, false);
+            FileManager.saveFileToCompletePath(modulePath, moduleJson, false);
         }
         ArrayList<Map<String, String>> listModule = StringManager.getListMapByJson(moduleJson);
-        final int size = listModule.size();
-        for (int i = 0; i < size; i++) {
+        for (int i = 0 , size = listModule.size(); i < size; i++) {
             Map<String,String> moduleMap = listModule.get(i);
             if (TextUtils.isEmpty(mType)
                     || TextUtils.equals(moduleMap.get("type"), mType)) {
@@ -75,8 +74,7 @@ public class HomeModuleControler {
     private void setRequestModuleData() {
         if (isRequest) return;
         final String modulePath = FileManager.getDataDir() + FileManager.file_homeTopModle;
-        String url = StringManager.API_GET_LEVEL;
-        ReqEncyptInternet.in().doEncyptAEC(url, "version=" + "v1",
+        ReqEncyptInternet.in().doEncyptAEC(StringManager.API_GET_LEVEL, "version=" + "v1",
                 new InternetCallback(Main.allMain) {
                     @Override
                     public void loaded(int flag, String url, final Object o) {

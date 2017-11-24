@@ -1,6 +1,7 @@
 package amodule.home;
 
-import android.text.TextUtils;
+import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -9,6 +10,7 @@ import com.xiangha.R;
 import java.util.List;
 import java.util.Map;
 
+import acore.tools.Tools;
 import amodule._common.delegate.ISaveStatistic;
 import amodule._common.plugin.WidgetVerticalLayout;
 import amodule._common.utility.WidgetUtility;
@@ -24,13 +26,16 @@ import amodule.main.activity.MainHomePage;
 
 public class HomeHeaderControler implements ISaveStatistic {
 
-    private View mHeaderView,mFeedHeaderView;
+    private View mHeaderView, mFeedHeaderView;
 
-    private TextView mFeedTitle;
+    private TextView mFeedTitle, mTipMessage;
 
     private WidgetVerticalLayout[] mLayouts = new WidgetVerticalLayout[6];
 
-    HomeHeaderControler(View header){
+    private boolean hasFeedData = false;
+    private boolean hasHeaderData = false;
+
+    HomeHeaderControler(View header) {
         this.mHeaderView = header;
         //banner
         mLayouts[0] = (WidgetVerticalLayout) header.findViewById(R.id.banner_widget);
@@ -45,46 +50,56 @@ public class HomeHeaderControler implements ISaveStatistic {
 
         mFeedHeaderView = header.findViewById(R.id.a_home_feed_title);
         mFeedTitle = (TextView) header.findViewById(R.id.feed_title);
+        mTipMessage = (TextView) header.findViewById(R.id.tip_message);
     }
 
-    public void setData(List<Map<String,String>> array,boolean isShowCache){
-        if(null == array || array.isEmpty()) return;
-        String[] twoLevelArray = {"轮播banner","功能入口","功能入口","精品厨艺","限时抢购","精选菜单"};
-        String[] threeLevelArray = {"轮播banner位置","","","精品厨艺位置","限时抢购位置","精选菜单位置"};
-        setVisibility(true);
-        final int length = Math.min(array.size(),mLayouts.length);
-        for(int index = 0 ; index < length ; index ++){
-            Map<String,String> map = array.get(index);
-            if(isShowCache && "1".equals(map.get("cache"))){
+    public void setData(List<Map<String, String>> array, boolean isShowCache) {
+        if (null == array || array.isEmpty()) return;
+        String[] twoLevelArray = {"轮播banner", "功能入口", "功能入口", "精品厨艺", "限时抢购", "精选菜单"};
+        String[] threeLevelArray = {"轮播banner位置", "", "", "精品厨艺位置", "限时抢购位置", "精选菜单位置"};
+        setVisibility(false);
+        final int length = Math.min(array.size(), mLayouts.length);
+        for (int index = 0; index < length; index++) {
+            Map<String, String> map = array.get(index);
+            if (isShowCache && "1".equals(map.get("cache"))) {
                 mLayouts[index].setVisibility(View.GONE);
                 continue;
             }
             mLayouts[index].setData(map);
-            mLayouts[index].setStatictusData(MainHomePage.STATICTUS_ID_HOMEPAGE,twoLevelArray[index],threeLevelArray[index]);
+            mLayouts[index].setStatictusData(MainHomePage.STATICTUS_ID_HOMEPAGE, twoLevelArray[index], threeLevelArray[index]);
             mLayouts[index].setVisibility(View.VISIBLE);
         }
+        View.OnLayoutChangeListener onLayoutChangeListener = (v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
+            hasHeaderData = mHeaderView.getHeight() - mTipMessage.getHeight() > mFeedHeaderView.getHeight();
+            mFeedHeaderView.setVisibility((hasFeedData && hasHeaderData) ? View.VISIBLE : View.GONE);
+        };
+        mHeaderView.addOnLayoutChangeListener(onLayoutChangeListener);
     }
 
     public void setVisibility(boolean isShow) {
-        for(WidgetVerticalLayout itemLayout:mLayouts){
-            itemLayout.setVisibility(isShow?View.VISIBLE:View.GONE);
+        for (WidgetVerticalLayout itemLayout : mLayouts) {
+            itemLayout.setVisibility(isShow ? View.VISIBLE : View.GONE);
         }
     }
 
     @Override
     public void saveStatisticData() {
-        for(WidgetVerticalLayout layout:mLayouts)
+        for (WidgetVerticalLayout layout : mLayouts) {
             layout.saveStatisticData();
-    }
-
-    void setFeedheaderVisibility(boolean feedheaderVisibility) {
-        mFeedHeaderView.setVisibility(feedheaderVisibility ? View.VISIBLE : View.GONE);
-    }
-
-    void setFeedTitleText(String text){
-        if(null == mFeedTitle || TextUtils.isEmpty(text)){
-            return;
         }
-        mFeedTitle.setText(text);
+    }
+
+    void setFeedheaderVisibility(boolean hasFeedData) {
+        this.hasFeedData = hasFeedData;
+        mFeedHeaderView.setVisibility((hasFeedData && hasHeaderData) ? View.VISIBLE : View.GONE);
+    }
+
+    void setFeedTitleText(String text) {
+        WidgetUtility.setTextToView(mFeedTitle, text);
+    }
+
+    @NonNull
+    public TextView getTipMessage() {
+        return mTipMessage;
     }
 }

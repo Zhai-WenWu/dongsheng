@@ -1,5 +1,6 @@
 package amodule.main.activity;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -47,7 +48,6 @@ import amodule.main.view.HintMyselfDialog;
 import amodule.user.activity.BrowseHistory;
 import amodule.user.activity.FansAndFollwers;
 import amodule.user.activity.FriendHome;
-import amodule.user.activity.MyFavorite;
 import amodule.user.activity.MyFavoriteNew;
 import amodule.user.activity.MyManagerInfo;
 import amodule.user.activity.ScoreStore;
@@ -70,6 +70,7 @@ import third.push.xg.XGPushServer;
  * @date: 2016年11月13日 下午15:22:50
  */
 public class MainMyself extends MainBaseActivity implements OnClickListener, IObserver {
+    public static final String KEY = "MainMyself";
     // 布局
     private RelativeLayout right_myself, userPage;
     private LinearLayout gourp1, gourp2,gourp3;
@@ -108,16 +109,11 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.a_common_myself);
-        Main.allMain.allTab.put("MainMyself",this);
+        Main.allMain.allTab.put(KEY,this);
         loadManager.showProgressBar();
         initUI();
         XHClick.track(this,"浏览我的页面");
-        loadManager.setLoading(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getYiYuanBindState();
-            }
-        });
+        loadManager.setLoading(v -> getYiYuanBindState());
         ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_LOGIN, ObserverManager.NOTIFY_YIYUAN_BIND, ObserverManager.NOTIFY_PAYFINISH);
     }
 
@@ -130,12 +126,7 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
             if (mQAItemView != null)
                 mQAItemView.setVisibility(View.VISIBLE);
             // 设置加载
-            loadManager.setLoading(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    getData();
-                }
-            });
+            loadManager.setLoading(v -> getData());
         } else
             resetData();
         loadManager.hideProgressBar();
@@ -158,12 +149,9 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
     }
 
     private void getYiYuanBindState() {
-        LoginManager.initYiYuanBindState(this, new Runnable() {
-            @Override
-            public void run() {
-                Object shouldShowDialog = FileManager.loadShared(MainMyself.this, FileManager.xmlFile_appInfo, "shouldShowDialog");
-                onBindStateDataReady(LoginManager.isTempVip(), "2".equals(shouldShowDialog));
-            }
+        LoginManager.initYiYuanBindState(this, () -> {
+            Object shouldShowDialog = FileManager.loadShared(MainMyself.this, FileManager.xmlFile_appInfo, "shouldShowDialog");
+            onBindStateDataReady(LoginManager.isTempVip(), "2".equals(shouldShowDialog));
         });
     }
 
@@ -197,18 +185,13 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
         loadManager.hideProgressBar();
     }
 
+    @SuppressLint("SetTextI18n")
     private void initUI() {
         goManagerInfo = (TextView) findViewById(R.id.goManagerInfo);
         goManagerInfo.setText("马甲");
         goManagerInfo.setTextColor(0xffffff);
         goManagerInfo.setVisibility(View.GONE);
-        goManagerInfo.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent it = new Intent(MainMyself.this, MyManagerInfo.class);
-                startActivity(it);
-            }
-        });
+        goManagerInfo.setOnClickListener(v -> startActivity(new Intent(MainMyself.this, MyManagerInfo.class)));
 
         right_myself = (RelativeLayout) findViewById(R.id.right_myself);
         iv_userType = (ImageView) findViewById(R.id.iv_userType);

@@ -71,15 +71,16 @@ public class FuncNavView2 extends HomeFuncNavView2 implements IBindMap, IStatict
         WidgetUtility.setTextToView(getTextView(R.id.text_left_2), leftMap.get("text2"));
         ImageView leftIcon = getImageView(R.id.icon_left_1);
         if (leftIcon != null) {
-            Glide.with(getContext()).load(leftMap.get("img")).into(leftIcon);
+            if(!TextUtils.isEmpty(leftMap.get("img")))
+                Glide.with(getContext()).load(leftMap.get("img")).into(leftIcon);
+            String leftUrl = leftMap.get("url");
+            mLeftView.setOnClickListener(v -> {
+                AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), leftUrl, true);
+                if (!TextUtils.isEmpty(id) && !TextUtils.isEmpty(twoLevel)) {
+                    XHClick.mapStat(getContext(), id, twoLevel, leftMap.get("text1"));
+                }
+            });
         }
-        String leftUrl = leftMap.get("url");
-        mLeftView.setOnClickListener(v -> {
-            AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), leftUrl, true);
-            if (!TextUtils.isEmpty(id) && !TextUtils.isEmpty(twoLevel)) {
-                XHClick.mapStat(getContext(), id, twoLevel, leftMap.get("text1"));
-            }
-        });
 
         //设置右侧数据
         if (arrayList.size() > 1) {
@@ -88,15 +89,16 @@ public class FuncNavView2 extends HomeFuncNavView2 implements IBindMap, IStatict
             WidgetUtility.setTextToView(getTextView(R.id.text_right_2), rightMap.get("text2"));
             ImageView rightIcon = getImageView(R.id.icon_right_1);
             if (rightIcon != null) {
-                Glide.with(getContext()).load(rightMap.get("img")).into(rightIcon);
+                if(!TextUtils.isEmpty(rightMap.get("img")))
+                    Glide.with(getContext()).load(rightMap.get("img")).into(rightIcon);
+                String rightUrl = rightMap.get("url");
+                mRightView.setOnClickListener(v -> {
+                    AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), rightUrl, true);
+                    if (!TextUtils.isEmpty(id) && !TextUtils.isEmpty(twoLevel)) {
+                        XHClick.mapStat(getContext(), id, twoLevel, rightMap.get("text1"));
+                    }
+                });
             }
-            String rightUrl = rightMap.get("url");
-            mRightView.setOnClickListener(v -> {
-                AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), rightUrl, true);
-                if (!TextUtils.isEmpty(id) && !TextUtils.isEmpty(twoLevel)) {
-                    XHClick.mapStat(getContext(), id, twoLevel, rightMap.get("text1"));
-                }
-            });
         }
 
         setVisibility(VISIBLE);

@@ -23,16 +23,4 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_45"/>
 
-    <TextView
-        android:id="@+id/tip_message"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/home_title"
-        android:gravity="center"
-        android:padding="@dimen/dp_15"
-        android:textSize="@dimen/dp_15"
-        android:visibility="gone"
-        tools:visibility="visible"
-        tools:text="\n服务升级中。。。\n"/>
-
 </RelativeLayout>

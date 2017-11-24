@@ -64,15 +64,10 @@ public class HomeDataControler {
 
     //读取缓存数据
     public void loadCacheHomeData(InternetCallback callback) {
-//        final Handler handler = new Handler(Looper.getMainLooper());
-//        new Thread(() -> {
-            String hoemDataStr = FileManager.readFile(CACHE_PATH).trim();
-            if (!TextUtils.isEmpty(hoemDataStr)) {
-//                handler.post(() ->
-                        callback.loaded(ReqEncyptInternet.REQ_OK_STRING, "", hoemDataStr);
-//                );
-            }
-//        }).start();
+        String hoemDataStr = FileManager.readFile(CACHE_PATH).trim();
+        if (!TextUtils.isEmpty(hoemDataStr)) {
+            callback.loaded(ReqEncyptInternet.REQ_OK_STRING, "", hoemDataStr);
+        }
     }
 
     public void saveCacheHomeData(String data) {
@@ -163,29 +158,6 @@ public class HomeDataControler {
                                         mData = mInsertADCallback.insertAD(mData, false);
                                     }
                                 }
-                                //读取历史记录
-//                                String historyUrl = (String) FileManager.loadShared(mActivity, mHomeModuleBean.getType(), mHomeModuleBean.getType());
-//                                if (!TextUtils.isEmpty(historyUrl)) {
-//                                    Map<String, String> map = StringManager.getMapByString(historyUrl, "&", "=");
-//                                    final String markValue = map.get("mark");
-//                                    final String timeValue = map.get("reset_time");
-//                                    final int length = mData.size();
-//                                    Map<String, String> backMap = StringManager.getMapByString(backUrl, "&", "=");
-//                                    String nowTime = backMap.get("reset_time");
-//                                    //设置显示参数
-//                                    for(int index = 0 ; index < length ; index ++){
-//                                        Map<String,String> tempMap = mData.get(index);
-//                                        if(index != 0
-//                                                && EqualsData(tempMap.get("mark"),markValue)
-//                                                && !TextUtils.isEmpty(nowTime)
-//                                                && !TextUtils.isEmpty(timeValue)){
-//                                            Log.i("zhangyujian", "mak:" + tempMap.get("mark") + "::;" + tempMap.get("name"));
-//                                            tempMap.put("refreshTime", Tools.getTimeDifferent(Long.parseLong(nowTime), Long.parseLong(timeValue)));
-//                                        }else{
-//                                            tempMap.put("refreshTime", "");
-//                                        }
-//                                    }
-//                                }
                                 //提示刷新UI
                                 if (mNotifyDataSetChangedCallback != null)
                                     mNotifyDataSetChangedCallback.notifyDataSetChanged();
@@ -252,12 +224,9 @@ public class HomeDataControler {
             });
             //去掉全部的广告位置
             ArrayList<Map<String, String>> listTemp = new ArrayList<>();
-            Stream.of(mData).forEach(map -> {
-                if (map.containsKey("adstyle")
-                        && "ad".equals(map.get("adstyle"))) {
-                    listTemp.add(map);
-                }
-            });
+            Stream.of(mData)
+                    .filter(map -> map.containsKey("adstyle") && "ad".equals(map.get("adstyle")))
+                    .forEach(map -> listTemp.add(map));
             Log.i(tag_yu, "删除广告");
             if (listTemp.size() > 0) {
                 mData.removeAll(listTemp);

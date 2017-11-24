@@ -41,6 +41,8 @@ public class HomeSecondListActivity extends BaseAppCompatActivity {
     private HomeModuleBean mModuleBean;
     private ArrayList<HomeSecondModule> mSecondModules;
 
+    private boolean mInitTabData;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +79,7 @@ public class HomeSecondListActivity extends BaseAppCompatActivity {
         }
         //初始化UI
         initView();
+        initTabData();
     }
 
     private void initView() {
@@ -86,70 +89,77 @@ public class HomeSecondListActivity extends BaseAppCompatActivity {
         titleV.setMaxWidth(ToolsDevice.getWindowPx(this).widthPixels - ToolsDevice.dp2px(this, 45 + 40));
         if(mModuleBean != null)
             titleV.setText(mModuleBean.getTitle());
+    }
+
+    private void initTabData() {
         mPagerAdapter = new HomeSecondListPagerAdapter(getSupportFragmentManager(), mSecondModules, mModuleBean, new HomeSecondListFragment.OnTabDataReadyCallback() {
             @Override
             public void onTabDataReady(String selectedType) {
+                if (mInitTabData)
+                    return;
+                mInitTabData = true;
+                int selectedPos = 0;
                 for (int i = 0; mSecondModules != null && i < mSecondModules.size(); i ++) {
                     HomeSecondModule module = mSecondModules.get(i);
                     if (module != null && TextUtils.equals(module.getType(), selectedType)) {
-                        mHomeTabStrip.updateSelection(i);
-                        return;
+                        selectedPos = i;
+                        break;
                     }
                 }
+                mViewPager.setCurrentItem(selectedPos);
+                mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                    @Override
+                    public void onPageScrolled(int i, float v, int i1) {
+                    }
+
+                    @Override
+                    public void onPageSelected(int i) {
+                        mHomeTabStrip.select(mHomeTabStrip.getmTabsContainer().getChildAt(i));
+                        mHomeTabStrip.notifyDataSetChanged();
+                        refreshAdData(i);
+                    }
+
+                    @Override
+                    public void onPageScrollStateChanged(int i) {
+
+                    }
+                });
+                switch (mType) {
+                    case "video":
+                        mHomeTabStrip.setTabInnerBackground(R.drawable.selector_hometabscroll_item_bg);
+                        mHomeTabStrip.setTabTextPaddingLeftRight(R.dimen.dp_13);
+                        mHomeTabStrip.setTabTextPaddingTopBottom(R.dimen.dp_5);
+                        mHomeTabStrip.setTabItemIntervalSize(R.dimen.dp_3);
+                        mHomeTabStrip.setTabItemMarginTopBottom(R.dimen.dp_13);
+                        mHomeTabStrip.setTabStartLeftMargin(R.dimen.dp_20);
+                        mHomeTabStrip.setTabEndRightMargin(R.dimen.dp_20);
+                        break;
+                    case "day":
+                        ArrayList<Integer> resIds = new ArrayList<Integer>();
+                        resIds.add(R.drawable.selector_hometabscroll_item_bg_morning);
+                        resIds.add(R.drawable.selector_hometabscroll_item_bg_afternoon);
+                        resIds.add(R.drawable.selector_hometabscroll_item_bg_evening);
+                        mHomeTabStrip.setTabBackground(resIds);
+                        int phoneWidth = Tools.getPhoneWidth();
+                        int imgWidthPx = 375;
+                        int imgHeightPx = 245;
+                        int width = phoneWidth / 3;
+                        int height = (imgHeightPx * width) / imgWidthPx;
+                        mHomeTabStrip.setTabHeight(height);
+                        mHomeTabStrip.setTabWidth(width);
+                        break;
+                }
+                mHomeTabStrip.setViewPager(mViewPager);
+                mHomeTabStrip.setOnTabReselectedListener(new PagerSlidingTabStrip.OnTabReselectedListener() {
+                    @Override
+                    public void onTabReselected(int position) {
+                        refreshFragment(position);
+                    }
+                });
             }
         });
-        mViewPager.setAdapter(mPagerAdapter);
-        mViewPager.setCurrentItem(0);
         mViewPager.setOffscreenPageLimit(3);
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int i, float v, int i1) {
-            }
-
-            @Override
-            public void onPageSelected(int i) {
-                mHomeTabStrip.select(mHomeTabStrip.getmTabsContainer().getChildAt(i));
-                mHomeTabStrip.notifyDataSetChanged();
-                refreshAdData(i);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int i) {
-
-            }
-        });
-        switch (mType) {
-            case "video":
-                mHomeTabStrip.setTabInnerBackground(R.drawable.selector_hometabscroll_item_bg);
-                mHomeTabStrip.setTabTextPaddingLeftRight(R.dimen.dp_13);
-                mHomeTabStrip.setTabTextPaddingTopBottom(R.dimen.dp_5);
-                mHomeTabStrip.setTabItemIntervalSize(R.dimen.dp_3);
-                mHomeTabStrip.setTabItemMarginTopBottom(R.dimen.dp_13);
-                mHomeTabStrip.setTabStartLeftMargin(R.dimen.dp_20);
-                mHomeTabStrip.setTabEndRightMargin(R.dimen.dp_20);
-                break;
-            case "day":
-                ArrayList<Integer> resIds = new ArrayList<Integer>();
-                resIds.add(R.drawable.selector_hometabscroll_item_bg_morning);
-                resIds.add(R.drawable.selector_hometabscroll_item_bg_afternoon);
-                resIds.add(R.drawable.selector_hometabscroll_item_bg_evening);
-                mHomeTabStrip.setTabBackground(resIds);
-                int phoneWidth = Tools.getPhoneWidth();
-                int imgWidthPx = 375;
-                int imgHeightPx = 245;
-                int width = phoneWidth / 3;
-                int height = (imgHeightPx * width) / imgWidthPx;
-                mHomeTabStrip.setTabHeight(height);
-                mHomeTabStrip.setTabWidth(width);
-                break;
-        }
-        mHomeTabStrip.setViewPager(mViewPager);
-        mHomeTabStrip.setOnTabReselectedListener(new PagerSlidingTabStrip.OnTabReselectedListener() {
-            @Override
-            public void onTabReselected(int position) {
-                refreshFragment(position);
-            }
-        });
+        mViewPager.setAdapter(mPagerAdapter);
     }
 
     private int getPxByDp(int resDp) {

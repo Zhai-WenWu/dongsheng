@@ -1235,14 +1235,12 @@
 
 
         <!-- *************************************** START umeng *************************************** -->
-        <!-- <meta-data -->
-        <!-- android:name="UMENG_APPKEY" -->
-        <!-- android:value="545aeac6fd98c565c20004ad"> -->
-
-
+         <meta-data
+             android:name="UMENG_APPKEY"
+             android:value="545aeac6fd98c565c20004ad">
         <!-- &lt;!&ndash;服务王 57726be2e0f55a1c900000ff&ndash;&gt; -->
         <!-- &lt;!&ndash;菜谱 545aeac6fd98c565c20004ad&ndash;&gt; -->
-        <!-- </meta-data> -->
+         </meta-data>
         <!-- <meta-data -->
         <!-- android:name="UMENG_CHANNEL" -->
         <!-- android:value="${UMENG_CHANNEL_VALUE}"/> -->

@@ -30,6 +30,9 @@ public class HorizontalViewLibrary implements IWidgetLibrary {
             case "1":
             case "2":
             case "3":
+            case "4":
+            case "5":
+            case "6":
                 return R.id.horizontal_recyclerview_1;
             default:
                 return NO_FIND_ID;
@@ -44,6 +47,9 @@ public class HorizontalViewLibrary implements IWidgetLibrary {
             case "1":
             case "2":
             case "3":
+            case "4":
+            case "5":
+            case "6":
                 return R.layout.widget_horizontal;
             default:
                 return NO_FIND_ID;
