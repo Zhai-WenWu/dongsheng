@@ -1,5 +1,6 @@
 package amodule._common.widget;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
@@ -7,7 +8,6 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -68,7 +68,10 @@ public class BannerView extends Banner implements IBindMap, IStatictusData,ISave
         mInflater = LayoutInflater.from(context);
         int height = (int) (ToolsDevice.getWindowPx(context).widthPixels * 336 / 750f);
         Log.i("tzy","width = " + ToolsDevice.getWindowPx(context).widthPixels + " , height = " + height);
-        setMinimumHeight(height);
+        post(() -> {
+            getLayoutParams().height = height;
+            setMinimumHeight(height);
+        });
         setVisibility(GONE);
         mAdIDArray.add(ARTICLE_CONTENT_BOTTOM);
         showMinH = Tools.getStatusBarHeight(context) + Tools.getDimen(context,R.dimen.dp_45) - height;
@@ -123,6 +126,7 @@ public class BannerView extends Banner implements IBindMap, IStatictusData,ISave
                 }
             }
 
+            @SuppressLint("InflateParams")
             @Override
             public View getView(int position) {
                 return mInflater.inflate(R.layout.widget_banner_item, null, true);
