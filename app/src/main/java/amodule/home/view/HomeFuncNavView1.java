@@ -14,8 +14,6 @@ import com.xiangha.R;
 import java.util.Arrays;
 import java.util.List;
 
-import acore.logic.AppCommon;
-import acore.override.helper.XHActivityManager;
 import amodule._common.utility.WidgetUtility;
 
 /**
@@ -54,17 +52,17 @@ public class HomeFuncNavView1 extends LinearLayout {
     protected void initData() {
         int[] iconArray = {R.drawable.home_fanc_nav_1, R.drawable.home_fanc_nav_2, R.drawable.home_fanc_nav_3, R.drawable.home_fanc_nav_4};
         String[] textArray = {"菜谱分类", "VIP名厨课", "视频", "本周佳作"};
-        String[] urls = {
-                "xiangha://welcome?fenlei.app",
-                "xiangha://welcome?url=https://appweb.xiangha.com/recom/xiangHaSchool",
-                "xiangha://welcome?HomeSecond.app?type=video",
-                "xiangha://welcome?WeekDish.app",
-        };
+//        String[] urls = {
+//                "xiangha://welcome?fenlei.app",
+//                "xiangha://welcome?url=https://appweb.xiangha.com/recom/xiangHaSchool",
+//                "xiangha://welcome?HomeSecond.app?type=video",
+//                "xiangha://welcome?WeekDish.app",
+//        };
         for (int index = 0; index < navIds.size(); index++) {
             View navView = findViewById(navIds.get(index));
             setResToView(navView, textArray[index], iconArray[index]);
-            String url = urls[index];
-            navView.setOnClickListener(v -> AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), url, true));
+//            String url = urls[index];
+//            navView.setOnClickListener(v -> AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), url, true));
         }
         setVisibility(VISIBLE);
     }
