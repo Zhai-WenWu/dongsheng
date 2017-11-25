@@ -109,10 +109,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard.pro'
             signingConfig signingConfigs.MainXiangha
         }
-        staging.initWith(buildTypes.debug)
-        staging {
-            applicationIdSuffix ".staging"
-        }
     }
 
 
