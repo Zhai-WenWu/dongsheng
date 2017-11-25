@@ -23,8 +23,8 @@ import acore.tools.ToolsDevice;
 import acore.widget.rvlistview.RvListView;
 import amodule._common.helper.WidgetDataHelper;
 import amodule._common.utility.WidgetUtility;
+import amodule.home.view.HomeBuoy;
 import amodule.home.view.HomeTitleLayout;
-import amodule.main.Tools.BuoyControler;
 import amodule.main.activity.MainHome;
 import amodule.main.activity.MainHomePage;
 import amodule.main.view.item.HomeItem;
@@ -48,7 +48,7 @@ public class HomeViewControler {
 
     private MainHomePage mActivity;
 
-    private BuoyControler.Buoy mBuoy;
+    private HomeBuoy mBuoy;
 
     private RvListView mRvListView;
 
@@ -76,7 +76,7 @@ public class HomeViewControler {
         HomeTitleLayout titleLayout = (HomeTitleLayout) mActivity.findViewById(R.id.home_title);
         titleLayout.setStatictusData(MainHomePage.STATICTUS_ID_PULISH, "顶部topbar", "");
         titleLayout.postDelayed(() -> {
-            mBuoy = new BuoyControler.Buoy(mActivity, BuoyControler.TYPE_HOME);
+            mBuoy = new HomeBuoy(mActivity);
             mBuoy.setClickCallback(() -> XHClick.mapStat(mActivity, MainHomePage.STATICTUS_ID_PULISH, "首页右侧侧边栏浮动图标", ""));
         }, 4000);
 
@@ -146,14 +146,6 @@ public class HomeViewControler {
     public void returnListTop() {
         if (mRvListView != null) {
             mRvListView.scrollToPosition(0);
-        }
-    }
-
-    public void refreshBouy() {
-        if (mBuoy != null) {
-            mBuoy.refresh(true);
-        } else {
-            mBuoy = new BuoyControler.Buoy(mActivity, BuoyControler.TYPE_HOME);
         }
     }
 
