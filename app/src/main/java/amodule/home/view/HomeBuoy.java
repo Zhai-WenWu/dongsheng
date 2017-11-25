@@ -27,7 +27,7 @@ import third.ad.tools.AdConfigTools;
 import third.ad.tools.AdPlayIdConfig;
 
 /**
- * Description : //TODO
+ * Description :
  * PackageName : amodule.home.view
  * Created on 2017/11/25 13:57.
  * Author : mrtrying
