@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -78,6 +79,7 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
         if (viewId > NO_FIND_ID) {
             View view = findViewById(viewId);
             if (null != view) {
+                view.setVisibility(VISIBLE);
                 currentID = viewId;
                 if (view instanceof IBindMap && !TextUtils.isEmpty(widgetData)) {
                     ((IBindMap) view).setData(dataMap);
@@ -85,11 +87,11 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
                 if (view instanceof IStatictusData) {
                     ((IStatictusData) view).setStatictusData(id, twoLevel, threeLevel);
                 }
-                view.setVisibility(VISIBLE);
+            }else{
+                hideView();
             }
         }else{
-            int index = mExtraTop == null ? 0 : 1;
-            getChildAt(index).setVisibility(GONE);
+            hideView();
         }
         //加载额外数据
         String widgetExtra = data.get(KEY_WIDGET_EXTRA);
@@ -104,6 +106,11 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
         }
         updateTopView(StringManager.getListMapByJson(widgetExtraMap.get(KEY_TOP)));
         updateBottom(StringManager.getListMapByJson(widgetExtraMap.get(KEY_BOTTOM)));
+    }
+
+    private void hideView(){
+        int index = mExtraTop == null ? 0 : 1;
+        getChildAt(index).setVisibility(GONE);
     }
 
     @Override

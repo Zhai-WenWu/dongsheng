@@ -35,8 +35,7 @@
     <amodule._common.plugin.WidgetVerticalLayout
         android:id="@+id/funcnav1_widget"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone">
+        android:layout_height="wrap_content">
 
         <include
             layout="@layout/widget_func_nav1"
@@ -48,8 +47,7 @@
     <amodule._common.plugin.WidgetVerticalLayout
         android:id="@+id/funcnav2_widget"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone">
+        android:layout_height="wrap_content">
 
         <include
             layout="@layout/widget_func_nav2"
@@ -102,6 +100,6 @@
         layout="@layout/a_home_feed_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="visible"/>
+        android:visibility="gone"/>
 
 </LinearLayout>

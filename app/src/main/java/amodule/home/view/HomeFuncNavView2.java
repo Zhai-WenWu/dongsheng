@@ -1,6 +1,7 @@
 package amodule.home.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -15,9 +16,13 @@ import com.xiangha.R;
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
 
+import acore.logic.AppCommon;
+import acore.override.helper.XHActivityManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule._common.utility.WidgetUtility;
+import amodule.home.activity.HomeSecondListActivity;
+import amodule.quan.activity.MainCircle;
 
 /**
  * Description :
@@ -73,10 +78,12 @@ public class HomeFuncNavView2 extends LinearLayout {
             resId = R.drawable.home_nav_dish_3;
         }
         WidgetUtility.setResToImage(getImageView(R.id.icon_left_1),resId);
+        mLeftView.setOnClickListener(v->getContext().startActivity(new Intent(getContext(), HomeSecondListActivity.class).putExtra(HomeSecondListActivity.TAG,"day")));
 
         WidgetUtility.setTextToView(getTextView(R.id.text_right_1),"关注/社区");
         WidgetUtility.setTextToView(getTextView(R.id.text_right_2),"晒美食,关注美食家");
         WidgetUtility.setResToImage(getImageView(R.id.icon_right_1),R.drawable.home_nav_circle);
+        mRightView.setOnClickListener(v->getContext().startActivity(new Intent(getContext(), MainCircle.class)));
     }
 
     protected TextView getTextView(int id){

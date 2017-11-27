@@ -128,7 +128,7 @@ public class HomeViewControler {
     //
     public void setHeaderData(List<Map<String, String>> data, boolean isShowCache) {
         if (data == null || data.isEmpty()) {
-            mHeaderControler.setVisibility(false);
+//            mHeaderControler.setVisibility(false);
             return;
         }
         Stream.of(data).forEach(map -> {
