@@ -1,10 +1,14 @@
 package amodule.quan.tool;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.view.View;
 
-import acore.logic.XHClick;
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.MessageView;
+import com.xh.view.TitleView;
+
 import acore.tools.StringManager;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
@@ -37,13 +41,21 @@ public class SubjectControl {
      * @param callback
      */
     public void createDeleteDilog(final Activity mAct,final String params,String content,final OnDeleteSuccessCallback callback) {
-        AlertDialog dialog = new AlertDialog.Builder(mAct)
-                .setTitle("确认删除？")
-                .setMessage("您确认要删除"+content+"吗？")
-                .setPositiveButton("确定",
-                        new DialogInterface.OnClickListener() {
+        final DialogManager dialogManager = new DialogManager(mAct);
+        dialogManager.createDialog(new ViewManager(dialogManager)
+                .setView(new TitleView(mAct).setText("确认删除"))
+                .setView(new MessageView(mAct).setText("您确认要删除" +content+ "吗？"))
+                .setView(new HButtonView(mAct)
+                        .setNegativeText("取消", new View.OnClickListener() {
                             @Override
-                            public void onClick(DialogInterface dialog, int which) {
+                            public void onClick(View v) {
+                                dialogManager.cancel();
+                            }
+                        })
+                        .setPositiveText("确定", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialogManager.cancel();
                                 ReqInternet.in().doPost(StringManager.api_quanSetSubject, params, new InternetCallback(mAct) {
                                     @Override
                                     public void loaded(int flag, String url, Object returnObj) {
@@ -53,16 +65,7 @@ public class SubjectControl {
                                     }
                                 });
                             }
-                        })
-                .setNegativeButton("取消",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog,int which) {
-                                dialog.cancel();
-                            }
-                        })
-                .create();
-        dialog.show();
+                        }))).show();
     }
 
     public interface OnDeleteSuccessCallback{

@@ -11,13 +11,12 @@ import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.widget.RelativeLayout;
 
+
 import java.util.Map;
 
 import acore.logic.load.LoadManager;
 import acore.override.activity.mian.MainBaseActivity;
-import acore.tools.IObserver;
 import acore.tools.LogManager;
-import acore.tools.ObserverManager;
 import amodule.main.bean.HomeModuleBean;
 import aplug.basic.XHConf;
 import aplug.web.tools.JsAppCommon;

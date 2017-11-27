@@ -4,12 +4,15 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.TitleMessageView;
 import com.xiangha.R;
 
 import java.util.ArrayList;
@@ -24,7 +27,6 @@ import amodule.dish.activity.DetailDish;
 import amodule.dish.activity.GoodDish;
 import amodule.user.db.BrowseHistorySqlite;
 import aplug.basic.ReqInternet;
-import xh.windowview.XhDialog;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -108,27 +110,27 @@ public class HistoryDishView extends HistoryView {
             mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                 @Override
                 public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
-                    final XhDialog dialog = new XhDialog(mContext);
-                    dialog.setTitle("确定删除该条浏览记录?")
-                            .setCanselButton("确定", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Map<String, String> map = mData.get(position);
-                                    BrowseHistorySqlite sqlite = new BrowseHistorySqlite(mContext);
-                                    sqlite.deleteByCode(BrowseHistorySqlite.TB_DISH_NAME, map.get("code"));
-                                    mData.remove(map);
-                                    mAdapter.notifyDataSetChanged();
-                                    dialog.cancel();
-                                }
-                            })
-                            .setSureButtonTextColor("#333333")
-                            .setSureButton("取消", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    dialog.cancel();
-                                }
-                            });
-                    dialog.show();
+                    final DialogManager dialogManager = new DialogManager(mAct);
+                    dialogManager.createDialog(new ViewManager(dialogManager)
+                            .setView(new TitleMessageView(mAct).setText("确定删除该条浏览记录?"))
+                            .setView(new HButtonView(mAct)
+                                    .setNegativeText("取消", new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            dialogManager.cancel();
+                                        }
+                                    })
+                                    .setPositiveText("确定", new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            dialogManager.cancel();
+                                            Map<String, String> map = mData.get(position);
+                                            BrowseHistorySqlite sqlite = new BrowseHistorySqlite(mContext);
+                                            sqlite.deleteByCode(BrowseHistorySqlite.TB_DISH_NAME, map.get("code"));
+                                            mData.remove(map);
+                                            mAdapter.notifyDataSetChanged();
+                                        }
+                                    }))).show();
                     return true;
                 }
             });

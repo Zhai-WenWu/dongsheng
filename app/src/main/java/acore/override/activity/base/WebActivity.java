@@ -1,14 +1,17 @@
 package acore.override.activity.base;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
+
 import java.util.Map;
 
+import acore.override.XHApplication;
 import acore.tools.LogManager;
 import acore.tools.StringManager;
 import amodule.main.Main;
@@ -143,6 +146,8 @@ public class WebActivity extends BaseActivity{
 	}
 
 	protected static void setCookie(String theUrl){
+		if (TextUtils.isEmpty(theUrl))
+			return;
 //		String cookieKey = StringManager.apiUrl.replace(StringManager.apiTitle, "").replace("/", "");
 		if(theUrl.indexOf(MallStringManager.domain)>-1){//电商 ds.xiangha.com
 			Map<String,String> header=MallReqInternet.in().getHeader(mShowWeb);
@@ -154,6 +159,7 @@ public class WebActivity extends BaseActivity{
 			for (int i = 0; i < cookie.length; i++) {
 				cookieManager.setCookie(cookieKey_mall, cookie[i]);
 			}
+			CookieSyncManager.createInstance(XHApplication.in().getApplicationContext());
 			CookieSyncManager.getInstance().sync();
 			LogManager.print(XHConf.log_tag_net,"d", "设置webview的cookie："+cookieStr);
 		}else if (theUrl.indexOf(StringManager.domain) > -1) {//菜谱  .xiangha.com
@@ -164,6 +170,7 @@ public class WebActivity extends BaseActivity{
 			for (int i = 0; i < cookie.length; i++) {
 				cookieManager.setCookie(StringManager.domain, cookie[i]);
 			}
+			CookieSyncManager.createInstance(XHApplication.in().getApplicationContext());
 			CookieSyncManager.getInstance().sync();
 			LogManager.print(XHConf.log_tag_net,"d", "设置webview的cookie："+cookieStr);
 		}

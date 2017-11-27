@@ -2,14 +2,10 @@ package aplug.web.view;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.net.http.SslError;
 import android.os.Build;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -23,9 +19,14 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.MessageView;
+import com.xh.view.TitleView;
+
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import acore.logic.AppCommon;
 import acore.logic.load.LoadManager;
@@ -33,12 +34,10 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import amodule.dish.activity.DetailDish;
 import amodule.main.Main;
-import aplug.basic.XHConf;
 import aplug.web.tools.JSAction;
 import aplug.web.tools.JsAppCommon;
 import aplug.web.tools.JsBase;
 import aplug.web.tools.TemplateWebViewControl;
-import aplug.web.tools.WebviewManager;
 import aplug.web.tools.XHTemplateManager;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilString;
@@ -117,7 +116,8 @@ public class TemplateWebView extends XHWebView{
 
         //兼容https,在部分版本上资源显示不全的问题
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW); }
+            settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+        }
         this.setVerticalScrollBarEnabled(false);
         this.setHorizontalScrollBarEnabled(false);
     }
@@ -224,9 +224,10 @@ public class TemplateWebView extends XHWebView{
 
                 return true;
             }
+
             @Override
-            public void onReceivedSslError(WebView view, SslErrorHandler sslhandler, SslError error) {
-                sslhandler.proceed();
+            public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+                handler.proceed();
             }
 
             @Override
@@ -241,43 +242,46 @@ public class TemplateWebView extends XHWebView{
      */
     private void setWebChromeClient() {
         this.setWebChromeClient(new WebChromeClient() {
-            @Override
-            public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
-                Tools.showToast(view.getContext(), message);
-                result.cancel();
-                if(loadManager != null)loadManager.hideProgressBar();
-                return true;
-            }
+                @Override
+                public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
+                    Tools.showToast(view.getContext(), message);
+                    result.cancel();
+                    if(loadManager != null)loadManager.hideProgressBar();
+                    return true;
+                }
 
             @Override
             public boolean onJsConfirm(WebView view, String url, String message, final JsResult result) {
                 showTip(message, result);
                 return true;
             }
+
             @Override
             public void onShowCustomView(View view, CustomViewCallback callback) {
                 super.onShowCustomView(view, callback);
-
             }
 
             //弹出提示
             private void showTip(String message, final JsResult result) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(TemplateWebView.this.getContext());
-                builder.setTitle("提示");
-                builder.setMessage(message);
-                builder.setPositiveButton(android.R.string.ok, new AlertDialog.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        result.confirm();
-                    }
-                });
-                builder.setNeutralButton(android.R.string.cancel, new AlertDialog.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        result.cancel();
-                    }
-
-                }).setCancelable(false).create().show();
+                final DialogManager dialogManager = new DialogManager(TemplateWebView.this.getContext());
+                dialogManager.createDialog(new ViewManager(dialogManager)
+                        .setView(new TitleView(TemplateWebView.this.getContext()).setText("提示"))
+                        .setView(new MessageView(TemplateWebView.this.getContext()).setText(message))
+                        .setView(new HButtonView(TemplateWebView.this.getContext())
+                                .setNegativeText(android.R.string.cancel, new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        dialogManager.cancel();
+                                        result.cancel();
+                                    }
+                                })
+                                .setPositiveText(android.R.string.ok, new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        dialogManager.cancel();
+                                        result.confirm();
+                                    }
+                                }))).setCancelable(false).show();
             }
         });
     }

@@ -3,6 +3,7 @@ package amodule.main.Tools;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
@@ -12,10 +13,13 @@ import android.webkit.CookieManager;
 
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;
-import com.mob.MobSDK;
 import com.tencent.android.tpush.XGPushManager;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.onlineconfig.OnlineConfigAgent;
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.TitleMessageView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,15 +46,12 @@ import amodule.main.view.home.HomeToutiaoAdControl;
 import amodule.quan.db.SubjectData;
 import amodule.quan.db.SubjectSqlite;
 import amodule.search.db.MatchWordsDbUtil;
-import aplug.service.alarm.PushAlarm;
-import aplug.service.base.ServiceManager;
 import aplug.web.tools.XHTemplateManager;
 import third.ad.tools.AdConfigTools;
-import third.ad.tools.TencenApiAdTools;
 import third.mall.aplug.MallCommon;
 import third.push.xg.XGLocalPushServer;
+import third.qiyu.QiYvHelper;
 import xh.basic.tool.UtilFile;
-import xh.windowview.XhDialog;
 
 import static java.lang.System.currentTimeMillis;
 import static xh.basic.tool.UtilString.getListMapByJson;
@@ -142,10 +143,13 @@ public class MainInitDataControl {
         XHClick.sendLiveTime(act);
         //电商首页数据
         MallCommon.getDsInfo(act, null);
-
+        //请求广告位
         AdConfigTools.getInstance().getAdConfigInfo();
         long endTime=System.currentTimeMillis();
+        //七鱼初始化 init方法无需放入主进程中执行，其他的初始化，有必要放在放入主进程
+        QiYvHelper.getInstance().initSDK(act);
         Log.i("zhangyujian","iniMainAfter::时间:"+(endTime-startTime));
+
     }
 
     /**
@@ -176,14 +180,13 @@ public class MainInitDataControl {
                 //获取圈子静态数据
                 AppCommon.saveCircleStaticData(act);
 
-                ServiceManager.startProtectService(act);
+//                ServiceManager.startProtectService(act);
 
                 AppCommon.saveUrlRuleFile(act);
                 AppCommon.saveAppData();
 
                 //取消自我唤醒
                 XGPushManager.clearLocalNotifications(act);
-                PushAlarm.closeTimingWake(act);
             }
         });
 
@@ -344,22 +347,26 @@ public class MainInitDataControl {
         UploadDishSqlite sqlite = new UploadDishSqlite(act);
         final int draftId = sqlite.getFailNeedHintId();
         if (draftId > 0) {
-            final XhDialog xhDialog = new XhDialog(act);
-            xhDialog.setTitle("您的视频菜谱还未上传完毕，是否继续上传？")
-                    .setCanselButton(" 取消", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            xhDialog.cancel();
-                        }
-                    }).setSureButton("去查看", new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent it = new Intent(act, UploadDishListActivity.class);
-                    it.putExtra("draftId",draftId);
-                    act.startActivity(it);
-                    xhDialog.cancel();
-                }
-            }).show();
+            final DialogManager dialogManager = new DialogManager(act);
+            dialogManager.createDialog(new ViewManager(dialogManager)
+                    .setView(new TitleMessageView(act).setText("您的视频菜谱还未上传完毕，是否继续上传？"))
+                    .setView(new HButtonView(act)
+                            .setNegativeText("取消", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dialogManager.cancel();
+                                }
+                            })
+                            .setPositiveTextColor(Color.parseColor("#007aff"))
+                            .setPositiveText("去查看", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dialogManager.cancel();
+                                    Intent it = new Intent(act, UploadDishListActivity.class);
+                                    it.putExtra("draftId",draftId);
+                                    act.startActivity(it);
+                                }
+                            }))).show();
         }
         UploadDishControl.getInstance().updataAllUploadingDish(act.getApplicationContext());
     }

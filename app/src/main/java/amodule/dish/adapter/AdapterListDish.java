@@ -1,7 +1,5 @@
 package amodule.dish.adapter;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -10,18 +8,25 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.MessageView;
+import com.xh.view.TitleView;
 import com.xiangha.R;
 
 import java.util.List;
 import java.util.Map;
 
 import acore.logic.AppCommon;
+import acore.logic.FavoriteHelper;
 import acore.logic.LoginManager;
 import acore.override.activity.base.BaseActivity;
 import acore.override.adapter.AdapterSimple;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.TagTextView;
+import amodule.article.activity.ArticleDetailActivity;
 import amodule.dish.db.DataOperate;
 import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.InternetCallback;
@@ -119,28 +124,34 @@ public class AdapterListDish extends AdapterSimple {
 
     // 收藏响应
     public void doFavorite(final Map<String, String> map) {
-        AppCommon.onFavoriteClick(mAct,"favorites", map.get("code"), new InternetCallback(mAct) {
-            @Override
-            public void loaded(int flag, String url, Object returnObj) {
-                if (flag >= UtilInternet.REQ_OK_STRING)
-                    parseFavClick(map);
-            }
-        });
+        FavoriteHelper.instance().setFavoriteStatus(mAct, map.get("code"), map.get("name"),
+                "2".equals(map.get("hasVideo")) ? FavoriteHelper.TYPE_DISH_VIDEO : FavoriteHelper.TYPE_DISH_ImageNText,
+                new FavoriteHelper.FavoriteStatusCallback() {
+                    @Override
+                    public void onSuccess(boolean state) {
+                        parseFavClick(state,map);
+                    }
+
+                    @Override
+                    public void onFailed() {
+
+                    }
+                });
     }
 
     /**
      * 收藏事件处理
      * @param map
      */
-    private void parseFavClick(Map<String, String> map) {
+    private void parseFavClick(boolean isFav,Map<String, String> map) {
         String str = map.get("favorites");
         int favorites = Integer.parseInt(str.substring(0, str.indexOf("收藏")));
-        if ((map.get("isFav") + "").equals("2")) {
-            map.put("favorites", (favorites - 1) + "收藏");
-            map.put("isFav", "1");
-        } else {
+        if (isFav) {
             map.put("favorites", (favorites + 1) + "收藏");
             map.put("isFav", "2");
+        } else {
+            map.put("favorites", (favorites - 1) + "收藏");
+            map.put("isFav", "1");
         }
         notifyDataSetChanged();
     }
@@ -150,24 +161,27 @@ public class AdapterListDish extends AdapterSimple {
         return new OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                new AlertDialog.Builder(mAct)
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .setTitle("取消删除")
-                        .setMessage("确定要删除离线菜谱?")
-                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                DataOperate.deleteBuyBurden(mAct, map.get("code"));
-                                data.remove(index);
-                                notifyDataSetChanged();
-                                Tools.showToast(mAct, "删除成功");
-                            }
-                        })
-                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                            }
-                        }).create().show();
+                final DialogManager dialogManager = new DialogManager(mAct);
+                dialogManager.createDialog(new ViewManager(dialogManager)
+                        .setView(new TitleView(mAct).setText("取消删除"))
+                        .setView(new MessageView(mAct).setText("确定要删除离线菜谱？"))
+                        .setView(new HButtonView(mAct)
+                                .setNegativeText("取消", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        dialogManager.cancel();
+                                    }
+                                })
+                                .setPositiveText("确定", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        DataOperate.deleteBuyBurden(mAct, map.get("code"));
+                                        data.remove(index);
+                                        notifyDataSetChanged();
+                                        Tools.showToast(mAct, "删除成功");
+                                        dialogManager.cancel();
+                                    }
+                                }))).show();
             }
         };
     }

@@ -7,6 +7,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.TitleMessageView;
 import com.xiangha.R;
 
 import org.json.JSONArray;
@@ -22,7 +26,6 @@ import acore.tools.Tools;
 import acore.widget.DragGridView;
 import amodule.dish.adapter.AdapterDishMakeOption;
 import xh.basic.tool.UtilString;
-import xh.windowview.XhDialog;
 
 public class UploadDishMakeOptionActivity extends BaseActivity {
 	private List<Map<String, String>> dataSourceList = new ArrayList<>();
@@ -91,26 +94,25 @@ public class UploadDishMakeOptionActivity extends BaseActivity {
 	@Override
 	public void onBackPressed() {
 		if(mDragAdapter.isEdit){
-			final XhDialog hintDialog = new XhDialog(this);
-			hintDialog.setTitle("是否保存调整后的步骤")
-			.setCanselButton("取消", new OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					hintDialog.cancel();
-					UploadDishMakeOptionActivity.super.onBackPressed();
-				}
-			})
-			.setSureButton("保存", new OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					saveData();
-					hintDialog.cancel();
-					UploadDishMakeOptionActivity.super.onBackPressed();
-				}
-			});
-			hintDialog.show();
+			final DialogManager dialogManager = new DialogManager(this);
+			dialogManager.createDialog(new ViewManager(dialogManager)
+					.setView(new TitleMessageView(this).setText("是否保存调整后的步骤？"))
+					.setView(new HButtonView(this)
+							.setNegativeText("取消", new View.OnClickListener() {
+								@Override
+								public void onClick(View v) {
+									dialogManager.cancel();
+									UploadDishMakeOptionActivity.super.onBackPressed();
+								}
+							})
+							.setPositiveText("保存", new View.OnClickListener() {
+								@Override
+								public void onClick(View v) {
+									saveData();
+									dialogManager.cancel();
+									UploadDishMakeOptionActivity.super.onBackPressed();
+								}
+							}))).show();
 		}else{
 			UploadDishMakeOptionActivity.super.onBackPressed();
 		}

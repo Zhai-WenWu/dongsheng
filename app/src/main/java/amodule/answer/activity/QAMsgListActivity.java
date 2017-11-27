@@ -103,6 +103,7 @@ public class QAMsgListActivity extends BaseFragmentActivity implements IObserver
             LogManager.print(XHConf.log_tag_net,"d", "设置cookie："+i+"::"+cookie[i]);
             cookieManager.setCookie(cookieKey, cookie[i]);
         }
+        CookieSyncManager.createInstance(this);
         CookieSyncManager.getInstance().sync();
         mWebView.setVisibility(View.VISIBLE);
        loadMsgList(false);

@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import acore.logic.AppCommon;
+import acore.logic.FavoriteHelper;
 import acore.logic.SpecialWebControl;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
@@ -178,6 +179,27 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         });
     }
 
+    private void requestFavoriteState(){
+        FavoriteHelper.instance().getFavoriteStatus(this, code,
+                dishActivityViewControl.isHasVideo() ? FavoriteHelper.TYPE_DISH_VIDEO : FavoriteHelper.TYPE_DISH_ImageNText,
+                new FavoriteHelper.FavoriteStatusCallback() {
+                    @Override
+                    public void onSuccess(boolean state) {
+                        //处理收藏状态
+                        if(dishActivityViewControl != null && dishActivityViewControl.getDishTitleViewControl() != null){
+                            dishActivityViewControl.getDishTitleViewControl().setFavStatus(state);
+                        }
+                    }
+
+                    @Override
+                    public void onFailed() {
+                        if(dishActivityViewControl != null && dishActivityViewControl.getDishTitleViewControl() != null){
+                            dishActivityViewControl.getDishTitleViewControl().setFavStatus(false);
+                        }
+                    }
+                });
+    }
+
     /**
      * 请求网络
      */
@@ -286,6 +308,8 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         }
         requestWeb(data);
         dishActivityViewControl.analyzeDishInfoData(data,permissionMap);
+        //请求收藏数据
+        requestFavoriteState();
     }
 
     private void requestWeb(String dishJson) {
@@ -403,6 +427,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
                     dishActivityViewControl.refreshAskStatus();
                     dishActivityViewControl.refreshQaWebView();
                 }
+                requestFavoriteState();
                 break;
             case ObserverManager.NOTIFY_FOLLOW://关注
                 if(dishActivityViewControl!=null) {

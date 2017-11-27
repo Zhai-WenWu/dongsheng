@@ -20,6 +20,10 @@ import android.widget.Toast;
 import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.animation.GlideAnimation;
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.TitleMessageView;
 import com.xiangha.R;
 
 import org.json.JSONArray;
@@ -63,7 +67,6 @@ import aplug.recordervideo.activity.ChooseVideoActivity;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilImage;
 import xh.basic.tool.UtilString;
-import xh.windowview.XhDialog;
 
 /**
  * Created by XiangHa on 2016/10/25.
@@ -827,29 +830,29 @@ public class UploadDishVideoControl extends UploadDishParrentControl implements 
                 AppCommon.openUrl(mAct,"http://appweb.xiangha.com/deal/helpDishVideo.html",true);
                 break;
             case R.id.delete_btn:
-                final XhDialog vsDialog = new XhDialog(mAct);
-                vsDialog.setTitle("是否删除这个草稿呢？")
-                        .setSureButton("删除", new View.OnClickListener() {
-
-                            @Override
-                            public void onClick(View v) {
-                                XHClick.mapStat(mAct, UploadDishActivity.STATISTICS_ID, "点击删除这个草稿", "");
-                                int id=uploadDishData.getId();
-                                if (id > 0) {
-                                    UploadDishSqlite mDishSqlite=new UploadDishSqlite(mAct.getApplicationContext());
-                                    mDishSqlite.deleteById(id);
-                                }
-                                mAct.finish();
-                            }
-                        })
-                        .setCanselButton("取消", new View.OnClickListener() {
-
-                            @Override
-                            public void onClick(View v) {
-                                vsDialog.cancel();
-                            }
-                        });
-                vsDialog.show();
+                final DialogManager dialogManager = new DialogManager(mAct);
+                dialogManager.createDialog(new ViewManager(dialogManager)
+                        .setView(new TitleMessageView(mAct).setText("是否删除这个草稿呢？"))
+                        .setView(new HButtonView(mAct)
+                                .setNegativeText("取消", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        dialogManager.cancel();
+                                    }
+                                })
+                                .setPositiveText("删除", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        dialogManager.cancel();
+                                        XHClick.mapStat(mAct, UploadDishActivity.STATISTICS_ID, "点击删除这个草稿", "");
+                                        int id=uploadDishData.getId();
+                                        if (id > 0) {
+                                            UploadDishSqlite mDishSqlite=new UploadDishSqlite(mAct.getApplicationContext());
+                                            mDishSqlite.deleteById(id);
+                                        }
+                                        mAct.finish();
+                                    }
+                                }))).show();
                 break;
         }
     }

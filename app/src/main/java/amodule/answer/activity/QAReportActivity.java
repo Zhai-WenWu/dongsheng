@@ -1,5 +1,6 @@
 package amodule.answer.activity;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -10,6 +11,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.TitleMessageView;
 import com.xiangha.R;
 
 import java.util.ArrayList;
@@ -26,7 +31,6 @@ import amodule.article.view.ReportItem;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import xh.basic.internet.UtilInternet;
-import xh.windowview.XhDialog;
 
 /**
  * Created by sll on 2017/7/17.
@@ -55,6 +59,7 @@ public class QAReportActivity extends BaseActivity {
     private ReportItem mLastSelectedAdminChild;
 
     private boolean mLoaded;
+    private boolean mBlackOriginalState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,25 +131,26 @@ public class QAReportActivity extends BaseActivity {
                         break;
                     case R.id.black_switch_btn:
                         if (!mBlackListSwitchBtn.isSelected()) {
-                            final XhDialog dialog = new XhDialog(QAReportActivity.this);
-                            dialog.setCancelable(true)
-                                    .setTitle("进入黑名单的用户将永远不能向你的菜谱进行付费提问，是否拉黑？")
-                                    .setCanselButton("否", new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            dialog.cancel();
-                                            XHClick.mapStat(QAReportActivity.this, "a_ask_report", "打开拉黑按钮", "选择【否】");
-                                        }
-                                    })
-                                    .setSureButton("是", new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            dialog.cancel();
-                                            mBlackListSwitchBtn.setSelected(true);
-                                            XHClick.mapStat(QAReportActivity.this, "a_ask_report", "打开拉黑按钮", "选择【是】（拉黑）");
-                                        }
-                                    })
-                                    .show();
+                            final DialogManager dialogManager = new DialogManager(QAReportActivity.this);
+                            dialogManager.createDialog(new ViewManager(dialogManager)
+                                    .setView(new TitleMessageView(QAReportActivity.this).setText("进入黑名单的用户将永远不能向你的菜谱进行付费提问，是否拉黑？"))
+                                    .setView(new HButtonView(QAReportActivity.this)
+                                            .setNegativeText("否", new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    dialogManager.cancel();
+                                                    XHClick.mapStat(QAReportActivity.this, "a_ask_report", "打开拉黑按钮", "选择【否】");
+                                                }
+                                            })
+                                            .setPositiveTextColor(Color.parseColor("#007aff"))
+                                            .setPositiveText("是", new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    dialogManager.cancel();
+                                                    mBlackListSwitchBtn.setSelected(true);
+                                                    XHClick.mapStat(QAReportActivity.this, "a_ask_report", "打开拉黑按钮", "选择【是】（拉黑）");
+                                                }
+                                            }))).show();
                         } else {
                             mBlackListSwitchBtn.setSelected(false);
                             XHClick.mapStat(QAReportActivity.this, "a_ask_report", "关闭拉黑按钮", "");
@@ -162,7 +168,7 @@ public class QAReportActivity extends BaseActivity {
      * 点击提交按钮
      */
     public void onCommitClick() {
-        if (mLastSelectedReportChild == null) {
+        if (mLastSelectedReportChild == null && (!mBlackOriginalState || (mBlackOriginalState && mBlackListSwitchBtn.isSelected()))) {
             Tools.showToast(QAReportActivity.this, "请选择举报原因");
             return;
         }
@@ -172,7 +178,7 @@ public class QAReportActivity extends BaseActivity {
             keys.add(mLastSelectedReportChild.getKey());
         if (mLastSelectedAdminChild != null && !TextUtils.isEmpty(mLastSelectedAdminChild.getKey()))
             keys.add(mLastSelectedAdminChild.getKey());
-        if (mBlackListSwitchBtn != null && mBlackListSwitchBtn.isSelected())
+        if (mBlackListSwitchBtn.isSelected())
             keys.add(mBlackListSwitchBtn.getTag().toString());
         String params = "";
         if (keys.size() > 0) {
@@ -235,7 +241,7 @@ public class QAReportActivity extends BaseActivity {
             if (mapBlack != null && !mapBlack.isEmpty()) {
                 String key = mapBlack.get("key");
                 String text = mapBlack.get("text");
-                String isDef = mapBlack.get("isDefault");//是否拉黑 1.否， 2.是
+                boolean isBlack = "2".equals(mapBlack.get("isDefault"));//是否拉黑 1.否， 2.是
                 if (!TextUtils.isEmpty(text)) {
                     if (mBlackText != null) {
                         mBlackText.setText(text);
@@ -245,9 +251,10 @@ public class QAReportActivity extends BaseActivity {
                         mBlackListContainer.setVisibility(View.VISIBLE);
                     if (mBlackListSwitchBtn != null) {
                         mBlackListSwitchBtn.setTag(key);
-                        mBlackListSwitchBtn.setSelected("2".equals(isDef));
+                        mBlackListSwitchBtn.setSelected(isBlack);
                     }
                 }
+                mBlackOriginalState = isBlack;
             }
             String moreReason = map.get("adminList");
             if (!TextUtils.isEmpty(moreReason)) {

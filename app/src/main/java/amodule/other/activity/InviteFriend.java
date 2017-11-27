@@ -1,8 +1,6 @@
 package amodule.other.activity;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -29,6 +27,10 @@ import com.google.zxing.EncodeHintType;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.TitleMessageView;
 import com.xiangha.R;
 
 import java.util.ArrayList;
@@ -387,7 +389,6 @@ public class InviteFriend extends BaseActivity {
 			// 把输入的文本转为二维码
 			BitMatrix martix = writer.encode(text, BarcodeFormat.QR_CODE, QR_WIDTH, QR_HEIGHT);
 
-			// System.out.println("w:" + martix.getWidth() + "h:" +
 			// martix.getHeight());
 
 			Hashtable<EncodeHintType, String> hints = new Hashtable<EncodeHintType, String>();
@@ -446,22 +447,23 @@ public class InviteFriend extends BaseActivity {
 	 * @param name
 	 */
 	private void showDialog(String name) {
-		AlertDialog dialog = new AlertDialog.Builder(this)
-		.setMessage(name)
-		.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				//正式添加邀请
-				load_inviteCustomer();
-			}
-		}).setNegativeButton("取消", new DialogInterface.OnClickListener() {
-
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				dialog.cancel();
-			}
-		}).create();
-		dialog.show();
+		final DialogManager dialogManager = new DialogManager(this);
+		dialogManager.createDialog(new ViewManager(dialogManager)
+				.setView(new TitleMessageView(this).setText(name))
+				.setView(new HButtonView(this)
+						.setNegativeText("取消", new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								dialogManager.cancel();
+							}
+						})
+						.setPositiveText("确定", new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								dialogManager.cancel();
+								//正式添加邀请
+								load_inviteCustomer();
+							}
+						}))).show();
 	}
 }

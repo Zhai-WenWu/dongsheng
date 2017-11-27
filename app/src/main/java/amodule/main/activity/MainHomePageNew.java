@@ -99,10 +99,6 @@ public class MainHomePageNew extends MainBaseActivity {
 		onLoadData(false);
 	}
 
-	public void onActivityshow(){
-//		SpecialWebControl.initSpecialWeb(this,"index","","");
-		showDialog();
-	}
 	/**
 	 * 加载数据
 	 */
@@ -128,35 +124,6 @@ public class MainHomePageNew extends MainBaseActivity {
 		//今日佳作列表加载数据,
 		mHomeDish.loadData(mHeaderAndListControl.getListView(), mHeaderAndListControl.getScrollLinearListLayout());
 
-	}
-
-	/**
-	 * 展示提醒dialog
-	 */
-	private void showDialog(){
-		String msg=(String) FileManager.loadShared(this, FileManager.CIRCLE_HOME_SHOWDIALOG, FileManager.CIRCLE_HOME_SHOWDIALOG);
-		if(TextUtils.isEmpty(msg)||!msg.equals("1")){
-			final Dialog dialog= new Dialog(this, R.style.dialog);
-			Window window= dialog.getWindow();
-			window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
-			dialog.setContentView(R.layout.dialog_maincircle_backgroup);
-			window.findViewById(R.id.maincircle_img_hint_close).setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					dialog.cancel();
-				}
-			});
-			window.findViewById(R.id.maincircle_img_hint_send).setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					dialog.cancel();
-					ChangeSendDialog dialog= new ChangeSendDialog(MainHomePageNew.this);
-					dialog.show();
-				}
-			});
-			dialog.show();
-			FileManager.saveShared(this, FileManager.CIRCLE_HOME_SHOWDIALOG, FileManager.CIRCLE_HOME_SHOWDIALOG, "1");
-		}
 	}
 
 }

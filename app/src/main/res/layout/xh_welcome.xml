@@ -67,17 +67,19 @@
         android:text="会员免广告"
         android:textColor="#FFFFFE"
         android:textSize="@dimen/sp_12"
-        android:visibility="visible"
+        android:visibility="gone"
         tagTextView:backgroundColor="#B2000000"
         tagTextView:bottomLeftRadius="@dimen/dp_20"
         tagTextView:topLeftRadius="@dimen/dp_20"
         />
     <ImageView
+        android:id="@+id/line_1"
         android:layout_width="1px"
         android:layout_height="match_parent"
         android:paddingTop="@dimen/dp_5"
         android:paddingBottom="@dimen/dp_5"
         android:src="#FFFFFE"
+        android:visibility="gone"
         android:layout_gravity="center"
         android:background="#B2000000"/>
     <acore.widget.TagTextView xmlns:tagTextView="http://schemas.android.com/apk/res-auto"
@@ -90,7 +92,7 @@
         android:text="跳过"
         android:textColor="#FFFFFE"
         android:textSize="@dimen/sp_12"
-        android:visibility="visible"
+        android:visibility="gone"
         tagTextView:backgroundColor="#B2000000"
         tagTextView:bottomRightRadius="@dimen/dp_20"
         tagTextView:topRightRadius="@dimen/dp_20" />

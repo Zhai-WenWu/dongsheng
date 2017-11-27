@@ -10,6 +10,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.TitleMessageView;
 import com.xiangha.R;
 
 import java.util.List;
@@ -24,7 +28,6 @@ import amodule.dish.activity.DetailDish;
 import amodule.dish.activity.upload.UploadDishActivity;
 import amodule.dish.activity.upload.UploadDishListActivity;
 import amodule.dish.db.UploadDishData;
-import xh.windowview.XhDialog;
 
 /**
  * Created by XiangHa on 2016/9/21.
@@ -67,22 +70,23 @@ public class AdapterUserDish extends AdapterSimple {
             iv_delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    final XhDialog dialog = new XhDialog(mAct);
-                    dialog.setTitle("真的要删除这个菜谱么?").
-                            setSureButton("删除", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    mDeleteListener.onDelete(position);
-                                    dialog.cancel();
-                                }
-                            }).setCanselButton("取消", new View.OnClickListener() {
-
-                        @Override
-                        public void onClick(View v) {
-                            dialog.cancel();
-                        }
-                    });
-                    dialog.show();
+                    final DialogManager dialogManager = new DialogManager(mAct);
+                    dialogManager.createDialog(new ViewManager(dialogManager)
+                            .setView(new TitleMessageView(mAct).setText("真的要删除这个菜谱么?"))
+                            .setView(new HButtonView(mAct)
+                                    .setNegativeText("取消", new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            dialogManager.cancel();
+                                        }
+                                    })
+                                    .setPositiveText("删除", new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            dialogManager.cancel();
+                                            mDeleteListener.onDelete(position);
+                                        }
+                                    }))).show();
                 }
             });
         } else {

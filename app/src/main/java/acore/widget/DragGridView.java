@@ -529,7 +529,6 @@ public class DragGridView extends GridView{
 		if (isForward) {
 			for (int pos = oldPosition; pos < newPosition; pos++) {
 				View view = getChildAt(pos - getFirstVisiblePosition());
-				System.out.println(pos);
 				if(view!=null&&view.getWidth()>0) {
 					if ((pos + 1) % mNumColumns == 0) {
 						resultList.add(createTranslationAnimations(view,

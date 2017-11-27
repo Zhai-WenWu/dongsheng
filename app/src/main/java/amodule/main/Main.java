@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -27,6 +28,10 @@ import com.popdialog.GoodCommentDialogControl;
 import com.popdialog.util.GoodCommentManager;
 import com.tencent.stat.StatConfig;
 import com.tencent.stat.StatService;
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.TitleMessageView;
 import com.xiangha.R;
 
 import java.util.ArrayList;
@@ -77,6 +82,7 @@ import amodule.user.activity.MyMessage;
 import aplug.basic.ReqInternet;
 import aplug.shortvideo.ShortVideoInit;
 import third.ad.control.AdControlHomeDish;
+import third.ad.tools.AdConfigTools;
 import third.mall.MainMall;
 import third.mall.alipay.MallPayActivity;
 import third.mall.aplug.MallCommon;
@@ -84,7 +90,7 @@ import third.push.xg.XGLocalPushServer;
 import third.qiyu.QiYvHelper;
 import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilLog;
-import xh.windowview.XhDialog;
+
 import static acore.tools.Tools.getApiSurTime;
 import static com.xiangha.R.id.iv_itemIsFine;
 
@@ -284,6 +290,10 @@ public class Main extends Activity implements OnClickListener, IObserver {
                 OffDishToFavoriteControl.addCollection(Main.this);
                 //初始化电商页面统计
                 PageStatisticsUtils.getInstance().getPageInfo(getApplicationContext());
+                //处理
+                if (LoginManager.isLogin())
+                    initQiYvUnreadCount();
+                addQiYvListener();
 
                 if (showQAUploading())
                     return;
@@ -341,29 +351,30 @@ public class Main extends Activity implements OnClickListener, IObserver {
                 show = true;
                 intent.setClass(Main.this, tempC);
                 final Intent finalIntent = intent;
-                final XhDialog dialog = new XhDialog(Main.this);
-                dialog.setTitle(msg)
-                        .setCancelable(true)
-                        .setCanselButton("否", new OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                dialog.cancel();
-                                new Thread(new Runnable() {
+                final DialogManager dialogManager = new DialogManager(Main.this);
+                dialogManager.createDialog(new ViewManager(dialogManager)
+                        .setView(new TitleMessageView(Main.this).setText(msg))
+                        .setView(new HButtonView(Main.this)
+                                .setNegativeText("否", new View.OnClickListener() {
                                     @Override
-                                    public void run() {
-                                        sqLite.deleteAll();
+                                    public void onClick(View v) {
+                                        dialogManager.cancel();
+                                        new Thread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                sqLite.deleteAll();
+                                            }
+                                        }).start();
                                     }
-                                }).start();
-                            }
-                        })
-                        .setSureButton("是", new OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Main.this.startActivity(finalIntent);
-                                dialog.cancel();
-                            }
-                        })
-                        .show();
+                                })
+                                .setPositiveTextColor(Color.parseColor("#007aff"))
+                                .setPositiveText("是", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        dialogManager.cancel();
+                                        Main.this.startActivity(finalIntent);
+                                    }
+                                }))).show();
             }
             return show;
         }
@@ -371,34 +382,36 @@ public class Main extends Activity implements OnClickListener, IObserver {
         private boolean showUploading(final UploadParentSQLite sqLite, final int dataType, String title) {
             final UploadArticleData uploadArticleData = sqLite.getUploadIngData();
             if (uploadArticleData != null) {
-                final XhDialog xhDialog = new XhDialog(Main.this);
-                xhDialog.setTitle(title)
-                        .setCanselButton("取消", new OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                uploadArticleData.setUploadType(UploadDishData.UPLOAD_PAUSE);
-                                sqLite.update(uploadArticleData.getId(),uploadArticleData);
-                                xhDialog.cancel();
-                            }
-                        }).setSureButton("确定", new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(Main.this, ArticleUploadListActivity.class);
-                        intent.putExtra("draftId", uploadArticleData.getId());
-                        intent.putExtra("dataType", dataType);
-                        intent.putExtra("coverPath", uploadArticleData.getImg());
-                        String videoPath = "";
-                        ArrayList<Map<String,String>> videoArray = uploadArticleData.getVideoArray();
-                        if(videoArray.size() > 0){
-                            videoPath = videoArray.get(0).get("video");
-                        }
-                        intent.putExtra("finalVideoPath", videoPath);
-                        startActivity(intent);
-                        xhDialog.cancel();
-                    }
-                }).setSureButtonTextColor("#333333")
-                        .setCancelButtonTextColor("#333333")
-                        .show();
+                final DialogManager dialogManager = new DialogManager(Main.this);
+                dialogManager.createDialog(new ViewManager(dialogManager)
+                        .setView(new TitleMessageView(Main.this).setText(title))
+                        .setView(new HButtonView(Main.this)
+                                .setNegativeText("取消", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        dialogManager.cancel();
+                                        uploadArticleData.setUploadType(UploadDishData.UPLOAD_PAUSE);
+                                        sqLite.update(uploadArticleData.getId(),uploadArticleData);
+                                    }
+                                })
+                                .setPositiveTextColor(Color.parseColor("#007aff"))
+                                .setPositiveText("确定", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        Intent intent = new Intent(Main.this, ArticleUploadListActivity.class);
+                                        intent.putExtra("draftId", uploadArticleData.getId());
+                                        intent.putExtra("dataType", dataType);
+                                        intent.putExtra("coverPath", uploadArticleData.getImg());
+                                        String videoPath = "";
+                                        ArrayList<Map<String,String>> videoArray = uploadArticleData.getVideoArray();
+                                        if(videoArray.size() > 0){
+                                            videoPath = videoArray.get(0).get("video");
+                                        }
+                                        intent.putExtra("finalVideoPath", videoPath);
+                                        dialogManager.cancel();
+                                        startActivity(intent);
+                                    }
+                                }))).show();
                 return true;
             }
             return false;
@@ -464,9 +477,6 @@ public class Main extends Activity implements OnClickListener, IObserver {
 //        QbSdk.initX5Environment(Main.this, null);
         ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_LOGIN);
         ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_LOGOUT);
-        if (LoginManager.isLogin())
-            initQiYvUnreadCount();
-        addQiYvListener();
     }
 
     /**
@@ -553,13 +563,61 @@ public class Main extends Activity implements OnClickListener, IObserver {
                     @Override
                     public void run() {
                         AppCommon.getCommonData(null);
+
                     }
                 });
             }
         };
-        timer.schedule(tt, everyReq * 1000, everyReq * 1000);
+        timer.schedule(tt, everyReq*1000, everyReq*1000);
+//        tempData();
+//        tempThreadData();
+//        getMainLooper().getThread().setPriority(10);
     }
 
+    private void tempData(){
+        Timer temptimer = new Timer();
+        final Handler handler = new Handler();
+        TimerTask tt = new TimerTask() {
+            @Override
+            public void run() {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        tempThreadData();
+                    }
+                });
+            }
+        };
+        temptimer.schedule(tt, 1000, 1000);
+    }
+    private void tempThreadData(){
+        ThreadGroup group = Thread.currentThread().getThreadGroup();
+        ThreadGroup topGroup = group;
+// 遍历线程组树，获取根线程组
+        while (group != null) {
+            topGroup = group;
+            group = group.getParent();
+        }
+// 激活的线程数加倍
+        int estimatedSize = topGroup.activeCount() * 2;
+        Thread[] slackList = new Thread[estimatedSize];
+// 获取根线程组的所有线程
+        int actualSize = topGroup.enumerate(slackList);
+// copy into a list that is the exact size
+        Thread[] list = new Thread[actualSize];
+        System.arraycopy(slackList, 0, list, 0, actualSize);
+        System.out.println("Thread list size == " + list.length);
+        Log.i("xianghaThread","Thread list size == " + list.length);
+        for (Thread thread : list) {
+            System.out.println(thread.getName());
+            if(thread.getName().startsWith("OkHttp")) {
+                thread.setPriority(6);
+                Log.i("xianghaThread", "thread.getName()::::: " + thread.getName()+":::"+thread.getPriority());
+            }
+            Log.i("xianghaThread", "thread.getName()::::: " + thread.getName()+":::"+thread.getPriority());
+//            thread.setPriority();
+        }
+    }
     public void onChangeSend(View v) {
         MyQuanDataControl.getNewMyQuanData(this, null);
         XHClick.mapStat(this, "a_index530", "底部导航栏", "点击底部发布按钮");
@@ -603,6 +661,9 @@ public class Main extends Activity implements OnClickListener, IObserver {
             }
         });
         openUri();
+        if(timer==null){
+            initRunTime();
+        }
     }
 
     /**
@@ -645,6 +706,15 @@ public class Main extends Activity implements OnClickListener, IObserver {
             isForeground = false;
             homebackTime = System.currentTimeMillis();
         }
+        if (timer!=null){
+            timer.cancel();
+            timer=null;
+        }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
     }
 
     @Override
@@ -716,6 +786,8 @@ public class Main extends Activity implements OnClickListener, IObserver {
                     timer.purge();
                 }
                 colse_level = 0;
+                //请求广告位
+                AdConfigTools.getInstance().getAdConfigInfo();
                 UploadDishControl.getInstance().updataAllUploadingDish(getApplicationContext());
                 // 开启自我唤醒
                 if (act != null) new XGLocalPushServer(act).initLocalPush();
@@ -873,8 +945,8 @@ public class Main extends Activity implements OnClickListener, IObserver {
 //                    MainMyself mainMyself = (MainMyself) allTab.get("MainMyself");
 //                    mainMyself.scrollToTop();
                 } else if (i == 3 && allTab.containsKey("MyMessage") && i == nowTab) {
-                    MyMessage myMessage = (MyMessage) allTab.get("MyMessage");
-                    myMessage.onRefresh();
+//                    MyMessage myMessage = (MyMessage) allTab.get("MyMessage");
+//                    myMessage.onRefresh();
                 }
                 try {
                     setCurrentTabByIndex(i);

@@ -20,6 +20,10 @@ import android.widget.TextView;
 import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.animation.GlideAnimation;
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.TitleMessageView;
 import com.xiangha.R;
 
 import java.util.Collections;
@@ -34,7 +38,6 @@ import amodule.dish.activity.upload.UploadDishActivity;
 import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
 import xh.basic.tool.UtilImage;
-import xh.windowview.XhDialog;
 
 import static com.xiangha.R.id.iv_makes_back2;
 
@@ -98,25 +101,24 @@ public class AdapterDishMakeOption extends BaseAdapter implements DragGridBaseAd
 
 			@Override
 			public void onClick(View v) {
-				final XhDialog hintDialog = new XhDialog(mCon);
-				hintDialog.setTitle("确定删除本步骤吗")
-						.setCanselButton("取消", new OnClickListener() {
-
-							@Override
-							public void onClick(View v) {
-								hintDialog.cancel();
-							}
-						})
-						.setSureButton("删除", new OnClickListener() {
-
-							@Override
-							public void onClick(View v) {
-								isEdit = true;
-								onDeleteStepView(position);
-								hintDialog.cancel();
-							}
-						});
-				hintDialog.show();
+				final DialogManager dialogManager = new DialogManager(mCon);
+				dialogManager.createDialog(new ViewManager(dialogManager)
+						.setView(new TitleMessageView(mCon).setText("确定删除本步骤吗？"))
+						.setView(new HButtonView(mCon)
+								.setNegativeText("取消", new View.OnClickListener() {
+									@Override
+									public void onClick(View v) {
+										dialogManager.cancel();
+									}
+								})
+								.setPositiveText("删除", new View.OnClickListener() {
+									@Override
+									public void onClick(View v) {
+										isEdit = true;
+										onDeleteStepView(position);
+										dialogManager.cancel();
+									}
+								}))).show();
 			}
 		});
 		if (position == mHidePosition) {

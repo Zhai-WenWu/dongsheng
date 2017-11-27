@@ -7,7 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.TitleMessageView;
 import com.xiangha.R;
 
 import java.util.ArrayList;
@@ -22,7 +25,6 @@ import acore.tools.ToolsDevice;
 import amodule.nous.activity.HomeNous;
 import amodule.user.db.BrowseHistorySqlite;
 import aplug.basic.ReqInternet;
-import xh.windowview.XhDialog;
 
 /**
  * PackageName : amodule.user.view
@@ -166,26 +168,26 @@ public class HistoryNousView extends HistoryView {
 
 				@Override
 				public boolean onLongClick(View v) {
-					final XhDialog dialog = new XhDialog(mAct);
-					dialog.setTitle("确定删除该条浏览记录?")
-							.setCanselButton("确定", new View.OnClickListener() {
-								@Override
-								public void onClick(View v) {
-									BrowseHistorySqlite sqlite = new BrowseHistorySqlite(mContext);
-									sqlite.deleteByCode(BrowseHistorySqlite.TB_NOUS_NAME, map.get("code"));
-									data.remove(map);
-									notifyDataSetChanged();
-									dialog.cancel();
-								}
-							})
-							.setSureButtonTextColor("#333333")
-							.setSureButton("取消", new View.OnClickListener() {
-								@Override
-								public void onClick(View v) {
-									dialog.cancel();
-								}
-							});
-					dialog.show();
+					final DialogManager dialogManager = new DialogManager(mAct);
+					dialogManager.createDialog(new ViewManager(dialogManager)
+							.setView(new TitleMessageView(mAct).setText("确定删除该条浏览记录?"))
+							.setView(new HButtonView(mAct)
+									.setNegativeText("取消", new View.OnClickListener() {
+										@Override
+										public void onClick(View v) {
+											dialogManager.cancel();
+										}
+									})
+									.setPositiveText("确定", new View.OnClickListener() {
+										@Override
+										public void onClick(View v) {
+											dialogManager.cancel();
+											BrowseHistorySqlite sqlite = new BrowseHistorySqlite(mContext);
+											sqlite.deleteByCode(BrowseHistorySqlite.TB_NOUS_NAME, map.get("code"));
+											data.remove(map);
+											notifyDataSetChanged();
+										}
+									}))).show();
 					return true;
 				}
 			});

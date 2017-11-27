@@ -209,7 +209,6 @@ public class MallSearchActivity extends MallBaseActivity {
 				@Override
 				public void onClick(View v) {
 					if(theUrl.indexOf(MallStringManager.domain)>-1){//电商
-						System.out.println("成功");
 						Map<String,String> header=MallReqInternet.in().getHeader(MallSearchActivity.this);
 						String cookieKey=MallStringManager.mall_web_apiUrl.replace(MallStringManager.appWebTitle, "");
 						String cookieStr=header.containsKey("Cookie")?header.get("Cookie"):"";
@@ -221,6 +220,7 @@ public class MallSearchActivity extends MallBaseActivity {
 							LogManager.print(XHConf.log_tag_net,"d", "设置cookie："+i+"::"+cookie[i]);
 							cookieManager.setCookie(cookieKey, cookie[i]);
 						}
+						CookieSyncManager.createInstance(MallSearchActivity.this);
 						CookieSyncManager.getInstance().sync();
 						LogManager.print(XHConf.log_tag_net,"d", "设置webview的cookie："+cookieStr);
 					}

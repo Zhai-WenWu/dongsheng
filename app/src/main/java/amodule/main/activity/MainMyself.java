@@ -18,6 +18,11 @@ import android.widget.TextView;
 
 import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.load.model.GlideUrl;
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.MessageView;
+import com.xh.view.TitleView;
+import com.xh.view.VButtonView;
 import com.xiangha.R;
 
 import java.util.ArrayList;
@@ -26,7 +31,6 @@ import java.util.Map;
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
-import acore.logic.login.widget.YiYuanBindDialog;
 import acore.override.activity.mian.MainBaseActivity;
 import acore.tools.FileManager;
 import acore.tools.IObserver;
@@ -69,10 +73,10 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
     private RelativeLayout right_myself, userPage;
     private LinearLayout gourp1, gourp2,gourp3;
     private String[] name1 = {"我的订单"},
-            name2 = {"我的会员", "当前设备已开通会员", "我的问答", "我的收藏",/*"缓存下载",*/"浏览历史"},
+            name2 = {"我的会员", "当前设备已开通会员", "我的问答", "我的收藏",/*"缓存下载","浏览历史"*/},
             name3 = {"反馈帮助","设置"};
     private String[] clickTag1 = {"order"},
-            clickTag2 = {"vip", "yiyuan", "qa", "favor",/*"download",*/"hitstory"},
+            clickTag2 = {"vip", "yiyuan", "qa", "favor",/*"download","hitstory"*/},
             clickTag3 = {"helpe","setting"};
 
     private final String tongjiId = "a_mine";
@@ -572,7 +576,7 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
         if(!isOption){
             switch (clickTag) {
                 case "yiyuan"://权益迁移
-                    new YiYuanBindDialog(this).show("权益迁移", getResources().getString(R.string.yiyuan_dialog_desc));
+                    generateDialog().show();
                     XHClick.mapStat(this, tongjiId, "权限迁移按钮", "");
                     break;
                 case "qa"://我的问答
@@ -626,6 +630,40 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
                     break;
             }
         }
+    }
+
+    private DialogManager generateDialog() {
+        final DialogManager dialogManager = new DialogManager(MainMyself.this);
+        dialogManager.createDialog(new ViewManager(dialogManager)
+                .setView(new TitleView(MainMyself.this).setText("权益迁移"))
+                .setView(new MessageView(MainMyself.this).setText(R.string.yiyuan_dialog_desc))
+                .setView(new VButtonView(MainMyself.this).setPositiveText(LoginManager.isLogin() ? R.string.vip_transfer_this : R.string.vip_transfer_xh, new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialogManager.cancel();
+                        if (LoginManager.isLogin()) {
+                            LoginManager.bindYiYuanVIP(MainMyself.this);
+                            XHClick.mapStat(MainMyself.this, "a_vip_thismove", "转移到本账号", "");
+                        } else {
+                            LoginManager.setAutoBindYiYuanVIP(true);
+                            Intent intent = new Intent(MainMyself.this, LoginByAccout.class);
+                            MainMyself.this.startActivity(intent);
+                            XHClick.mapStat(MainMyself.this, "a_vip_newmove", "转移到香哈账号", "");
+                        }
+                    }
+                }).setPositiveTextColor(Color.parseColor("#007aff")).setPositiveTextBold(true)
+                        .setNegativeText("取消", new OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialogManager.cancel();
+                                if (LoginManager.isLogin()) {
+                                    XHClick.mapStat(MainMyself.this, "a_vip_thismove","取消", "");
+                                } else {
+                                    XHClick.mapStat(MainMyself.this, "a_vip_newmove","取消", "");
+                                }
+                            }
+                        }).setNegativeTextColor(Color.parseColor("#007aff"))));
+        return dialogManager;
     }
 
     public void setUserImage(final ImageView v, String value) {
@@ -686,13 +724,13 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
         mYiYuanDialogShowing = true;
         if (fromServer)
             FileManager.saveShared(MainMyself.this,FileManager.xmlFile_appInfo,"vipTransfer","2");
-        YiYuanBindDialog bindDialog = new YiYuanBindDialog(this);
-        bindDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+        final DialogManager dialogManager = generateDialog();
+        dialogManager.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
                 mYiYuanDialogShowing = false;
             }
         });
-        bindDialog.show(getString(R.string.yiyuan_bind_title), getString(R.string.yiyuan_dialog_desc));
+        dialogManager.show();
     }
 }

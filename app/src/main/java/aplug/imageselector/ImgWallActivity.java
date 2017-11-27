@@ -1,11 +1,5 @@
 package aplug.imageselector;
 
-import java.util.ArrayList;
-
-import xh.windowview.XhDialog;
-import acore.override.activity.base.BaseActivity;
-import acore.tools.Tools;
-
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -22,15 +16,23 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import aplug.basic.SubBitmapTarget;
-import aplug.basic.LoadImage;
-import aplug.imageselector.adapter.AdapterImgWall;
-import aplug.imageselector.constant.ImageSelectorConstant;
-
 import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.animation.GlideAnimation;
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.TitleMessageView;
 import com.xiangha.R;
+
+import java.util.ArrayList;
+
+import acore.override.activity.base.BaseActivity;
+import acore.tools.Tools;
+import aplug.basic.LoadImage;
+import aplug.basic.SubBitmapTarget;
+import aplug.imageselector.adapter.AdapterImgWall;
+import aplug.imageselector.constant.ImageSelectorConstant;
 
 /**
  * Title:ImgWallActivity.java Copyright: Copyright (c) 2014~2017
@@ -211,16 +213,16 @@ public class ImgWallActivity extends BaseActivity implements OnClickListener {
                     indicator.setImageResource(R.drawable.btn_unselected);
                     indicator.setSelected(false);
                 } else if (resultList.size() >= mMaxCount) {
-                    final XhDialog dialog = new XhDialog(this);
-                    dialog.setTitle("最多可以选择" + mMaxCount + "张图片")
-                            .setSureButton("我知道了", new OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    dialog.cancel();
-                                }
-                            });
-                    dialog.show();
-//				Tools.showToast(this, "最多可以选择" + mMaxCount + "张图片");
+                    final DialogManager dialogManager = new DialogManager(this);
+                    dialogManager.createDialog(new ViewManager(dialogManager)
+                            .setView(new TitleMessageView(this).setText("最多可以选择" + mMaxCount + "张图片"))
+                            .setView(new HButtonView(this)
+                                    .setNegativeText("我知道了", new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            dialogManager.cancel();
+                                        }
+                                    }))).show();
                     return;
                 } else {
                     resultList.add(mData.get(currentIndex));

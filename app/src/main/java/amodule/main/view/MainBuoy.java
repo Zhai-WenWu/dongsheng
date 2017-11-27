@@ -47,7 +47,7 @@ public class MainBuoy {
 	private ImageView imageButton;
 	
 	public MainBuoy(Main act){
-		Log.i("tzy","create MainBuoy");
+//		Log.i("tzy","create MainBuoy");
 		this.mAct = act;
 		// 浮动按钮
 		isMove = true;

@@ -14,6 +14,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.TitleMessageView;
 import com.xiangha.R;
 
 import java.util.ArrayList;
@@ -33,7 +37,6 @@ import aplug.basic.InternetCallback;
 import third.mall.tool.ToolView;
 import xh.basic.tool.UtilString;
 import xh.windowview.BottomDialog;
-import xh.windowview.XhDialog;
 
 /**
  * NormarlContentView---用户相关
@@ -398,23 +401,23 @@ public class NormalContentItemUserView extends NormarlContentItemView {
      * 删除美食贴
      */
     private void showDeleteSubjectDialog(){
-        final XhDialog dialog = new XhDialog(mAct);
-        dialog.setTitle("真的要删除这个贴子么?").
-                setSureButton("删除", new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-                        deleteSubject();
-                        dialog.cancel();
-                    }
-                }).setCanselButton("取消", new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                dialog.cancel();
-            }
-        });
-        dialog.show();
+        final DialogManager dialogManager = new DialogManager(mAct);
+        dialogManager.createDialog(new ViewManager(dialogManager)
+                .setView(new TitleMessageView(mAct).setText("真的要删除这个贴子么?"))
+                .setView(new HButtonView(mAct)
+                        .setNegativeText("取消", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialogManager.cancel();
+                            }
+                        })
+                        .setPositiveText("删除", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialogManager.cancel();
+                                deleteSubject();
+                            }
+                        }))).show();
     }
     /**
      * 删除该美食贴

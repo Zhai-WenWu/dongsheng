@@ -16,6 +16,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.TitleMessageView;
 import com.xiangha.R;
 
 import java.util.ArrayList;
@@ -27,13 +31,12 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.ProperRatingBar;
-import amodule.answer.window.UploadingDialog;
+import amodule.answer.view.UploadingView;
 import aplug.imageselector.ImageSelectorActivity;
 import aplug.imageselector.constant.ImageSelectorConstant;
 import third.mall.override.MallBaseActivity;
 import third.mall.upload.EvalutionUploadControl;
 import third.mall.view.EvalutionImageLayout;
-import xh.windowview.XhDialog;
 
 /**
  * 发布评价
@@ -349,7 +352,7 @@ public class PublishEvalutionSingleActivity extends MallBaseActivity implements 
                 uploadControl.uploadAgin(imagePath);//上传
             }
         }
-        Log.i("tzy","images = " + uploadControl.bean.images.toString());
+//        Log.i("tzy","images = " + uploadControl.bean.images.toString());
         //对比旧的移除数据
 //        for (String imagePath : imagesLayout.getImageArray()) {
 //            if (!images.contains(imagePath))
@@ -417,37 +420,37 @@ public class PublishEvalutionSingleActivity extends MallBaseActivity implements 
 
     /** 显示确认返回dialog */
     private void showSureBackDialog() {
-        final XhDialog dialog = new XhDialog(this);
-        dialog.setTitle("是否取消发布")
-                .setCanselButton("是", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        XHClick.mapStat(PublishEvalutionSingleActivity.this, STATISTICS_RETURN_ID,"是否取消发布","是");
-                        isSureBack = true;
-                        dialog.cancel();
-                        PublishEvalutionSingleActivity.this.onBackPressed();
-                    }
-                })
-                .setSureButtonTextColor("#333333")
-                .setSureButton("否", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        XHClick.mapStat(PublishEvalutionSingleActivity.this, STATISTICS_RETURN_ID,"是否取消发布","否");
-                        isSureBack = false;
-                        dialog.cancel();
-                    }
-                })
-                .show();
+        final DialogManager dialogManager = new DialogManager(this);
+        dialogManager.createDialog(new ViewManager(dialogManager)
+                .setView(new TitleMessageView(this).setText("是否取消发布？"))
+                .setView(new HButtonView(this)
+                        .setNegativeText("否", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialogManager.cancel();
+                                XHClick.mapStat(PublishEvalutionSingleActivity.this, STATISTICS_RETURN_ID,"是否取消发布","否");
+                                isSureBack = false;
+                            }
+                        })
+                        .setPositiveText("是", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialogManager.cancel();
+                                XHClick.mapStat(PublishEvalutionSingleActivity.this, STATISTICS_RETURN_ID,"是否取消发布","是");
+                                isSureBack = true;
+                                PublishEvalutionSingleActivity.this.onBackPressed();
+                            }
+                        }))).show();
     }
 
-    private UploadingDialog mUploadingDialog;
+    private DialogManager mUploadingDialog;
     private void showUploadingDialog() {
         if (mUploadingDialog != null && mUploadingDialog.isShowing())
             return;
         if (mUploadingDialog == null) {
-            mUploadingDialog = new UploadingDialog(this);
-            mUploadingDialog.setContentView();
-            mUploadingDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            mUploadingDialog = new DialogManager(this);
+            mUploadingDialog.createDialog(new ViewManager(mUploadingDialog)
+            .setView(new UploadingView(this))).noPadding().setOnCancelListener(new DialogInterface.OnCancelListener() {
                 @Override
                 public void onCancel(DialogInterface dialog) {
                     uploadControl.cancelUpload();

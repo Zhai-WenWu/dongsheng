@@ -1,12 +1,17 @@
 package amodule.user.activity.login;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.TitleMessageView;
 import com.xiangha.R;
 
 import acore.logic.XHClick;
@@ -15,7 +20,6 @@ import acore.override.activity.base.BaseLoginActivity;
 import acore.tools.ToolsDevice;
 import amodule.user.view.NextStepView;
 import amodule.user.view.SecretInputView;
-import xh.windowview.XhDialog;
 
 /**
  * Created by ：fei_teng on 2017/2/20 18:12.
@@ -213,37 +217,36 @@ public class SetSecretActivity extends BaseLoginActivity {
             cancelText = "下次再说";
             sureText = "设置密码";
         }
-
-        final XhDialog xhDialog = new XhDialog(this);
-        xhDialog.setTitle(title)
-                .setSureButtonTextColor("#007aff")
-                .setSureButton(sureText, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        xhDialog.cancel();
-
-                        if (ORIGIN_BIND_PHONE_NUM.equals(path_from)) {
-                            XHClick.mapStat(SetSecretActivity.this, TAG_ACCOCUT, "绑定手机号", "弹框设置密码，选择设置密码");
-                        } else if (ORIGIN_REGISTER.equals(path_from)) {
-                            XHClick.mapStat(SetSecretActivity.this, PHONE_TAG, "注册", "弹框设置密码，选择设置密码");
-                        }
-                    }
-                })
-                .setCancelButtonTextColor("#007aff")
-                .setCanselButton(cancelText, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        xhDialog.cancel();
-                        if (ORIGIN_BIND_PHONE_NUM.equals(path_from)) {
-                            Toast.makeText(SetSecretActivity.this, "绑定成功", Toast.LENGTH_SHORT).show();
-                        } else if (ORIGIN_BIND_PHONE_NUM.equals(path_from)) {
-                            XHClick.mapStat(SetSecretActivity.this, TAG_ACCOCUT, "绑定手机号", "弹框设置密码，选择下次再说");
-                        } else if (ORIGIN_REGISTER.equals(path_from)) {
-                            XHClick.mapStat(SetSecretActivity.this, PHONE_TAG, "注册", "弹框设置密码，选择直接登录");
-                        }
-                        backToForward();
-                    }
-                })
-                .show();
+        final DialogManager dialogManager = new DialogManager(this);
+        dialogManager.createDialog(new ViewManager(dialogManager)
+                .setView(new TitleMessageView(this).setText(title))
+                .setView(new HButtonView(this)
+                        .setNegativeTextColor(Color.parseColor("#007aff"))
+                        .setNegativeText(cancelText, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialogManager.cancel();
+                                if (ORIGIN_BIND_PHONE_NUM.equals(path_from)) {
+                                    Toast.makeText(SetSecretActivity.this, "绑定成功", Toast.LENGTH_SHORT).show();
+                                } else if (ORIGIN_BIND_PHONE_NUM.equals(path_from)) {
+                                    XHClick.mapStat(SetSecretActivity.this, TAG_ACCOCUT, "绑定手机号", "弹框设置密码，选择下次再说");
+                                } else if (ORIGIN_REGISTER.equals(path_from)) {
+                                    XHClick.mapStat(SetSecretActivity.this, PHONE_TAG, "注册", "弹框设置密码，选择直接登录");
+                                }
+                                backToForward();
+                            }
+                        })
+                        .setPositiveTextColor(Color.parseColor("#007aff"))
+                        .setPositiveText(sureText, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialogManager.cancel();
+                                if (ORIGIN_BIND_PHONE_NUM.equals(path_from)) {
+                                    XHClick.mapStat(SetSecretActivity.this, TAG_ACCOCUT, "绑定手机号", "弹框设置密码，选择设置密码");
+                                } else if (ORIGIN_REGISTER.equals(path_from)) {
+                                    XHClick.mapStat(SetSecretActivity.this, PHONE_TAG, "注册", "弹框设置密码，选择设置密码");
+                                }
+                            }
+                        }))).show();
     }
 }

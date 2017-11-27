@@ -1,12 +1,17 @@
 package amodule.user.activity.login;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.TitleMessageView;
 import com.xiangha.R;
 
 import acore.logic.AppCommon;
@@ -20,7 +25,6 @@ import amodule.user.view.NextStepView;
 import amodule.user.view.PhoneNumInputView;
 import amodule.user.view.SecretInputView;
 import third.share.tools.ShareTools;
-import xh.windowview.XhDialog;
 
 /**
  * 通过账号密码登录
@@ -188,29 +192,30 @@ public class LoginByPassword extends ThirdLoginBaseActivity implements View.OnCl
 
                         @Override
                         public void onFalse(int flag) {
-//
-                            final XhDialog xhDialog = new XhDialog(LoginByPassword.this);
-                            xhDialog.setTitle("网络有问题或手机号未注册")
-                                    .setCanselButton("取消", new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            XHClick.mapStat(LoginByPassword.this, PHONE_TAG, "手机号登录",
-                                                    "失败原因：弹框未注册，选择不注册");
-                                            xhDialog.cancel();
-                                        }
-                                    })
-                                    .setSureButton("立即注册", new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            register(LoginByPassword.this, phone_info.getZoneCode(),
-                                                    phone_info.getPhoneNum());
-                                            XHClick.mapStat(LoginByPassword.this, PHONE_TAG, "手机号登录",
-                                                    "失败原因：弹框未注册，选择注册");
-                                            xhDialog.cancel();
-                                        }
-                                    }).setSureButtonTextColor("#007aff")
-                                    .setCancelButtonTextColor("#007aff");
-                            xhDialog.show();
+                            final DialogManager dialogManager = new DialogManager(LoginByPassword.this);
+                            dialogManager.createDialog(new ViewManager(dialogManager)
+                                    .setView(new TitleMessageView(LoginByPassword.this).setText("网络有问题或手机号未注册"))
+                                    .setView(new HButtonView(LoginByPassword.this)
+                                            .setNegativeTextColor(Color.parseColor("#007aff"))
+                                            .setNegativeText("取消", new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    dialogManager.cancel();
+                                                    XHClick.mapStat(LoginByPassword.this, PHONE_TAG, "手机号登录",
+                                                            "失败原因：弹框未注册，选择不注册");
+                                                }
+                                            })
+                                            .setPositiveTextColor(Color.parseColor("#007aff"))
+                                            .setPositiveText("立即注册", new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    dialogManager.cancel();
+                                                    register(LoginByPassword.this, phone_info.getZoneCode(),
+                                                            phone_info.getPhoneNum());
+                                                    XHClick.mapStat(LoginByPassword.this, PHONE_TAG, "手机号登录",
+                                                            "失败原因：弹框未注册，选择注册");
+                                                }
+                                            }))).show();
                         }
                     });
         } else if (LoginCheck.NOT_11_NUM.equals(errorType)) {

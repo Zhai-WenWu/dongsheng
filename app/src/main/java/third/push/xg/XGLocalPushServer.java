@@ -21,7 +21,6 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
-import aplug.service.alarm.PushAlarm;
 
 @SuppressLint("SimpleDateFormat")
 public class XGLocalPushServer {
@@ -57,7 +56,6 @@ public class XGLocalPushServer {
             initNousLocalPush(mContext, firstday + 3, data, FileManager.xmlKey_localCaidan);
             initDishLocalPush(mContext, firstday, data.size());
         }
-        PushAlarm.startTimingWake(mContext);
 
     }
 

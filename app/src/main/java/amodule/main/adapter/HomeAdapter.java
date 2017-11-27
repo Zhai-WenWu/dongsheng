@@ -3,6 +3,7 @@ package amodule.main.adapter;
 import android.app.Activity;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.ViewGroup;
 
 import java.util.List;

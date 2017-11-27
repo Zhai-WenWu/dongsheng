@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activityLayout"
+    style="@style/layout"
+    android:background="@android:color/transparent">
+
+    <cn.srain.cube.views.ptr.PtrClassicFrameLayout
+        xmlns:cube_ptr="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/refresh_list_view_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/seek_layout"
+        android:background="#F2F2F2"
+        cube_ptr:ptr_duration_to_close="200"
+        cube_ptr:ptr_duration_to_close_header="500"
+        cube_ptr:ptr_pull_to_fresh="false"
+        cube_ptr:ptr_ratio_of_header_height_to_refresh="1"
+        cube_ptr:ptr_resistance="1.7">
+
+        <acore.widget.rvlistview.RvListView
+            android:id="@+id/rvListview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:cacheColorHint="@android:color/transparent"
+            android:listSelector="@android:color/transparent"
+            android:paddingLeft="0dp"
+            android:paddingRight="0dp"/>
+
+    </cn.srain.cube.views.ptr.PtrClassicFrameLayout>
+
+    <RelativeLayout
+        android:id="@+id/seek_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_45"
+        android:layout_below="@+id/title_rela_all"
+        android:background="#F2F2F2"
+        android:paddingLeft="@dimen/dp_10"
+        android:paddingRight="@dimen/dp_10">
+
+        <RelativeLayout
+            android:id="@+id/seek_but_rela"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_30"
+            android:layout_centerVertical="true"
+            android:background="@drawable/bg_search_edit_favorite"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/favorite_img"
+                android:layout_width="@dimen/dp_15"
+                android:layout_height="@dimen/dp_15"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/dp_6"
+                android:scaleType="centerCrop"
+                android:src="@drawable/icon_favorite_search_fake"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/favorite_img"
+                android:background="@drawable/bg_round_transparent"
+                android:hint="搜索"
+                android:textColor="#999999"
+                android:textSize="@dimen/sp_14"/>
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/title_rela_all"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_45"
+        android:background="@color/common_top_bg">
+
+        <include
+            android:id="@+id/ll_title"
+            layout="@layout/c_view_bar_title"/>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/noData_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/title_rela_all"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <ImageView
+            android:layout_width="@dimen/dp_150"
+            android:layout_height="@dimen/dp_150"
+            android:src="@drawable/z_favo_no_data"/>
+
+        <TextView
+            android:id="@+id/no_data_text"
+            style="@style/noDataText"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_50"
+            android:text="没有收藏内容，快去收藏吧！"
+            android:textSize="@dimen/sp_13"
+            android:visibility="visible"/>
+
+        <Button
+            android:id="@+id/btn_no_data"
+            android:layout_width="@dimen/dp_126"
+            android:layout_height="@dimen/dp_36"
+            android:layout_marginTop="@dimen/dp_30"
+            android:background="@drawable/btn_round_read_submit"
+            android:text="去收藏"
+            android:textColor="#fff"
+            android:textSize="@dimen/sp_14"/>
+    </LinearLayout>
+
+</RelativeLayout>

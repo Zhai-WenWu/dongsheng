@@ -11,12 +11,14 @@ import android.webkit.CookieSyncManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import acore.override.XHApplication;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import aplug.basic.ReqInternet;
@@ -162,7 +164,8 @@ public class SpecialWebControl {
 
         //兼容https,在部分版本上资源显示不全的问题
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW); }
+            settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+        }
         Map<String, String> header = ReqInternet.in().getHeader(context);
         String cookieStr = header.containsKey("Cookie") ? header.get("Cookie") : "";
         String[] cookie = cookieStr.split(";");
@@ -171,6 +174,7 @@ public class SpecialWebControl {
             cookieManager.setCookie(url, cookie[i]);
         }
         cookieManager.setCookie(url, "xhWebStat=1");
+        CookieSyncManager.createInstance(XHApplication.in().getApplicationContext());
         CookieSyncManager.getInstance().sync();
         return webView;
     }

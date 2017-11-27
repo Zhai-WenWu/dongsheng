@@ -1,6 +1,5 @@
 package third.mall.activity;
 
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +8,8 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
 import com.xiangha.R;
 
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
-import amodule.answer.window.UploadingDialog;
+import amodule.answer.view.UploadingView;
 import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
 import third.mall.adapter.AdapterEvalution;
 import third.mall.aplug.MallInternetCallback;
@@ -193,7 +194,7 @@ public class PublishEvalutionMultiActivity extends MallBaseActivity {
                 params.put("data[" + index + "][score]",map.get("score"));
             }
         }
-        Log.i("tzy","params = " + params.toString());
+//        Log.i("tzy","params = " + params.toString());
         return params;
     }
 
@@ -235,14 +236,14 @@ public class PublishEvalutionMultiActivity extends MallBaseActivity {
         super.finish();
     }
 
-    private UploadingDialog mUploadingDialog;
+    private DialogManager mUploadingDialog;
     private void showUploadingDialog() {
         if (mUploadingDialog != null && mUploadingDialog.isShowing())
             return;
         if (mUploadingDialog == null) {
-            mUploadingDialog = new UploadingDialog(this);
-            mUploadingDialog.setContentView();
-            mUploadingDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            mUploadingDialog = new DialogManager(this);
+            mUploadingDialog.createDialog(new ViewManager(mUploadingDialog)
+            .setView(new UploadingView(this))).noPadding().setOnCancelListener(new DialogInterface.OnCancelListener() {
                 @Override
                 public void onCancel(DialogInterface dialog) {
                     MallReqInternet.in().cancelRequset(new StringBuffer(MallStringManager.mall_addMuiltComment).append(getParams()).toString());

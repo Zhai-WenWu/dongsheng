@@ -1,7 +1,5 @@
 package amodule.user.view;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -11,12 +9,16 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.MessageView;
+import com.xh.view.TitleView;
 import com.xiangha.R;
 
 import java.util.ArrayList;
 import java.util.Map;
 
-import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.load.LoadManager;
 import acore.override.activity.base.BaseActivity;
@@ -120,22 +122,26 @@ public class FavoriteDish {
 			public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 				
 				final Map<String, String> map = listDataMyFav.get(arg2-1);
-				new AlertDialog.Builder(mAct)
-					.setIcon(android.R.drawable.ic_dialog_alert)
-					.setTitle("取消收藏")
-					.setMessage("确定要取消收藏?")
-					.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							doFavorite(map);
-							listDataMyFav.remove(map);
-							adapter.notifyDataSetChanged();
-						}
-					}).setNegativeButton("取消", new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-						}
-					}).create().show();
+				final DialogManager dialogManager = new DialogManager(mAct);
+				dialogManager.createDialog(new ViewManager(dialogManager)
+						.setView(new TitleView(mAct).setText("取消收藏"))
+						.setView(new MessageView(mAct).setText("确定要取消收藏?"))
+						.setView(new HButtonView(mAct)
+								.setNegativeText("取消", new View.OnClickListener() {
+									@Override
+									public void onClick(View v) {
+										dialogManager.cancel();
+									}
+								})
+								.setPositiveText("确定", new View.OnClickListener() {
+									@Override
+									public void onClick(View v) {
+										dialogManager.cancel();
+										doFavorite(map);
+										listDataMyFav.remove(map);
+										adapter.notifyDataSetChanged();
+									}
+								}))).show();
 				return true;
 			}
 		});
@@ -143,12 +149,12 @@ public class FavoriteDish {
 	
 	// 收藏响应
 	private void doFavorite(final Map<String, String> map) {
-		AppCommon.onFavoriteClick(mAct,"favorites", map.get("code"), new InternetCallback(mAct) {
-			@Override
-			public void loaded(int flag, String url, Object returnObj) {
-
-			}
-		});
+//		AppCommon.onFavoriteClick(mAct,"favorites", map.get("code"), new InternetCallback(mAct) {
+//			@Override
+//			public void loaded(int flag, String url, Object returnObj) {
+//
+//			}
+//		});
 	}
 
 	public void loadLocal(boolean isForward){
@@ -250,7 +256,6 @@ public class FavoriteDish {
 						listDataMyFav.add(objInfo.get(i));
 					}
 					adapter.notifyDataSetChanged();
-					MyFavorite.notifyMessage(MyFavorite.MSG_DATA_OK);
 					// 如果是重新加载的,选中第一个tab.
 					if (isForward)
 						theListView.setSelection(1);

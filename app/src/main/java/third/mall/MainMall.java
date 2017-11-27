@@ -20,7 +20,6 @@ import acore.logic.XHClick;
 import acore.override.activity.mian.MainBaseActivity;
 import acore.tools.FileManager;
 import acore.tools.LogManager;
-import acore.tools.PageStatisticsUtils;
 import acore.tools.Tools;
 import amodule.main.Main;
 import amodule.user.activity.login.LoginByAccout;
@@ -33,7 +32,6 @@ import third.mall.alipay.MallPayActivity;
 import third.mall.aplug.MallCommon;
 import third.mall.aplug.MallReqInternet;
 import third.mall.aplug.MallStringManager;
-import third.mall.override.MallBaseActivity;
 import xh.basic.tool.UtilFile;
 
 
@@ -124,6 +122,7 @@ public class MainMall extends MainBaseActivity implements OnClickListener{
 				LogManager.print(XHConf.log_tag_net,"d", "设置cookie："+i+"::"+cookie[i]);
 				cookieManager.setCookie(cookieKey, cookie[i]);
 			}
+			CookieSyncManager.createInstance(this);
 			CookieSyncManager.getInstance().sync();
 			LogManager.print(XHConf.log_tag_net,"d", "设置webview的cookie："+cookieStr);
 		}

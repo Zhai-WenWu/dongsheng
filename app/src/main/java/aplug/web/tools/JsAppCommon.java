@@ -328,51 +328,7 @@ public class JsAppCommon extends JsBase {
      */
     @JavascriptInterface
     public void initFav(final String code, final String isFavStr, final String clickUrl, final String params, final String eventID, final String statKey) {
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                //设置收藏按钮图片
-                boolean isFav = "2".equals(isFavStr);
-                final ImageView favoriteNousImageView = (ImageView) mAct.findViewById(R.id.img_fav);
-                favoriteNousImageView.setImageResource(isFav ? R.drawable.z_caipu_xiangqing_topbar_ico_fav_active
-                        : R.drawable.z_caipu_xiangqing_topbar_ico_fav);
-                final TextView favoriteNousTextView = (TextView) mAct.findViewById(R.id.tv_fav);
-                favoriteNousTextView.setText(isFav ? "已收藏" : "  收藏  ");
-                RelativeLayout favLayout = (RelativeLayout) mAct.findViewById(R.id.fav_layout);
-                favLayout.setVisibility(View.VISIBLE);
-                favLayout.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (LoginManager.isLogin()) {
-                            ReqInternet.in().doPost(clickUrl, params, new InternetCallback(mAct) {
-                                @Override
-                                public void loaded(int flag, String url, Object returnObj) {
-                                    if (flag >= ReqInternet.REQ_OK_STRING) {
-                                        Map<String, String> map = StringManager.getListMapByJson(returnObj).get(0);
-                                        boolean nowFav = map.get("type").equals("2");
-                                        String dishJson = DataOperate.buyBurden(context, code);
-                                        if (dishJson.length() > 10 && dishJson.contains("\"makes\":")) {
-                                            // 修改splite数据
-                                            dishJson = dishJson.replace(nowFav ? "\"isFav\":1" : "\"isFav\":2", nowFav ? "\"isFav\":2" : "\"isFav\":1");
-                                            DishOffSqlite sqlite = new DishOffSqlite(context);
-                                            sqlite.updateIsFav(code, dishJson);
-                                        }
-                                        //7.29新添加统计
-                                        XHClick.mapStat(mAct, eventID, statKey, nowFav ? "收藏成功" : "取消收藏");
-                                        favoriteNousImageView.setImageResource(nowFav ? R.drawable.z_caipu_xiangqing_topbar_ico_fav_active
-                                                : R.drawable.z_caipu_xiangqing_topbar_ico_fav);
-                                        favoriteNousTextView.setText(nowFav ? "已收藏" : "  收藏  ");
-                                    }
-                                }
-                            });
-                        } else {
-                            Intent intent = new Intent(mAct, LoginByAccout.class);
-                            mAct.startActivity(intent);
-                        }
-                    }
-                });
-            }
-        });
+        //无效方法
     }
 
     /**
@@ -514,9 +470,7 @@ public class JsAppCommon extends JsBase {
 
             @Override
             public void run() {
-                if (LoginManager.isLogin()) {
-                    FavorableDialog dialog = new FavorableDialog(mAct, shop_code);
-                } else {
+                if (!LoginManager.isLogin()) {
                     Intent intent_user = new Intent(mAct, LoginByAccout.class);
                     mAct.startActivity(intent_user);
                 }
