@@ -6,6 +6,7 @@ import android.app.LocalActivityManager;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -73,10 +74,15 @@ import amodule.main.Tools.MainInitDataControl;
 import amodule.main.activity.MainHomePage;
 import amodule.main.activity.MainMyself;
 import amodule.main.view.WelcomeDialog;
+<<<<<<< HEAD
+=======
+import amodule.quan.tool.MyQuanDataControl;
+>>>>>>> master_1025_develop_575
 import amodule.user.activity.MyMessage;
 import aplug.basic.ReqInternet;
 import aplug.shortvideo.ShortVideoInit;
 import third.ad.control.AdControlHomeDish;
+import third.ad.tools.AdConfigTools;
 import third.mall.MainMall;
 import third.mall.alipay.MallPayActivity;
 import third.mall.aplug.MallCommon;
@@ -247,6 +253,10 @@ public class Main extends Activity implements OnClickListener, IObserver {
                 OffDishToFavoriteControl.addCollection(Main.this);
                 //初始化电商页面统计
                 PageStatisticsUtils.getInstance().getPageInfo(getApplicationContext());
+                //处理
+                if (LoginManager.isLogin())
+                    initQiYvUnreadCount();
+                addQiYvListener();
 
                 if (showQAUploading())
                     return;
@@ -413,9 +423,6 @@ public class Main extends Activity implements OnClickListener, IObserver {
         QbSdk.initX5Environment(Main.this, null);
         ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_LOGIN);
         ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_LOGOUT);
-        if (LoginManager.isLogin())
-            initQiYvUnreadCount();
-        addQiYvListener();
     }
 
     /**
@@ -483,12 +490,80 @@ public class Main extends Activity implements OnClickListener, IObserver {
         TimerTask tt = new TimerTask() {
             @Override
             public void run() {
+<<<<<<< HEAD
                 handler.post(() -> AppCommon.getCommonData(null));
+=======
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        AppCommon.getCommonData(null);
+
+                    }
+                });
+>>>>>>> master_1025_develop_575
             }
         };
-        timer.schedule(tt, everyReq * 1000, everyReq * 1000);
+        timer.schedule(tt, everyReq*1000, everyReq*1000);
+//        tempData();
+//        tempThreadData();
+//        getMainLooper().getThread().setPriority(10);
     }
 
+<<<<<<< HEAD
+=======
+    private void tempData(){
+        Timer temptimer = new Timer();
+        final Handler handler = new Handler();
+        TimerTask tt = new TimerTask() {
+            @Override
+            public void run() {
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        tempThreadData();
+                    }
+                });
+            }
+        };
+        temptimer.schedule(tt, 1000, 1000);
+    }
+    private void tempThreadData(){
+        ThreadGroup group = Thread.currentThread().getThreadGroup();
+        ThreadGroup topGroup = group;
+// 遍历线程组树，获取根线程组
+        while (group != null) {
+            topGroup = group;
+            group = group.getParent();
+        }
+// 激活的线程数加倍
+        int estimatedSize = topGroup.activeCount() * 2;
+        Thread[] slackList = new Thread[estimatedSize];
+// 获取根线程组的所有线程
+        int actualSize = topGroup.enumerate(slackList);
+// copy into a list that is the exact size
+        Thread[] list = new Thread[actualSize];
+        System.arraycopy(slackList, 0, list, 0, actualSize);
+        System.out.println("Thread list size == " + list.length);
+        Log.i("xianghaThread","Thread list size == " + list.length);
+        for (Thread thread : list) {
+            System.out.println(thread.getName());
+            if(thread.getName().startsWith("OkHttp")) {
+                thread.setPriority(6);
+                Log.i("xianghaThread", "thread.getName()::::: " + thread.getName()+":::"+thread.getPriority());
+            }
+            Log.i("xianghaThread", "thread.getName()::::: " + thread.getName()+":::"+thread.getPriority());
+//            thread.setPriority();
+        }
+    }
+    public void onChangeSend(View v) {
+        MyQuanDataControl.getNewMyQuanData(this, null);
+        XHClick.mapStat(this, "a_index530", "底部导航栏", "点击底部发布按钮");
+        XHClick.mapStat(this, MainCircle.STATISTICS_ID, "发贴", null);
+        XHClick.mapStat(this, "a_down", "+", "");
+        Intent intent = new Intent(this, MainChangeSend.class);
+        startActivity(intent);
+    }
+>>>>>>> master_1025_develop_575
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -521,6 +596,9 @@ public class Main extends Activity implements OnClickListener, IObserver {
                 XHClick.mapStat(Main.this, "a_evaluate420", typeStr, timeStr)
         );
         openUri();
+        if(timer==null){
+            initRunTime();
+        }
     }
 
     /**
@@ -553,6 +631,15 @@ public class Main extends Activity implements OnClickListener, IObserver {
             isForeground = false;
             homebackTime = System.currentTimeMillis();
         }
+        if (timer!=null){
+            timer.cancel();
+            timer=null;
+        }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
     }
 
     @Override
@@ -618,6 +705,8 @@ public class Main extends Activity implements OnClickListener, IObserver {
                     timer.purge();
                 }
                 colse_level = 0;
+                //请求广告位
+                AdConfigTools.getInstance().getAdConfigInfo();
                 UploadDishControl.getInstance().updataAllUploadingDish(getApplicationContext());
                 // 开启自我唤醒
                 if (act != null) new XGLocalPushServer(act).initLocalPush();

@@ -59,6 +59,7 @@ public class QAReportActivity extends BaseActivity {
     private ReportItem mLastSelectedAdminChild;
 
     private boolean mLoaded;
+    private boolean mBlackOriginalState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -167,7 +168,7 @@ public class QAReportActivity extends BaseActivity {
      * 点击提交按钮
      */
     public void onCommitClick() {
-        if (mLastSelectedReportChild == null) {
+        if (mLastSelectedReportChild == null && (!mBlackOriginalState || (mBlackOriginalState && mBlackListSwitchBtn.isSelected()))) {
             Tools.showToast(QAReportActivity.this, "请选择举报原因");
             return;
         }
@@ -177,7 +178,7 @@ public class QAReportActivity extends BaseActivity {
             keys.add(mLastSelectedReportChild.getKey());
         if (mLastSelectedAdminChild != null && !TextUtils.isEmpty(mLastSelectedAdminChild.getKey()))
             keys.add(mLastSelectedAdminChild.getKey());
-        if (mBlackListSwitchBtn != null && mBlackListSwitchBtn.isSelected())
+        if (mBlackListSwitchBtn.isSelected())
             keys.add(mBlackListSwitchBtn.getTag().toString());
         String params = "";
         if (keys.size() > 0) {
@@ -240,7 +241,7 @@ public class QAReportActivity extends BaseActivity {
             if (mapBlack != null && !mapBlack.isEmpty()) {
                 String key = mapBlack.get("key");
                 String text = mapBlack.get("text");
-                String isDef = mapBlack.get("isDefault");//是否拉黑 1.否， 2.是
+                boolean isBlack = "2".equals(mapBlack.get("isDefault"));//是否拉黑 1.否， 2.是
                 if (!TextUtils.isEmpty(text)) {
                     if (mBlackText != null) {
                         mBlackText.setText(text);
@@ -250,9 +251,10 @@ public class QAReportActivity extends BaseActivity {
                         mBlackListContainer.setVisibility(View.VISIBLE);
                     if (mBlackListSwitchBtn != null) {
                         mBlackListSwitchBtn.setTag(key);
-                        mBlackListSwitchBtn.setSelected("2".equals(isDef));
+                        mBlackListSwitchBtn.setSelected(isBlack);
                     }
                 }
+                mBlackOriginalState = isBlack;
             }
             String moreReason = map.get("adminList");
             if (!TextUtils.isEmpty(moreReason)) {

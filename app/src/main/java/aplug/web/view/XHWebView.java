@@ -3,8 +3,8 @@ package aplug.web.view;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.webkit.WebView;
 
-import com.tencent.smtt.sdk.WebView;
 
 import java.util.Map;
 

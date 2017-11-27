@@ -175,13 +175,8 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
             @Override
             public void onLoadFailed(final Exception e, Drawable drawable) {
                 super.onLoadFailed(e, drawable);
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        BuglyLog.i("image", "url = " + url + "  netStatus = " + ToolsDevice.getNetWorkSimpleType(getContext()));
-                        CrashReport.postCatchedException(e);
-                    }
-                }).start();
+                BuglyLog.i("image", "url = " + url + "  netStatus = " + ToolsDevice.getNetWorkSimpleType(getContext()));
+                CrashReport.postCatchedException(e);
             }
         };
     }

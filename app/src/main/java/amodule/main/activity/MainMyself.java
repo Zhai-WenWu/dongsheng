@@ -48,7 +48,11 @@ import amodule.main.view.HintMyselfDialog;
 import amodule.user.activity.BrowseHistory;
 import amodule.user.activity.FansAndFollwers;
 import amodule.user.activity.FriendHome;
+<<<<<<< HEAD
 import amodule.user.activity.MyFavoriteNew;
+=======
+import amodule.user.activity.MyFavorite;
+>>>>>>> master_1025_develop_575
 import amodule.user.activity.MyManagerInfo;
 import amodule.user.activity.ScoreStore;
 import amodule.user.activity.Setting;
@@ -565,7 +569,7 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
                 case "favor"://收藏
                     XHClick.track(getApplicationContext(), "点击我的页面的收藏");
                     XHClick.mapStat(this, tongjiId,"列表","收藏");
-                    Intent intent_fav = new Intent(MainMyself.this, MyFavoriteNew.class);
+                    Intent intent_fav = new Intent(MainMyself.this, MyFavorite.class);
                     startActivity(intent_fav);
                     break;
                 case "hitstory"://浏览记录

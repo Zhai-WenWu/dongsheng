@@ -9,11 +9,11 @@ import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
+import android.webkit.CookieManager;
 
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;
 import com.tencent.android.tpush.XGPushManager;
-import com.tencent.smtt.sdk.CookieManager;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.onlineconfig.OnlineConfigAgent;
 import com.umeng.onlineconfig.OnlineConfigLog;
@@ -47,12 +47,11 @@ import amodule.main.view.home.HomeToutiaoAdControl;
 import amodule.quan.db.SubjectData;
 import amodule.quan.db.SubjectSqlite;
 import amodule.search.db.MatchWordsDbUtil;
-import aplug.service.alarm.PushAlarm;
-import aplug.service.base.ServiceManager;
 import aplug.web.tools.XHTemplateManager;
 import third.ad.tools.AdConfigTools;
 import third.mall.aplug.MallCommon;
 import third.push.xg.XGLocalPushServer;
+import third.qiyu.QiYvHelper;
 import xh.basic.tool.UtilFile;
 
 import static java.lang.System.currentTimeMillis;
@@ -144,10 +143,13 @@ public class MainInitDataControl {
         XHClick.sendLiveTime(act);
         //电商首页数据
         MallCommon.getDsInfo(act, null);
-
+        //请求广告位
         AdConfigTools.getInstance().getAdConfigInfo();
         long endTime=System.currentTimeMillis();
+        //七鱼初始化 init方法无需放入主进程中执行，其他的初始化，有必要放在放入主进程
+        QiYvHelper.getInstance().initSDK(act);
         Log.i("zhangyujian","iniMainAfter::时间:"+(endTime-startTime));
+
     }
 
     /**
@@ -178,14 +180,13 @@ public class MainInitDataControl {
                 //获取圈子静态数据
                 AppCommon.saveCircleStaticData(act);
 
-                ServiceManager.startProtectService(act);
+//                ServiceManager.startProtectService(act);
 
                 AppCommon.saveUrlRuleFile(act);
                 AppCommon.saveAppData();
 
                 //取消自我唤醒
                 XGPushManager.clearLocalNotifications(act);
-                PushAlarm.closeTimingWake(act);
             }
         });
 
