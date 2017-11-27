@@ -1,22 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/text1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="@dimen/dp_20"
-        android:layout_marginRight="@dimen/dp_9"
-        android:textColor="@color/c_black_text"
-        android:textSize="@dimen/sp_17"
-        android:textStyle="bold"
-        tools:text="限时抢购"/>
+        style="@style/common_title_style.common_subtitle_style"
+        android:layout_marginRight="@dimen/dp_9"/>
 
     <LinearLayout
         android:id="@+id/linearlayout1"

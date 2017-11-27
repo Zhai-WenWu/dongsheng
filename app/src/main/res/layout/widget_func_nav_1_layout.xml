@@ -5,7 +5,9 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:paddingLeft="@dimen/dp_20"
-    android:paddingRight="@dimen/dp_20">
+    android:paddingRight="@dimen/dp_20"
+    android:paddingTop="@dimen/dp_20"
+    android:paddingBottom="@dimen/dp_18">
 
     <include
         android:id="@+id/nav_1"

@@ -94,7 +94,7 @@ public class FuncNavView1 extends HomeFuncNavView1 implements IBindMap,IStatictu
         if(null != imageView){
             if(!TextUtils.isEmpty(data.get("img")))
                 Glide.with(getContext()).load(data.get("img")).into(imageView);
-            imageView.setOnClickListener(v->{
+            itemView.setOnClickListener(v->{
                 AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(),data.get("url"),true);
                 if(!TextUtils.isEmpty(id) && !TextUtils.isEmpty(twoLevel)){
                     XHClick.mapStat(getContext(),id,twoLevel,data.get("text1"));

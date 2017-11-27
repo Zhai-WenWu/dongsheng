@@ -454,8 +454,22 @@
     <style name="subtitle_style">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">@dimen/dp_20</item>
-        <item name="android:layout_marginBottom">@dimen/dp_13</item>
+        <item name="android:layout_marginTop">@dimen/dp_18</item>
+        <item name="android:layout_marginBottom">@dimen/dp_11</item>
+    </style>
+
+    <style name="common_title_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">@dimen/dp_20</item>
+        <item name="android:textSize">@dimen/sp_16</item>
+        <item name="android:textColor">@color/c_black_text</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="common_title_style.common_subtitle_style">
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_alignParentLeft">true</item>
     </style>
 
 </resources>

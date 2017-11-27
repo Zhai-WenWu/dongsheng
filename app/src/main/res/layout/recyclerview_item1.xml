@@ -41,7 +41,7 @@
             android:ellipsize="end"
             android:textColor="@color/c_white_text"
             android:textStyle="bold"
-            android:textSize="@dimen/sp_18"
+            android:textSize="@dimen/sp_16"
             android:layout_alignParentBottom="true"/>
 
         <TextView
@@ -52,17 +52,17 @@
             android:ellipsize="end"
             android:lines="1"
             android:textColor="@color/c_white_text"
-            android:textSize="@dimen/sp_13" />
+            android:textSize="@dimen/sp_11" />
 
         <TextView
             android:id="@+id/textview3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_1"
+            android:layout_marginTop="@dimen/dp_3"
             android:lines="1"
             android:ellipsize="end"
             android:textColor="@color/c_white_text"
-            android:textSize="@dimen/sp_10"/>
+            android:textSize="@dimen/sp_9"/>
 
     </LinearLayout>
 

@@ -33,8 +33,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/c_white_text"
-            android:textSize="@dimen/sp_21"
-            android:lineSpacingExtra="@dimen/dp_7"
+            android:textSize="@dimen/sp_20"
+            android:lineSpacingExtra="@dimen/dp_5"
             android:gravity="center"
             android:textStyle="bold"
             tools:text="啊啊啊啊"
@@ -44,10 +44,9 @@
         <TextView
             android:id="@+id/textview2"
             tools:text="啊啊啊啊"
-            android:layout_marginTop="@dimen/dp__2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/sp_15"
+            android:textSize="@dimen/sp_14"
             android:textColor="@color/c_white_text"/>
 
     </LinearLayout>

@@ -6,14 +6,7 @@
 
     <TextView
         android:id="@+id/text1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/dp_20"
-        android:textSize="@dimen/sp_17"
-        android:textColor="@color/c_black_text"
-        android:textStyle="bold"
-        android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true"/>
+        style="@style/common_title_style.common_subtitle_style"/>
 
     <TextView
         android:id="@+id/text2"

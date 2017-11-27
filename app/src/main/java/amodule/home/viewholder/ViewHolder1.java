@@ -33,7 +33,7 @@ public class ViewHolder1 extends XHBaseRvViewHolder {
         mItemView = itemView;
         if (mItemView == null)
             return;
-        int[] wh = computeItemWH(325, 445, mItemView.getResources().getDimensionPixelSize(R.dimen.dp_50), 2);
+        int[] wh = computeItemWH(326, 456, mItemView.getResources().getDimensionPixelSize(R.dimen.dp_50), 2);
         mItemView.setLayoutParams(new RelativeLayout.LayoutParams(wh[0], wh[1]));
         mItemView.invalidate();
         mLinearLayout = (LinearLayout) mItemView.findViewById(R.id.linearlayout1);
