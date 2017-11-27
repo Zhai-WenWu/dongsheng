@@ -24,6 +24,7 @@ import acore.logic.XHClick;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import amodule.answer.activity.AskEditActivity;
+import amodule.quan.activity.upload.UploadSubjectNew;
 import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
@@ -42,7 +43,7 @@ public class DishHoverViewControl implements View.OnClickListener{
     private ImageView mGoodImg,mNoLikeImg,hoverGoodImg;
     private TextView mHoverNum,mHoverTv,showCaipuTv;
     private String askStatus="";
-    private String code,authorCode;
+    private String code,authorCode,dishName;
     private Map<String,String> mapQA;
     public DishHoverViewControl(Activity activity){
         mAct=activity;
@@ -78,8 +79,10 @@ public class DishHoverViewControl implements View.OnClickListener{
      * 处理数据
      * @param maps
      */
-    public void initData(Map<String,String> maps){
+    public void initData(Map<String,String> maps,String dishcode,String dishName){
         mAct.findViewById(R.id.a_dish_detail_new_footer_hover).setVisibility(View.VISIBLE);
+        this.code= dishcode;
+        this.dishName = dishName;
         String temp = maps.get("likeNum");
         Log.i("xianghaTag","temp:::"+temp);
         mHoverNum.setText("有用"+temp);
@@ -145,6 +148,13 @@ public class DishHoverViewControl implements View.OnClickListener{
                 goodLayoutParent.setVisibility(View.VISIBLE);
                 break;
             case R.id.a_dish_detail_hover_show_caipu:
+                Intent showIntent = new Intent(mAct, UploadSubjectNew.class);
+                showIntent.putExtra("dishCode",code);
+                showIntent.putExtra("name",dishName);
+                showIntent.putExtra("skip", true);
+                showIntent.putExtra("cid", "1");
+                mAct.startActivity(showIntent);
+                XHClick.mapStat(mAct, tongjiId, "晒我做的这道菜", "晒我做的这道菜点击量");
                 break;
         }
     }
@@ -163,7 +173,7 @@ public class DishHoverViewControl implements View.OnClickListener{
                 if(i >= ReqInternet.REQ_OK_STRING){
                     ArrayList<Map<String,String>> arrayList = StringManager.getListMapByJson(o);
                     if(arrayList.size() > 0){
-                        mHoverNum.setText(arrayList.get(0).get("num"));
+                        mHoverNum.setText("有用"+arrayList.get(0).get("num"));
                     }
                     if(isLike){//点赞
                         if("2".equals(dishLikeStatus)){

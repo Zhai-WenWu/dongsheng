@@ -295,10 +295,10 @@ public class DetailDishViewManager {
     /**
      * 处理小贴士信息
      */
-    public void handlerExplainView(ArrayList<Map<String, String>> list) {
-        if(dishExplainView!=null){
+    public void handlerExplainView(Map<String,String> map) {
+        if(dishExplainView!=null && map!=null && !TextUtils.isEmpty(map.get("remark"))){
             dishExplainView.setVisibility(View.VISIBLE);
-            dishExplainView.setData(list.get(0));
+            dishExplainView.setData(map);
         }
     }
 
@@ -325,7 +325,10 @@ public class DetailDishViewManager {
      * @param list
      */
     public void handlerRecommedAndAd(ArrayList<Map<String, String>> list,String code,String name){
-        if(dishRecommedAndAdView!=null){
+        if(list==null)return;
+        Map<String,String> temp=list.get(0);
+        if(dishRecommedAndAdView!=null&&list!=null&&!TextUtils.isEmpty(temp.get("list"))
+                &&!"[]".equals(temp.get("list"))&&!"{}".equals(temp.get("list"))){
             dishRecommedAndAdView.setVisibility(View.VISIBLE);
             dishRecommedAndAdView.initData(code,name);
             dishRecommedAndAdView.initUserDish(list);
@@ -342,9 +345,9 @@ public class DetailDishViewManager {
     /**
      * 处理浮动推荐
      */
-    public void handlerHoverView(Map<String,String> map){
+    public void handlerHoverView(Map<String,String> map,String code,String dishName){
         if(dishHoverViewControl!=null){
-            dishHoverViewControl.initData(map);
+            dishHoverViewControl.initData(map,code,dishName);
         }
     }
     public void onResume(){

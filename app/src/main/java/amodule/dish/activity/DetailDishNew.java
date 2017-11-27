@@ -171,7 +171,7 @@ public class DetailDishNew extends BaseAppCompatActivity implements IObserver {
                 }
                 detailDishViewManager.handlerTitle(mapTop,code,isHasVideo,mapTop.get("dishState"),loadManager,state);//title导航
                 detailDishViewManager.handlerDishData(list);//菜谱基本信息
-                detailDishViewManager.handlerExplainView(list);//小贴士
+                detailDishViewManager.handlerExplainView(mapTop);//小贴士
                 requestWeb(mapTop);
                 break;
             case DetailDishDataManager.DISH_DATA_INGRE://用料
@@ -196,7 +196,7 @@ public class DetailDishNew extends BaseAppCompatActivity implements IObserver {
             case DetailDishDataManager.DISH_DATA_RELATION://公共数据
                 Map<String,String> relation= list.get(0);
                 detailDishViewManager.handlerUserPowerData(relation);//用户权限
-                detailDishViewManager.handlerHoverView(relation);
+                detailDishViewManager.handlerHoverView(relation,code,dishName);
                 if(relation.containsKey("isShow")&&"2".equals(relation.get("isShow"))){
                     detailDishViewManager.handlerVipView(StringManager.getFirstMap(relation.get("isShow")));
                 }
