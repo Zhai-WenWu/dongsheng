@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="@dimen/dp_70"
-    android:layout_height="@dimen/dp_49">
+    android:layout_height="@dimen/dp_47">
 
     <ImageView
         android:id="@+id/Index_backgroup"
@@ -24,8 +24,8 @@
 
         <ImageView
             android:id="@+id/iv_itemIsFine"
-            android:layout_width="@dimen/dp_27"
-            android:layout_height="@dimen/dp_24"
+            android:layout_width="@dimen/dp_25"
+            android:layout_height="@dimen/dp_22"
             android:layout_gravity="center"
             android:scaleType="fitXY"/>
 
