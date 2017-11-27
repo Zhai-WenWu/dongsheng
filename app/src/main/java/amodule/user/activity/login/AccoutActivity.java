@@ -12,6 +12,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.tencent.bugly.crashreport.CrashReport;
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.TitleMessageView;
 import com.xiangha.R;
 
 import java.util.ArrayList;
@@ -34,7 +38,6 @@ import cn.sharesdk.framework.PlatformDb;
 import cn.sharesdk.framework.ShareSDK;
 import third.push.xg.XGPushServer;
 import third.share.tools.ShareTools;
-import xh.windowview.XhDialog;
 
 /**
  * 用户设置页面
@@ -197,27 +200,27 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
             bindPhoneIntent.putExtra(PATH_ORIGIN, ORIGIN_MODIFY_PSW);
             startActivity(bindPhoneIntent);
         } else {
-            final XhDialog xhDialog = new XhDialog(AccoutActivity.this);
-            xhDialog.setTitle("修改登录密码" + "\n将给手机" +
-                    hidePhoneNum(tel) + "发送验证码")
-                    .setCanselButton("取消", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            XHClick.mapStat(AccoutActivity.this, TAG_ACCOCUT, "修改密码", "修改密码弹框，点取消");
-                            xhDialog.cancel();
-                        }
-                    })
-                    .setSureButton("确定", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            XHClick.mapStat(AccoutActivity.this, TAG_ACCOCUT, "修改密码", "修改密码弹框，点确定");
-                            gotoInputIdentify(AccoutActivity.this, zoneCode, tel, ORIGIN_MODIFY_PSW);
-                            xhDialog.cancel();
-                        }
-                    })
-                    .setSureButtonTextColor("#007aff")
-                    .setCancelButtonTextColor("#007aff");
-            xhDialog.show();
+            final DialogManager dialogManager = new DialogManager(AccoutActivity.this);
+            dialogManager.createDialog(new ViewManager(dialogManager)
+                    .setView(new TitleMessageView(AccoutActivity.this).setText("修改登录密码" + "\n将给手机" + hidePhoneNum(tel) + "发送验证码"))
+                    .setView(new HButtonView(AccoutActivity.this)
+                            .setNegativeTextColor(Color.parseColor("#007aff"))
+                            .setNegativeText("取消", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dialogManager.cancel();
+                                    XHClick.mapStat(AccoutActivity.this, TAG_ACCOCUT, "修改密码", "修改密码弹框，点取消");
+                                }
+                            })
+                            .setPositiveTextColor(Color.parseColor("#007aff"))
+                            .setPositiveText("确定", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dialogManager.cancel();
+                                    XHClick.mapStat(AccoutActivity.this, TAG_ACCOCUT, "修改密码", "修改密码弹框，点确定");
+                                    gotoInputIdentify(AccoutActivity.this, zoneCode, tel, ORIGIN_MODIFY_PSW);
+                                }
+                            }))).show();
         }
     }
 
@@ -325,54 +328,52 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
         tongjiStr = "邮箱".equals(title) ? "解绑邮箱" : title;
 
         if (TextUtils.isEmpty(tel) && bindMap.size() == 1) {
-            final XhDialog xhDialog = new XhDialog(AccoutActivity.this);
             final String finalTitle1 = tongjiStr;
-            xhDialog.setTitle("该账号为唯一登录方式，\n绑定手机号才能解绑")
-                    .setSureButton("我知道了", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                            XHClick.mapStat(AccoutActivity.this, TAG_ACCOCUT, finalTitle1, "解绑失败原因：是唯一登录方式");
-                            xhDialog.cancel();
-                        }
-                    })
-                    .setSureButtonTextColor("#007aff")
-                    .setCancelButtonTextColor("#007aff");
-            xhDialog.show();
+            final DialogManager dialogManager = new DialogManager(AccoutActivity.this);
+            dialogManager.createDialog(new ViewManager(dialogManager)
+                    .setView(new TitleMessageView(AccoutActivity.this).setText("该账号为唯一登录方式，\n绑定手机号才能解绑"))
+                    .setView(new HButtonView(AccoutActivity.this)
+                            .setNegativeTextColor(Color.parseColor("#007aff"))
+                            .setNegativeText("我知道了", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dialogManager.cancel();
+                                    XHClick.mapStat(AccoutActivity.this, TAG_ACCOCUT, finalTitle1, "解绑失败原因：是唯一登录方式");
+                                }
+                            }))).show();
             return;
         }
 
-        final XhDialog xhDialog = new XhDialog(AccoutActivity.this);
-
         final String finalTitle = tongjiStr;
-        xhDialog.setTitle("确认取消绑定该" + title + "？")
-                .setCanselButton("取消", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        xhDialog.cancel();
-                        XHClick.mapStat(AccoutActivity.this, TAG_ACCOCUT, finalTitle, "弹框解绑，选择取消");
-                    }
-                })
-                .setSureButton("确定", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        xhDialog.cancel();
-
-                        if ("email".equals(type)) {
-                            XHClick.mapStat(AccoutActivity.this, TAG_ACCOCUT, "解绑邮箱", "弹框解绑，选择确定");
-                            unbindEmail();
-                        } else if ("meizu".equals(type)) {
-                            XHClick.mapStat(AccoutActivity.this, TAG_ACCOCUT, "解绑魅族号", "弹框解绑，选择确定");
-                            unbindThirdParty(type);
-                        } else {
-                            XHClick.mapStat(AccoutActivity.this, TAG_ACCOCUT, type, "弹框解绑，选择确定");
-                            unbindThirdParty(type);
-                        }
-                    }
-                })
-                .setSureButtonTextColor("#007aff")
-                .setCancelButtonTextColor("#007aff");
-        xhDialog.show();
+        final DialogManager dialogManager = new DialogManager(AccoutActivity.this);
+        dialogManager.createDialog(new ViewManager(dialogManager)
+                .setView(new TitleMessageView(AccoutActivity.this).setText("确认取消绑定该" + title + "？"))
+                .setView(new HButtonView(AccoutActivity.this)
+                        .setNegativeTextColor(Color.parseColor("#007aff"))
+                        .setNegativeText("取消", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialogManager.cancel();
+                                XHClick.mapStat(AccoutActivity.this, TAG_ACCOCUT, finalTitle, "弹框解绑，选择取消");
+                            }
+                        })
+                        .setPositiveTextColor(Color.parseColor("#007aff"))
+                        .setPositiveText("确定", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialogManager.cancel();
+                                if ("email".equals(type)) {
+                                    XHClick.mapStat(AccoutActivity.this, TAG_ACCOCUT, "解绑邮箱", "弹框解绑，选择确定");
+                                    unbindEmail();
+                                } else if ("meizu".equals(type)) {
+                                    XHClick.mapStat(AccoutActivity.this, TAG_ACCOCUT, "解绑魅族号", "弹框解绑，选择确定");
+                                    unbindThirdParty(type);
+                                } else {
+                                    XHClick.mapStat(AccoutActivity.this, TAG_ACCOCUT, type, "弹框解绑，选择确定");
+                                    unbindThirdParty(type);
+                                }
+                            }
+                        }))).show();
     }
 
     private void unbindEmail() {

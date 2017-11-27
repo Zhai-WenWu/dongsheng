@@ -1,12 +1,17 @@
 package amodule.user.activity.login;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.TitleMessageView;
 import com.xiangha.R;
 
 import acore.logic.XHClick;
@@ -15,7 +20,6 @@ import acore.tools.ToolsDevice;
 import amodule.user.view.IdentifyInputView;
 import amodule.user.view.NextStepView;
 import amodule.user.view.SpeechaIdentifyInputView;
-import xh.windowview.XhDialog;
 
 /**
  * Created by ：fei_teng on 2017/2/22 21:04.
@@ -171,26 +175,27 @@ public class ChangePhone extends BaseLoginActivity implements View.OnClickListen
                 break;
             case R.id.tv_phone_missed:
                 XHClick.mapStat(ChangePhone.this, TAG_ACCOCUT, "修改手机号", "方法1验证码页，点手机号丢失或停用");
-                final XhDialog xhDialog = new XhDialog(ChangePhone.this);
-                xhDialog.setTitle("手机号丢失或停用？\n请输入原手机号和密码验证")
-                        .setCanselButton("取消", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                XHClick.mapStat(ChangePhone.this, TAG_ACCOCUT, "修改手机号", "手机号丢失停用弹框，点取消");
-                                xhDialog.cancel();
-                            }
-                        })
-                        .setSureButton("确定", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                XHClick.mapStat(ChangePhone.this, TAG_ACCOCUT, "修改手机号", "手机号丢失停用弹框，点确定");
-                                gotoCheckSecret(ChangePhone.this);
-                                xhDialog.cancel();
-                            }
-                        })
-                        .setSureButtonTextColor("#007aff")
-                        .setCancelButtonTextColor("#007aff")
-                        .show();
+                final DialogManager dialogManager = new DialogManager(ChangePhone.this);
+                dialogManager.createDialog(new ViewManager(dialogManager)
+                        .setView(new TitleMessageView(ChangePhone.this).setText("手机号丢失或停用？\n请输入原手机号和密码验证"))
+                        .setView(new HButtonView(ChangePhone.this)
+                                .setNegativeTextColor(Color.parseColor("#007aff"))
+                                .setNegativeText("取消", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        dialogManager.cancel();
+                                        XHClick.mapStat(ChangePhone.this, TAG_ACCOCUT, "修改手机号", "手机号丢失停用弹框，点取消");
+                                    }
+                                })
+                                .setPositiveTextColor(Color.parseColor("#007aff"))
+                                .setPositiveText("确定", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        dialogManager.cancel();
+                                        XHClick.mapStat(ChangePhone.this, TAG_ACCOCUT, "修改手机号", "手机号丢失停用弹框，点确定");
+                                        gotoCheckSecret(ChangePhone.this);
+                                    }
+                                }))).show();
                 break;
             default:
                 break;

@@ -17,6 +17,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.TitleMessageView;
 import com.xiangha.R;
 
 import org.json.JSONArray;
@@ -43,7 +47,6 @@ import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import xh.basic.internet.UtilInternet;
-import xh.windowview.XhDialog;
 
 import static xh.basic.tool.UtilString.getListMapByJson;
 
@@ -249,38 +252,40 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void onDeleteCommentClick(final String comment_id,String deleteType) {
                 XHClick.mapStat(CommentActivity.this,deleteTongjiId,deleteTwoLeven,deleteType);
-                final XhDialog xhDialog = new XhDialog(CommentActivity.this);
-                xhDialog.setTitle("确认删除我的评论？").setCanselButton("取消", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        xhDialog.cancel();
-                    }
-                }).setSureButton("确认", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        String params = "type=" + type + "&code=" + code + "&commentId="+comment_id;
-                        ReqEncyptInternet.in().doEncypt(StringManager.api_delForum, params, new InternetCallback(CommentActivity.this) {
-                            @Override
-                            public void loaded(int flag, String s, Object o) {
-                                if(flag >= ReqInternet.REQ_OK_STRING){
-                                    listArray.remove(position);
-                                    adapterSimple.notifyDataSetChanged();
-                                    if(listArray.size() == 0){
-                                        upDropPage = 1;
-                                        gotoCommentId = null;
-                                        gotoReplayId = null;
-                                        getCommentData(true);
-                                    }else {
-                                        changeDataChange();
+                final DialogManager dialogManager = new DialogManager(CommentActivity.this);
+                dialogManager.createDialog(new ViewManager(dialogManager)
+                        .setView(new TitleMessageView(CommentActivity.this).setText("确认删除我的评论？"))
+                        .setView(new HButtonView(CommentActivity.this)
+                                .setNegativeText("取消", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        dialogManager.cancel();
                                     }
-                                }
-                            }
-                        });
-                        xhDialog.cancel();
-                    }
-                }).setSureButtonTextColor("#333333")
-                .setCancelButtonTextColor("#333333")
-                .show();
+                                })
+                                .setPositiveText("确认", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        String params = "type=" + type + "&code=" + code + "&commentId="+comment_id;
+                                        ReqEncyptInternet.in().doEncypt(StringManager.api_delForum, params, new InternetCallback(CommentActivity.this) {
+                                            @Override
+                                            public void loaded(int flag, String s, Object o) {
+                                                if(flag >= ReqInternet.REQ_OK_STRING){
+                                                    listArray.remove(position);
+                                                    adapterSimple.notifyDataSetChanged();
+                                                    if(listArray.size() == 0){
+                                                        upDropPage = 1;
+                                                        gotoCommentId = null;
+                                                        gotoReplayId = null;
+                                                        getCommentData(true);
+                                                    }else {
+                                                        changeDataChange();
+                                                    }
+                                                }
+                                            }
+                                        });
+                                        dialogManager.cancel();
+                                    }
+                                }))).show();
             }
 
             @Override

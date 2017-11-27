@@ -1,12 +1,17 @@
 package amodule.user.activity.login;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.TitleMessageView;
 import com.xiangha.R;
 
 import acore.logic.XHClick;
@@ -15,7 +20,6 @@ import acore.tools.ToolsDevice;
 import amodule.user.view.IdentifyInputView;
 import amodule.user.view.NextStepView;
 import amodule.user.view.SpeechaIdentifyInputView;
-import xh.windowview.XhDialog;
 
 /**
  * Created by ：fei_teng on 2017/2/20 15:41.
@@ -317,32 +321,33 @@ public class InputIdentifyCode extends BaseLoginActivity implements View.OnClick
                 cancelText = "下次再说";
                 sureText = "设置密码";
             }
-
-            final XhDialog xhDialog = new XhDialog(this);
-            xhDialog.setTitle(title);
-            xhDialog.setSureButton(sureText, new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (ORIGIN_REGISTER.equals(origin)) {
-                        XHClick.mapStat(InputIdentifyCode.this, PHONE_TAG, "注册", "弹框是否中断，选择继续");
-                    }
-                    xhDialog.cancel();
-                }
-            });
-            xhDialog.setCanselButton(cancelText, new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (ORIGIN_REGISTER.equals(origin)) {
-                        XHClick.mapStat(InputIdentifyCode.this, PHONE_TAG, "注册", "弹框是否中断，选择中断");
-                        finish();
-                    } else {
-                        backToForward();
-                    }
-                    xhDialog.cancel();
-                }
-            })
-                    .setSureButtonTextColor("#007aff")
-                    .setCancelButtonTextColor("#007aff").show();
+            final DialogManager dialogManager = new DialogManager(this);
+            dialogManager.createDialog(new ViewManager(dialogManager)
+                    .setView(new TitleMessageView(this).setText(title))
+                    .setView(new HButtonView(this)
+                            .setNegativeTextColor(Color.parseColor("#007aff"))
+                            .setNegativeText(cancelText, new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dialogManager.cancel();
+                                    if (ORIGIN_REGISTER.equals(origin)) {
+                                        XHClick.mapStat(InputIdentifyCode.this, PHONE_TAG, "注册", "弹框是否中断，选择中断");
+                                        finish();
+                                    } else {
+                                        backToForward();
+                                    }
+                                }
+                            })
+                            .setPositiveTextColor(Color.parseColor("#007aff"))
+                            .setPositiveText(sureText, new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dialogManager.cancel();
+                                    if (ORIGIN_REGISTER.equals(origin)) {
+                                        XHClick.mapStat(InputIdentifyCode.this, PHONE_TAG, "注册", "弹框是否中断，选择继续");
+                                    }
+                                }
+                            }))).show();
         } else {
 
             finish();

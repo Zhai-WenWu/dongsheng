@@ -6,9 +6,7 @@ repositories {
     flatDir {
         dirs 'libsxh'
     }
-    google()
 }
-
 dependencies {
     //添加广点通广告
     compile fileTree(include: '*.jar', dir: 'libsAddGd')
@@ -35,12 +33,11 @@ dependencies {
     compile 'com.meituan.android.walle:library:1.0.3'
     compile 'com.growingio.android:vds-android-agent:0.9.103@aar'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile project(':gsyVideoPlayer-java')
     compile 'com.qiyukf.unicorn:unicorn:3.10.0'
+    compile project(':gsyVideoPlayer-java')
+    compile project(':xh_dialog')
 }
-
 android {
-
     compileSdkVersion 25
     buildToolsVersion '26.0.2'
 
@@ -48,8 +45,8 @@ android {
         applicationId "com.xiangha"
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 210
-        versionName "5.7.0"
+        versionCode 212
+        versionName "5.7.2"
         // dex突破65535的限制
         multiDexEnabled true
         //GrowingIO
@@ -60,7 +57,6 @@ android {
             moduleName "gsyVideoPlayer-java"
             abiFilters 'armeabi-v7a'
         }
-
     }
 
     signingConfigs {
@@ -68,11 +64,12 @@ android {
             keyAlias 'caipu'
             keyPassword 'XH.comCaipu'
 //            storeFile file('F:/XH_Work/WorkSpace/Project/keystore/xiangha.keystore')
-            storeFile file('D:/android_workspace/xiangha.keystore')
-//            storeFile file('E:/keystore/xiangha.keystore'
+//            storeFile file('D:/android_workspace/xiangha.keystore')
+            storeFile file('E:/keystore/xiangha.keystore')
 
 //            storeFile file('E:/XHWork/xiangha/keystore/xiangha.keystore')
 //            storeFile file('/Users/tanzeyu/androidProject/xiangha.keystore')
+
 //            yulekwok
 //            storeFile file('/Users/yulekwok/Documents/MacDev/keystore/xiangha.keystore')
 //            mac
@@ -140,7 +137,6 @@ android {
         }
 
     }
-
     flavorDimensions "ceshi"
     productFlavors {
         //---------------------测试------------------------

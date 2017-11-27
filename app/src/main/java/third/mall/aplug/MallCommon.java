@@ -17,6 +17,7 @@ import java.util.Map;
 
 import acore.logic.load.LoadManager;
 import acore.override.activity.base.BaseActivity;
+import acore.override.helper.XHActivityManager;
 import acore.tools.FileManager;
 import acore.tools.Tools;
 import amodule.main.Main;
@@ -340,7 +341,7 @@ public class MallCommon {
 							public void setState(int state) {
 								if(state>=UtilInternet.REQ_OK_STRING){
 									addShoppingcat(context, code,interfaceAddshop);
-								}else if(state==UtilInternet.REQ_CODE_ERROR){
+//								}else if(state==UtilInternet.REQ_CODE_ERROR){
 								}
 							}
 						});
@@ -381,7 +382,7 @@ public class MallCommon {
 							public void setState(int state) {
 								if(state>=UtilInternet.REQ_OK_STRING){
 									malldirect(payment_order_id,contexts,paystate);
-								}else if(state==UtilInternet.REQ_CODE_ERROR){
+//								}else if(state==UtilInternet.REQ_CODE_ERROR){
 								}
 							}
 						});
@@ -606,6 +607,11 @@ public class MallCommon {
             return;
         }
         MallCommon.statictisFrom+=TextUtils.isEmpty(MallCommon.statictisFrom)?dsfrom: MallBaseActivity.PAGE_LOGO+dsfrom;
+		String ds_from=FileManager.loadShared(XHActivityManager.getInstance().getCurrentActivity(),FileManager.xmlFile_appInfo,FileManager.xmlKey_ds_from_show).toString();
+		if("2".equals(ds_from)){
+			Log.i("xianghaTag","ds_from::"+statictisFrom);
+			Tools.showToast(XHActivityManager.getInstance().getCurrentActivity(),statictisFrom);
+		}
     }
 
 }

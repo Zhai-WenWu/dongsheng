@@ -77,7 +77,7 @@ public class RvListView extends RecyclerView {
     public RvListView(Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         //默认使用LinearLayoutManager，并且处置布局
-        setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
+        setLayoutManager(new LinearLayoutManagerWrapper(context));
         mHeaderContainer = new LinearLayout(context);
         mFooterContainer = new LinearLayout(context);
         Log.d(TAG, "Constructor execute.");
@@ -106,6 +106,12 @@ public class RvListView extends RecyclerView {
 //            mAdapter.setHasStableIds(false);
 //        }
         super.swapAdapter(mAdapter, removeAndRecycleExistingViews);
+    }
+
+    public void notifyItemViewRemove(int position){
+        if(null != mAdapter){
+            mAdapter.notifyItemViewRemove(position);
+        }
     }
 
     /*------------------------------------------------------- Header -------------------------------------------------------*/
@@ -500,6 +506,12 @@ public class RvListView extends RecyclerView {
             }
         }
 
+        public void notifyItemViewRemove(int position) {
+            if(position <= getItemCount()){
+                notifyItemRemoved(position);
+            }
+        }
+
         protected boolean isEnabled(int viewType) {
             return true;
         }
@@ -552,6 +564,7 @@ public class RvListView extends RecyclerView {
         Adapter getOriginalAdapter() {
             return mOriginalAdapter;
         }
+
     }
 
     /*------------------------------------------------------- Inner Interface -------------------------------------------------------*/

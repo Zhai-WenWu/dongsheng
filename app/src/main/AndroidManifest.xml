@@ -450,6 +450,7 @@
         <activity
             android:name="amodule.article.activity.ArticleDetailActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
             android:theme="@style/AppMainTheme"
             android:windowSoftInputMode="adjustResize"/>
@@ -899,6 +900,13 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppMainTheme"
             android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name="amodule.user.activity.SreachFavoriteActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppMainTheme"
+            android:windowSoftInputMode="adjustResize"
+            />
         <!-- user end -->
 
 
@@ -1020,14 +1028,6 @@
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan"/>
         <activity
-            android:name="aplug.service.ServiceOpenActivity"
-            android:exported="true"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar">
-            <intent-filter>
-                <action android:name="aplug.service.ServiceOpenActivity"/>
-            </intent-filter>
-        </activity>
-        <activity
             android:name="aplug.shortvideo.activity.MediaRecorderActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTop"
@@ -1072,17 +1072,12 @@
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan"/>
 
-        <service
-            android:name="aplug.service.base.ProtectService"
-            android:process=":pro"/>
-        <service
-            android:name="aplug.service.CoreService"
-            android:process=":core"/>
         <!-- aplug end -->
         <!-- mall start -->
         <activity
             android:name="third.mall.activity.CommodDetailActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="stateHidden|stateUnchanged"/>
@@ -1319,37 +1314,6 @@
         <!-- START 信鸽 -->
         <receiver android:name="third.push.broadcast.ClickNotificationBroadcast"/>
         <receiver android:name="third.push.broadcast.DismissNotificationBroadcast"/>
-        <receiver
-            android:name="aplug.service.alarm.RepeatingAlarm"
-            android:enabled="true"
-            android:permission="android.permission.RECEIVE_BOOT_COMPLETED"
-            android:process=":remote">
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
-            </intent-filter>
-            <intent-filter android:priority="3000">
-                <action android:name="android.intent.action.ACTION_POWER_CONNECTED"/>
-                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED"/>
-            </intent-filter>
-            <intent-filter android:priority="3000">
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
-            <intent-filter android:priority="3000">
-
-                <!-- SD卡已经成功挂载 -->
-                <action android:name="android.intent.action.MEDIA_MOUNTED"/>
-                <!-- sd卡存在，但还没有挂载 -->
-                <action android:name="android.intent.action.MEDIA_UNMOUNTED"/>
-                <action android:name="android.intent.action.MEDIA_EJECT"/>
-
-                <data android:scheme="file"/>
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.TIME_SET"/>
-            </intent-filter>
-        </receiver>
 
         <!-- 【必须】 信鸽receiver广播接收 -->
         <receiver

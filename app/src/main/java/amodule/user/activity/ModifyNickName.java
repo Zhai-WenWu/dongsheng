@@ -130,7 +130,6 @@ public class ModifyNickName extends BaseActivity {
 					UserSetting.sendRefreshMsg();
 					ModifyNickName.this.finish();
 				}
-				else Tools.showToast(ModifyNickName.this, returnObj.toString());
 			}
 		});
 	}
@@ -148,7 +147,6 @@ public class ModifyNickName extends BaseActivity {
 						UserSetting.sendRefreshMsg();
 						ModifyNickName.this.finish();
 					}
-					else Tools.showToast(ModifyNickName.this, returnObj.toString());
 				}
 			});
 		} else

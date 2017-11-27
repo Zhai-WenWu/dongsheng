@@ -5,14 +5,17 @@
  */
 package amodule.user.adapter;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.MessageView;
+import com.xh.view.TitleView;
 import com.xiangha.R;
 
 import java.util.ArrayList;
@@ -48,30 +51,31 @@ public class AdapterMyselfDraft extends AdapterSimple {
 
 			@Override
 			public void onClick(final View v) {
-				new AlertDialog.Builder(mContext)
-						.setIcon(android.R.drawable.ic_dialog_alert)
-						.setTitle("删除草稿")
-						.setMessage("确定要删除选中草稿?")
-						.setPositiveButton("确定",new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog,int which) {
-									XHClick.onEventValue(mContext, "dishOperate", "dishOperate", "删除", 1);
-									if (new UploadDishSqlite(mContext.getApplicationContext()).deleteById(Integer.parseInt(mData2.get("id")))) {
-										Tools.showToast(mContext, "已成功删除");
-										mData.remove(mData2);
-										notifyDataSetChanged();
-									} else {
-										Tools.showToast(mContext, "删除失败!");
+				final DialogManager dialogManager = new DialogManager(mContext);
+				dialogManager.createDialog(new ViewManager(dialogManager)
+						.setView(new TitleView(mContext).setText("删除草稿"))
+						.setView(new MessageView(mContext).setText("确定要删除选中草稿?"))
+						.setView(new HButtonView(mContext)
+								.setNegativeText("取消", new View.OnClickListener() {
+									@Override
+									public void onClick(View v) {
+										dialogManager.cancel();
 									}
-								}
-							})
-						.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(
-										DialogInterface dialog,
-										int which) {
-								}
-							}).create().show();
+								})
+								.setPositiveText("确定", new View.OnClickListener() {
+									@Override
+									public void onClick(View v) {
+										dialogManager.cancel();
+										XHClick.onEventValue(mContext, "dishOperate", "dishOperate", "删除", 1);
+										if (new UploadDishSqlite(mContext.getApplicationContext()).deleteById(Integer.parseInt(mData2.get("id")))) {
+											Tools.showToast(mContext, "已成功删除");
+											mData.remove(mData2);
+											notifyDataSetChanged();
+										} else {
+											Tools.showToast(mContext, "删除失败!");
+										}
+									}
+								}))).show();
 			}
 		});
 	}

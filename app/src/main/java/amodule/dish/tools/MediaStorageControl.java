@@ -8,6 +8,11 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.view.View;
 
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.TitleMessageView;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Map;
@@ -17,7 +22,6 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import amodule.dish.db.UploadDishData;
 import amodule.dish.db.UploadDishSqlite;
-import amodule.dish.view.CommonDialog;
 
 /**
  * 合成视频前，判断内存大小，
@@ -60,15 +64,16 @@ public class MediaStorageControl {
         String showInfo = "您的手机存储空间不足，无法合成视频！需要至少1GB的存储空间~";
         String btnMsg1 = "我知道了";
 
-            final CommonDialog dialog = new CommonDialog(context);
-            dialog.setCancelable(false);
-            dialog.setMessage(showInfo).setSureButton(btnMsg1, new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dialog.cancel();
-                }
-            });
-            dialog.show();
+        final DialogManager dialogManager = new DialogManager(context);
+        dialogManager.createDialog(new ViewManager(dialogManager)
+                .setView(new TitleMessageView(context).setText(showInfo))
+                .setView(new HButtonView(context)
+                        .setNegativeText(btnMsg1, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialogManager.cancel();
+                            }
+                        }))).setCancelable(false).show();
     }
 
 

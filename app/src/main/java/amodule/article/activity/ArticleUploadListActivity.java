@@ -19,6 +19,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.TitleMessageView;
 import com.xiangha.R;
 
 import java.util.ArrayList;
@@ -37,7 +41,6 @@ import amodule.article.activity.edit.EditParentActivity;
 import amodule.article.activity.edit.VideoEditActivity;
 import amodule.article.db.UploadArticleData;
 import amodule.article.upload.ArticleUploadListPool;
-import amodule.dish.view.CommonDialog;
 import amodule.main.Main;
 import amodule.upload.UploadListControl;
 import amodule.upload.UploadListPool;
@@ -47,7 +50,6 @@ import amodule.upload.callback.UploadListUICallBack;
 import amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver;
 import amodule.user.activity.FriendHome;
 import aplug.basic.ReqInternet;
-import xh.windowview.XhDialog;
 
 /**
  * 文章上传列表页
@@ -202,45 +204,46 @@ public class ArticleUploadListActivity extends BaseActivity {
                 String btnMsg1 = "确定";
                 String btnMsg2 = "取消";
 
-                final CommonDialog dialog = new CommonDialog(ArticleUploadListActivity.this);
-                dialog.setMessage(showInfo).setSureButton(btnMsg1, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.cancel();
-                        listPool.cancelUpload();
-                        if (FriendHome.isAlive) {
-                            Intent broadIntent = new Intent();
-                            broadIntent.setAction(UploadStateChangeBroadcasterReceiver.ACTION);
-                            String type = "";
-                            if (dataType == EditParentActivity.DATA_TYPE_ARTICLE)
-                                type = "2";
-                            else if (dataType == EditParentActivity.DATA_TYPE_VIDEO)
-                                type = "1";
-                            if (!TextUtils.isEmpty(type))
-                                broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.DATA_TYPE, type);
-                            Main.allMain.sendBroadcast(broadIntent);
-                        }
-                        isStopUpload = true;
+                final DialogManager dialogManager = new DialogManager(ArticleUploadListActivity.this);
+                dialogManager.createDialog(new ViewManager(dialogManager)
+                        .setView(new TitleMessageView(ArticleUploadListActivity.this).setText(showInfo))
+                        .setView(new HButtonView(ArticleUploadListActivity.this)
+                                .setPositiveText(btnMsg1, new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        dialogManager.cancel();
+                                        listPool.cancelUpload();
+                                        if (FriendHome.isAlive) {
+                                            Intent broadIntent = new Intent();
+                                            broadIntent.setAction(UploadStateChangeBroadcasterReceiver.ACTION);
+                                            String type = "";
+                                            if (dataType == EditParentActivity.DATA_TYPE_ARTICLE)
+                                                type = "2";
+                                            else if (dataType == EditParentActivity.DATA_TYPE_VIDEO)
+                                                type = "1";
+                                            if (!TextUtils.isEmpty(type))
+                                                broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.DATA_TYPE, type);
+                                            Main.allMain.sendBroadcast(broadIntent);
+                                        }
+                                        isStopUpload = true;
 
-                        Intent intent = new Intent();
-                        if(dataType == EditParentActivity.DATA_TYPE_ARTICLE){
-                            intent.setClass(ArticleUploadListActivity.this, ArticleEidtActivity.class);
-                        }else if(dataType == EditParentActivity.DATA_TYPE_VIDEO){
-                            intent.setClass(ArticleUploadListActivity.this, VideoEditActivity.class);
-                        }
-                        intent.putExtra("draftId",draftId);
-                        startActivity(intent);
-                        finish();
-
-                    }
-                });
-                dialog.setCanselButton(btnMsg2, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.cancel();
-                    }
-                });
-                dialog.show();
+                                        Intent intent = new Intent();
+                                        if(dataType == EditParentActivity.DATA_TYPE_ARTICLE){
+                                            intent.setClass(ArticleUploadListActivity.this, ArticleEidtActivity.class);
+                                        }else if(dataType == EditParentActivity.DATA_TYPE_VIDEO){
+                                            intent.setClass(ArticleUploadListActivity.this, VideoEditActivity.class);
+                                        }
+                                        intent.putExtra("draftId",draftId);
+                                        startActivity(intent);
+                                        finish();
+                                    }
+                                })
+                                .setNegativeText(btnMsg2, new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        dialogManager.cancel();
+                                    }
+                                }))).show();
             }
         });
 
@@ -494,26 +497,23 @@ public class ArticleUploadListActivity extends BaseActivity {
     }
 
     private void hintNetWork(){
-//        if(ToolsDevice.getNetActiveState(ArticleUploadListActivity.this)) {
-            final XhDialog xhDialog = new XhDialog(ArticleUploadListActivity.this);
-            xhDialog.setTitle("当前不是WiFi环境，是否继续上传？")
-                    .setCanselButton("取消", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            xhDialog.cancel();
-                        }
-                    }).setSureButton("确定", new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    xhDialog.cancel();
-                    allStartOrPause(true);
-                }
-            }).setSureButtonTextColor("#333333")
-                    .setCancelButtonTextColor("#333333")
-                    .show();
-//        }else{
-//            Tools.showToast(ArticleUploadListActivity.this,"网络错误，请检查网络或重试");
-//        }
+        final DialogManager dialogManager = new DialogManager(ArticleUploadListActivity.this);
+        dialogManager.createDialog(new ViewManager(dialogManager)
+                .setView(new TitleMessageView(ArticleUploadListActivity.this).setText("当前不是WiFi环境，是否继续上传？"))
+                .setView(new HButtonView(ArticleUploadListActivity.this)
+                        .setNegativeText("取消", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialogManager.cancel();
+                            }
+                        })
+                        .setPositiveText("确定", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialogManager.cancel();
+                                allStartOrPause(true);
+                            }
+                        }))).show();
     }
 
 

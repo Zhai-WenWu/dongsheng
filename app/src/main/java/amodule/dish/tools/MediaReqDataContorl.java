@@ -4,11 +4,16 @@ import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.TitleMessageView;
+
 import java.text.DecimalFormat;
 
 import acore.tools.Tools;
 import amodule.dish.business.DishVideoDownloaderManager;
-import amodule.dish.view.CommonDialog;
+import amodule.dish.view.TitleProgressView;
 
 /**
  * 视频：从网络获取片头片尾，bmg
@@ -23,8 +28,8 @@ public class MediaReqDataContorl {
     private Context context;
     private int state = 0;//当前状态 0:未获取到更新数据, 1:有更新数据,但未进行下载. 2:正在进行更新. 3:已经更新完成. 4:当前无更新.
     private DishVideoDownloaderManager downloaderManager;
-    private CommonDialog updateDialog;
-    private CommonDialog downloadDialog;
+    private DialogManager updateDialog;
+    private DialogManager downloadDialog;
     private int reTryLimit = 3;
     private int currentTry;
 
@@ -113,24 +118,22 @@ public class MediaReqDataContorl {
         String btnMsg2 = "下载";
 
 
-        updateDialog = new CommonDialog(mAct);
-        updateDialog.setCancelable(false);
-        updateDialog.setMessage(showInfo).setSureButton(btnMsg2, new View.OnClickListener() {
+        updateDialog = new DialogManager(mAct);
+        updateDialog.createDialog(new ViewManager(updateDialog)
+        .setView(new TitleMessageView(mAct).setText(showInfo))
+        .setView(new HButtonView(mAct).setPositiveText(btnMsg2, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 downloaderManager.downloadDishVideo(context);
                 updateDialog.cancel();
                 downloadDataDialog(0, fileSize);
             }
-        });
-
-        updateDialog.setCanselButton(btnMsg1, new View.OnClickListener() {
+        }).setNegativeText(btnMsg1, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 closeUi();
             }
-        });
-        updateDialog.show();
+        }))).setCancelable(false).show();
     }
 
     private void closeUi() {
@@ -145,6 +148,7 @@ public class MediaReqDataContorl {
     }
 
 
+    private TitleProgressView mTitleProgressView;
     /**
      * 下载数据
      *
@@ -166,31 +170,29 @@ public class MediaReqDataContorl {
         String btnMsg2 = "后台下载";
 
         if (downloadDialog == null) {
-            downloadDialog = new CommonDialog(mAct);
-            downloadDialog.setCancelable(false);
-            downloadDialog.setMessage(showInfo).setSureButton(btnMsg2, new View.OnClickListener() {
+            downloadDialog = new DialogManager(mAct);
+            downloadDialog.createDialog(new ViewManager(downloadDialog)
+            .setView(mTitleProgressView = new TitleProgressView(mAct).setTitle(showInfo))
+            .setView(new HButtonView(mAct).setPositiveText(btnMsg2, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     downloadDialog.cancel();
                 }
-            });
-
-            downloadDialog.setCanselButton(btnMsg1, new View.OnClickListener() {
+            }).setNegativeText(btnMsg1, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     downloaderManager.cancelDownload();
                     downloadDialog.cancel();
                     closeUi();
                 }
-            });
-            downloadDialog.show();
+            }))).setCancelable(false).show();
         }
 
         mAct.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                downloadDialog.setMessage(showInfo);
-                downloadDialog.setProgress((int) (currentSize * 100.0f / totalSize));
+                mTitleProgressView.setTitle(showInfo);
+                mTitleProgressView.setProgress((int) (currentSize * 100.0f / totalSize));
             }
         });
     }

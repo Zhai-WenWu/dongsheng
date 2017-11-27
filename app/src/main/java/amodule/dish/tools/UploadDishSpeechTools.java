@@ -51,7 +51,7 @@ public class UploadDishSpeechTools {
 			@Override
 			public void onError(String errorInfo) {}
 		});
-		speechIflytek.mSpeech_VAD_EOS = 10000;
+		speechIflytek.mSpeech_VAD_EOS = 7000;
 	}
 	
 //	public void setStartButton(TextView startBtn){

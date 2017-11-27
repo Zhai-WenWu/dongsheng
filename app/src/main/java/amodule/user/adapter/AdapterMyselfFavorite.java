@@ -1,7 +1,5 @@
 package amodule.user.adapter;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -10,6 +8,11 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.MessageView;
+import com.xh.view.TitleView;
 import com.xiangha.R;
 
 import java.util.List;
@@ -116,19 +119,26 @@ public class AdapterMyselfFavorite extends AdapterSimple {
 				public void onClick(final View v) {
 					switch (type) {
 					case viewDel:
-						new AlertDialog.Builder(mAct).setIcon(android.R.drawable.ic_dialog_alert).setTitle("取消收藏").setMessage("确定要取消收藏?")
-								.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-									@Override
-									public void onClick(DialogInterface dialog, int which) {
-										doFavorite(map);
-										mData.remove(map);
-										notifyDataSetChanged();
-									}
-								}).setNegativeButton("取消", new DialogInterface.OnClickListener() {
-									@Override
-									public void onClick(DialogInterface dialog, int which) {
-									}
-								}).create().show();
+						final DialogManager dialogManager = new DialogManager(mAct);
+						dialogManager.createDialog(new ViewManager(dialogManager)
+								.setView(new TitleView(mAct).setText("取消收藏"))
+								.setView(new MessageView(mAct).setText("确定要取消收藏?"))
+								.setView(new HButtonView(mAct)
+										.setNegativeText("取消", new View.OnClickListener() {
+											@Override
+											public void onClick(View v) {
+												dialogManager.cancel();
+											}
+										})
+										.setPositiveText("确定", new View.OnClickListener() {
+											@Override
+											public void onClick(View v) {
+												dialogManager.cancel();
+												doFavorite(map);
+												mData.remove(map);
+												notifyDataSetChanged();
+											}
+										}))).show();
 						break;
 					}
 				}
@@ -137,12 +147,12 @@ public class AdapterMyselfFavorite extends AdapterSimple {
 
 		// 收藏响应
 		private void doFavorite(final Map<String, String> map) {
-			AppCommon.onFavoriteClick(mAct,"favorites", map.get("code"), new InternetCallback(mAct) {
-				@Override
-				public void loaded(int flag, String url, Object returnObj) {
-
-				}
-			});
+//			AppCommon.onFavoriteClick(mAct,"favorites", map.get("code"), new InternetCallback(mAct) {
+//				@Override
+//				public void loaded(int flag, String url, Object returnObj) {
+//
+//				}
+//			});
 		}
 	}
 }

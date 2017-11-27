@@ -143,7 +143,8 @@ public class FileManager extends UtilFile{
 	public static final  String SHOW_NO_WIFI = "show_no_wifi";
 	public static final  String STATICTIS_S6 = "statictis_s6";//s6统计数据体
 	public static final  String file_homeTopModle = "homeTopModle" + VersionOp.getVerName(XHApplication.in());//首页一级导航的内置数据
-
+	public static final String xmlKey_ds_from_show = "ds_from_show";
+	public static final String app_welcome = "app_welcome";
 
 	/**
 	 * 获取字符串数组

@@ -2,12 +2,8 @@ package acore.override;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.multidex.MultiDex;
 import android.text.TextUtils;
 import android.util.Log;
@@ -15,14 +11,6 @@ import android.util.Log;
 import com.baidu.mobads.AdView;
 import com.baidu.mobads.AppActivity;
 import com.mob.MobApplication;
-import com.qiyukf.unicorn.api.ImageLoaderListener;
-import com.qiyukf.unicorn.api.OnBotEventListener;
-import com.qiyukf.unicorn.api.OnMessageItemClickListener;
-import com.qiyukf.unicorn.api.SavePowerConfig;
-import com.qiyukf.unicorn.api.StatusBarNotificationConfig;
-import com.qiyukf.unicorn.api.Unicorn;
-import com.qiyukf.unicorn.api.UnicornImageLoader;
-import com.qiyukf.unicorn.api.YSFOptions;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.analytics.MobclickAgent;
 import com.xiangha.R;
@@ -30,7 +18,6 @@ import com.xiangha.R;
 import java.util.Map;
 
 import acore.logic.AppCommon;
-import acore.logic.VersionOp;
 import acore.override.helper.XHActivityManager;
 import acore.tools.ChannelUtil;
 import acore.tools.LogManager;
@@ -42,10 +29,8 @@ import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import aplug.basic.XHConf;
 import third.growingio.GrowingIOController;
-import third.mall.activity.CommodDetailActivity;
 import third.mall.aplug.MallReqInternet;
 import third.push.umeng.UMPushServer;
-import third.qiyu.GlideImageLoader;
 import third.qiyu.QiYvHelper;
 
 public class XHApplication extends MobApplication {
@@ -68,10 +53,19 @@ public class XHApplication extends MobApplication {
 
     @Override
     public void onCreate() {
-        startTime = System.currentTimeMillis();
-        super.onCreate();
-        LogManager.printStartTime("zhangyujian","XhApplication::super.oncreate::");
         mAppApplication = this;
+        startTime = System.currentTimeMillis();
+        LogManager.printStartTime("zhangyujian","XhApplication::11111.oncreate::");
+        try{
+            super.onCreate();
+        }catch (SecurityException e) {
+            //捕捉已知MobSDK定位bug
+            e.printStackTrace();
+        }catch (Exception e){
+            CrashReport.postCatchedException(e);
+        }
+        LogManager.printStartTime("zhangyujian","XhApplication::222222.oncreate::");
+
 
         //初始化umeng推送
         initUmengPush();
@@ -93,7 +87,7 @@ public class XHApplication extends MobApplication {
         String channel = ChannelUtil.getChannel(this);
         MobclickAgent.UMAnalyticsConfig config = new MobclickAgent.UMAnalyticsConfig(this, "545aeac6fd98c565c20004ad", channel);
         MobclickAgent.startWithConfigure(config);
-
+        LogManager.printStartTime("zhangyujian","XhApplication:0000:initData::");
         //bugly集成
         initBugly(getApplicationContext());
 
@@ -103,7 +97,7 @@ public class XHApplication extends MobApplication {
         ReqInternet.init(getApplicationContext());
         ReqEncyptInternet.init(getApplicationContext());
         LoadImage.init(getApplicationContext());
-
+        LogManager.printStartTime("zhangyujian","XhApplication:1111:initData::");
         //设置百度appid
         Map<String,String> map = StringManager.getFirstMap(AppCommon.getConfigByLocal("baiduappid"));
         if(map.containsKey("appid") && !TextUtils.isEmpty(map.get("appid"))){
@@ -118,42 +112,34 @@ public class XHApplication extends MobApplication {
         AppActivity.getActionBarColorTheme().setCloseColor(commonTopTextColor);
         AppActivity.getActionBarColorTheme().setProgressColor(commonTopTextColor);
 
+        LogManager.printStartTime("zhangyujian","XhApplication:222:initData::");
         //GrowingIO初始化
         new GrowingIOController().init(this);
         this.registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
             @Override
             public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-//                XHActivityManager.getInstance().setCurrentActivity(activity);
             }
-
             @Override
             public void onActivityStarted(Activity activity) {
             }
-
             @Override
             public void onActivityResumed(Activity activity) {
                 //记录当前activity
                 XHActivityManager.getInstance().setCurrentActivity(activity);
             }
-
             @Override
             public void onActivityPaused(Activity activity) {
             }
-
             @Override
             public void onActivityStopped(Activity activity) {
             }
-
             @Override
             public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
             }
-
             @Override
             public void onActivityDestroyed(Activity activity) {
             }
         });
-        //七鱼初始化 init方法无需放入主进程中执行，其他的初始化，有必要放在放入主进程
-        QiYvHelper.getInstance().initSDK(this);
     }
 
     @Override

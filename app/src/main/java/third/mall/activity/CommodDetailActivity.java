@@ -122,6 +122,7 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
     private int productNum = 1;//购买商品数量
     private BuyDialog buyDialog;
     private TemplateWebView middle_templateWebView,foot_templateWebView;
+    private boolean isNeedResume=false;//是否需要刷新
 
     @Override
     protected void onCreate(Bundle arg0) {
@@ -356,11 +357,12 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
     @Override
     protected void onResume() {
         super.onResume();
-        setShopcatNum();
-//        if(LoginManager.isLogin()){
-//            MallCommon.getShoppingNum(this,mall_news_num,mall_news_num_two);
-//        }
+//        setShopcatNum();
+        if(LoginManager.isLogin() && isNeedResume){
+            MallCommon.getShoppingNum(this,mall_news_num,mall_news_num_two);
+        }
     }
+
 
     /**
      * 解析数据
@@ -878,6 +880,7 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
     @Override
     protected void onPause() {
         super.onPause();
+        isNeedResume = true;
     }
 
     @Override

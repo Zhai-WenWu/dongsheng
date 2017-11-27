@@ -320,6 +320,7 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
      */
     protected void setStateAndUi(int state) {
         mCurrentState = state;
+        Log.i("tzy","video mCurrentState = " + mCurrentState);
         switch (mCurrentState) {
             case CURRENT_STATE_NORMAL:
                 if (isCurrentMediaListener()) {
@@ -501,7 +502,9 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
     public void onVideoResume() {
         try{
             mPauseTime = 0;
-            if (mCurrentState == CURRENT_STATE_PAUSE) {
+            Log.i("tzy","onVideoResume");
+//            if (mCurrentState == CURRENT_STATE_PAUSE) {
+            if (!GSYVideoManager.instance().getMediaPlayer().isPlaying()) {
                 if (mCurrentPosition > 0 && GSYVideoManager.instance().getMediaPlayer() != null) {
                     setStateAndUi(CURRENT_STATE_PLAYING);
                     GSYVideoManager.instance().getMediaPlayer().seekTo(mCurrentPosition);
@@ -888,7 +891,7 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
         }
 
         startProgressTimer();
-
+        Log.i("tzy","onPrepared");
         setStateAndUi(CURRENT_STATE_PLAYING);
 
         if (mVideoAllCallBack != null && isCurrentMediaListener()) {
@@ -1003,6 +1006,7 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
     public void onInfo(int what, int extra) {
         if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START) {
             mBackUpPlayingBufferState = mCurrentState;
+            Log.i("tzy","mBackUpPlayingBufferState = " + mBackUpPlayingBufferState);
             //避免在onPrepared之前就进入了buffering，导致一只loading
             if (mHadPlay && mCurrentState != CURRENT_STATE_PREPAREING && mCurrentState > 0)
                 setStateAndUi(CURRENT_STATE_PLAYING_BUFFERING_START);

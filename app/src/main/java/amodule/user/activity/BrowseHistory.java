@@ -9,6 +9,10 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.TitleMessageView;
 import com.xiangha.R;
 
 import java.util.ArrayList;
@@ -22,7 +26,6 @@ import amodule.user.view.HistoryDishView;
 import amodule.user.view.HistoryNousView;
 import amodule.user.view.HistorySubjectView;
 import amodule.user.view.HistoryView;
-import xh.windowview.XhDialog;
 
 /**
  * 浏览历史
@@ -125,23 +128,23 @@ public class BrowseHistory extends BaseActivity implements View.OnClickListener 
 	public void onClick(View v) {
 		switch (v.getId()) {
 			case R.id.rightText:
-				final XhDialog dialog = new XhDialog(this);
-				dialog.setTitle("确定清空所有" + titles[mViewPager.getCurrentItem()] + "浏览记录？")
-						.setSureButton("取消", new View.OnClickListener() {
-							@Override
-							public void onClick(View v) {
-								dialog.cancel();
-							}
-						})
-						.setSureButtonTextColor("#333333")
-						.setCanselButton("确定", new View.OnClickListener() {
-							@Override
-							public void onClick(View v) {
-								clearCurrentHistory();
-								dialog.cancel();
-							}
-						});
-				dialog.show();
+				final DialogManager dialogManager = new DialogManager(this);
+				dialogManager.createDialog(new ViewManager(dialogManager)
+						.setView(new TitleMessageView(this).setText("确定清空所有" + titles[mViewPager.getCurrentItem()] + "浏览记录？"))
+						.setView(new HButtonView(this)
+								.setNegativeText("取消", new View.OnClickListener() {
+									@Override
+									public void onClick(View v) {
+										dialogManager.cancel();
+									}
+								})
+								.setPositiveText("确定", new View.OnClickListener() {
+									@Override
+									public void onClick(View v) {
+										dialogManager.cancel();
+										clearCurrentHistory();
+									}
+								}))).show();
 				break;
 			default:
 				break;

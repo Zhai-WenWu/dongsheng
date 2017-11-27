@@ -27,7 +27,7 @@
     </style>
 
     <!-- window 透明的-->
-    <style name="Theme.AppCompat.Translucent" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="Theme.AppCompat.Translucent" parent="Base.Theme.AppCompat.Light.DarkActionBar">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:colorBackgroundCacheHint">@null</item>
         <item name="android:windowIsTranslucent">true</item>

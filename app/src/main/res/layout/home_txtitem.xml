@@ -97,6 +97,7 @@
                     android:maxLines="1"
                     android:textColor="#b5b4b4"
                     android:textSize="@dimen/sp_11"
+                    android:text="dsdsdsdsdsds"
                     android:visibility="visible" />
 
                 <ImageView

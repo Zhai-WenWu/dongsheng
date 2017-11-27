@@ -11,13 +11,16 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.load.model.GlideUrl;
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.TitleMessageView;
 import com.xiangha.R;
 
 import org.json.JSONArray;
@@ -27,7 +30,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Map;
 
-import acore.tools.PageStatisticsUtils;
 import acore.tools.Tools;
 import aplug.basic.LoadImage;
 import third.mall.alipay.MallPayActivity;
@@ -206,32 +208,23 @@ public class BuyCommodActivity extends MallBaseActivity implements OnClickListen
 	}
 
 	private void showDialg() {
-		final Dialog dialog = new Dialog(this, R.style.dialog);
-		dialog.setContentView(R.layout.a_mall_alipa_dialog);
-		Window window = dialog.getWindow();
-		window.findViewById(R.id.dialog_title).setVisibility(View.GONE);
-		TextView dialog_message = (TextView) window.findViewById(R.id.dialog_message);
-		dialog_message.setText("确认取消此订单？");
-		TextView dialog_cancel = (TextView) window.findViewById(R.id.dialog_cancel);
-		TextView dialog_sure = (TextView) window.findViewById(R.id.dialog_sure);
-		dialog_cancel.setText("取消");
-		dialog_sure.setText("确定");
-		dialog_cancel.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				dialog.cancel();
-			}
-		});
-		dialog_sure.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				dialog.cancel();
-				BuyCommodActivity.this.finish();
-			}
-		});
-		dialog.show();
+		final DialogManager dialogManager = new DialogManager(this);
+		dialogManager.createDialog(new ViewManager(dialogManager)
+				.setView(new TitleMessageView(this).setText("确认取消此订单？"))
+				.setView(new HButtonView(this)
+						.setNegativeText("取消", new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								dialogManager.cancel();
+							}
+						})
+						.setPositiveText("确定", new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								dialogManager.cancel();
+								BuyCommodActivity.this.finish();
+							}
+						}))).show();
 	}
 
 	private void setRequest() {

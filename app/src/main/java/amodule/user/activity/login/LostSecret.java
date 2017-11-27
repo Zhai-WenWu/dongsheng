@@ -1,6 +1,7 @@
 package amodule.user.activity.login;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -8,6 +9,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.TitleMessageView;
 import com.xiangha.R;
 
 import acore.logic.XHClick;
@@ -19,7 +24,6 @@ import amodule.user.view.IdentifyInputView;
 import amodule.user.view.NextStepView;
 import amodule.user.view.PhoneNumInputView;
 import amodule.user.view.SpeechaIdentifyInputView;
-import xh.windowview.XhDialog;
 
 /**
  * Created by ：fei_teng on 2017/2/21 15:04.
@@ -238,31 +242,32 @@ public class LostSecret extends BaseLoginActivity {
                                 sendSms();
                             } else {
                                 loadManager.hideProgressBar();
-                                final XhDialog xhDialog = new XhDialog(LostSecret.this);
-                                xhDialog.setTitle("网络有问题或手机号未注册？")
-                                        .setCanselButton("取消", new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                                XHClick.mapStat(LostSecret.this, PHONE_TAG, "忘记密码",
-                                                        "失败原因：弹框未注册，选择不注册");
-                                                xhDialog.cancel();
-                                                login_identify.setOnBtnClickState(true);
-                                            }
-                                        })
-                                        .setSureButton("立即注册", new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                                register(LostSecret.this, phone_info.getZoneCode(),
-                                                        phone_info.getPhoneNum());
-                                                XHClick.mapStat(LostSecret.this, PHONE_TAG, "忘记密码",
-                                                        "失败原因：弹框未注册，选择注册");
-                                                finish();
-                                                xhDialog.cancel();
-                                            }
-                                        })
-                                        .setSureButtonTextColor("#007aff")
-                                        .setCancelButtonTextColor("#007aff");
-                                xhDialog.show();
+                                final DialogManager dialogManager = new DialogManager(LostSecret.this);
+                                dialogManager.createDialog(new ViewManager(dialogManager)
+                                        .setView(new TitleMessageView(LostSecret.this).setText("网络有问题或手机号未注册？"))
+                                        .setView(new HButtonView(LostSecret.this)
+                                                .setNegativeTextColor(Color.parseColor("#007aff"))
+                                                .setNegativeText("取消", new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View v) {
+                                                        dialogManager.cancel();
+                                                        XHClick.mapStat(LostSecret.this, PHONE_TAG, "忘记密码",
+                                                                "失败原因：弹框未注册，选择不注册");
+                                                        login_identify.setOnBtnClickState(true);
+                                                    }
+                                                })
+                                                .setPositiveTextColor(Color.parseColor("#007aff"))
+                                                .setPositiveText("立即注册", new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View v) {
+                                                        dialogManager.cancel();
+                                                        register(LostSecret.this, phone_info.getZoneCode(),
+                                                                phone_info.getPhoneNum());
+                                                        XHClick.mapStat(LostSecret.this, PHONE_TAG, "忘记密码",
+                                                                "失败原因：弹框未注册，选择注册");
+                                                        finish();
+                                                    }
+                                                }))).show();
                             }
                         }
                     });

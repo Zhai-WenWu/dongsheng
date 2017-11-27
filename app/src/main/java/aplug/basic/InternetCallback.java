@@ -2,7 +2,9 @@ package aplug.basic;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.os.Build;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -44,7 +46,7 @@ public abstract class InternetCallback extends InterCallback {
 		super(context);
 		this.encryptparams= encryptparams;
 	}
-	public void setEncryptparams(String encryptparams){
+	public void  setEncryptparams(String encryptparams){
 		this.encryptparams= encryptparams;
 	}
 	@Override
@@ -102,7 +104,7 @@ public abstract class InternetCallback extends InterCallback {
 						loaded(ReqInternet.REQ_CODE_ERROR, url, msg);
 					} else {
 						loaded(ReqInternet.REQ_CODE_ERROR, url, msg);
-                        toastFaildRes(msg);
+//                        toastFaildRes(msg);
                     }
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -227,11 +229,29 @@ public abstract class InternetCallback extends InterCallback {
 		String location = getLocation();
 		cookie += "geo=" + location + ";";
 		header.put("Cookie", cookie);
-        if(!TextUtils.isEmpty(url)&&(url.contains("main7")||url.contains("Main7"))&&!TextUtils.isEmpty(encryptparams)){
+        if(!TextUtils.isEmpty(url)&&(url.contains("main7")||url.contains("Main7")||url.contains("main8"))&&!TextUtils.isEmpty(encryptparams)){
 			encryptparams=encryptparams.replaceAll("\\n","");
 			header.put("xh-parameter", encryptparams);
         }
-        try {
+		String isAccept= AppCommon.getConfigByLocal("imageAccept");//isWebp 2表示使用，1不
+		if(!TextUtils.isEmpty(isAccept)){
+			Log.i("xianghaTag","imageAccept:::"+isAccept);
+			Map<String,String> map=StringManager.getFirstMap(isAccept);
+			if(!TextUtils.isEmpty(map.get("sdk"))&&Integer.parseInt(map.get("sdk"))<= Build.VERSION.SDK_INT){
+				Log.i("xianghaTag","1111:::"+isAccept);
+				String accept = header.containsKey("Accept") ? header.get("Accept") : "";
+				if(accept.length() > 0){
+					if(!accept.contains("image/webp")){
+						accept += ";image/webp";
+					}
+				}else{
+					accept = "image/webp";
+				}
+				header.put("Accept",accept);
+			}
+		}
+
+		try {
 			String ua = "imei=" + ToolsDevice.getXhIMEI(context) + ";";
 			ua += "device=" + ToolsDevice.getDevice(context) + ";";
 			ua += "AndroidId=" + ToolsDevice.getAndroidId(context) + ";";

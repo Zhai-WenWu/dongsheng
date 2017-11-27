@@ -1,16 +1,19 @@
 package amodule.dish.video.activity;
 
-import android.app.Dialog;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.TitleMessageView;
 import com.xiangha.R;
 
 import java.util.Timer;
@@ -137,36 +140,25 @@ public class MediaHandleActivity extends BaseActivity implements View.OnClickLis
      * 展示dialog
      */
     private void showDialog(){
-        final Dialog dialog= new Dialog(this,R.style.dialog);
-        dialog.setContentView(R.layout.a_mall_alipa_dialog);
-        Window window=dialog.getWindow();
-        window.findViewById(R.id.dialog_title).setVisibility(View.GONE);
-        TextView dialog_message= (TextView) window.findViewById(R.id.dialog_message);
-        dialog_message.setText("确认要终止合成视频吗?");
-        TextView dialog_cancel= (TextView) window.findViewById(R.id.dialog_cancel);
-        TextView dialog_sure= (TextView) window.findViewById(R.id.dialog_sure);
-        dialog_cancel.setText("取消");
-        dialog_sure.setText("确定");
-        dialog_cancel.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                XHClick.mapStat(MediaHandleActivity.this,"a_video_splice","终止合成","取消");
-                dialog.cancel();
-            }
-        });
-        dialog_sure.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                XHClick.mapStat(MediaHandleActivity.this,"a_video_splice","终止合成","确定");
-//                mediaHandlerContorl.setStop(true);
-//                MediaHandleControl.delAllMediaHandlerData(uploadDishData.getId());
-                MediaHandleActivity.this.finish();
-                dialog.cancel();
-            }
-        });
-        dialog.show();
+        final DialogManager dialogManager = new DialogManager(this);
+        dialogManager.createDialog(new ViewManager(dialogManager)
+                .setView(new TitleMessageView(this).setText("确认要终止合成视频吗?"))
+                .setView(new HButtonView(this)
+                        .setNegativeText("取消", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialogManager.cancel();
+                                XHClick.mapStat(MediaHandleActivity.this,"a_video_splice","终止合成","取消");
+                            }
+                        })
+                        .setPositiveText("确定", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialogManager.cancel();
+                                XHClick.mapStat(MediaHandleActivity.this,"a_video_splice","终止合成","确定");
+                                MediaHandleActivity.this.finish();
+                            }
+                        }))).show();
     }
     @Override
     protected void onDestroy() {

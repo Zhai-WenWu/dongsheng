@@ -1,18 +1,22 @@
 package third.mall.alipay;
 
-import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alipay.sdk.app.PayTask;
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.MessageView;
+import com.xh.view.TitleView;
 import com.xiangha.R;
 
 import java.io.UnsupportedEncodingException;
@@ -24,8 +28,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 
-import acore.override.activity.base.BaseActivity;
-import acore.tools.PageStatisticsUtils;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.main.Main;
@@ -347,26 +349,25 @@ public class MallPayActivity extends MallBaseActivity implements OnClickListener
 		showDialg();
 	}
 	private void showDialg(){
-		final Dialog dialog= new Dialog(this,R.style.dialog);
-		dialog.setContentView(R.layout.a_mall_alipa_dialog);
-		Window window=dialog.getWindow();
-		window.findViewById(R.id.dialog_cancel).setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				MallPayActivity.pay_state=true;
-				Main.colse_level=3;
-				dialog.cancel();
-				MallPayActivity.this.finish();
-			}
-		});
-		window.findViewById(R.id.dialog_sure).setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				dialog.cancel();
-			}
-		});
-		dialog.show();
+		final DialogManager dialogManager = new DialogManager(this);
+		dialogManager.createDialog(new ViewManager(dialogManager)
+				.setView(new TitleView(this).setText("付款说明"))
+				.setView(new MessageView(this).setText("该订单1小时后将被取消，请尽快完成支付"))
+				.setView(new HButtonView(this)
+						.setNegativeText("放弃付款", new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								dialogManager.cancel();
+								MallPayActivity.pay_state=true;
+								Main.colse_level=3;
+								MallPayActivity.this.finish();
+							}
+						})
+						.setPositiveText("继续支付", new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								dialogManager.cancel();
+							}
+						}))).show();
 	}
 }

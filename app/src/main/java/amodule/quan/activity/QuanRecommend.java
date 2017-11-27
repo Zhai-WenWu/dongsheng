@@ -1,17 +1,6 @@
 package amodule.quan.activity;
 
-import java.util.ArrayList;
-
-import xh.basic.internet.UtilInternet;
-import acore.override.activity.base.BaseActivity;
-import acore.tools.StringManager;
-import acore.tools.Tools;
-import acore.tools.ToolsDevice;
-import amodule.quan.db.CircleData;
-import amodule.quan.db.CircleSqlite;
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,10 +10,25 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.MessageView;
+import com.xh.view.TitleView;
+import com.xiangha.R;
+
+import java.util.ArrayList;
+
+import acore.override.activity.base.BaseActivity;
+import acore.tools.StringManager;
+import acore.tools.Tools;
+import acore.tools.ToolsDevice;
+import amodule.quan.db.CircleData;
+import amodule.quan.db.CircleSqlite;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
-
-import com.xiangha.R;
+import xh.basic.internet.UtilInternet;
 
 /**
  * 管理员推荐
@@ -139,27 +143,32 @@ public class QuanRecommend extends BaseActivity implements OnClickListener {
 			moveModel();
 			break;
 		case R.id.user_recommend_home:// 推荐
-			AlertDialog dialog = new AlertDialog.Builder(QuanRecommend.this).setTitle("确认推荐？").setMessage("您确认要推荐本贴吗？").setPositiveButton("确定", new DialogInterface.OnClickListener() {
+			final DialogManager dialogManager = new DialogManager(QuanRecommend.this);
+			dialogManager.createDialog(new ViewManager(dialogManager)
+					.setView(new TitleView(QuanRecommend.this).setText("确认推荐？"))
+					.setView(new MessageView(QuanRecommend.this).setText("您确认要推荐本贴吗？"))
+					.setView(new HButtonView(QuanRecommend.this)
+							.setNegativeText("取消", new View.OnClickListener() {
+								@Override
+								public void onClick(View v) {
+									dialogManager.cancel();
+								}
+							})
+							.setPositiveText("确定", new View.OnClickListener() {
+								@Override
+								public void onClick(View v) {
+									dialogManager.cancel();
+									String url = StringManager.api_setSubjectRecommend;
+									String params = "code=" + code;
+									ReqInternet.in().doPost(url, params, new InternetCallback(QuanRecommend.this) {
 
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					String url = StringManager.api_setSubjectRecommend;
-					String params = "code=" + code;
-					ReqInternet.in().doPost(url, params, new InternetCallback(QuanRecommend.this) {
-
-						@Override
-						public void loaded(int flag, String url, Object returnObj) {
-							QuanRecommend.this.finish();
-						}
-					});
-				}
-			}).setNegativeButton("取消", new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					dialog.cancel();
-				}
-			}).create();
-			dialog.show();
+										@Override
+										public void loaded(int flag, String url, Object returnObj) {
+											QuanRecommend.this.finish();
+										}
+									});
+								}
+							}))).show();
 			break;
 		case R.id.user_recommend_cream:// 加精
 			addCream();
@@ -195,26 +204,32 @@ public class QuanRecommend extends BaseActivity implements OnClickListener {
 	 * 加精
 	 */
 	private void addCream(){
-		AlertDialog dialog = new AlertDialog.Builder(QuanRecommend.this).setTitle("确认加精？").setMessage("您确认要对该贴加精吗？").setPositiveButton("确定", new DialogInterface.OnClickListener() {
+		final DialogManager dialogManager = new DialogManager(QuanRecommend.this);
+		dialogManager.createDialog(new ViewManager(dialogManager)
+				.setView(new TitleView(QuanRecommend.this).setText("确认加精"))
+				.setView(new MessageView(QuanRecommend.this).setText("您确认要对该贴加精吗？"))
+				.setView(new HButtonView(QuanRecommend.this)
+						.setNegativeText("取消", new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								dialogManager.cancel();
+							}
+						})
+						.setPositiveText("确定", new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								dialogManager.cancel();
+								String url =StringManager.api_addJingHua+"?code="+code;
+								QuanRecommend.this.finish();
+								ReqInternet.in().doGet(url, new InternetCallback(QuanRecommend.this) {
+									@Override
+									public void loaded(int flag, String url, Object returnObj) {
+										if (flag < UtilInternet.REQ_OK_STRING){
+										}
+									}
+								});
+							}
+						}))).show();
 
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				String url =StringManager.api_addJingHua+"?code="+code;
-				QuanRecommend.this.finish();
-				ReqInternet.in().doGet(url, new InternetCallback(QuanRecommend.this) {
-					@Override
-					public void loaded(int flag, String url, Object returnObj) {
-						if (flag < UtilInternet.REQ_OK_STRING){
-						}
-					}
-				});
-			}
-		}).setNegativeButton("取消", new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				dialog.cancel();
-			}
-		}).create();
-		dialog.show();
 	}
 }

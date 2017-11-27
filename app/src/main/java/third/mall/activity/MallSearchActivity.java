@@ -220,6 +220,7 @@ public class MallSearchActivity extends MallBaseActivity {
 							LogManager.print(XHConf.log_tag_net,"d", "设置cookie："+i+"::"+cookie[i]);
 							cookieManager.setCookie(cookieKey, cookie[i]);
 						}
+						CookieSyncManager.createInstance(MallSearchActivity.this);
 						CookieSyncManager.getInstance().sync();
 						LogManager.print(XHConf.log_tag_net,"d", "设置webview的cookie："+cookieStr);
 					}

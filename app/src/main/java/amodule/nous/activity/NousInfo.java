@@ -12,10 +12,13 @@ import org.json.JSONObject;
 
 import java.util.Map;
 
-import acore.logic.AppCommon;
+import acore.logic.FavoriteHelper;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
+import acore.tools.IObserver;
+import acore.tools.ObserverManager;
 import acore.tools.StringManager;
+import acore.tools.Tools;
 import amodule.main.Main;
 import amodule.user.activity.login.LoginByAccout;
 import amodule.user.db.BrowseHistorySqlite;
@@ -29,144 +32,178 @@ import xh.basic.tool.UtilString;
 
 public class NousInfo extends ApiShowWeb {
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		XHClick.track(this, "浏览知识");
-	}
+    private String code,titleText;
+    private boolean isFav;
 
-	@Override
-	protected void setTitle() {
-		title.setText("香哈头条");
-		rightBtn.setVisibility(View.GONE);
-		shareLayout.setVisibility(View.GONE);
-		favLayout.setVisibility(View.GONE);
-		homeLayout.setVisibility(View.GONE);
-		shareLayout.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (barShare != null) {
-					barShare.openShare();
-				}
-			}
-		});
-		homeLayout.setOnClickListener(new OnClickListener() {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        XHClick.track(this, "浏览知识");
+        code = getIntent().getStringExtra("code");
+        if (TextUtils.isEmpty(code)) {
+            Tools.showToast(this, "数据错误");
+            finish();
+        }
+//        registerObserver();
+    }
 
-			@Override
-			public void onClick(View v) {
-				Main.colse_level = 1;
-				finish();
-			}
-		});
-		favLayout.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				//7.29新添加统计
-				XHClick.mapStat(NousInfo.this, "a_collection", "香哈头条", "");
-				if (LoginManager.isLogin()) {
-					AppCommon.onFavoriteClick(NousInfo.this, "nous", nousCodeString, new InternetCallback(NousInfo.this) {
+//    private IObserver mIObserver;
+//    private void registerObserver(){
+//        mIObserver = new IObserver() {
+//            @Override
+//            public void notify(String name, Object sender, Object data) {
+//                requestFavoriteState();
+//            }
+//        };
+//        ObserverManager.getInstence().registerObserver(mIObserver,ObserverManager.NOTIFY_LOGIN);
+//    }
+//
+//    @Override
+//    protected void onDestroy() {
+//        ObserverManager.getInstence().unRegisterObserver(mIObserver);
+//        super.onDestroy();
+//    }
 
-						@Override
-						public void loaded(int flag, String url, Object returnObj) {
-							if (flag >= UtilInternet.REQ_OK_STRING) {
-								Map<String, String> map = UtilString.getListMapByJson(returnObj).get(0);
-								boolean nowFav = map.get("type").equals("2");
-								favoriteNousImageView.setImageResource(nowFav ? R.drawable.z_caipu_xiangqing_topbar_ico_fav_active
-										: R.drawable.z_caipu_xiangqing_topbar_ico_fav);
-								favoriteNousTextView.setText(nowFav ? "已收藏" : "  收藏  ");
-							} else {
-								String returnStr = TextUtils.isEmpty((String) returnObj) ? "" : returnObj.toString();
-								if (returnStr.contains("登录")) {
-									Intent intent = new Intent(NousInfo.this, LoginByAccout.class);
-									startActivity(intent);
-								}
-							}
-						}
-					});
-				} else {
-					Intent intent = new Intent(NousInfo.this, LoginByAccout.class);
-					startActivity(intent);
-				}
-			}
-		});
-	}
+    @Override
+    protected void setTitle() {
+        title.setText("香哈头条");
+        rightBtn.setVisibility(View.GONE);
+        shareLayout.setVisibility(View.GONE);
+        favLayout.setVisibility(View.GONE);
+        homeLayout.setVisibility(View.GONE);
+        shareLayout.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (barShare != null) {
+                    barShare.openShare();
+                }
+            }
+        });
+        homeLayout.setOnClickListener(new OnClickListener() {
 
-	@Override
-	public void loadData() {
-		String apiUrl = StringManager.api_nousInfo + "?code=" + getIntent().getStringExtra("code");
-		ReqInternet.in().doGet(apiUrl, new InternetCallback(this) {
-			@Override
-			public void loaded(int flag, String url, Object returnObj) {
-				if (flag >= UtilInternet.REQ_OK_STRING) {
-					Map<String, String> am = UtilString.getListMapByJson(returnObj).get(0);
-					saveHistoryToDB(am);
-					String content = am.get("content");
-					nousCodeString = am.get("code");
+            @Override
+            public void onClick(View v) {
+                Main.colse_level = 1;
+                finish();
+            }
+        });
+//        favLayout.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                //7.29新添加统计
+//                XHClick.mapStat(NousInfo.this, "a_collection", "香哈头条", "");
+//                if (LoginManager.isLogin()) {
+//                    FavoriteHelper.instance().setFavoriteStatus(NousInfo.this, code, titleText, FavoriteHelper.TYPE_NOUS,
+//                            new FavoriteHelper.FavoriteStatusCallback() {
+//                                @Override
+//                                public void onSuccess(boolean state) {
+//                                    isFav = state;
+//                                    favoriteNousImageView.setImageResource(isFav ? R.drawable.z_caipu_xiangqing_topbar_ico_fav_active
+//                                            : R.drawable.z_caipu_xiangqing_topbar_ico_fav);
+//                                    favoriteNousTextView.setText(isFav ? "已收藏" : "  收藏  ");
+//                                }
+//
+//                                @Override
+//                                public void onFailed() {
+//                                }
+//                            });
+//                } else {
+//                    Intent intent = new Intent(NousInfo.this, LoginByAccout.class);
+//                    startActivity(intent);
+//                }
+//            }
+//        });
+    }
 
-					//设置收藏按钮图片
-					if (am.containsKey("isFav")) {
-						boolean isFav = am.get("isFav").equals("2");
-						favoriteNousImageView.setImageResource(isFav ? R.drawable.z_caipu_xiangqing_topbar_ico_fav_active
-								: R.drawable.z_caipu_xiangqing_topbar_ico_fav);
-						favoriteNousTextView.setText(isFav ? "已收藏" : "  收藏  ");
-					}
+    @Override
+    public void loadData() {
+//        requestFavoriteState();
 
-					if (content.length() > 28) {
-						content = content.substring(0, 28) + "..." + "(香哈菜谱)";
-					} else {
-						content = content + "(香哈菜谱)";
-					}
-					htmlData = am.get("html");
-					//http://www.xiangha.com/zhishi/236824.html   http://nativeapp.xiangha.com/
-					webview.loadDataWithBaseURL("http://www.xiangha.com/zhishi/"+NousInfo.this.getIntent().getStringExtra("code")+".html", htmlData, "text/html", "utf-8", null);
-					XHClick.mapStat(context, "a_share400", "香哈头条", "");
-					//这里的小知识文案不能动，影响统计加积分--FangRuijiao
-					barShare = new BarShare(NousInfo.this, "香哈头条", "");
-					String zhishiurl = StringManager.wwwUrl + "zhishi/" + am.get("code") + ".html";
-					barShare.setShare(BarShare.IMG_TYPE_WEB, am.get("title"), content, am.get("img"), zhishiurl);
-					rightBtn.setVisibility(View.VISIBLE);
-					shareLayout.setVisibility(View.VISIBLE);
-					favLayout.setVisibility(View.VISIBLE);
-					homeLayout.setVisibility(View.GONE);
-				} else
-					rightBtn.setVisibility(View.GONE);
-			}
-		});
-	}
+        String apiUrl = StringManager.api_nousInfo + "?code=" + code;
+        ReqInternet.in().doGet(apiUrl, new InternetCallback(this) {
+            @Override
+            public void loaded(int flag, String url, Object returnObj) {
+                if (flag >= UtilInternet.REQ_OK_STRING) {
+                    Map<String, String> am = UtilString.getListMapByJson(returnObj).get(0);
+                    saveHistoryToDB(am);
+                    titleText = am.get("title");
+                    String content = am.get("content");
+                    nousCodeString = am.get("code");
 
-	private boolean saveHistoryOver = false;
+                    if (content.length() > 28) {
+                        content = content.substring(0, 28) + "..." + "(香哈菜谱)";
+                    } else {
+                        content = content + "(香哈菜谱)";
+                    }
+                    htmlData = am.get("html");
+                    //http://www.xiangha.com/zhishi/236824.html   http://nativeapp.xiangha.com/
+                    webview.loadDataWithBaseURL("http://www.xiangha.com/zhishi/" + NousInfo.this.getIntent().getStringExtra("code") + ".html", htmlData, "text/html", "utf-8", null);
+                    XHClick.mapStat(context, "a_share400", "香哈头条", "");
+                    //这里的小知识文案不能动，影响统计加积分--FangRuijiao
+                    barShare = new BarShare(NousInfo.this, "香哈头条", "");
+                    String zhishiurl = StringManager.wwwUrl + "zhishi/" + am.get("code") + ".html";
+                    barShare.setShare(BarShare.IMG_TYPE_WEB, am.get("title"), content, am.get("img"), zhishiurl);
+                    rightBtn.setVisibility(View.VISIBLE);
+                    shareLayout.setVisibility(View.VISIBLE);
+                    homeLayout.setVisibility(View.GONE);
+                } else
+                    rightBtn.setVisibility(View.GONE);
+            }
+        });
+    }
 
-	/** 保存历史 */
-	private void saveHistoryToDB(final Map<String, String> map) {
-		if (!saveHistoryOver) {
-			saveHistoryOver = true;
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					JSONObject jsonObject = handlerJSONData(map);
-					HistoryData data = new HistoryData();
-					data.setCode(map.get("code"));
-					data.setBrowseTime(System.currentTimeMillis());
-					data.setDataJson(jsonObject.toString());
-					BrowseHistorySqlite sqlite = new BrowseHistorySqlite(NousInfo.this);
-					sqlite.insertSubject(BrowseHistorySqlite.TB_NOUS_NAME, data);
-				}
-			}).start();
-		}
-	}
+//    private void requestFavoriteState() {
+//        FavoriteHelper.instance().getFavoriteStatus(this, code, FavoriteHelper.TYPE_NOUS,
+//                new FavoriteHelper.FavoriteStatusCallback() {
+//                    @Override
+//                    public void onSuccess(boolean state) {
+//                        //设置收藏按钮图片
+//                        isFav = state;
+//                        favoriteNousImageView.setImageResource(isFav ? R.drawable.z_caipu_xiangqing_topbar_ico_fav_active
+//                                : R.drawable.z_caipu_xiangqing_topbar_ico_fav);
+//                        favoriteNousTextView.setText(isFav ? "已收藏" : "  收藏  ");
+//                        favLayout.setVisibility(View.VISIBLE);
+//                    }
+//
+//                    @Override
+//                    public void onFailed() {
+//                    }
+//                });
+//    }
 
-	private JSONObject handlerJSONData(Map<String, String> map) {
-		JSONObject jsonObject = new JSONObject();
-		try {
-			jsonObject.put("allClick", map.get("allClick") + "");
-			jsonObject.put("code", map.get("code") + "");
-			jsonObject.put("content", map.get("content") + "");
-			jsonObject.put("title", map.get("title") + "");
-			jsonObject.put("img", map.get("img") + "");
-		} catch (Exception ignored) {
+    private boolean saveHistoryOver = false;
 
-		}
-		return jsonObject;
-	}
+    /** 保存历史 */
+    private void saveHistoryToDB(final Map<String, String> map) {
+        if (!saveHistoryOver) {
+            saveHistoryOver = true;
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    JSONObject jsonObject = handlerJSONData(map);
+                    HistoryData data = new HistoryData();
+                    data.setCode(map.get("code"));
+                    data.setBrowseTime(System.currentTimeMillis());
+                    data.setDataJson(jsonObject.toString());
+                    BrowseHistorySqlite sqlite = new BrowseHistorySqlite(NousInfo.this);
+                    sqlite.insertSubject(BrowseHistorySqlite.TB_NOUS_NAME, data);
+                }
+            }).start();
+        }
+    }
+
+    private JSONObject handlerJSONData(Map<String, String> map) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("allClick", map.get("allClick") + "");
+            jsonObject.put("code", map.get("code") + "");
+            jsonObject.put("content", map.get("content") + "");
+            jsonObject.put("title", map.get("title") + "");
+            jsonObject.put("img", map.get("img") + "");
+        } catch (Exception ignored) {
+
+        }
+        return jsonObject;
+    }
 
 }

@@ -2,6 +2,7 @@ package amodule.main.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -13,6 +14,10 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.TitleMessageView;
 import com.xiangha.R;
 
 import java.util.ArrayList;
@@ -164,15 +169,18 @@ public class MainChangeSend extends BaseActivity {
                                 MainChangeSend.this.startActivity(recoreVideo);
                                 MainChangeSend.this.finish();
                             } else {
-                                final XhDialog xhDialog = new XhDialog(MainChangeSend.this);
-                                xhDialog.setTitle("您的设备不支持1080p视频拍摄！")
-                                        .setSureButton("确定", new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                                MainChangeSend.this.finish();
-                                                xhDialog.cancel();
-                                            }
-                                        }).show();
+                                final DialogManager dialogManager = new DialogManager(MainChangeSend.this);
+                                dialogManager.createDialog(new ViewManager(dialogManager)
+                                        .setView(new TitleMessageView(MainChangeSend.this).setText("您的设备不支持1080p视频拍摄！"))
+                                        .setView(new HButtonView(MainChangeSend.this)
+                                                .setNegativeTextColor(Color.parseColor("#007aff"))
+                                                .setNegativeText("确定", new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View v) {
+                                                        dialogManager.cancel();
+                                                        MainChangeSend.this.finish();
+                                                    }
+                                                }))).show();
                             }
                         } else {
                             MainChangeSend.this.finish();

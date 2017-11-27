@@ -1,6 +1,5 @@
 package amodule.dish.video.activity;
 
-import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
@@ -9,7 +8,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -360,37 +358,6 @@ public class MediaPaperActivity extends BaseActivity implements View.OnClickList
         return null;
     }
 
-    /**
-     * 展示dialog
-     */
-    private void showDialog(){
-        final Dialog dialog= new Dialog(this,R.style.dialog);
-        dialog.setContentView(R.layout.a_mall_alipa_dialog);
-        Window window=dialog.getWindow();
-        window.findViewById(R.id.dialog_title).setVisibility(View.GONE);
-        TextView dialog_message= (TextView) window.findViewById(R.id.dialog_message);
-        dialog_message.setText("确认放弃所有操作?");
-        TextView dialog_cancel= (TextView) window.findViewById(R.id.dialog_cancel);
-        TextView dialog_sure= (TextView) window.findViewById(R.id.dialog_sure);
-        dialog_cancel.setText("取消");
-        dialog_sure.setText("确定");
-        dialog_cancel.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                dialog.cancel();
-            }
-        });
-        dialog_sure.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                MediaPaperActivity.this.finish();
-                dialog.cancel();
-            }
-        });
-        dialog.show();
-    }
     public class MyViewPagerAdapter extends PagerAdapter {
         private List<MediaPaperItemViewNew> mListViews;
 

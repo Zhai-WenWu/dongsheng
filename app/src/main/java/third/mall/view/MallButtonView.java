@@ -1,13 +1,30 @@
 package third.mall.view;
 
-import java.util.ArrayList;
-import java.util.Map;
+import android.content.Context;
+import android.graphics.Color;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.TitleMessageView;
+import com.xiangha.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Map;
+
+import acore.tools.Tools;
 import acore.widget.TagTextView;
+import amodule.main.Main;
+import third.mall.alipay.MallPayActivity;
 import third.mall.aplug.MallClickContorl;
 import third.mall.aplug.MallCommon;
 import third.mall.aplug.MallCommon.InterfaceMallReqIntert;
@@ -16,19 +33,6 @@ import third.mall.aplug.MallReqInternet;
 import third.mall.aplug.MallStringManager;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilString;
-import acore.tools.Tools;
-import android.app.Dialog;
-import android.content.Context;
-import android.graphics.Color;
-import android.text.TextUtils;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.Window;
-import android.widget.TextView;
-
-import com.xiangha.R;
 
 /**
  * Button的View 集合
@@ -223,33 +227,24 @@ public class MallButtonView {
 	 * 弹出dialog
 	 */
 	private void showDilalog( String des, final String actionUrl,final String param,final InterfaceViewCallback callback,final String url,final String mall_stat_statistic) {
-		final Dialog dialog = new Dialog(context, R.style.dialog);
-		dialog.setContentView(R.layout.a_mall_alipa_dialog);
-		Window window = dialog.getWindow();
-		window.findViewById(R.id.dialog_title).setVisibility(View.GONE);
-		TextView dialog_message = (TextView) window.findViewById(R.id.dialog_message);
-		dialog_message.setText(des);
-		TextView dialog_cancel = (TextView) window.findViewById(R.id.dialog_cancel);
-		TextView dialog_sure = (TextView) window.findViewById(R.id.dialog_sure);
-		dialog_cancel.setText("取消");
-		dialog_sure.setText("确定");
-		dialog_cancel.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				dialog.cancel();
-			}
-		});
-		dialog_sure.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				MallClickContorl.getInstance().setStatisticUrl(url, null,mall_stat_statistic, context);
-				postRequest(actionUrl, param,callback);
-				dialog.cancel();
-			}
-		});
-		dialog.show();
+		final DialogManager dialogManager = new DialogManager(context);
+		dialogManager.createDialog(new ViewManager(dialogManager)
+				.setView(new TitleMessageView(context).setText(des))
+				.setView(new HButtonView(context)
+						.setNegativeText("取消", new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								dialogManager.cancel();
+							}
+						})
+						.setPositiveText("确定", new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								dialogManager.cancel();
+								MallClickContorl.getInstance().setStatisticUrl(url, null,mall_stat_statistic, context);
+								postRequest(actionUrl, param,callback);
+							}
+						}))).show();
 	}
 
 	/**
@@ -280,7 +275,7 @@ public class MallButtonView {
 							public void setState(int state) {
 								if (state >= UtilInternet.REQ_OK_STRING) {
 									postRequest(actionUrl, param,callback);
-								} else if (state == UtilInternet.REQ_CODE_ERROR) {
+//								} else if (state == UtilInternet.REQ_CODE_ERROR) {
 								}
 							}
 						});

@@ -16,6 +16,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bartoszlipinski.recyclerviewheader.RecyclerViewHeader;
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.MessageView;
+import com.xh.view.TitleView;
 import com.xiangha.R;
 
 import java.util.ArrayList;
@@ -30,7 +35,6 @@ import aplug.recordervideo.db.RecorderVideoSqlite;
 import aplug.recordervideo.tools.FileToolsCammer;
 import aplug.recordervideo.view.RecorderVideoPreviewView;
 import aplug.shortvideo.view.VideoPreviewView;
-import xh.windowview.XhDialog;
 
 import static aplug.recordervideo.db.RecorderVideoSqlite.getInstans;
 
@@ -141,30 +145,32 @@ public class ChooseVideoActivity extends BaseActivity implements View.OnClickLis
         adapter.setOnDeleteListener(new AdapterChooseVideo.OnDeleteListener() {
             @Override
             public void onDelete(final int position, final String videoPath) {
-                final XhDialog xhDialog = new XhDialog(ChooseVideoActivity.this);
-                xhDialog.setTitle("确定删除选中视频吗？")
-                        .setMessage("手机相册中的视频将会同时被删除")
-                        .setSureButton("删除", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                XHClick.mapStat(ChooseVideoActivity.this, tongjiId,"删除","确定删除");
-//                                boolean isDelete= FileUtils.deleteFile(videoPath);
-                                if(isDelete){
-                                    String id = arrayList.get(position).get(RecorderVideoData.video_id);
-                                    RecorderVideoSqlite.getInstans().deleteById(id);
-                                    handler.sendEmptyMessage(DATA_REFRASH);
-                                }else{
-                                    Toast.makeText(ChooseVideoActivity.this,"删除失败！",Toast.LENGTH_SHORT).show();
-                                }
-                                xhDialog.cancel();
-                            }
-                        }).setCanselButton("取消", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        XHClick.mapStat(ChooseVideoActivity.this, tongjiId,"删除","取消删除");
-                        xhDialog.cancel();
-                    }
-                }).show();
+                final DialogManager dialogManager = new DialogManager(ChooseVideoActivity.this);
+                dialogManager.createDialog(new ViewManager(dialogManager)
+                        .setView(new TitleView(ChooseVideoActivity.this).setText("确定删除选中视频吗？"))
+                        .setView(new MessageView(ChooseVideoActivity.this).setText("手机相册中的视频将会同时被删除"))
+                        .setView(new HButtonView(ChooseVideoActivity.this)
+                                .setNegativeText("取消", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        dialogManager.cancel();
+                                        XHClick.mapStat(ChooseVideoActivity.this, tongjiId,"删除","取消删除");
+                                    }
+                                })
+                                .setPositiveText("删除", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        dialogManager.cancel();
+                                        XHClick.mapStat(ChooseVideoActivity.this, tongjiId,"删除","确定删除");
+                                        if(isDelete){
+                                            String id = arrayList.get(position).get(RecorderVideoData.video_id);
+                                            RecorderVideoSqlite.getInstans().deleteById(id);
+                                            handler.sendEmptyMessage(DATA_REFRASH);
+                                        }else{
+                                            Toast.makeText(ChooseVideoActivity.this,"删除失败！",Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                }))).show();
             }
         });
         mRecyclerView.setAdapter(adapter);

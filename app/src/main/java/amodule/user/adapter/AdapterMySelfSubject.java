@@ -3,22 +3,6 @@
  */
 package amodule.user.adapter;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import acore.widget.TextViewShow;
-import xh.basic.internet.UtilInternet;
-import xh.basic.tool.UtilString;
-import acore.override.activity.base.BaseActivity;
-import acore.override.adapter.AdapterSimple;
-import acore.tools.StringManager;
-import acore.widget.ImageViewVideo;
-import amodule.quan.activity.ShowSubject;
-import amodule.user.activity.FriendHome;
-
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -31,10 +15,28 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.MessageView;
+import com.xh.view.TitleView;
+import com.xiangha.R;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import acore.override.activity.base.BaseActivity;
+import acore.override.adapter.AdapterSimple;
+import acore.tools.StringManager;
+import acore.widget.ImageViewVideo;
+import acore.widget.TextViewShow;
+import amodule.quan.activity.ShowSubject;
+import amodule.user.activity.FriendHome;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
-
-import com.xiangha.R;
+import xh.basic.internet.UtilInternet;
+import xh.basic.tool.UtilString;
 
 public class AdapterMySelfSubject extends AdapterSimple {
 	public static final int styleNormal = 1;
@@ -309,32 +311,39 @@ public class AdapterMySelfSubject extends AdapterSimple {
 							mAct.startActivity(intentSub);
 							break;
 						case viewDel:
-							new AlertDialog.Builder(mAct).setIcon(android.R.drawable.ic_dialog_alert).setTitle("删除发布的内容")
-									.setMessage("确定要删除该内容?").setPositiveButton("确定", new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog, int which) {
-									String params = "type=delFloor&subjectCode=" + map.get("code") + "&floorId=" + map.get("floorId")
-											+ "&commentId=" + map.get("commentId");
-									// 请求网络;
-									ReqInternet.in().doPost(StringManager.api_quanSetSubject, params, new InternetCallback(mAct) {
-										@Override
-										public void loaded(int flag, String url, Object returnObj) {
-											if (flag >= UtilInternet.REQ_OK_STRING) {
-												Map<String, String> map = UtilString.getListMapByJson(returnObj.toString()).get(0);
-												if (map.get("type").equals("2")) {
-													map.put("hide", "yes");// 隐藏该条目;
+							final DialogManager dialogManager = new DialogManager(mAct);
+							dialogManager.createDialog(new ViewManager(dialogManager)
+									.setView(new TitleView(mAct).setText("删除发布的内容"))
+									.setView(new MessageView(mAct).setText("确定要删除该内容?"))
+									.setView(new HButtonView(mAct)
+											.setNegativeText("取消", new View.OnClickListener() {
+												@Override
+												public void onClick(View v) {
+													dialogManager.cancel();
 												}
-											}
-										}
-									});
-									mData.remove(map);
-									notifyDataSetChanged();
-								}
-							}).setNegativeButton("取消", new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog, int which) {
-								}
-							}).create().show();
+											})
+											.setPositiveText("确定", new View.OnClickListener() {
+												@Override
+												public void onClick(View v) {
+													dialogManager.cancel();
+													String params = "type=delFloor&subjectCode=" + map.get("code") + "&floorId=" + map.get("floorId")
+															+ "&commentId=" + map.get("commentId");
+													// 请求网络;
+													ReqInternet.in().doPost(StringManager.api_quanSetSubject, params, new InternetCallback(mAct) {
+														@Override
+														public void loaded(int flag, String url, Object returnObj) {
+															if (flag >= UtilInternet.REQ_OK_STRING) {
+																Map<String, String> map = UtilString.getListMapByJson(returnObj.toString()).get(0);
+																if (map.get("type").equals("2")) {
+																	map.put("hide", "yes");// 隐藏该条目;
+																}
+															}
+														}
+													});
+													mData.remove(map);
+													notifyDataSetChanged();
+												}
+											}))).show();
 							break;
 					}
 				}

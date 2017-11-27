@@ -188,7 +188,7 @@ public class AdapterMainMsg extends AdapterSimple {
 	//						mData.remove(map);
 							break;
 						case viewImg:
-							Log.i("tzy","clickImage");
+//							Log.i("tzy","clickImage");
 							if(!TextUtils.isEmpty(map.get("imgClickUrl"))){
 								AppCommon.openUrl(mAct,map.get("imgClickUrl"),true);
 							}
