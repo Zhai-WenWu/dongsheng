@@ -404,7 +404,12 @@ public class Banner extends RelativeLayout {
 //                goScroll();
 //                break;
 //        }
-        return super.dispatchTouchEvent(ev);
+        try {
+            return super.dispatchTouchEvent(ev);
+        }catch (Exception ignored){
+            ignored.printStackTrace();
+            return false;
+        }
     }
 
 

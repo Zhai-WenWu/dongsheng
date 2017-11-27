@@ -2,6 +2,7 @@ package amodule._common.widget;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -13,6 +14,8 @@ import android.widget.TextView;
 
 import com.annimon.stream.Stream;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.animation.GlideAnimation;
 import com.xiangha.R;
 
 import java.util.ArrayList;
@@ -23,6 +26,7 @@ import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.helper.XHActivityManager;
+import acore.tools.ImgManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -33,7 +37,9 @@ import amodule._common.delegate.IHandlerClickEvent;
 import amodule._common.delegate.ISaveStatistic;
 import amodule._common.delegate.IStatictusData;
 import amodule._common.helper.WidgetDataHelper;
+import aplug.basic.SubBitmapTarget;
 import third.ad.scrollerAd.XHAllAdControl;
+import xh.basic.tool.UtilImage;
 
 import static third.ad.tools.AdPlayIdConfig.ARTICLE_CONTENT_BOTTOM;
 
@@ -109,9 +115,16 @@ public class BannerView extends Banner implements IBindMap, IStatictusData,ISave
                 ImageView imageView = (ImageView) view.findViewById(R.id.image);
                 Glide.with(getContext())
                         .load(data.get("img"))
+                        .asBitmap()
+                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                         .placeholder(R.drawable.i_nopic)
                         .error(R.drawable.i_nopic)
-                        .into(imageView);
+                        .into(new SubBitmapTarget() {
+                            @Override
+                            public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
+                                imageView.setImageBitmap(bitmap);
+                            }
+                        });
                 if("2".equals(data.get("isAd"))){
                     adView = view;
                     TextView textView = (TextView) view.findViewById(R.id.title);
