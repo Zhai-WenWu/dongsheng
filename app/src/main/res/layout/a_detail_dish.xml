@@ -14,6 +14,7 @@
         android:dividerHeight="0dp"
         android:paddingLeft="0dp"
         android:paddingRight="0dp"
+        android:paddingBottom="@dimen/dp_50"
         android:background="@color/transparent"
         android:scrollbars="none"
         android:visibility="gone"/>

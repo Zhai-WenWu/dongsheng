@@ -9,6 +9,7 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
@@ -107,7 +108,7 @@ public class DishAboutView extends ItemBaseView {
                     context.startActivity(intent);
                     return;
                 }
-                if(mapUser.containsKey("isFav")&&mapUser.get("isFav").equals("1")){
+                if(mapPower.containsKey("isFav")&&mapPower.get("isFav").equals("1")){
                     XHClick.mapStat(activity, DetailDish.tongjiId, "用户点击", "关注点击");
                     AppCommon.onAttentionClick(mapUser.get("customerCode"), "follow");
                     mapPower.put("isFav","2");
@@ -163,7 +164,6 @@ public class DishAboutView extends ItemBaseView {
         dish_user_time.setText(TextUtils.isEmpty(userIntro) ? getResources().getString(R.string.user_intro_def) : userIntro);
 
         cusImg.setOnClickListener(onClickListener);
-        dish_user_name.setOnClickListener(onClickListener);
         dish_user_name.setOnClickListener(onClickListener);
     }
 

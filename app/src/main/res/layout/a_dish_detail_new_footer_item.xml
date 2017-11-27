@@ -72,10 +72,13 @@
 
             <ImageView
                 android:id="@+id/a_dish_detail_zan"
-                android:layout_width="@dimen/dp_27"
+                android:layout_width="@dimen/dp_37"
                 android:layout_height="@dimen/dp_39"
                 android:background="@color/transparent"
-                android:padding="@dimen/dp_5" />
+                android:paddingLeft="@dimen/dp_10"
+                android:paddingRight="@dimen/dp_10"
+                android:paddingTop="@dimen/dp_5"
+                android:paddingBottom="@dimen/dp_5" />
 
             <TextView
                 android:id="@+id/a_dish_detail_zan_numer"
