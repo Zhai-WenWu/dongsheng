@@ -49,7 +49,7 @@ dependencies {
     compile 'org.eclipse.jetty:jetty-server:8.1.12.v20130726'
     compile 'org.eclipse.jetty:jetty-servlet:8.1.12.v20130726'
     compile 'org.eclipse.jetty:jetty-client:8.1.12.v20130726'
-    compile 'org.slf4j:slf4j-simple:1.7.21'
+    compile 'org.slf4j:slf4j-android:1.7.21'
     compile 'com.koushikdutta.urlimageviewhelper:urlimageviewhelper:1.0.4'
     //Cling related-------end
 
@@ -88,8 +88,8 @@ android {
             keyAlias 'caipu'
             keyPassword 'XH.comCaipu'
 //            storeFile file('F:/XH_Work/WorkSpace/Project/keystore/xiangha.keystore')
-            storeFile file('D:/android_workspace/xiangha.keystore')
-//            storeFile file('E:/keystore/xiangha.keystore')
+//            storeFile file('D:/android_workspace/xiangha.keystore')
+            storeFile file('E:/keystore/xiangha.keystore')
 
 //            storeFile file('E:/XHWork/xiangha/keystore/xiangha.keystore')
 //            storeFile file('/Users/tanzeyu/androidProject/xiangha.keystore')

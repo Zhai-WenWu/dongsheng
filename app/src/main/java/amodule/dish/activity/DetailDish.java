@@ -172,6 +172,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         permissionMap.clear();
         dishActivityViewControl.setCode(courseCode,chapterCode);
         dishActivityViewControl.initData(code);
+//        dishActivityViewControl.showClingBtn(true);
         dishActivityViewControl.setClingClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -71,6 +71,7 @@ public class DishHeaderViewNew extends LinearLayout {
 
     private int distance;
     private boolean isLoadImg=false;
+    private boolean mShowClingBtn;
 
     private OnClickListener mClingClickListener;
 
@@ -314,6 +315,7 @@ public class DishHeaderViewNew extends LinearLayout {
             dishVidioLayout.setPadding(0, distance, 0, 0);
             mVideoPlayerController = new VideoPlayerController(activity, dishVidioLayout, img);
             mVideoPlayerController.showFullScrren();
+            mVideoPlayerController.showClingBtn(mShowClingBtn);
             if(permissionMap != null && permissionMap.containsKey("video")){
 
                 Map<String,String> videoPermionMap = StringManager.getFirstMap(permissionMap.get("video"));
@@ -369,9 +371,7 @@ public class DishHeaderViewNew extends LinearLayout {
     }
 
     public void showClingBtn(boolean show) {
-        if (mVideoPlayerController != null) {
-            mVideoPlayerController.showClingBtn(show);
-        }
+        mShowClingBtn = show;
     }
 
     private RelativeLayout dredgeVipLayout;
