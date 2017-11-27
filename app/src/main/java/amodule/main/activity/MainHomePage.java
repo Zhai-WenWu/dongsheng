@@ -173,12 +173,12 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
                     Log.i("tzy" , "setHeaderData " + (isCache ? "cacheTime = " : "serviceTime = ") + (System.currentTimeMillis() - startLoadTime) + "ms");
                     if (!isCache && mDataControler != null) {
                         mDataControler.saveCacheHomeData((String) o);
-                        isRefreshingHeader = false;
                     }
                 }
                 if(!LoadOver){
                     EntryptData(true);
                 }
+                isRefreshingHeader = false;
             }
         };
     }
