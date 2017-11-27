@@ -31,10 +31,13 @@ import amodule.dish.db.DataOperate;
 import amodule.dish.view.manager.DetailDishDataManager;
 import amodule.dish.view.manager.DetailDishViewManager;
 import amodule.main.Main;
+import amodule.user.db.BrowseHistorySqlite;
+import amodule.user.db.HistoryData;
 import aplug.web.tools.WebviewManager;
 import aplug.web.view.XHWebView;
 
 import static amodule.dish.activity.DetailDish.tongjiId;
+import static java.lang.System.currentTimeMillis;
 
 /**
  * 菜谱详情页原生标准
@@ -173,9 +176,11 @@ public class DetailDishNew extends BaseAppCompatActivity implements IObserver {
                 detailDishViewManager.handlerDishData(list);//菜谱基本信息
                 detailDishViewManager.handlerExplainView(mapTop);//小贴士
                 requestWeb(mapTop);
+                saveDishInfo(mapTop);
                 break;
             case DetailDishDataManager.DISH_DATA_INGRE://用料
                 detailDishViewManager.handlerIngreView(list);
+                savaJsAdata(list);
                 break;
             case DetailDishDataManager.DISH_DATA_BANNER://banner
                 detailDishViewManager.handlerBannerView(list);
@@ -299,6 +304,51 @@ public class DetailDishNew extends BaseAppCompatActivity implements IObserver {
                 break;
             case ObserverManager.NOTIFY_PAYFINISH://支付
                 break;
+        }
+    }
+    private boolean saveDishInfo = false;
+    private boolean isSaveJsData = false;
+    private Map<String, String> needSaveDishInfo = new HashMap<>();
+
+    private void saveDishInfo(Map<String,String> map){
+        saveDishInfo = true;
+        needSaveDishInfo.put("name", map.get("name"));
+        needSaveDishInfo.put("img", map.get("img"));
+        needSaveDishInfo.put("code", map.get("dishCode"));
+        needSaveDishInfo.put("hasVideo", map.get("type"));
+        needSaveDishInfo.put("isFine", map.get("isFine"));
+        needSaveDishInfo.put("isMakeImg", map.get("isMakeImg"));
+        needSaveDishInfo.put("allClick",map.get("allClick"));
+        needSaveDishInfo.put("nickName",StringManager.getFirstMap(map.get("customer")).get("nickName"));
+        needSaveDishInfo.put("favorites",map.get("favorites"));
+        saveHistoryToDB();
+    }
+
+    public void savaJsAdata(ArrayList<Map<String,String>> list){
+        isSaveJsData = true;
+        String burdens="";
+        for(Map<String,String> map:list){
+            burdens+=map.get("name");
+        }
+        needSaveDishInfo.put("burdens",burdens);
+        saveHistoryToDB();
+    }
+
+    /**保存数据到数据库*/
+    private synchronized void saveHistoryToDB() {
+        Log.i("xianghaTag","saveHistoryToDB");
+        if (saveDishInfo && isSaveJsData) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    HistoryData data = new HistoryData();
+                    data.setBrowseTime(currentTimeMillis());
+                    data.setCode(code);
+                    data.setDataJson(StringManager.getJsonByMap(needSaveDishInfo).toString());
+                    BrowseHistorySqlite sqlite = new BrowseHistorySqlite(XHApplication.in());
+                    sqlite.insertSubject(BrowseHistorySqlite.TB_DISH_NAME, data);
+                }
+            }).start();
         }
     }
 }
