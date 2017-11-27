@@ -48,11 +48,7 @@ import amodule.main.view.HintMyselfDialog;
 import amodule.user.activity.BrowseHistory;
 import amodule.user.activity.FansAndFollwers;
 import amodule.user.activity.FriendHome;
-<<<<<<< HEAD
-import amodule.user.activity.MyFavoriteNew;
-=======
 import amodule.user.activity.MyFavorite;
->>>>>>> master_1025_develop_575
 import amodule.user.activity.MyManagerInfo;
 import amodule.user.activity.ScoreStore;
 import amodule.user.activity.Setting;

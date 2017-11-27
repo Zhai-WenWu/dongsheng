@@ -309,12 +309,8 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
         EntryptData(true);
     }
 
-    private int resumeCount = 0;
-
-    public void onResumeFake() {
-        if (resumeCount != 0)
-            SpecialWebControl.initSpecialWeb(this, rl, "index", "", "");
-        resumeCount++;
+    private void onResumeFake() {
+        SpecialWebControl.initSpecialWeb(this, rl, "index", "", "");
     }
 
     /** 统计推荐列表使用时间 */

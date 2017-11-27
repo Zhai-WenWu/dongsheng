@@ -5,6 +5,7 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
@@ -96,8 +97,17 @@ public class SpecialWebControl {
             if (!canRequest(type, keyUrl, maxCount)) {
                 return;
             }
+            WebView webView = null;
+            View view = parent.getChildAt(parent.getChildCount() - 1);
+            if(view != null && view instanceof WebView){
+                Log.i("tzy","复用已存在的webview");
+                webView = (WebView)view;
+            }else{
+                Log.i("tzy","创建webview");
+                webView = new WebView(context);
+            }
             //同步cookie并获得webview
-            WebView webView = syncCookie(context, url);
+            webView = syncCookie(context,webView, url);
             if (parent.indexOfChild(webView) > -1) {
                 parent.removeView(webView);
             }
@@ -148,8 +158,7 @@ public class SpecialWebControl {
      *
      * @return
      */
-    private static WebView syncCookie(Context context, String url) {
-        WebView webView = new WebView(context);
+    private static WebView syncCookie(Context context,WebView webView, String url) {
         WebSettings settings = webView.getSettings();
         settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         settings.setAppCacheEnabled(false);
