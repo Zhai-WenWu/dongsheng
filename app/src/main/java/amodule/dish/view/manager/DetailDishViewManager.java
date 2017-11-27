@@ -120,8 +120,7 @@ public class DetailDishViewManager {
         dishADBannerView.setVisibility(View.GONE);
         //小技巧
         dishModuleScrollView= new DishModuleScrollView(mAct);
-        dishModuleScrollView.setData(null);
-//        dishModuleScrollView.setVisibility(View.GONE);
+        dishModuleScrollView.setVisibility(View.GONE);
         layoutHeader.addView(dishVipView);
         layoutHeader.addView(dishAboutView);
         layoutHeader.addView(dishADBannerView);
@@ -279,7 +278,10 @@ public class DetailDishViewManager {
      * 处理小技巧view
      */
     public void handlerSkillView(ArrayList<Map<String, String>> list) {
-        if(dishModuleScrollView!=null)dishModuleScrollView.setData(list);
+        if(dishModuleScrollView!=null&&"2".equals(list.get(0).get("isShow"))){
+            dishModuleScrollView.setVisibility(View.VISIBLE);
+            if(list.get(0).containsKey("list"))dishModuleScrollView.setData(StringManager.getListMapByJson(list.get(0).get("list")));
+        }
     }
     /**
      * 处理步骤相关view

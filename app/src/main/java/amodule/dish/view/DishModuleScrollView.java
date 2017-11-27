@@ -14,6 +14,9 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.xiangha.R;
 import java.util.ArrayList;
 import java.util.Map;
+
+import acore.logic.AppCommon;
+import acore.override.helper.XHActivityManager;
 import acore.override.view.ItemBaseView;
 import acore.tools.Tools;
 import aplug.basic.SubBitmapTarget;
@@ -46,25 +49,25 @@ public class DishModuleScrollView extends ItemBaseView{
         horizontal_scroll_linear= (LinearLayout) findViewById(R.id.horizontal_scroll_linear);
     }
     public void setData(ArrayList<Map<String,String>> listMaps){
-//        if(listMaps==null||listMaps.size()<=0)return;
-//        int size= listMaps.size();
-        for(int i=0;i<10;i++){
+        if(listMaps==null||listMaps.size()<=0)return;
+        int size= listMaps.size();
+        for( int i = 0; i<size; i++){
+            Map<String,String> map= listMaps.get(i);
             View view=LayoutInflater.from(context).inflate(R.layout.dish_module_skill,null);
             view.findViewById(R.id.skill_line).setVisibility(i>0?View.VISIBLE:View.GONE);
             ImageView img_skill= (ImageView) view.findViewById(R.id.img_skill);
             TextView text1= (TextView) view.findViewById(R.id.text1);
             TextView text2= (TextView) view.findViewById(R.id.text2);
-//            setViewImage(img_skill,listMaps.get(i),"img");
-            setViewImage(img_skill,"http://s1.cdn.xiangha.com/caipu/201705/1516/181531209303.jpg/OTAweDYwMA");
-//            text1.setText(listMaps.get(i).get("text"));
-            text1.setText("测试数据");
-            text2.setText("测试数据");
+            view.findViewById(R.id.skill_vip).setVisibility("2".equals(map.get("isVip"))?VISIBLE:GONE);
+            setViewImage(img_skill,map,"img");
+            if("2".equals(map.get("isVideo")))text1.setText(map.get("videoTime"));
+            text2.setText(map.get("text"));
 
-
+            final String url = map.get("url");
             view.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(),url,false);
                 }
             });
             horizontal_scroll_linear.addView(view);
@@ -82,7 +85,7 @@ public class DishModuleScrollView extends ItemBaseView{
                 if (img != null && bitmap != null) {
                     // 图片圆角和宽高适应auther_userImg
                     v.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                    v.setImageBitmap(UtilImage.toRoundCorner(v.getResources(),bitmap,1, Tools.getDimen(context,R.dimen.dp_20)));
+                    v.setImageBitmap(UtilImage.toRoundCorner(v.getResources(),bitmap,1, Tools.getDimen(context,R.dimen.dp_4)));
                 }
             }
         };
