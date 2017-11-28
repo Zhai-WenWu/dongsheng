@@ -89,48 +89,60 @@ public class SpecialWebControl {
      * @param url
      */
     private static void createWeb(Context context, ViewGroup parent, String keyUrl, String url, @NonNull String type, String name, int maxCount) {
-        try {
-            if (context == null || parent == null) {
-                return;
+        if (context == null || parent == null) {
+            return;
+        }
+        //是否能请求
+        if (!canRequest(type, keyUrl, maxCount)) {
+            return;
+        }
+        WebView webView = getWebView(context,parent,url);
+        if (parent.indexOfChild(webView) > -1) {
+            parent.removeView(webView);
+        }
+        parent.addView(webView, 0, 0);
+        webView.setWebViewClient(new WebViewClient(){
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                if(null != view && !TextUtils.isEmpty(url))
+                    view.loadUrl(url);
+                return true;
             }
-            //是否能请求
-            if (!canRequest(type, keyUrl, maxCount)) {
-                return;
+        });
+        webView.postDelayed(() -> {
+            try {
+                loadUrl(webView, url, name);
+            } catch (Exception ignored) {
+                ignored.printStackTrace();
             }
-            WebView webView = null;
-            View view = parent.getChildAt(parent.getChildCount() - 1);
-            if(view != null && view instanceof WebView){
-                Log.i("tzy","复用已存在的webview");
-                webView = (WebView)view;
-            }else{
-                Log.i("tzy","创建webview");
-                webView = new WebView(context);
-            }
-            //同步cookie并获得webview
-            webView = syncCookie(context,webView, url);
-            if (parent.indexOfChild(webView) > -1) {
-                parent.removeView(webView);
-            }
-            parent.addView(webView, 0, 0);
-            //设置referer
-            Map<String, String> referer = getWebReferer(name);
-            if (referer == null) {
-                webView.loadUrl(url);
-            } else {
-                webView.loadUrl(url, referer);
-            }
-            webView.setWebViewClient(new WebViewClient(){
-                @Override
-                public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                    if(null != view && !TextUtils.isEmpty(url))
-                        view.loadUrl(url);
-                    return true;
-                }
-            });
-        } catch (Exception igroned) {
-            Log.i("tzy", "Exception.message = " + igroned.getMessage());
+        },500);
+    }
+
+    private static WebView getWebView(Context context,ViewGroup parent,String url){
+        WebView webView =null;
+        View view = parent.getChildAt(parent.getChildCount() - 1);
+        if(view != null && view instanceof WebView){
+            Log.i("tzy","复用已存在的webview");
+            webView = (WebView)view;
+        }else{
+            Log.i("tzy","创建webview");
+            webView = new WebView(context);
+        }
+        //同步cookie并获得webview
+        return syncCookie(context,webView, url);
+    }
+
+    private static void loadUrl(WebView webView,String url,String name) throws UnsupportedEncodingException {
+        //设置referer
+        Map<String, String> referer = getWebReferer(name);
+        if (referer == null) {
+            webView.loadUrl(url);
+        } else {
+            webView.loadUrl(url, referer);
         }
     }
+
+
 
     /**
      * 判断是否能请求
