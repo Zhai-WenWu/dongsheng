@@ -7,7 +7,9 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:paddingLeft="@dimen/dp_20"
-    android:paddingRight="@dimen/dp_20">
+    android:paddingRight="@dimen/dp_20"
+    android:paddingTop="@dimen/dp_10"
+    android:paddingBottom="@dimen/dp_10">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/left_nav"

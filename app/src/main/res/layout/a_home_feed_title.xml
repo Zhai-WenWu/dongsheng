@@ -5,7 +5,7 @@
     android:id="@+id/feed_title_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="@dimen/dp_20">
+    android:paddingTop="@dimen/dp_10">
 
     <View
         android:id="@+id/line"

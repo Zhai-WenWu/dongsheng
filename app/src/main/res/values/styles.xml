@@ -456,7 +456,7 @@
     <style name="subtitle_style">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">@dimen/dp_18</item>
+        <item name="android:layout_marginTop">@dimen/dp_10</item>
         <item name="android:layout_marginBottom">@dimen/dp_11</item>
     </style>
 

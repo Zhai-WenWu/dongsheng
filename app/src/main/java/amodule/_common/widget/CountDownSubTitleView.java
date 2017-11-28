@@ -32,6 +32,7 @@ import amodule._common.widget.baseview.BaseSubTitleView;
 
 public class CountDownSubTitleView extends BaseSubTitleView {
 
+    private TextView mPoint1;
     private TextView mTitle1;
     private TextView mTitle2;
     private TextView mTitle3;
@@ -70,6 +71,7 @@ public class CountDownSubTitleView extends BaseSubTitleView {
         mTitle3 = (TextView) findViewById(R.id.text3);
         mTitle4 = (TextView) findViewById(R.id.text4);
         mTitle5 = (TextView) findViewById(R.id.text5);
+        mPoint1 = (TextView) findViewById(R.id.title_3);
     }
 
     @Override
@@ -141,11 +143,11 @@ public class CountDownSubTitleView extends BaseSubTitleView {
         int day = Integer.parseInt(times[0]);
         if(1 >= day){
             mTitle2.setVisibility(GONE);
-            findViewById(R.id.title_3).setVisibility(GONE);
+            mPoint1.setVisibility(GONE);
         }else{
             setText(mTitle2,(day - 1) + "天");
             mTitle2.setVisibility(VISIBLE);
-            findViewById(R.id.title_3).setVisibility(VISIBLE);
+            mPoint1.setVisibility(VISIBLE);
         }
         setText(mTitle3,times[1]);
         setText(mTitle4,times[2]);
