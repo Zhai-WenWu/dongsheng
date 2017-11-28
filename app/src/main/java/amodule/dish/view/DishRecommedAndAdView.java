@@ -27,6 +27,7 @@ import acore.override.view.ItemBaseView;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
+import amodule.dish.activity.DetailDishNew;
 import amodule.quan.activity.FollowSubject;
 import amodule.quan.activity.ShowSubject;
 import amodule.quan.activity.upload.UploadSubjectNew;
@@ -141,7 +142,7 @@ public class DishRecommedAndAdView extends ItemBaseView implements View.OnClickL
                         if(newIsLike){
                             Tools.showToast(context,"已点过赞");
                         }else {
-                            XHClick.mapStat(context, tongjiId, "哈友相关作品", "点赞按钮点击量");
+                            XHClick.mapStat(context, DetailDishNew.tongjiId_detail, "哈友相关作品", "点赞按钮点击量");
                             if(!LoginManager.isLogin()){//未登录，直接去登录
                                 Intent intent = new Intent(context, LoginByAccout.class);
                                 context.startActivity(intent);
@@ -171,7 +172,7 @@ public class DishRecommedAndAdView extends ItemBaseView implements View.OnClickL
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        XHClick.mapStat(context, tongjiId, "哈友相关作品", "相关作品帖子点击量");
+                        XHClick.mapStat(context, DetailDishNew.tongjiId_detail, "哈友相关作品", "相关作品帖子点击量");
                         Intent it = new Intent(context, ShowSubject.class);
                         it.putExtra("code", subjectCode);
                         context.startActivity(it);
@@ -233,7 +234,7 @@ public class DishRecommedAndAdView extends ItemBaseView implements View.OnClickL
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                XHClick.mapStat(context, tongjiId, "哈友相关作品", "相关作品帖子用户头像点击量");
+                XHClick.mapStat(context, DetailDishNew.tongjiId_detail, "哈友相关作品", "相关作品帖子用户头像点击量");
                 Intent intent = new Intent(context, FriendHome.class);
                 intent.putExtra("code",userCode);
                 context.startActivity(intent);

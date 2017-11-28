@@ -23,12 +23,15 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import acore.logic.AppCommon;
+import acore.logic.XHClick;
 import acore.override.helper.XHActivityManager;
 import acore.override.view.ItemBaseView;
 import acore.tools.StringManager;
 import acore.tools.Tools;
+import amodule.dish.activity.DetailDishNew;
 import amodule.main.Main;
 import aplug.imageselector.ImgWallActivity;
+import xh.basic.tool.UtilString;
 
 /**
  * 菜谱详情页问答
@@ -37,7 +40,7 @@ public class DishQAView extends ItemBaseView{
     private ImageView auther_userImg;
     private TextView text_user,text_answer,text_degree,text_time;
     private LinearLayout qa_content_linear;
-    private Map<String,String> maptemp;
+    private Map<String,String> maptemp,mapuser;
     public DishQAView(Context context) {
         super(context, R.layout.view_dish_qa);
     }
@@ -64,10 +67,24 @@ public class DishQAView extends ItemBaseView{
      * 处理用户信息
      */
     public void setUserMap(Map<String,String> mapuser){
+        this.mapuser = mapuser;
         setViewImage(auther_userImg,mapuser,"img");
         findViewById(R.id.cusType).setVisibility(mapuser.containsKey("isGourmet")&& mapuser.get("isGourmet").equals("2")?View.VISIBLE:View.GONE);
         text_user.setText(mapuser.get("nickName"));
+        auther_userImg.setOnClickListener(onClickListener);
+        text_user.setOnClickListener(onClickListener);
+
     }
+    /**
+     *用户点击跳转页面
+     */
+    private View.OnClickListener onClickListener= new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), DetailDishNew.tongjiId_detail, "问答", "点击作者头像");
+            AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), mapuser.get("url"),true);
+        }
+    };
 
     /**
      * 处理列表信息
@@ -81,12 +98,24 @@ public class DishQAView extends ItemBaseView{
         ArrayList<Map<String,String>> listQA = StringManager.getListMapByJson(maptemp.get("list"));
         if(listQA!=null&&listQA.size()>0){
             for(int i=0;i<listQA.size();i++){
-                Map<String,String> mapQA= listQA.get(i);
+                final Map<String,String> mapQA= listQA.get(i);
                 View qaItem=LayoutInflater.from(context).inflate(R.layout.view_dish_qa_item,null);
                 TextView content_one= (TextView) qaItem.findViewById(R.id.content_one);
                 TextView content_two= (TextView) qaItem.findViewById(R.id.content_two);
                 content_one.setText(getClickableSpan(listQA.get(0).get("text"),listQA.get(0)));
                 content_one.setMovementMethod(LinkMovementMethod.getInstance());//必须设置否则无效
+                if(mapQA.containsKey("isAttend")&&"1".equals(mapQA.get("isAttend"))) {
+                    qaItem.findViewById(R.id.money_linear).setVisibility(View.VISIBLE);
+                    ((TextView)qaItem.findViewById(R.id.money_qa)).setText(mapQA.get("peekMoney")+"元偷看");
+                }
+                final int index = i;
+                content_one.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), DetailDishNew.tongjiId_detail, "问答", "点击第"+index+"条问答");
+                        AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(),mapQA.get("link"),false);
+                    }
+                });
                 content_two.setText(listQA.get(0).get("useRate")+"%觉的有用");
                 qa_content_linear.addView(qaItem);
             }
@@ -95,6 +124,7 @@ public class DishQAView extends ItemBaseView{
             @Override
             public void onClick(View v) {
                 if(maptemp!= null&&maptemp.containsKey("moreQaLink")){
+                    XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), DetailDishNew.tongjiId_detail, "问答", "点击【更多问答】");
                     AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(),maptemp.get("moreQaLink"),false);
                 }
             }

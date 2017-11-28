@@ -17,7 +17,7 @@
 
 
     <!-- common color -->
-    <color name="comment_color">#ff533c</color>
+    <color name="comment_color">#f23030</color>
     <color name="comment_back_color">#F1EEE4</color>
     <color name="comment_back_color_new">#f7f7f7</color>
     <color name="backgroup_color">#fefefe</color>

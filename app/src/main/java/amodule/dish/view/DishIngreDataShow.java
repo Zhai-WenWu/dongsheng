@@ -27,6 +27,7 @@ import acore.override.adapter.AdapterSimple;
 import acore.override.helper.XHActivityManager;
 import acore.override.view.ItemBaseView;
 import acore.tools.Tools;
+import amodule.dish.activity.DetailDishNew;
 import amodule.health.activity.DetailIngre;
 import third.mall.tool.ToolView;
 import third.mall.widget.ListViewForScrollView;
@@ -101,8 +102,7 @@ public class DishIngreDataShow extends ItemBaseView implements View.OnClickListe
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Map<String, String> ingre = lists.get(position);
                     if (ingre.get("url").length() > 0) {
-                        XHClick.mapStat(context, tongjiId, "菜谱区域的点击", "用料部分的点击量");
-                        XHClick.mapStat(context, tongjiId, "食材部分的点击量", "");
+                        XHClick.mapStat(context, DetailDishNew.tongjiId_detail, "用料", "食材信息按钮点击量");
                         AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), ingre.get("url"), false);
                     }
                 }
@@ -126,12 +126,14 @@ public class DishIngreDataShow extends ItemBaseView implements View.OnClickListe
             ingre_all_tv.setText("收起");
             ingre_all_img.setBackgroundResource(R.drawable.dish_ingre_pack);
             adapter.notifyDataSetChanged();
+            XHClick.mapStat(context, DetailDishNew.tongjiId_detail, "用料", "折叠用料点击量");
         }else if("2".equals(isSpread)){
             lists.addAll(listNoAll);
             isSpread="1";
             ingre_all_tv.setText("展开全部");
             ingre_all_img.setBackgroundResource(R.drawable.dish_ingre_show);
             adapter.notifyDataSetChanged();
+            XHClick.mapStat(context, DetailDishNew.tongjiId_detail, "用料", "展开用料点击量");
         }
     }
 }

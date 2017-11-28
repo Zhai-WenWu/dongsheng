@@ -222,7 +222,7 @@ public class SetPersonalInfo extends BaseLoginActivity implements View.OnClickLi
 
         } else if (nickname.length() > 15) {
             tv_msg_tip.setText("中英文均可，不能超过15个汉字或字符");
-            tv_msg_tip.setTextColor(Color.parseColor("#ff533c"));
+            tv_msg_tip.setTextColor(Color.parseColor("#f23030"));
             btn_next_step.setClickCenterable(false);
         } else {
             String params = "type=nickName&p1=" + nickname;
@@ -249,7 +249,7 @@ public class SetPersonalInfo extends BaseLoginActivity implements View.OnClickLi
         } else {
             tv_msg_tip.setText("该昵称已被占用，换一个吧");
         }
-        tv_msg_tip.setTextColor(Color.parseColor("#ff533c"));
+        tv_msg_tip.setTextColor(Color.parseColor("#f23030"));
         btn_next_step.setClickCenterable(isSuccess);
     }
 

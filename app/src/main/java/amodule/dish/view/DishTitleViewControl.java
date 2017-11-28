@@ -26,6 +26,7 @@ import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.PopWindowDialog;
+import amodule.dish.activity.DetailDishNew;
 import amodule.dish.activity.upload.UploadDishActivity;
 import amodule.dish.tools.OffDishToFavoriteControl;
 import amodule.main.Main;
@@ -148,18 +149,18 @@ public class DishTitleViewControl implements View.OnClickListener{
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.back:
-                XHClick.mapStat(detailDish, tongjiId, "顶部导航栏", "返回点击量");
+                XHClick.mapStat(detailDish, DetailDishNew.tongjiId_detail, "顶部导航栏", "返回点击量");
                 detailDish.finish();
                 break;
             case R.id.leftClose:
-                XHClick.mapStat(detailDish, tongjiId, "顶部导航栏", "关闭点击量");
+                XHClick.mapStat(detailDish, DetailDishNew.tongjiId_detail, "顶部导航栏", "关闭点击量");
                 Main.colse_level = 1;
                 detailDish.finish();
                 break;
             case R.id.fav_layout://收藏
                 if (detailDish != null)
                     XHClick.track(detailDish, "收藏菜谱");
-                XHClick.mapStat(detailDish, tongjiId, "顶部导航栏", "收藏点击量");
+                XHClick.mapStat(detailDish, DetailDishNew.tongjiId_detail, "顶部导航栏", "收藏点击量");
                 doFavorite();
                 break;
             case R.id.share_layout:
@@ -170,13 +171,13 @@ public class DishTitleViewControl implements View.OnClickListener{
                 bottomDialog.setTopButton("分享", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        XHClick.mapStat(detailDish, tongjiId, "顶部导航栏", "分享点击量");
+                        XHClick.mapStat(detailDish, DetailDishNew.tongjiId_detail, "顶部导航栏", "分享点击量");
                         openShare();
                     }
                 }).setBottomButton("编辑", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        XHClick.mapStat(detailDish, tongjiId, "顶部导航栏", "二次编辑点击量");
+                        XHClick.mapStat(detailDish, DetailDishNew.tongjiId_detail, "顶部导航栏", "二次编辑点击量");
                         if(isHasVideo){
                             Tools.showToast(context,"请用香哈（视频版）编辑");
                         }else doModify();
@@ -207,7 +208,7 @@ public class DishTitleViewControl implements View.OnClickListener{
         if (detailDish != null)
             XHClick.track(detailDish, "分享菜谱");
         XHClick.mapStat(detailDish, "a_share400", "菜谱", "菜谱详情页");
-        XHClick.mapStat(detailDish, tongjiId, "顶部导航栏", "分享点击量");
+        XHClick.mapStat(detailDish, DetailDishNew.tongjiId_detail, "顶部导航栏", "分享点击量");
 
         boolean isAuthor = false;
         String code = "",userCode="";
@@ -219,7 +220,7 @@ public class DishTitleViewControl implements View.OnClickListener{
         }
         Map<String, String> mapData = getShareData(isAuthor);
         Intent intent = new Intent(detailDish, ShareActivityDialog.class);
-        intent.putExtra("tongjiId", tongjiId);
+        intent.putExtra("tongjiId", DetailDishNew.tongjiId_detail);
         intent.putExtra("isHasReport", !isAuthor);
         intent.putExtra("nickName", nickName);
         intent.putExtra("code", userCode);
@@ -304,7 +305,7 @@ public class DishTitleViewControl implements View.OnClickListener{
 
                             //统计
                             XHClick.onEvent(detailDish.getApplicationContext(), "dishFav", nowFav ? "收藏" : "取消");
-                            XHClick.mapStat(detailDish, tongjiId, "顶部导航栏", "收藏点击量");
+                            XHClick.mapStat(detailDish, DetailDishNew.tongjiId_detail, "顶部导航栏", "收藏点击量");
                             dishInfoMap.put("favNum", nowFav ? "2" : "1");
                             if (nowFav) {
                                 boolean isShow = PopWindowDialog.isShowPop(FileManager.xmlKey_shareShowPopDataFavDish, FileManager.xmlKey_shareShowPopNumFavDish);

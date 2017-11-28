@@ -16,9 +16,11 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import acore.logic.AppCommon;
+import acore.logic.XHClick;
 import acore.override.helper.XHActivityManager;
 import acore.override.view.ItemBaseView;
 import acore.tools.Tools;
+import amodule.dish.activity.DetailDishNew;
 import aplug.basic.SubBitmapTarget;
 import xh.basic.tool.UtilImage;
 
@@ -67,6 +69,7 @@ public class DishModuleScrollView extends ItemBaseView{
             view.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), DetailDishNew.tongjiId_detail, "食材小技巧", "食材小技巧点击量");
                     AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(),url,false);
                 }
             });
@@ -85,7 +88,8 @@ public class DishModuleScrollView extends ItemBaseView{
                 if (img != null && bitmap != null) {
                     // 图片圆角和宽高适应auther_userImg
                     v.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                    v.setImageBitmap(UtilImage.toRoundCorner(v.getResources(),bitmap,1, Tools.getDimen(context,R.dimen.dp_4)));
+                    v.setImageBitmap(bitmap);
+//                    v.setImageBitmap(UtilImage.toRoundCorner(v.getResources(),bitmap,1, Tools.getDimen(context,R.dimen.dp_4)));
                 }
             }
         };

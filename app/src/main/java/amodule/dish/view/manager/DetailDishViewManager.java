@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.AbsListView;
@@ -129,7 +130,7 @@ public class DetailDishViewManager {
         layoutHeader.addView(dishIngreDataShow);
         layoutHeader.addView(dishModuleScrollView);
         textStep = new TextView(activity);
-        textStep.setPadding(Tools.getDimen(activity, R.dimen.dp_20), Tools.getDimen(activity, R.dimen.dp_20), 0, 0);
+        textStep.setPadding(Tools.getDimen(activity, R.dimen.dp_20), Tools.getDimen(activity, R.dimen.dp_35), 0,  Tools.getDimen(activity, R.dimen.dp_14));
         textStep.setTextSize(Tools.getDimenSp(activity, R.dimen.sp_18));
         textStep.setTextColor(Color.parseColor("#333333"));
         TextPaint tp = textStep.getPaint();
@@ -150,7 +151,12 @@ public class DetailDishViewManager {
 
         layoutFooter.addView(dishExplainView);
         layoutFooter.addView(dishQAView);
+        RelativeLayout layout= new RelativeLayout(mAct);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,Tools.getDimen(mAct,R.dimen.dp_60));
+//        layout.setPadding(0,Tools.getDimen(mAct,R.dimen.dp_100),0,0);
+        layout.setLayoutParams(layoutParams);
         layoutFooter.addView(dishRecommedAndAdView);
+        layoutFooter.addView(layout);
         listView.addHeaderView(dishHeaderViewNew);
         listView.addHeaderView(layoutHeader);
         listView.addFooterView(layoutFooter);
@@ -293,6 +299,7 @@ public class DetailDishViewManager {
      */
     public void handlerStepView(ArrayList<Map<String,String>> list){
         if(list!=null&&list.size()>0&&"1".equals(list.get(0).get("isShow"))) {
+            textStep.setPadding(Tools.getDimen(mAct, R.dimen.dp_20), Tools.getDimen(mAct, R.dimen.dp_35), 0,  0);
             noStepView.setVisibility(View.VISIBLE);
             ((TextView)noStepView.findViewById(R.id.dish_no_step_tv)).setText(list.get(0).get("promptMsg"));
         }

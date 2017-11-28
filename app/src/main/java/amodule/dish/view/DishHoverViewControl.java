@@ -24,6 +24,7 @@ import acore.logic.XHClick;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import amodule.answer.activity.AskEditActivity;
+import amodule.dish.activity.DetailDishNew;
 import amodule.quan.activity.upload.UploadSubjectNew;
 import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.InternetCallback;
@@ -85,8 +86,8 @@ public class DishHoverViewControl implements View.OnClickListener{
         this.dishName = dishName;
         String temp = maps.get("likeNum");
         Log.i("xianghaTag","temp:::"+temp);
-        mHoverNum.setText("有用"+temp);
-        handlerDishLikeState(maps.get("likeStatus"));
+//        mHoverNum.setText("有用"+temp);
+        handlerDishLikeState(maps.get("likeStatus"),temp);
         initStateButton(StringManager.getFirstMap(maps.get("qaButton")));
     }
 
@@ -94,8 +95,8 @@ public class DishHoverViewControl implements View.OnClickListener{
         if(mapQA==null||mapQA.size()<=0)return;
         this.mapQA= mapQA;
         int roundRadius = Tools.getDimen(mAct,R.dimen.dp_3); // 8dp 圆角半径
-        int fillColor = Color.parseColor(mapQA.containsKey("bgColor")&&!TextUtils.isEmpty(mapQA.get("bgColor"))?mapQA.get("bgColor"):"#ff533c");//内部填充颜色
-//        int fillColor = Color.parseColor("#ff533c");//内部填充颜色
+        int fillColor = Color.parseColor(mapQA.containsKey("bgColor")&&!TextUtils.isEmpty(mapQA.get("bgColor"))?mapQA.get("bgColor"):"#f23030");//内部填充颜色
+//        int fillColor = Color.parseColor("#f23030");//内部填充颜色
 
         GradientDrawable gd = new GradientDrawable();//创建drawable
         gd.setColor(fillColor);
@@ -104,6 +105,7 @@ public class DishHoverViewControl implements View.OnClickListener{
         mHoverTv.setBackgroundDrawable(gd);
         mHoverTv.setTextColor(Color.parseColor(mapQA.containsKey("color")&&!TextUtils.isEmpty(mapQA.get("color"))?mapQA.get("color"):"#fffffe"));
         mHoverTv.setText(mapQA.get("text"));
+        XHClick.mapStat(mAct, DetailDishNew.tongjiId_detail, "向作者提问按钮状态", mapQA.get("text"));
     }
     @Override
     public void onClick(View v) {
@@ -116,7 +118,7 @@ public class DishHoverViewControl implements View.OnClickListener{
                 if(mapQA!=null&&mapQA.containsKey("isJump")&&"2".equals(mapQA.get("isJump"))){
                    AppCommon.openUrl(mAct,mapQA.get("url"),false);
                 }else{
-                    XHClick.mapStat(mAct, tongjiId, "底部浮动", "向作者提问点击量");
+                    XHClick.mapStat(mAct, DetailDishNew.tongjiId_detail, "底部浮动", "向作者提问点击量");
                     if(mapQA.containsKey("toast")&&!TextUtils.isEmpty(mapQA.get("toast"))){
                         Tools.showToast(mAct,mapQA.get("toast"));
                     }
@@ -128,12 +130,12 @@ public class DishHoverViewControl implements View.OnClickListener{
                     mAct.startActivity(new Intent(mAct,LoginByAccout.class));
                     return;
                 }
-                XHClick.mapStat(mAct, tongjiId, "底部浮动", "点赞按钮点击量");
+                XHClick.mapStat(mAct, DetailDishNew.tongjiId_detail, "底部浮动", "点赞按钮点击量");
                 onChangeLikeState(true,true);
                 hindGoodLayout();
                 break;
             case R.id.a_dish_detail_new_footer_hover_trample: //没用
-                XHClick.mapStat(mAct, tongjiId, "底部浮动", "点踩按钮点击量");
+                XHClick.mapStat(mAct, DetailDishNew.tongjiId_detail, "底部浮动", "点踩按钮点击量");
                 onChangeLikeState(false,false);
                 hindGoodLayout();
 
@@ -154,7 +156,7 @@ public class DishHoverViewControl implements View.OnClickListener{
                 showIntent.putExtra("skip", true);
                 showIntent.putExtra("cid", "1");
                 mAct.startActivity(showIntent);
-                XHClick.mapStat(mAct, tongjiId, "晒我做的这道菜", "晒我做的这道菜点击量");
+                XHClick.mapStat(mAct, DetailDishNew.tongjiId_detail, "底部浮动", "晒美食点击量");
                 break;
         }
     }
@@ -170,10 +172,11 @@ public class DishHoverViewControl implements View.OnClickListener{
         ReqEncyptInternet.in().doEncypt(StringManager.api_getDishLikeHate,map, new InternetCallback(mAct) {
             @Override
             public void loaded(int i, String s, Object o) {
+                String numtext="";
                 if(i >= ReqInternet.REQ_OK_STRING){
                     ArrayList<Map<String,String>> arrayList = StringManager.getListMapByJson(o);
                     if(arrayList.size() > 0){
-                        mHoverNum.setText("有用"+arrayList.get(0).get("num"));
+                        numtext=arrayList.get(0).get("num");
                     }
                     if(isLike){//点赞
                         if("2".equals(dishLikeStatus)){
@@ -189,7 +192,7 @@ public class DishHoverViewControl implements View.OnClickListener{
                         }
                     }
                 }
-                handlerDishLikeState(dishLikeStatus);
+                handlerDishLikeState(dishLikeStatus,numtext);
             }
         });
     }
@@ -203,19 +206,22 @@ public class DishHoverViewControl implements View.OnClickListener{
     /**
      * 处理点赞点踩状态变化
      */
-    private void handlerDishLikeState(String dishStatus){
+    private void handlerDishLikeState(String dishStatus,String likeNum){
         if("2".equals(dishStatus)){//点赞
             mGoodImg.setImageResource(R.drawable.i_good_activity);
             mNoLikeImg.setImageResource(R.drawable.i_not_good);
             hoverGoodImg.setImageResource(R.drawable.i_dish_detail_zan_good);
+            if(!TextUtils.isEmpty(likeNum)) mHoverNum.setText("有用"+likeNum);
         }else if("1".equals(dishStatus)){//点踩
             mNoLikeImg.setImageResource(R.drawable.i_not_good_activity);
             mGoodImg.setImageResource(R.drawable.i_good_black);
             hoverGoodImg.setImageResource(R.drawable.i_dish_detail_zan_nolike);
+            if(!TextUtils.isEmpty(likeNum))mHoverNum.setText("有用"+likeNum);
         }else if("3".equals(dishStatus)){
             mGoodImg.setImageResource(R.drawable.i_good_black);
             mNoLikeImg.setImageResource(R.drawable.i_not_good);
             hoverGoodImg.setImageResource(R.drawable.i_dish_detail_zan);
+            mHoverNum.setText("是否有用？");
         }
     }
     /**

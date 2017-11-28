@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/line_linear"
-        android:background="#f9f9f9f9"
+        android:background="#f2f2f2"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -52,8 +52,8 @@
                 android:id="@+id/a_dish_detail_new_footer_hover_tv"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/dp_3"
-                android:layout_marginBottom="@dimen/dp_3"
+                android:layout_marginTop="@dimen/dp_8"
+                android:layout_marginBottom="@dimen/dp_8"
                 android:gravity="center"
                 android:text="问作者"
                 android:background="@drawable/bg_circle_yellow_5"
@@ -64,7 +64,7 @@
         <View
             android:layout_width="@dimen/dp_10"
             android:layout_height="match_parent"
-            android:background="#fffffe" />
+            android:background="#f2f2f2" />
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -74,8 +74,8 @@
                 android:id="@+id/a_dish_detail_hover_show_caipu"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/dp_3"
-                android:layout_marginBottom="@dimen/dp_3"
+                android:layout_marginTop="@dimen/dp_8"
+                android:layout_marginBottom="@dimen/dp_8"
                 android:gravity="center"
                 android:text="晒作品"
                 android:textColor="#fffffe"
@@ -86,7 +86,7 @@
         <View
             android:layout_width="@dimen/dp_10"
             android:layout_height="match_parent"
-            android:background="#fffffe" />
+            android:background="#f2f2f2" />
 
     </LinearLayout>
 
@@ -95,7 +95,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/line_linear"
-        android:background="#f9f9f9f9"
+        android:background="#f2f2f2"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:visibility="gone">
@@ -159,30 +159,12 @@
     </LinearLayout>
 
 
-    <LinearLayout
-        android:id="@+id/line_linear"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <ImageView
-            android:id="@+id/line_1"
-            android:layout_width="match_parent"
-            android:layout_height="20px"
-            android:background="@drawable/bg_line_shadow"
-            android:scaleType="fitXY"
-            android:visibility="visible"
-            />
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="#e9e9e9"/>
-    </LinearLayout>
 
     <View
         android:id="@+id/line_2"
         style="@style/lineView"
-        android:layout_alignParentBottom="true"
-        android:layout_marginTop="@dimen/dp_20" />
+        android:background="#f1f1f1"
+        android:layout_alignParentTop="true"/>
     <RelativeLayout
         android:id="@+id/a_dish_detail_new_footer_member_rela"
         android:layout_width="match_parent"

@@ -47,12 +47,11 @@ import static java.lang.System.currentTimeMillis;
  * 菜谱详情页原生标准
  */
 public class DetailDishNew extends BaseAppCompatActivity implements IObserver {
+    public static String tongjiId_detail = "a_menu_detail_normal";//统计标示
     private String data_type = "";
     private String module_type = "";
     private String img = "";//预加载图片
     public String code, dishTitle, state,dishName;//页面开启状态所必须的数据。
-    private String courseCode;//课程分类
-    private String chapterCode;//章节分类
     public static long startTime = 0;
     private Handler handlerScreen;
     private ListView listView;
@@ -81,8 +80,6 @@ public class DetailDishNew extends BaseAppCompatActivity implements IObserver {
         if (bundle != null) {
             code = bundle.getString("code");
             dishTitle = bundle.getString("name");
-            courseCode = bundle.getString("courseCode", "");
-            chapterCode = bundle.getString("chapterCode", "");
             if (dishTitle == null) dishTitle = "香哈菜谱";
             state = bundle.getString("state");
             data_type = bundle.getString("data_type");
@@ -91,6 +88,7 @@ public class DetailDishNew extends BaseAppCompatActivity implements IObserver {
             //保存历史记录
             DataOperate.saveHistoryCode(code);
         }
+//        code = "90384610";
         if (TextUtils.isEmpty(code)) {
             Tools.showToast(getApplicationContext(), "抱歉，未找到相应菜谱");
             this.finish();
@@ -143,7 +141,7 @@ public class DetailDishNew extends BaseAppCompatActivity implements IObserver {
                 if(!getStateMakes(maplist)){//无图时不执行
                     return;
                 }
-                XHClick.mapStat(DetailDishNew.this, tongjiId, "菜谱区域的点击", "步骤图点击");
+                XHClick.mapStat(DetailDishNew.this, DetailDishNew.tongjiId_detail, "步骤", "步骤图点击量");
                 Intent intent = new Intent(DetailDishNew.this, MoreImageShow.class);
                 ArrayList<Map<String, String>> listdata = new ArrayList<Map<String, String>>();
                 listdata.addAll(maplist);
@@ -181,6 +179,7 @@ public class DetailDishNew extends BaseAppCompatActivity implements IObserver {
                 detailDishViewManager.handlerExplainView(mapTop);//小贴士
                 requestWeb(mapTop);
                 saveDishInfo(mapTop);
+                tongjiId_detail=isHasVideo?"a_menu_detail_video":"a_menu_detail_normal";
                 break;
             case DetailDishDataManager.DISH_DATA_INGRE://用料
                 detailDishViewManager.handlerIngreView(list);
@@ -207,7 +206,7 @@ public class DetailDishNew extends BaseAppCompatActivity implements IObserver {
                 detailDishViewManager.handlerUserPowerData(relation);//用户权限
                 detailDishViewManager.handlerHoverView(relation,code,dishName);
                 if(relation.containsKey("isShow")&&"2".equals(relation.get("isShow"))){
-                    detailDishViewManager.handlerVipView(StringManager.getFirstMap(relation.get("isShow")));
+                    detailDishViewManager.handlerVipView(StringManager.getFirstMap(relation.get("vipButton")));
                 }
                 showCaipuHint();
                 break;

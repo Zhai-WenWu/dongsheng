@@ -32,7 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/dish_title"
-            android:layout_marginTop="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_8"
             android:textColor="#999999"
             android:background="@color/transparent"
             android:text="加载中"
@@ -149,7 +149,7 @@
         android:layout_height="wrap_content"
         android:background="@color/transparent"
         android:layout_below="@+id/dish_exp_user_rela"
-        android:paddingTop="@dimen/dp_40">
+        android:paddingTop="@dimen/dp_35">
 
         <TextView
             android:id="@+id/dish_work_exp_tv"

@@ -119,11 +119,11 @@ public class UserHomeTxtItem extends UserHomeItem implements View.OnClickListene
                 switch (mUploadType) {
                     case UploadDishData.UPLOAD_FAIL:
                         statusInfo = "上传失败，请重试";
-                        mStatusInfo.setTextColor(Color.parseColor("#ff533c"));
+                        mStatusInfo.setTextColor(Color.parseColor("#f23030"));
                         break;
                     case UploadDishData.UPLOAD_PAUSE:
                         statusInfo = "暂停上传";
-                        mStatusInfo.setTextColor(Color.parseColor("#ff533c"));
+                        mStatusInfo.setTextColor(Color.parseColor("#f23030"));
                         break;
                     case UploadDishData.UPLOAD_ING:
                         statusInfo = "上传中...";
@@ -190,7 +190,7 @@ public class UserHomeTxtItem extends UserHomeItem implements View.OnClickListene
             String statusInfo = mDataMap.get("status");
             if ("1".equals(statusInfo)) {
                 if (mStatusInfo != null) {
-                    mStatusInfo.setTextColor(Color.parseColor("#ff533c"));
+                    mStatusInfo.setTextColor(Color.parseColor("#f23030"));
                     mStatusInfo.setText("审核未通过");
                     mStatusInfo.setVisibility(View.VISIBLE);
                 }
@@ -306,11 +306,11 @@ public class UserHomeTxtItem extends UserHomeItem implements View.OnClickListene
                 switch (mUploadType) {
                     case UploadDishData.UPLOAD_FAIL:
                         statusInfo = "上传失败，请重试";
-                        mStatusInfo.setTextColor(Color.parseColor("#ff533c"));
+                        mStatusInfo.setTextColor(Color.parseColor("#f23030"));
                         break;
                     case UploadDishData.UPLOAD_PAUSE:
                         statusInfo = "暂停上传";
-                        mStatusInfo.setTextColor(Color.parseColor("#ff533c"));
+                        mStatusInfo.setTextColor(Color.parseColor("#f23030"));
                         break;
                     case UploadDishData.UPLOAD_ING:
                         statusInfo = "上传中...";

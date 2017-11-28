@@ -14,7 +14,6 @@
         android:dividerHeight="0dp"
         android:paddingLeft="0dp"
         android:paddingRight="0dp"
-        android:paddingBottom="@dimen/dp_50"
         android:background="@color/transparent"
         android:scrollbars="none"
         android:visibility="gone"/>
@@ -28,7 +27,7 @@
         android:id="@+id/a_dish_detail_new_footer_hover"
         layout="@layout/a_dish_detail_hove_viewr"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_50"
+        android:layout_height="@dimen/dp_55"
         android:background="@android:color/transparent"
         android:layout_alignParentBottom="true"
         android:visibility="gone" />
@@ -36,7 +35,7 @@
         android:id="@+id/dish_show_rela"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/dp_50"
+        android:layout_marginBottom="@dimen/dp_55"
         android:layout_alignParentRight="true"
         android:layout_marginRight="@dimen/dp_15"
         android:layout_alignParentBottom="true"
@@ -49,7 +48,7 @@
             android:gravity="center"
             android:background="@drawable/dish_show_caipu"
             android:textColor="#fffffe"
-            android:textSize="@dimen/dp_16" />
+            android:textSize="@dimen/dp_13" />
     </RelativeLayout>
 
     <RelativeLayout

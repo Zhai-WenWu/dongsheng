@@ -768,7 +768,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
     public void setCurrentText(int index) {
         for (int j = 0; j < tabViews.length; j++) {
             if (j == index) {
-                ((TextView) tabViews[j].findViewById(R.id.textView1)).setTextColor(Color.parseColor("#ff533c"));
+                ((TextView) tabViews[j].findViewById(R.id.textView1)).setTextColor(Color.parseColor("#f23030"));
                 tabViews[j].findViewById(iv_itemIsFine).setSelected(true);
                 tabViews[j].findViewById(iv_itemIsFine).setPressed(false);
                 if (j == 2) {

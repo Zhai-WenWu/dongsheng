@@ -32,7 +32,7 @@ public class FollowView extends LinearLayout{
 	public int M_FOLLOW_BACK_RESOUSE = R.drawable.bg_round2_999999;
 	public int M_NOT_FOLLOW_BACK_RESOUSE = R.drawable.bg_round_white8;
 	public int M_Follow_TEXT_COLOR = Color.parseColor("#999999");
-	public int M_NOT_Follow_TEXT_COLOR = Color.parseColor("#ff533c");
+	public int M_NOT_Follow_TEXT_COLOR = Color.parseColor("#f23030");
 	//----------显示，关注，取消关注-------------
 	/**	不显示关注按钮 */
 	public String FOLLOW_GONE = "1";
