@@ -240,6 +240,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
             manager.getDefaultDisplay().getMetrics(displayMetrics);
             int width = dm.widthPixels / mTabColumn;
             mTabLayoutParams = new LinearLayout.LayoutParams(width, mHeight);
+            mTabWidth = width;
         }
     }
 
