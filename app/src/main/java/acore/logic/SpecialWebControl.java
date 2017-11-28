@@ -11,7 +11,7 @@ import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-
+import android.webkit.WebViewClient;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -119,6 +119,14 @@ public class SpecialWebControl {
             } else {
                 webView.loadUrl(url, referer);
             }
+            webView.setWebViewClient(new WebViewClient(){
+                @Override
+                public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                    if(null != view && !TextUtils.isEmpty(url))
+                        view.loadUrl(url);
+                    return true;
+                }
+            });
         } catch (Exception igroned) {
             Log.i("tzy", "Exception.message = " + igroned.getMessage());
         }
