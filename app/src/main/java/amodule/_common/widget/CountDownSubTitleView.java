@@ -3,6 +3,7 @@ package amodule._common.widget;
 import android.app.Activity;
 import android.content.Context;
 import android.os.CountDownTimer;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -140,13 +141,20 @@ public class CountDownSubTitleView extends BaseSubTitleView {
         int day = Integer.parseInt(times[0]);
         if(1 >= day){
             mTitle2.setVisibility(GONE);
+            findViewById(R.id.title_3).setVisibility(GONE);
         }else{
-            mTitle2.setText((day - 1) + "天");
+            setText(mTitle2,(day - 1) + "天");
             mTitle2.setVisibility(VISIBLE);
+            findViewById(R.id.title_3).setVisibility(VISIBLE);
         }
-        mTitle3.setText(times[1]);
-        mTitle4.setText(times[2]);
-        mTitle5.setText(times[3]);
+        setText(mTitle3,times[1]);
+        setText(mTitle4,times[2]);
+        setText(mTitle5,times[3]);
+    }
+
+    public void setText(@NonNull TextView textView, @NonNull String text){
+        if(!TextUtils.equals(text,textView.getText()))
+            textView.setText(text);
     }
 
     @Override
