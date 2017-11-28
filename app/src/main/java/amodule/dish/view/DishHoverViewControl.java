@@ -208,19 +208,19 @@ public class DishHoverViewControl implements View.OnClickListener{
      */
     private void handlerDishLikeState(String dishStatus,String likeNum){
         if("2".equals(dishStatus)){//点赞
-            mGoodImg.setImageResource(R.drawable.i_good_activity);
-            mNoLikeImg.setImageResource(R.drawable.i_not_good);
-            hoverGoodImg.setImageResource(R.drawable.i_dish_detail_zan_good);
+            mGoodImg.setImageResource(R.drawable.iv_good_good_arrow);
+            mNoLikeImg.setImageResource(R.drawable.iv_bad_no_arrow);
+            hoverGoodImg.setImageResource(R.drawable.iv_dish_all_good);
             if(!TextUtils.isEmpty(likeNum)) mHoverNum.setText("有用"+likeNum);
         }else if("1".equals(dishStatus)){//点踩
-            mNoLikeImg.setImageResource(R.drawable.i_not_good_activity);
-            mGoodImg.setImageResource(R.drawable.i_good_black);
-            hoverGoodImg.setImageResource(R.drawable.i_dish_detail_zan_nolike);
+            mNoLikeImg.setImageResource(R.drawable.iv_bad_good_arrow);
+            mGoodImg.setImageResource(R.drawable.iv_good_no_arrow);
+            hoverGoodImg.setImageResource(R.drawable.iv_dish_all_bad);
             if(!TextUtils.isEmpty(likeNum))mHoverNum.setText("有用"+likeNum);
         }else if("3".equals(dishStatus)){
-            mGoodImg.setImageResource(R.drawable.i_good_black);
-            mNoLikeImg.setImageResource(R.drawable.i_not_good);
-            hoverGoodImg.setImageResource(R.drawable.i_dish_detail_zan);
+            mGoodImg.setImageResource(R.drawable.iv_good_no_arrow);
+            mNoLikeImg.setImageResource(R.drawable.iv_bad_no_arrow);
+            hoverGoodImg.setImageResource(R.drawable.iv_dish_all_no);
             mHoverNum.setText("是否有用？");
         }
     }
