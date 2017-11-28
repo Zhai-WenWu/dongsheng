@@ -28,28 +28,35 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/ic_launcher"/>
 
-        <TextView
-            android:id="@+id/text_left_1"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/dp_1.5"
-            android:textColor="#333333"
-            android:textSize="@dimen/sp_15"
-            android:textStyle="bold"
-            android:paddingLeft="@dimen/dp_10"
-            app:layout_constraintBottom_toTopOf="@+id/guideline_left"
-            tools:text="今日三餐"/>
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/text_left_2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_1.5"
-            android:textColor="#999999"
-            android:textSize="@dimen/sp_11"
-            app:layout_constraintTop_toTopOf="@+id/guideline_left"
-            android:paddingLeft="@dimen/dp_10"
-            tools:text="早.中.晚餐食谱"/>
+            <TextView
+                android:id="@+id/text_left_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dp_1.5"
+                android:paddingLeft="@dimen/dp_10"
+                android:textColor="#333333"
+                android:textSize="@dimen/sp_15"
+                android:textStyle="bold"
+                tools:text="今日三餐"/>
+
+            <TextView
+                android:id="@+id/text_left_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_1.5"
+                android:paddingLeft="@dimen/dp_10"
+                android:textColor="#999999"
+                android:textSize="@dimen/sp_11"
+                tools:text="早.中.晚餐食谱"/>
+
+        </LinearLayout>
 
         <android.support.constraint.Guideline
             android:id="@+id/guideline_left"
@@ -84,28 +91,37 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/ic_launcher"/>
 
-        <TextView
-            android:id="@+id/text_right_1"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/dp_1.5"
-            android:textColor="#333333"
-            android:textSize="@dimen/sp_15"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/guideline_righr"
-            android:paddingLeft="@dimen/dp_10"
-            tools:text="关注/社区"/>
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/text_right_2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_1.5"
-            android:textColor="#999999"
-            android:textSize="@dimen/sp_11"
-            app:layout_constraintTop_toTopOf="@+id/guideline_righr"
-            android:paddingLeft="@dimen/dp_10"
-            tools:text="晒美食，关注美食家"/>
+            <TextView
+                android:id="@+id/text_right_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dp_1.5"
+                android:paddingLeft="@dimen/dp_10"
+                android:textColor="#333333"
+                android:textSize="@dimen/sp_15"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/guideline_righr"
+                tools:text="关注/社区"/>
+
+            <TextView
+                android:id="@+id/text_right_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_1.5"
+                android:paddingLeft="@dimen/dp_10"
+                android:textColor="#999999"
+                android:textSize="@dimen/sp_11"
+                app:layout_constraintTop_toTopOf="@+id/guideline_righr"
+                tools:text="晒美食，关注美食家"/>
+
+        </LinearLayout>
 
         <android.support.constraint.Guideline
             android:id="@+id/guideline_righr"

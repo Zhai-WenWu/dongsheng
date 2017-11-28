@@ -16,8 +16,6 @@ import com.xiangha.R;
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
 
-import acore.logic.AppCommon;
-import acore.override.helper.XHActivityManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule._common.utility.WidgetUtility;

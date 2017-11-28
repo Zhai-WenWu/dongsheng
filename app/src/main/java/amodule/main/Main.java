@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -437,7 +438,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
         tabViews = new View[classes.length];
         for (int i = 0; i < tabTitle.length; i++) {
             tabViews[i] = linear_item.getChildAt(i);
-            LinearLayout layout = (LinearLayout) tabViews[i].findViewById(R.id.tab_linearLayout);
+            ConstraintLayout layout = (ConstraintLayout) tabViews[i].findViewById(R.id.tab_layout);
             layout.setOnClickListener(this);
 
             TextView tv = ((TextView) tabViews[i].findViewById(R.id.textView1));
@@ -513,7 +514,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
         isForeground = true;
         //去我的页面
         if (MallPayActivity.pay_state) {
-            onClick(tabViews[classes.length - 1].findViewById(R.id.tab_linearLayout));
+            onClick(tabViews[classes.length - 1].findViewById(R.id.tab_layout));
         }
         //去商城页面
 //        if (MallPayActivity.mall_state) {
@@ -763,7 +764,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
     @Override
     public void onClick(View v) {
         for (int i = 0; i < tabViews.length; i++) {
-            if (v == tabViews[i].findViewById(R.id.tab_linearLayout) && allTab.size() > 0) {
+            if (v == tabViews[i].findViewById(R.id.tab_layout) && allTab.size() > 0) {
                 if (i == 0 && allTab.containsKey(MainHomePage.KEY) && i == nowTab) {
                     MainHomePage mainIndex = (MainHomePage) allTab.get(MainHomePage.KEY);
                     mainIndex.refresh();

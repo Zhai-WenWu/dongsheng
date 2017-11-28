@@ -9,8 +9,8 @@
 
     <ImageView
         android:id="@+id/icon"
-        android:layout_width="@dimen/dp_32"
-        android:layout_height="@dimen/dp_27"
+        android:layout_width="@dimen/dp_30"
+        android:layout_height="@dimen/dp_25"
         tools:src="@drawable/ic_launcher"/>
 
     <TextView
