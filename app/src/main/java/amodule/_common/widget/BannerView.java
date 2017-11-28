@@ -39,7 +39,6 @@ import amodule._common.delegate.IStatictusData;
 import amodule._common.helper.WidgetDataHelper;
 import aplug.basic.SubBitmapTarget;
 import third.ad.scrollerAd.XHAllAdControl;
-import xh.basic.tool.UtilImage;
 
 import static third.ad.tools.AdPlayIdConfig.ARTICLE_CONTENT_BOTTOM;
 

@@ -7,8 +7,7 @@
         android:id="@+id/imageview1"
         android:layout_width="@dimen/dp_163"
         android:layout_height="@dimen/dp_163"
-        android:scaleType="centerCrop"
-        android:background="@drawable/i_nopic"/>
+        android:scaleType="centerCrop"/>
 
     <TextView
         android:id="@+id/textview1"

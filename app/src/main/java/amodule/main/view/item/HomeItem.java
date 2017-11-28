@@ -90,7 +90,6 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
     }
 
     protected void initView() {
-        this.setBackgroundColor(Color.parseColor("#ffffff"));
         mAdTag = (ImageView) findViewById(R.id.ad_tag);
         mLineTop = findViewById(R.id.line_top);
         mDot = findViewById(R.id.dot);
