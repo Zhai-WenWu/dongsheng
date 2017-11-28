@@ -250,6 +250,16 @@ public class HomeSecondListFragment extends Fragment {
                     //Log.i("FRJ","获取  服务端   数据回来了-------------");
 
                     Map<String,String> dataMap = StringManager.getFirstMap(object);
+                    //针对三餐会有默认选中不同的tab，第一次请求的数据不保留，防止系统本身第一次默认的加载和第二次默认选中页面数据相同
+                    if (!mActivity.hasInitTabData() && TextUtils.equals(mModuleBean.getType(), "day")) {
+                        mLoadOver = false;
+                    }
+                    //初始化二级
+                    if (mCallback != null) {
+                        mCallback.onTabDataReady(dataMap.get("trigger_two_type"));
+                    }
+                    if (!mLoadOver)//如果是三餐列表并且是第一次加载的，直接跳出，不填充当前Fragment里的数据。
+                        return;
                     //当前数据有问题，直接return数据
                     if(!(!dataMap.containsKey("list")
                             ||StringManager.getListMapByJson(dataMap.get("list")).size()<=0)){
@@ -269,10 +279,6 @@ public class HomeSecondListFragment extends Fragment {
                             if(!TextUtils.isEmpty(dataMap.get("nexturl")))
                                 mNextUrl = dataMap.get("nexturl");
 
-                        }
-                        //初始化二级
-                        if (mCallback != null) {
-                            mCallback.onTabDataReady(dataMap.get("trigger_two_type"));
                         }
                         ArrayList<Map<String, String>> listDatas = StringManager.getListMapByJson(dataMap.get("list"));
                         if (listDatas != null && listDatas.size() > 0) {
