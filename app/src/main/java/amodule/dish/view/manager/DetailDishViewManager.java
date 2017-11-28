@@ -8,6 +8,7 @@ import android.os.Message;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -77,6 +78,7 @@ public class DetailDishViewManager {
     public DishADBannerView dishADBannerView;
     public DishQAView dishQAView;
     public DishModuleScrollView dishModuleScrollView;
+    public View noStepView;
 
 
     /**
@@ -134,7 +136,10 @@ public class DetailDishViewManager {
         tp.setFakeBoldText(true);
         textStep.setText("做法");
         textStep.setVisibility(View.GONE);
+        noStepView=LayoutInflater.from(mAct).inflate(R.layout.dish_no_step,null);
+        noStepView.setVisibility(View.GONE);
         layoutHeader.addView(textStep);
+        layoutHeader.addView(noStepView);
         dishQAView = new DishQAView(mAct);
         dishQAView.setVisibility(View.GONE);
         //foot
@@ -288,7 +293,8 @@ public class DetailDishViewManager {
      */
     public void handlerStepView(ArrayList<Map<String,String>> list){
         if(list!=null&&list.size()>0&&"1".equals(list.get(0).get("isShow"))) {
-            textStep.setText(list.get(0).get("promptMsg"));
+            noStepView.setVisibility(View.VISIBLE);
+            ((TextView)noStepView.findViewById(R.id.dish_no_step_tv)).setText(list.get(0).get("promptMsg"));
         }
         textStep.setVisibility(View.VISIBLE);
     }
@@ -332,14 +338,6 @@ public class DetailDishViewManager {
             dishRecommedAndAdView.setVisibility(View.VISIBLE);
             dishRecommedAndAdView.initData(code,name);
             dishRecommedAndAdView.initUserDish(list);
-        }
-    }
-    /**
-     * 处理浮动推荐
-     */
-    public void handlerHoverViewCode(String code){
-        if(dishHoverViewControl!=null){
-//            dishHoverViewControl.setCode(code);
         }
     }
     /**

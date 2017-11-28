@@ -123,7 +123,6 @@ public class DishQAView extends ItemBaseView{
             View.OnClickListener bitSpanClick = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Tools.showToast(context, "测试数据");
 
                     Map<String,String> map = StringManager.getFirstMap(maps.get("imgs"));
                     if(map!=null&&map.size()>0) {
