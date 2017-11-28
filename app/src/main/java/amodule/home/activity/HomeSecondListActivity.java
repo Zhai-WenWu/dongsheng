@@ -42,7 +42,7 @@ public class HomeSecondListActivity extends BaseAppCompatActivity {
     private HomeModuleBean mModuleBean;
     private ArrayList<HomeSecondModule> mSecondModules;
 
-    private boolean mInitTabData;
+    private boolean mHasInitTabData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,14 +92,18 @@ public class HomeSecondListActivity extends BaseAppCompatActivity {
             titleV.setText(mModuleBean.getTitle());
     }
 
+    public boolean hasInitTabData() {
+        return mHasInitTabData;
+    }
+
     private void initTabData() {
         mPagerAdapter = new HomeSecondListPagerAdapter(getSupportFragmentManager(), mSecondModules, mModuleBean, new HomeSecondListFragment.OnTabDataReadyCallback() {
             @Override
             public void onTabDataReady(String selectedType) {
                 Log.i("tzy","selectedType = " + selectedType);
-                if (mInitTabData)
+                if (mHasInitTabData)
                     return;
-                mInitTabData = true;
+                mHasInitTabData = true;
                 int selectedPos = 0;
                 for (int i = 0; mSecondModules != null && i < mSecondModules.size(); i ++) {
                     HomeSecondModule module = mSecondModules.get(i);

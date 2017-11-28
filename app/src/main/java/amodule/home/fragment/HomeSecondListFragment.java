@@ -19,9 +19,9 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import acore.logic.load.LoadManager;
-import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.StringManager;
 import acore.widget.rvlistview.RvListView;
+import amodule.home.activity.HomeSecondListActivity;
 import amodule.home.adapter.HomeSecondRecyclerAdapter;
 import amodule.home.module.HomeSecondModule;
 import amodule.main.bean.HomeModuleBean;
@@ -63,7 +63,7 @@ public class HomeSecondListFragment extends Fragment {
     private boolean mIsVisible;
 
     private AdControlParent mAdControl;
-    private BaseAppCompatActivity mActivity;
+    private HomeSecondListActivity mActivity;
     private PtrClassicFrameLayout mPtrFrameLayout;
     private RvListView mRv;
     private HomeSecondRecyclerAdapter mHomeAdapter;
@@ -152,7 +152,7 @@ public class HomeSecondListFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mActivity = (BaseAppCompatActivity) context;
+        mActivity = (HomeSecondListActivity) context;
         mLoadManager = mActivity.loadManager;
     }
 
@@ -221,7 +221,7 @@ public class HomeSecondListFragment extends Fragment {
                 params=mBackUrl;
             }else{
                 params= "type="+mModuleBean.getType();
-                if(!TextUtils.isEmpty(mSecondModuleBean.getType()))
+                if(!TextUtils.isEmpty(mSecondModuleBean.getType()) && mActivity.hasInitTabData())
                     params+="&two_type="+mSecondModuleBean.getType();
             }
         }else{//向下翻页
@@ -229,7 +229,8 @@ public class HomeSecondListFragment extends Fragment {
                 params=mNextUrl;
             }else{
                 params= "type="+mModuleBean.getType();
-                if(!TextUtils.isEmpty(mSecondModuleBean.getType()))params+="&two_type="+mSecondModuleBean.getType();
+                if(!TextUtils.isEmpty(mSecondModuleBean.getType()) && mActivity.hasInitTabData())
+                    params+="&two_type="+mSecondModuleBean.getType();
             }
         }
         loadData(refresh, params);
