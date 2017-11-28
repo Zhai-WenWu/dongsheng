@@ -33,14 +33,15 @@
         android:layout_alignParentBottom="true"
         android:visibility="gone" />
     <RelativeLayout
+        android:id="@+id/dish_show_rela"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/dp_50"
         android:layout_alignParentRight="true"
         android:layout_marginRight="@dimen/dp_15"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:visibility="gone">
         <TextView
-            android:id="@+id/dish_no_step_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
