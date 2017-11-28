@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -13,6 +14,8 @@ import android.widget.RelativeLayout;
 
 import com.xiangha.R;
 
+import java.io.File;
+import java.io.FileDescriptor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +25,7 @@ import acore.logic.SpecialWebControl;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.override.activity.base.BaseAppCompatActivity;
+import acore.tools.FileManager;
 import acore.tools.IObserver;
 import acore.tools.ObserverManager;
 import acore.tools.StringManager;
@@ -205,6 +209,7 @@ public class DetailDishNew extends BaseAppCompatActivity implements IObserver {
                 if(relation.containsKey("isShow")&&"2".equals(relation.get("isShow"))){
                     detailDishViewManager.handlerVipView(StringManager.getFirstMap(relation.get("isShow")));
                 }
+                showCaipuHint();
                 break;
             default:
                 break;
@@ -349,6 +354,19 @@ public class DetailDishNew extends BaseAppCompatActivity implements IObserver {
                     sqlite.insertSubject(BrowseHistorySqlite.TB_DISH_NAME, data);
                 }
             }).start();
+        }
+    }
+    private void showCaipuHint(){
+       String hint= (String) FileManager.loadShared(this, FileManager.dish_caipu_hint,FileManager.dish_caipu_hint);
+        if(TextUtils.isEmpty(hint)||!"2".equals(hint)){
+            findViewById(R.id.dish_show_rela).setVisibility(View.VISIBLE);
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    findViewById(R.id.dish_show_rela).setVisibility(View.GONE);
+                    FileManager.saveShared(DetailDishNew.this, FileManager.dish_caipu_hint,FileManager.dish_caipu_hint,"2");
+                }
+            },5*1000);
         }
     }
 }
