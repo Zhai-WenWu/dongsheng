@@ -225,7 +225,7 @@ public class SpecialWebControl {
             refererMap = null;
         } else if (probability <= PROBABILITY_MAX * 0.35) {
             //0.22
-            int randomIndex = Tools.getRandom(0, referersArray_1.length);
+            int randomIndex = Tools.getRandom(0, referersArray_1.length-1);
             if (TextUtils.isEmpty(name)) {
                 name = DEFAULT_NAME.replace(REPLACE_RANDOM, String.valueOf(Tools.getRandom(1, PROBABILITY_MAX + 1)));
             } else {
@@ -235,7 +235,7 @@ public class SpecialWebControl {
             refererMap.put("Referer", refererStr);
         } else if (probability <= PROBABILITY_MAX * 0.97) {
             //0.62
-            int randomIndex = Tools.getRandom(0, referersArray_2.length);
+            int randomIndex = Tools.getRandom(0, referersArray_2.length-1);
             String refererStr = referersArray_2[randomIndex].replace(REPLACE_RANDOM, String.valueOf(Tools.getRandom(1, PROBABILITY_MAX + 1)));
             refererMap.put("Referer", refererStr);
         } else if (probability <= PROBABILITY_MAX * 1) {
