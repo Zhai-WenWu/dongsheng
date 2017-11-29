@@ -6,21 +6,33 @@
     android:id="@+id/activityLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <acore.widget.rvlistview.RvListView
-        android:id="@+id/rvListview"
+    <cn.srain.cube.views.ptr.PtrClassicFrameLayout
+        xmlns:cube_ptr="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/refresh_list_view_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:layout_below="@+id/home_title"
-        android:focusableInTouchMode="true"
-        android:overScrollMode="never"
-        android:scrollbars="none"/>
+        cube_ptr:ptr_duration_to_close="200"
+        cube_ptr:ptr_duration_to_close_header="500"
+        cube_ptr:ptr_pull_to_fresh="false"
+        cube_ptr:ptr_ratio_of_header_height_to_refresh="1"
+        cube_ptr:ptr_resistance="1.7">
+
+        <acore.widget.rvlistview.RvListView
+            android:id="@+id/rvListview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:focusableInTouchMode="true"
+            android:overScrollMode="never"
+            android:scrollbars="none"/>
+
+    </cn.srain.cube.views.ptr.PtrClassicFrameLayout>
 
     <amodule.home.view.HomeTitleLayout
         android:id="@+id/home_title"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_45"/>
+        android:layout_height="@dimen/dp_49"/>
 
 </RelativeLayout>

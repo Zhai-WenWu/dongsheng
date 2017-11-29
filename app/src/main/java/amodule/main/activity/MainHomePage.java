@@ -50,7 +50,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
     //adapter
     HomeAdapter mHomeAdapter;
     //是否加载
-    boolean LoadOver = false;
+    volatile boolean LoadOver = false;
 
     boolean HeaderDataLoaded = false;
 
@@ -115,9 +115,11 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
         if (!LoadOver) {
             assert mViewContrloer != null;
             loadManager.setLoading(
+                    mViewContrloer.getRefreshLayout(),
                     mViewContrloer.getRvListView(),
                     mHomeAdapter,
                     true,
+                    v -> inerRefresh(),
                     v -> {
                         if (HeaderDataLoaded)
                             EntryptData(!LoadOver);
@@ -179,6 +181,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
                     EntryptData(true);
                 }
                 isRefreshingHeader = false;
+                mViewContrloer.refreshComplete();
             }
         };
     }
@@ -300,6 +303,10 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
     boolean isRefreshingHeader = false;
     boolean isRefreshingFeed = false;
     public void refresh() {
+        mViewContrloer.autoRefresh();
+    }
+
+    private void inerRefresh(){
         if(isRefreshingHeader || isRefreshingFeed){
             return;
         }

@@ -29,6 +29,7 @@ import amodule.main.activity.MainHome;
 import amodule.main.activity.MainHomePage;
 import amodule.main.view.item.HomeItem;
 import aplug.web.ShowWeb;
+import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
 import third.umeng.OnlineConfigControler;
 
 /**
@@ -50,6 +51,7 @@ public class HomeViewControler {
 
     private HomeBuoy mBuoy;
 
+    private PtrClassicFrameLayout mRefreshLayout;
     private RvListView mRvListView;
 
     //feed头部view
@@ -80,6 +82,8 @@ public class HomeViewControler {
             mBuoy.setClickCallback(() -> XHClick.mapStat(mActivity, MainHomePage.STATICTUS_ID_PULISH, "首页右侧侧边栏浮动图标", ""));
         }, 4000);
 
+        mRefreshLayout = (PtrClassicFrameLayout) mActivity.findViewById(R.id.refresh_list_view_frame);
+        mRefreshLayout.disableWhenHorizontalMove(true);
         mRvListView = (RvListView) mActivity.findViewById(R.id.rvListview);
         mRvListView.addHeaderView(mHeaderView);
         mRvListView.addHeaderView(mHomeFeedHeaderControler.getLayout());
@@ -181,6 +185,16 @@ public class HomeViewControler {
         );
     }
 
+    public void refreshComplete(){
+        if(null != mRefreshLayout)
+            mRefreshLayout.refreshComplete();
+    }
+
+    public void autoRefresh(){
+        if(null != mRefreshLayout)
+            mRefreshLayout.autoRefresh();
+    }
+
     private void initTipMessage(String configData) {
         Map<String, String> data = StringManager.getFirstMap(configData);
         if (null == data || data.isEmpty() || !"2".equals(data.get("isShow"))) {
@@ -258,4 +272,7 @@ public class HomeViewControler {
         return mRvListView;
     }
 
+    public PtrClassicFrameLayout getRefreshLayout() {
+        return mRefreshLayout;
+    }
 }
