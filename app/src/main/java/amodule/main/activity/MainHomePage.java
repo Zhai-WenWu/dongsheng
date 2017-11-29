@@ -121,6 +121,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
                     true,
                     v -> inerRefresh(),
                     v -> {
+                        Log.i("tzy_data","loadData :: HeaderDataLoaded = " + HeaderDataLoaded + " , LoadOver = " + LoadOver);
                         if (HeaderDataLoaded)
                             EntryptData(!LoadOver);
                     }
@@ -177,9 +178,6 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
                         mDataControler.saveCacheHomeData((String) o);
                     }
                 }
-                if(!LoadOver){
-                    EntryptData(true);
-                }
                 isRefreshingHeader = false;
                 mViewContrloer.refreshComplete();
             }
@@ -192,6 +190,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
      * @param refresh，是否刷新
      */
     private void EntryptData(final boolean refresh) {
+        Log.i("tzy_data","EntryptData::"+refresh);
         //已经load
         LoadOver = true;
         if (refresh && mDataControler != null) {
@@ -303,6 +302,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
     boolean isRefreshingHeader = false;
     boolean isRefreshingFeed = false;
     public void refresh() {
+        Log.i("tzy_data","refresh()");
         mViewContrloer.autoRefresh();
     }
 

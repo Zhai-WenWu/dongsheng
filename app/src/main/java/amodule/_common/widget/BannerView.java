@@ -119,7 +119,6 @@ public class BannerView extends Banner implements IBindMap, IStatictusData,ISave
                 if(tagValue != null && tagValue.equals(data.get("img"))){
                     return;
                 }
-                Log.i("tzy","banner bindView");
                 imageView.setTag(TAG_ID,data.get("img"));
                 Glide.with(getContext())
                         .load(data.get("img"))

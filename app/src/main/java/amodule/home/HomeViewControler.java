@@ -135,10 +135,12 @@ public class HomeViewControler {
 //            mHeaderControler.setVisibility(false);
             return;
         }
-        Stream.of(data).forEach(map -> {
-            Map<String, String> temp = StringManager.getFirstMap(map.get(WidgetDataHelper.KEY_WIDGET_DATA));
-            map.put("cache", "2".equals(temp.get("appFixed")) ? "2" : "1");
-        });
+        if(isShowCache){
+            Stream.of(data).forEach(map -> {
+                Map<String, String> temp = StringManager.getFirstMap(map.get(WidgetDataHelper.KEY_WIDGET_DATA));
+                map.put("cache", "2".equals(temp.get("appFixed")) ? "2" : "1");
+            });
+        }
         mHeaderControler.setData(data, isShowCache);
     }
 

@@ -32,6 +32,8 @@ public class HomeHeaderControler implements ISaveStatistic {
 
     private WidgetVerticalLayout[] mLayouts = new WidgetVerticalLayout[6];
 
+    private View.OnLayoutChangeListener onLayoutChangeListener;
+
     private boolean hasFeedData = false;
     private boolean hasHeaderData = false;
 
@@ -57,7 +59,7 @@ public class HomeHeaderControler implements ISaveStatistic {
         if (null == array || array.isEmpty()) return;
         String[] twoLevelArray = {"轮播banner", "功能入口", "功能入口", "精品厨艺", "限时抢购", "精选菜单"};
         String[] threeLevelArray = {"轮播banner位置", "", "", "精品厨艺位置", "限时抢购位置", "精选菜单位置"};
-        setVisibility(false);
+//        setVisibility(false);
         final int length = Math.min(array.size(), mLayouts.length);
         for (int index = 0; index < length; index++) {
             Map<String, String> map = array.get(index);
@@ -69,11 +71,14 @@ public class HomeHeaderControler implements ISaveStatistic {
             mLayouts[index].setStatictusData(MainHomePage.STATICTUS_ID_HOMEPAGE, twoLevelArray[index], threeLevelArray[index]);
             mLayouts[index].setVisibility(View.VISIBLE);
         }
-        View.OnLayoutChangeListener onLayoutChangeListener = (v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
-            hasHeaderData = mHeaderView.getHeight() - mTipMessage.getHeight() > mFeedHeaderView.getHeight();
-            mFeedHeaderView.setVisibility((hasFeedData && hasHeaderData) ? View.VISIBLE : View.GONE);
-        };
-        mHeaderView.addOnLayoutChangeListener(onLayoutChangeListener);
+
+        if(onLayoutChangeListener == null){
+            onLayoutChangeListener = (v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
+                hasHeaderData = mHeaderView.getHeight() - mTipMessage.getHeight() > mFeedHeaderView.getHeight();
+                mFeedHeaderView.setVisibility((hasFeedData && hasHeaderData) ? View.VISIBLE : View.GONE);
+            };
+            mHeaderView.addOnLayoutChangeListener(onLayoutChangeListener);
+        }
     }
 
     public void setVisibility(boolean isShow) {

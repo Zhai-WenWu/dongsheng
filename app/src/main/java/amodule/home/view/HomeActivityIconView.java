@@ -67,7 +67,6 @@ public class HomeActivityIconView extends AppCompatImageView {
     //获取数据
     private void loadData() {
         Map<String, String> dataMap = AdConfigTools.getInstance().getAdConfigData(AdPlayIdConfig.HOME_TOPLEFT);
-        Log.i("tzy","data = " + dataMap.toString());
         if (dataMap.isEmpty()) {
             return;
         }

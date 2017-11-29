@@ -171,11 +171,13 @@ public class WelcomeAdTools {
                 new third.ad.tools.GdtAdTools.GdtSplashAdListener() {
                     @Override
                     public void onAdPresent() {
+                        Log.i("zhangyujian", "GDT：：onAdPresent");
                         mGdtCallback.onAdPresent();
                     }
 
                     @Override
                     public void onAdFailed(String reason) {
+                        Log.i("zhangyujian", "GDT：：onAdFailed");
                         index_ad++;
                         nextAd(false);
                         mGdtCallback.onAdFailed(reason);
@@ -246,6 +248,7 @@ public class WelcomeAdTools {
                         new BaiduAdTools.BaiduSplashAdCallback() {
                             @Override
                             public void onAdPresent() {
+                                Log.i("zhangyujian","displayBaiduAD::onAdPresent");
                                 mBaiduCallback.onAdPresent();
                             }
 
@@ -256,6 +259,7 @@ public class WelcomeAdTools {
 
                             @Override
                             public void onAdFailed(String s) {
+                                Log.i("zhangyujian","displayBaiduAD::onAdFailed");
                                 index_ad++;
                                 nextAd(false);
                                 mBaiduCallback.onAdFailed(s);
