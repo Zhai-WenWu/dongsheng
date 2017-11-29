@@ -65,13 +65,13 @@ public class StringManager extends UtilString {
     //第三方下载链接（应用宝）
     public final static String third_downLoadUrl = "http://a.app.qq.com/o/simple.jsp?pkgname=com.xiangha";
     //崩溃
-    public final static String api_uploadCrashLog = "http://crash.xiangha.com/report";
+    public final static String api_uploadCrashLog = "https://crash.xiangha.com/report";
     //统计
-    public final static String api_stat = "http://stat.xiangha.com/s2.gif";
+    public final static String api_stat = "https://stat.xiangha.com/s2.gif";
     //用户手机应用列表
-    public final static String api_uploadFavorLog = "http://favor.xiangha.com/list";
+    public final static String api_uploadFavorLog = "https://favor.xiangha.com/list";
     //用户发贴发菜谱用户日志
-    public final static String api_uploadUserLog = "http://crash.xiangha.com/crash/report2";
+    public final static String api_uploadUserLog = "https://crash.xiangha.com/crash/report2";
     //获取广告信息
     public final static String api_adData = apiUrl + "main6/ads/getBasicList";
     public final static String api_indexDataNew = apiUrl + urlSection.get("main6") + "baseData";
@@ -227,7 +227,7 @@ public class StringManager extends UtilString {
     public final static String api_homeDish = apiUrl + "main6/index/indexTodayGood";
     public final static String api_homeTodayGoodShare = wwwUrl + "caipu/youzhi";
     public final static String api_homeGetTieList = apiUrl + "main6/index/getTieList";
-    public final static String api_monitoring = "http://stat.xiangha.com/s4.gif";
+    public final static String api_monitoring = "https://stat.xiangha.com/s4.gif";
 
     //钱包会员
     public final static String api_money = appWebUrl + "vip/walletV1?fullScreen=2"; //我的钱包
@@ -241,7 +241,7 @@ public class StringManager extends UtilString {
 
 
     //广告统计
-    public final static String api_monitoring_5 = "http://stat.xiangha.com/s5.gif"; //广告统计
+    public final static String api_monitoring_5 = "https://stat.xiangha.com/s5.gif"; //广告统计
     public final static String api_clickAds = apiUrl + "main6/ads/clickAds"; //广告统计,用于加积分
     public final static String api_myQuanV2 = apiUrl + urlSection.get("quan6") + "myQuanV2";//修改贴子模块
     //菜谱详情页
@@ -297,9 +297,9 @@ public class StringManager extends UtilString {
     /***
      * 推荐列表的统计
      */
-    public final static String API_STATISTIC_S6 = "http://stat.xiangha.com/s6.gif"; //新首页统计
-    public final static String API_STATISTIC_S7 = "http://stat.xiangha.com/s7.gif"; //页面统计时间
-    public final static String API_STATISTIC_S8 = "http://stat.xiangha.com/s8.gif"; //页面统计时间
+    public final static String API_STATISTIC_S6 = "https://stat.xiangha.com/s6.gif"; //新首页统计
+    public final static String API_STATISTIC_S7 = "https://stat.xiangha.com/s7.gif"; //页面统计时间
+    public final static String API_STATISTIC_S8 = "https://stat.xiangha.com/s8.gif"; //页面统计时间
 
     /*文章*/
     public final static String api_getArticleClass = apiUrl + "main7/article/getArticleClass"; //文章分类

@@ -208,7 +208,7 @@ public class SpecialWebControl {
             refererMap.put("Referer", refererStr);
         } else if (probability <= PROBABILITY_MAX * 1) {
             //0.03
-            refererMap.put("Referer", "http://m.xiangha.com/");
+            refererMap.put("Referer", "https://m.xiangha.com/");
         }
         return refererMap;
     }

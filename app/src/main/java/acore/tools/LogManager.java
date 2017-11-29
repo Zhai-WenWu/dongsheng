@@ -83,7 +83,7 @@ public class LogManager extends UtilLog {
 		String content = FileManager.readFile(wornLog);
 		if(content.length()>10){
 			LinkedHashMap<String, String> map = LogManager.getReportLog("loadImg","图片加载过程",Tools.getAssignTime("yyyy-MM-dd HH:mm:ss", 0),content);
-			ReqInternet.in().doPost("http://crash.xiangha.com/crash/report2", map , new InternetCallback(XHApplication.in()) {
+			ReqInternet.in().doPost("http:s//crash.xiangha.com/crash/report2", map , new InternetCallback(XHApplication.in()) {
 				@Override
 				public void loaded(int flag, String url, Object returnObj) {
 					if(flag >= UtilInternet.REQ_OK_STRING) { //成功,回调成功

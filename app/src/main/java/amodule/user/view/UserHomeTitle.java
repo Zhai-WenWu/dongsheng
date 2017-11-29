@@ -75,7 +75,7 @@ public class UserHomeTitle {
                 intent.putExtra("nickName", userinfo_map.get("nickName"));
                 intent.putExtra("imgUrl", userinfo_map.get("img"));
                 intent.putExtra("code", userinfo_map.get("code"));
-                intent.putExtra("clickUrl", "http://m.xiangha.com/i/" + userinfo_map.get("code"));
+                intent.putExtra("clickUrl", "https://m.xiangha.com/i/" + userinfo_map.get("code"));
                 intent.putExtra("isHasReport",!isMyself); //自己的主页不现实举报
                 mAct.startActivity(intent);
             }

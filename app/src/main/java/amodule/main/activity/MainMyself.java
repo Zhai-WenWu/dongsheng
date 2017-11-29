@@ -476,7 +476,7 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
                 case R.id.my_renzheng: //认证美食家
                     XHClick.track(getApplicationContext(), "点击我的页面的头部");
                     XHClick.mapStat(this, tongjiId, "头部", "认证");
-                    AppCommon.openUrl(this, "http://appweb.xiangha.com/approve/index", true);
+                    AppCommon.openUrl(this, "https://appweb.xiangha.com/approve/index", true);
                     break;
                 case R.id.my_vip: //开通会员
                     XHClick.track(getApplicationContext(), "点击我的页面的头部");
