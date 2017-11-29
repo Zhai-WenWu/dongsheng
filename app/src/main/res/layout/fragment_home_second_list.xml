@@ -9,7 +9,7 @@
         android:id="@+id/refresh_list_view_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/common_bg"
+        android:background="#FFFFFE"
         cube_ptr:ptr_duration_to_close="200"
         android:layout_below="@+id/homeHeaderNum"
         cube_ptr:ptr_duration_to_close_header="500"

@@ -73,7 +73,7 @@ public class BannerView extends Banner implements IBindMap, IStatictusData,ISave
         int paddingBottom = getResources().getDimensionPixelSize(R.dimen.dp_10);
         setPadding(0, 0, 0, paddingBottom);
         mInflater = LayoutInflater.from(context);
-        int height = (int) (ToolsDevice.getWindowPx(context).widthPixels * 336 / 750f) + paddingBottom;
+        int height = (int) (ToolsDevice.getWindowPx(context).widthPixels * 320 / 750f) + paddingBottom;
         Log.i("tzy","width = " + ToolsDevice.getWindowPx(context).widthPixels + " , height = " + height);
         post(() -> {
             getLayoutParams().height = height;

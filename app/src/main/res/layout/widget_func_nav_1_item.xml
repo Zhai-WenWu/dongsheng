@@ -20,7 +20,7 @@
         android:maxWidth="@dimen/dp_60"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textColor="#000"
+        android:textColor="#333333"
         android:textSize="@dimen/sp_12"
         tools:text="VIP名厨课"/>
 

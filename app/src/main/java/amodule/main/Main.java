@@ -92,7 +92,7 @@ import static com.xiangha.R.id.iv_itemIsFine;
 public class Main extends Activity implements OnClickListener, IObserver {
     public static final String TAG="xianghaTag";
 
-    private String[] tabTitle = {"香哈", "商城", "消息", "我的"};
+    private String[] tabTitle = {"学做菜", "商城", "消息", "我的"};
     private Class<?>[] classes = new Class<?>[]{MainHomePage.class, MainMall.class, MyMessage.class, MainMyself.class};
     private int[] tabImgs = new int[]{R.drawable.tab_index, R.drawable.tab_mall, R.drawable.tab_four, R.drawable.tab_myself};
 
