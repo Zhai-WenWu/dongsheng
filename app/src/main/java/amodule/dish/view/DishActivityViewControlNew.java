@@ -46,7 +46,7 @@ import static java.lang.System.currentTimeMillis;
 /**
  * 菜谱界面的总控制类
  */
-public class    DishActivityViewControlNew {
+public class DishActivityViewControlNew {
     private Activity mAct;
     private RelativeLayout bar_title_1;
     private TemplateWebView templateWebView;

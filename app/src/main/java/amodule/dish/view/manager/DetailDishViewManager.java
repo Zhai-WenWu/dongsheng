@@ -232,6 +232,10 @@ public class DetailDishViewManager {
             dishVidioLayout=dishHeaderViewNew.getViewLayout();
         }
     }
+    public void handlerLoginStatus(){
+        if (dishHeaderViewNew != null)
+            dishHeaderViewNew.setLoginStatus();
+    }
 
     /**
      * 处理菜谱基本信息

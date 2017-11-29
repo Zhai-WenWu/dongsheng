@@ -63,6 +63,7 @@ public class DetailDishNew extends BaseAppCompatActivity implements IObserver {
     private boolean isHasVideo;//当前是否是视频
     private String customerCode;
     private RelativeLayout dredgeVipFullLayout;
+    private XHWebView pageXhWebView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -224,7 +225,7 @@ public class DetailDishNew extends BaseAppCompatActivity implements IObserver {
             detailDishDataManager.resetTopInfo();
             detailDishDataManager.reqTopInfo();
         }
-//        dishActivityViewControl.setLoginStatus();
+        if(detailDishViewManager!=null)detailDishViewManager.handlerLoginStatus();
     }
 
     @Override
@@ -265,7 +266,7 @@ public class DetailDishNew extends BaseAppCompatActivity implements IObserver {
         if(pagePermission.containsKey("url") && !TextUtils.isEmpty(pagePermission.get("url"))){
             //xhwebView
             WebviewManager manager = new WebviewManager(this,loadManager,true);
-            XHWebView pageXhWebView = manager.createWebView(R.id.XHWebview);
+            pageXhWebView = manager.createWebView(R.id.XHWebview);
             String url = pagePermission.get("url");
             pageXhWebView.loadUrl(url);
             RelativeLayout bar_title_2 = (RelativeLayout) dredgeVipFullLayout.findViewById(R.id.dish_title_page);
@@ -375,4 +376,10 @@ public class DetailDishNew extends BaseAppCompatActivity implements IObserver {
             },5*1000);
         }
     }
+    public void reset(){
+        if(detailDishViewManager!=null)detailDishViewManager.handlerLoginStatus();
+        if(pageXhWebView!=null)
+            pageXhWebView.setVisibility(View.GONE);
+    }
+
 }

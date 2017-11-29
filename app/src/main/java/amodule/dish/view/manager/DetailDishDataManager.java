@@ -92,6 +92,7 @@ public class DetailDishDataManager {
             public void loaded(int flag, String url, Object object) {
                 if(flag>=UtilInternet.REQ_OK_STRING) {
                     if(!hasPermission || !contiunRefresh) return;
+                    detailAct.reset();
                     customerCode= StringManager.getFirstMap(object).get("customerCode");
                     if (!TextUtils.isEmpty(object.toString()) && !object.toString().equals("[]")) {
                         handleDataSuccess(flag, DISH_DATA_TOP, object);
