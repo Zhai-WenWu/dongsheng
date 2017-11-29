@@ -36,7 +36,7 @@
                     android:id="@+id/tv_current"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#FF533C"
+                    android:textColor="#f23030"
                     android:textSize="14.0sp" />
 
                 <TextView

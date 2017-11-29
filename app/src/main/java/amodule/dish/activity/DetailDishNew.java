@@ -86,7 +86,7 @@ public class DetailDishNew extends BaseAppCompatActivity implements IObserver {
             img = bundle.getString("img");
             DataOperate.saveHistoryCode(code);//保存历史记录
         }
-        code = "90384610";
+//        code = "90384610";
         if (TextUtils.isEmpty(code)) {
             Tools.showToast(getApplicationContext(), "抱歉，未找到相应菜谱");
             this.finish();
@@ -140,7 +140,7 @@ public class DetailDishNew extends BaseAppCompatActivity implements IObserver {
                 listdata.addAll(maplist);
                 if (!TextUtils.isEmpty(mapTop.get("remark"))) {
                     Map<String, String> map_temp = new HashMap();
-                    map_temp.put("img", mapTop != null?mapTop.get("img"):"");
+                    map_temp.put("img", maplist.get(maplist.size()-1).get("img"));
                     map_temp.put("info", "小贴士：\n" + mapTop.get("remark"));
                     map_temp.put("num", String.valueOf(maplist.size() + 1));
                     listdata.add(map_temp);
@@ -214,6 +214,17 @@ public class DetailDishNew extends BaseAppCompatActivity implements IObserver {
     protected void onPause() {
         super.onPause();
         if(detailDishViewManager!=null)detailDishViewManager.onPause();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        isHasVideo = false;
+        if(detailDishDataManager!=null){
+            detailDishDataManager.resetTopInfo();
+            detailDishDataManager.reqTopInfo();
+        }
+//        dishActivityViewControl.setLoginStatus();
     }
 
     @Override

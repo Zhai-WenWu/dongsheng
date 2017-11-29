@@ -46,7 +46,7 @@ public class DetailDishDataManager {
         dishCode = code;
         this.detailAct = detailAct;
         resetData();
-        reqTopInfo();
+        reqOne();
     }
     //重置权限数据
     private void resetData(){
@@ -57,14 +57,24 @@ public class DetailDishDataManager {
         detailPermissionMap.clear();
         permissionMap.clear();
     }
+
+    /**
+     * 重置处理数据
+     */
+    public void resetTopInfo(){
+        detailPermissionMap.clear();
+        permissionMap.clear();
+    }
     /**
      * 第一次请求接口合集
      */
     public void reqOne() {
+        reqTopInfo();
         reqPublicData();
         reqIngre();
         reqBanner();
         reqAnticData();
+        reqTwo();
     }
 
     public void reqTwo() {
@@ -75,7 +85,7 @@ public class DetailDishDataManager {
     /**
      * 请求topInfo数据---第一请求，有权限请求
      */
-    private void reqTopInfo() {
+    public void reqTopInfo() {
         String params = "dishCode=" + dishCode;
         ReqEncyptInternet.in().doEncypt(StringManager.API_MAIN8_TOPINFP, params, new InternetCallback(mContext) {
             @Override
@@ -85,8 +95,6 @@ public class DetailDishDataManager {
                     customerCode= StringManager.getFirstMap(object).get("customerCode");
                     if (!TextUtils.isEmpty(object.toString()) && !object.toString().equals("[]")) {
                         handleDataSuccess(flag, DISH_DATA_TOP, object);
-                        reqOne();
-                        reqTwo();
                         Map<String,String> maps= StringManager.getFirstMap(object);
                         if(maps.containsKey("isHide")&&!"2".equals(maps.get("isHide"))){
                             reqOtherTieData();
