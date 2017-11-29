@@ -245,6 +245,7 @@ public class Banner extends RelativeLayout {
         mViewPager = new SLooperViewPager(context);
 
         mViewPager.setOffscreenPageLimit(8);
+        mViewPager.setOverScrollMode(OVER_SCROLL_NEVER);
 
         //以matchParent的方式将viewPager填充到控件容器中
         addView(mViewPager, new LayoutParams(RMP, RMP));
