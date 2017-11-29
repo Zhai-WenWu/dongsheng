@@ -95,6 +95,10 @@ public class Main extends Activity implements OnClickListener, IObserver {
     private String[] tabTitle = {"学做菜", "商城", "消息", "我的"};
     private Class<?>[] classes = new Class<?>[]{MainHomePage.class, MainMall.class, MyMessage.class, MainMyself.class};
     private int[] tabImgs = new int[]{R.drawable.tab_index, R.drawable.tab_mall, R.drawable.tab_four, R.drawable.tab_myself};
+    public static final int TAB_HOME = 0;
+    public static final int TAB_MALL = 1;
+    public static final int TAB_MESSAGE = 2;
+    public static final int TAB_SELF = 3;
 
     @SuppressLint("StaticFieldLeak")
     public static Main allMain;
@@ -207,9 +211,11 @@ public class Main extends Activity implements OnClickListener, IObserver {
         if (mUnreadCountListener == null) {
             mUnreadCountListener = count -> {
                 if (count >= 0) {
-                    if (nowTab == 3 || allTab.containsKey(MyMessage.KEY)) {
+                    if (nowTab == TAB_MESSAGE || allTab.containsKey(MyMessage.KEY)) {
                         MyMessage myMessage = (MyMessage) allTab.get(MyMessage.KEY);
-                        myMessage.setQiYvNum(count);
+                        if(myMessage != null){
+                            myMessage.setQiYvNum(count);
+                        }
                     }
                     Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + count);
                 }
@@ -468,12 +474,6 @@ public class Main extends Activity implements OnClickListener, IObserver {
 //        }
 //        setTabItemMargins(linear_item, 0, 0, margin);
 //        setTabItemMargins(linear_item, length - 1, margin, 0);
-    }
-
-    public void setTabItemMargins(ViewGroup viewGroup, int index, int leftMargin, int rightMargin) {
-        RelativeLayout child = (RelativeLayout) viewGroup.getChildAt(index);
-        LinearLayout.LayoutParams params_child = (LinearLayout.LayoutParams) child.getLayoutParams();
-        params_child.setMargins(leftMargin, 0, leftMargin, 0);
     }
 
     // 时刻取得导航提醒
@@ -766,18 +766,18 @@ public class Main extends Activity implements OnClickListener, IObserver {
     public void onClick(View v) {
         for (int i = 0; i < tabViews.length; i++) {
             if (v == tabViews[i].findViewById(R.id.tab_layout) && allTab.size() > 0) {
-                if (i == 0 && allTab.containsKey(MainHomePage.KEY) && i == nowTab) {
+                if (i == TAB_HOME && allTab.containsKey(MainHomePage.KEY) && i == nowTab) {
                     MainHomePage mainIndex = (MainHomePage) allTab.get(MainHomePage.KEY);
                     mainIndex.refresh();
-                } else if (i == 1 && allTab.containsKey(MainMall.KEY) && tabHost.getCurrentTab() == i) {  //当所在页面正式你要刷新的页面,就直接刷新
+                } else if (i == TAB_MALL && allTab.containsKey(MainMall.KEY) && tabHost.getCurrentTab() == i) {  //当所在页面正式你要刷新的页面,就直接刷新
                     MainMall mall = (MainMall) allTab.get(MainMall.KEY);
                     mall.scrollTop();
                     mall.refresh();
-                } else if (i == 3 && allTab.containsKey(MainMyself.KEY)) {
+                } else if (i == TAB_SELF && allTab.containsKey(MainMyself.KEY)) {
                     //在onResume方法添加了刷新方法
 //                    MainMyself mainMyself = (MainMyself) allTab.get(MainMyself.KEY);
 //                    mainMyself.scrollToTop();
-                } else if (i == 2 && allTab.containsKey(MyMessage.KEY) && i == nowTab) {
+                } else if (i == TAB_MESSAGE && allTab.containsKey(MyMessage.KEY) && i == nowTab) {
 //                    MyMessage myMessage = (MyMessage) allTab.get(MyMessage.KEY);
 //                    myMessage.onRefresh();
                 }
@@ -807,17 +807,6 @@ public class Main extends Activity implements OnClickListener, IObserver {
             return tabViews[index];
         }
         return null;
-    }
-
-    /**
-     * 执行一个旋转动画
-     * @param view
-     */
-    private void setRoteAnimation(View view) {
-        RotateAnimation animation = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-        animation.setDuration(800);
-        view.clearAnimation();
-        view.startAnimation(animation);
     }
 
     public LocalActivityManager getLocalActivityManager() {
@@ -858,7 +847,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
         if (ObserverManager.NOTIFY_LOGIN.equals(name)) {
             if (data != null && data instanceof Boolean && (Boolean)data) {
                 addQiYvListener();
-                if (nowTab == 2 || allTab.containsKey(MyMessage.KEY)) {
+                if (nowTab == TAB_MESSAGE || allTab.containsKey(MyMessage.KEY)) {
                     MyMessage myMessage = (MyMessage) allTab.get(MyMessage.KEY);
                     if(myMessage != null){
                         myMessage.onRefresh();
@@ -868,7 +857,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
                 QiYvHelper.getInstance().getUnreadCount(new QiYvHelper.NumberCallback() {
                     @Override
                     public void onNumberReady(int count) {
-                        if (nowTab == 3 || allTab.containsKey(MyMessage.KEY)) {
+                        if (nowTab == 2 || allTab.containsKey(MyMessage.KEY)) {
                             MyMessage myMessage = (MyMessage) allTab.get(MyMessage.KEY);
                             if(myMessage != null){
                                 myMessage.setQiYvNum(count);
@@ -881,7 +870,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
         } else if (ObserverManager.NOTIFY_LOGOUT.equals(name)) {
             if (data != null && data instanceof Boolean) {
                 if ((Boolean)data) {
-                    if (nowTab == 3 || allTab.containsKey(MyMessage.KEY)) {
+                    if (nowTab == TAB_MESSAGE || allTab.containsKey(MyMessage.KEY)) {
                         MyMessage myMessage = (MyMessage) allTab.get(MyMessage.KEY);
                         myMessage.onRefresh();
                     }

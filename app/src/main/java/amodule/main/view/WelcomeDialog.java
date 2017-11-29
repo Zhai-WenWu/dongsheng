@@ -101,8 +101,6 @@ public class WelcomeDialog extends Dialog {
         this.mAdTime = adShowTime;
         this.dialogShowCallBack=callBack;
         Window window = this.getWindow();
-//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
         this.view = this.getLayoutInflater().inflate(R.layout.xh_welcome, null);
         setContentView(view);
@@ -321,6 +319,7 @@ public class WelcomeDialog extends Dialog {
     }
     private void showSkipContainer(){
         view.findViewById(R.id.line_1).setVisibility(View.VISIBLE);
+        view.findViewById(R.id.ad_linear).setVisibility(View.VISIBLE);
         textLead.setVisibility(View.VISIBLE);
         textSkip.setVisibility(View.VISIBLE);
         mADLayout.setVisibility(View.VISIBLE);
@@ -337,7 +336,6 @@ public class WelcomeDialog extends Dialog {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-
                 textLead.setVisibility(View.VISIBLE);
                 textSkip.setVisibility(View.VISIBLE);
                 mADLayout.setVisibility(View.VISIBLE);
@@ -454,12 +452,12 @@ public class WelcomeDialog extends Dialog {
             startCountDown(false);
             LogManager.printStartTime("zhangyujian","dialog::onWindowFocusChanged333::");
             //
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
+//            new Thread(new Runnable() {
+//                @Override
+//                public void run() {
                     WelcomeAdTools.getInstance().handlerAdData(false, null,isTwoShow);
-                }
-            }).start();
+//                }
+//            }).start();
 
             LogManager.printStartTime("zhangyujian","dialog::onWindowFocusChanged::");
         }

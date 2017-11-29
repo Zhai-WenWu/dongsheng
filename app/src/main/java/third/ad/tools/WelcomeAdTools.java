@@ -111,7 +111,8 @@ public class WelcomeAdTools {
                     handlerData(configMap.get(key), list_ad, banner);
             }
             //开启广告
-            new Handler(Looper.getMainLooper()).post(() -> nextAd(isCache));
+//            new Handler(Looper.getMainLooper()).post(() -> nextAd(isCache));
+            nextAd(isCache);
         } else {
             if (adDataCallBack != null) adDataCallBack.noAdData();
         }

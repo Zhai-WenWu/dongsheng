@@ -27,11 +27,14 @@ import acore.widget.rvlistview.RvListView;
 import amodule.article.view.BottomDialog;
 import amodule.main.Main;
 import amodule.main.activity.MainHome;
+import amodule.main.activity.MainHomePage;
 import amodule.user.adapter.AdapterModuleS0;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
+
+import static amodule.main.Main.TAB_HOME;
 
 /**
  * 我的收藏页面改版
@@ -224,8 +227,8 @@ public class MyFavorite extends BaseActivity implements View.OnClickListener {
             case R.id.btn_no_data:
                 if (Main.allMain != null) {
                     Main.allMain.setCurrentTabByClass(MainHome.class);
-                    if (Main.allMain.allTab != null && Main.allMain.allTab.get("MainIndex") != null) {
-                        ((MainHome) Main.allMain.allTab.get("MainIndex")).setCurrentTab(0);
+                    if (Main.allMain.allTab != null && Main.allMain.allTab.get(MainHomePage.KEY) != null) {
+                        ((MainHome) Main.allMain.allTab.get(MainHomePage.KEY)).setCurrentTab(TAB_HOME);
                     }
                 }
                 Main.colse_level = 1;
