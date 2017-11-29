@@ -50,7 +50,7 @@ public class DishExplainView extends ItemBaseView {
     public void init() {
         super.init();
         mAdLayout = (LinearLayout)findViewById(R.id.a_dish_detail_ad);
-        dishAdDataView = new DishAdDataViewNew(context);
+        dishAdDataView = new DishAdDataViewNew(context,R.layout.view_dish_tips_ad_layout_distance);
         dishAdDataView.getRequest(XHActivityManager.getInstance().getCurrentActivity(), mAdLayout);
     }
 

@@ -93,22 +93,29 @@ public class DishQAView extends ItemBaseView{
     public void setData(ArrayList<Map<String,String>> list){
         maptemp= list.get(0);
         text_answer.setText(maptemp.get("answerNum"));
-        text_degree.setText(maptemp.get("satisfyRate"));
+        text_degree.setText(maptemp.get("satisfyRate")+"%");
         text_time.setText(maptemp.get("avgRespondTime"));
         ArrayList<Map<String,String>> listQA = StringManager.getListMapByJson(maptemp.get("list"));
         if(listQA!=null&&listQA.size()>0){
             for(int i=0;i<listQA.size();i++){
                 final Map<String,String> mapQA= listQA.get(i);
+                final int index = i;
                 View qaItem=LayoutInflater.from(context).inflate(R.layout.view_dish_qa_item,null);
                 TextView content_one= (TextView) qaItem.findViewById(R.id.content_one);
                 TextView content_two= (TextView) qaItem.findViewById(R.id.content_two);
-                content_one.setText(getClickableSpan(listQA.get(0).get("text"),listQA.get(0)));
+                content_one.setText(getClickableSpan(mapQA.get("text"),mapQA));
                 content_one.setMovementMethod(LinkMovementMethod.getInstance());//必须设置否则无效
                 if(mapQA.containsKey("isAttend")&&"1".equals(mapQA.get("isAttend"))) {
                     qaItem.findViewById(R.id.money_linear).setVisibility(View.VISIBLE);
                     ((TextView)qaItem.findViewById(R.id.money_qa)).setText(mapQA.get("peekMoney")+"元偷看");
+                    qaItem.findViewById(R.id.money_linear).setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), DetailDishNew.tongjiId_detail, "问答", "点击第"+index+"条问答");
+                            AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(),mapQA.get("link"),false);
+                        }
+                    });
                 }
-                final int index = i;
                 content_one.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -154,11 +161,11 @@ public class DishQAView extends ItemBaseView{
                 @Override
                 public void onClick(View v) {
 
-                    Map<String,String> map = StringManager.getFirstMap(maps.get("imgs"));
-                    if(map!=null&&map.size()>0) {
+                   ArrayList<Map<String,String>> maplist = StringManager.getListMapByJson(maps.get("imgs"));
+                    if(maplist!=null&&maplist.size()>0) {
                         ArrayList<String> data= new ArrayList<>();
-                        for(String str:map.keySet()){
-                            data.add(str);
+                        for(Map<String,String> str:maplist){
+                            data.add(str.get(""));
                         }
                         Intent intent = new Intent(context, ImgWallActivity.class);
                         intent.putStringArrayListExtra("images", data);

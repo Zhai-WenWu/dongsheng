@@ -70,7 +70,6 @@ public class DetailDishNew extends BaseAppCompatActivity implements IObserver {
         initView();
         initData();
     }
-
     /**
      * 处理页面初始数据
      */
@@ -85,17 +84,15 @@ public class DetailDishNew extends BaseAppCompatActivity implements IObserver {
             data_type = bundle.getString("data_type");
             module_type = bundle.getString("module_type");
             img = bundle.getString("img");
-            //保存历史记录
-            DataOperate.saveHistoryCode(code);
+            DataOperate.saveHistoryCode(code);//保存历史记录
         }
-//        code = "90384610";
+        code = "90384610";
         if (TextUtils.isEmpty(code)) {
             Tools.showToast(getApplicationContext(), "抱歉，未找到相应菜谱");
             this.finish();
             return;
         }
-        //保持高亮
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);//保持高亮
         handlerScreen = new Handler();
         handlerScreen.postDelayed(new Runnable() {
             @Override
@@ -103,12 +100,10 @@ public class DetailDishNew extends BaseAppCompatActivity implements IObserver {
                 getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             }
         }, 15 * 60 * 1000);
-        //sufureView页面闪烁
-        getWindow().setFormat(PixelFormat.TRANSLUCENT);
+        getWindow().setFormat(PixelFormat.TRANSLUCENT);//sufureView页面闪烁
         XHClick.track(XHApplication.in(), "浏览菜谱详情页");
         ObserverManager.getInstence().registerObserver(this,ObserverManager.NOTIFY_LOGIN,ObserverManager.NOTIFY_FOLLOW,ObserverManager.NOTIFY_PAYFINISH);
     }
-
     /**
      * 处理页面Ui
      */
@@ -116,19 +111,17 @@ public class DetailDishNew extends BaseAppCompatActivity implements IObserver {
         initActivity("", 2, 0, 0, R.layout.a_detail_dish);
         listView = (ListView) findViewById(R.id.listview);
     }
-
     /**
      * 处理页面Ui
      */
     private void initData() {
         adapterDishNew = new AdapterDishNew(listView,maplist);
         listView.setAdapter(adapterDishNew);
-        if (detailDishViewManager == null) {
+        if (detailDishViewManager == null) {//view manager
             detailDishViewManager = new DetailDishViewManager(this, listView, state);
             detailDishViewManager.initBeforeData(img);
         }
-
-        if (detailDishDataManager == null) detailDishDataManager = new DetailDishDataManager(code,this);
+        if (detailDishDataManager == null) detailDishDataManager = new DetailDishDataManager(code,this);//数据manager
         detailDishDataManager.setDishDataCallBack(new DetailDishDataManager.DishDataCallBack() {
             @Override
             public void handlerTypeData(String type, ArrayList<Map<String,String>> list,Map<String,String> PermissionMap) {
@@ -143,15 +136,11 @@ public class DetailDishNew extends BaseAppCompatActivity implements IObserver {
                 }
                 XHClick.mapStat(DetailDishNew.this, DetailDishNew.tongjiId_detail, "步骤", "步骤图点击量");
                 Intent intent = new Intent(DetailDishNew.this, MoreImageShow.class);
-                ArrayList<Map<String, String>> listdata = new ArrayList<Map<String, String>>();
+                ArrayList<Map<String, String>> listdata = new ArrayList<>();
                 listdata.addAll(maplist);
                 if (!TextUtils.isEmpty(mapTop.get("remark"))) {
-                    Map<String, String> map_temp = new HashMap<String, String>();
-                    if(mapTop != null){
-                        map_temp.put("img", mapTop.get("img"));
-                    }else{
-                        map_temp.put("img", "");
-                    }
+                    Map<String, String> map_temp = new HashMap();
+                    map_temp.put("img", mapTop != null?mapTop.get("img"):"");
                     map_temp.put("info", "小贴士：\n" + mapTop.get("remark"));
                     map_temp.put("num", String.valueOf(maplist.size() + 1));
                     listdata.add(map_temp);
@@ -233,6 +222,14 @@ public class DetailDishNew extends BaseAppCompatActivity implements IObserver {
         //反注册。
         ObserverManager.getInstence().unRegisterObserver(ObserverManager.NOTIFY_LOGIN,ObserverManager.NOTIFY_FOLLOW,ObserverManager.NOTIFY_PAYFINISH);
         if(detailDishViewManager!=null)detailDishViewManager.onDestroy();
+        long nowTime=System.currentTimeMillis();
+        if(startTime>0&&(nowTime-startTime)>0&&!TextUtils.isEmpty(data_type)&&!TextUtils.isEmpty(module_type)){
+            XHClick.saveStatictisFile("DetailDish",module_type,data_type,code,"","stop",String.valueOf((nowTime-startTime)/1000),"","","","");
+        }
+        if(handlerScreen!=null){
+            handlerScreen.removeCallbacksAndMessages(null);
+            handlerScreen=null;
+        }
     }
 
     public void refresh() {
@@ -340,7 +337,6 @@ public class DetailDishNew extends BaseAppCompatActivity implements IObserver {
 
     /**保存数据到数据库*/
     private synchronized void saveHistoryToDB() {
-        Log.i("xianghaTag","saveHistoryToDB");
         if (saveDishInfo && isSaveJsData) {
             new Thread(new Runnable() {
                 @Override

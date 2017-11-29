@@ -6,7 +6,6 @@
     android:paddingLeft="@dimen/dp_20"
     android:paddingRight="@dimen/dp_20">
 
-
     <TextView
         android:id="@+id/content_one"
         android:layout_width="match_parent"
@@ -45,21 +44,26 @@
     <LinearLayout
         android:id="@+id/money_linear"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/dp_20"
         android:layout_alignParentRight="true"
         android:layout_marginTop="@dimen/dp_5"
+        android:paddingLeft="@dimen/dp_8"
+        android:paddingRight="@dimen/dp_8"
+        android:gravity="center"
         android:layout_below="@+id/content_one"
         android:orientation="horizontal"
+        android:background="@drawable/bg_circle_333333_20"
         android:visibility="gone">
         <ImageView
-            android:layout_width="@dimen/dp_20"
-            android:layout_height="@dimen/dp_15"
+            android:layout_width="@dimen/dp_15"
+            android:layout_height="@dimen/dp_11"
             android:background="@drawable/z_newmenu_look"/>
         <TextView
             android:id="@+id/money_qa"
             android:layout_marginLeft="@dimen/dp_4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="#333333"
             android:text="偷看"/>
     </LinearLayout>
     <View

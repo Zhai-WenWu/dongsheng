@@ -36,16 +36,16 @@ public class DishAdDataViewNew extends ItemBaseView {
     private Map<String, String> adDataMap = new HashMap<>();
     RelativeLayout root_layout;
 
-    public DishAdDataViewNew(Context context) {
-        super(context, R.layout.view_dish_tips_ad_layout_new);
+    public DishAdDataViewNew(Context context,int layoutId) {
+        super(context, layoutId);
     }
 
-    public DishAdDataViewNew(Context context, AttributeSet attrs) {
-        super(context, attrs, R.layout.view_dish_tips_ad_layout_new);
+    public DishAdDataViewNew(Context context, AttributeSet attrs,int layoutId) {
+        super(context, attrs, layoutId);
     }
 
-    public DishAdDataViewNew(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr, R.layout.view_dish_tips_ad_layout_new);
+    public DishAdDataViewNew(Context context, AttributeSet attrs, int defStyleAttr,int layoutId) {
+        super(context, attrs, defStyleAttr, layoutId);
     }
 
     @Override

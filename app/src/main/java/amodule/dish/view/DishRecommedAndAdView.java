@@ -53,15 +53,15 @@ public class DishRecommedAndAdView extends ItemBaseView implements View.OnClickL
     private TextView mRecommentNum,mRelevantTv;
     private String code,mDishName;
     public DishRecommedAndAdView(Context context) {
-        super(context, R.layout.a_dish_detail_new_footer);
+        super(context, R.layout.a_dish_detail_recommend);
     }
 
     public DishRecommedAndAdView(Context context, AttributeSet attrs) {
-        super(context, attrs,  R.layout.a_dish_detail_new_footer);
+        super(context, attrs,  R.layout.a_dish_detail_recommend);
     }
 
     public DishRecommedAndAdView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr,  R.layout.a_dish_detail_new_footer);
+        super(context, attrs, defStyleAttr,  R.layout.a_dish_detail_recommend);
     }
 
     @Override

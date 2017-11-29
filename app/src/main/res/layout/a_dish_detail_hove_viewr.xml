@@ -2,8 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/transparent"
-    >
+    android:background="@color/transparent">
 
     <LinearLayout
         android:id="@+id/a_dish_detail_new_footer_hover_layout"
@@ -19,16 +18,16 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="3"
-            android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            android:orientation="vertical">
 
             <ImageView
                 android:id="@+id/a_dish_detail_new_footer_hover_good_show"
                 android:layout_width="@dimen/dp_23"
                 android:layout_height="@dimen/dp_17.5"
-                android:layout_marginTop="@dimen/dp_7"
                 android:layout_marginBottom="@dimen/dp_2"
                 android:layout_marginRight="@dimen/dp_1.5"
+                android:layout_marginTop="@dimen/dp_7"
                 android:src="@drawable/i_dish_detail_zan" />
 
             <TextView
@@ -52,37 +51,41 @@
                 android:id="@+id/a_dish_detail_new_footer_hover_tv"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/dp_8"
                 android:layout_marginBottom="@dimen/dp_8"
+                android:layout_marginTop="@dimen/dp_8"
+                android:background="@drawable/bg_circle_yellow_5"
                 android:gravity="center"
                 android:text="问作者"
-                android:background="@drawable/bg_circle_yellow_5"
                 android:textColor="#fffffe"
                 android:textSize="@dimen/sp_15" />
 
         </LinearLayout>
+
         <View
             android:layout_width="@dimen/dp_10"
             android:layout_height="match_parent"
             android:background="#f2f2f2" />
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="3"
             android:gravity="center">
+
             <TextView
                 android:id="@+id/a_dish_detail_hover_show_caipu"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/dp_8"
                 android:layout_marginBottom="@dimen/dp_8"
+                android:layout_marginTop="@dimen/dp_8"
+                android:background="@drawable/bg_circle_red_5"
                 android:gravity="center"
                 android:text="晒作品"
                 android:textColor="#fffffe"
-                android:background="@drawable/bg_circle_red_5"
                 android:textSize="@dimen/sp_15" />
 
         </LinearLayout>
+
         <View
             android:layout_width="@dimen/dp_10"
             android:layout_height="match_parent"
@@ -99,36 +102,6 @@
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:visibility="gone">
-
-        <LinearLayout
-            android:id="@+id/a_dish_detail_new_footer_hover_trample"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:gravity="center">
-
-            <ImageView
-                android:id="@+id/a_dish_hover_img"
-                android:layout_width="@dimen/dp_16"
-                android:layout_height="@dimen/dp_17.5"
-                android:src="@drawable/i_not_good" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/dp_1"
-                android:layout_marginLeft="@dimen/dp_7"
-                android:gravity="center"
-                android:text="没用"
-                android:textColor="#333"
-                android:textSize="@dimen/sp_13" />
-
-        </LinearLayout>
-
-        <View
-            android:layout_width="1px"
-            android:layout_height="@dimen/dp_26"
-            android:background="#ccc" />
 
         <LinearLayout
             android:id="@+id/a_dish_detail_new_footer_hover_good"
@@ -156,15 +129,43 @@
 
         </LinearLayout>
 
+        <View
+            android:layout_width="1px"
+            android:layout_height="@dimen/dp_26"
+            android:background="#ccc" />
+
+        <LinearLayout
+            android:id="@+id/a_dish_detail_new_footer_hover_trample"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/a_dish_hover_img"
+                android:layout_width="@dimen/dp_16"
+                android:layout_height="@dimen/dp_17.5"
+                android:src="@drawable/i_not_good" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dp_1"
+                android:layout_marginLeft="@dimen/dp_7"
+                android:gravity="center"
+                android:text="没用"
+                android:textColor="#333"
+                android:textSize="@dimen/sp_13" />
+
+        </LinearLayout>
     </LinearLayout>
-
-
 
     <View
         android:id="@+id/line_2"
         style="@style/lineView"
-        android:background="#f1f1f1"
-        android:layout_alignParentTop="true"/>
+        android:layout_alignParentTop="true"
+        android:background="#f1f1f1" />
+
     <RelativeLayout
         android:id="@+id/a_dish_detail_new_footer_member_rela"
         android:layout_width="match_parent"
@@ -180,12 +181,12 @@
             android:gravity="center"
             android:text="开通VIP"
             android:textColor="#FFFFFF"
-            android:textSize="@dimen/sp_17"/>
+            android:textSize="@dimen/sp_17" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
-            android:background="#EDEDDE"/>
+            android:background="#EDEDDE" />
 
     </RelativeLayout>
 

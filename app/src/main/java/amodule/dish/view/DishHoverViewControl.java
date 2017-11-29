@@ -211,87 +211,20 @@ public class DishHoverViewControl implements View.OnClickListener{
             mGoodImg.setImageResource(R.drawable.iv_good_good_arrow);
             mNoLikeImg.setImageResource(R.drawable.iv_bad_no_arrow);
             hoverGoodImg.setImageResource(R.drawable.iv_dish_all_good);
+            mHoverNum.setTextColor(Color.parseColor("#f23030"));
             if(!TextUtils.isEmpty(likeNum)) mHoverNum.setText("有用"+likeNum);
         }else if("1".equals(dishStatus)){//点踩
             mNoLikeImg.setImageResource(R.drawable.iv_bad_good_arrow);
             mGoodImg.setImageResource(R.drawable.iv_good_no_arrow);
             hoverGoodImg.setImageResource(R.drawable.iv_dish_all_bad);
-            if(!TextUtils.isEmpty(likeNum))mHoverNum.setText("有用"+likeNum);
+            mHoverNum.setTextColor(Color.parseColor("#f23030"));
+            if(!TextUtils.isEmpty(likeNum))mHoverNum.setText("没用");
         }else if("3".equals(dishStatus)){
             mGoodImg.setImageResource(R.drawable.iv_good_no_arrow);
             mNoLikeImg.setImageResource(R.drawable.iv_bad_no_arrow);
             hoverGoodImg.setImageResource(R.drawable.iv_dish_all_no);
-            mHoverNum.setText("是否有用？");
-        }
-    }
-    /**
-     * 处理状态：1：不显示，2：向作者提问，3：提醒作者开通问答，4：未登陆状态
-     * @param status
-     */
-    private void handlrAskStatus(String status){
-        askStatus=status;
-        switch (status){
-            case "2":
-                mHoverTv.setText("向作者提问");
-                break;
-            case "3":
-                mHoverTv.setText("提醒作者开通问答");
-                break;
-        }
-        if("2".equals(status)||"3".equals(status)||"4".equals(status)){
-            mAct.findViewById(R.id.a_dish_detail_new_footer_hover).setVisibility(View.VISIBLE);
-            hoverLayout.setVisibility(View.VISIBLE);
-        }else{
-            mAct.findViewById(R.id.a_dish_detail_new_footer_hover).setVisibility(View.GONE);
-            hoverLayout.setVisibility(View.GONE);
-        }
-    }
-    /**
-     * 处理当前用户状态。
-     */
-    private void setRequestAskButtonStatus(){
-        LinkedHashMap<String,String> map = new LinkedHashMap<>();
-        map.put("code",code);
-        ReqEncyptInternet.in().doEncypt(StringManager.api_askButtonStatus,map, new InternetCallback(mAct) {
-            @Override
-            public void loaded(int i, String s, Object o) {
-                if(i >= ReqInternet.REQ_OK_STRING){
-                    Map<String,String> map= StringManager.getFirstMap(o);
-                    if(map.containsKey("button")&&!TextUtils.isEmpty(map.get("button"))&&!"0".equals(StringManager.getFirstMap(map.get("button")).get("style"))) {
-                        handlerAskButton(StringManager.getFirstMap(map.get("button")));
-                    }else{
-                        if (map.containsKey("status") && !TextUtils.isEmpty(map.get("status"))) {
-                            handlrAskStatus(map.get("status"));
-                        }
-                    }
-                }
-            }
-        });
-    }
-    /**
-     * 对按钮处理
-     * 会员去看看。
-     */
-    private void handlerAskButton(final Map<String,String> map){
-        if(map.containsKey("title")&&map.containsKey("url")) {
-            mAct.findViewById(R.id.a_dish_detail_new_footer_hover_layout).setVisibility(View.GONE);
-            mAct.findViewById(R.id.a_dish_detail_new_footer_hover).setVisibility(View.VISIBLE);
-            RelativeLayout bottom_layout = (RelativeLayout) mAct.findViewById(R.id.a_dish_detail_new_footer_member_rela);
-            bottom_layout.setVisibility(View.VISIBLE);
-            TextView vip_immediately = (TextView) mAct.findViewById(R.id.a_dish_detail_new_footer_member_tv);
-            vip_immediately.setText(map.get("title"));
-            if(map.containsKey("color"))vip_immediately.setTextColor(Color.parseColor(map.get("color")));
-            if(map.containsKey("bgColor")){
-                bottom_layout.setBackgroundColor(Color.parseColor(map.get("bgColor")));
-                vip_immediately.setBackgroundColor(Color.parseColor(map.get("bgColor")));
-            }
-            //点击展示。
-            vip_immediately.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    AppCommon.openUrl(mAct,map.get("url"),false);
-                }
-            });
+            mHoverNum.setTextColor(Color.parseColor("#333333"));
+            mHoverNum.setText("有用"+likeNum);
         }
     }
 }

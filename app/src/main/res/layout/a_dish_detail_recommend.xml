@@ -5,50 +5,51 @@
     android:orientation="vertical">
 
 
-
     <LinearLayout
         android:id="@+id/a_dish_detail_new_tieshi_ad"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dp_20"
         android:layout_marginLeft="@dimen/dp_20"
         android:layout_marginRight="@dimen/dp_20"
-        android:layout_marginBottom="@dimen/dp_20"
-        android:orientation="vertical"/>
+        android:orientation="vertical" />
+
+    <View
+        android:id="@+id/qa_line"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_5"
+        android:layout_below="@+id/a_dish_detail_new_tieshi_ad"
+        android:background="#f2f2f2" />
 
     <RelativeLayout
         android:id="@+id/a_dish_detail_new_xiangguan"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/a_dish_detail_new_tieshi_ad"
+        android:layout_below="@+id/qa_line"
         android:layout_marginBottom="@dimen/dp_15"
         android:layout_marginLeft="@dimen/dp_20"
         android:layout_marginRight="@dimen/dp_20"
-        android:visibility="gone" >
+        android:layout_marginTop="@dimen/dp_15"
+        android:visibility="gone">
 
-        <View
-            android:id="@+id/a_dish_detail_new_line1"
-            style="@style/lineView"
-            android:layout_marginBottom="@dimen/dp_16"/>
 
         <TextView
             android:id="@+id/a_dish_detail_new_tv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/a_dish_detail_new_line1"
             android:layout_toLeftOf="@+id/a_dish_detail_new_tv_num"
             android:text="哈友晒的这道菜"
             android:textColor="#333"
             android:textSize="@dimen/sp_17"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/a_dish_detail_new_tv_num"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_below="@+id/a_dish_detail_new_line1"
             android:textColor="@color/comment_color"
-            android:textSize="@dimen/sp_16"/>
+            android:textSize="@dimen/sp_16" />
 
     </RelativeLayout>
 
@@ -83,7 +84,6 @@
         android:text="晒我做的这道菜"
         android:textColor="#fff"
         android:textSize="@dimen/sp_17"
-        android:visibility="gone"
-        />
+        android:visibility="gone" />
 
 </RelativeLayout>

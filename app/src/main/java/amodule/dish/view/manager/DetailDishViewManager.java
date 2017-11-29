@@ -81,7 +81,6 @@ public class DetailDishViewManager {
     public DishModuleScrollView dishModuleScrollView;
     public View noStepView;
 
-
     /**
      * 对view进行基础初始化
      */
