@@ -1,7 +1,10 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="amodule.home.fragment.HomeSecondListFragment">
 
     <cn.srain.cube.views.ptr.PtrClassicFrameLayout
@@ -9,9 +12,9 @@
         android:id="@+id/refresh_list_view_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/homeHeaderNum"
         android:background="#FFFFFE"
         cube_ptr:ptr_duration_to_close="200"
-        android:layout_below="@+id/homeHeaderNum"
         cube_ptr:ptr_duration_to_close_header="500"
         cube_ptr:ptr_pull_to_fresh="false"
         cube_ptr:ptr_ratio_of_header_height_to_refresh="1"
@@ -21,6 +24,8 @@
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:overScrollMode="never"
+            android:scrollbars="none"
             android:background="@android:color/transparent"
             android:cacheColorHint="@android:color/transparent"
             android:listSelector="@android:color/transparent"
