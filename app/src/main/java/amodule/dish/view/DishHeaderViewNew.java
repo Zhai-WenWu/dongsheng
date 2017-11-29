@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
@@ -33,6 +34,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import acore.logic.AppCommon;
+import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.tools.FileManager;
@@ -41,6 +43,7 @@ import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.ImageViewVideo;
 import amodule.dish.activity.MoreImageShow;
+import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
 import third.ad.scrollerAd.XHAllAdControl;
@@ -362,7 +365,8 @@ public class DishHeaderViewNew extends LinearLayout {
                 @Override
                 public void onClick(View v) {
                     if(!TextUtils.isEmpty(url)){
-                        AppCommon.openUrl(activity,url,true);
+                        String currentUrl = url + "&vipFrom=" +Uri.encode(LoginManager.isLogin() ? "视频菜谱会员按钮（登录后）" : "视频菜谱会员按钮（登录前）");
+                        AppCommon.openUrl(activity,currentUrl,true);
                         return;
                     }
 

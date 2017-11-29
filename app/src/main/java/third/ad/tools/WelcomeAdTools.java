@@ -110,9 +110,8 @@ public class WelcomeAdTools {
                 if (configMap.containsKey(key))
                     handlerData(configMap.get(key), list_ad, banner);
             }
-            Log.i("tzy","nextAd");
             //开启广告
-            nextAd(isCache);
+            new Handler(Looper.getMainLooper()).post(() -> nextAd(isCache));
         } else {
             if (adDataCallBack != null) adDataCallBack.noAdData();
         }

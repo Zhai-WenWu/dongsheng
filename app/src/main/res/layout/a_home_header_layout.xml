@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tip_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingLeft="@dimen/dp_20"
+        android:paddingRight="@dimen/dp_20"
+        android:paddingTop="@dimen/dp_10"
+        android:paddingBottom="@dimen/dp_10"
+        android:visibility="gone"
+        tools:text="服务器升级中，请您稍后重试"
+        tools:visibility="visible"/>
+
+    <amodule._common.plugin.WidgetVerticalLayout
+        android:id="@+id/banner_widget"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+
+        <include
+            layout="@layout/widget_banner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </amodule._common.plugin.WidgetVerticalLayout>
+
+    <amodule._common.plugin.WidgetVerticalLayout
+        android:id="@+id/funcnav1_widget"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include
+            layout="@layout/widget_func_nav1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </amodule._common.plugin.WidgetVerticalLayout>
+
+    <amodule._common.plugin.WidgetVerticalLayout
+        android:id="@+id/funcnav2_widget"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include
+            layout="@layout/widget_func_nav2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </amodule._common.plugin.WidgetVerticalLayout>
+
+    <amodule._common.plugin.WidgetVerticalLayout
+        android:id="@+id/horizontal1_widget"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+
+        <include
+            layout="@layout/widget_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </amodule._common.plugin.WidgetVerticalLayout>
+
+    <amodule._common.plugin.WidgetVerticalLayout
+        android:id="@+id/horizontal2_widget"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+
+        <include
+            layout="@layout/widget_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </amodule._common.plugin.WidgetVerticalLayout>
+
+    <amodule._common.plugin.WidgetVerticalLayout
+        android:id="@+id/horizontal3_widget"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+
+        <include
+            layout="@layout/widget_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </amodule._common.plugin.WidgetVerticalLayout>
+
+    <include
+        android:id="@+id/a_home_feed_title"
+        layout="@layout/a_home_feed_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
+
+</LinearLayout>

@@ -7,6 +7,8 @@ import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -18,8 +20,6 @@ import com.xh.manager.ViewManager;
 import com.xh.view.HButtonView;
 import com.xh.view.TitleMessageView;
 import com.xh.window.FloatingWindow;
-import com.tencent.smtt.sdk.CookieManager;
-import com.tencent.smtt.sdk.CookieSyncManager;
 import com.xiangha.R;
 
 import java.util.Map;
@@ -235,7 +235,7 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
         if (succ && map != null && !map.isEmpty()) {
             mAskPrice = map.get("price");
             if (!TextUtils.isEmpty(mAskPrice)) {
-                mPriceText.setText(mAskPrice + "元");
+                mPriceText.setText((TextUtils.equals("0", mAskPrice) || TextUtils.equals("0.0", mAskPrice) || TextUtils.equals("0.00", mAskPrice)) ? "免费" : (mAskPrice + "元"));
                 mPriceText.setVisibility(View.VISIBLE);
             }
         }

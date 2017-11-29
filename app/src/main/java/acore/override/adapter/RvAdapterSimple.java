@@ -1,9 +1,6 @@
 package acore.override.adapter;
 
-import android.content.Context;
-import android.database.DataSetObserver;
 import android.graphics.Bitmap;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +17,7 @@ import java.util.List;
 
 import acore.tools.FileManager;
 import acore.tools.Tools;
-import acore.widget.rvlistview.RvBaseSimpleAdapter;
+import acore.widget.rvlistview.adapter.RvBaseSimpleAdapter;
 import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
 import xh.basic.tool.UtilImage;
@@ -149,4 +146,5 @@ public class RvAdapterSimple extends RvBaseSimpleAdapter {
     public ViewGroup getParent() {
         return (ViewGroup) mParent;
     }
+
 }

@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -37,6 +38,7 @@ import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilString;
 
 public class MyMessage extends MainBaseActivity{
+	public static final String KEY = "MyMessage";
 	private DownRefreshList listMessage;
 	private TextView feekback_msg_num,msg_title_sort;
 	
@@ -55,12 +57,13 @@ public class MyMessage extends MainBaseActivity{
 
 	private TextView mMyQANum;
 	private TextView mQiYvNum;
+	private LinearLayout mNoLoginLayout;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.a_common_message);
-		Main.allMain.allTab.put("MyMessage", this);
+		Main.allMain.allTab.put(KEY, this);
 		init();
 		XHClick.track(this, "浏览消息列表页");
 	}
@@ -122,17 +125,17 @@ public class MyMessage extends MainBaseActivity{
 		// 标示用户登录啦
 		if(LoginManager.isLogin()){
 			findViewById(R.id.no_login_rela).setVisibility(View.GONE);
-			findViewById(R.id.tv_login_notify).setVisibility(View.GONE);
+			mNoLoginLayout.setVisibility(View.GONE);
 			findViewById(R.id.tv_noData).setVisibility(View.GONE);
 			if (ToolsDevice.getNetActiveState(this)) {
 				load(true);
 				setRefresh();
 			}
 			AppCommon.quanMessage = 0;
-			Main.setNewMsgNum(3,AppCommon.quanMessage);
+			Main.setNewMsgNum(2,AppCommon.quanMessage);
 		}else{
 			findViewById(R.id.no_login_rela).setVisibility(View.VISIBLE);
-			findViewById(R.id.tv_login_notify).setVisibility(View.VISIBLE);
+			mNoLoginLayout.setVisibility(View.VISIBLE);
 			findViewById(R.id.tv_noData).setVisibility(View.GONE);
 			isShowData=true;
 		}
@@ -144,6 +147,9 @@ public class MyMessage extends MainBaseActivity{
 	}
 
 	private void init() {
+
+		mNoLoginLayout = (LinearLayout) findViewById(R.id.tv_login_notify);
+
 		// title初始化
 		TextView title = (TextView) findViewById(R.id.msg_title_tv);
 		title.setText("消息");
@@ -188,7 +194,7 @@ public class MyMessage extends MainBaseActivity{
 					case R.id.my_qa:
 						if (mMyQANum != null && mMyQANum.getVisibility() == View.VISIBLE) {
 							AppCommon.myQAMessage = 0;
-							Main.setNewMsgNum(3, AppCommon.myQAMessage);
+							Main.setNewMsgNum(2, AppCommon.myQAMessage);
 							mMyQANum.setText("");
 							mMyQANum.setVisibility(View.GONE);
 						}
@@ -200,7 +206,7 @@ public class MyMessage extends MainBaseActivity{
 						Map<String, String> customMap = new HashMap<String, String>();
 						customMap.put("pageTitle", "消息列表页");
 						QiYvHelper.getInstance().startServiceAcitivity(MyMessage.this, null, null, customMap);
-						Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage);
+						Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage);
 						break;
 				}
 			}
@@ -378,7 +384,6 @@ public class MyMessage extends MainBaseActivity{
 					loadCount = listReturn.size();
 					if (isForward&&loadCount == 0 && LoginManager.isLogin()) {
 						isShowData=true;
-//						 findViewById(R.id.tv_login_notify).setVisibility(View.VISIBLE);
 						findViewById(R.id.tv_noData).setVisibility(View.VISIBLE);
 					}else{
 						isShowData=false;
@@ -387,14 +392,14 @@ public class MyMessage extends MainBaseActivity{
 					if(LoginManager.isLogin()){
 						isShowData=false;
 						findViewById(R.id.no_login_rela).setVisibility(View.GONE);
-						findViewById(R.id.tv_login_notify).setVisibility(View.GONE);
+						mNoLoginLayout.setVisibility(View.GONE);
 						findViewById(R.id.tv_noData).setVisibility(View.GONE);
 						if (isForward&&loadCount == 0 && LoginManager.isLogin()) {
 							findViewById(R.id.tv_noData).setVisibility(View.VISIBLE);
 						}else findViewById(R.id.tv_noData).setVisibility(View.GONE);
 					}else{
 						findViewById(R.id.no_login_rela).setVisibility(View.VISIBLE);
-						findViewById(R.id.tv_login_notify).setVisibility(View.VISIBLE);
+						mNoLoginLayout.setVisibility(View.VISIBLE);
 						findViewById(R.id.tv_noData).setVisibility(View.GONE);
 						isShowData=true;
 					}
@@ -402,7 +407,7 @@ public class MyMessage extends MainBaseActivity{
 				listMessage.setVisibility(View.VISIBLE);
 				if (everyPage == 0)
 					everyPage = loadCount;
-				currentPage = loadManager.changeMoreBtn(flag, everyPage, loadCount, currentPage,listDataMessage.size() == 0);
+				currentPage = loadManager.changeMoreBtn(flag, everyPage, loadCount, currentPage,mNoLoginLayout.getVisibility() != View.VISIBLE && listDataMessage.size() == 0);
 				if (isForward)
 					adapter.notifyDataSetInvalidated();
 				else

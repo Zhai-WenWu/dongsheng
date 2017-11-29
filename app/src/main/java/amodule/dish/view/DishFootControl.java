@@ -64,7 +64,7 @@ public class DishFootControl implements View.OnClickListener{
 
 
     //处理底部浮动view
-    private LinearLayout goodLayoutParent,hoverLayout;
+    private LinearLayout goodLayoutParent,hoverLayout, questionBtnContainer;
     private ImageView mGoodImg,mNoLikeImg,hoverGoodImg;
     private TextView mHoverNum,mHoverTv;
     private String askStatus="";
@@ -102,7 +102,8 @@ public class DishFootControl implements View.OnClickListener{
         mAct.findViewById(R.id.a_dish_detail_new_footer_hover_good).setOnClickListener(this);
         mAct.findViewById(R.id.a_dish_detail_new_footer_hover_trample).setOnClickListener(this);
         mHoverTv= (TextView) mAct.findViewById(R.id.a_dish_detail_new_footer_hover_tv);
-        mHoverTv.setOnClickListener(this);
+        questionBtnContainer= (LinearLayout) mAct.findViewById(R.id.a_dish_detail_new_footer_hover_question_container);
+        questionBtnContainer.setOnClickListener(this);
         mAct.findViewById(R.id.a_dish_detail_new_footer_hover_good_linear).setOnClickListener(this);
         mHoverNum = (TextView) mAct.findViewById(R.id.a_dish_detail_new_footer_hover_number);
         mGoodImg = (ImageView) mAct.findViewById(R.id.a_dish_hover_good_img);
@@ -314,7 +315,7 @@ public class DishFootControl implements View.OnClickListener{
                 mAct.startActivity(showIntent);
                 XHClick.mapStat(mAct, tongjiId, "晒我做的这道菜", "晒我做的这道菜点击量");
                 break;
-            case R.id.a_dish_detail_new_footer_hover_tv: //提问作者
+            case R.id.a_dish_detail_new_footer_hover_question_container: //提问作者
                 if(!LoginManager.isLogin()){
                     mAct.startActivity(new Intent(mAct,LoginByAccout.class));
                     return;

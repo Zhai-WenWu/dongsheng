@@ -30,7 +30,7 @@ import java.util.Map;
 import acore.broadcast.ConnectionChangeReceiver;
 import acore.logic.AppCommon;
 import acore.logic.load.LoadManager;
-import acore.override.activity.mian.MainBaseActivity;
+import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -40,15 +40,12 @@ import amodule.quan.db.PlateData;
 import amodule.quan.tool.QuanAdvertControl;
 import amodule.quan.view.CircleHeaderView;
 import amodule.quan.view.NormalContentView;
-import amodule.quan.view.NormarlContentItemImageVideoView;
-import amodule.quan.view.RecommendFriendView;
 import amodule.quan.view.VideoImageView;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
 import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
 import third.ad.AdsShow;
 
-import static amodule.main.Main.allMain;
 import static com.xiangha.R.id.return_top;
 
 /**
@@ -61,7 +58,7 @@ public class CircleMainFragment extends Fragment {
     protected static final String PLATEDATA = "plate_data";
     public static final String CIRCLENAME = "circle_name";
     /** 依附的Activity */
-    private MainBaseActivity mActivity;
+    private BaseAppCompatActivity mActivity;
     /** 是否加载完成 */
     private boolean LoadOver = false;
     private LoadManager mLoadManager = null;
@@ -142,7 +139,7 @@ public class CircleMainFragment extends Fragment {
 
     @Override
     public void onAttach(Activity activity) {
-        mActivity = (MainBaseActivity) activity;
+        mActivity = (BaseAppCompatActivity) activity;
         super.onAttach(activity);
         isAutoPaly = "wifi".equals(ToolsDevice.getNetWorkSimpleType(activity));
         registnetworkListener();
@@ -163,18 +160,15 @@ public class CircleMainFragment extends Fragment {
         refreshLayout = (PtrClassicFrameLayout) mView.findViewById(R.id.refresh_list_view_frame);
         mListView = (RvListView) mView.findViewById(R.id.rvListview);
         returnTop = (ImageView) mView.findViewById(return_top);
-        returnTop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                returnTop.clearAnimation();
-                RotateAnimation animation = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-                animation.setInterpolator(new LinearInterpolator());
-                animation.setDuration(500);
-                animation.setFillAfter(true);// 特效animation设置
-                returnTop.startAnimation(animation);
-                returnListTop();
-                refresh();
-            }
+        returnTop.setOnClickListener(v -> {
+            returnTop.clearAnimation();
+            RotateAnimation animation = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+            animation.setInterpolator(new LinearInterpolator());
+            animation.setDuration(500);
+            animation.setFillAfter(true);// 特效animation设置
+            returnTop.startAnimation(animation);
+            returnListTop();
+            refresh();
         });
         //初始化AD
         initAd();
@@ -277,27 +271,14 @@ public class CircleMainFragment extends Fragment {
         mAdapter.setStiaticKey(mPlateData.getStiaticID());
         mAdapter.setModuleName(mPlateData.getName());
         mAdapter.setCircleName(mCircleName);
-        mAdapter.setmRecommendCutomerCallBack(new RecommendFriendView.RecommendCutomerCallBack() {
-            @Override
-            public void noUseData() {
-                getSpareUser(false);
-            }
-        });
+        mAdapter.setmRecommendCutomerCallBack(() -> getSpareUser(false));
         if (!LoadOver) {
             //设置加载，并传入PlaceHoderHeaderLayout设置滑动加载
-            mLoadManager.setLoading(refreshLayout, mListView, mAdapter, true, new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    getData(true);
-                    //刷新广告
-                    quanAdvertControl.getAdData(mActivity);
-                }
-            }, new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    getData(!LoadOver);
-                }
-            });
+            mLoadManager.setLoading(refreshLayout, mListView, mAdapter, true, v -> {
+                getData(true);
+                //刷新广告
+                quanAdvertControl.getAdData(mActivity);
+            }, v -> getData(!LoadOver));
             mListView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 final int topRedundant = Tools.getDimen(getContext(), R.dimen.dp_45) + Tools.getStatusBarHeight(getContext());
                 final int bottomRedundant = Tools.getDimen(getContext(), R.dimen.dp_50);
@@ -357,30 +338,23 @@ public class CircleMainFragment extends Fragment {
         quanAdvertControl = new QuanAdvertControl(mActivity);
 //        quanAdvertControl.getGdtData(mActivity);
 //        quanAdvertControl.getTencentApiAd(mActivity);
-        quanAdvertControl.setCallBack(new QuanAdvertControl.DataCallBack() {
-            @Override
-            public void dataBack() {
-                if (isLoadAd) {
-                    index_size = 0;
-                    mListData = quanAdvertControl.getAdvertAndQuanData(mListData, mPlateData.getCid(), mPlateData.getMid(), index_size);
-                    //Log.i("FRJ","广告数据回来刷新adapter:::集合大小："+mListData.size());
-                    mAdapter.notifyDataSetChanged();
-                    index_size = mListData.size();
-                } else {
-                }
+        quanAdvertControl.setCallBack(() -> {
+            if (isLoadAd) {
+                index_size = 0;
+                mListData = quanAdvertControl.getAdvertAndQuanData(mListData, mPlateData.getCid(), mPlateData.getMid(), index_size);
+                //Log.i("FRJ","广告数据回来刷新adapter:::集合大小："+mListData.size());
+                mAdapter.notifyDataSetChanged();
+                index_size = mListData.size();
             }
         });
         quanAdvertControl.getAdData(mActivity);
         mAdapter.setQuanAdvertControl(quanAdvertControl);
         //视频被点击事件
-        mAdapter.setVideoClickCallBack(new NormarlContentItemImageVideoView.VideoClickCallBack() {
-            @Override
-            public void videoImageOnClick(final int position) {
-                int firstVisiPosi = ((LinearLayoutManager)mListView.getLayoutManager()).findFirstVisibleItemPosition();
-                //要获得listview的第n个View,则需要n减去第一个可见View的位置。+1是因为有header
-                View parentView = mListView.getChildAt(position - firstVisiPosi + headerCount);
-                setVideoLayout(parentView, position);
-            }
+        mAdapter.setVideoClickCallBack(position -> {
+            int firstVisiPosi = ((LinearLayoutManager) mListView.getLayoutManager()).findFirstVisibleItemPosition();
+            //要获得listview的第n个View,则需要n减去第一个可见View的位置。+1是因为有header
+            View parentView = mListView.getChildAt(position - firstVisiPosi + headerCount);
+            setVideoLayout(parentView, position);
         });
     }
 
@@ -403,15 +377,12 @@ public class CircleMainFragment extends Fragment {
             }
 
             video_layout = (LinearLayout) parentView.findViewById(R.id.video_layout);
-            if(videoImageView!=null) {
+            if (videoImageView != null) {
                 video_layout.addView(videoImageView);
                 videoImageView.onBegin();
-                videoImageView.setVideoClickCallBack(new VideoImageView.VideoClickCallBack() {
-                    @Override
-                    public void setVideoClick() {
-                        stopVideo();
-                        goNextActivity(position);
-                    }
+                videoImageView.setVideoClickCallBack(() -> {
+                    stopVideo();
+                    goNextActivity(position);
                 });
             }
         }
@@ -575,12 +546,9 @@ public class CircleMainFragment extends Fragment {
                 }
                 //如果没有数据显示提示
                 if (mListData.size() == 0) {
-                    mCircleHeaderView.showNoDataView(noDataNotice_1, noDataNotice_2, new CircleHeaderView.ItemCallback() {
-                        @Override
-                        public void onClick(String content) {
-                            if (!TextUtils.isEmpty(noDataUrl)) {
-                                AppCommon.openUrl(mActivity, noDataUrl, true);
-                            }
+                    mCircleHeaderView.showNoDataView(noDataNotice_1, noDataNotice_2, content -> {
+                        if (!TextUtils.isEmpty(noDataUrl)) {
+                            AppCommon.openUrl(mActivity, noDataUrl, true);
                         }
                     });
                     mView.findViewById(R.id.return_top_rela).setVisibility(View.GONE);
@@ -692,9 +660,7 @@ public class CircleMainFragment extends Fragment {
      * 设置当前页面加载页面位置
      */
     public void setQuanmCurrentPage() {
-        if (firstVisibleItems >= 10) {
-            allMain.setQuanRefreshState(true);
-        } else allMain.setQuanRefreshState(false);
+
     }
 
     public PlateData getmPlateData() {

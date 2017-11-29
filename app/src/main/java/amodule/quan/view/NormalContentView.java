@@ -13,7 +13,6 @@ import java.util.Map;
 
 import acore.logic.AppCommon;
 import acore.tools.StringManager;
-import amodule.main.activity.MainHomePageNew;
 import amodule.quan.tool.NormarlContentData;
 import xh.windowview.BottomDialog;
 
@@ -57,17 +56,6 @@ public class NormalContentView extends CircleItemBaseRelativeLayout {
         LayoutInflater.from(context).inflate(R.layout.circle_invitationcontent, this, true);
         normarlContentData= new NormarlContentData();
         this.context = context;
-    }
-    /**
-     * 设置模块名称
-     *
-     * @param moduleName
-     */
-    public void setModuleName(String moduleName, boolean isHome) {
-        this.moduleName = moduleName;
-        if (isHome) {statisID = MainHomePageNew.STATISTICS_ID;
-        }else{ statisID = "a_quan_homepage";}
-        normarlContentData.setStatisID(statisID);
     }
     /**
      * 设置统计的key 和id

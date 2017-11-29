@@ -275,20 +275,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/common_TransParentThemeNew"
             android:windowSoftInputMode="adjustPan"/>
-        <activity
-            android:name="amodule.main.activity.MainCircle"
-            android:keepScreenOn="true"
-            android:configChanges="orientation|keyboardHidden"
-            android:hardwareAccelerated="true"
-            android:screenOrientation="portrait"
-            android:theme="@style/common_TransParentTheme"
-            android:windowSoftInputMode="adjustPan"/>
-        <activity
-            android:name="amodule.main.activity.MainHomePageNew"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"
-            android:theme="@style/titleTheme"
-            android:windowSoftInputMode="adjustPan"/>
+
         <activity
             android:name="amodule.main.activity.MainHome"
             android:configChanges="orientation|keyboardHidden"
@@ -297,6 +284,14 @@
             android:screenOrientation="portrait"
             android:theme="@style/common_TransParentTheme"
             android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name="amodule.main.activity.MainHomePage"
+                  android:configChanges="orientation|keyboardHidden"
+                  android:keepScreenOn="true"
+                  android:hardwareAccelerated="true"
+                  android:screenOrientation="portrait"
+                  android:theme="@style/common_TransParentTheme"
+                  android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name="amodule.main.activity.MainMyself"
             android:configChanges="orientation|keyboardHidden"
@@ -458,6 +453,7 @@
         <activity
             android:name="amodule.article.activity.ArticleDetailActivity"
             android:configChanges="orientation|keyboardHidden"
+            android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
             android:theme="@style/AppMainTheme"
             android:windowSoftInputMode="adjustResize"/>
@@ -606,6 +602,12 @@
 
 
         <!-- quan start -->
+        <activity
+            android:name="amodule.quan.activity.MainCircle"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/titleTheme"
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name="amodule.quan.activity.FriendQuan"
             android:configChanges="orientation|keyboardHidden"
@@ -781,12 +783,6 @@
             android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name="amodule.user.activity.MyFavorite"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"
-            android:theme="@style/titleTheme"
-            android:windowSoftInputMode="adjustResize"/>
-        <activity
-            android:name="amodule.user.activity.MyFavoriteNew"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
@@ -1041,14 +1037,6 @@
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan"/>
         <activity
-            android:name="aplug.service.ServiceOpenActivity"
-            android:exported="true"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar">
-            <intent-filter>
-                <action android:name="aplug.service.ServiceOpenActivity"/>
-            </intent-filter>
-        </activity>
-        <activity
             android:name="aplug.shortvideo.activity.MediaRecorderActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTop"
@@ -1093,12 +1081,6 @@
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan"/>
 
-        <service
-            android:name="aplug.service.base.ProtectService"
-            android:process=":pro"/>
-        <service
-            android:name="aplug.service.CoreService"
-            android:process=":core"/>
         <!-- aplug end -->
         <!-- mall start -->
         <activity
@@ -1242,14 +1224,12 @@
 
 
         <!-- *************************************** START umeng *************************************** -->
-        <!-- <meta-data -->
-        <!-- android:name="UMENG_APPKEY" -->
-        <!-- android:value="545aeac6fd98c565c20004ad"> -->
-
-
+         <meta-data
+             android:name="UMENG_APPKEY"
+             android:value="545aeac6fd98c565c20004ad">
         <!-- &lt;!&ndash;服务王 57726be2e0f55a1c900000ff&ndash;&gt; -->
         <!-- &lt;!&ndash;菜谱 545aeac6fd98c565c20004ad&ndash;&gt; -->
-        <!-- </meta-data> -->
+         </meta-data>
         <!-- <meta-data -->
         <!-- android:name="UMENG_CHANNEL" -->
         <!-- android:value="${UMENG_CHANNEL_VALUE}"/> -->
@@ -1341,37 +1321,6 @@
         <!-- START 信鸽 -->
         <receiver android:name="third.push.broadcast.ClickNotificationBroadcast"/>
         <receiver android:name="third.push.broadcast.DismissNotificationBroadcast"/>
-        <receiver
-            android:name="aplug.service.alarm.RepeatingAlarm"
-            android:enabled="true"
-            android:permission="android.permission.RECEIVE_BOOT_COMPLETED"
-            android:process=":remote">
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
-            </intent-filter>
-            <intent-filter android:priority="3000">
-                <action android:name="android.intent.action.ACTION_POWER_CONNECTED"/>
-                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED"/>
-            </intent-filter>
-            <intent-filter android:priority="3000">
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
-            <intent-filter android:priority="3000">
-
-                <!-- SD卡已经成功挂载 -->
-                <action android:name="android.intent.action.MEDIA_MOUNTED"/>
-                <!-- sd卡存在，但还没有挂载 -->
-                <action android:name="android.intent.action.MEDIA_UNMOUNTED"/>
-                <action android:name="android.intent.action.MEDIA_EJECT"/>
-
-                <data android:scheme="file"/>
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.TIME_SET"/>
-            </intent-filter>
-        </receiver>
 
         <!-- 【必须】 信鸽receiver广播接收 -->
         <receiver
@@ -1386,7 +1335,7 @@
                 <action android:name="android.intent.action.USER_PRESENT"/>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
                 <!-- 【可选】 一些常用的系统广播，增强信鸽service的复活机会，请根据需要选择。当然，你也可以添加APP自定义的一些广播让启动service -->
-                <action android:name="android.bluetooth.adapter.action.STATE_CHANGED"/>
+                <action android:name="android.bluetooth.pagerAdapter.action.STATE_CHANGED"/>
                 <action android:name="android.intent.action.ACTION_POWER_CONNECTED"/>
                 <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED"/>
             </intent-filter>
@@ -1555,6 +1504,21 @@
             android:name="com.baidu.mobads.AppActivity"
             android:configChanges="keyboard|keyboardHidden|orientation"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <activity
+            android:name="amodule.home.activity.HomeSecondListActivity"
+            android:configChanges="keyboard|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:hardwareAccelerated="true"
+            android:theme="@style/titleTheme"/>
+
+        <activity
+            android:name="amodule.home.activity.HomeWeekListActivity"
+            android:configChanges="keyboard|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:hardwareAccelerated="true"
+            android:theme="@style/titleTheme"/>
+
         <!--Baidu AD end-->
         <!--全面屏适配-->
         <meta-data android:name="android.max_aspect"

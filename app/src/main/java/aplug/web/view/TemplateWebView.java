@@ -10,16 +10,15 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.webkit.CookieManager;
 import android.webkit.JavascriptInterface;
+import android.webkit.JsResult;
+import android.webkit.SslErrorHandler;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
-import com.tencent.smtt.export.external.interfaces.IX5WebChromeClient;
-import com.tencent.smtt.export.external.interfaces.JsResult;
-import com.tencent.smtt.export.external.interfaces.SslErrorHandler;
-import com.tencent.smtt.sdk.CookieManager;
-import com.tencent.smtt.sdk.WebChromeClient;
-import com.tencent.smtt.sdk.WebSettings;
-import com.tencent.smtt.sdk.WebView;
-import com.tencent.smtt.sdk.WebViewClient;
 
 import com.xh.manager.DialogManager;
 import com.xh.manager.ViewManager;
@@ -116,7 +115,9 @@ public class TemplateWebView extends XHWebView{
         settings.setTextZoom(100);//不跟随系统字体
 
         //兼容https,在部分版本上资源显示不全的问题
-        settings.setMixedContentMode(WebSettings.LOAD_NORMAL);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+        }
         this.setVerticalScrollBarEnabled(false);
         this.setHorizontalScrollBarEnabled(false);
     }
@@ -225,8 +226,8 @@ public class TemplateWebView extends XHWebView{
             }
 
             @Override
-            public void onReceivedSslError(WebView webView, SslErrorHandler sslErrorHandler, com.tencent.smtt.export.external.interfaces.SslError sslError) {
-                sslErrorHandler.proceed();
+            public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+                handler.proceed();
             }
 
             @Override
@@ -241,13 +242,13 @@ public class TemplateWebView extends XHWebView{
      */
     private void setWebChromeClient() {
         this.setWebChromeClient(new WebChromeClient() {
-            @Override
-            public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
-                Tools.showToast(view.getContext(), message);
-                result.cancel();
-                if(loadManager != null)loadManager.hideProgressBar();
-                return true;
-            }
+                @Override
+                public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
+                    Tools.showToast(view.getContext(), message);
+                    result.cancel();
+                    if(loadManager != null)loadManager.hideProgressBar();
+                    return true;
+                }
 
             @Override
             public boolean onJsConfirm(WebView view, String url, String message, final JsResult result) {
@@ -256,8 +257,8 @@ public class TemplateWebView extends XHWebView{
             }
 
             @Override
-            public void onShowCustomView(View view, IX5WebChromeClient.CustomViewCallback customViewCallback) {
-                super.onShowCustomView(view, customViewCallback);
+            public void onShowCustomView(View view, CustomViewCallback callback) {
+                super.onShowCustomView(view, callback);
             }
 
             //弹出提示

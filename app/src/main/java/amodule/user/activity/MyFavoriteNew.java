@@ -1,12 +1,10 @@
 package amodule.user.activity;
 
-import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -27,6 +25,7 @@ import acore.widget.rvlistview.RvListView;
 import amodule.article.view.BottomDialog;
 import amodule.main.Main;
 import amodule.main.activity.MainHome;
+import amodule.main.activity.MainHomePage;
 import amodule.user.adapter.AdapterModuleS0;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
@@ -45,7 +44,6 @@ public class MyFavoriteNew extends BaseActivity implements View.OnClickListener 
     private RvListView rvListview;
     private AdapterModuleS0 myFavorite;
     private int currentpage = 0, everyPage = 0;//页面号码
-    private int seekLayoutHeight = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,19 +71,8 @@ public class MyFavoriteNew extends BaseActivity implements View.OnClickListener 
         findViewById(R.id.back).setOnClickListener(this);
         findViewById(R.id.btn_no_data).setOnClickListener(this);
 
-        seekLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                seekLayoutHeight = seekLayout.getMeasuredHeight();
-            }
-        });
         refreshLayout.getHeader().setBackgroundColor(Color.parseColor("#f2f2f2"));
     }
-
-    private static final int HIDE_THRESHOLD = 20;//滑动隐藏的阈值
-
-    private int mScrolledDistance = 0;//滑动距离
-    private boolean mControlsVisible = true;//控件的显示状态
 
     private void initData() {
         myFavorite = new AdapterModuleS0(this, mData);
@@ -94,53 +81,26 @@ public class MyFavoriteNew extends BaseActivity implements View.OnClickListener 
         Drawable drawable = getResources().getDrawable(R.drawable.item_decoration);
         itemDecoration.setDrawable(drawable);
         rvListview.addItemDecoration(itemDecoration);
-        rvListview.setOnItemClickListener(new RvListView.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
-                if(mData == null || position < 0 || position >= mData.size())
-                    return;
-                Map<String, String> item = mData.get(position);
-                if(item == null){
-                    return;
-                }
-                Map<String, String> itemParameter =  StringManager.getFirstMap(item.get("parameter"));
-                AppCommon.openUrl(MyFavoriteNew.this,itemParameter.get("url"),true);
+        rvListview.setOnItemClickListener((view, holder, position) -> {
+            if (mData == null || position < 0 || position >= mData.size())
+                return;
+            Map<String, String> item = mData.get(position);
+            if (item == null) {
+                return;
             }
+            Map<String, String> itemParameter = StringManager.getFirstMap(item.get("parameter"));
+            AppCommon.openUrl(MyFavoriteNew.this, itemParameter.get("url"), true);
         });
-        rvListview.setOnItemLongClickListener(new RvListView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(View view, RecyclerView.ViewHolder holder, int position) {
-                showBottomDialog(position);
-                return true;
-            }
+        rvListview.setOnItemLongClickListener((view, holder, position) -> {
+            showBottomDialog(position);
+            return true;
         });
         loadManager.setLoading(refreshLayout,
                 rvListview, myFavorite, true,
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        requestData(true);
-                    }
-                },
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        requestData(false);
-                    }
-                });
+                v -> requestData(true),
+                v -> requestData(false)
+        );
         loadManager.getSingleLoadMore(rvListview).setBackgroundColor(Color.parseColor("#F2F2F2"));
-    }
-
-    private void hideSearchBar() {
-        ObjectAnimator animator = ObjectAnimator.ofFloat(seekLayout, View.TRANSLATION_Y, 0, -seekLayoutHeight);
-        animator.setDuration(500);
-        animator.start();
-    }
-
-    private void showSreachBar() {
-        ObjectAnimator animator = ObjectAnimator.ofFloat(seekLayout, View.TRANSLATION_Y, -seekLayoutHeight, 0);
-        animator.setDuration(500);
-        animator.start();
     }
 
     /**
@@ -170,7 +130,7 @@ public class MyFavoriteNew extends BaseActivity implements View.OnClickListener 
                 if (everyPage == 0) {
                     everyPage = loadCount;
                 }
-                if(isRefresh){
+                if (isRefresh) {
                     refreshLayout.refreshComplete();
                 }
                 loadManager.changeMoreBtn(flag, everyPage, loadCount, currentpage, mData.isEmpty());
@@ -222,8 +182,8 @@ public class MyFavoriteNew extends BaseActivity implements View.OnClickListener 
             case R.id.btn_no_data:
                 if (Main.allMain != null) {
                     Main.allMain.setCurrentTabByClass(MainHome.class);
-                    if (Main.allMain.allTab != null && Main.allMain.allTab.get("MainIndex") != null) {
-                        ((MainHome) Main.allMain.allTab.get("MainIndex")).setCurrentTab(0);
+                    if (Main.allMain.allTab != null && Main.allMain.allTab.get(MainHomePage.KEY) != null) {
+                        ((MainHome) Main.allMain.allTab.get(MainHomePage.KEY)).setCurrentTab(0);
                     }
                 }
                 Main.colse_level = 1;
@@ -249,13 +209,13 @@ public class MyFavoriteNew extends BaseActivity implements View.OnClickListener 
     }
 
     private void showBottomDialog(final int position) {
-        if(mData == null || position < 0 || position >= mData.size())
+        if (mData == null || position < 0 || position >= mData.size())
             return;
         Map<String, String> item = mData.get(position);
-        if(item == null){
+        if (item == null) {
             return;
         }
-        Map<String, String> itemParameter =  StringManager.getFirstMap(item.get("parameter"));
+        Map<String, String> itemParameter = StringManager.getFirstMap(item.get("parameter"));
         if (itemParameter.isEmpty()) return;
         final String code = itemParameter.get("code");
         final String type = itemParameter.get("type");
@@ -265,14 +225,12 @@ public class MyFavoriteNew extends BaseActivity implements View.OnClickListener 
         Map<String, String> itemB = StringManager.getFirstMap(item.get("B"));
         final String typeName = itemB.get("text1");
         BottomDialog dialog = new BottomDialog(this);
-        dialog.addButton("取消收藏", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FavoriteHelper.instance().setFavoriteStatus(MyFavoriteNew.this, code,  typeName, type,
+        dialog.addButton("取消收藏",
+                v -> FavoriteHelper.instance().setFavoriteStatus(MyFavoriteNew.this, code, typeName, type,
                         new FavoriteHelper.FavoriteStatusCallback() {
                             @Override
                             public void onSuccess(boolean state) {
-                                if(state){
+                                if (state) {
                                     return;
                                 }
                                 mData.remove(position);
@@ -283,9 +241,7 @@ public class MyFavoriteNew extends BaseActivity implements View.OnClickListener 
                             @Override
                             public void onFailed() {
                             }
-                        });
-            }
-        });
+                        }));
         dialog.show();
     }
 

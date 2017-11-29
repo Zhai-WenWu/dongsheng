@@ -89,24 +89,6 @@ public class CircleHome extends BaseAppCompatActivity implements OnClickListener
         SubjectSqlite subjectSqlite = SubjectSqlite.getInstance(this);
         batchUpdateSubjectDataArray(subjectSqlite.selectByCidState(cid, SubjectData.UPLOAD_ING), SubjectData.UPLOAD_ING);
         batchUpdateSubjectDataArray(subjectSqlite.selectByCidState(cid, SubjectData.UPLOAD_FAIL), SubjectData.UPLOAD_FAIL);
-        if (control != null && mCommonBottomView != null) {
-            control.refreshIconOnClickListener(CommonBottomView.BOTTOM_CENTER, new OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                    XHClick.mapStat(CircleHome.this, "a_quan_zi_index", "本圈子发贴按钮", "");
-                    XHClick.mapStat(CircleHome.this, "a_down420", "发贴按钮", "");
-                    Intent uploadSubject = new Intent(CircleHome.this, UploadSubjectNew.class);
-                    uploadSubject.putExtra("cid", cid);
-                    CircleSqlite sqlite = new CircleSqlite(CircleHome.this);
-                    CircleData circleData = sqlite.select(CircleDB.db_cid, cid);
-                    if (circleData != null && "2".equals(circleData.getSkip())) {
-                        uploadSubject.putExtra("skip", true);
-                    }
-                    startActivity(uploadSubject);
-                }
-            });
-        }
     }
 
     public void batchUpdateSubjectDataArray(ArrayList<SubjectData> array, int state) {

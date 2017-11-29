@@ -116,7 +116,7 @@ public class PushPraser {
 									QiYvHelper.getInstance().getUnreadCount(new QiYvHelper.NumberCallback() {
 										@Override
 										public void onNumberReady(int count) {
-											Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + count);
+											Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + count);
 										}
 									});
 									new NotificationManager().notificationActivity(mContext, data);
@@ -135,7 +135,7 @@ public class PushPraser {
 								QiYvHelper.getInstance().getUnreadCount(new QiYvHelper.NumberCallback() {
 									@Override
 									public void onNumberReady(int count) {
-										Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + count);
+										Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + count);
 									}
 								});
 								new NotificationManager().notificationActivity(mContext, data);
@@ -147,7 +147,7 @@ public class PushPraser {
 							QiYvHelper.getInstance().getUnreadCount(new QiYvHelper.NumberCallback() {
 								@Override
 								public void onNumberReady(int count) {
-									Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + count);
+									Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + count);
 								}
 							});
 							if (mContext != null && ToolsDevice.isAppInPhone(mContext, mContext.getPackageName()) < 2) {

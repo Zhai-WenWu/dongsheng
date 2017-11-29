@@ -130,10 +130,10 @@ public class ModuleMoreImgView extends ModuleBaseView{
         RelativeLayout.LayoutParams _1PicLayoutParams = new RelativeLayout.LayoutParams(subjectImgWidth, subjectImgWidth * 2 / 3);
         LinearLayout.LayoutParams _1PicImageParams = new LinearLayout.LayoutParams(subjectImgWidth, subjectImgWidth * 2 / 3);
 
-        RelativeLayout.LayoutParams _2PicLayoutParams = new RelativeLayout.LayoutParams(subjectImgWidth, subjectImgWidth / 2);
+        RelativeLayout.LayoutParams _2PicLayoutParams = new RelativeLayout.LayoutParams(subjectImgWidth, (subjectImgWidth-Tools.getDimen(mContext,R.dimen.dp_4)) / 2);
         LinearLayout.LayoutParams _2PicImageParams = new LinearLayout.LayoutParams((subjectImgWidth-Tools.getDimen(mContext,R.dimen.dp_4)) / 2, (subjectImgWidth-Tools.getDimen(mContext,R.dimen.dp_4)) / 2);
 
-        RelativeLayout.LayoutParams _3PicLayoutParams = new RelativeLayout.LayoutParams(subjectImgWidth, subjectImgWidth / 3);
+        RelativeLayout.LayoutParams _3PicLayoutParams = new RelativeLayout.LayoutParams(subjectImgWidth, (subjectImgWidth-Tools.getDimen(mContext,R.dimen.dp_8)) / 3);
         LinearLayout.LayoutParams _3PicImageParams = new LinearLayout.LayoutParams((subjectImgWidth-Tools.getDimen(mContext,R.dimen.dp_8)) / 3, (subjectImgWidth-Tools.getDimen(mContext,R.dimen.dp_8)) / 3);
         findViewById(R.id.line_1).setVisibility(View.GONE);
         findViewById(R.id.line_2).setVisibility(View.GONE);

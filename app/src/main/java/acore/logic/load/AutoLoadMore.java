@@ -3,7 +3,6 @@ package acore.logic.load;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -18,7 +17,6 @@ import acore.widget.DownRefreshList;
 import acore.widget.DownRefreshList.OnRefreshListener;
 import acore.widget.LayoutScroll;
 import acore.widget.ScrollLinearListLayout;
-import acore.widget.rvlistview.RvBaseAdapter;
 import acore.widget.rvlistview.RvListView;
 import aplug.stickheaderlayout.PlaceHoderHeaderLayout;
 
