@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -24,7 +25,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.popdialog.util.GoodCommentManager;
-import com.tencent.smtt.sdk.QbSdk;
 import com.tencent.stat.StatConfig;
 import com.tencent.stat.StatService;
 import com.xh.manager.DialogManager;
@@ -54,7 +54,6 @@ import acore.tools.ObserverManager;
 import acore.tools.PageStatisticsUtils;
 import acore.tools.StringManager;
 import acore.tools.Tools;
-import acore.tools.ToolsDevice;
 import acore.widget.XiangHaTabHost;
 import amodule.answer.activity.AnswerEditActivity;
 import amodule.answer.activity.AskEditActivity;
@@ -77,6 +76,7 @@ import amodule.user.activity.MyMessage;
 import aplug.basic.ReqInternet;
 import aplug.shortvideo.ShortVideoInit;
 import third.ad.control.AdControlHomeDish;
+import third.ad.tools.AdConfigTools;
 import third.mall.MainMall;
 import third.mall.alipay.MallPayActivity;
 import third.mall.aplug.MallCommon;
@@ -92,7 +92,7 @@ import static com.xiangha.R.id.iv_itemIsFine;
 public class Main extends Activity implements OnClickListener, IObserver {
     public static final String TAG="xianghaTag";
 
-    private String[] tabTitle = {"香哈", "商城", "消息", "我的"};
+    private String[] tabTitle = {"学做菜", "商城", "消息", "我的"};
     private Class<?>[] classes = new Class<?>[]{MainHomePage.class, MainMall.class, MyMessage.class, MainMyself.class};
     private int[] tabImgs = new int[]{R.drawable.tab_index, R.drawable.tab_mall, R.drawable.tab_four, R.drawable.tab_myself};
 
@@ -247,6 +247,10 @@ public class Main extends Activity implements OnClickListener, IObserver {
                 OffDishToFavoriteControl.addCollection(Main.this);
                 //初始化电商页面统计
                 PageStatisticsUtils.getInstance().getPageInfo(getApplicationContext());
+                //处理
+                if (LoginManager.isLogin())
+                    initQiYvUnreadCount();
+                addQiYvListener();
 
                 if (showQAUploading())
                     return;
@@ -410,12 +414,8 @@ public class Main extends Activity implements OnClickListener, IObserver {
         //从Welcome方法
         ShortVideoInit.init(Main.this);
         //从Welcome方法
-        QbSdk.initX5Environment(Main.this, null);
         ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_LOGIN);
         ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_LOGOUT);
-        if (LoginManager.isLogin())
-            initQiYvUnreadCount();
-        addQiYvListener();
     }
 
     /**
@@ -438,7 +438,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
         tabViews = new View[classes.length];
         for (int i = 0; i < tabTitle.length; i++) {
             tabViews[i] = linear_item.getChildAt(i);
-            LinearLayout layout = (LinearLayout) tabViews[i].findViewById(R.id.tab_linearLayout);
+            ConstraintLayout layout = (ConstraintLayout) tabViews[i].findViewById(R.id.tab_layout);
             layout.setOnClickListener(this);
 
             TextView tv = ((TextView) tabViews[i].findViewById(R.id.textView1));
@@ -486,7 +486,10 @@ public class Main extends Activity implements OnClickListener, IObserver {
                 handler.post(() -> AppCommon.getCommonData(null));
             }
         };
-        timer.schedule(tt, everyReq * 1000, everyReq * 1000);
+        timer.schedule(tt, everyReq*1000, everyReq*1000);
+//        tempData();
+//        tempThreadData();
+//        getMainLooper().getThread().setPriority(10);
     }
 
     @Override
@@ -511,7 +514,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
         isForeground = true;
         //去我的页面
         if (MallPayActivity.pay_state) {
-            onClick(tabViews[classes.length - 1].findViewById(R.id.tab_linearLayout));
+            onClick(tabViews[classes.length - 1].findViewById(R.id.tab_layout));
         }
         //去商城页面
 //        if (MallPayActivity.mall_state) {
@@ -521,6 +524,9 @@ public class Main extends Activity implements OnClickListener, IObserver {
                 XHClick.mapStat(Main.this, "a_evaluate420", typeStr, timeStr)
         );
         openUri();
+        if(timer==null){
+            initRunTime();
+        }
     }
 
     /**
@@ -553,6 +559,15 @@ public class Main extends Activity implements OnClickListener, IObserver {
             isForeground = false;
             homebackTime = System.currentTimeMillis();
         }
+        if (timer!=null){
+            timer.cancel();
+            timer=null;
+        }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
     }
 
     @Override
@@ -618,6 +633,8 @@ public class Main extends Activity implements OnClickListener, IObserver {
                     timer.purge();
                 }
                 colse_level = 0;
+                //请求广告位
+                AdConfigTools.getInstance().getAdConfigInfo();
                 UploadDishControl.getInstance().updataAllUploadingDish(getApplicationContext());
                 // 开启自我唤醒
                 if (act != null) new XGLocalPushServer(act).initLocalPush();
@@ -747,7 +764,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
     @Override
     public void onClick(View v) {
         for (int i = 0; i < tabViews.length; i++) {
-            if (v == tabViews[i].findViewById(R.id.tab_linearLayout) && allTab.size() > 0) {
+            if (v == tabViews[i].findViewById(R.id.tab_layout) && allTab.size() > 0) {
                 if (i == 0 && allTab.containsKey(MainHomePage.KEY) && i == nowTab) {
                     MainHomePage mainIndex = (MainHomePage) allTab.get(MainHomePage.KEY);
                     mainIndex.refresh();

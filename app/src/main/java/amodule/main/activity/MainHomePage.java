@@ -173,12 +173,12 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
                     Log.i("tzy" , "setHeaderData " + (isCache ? "cacheTime = " : "serviceTime = ") + (System.currentTimeMillis() - startLoadTime) + "ms");
                     if (!isCache && mDataControler != null) {
                         mDataControler.saveCacheHomeData((String) o);
-                        isRefreshingHeader = false;
                     }
                 }
                 if(!LoadOver){
                     EntryptData(true);
                 }
+                isRefreshingHeader = false;
             }
         };
     }
@@ -309,12 +309,8 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
         EntryptData(true);
     }
 
-    private int resumeCount = 0;
-
-    public void onResumeFake() {
-        if (resumeCount != 0)
-            SpecialWebControl.initSpecialWeb(this, rl, "index", "", "");
-        resumeCount++;
+    private void onResumeFake() {
+        SpecialWebControl.initSpecialWeb(this, rl, "index", "", "");
     }
 
     /** 统计推荐列表使用时间 */

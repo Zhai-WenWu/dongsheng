@@ -231,15 +231,13 @@ public class MallButtonView {
 		dialogManager.createDialog(new ViewManager(dialogManager)
 				.setView(new TitleMessageView(context).setText(des))
 				.setView(new HButtonView(context)
-						.setNegativeText("放弃付款", new View.OnClickListener() {
+						.setNegativeText("取消", new View.OnClickListener() {
 							@Override
 							public void onClick(View v) {
 								dialogManager.cancel();
-								MallPayActivity.pay_state=true;
-								Main.colse_level=3;
 							}
 						})
-						.setPositiveText("继续支付", new View.OnClickListener() {
+						.setPositiveText("确定", new View.OnClickListener() {
 							@Override
 							public void onClick(View v) {
 								dialogManager.cancel();

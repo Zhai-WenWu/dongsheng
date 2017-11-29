@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.webkit.WebSettings;
 import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -24,7 +25,6 @@ import com.xh.manager.ViewManager;
 import com.xh.view.HButtonView;
 import com.xh.view.MessageView;
 import com.xh.view.TitleMessageView;
-import com.tencent.smtt.sdk.WebSettings;
 import com.xiangha.R;
 
 import org.json.JSONArray;

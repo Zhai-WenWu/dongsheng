@@ -33,11 +33,10 @@ import static amodule._common.widgetlib.IWidgetLibrary.NO_FIND_ID;
  * E_mail : ztanzeyu@gmail.com
  */
 
-public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, String>> implements IStatictusData,ISaveStatistic {
+public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, String>> implements IStatictusData, ISaveStatistic {
 
     public static final int LLM = LinearLayout.LayoutParams.MATCH_PARENT;
     public static final int LLW = LinearLayout.LayoutParams.WRAP_CONTENT;
-    private int viewPaddingTop,viewPaddingBottom;
 
     LayoutInflater mInflater;
 
@@ -66,7 +65,7 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
     public void setData(Map<String, String> data) {
         initTopLayout();
         initBootomLayout();
-        if (null == data || data.isEmpty()){
+        if (null == data || data.isEmpty()) {
             return;
         }
         String widgetType = data.get(KEY_WIDGET_TYPE);
@@ -78,6 +77,7 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
         if (viewId > NO_FIND_ID) {
             View view = findViewById(viewId);
             if (null != view) {
+                view.setVisibility(VISIBLE);
                 currentID = viewId;
                 if (view instanceof IBindMap && !TextUtils.isEmpty(widgetData)) {
                     ((IBindMap) view).setData(dataMap);
@@ -85,11 +85,11 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
                 if (view instanceof IStatictusData) {
                     ((IStatictusData) view).setStatictusData(id, twoLevel, threeLevel);
                 }
-                view.setVisibility(VISIBLE);
+            } else {
+                hideView();
             }
-        }else{
-            int index = mExtraTop == null ? 0 : 1;
-            getChildAt(index).setVisibility(GONE);
+        } else {
+            hideView();
         }
         //加载额外数据
         String widgetExtra = data.get(KEY_WIDGET_EXTRA);
@@ -106,27 +106,29 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
         updateBottom(StringManager.getListMapByJson(widgetExtraMap.get(KEY_BOTTOM)));
     }
 
+    private void hideView() {
+        int index = mExtraTop == null ? 0 : 1;
+        getChildAt(index).setVisibility(GONE);
+    }
+
     @Override
     public void updateTopView(List<Map<String, String>> array) {
         if (null == array || array.isEmpty()) {
             return;
         }
 
-        Stream.of(array).forEach(data -> {
-            addViewByData(mExtraTop, data, false);
-        });
+        Stream.of(array).forEach(data -> addViewByData(mExtraTop, data, false));
         requestLayout();
         mExtraTop.setVisibility(mExtraTop.getChildCount() > 0 ? VISIBLE : GONE);
     }
 
-    private void initTopLayout(){
-        if(mExtraTop == null){
+    private void initTopLayout() {
+        if (mExtraTop == null) {
             mExtraTop = new LinearLayout(getContext());
-            mExtraTop.setLayoutParams(new LinearLayout.LayoutParams(LLM,LLW));
+            mExtraTop.setLayoutParams(new LinearLayout.LayoutParams(LLM, LLW));
             mExtraTop.setOrientation(VERTICAL);
-            mExtraTop.setPadding(0,0,0,viewPaddingTop);
             addView(mExtraTop, 0);
-        }else if(mExtraTop.getChildCount() > 0){
+        } else if (mExtraTop.getChildCount() > 0) {
             mExtraTop.removeAllViews();
         }
     }
@@ -137,21 +139,18 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
         if (null == array || array.isEmpty()) {
             return;
         }
-
-        Stream.of(array).forEach(data -> {
-            addViewByData(mExtraBottom, data, true);
-        });
+        Stream.of(array).forEach(data -> addViewByData(mExtraBottom, data, true));
         requestLayout();
         mExtraBottom.setVisibility(mExtraBottom.getChildCount() > 0 ? VISIBLE : GONE);
     }
-    private void initBootomLayout(){
-        if(mExtraBottom == null){
+
+    private void initBootomLayout() {
+        if (mExtraBottom == null) {
             mExtraBottom = new LinearLayout(getContext());
-            mExtraBottom.setLayoutParams(new LinearLayout.LayoutParams(LLM,LLW));
+            mExtraBottom.setLayoutParams(new LinearLayout.LayoutParams(LLM, LLW));
             mExtraBottom.setOrientation(VERTICAL);
-            mExtraBottom.setPadding(0,viewPaddingBottom,0,0);
             addView(mExtraBottom);
-        }else if(mExtraBottom.getChildCount() > 0){
+        } else if (mExtraBottom.getChildCount() > 0) {
             mExtraBottom.removeAllViews();
         }
     }
@@ -159,7 +158,7 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
     /**
      * 根据数据添加view
      *
-     * @param data
+     * @param data 数据
      * @param isOrder 是否按顺序添加
      */
 
@@ -190,19 +189,11 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
 
     @Override
     public void saveStatisticData() {
-        if(currentID > 0){
+        if (currentID > 0) {
             View view = findViewById(currentID);
-            if(view != null && view instanceof ISaveStatistic){
-                ((ISaveStatistic)view).saveStatisticData();
+            if (view != null && view instanceof ISaveStatistic) {
+                ((ISaveStatistic) view).saveStatisticData();
             }
         }
-    }
-
-    public void setViewPaddingTop(int viewPaddingTop) {
-        this.viewPaddingTop = viewPaddingTop;
-    }
-
-    public void setViewPaddingBottom(int viewPaddingBottom) {
-        this.viewPaddingBottom = viewPaddingBottom;
     }
 }

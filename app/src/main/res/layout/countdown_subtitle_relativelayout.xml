@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/text1"
+        tools:text="限时抢购"
         style="@style/common_title_style.common_subtitle_style"
         android:layout_marginRight="@dimen/dp_9"/>
 
@@ -14,12 +18,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toRightOf="@id/text1"
+        android:layout_toRightOf="@+id/text1"
         android:orientation="horizontal"
+        tools:visibility="visible"
         android:visibility="gone">
 
         <TextView
             android:id="@+id/text2"
+            tools:text="1天"
             style="@style/count_down_time"/>
 
         <TextView
@@ -29,6 +35,7 @@
 
         <TextView
             android:id="@+id/text3"
+            tools:text="10"
             style="@style/count_down_time"/>
 
         <TextView
@@ -37,6 +44,7 @@
 
         <TextView
             android:id="@+id/text4"
+            tools:text="52"
             style="@style/count_down_time"/>
 
         <TextView
@@ -45,8 +53,9 @@
 
         <TextView
             android:id="@+id/text5"
+            tools:text="23"
             style="@style/count_down_time"/>
 
     </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>

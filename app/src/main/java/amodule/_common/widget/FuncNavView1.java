@@ -50,7 +50,6 @@ public class FuncNavView1 extends HomeFuncNavView1 implements IBindMap,IStatictu
     @Override
     protected void initData() {
         super.initData();
-        setVisibility(GONE);
     }
 
     @Override

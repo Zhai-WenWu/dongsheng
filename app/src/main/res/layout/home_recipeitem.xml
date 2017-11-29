@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/transparent_fe">
@@ -96,6 +98,7 @@
         android:layout_marginRight="@dimen/dp_20"
         android:layout_marginTop="@dimen/dp_15"
         android:layout_marginBottom="@dimen/dp_7"
+        tools:visibility="visible"
         android:background="@color/transparent_fe">
 
         <ImageView

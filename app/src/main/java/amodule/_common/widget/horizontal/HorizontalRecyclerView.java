@@ -147,6 +147,7 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,
                         outRect.left = getPxByDp(R.dimen.dp_5);
                         outRect.right = getPxByDp(R.dimen.dp_5);
                     }
+                    outRect.bottom = getPxByDp(R.dimen.dp_10);
                 }
             });
             mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {

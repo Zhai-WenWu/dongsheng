@@ -2,6 +2,7 @@ package amodule.main.view;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.support.constraint.ConstraintLayout;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,7 +53,7 @@ public class CommonBottomView extends RelativeLayout {
 		LayoutInflater.from(context).inflate(R.layout.view_commonbottomview, this, true);
 		linear_item = (LinearLayout) findViewById(R.id.linear_item);
 		for (int i = 0; i < tabTitle.length; i++) {
-			LinearLayout layout = (LinearLayout) linear_item.getChildAt(i).findViewById(R.id.tab_linearLayout);
+			ConstraintLayout layout = (ConstraintLayout) linear_item.getChildAt(i).findViewById(R.id.tab_layout);
 			layout.setTag(String.valueOf(i));
 			TextView tv = ((TextView) linear_item.getChildAt(i).findViewById(R.id.textView1));
 			tv.setText(tabTitle[i]);
@@ -178,7 +179,7 @@ public class CommonBottomView extends RelativeLayout {
 	 */
 	private void setIconOnClickListener(){
 		for (int i = 0; i < tabTitle.length; i++) {
-			LinearLayout layout = (LinearLayout) linear_item.getChildAt(i).findViewById(R.id.tab_linearLayout);
+			ConstraintLayout layout = (ConstraintLayout) linear_item.getChildAt(i).findViewById(R.id.tab_layout);
 			layout.setOnClickListener(getOnclickListener(String.valueOf(i)));
 		}
 	}

@@ -244,7 +244,7 @@ public class Banner extends RelativeLayout {
         //初始化ViewPager
         mViewPager = new SLooperViewPager(context);
 
-        mViewPager.setOffscreenPageLimit(4);
+        mViewPager.setOffscreenPageLimit(8);
 
         //以matchParent的方式将viewPager填充到控件容器中
         addView(mViewPager, new LayoutParams(RMP, RMP));
@@ -392,18 +392,18 @@ public class Banner extends RelativeLayout {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-//        int action = ev.getAction();
-//        switch (action) {
-//            case MotionEvent.ACTION_DOWN:
-//                pauseScroll();
-//                break;
-//            case MotionEvent.ACTION_UP:
-//                goScroll();
-//                break;
-//            case MotionEvent.ACTION_CANCEL:
-//                goScroll();
-//                break;
-//        }
+        int action = ev.getAction();
+        switch (action) {
+            case MotionEvent.ACTION_DOWN:
+                pauseScroll();
+                break;
+            case MotionEvent.ACTION_UP:
+                goScroll();
+                break;
+            case MotionEvent.ACTION_CANCEL:
+                goScroll();
+                break;
+        }
         try {
             return super.dispatchTouchEvent(ev);
         }catch (Exception ignored){

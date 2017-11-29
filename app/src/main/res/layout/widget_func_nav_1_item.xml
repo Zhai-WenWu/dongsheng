@@ -9,8 +9,8 @@
 
     <ImageView
         android:id="@+id/icon"
-        android:layout_width="@dimen/dp_32"
-        android:layout_height="@dimen/dp_27"
+        android:layout_width="@dimen/dp_30"
+        android:layout_height="@dimen/dp_25"
         tools:src="@drawable/ic_launcher"/>
 
     <TextView
@@ -20,7 +20,7 @@
         android:maxWidth="@dimen/dp_60"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textColor="#000"
+        android:textColor="#333333"
         android:textSize="@dimen/sp_12"
         tools:text="VIP名厨课"/>
 

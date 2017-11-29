@@ -19,9 +19,9 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import acore.logic.load.LoadManager;
-import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.StringManager;
 import acore.widget.rvlistview.RvListView;
+import amodule.home.activity.HomeSecondListActivity;
 import amodule.home.adapter.HomeSecondRecyclerAdapter;
 import amodule.home.module.HomeSecondModule;
 import amodule.main.bean.HomeModuleBean;
@@ -63,7 +63,7 @@ public class HomeSecondListFragment extends Fragment {
     private boolean mIsVisible;
 
     private AdControlParent mAdControl;
-    private BaseAppCompatActivity mActivity;
+    private HomeSecondListActivity mActivity;
     private PtrClassicFrameLayout mPtrFrameLayout;
     private RvListView mRv;
     private HomeSecondRecyclerAdapter mHomeAdapter;
@@ -152,7 +152,7 @@ public class HomeSecondListFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mActivity = (BaseAppCompatActivity) context;
+        mActivity = (HomeSecondListActivity) context;
         mLoadManager = mActivity.loadManager;
     }
 
@@ -221,7 +221,7 @@ public class HomeSecondListFragment extends Fragment {
                 params=mBackUrl;
             }else{
                 params= "type="+mModuleBean.getType();
-                if(!TextUtils.isEmpty(mSecondModuleBean.getType()))
+                if(!TextUtils.isEmpty(mSecondModuleBean.getType()) && mActivity.hasInitTabData())
                     params+="&two_type="+mSecondModuleBean.getType();
             }
         }else{//向下翻页
@@ -229,7 +229,8 @@ public class HomeSecondListFragment extends Fragment {
                 params=mNextUrl;
             }else{
                 params= "type="+mModuleBean.getType();
-                if(!TextUtils.isEmpty(mSecondModuleBean.getType()))params+="&two_type="+mSecondModuleBean.getType();
+                if(!TextUtils.isEmpty(mSecondModuleBean.getType()) && mActivity.hasInitTabData())
+                    params+="&two_type="+mSecondModuleBean.getType();
             }
         }
         loadData(refresh, params);
@@ -249,6 +250,16 @@ public class HomeSecondListFragment extends Fragment {
                     //Log.i("FRJ","获取  服务端   数据回来了-------------");
 
                     Map<String,String> dataMap = StringManager.getFirstMap(object);
+                    //针对三餐会有默认选中不同的tab，第一次请求的数据不保留，防止系统本身第一次默认的加载和第二次默认选中页面数据相同
+                    if (!mActivity.hasInitTabData() && TextUtils.equals(mModuleBean.getType(), "day")) {
+                        mLoadOver = false;
+                    }
+                    //初始化二级
+                    if (mCallback != null) {
+                        mCallback.onTabDataReady(dataMap.get("trigger_two_type"));
+                    }
+                    if (!mLoadOver)//如果是三餐列表并且是第一次加载的，直接跳出，不填充当前Fragment里的数据。
+                        return;
                     //当前数据有问题，直接return数据
                     if(!(!dataMap.containsKey("list")
                             ||StringManager.getListMapByJson(dataMap.get("list")).size()<=0)){
@@ -268,10 +279,6 @@ public class HomeSecondListFragment extends Fragment {
                             if(!TextUtils.isEmpty(dataMap.get("nexturl")))
                                 mNextUrl = dataMap.get("nexturl");
 
-                        }
-                        //初始化二级
-                        if (mCallback != null) {
-                            mCallback.onTabDataReady(dataMap.get("trigger_two_type"));
                         }
                         ArrayList<Map<String, String>> listDatas = StringManager.getListMapByJson(dataMap.get("list"));
                         if (listDatas != null && listDatas.size() > 0) {

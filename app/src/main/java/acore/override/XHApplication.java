@@ -13,7 +13,6 @@ import com.baidu.mobads.AdView;
 import com.baidu.mobads.AppActivity;
 import com.mob.MobApplication;
 import com.tencent.bugly.crashreport.CrashReport;
-import com.tencent.smtt.sdk.QbSdk;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.onlineconfig.OnlineConfigAgent;
 import com.umeng.onlineconfig.OnlineConfigLog;
@@ -57,7 +56,9 @@ public class XHApplication extends MobApplication {
 
     @Override
     public void onCreate() {
+        mAppApplication = this;
         startTime = System.currentTimeMillis();
+        LogManager.printStartTime("zhangyujian","XhApplication::11111.oncreate::");
         try{
             super.onCreate();
         }catch (SecurityException e) {
@@ -66,8 +67,8 @@ public class XHApplication extends MobApplication {
         }catch (Exception e){
             CrashReport.postCatchedException(e);
         }
-        LogManager.printStartTime("zhangyujian","XhApplication::super.oncreate::");
-        mAppApplication = this;
+        LogManager.printStartTime("zhangyujian","XhApplication::222222.oncreate::");
+
 
         //初始化umeng推送
         initUmengPush();
@@ -89,7 +90,7 @@ public class XHApplication extends MobApplication {
         String channel = ChannelUtil.getChannel(this);
         MobclickAgent.UMAnalyticsConfig config = new MobclickAgent.UMAnalyticsConfig(this, "545aeac6fd98c565c20004ad", channel);
         MobclickAgent.startWithConfigure(config);
-
+        LogManager.printStartTime("zhangyujian","XhApplication:0000:initData::");
         //bugly集成
         initBugly(getApplicationContext());
 
@@ -99,7 +100,7 @@ public class XHApplication extends MobApplication {
         ReqInternet.init(getApplicationContext());
         ReqEncyptInternet.init(getApplicationContext());
         LoadImage.init(getApplicationContext());
-
+        LogManager.printStartTime("zhangyujian","XhApplication:1111:initData::");
         //设置百度appid
         Map<String,String> map = StringManager.getFirstMap(AppCommon.getConfigByLocal("baiduappid"));
         if(map.containsKey("appid") && !TextUtils.isEmpty(map.get("appid"))){
@@ -114,66 +115,34 @@ public class XHApplication extends MobApplication {
         AppActivity.getActionBarColorTheme().setCloseColor(commonTopTextColor);
         AppActivity.getActionBarColorTheme().setProgressColor(commonTopTextColor);
 
+        LogManager.printStartTime("zhangyujian","XhApplication:222:initData::");
         //GrowingIO初始化
         new GrowingIOController().init(this);
         this.registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
             @Override
             public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-//                XHActivityManager.getInstance().setCurrentActivity(activity);
             }
-
             @Override
             public void onActivityStarted(Activity activity) {
             }
-
             @Override
             public void onActivityResumed(Activity activity) {
                 //记录当前activity
                 XHActivityManager.getInstance().setCurrentActivity(activity);
             }
-
             @Override
             public void onActivityPaused(Activity activity) {
             }
-
             @Override
             public void onActivityStopped(Activity activity) {
             }
-
             @Override
             public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
             }
-
             @Override
             public void onActivityDestroyed(Activity activity) {
             }
         });
-        //七鱼初始化 init方法无需放入主进程中执行，其他的初始化，有必要放在放入主进程
-        QiYvHelper.getInstance().initSDK(this);
-
-        initX5();
-    }
-
-    /**
-     * 初始化X5浏览器
-     */
-    private void initX5() {
-        //搜集本地tbs内核信息并上报服务器，服务器返回结果决定使用哪个内核。
-
-        QbSdk.PreInitCallback cb = new QbSdk.PreInitCallback() {
-
-            @Override
-            public void onViewInitFinished(boolean arg0) {
-                //x5內核初始化完成的回调，为true表示x5内核加载成功，否则表示x5内核加载失败，会自动切换到系统内核。
-                Log.d("app", " onViewInitFinished is " + arg0);
-            }
-
-            @Override
-            public void onCoreInitFinished() {
-            }
-        };
-        //x5内核初始化接口
-        QbSdk.initX5Environment(getApplicationContext(),  cb);
     }
 
     @Override

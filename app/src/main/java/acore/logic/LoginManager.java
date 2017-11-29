@@ -8,8 +8,9 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 import android.view.View;
+import android.webkit.CookieManager;
 
-import com.tencent.smtt.sdk.CookieManager;
+
 import com.xh.manager.DialogManager;
 import com.xh.manager.ViewManager;
 import com.xh.view.HButtonView;
@@ -657,23 +658,17 @@ public class LoginManager {
                 String vipFirstTime = vipContentMap.get("first_time");
                 String vipLastTime = vipContentMap.get("last_time");
                 String vipMaturityTime = vipContentMap.get("maturity_time");
-                try {
-                    //单位都是秒
-                    if(!TextUtils.isEmpty(vipFirstTime)
-                            && !TextUtils.isEmpty(vipFirstTime)
-                            && !TextUtils.isEmpty(vipFirstTime)
-                            ){
-                        long firstTime = Long.parseLong(vipFirstTime);
-                        long lastTime = Long.parseLong(vipLastTime);
-                        long maturityTime = Long.parseLong(vipMaturityTime);
-                        long dialogTime = lastTime + 20 * 24 * 60 * 60;
-                        long currTime = System.currentTimeMillis() / 1000;
-                        String shouldShowDialogValue = (isTempVip && !"2".equals(vipTransfer) && dialogTime <= maturityTime && currTime >= dialogTime && currTime <= maturityTime) ? "2" : "";
-                        FileManager.saveShared(context, FileManager.xmlFile_appInfo, "shouldShowDialog", shouldShowDialogValue);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if (TextUtils.isEmpty(vipFirstTime) || TextUtils.isEmpty(vipLastTime) || TextUtils.isEmpty(vipMaturityTime)) {
+                    if (callback != null)
+                        callback.run();
+                    return;
                 }
+                //单位都是秒
+                long lastTime = Long.parseLong(vipLastTime);
+                long maturityTime = Long.parseLong(vipMaturityTime);
+                long dialogTime = lastTime + 20 * 24 * 60 * 60;
+                long currTime = System.currentTimeMillis() / 1000;
+                FileManager.saveShared(context, FileManager.xmlFile_appInfo, "shouldShowDialog", (isTempVip && !"2".equals(vipTransfer) && dialogTime <= maturityTime && currTime >= dialogTime && currTime <= maturityTime) ? "2" : "");
                 if (callback != null)
                     callback.run();
             }

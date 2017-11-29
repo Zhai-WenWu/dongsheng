@@ -15,6 +15,7 @@
         android:layout_gravity="center_horizontal"
         android:background="@android:color/white"
         android:visibility="visible"
+        app:layout_scrollFlags="scroll|enterAlways|snap"
         app:pstsIndicatorColor="@color/comment_color"
         app:pstsIndicatorHeight="0px"
         app:pstsIndicatorWidthFollowText="true"
