@@ -61,7 +61,7 @@ public class HomeSecondListActivity extends BaseAppCompatActivity {
             finish();
             return;
         }
-        mModuleBean = new HomeModuleControler().getHomeModuleByType(this,mType);
+        mModuleBean = new HomeModuleControler().getHomeModuleByType(this, mType);
         mSecondModules = new ArrayList<HomeSecondModule>();
         ArrayList<Map<String, String>> levels = StringManager.getListMapByJson(mModuleBean.getTwoData());
         for (Map<String, String> level : levels) {
@@ -86,15 +86,21 @@ public class HomeSecondListActivity extends BaseAppCompatActivity {
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
         TextView titleV = (TextView) findViewById(R.id.title);
         titleV.setMaxWidth(ToolsDevice.getWindowPx(this).widthPixels - ToolsDevice.dp2px(this, 45 + 40));
-        if(mModuleBean != null)
-            titleV.setText(mModuleBean.getTitle());
+        if (mModuleBean != null && !TextUtils.isEmpty(mType)) {
+            switch (mType) {
+                case "day":
+                    titleV.setText("今日三餐");
+                    break;
+                default:
+                    titleV.setText(mModuleBean.getTitle());
+                    break;
+            }
+        }
     }
 
     private void initTabData() {
         mPagerAdapter = new HomeSecondListPagerAdapter(getSupportFragmentManager(), mSecondModules, mModuleBean);
         mViewPager.setOffscreenPageLimit(3);
-        mViewPager.setAdapter(mPagerAdapter);
-        mHomeTabStrip.setViewPager(mViewPager);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int i, float v, int i1) {
@@ -140,15 +146,17 @@ public class HomeSecondListActivity extends BaseAppCompatActivity {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("HH");
                 String currentHourStr = dateFormat.format(System.currentTimeMillis());
                 int currentHour = Integer.parseInt(currentHourStr);
-                if(currentHour <= 10 || currentHour > 23){
+                if (currentHour <= 10 || currentHour > 23) {
                     selectedPos = 0;
-                }else if(currentHour > 10 && currentHour <= 14){
+                } else if (currentHour > 10 && currentHour <= 14) {
                     selectedPos = 1;
-                }else if(currentHour > 14 && currentHour <= 23){
+                } else if (currentHour > 14 && currentHour <= 23) {
                     selectedPos = 2;
                 }
                 break;
         }
+        mViewPager.setAdapter(mPagerAdapter);
+        mHomeTabStrip.setViewPager(mViewPager);
         mViewPager.setCurrentItem(selectedPos);
         mHomeTabStrip.setOnTabReselectedListener(new PagerSlidingTabStrip.OnTabReselectedListener() {
             @Override
@@ -195,7 +203,7 @@ public class HomeSecondListActivity extends BaseAppCompatActivity {
     protected void onResume() {
         super.onResume();
     }
-    
+
     @Override
     protected void onPause() {
         super.onPause();
