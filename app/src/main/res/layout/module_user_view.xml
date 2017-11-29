@@ -54,7 +54,6 @@
                 android:id="@+id/right_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_2"
                 android:layout_alignParentRight="true"
                 android:text="加载中"
                 android:textColor="#999999"

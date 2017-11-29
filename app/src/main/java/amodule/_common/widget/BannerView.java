@@ -59,6 +59,7 @@ public class BannerView extends Banner implements IBindMap, IStatictusData,ISave
 
     private View adView = null;
     private Map<String,String> adMap = new HashMap<>();
+    public static final int TAG_ID = R.string.tag;
 
     public BannerView(Context context) {
         this(context, null);
@@ -114,12 +115,16 @@ public class BannerView extends Banner implements IBindMap, IStatictusData,ISave
             @Override
             public void bindView(View view, Map<String, String> data) {
                 ImageView imageView = (ImageView) view.findViewById(R.id.image);
+                Object tagValue = imageView.getTag(TAG_ID);
+                if(tagValue != null && tagValue.equals(data.get("img"))){
+                    return;
+                }
+                Log.i("tzy","banner bindView");
+                imageView.setTag(TAG_ID,data.get("img"));
                 Glide.with(getContext())
                         .load(data.get("img"))
                         .asBitmap()
                         .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                        .placeholder(R.drawable.i_nopic)
-                        .error(R.drawable.i_nopic)
                         .into(new SubBitmapTarget() {
                             @Override
                             public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
@@ -191,7 +196,7 @@ public class BannerView extends Banner implements IBindMap, IStatictusData,ISave
                 XHClick.mapStat(getContext(), id, twoLevel, threeLevel + position);
             }
         });
-        setPageChangeDuration(6 * 1000);
+        setPageChangeDuration(5 * 1000);
         setRandomItem(arrayList);
         setVisibility(VISIBLE);
     }
@@ -235,6 +240,8 @@ public class BannerView extends Banner implements IBindMap, IStatictusData,ISave
         if (null == arrayList || arrayList.isEmpty()) {
             return;
         }
+        weightSum = 0;
+        Log.i("tzy","setRandomItem");
         weightArray = new int[arrayList.size()];
         for (int index = 0; index < weightArray.length; index++) {
             Map<String, String> map = arrayList.get(index);
@@ -262,6 +269,7 @@ public class BannerView extends Banner implements IBindMap, IStatictusData,ISave
         for (int index = 0; index < weightArray.length; index++) {
             if (randomWeight < weightArray[index]) {
                 setCurrentItem(index);
+                Log.i("tzy","setCurrentItem::" + index);
                 break;
             }
         }
