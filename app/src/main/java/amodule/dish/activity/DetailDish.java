@@ -175,7 +175,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
             dishActivityViewControl.setDishOneView(img);
         }
         initData();
-        handlerNew();
+//        handlerNew();
     }
     private void initData(){
         loadOver = false;
