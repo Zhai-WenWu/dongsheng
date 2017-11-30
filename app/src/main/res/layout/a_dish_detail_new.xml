@@ -87,13 +87,4 @@
         android:layout_alignParentBottom="true"
         android:visibility="gone"
         tools:visibility="gone"/>
-    <Button
-        android:id="@+id/button1"
-        android:layout_width="@dimen/dp_40"
-        android:layout_height="@dimen/dp_40"
-        android:layout_centerInParent="true"
-        android:background="#000000"
-        android:textColor="#fffffe"
-        android:text="点击"/>
-
 </RelativeLayout>

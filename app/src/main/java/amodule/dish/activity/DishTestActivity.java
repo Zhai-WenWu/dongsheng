@@ -17,15 +17,10 @@ import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.xiangha.R;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
-import acore.logic.XHClick;
 import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
@@ -36,12 +31,10 @@ import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 
-import static amodule.dish.activity.DetailDishWeb.tongjiId;
 
 /**
- * Created by Administrator on 2017/11/29.
+ * 临时停留页面
  */
-
 public class DishTestActivity extends BaseAppCompatActivity{
     private String code,img;
     private Bundle bundle;
@@ -68,9 +61,9 @@ public class DishTestActivity extends BaseAppCompatActivity{
                 reqTopInfo();
             }
         });
-        AlphaAnimation alphaAnimation = new AlphaAnimation(0.0f, 1.0f);
+        AlphaAnimation alphaAnimation = new AlphaAnimation(0.5f, 1.0f);
         //设置动画持续时长
-        alphaAnimation.setDuration(200);
+        alphaAnimation.setDuration(100);
         //设置动画结束之后的状态是否是动画的最终状态，true，表示是保持动画结束时的最终状态
         alphaAnimation.setFillAfter(true);
         rl.startAnimation(alphaAnimation);

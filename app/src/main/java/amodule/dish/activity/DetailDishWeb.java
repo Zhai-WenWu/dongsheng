@@ -116,17 +116,6 @@ public class DetailDishWeb extends BaseAppCompatActivity implements IObserver {
         //注册监听
         ObserverManager.getInstence().registerObserver(this,ObserverManager.NOTIFY_LOGIN,ObserverManager.NOTIFY_FOLLOW,ObserverManager.NOTIFY_PAYFINISH);
     }
-    private void handlerNew(){
-        findViewById(R.id.button1).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(DetailDishWeb.this,DetailDish.class);
-                intent.putExtra("code",code);
-                intent.putExtra("img",img);
-                DetailDishWeb.this.startActivity(intent);
-            }
-        });
-    }
     @Override
     protected void onRestart() {
         super.onRestart();
@@ -172,7 +161,6 @@ public class DetailDishWeb extends BaseAppCompatActivity implements IObserver {
             dishActivityViewControl.setDishOneView(img);
         }
         initData();
-        handlerNew();
     }
     private void initData(){
         loadOver = false;
