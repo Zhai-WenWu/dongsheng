@@ -38,11 +38,9 @@ import acore.tools.ToolsDevice;
 import amodule.answer.activity.AnswerEditActivity;
 import amodule.answer.activity.AskEditActivity;
 import amodule.answer.activity.QAReportActivity;
-import amodule.dish.activity.DetailDish;
+import amodule.dish.activity.DetailDishWeb;
 import amodule.dish.activity.MoreImageShow;
 import amodule.dish.activity.upload.UploadDishActivity;
-import amodule.dish.db.DataOperate;
-import amodule.dish.db.DishOffSqlite;
 import amodule.other.activity.PlayVideo;
 import amodule.quan.activity.upload.UploadSubjectNew;
 import amodule.user.activity.ChooseDish;
@@ -63,7 +61,6 @@ import third.mall.aplug.MallCommon;
 import third.mall.aplug.MallInternetCallback;
 import third.mall.aplug.MallReqInternet;
 import third.mall.aplug.MallStringManager;
-import third.mall.dialog.FavorableDialog;
 import third.mall.wx.WxPay;
 import third.share.BarShare;
 import third.share.BarShareImage;
@@ -160,8 +157,8 @@ public class JsAppCommon extends JsBase {
         handler.post(new Runnable() {
             @Override
             public void run() {
-            if (mAct != null && mAct instanceof DetailDish)
-                ((DetailDish)mAct).savaJsAdata(burden,allClick,favrites,nickName);
+            if (mAct != null && mAct instanceof DetailDishWeb)
+                ((DetailDishWeb)mAct).savaJsAdata(burden,allClick,favrites,nickName);
             }
         });
     }

@@ -331,7 +331,7 @@
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan"/>
         <activity
-            android:name="amodule.dish.activity.DetailDish"
+            android:name="amodule.dish.activity.DetailDishWeb"
             android:configChanges="orientation|keyboardHidden|locale|screenSize|layoutDirection"
             android:hardwareAccelerated="true"
             android:keepScreenOn="true"
@@ -339,7 +339,15 @@
             android:theme="@style/AppMainTheme"
             android:windowSoftInputMode="adjustPan"/>
         <activity
-            android:name="amodule.dish.activity.DetailDishNew"
+            android:name="amodule.dish.activity.DishTestActivity"
+            android:configChanges="orientation|keyboardHidden|locale|screenSize|layoutDirection"
+            android:hardwareAccelerated="true"
+            android:keepScreenOn="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/common_AllTransParentTheme"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name="amodule.dish.activity.DetailDish"
             android:configChanges="orientation|keyboardHidden|locale|screenSize|layoutDirection"
             android:hardwareAccelerated="true"
             android:keepScreenOn="true"

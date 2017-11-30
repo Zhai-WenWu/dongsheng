@@ -43,6 +43,7 @@ import amodule.dish.view.DishRecommedAndAdView;
 import amodule.dish.view.DishTitleViewControl;
 import amodule.dish.view.DishVipView;
 import amodule.dish.view.XhScrollView;
+import amodule.main.Main;
 import third.video.VideoPlayerController;
 
 /**
@@ -168,6 +169,8 @@ public class DetailDishViewManager {
      */
     private void initTitle(){
         bar_title_1 = (RelativeLayout) mAct.findViewById(R.id.a_dish_detail_new_title);
+        String colors = Tools.getColorStr(mAct, R.color.common_top_bg);
+        Tools.setStatusBarColor(mAct, Color.parseColor(colors));
 //        statusBarHeight = Tools.getStatusBarHeight(mAct);
 //        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) bar_title_1.getLayoutParams();
 //        layoutParams.height = titleHeight + statusBarHeight;

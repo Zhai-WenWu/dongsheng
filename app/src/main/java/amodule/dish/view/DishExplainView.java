@@ -1,8 +1,6 @@
 package amodule.dish.view;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
@@ -11,23 +9,10 @@ import android.widget.TextView;
 
 import com.xiangha.R;
 
-import java.util.ArrayList;
 import java.util.Map;
 
-import acore.logic.AppCommon;
-import acore.logic.LoginManager;
-import acore.logic.XHClick;
 import acore.override.helper.XHActivityManager;
 import acore.override.view.ItemBaseView;
-import acore.tools.FileManager;
-import acore.tools.StringManager;
-import acore.tools.Tools;
-import amodule.dish.activity.DetailDish;
-import amodule.quan.activity.upload.UploadSubjectNew;
-import amodule.quan.db.CircleData;
-import amodule.quan.db.CircleSqlite;
-import amodule.user.activity.login.LoginByAccout;
-import aplug.feedback.activity.Feedback;
 
 
 /**

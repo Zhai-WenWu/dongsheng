@@ -48,6 +48,7 @@ import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
+import amodule.dish.activity.DishTestActivity;
 import amodule.health.activity.HealthTest;
 import amodule.health.activity.MyPhysique;
 import amodule.main.Main;
@@ -395,7 +396,6 @@ public class AppCommon {
             });
         }
         Intent intent = null;
-        LogManager.print("d", "parseURL:" + url);
         //特殊处理体质
         if (url.contains("tizhitest.app")) {
             String result = isHealthTest();
@@ -422,7 +422,8 @@ public class AppCommon {
         try {
             String[] urls = newUrl.split("\\?");
             if (urls.length > 0) {
-                final Class<?> c = Class.forName(urls[0]);
+                String urlTemp="amodule.dish.activity.DetailDish".equals(urls[0])?"amodule.dish.activity.DishTestActivity":urls[0];
+                final Class<?> c = Class.forName(urlTemp);
                 if (urls[0].contains("amodule.main.activity.") || urls[0].contains("third.mall.MainMall")) {
                     Main.colse_level = 2;
                     if (Main.allMain != null) {

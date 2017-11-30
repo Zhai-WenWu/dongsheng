@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.xiangha.R;
@@ -23,15 +22,12 @@ import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.tools.StringManager;
 import acore.tools.Tools;
-import amodule.answer.activity.AskEditActivity;
-import amodule.dish.activity.DetailDishNew;
+import amodule.dish.activity.DetailDish;
 import amodule.quan.activity.upload.UploadSubjectNew;
 import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
-
-import static amodule.dish.activity.DetailDish.tongjiId;
 
 /**
  * 菜谱详情页面
@@ -105,7 +101,7 @@ public class DishHoverViewControl implements View.OnClickListener{
         mHoverTv.setBackgroundDrawable(gd);
         mHoverTv.setTextColor(Color.parseColor(mapQA.containsKey("color")&&!TextUtils.isEmpty(mapQA.get("color"))?mapQA.get("color"):"#fffffe"));
         mHoverTv.setText(mapQA.get("text"));
-        XHClick.mapStat(mAct, DetailDishNew.tongjiId_detail, "向作者提问按钮状态", mapQA.get("text"));
+        XHClick.mapStat(mAct, DetailDish.tongjiId_detail, "向作者提问按钮状态", mapQA.get("text"));
     }
     @Override
     public void onClick(View v) {
@@ -118,7 +114,7 @@ public class DishHoverViewControl implements View.OnClickListener{
                 if(mapQA!=null&&mapQA.containsKey("isJump")&&"2".equals(mapQA.get("isJump"))){
                    AppCommon.openUrl(mAct,mapQA.get("url"),false);
                 }else{
-                    XHClick.mapStat(mAct, DetailDishNew.tongjiId_detail, "底部浮动", "向作者提问点击量");
+                    XHClick.mapStat(mAct, DetailDish.tongjiId_detail, "底部浮动", "向作者提问点击量");
                     if(mapQA.containsKey("toast")&&!TextUtils.isEmpty(mapQA.get("toast"))){
                         Tools.showToast(mAct,mapQA.get("toast"));
                     }
@@ -130,12 +126,12 @@ public class DishHoverViewControl implements View.OnClickListener{
                     mAct.startActivity(new Intent(mAct,LoginByAccout.class));
                     return;
                 }
-                XHClick.mapStat(mAct, DetailDishNew.tongjiId_detail, "底部浮动", "点赞按钮点击量");
+                XHClick.mapStat(mAct, DetailDish.tongjiId_detail, "底部浮动", "点赞按钮点击量");
                 onChangeLikeState(true,true);
                 hindGoodLayout();
                 break;
             case R.id.a_dish_detail_new_footer_hover_trample: //没用
-                XHClick.mapStat(mAct, DetailDishNew.tongjiId_detail, "底部浮动", "点踩按钮点击量");
+                XHClick.mapStat(mAct, DetailDish.tongjiId_detail, "底部浮动", "点踩按钮点击量");
                 onChangeLikeState(false,false);
                 hindGoodLayout();
 
@@ -156,7 +152,7 @@ public class DishHoverViewControl implements View.OnClickListener{
                 showIntent.putExtra("skip", true);
                 showIntent.putExtra("cid", "1");
                 mAct.startActivity(showIntent);
-                XHClick.mapStat(mAct, DetailDishNew.tongjiId_detail, "底部浮动", "晒美食点击量");
+                XHClick.mapStat(mAct, DetailDish.tongjiId_detail, "底部浮动", "晒美食点击量");
                 break;
         }
     }

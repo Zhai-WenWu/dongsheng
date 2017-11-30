@@ -2,7 +2,6 @@ package amodule.dish.view.manager;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,11 +10,8 @@ import java.util.Map;
 import acore.override.helper.XHActivityManager;
 import acore.tools.StringManager;
 import amodule.dish.activity.DetailDish;
-import amodule.dish.activity.DetailDishNew;
-import amodule.main.Main;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
-import aplug.basic.ReqInternet;
 import xh.basic.internet.UtilInternet;
 
 /**
@@ -40,13 +36,13 @@ public class DetailDishDataManager {
     private boolean hasPermission = true;
     private boolean contiunRefresh = true;
     private boolean loadOver = false;
-    private DetailDishNew detailAct;
+    private DetailDish detailAct;
 
-    public DetailDishDataManager(String code, DetailDishNew detailAct) {
+    public DetailDishDataManager(String code, DetailDish detailAct) {
         dishCode = code;
         this.detailAct = detailAct;
         resetData();
-        reqOne();
+        reqTopInfo(true);
     }
     //重置权限数据
     private void resetData(){
@@ -69,7 +65,6 @@ public class DetailDishDataManager {
      * 第一次请求接口合集
      */
     public void reqOne() {
-        reqTopInfo();
         reqPublicData();
         reqIngre();
         reqBanner();
@@ -84,8 +79,9 @@ public class DetailDishDataManager {
 
     /**
      * 请求topInfo数据---第一请求，有权限请求
+     * boolean isGon
      */
-    public void reqTopInfo() {
+    public void reqTopInfo(boolean isGon) {
         String params = "dishCode=" + dishCode;
         ReqEncyptInternet.in().doEncypt(StringManager.API_MAIN8_TOPINFP, params, new InternetCallback(mContext) {
             @Override
@@ -96,6 +92,7 @@ public class DetailDishDataManager {
                     customerCode= StringManager.getFirstMap(object).get("customerCode");
                     if (!TextUtils.isEmpty(object.toString()) && !object.toString().equals("[]")) {
                         handleDataSuccess(flag, DISH_DATA_TOP, object);
+                        if(isGon)reqOne();
                         Map<String,String> maps= StringManager.getFirstMap(object);
                         if(maps.containsKey("isHide")&&!"2".equals(maps.get("isHide"))){
                             reqOtherTieData();

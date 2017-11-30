@@ -41,7 +41,7 @@ import aplug.basic.ReqInternet;
 import aplug.basic.SubBitmapTarget;
 import xh.basic.tool.UtilImage;
 
-import static amodule.dish.activity.DetailDish.tongjiId;
+import static amodule.dish.activity.DetailDishWeb.tongjiId;
 import static xh.basic.tool.UtilString.getListMapByJson;
 
 /**

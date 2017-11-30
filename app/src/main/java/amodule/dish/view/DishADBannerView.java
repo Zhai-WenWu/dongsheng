@@ -14,7 +14,7 @@ import acore.logic.XHClick;
 import acore.override.helper.XHActivityManager;
 import acore.override.view.ItemBaseView;
 import acore.tools.Tools;
-import amodule.dish.activity.DetailDishNew;
+import amodule.dish.activity.DetailDish;
 
 /**
  * 用料上方广告处理——————api
@@ -44,7 +44,7 @@ public class DishADBannerView extends ItemBaseView {
         img_banner.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), DetailDishNew.tongjiId_detail, "用料上方banner位", "banner位点击量");
+                XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), DetailDish.tongjiId_detail, "用料上方banner位", "banner位点击量");
                 AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(),map.get("appUrl"),true);
             }
         });
