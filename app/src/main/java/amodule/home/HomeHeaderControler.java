@@ -3,6 +3,7 @@ package amodule.home;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.xiangha.R;
@@ -26,7 +27,9 @@ import amodule.main.activity.MainHomePage;
 
 public class HomeHeaderControler implements ISaveStatistic {
 
-    private View mHeaderView, mFeedHeaderView;
+    private View mHeaderView, mFeedHeaderView,mLine;
+
+    private LinearLayout mFeedLayout;
 
     private TextView mFeedTitle, mTipMessage;
 
@@ -53,6 +56,8 @@ public class HomeHeaderControler implements ISaveStatistic {
         mFeedHeaderView = header.findViewById(R.id.a_home_feed_title);
         mFeedTitle = (TextView) header.findViewById(R.id.feed_title);
         mTipMessage = (TextView) header.findViewById(R.id.tip_message);
+        mLine = header.findViewById(R.id.line);
+        mFeedLayout = (LinearLayout) header.findViewById(R.id.feed_title_layout);
     }
 
     public void setData(List<Map<String, String>> array, boolean isShowCache) {
@@ -75,7 +80,12 @@ public class HomeHeaderControler implements ISaveStatistic {
         if(onLayoutChangeListener == null){
             onLayoutChangeListener = (v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
                 hasHeaderData = mHeaderView.getHeight() - mTipMessage.getHeight() > mFeedHeaderView.getHeight();
-                mFeedHeaderView.setVisibility((hasFeedData && hasHeaderData) ? View.VISIBLE : View.GONE);
+                int needVisibility = (hasFeedData && hasHeaderData) ? View.VISIBLE : View.GONE;
+                if(needVisibility != mFeedHeaderView.getVisibility()){
+                    mFeedHeaderView.setVisibility(needVisibility);
+                    mLine.setVisibility(needVisibility);
+                    mFeedLayout.setVisibility(needVisibility);
+                }
             };
             mHeaderView.addOnLayoutChangeListener(onLayoutChangeListener);
         }

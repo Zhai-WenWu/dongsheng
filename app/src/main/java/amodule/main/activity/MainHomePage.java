@@ -215,6 +215,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
         mDataControler.loadServiceFeedData(refresh, new HomeDataControler.OnLoadDataCallback() {
             @Override
             public void onPrepare() {
+                loadManager.changeMoreBtn(mViewContrloer.getRvListView(), ReqInternet.REQ_OK_STRING, -1, -1, LoadOver ? 2 : 1, !LoadOver);
                 if (refresh) {
                     XHClick.mapStat(MainHomePage.this, "a_recommend", "刷新效果", "下拉刷新");
                     loadManager.hideProgressBar();
@@ -224,7 +225,6 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
                 if(null != loadmore){
                     loadmore.setVisibility(View.VISIBLE);
                 }
-                loadManager.changeMoreBtn(mViewContrloer.getRvListView(), ReqInternet.REQ_OK_STRING, -1, -1, LoadOver ? 2 : 1, refresh);
             }
 
             @Override

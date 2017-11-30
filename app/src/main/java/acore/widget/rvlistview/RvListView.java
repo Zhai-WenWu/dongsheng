@@ -46,8 +46,8 @@ public class RvListView extends RecyclerView {
     static final int VIEW_TYPE_FOOTER = -2;
     static final int VIEW_TYPE_EMPTY = Integer.MAX_VALUE - 1;
 
-    private final LinearLayout mHeaderContainer;
-    private final LinearLayout mFooterContainer;
+    private LinearLayout mHeaderContainer;
+    private LinearLayout mFooterContainer;
 
     private View mEmptyView;
 
@@ -76,8 +76,12 @@ public class RvListView extends RecyclerView {
 
     public RvListView(Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        mHeaderContainer = new LinearLayout(context);
-        mFooterContainer = new LinearLayout(context);
+        initialize();
+    }
+
+    private void initialize() {
+        mHeaderContainer = new LinearLayout(getContext());
+        mFooterContainer = new LinearLayout(getContext());
         Log.d(TAG, "Constructor execute.");
     }
 
