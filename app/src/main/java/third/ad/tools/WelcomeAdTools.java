@@ -54,9 +54,18 @@ public class WelcomeAdTools {
     private XHBannerCallback mXHBannerCallback;
     private BaiduCallback mBaiduCallback;
     private boolean isTwoShow = false;
+    String data;
 
     private WelcomeAdTools() {
+        //获取广告数据
+        data = FileManager.readFile(FileManager.getDataDir() + FileManager.file_ad);
+        Log.i("tzy","WelcomeAdTools create.");
+        Log.i("tzy","data = " + data);
+        //获取参数
         String splashConfigDataStr = AppCommon.getConfigByLocal(CONFIGKEY);
+        if(TextUtils.isEmpty(splashConfigDataStr)){
+            return;
+        }
         Map<String, String> data = StringManager.getFirstMap(splashConfigDataStr);
         String[] keys = {"splashmins", "splashmaxs", "open", "duretimes", "shownum"};
         int[] values = {splashmins, splashmaxs, open, duretimes, shownum};
@@ -66,6 +75,7 @@ public class WelcomeAdTools {
                 values[index] = Integer.parseInt(data.get(keys[index]));
             }
         }
+
     }
 
     public static synchronized WelcomeAdTools getInstance() {
@@ -86,15 +96,15 @@ public class WelcomeAdTools {
     /**
      * 广告入口
      */
-    public void handlerAdData(final boolean isCache, AdDataCallBack CallBack, boolean isTwoShow) {
+    public void handlerAdData(final boolean isCache, AdNoDataCallBack CallBack, boolean isTwoShow) {
         this.isTwoShow = isTwoShow;
         list_ad.clear();
         ad_data.clear();
         index_ad = 0;
-        this.adDataCallBack = CallBack;
-        String data = FileManager.readFile(FileManager.getDataDir() + FileManager.file_ad);
+        this.mAdNoDataCallBack = CallBack;
+        Log.i("tzy","WelcomeAdTools handlerAdData.");
         if (TextUtils.isEmpty(data)) {
-            if (adDataCallBack != null) adDataCallBack.noAdData();
+            if (mAdNoDataCallBack != null) mAdNoDataCallBack.noAdData();
             return;
         }
         Map<String, String> map = StringManager.getFirstMap(data);
@@ -114,7 +124,7 @@ public class WelcomeAdTools {
 //            new Handler(Looper.getMainLooper()).post(() -> nextAd(isCache));
             nextAd(isCache);
         } else {
-            if (adDataCallBack != null) adDataCallBack.noAdData();
+            if (mAdNoDataCallBack != null) mAdNoDataCallBack.noAdData();
         }
     }
 
@@ -135,6 +145,7 @@ public class WelcomeAdTools {
      * 下一个广告数据
      */
     private void nextAd(boolean isCache) {
+        Log.i("tzy","WelcomeAdTools nextAd.");
         if (list_ad.size() > index_ad) {
             if (XHScrollerAdParent.TAG_GDT.equals(list_ad.get(index_ad))) {//gdt
                 if (index_ad == 0 && isCache) {
@@ -150,7 +161,7 @@ public class WelcomeAdTools {
                     displayBaiduAD();
             }
         } else {
-            if (adDataCallBack != null) adDataCallBack.noAdData();
+            if (mAdNoDataCallBack != null) mAdNoDataCallBack.noAdData();
         }
     }
 
@@ -317,26 +328,12 @@ public class WelcomeAdTools {
         public ViewGroup getADLayout();
     }
 
-
-    public GdtCallback getmGdtCallback() {
-        return mGdtCallback;
-    }
-
     public void setmGdtCallback(GdtCallback mGdtCallback) {
         this.mGdtCallback = mGdtCallback;
     }
 
-
-    public XHBannerCallback getmXHBannerCallback() {
-        return mXHBannerCallback;
-    }
-
     public void setmXHBannerCallback(XHBannerCallback mXHBannerCallback) {
         this.mXHBannerCallback = mXHBannerCallback;
-    }
-
-    public BaiduCallback getBaiduCallback() {
-        return mBaiduCallback;
     }
 
     public void setBaiduCallback(BaiduCallback mBaiduCallback) {
@@ -363,11 +360,11 @@ public class WelcomeAdTools {
         return shownum;
     }
 
-    public interface AdDataCallBack {
+    public interface AdNoDataCallBack {
         /*** 没有广告数据*/
         public void noAdData();
     }
 
-    private AdDataCallBack adDataCallBack;
+    private AdNoDataCallBack mAdNoDataCallBack;
 
 }
