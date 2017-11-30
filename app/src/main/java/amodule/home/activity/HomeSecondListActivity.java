@@ -46,7 +46,7 @@ public class HomeSecondListActivity extends BaseAppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setFormat(PixelFormat.TRANSLUCENT);
-        initActivity("", 2, 0, R.layout.back_title_bar, R.layout.home_second_list_layout);
+        initActivity("", 2, 0, R.layout.back_title_bar, R.layout.home_second_list_layout, android.R.color.white);
         initData();
     }
 
