@@ -97,7 +97,7 @@ public class HomeBuoy {
             //绑定点击
             bindClick(bannerMap.get("url"));
             //设置图片
-            setBuoyImage(StringManager.getFirstMap(bannerMap.get("imgs")).get("appImg"));
+            setBuoyImage(StringManager.getFirstMap(bannerMap.get("imgs")).get("rightFloatImg"));
             //显示
             setFloatMenuData();
             FileManager.saveShared(mAct, FileManager.xmlFile_appInfo, AdPlayIdConfig.HOME_FLOAT, String.valueOf(++count));

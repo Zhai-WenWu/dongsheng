@@ -119,8 +119,8 @@ public class AdPlayIdConfig {
     public static final String ARTICLE_TIEPIAN = "wz_tiepian";
 
 
-    public static final String HOME_TOPLEFT = "XHLeftTop";
-    public static final String HOME_FLOAT = "XHFloat";
+    public static final String HOME_TOPLEFT = "sy_tubiao";
+    public static final String HOME_FLOAT = "sy_fudong";
     public static final String HOME_BANNEER_1 = "sy_banner1";
 
 

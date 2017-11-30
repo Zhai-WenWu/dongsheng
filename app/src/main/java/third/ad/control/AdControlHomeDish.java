@@ -24,7 +24,7 @@ import third.ad.tools.AdPlayIdConfig;
  */
 public class AdControlHomeDish extends AdControlParent{
     public static String tag_yu="zyj";
-    private static AdControlHomeDish mAdControlHomeDishUnload;
+    private static volatile AdControlHomeDish mAdControlHomeDishUnload;
     public static String Control_up="up";
     public static String Control_down="down";
 
