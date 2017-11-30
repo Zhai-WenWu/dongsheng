@@ -87,7 +87,6 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
     protected DismissControlViewTimerTask mDismissControlViewTimerTask;
 
     protected LockClickListener mLockClickListener;//点击锁屏的回调
-    protected OnClickListener mClingClickListener;//投屏点击的回调
 
     protected Dialog mProgressDialog;
     protected ProgressBar mDialogProgressBar;
@@ -95,7 +94,6 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
     protected TextView mDialogTotalTime;
     protected ImageView mDialogIcon;
     protected ImageView mLockScreen;
-    protected ImageView mClingBtn;
 
     protected Drawable mBottomProgressDrawable;
     protected Drawable mBottomShowProgressDrawable;
@@ -143,7 +141,6 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
         mTitleTextView = (TextView) findViewById(R.id.title);
         mThumbImageViewLayout = (RelativeLayout) findViewById(R.id.thumb);
         mLockScreen = (ImageView) findViewById(R.id.lock_screen);
-        mClingBtn = (ImageView) findViewById(R.id.cling);
 
         mLoadingProgressBar = findViewById(R.id.loading);
 
@@ -168,30 +165,21 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
             mProgressBar.setThumb(mBottomShowProgressThumbDrawable);
         }
 
-        mClingBtn.setVisibility(GONE);
         mLockScreen.setVisibility(GONE);
 
-        OnClickListener clickListener = new OnClickListener() {
+        mLockScreen.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (v.getId() == R.id.lock_screen) {
-                    if (mCurrentState == CURRENT_STATE_AUTO_COMPLETE ||
-                            mCurrentState == CURRENT_STATE_ERROR) {
-                        return;
-                    }
-                    lockTouchLogic();
-                    if (mLockClickListener != null) {
-                        mLockClickListener.onClick(v, mLockCurScreen);
-                    }
-                } else if (v.getId() == R.id.cling) {
-                    if (mClingClickListener != null)
-                        mClingClickListener.onClick(v);
+                if (mCurrentState == CURRENT_STATE_AUTO_COMPLETE ||
+                        mCurrentState == CURRENT_STATE_ERROR) {
+                    return;
+                }
+                lockTouchLogic();
+                if (mLockClickListener != null) {
+                    mLockClickListener.onClick(v, mLockCurScreen);
                 }
             }
-        };
-
-        mLockScreen.setOnClickListener(clickListener);
-        mClingBtn.setOnClickListener(clickListener);
+        });
 
     }
 
@@ -1167,15 +1155,6 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
     /** 锁屏点击 */
     public void setLockClickListener(LockClickListener lockClickListener) {
         this.mLockClickListener = lockClickListener;
-    }
-
-    public void setClingClickListener(OnClickListener clickListener) {
-        this.mClingClickListener = clickListener;
-    }
-
-    public void showClingBtn(boolean show) {
-        if (mClingBtn != null)
-            mClingBtn.setVisibility(show ? VISIBLE : GONE);
     }
 
     /**

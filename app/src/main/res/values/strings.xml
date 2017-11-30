@@ -67,13 +67,5 @@
     <string name="vip_transfer_this">转移到本账号</string>
     <string name="vip_transfer_xh">转移到香哈账号</string>
     <string name="myself_viptransfer_itemdesc">将权益迁移到账号可在各设备上享受会员</string>
-    <string name="notice">请选择连接设备，选择连接设备才可播放</string>
-    <string name="mute">静音</string>
-    <string name="progress">进度</string>
-    <string name="volume">音量</string>
-    <string name="play">播放</string>
-    <string name="pause">暂停</string>
-    <string name="stop">停止</string>
-    <string name="selectedText">已选中: %s</string>
 
 </resources>

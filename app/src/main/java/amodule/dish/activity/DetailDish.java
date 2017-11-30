@@ -12,7 +12,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import com.xiangha.R;
 
@@ -39,9 +38,7 @@ import aplug.basic.InternetCallback;
 import aplug.basic.LoadImage;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
-import aplug.web.tools.TemplateWebViewControl;
 import aplug.web.view.TemplateWebView;
-import third.cling.ui.ClingDeviceActivity;
 import third.video.VideoPlayerController;
 
 /**
@@ -172,20 +169,6 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         permissionMap.clear();
         dishActivityViewControl.setCode(courseCode,chapterCode);
         dishActivityViewControl.initData(code);
-//        dishActivityViewControl.showClingBtn(true);
-        dishActivityViewControl.setClingClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String videoUrl = dishActivityViewControl.getVideoUrl();
-                if (TextUtils.isEmpty(videoUrl)) {
-                    Toast.makeText(DetailDish.this, "无效的视频地址", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                Intent intent = new Intent(DetailDish.this, ClingDeviceActivity.class);
-                intent.putExtra(ClingDeviceActivity.PLAY_URL, videoUrl);
-                DetailDish.this.startActivity(intent);
-            }
-        });
         loadManager.setLoading(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

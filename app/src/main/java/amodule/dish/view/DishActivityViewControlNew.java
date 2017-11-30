@@ -84,8 +84,6 @@ public class  DishActivityViewControlNew {
 
     private String courseCode,chapterCode;//
 
-    private View.OnClickListener mClingClickListener;
-
     public DishActivityViewControlNew(Activity activity){
         this.mAct = activity;
         wm_height = activity.getWindowManager().getDefaultDisplay().getHeight();
@@ -118,13 +116,6 @@ public class  DishActivityViewControlNew {
         dishHeaderView= (DishHeaderViewNew) mAct.findViewById(R.id.a_dish_detail_new_headview);
         headerLayoutHeight = ToolsDevice.getWindowPx(mAct).widthPixels * 9 / 16 + titleHeight + statusBarHeight;
         dishHeaderView.initView(mAct,headerLayoutHeight);
-        dishHeaderView.setClingClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mClingClickListener != null)
-                    mClingClickListener.onClick(v);
-            }
-        });
 
         //处理标题导航栏
         dishTitleViewControl= new DishTitleViewControlNew(mAct);
@@ -175,15 +166,6 @@ public class  DishActivityViewControlNew {
         View title_state_bar = mAct.findViewById(R.id.title_state_bar);
         layoutParams = (RelativeLayout.LayoutParams) title_state_bar.getLayoutParams();
         layoutParams.height = statusBarHeight;
-    }
-
-    public void setClingClickListener (View.OnClickListener clickListener) {
-        this.mClingClickListener = clickListener;
-    }
-
-    public void showClingBtn(boolean show) {
-        if (dishHeaderView != null)
-            dishHeaderView.showClingBtn(show);
     }
 
     /**
@@ -724,9 +706,5 @@ public class  DishActivityViewControlNew {
 
     public boolean isHasVideo() {
         return isHasVideo;
-    }
-
-    public String getVideoUrl() {
-        return dishHeaderView == null ? null : dishHeaderView.getVideoUrl();
     }
 }
