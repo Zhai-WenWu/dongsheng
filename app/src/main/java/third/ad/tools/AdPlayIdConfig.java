@@ -122,6 +122,7 @@ public class AdPlayIdConfig {
 
     public static final String HOME_TOPLEFT = "XHLeftTop";
     public static final String HOME_FLOAT = "XHFloat";
+    public static final String HOME_BANNEER_1 = "sy_banner1";
 
 
 }
