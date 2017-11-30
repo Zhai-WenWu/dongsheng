@@ -23,7 +23,6 @@ import acore.tools.FileManager;
 import acore.tools.StringManager;
 import third.ad.tools.BaiduAdTools;
 import third.ad.tools.GdtAdTools;
-import xh.basic.tool.UtilString;
 
 import static third.ad.control.AdControlHomeDish.tag_yu;
 import static xh.basic.tool.UtilString.getListMapByJson;
@@ -161,9 +160,10 @@ public class XHAllAdControl {
      */
     private void handlerAdData(String adData, ArrayList<Map<String, String>> arrayList, String data) {
         Map<String, String> map_ad = StringManager.getFirstMap(adData);
-        if (map_ad.get("open").equals("2")&&XHScrollerAdParent.supportType(map_ad.get("type"))) {
+        if ("2".equals(map_ad.get("open"))
+                && XHScrollerAdParent.supportType(map_ad.get("type"))) {
             /*banner广告数据存储到广告体*/
-            if (map_ad.get("type").equals("personal"))
+            if ("personal".equals(map_ad.get("type")))
                 map_ad.put("data", data);
             arrayList.add(map_ad);
         }
@@ -176,18 +176,20 @@ public class XHAllAdControl {
      * @param map_temp 数据体
      */
     private void judge(Map<String, String> map_temp) {
-        if (map_temp.get("type").equals("gdt") && map_temp.get("open").equals("2")) {
+        if ("gdt".equals(map_temp.get("type"))
+                && "2".equals(map_temp.get("open"))) {
             if (!isShowGdt || TextUtils.isEmpty(GDT_ID)) {
                 String data = map_temp.get("data");
-                LinkedHashMap<String, String> map_link = UtilString.getMapByString(data, "&", "=");
+                LinkedHashMap<String, String> map_link = StringManager.getMapByString(data, "&", "=");
                 if (map_link.containsKey("adid"))
                     GDT_ID = map_link.get("adid");
             }
             isShowGdt = true;
-        }else if(map_temp.get("type").equals("baidu") && map_temp.get("open").equals("2")) {
+        }else if("baidu".equals(map_temp.get("type"))
+                && "2".equals(map_temp.get("open"))) {
             if (!isShowBaidu || TextUtils.isEmpty(BAIDU_ID)) {
                 String data = map_temp.get("data");
-                LinkedHashMap<String, String> map_link = UtilString.getMapByString(data, "&", "=");
+                LinkedHashMap<String, String> map_link = StringManager.getMapByString(data, "&", "=");
                 if (map_link.containsKey("adid"))
                     BAIDU_ID = map_link.get("adid");
             }
@@ -294,7 +296,8 @@ public class XHAllAdControl {
     /** 开启单条数据 */
     private void startAdRequest() {
         int size = listAdContrls.size();
-        if(size>0) oneAdTime = System.currentTimeMillis();//第一时间。
+        if(size > 0)
+            oneAdTime = System.currentTimeMillis();//第一时间。
         for (int i = 0; i < size; i++) {
             if (listAdContrls.get(i) != null) {
                 listAdContrls.get(i).setAdDataCallBack(new XHAdControlCallBack() {
@@ -421,14 +424,15 @@ public class XHAllAdControl {
     private void getStiaticsData() {
         String msg = FileManager.getFromAssets(XHApplication.in(), "adStatistics");
         ArrayList<Map<String, String>> listmap = StringManager.getListMapByJson(msg);
-        if (listmap.get(0).containsKey(StatisticKey)) {
+        if (listmap.size() > 0 && listmap.get(0).containsKey(StatisticKey)) {
             ArrayList<Map<String, String>> stiaticsList = StringManager.getListMapByJson(listmap.get(0).get(StatisticKey));
             ad_show = stiaticsList.get(0).get("show");
             ad_click = stiaticsList.get(0).get("click");
             twoData = stiaticsList.get(0).get("twoData");
         }
         //判断当前是否是美食圈列表结构
-        if ("community_list".equals(StatisticKey) || "result_works".equals(StatisticKey)) {
+        if ("community_list".equals(StatisticKey)
+                || "result_works".equals(StatisticKey)) {
             isQuanList = true;
         }
     }

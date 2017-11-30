@@ -24,8 +24,6 @@ public class GdtAdTools {
 
     private final String APPID = "1150004142";
 
-    public static final String ID_DISH_SCOMMEND_ONE = "2050515338458348"; //菜谱详情页相关推荐第一位置
-
     private static volatile GdtAdTools mGdtAdTools;
 
     private GdtAdTools() {

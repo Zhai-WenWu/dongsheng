@@ -3,6 +3,8 @@ package third.ad.scrollerAd;
 import android.util.Log;
 import android.view.View;
 
+import com.annimon.stream.Stream;
+
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -52,12 +54,11 @@ public class XHOneAdControl {
 
                 @Override
                 public void onFail(String type) {
-                    if(index==listAdParent.size()-1){
+                    if(index == listAdParent.size() - 1){
                         xhAdControlCallBack.onFail(type,index_controls);
                     }else{
                         getCurrentAd(index+1);
                     }
-
                 }
             });
         }
@@ -97,18 +98,17 @@ public class XHOneAdControl {
      * @param view
      */
     public void setView(View view){
-        if (index_ad>-1) {
-            if (view != null) listAdParent.get(index_ad).setShowView(view);
+        if (index_ad > -1 && view != null) {
+            listAdParent.get(index_ad).setShowView(view);
         }
     }
 
     //退出activity时，释放view
     public void releaseView(){
-        if(listAdParent!=null&&listAdParent.size()>0){
-            for(int i=0;i<listAdParent.size();i++){
-                if(listAdParent.get(i)!=null)
-                    listAdParent.get(i).realseView();
-            }
+        if(listAdParent != null){
+            Stream.of(listAdParent)
+                    .filter(adParent -> null != adParent)
+                    .forEach(XHScrollerAdParent::realseView);
         }
     }
 }

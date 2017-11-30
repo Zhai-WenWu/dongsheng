@@ -1199,14 +1199,6 @@
             android:windowSoftInputMode="adjustPan"
             />
         <!-- mall end -->
-        <!-- ad start -->
-        <activity
-            android:name="third.ad.tools.AdWebView"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"
-            android:theme="@style/titleTheme"
-            android:windowSoftInputMode="adjustPan"/>
-        <!-- ad end -->
 
         <activity
             android:name="amodule.dish.activity.upload.UploadDishListActivity"

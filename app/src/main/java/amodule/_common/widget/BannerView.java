@@ -267,13 +267,10 @@ public class BannerView extends Banner implements IBindMap, IStatictusData,ISave
         for (int index = 0; index < weightArray.length; index++) {
             if (randomWeight < weightArray[index]) {
                 setCurrentItem(index);
-                setCurrentItem(index + 1);
-                setCurrentItem(index);
 //                Log.i("tzy","setCurrentItem::" + index);
                 break;
             }
         }
-
     }
 
     String id, twoLevel, threeLevel;

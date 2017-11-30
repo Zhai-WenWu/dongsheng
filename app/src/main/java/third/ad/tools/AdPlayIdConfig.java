@@ -12,7 +12,6 @@ public class AdPlayIdConfig {
      * 欢迎页面
      */
     public static final String WELCOME = "kaiping";
-    public static  final  String welcome_gdt_two="2090116985265199";//广点通id,二次开屏的
     /**
      * 全屏广告
      */
