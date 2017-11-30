@@ -9,17 +9,13 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.xiangha.R;
 
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -31,14 +27,10 @@ import acore.override.view.ItemBaseView;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import amodule.dish.activity.DetailDish;
-import amodule.dish.activity.DetailDishNew;
 import amodule.user.activity.FriendHome;
 import amodule.user.activity.login.LoginByAccout;
 import third.mall.tool.ToolView;
 import xh.basic.tool.UtilString;
-
-import static amodule.dish.activity.DetailDish.tongjiId;
-import static com.xiangha.R.id.caipu_follow_rela;
 
 /**
  * 简介
@@ -110,13 +102,13 @@ public class DishAboutView extends ItemBaseView {
                     return;
                 }
                 if(mapPower.containsKey("isFav")&&mapPower.get("isFav").equals("1")){
-                    XHClick.mapStat(activity, DetailDishNew.tongjiId_detail, "作者信息点击", "关注按钮点击量");
+                    XHClick.mapStat(activity, DetailDish.tongjiId_detail, "作者信息点击", "关注按钮点击量");
                     AppCommon.onAttentionClick(mapUser.get("customerCode"), "follow");
                     mapPower.put("isFav","2");
                     Tools.showToast(context,"已关注");
                     setFollowState(mapPower);
                 }else{
-                    XHClick.mapStat(activity, DetailDishNew.tongjiId_detail, "作者信息点击", "已关注按钮点击量");
+                    XHClick.mapStat(activity, DetailDish.tongjiId_detail, "作者信息点击", "已关注按钮点击量");
                     Intent intent = new Intent(activity, FriendHome.class);
                     intent.putExtra("code",mapUser.get("customerCode"));
                     activity.startActivityForResult(intent,1000);
@@ -214,7 +206,7 @@ public class DishAboutView extends ItemBaseView {
     private View.OnClickListener onClickListener= new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            XHClick.mapStat(activity, DetailDishNew.tongjiId_detail, "作者信息点击", "头像点击量");
+            XHClick.mapStat(activity, DetailDish.tongjiId_detail, "作者信息点击", "头像点击量");
             AppCommon.openUrl(activity, UtilString.getListMapByJson(mapAbout.get("customer")).get(0).get("url"),true);
         }
     };

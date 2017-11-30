@@ -32,7 +32,7 @@ import acore.logic.AppCommon;
 import acore.logic.load.LoadManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
-import amodule.dish.activity.DetailDish;
+import amodule.dish.activity.DetailDishWeb;
 import amodule.main.Main;
 import aplug.web.tools.JSAction;
 import aplug.web.tools.JsAppCommon;
@@ -172,7 +172,7 @@ public class TemplateWebView extends XHWebView{
                 Log.i(Main.TAG,"url::"+url);
                 String XH_PROTOCOL = "xiangha://welcome?";
                 // 如果识别到外部开启链接，则解析
-                if(act instanceof DetailDish) {
+                if(act instanceof DetailDishWeb) {
                     if (url.startsWith(XH_PROTOCOL) && url.length() > XH_PROTOCOL.length()) {
                         String tmpUrl = url.substring(XH_PROTOCOL.length());
                         if (tmpUrl.startsWith("url=")) {

@@ -87,5 +87,4 @@
         android:layout_alignParentBottom="true"
         android:visibility="gone"
         tools:visibility="gone"/>
-
 </RelativeLayout>

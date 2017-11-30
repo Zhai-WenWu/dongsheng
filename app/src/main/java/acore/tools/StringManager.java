@@ -373,6 +373,7 @@ public class StringManager extends UtilString {
     public final static String API_MAIN8_RELATIONBYCODE = apiUrl + "main8/Dish/getDishRelationByCode";//菜谱详情页公共
     public final static String API_MAIN8_ANTIC = apiUrl + "main8/Dish/getDishAntic";//菜谱详情页小技巧
     public final static String API_HOMEPAGE_6_0 = apiUrl + "main8/recommend/recommend";//首页
+    public final static String API_GETDISHTYPE = apiUrl + "main8/Dish/getDishType";//首页
 
     //替换url
     public final static String replaceUrl(String url) {

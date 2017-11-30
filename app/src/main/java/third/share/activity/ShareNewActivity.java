@@ -26,7 +26,7 @@ import acore.logic.XHClick;
 import acore.tools.ToolsDevice;
 import third.share.tools.ShareTools;
 
-import static amodule.dish.activity.DetailDish.tongjiId;
+import static amodule.dish.activity.DetailDishWeb.tongjiId;
 
 /**
  * Created by Administrator on 2016/8/5.

@@ -10,7 +10,6 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ImageSpan;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -28,10 +27,8 @@ import acore.override.helper.XHActivityManager;
 import acore.override.view.ItemBaseView;
 import acore.tools.StringManager;
 import acore.tools.Tools;
-import amodule.dish.activity.DetailDishNew;
-import amodule.main.Main;
+import amodule.dish.activity.DetailDish;
 import aplug.imageselector.ImgWallActivity;
-import xh.basic.tool.UtilString;
 
 /**
  * 菜谱详情页问答
@@ -81,7 +78,7 @@ public class DishQAView extends ItemBaseView{
     private View.OnClickListener onClickListener= new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), DetailDishNew.tongjiId_detail, "问答", "点击作者头像");
+            XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), DetailDish.tongjiId_detail, "问答", "点击作者头像");
             AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), mapuser.get("url"),true);
         }
     };
@@ -111,7 +108,7 @@ public class DishQAView extends ItemBaseView{
                     qaItem.findViewById(R.id.money_linear).setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), DetailDishNew.tongjiId_detail, "问答", "点击第"+index+"条问答");
+                            XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), DetailDish.tongjiId_detail, "问答", "点击第"+index+"条问答");
                             AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(),mapQA.get("link"),false);
                         }
                     });
@@ -119,7 +116,7 @@ public class DishQAView extends ItemBaseView{
                 content_one.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), DetailDishNew.tongjiId_detail, "问答", "点击第"+index+"条问答");
+                        XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), DetailDish.tongjiId_detail, "问答", "点击第"+index+"条问答");
                         AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(),mapQA.get("link"),false);
                     }
                 });
@@ -131,7 +128,7 @@ public class DishQAView extends ItemBaseView{
             @Override
             public void onClick(View v) {
                 if(maptemp!= null&&maptemp.containsKey("moreQaLink")){
-                    XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), DetailDishNew.tongjiId_detail, "问答", "点击【更多问答】");
+                    XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), DetailDish.tongjiId_detail, "问答", "点击【更多问答】");
                     AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(),maptemp.get("moreQaLink"),false);
                 }
             }

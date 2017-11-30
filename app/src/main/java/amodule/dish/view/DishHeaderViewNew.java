@@ -43,7 +43,6 @@ import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.ImageViewVideo;
 import amodule.dish.activity.MoreImageShow;
-import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
 import third.ad.scrollerAd.XHAllAdControl;
@@ -52,7 +51,7 @@ import third.video.VideoPlayerController;
 import xh.basic.tool.UtilImage;
 import xh.basic.tool.UtilString;
 
-import static amodule.dish.activity.DetailDish.tongjiId;
+import static amodule.dish.activity.DetailDishWeb.tongjiId;
 
 /**
  * Created by Administrator on 2016/9/21.
@@ -448,14 +447,17 @@ public class DishHeaderViewNew extends LinearLayout {
     public void onResume() {
         isOnResuming = true;
         if(mVideoPlayerController != null
-                && (dredgeVipLayout == null || dredgeVipLayout.getVisibility() == GONE))
+                && (dredgeVipLayout == null || dredgeVipLayout.getVisibility() == GONE)) {
             mVideoPlayerController.onResume();
+            Log.i("xianghaTag","onResume:::header");
+        }
     }
 
     public void onPause() {
         isOnResuming = false;
         if(mVideoPlayerController != null)
         mVideoPlayerController.onPause();
+        Log.i("xianghaTag","onPause:::header");
     }
 
     public boolean onBackPressed(){

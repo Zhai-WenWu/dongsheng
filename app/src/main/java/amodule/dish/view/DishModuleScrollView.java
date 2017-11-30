@@ -19,10 +19,8 @@ import acore.logic.AppCommon;
 import acore.logic.XHClick;
 import acore.override.helper.XHActivityManager;
 import acore.override.view.ItemBaseView;
-import acore.tools.Tools;
-import amodule.dish.activity.DetailDishNew;
+import amodule.dish.activity.DetailDish;
 import aplug.basic.SubBitmapTarget;
-import xh.basic.tool.UtilImage;
 
 /**
  * 模块化；横滑
@@ -69,7 +67,7 @@ public class DishModuleScrollView extends ItemBaseView{
             view.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), DetailDishNew.tongjiId_detail, "食材小技巧", "食材小技巧点击量");
+                    XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), DetailDish.tongjiId_detail, "食材小技巧", "食材小技巧点击量");
                     AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(),url,false);
                 }
             });
