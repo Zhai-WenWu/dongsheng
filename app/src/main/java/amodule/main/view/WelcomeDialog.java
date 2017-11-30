@@ -89,7 +89,7 @@ public class WelcomeDialog extends Dialog {
     public WelcomeDialog(@NonNull Activity act, int adShowTime,DialogShowCallBack callBack) {
         super(act, R.style.welcomeDialog);
         String app_welocme= (String) FileManager.loadShared(act,FileManager.app_welcome,FileManager.app_welcome);
-        if(TextUtils.isEmpty(app_welocme)||!"2".equals(app_welocme)){
+        if(TextUtils.isEmpty(app_welocme) || !"2".equals(app_welocme)){
             adShowTime=3;
             FileManager.saveShared(act,FileManager.app_welcome,FileManager.app_welcome,"2");
         }
@@ -160,6 +160,10 @@ public class WelcomeDialog extends Dialog {
     }
 
     private void initAd() {
+        if(null == FileManager.ifFileModifyByCompletePath(FileManager.getDataDir() + FileManager.file_ad,-1)){
+            mAdTime = 3;
+            return;
+        }
         //设置广点通广告回调
         WelcomeAdTools.getInstance().setmGdtCallback(
                 new WelcomeAdTools.GdtCallback() {
