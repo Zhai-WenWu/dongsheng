@@ -1502,14 +1502,14 @@
             android:configChanges="keyboard|keyboardHidden"
             android:screenOrientation="portrait"
             android:hardwareAccelerated="true"
-            android:theme="@style/titleTheme"/>
+            android:theme="@style/common_TransParentTheme"/>
 
         <activity
             android:name="amodule.home.activity.HomeWeekListActivity"
             android:configChanges="keyboard|keyboardHidden"
             android:screenOrientation="portrait"
             android:hardwareAccelerated="true"
-            android:theme="@style/titleTheme"/>
+            android:theme="@style/common_TransParentTheme"/>
 
         <!--Baidu AD end-->
         <!--全面屏适配-->

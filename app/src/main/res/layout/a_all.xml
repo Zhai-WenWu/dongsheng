@@ -14,8 +14,6 @@
         android:id="@+id/all_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/all_title"
-        android:background="@color/common_bg"
-        />
+        android:layout_below="@+id/all_title"/>
 
 </RelativeLayout>
