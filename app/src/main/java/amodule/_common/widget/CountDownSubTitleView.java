@@ -142,12 +142,12 @@ public class CountDownSubTitleView extends BaseSubTitleView {
         String[] times = formatTime.split(":");
         int day = Integer.parseInt(times[0]);
         if(1 >= day){
-            mTitle2.setVisibility(GONE);
-            mPoint1.setVisibility(GONE);
-        }else{
+            setViewVisibility(mTitle2,GONE);
+            setViewVisibility(mPoint1,GONE);
+        } else {
             setText(mTitle2,(day - 1) + "天");
-            mTitle2.setVisibility(VISIBLE);
-            mPoint1.setVisibility(VISIBLE);
+            setViewVisibility(mTitle2,VISIBLE);
+            setViewVisibility(mPoint1,VISIBLE);
         }
         setText(mTitle3,times[1]);
         setText(mTitle4,times[2]);
@@ -155,8 +155,15 @@ public class CountDownSubTitleView extends BaseSubTitleView {
     }
 
     public void setText(@NonNull TextView textView, @NonNull String text){
-        if(!TextUtils.equals(text,textView.getText()))
-            textView.setText(text);
+        if(textView == null || TextUtils.equals(text,textView.getText()))
+            return;
+        textView.setText(text);
+    }
+
+    public void setViewVisibility(View view,int visibility){
+        if(view == null || view.getVisibility() == visibility)
+            return;
+        view.setVisibility(visibility);
     }
 
     @Override
