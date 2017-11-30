@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
@@ -74,10 +75,13 @@ public class HomeBuoy {
         String countStr = FileManager.loadShared(mAct, FileManager.xmlFile_appInfo, AdPlayIdConfig.HOME_FLOAT).toString();
         final String path = FileManager.getDataDir() + AdPlayIdConfig.HOME_FLOAT;
         String originalData = FileManager.readFile(path).trim();
+        Log.i("tzy","countStr = " + countStr);
+        Log.i("tzy","originalData = " + originalData);
         String currentData = Tools.map2Json(buoyData);
+        Log.i("tzy","currentData = " + currentData);
         //如果不一样，重新存储数据
         if (!currentData.equals(originalData)) {
-            FileManager.saveFileToCompletePath(FileManager.getSDCacheDir() + AdPlayIdConfig.HOME_FLOAT, currentData, false);
+            FileManager.saveFileToCompletePath(path, currentData, false);
             FileManager.saveShared(mAct, FileManager.xmlFile_appInfo, AdPlayIdConfig.HOME_FLOAT, "0");
         }
         int count = TextUtils.isEmpty(countStr) ? 0 : Integer.parseInt(countStr);
@@ -188,7 +192,12 @@ public class HomeBuoy {
      */
     private void setBuoyImage(String imgUrl) {
         if (imageButton == null) return;
+        if(TextUtils.isEmpty(imgUrl)){
+            imageButton.setVisibility(View.GONE);
+            return;
+        }
         imageButton.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        imageButton.setVisibility(View.VISIBLE);
         BitmapRequestBuilder<GlideUrl, Bitmap> bitmapRequest = LoadImage.with(mAct)
                 .load(imgUrl)
                 .setPlaceholderId(R.drawable.z_quan_float_activity)
