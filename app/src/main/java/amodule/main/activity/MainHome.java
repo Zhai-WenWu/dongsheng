@@ -40,6 +40,7 @@ import amodule.search.avtivity.HomeSearch;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
+import third.cling.ui.ClingDeviceActivity;
 
 /**
  * 新的框架首页

@@ -37,7 +37,6 @@ dependencies {
     compile 'com.qiyukf.unicorn:unicorn:3.10.0'
     compile project(':gsyVideoPlayer-java')
     compile project(':xh_dialog')
-
 }
 
 android {

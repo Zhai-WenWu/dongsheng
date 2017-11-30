@@ -1554,6 +1554,23 @@
         <meta-data android:name="android.max_aspect"
                    android:value="ratio_float" />
 
+        <!--Cling start-->
+        <activity
+            android:name="third.cling.ui.ClingDeviceActivity"
+            android:launchMode="singleInstance"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/common_TransParentTheme"
+            android:windowSoftInputMode="adjustPan"/>
+        <service
+            android:name="third.cling.service.ClingUpnpService"
+            android:exported="false" />
+
+        <service
+            android:name="third.cling.service.SystemService"
+            android:exported="false" />
+        <!--Cling end-->
+
     </application>
 
 </manifest>
