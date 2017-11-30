@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.utils.GSYVideoType;
+import com.shuyu.gsyvideoplayer.video.GSYBaseVideoPlayer;
 import com.xiangha.R;
 import com.example.gsyvideoplayer.listener.SampleListener;
 import com.shuyu.gsyvideoplayer.GSYVideoPlayer;
@@ -62,9 +63,12 @@ public class VideoPlayerController {
     public boolean isNetworkDisconnect = false;
     public int autoRetryCount = 0;
     public boolean isPortrait = false;
+    public boolean isFullScreenAuto = false;
 
     public StandardGSYVideoPlayer videoPlayer;
     protected OrientationUtils orientationUtils;
+
+    private OnClickListener mFullScreenClickListener;
 
     public VideoPlayerController(Context context) {
         this.mContext = context;
@@ -92,9 +96,13 @@ public class VideoPlayerController {
         orientationUtils.setRotateWithSystem(false);
         videoPlayer.getTitleTextView().setVisibility(View.GONE);
         videoPlayer.setShowFullAnimation(false);
-        videoPlayer.getFullscreenButton().setOnClickListener(new View.OnClickListener() {
+        videoPlayer.getFullscreenButton().setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (mFullScreenClickListener != null) {
+                    mFullScreenClickListener.onClick(videoPlayer.getFullscreenButton());
+                    return;
+                }
                 //第一个true是否需要隐藏actionbar，第二个true是否需要隐藏statusbar
                 videoPlayer.startWindowFullscreen(context, true, true);
             }
@@ -103,6 +111,7 @@ public class VideoPlayerController {
             @Override
             public void onAutoComplete(String url, Object... objects) {
                 super.onAutoComplete(url, objects);
+                showVideoImage();
                 if(onPlayingCompletionListener != null)
                     onPlayingCompletionListener.onPlayingCompletion();
             }
@@ -129,6 +138,12 @@ public class VideoPlayerController {
             public void onQuitFullscreen(String url, Object... objects) {
                 super.onQuitFullscreen(url, objects);
                 orientationUtils.backToProtVideo();
+                Resources resources = context.getResources();
+                videoPlayer.setBottomProgressBarDrawable(resources.getDrawable(R.drawable.video_new_progress));
+                videoPlayer.setDialogVolumeProgressBar(resources.getDrawable(R.drawable.video_new_volume_progress_bg));
+                videoPlayer.setDialogProgressBar(resources.getDrawable(R.drawable.video_new_progress));
+                videoPlayer.setBottomShowProgressBarDrawable(resources.getDrawable(R.drawable.video_new_seekbar_progress),
+                        resources.getDrawable(R.drawable.video_new_seekbar_thumb));
             }
         });
 
@@ -142,7 +157,6 @@ public class VideoPlayerController {
         //是否可以滑动调整
         videoPlayer.setIsTouchWiget(false);
         videoPlayer.setIsTouchWigetFull(true);
-
 
 //        videoPlayerStandard.setOnPlayErrorCallback(new JCVideoPlayerStandard.OnPlayErrorCallback() {
 //            @Override
@@ -187,6 +201,10 @@ public class VideoPlayerController {
         String temp= (String) FileManager.loadShared(context,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI);
         if(!TextUtils.isEmpty(temp)&&"1".equals(temp))
             setShowMedia(true);
+    }
+
+    public void setFullScreenClickListener(OnClickListener clickListener) {
+        mFullScreenClickListener = clickListener;
     }
 
     private void setNetworkCallback(){
@@ -270,10 +288,12 @@ public class VideoPlayerController {
                         removeTipView();
                     }else{
                         removeDishView();
+                        hideVideoImage();
                         return;
                     }
                 }
                 removeDishView();
+                hideVideoImage();
                 removeTipView();
                 videoPlayer.startPlayLogic();
                 if (mStatisticsPlayCountCallback != null) {
@@ -282,6 +302,18 @@ public class VideoPlayerController {
         } else {
             Tools.showToast(mContext, "努力获取视频信息中...");
             initVideoView(mVideoUnique, mUserUnique);
+        }
+    }
+
+    private void hideVideoImage() {
+        if (mImageView != null && mImageView.getVisibility() == View.VISIBLE) {
+            mImageView.setVisibility(View.GONE);
+        }
+    }
+
+    private void showVideoImage() {
+        if (mImageView != null) {
+            mImageView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -412,6 +444,20 @@ public class VideoPlayerController {
         mHasVideoInfo = true;
     }
 
+    /**
+     * 设置视频播放地址
+     * @param videoUrl
+     */
+    public void setVideoUrl(String videoUrl) {
+        this.mVideoUrl = videoUrl;
+        videoPlayer.setUp(mVideoUrl, false, "");
+        mHasVideoInfo = true;
+    }
+
+    public String getVideoUrl() {
+        return mVideoUrl;
+    }
+
     private String getData(List<Map<String, String>> list, String key) {
         if (list.size() > 0) {
             Map<String, String> map = list.get(0);
@@ -515,6 +561,15 @@ public class VideoPlayerController {
             videoPlayer.onVideoResume();
         Log.i("tzy","width = " + GSYVideoManager.instance().getMediaPlayer().getVideoWidth());
         Log.i("tzy","height = " + GSYVideoManager.instance().getMediaPlayer().getVideoHeight());
+    }
+
+    public void onPause(boolean showVideoImage) {
+        if(null != videoPlayer)
+            videoPlayer.onVideoPause();
+        if (showVideoImage)
+            showVideoImage();
+        else
+            hideVideoImage();
     }
 
     public void onPause() {

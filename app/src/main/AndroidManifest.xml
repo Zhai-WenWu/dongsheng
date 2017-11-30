@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE"/>
     <uses-permission android:name="android.permission.GET_TASKS"/>
     <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT"/>
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
@@ -1095,9 +1096,10 @@
         <!-- mall start -->
         <activity
             android:name="third.mall.activity.CommodDetailActivity"
-            android:configChanges="orientation|keyboardHidden"
+            android:configChanges="orientation|keyboardHidden|locale|screenSize|layoutDirection"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
+            android:keepScreenOn="true"
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="stateHidden|stateUnchanged"/>
         <activity

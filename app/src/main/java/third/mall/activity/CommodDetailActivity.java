@@ -24,6 +24,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -41,7 +42,6 @@ import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.xiangha.R;
 
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -77,6 +77,7 @@ import third.mall.widget.ScrollViewContainer.ScrollviewContaninerInter;
 import third.qiyu.QiYvHelper;
 import third.share.BarShare;
 import third.share.activity.ShareActivityDialog;
+import third.video.VideoPlayerController;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilString;
@@ -123,6 +124,9 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
     private BuyDialog buyDialog;
     private TemplateWebView middle_templateWebView,foot_templateWebView;
     private boolean isNeedResume=false;//是否需要刷新
+    private int mVideoPosition = -1;
+
+    private VideoPlayerController mVideoPlayerController = null;//视频控制器
 
     @Override
     protected void onCreate(Bundle arg0) {
@@ -185,6 +189,7 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
         mall_ScrollViewContainer = (ScrollViewContainer) findViewById(R.id.mall_ScrollViewContainer);
         mall_ScrollViewContainer.setInterface(new ScrollviewContaninerInter() {
             @Override
+
             public void setState(int state) {
                 titleState = state == 1 ? "1" : "2";
                 handleTitleState();
@@ -357,9 +362,11 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
     @Override
     protected void onResume() {
         super.onResume();
-//        setShopcatNum();
         if(LoginManager.isLogin() && isNeedResume){
             MallCommon.getShoppingNum(this,mall_news_num,mall_news_num_two);
+        }
+        if(null != mVideoPlayerController){
+            mVideoPlayerController.onResume();
         }
     }
 
@@ -517,6 +524,7 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
         }
     }
 
+    private String mVideoUrl;
     /**
      * 初始化viewpager
      *
@@ -528,12 +536,23 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
         List<View> views = new ArrayList<View>();
         for (int i = 0; i < images.size(); i++) {
             View topView = LayoutInflater.from(this).inflate(R.layout.v_product_top_view, null);
-            if (images.get(i).containsKey("type") && "1".equals(images.get(i).get("type"))) {
-                topView.findViewById(R.id.image_video).setVisibility(View.VISIBLE);
-            } else topView.findViewById(R.id.image_video).setVisibility(View.GONE);
-            ImageView iv = (ImageView) topView.findViewById(R.id.image);
-            iv.setScaleType(ScaleType.FIT_XY);
-            setImageView(iv, images.get(i).get("img"), false);
+            Map<String, String> itemMap = images.get(i);
+            String type = itemMap.get("type");
+
+            if ("1".equals(type)) {
+                mVideoPosition = i;
+                ViewGroup videoLayout = (ViewGroup) topView.findViewById(R.id.video_layout);
+                videoLayout.setVisibility(View.VISIBLE);
+                String imgUrl = itemMap.get("img");
+                mVideoPlayerController = new VideoPlayerController(this, videoLayout, imgUrl);
+                mVideoUrl = StringManager.getFirstMap(StringManager.getFirstMap(images.get(i).get("video")).get("video_url")).get("default_url");
+                mVideoPlayerController.setVideoUrl(mVideoUrl);
+            } else {
+                topView.findViewById(R.id.image).setVisibility(View.VISIBLE);
+                ImageView iv = (ImageView) topView.findViewById(R.id.image);
+                iv.setScaleType(ScaleType.FIT_XY);
+                setImageView(iv, images.get(i).get("img"), false);
+            }
             views.add(topView);
         }
         imageviews = new ImageView[views.size()];
@@ -564,6 +583,14 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
                         imageviews[i].setImageResource(R.drawable.z_home_banner_bg_pic_white);
                     }
                 }
+                if (mVideoPlayerController != null) {
+                    if (mVideoPosition != arg0 && mVideoPlayerController.isPlaying()) {
+                        mVideoPlayerController.onPause();
+                    } else {
+                        mVideoPlayerController.onResume();
+                    }
+                }
+
             }
 
             @Override
@@ -574,6 +601,10 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
             public void onPageScrollStateChanged(int arg0) {
             }
         });
+
+        if (mVideoPlayerController != null) {
+            mVideoPlayerController.setOnClick();
+        }
     }
 
     /**
@@ -878,9 +909,19 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
     }
 
     @Override
+    public void onBackPressed() {
+        if(null != mVideoPlayerController && mVideoPlayerController.onBackPressed())
+            return;
+        super.onBackPressed();
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
         isNeedResume = true;
+        if (mVideoPlayerController != null && mVideoPlayerController.isPlaying()) {
+            mVideoPlayerController.onPause();
+        }
     }
 
     @Override
@@ -890,6 +931,8 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
             XHClick.saveStatictisFile("CommodDetail", module_type, data_type, code, "", "stop", String.valueOf((nowTime - startTime) / 1000), "", "", "", "");
         }
         super.onDestroy();
+        if (mVideoPlayerController != null)
+            mVideoPlayerController.onDestroy();
         mall_ScrollViewContainer = null;
         common = null;
         System.gc();

@@ -10,9 +10,6 @@ import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -33,7 +30,6 @@ import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.PagerSlidingTabStrip;
-import amodule.dish.activity.MenuDish;
 import amodule.main.Main;
 import amodule.main.bean.HomeModuleBean;
 import amodule.main.view.ChangeSendDialog;
@@ -92,7 +88,7 @@ public class MainHome extends MainBaseActivity implements IObserver {
     private void initView() {
 //        String colors = Tools.getColorStr(this, R.color.common_top_bg);
 //        Tools.setStatusBarColor(this, Color.parseColor(colors));
-        home_tab = (acore.widget.PagerSlidingTabStrip) findViewById(R.id.home_tab);
+        home_tab = (PagerSlidingTabStrip) findViewById(R.id.home_tab);
         viewpager = (ViewPager) findViewById(R.id.viewpager);
         mFenlei = (LinearLayout) findViewById(R.id.fenlei_linear);
         mSearch = (RelativeLayout) findViewById(R.id.ed_search_layout_main);
