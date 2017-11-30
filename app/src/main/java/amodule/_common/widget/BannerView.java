@@ -26,7 +26,6 @@ import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.helper.XHActivityManager;
-import acore.tools.ImgManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -75,7 +74,7 @@ public class BannerView extends Banner implements IBindMap, IStatictusData,ISave
         setPadding(0, 0, 0, paddingBottom);
         mInflater = LayoutInflater.from(context);
         int height = (int) (ToolsDevice.getWindowPx(context).widthPixels * 320 / 750f) + paddingBottom;
-        Log.i("tzy","width = " + ToolsDevice.getWindowPx(context).widthPixels + " , height = " + height);
+//        Log.i("tzy","width = " + ToolsDevice.getWindowPx(context).widthPixels + " , height = " + height);
         post(() -> {
             getLayoutParams().height = height;
             setMinimumHeight(height);
@@ -240,7 +239,7 @@ public class BannerView extends Banner implements IBindMap, IStatictusData,ISave
             return;
         }
         weightSum = 0;
-        Log.i("tzy","setRandomItem");
+//        Log.i("tzy","setRandomItem");
         weightArray = new int[arrayList.size()];
         for (int index = 0; index < weightArray.length; index++) {
             Map<String, String> map = arrayList.get(index);
@@ -268,7 +267,9 @@ public class BannerView extends Banner implements IBindMap, IStatictusData,ISave
         for (int index = 0; index < weightArray.length; index++) {
             if (randomWeight < weightArray[index]) {
                 setCurrentItem(index);
-                Log.i("tzy","setCurrentItem::" + index);
+                setCurrentItem(index + 1);
+                setCurrentItem(index);
+//                Log.i("tzy","setCurrentItem::" + index);
                 break;
             }
         }

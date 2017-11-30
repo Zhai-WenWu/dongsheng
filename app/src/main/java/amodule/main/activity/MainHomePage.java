@@ -121,7 +121,6 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
                     true,
                     v -> inerRefresh(),
                     v -> {
-                        Log.i("tzy_data","loadData :: HeaderDataLoaded = " + HeaderDataLoaded + " , LoadOver = " + LoadOver);
                         if (HeaderDataLoaded)
                             EntryptData(!LoadOver);
                     }
@@ -136,7 +135,6 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
     @Override
     protected void onStart() {
         super.onStart();
-        startLoadTime = System.currentTimeMillis();
         loadRemoteData();
     }
 
@@ -145,6 +143,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
     }
 
     private void loadRemoteData(){
+        startLoadTime = System.currentTimeMillis();
         mDataControler.loadServiceHomeData(getHeaderCallback(false));
         mDataControler.loadServiceTopData(new InternetCallback(this) {
             @Override
