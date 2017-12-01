@@ -75,10 +75,7 @@ public class HomeBuoy {
         String countStr = FileManager.loadShared(mAct, FileManager.xmlFile_appInfo, AdPlayIdConfig.HOME_FLOAT).toString();
         final String path = FileManager.getDataDir() + AdPlayIdConfig.HOME_FLOAT;
         String originalData = FileManager.readFile(path).trim();
-        Log.i("tzy","countStr = " + countStr);
-        Log.i("tzy","originalData = " + originalData);
         String currentData = Tools.map2Json(buoyData);
-        Log.i("tzy","currentData = " + currentData);
         //如果不一样，重新存储数据
         if (!currentData.equals(originalData)) {
             FileManager.saveFileToCompletePath(path, currentData, false);
