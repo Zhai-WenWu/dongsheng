@@ -32,7 +32,7 @@ public class NativeShowWeb extends BaseActivity {
     private void initView() {
         webView = (WebView) findViewById(R.id.webview);
 
-        if(TextUtils.isEmpty(url))
+        if(!TextUtils.isEmpty(url))
             webView.loadUrl(url);
     }
 
