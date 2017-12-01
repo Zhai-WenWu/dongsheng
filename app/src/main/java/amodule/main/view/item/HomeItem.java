@@ -144,8 +144,8 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
         }
         if (!handleClickEvent(v)) {
             if (isDishData()) {
-                String dishStr = "dishInfo=" + appendDishData();
-                mTransferUrl = mTransferUrl + "&" + URLEncoder.encode(dishStr);
+                String dishStr = "dishInfo=" + URLEncoder.encode(appendDishData());
+                mTransferUrl = mTransferUrl + "&" + dishStr;
             }
             AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), mTransferUrl, true);
             onItemClick();
