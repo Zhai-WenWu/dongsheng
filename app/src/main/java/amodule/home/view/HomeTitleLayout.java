@@ -73,12 +73,7 @@ public class HomeTitleLayout extends RelativeLayout implements View.OnClickListe
             case R.id.home_publish_btn:
                 //统计
                 XHClick.mapStat(getContext(),id,twoLevel,"发布按钮");
-                mPulishView.showPulishMenu();//# : %23%2F  NativeShowWeb.app=aplug.web.NativeShowWeb
-                String url = "https://aduland.dianping.com/page/normandie?cv=eyJ0IjoiWVQ1THNpeGY1SV9kMTc1bDBBZ3hoV1VPZ08tMlRLUDJNdk9sdmlHR3Z5WTFGUHIwc2VKOGY3X1Frc0NyS0hFVlU4NnFWcjlGRmhseWVNV1JfYkNGOVEiLCJ1IjoiaHR0cDovL2g1LmRpYW5waW5nLmNvbS9hcHAvYWR1bmlvbi1uZXdqaC9pbmRleC5odG1sIy9wYWdlX2luZm9fYmltZ19kcm9wP3V0bV9zb3VyY2U9OGRwN3FqZSZzaG9wdHlwZT0xMCwzMCw1MCw1NSw3MCw3NSw5MCJ9&sub_media=xhcp01";
-//                AppCommon.openUrl((Activity) getContext(),"NativeShowWeb.app?url=" + Uri.encode(url),true);
-                AppCommon.openUrl((Activity) getContext(),"link.app?url=" + Uri.encode(url),true);
-//                AppCommon.openUrl((Activity) getContext(),url.replace("#","%23%2F"),true);
-//                getContext().startActivity(new Intent(getContext(), ShowWeb.class).putExtra("url","welcome://xiangha?" + Uri.encode(url)));
+                mPulishView.showPulishMenu();
                 break;
             case R.id.home_search_layout:
                 //统计
