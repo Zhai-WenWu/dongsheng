@@ -1,26 +1,20 @@
 package amodule.dish.activity;
 
-import android.app.Activity;
-import android.app.LocalActivityManager;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.xiangha.R;
 import java.util.Map;
-
 import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
@@ -40,6 +34,7 @@ public class DishTestActivity extends BaseAppCompatActivity{
     private Bundle bundle;
     public static long startTime=0;
     private RelativeLayout dishVidioLayout;
+    private boolean isfinish=false;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,12 +56,12 @@ public class DishTestActivity extends BaseAppCompatActivity{
                 reqTopInfo();
             }
         });
-        AlphaAnimation alphaAnimation = new AlphaAnimation(0.5f, 1.0f);
-        //设置动画持续时长
-        alphaAnimation.setDuration(100);
-        //设置动画结束之后的状态是否是动画的最终状态，true，表示是保持动画结束时的最终状态
-        alphaAnimation.setFillAfter(true);
-        rl.startAnimation(alphaAnimation);
+//        AlphaAnimation alphaAnimation = new AlphaAnimation(0.5f, 1.0f);
+//        //设置动画持续时长
+//        alphaAnimation.setDuration(100);
+//        //设置动画结束之后的状态是否是动画的最终状态，true，表示是保持动画结束时的最终状态
+//        alphaAnimation.setFillAfter(true);
+//        rl.startAnimation(alphaAnimation);
         if(!TextUtils.isEmpty(img))setImg(img);
     }
     /**
@@ -79,6 +74,10 @@ public class DishTestActivity extends BaseAppCompatActivity{
             @Override
             public void loaded(int flag, String url, Object object) {
                 loadManager.hideProgressBar();
+                Log.i("xianghaTag","isfinish::"+isfinish);
+                if(isfinish){
+                    return;
+                }
                 if(flag>= ReqInternet.REQ_OK_STRING){
                     Map<String,String> map= StringManager.getFirstMap(object);
                     if(!map.containsKey("type")|| TextUtils.isEmpty(map.get("type"))){
@@ -115,11 +114,13 @@ public class DishTestActivity extends BaseAppCompatActivity{
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        isfinish=true;
     }
     @Override
     public void startActivity(Intent intent) {
         super.startActivity(intent);
         // 设置切换动画，从右边进入，左边退出
+//        overridePendingTransition(R.anim.in_from_right, 0);
         overridePendingTransition(0, 0);
     }
 
@@ -133,6 +134,7 @@ public class DishTestActivity extends BaseAppCompatActivity{
     @Override
     public void finish() {
         super.finish();
+        isfinish=true;
         overridePendingTransition(0, 0);
     }
 
