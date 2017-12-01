@@ -60,7 +60,6 @@ public class WelcomeAdTools {
         //获取广告数据
         data = FileManager.readFile(FileManager.getDataDir() + FileManager.file_ad);
         Log.i("tzy","WelcomeAdTools create.");
-        Log.i("tzy","data = " + data);
         //获取参数
         String splashConfigDataStr = AppCommon.getConfigByLocal(CONFIGKEY);
         if(TextUtils.isEmpty(splashConfigDataStr)){
