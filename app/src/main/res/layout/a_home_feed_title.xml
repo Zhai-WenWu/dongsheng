@@ -25,7 +25,7 @@
         android:background="#fffffe">
 
         <View
-            android:layout_width="@dimen/dp_10"
+            android:layout_width="@dimen/dp_12"
             android:layout_height="@dimen/dp_2"
             android:background="#000000"/>
 
@@ -42,7 +42,7 @@
             android:textStyle="bold"/>
 
         <View
-            android:layout_width="@dimen/dp_10"
+            android:layout_width="@dimen/dp_12"
             android:layout_height="@dimen/dp_2"
             android:background="#000000"/>
     </LinearLayout>
