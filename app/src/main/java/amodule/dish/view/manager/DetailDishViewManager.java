@@ -3,6 +3,7 @@ package amodule.dish.view.manager;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextPaint;
@@ -19,14 +20,13 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.xiangha.R;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import acore.logic.load.LoadManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -42,8 +42,6 @@ import amodule.dish.view.DishQAView;
 import amodule.dish.view.DishRecommedAndAdView;
 import amodule.dish.view.DishTitleViewControl;
 import amodule.dish.view.DishVipView;
-import amodule.dish.view.XhScrollView;
-import amodule.main.Main;
 import third.video.VideoPlayerController;
 
 /**
@@ -114,7 +112,7 @@ public class DetailDishViewManager {
         dishVipView.setVisibility(View.GONE);
         //用户信息和菜谱基础信息
         dishAboutView= new DishAboutView(mAct);
-        dishAboutView.setVisibility(View.GONE);
+        dishAboutView.setVisibility(View.INVISIBLE);
         //用料
         dishIngreDataShow= new DishIngreDataShow(mAct);
         dishIngreDataShow.setVisibility(View.GONE);
@@ -171,21 +169,16 @@ public class DetailDishViewManager {
         bar_title_1 = (RelativeLayout) mAct.findViewById(R.id.a_dish_detail_new_title);
         String colors = Tools.getColorStr(mAct, R.color.common_top_bg);
         Tools.setStatusBarColor(mAct, Color.parseColor(colors));
-//        statusBarHeight = Tools.getStatusBarHeight(mAct);
-//        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) bar_title_1.getLayoutParams();
-//        layoutParams.height = titleHeight + statusBarHeight;
-//        View title_state_bar = mAct.findViewById(R.id.title_state_bar);
-//        layoutParams = (RelativeLayout.LayoutParams) title_state_bar.getLayoutParams();
-//        layoutParams.height = statusBarHeight;
     }
     /**
      * 处理预先加载数据
      */
-    public void initBeforeData(String img){
+    public void initBeforeData(String img,String dishInfo){
         if (dishHeaderViewNew != null&& !TextUtils.isEmpty(img))dishHeaderViewNew.setImg(img);
-    }
-    public void handlerRelationData(ArrayList<Map<String,String>> list){
-
+        if(dishAboutView != null && !TextUtils.isEmpty(dishInfo)) {
+            dishAboutView.setVisibility(View.VISIBLE);
+            dishAboutView.setData(StringManager.getFirstMap(Uri.decode(dishInfo)), mAct);
+        }
     }
     /**
      * 处理标题信息数据
@@ -220,12 +213,10 @@ public class DetailDishViewManager {
             dishHeaderViewNew.setDishCallBack(new DishHeaderViewNew.DishHeaderVideoCallBack() {
                 @Override
                 public void videoImageOnClick() {
-                    Log.i("wyl","videoImageOnClick");
                     bar_title_1.setBackgroundResource(R.color.common_top_bg);
                 }
                 @Override
                 public void getVideoControl(VideoPlayerController mVideoPlayerController, RelativeLayout dishVidioLayouts, View view_oneImage) {
-                    Log.i("wyl","getVideoControl");
                     dishVidioLayout=dishVidioLayouts;
                     DetailDishViewManager.this.view_oneImage= view_oneImage;
                     setViewOneState();
@@ -239,7 +230,6 @@ public class DetailDishViewManager {
         if (dishHeaderViewNew != null)
             dishHeaderViewNew.setLoginStatus();
     }
-
     /**
      * 处理菜谱基本信息
      */
@@ -320,7 +310,6 @@ public class DetailDishViewManager {
             dishExplainView.setData(map);
         }
     }
-
     /**
      * 处理用户信息问答
      */

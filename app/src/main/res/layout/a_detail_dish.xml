@@ -29,7 +29,7 @@
         android:layout_height="@dimen/dp_55"
         android:layout_alignParentBottom="true"
         android:background="@android:color/transparent"
-        android:visibility="gone" />
+        android:visibility="visible" />
 
     <RelativeLayout
         android:id="@+id/dish_show_rela"
@@ -57,7 +57,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone"
-        tools:visibility="visible">
+        tools:visibility="gone">
 
         <include
             android:id="@+id/dish_title_page"

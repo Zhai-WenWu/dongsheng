@@ -422,8 +422,8 @@ public class AppCommon {
         try {
             String[] urls = newUrl.split("\\?");
             if (urls.length > 0) {
-                String urlTemp="amodule.dish.activity.DetailDish".equals(urls[0])?"amodule.dish.activity.DishTestActivity":urls[0];
-                final Class<?> c = Class.forName(urlTemp);
+//                String urlTemp="amodule.dish.activity.DetailDish".equals(urls[0])?"amodule.dish.activity.DishTestActivity":urls[0];
+                final Class<?> c = Class.forName(urls[0]);
                 if (urls[0].contains("amodule.main.activity.") || urls[0].contains("third.mall.MainMall")) {
                     Main.colse_level = 2;
                     if (Main.allMain != null) {

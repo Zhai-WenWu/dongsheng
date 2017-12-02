@@ -40,8 +40,9 @@ public class DishAboutView extends ItemBaseView {
     private TextView dish_work_exp_tv;
     private Map<String,String> mapAbout;
     private Map<String,String> mapUser,mapPower;
-    private TextView dish_follow_tv;
+    private TextView dish_follow_tv,dish_user_name,dish_user_time,dish_title,dish_explain;
     private Activity activity;
+    private ImageView cusImg;
     public DishAboutView(Context context) {
         super(context, R.layout.view_dish_header_about);
     }
@@ -57,7 +58,11 @@ public class DishAboutView extends ItemBaseView {
     @Override
     public void init() {
         super.init();
-
+        cusImg= (ImageView) findViewById(R.id.auther_userImg);
+        dish_user_name= (TextView) findViewById(R.id.dish_user_name);
+        dish_user_time= (TextView) findViewById(R.id.dish_user_time);
+        dish_title= (TextView) findViewById(R.id.dish_title);
+        dish_explain= (TextView) findViewById(R.id.dish_explain);
     }
 
     /**
@@ -69,7 +74,7 @@ public class DishAboutView extends ItemBaseView {
         this.mapAbout = map;
         this.activity= activitys;
         setDishData();
-        setExplainData(map.get("info"));
+        setExplainData(map.containsKey("info")&&!TextUtils.isEmpty(map.get("info"))?map.get("info"):"");
         setUserData(StringManager.getFirstMap(map.get("customer")));
     }
 
@@ -129,9 +134,6 @@ public class DishAboutView extends ItemBaseView {
      */
     private void setDishData(){
         findViewById(R.id.title_dish_exp_rela).setVisibility(View.VISIBLE);
-        //独家是否显示
-        TextView dish_title= (TextView) findViewById(R.id.dish_title);
-        TextView dish_explain= (TextView) findViewById(R.id.dish_explain);
         if(mapAbout.containsKey("name")&&!TextUtils.isEmpty(mapAbout.get("name"))){
             dish_title.setText(mapAbout.get("name"));
         }
@@ -145,14 +147,12 @@ public class DishAboutView extends ItemBaseView {
      * 设置用户数据
      */
     private void setUserData(){
-        ImageView cusImg= (ImageView) findViewById(R.id.auther_userImg);
-        setViewImage(cusImg,mapUser.get("img"));
+        if(!TextUtils.isEmpty(mapUser.get("img")))
+            setViewImage(cusImg,mapUser.get("img"));
         if(mapUser.containsKey("isGourmet")&& mapUser.get("isGourmet").equals("2")){
             findViewById(R.id.cusType).setVisibility(View.VISIBLE);
         }else findViewById(R.id.cusType).setVisibility(View.GONE);
-        TextView dish_user_name= (TextView) findViewById(R.id.dish_user_name);
         dish_user_name.setText(mapUser.get("nickName"));
-        TextView dish_user_time= (TextView) findViewById(R.id.dish_user_time);
         String userIntro = handleUserIntro(mapUser.get("info"));
         dish_user_time.setText(TextUtils.isEmpty(userIntro) ? getResources().getString(R.string.user_intro_def) : userIntro);
 
@@ -272,21 +272,5 @@ public class DishAboutView extends ItemBaseView {
         ForegroundColorSpan redSpan = new ForegroundColorSpan(Color.parseColor(color));
         builder.setSpan(redSpan, start, end, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
         view.setText(builder);
-    }
-    /**
-     * 获取值得买每行的字数
-     *
-     * @return
-     */
-    private int setTitleTextViewNum(int distance_commend) {
-        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        int tv_distance = (int) this.getResources().getDimension(R.dimen.dp_23);//字体的大小
-        int distance = (int) this.getResources().getDimension(R.dimen.dp_15);
-
-        int waith = wm.getDefaultDisplay().getWidth();
-        int tv_waith = waith - distance*2-distance_commend ;
-        int tv_pad = ToolView.dip2px(context, 1.0f);
-        int num = (tv_waith + tv_pad) / (tv_distance + tv_pad);
-        return num;
     }
 }

@@ -34,7 +34,6 @@
                 android:id="@+id/a_dish_detail_new_footer_hover_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0"
                 android:textColor="#333"
                 android:textSize="@dimen/sp_12" />
 
@@ -187,7 +186,6 @@
             android:layout_width="match_parent"
             android:layout_height="1px"
             android:background="#EDEDDE" />
-
     </RelativeLayout>
 
 </RelativeLayout>

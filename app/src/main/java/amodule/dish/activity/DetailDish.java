@@ -2,6 +2,7 @@ package amodule.dish.activity;
 
 import android.content.Intent;
 import android.graphics.PixelFormat;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -62,24 +63,14 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
     private String customerCode;
     private RelativeLayout dredgeVipFullLayout;
     private XHWebView pageXhWebView;
+    private String dishInfo = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        long endTime1= System.currentTimeMillis();
-        Log.i("xianghaTag","dish::test:1::onCreate：："+(endTime1-DishTestActivity.startTime));
         initBudle();
-        long endTime2= System.currentTimeMillis();
-        Log.i("xianghaTag","dish:test:2:onCreate：："+(endTime2-DishTestActivity.startTime));;
-        Log.i("xianghaTag","dish::2:onCreate：："+(endTime2-startTime));
         initView();
-        long endTime3= System.currentTimeMillis();
-        Log.i("xianghaTag","dish::test:3::onCreate：："+(endTime3-DishTestActivity.startTime));
-        Log.i("xianghaTag","dish:3::onCreate：："+(endTime3-startTime));
         initData();
-        long endTime= System.currentTimeMillis();
-        Log.i("xianghaTag","dish::test:4::onCreate：："+(endTime-DishTestActivity.startTime));
-        Log.i("xianghaTag","dish:4::onCreate：："+(endTime-startTime));
 
     }
     /**
@@ -96,9 +87,9 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
             data_type = bundle.getString("data_type");
             module_type = bundle.getString("module_type");
             img = bundle.getString("img");
+            dishInfo = bundle.getString("dishInfo");
             DataOperate.saveHistoryCode(code);//保存历史记录
         }
-//        code = "90384610";
         if (TextUtils.isEmpty(code)) {
             Tools.showToast(getApplicationContext(), "抱歉，未找到相应菜谱");
             this.finish();
@@ -115,8 +106,6 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         getWindow().setFormat(PixelFormat.TRANSLUCENT);//sufureView页面闪烁
         XHClick.track(XHApplication.in(), "浏览菜谱详情页");
         ObserverManager.getInstence().registerObserver(this,ObserverManager.NOTIFY_LOGIN,ObserverManager.NOTIFY_FOLLOW,ObserverManager.NOTIFY_PAYFINISH);
-        long endTime= System.currentTimeMillis();
-        Log.i("xianghaTag","时间222：："+(endTime-DishTestActivity.startTime));
     }
     /**
      * 处理页面Ui
@@ -133,7 +122,10 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         listView.setAdapter(adapterDishNew);
         if (detailDishViewManager == null) {//view manager
             detailDishViewManager = new DetailDishViewManager(this, listView, state);
-            detailDishViewManager.initBeforeData(img);
+            Log.i("xianghaTag","dishInfo:22:"+dishInfo);
+            dishInfo= Uri.decode(dishInfo);
+            Log.i("xianghaTag","dishInfo:111:"+dishInfo);
+            detailDishViewManager.initBeforeData(img,dishInfo);
         }
         if (detailDishDataManager == null) detailDishDataManager = new DetailDishDataManager(code,this);//数据manager
         detailDishDataManager.setDishDataCallBack(new DetailDishDataManager.DishDataCallBack() {

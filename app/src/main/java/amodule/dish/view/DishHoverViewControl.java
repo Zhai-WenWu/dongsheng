@@ -55,7 +55,6 @@ public class DishHoverViewControl implements View.OnClickListener{
      * 处理底部浮动的view
      */
     private void initFudongView(){
-        mAct.findViewById(R.id.a_dish_detail_new_footer_hover).setVisibility(View.GONE);
         goodLayoutParent = (LinearLayout) mAct.findViewById(R.id.a_dish_detail_new_footer_hover_good_layout);
         hoverLayout= (LinearLayout) mAct.findViewById(R.id.a_dish_detail_new_footer_hover_layout);
         mAct.findViewById(R.id.a_dish_detail_new_footer_hover_good).setOnClickListener(this);
@@ -92,7 +91,6 @@ public class DishHoverViewControl implements View.OnClickListener{
         this.mapQA= mapQA;
         int roundRadius = Tools.getDimen(mAct,R.dimen.dp_3); // 8dp 圆角半径
         int fillColor = Color.parseColor(mapQA.containsKey("bgColor")&&!TextUtils.isEmpty(mapQA.get("bgColor"))?mapQA.get("bgColor"):"#f23030");//内部填充颜色
-//        int fillColor = Color.parseColor("#f23030");//内部填充颜色
 
         GradientDrawable gd = new GradientDrawable();//创建drawable
         gd.setColor(fillColor);
