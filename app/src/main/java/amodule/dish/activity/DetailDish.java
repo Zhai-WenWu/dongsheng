@@ -67,6 +67,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
     private boolean contiunRefresh = true;
     private String lastPermission = "";
     private boolean loadOver = false;
+    private boolean mShouldInitCling;
 
     public static long startTime= 0;
     private String data_type="";
@@ -116,11 +117,12 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         //sufureView页面闪烁
         getWindow().setFormat(PixelFormat.TRANSLUCENT);
         Log.i(Main.TAG,"菜谱详情页");
+        mShouldInitCling = !ToolsDevice.isTabletDevice(this);
         init();
         XHClick.track(XHApplication.in(), "浏览菜谱详情页");
         //注册监听
         ObserverManager.getInstence().registerObserver(this,ObserverManager.NOTIFY_LOGIN,ObserverManager.NOTIFY_FOLLOW,ObserverManager.NOTIFY_PAYFINISH);
-        if (!ToolsDevice.isTabletDevice(this)) {
+        if (mShouldInitCling) {
             ClingControl.getInstance(this).onCreate();
             ClingControl.getInstance(this).setOnDeviceSelected(new OnDeviceSelectedListener() {
                 @Override
@@ -193,21 +195,21 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         permissionMap.clear();
         dishActivityViewControl.setCode(courseCode, chapterCode);
         dishActivityViewControl.initData(code);
-        if (!ToolsDevice.isTabletDevice(this)) {
-        dishActivityViewControl.showClingBtn(true);
-        dishActivityViewControl.setClingClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String videoUrl = dishActivityViewControl.getVideoUrl();
-                if (TextUtils.isEmpty(videoUrl)) {
-                    Toast.makeText(DetailDish.this, "无效的视频地址", Toast.LENGTH_SHORT).show();
-                    return;
+        if (mShouldInitCling) {
+            dishActivityViewControl.showClingBtn(true);
+            dishActivityViewControl.setClingClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String videoUrl = dishActivityViewControl.getVideoUrl();
+                    if (TextUtils.isEmpty(videoUrl)) {
+                        Toast.makeText(DetailDish.this, "无效的视频地址", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    Intent intent = DetailDish.this.getIntent();
+                    intent.putExtra(ClingControl.PLAY_URL, videoUrl);
+                    ClingControl.getInstance(DetailDish.this).showPopup();
                 }
-                Intent intent = DetailDish.this.getIntent();
-                intent.putExtra(ClingControl.PLAY_URL, videoUrl);
-                ClingControl.getInstance(DetailDish.this).showPopup();
-            }
-        });
+            });
     }
         loadManager.setLoading(new View.OnClickListener() {
             @Override
@@ -222,7 +224,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
-        if (!ToolsDevice.isTabletDevice(this))
+        if (mShouldInitCling)
             ClingControl.getInstance(this).onNewIntent(intent);
     }
 
@@ -385,7 +387,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         if(dishActivityViewControl != null){
             dishActivityViewControl.onResume();
         }
-        if (!ToolsDevice.isTabletDevice(this))
+        if (mShouldInitCling)
             ClingControl.getInstance(this).onResume();
     }
 
@@ -397,7 +399,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         if(dishActivityViewControl != null){
             dishActivityViewControl.onPause();
         }
-        if (!ToolsDevice.isTabletDevice(this))
+        if (mShouldInitCling)
             ClingControl.getInstance(this).onPause();
     }
 
@@ -418,7 +420,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
             handlerScreen.removeCallbacksAndMessages(null);
             handlerScreen=null;
         }
-        if (!ToolsDevice.isTabletDevice(this))
+        if (mShouldInitCling)
             ClingControl.getInstance(this).onDestroy();
     }
 

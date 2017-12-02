@@ -213,7 +213,9 @@ public class ClingControl {
 
         ClingManager.getInstance().destroy();
         ClingDeviceList.getInstance().destroy();
-        mDevicesPopup.destroyPopup();
+        if (mDevicesPopup != null)
+            mDevicesPopup.destroyPopup();
+        mDevicesPopup = null;
         mClingOptionView = null;
         mListener = null;
         mOnExitClickListener = null;
@@ -451,7 +453,8 @@ public class ClingControl {
         rootView.post(new Runnable() {
             @Override
             public void run() {
-                mDevicesPopup.showAtLocation(mActivity.findViewById(Window.ID_ANDROID_CONTENT), Gravity.BOTTOM, 0, 0);
+                if (mDevicesPopup != null && mActivity != null)
+                    mDevicesPopup.showAtLocation(mActivity.findViewById(Window.ID_ANDROID_CONTENT), Gravity.BOTTOM, 0, 0);
             }
         });
     }
