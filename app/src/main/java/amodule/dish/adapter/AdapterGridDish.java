@@ -24,7 +24,7 @@ import acore.widget.rvlistview.holder.RvBaseViewHolder;
 import amodule._common.utility.WidgetUtility;
 
 /**
- * Description : //TODO
+ * Description :
  * PackageName : amodule.dish.adapter
  * Created on 2017/12/1 16:30.
  * Author : mrtrying

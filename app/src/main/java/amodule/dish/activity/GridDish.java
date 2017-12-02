@@ -25,7 +25,7 @@ import aplug.basic.ReqEncyptInternet;
 import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
 
 /**
- * Description : //TODO
+ * Description :
  * PackageName : amodule.dish.activity
  * Created on 2017/12/1 16:18.
  * Author : mrtrying

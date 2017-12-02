@@ -16,6 +16,9 @@ import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.xiangha.R;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -322,20 +325,39 @@ public class AdapterCaipuSearch extends BaseAdapter {
             viewHolder.v_bottom_line.setVisibility(View.VISIBLE);
         }
 
-        convertView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                XHClick.mapStat(mActivity, "a_search_result", "菜谱结果页", "点击菜谱");
-                Intent intent = new Intent(mActivity, DetailDish.class);
-                intent.putExtra("code", caipuMap.get("code"));
-                intent.putExtra("name", caipuMap.get("name"));
-                if(!"2".equals(caipuMap.get("hasVideo"))){
-                    intent.putExtra("img", caipuMap.get("img"));
-                }
-                mActivity.startActivity(intent);
+        convertView.setOnClickListener(v -> {
+            XHClick.mapStat(mActivity, "a_search_result", "菜谱结果页", "点击菜谱");
+            Intent intent = new Intent(mActivity, DetailDish.class);
+            intent.putExtra("code", caipuMap.get("code"));
+            intent.putExtra("name", caipuMap.get("name"));
+            if(!"2".equals(caipuMap.get("hasVideo"))){
+                intent.putExtra("img", caipuMap.get("img"));
             }
+            try{
+                intent.putExtra("dishInfo",getDishInfo(caipuMap));
+            }catch (Exception e){
+                intent.putExtra("dishInfo","");
+                e.printStackTrace();
+            }
+            mActivity.startActivity(intent);
         });
         return convertView;
+    }
+
+    private String getDishInfo(Map<String,String> data) throws JSONException {
+        JSONObject dishInfoJson = new JSONObject();
+        dishInfoJson.put("code",data.get("code"));
+        dishInfoJson.put("name",data.get("name"));
+        dishInfoJson.put("allClick",data.get("allClick").replace("浏览",""));
+        dishInfoJson.put("favorites",data.get("favorites").replace("收藏",""));
+        dishInfoJson.put("info","");
+        JSONObject customerJson = new JSONObject();
+        customerJson.put("customerCode",data.get("cusCode"));
+        customerJson.put("nickName",data.get("cusNickName"));
+        customerJson.put("info","");
+        customerJson.put("img",data.get("cusImg"));
+        dishInfoJson.put("customer",customerJson);
+        return dishInfoJson.toString();
     }
 
     private View createZhishiView() {

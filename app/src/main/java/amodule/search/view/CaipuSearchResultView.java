@@ -235,8 +235,10 @@ public class CaipuSearchResultView extends LinearLayout {
                         for (int k = 0; k < tempList.size(); k++) {
                             Map<String, String> map1 = tempList.get(k);
                             if (map1.containsKey("customers")) {
-                                ArrayList<Map<String, String>> customer = StringManager.getListMapByJson(map1.get("customers"));
-                                map1.put("cusNickName", customer.get(0).get("nickName"));
+                                Map<String, String> customer = StringManager.getFirstMap(map1.get("customers"));
+                                map1.put("cusNickName", customer.get("nickName"));
+                                map1.put("cusImg", customer.get("img"));
+                                map1.put("cusCode", customer.get("code"));
                                 map1.remove("customers");
                             }
                             map1.put("allClick", map1.get("allClick") + "浏览");

@@ -144,7 +144,6 @@ public class DefaultSearchView extends LinearLayout implements View.OnClickListe
         if (isShow) {
             listSearchHistory.clear();
             listSearchHistory = new SearchDataImp().getHistoryWords();
-            Log.i("tzy","listSearchHistory = " + listSearchHistory.toString());
             showHisTable();
         }
         showHotTable();
