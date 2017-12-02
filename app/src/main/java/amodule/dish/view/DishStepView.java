@@ -76,11 +76,14 @@ public class DishStepView extends ItemBaseView {
         imgWidth=Tools.getPhoneWidth()-Tools.getDimen(context,R.dimen.dp_40);
         this.position= position;
         this.callback = stepViewCallBack;
-        String text ="<b><tt>"+map.get("num")+".</tt></b>";
-        int size_num= text.length();
-        text += map.get("info").trim();
-        text = text.replace("\n","").replace("\r","");
-        itemText1.setText(Html.fromHtml(text));
+        if(!TextUtils.isEmpty(map.get("info").trim())) {
+            String text = "<b><tt>" + map.get("num") + ".</tt></b>";
+            int size_num = text.length();
+            text += map.get("info").trim();
+            text = text.replace("\n", "").replace("\r", "");
+            itemText1.setText(Html.fromHtml(text));
+            itemText1.setVisibility(View.VISIBLE);
+        }else itemText1.setVisibility(View.GONE);
 
         this.setOnClickListener(new View.OnClickListener() {
             @Override

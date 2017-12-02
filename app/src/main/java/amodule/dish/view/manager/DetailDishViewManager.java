@@ -135,7 +135,6 @@ public class DetailDishViewManager {
         textStep.setTextColor(Color.parseColor("#333333"));
         TextPaint tp = textStep.getPaint();
         tp.setFakeBoldText(true);
-        textStep.setText("做法");
         textStep.setVisibility(View.GONE);
         noStepView=LayoutInflater.from(mAct).inflate(R.layout.dish_no_step,null);
         noStepView.setVisibility(View.GONE);
@@ -297,11 +296,20 @@ public class DetailDishViewManager {
      * 处理步骤相关view
      */
     public void handlerStepView(ArrayList<Map<String,String>> list){
-        if(list!=null&&list.size()>0&&"1".equals(list.get(0).get("isShow"))) {
-            textStep.setPadding(Tools.getDimen(mAct, R.dimen.dp_20), Tools.getDimen(mAct, R.dimen.dp_35), 0,  0);
-            noStepView.setVisibility(View.VISIBLE);
-            ((TextView)noStepView.findViewById(R.id.dish_no_step_tv)).setText(list.get(0).get("promptMsg"));
+        if(list!=null&&list.size()>0) {
+            Map<String,String> map= list.get(0);
+            if(map.containsKey("title")&&!TextUtils.isEmpty(map.get("title"))){
+                textStep.setVisibility(View.VISIBLE);
+                textStep.setText(map.get("title"));
+            }else textStep.setVisibility(View.GONE);
+            if("1".equals(map.get("isShow"))) {
+                textStep.setPadding(Tools.getDimen(mAct, R.dimen.dp_20), Tools.getDimen(mAct, R.dimen.dp_35), 0, 0);
+                noStepView.setVisibility(View.VISIBLE);
+                ((TextView) noStepView.findViewById(R.id.dish_no_step_tv)).setText(map.get("promptMsg"));
+            }
+
         }
+
         textStep.setVisibility(View.VISIBLE);
     }
     /**
