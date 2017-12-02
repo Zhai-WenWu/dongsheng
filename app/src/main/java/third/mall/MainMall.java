@@ -110,7 +110,8 @@ public class MainMall extends MainBaseActivity implements OnClickListener{
 		});
 	}
 	public void loadData() {
-		if (MallCommon.ds_home_url.indexOf(MallStringManager.domain) > -1) {
+		String homeMallUrl = MallStringManager.replaceUrl(MallCommon.ds_home_url);
+		if (homeMallUrl.indexOf(MallStringManager.domain) > -1) {
 			Map<String,String> header=MallReqInternet.in().getHeader(this);
 			String cookieKey=MallStringManager.mall_web_apiUrl.replace(MallStringManager.appWebTitle, "");
 			String cookieStr=header.containsKey("Cookie")?header.get("Cookie"):"";
@@ -127,7 +128,7 @@ public class MainMall extends MainBaseActivity implements OnClickListener{
 			LogManager.print(XHConf.log_tag_net,"d", "设置webview的cookie："+cookieStr);
 		}
 		LogManager.print(XHConf.log_tag_net,"d","------------------打开网页------------------\n"+MallCommon.ds_home_url);
-		webview.loadUrl(MallCommon.ds_home_url);
+		webview.loadUrl(homeMallUrl);
 	}
 	
 	public void refresh(){
