@@ -92,7 +92,6 @@ public class GridDish extends BaseAppCompatActivity {
         loadData();
     }
 
-    //请求数据
     private void loadData() {
         mCurrentPage++;
         loadManager.changeMoreBtn(ReqEncyptInternet.REQ_OK_STRING, -1, -1, mCurrentPage, mData.size() == 0);
@@ -100,9 +99,6 @@ public class GridDish extends BaseAppCompatActivity {
         ReqEncyptInternet.in().doEncypt(StringManager.api_getVideoList, params, new InternetCallback(this) {
             @Override
             public void loaded(int flag, String s, Object o) {
-                if (mCurrentPage == 1) {
-                    mRefreshLayout.refreshComplete();
-                }
                 int loadCount = 0;
                 if (flag >= ReqEncyptInternet.REQ_OK_STRING) {
                     Map<String, String> temp = StringManager.getFirstMap(o);

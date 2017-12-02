@@ -17,15 +17,8 @@
         app:ptr_ratio_of_header_height_to_refresh="1"
         app:ptr_resistance="1.7">
 
-        <acore.widget.rvlistview.RvGridView
-            android:id="@+id/rvGridView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:overScrollMode="never"
-            android:scrollbars="none"
-            android:paddingLeft="@dimen/dp_15"
-            android:paddingRight="@dimen/dp_15"
-            app:spanCount="2"/>
+        <include
+            layout="@layout/a_dish_grid_content"/>
 
     </cn.srain.cube.views.ptr.PtrClassicFrameLayout>
 </RelativeLayout>
