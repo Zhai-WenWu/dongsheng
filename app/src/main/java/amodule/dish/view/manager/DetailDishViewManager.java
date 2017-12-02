@@ -327,6 +327,8 @@ public class DetailDishViewManager {
      */
     public void handlerQAView(ArrayList<Map<String, String>> list){
         if(dishQAView!=null){
+            Map<String,String> map= list.get(0);
+            if(!map.containsKey("count")||TextUtils.isEmpty(map.get("count"))||Integer.parseInt(map.get("count"))<=0)return;
             dishQAView.setData(list);
             dishQAView.setVisibility(View.VISIBLE);
         }

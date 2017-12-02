@@ -16,7 +16,7 @@ import amodule.dish.view.DishStepView;
  */
 public class AdapterDishRvListView extends RvBaseAdapter<Map<String,String>>{
 
-    private AdapterDishNew.ItemOnClickCallBack clickCallBack;
+    private ItemOnClickCallBack clickCallBack;
     public AdapterDishRvListView(Context context, @Nullable List<Map<String, String>> data) {
         super(context, data);
     }
@@ -26,7 +26,7 @@ public class AdapterDishRvListView extends RvBaseAdapter<Map<String,String>>{
         return new StepViewHolder(new DishStepView(mContext));
     }
 
-    public void setClickCallBack(AdapterDishNew.ItemOnClickCallBack itemOnClickCallBack){
+    public void setClickCallBack(ItemOnClickCallBack itemOnClickCallBack){
         this.clickCallBack= itemOnClickCallBack;
     }
     @Override
@@ -48,6 +48,7 @@ public class AdapterDishRvListView extends RvBaseAdapter<Map<String,String>>{
                 }
                 @Override
                 public void onClick() {
+                    clickCallBack.onClickPosition(position);
                 }
             },position);
         }
