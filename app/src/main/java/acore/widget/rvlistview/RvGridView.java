@@ -19,7 +19,7 @@ import com.xiangha.R;
 
 public class RvGridView extends RvListView {
 
-    private int spanCount = 1;
+    private int spanCount;
     public RvGridView(Context context) {
         this(context,null);
     }
@@ -30,12 +30,15 @@ public class RvGridView extends RvListView {
 
     public RvGridView(Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        TypedArray array = getContext().obtainStyledAttributes(attrs, R.styleable.RvGridView);
+    }
 
+    @Override
+    protected void initializeAttr(AttributeSet attrs) {
+        super.initializeAttr(attrs);
+        TypedArray array = getContext().obtainStyledAttributes(attrs, R.styleable.RvGridView);
         spanCount = array.getInt(R.styleable.RvGridView_spanCount, 1);
         //防止异常数据
         spanCount = spanCount > 1 ? spanCount : 1;
-
         array.recycle();
     }
 
