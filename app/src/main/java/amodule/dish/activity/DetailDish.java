@@ -134,7 +134,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
                 dishTypeData(type,list,PermissionMap);
             }
         });
-        adapterDishRvListView.setClickCallBack(new AdapterDishNew.ItemOnClickCallBack() {
+        adapterDishRvListView.setClickCallBack(new AdapterDishRvListView.ItemOnClickCallBack() {
             @Override
             public void onClickPosition(int position) {
                 if(!getStateMakes(maplist)){//无图时不执行
