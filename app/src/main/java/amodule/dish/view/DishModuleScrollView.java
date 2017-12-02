@@ -4,14 +4,12 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.request.animation.GlideAnimation;
@@ -20,29 +18,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import acore.logic.AppCommon;
-import acore.logic.XHClick;
-import acore.override.helper.XHActivityManager;
 import acore.override.view.ItemBaseView;
-import acore.tools.Tools;
+import acore.tools.StringManager;
 import acore.widget.rvlistview.RvHorizatolListView;
 import acore.widget.rvlistview.adapter.RvBaseAdapter;
 import acore.widget.rvlistview.holder.RvBaseViewHolder;
-import amodule.dish.activity.DetailDish;
 import aplug.basic.SubBitmapTarget;
 
 /**
  * 模块化；横滑
  */
 public class DishModuleScrollView extends ItemBaseView{
-    private TextView module_tv;
+    private TextView module_tv,module_more;
     private RvHorizatolListView rvHorizatolListView;
     private AdapterModuleScroll adapterModuleScroll;
     private ArrayList<Map<String,String>> mapList = new ArrayList<>();
+    private DishGridDialog dishGridDialog;
     public DishModuleScrollView(Context context) {
         super(context, R.layout.dish_module_scroll_view);
-
-
     }
 
     public DishModuleScrollView(Context context, AttributeSet attrs) {
@@ -59,19 +52,37 @@ public class DishModuleScrollView extends ItemBaseView{
         super.init();
         module_tv= (TextView) findViewById(R.id.module_tv);
         rvHorizatolListView= (RvHorizatolListView) findViewById(R.id.rvHorizatolListView);
+        module_more= (TextView) findViewById(R.id.module_more);
 
     }
     public void setData(ArrayList<Map<String,String>> listMaps){
+
         if(listMaps==null||listMaps.size()<=0)return;
-        int size= listMaps.size();
+        Map<String,String> map= listMaps.get(0);
+        ArrayList<Map<String,String>> listTemp = StringManager.getListMapByJson(map.get("list"));
+        if(map.containsKey("title")&& !TextUtils.isEmpty(map.get("title"))){
+            module_tv.setText(map.get("title"));
+            module_tv.setVisibility(View.VISIBLE);
+        }else module_tv.setVisibility(View.GONE);
+        module_more.setVisibility(map.containsKey("type")&&"2".equals(map.get("type"))?View.VISIBLE:View.GONE);
+        int size= listTemp.size();
         for( int i = 0; i<size; i++){
-            mapList.add(listMaps.get(i));
+            mapList.add(listTemp.get(i));
         }
         if(rvHorizatolListView.getAdapter()==null){
             adapterModuleScroll = new AdapterModuleScroll(context,mapList);
             rvHorizatolListView.setAdapter(adapterModuleScroll);
         }
         adapterModuleScroll.notifyDataSetChanged();
+        module_more.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(dishGridDialog==null){
+                    dishGridDialog= new DishGridDialog(context,"94888978");
+                }
+                dishGridDialog.show();
+            }
+        });
     }
 
     public SubBitmapTarget getTarget(final ImageView v, final String url) {

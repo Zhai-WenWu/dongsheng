@@ -6,13 +6,23 @@
 
     <TextView
         android:id="@+id/module_tv"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dp_30"
         android:text="食材小技巧"
         android:textColor="#333333"
         android:textStyle="bold"
         android:textSize="@dimen/dp_18" />
+    <TextView
+        android:id="@+id/module_more"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_30"
+        android:layout_alignParentRight="true"
+        android:paddingRight="@dimen/dp_20"
+        android:text="查看更多"
+        android:textColor="#333333"
+        android:textSize="@dimen/dp_16" />
 
     <acore.widget.rvlistview.RvHorizatolListView
         android:id="@+id/rvHorizatolListView"

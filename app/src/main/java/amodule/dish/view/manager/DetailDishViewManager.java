@@ -289,7 +289,7 @@ public class DetailDishViewManager {
     public void handlerSkillView(ArrayList<Map<String, String>> list) {
         if(dishModuleScrollView!=null&&"2".equals(list.get(0).get("isShow"))){
             dishModuleScrollView.setVisibility(View.VISIBLE);
-            if(list.get(0).containsKey("list"))dishModuleScrollView.setData(StringManager.getListMapByJson(list.get(0).get("list")));
+            if(list.get(0).containsKey("list"))dishModuleScrollView.setData(list);
         }
     }
     /**

@@ -57,7 +57,7 @@ public class DishSkillView extends ItemBaseView{
     }
     public void setData(Map<String,String> data,int position){
         findViewById(R.id.skill_line).setVisibility(position>0?View.VISIBLE:View.GONE);
-        findViewById(R.id.skill_vip).setVisibility("2".equals(data.get("isVip"))?VISIBLE:GONE);
+        findViewById(R.id.skill_vip).setVisibility("2".equals(data.get("iconType"))?VISIBLE:GONE);
         setViewImage(img_skill,data,"img");
         if("2".equals(data.get("isVideo")))text1.setText(data.get("videoTime"));
         text2.setText(data.get("text"));
