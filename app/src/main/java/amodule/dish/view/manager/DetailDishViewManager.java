@@ -31,6 +31,7 @@ import acore.logic.load.LoadManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
+import acore.widget.rvlistview.RvListView;
 import amodule.dish.view.DishADBannerView;
 import amodule.dish.view.DishAboutView;
 import amodule.dish.view.DishExplainView;
@@ -49,12 +50,12 @@ import third.video.VideoPlayerController;
  * 不能牵扯如何业务逻辑处理----因为当前页面业务确定，采用直接数据指向方法（不抽象不模糊）
  */
 public class DetailDishViewManager {
-    private RelativeLayout bar_title_1,dishVidioLayout;
+    private RelativeLayout dishVidioLayout;
     public static int showNumLookImage = 0;//点击展示次数
     private boolean isHasVideoOnClick = false;
     private boolean isShowTitleColor=false;
     private View view_oneImage;
-    private ListView listView;
+    private RvListView listView;
     private int firstItemIndex,startY;
     private boolean isHasVideo=false,isRecored=false;
     private int wm_height;//屏幕高度
@@ -79,11 +80,12 @@ public class DetailDishViewManager {
     public DishQAView dishQAView;
     public DishModuleScrollView dishModuleScrollView;
     public View noStepView;
+    private RelativeLayout bar_title_1;
 
     /**
      * 对view进行基础初始化
      */
-    public DetailDishViewManager(Activity activity, ListView listView,String state) {
+    public DetailDishViewManager(Activity activity, RvListView listView, String state) {
         wm_height = activity.getWindowManager().getDefaultDisplay().getHeight();
         mAct = activity;
         this.listView = listView;
@@ -168,6 +170,7 @@ public class DetailDishViewManager {
     private void initTitle(){
         bar_title_1 = (RelativeLayout) mAct.findViewById(R.id.a_dish_detail_new_title);
         String colors = Tools.getColorStr(mAct, R.color.common_top_bg);
+        bar_title_1.setBackgroundResource(R.color.common_top_bg);
         Tools.setStatusBarColor(mAct, Color.parseColor(colors));
     }
     /**
@@ -213,7 +216,7 @@ public class DetailDishViewManager {
             dishHeaderViewNew.setDishCallBack(new DishHeaderViewNew.DishHeaderVideoCallBack() {
                 @Override
                 public void videoImageOnClick() {
-                    bar_title_1.setBackgroundResource(R.color.common_top_bg);
+//                    bar_title_1.setBackgroundResource(R.color.common_top_bg);
                 }
                 @Override
                 public void getVideoControl(VideoPlayerController mVideoPlayerController, RelativeLayout dishVidioLayouts, View view_oneImage) {
@@ -366,81 +369,78 @@ public class DetailDishViewManager {
      * 设置当前标题颜色状态
      */
     private void setViewOneState() {
-        int[] location = new int[2];
-        int view_height = 0;
-        if (view_oneImage != null) {
-            view_oneImage.getLocationOnScreen(location);
-            view_height = view_oneImage.getHeight();
-        }
-        if (Math.abs(location[1]) > view_height) {
-            bar_title_1.clearAnimation();
-            //初始化view都为不透明
-            if (isHasVideoOnClick) return;
-            bar_title_1.setBackgroundResource(R.color.common_top_bg);
-            if(!isShowTitleColor){
-                AlphaAnimation alphaAnimation= new AlphaAnimation(0,1);
-                alphaAnimation.setDuration(1000);
-                alphaAnimation.setFillAfter(true);
-                bar_title_1.startAnimation(alphaAnimation);
-                isShowTitleColor=true;
-            }
-        } else {
-            if (isHasVideoOnClick) return;
-            //初始化view都为透明
-            if(isShowTitleColor) {
-                AlphaAnimation alphaAnimation= new AlphaAnimation(1,0);
-                alphaAnimation.setDuration(200);
-                alphaAnimation.setFillAfter(true);
-                bar_title_1.startAnimation(alphaAnimation);
-                isShowTitleColor = false;
-                alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {
-                    }
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        bar_title_1.setBackgroundResource(R.drawable.bg_dish_title);
-                        AlphaAnimation alphaAnimation= new AlphaAnimation(0,1);
-                        alphaAnimation.setDuration(500);
-                        alphaAnimation.setFillAfter(true);
-                        bar_title_1.startAnimation(alphaAnimation);
-                    }
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
-                    }
-                });
-            }
-            else bar_title_1.setBackgroundResource(R.drawable.bg_dish_title);
-        }
+//        int[] location = new int[2];
+//        int view_height = 0;
+//        if (view_oneImage != null) {
+//            view_oneImage.getLocationOnScreen(location);
+//            view_height = view_oneImage.getHeight();
+//        }
+//        if (Math.abs(location[1]) > view_height) {
+//            bar_title_1.clearAnimation();
+//            //初始化view都为不透明
+//            if (isHasVideoOnClick) return;
+//            if(!isShowTitleColor){
+//                AlphaAnimation alphaAnimation= new AlphaAnimation(0,1);
+//                alphaAnimation.setDuration(1000);
+//                alphaAnimation.setFillAfter(true);
+//                bar_title_1.startAnimation(alphaAnimation);
+//                isShowTitleColor=true;
+//            }
+//        } else {
+//            if (isHasVideoOnClick) return;
+//            //初始化view都为透明
+//            if(isShowTitleColor) {
+//                AlphaAnimation alphaAnimation= new AlphaAnimation(1,0);
+//                alphaAnimation.setDuration(200);
+//                alphaAnimation.setFillAfter(true);
+//                bar_title_1.startAnimation(alphaAnimation);
+//                isShowTitleColor = false;
+//                alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
+//                    @Override
+//                    public void onAnimationStart(Animation animation) {
+//                    }
+//                    @Override
+//                    public void onAnimationEnd(Animation animation) {
+//                        AlphaAnimation alphaAnimation= new AlphaAnimation(0,1);
+//                        alphaAnimation.setDuration(500);
+//                        alphaAnimation.setFillAfter(true);
+//                        bar_title_1.startAnimation(alphaAnimation);
+//                    }
+//                    @Override
+//                    public void onAnimationRepeat(Animation animation) {
+//                    }
+//                });
+//            }
+//        }
     }
     /**
      * listview滑动监听
      */
     private void setListViewListener() {
-        setViewOneState();
-        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                /** 当滑动时停止播放 ...star.... */
-//                changeGifState(view,scrollState);
-                /** 当滑动时停止播放 .....end....*/
-                switch (scrollState) {
-                    // 当不滚动时
-                    case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
-                        setViewOneState();
-                        break;
-                    case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
-                        setViewOneState();
-                        break;
-                    case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
-                        break;
-                }
-            }
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                firstItemIndex = firstVisibleItem;
-            }
-        });
+//        setViewOneState();
+//        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+//            @Override
+//            public void onScrollStateChanged(AbsListView view, int scrollState) {
+//                /** 当滑动时停止播放 ...star.... */
+////                changeGifState(view,scrollState);
+//                /** 当滑动时停止播放 .....end....*/
+//                switch (scrollState) {
+//                    // 当不滚动时
+//                    case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
+//                        setViewOneState();
+//                        break;
+//                    case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
+//                        setViewOneState();
+//                        break;
+//                    case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
+//                        break;
+//                }
+//            }
+//            @Override
+//            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+//                firstItemIndex = firstVisibleItem;
+//            }
+//        });
         listView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -493,12 +493,12 @@ public class DetailDishViewManager {
     }
     private int oneY = 0;
     private void scrollviewState(int oneY,int nowY){
-        Log.i("xianghaTag","oneY::"+oneY+":::nowY:::"+nowY);
-        if(nowY < oneY && ((oneY - nowY) > 1)){//向下滑动
-            bar_title_1.setVisibility(View.GONE);
-        }else if(nowY > oneY && (nowY - oneY) >=1){//向上滑动
-            bar_title_1.setVisibility(View.VISIBLE);
-        }
+//        Log.i("xianghaTag","oneY::"+oneY+":::nowY:::"+nowY);
+//        if(nowY < oneY && ((oneY - nowY) > 1)){//向下滑动
+//            bar_title_1.setVisibility(View.GONE);
+//        }else if(nowY > oneY && (nowY - oneY) >=1){//向上滑动
+//            bar_title_1.setVisibility(View.VISIBLE);
+//        }
     }
     private int mMoveLen = 0;
     private MyTimer mTimer;
