@@ -35,7 +35,8 @@ import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import aplug.basic.XHConf;
-import third.mall.aplug.MallStringManager;
+
+import static acore.tools.StringManager.api_getVideoList;
 
 /**
  * Description : //TODO
@@ -109,7 +110,7 @@ public class DishGridDialog extends Dialog {
     @Override
     public void dismiss() {
         super.dismiss();
-        ReqEncyptInternet.in().cancelRequset(new StringBuffer(StringManager.api_getVideoList).append(params).toString());
+        ReqEncyptInternet.in().cancelRequset(new StringBuffer(api_getVideoList).append(params).toString());
     }
 
     //请求数据
@@ -117,7 +118,7 @@ public class DishGridDialog extends Dialog {
         mCurrentPage++;
         changeMoreBtn(mGridView,ReqEncyptInternet.REQ_OK_STRING, -1, -1, mCurrentPage, mData.size() == 0);
         params.put("page", String.valueOf(mCurrentPage));
-        ReqEncyptInternet.in().doEncypt(StringManager.api_getVideoList, params, new InternetCallback(getContext()) {
+        ReqEncyptInternet.in().doEncypt(api_getVideoList, params, new InternetCallback(getContext()) {
             @Override
             public void loaded(int flag, String s, Object o) {
                 int loadCount = 0;

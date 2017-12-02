@@ -18,6 +18,7 @@ import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilString;
 
 public class DataOperate {
+	public final static String NWELINE = "\r\n";
 	//没登录时默认离线菜谱个数
 	public static final int MAX_DOWN_DISH=10;
 
@@ -113,7 +114,7 @@ public class DataOperate {
 			};
 		}).start();
 	}
-	
+
 	/**
 	 * 保存搜索关键字
 	 * @param searchWord
@@ -122,25 +123,25 @@ public class DataOperate {
 		if (searchWord != null && searchWord.trim().length() > 0){
 			String his = UtilFile.readFile(UtilFile.getDataDir() + FileManager.file_searchHis);
 			if (his.length() == 0) {
-				his = "\r\n";
+				his = NWELINE;
 			}
 			// 兼容老文件
-			else if (his.indexOf("\r\n") != 0) {
-				his = "\r\n" + his + "\r\n";
+			else if (his.indexOf(NWELINE) != 0) {
+				his = NWELINE + his + NWELINE;
 			}
 			// 已存在放到首位
-			if (his.indexOf("\r\n" + searchWord + "\r\n") >= 0) {
-				his = "\r\n" + searchWord + his.replace("\r\n" + searchWord + "\r\n", "\r\n");
+			if (his.indexOf(NWELINE + searchWord + NWELINE) >= 0) {
+				his = NWELINE + searchWord + his.replace(NWELINE + searchWord + NWELINE, NWELINE);
 			} else {
-				String[] hiss = his.split("\r\n");
+				String[] hiss = his.split(NWELINE);
 				if (hiss.length < 51) {
-					his = "\r\n" + searchWord + his;
+					his = NWELINE + searchWord + his;
 				} else {
-					his = "\r\n" + searchWord;
+					his = NWELINE + searchWord;
 					for (int i = 1; i < hiss.length - 1; i++) {
-						his += "\r\n" + hiss[i];
+						his += NWELINE + hiss[i];
 					}
-					his += "\r\n";
+					his += NWELINE;
 				}
 			}
 			UtilFile.saveFileToCompletePath(UtilFile.getDataDir() + FileManager.file_searchHis, his, false);
@@ -154,25 +155,25 @@ public class DataOperate {
 		if (searchWord != null && searchWord.trim().length() > 0){
 			String his = UtilFile.readFile(UtilFile.getDataDir() + FileManager.file_historyCode);
 			if (his.length() == 0) {
-				his = "\r\n";
+				his = NWELINE;
 			}
 			// 兼容老文件
-			else if (his.indexOf("\r\n") != 0) {
-				his = "\r\n" + his + "\r\n";
+			else if (his.indexOf(NWELINE) != 0) {
+				his = NWELINE + his + NWELINE;
 			}
 			// 已存在放到首位
-			if (his.indexOf("\r\n" + searchWord + "\r\n") >= 0) {
-				his = "\r\n" + searchWord + his.replace("\r\n" + searchWord + "\r\n", "\r\n");
+			if (his.indexOf(NWELINE + searchWord + NWELINE) >= 0) {
+				his = NWELINE + searchWord + his.replace(NWELINE + searchWord + NWELINE, NWELINE);
 			} else {
-				String[] hiss = his.split("\r\n");
+				String[] hiss = his.split(NWELINE);
 				if (hiss.length < 101) {
-					his = "\r\n" + searchWord + his;
+					his = NWELINE + searchWord + his;
 				} else {
-					his = "\r\n" + searchWord;
+					his = NWELINE + searchWord;
 					for (int i = 1; i < hiss.length - 1; i++) {
-						his += "\r\n" + hiss[i];
+						his += NWELINE + hiss[i];
 					}
-					his += "\r\n";
+					his += NWELINE;
 				}
 			}
 			UtilFile.saveFileToCompletePath(UtilFile.getDataDir() + FileManager.file_historyCode, his, false);
