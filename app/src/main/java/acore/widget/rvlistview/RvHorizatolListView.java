@@ -1,7 +1,9 @@
 package acore.widget.rvlistview;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.LinearLayout;
@@ -15,6 +17,7 @@ import android.widget.LinearLayout;
  */
 
 public class RvHorizatolListView extends RvListView {
+
     public RvHorizatolListView(Context context) {
         super(context);
     }
@@ -32,6 +35,13 @@ public class RvHorizatolListView extends RvListView {
         super.initialize();
         mHeaderContainer.setOrientation(LinearLayout.HORIZONTAL);
         mFooterContainer.setOrientation(LinearLayout.HORIZONTAL);
+    }
+
+    @SuppressLint("WrongConstant")
+    @Override
+    public void setAdapter(Adapter adapter) {
+        setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false));
+        super.setAdapter(adapter);
     }
 
     private  int lastX = -1;
