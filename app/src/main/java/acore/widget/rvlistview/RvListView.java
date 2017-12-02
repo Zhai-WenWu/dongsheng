@@ -53,7 +53,7 @@ public class RvListView extends RecyclerView {
 
     private EmptyHandler mEmptyHandler;
 
-    private RvHeaderAndFooterViewAdapter mAdapter;
+    protected RvHeaderAndFooterViewAdapter mAdapter;
 
     private OnItemClickListener mOnItemClickListener;
 
@@ -82,7 +82,7 @@ public class RvListView extends RecyclerView {
     protected void initialize() {
         mHeaderContainer = new LinearLayout(getContext());
         mFooterContainer = new LinearLayout(getContext());
-        Log.d(TAG, "Constructor execute.");
+        Log.d("tzy", "Constructor execute.");
     }
 
     @Override
@@ -95,6 +95,7 @@ public class RvListView extends RecyclerView {
     @Override
     public void setAdapter(Adapter adapter) {
         if(getLayoutManager() == null){
+            Log.i("tzy","setLinearLayoutManager");
             //默认使用LinearLayoutManager，并且处置布局
             setLayoutManager(new LinearLayoutManager(getContext()));
         }
@@ -296,9 +297,9 @@ public class RvListView extends RecyclerView {
                 this.mOriginalAdapter.onDetachedFromRecyclerView(RvListView.this);
             }
             this.mOriginalAdapter = adapter;
-            if (adapter != null) {
-                adapter.registerAdapterDataObserver(adapterDataObserver);
-                adapter.onAttachedToRecyclerView(RvListView.this);
+            if (mOriginalAdapter != null) {
+                mOriginalAdapter.registerAdapterDataObserver(adapterDataObserver);
+                mOriginalAdapter.onAttachedToRecyclerView(RvListView.this);
             }
         }
 

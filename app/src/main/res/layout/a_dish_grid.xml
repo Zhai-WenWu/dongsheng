@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activityLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <cn.srain.cube.views.ptr.PtrClassicFrameLayout
+        android:id="@+id/refresh_list_view_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/home_title"
+        app:ptr_duration_to_close="200"
+        app:ptr_duration_to_close_header="500"
+        app:ptr_pull_to_fresh="false"
+        app:ptr_ratio_of_header_height_to_refresh="1"
+        app:ptr_resistance="1.7">
+
+        <acore.widget.rvlistview.RvGridView
+            android:id="@+id/rvGridView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:overScrollMode="never"
+            android:scrollbars="none"
+            android:paddingLeft="@dimen/dp_15"
+            android:paddingRight="@dimen/dp_15"
+            app:spanCount="2"/>
+
+    </cn.srain.cube.views.ptr.PtrClassicFrameLayout>
+</RelativeLayout>

@@ -255,6 +255,7 @@ public class StringManager extends UtilString {
     public final static String api_askButtonStatus = apiUrl + "main7/dish/askButtonStatus";
     public final static String api_authorInfo = apiUrl + "main7/dish/authorInfo";
     public final static String api_basicInfo = apiUrl + "main7/dish/basicInfo";
+    public final static String api_getVideoList = apiUrl + "main7/school/getVideoList";
 
     public final static String api_getConf = apiUrl + urlSection.get("other6") + "getConf";
     public final static String api_subjectOverHead = apiUrl + urlSection.get("user6") + "subjectOverHeadLast";//用户美食贴置顶
