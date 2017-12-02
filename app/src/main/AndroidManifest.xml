@@ -1554,6 +1554,16 @@
         <meta-data android:name="android.max_aspect"
                    android:value="ratio_float" />
 
+        <!--Cling start-->
+        <service
+            android:name="third.cling.service.ClingUpnpService"
+            android:exported="false" />
+
+        <service
+            android:name="third.cling.service.SystemService"
+            android:exported="false" />
+        <!--Cling end-->
+
     </application>
 
 </manifest>

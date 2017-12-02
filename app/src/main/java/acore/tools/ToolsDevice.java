@@ -9,6 +9,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.FeatureInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
@@ -677,5 +678,15 @@ public class ToolsDevice {
             }
         }
         return result;
+    }
+
+    /**
+     * 判断是否平板设备
+     * @param context
+     * @return true:平板,false:手机
+     */
+    public static boolean isTabletDevice(Context context) {
+        return (context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >=
+                Configuration.SCREENLAYOUT_SIZE_LARGE;
     }
 }

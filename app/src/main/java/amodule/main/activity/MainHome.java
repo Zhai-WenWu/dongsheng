@@ -88,7 +88,7 @@ public class MainHome extends MainBaseActivity implements IObserver {
     private void initView() {
 //        String colors = Tools.getColorStr(this, R.color.common_top_bg);
 //        Tools.setStatusBarColor(this, Color.parseColor(colors));
-        home_tab = (PagerSlidingTabStrip) findViewById(R.id.home_tab);
+        home_tab = (acore.widget.PagerSlidingTabStrip) findViewById(R.id.home_tab);
         viewpager = (ViewPager) findViewById(R.id.viewpager);
         mFenlei = (LinearLayout) findViewById(R.id.fenlei_linear);
         mSearch = (RelativeLayout) findViewById(R.id.ed_search_layout_main);

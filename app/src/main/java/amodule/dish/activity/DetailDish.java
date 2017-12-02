@@ -12,6 +12,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.xiangha.R;
 
@@ -39,6 +40,9 @@ import aplug.basic.LoadImage;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import aplug.web.view.TemplateWebView;
+import third.cling.control.ClingControl;
+import third.cling.control.OnDeviceSelectedListener;
+import third.cling.entity.ClingDevice;
 import third.video.VideoPlayerController;
 
 /**
@@ -72,6 +76,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
     private Handler handlerScreen;
     private String courseCode;//课程分类
     private String chapterCode;//章节分类
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
@@ -115,6 +120,25 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         XHClick.track(XHApplication.in(), "浏览菜谱详情页");
         //注册监听
         ObserverManager.getInstence().registerObserver(this,ObserverManager.NOTIFY_LOGIN,ObserverManager.NOTIFY_FOLLOW,ObserverManager.NOTIFY_PAYFINISH);
+        if (!ToolsDevice.isTabletDevice(this)) {
+            ClingControl.getInstance(this).onCreate();
+            ClingControl.getInstance(this).setOnDeviceSelected(new OnDeviceSelectedListener() {
+                @Override
+                public void onDeviceSelected(ClingDevice device) {
+                    if (dishActivityViewControl != null) {
+                        dishActivityViewControl.addClingOptionView(ClingControl.getInstance(DetailDish.this).getClingOptionView());
+                    }
+                }
+            });
+            ClingControl.getInstance(this).setOnExitClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (dishActivityViewControl != null) {
+                        dishActivityViewControl.removeClingOptionView();
+                    }
+                }
+            });
+        }
     }
 
     @Override
@@ -160,15 +184,31 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         }
         initData();
     }
-    private void initData(){
+    private void initData() {
         loadOver = false;
         hasPermission = true;
         contiunRefresh = true;
         lastPermission = "";
         detailPermissionMap.clear();
         permissionMap.clear();
-        dishActivityViewControl.setCode(courseCode,chapterCode);
+        dishActivityViewControl.setCode(courseCode, chapterCode);
         dishActivityViewControl.initData(code);
+        if (!ToolsDevice.isTabletDevice(this)) {
+        dishActivityViewControl.showClingBtn(true);
+        dishActivityViewControl.setClingClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String videoUrl = dishActivityViewControl.getVideoUrl();
+                if (TextUtils.isEmpty(videoUrl)) {
+                    Toast.makeText(DetailDish.this, "无效的视频地址", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                Intent intent = DetailDish.this.getIntent();
+                intent.putExtra(ClingControl.PLAY_URL, videoUrl);
+                ClingControl.getInstance(DetailDish.this).showPopup();
+            }
+        });
+    }
         loadManager.setLoading(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -176,6 +216,14 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
                 loadOtherData();
             }
         });
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        if (!ToolsDevice.isTabletDevice(this))
+            ClingControl.getInstance(this).onNewIntent(intent);
     }
 
     private void requestFavoriteState(){
@@ -329,8 +377,6 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
 
     @Override
     protected void onResume() {
-        Log.i("zyj","onResume::"+(System.currentTimeMillis()-startTime));
-        Log.i("tzy","onResume()");
         mFavePopWindowDialog=dishActivityViewControl.getDishTitleViewControl().getPopWindowDialog();
         super.onResume();
         Rect outRect = new Rect();
@@ -339,6 +385,8 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         if(dishActivityViewControl != null){
             dishActivityViewControl.onResume();
         }
+        if (!ToolsDevice.isTabletDevice(this))
+            ClingControl.getInstance(this).onResume();
     }
 
     @Override
@@ -349,6 +397,8 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         if(dishActivityViewControl != null){
             dishActivityViewControl.onPause();
         }
+        if (!ToolsDevice.isTabletDevice(this))
+            ClingControl.getInstance(this).onPause();
     }
 
     @Override
@@ -368,7 +418,8 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
             handlerScreen.removeCallbacksAndMessages(null);
             handlerScreen=null;
         }
-
+        if (!ToolsDevice.isTabletDevice(this))
+            ClingControl.getInstance(this).onDestroy();
     }
 
     @Override

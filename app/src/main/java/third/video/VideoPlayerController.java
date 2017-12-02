@@ -68,6 +68,7 @@ public class VideoPlayerController {
     public StandardGSYVideoPlayer videoPlayer;
     protected OrientationUtils orientationUtils;
 
+    private OnClickListener mClingClickListener;
     private OnClickListener mFullScreenClickListener;
 
     public VideoPlayerController(Context context) {
@@ -96,7 +97,7 @@ public class VideoPlayerController {
         orientationUtils.setRotateWithSystem(false);
         videoPlayer.getTitleTextView().setVisibility(View.GONE);
         videoPlayer.setShowFullAnimation(false);
-        videoPlayer.getFullscreenButton().setOnClickListener(new OnClickListener() {
+        videoPlayer.getFullscreenButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mFullScreenClickListener != null) {
@@ -158,6 +159,15 @@ public class VideoPlayerController {
         videoPlayer.setIsTouchWiget(false);
         videoPlayer.setIsTouchWigetFull(true);
 
+        videoPlayer.setClingClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mClingClickListener != null)
+                    mClingClickListener.onClick(v);
+            }
+        });
+
+
 //        videoPlayerStandard.setOnPlayErrorCallback(new JCVideoPlayerStandard.OnPlayErrorCallback() {
 //            @Override
 //            public boolean onError() {
@@ -205,6 +215,15 @@ public class VideoPlayerController {
 
     public void setFullScreenClickListener(OnClickListener clickListener) {
         mFullScreenClickListener = clickListener;
+    }
+
+    public void setClingClickListener(OnClickListener clickListener) {
+        this.mClingClickListener = clickListener;
+    }
+
+    public void showClingBtn(boolean show) {
+        if (videoPlayer != null)
+            videoPlayer.showClingBtn(show);
     }
 
     private void setNetworkCallback(){
