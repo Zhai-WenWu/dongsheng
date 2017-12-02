@@ -29,7 +29,9 @@ import acore.tools.IObserver;
 import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
+import acore.widget.rvlistview.RvListView;
 import amodule.dish.adapter.AdapterDishNew;
+import amodule.dish.adapter.AdapterDishRvListView;
 import amodule.dish.db.DataOperate;
 import amodule.dish.view.manager.DetailDishDataManager;
 import amodule.dish.view.manager.DetailDishViewManager;
@@ -53,10 +55,9 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
     public String code, dishTitle, state,dishName;//页面开启状态所必须的数据。
     public static long startTime = 0;
     private Handler handlerScreen;
-    private ListView listView;
+    private RvListView rvListview;
     private DetailDishViewManager detailDishViewManager;//view控制器
     private DetailDishDataManager detailDishDataManager;//数据控制器
-    private AdapterDishNew adapterDishNew;
     private ArrayList<Map<String,String>> maplist = new ArrayList<>();
     private Map<String,String> mapTop = new HashMap<>();
     private boolean isHasVideo;//当前是否是视频
@@ -64,6 +65,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
     private RelativeLayout dredgeVipFullLayout;
     private XHWebView pageXhWebView;
     private String dishInfo = "";
+    private AdapterDishRvListView adapterDishRvListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,19 +114,17 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
      */
     private void initView() {
         initActivity("", 2, 0, 0, R.layout.a_detail_dish);
-        listView = (ListView) findViewById(R.id.listview);
+        rvListview = (RvListView) findViewById(R.id.rvListview);
     }
     /**
      * 处理页面Ui
      */
     private void initData() {
-        adapterDishNew = new AdapterDishNew(listView,maplist);
-        listView.setAdapter(adapterDishNew);
+        adapterDishRvListView = new AdapterDishRvListView(this,maplist);
+        rvListview.setAdapter(adapterDishRvListView);
         if (detailDishViewManager == null) {//view manager
-            detailDishViewManager = new DetailDishViewManager(this, listView, state);
-            Log.i("xianghaTag","dishInfo:22:"+dishInfo);
+            detailDishViewManager = new DetailDishViewManager(this, rvListview, state);
             dishInfo= Uri.decode(dishInfo);
-            Log.i("xianghaTag","dishInfo:111:"+dishInfo);
             detailDishViewManager.initBeforeData(img,dishInfo);
         }
         if (detailDishDataManager == null) detailDishDataManager = new DetailDishDataManager(code,this);//数据manager
@@ -134,7 +134,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
                 dishTypeData(type,list,PermissionMap);
             }
         });
-        adapterDishNew.setClickCallBack(new AdapterDishNew.ItemOnClickCallBack() {
+        adapterDishRvListView.setClickCallBack(new AdapterDishNew.ItemOnClickCallBack() {
             @Override
             public void onClickPosition(int position) {
                 if(!getStateMakes(maplist)){//无图时不执行
@@ -208,7 +208,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
             default:
                 break;
         }
-        adapterDishNew.notifyDataSetChanged();
+        adapterDishRvListView.notifyDataSetChanged();
     }
     @Override
     protected void onResume() {

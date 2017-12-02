@@ -156,9 +156,10 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_0.5"
-            android:layout_alignParentBottom="true"
+            android:layout_alignBottom="@+id/img_line"
             android:background="#e8e8e8"/>
         <ImageView
+            android:id="@+id/img_line"
             android:layout_width="@dimen/dp_16"
             android:layout_height="@dimen/dp_10"
             android:layout_marginLeft="@dimen/dp_20"

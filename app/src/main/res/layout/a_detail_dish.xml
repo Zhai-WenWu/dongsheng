@@ -5,8 +5,13 @@
     style="@style/layout"
     android:background="@color/transparent">
 
-    <ListView
-        android:id="@+id/listview"
+    <include
+        android:id="@+id/a_dish_detail_new_title"
+        layout="@layout/a_dish_detail_bar_title_new"
+        android:background="@color/transparent" />
+    <acore.widget.rvlistview.RvListView
+        android:id="@+id/rvListview"
+        android:layout_below="@+id/a_dish_detail_new_title"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:background="@color/transparent"
@@ -17,10 +22,7 @@
         android:scrollbars="none"
         android:visibility="gone" />
 
-    <include
-        android:id="@+id/a_dish_detail_new_title"
-        layout="@layout/a_dish_detail_bar_title_new"
-        android:background="@color/transparent" />
+
 
     <include
         android:id="@+id/a_dish_detail_new_footer_hover"
