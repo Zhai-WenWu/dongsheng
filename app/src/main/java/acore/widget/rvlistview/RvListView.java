@@ -76,7 +76,15 @@ public class RvListView extends RecyclerView {
 
     public RvListView(Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        initializeAttr(attrs);
+        initializeStyle(defStyle);
         initialize();
+    }
+
+    protected void initializeAttr(AttributeSet attrs) {
+    }
+
+    protected void initializeStyle(int defStyle) {
     }
 
     protected void initialize() {

@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
@@ -35,7 +37,8 @@ import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import aplug.basic.XHConf;
-import third.mall.aplug.MallStringManager;
+
+import static acore.tools.StringManager.api_getVideoList;
 
 /**
  * Description : //TODO
@@ -57,8 +60,8 @@ public class DishGridDialog extends Dialog {
 
     public DishGridDialog(@NonNull Context context, @NonNull String code) {
         super(context, R.style.dishGridStyle);
-        Window window = getWindow();
-        window.setWindowAnimations(R.style.dishGridAnim);
+//        Window window = getWindow();
+//        window.setWindowAnimations(R.style.dishGridAnim);
         setCancelable(true);
         mLoadMore = new LoadMoreManager(context);
         //初始化参数
@@ -69,8 +72,9 @@ public class DishGridDialog extends Dialog {
         initUI();
     }
 
+    View contentView;
     private void initUI() {
-        View contentView = LayoutInflater.from(getContext()).inflate(R.layout.a_dish_grid_content,null);
+        contentView = LayoutInflater.from(getContext()).inflate(R.layout.a_dish_grid_content,null);
         RelativeLayout rootLayout = new RelativeLayout(getContext());
         rootLayout.setBackgroundColor(Color.parseColor("#33000000"));
         rootLayout.setOnClickListener(v -> dismiss());
@@ -104,12 +108,38 @@ public class DishGridDialog extends Dialog {
     public void show() {
         super.show();
         mLoadMore.getLoadMoreBtn(mGridView).performClick();
+        if(contentView != null){
+            contentView.startAnimation(AnimationUtils.loadAnimation(getContext(),R.anim.in_from_bottom_alpha));
+        }
     }
 
+    boolean isDissmiss = false;
     @Override
     public void dismiss() {
-        super.dismiss();
-        ReqEncyptInternet.in().cancelRequset(new StringBuffer(StringManager.api_getVideoList).append(params).toString());
+        if(contentView != null && !isDissmiss){
+            isDissmiss = true;
+            Animation animation = AnimationUtils.loadAnimation(getContext(),R.anim.out_from_bottom_alpha);
+            animation.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    dismiss();
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+            contentView.startAnimation(animation);
+        }else{
+            ReqEncyptInternet.in().cancelRequset(new StringBuffer(api_getVideoList).append(params).toString());
+            super.dismiss();
+        }
     }
 
     //请求数据
@@ -117,7 +147,7 @@ public class DishGridDialog extends Dialog {
         mCurrentPage++;
         changeMoreBtn(mGridView,ReqEncyptInternet.REQ_OK_STRING, -1, -1, mCurrentPage, mData.size() == 0);
         params.put("page", String.valueOf(mCurrentPage));
-        ReqEncyptInternet.in().doEncypt(StringManager.api_getVideoList, params, new InternetCallback(getContext()) {
+        ReqEncyptInternet.in().doEncypt(api_getVideoList, params, new InternetCallback(getContext()) {
             @Override
             public void loaded(int flag, String s, Object o) {
                 int loadCount = 0;
