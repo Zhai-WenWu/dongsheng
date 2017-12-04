@@ -98,7 +98,8 @@ public class DishModuleScrollView extends ItemBaseView{
                         @Override
                         public void onItemClick(View view, int position, Map<String, String> stringStringMap) {
                             //点击回调
-                            AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(),stringStringMap.get("url"),false);
+                            AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(),stringStringMap.get("appurl"),false);
+                            dishGridDialog.dismiss();
                         }
                     });
                 }
