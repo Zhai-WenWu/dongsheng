@@ -15,6 +15,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.annimon.stream.Stream;
 import com.xiangha.R;
@@ -60,42 +61,32 @@ public class DishGridDialog extends Dialog {
     private String mCurrentCode;
     private OnItemClickCallback mOnItemClickCallback;
 
-    public DishGridDialog(@NonNull Context context, @NonNull String code){
-        this(context,code,"","");
+    public DishGridDialog(@NonNull Context context, @NonNull String code) {
+        this(context, code, "", "");
     }
 
-    public DishGridDialog(@NonNull Context context, @NonNull String code,String chapterCode,String courseCode) {
+    public DishGridDialog(@NonNull Context context, @NonNull String code, String chapterCode, String courseCode) {
         super(context, R.style.dishGridStyle);
-//        Window window = getWindow();
-//        window.setWindowAnimations(R.style.dishGridAnim);
         setCancelable(true);
         mLoadMore = new LoadMoreManager(context);
         //初始化参数
-        this.mCurrentCode = code;
-        if(!TextUtils.isEmpty(code)){
-            params.put("code",code);
-        }
-        if(!TextUtils.isEmpty(chapterCode)){
-            params.put("chapterCode",chapterCode);
-        }
-        if(!TextUtils.isEmpty(courseCode)){
-            params.put("courseCode",courseCode);
-        }
+        updateParam(code, chapterCode, courseCode);
         //初始化UI
         initUI();
     }
 
     View contentView;
     private void initUI() {
-        contentView = LayoutInflater.from(getContext()).inflate(R.layout.a_dish_grid_content,null);
+        contentView = LayoutInflater.from(getContext()).inflate(R.layout.a_dish_grid_dialog, null);
         RelativeLayout rootLayout = new RelativeLayout(getContext());
-        rootLayout.setBackgroundColor(Color.parseColor("#33000000"));
+        rootLayout.setBackgroundColor(Color.parseColor("#88000000"));
         rootLayout.setOnClickListener(v -> dismiss());
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, (int) (ToolsDevice.getWindowPx(getContext()).heightPixels *2/3f));
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, (int) (ToolsDevice.getWindowPx(getContext()).heightPixels * 2 / 3f));
         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-        rootLayout.addView(contentView,layoutParams);
-        setContentView(rootLayout,new WindowManager.LayoutParams(WindowManager.LayoutParams.MATCH_PARENT,WindowManager.LayoutParams.MATCH_PARENT));
+        rootLayout.addView(contentView, layoutParams);
+        setContentView(rootLayout, new WindowManager.LayoutParams(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT));
 
+        contentView.findViewById(R.id.back_icon).setOnClickListener(v -> dismiss());
         mGridView = (RvGridView) contentView.findViewById(R.id.rvGridView);
         final int padding_5 = Tools.getDimen(getContext(), R.dimen.dp_5);
         final int padding_4 = Tools.getDimen(getContext(), R.dimen.dp_4);
@@ -104,67 +95,104 @@ public class DishGridDialog extends Dialog {
             public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
                 super.getItemOffsets(outRect, view, parent, state);
                 int position = parent.getChildAdapterPosition(view) - mGridView.getHeaderViewsSize();
-                outRect.top = (position == 0 || position == 1) ? padding_5 * 4 : padding_5;
+                outRect.top = (position == 0 || position == 1) ? padding_4 : padding_5;
                 outRect.left = padding_4;
                 outRect.right = padding_4;
                 outRect.bottom = padding_5;
             }
         });
+
         mGridView.setOnItemClickListener((view, holder, position) -> {
-            if(mOnItemClickCallback != null){
-                mOnItemClickCallback.onItemClick(view,position,mData.get(position));
+            if (mOnItemClickCallback != null) {
+                mOnItemClickCallback.onItemClick(view, position, mData.get(position));
             }
         });
         mAdapter = new AdapterGridDish(getContext(), mData);
         mGridView.setAdapter(mAdapter);
-        View.OnClickListener clicker =  v -> loadData();
+        View.OnClickListener clicker = v -> loadData();
         Button loadMore = mLoadMore.newLoadMoreBtn(mGridView, clicker);
-        loadMore.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,Tools.getDimen(getContext(),R.dimen.dp_45)));
+        loadMore.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Tools.getDimen(getContext(), R.dimen.dp_45)));
         AutoLoadMore.setAutoMoreListen(mGridView, loadMore, clicker);
+    }
+
+    public void updateParam(String code) {
+        updateParam(code, "", "");
+    }
+
+    private final String PARAM_KEY_CODE = "code";
+    private final String PARAM_KEY_CHAPTERCODE = "chapterCode";
+    private final String PARAM_KEY_COURSECODE = "courseCode";
+
+    public DishGridDialog updateParam(@NonNull String code, String chapterCode, String courseCode) {
+        this.mCurrentCode = code;
+        handlerParams(PARAM_KEY_CODE,code);
+        handlerParams(PARAM_KEY_CHAPTERCODE,chapterCode);
+        handlerParams(PARAM_KEY_COURSECODE,courseCode);
+        return this;
+    }
+
+    /**
+     * 处理参数
+     * @param key
+     * @param value
+     * @return
+     */
+    private String handlerParams(String key, String value) {
+        return TextUtils.isEmpty(value) ? params.remove(key) : params.put(key, value);
     }
 
     @Override
     public void show() {
-        super.show();
-        mLoadMore.getLoadMoreBtn(mGridView).performClick();
-        if(contentView != null){
-            contentView.startAnimation(AnimationUtils.loadAnimation(getContext(),R.anim.in_from_bottom_alpha));
+        if (TextUtils.isEmpty(mCurrentCode)) {
+            Toast.makeText(getContext(), "参数错误", Toast.LENGTH_SHORT).show();
+            return;
         }
+        super.show();
+        refresh();
+//        if (contentView != null) {
+//            contentView.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.in_from_bottom_alpha));
+//        }
     }
 
     boolean isDissmiss = false;
+
     @Override
     public void dismiss() {
-        if(contentView != null && !isDissmiss){
-            isDissmiss = true;
-            Animation animation = AnimationUtils.loadAnimation(getContext(),R.anim.out_from_bottom_alpha);
-            animation.setAnimationListener(new Animation.AnimationListener() {
-                @Override
-                public void onAnimationStart(Animation animation) {
-
-                }
-
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    dismiss();
-                }
-
-                @Override
-                public void onAnimationRepeat(Animation animation) {
-
-                }
-            });
-            contentView.startAnimation(animation);
-        }else{
+//        if (contentView != null && !isDissmiss) {
+//            isDissmiss = true;
+//            Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.out_from_bottom_alpha);
+//            animation.setAnimationListener(new Animation.AnimationListener() {
+//                @Override
+//                public void onAnimationStart(Animation animation) {
+//
+//                }
+//
+//                @Override
+//                public void onAnimationEnd(Animation animation) {
+//                    dismiss();
+//                }
+//
+//                @Override
+//                public void onAnimationRepeat(Animation animation) {
+//
+//                }
+//            });
+//            contentView.startAnimation(animation);
+//        } else {
             ReqEncyptInternet.in().cancelRequset(new StringBuffer(api_getVideoList).append(params).toString());
             super.dismiss();
-        }
+//        }
+    }
+
+    private void refresh(){
+        mCurrentPage = 0;
+        loadData();
     }
 
     //请求数据
     private void loadData() {
         mCurrentPage++;
-        changeMoreBtn(mGridView,ReqEncyptInternet.REQ_OK_STRING, -1, -1, mCurrentPage, mData.size() == 0);
+        changeMoreBtn(mGridView, ReqEncyptInternet.REQ_OK_STRING, -1, -1, mCurrentPage, mData.size() == 0);
         params.put("page", String.valueOf(mCurrentPage));
         ReqEncyptInternet.in().doEncypt(api_getVideoList, params, new InternetCallback(getContext()) {
             @Override
@@ -176,10 +204,10 @@ public class DishGridDialog extends Dialog {
                     loadCount = data.size();
                     Stream.of(data).forEach(map -> {
                         Map<String, String> dish = StringManager.getFirstMap(map.get("dish"));
-                        transferData(map,dish,"time");
-                        transferData(map,dish,"name");
-                        transferData(map,dish,"image",map.get("image"));
-                        map.put("isCurrent",TextUtils.equals(mCurrentCode,dish.get("code"))?"2":"1");
+                        transferData(map, dish, "time");
+                        transferData(map, dish, "name");
+                        transferData(map, dish, "image", map.get("image"));
+                        map.put("isCurrent", TextUtils.equals(mCurrentCode, dish.get("code")) ? "2" : "1");
                         mData.add(map);
                     });
                     if (mCurrentPage == 1) {
@@ -193,27 +221,27 @@ public class DishGridDialog extends Dialog {
                     mEveryPageCount = loadCount;
                 }
 
-                changeMoreBtn(mGridView,flag, mEveryPageCount, loadCount, mCurrentPage, false);
+                changeMoreBtn(mGridView, flag, mEveryPageCount, loadCount, mCurrentPage, false);
             }
         });
     }
 
-    private void transferData(Map<String,String> target,Map<String,String> source,String key){
-        transferData(target,source,key,"");
+    private void transferData(Map<String, String> target, Map<String, String> source, String key) {
+        transferData(target, source, key, "");
     }
 
-    private void transferData(Map<String,String> target,Map<String,String> source,String key,String defaultValue){
-        if(null == target
+    private void transferData(Map<String, String> target, Map<String, String> source, String key, String defaultValue) {
+        if (null == target
                 || null == source
                 || source.isEmpty()
-                || TextUtils.isEmpty(key)){
+                || TextUtils.isEmpty(key)) {
             return;
         }
         String timeValue = source.get(key);
         target.put(key, TextUtils.isEmpty(timeValue) ? defaultValue : timeValue);
     }
 
-    public int changeMoreBtn(Object key, int flag, int everyPageNum, int actPageNum, int nowPage, boolean isBlankSpace) {
+    private int changeMoreBtn(Object key, int flag, int everyPageNum, int actPageNum, int nowPage, boolean isBlankSpace) {
         Button loadMoreBtn = mLoadMore.getLoadMoreBtn(key);
         if (loadMoreBtn == null) {
             return 0;
@@ -257,11 +285,7 @@ public class DishGridDialog extends Dialog {
      *
      * @return
      */
-    public int loadOver(int flag, int nowPage, boolean isBlankSpace) {
-        return loadOver(null, flag, nowPage, isBlankSpace);
-    }
-
-    public int loadOver(Object key, int flag, int nowPage, boolean isBlankSpace) {
+    private int loadOver(Object key, int flag, int nowPage, boolean isBlankSpace) {
         Button loadMoreBtn = mLoadMore.getLoadMoreBtn(key);
         if (flag >= ReqInternet.REQ_OK_STRING) {
 //            hideProgressBar();
@@ -288,11 +312,12 @@ public class DishGridDialog extends Dialog {
         return nowPage;
     }
 
-    public interface OnItemClickCallback{
+    public interface OnItemClickCallback {
         void onItemClick(View view, int position, Map<String, String> stringStringMap);
     }
 
-    public void setOnItemClickCallback(OnItemClickCallback onItemClickCallback) {
+    public DishGridDialog setOnItemClickCallback(OnItemClickCallback onItemClickCallback) {
         mOnItemClickCallback = onItemClickCallback;
+        return this;
     }
 }
