@@ -89,7 +89,10 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
                     adControlParent.getNewAdData(listDatas, isBack) : listDatas;
         });
         mDataControler.setNotifyDataSetChangedCallback(() -> {
-            if (mHomeAdapter != null) mHomeAdapter.notifyDataSetChanged();
+            if (mHomeAdapter != null
+                    && mViewContrloer.getRvListView() != null
+                    &&! mViewContrloer.getRvListView().isComputingLayout())
+                mHomeAdapter.notifyDataSetChanged();
         });
         mDataControler.setEntryptDataCallback(this::EntryptData);
         //初始化adapter

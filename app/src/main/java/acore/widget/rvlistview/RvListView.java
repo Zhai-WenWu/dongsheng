@@ -549,7 +549,8 @@ public class RvListView extends RecyclerView {
                     @Override
                     public void onClick(View v) {
                         int position = viewHolder.getAdapterPosition();
-                        mOnItemClickListener.onItemClick(v, viewHolder, position);
+                        if(position >=0)
+                            mOnItemClickListener.onItemClick(v, viewHolder, position);
                     }
                 });
             }
@@ -559,7 +560,10 @@ public class RvListView extends RecyclerView {
                     @Override
                     public boolean onLongClick(View v) {
                         int position = viewHolder.getAdapterPosition();
-                        return mOnItemLongClickListener.onItemLongClick(v, viewHolder, position);
+                        if(position >= 0)
+                            return mOnItemLongClickListener.onItemLongClick(v, viewHolder, position);
+                        else
+                            return false;
                     }
                 });
             }
