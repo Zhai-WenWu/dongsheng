@@ -23,11 +23,13 @@ import acore.logic.AppCommon;
 import acore.logic.XHClick;
 import acore.override.helper.XHActivityManager;
 import acore.override.view.ItemBaseView;
+import acore.tools.Tools;
 import acore.widget.rvlistview.RvHorizatolListView;
 import acore.widget.rvlistview.adapter.RvBaseAdapter;
 import acore.widget.rvlistview.holder.RvBaseViewHolder;
 import amodule.dish.activity.DetailDish;
 import aplug.basic.SubBitmapTarget;
+import xh.basic.tool.UtilImage;
 
 /**
  * 模块化；横滑
@@ -81,8 +83,8 @@ public class DishSkillView extends ItemBaseView{
                 if (img != null && bitmap != null) {
                     // 图片圆角和宽高适应auther_userImg
                     v.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                    v.setImageBitmap(bitmap);
-//                    v.setImageBitmap(UtilImage.toRoundCorner(v.getResources(),bitmap,1, Tools.getDimen(context,R.dimen.dp_4)));
+//                    v.setImageBitmap(bitmap);
+                    v.setImageBitmap(UtilImage.toRoundCorner(v.getResources(),bitmap,1, Tools.getDimen(context,R.dimen.dp_40)));
                 }
             }
         };

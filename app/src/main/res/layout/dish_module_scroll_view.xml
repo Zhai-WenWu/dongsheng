@@ -30,5 +30,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/module_tv"
         android:layout_marginTop="@dimen/dp_15"
+        android:background="@color/transparent"
         android:scrollbars="none"/>
 </RelativeLayout>

@@ -69,6 +69,7 @@ public class DishHoverViewControl implements View.OnClickListener{
         mNoLikeImg = (ImageView) mAct.findViewById(R.id.a_dish_hover_img);
         hoverGoodImg= (ImageView) mAct.findViewById(R.id.a_dish_detail_new_footer_hover_good_show);
         hoverGoodImg.setOnClickListener(this);
+        hoverGoodImg.setVisibility(View.GONE);
     }
 
     /**
@@ -77,6 +78,7 @@ public class DishHoverViewControl implements View.OnClickListener{
      */
     public void initData(Map<String,String> maps,String dishcode,String dishName){
         mAct.findViewById(R.id.a_dish_detail_new_footer_hover).setVisibility(View.VISIBLE);
+        hoverGoodImg.setVisibility(View.VISIBLE);
         this.code= dishcode;
         this.dishName = dishName;
         String temp = maps.get("likeNum");
@@ -91,15 +93,14 @@ public class DishHoverViewControl implements View.OnClickListener{
         this.mapQA= mapQA;
         int roundRadius = Tools.getDimen(mAct,R.dimen.dp_3); // 8dp 圆角半径
         int fillColor = Color.parseColor(mapQA.containsKey("bgColor")&&!TextUtils.isEmpty(mapQA.get("bgColor"))?mapQA.get("bgColor"):"#f23030");//内部填充颜色
-
         GradientDrawable gd = new GradientDrawable();//创建drawable
         gd.setColor(fillColor);
         gd.setCornerRadius(roundRadius);
-
         mHoverTv.setBackgroundDrawable(gd);
         mHoverTv.setTextColor(Color.parseColor(mapQA.containsKey("color")&&!TextUtils.isEmpty(mapQA.get("color"))?mapQA.get("color"):"#fffffe"));
         mHoverTv.setText(mapQA.get("text"));
         XHClick.mapStat(mAct, DetailDish.tongjiId_detail, "向作者提问按钮状态", mapQA.get("text"));
+
     }
     @Override
     public void onClick(View v) {
@@ -113,11 +114,10 @@ public class DishHoverViewControl implements View.OnClickListener{
                    AppCommon.openUrl(mAct,mapQA.get("url"),false);
                 }else{
                     XHClick.mapStat(mAct, DetailDish.tongjiId_detail, "底部浮动", "向作者提问点击量");
-                    if(mapQA.containsKey("toast")&&!TextUtils.isEmpty(mapQA.get("toast"))){
+                    if(mapQA!=null&&mapQA.containsKey("toast")&&!TextUtils.isEmpty(mapQA.get("toast"))){
                         Tools.showToast(mAct,mapQA.get("toast"));
                     }
                 }
-
                 break;
             case R.id.a_dish_detail_new_footer_hover_good: //有用
                 if(!LoginManager.isLogin()){
@@ -132,7 +132,6 @@ public class DishHoverViewControl implements View.OnClickListener{
                 XHClick.mapStat(mAct, DetailDish.tongjiId_detail, "底部浮动", "点踩按钮点击量");
                 onChangeLikeState(false,false);
                 hindGoodLayout();
-
                 break;
             case R.id.a_dish_detail_new_footer_hover_good_linear:
             case R.id.a_dish_detail_new_footer_hover_good_show: //展现点赞
@@ -140,6 +139,7 @@ public class DishHoverViewControl implements View.OnClickListener{
                     mAct.startActivity(new Intent(mAct,LoginByAccout.class));
                     return;
                 }
+                if(mapQA==null)return;
                 hoverLayout.setVisibility(View.GONE);
                 goodLayoutParent.setVisibility(View.VISIBLE);
                 break;

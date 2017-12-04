@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/transparent">
 
     <View
         android:id="@+id/skill_line"
@@ -62,6 +63,7 @@
             android:layout_marginBottom="@dimen/dp_3"
             android:layout_alignRight="@+id/img_skill_rela"
             android:layout_marginRight="@dimen/dp_7"
+            android:background="@color/transparent"
             android:textColor="#fffffe"
             android:textSize="@dimen/dp_10" />
 
