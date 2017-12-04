@@ -72,39 +72,25 @@ public class HomeBuoy {
             }
         }
         //储存数据
-        String countStr = FileManager.loadShared(mAct, FileManager.xmlFile_appInfo, AdPlayIdConfig.HOME_FLOAT).toString();
         final String path = FileManager.getDataDir() + AdPlayIdConfig.HOME_FLOAT;
         String originalData = FileManager.readFile(path).trim();
         String currentData = Tools.map2Json(buoyData);
         //如果不一样，重新存储数据
         if (!currentData.equals(originalData)) {
             FileManager.saveFileToCompletePath(path, currentData, false);
-            FileManager.saveShared(mAct, FileManager.xmlFile_appInfo, AdPlayIdConfig.HOME_FLOAT, "0");
         }
-        int count = TextUtils.isEmpty(countStr) ? 0 : Integer.parseInt(countStr);
-        int defaultMaxCount = 3;
-        final String showNumValue = bannerMap.get("showNum");
-        if (!TextUtils.isEmpty(showNumValue)
-                && !"null".equals(showNumValue)) {
-            defaultMaxCount = Integer.parseInt(showNumValue);
-        }
-        if (count < defaultMaxCount) {
-            //初始化浮标
-            initBuoy();
-            //初始化动画
-            initAnimation();
-            //初始化hanlder
-            initHandler();
-            //绑定点击
-            bindClick(bannerMap.get("url"));
-            //设置图片
-            setBuoyImage(StringManager.getFirstMap(bannerMap.get("imgs")).get("rightFloatImg"));
-            //显示
-            setFloatMenuData();
-            FileManager.saveShared(mAct, FileManager.xmlFile_appInfo, AdPlayIdConfig.HOME_FLOAT, String.valueOf(++count));
-        } else {
-            hide();
-        }
+        //初始化浮标
+        initBuoy();
+        //初始化动画
+        initAnimation();
+        //初始化hanlder
+        initHandler();
+        //绑定点击
+        bindClick(bannerMap.get("url"));
+        //设置图片
+        setBuoyImage(StringManager.getFirstMap(bannerMap.get("imgs")).get("rightFloatImg"));
+        //显示
+        setFloatMenuData();
     }
 
     public void setFloatMenuData() {
