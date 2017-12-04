@@ -11,8 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -80,7 +78,7 @@ public class DishGridDialog extends Dialog {
         contentView = LayoutInflater.from(getContext()).inflate(R.layout.a_dish_grid_dialog, null);
         RelativeLayout rootLayout = new RelativeLayout(getContext());
         rootLayout.setBackgroundColor(Color.parseColor("#88000000"));
-        rootLayout.setOnClickListener(v -> dismiss());
+        rootLayout.setOnClickListener(v -> {});
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, (int) (ToolsDevice.getWindowPx(getContext()).heightPixels * 2 / 3f));
         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
         rootLayout.addView(contentView, layoutParams);
