@@ -103,7 +103,6 @@ public class RvListView extends RecyclerView {
     @Override
     public void setAdapter(Adapter adapter) {
         if(getLayoutManager() == null){
-            Log.i("tzy","setLinearLayoutManager");
             //默认使用LinearLayoutManager，并且处置布局
             setLayoutManager(new LinearLayoutManager(getContext()));
         }
