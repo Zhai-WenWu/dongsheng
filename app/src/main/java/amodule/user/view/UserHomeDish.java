@@ -258,6 +258,7 @@ public class UserHomeDish extends TabContentView {
                     ArrayList<Map<String, String>> returnList = getListMapByJson(returnObj);
                     for (int i = 0; i < returnList.size(); i++) {
                         Map<String, String> map = returnList.get(i);
+                        map.put("views", map.get("allClick"));
                         map.put("isUpdate", "");
                         String state = map.get("dishState");
                         map.put("isFail", "");

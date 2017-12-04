@@ -1,6 +1,7 @@
 package amodule.user.adapter;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -16,6 +17,8 @@ import com.xh.view.HButtonView;
 import com.xh.view.TitleMessageView;
 import com.xiangha.R;
 
+import org.json.JSONObject;
+
 import java.util.List;
 import java.util.Map;
 
@@ -23,6 +26,7 @@ import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;
 import acore.override.adapter.AdapterSimple;
+import acore.tools.StringManager;
 import acore.tools.Tools;
 import amodule.dish.activity.DetailDish;
 import amodule.dish.activity.upload.UploadDishActivity;
@@ -129,6 +133,7 @@ public class AdapterUserDish extends AdapterSimple {
                     bundle.putString("code", mapInfo.get("code"));
                     bundle.putString("name", mapInfo.get("name"));
                     bundle.putString("img", mapInfo.get("img"));
+                    intent.putExtra("dishInfo",getDishInfo(mapInfo));
                     if (LoginManager.userInfo.get("code") != null && LoginManager.userInfo.get("code").equals(mapInfo.get("userCode")))
                         bundle.putString("state", mapInfo.get("dishState"));
                     intent.putExtras(bundle);
@@ -152,12 +157,35 @@ public class AdapterUserDish extends AdapterSimple {
                     bundle.putString("code", mapInfo.get("code"));
                     bundle.putString("name", mapInfo.get("name"));
                     bundle.putString("img", mapInfo.get("img"));
+                    intent.putExtra("dishInfo",getDishInfo(mapInfo));
                     if (LoginManager.userInfo.get("code") != null && LoginManager.userInfo.get("code").equals(mapInfo.get("userCode")))
                         bundle.putString("state", mapInfo.get("dishState"));
                     intent.putExtras(bundle);
                     mAct.startActivity(intent);
                 }
             }
+        }
+    }
+
+    private String getDishInfo(Map<String,String> data) {
+        try{
+            JSONObject dishInfoJson = new JSONObject();
+            dishInfoJson.put("code",data.get("code"));
+            dishInfoJson.put("name",data.get("name"));
+            dishInfoJson.put("allClick",data.get("views"));
+            dishInfoJson.put("favorites",data.get("favorites"));
+            dishInfoJson.put("info",data.get("info"));
+            JSONObject customerJson = new JSONObject();
+            Map<String,String> userInfo = StringManager.getFirstMap(data.get("customers"));
+            customerJson.put("customerCode",userInfo.get("code"));
+            customerJson.put("nickName",userInfo.get("nickName"));
+            customerJson.put("info","");
+            customerJson.put("img",userInfo.get("img"));
+            dishInfoJson.put("customer",customerJson);
+            return Uri.encode(dishInfoJson.toString());
+        }catch (Exception e){
+            e.printStackTrace();
+            return "";
         }
     }
 
