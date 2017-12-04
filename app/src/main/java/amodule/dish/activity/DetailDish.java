@@ -1,4 +1,5 @@
 package amodule.dish.activity;
+
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.net.Uri;
@@ -9,6 +10,8 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
+
 import com.xiangha.R;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,6 +26,7 @@ import acore.tools.IObserver;
 import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
+import acore.tools.ToolsDevice;
 import acore.widget.rvlistview.RvListView;
 import amodule.dish.adapter.AdapterDishRvListView;
 import amodule.dish.db.DataOperate;
@@ -34,6 +38,10 @@ import amodule.user.db.BrowseHistorySqlite;
 import amodule.user.db.HistoryData;
 import aplug.web.tools.WebviewManager;
 import aplug.web.view.XHWebView;
+import third.cling.control.ClingControl;
+import third.cling.control.OnDeviceSelectedListener;
+import third.cling.entity.ClingDevice;
+
 import static amodule.dish.activity.DetailDishWeb.tongjiId;
 import static java.lang.System.currentTimeMillis;
 
@@ -54,6 +62,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
     private ArrayList<Map<String,String>> maplist = new ArrayList<>();
     private Map<String,String> mapTop = new HashMap<>();
     private boolean isHasVideo;//当前是否是视频
+    private boolean mShouldInitCling;
     private String customerCode;
     private RelativeLayout dredgeVipFullLayout;
     private XHWebView pageXhWebView;
@@ -68,7 +77,46 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         initBudle();
         initView();
         initData();
+        initCling();
     }
+
+    private void initCling() {
+        mShouldInitCling = !ToolsDevice.isTabletDevice(this);
+        if (mShouldInitCling) {
+            ClingControl.getInstance(this).onCreate();
+            ClingControl.getInstance(this).setOnDeviceSelected(new OnDeviceSelectedListener() {
+                @Override
+                public void onDeviceSelected(ClingDevice device) {
+                    if (detailDishViewManager != null) {
+                        detailDishViewManager.addClingOptionView(ClingControl.getInstance(DetailDish.this).getClingOptionView());
+                    }
+                }
+            });
+            ClingControl.getInstance(this).setOnExitClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (detailDishViewManager != null) {
+                        detailDishViewManager.removeClingOptionView();
+                    }
+                }
+            });
+            detailDishViewManager.showClingBtn(true);
+            detailDishViewManager.setClingClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String videoUrl = detailDishViewManager.getVideoUrl();
+                    if (TextUtils.isEmpty(videoUrl)) {
+                        Toast.makeText(DetailDish.this, "无效的视频地址", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    Intent intent = DetailDish.this.getIntent();
+                    intent.putExtra(ClingControl.PLAY_URL, videoUrl);
+                    ClingControl.getInstance(DetailDish.this).showPopup();
+                }
+            });
+        }
+    }
+
     /**
      * 处理页面初始数据
      */
@@ -228,12 +276,16 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
     protected void onResume() {
         super.onResume();
         if(detailDishViewManager!=null)detailDishViewManager.onResume();
+        if (mShouldInitCling)
+            ClingControl.getInstance(this).onResume();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         if(detailDishViewManager!=null)detailDishViewManager.onPause();
+        if (mShouldInitCling)
+            ClingControl.getInstance(this).onPause();
     }
 
     @Override
@@ -261,7 +313,18 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
             handlerScreen.removeCallbacksAndMessages(null);
             handlerScreen=null;
         }
+        if (mShouldInitCling)
+            ClingControl.getInstance(this).onDestroy();
     }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        if (mShouldInitCling)
+            ClingControl.getInstance(this).onNewIntent(intent);
+    }
+
     public void refresh() {
         if(detailDishViewManager!=null)detailDishViewManager.refresh();
     }
