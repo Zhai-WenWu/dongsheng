@@ -47,6 +47,7 @@ import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
 import third.ad.scrollerAd.XHAllAdControl;
 import third.ad.tools.AdPlayIdConfig;
+import third.cling.ui.ClingOptionView;
 import third.video.VideoPlayerController;
 import xh.basic.tool.UtilImage;
 import xh.basic.tool.UtilString;
@@ -73,6 +74,9 @@ public class DishHeaderViewNew extends LinearLayout {
 
     private int distance;
     private boolean isLoadImg=false;
+    private boolean mShowClingBtn;
+
+    private OnClickListener mClingClickListener;
 
     public DishHeaderViewNew(Context context) {
         super(context);
@@ -157,10 +161,11 @@ public class DishHeaderViewNew extends LinearLayout {
             String selfVideo = videoMap.get("video");
             String img = videoMap.get("img");
             String type = videoMap.get("type");
+            if(isAutoPaly)isAutoPaly = "2".equals(videoMap.get("autoPlay"));
 
             if ("2".equals(type) && !TextUtils.isEmpty(selfVideo) && !"[]".equals(selfVideo)) {
                 if (!setSelfVideo(title, selfVideo, img, permissionMap))
-                    Toast.makeText(context, "视频播放失败222", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "视频播放失败", Toast.LENGTH_SHORT).show();
             } else {
                 if(isLoadImg) {
                     handlerImage(img);
@@ -305,6 +310,7 @@ public class DishHeaderViewNew extends LinearLayout {
             dishVidioLayout.setPadding(0, distance, 0, 0);
             mVideoPlayerController = new VideoPlayerController(activity, dishVidioLayout, img);
             mVideoPlayerController.showFullScrren();
+            mVideoPlayerController.showClingBtn(mShowClingBtn);
             if(permissionMap != null && permissionMap.containsKey("video")){
 
                 Map<String,String> videoPermionMap = StringManager.getFirstMap(permissionMap.get("video"));
@@ -338,6 +344,14 @@ public class DishHeaderViewNew extends LinearLayout {
                     setVideoAdData(mapAd, adLayout);
                 }
             });
+
+            mVideoPlayerController.setClingClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mClingClickListener != null)
+                        mClingClickListener.onClick(v);
+                }
+            });
             dishvideo_img.setVisibility(View.GONE);
             callBack.getVideoControl(mVideoPlayerController, dishVidioLayout, videoViewGroup);
             callBack.videoImageOnClick();
@@ -345,6 +359,14 @@ public class DishHeaderViewNew extends LinearLayout {
         }
         initVideoAd();
         return isUrlVaild;
+    }
+
+    public void setClingClickListener(OnClickListener clickListener) {
+        this.mClingClickListener = clickListener;
+    }
+
+    public void showClingBtn(boolean show) {
+        mShowClingBtn = show;
     }
 
     private RelativeLayout dredgeVipLayout;
@@ -537,6 +559,16 @@ public class DishHeaderViewNew extends LinearLayout {
             mVideoPlayerController.onDestroy();
 //            mVideoPlayerController=null;
         }
+    }
+
+    public String getVideoUrl() {
+        return mVideoPlayerController == null ? null : mVideoPlayerController.getVideoUrl();
+    }
+
+    public int getPlayState() {
+        if (mVideoPlayerController != null)
+            return mVideoPlayerController.videoPlayer.getCurrentState();
+        return -1;//状态的初始化
     }
 
 }

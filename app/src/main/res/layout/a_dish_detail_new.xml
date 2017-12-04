@@ -13,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:focusableInTouchMode="true"
         android:visibility="gone">
 
         <LinearLayout
@@ -31,6 +32,7 @@
                 android:id="@+id/a_dish_detail_new_web"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:descendantFocusability="blocksDescendants"
                 android:visibility="gone"/>
 
             <include
