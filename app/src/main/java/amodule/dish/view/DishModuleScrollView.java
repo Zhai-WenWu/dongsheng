@@ -79,6 +79,12 @@ public class DishModuleScrollView extends ItemBaseView{
             public void onClick(View v) {
                 if(dishGridDialog==null){
                     dishGridDialog= new DishGridDialog(context,"94888978");
+                    dishGridDialog.setOnItemClickCallback(new DishGridDialog.OnItemClickCallback() {
+                        @Override
+                        public void onItemClick(View view, int position, Map<String, String> stringStringMap) {
+                            //点击回调
+                        }
+                    });
                 }
                 dishGridDialog.show();
             }

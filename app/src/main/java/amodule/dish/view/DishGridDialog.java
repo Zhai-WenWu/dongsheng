@@ -10,7 +10,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -58,15 +57,29 @@ public class DishGridDialog extends Dialog {
     private int mEveryPageCount = 10;
     private LinkedHashMap<String, String> params = new LinkedHashMap<>();
 
-    public DishGridDialog(@NonNull Context context, @NonNull String code) {
+    private String mCurrentCode;
+    private OnItemClickCallback mOnItemClickCallback;
+
+    public DishGridDialog(@NonNull Context context, @NonNull String code){
+        this(context,code,"","");
+    }
+
+    public DishGridDialog(@NonNull Context context, @NonNull String code,String chapterCode,String courseCode) {
         super(context, R.style.dishGridStyle);
 //        Window window = getWindow();
 //        window.setWindowAnimations(R.style.dishGridAnim);
         setCancelable(true);
         mLoadMore = new LoadMoreManager(context);
         //初始化参数
+        this.mCurrentCode = code;
         if(!TextUtils.isEmpty(code)){
             params.put("code",code);
+        }
+        if(!TextUtils.isEmpty(chapterCode)){
+            params.put("chapterCode",chapterCode);
+        }
+        if(!TextUtils.isEmpty(courseCode)){
+            params.put("courseCode",courseCode);
         }
         //初始化UI
         initUI();
@@ -84,16 +97,22 @@ public class DishGridDialog extends Dialog {
         setContentView(rootLayout,new WindowManager.LayoutParams(WindowManager.LayoutParams.MATCH_PARENT,WindowManager.LayoutParams.MATCH_PARENT));
 
         mGridView = (RvGridView) contentView.findViewById(R.id.rvGridView);
-        final int padding = Tools.getDimen(getContext(), R.dimen.dp_5);
+        final int padding_5 = Tools.getDimen(getContext(), R.dimen.dp_5);
+        final int padding_4 = Tools.getDimen(getContext(), R.dimen.dp_4);
         mGridView.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
             public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
                 super.getItemOffsets(outRect, view, parent, state);
                 int position = parent.getChildAdapterPosition(view) - mGridView.getHeaderViewsSize();
-                outRect.top = (position == 0 || position == 1) ? padding * 4 : padding;
-                outRect.left = padding;
-                outRect.right = padding;
-                outRect.bottom = padding;
+                outRect.top = (position == 0 || position == 1) ? padding_5 * 4 : padding_5;
+                outRect.left = padding_4;
+                outRect.right = padding_4;
+                outRect.bottom = padding_5;
+            }
+        });
+        mGridView.setOnItemClickListener((view, holder, position) -> {
+            if(mOnItemClickCallback != null){
+                mOnItemClickCallback.onItemClick(view,position,mData.get(position));
             }
         });
         mAdapter = new AdapterGridDish(getContext(), mData);
@@ -160,7 +179,7 @@ public class DishGridDialog extends Dialog {
                         transferData(map,dish,"time");
                         transferData(map,dish,"name");
                         transferData(map,dish,"image",map.get("image"));
-
+                        map.put("isCurrent",TextUtils.equals(mCurrentCode,dish.get("code"))?"2":"1");
                         mData.add(map);
                     });
                     if (mCurrentPage == 1) {
@@ -220,7 +239,7 @@ public class DishGridDialog extends Dialog {
                 loadMoreBtn.setText("点击加载更多");
                 loadMoreBtn.setEnabled(true);
             } else {
-                loadMoreBtn.setText("— 吃,也是一种艺术 —");
+                loadMoreBtn.setText("没有更多了");
                 loadMoreBtn.setEnabled(false);
             }
             if (actPageNum <= 0 && nowPage == 1)
@@ -269,4 +288,11 @@ public class DishGridDialog extends Dialog {
         return nowPage;
     }
 
+    public interface OnItemClickCallback{
+        void onItemClick(View view, int position, Map<String, String> stringStringMap);
+    }
+
+    public void setOnItemClickCallback(OnItemClickCallback onItemClickCallback) {
+        mOnItemClickCallback = onItemClickCallback;
+    }
 }

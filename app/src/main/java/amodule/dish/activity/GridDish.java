@@ -68,16 +68,17 @@ public class GridDish extends BaseAppCompatActivity {
     private void initUI() {
         mRefreshLayout = (PtrClassicFrameLayout) findViewById(R.id.refresh_list_view_frame);
         mGridView = (RvGridView) findViewById(R.id.rvGridView);
-        final int padding = Tools.getDimen(this, R.dimen.dp_5);
+        final int padding_5 = Tools.getDimen(this, R.dimen.dp_5);
+        final int padding_4 = Tools.getDimen(this, R.dimen.dp_4);
         mGridView.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
             public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
                 super.getItemOffsets(outRect, view, parent, state);
                 int position = parent.getChildAdapterPosition(view) - mGridView.getHeaderViewsSize();
-                outRect.top = (position == 0 || position == 1) ? padding * 4 : padding;
-                outRect.left = padding;
-                outRect.right = padding;
-                outRect.bottom = padding;
+                outRect.top = (position == 0 || position == 1) ? padding_5 * 4 : padding_5;
+                outRect.left = padding_4;
+                outRect.right = padding_4;
+                outRect.bottom = padding_5;
             }
         });
         mAdapter = new AdapterGridDish(this, mData);

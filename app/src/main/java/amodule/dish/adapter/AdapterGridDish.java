@@ -72,6 +72,8 @@ public class AdapterGridDish extends RvBaseAdapter<Map<String, String>> {
             if(!LoginManager.isVIP())
                 WidgetUtility.setResToImage(findViewById(R.id.icon),getIconRes(data.get("isShow")));
             findViewById(R.id.icon).setVisibility(LoginManager.isVIP()?View.GONE:View.VISIBLE);
+            findViewById(R.id.shadow).setVisibility("2".equals(data.get("isCurrent"))?View.GONE:View.VISIBLE);
+            findViewById(R.id.time_text).setVisibility("2".equals(data.get("isCurrent"))?View.GONE:View.VISIBLE);
         }
 
         //获取icon id
