@@ -123,7 +123,6 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         XHClick.track(XHApplication.in(), "浏览菜谱详情页");
         //注册监听
         ObserverManager.getInstence().registerObserver(this,ObserverManager.NOTIFY_LOGIN,ObserverManager.NOTIFY_FOLLOW,ObserverManager.NOTIFY_PAYFINISH);
-<<<<<<< HEAD
         if (mShouldInitCling) {
             ClingControl.getInstance(this).onCreate();
             ClingControl.getInstance(this).setOnDeviceSelected(new OnDeviceSelectedListener() {
@@ -144,10 +143,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
             });
         }
     }
-=======
->>>>>>> master_1025_develop_1109
 
-    }
     private void handlerNew(){
         findViewById(R.id.button1).setOnClickListener(new View.OnClickListener() {
             @Override
