@@ -50,7 +50,6 @@ public class DishSkillView extends ItemBaseView{
     @Override
     public void init() {
         super.init();
-        Log.i("xianghaTag","data:2222::");
         img_skill= (ImageView) findViewById(R.id.img_skill);
         text1= (TextView) findViewById(R.id.text1);
         text2= (TextView) findViewById(R.id.text2);
@@ -58,6 +57,7 @@ public class DishSkillView extends ItemBaseView{
     public void setData(Map<String,String> data,int position){
         findViewById(R.id.skill_line).setVisibility(position>0?View.VISIBLE:View.GONE);
         findViewById(R.id.skill_vip).setVisibility("2".equals(data.get("iconType"))?VISIBLE:GONE);
+        findViewById(R.id.skill_shikan).setVisibility("1".equals(data.get("iconType"))?VISIBLE:GONE);
         setViewImage(img_skill,data,"img");
         if("2".equals(data.get("isVideo")))text1.setText(data.get("videoTime"));
         text2.setText(data.get("text"));

@@ -41,7 +41,18 @@
             android:layout_alignTop="@+id/img_skill_rela"
             android:layout_marginRight="@dimen/dp_2"
             android:layout_marginTop="@dimen/dp_2"
-            android:background="@drawable/vip" />
+            android:background="@drawable/vip"
+            android:visibility="gone"/>
+        <ImageView
+            android:id="@+id/skill_shikan"
+            android:layout_width="@dimen/dp_30"
+            android:layout_height="@dimen/dp_17"
+            android:layout_alignRight="@+id/img_skill_rela"
+            android:layout_alignTop="@+id/img_skill_rela"
+            android:layout_marginRight="@dimen/dp_2"
+            android:layout_marginTop="@dimen/dp_2"
+            android:background="@drawable/dish_shikan"
+            android:visibility="visible"/>
 
         <TextView
             android:id="@+id/text1"

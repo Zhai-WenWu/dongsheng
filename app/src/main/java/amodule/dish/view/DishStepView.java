@@ -145,8 +145,11 @@ public class DishStepView extends ItemBaseView {
         }
     }
 
+    /**
+     * gif不进行显示
+     */
     public void stopGif(){
-        itemGifHint.setVisibility(View.VISIBLE);
+        itemGifHint.setVisibility(View.GONE);
         itemImg1.setVisibility(View.VISIBLE);
     }
 

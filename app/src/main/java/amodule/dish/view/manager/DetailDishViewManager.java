@@ -215,13 +215,11 @@ public class DetailDishViewManager {
             dishHeaderViewNew.setDishCallBack(new DishHeaderViewNew.DishHeaderVideoCallBack() {
                 @Override
                 public void videoImageOnClick() {
-//                    bar_title_1.setBackgroundResource(R.color.common_top_bg);
                 }
                 @Override
                 public void getVideoControl(VideoPlayerController mVideoPlayerController, RelativeLayout dishVidioLayouts, View view_oneImage) {
                     dishVidioLayout=dishVidioLayouts;
                     DetailDishViewManager.this.view_oneImage= view_oneImage;
-                    setViewOneState();
                 }
             });
             dishHeaderViewNew.setData(list, permissionMap);
@@ -286,10 +284,10 @@ public class DetailDishViewManager {
     /**
      * 处理小技巧view
      */
-    public void handlerSkillView(ArrayList<Map<String, String>> list) {
+    public void handlerSkillView(ArrayList<Map<String, String>> list,String dishCode,String courseCode,String chapterCode) {
         if(dishModuleScrollView!=null&&"2".equals(list.get(0).get("isShow"))){
             dishModuleScrollView.setVisibility(View.VISIBLE);
-            if(list.get(0).containsKey("list"))dishModuleScrollView.setData(list);
+            if(list.get(0).containsKey("list"))dishModuleScrollView.setData(list,dishCode,courseCode,chapterCode);
         }
     }
     /**
@@ -376,54 +374,6 @@ public class DetailDishViewManager {
     public void refresh() {
     }
     /**
-     * 设置当前标题颜色状态
-     */
-    private void setViewOneState() {
-//        int[] location = new int[2];
-//        int view_height = 0;
-//        if (view_oneImage != null) {
-//            view_oneImage.getLocationOnScreen(location);
-//            view_height = view_oneImage.getHeight();
-//        }
-//        if (Math.abs(location[1]) > view_height) {
-//            bar_title_1.clearAnimation();
-//            //初始化view都为不透明
-//            if (isHasVideoOnClick) return;
-//            if(!isShowTitleColor){
-//                AlphaAnimation alphaAnimation= new AlphaAnimation(0,1);
-//                alphaAnimation.setDuration(1000);
-//                alphaAnimation.setFillAfter(true);
-//                bar_title_1.startAnimation(alphaAnimation);
-//                isShowTitleColor=true;
-//            }
-//        } else {
-//            if (isHasVideoOnClick) return;
-//            //初始化view都为透明
-//            if(isShowTitleColor) {
-//                AlphaAnimation alphaAnimation= new AlphaAnimation(1,0);
-//                alphaAnimation.setDuration(200);
-//                alphaAnimation.setFillAfter(true);
-//                bar_title_1.startAnimation(alphaAnimation);
-//                isShowTitleColor = false;
-//                alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
-//                    @Override
-//                    public void onAnimationStart(Animation animation) {
-//                    }
-//                    @Override
-//                    public void onAnimationEnd(Animation animation) {
-//                        AlphaAnimation alphaAnimation= new AlphaAnimation(0,1);
-//                        alphaAnimation.setDuration(500);
-//                        alphaAnimation.setFillAfter(true);
-//                        bar_title_1.startAnimation(alphaAnimation);
-//                    }
-//                    @Override
-//                    public void onAnimationRepeat(Animation animation) {
-//                    }
-//                });
-//            }
-//        }
-    }
-    /**
      * listview滑动监听
      */
     private void setListViewListener() {
@@ -481,9 +431,6 @@ public class DetailDishViewManager {
                                 }
                             }
                         }
-                        if(oneY==0)oneY=(int) event.getY();
-                        int nowY = (int) event.getY();
-                        scrollviewState(oneY,nowY);
                         break;
                     case MotionEvent.ACTION_CANCEL:
                     case MotionEvent.ACTION_UP:
@@ -494,7 +441,6 @@ public class DetailDishViewManager {
                                 mTimer.schedule(2);
                             }
                         }
-                        oneY=0;
                         break;
                 }
                 return false;
@@ -502,14 +448,6 @@ public class DetailDishViewManager {
         });
     }
     private int oneY = 0;
-    private void scrollviewState(int oneY,int nowY){
-//        Log.i("xianghaTag","oneY::"+oneY+":::nowY:::"+nowY);
-//        if(nowY < oneY && ((oneY - nowY) > 1)){//向下滑动
-//            bar_title_1.setVisibility(View.GONE);
-//        }else if(nowY > oneY && (nowY - oneY) >=1){//向上滑动
-//            bar_title_1.setVisibility(View.VISIBLE);
-//        }
-    }
     private int mMoveLen = 0;
     private MyTimer mTimer;
     @SuppressLint("HandlerLeak")

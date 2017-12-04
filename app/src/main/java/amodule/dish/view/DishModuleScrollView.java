@@ -34,6 +34,8 @@ public class DishModuleScrollView extends ItemBaseView{
     private AdapterModuleScroll adapterModuleScroll;
     private ArrayList<Map<String,String>> mapList = new ArrayList<>();
     private DishGridDialog dishGridDialog;
+    private String dishCode,courseCode,chapterCode;
+
     public DishModuleScrollView(Context context) {
         super(context, R.layout.dish_module_scroll_view);
     }
@@ -55,8 +57,18 @@ public class DishModuleScrollView extends ItemBaseView{
         module_more= (TextView) findViewById(R.id.module_more);
 
     }
-    public void setData(ArrayList<Map<String,String>> listMaps){
 
+    /**
+     * 设置数据：
+     * @param listMaps 展示数据体
+     * @param code 菜谱code
+     * @param courseCode 课程code
+     * @param chapterCode 章节code
+     */
+    public void setData(ArrayList<Map<String,String>> listMaps,String code,String courseCode,String chapterCode){
+        this.dishCode = code;
+        this.courseCode = courseCode;
+        this.chapterCode = chapterCode;
         if(listMaps==null||listMaps.size()<=0)return;
         Map<String,String> map= listMaps.get(0);
         ArrayList<Map<String,String>> listTemp = StringManager.getListMapByJson(map.get("list"));
@@ -77,8 +89,9 @@ public class DishModuleScrollView extends ItemBaseView{
         module_more.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(TextUtils.isEmpty(dishCode))return;
                 if(dishGridDialog==null){
-                    dishGridDialog= new DishGridDialog(context,"94888978");
+                    dishGridDialog= new DishGridDialog(context,dishCode,courseCode,chapterCode);
                     dishGridDialog.setOnItemClickCallback(new DishGridDialog.OnItemClickCallback() {
                         @Override
                         public void onItemClick(View view, int position, Map<String, String> stringStringMap) {
@@ -115,7 +128,6 @@ public class DishModuleScrollView extends ItemBaseView{
 
         @Override
         public RvBaseViewHolder<Map<String, String>> onCreateViewHolder(ViewGroup parent, int viewType) {
-            Log.i("xianhaTag","onCreateViewHolder");
             return new ViewHolder(new DishSkillView(context));
         }
         @Override

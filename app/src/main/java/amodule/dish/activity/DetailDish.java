@@ -30,7 +30,6 @@ import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.rvlistview.RvListView;
-import amodule.dish.adapter.AdapterDishNew;
 import amodule.dish.adapter.AdapterDishRvListView;
 import amodule.dish.db.DataOperate;
 import amodule.dish.view.manager.DetailDishDataManager;
@@ -66,6 +65,8 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
     private XHWebView pageXhWebView;
     private String dishInfo = "";
     private AdapterDishRvListView adapterDishRvListView;
+    private String courseCode;//课程分类
+    private String chapterCode;//章节分类
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +74,6 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         initBudle();
         initView();
         initData();
-
     }
     /**
      * 处理页面初始数据
@@ -85,6 +85,8 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
             code = bundle.getString("code");
             dishTitle = bundle.getString("name");
             if (dishTitle == null) dishTitle = "香哈菜谱";
+            courseCode = bundle.getString("courseCode","");
+            chapterCode = bundle.getString("chapterCode","");
             state = bundle.getString("state");
             data_type = bundle.getString("data_type");
             module_type = bundle.getString("module_type");
@@ -194,7 +196,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
                 detailDishViewManager.handlerQAView(list);
                 break;
             case DetailDishDataManager.DISH_DATA_RNTIC://技巧
-                detailDishViewManager.handlerSkillView(list);
+                detailDishViewManager.handlerSkillView(list,code,courseCode,chapterCode);
                 break;
             case DetailDishDataManager.DISH_DATA_RELATION://公共数据
                 Map<String,String> relation= list.get(0);
@@ -213,15 +215,12 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
     @Override
     protected void onResume() {
         super.onResume();
-        Log.i("xianghTag","dish::::onResume");
-
         if(detailDishViewManager!=null)detailDishViewManager.onResume();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        Log.i("xianghTag","dish::::onPause");
         if(detailDishViewManager!=null)detailDishViewManager.onPause();
     }
 
@@ -251,7 +250,6 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
             handlerScreen=null;
         }
     }
-
     public void refresh() {
         if(detailDishViewManager!=null)detailDishViewManager.refresh();
     }
@@ -389,18 +387,4 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         if(pageXhWebView!=null)
             pageXhWebView.setVisibility(View.GONE);
     }
-    @Override
-    public void startActivity(Intent intent) {
-        super.startActivity(intent);
-        // 设置切换动画，从右边进入，左边退出
-        overridePendingTransition(0, 0);
-    }
-
-    @Override
-    public void startActivityForResult(Intent intent, int requestCode) {
-        super.startActivityForResult(intent, requestCode);
-        // 设置切换动画，从右边进入，左边退出
-        overridePendingTransition(0, 0);
-    }
-
 }
