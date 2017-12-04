@@ -2,6 +2,7 @@ package amodule.dish.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -217,14 +218,37 @@ public class ListDish extends BaseActivity {
                             xhAllAdControl.onAdClick(adPosition,String.valueOf(adPosition+1));
                         }
                     }else{
-                    intent.putExtra("code", arrayList.get(position).get("code"));
-                    intent.putExtra("img", arrayList.get(position).get("img"));
-                    intent.putExtra("name", arrayList.get(position).get("name"));
-                    startActivity(intent);
+                        intent.putExtra("code", arrayList.get(position).get("code"));
+                        intent.putExtra("img", arrayList.get(position).get("img"));
+                        intent.putExtra("name", arrayList.get(position).get("name"));
+                        intent.putExtra("dishInfo",getDishInfo(arrayList.get(position)));
+                        startActivity(intent);
                     }
                 }
             }
         });
+    }
+
+    private String getDishInfo(Map<String,String> data) {
+        try{
+            JSONObject dishInfoJson = new JSONObject();
+            dishInfoJson.put("code",data.get("code"));
+            dishInfoJson.put("name",data.get("name"));
+            dishInfoJson.put("allClick",data.get("allClick").replace("浏览",""));
+            dishInfoJson.put("favorites",data.get("favorites").replace("收藏",""));
+            dishInfoJson.put("info",data.get("info"));
+            JSONObject customerJson = new JSONObject();
+            Map<String,String> userInfo = StringManager.getFirstMap(data.get("customer"));
+            customerJson.put("customerCode",userInfo.get("code"));
+            customerJson.put("nickName",userInfo.get("nickName"));
+            customerJson.put("info","");
+            customerJson.put("img",userInfo.get("img"));
+            dishInfoJson.put("customer",customerJson);
+            return Uri.encode(dishInfoJson.toString());
+        }catch (Exception e){
+            e.printStackTrace();
+            return "";
+        }
     }
 
     boolean isFav = false;
