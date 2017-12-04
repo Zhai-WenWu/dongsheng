@@ -66,6 +66,11 @@ public class AdapterDishNew extends AdapterSimple {
                 public void onClick() {
                     clickCallBack.onClickPosition(position);
                 }
+
+                @Override
+                public void onGifPlayClick() {
+
+                }
             },position);
         }
     }

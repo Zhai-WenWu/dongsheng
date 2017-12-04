@@ -179,7 +179,9 @@ public class DetailDishViewManager {
         if (dishHeaderViewNew != null&& !TextUtils.isEmpty(img))dishHeaderViewNew.setImg(img);
         if(dishAboutView != null && !TextUtils.isEmpty(dishInfo)) {
             dishAboutView.setVisibility(View.VISIBLE);
-            dishAboutView.setData(StringManager.getFirstMap(Uri.decode(dishInfo)), mAct);
+            Map<String,String> map=StringManager.getFirstMap(Uri.decode(dishInfo));
+            if(TextUtils.isEmpty(img)&&map.containsKey("img")&&!TextUtils.isEmpty(map.get("img"))&&dishHeaderViewNew!=null)dishHeaderViewNew.setImg(map.get("img"));
+            dishAboutView.setData(map, mAct);
         }
     }
     /**

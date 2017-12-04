@@ -2,6 +2,7 @@ package amodule.dish.adapter;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.ViewGroup;
 
 import java.util.List;
@@ -48,12 +49,19 @@ public class AdapterDishRvListView extends RvBaseAdapter<Map<String,String>>{
                 }
                 @Override
                 public void onClick() {
+                    Log.i("xianghaTag","position::"+position);
                     clickCallBack.onClickPosition(position);
+                }
+
+                @Override
+                public void onGifPlayClick() {
+                    clickCallBack.onGifClickPosition(position);
                 }
             },position);
         }
     }
     public interface ItemOnClickCallBack{
         public void onClickPosition(int position);
+        public void onGifClickPosition(int position);
     }
 }
