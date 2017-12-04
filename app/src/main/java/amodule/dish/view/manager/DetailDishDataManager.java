@@ -1,6 +1,7 @@
 package amodule.dish.view.manager;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import java.util.ArrayList;
@@ -37,9 +38,12 @@ public class DetailDishDataManager {
     private boolean contiunRefresh = true;
     private boolean loadOver = false;
     private DetailDish detailAct;
+    private String courseCode,chapterCode;
 
-    public DetailDishDataManager(String code, DetailDish detailAct) {
+    public DetailDishDataManager(String code, DetailDish detailAct,String courseCode,String chapterCode) {
         dishCode = code;
+        this.courseCode= courseCode;
+        this.chapterCode= chapterCode;
         this.detailAct = detailAct;
         resetData();
         reqTopInfo(true);
@@ -83,7 +87,7 @@ public class DetailDishDataManager {
      */
     public void reqTopInfo(boolean isGon) {
         String params = "dishCode=" + dishCode;
-        ReqEncyptInternet.in().doEncypt(StringManager.API_MAIN8_TOPINFP, params, new InternetCallback(mContext) {
+        ReqEncyptInternet.in().doEncypt(StringManager.API_MAIN8_TOPINFP, getOtherCode(params), new InternetCallback(mContext) {
             @Override
             public void loaded(int flag, String url, Object object) {
                 if(flag>=UtilInternet.REQ_OK_STRING) {
@@ -133,7 +137,7 @@ public class DetailDishDataManager {
      */
     private void reqIngre() {
         String params = "code=" + dishCode;
-        ReqEncyptInternet.in().doEncypt(StringManager.API_GETDISHBURDENBYCODE, params, new InternetCallback(mContext) {
+        ReqEncyptInternet.in().doEncypt(StringManager.API_GETDISHBURDENBYCODE, getOtherCode(params), new InternetCallback(mContext) {
             @Override
             public void loaded(int flag, String url, Object object) {
                 handleDataSuccess(flag,DISH_DATA_INGRE,object);
@@ -159,7 +163,7 @@ public class DetailDishDataManager {
      */
     private void reqStep() {
         String params = "dishCode=" + dishCode;
-        ReqEncyptInternet.in().doEncypt(StringManager.API_MAIN8_DISHMAKE, params, new InternetCallback(mContext) {
+        ReqEncyptInternet.in().doEncypt(StringManager.API_MAIN8_DISHMAKE, getOtherCode(params), new InternetCallback(mContext) {
             @Override
             public void loaded(int flag, String url, Object object) {
                 handleDataSuccess(flag,DISH_DATA_STEP,object);
@@ -173,7 +177,7 @@ public class DetailDishDataManager {
     private void reqOtherTieData(){
         String params = "dishCode=" + dishCode;
         //获取帖子数据
-        ReqEncyptInternet.in().doEncypt(StringManager.API_MAIN8_TIEINFO,params, new InternetCallback(mContext) {
+        ReqEncyptInternet.in().doEncypt(StringManager.API_MAIN8_TIEINFO,getOtherCode(params), new InternetCallback(mContext) {
             @Override
             public void loaded(int flag, String s, Object object) {
                 handleDataSuccess(flag,DISH_DATA_TIE,object);
@@ -186,7 +190,7 @@ public class DetailDishDataManager {
     private void reqQAData(){
         String params = "dishCode=" + dishCode;
         //获取帖子数据
-        ReqEncyptInternet.in().doEncypt(StringManager.API_MAIN8_QAINFO,params, new InternetCallback(mContext) {
+        ReqEncyptInternet.in().doEncypt(StringManager.API_MAIN8_QAINFO,getOtherCode(params), new InternetCallback(mContext) {
             @Override
             public void loaded(int flag, String s, Object object) {
                 handleDataSuccess(flag,DISH_DATA_QA,object);
@@ -199,7 +203,7 @@ public class DetailDishDataManager {
     private void reqAnticData(){
         String params = "dishCode=" + dishCode;
         //获取帖子数据
-        ReqEncyptInternet.in().doEncypt(StringManager.API_MAIN8_ANTIC,params, new InternetCallback(mContext) {
+        ReqEncyptInternet.in().doEncypt(StringManager.API_MAIN8_ANTIC,getOtherCode(params), new InternetCallback(mContext) {
             @Override
             public void loaded(int flag, String s, Object object) {
                 handleDataSuccess(flag,DISH_DATA_RNTIC,object);
@@ -213,7 +217,7 @@ public class DetailDishDataManager {
     private void reqPublicData(){
         String params = "dishCode=" + dishCode;
         //获取点赞数据
-        ReqEncyptInternet.in().doEncypt(StringManager.API_MAIN8_RELATIONBYCODE, params, new InternetCallback(mContext) {
+        ReqEncyptInternet.in().doEncypt(StringManager.API_MAIN8_RELATIONBYCODE, getOtherCode(params), new InternetCallback(mContext) {
             @Override
             public void loaded(int flag, String s, Object object) {
                 handleDataSuccess(flag,DISH_DATA_RELATION,object);
@@ -245,5 +249,10 @@ public class DetailDishDataManager {
     }
     public void setDishDataCallBack(DishDataCallBack callBack) {
         dishDataCallBack = callBack;
+    }
+    private String getOtherCode(@NonNull String params){
+        if(!TextUtils.isEmpty(courseCode))params+="&courseCode="+courseCode;
+        if(!TextUtils.isEmpty(chapterCode))params+="&chapterCode="+chapterCode;
+        return params;
     }
 }

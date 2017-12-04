@@ -1,5 +1,4 @@
 package amodule.dish.activity;
-
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.net.Uri;
@@ -7,18 +6,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
-
 import com.xiangha.R;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
 import acore.logic.LoginManager;
 import acore.logic.SpecialWebControl;
 import acore.logic.XHClick;
@@ -40,7 +34,6 @@ import amodule.user.db.BrowseHistorySqlite;
 import amodule.user.db.HistoryData;
 import aplug.web.tools.WebviewManager;
 import aplug.web.view.XHWebView;
-
 import static amodule.dish.activity.DetailDishWeb.tongjiId;
 import static java.lang.System.currentTimeMillis;
 
@@ -130,7 +123,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
             dishInfo= Uri.decode(dishInfo);
             detailDishViewManager.initBeforeData(img,dishInfo);
         }
-        if (detailDishDataManager == null) detailDishDataManager = new DetailDishDataManager(code,this);//数据manager
+        if (detailDishDataManager == null) detailDishDataManager = new DetailDishDataManager(code,this,courseCode,chapterCode);//数据manager
         detailDishDataManager.setDishDataCallBack(new DetailDishDataManager.DishDataCallBack() {
             @Override
             public void handlerTypeData(String type, ArrayList<Map<String,String>> list,Map<String,String> PermissionMap) {

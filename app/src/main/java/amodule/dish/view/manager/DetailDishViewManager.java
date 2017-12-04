@@ -428,7 +428,7 @@ public class DetailDishViewManager {
                                     if (headerLayoutHeight + y <= wm_height * 2 / 3) {
                                         mMoveLen = y;
                                         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, headerLayoutHeight + y);
-                                        dishVidioLayout.setLayoutParams(layoutParams);
+                                        if(dishVidioLayout!=null&& layoutParams!=null)dishVidioLayout.setLayoutParams(layoutParams);
                                     }
                                 }
                             }
