@@ -348,7 +348,7 @@ public class Banner extends RelativeLayout {
             return;
         }
         if (offset < 0) {
-            mPointContainerLl.removeViews(dataSize, -offset);
+            mPointContainerLl.removeViews(0, -offset);
         }
     }
 
@@ -467,8 +467,8 @@ public class Banner extends RelativeLayout {
                     }
                 }
             });
-
-            container.addView(view);
+            if(container.indexOfChild(view) <= -1)
+                container.addView(view);
             return view;
         }
 
@@ -566,6 +566,12 @@ public class Banner extends RelativeLayout {
     }
 
     @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        goScroll();
+    }
+
+    @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         pauseScroll();
@@ -623,7 +629,7 @@ public class Banner extends RelativeLayout {
      * 通知数据已经放生改变
      */
     public void notifyDataHasChanged() {
-        pauseScroll();
+        mItemArrays.clear();
         initPoints();
         mViewPager.getAdapter().notifyDataSetChanged();
         mViewPager.setCurrentItem(0, false);
