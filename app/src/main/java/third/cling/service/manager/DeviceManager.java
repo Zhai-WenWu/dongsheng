@@ -11,6 +11,7 @@ import third.cling.control.SubscriptionControl;
 import third.cling.entity.ClingDevice;
 import third.cling.entity.ClingDeviceList;
 import third.cling.entity.IDevice;
+import third.cling.service.callback.ActionCallback;
 import third.cling.util.Utils;
 
 /**
@@ -26,9 +27,11 @@ public class DeviceManager implements IDeviceManager {
      */
     private ClingDevice mSelectedDevice;
     private SubscriptionControl mSubscriptionControl;
+    private ActionCallback mCallback;
 
     public DeviceManager() {
         mSubscriptionControl = new SubscriptionControl();
+        mSubscriptionControl.setActionCallbak(mCallback);
     }
 
     @Override
@@ -88,5 +91,9 @@ public class DeviceManager implements IDeviceManager {
         if (Utils.isNotNull(mSubscriptionControl)){
             mSubscriptionControl.destroy();
         }
+    }
+
+    public void setActionCallback (ActionCallback callback) {
+        this.mCallback = callback;
     }
 }

@@ -1537,10 +1537,6 @@
         <service
             android:name="third.cling.service.ClingUpnpService"
             android:exported="false" />
-
-        <service
-            android:name="third.cling.service.SystemService"
-            android:exported="false" />
         <!--Cling end-->
 
     </application>
