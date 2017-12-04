@@ -43,7 +43,7 @@ public class SpeechaIdentifyInputView extends RelativeLayout implements View.OnC
     public void setState(boolean state){
         speechaTv.setClickable(state);
         if(state){
-            speechaTv.setTextColor(Color.parseColor("#ff533c"));
+            speechaTv.setTextColor(Color.parseColor("#f23030"));
         }else{
             speechaTv.setTextColor(Color.parseColor("#999999"));
         }

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
@@ -33,6 +34,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import acore.logic.AppCommon;
+import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.tools.FileManager;
@@ -41,6 +43,7 @@ import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.ImageViewVideo;
 import amodule.dish.activity.MoreImageShow;
+import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
 import third.ad.scrollerAd.XHAllAdControl;
@@ -124,7 +127,12 @@ public class DishHeaderViewNew extends LinearLayout {
         this.addView(videoViewGroup);
 //        INVisibiHeaderView();
     }
-
+    public void setDistance(int distances){
+        this.distance = distances;
+    }
+    public RelativeLayout getViewLayout(){
+        return  dishVidioLayout;
+    }
     /**
      * 设置当前header的callback回调
      */
@@ -150,14 +158,14 @@ public class DishHeaderViewNew extends LinearLayout {
     public void setData(ArrayList<Map<String, String>> list, Map<String, String> permissionMap) {
         Map<String, String> videoMap = list.get(0);
         String title = videoMap.get("title");
-        try {
+//        try {
             String selfVideo = videoMap.get("video");
             String img = videoMap.get("img");
             String type = videoMap.get("type");
 
             if ("2".equals(type) && !TextUtils.isEmpty(selfVideo) && !"[]".equals(selfVideo)) {
                 if (!setSelfVideo(title, selfVideo, img, permissionMap))
-                    Toast.makeText(context, "视频播放失败", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "视频播放失败222", Toast.LENGTH_SHORT).show();
             } else {
                 if(isLoadImg) {
                     handlerImage(img);
@@ -166,9 +174,9 @@ public class DishHeaderViewNew extends LinearLayout {
                 }
 
             }
-        } catch (Exception e) {
-            Toast.makeText(context, "视频播放失败", Toast.LENGTH_SHORT).show();
-        }
+//        } catch (Exception e) {
+//            Toast.makeText(context, "视频播放失败111", Toast.LENGTH_SHORT).show();
+//        }
     }
 
     private void initVideoAd() {
@@ -248,20 +256,6 @@ public class DishHeaderViewNew extends LinearLayout {
                 }
             }
         };
-//        mThread = new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                for(; num > 0; num--) {
-//                    handler.sendEmptyMessage(num);
-//                    try {
-//                        Thread.sleep(1000);
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//                handler.sendEmptyMessage(0);
-//            }
-//        });
         BitmapRequestBuilder<GlideUrl, Bitmap> bitmapRequest = LoadImage.with(XHApplication.in())
                 .load(imgUrl)
                 .setRequestListener(new RequestListener<GlideUrl, Bitmap>() {
@@ -392,7 +386,8 @@ public class DishHeaderViewNew extends LinearLayout {
                 @Override
                 public void onClick(View v) {
                     if(!TextUtils.isEmpty(url)){
-                        AppCommon.openUrl(activity,url,true);
+                        String currentUrl = url + "&vipFrom=" +Uri.encode(LoginManager.isLogin() ? "视频菜谱会员按钮（登录后）" : "视频菜谱会员按钮（登录前）");
+                        AppCommon.openUrl(activity,currentUrl,true);
                         return;
                     }
 

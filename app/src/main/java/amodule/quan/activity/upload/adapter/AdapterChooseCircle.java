@@ -34,7 +34,7 @@ public class AdapterChooseCircle extends AdapterSimple{
 
         String isChoose = map.get("isChoose");
         if("true".equals(isChoose)){
-            textView.setTextColor(Color.parseColor("#ff533c"));
+            textView.setTextColor(Color.parseColor("#f23030"));
             view.findViewById(R.id.a_post_choose_item_img_select).setVisibility(View.VISIBLE);
             view.findViewById(R.id.a_post_choose_item_img_unselect).setVisibility(View.GONE);
         }else{

@@ -100,10 +100,10 @@ public class DishTitleViewControlNew implements View.OnClickListener{
      * @param isHasVideo----是否是视频贴
      */
     public void setData(Map<String, String> dishInfoMaps,String code,boolean isHasVideo,String dishState,LoadManager loadManager){
-        this.dishInfoMap=dishInfoMaps;
-        this.code= code;
-        this.isHasVideo=isHasVideo;
-        this.dishState = dishState;
+            this.dishInfoMap=dishInfoMaps;
+            this.code= code;
+            this.isHasVideo=isHasVideo;
+            this.dishState = dishState;
         this.loadManager= loadManager;
     }
     public PopWindowDialog getPopWindowDialog(){
@@ -240,7 +240,7 @@ public class DishTitleViewControlNew implements View.OnClickListener{
         intent.putExtra("content", mapData.get("mContent"));
         intent.putExtra("type", mapData.get("mType"));
         intent.putExtra("shareFrom", "文章详情");
-        intent.putExtra("reportUrl", "Feedback.app?feekUrl=http://www.xiangha.com/caipu/"+code+".html");
+        intent.putExtra("reportUrl", "Feedback.app?feekUrl=https://www.xiangha.com/caipu/"+code+".html");
         detailDish.startActivity(intent);
     }
 
@@ -325,9 +325,9 @@ public class DishTitleViewControlNew implements View.OnClickListener{
                                             isAutoOff ? "已离线到本地,可在设置-收藏菜谱关闭。" : null);
                                     if (isHasVideo && mVideoPlayerController != null && mVideoPlayerController.getVideoImageView() != null) {
                                         String title = "【香哈菜谱】看了" + dishInfoMap.get("name") + "的教学视频，我已经学会了，味道超赞！";
-                                        String clickUrl = StringManager.wwwUrl + "video/caipu/" + dishInfoMap.get("code");
+                                        String clickUrl = StringManager.wwwUrl + "caipu/" + dishInfoMap.get("code")+ ".html";
                                         ;
-                                        String content = "顶级大厨的做菜视频，讲的真是太详细啦！想吃就赶快进来免费学习吧~ " + clickUrl;
+                                        String content = "顶级大厨的做菜视频，讲的真是太详细啦！想吃就赶快进来免费学习吧~ " ;
 //                                            Bitmap bitmap = mVideoPlayerController.getVideoImageView().getBitmap();
 //                                            String imgUrl = ShareTools.getBarShare(DetailDish.this).saveDrawable(bitmap, FileManager.save_cache + "/share_" + currentTimeMillis() + ".png");
                                         String type = BarShare.IMG_TYPE_WEB;

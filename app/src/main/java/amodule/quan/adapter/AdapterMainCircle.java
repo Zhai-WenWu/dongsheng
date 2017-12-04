@@ -13,8 +13,8 @@ import java.util.Map;
 
 import acore.logic.AppCommon;
 import acore.logic.XHClick;
-import acore.widget.rvlistview.RvBaseAdapter;
-import acore.widget.rvlistview.RvBaseViewHolder;
+import acore.widget.rvlistview.adapter.RvBaseAdapter;
+import acore.widget.rvlistview.holder.RvBaseViewHolder;
 import amodule.quan.tool.HomeAdvertControl;
 import amodule.quan.tool.QuanAdvertControl;
 import amodule.quan.view.NormalContentView;

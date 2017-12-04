@@ -827,7 +827,7 @@ public class UploadDishVideoControl extends UploadDishParrentControl implements 
                 break;
             case R.id.dish_video_up_title_info: //视频帮助信息
                 XHClick.mapStat(mAct, tongjiId,"说明页面入口按钮","");
-                AppCommon.openUrl(mAct,"http://appweb.xiangha.com/deal/helpDishVideo.html",true);
+                AppCommon.openUrl(mAct,"https://appweb.xiangha.com/deal/helpDishVideo.html",true);
                 break;
             case R.id.delete_btn:
                 final DialogManager dialogManager = new DialogManager(mAct);

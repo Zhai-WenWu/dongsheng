@@ -17,10 +17,11 @@ import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import amodule.main.Main;
-import amodule.main.activity.MainHomePageNew;
+import amodule.main.activity.MainHome;
 import amodule.other.listener.HomeKeyListener;
 import amodule.other.listener.HomeKeyListener.OnHomePressedListener;
 import aplug.basic.ReqEncyptInternet;
+import third.ad.tools.AdConfigTools;
 import third.ad.tools.WelcomeAdTools;
 import third.mall.aplug.MallCommon;
 import xh.basic.tool.UtilFile;
@@ -93,6 +94,8 @@ public class ActivityMethodManager {
                         if(!Main.isShowWelcomeDialog) {
 //                            new WelcomeDialog(mAct, adShowTime).show();
                             Log.i("zhangyujian","二次开屏");
+                            //请求广告位
+                            AdConfigTools.getInstance().getAdConfigInfo();
                             mAct.startActivity(new Intent(mAct, Welcome.class));
                         }
                         //更新开启次数
@@ -107,7 +110,7 @@ public class ActivityMethodManager {
         if (colse_level <= level) {
             if (level == 1 && colse_level != 0) {
                 if (Main.allMain != null) {
-                    Main.allMain.setCurrentTabByClass(MainHomePageNew.class);
+                    Main.allMain.setCurrentTabByClass(MainHome.class);
                 }
                 colse_level = 1000;
             } else {

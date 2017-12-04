@@ -2,6 +2,7 @@ package amodule.search.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -21,6 +22,7 @@ import acore.logic.SetDataView;
 import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;
 import acore.override.adapter.AdapterSimple;
+import acore.tools.FileManager;
 import acore.tools.ToolsDevice;
 import amodule.search.data.SearchConstant;
 import amodule.search.data.SearchDataImp;
@@ -142,6 +144,7 @@ public class DefaultSearchView extends LinearLayout implements View.OnClickListe
         if (isShow) {
             listSearchHistory.clear();
             listSearchHistory = new SearchDataImp().getHistoryWords();
+            Log.i("tzy","listSearchHistory = " + listSearchHistory.toString());
             showHisTable();
         }
         showHotTable();
@@ -270,8 +273,9 @@ public class DefaultSearchView extends LinearLayout implements View.OnClickListe
         switch (v.getId()) {
             // 清除搜索历史
             case R.id.search_his_clean_img:
-                UtilFile.saveFileToCompletePath(UtilFile.getDataDir() + "searchHis.xh", "", false);
+                FileManager.delDirectoryOrFile(UtilFile.getDataDir() + FileManager.file_searchHis);
                 XHClick.mapStat(mActivity, "a_search_default", "搜索历史", "清除历史");
+                Log.i("tzy","清除历史");
                 listSearchHistory.clear();
                 refresh();
                 callback.disableEditFocus(false);

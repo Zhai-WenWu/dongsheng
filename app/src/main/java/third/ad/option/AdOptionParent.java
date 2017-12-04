@@ -256,7 +256,7 @@ public abstract class AdOptionParent {
                                     int aboveIndex = index - 1; //广告要跟上一个样式保持一致
                                     if (aboveIndex < 0) aboveIndex = index;
                                     Map<String, String> aboveMap = old_list.get(aboveIndex);
-                                    ArrayList<Map<String, String>> arrayList = StringManager.getListMapByJson(aboveMap.get("imgs"));
+//                                    ArrayList<Map<String, String>> arrayList = StringManager.getListMapByJson(aboveMap.get("imgs"));
                                     String type = aboveMap.get("style");
                                     if (TextUtils.isEmpty(type)) {//如果上一个样式的字段不存在则默认右图样式
                                         JSONObject styleObject = new JSONObject();

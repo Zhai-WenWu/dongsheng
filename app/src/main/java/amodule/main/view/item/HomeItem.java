@@ -90,7 +90,6 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
     }
 
     protected void initView() {
-        this.setBackgroundColor(Color.parseColor("#ffffff"));
         mAdTag = (ImageView) findViewById(R.id.ad_tag);
         mLineTop = findViewById(R.id.line_top);
         mDot = findViewById(R.id.dot);
@@ -175,13 +174,8 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
             @Override
             public void onLoadFailed(final Exception e, Drawable drawable) {
                 super.onLoadFailed(e, drawable);
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        BuglyLog.i("image", "url = " + url + "  netStatus = " + ToolsDevice.getNetWorkSimpleType(getContext()));
-                        CrashReport.postCatchedException(e);
-                    }
-                }).start();
+                BuglyLog.i("image", "url = " + url + "  netStatus = " + ToolsDevice.getNetWorkSimpleType(getContext()));
+                CrashReport.postCatchedException(e);
             }
         };
     }
@@ -358,12 +352,7 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
                 }
             }
         }
-        if (mDataMap.containsKey("adstyle")) {
-            String adStyle = mDataMap.get("adstyle");
-            if (!TextUtils.isEmpty(adStyle) && adStyle.equals("ad")) {
-                mIsAd = true;
-            }
-        }
+        mIsAd = TextUtils.equals("ad", mDataMap.get("adstyle"));
         if (mIsAd) {
             if (mAdControlParent != null && !mDataMap.containsKey("isADShow")) {
                 mAdControlParent.onAdShow(mDataMap, this);

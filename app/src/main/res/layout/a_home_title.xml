@@ -1,25 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:id="@+id/title_rela"
-    android:layout_height="match_parent"
-    android:background="@color/backgroup_color" >
+    android:layout_height="@dimen/dp_49"
+    android:background="@color/common_top_bg">
 
-    <TextView
-        android:id="@+id/title_tv"
-        style="@style/top_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <amodule.home.view.HomeActivityIconView
+        android:id="@+id/home_act_btn"
+        android:layout_width="@dimen/dp_52"
+        android:layout_height="match_parent"/>
+
+    <RelativeLayout
+        android:id="@+id/home_search_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_30"
         android:layout_centerVertical="true"
-        android:text="精华贴子" />
+        android:layout_toLeftOf="@+id/home_publish_btn"
+        android:layout_toRightOf="@+id/home_act_btn"
+        android:background="@drawable/bg_home_search">
 
-    <ImageView
-        android:id="@+id/title_icon"
-        android:layout_width="@dimen/dp_12"
-        android:layout_height="@dimen/dp_12"
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="@dimen/dp_13"
+                android:layout_height="@dimen/dp_13"
+                android:src="@drawable/home_search_icon"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/dp_8"
+                android:text="搜菜谱、食材"
+                android:textColor="#000"
+                android:textSize="@dimen/sp_13"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <amodule.home.view.HomePushIconView
+        android:id="@+id/home_publish_btn"
+        android:layout_width="@dimen/dp_52"
+        android:layout_height="match_parent"
         android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:scaleType="centerInside"
-        android:src="@drawable/i_ico_homepage_right_more" />
+        android:paddingLeft="@dimen/dp_12"
+        android:paddingRight="@dimen/dp_20"
+        android:src="@drawable/home_pulish"/>
 
 </RelativeLayout>

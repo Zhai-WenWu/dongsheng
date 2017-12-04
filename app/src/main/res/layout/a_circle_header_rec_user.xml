@@ -36,7 +36,7 @@
             android:paddingBottom="@dimen/dp_4"
             android:paddingLeft="@dimen/dp_2"
             android:text="这是我的名字你看鸡毛"
-            android:textColor="#FF533C"
+            android:textColor="#f23030"
             android:textSize="@dimen/sp_15"/>
 
         <TextView

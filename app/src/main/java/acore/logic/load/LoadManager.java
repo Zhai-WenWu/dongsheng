@@ -3,7 +3,6 @@ package acore.logic.load;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -23,15 +22,14 @@ import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.load.view.LoadingView;
 import acore.override.XHApplication;
-import acore.override.adapter.RvAdapterSimple;
 import acore.tools.FileManager;
 import acore.tools.LogManager;
 import acore.tools.Tools;
 import acore.widget.DownRefreshList;
 import acore.widget.LayoutScroll;
 import acore.widget.ScrollLinearListLayout;
-import acore.widget.rvlistview.RvBaseAdapter;
 import acore.widget.rvlistview.RvListView;
+import acore.widget.rvlistview.adapter.RvBaseAdapter;
 import amodule.quan.adapter.AdapterCircle;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
@@ -358,6 +356,11 @@ public class LoadManager {
 
 	public void setLoading(PtrClassicFrameLayout refreshLayout, RvListView listView, RvBaseAdapter adapter,
 						   boolean hasMore,final OnClickListener refreshListener, final OnClickListener loadMoreListener){
+		setLoading(refreshLayout, listView, adapter, hasMore, true, refreshListener, loadMoreListener);
+	}
+
+	public void setLoading(PtrClassicFrameLayout refreshLayout, RvListView listView, RvBaseAdapter adapter,
+						   boolean hasMore, boolean showProgressbar, final OnClickListener refreshListener, final OnClickListener loadMoreListener){
 		refreshLayout.setPtrHandler(new PtrDefaultHandler() {
 			@Override
 			public void onRefreshBegin(PtrFrameLayout frame) {
@@ -371,7 +374,7 @@ public class LoadManager {
 				AutoLoadMore.setAutoMoreListen(listView, loadMore, loadMoreListener);
 			}
 		}
-		setLoading(loadMoreListener);
+		setLoading(loadMoreListener, showProgressbar);
 	}
 
 	/**

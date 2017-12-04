@@ -72,7 +72,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="抢沙发~"
-                android:textColor="#FF533C"
+                android:textColor="#f23030"
                 android:textSize="@dimen/sp_15"
                 />
         </LinearLayout>

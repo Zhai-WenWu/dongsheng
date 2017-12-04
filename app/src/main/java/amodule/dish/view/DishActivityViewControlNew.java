@@ -49,7 +49,11 @@ import static java.lang.System.currentTimeMillis;
 /**
  * 菜谱界面的总控制类
  */
+<<<<<<< HEAD
 public class DishActivityViewControlNew {
+=======
+public class    DishActivityViewControlNew {
+>>>>>>> master_1025_develop_1109
     private Activity mAct;
     private RelativeLayout bar_title_1;
     private TemplateWebView templateWebView;
@@ -220,8 +224,12 @@ public class DishActivityViewControlNew {
 
             @Override
             public void scrollOritention(int scrollState) {
+<<<<<<< HEAD
                 if (scrollState == XhScrollView.SCROLL_DOWN) {//向下滑动
 
+=======
+                if(scrollState==XhScrollView.SCROLL_DOWN){//向下滑动
+>>>>>>> master_1025_develop_1109
                     bar_title_1.setVisibility(View.GONE);
                 } else if (scrollState == XhScrollView.SCROLL_UP) {//向上滑动
                     bar_title_1.setVisibility(View.VISIBLE);

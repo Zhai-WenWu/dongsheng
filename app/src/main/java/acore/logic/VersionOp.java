@@ -241,6 +241,7 @@ public class VersionOp extends BaseDialogControl {
 
         @Override
         public void downError(String arg0) {
+            Log.i("xianghaTag","arg0::"+arg0);
             Tools.showToast(XHActivityManager.getInstance().getCurrentActivity(), arg0);
         }
     };

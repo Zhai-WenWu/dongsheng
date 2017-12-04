@@ -6,7 +6,7 @@
 
     <stroke
         android:width="@dimen/dp_0.5"
-        android:color="#ff533c" />
+        android:color="#f23030" />
  <!-- 边框大小、颜色 -->
     <!-- 圆角 -->
     <corners android:radius="@dimen/dp_2" />

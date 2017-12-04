@@ -25,7 +25,7 @@
         android:layout_marginTop="@dimen/dp_7"
         android:background="@drawable/tv_circle_white"
         android:gravity="center_horizontal|center_vertical"
-        android:textColor="#ff533c"
+        android:textColor="#f23030"
         android:textSize="@dimen/sp_10"
         android:visibility="invisible"/>
 </RelativeLayout>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:tools="http://schemas.android.com/tools">
+    <item
+        android:id="@+id/pulish_subject"
+        android:icon="@drawable/pulish_subject"
+        android:title="晒美食"/>
+
+    <item
+        android:id="@+id/pulish_dish"
+        android:icon="@drawable/send_dish"
+        android:title="写菜谱"/>
+    <item
+        android:id="@+id/pulish_article"
+        android:icon="@drawable/pulish_article"
+        android:title="发文章"/>
+    <item
+        android:id="@+id/pulish_video"
+        android:icon="@drawable/pulish_video"
+        android:title="短视频"/>
+
+</menu>

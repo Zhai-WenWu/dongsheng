@@ -156,7 +156,7 @@ public class CustomerView extends ItemBaseView {
                 follow_rela.setBackgroundResource(R.drawable.bg_follow);
                 follow_rela.setClickable(true);
                 follow_tv.setText("关注");
-                follow_tv.setTextColor(Color.parseColor("#ff533c"));
+                follow_tv.setTextColor(Color.parseColor("#f23030"));
             } else {
                 follow_rela.setBackgroundColor(Color.parseColor("#fffffe"));
                 follow_rela.setClickable(false);

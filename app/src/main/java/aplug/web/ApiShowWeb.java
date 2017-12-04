@@ -85,7 +85,7 @@ public class ApiShowWeb extends WebActivity {
 						content = content + "(香哈菜谱)";
 					}
 					htmlData = am.get("html");
-					webview.loadDataWithBaseURL("http://nativeapp.xiangha.com/", htmlData, "text/html", "utf-8", null);
+					webview.loadDataWithBaseURL("https://nativeapp.xiangha.com/", htmlData, "text/html", "utf-8", null);
 					barShare = new BarShare(ApiShowWeb.this, name,"");
 					String zhishiurl = am.get("url");
 					barShare.setShare(BarShare.IMG_TYPE_WEB, am.get("title"), content, am.get("img"), zhishiurl);

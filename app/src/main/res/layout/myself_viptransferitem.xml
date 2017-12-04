@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@+id/my_new_info"
             android:clickable="false"
-            android:textColor="#ff533c"
+            android:textColor="#f23030"
             android:textSize="@dimen/sp_12" />
 
         <TextView

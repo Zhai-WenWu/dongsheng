@@ -47,6 +47,7 @@
             android:background="#ccc" />
 
         <LinearLayout
+            android:id="@+id/a_dish_detail_new_footer_hover_question_container"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="3"

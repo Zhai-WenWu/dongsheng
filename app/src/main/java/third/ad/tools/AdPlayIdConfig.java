@@ -120,4 +120,8 @@ public class AdPlayIdConfig {
     public static final String ARTICLE_TIEPIAN = "wz_tiepian";
 
 
+    public static final String HOME_TOPLEFT = "XHLeftTop";
+    public static final String HOME_FLOAT = "XHFloat";
+
+
 }

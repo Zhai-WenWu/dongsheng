@@ -30,8 +30,6 @@ import acore.logic.XHClick;
 import acore.logic.load.LoadManager;
 import acore.override.activity.mian.MainBaseActivity;
 import acore.tools.FileManager;
-import acore.tools.IObserver;
-import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -234,10 +232,6 @@ public class HomeFragment extends BaseHomeFragment{
         });
     }
 
-    private boolean isVideoList() {
-        return homeModuleBean == null ? false : mVideoType.equals(homeModuleBean.getType());
-    }
-
     /**
      * 初始化header布局
      */
@@ -342,52 +336,56 @@ public class HomeFragment extends BaseHomeFragment{
             });
         }
         if(!LoadOver){
-            final LinearLayoutManager layoutManager = (LinearLayoutManager) mListview.getLayoutManager();
-            mListview.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                @Override
-                public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                    super.onScrollStateChanged(recyclerView, newState);
+            mLoadManager.setLoading(refreshLayout, mListview, mHomeAdapter, true,
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+//                        if(!TextUtils.isEmpty(statisticKey)){
+//                            mAdControl.getAdData(mActivity,statisticKey);
+//                        }
+                            EntryptData(true);
+                        }
+                    },
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            EntryptData(!LoadOver);
+                        }
+                    });
+            RecyclerView.LayoutManager layoutManager = mListview.getLayoutManager();
+            if(layoutManager != null && layoutManager instanceof LinearLayoutManager){
+                final LinearLayoutManager linearLayoutManager = (LinearLayoutManager) layoutManager;
+                mListview.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                    @Override
+                    public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                        super.onScrollStateChanged(recyclerView, newState);
 //                    if(newState == RecyclerView.SCROLL_STATE_IDLE
 //                            || newState == RecyclerView.SCROLL_STATE_TOUCH_SCROLL){
 //                        Glide.with(getContext()).resumeRequests();
 //                    }else{
 //                        Glide.with(getContext()).pauseRequests();
 //                    }
-                }
-
-                @Override
-                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                    super.onScrolled(recyclerView, dx, dy);
-                    int firstVisibleItem = layoutManager.findFirstVisibleItemPosition();
-                    int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
-                    isScrollData=true;
-                    if(scrollDataIndex<(lastVisibleItemPosition-1)) {
-                        scrollDataIndex = (lastVisibleItemPosition-1);
                     }
-                    if (mPlayPosition != -1) {
-                        //正在播放的视频滑出屏幕
-                        if ((mPlayPosition + mHeaderCount) < firstVisibleItem || (mPlayPosition + mHeaderCount) > (lastVisibleItemPosition - 1)) {
-                            stopVideo();
+
+                    @Override
+                    public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                        super.onScrolled(recyclerView, dx, dy);
+                        int firstVisibleItem = linearLayoutManager.findFirstVisibleItemPosition();
+                        int lastVisibleItemPosition = linearLayoutManager.findLastVisibleItemPosition();
+                        isScrollData=true;
+                        if(scrollDataIndex<(lastVisibleItemPosition-1)) {
+                            scrollDataIndex = (lastVisibleItemPosition-1);
+                        }
+                        if (mPlayPosition != -1) {
+                            //正在播放的视频滑出屏幕
+                            if ((mPlayPosition + mHeaderCount) < firstVisibleItem || (mPlayPosition + mHeaderCount) > (lastVisibleItemPosition - 1)) {
+                                stopVideo();
+                            }
                         }
                     }
-                }
-            });
-            mLoadManager.setLoading(refreshLayout, mListview, mHomeAdapter, true,
-                    new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-//                        if(!TextUtils.isEmpty(statisticKey)){
-//                            mAdControl.getAdData(mActivity,statisticKey);
-//                        }
-                    EntryptData(true);
-                }
-            },
-                    new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    EntryptData(!LoadOver);
-                }
-            });
+                });
+            }
+
         }
     }
 

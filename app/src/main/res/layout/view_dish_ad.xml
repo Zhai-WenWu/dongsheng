@@ -4,30 +4,17 @@
     android:layout_height="wrap_content">
 
     <RelativeLayout
-        android:id="@+id/dish_detail_burden_ad_bd_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/dp_15"
-        android:paddingRight="@dimen/dp_15" />
-    <RelativeLayout
         android:id="@+id/dish_detail_burden_ad_banner_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/dp_15"
-        android:paddingRight="@dimen/dp_15" />
+        android:paddingLeft="@dimen/dp_20"
+        android:paddingTop="@dimen/dp_20"
+        android:paddingRight="@dimen/dp_20">
+        <ImageView
+            android:id="@+id/img_banner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+    </RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/dish_detail_burden_tencent_banner_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/dp_15"
-        android:paddingRight="@dimen/dp_15" />
-
-    <include
-        android:id="@+id/a_dish_detail_burden_ad_banner_bottom"
-        layout="@layout/ad_banner_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/dp_15"
-        android:layout_marginRight="@dimen/dp_15"/>
 </LinearLayout>

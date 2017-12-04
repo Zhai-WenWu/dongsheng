@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <View
+        android:id="@+id/skill_line"
+        android:layout_width="@dimen/dp_4"
+        android:layout_height="match_parent" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/skill_line">
+
+        <RelativeLayout
+            android:id="@+id/img_skill_rela"
+            android:layout_width="@dimen/dp_115"
+            android:layout_height="@dimen/dp_82">
+
+            <ImageView
+                android:id="@+id/img_skill"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                android:background="@drawable/view_skill_back_mask"/>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_60"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/view_skill_back_mask"/>
+        </RelativeLayout>
+
+
+        <ImageView
+            android:id="@+id/skill_vip"
+            android:layout_width="@dimen/dp_30"
+            android:layout_height="@dimen/dp_17"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/img_skill_rela"
+            android:layout_marginRight="@dimen/dp_2"
+            android:layout_marginTop="@dimen/dp_2"
+            android:background="@drawable/vip" />
+
+        <TextView
+            android:id="@+id/text1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/img_skill_rela"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="@dimen/dp_3"
+            android:layout_marginRight="@dimen/dp_7"
+            android:textColor="#fffffe"
+            android:textSize="@dimen/dp_10" />
+
+        <TextView
+            android:id="@+id/text2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/img_skill_rela"
+            android:layout_marginTop="@dimen/dp_5"
+            android:textColor="#333333"
+            android:textSize="@dimen/dp_13" />
+    </RelativeLayout>
+</RelativeLayout>

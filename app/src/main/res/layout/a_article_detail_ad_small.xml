@@ -82,7 +82,7 @@
                 android:layout_height="@dimen/dp_35"
                 android:gravity="center"
                 android:maxLines="1"
-                android:textColor="#ff533c"
+                android:textColor="#f23030"
                 android:textSize="@dimen/sp_14"
                 android:visibility="gone"/>
 

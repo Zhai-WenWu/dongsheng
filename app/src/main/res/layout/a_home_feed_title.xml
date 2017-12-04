@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/feed_title_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="@dimen/dp_10">
+
+    <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_5"
+        android:background="#F2F2F2"
+        android:visibility="visible"/>
+
+    <LinearLayout
+        android:id="@+id/recommend_tag"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/line"
+        android:layout_marginLeft="@dimen/dp_20"
+        android:layout_marginRight="@dimen/dp_20"
+        android:paddingTop="@dimen/dp_25"
+        android:paddingBottom="@dimen/dp_1"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:background="#fffffe">
+
+        <View
+            android:layout_width="@dimen/dp_8"
+            android:layout_height="0.5dp"
+            android:background="#000000"/>
+
+        <TextView
+            android:id="@+id/feed_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:paddingLeft="@dimen/dp_5"
+            android:paddingRight="@dimen/dp_5"
+            android:text="热门推荐"
+            android:textSize="@dimen/sp_16"
+            android:textColor="@color/c_black_text"
+            android:textStyle="bold"/>
+
+        <View
+            android:layout_width="@dimen/dp_8"
+            android:layout_height="0.5dp"
+            android:background="#000000"/>
+    </LinearLayout>
+
+
+
+    <!--<TextView
+        android:id="@+id/feed_title"
+        style="@style/common_title_style"
+        android:layout_below="@+id/line"
+        android:paddingTop="@dimen/dp_25"
+        android:text="热门推荐"
+        android:layout_centerHorizontal="true"/>-->
+
+</RelativeLayout>

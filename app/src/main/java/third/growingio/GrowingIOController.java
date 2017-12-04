@@ -15,6 +15,8 @@ import acore.override.XHApplication;
 import acore.tools.ChannelUtil;
 import acore.tools.FileManager;
 import acore.tools.LogManager;
+import acore.tools.StringManager;
+import xh.basic.tool.UtilFile;
 
 /**
  * PackageName : third.growingio
@@ -120,11 +122,14 @@ public class GrowingIOController {
         //指令强制开启
         String isInputOrder = FileManager.loadShared(context,FileManager.file_appData,FileManager.xmlKey_growingioopen).toString();
         if("true".equals(isInputOrder)){
-            Log.i("tzy","GrowingIO is open");
             return true;
         }
         //正常判断
-        if(LoginManager.isLogin() && LoginManager.isVIP()){
+        Map<String, String> userInfo = (Map<String, String>) FileManager.loadShared(context, FileManager.xmlFile_userInfo, "");
+        Map<String,String> vipMap = StringManager.getFirstMap(userInfo.get("vip"));
+        if(!userInfo.isEmpty()
+                && !TextUtils.isEmpty(userInfo.get("userCode"))
+                && "2".equals(vipMap.get("isVip"))){
             return true;
         }
         return false;

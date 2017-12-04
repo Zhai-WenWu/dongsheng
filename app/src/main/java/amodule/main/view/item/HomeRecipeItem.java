@@ -15,6 +15,7 @@ import java.util.Map;
 
 import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
+import amodule.home.delegate.IDataSetDelegate;
 import amodule.main.activity.MainHome;
 
 /**
@@ -24,23 +25,25 @@ import amodule.main.activity.MainHome;
 
 public class HomeRecipeItem extends HomeItem {
 
-    private TextView mTitle;
-    private TextView mTitleTop;
-    private TextView mVideoTime;
-    private ImageView mImg;
-    private ImageView mVIP;
-    private ImageView mSole;
-    private ImageView mPlayImg;
-    private LinearLayout mRecommendTag;
-    private RelativeLayout mVideoContainer;
-    private RelativeLayout mContainer;
-    private View mRecommendLine;
-    private View mLayerView;
+    private IDataSetDelegate<Map<String, String>> mDataSetDelegate;
 
-    private boolean mIsVideo;
-    private boolean mIsVip;
+    protected TextView mTitle;
+    protected TextView mTitleTop;
+    protected TextView mVideoTime;
+    protected ImageView mImg;
+    protected ImageView mVIP;
+    protected ImageView mSole;
+    protected ImageView mPlayImg;
+    protected LinearLayout mRecommendTag;
+    protected RelativeLayout mVideoContainer;
+    protected RelativeLayout mContainer;
+    protected View mRecommendLine;
+    protected View mLayerView;
 
-    private int mVideoParamsH = (ToolsDevice.getWindowPx(getContext()).widthPixels - getResources().getDimensionPixelSize(R.dimen.dp_40)) * 9 / 16;
+    protected boolean mIsVideo;
+    protected boolean mIsVip;
+
+    protected int mVideoParamsH = (ToolsDevice.getWindowPx(getContext()).widthPixels - getResources().getDimensionPixelSize(R.dimen.dp_40)) * 9 / 16;
 
     public HomeRecipeItem(Context context) {
         this(context, null);
@@ -87,6 +90,10 @@ public class HomeRecipeItem extends HomeItem {
     @Override
     public void setData(Map<String, String> dataMap, int position) {
         super.setData(dataMap, position);
+        if (mDataSetDelegate != null) {
+            mDataSetDelegate.onSetData(dataMap);
+            return;
+        }
         if (mDataMap == null)
             return;
         if (mIsAd) {
@@ -178,6 +185,10 @@ public class HomeRecipeItem extends HomeItem {
     @Override
     protected void resetData() {
         super.resetData();
+        if (mDataSetDelegate != null) {
+            mDataSetDelegate.onResetData();
+            return;
+        }
         mIsVideo = false;
         mIsVip = false;
         MarginLayoutParams containerParams = (MarginLayoutParams) mContainer.getLayoutParams();
@@ -197,5 +208,9 @@ public class HomeRecipeItem extends HomeItem {
         mVideoContainer.setVisibility(View.GONE);
         mLayerView.setVisibility(View.GONE);
         mContainer.setVisibility(View.GONE);
+    }
+
+    public void setDataDelegate(IDataSetDelegate<Map<String, String>> delegate) {
+        mDataSetDelegate = delegate;
     }
 }

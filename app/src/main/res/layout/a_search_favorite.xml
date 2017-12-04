@@ -47,7 +47,7 @@
                     android:layout_marginLeft="@dimen/dp_9"
                     android:layout_marginRight="@dimen/dp_3"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/icon_favorite_search_fake"/>
+                    android:src="@drawable/icon_favorite_search_fake_edit"/>
 
                 <EditText
                     android:id="@+id/ed_search_main"

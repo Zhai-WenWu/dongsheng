@@ -69,7 +69,7 @@
             android:id="@+id/line_1"
             android:layout_width="@dimen/dp_4"
             android:layout_height="match_parent"
-            android:background="#ececec" />
+            android:background="#fffffe" />
 
         <ImageView
             android:id="@+id/quan_iv_img_2"
@@ -86,7 +86,7 @@
             android:id="@+id/line_2"
             android:layout_width="@dimen/dp_4"
             android:layout_height="match_parent"
-            android:background="#ececec" />
+            android:background="#fffffe" />
 
         <ImageView
             android:id="@+id/quan_iv_img_3"
