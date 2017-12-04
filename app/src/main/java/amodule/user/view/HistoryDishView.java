@@ -1,8 +1,10 @@
 package amodule.user.view;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.RelativeLayout;
@@ -15,12 +17,15 @@ import com.xh.view.HButtonView;
 import com.xh.view.TitleMessageView;
 import com.xiangha.R;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import acore.override.activity.base.BaseActivity;
 import acore.override.adapter.AdapterSimple;
+import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.dish.activity.DetailDish;
@@ -102,6 +107,8 @@ public class HistoryDishView extends HistoryView {
                     Intent intent = new Intent(mContext, DetailDish.class);
                     intent.putExtra("code", mData.get(position).get("code"));
                     intent.putExtra("img", mData.get(position).get("img"));
+                    intent.putExtra("name", mData.get(position).get("name"));
+                    intent.putExtra("dishInfo", getDishInfo(mData.get(position)));
                     mContext.startActivity(intent);
                 }
             }
@@ -134,6 +141,30 @@ public class HistoryDishView extends HistoryView {
                     return true;
                 }
             });
+    }
+
+    private String getDishInfo(Map<String,String> data) {
+        if (data == null || data.isEmpty())
+            return "";
+        String info = data.get("info");
+        try{
+            JSONObject dishInfoJson = new JSONObject();
+            dishInfoJson.put("code",data.get("code"));
+            dishInfoJson.put("name",data.get("name"));
+            dishInfoJson.put("favorites",data.get("favorites"));
+            dishInfoJson.put("info", TextUtils.isEmpty(info) ? "" : info);
+            JSONObject customerJson = new JSONObject();
+            Map<String,String> userInfo = StringManager.getFirstMap(data.get("customer"));
+            customerJson.put("customerCode",userInfo.get("code"));
+            customerJson.put("nickName",userInfo.get("nickName"));
+            customerJson.put("info",userInfo.get("info"));
+            customerJson.put("img",userInfo.get("img"));
+            dishInfoJson.put("customer",customerJson);
+            return Uri.encode(dishInfoJson.toString());
+        }catch (Exception e){
+            e.printStackTrace();
+            return "";
+        }
     }
 
     @Override

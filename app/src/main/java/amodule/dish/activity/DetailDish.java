@@ -352,6 +352,8 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         needSaveDishInfo.put("allClick",map.get("allClick"));
         needSaveDishInfo.put("nickName",StringManager.getFirstMap(map.get("customer")).get("nickName"));
         needSaveDishInfo.put("favorites",map.get("favorites"));
+        needSaveDishInfo.put("customer", map.get("customer"));
+        needSaveDishInfo.put("info", map.get("info"));
         saveHistoryToDB();
     }
 
