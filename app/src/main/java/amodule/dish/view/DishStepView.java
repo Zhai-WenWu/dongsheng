@@ -149,7 +149,7 @@ public class DishStepView extends ItemBaseView {
      * gif不进行显示
      */
     public void stopGif(){
-        itemGifHint.setVisibility(View.GONE);
+        itemGifHint.setVisibility(View.VISIBLE);
         itemImg1.setVisibility(View.VISIBLE);
     }
 
@@ -181,6 +181,7 @@ public class DishStepView extends ItemBaseView {
         if(!TextUtils.isEmpty(gifUrl)){
             if(itemGif.getTag() == null)
                 itemGif.setTag(TAG_ID, gifUrl);
+            if(callback!=null)callback.onGifPlayClick();
             Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.loading_anim);
             loadProgress.startAnimation(animation);
             loadProgress.setVisibility(VISIBLE);
@@ -258,5 +259,6 @@ public class DishStepView extends ItemBaseView {
     public interface StepViewCallBack{
         public void getHeight(String height);
         public void onClick();
+        public void onGifPlayClick();
     }
 }

@@ -32,6 +32,7 @@ import acore.tools.Tools;
 import acore.widget.rvlistview.RvListView;
 import amodule.dish.adapter.AdapterDishRvListView;
 import amodule.dish.db.DataOperate;
+import amodule.dish.view.DishStepView;
 import amodule.dish.view.manager.DetailDishDataManager;
 import amodule.dish.view.manager.DetailDishViewManager;
 import amodule.main.Main;
@@ -157,6 +158,19 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
                 intent.putExtra("index", position);
                 intent.putExtra("key", tongjiId);
                 DetailDish.this.startActivity(intent);
+            }
+
+            @Override
+            public void onGifClickPosition(int position) {
+                int length= rvListview.getChildCount();
+                if(length>0){
+                    for(int i=0;i<length;i++){
+                        if(position!=i) {
+                            View itemView = rvListview.getChildAt(i);
+                            if(itemView instanceof DishStepView)((DishStepView)itemView).stopGif();
+                        }
+                    }
+                }
             }
         });
     }

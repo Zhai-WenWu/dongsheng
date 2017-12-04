@@ -17,12 +17,12 @@
         android:id="@+id/module_more"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dp_30"
+        android:layout_marginTop="@dimen/dp_35"
         android:layout_alignParentRight="true"
         android:paddingRight="@dimen/dp_20"
         android:text="查看更多"
-        android:textColor="#333333"
-        android:textSize="@dimen/dp_16" />
+        android:textColor="#999999"
+        android:textSize="@dimen/dp_13" />
 
     <acore.widget.rvlistview.RvHorizatolListView
         android:id="@+id/rvHorizatolListView"
