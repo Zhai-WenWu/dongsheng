@@ -6,11 +6,11 @@
 
 package acore.override.activity.base;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -50,7 +50,7 @@ import third.share.BarShare;
 
 import static acore.tools.Tools.getApiSurTime;
 
-public class BaseActivity extends Activity {
+public class BaseActivity extends AppCompatActivity {
 	public RelativeLayout rl;
 	protected int level = 5;
 	public BarShare barShare;
