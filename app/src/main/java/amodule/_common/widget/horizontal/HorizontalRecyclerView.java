@@ -29,6 +29,7 @@ import amodule._common.widget.baseview.BaseSubTitleView;
 import amodule.home.adapter.HorizontalAdapter1;
 import amodule.home.adapter.HorizontalAdapter2;
 import amodule.home.adapter.HorizontalAdapter3;
+import amodule.home.viewholder.XHBaseRvViewHolder;
 import amodule.main.activity.MainHome;
 
 import static amodule._common.helper.WidgetDataHelper.KEY_PARAMETER;
@@ -126,10 +127,16 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,
             mRecyclerView.setLayoutManager(layoutManager);
             mRecyclerView.setAdapter(mRecyclerAdapter);
             mRecyclerView.setOnItemClickListener((view, holder, position) -> {
-                String url = list.get(position).get(WidgetDataHelper.KEY_URL);
-                AppCommon.openUrl((Activity)HorizontalRecyclerView.this.getContext(), url, true);
-                if(!TextUtils.isEmpty(id) && !TextUtils.isEmpty(twoLevel)){
-                    XHClick.mapStat(getContext(),id,twoLevel,threeLevel+position);
+                if (holder != null && holder instanceof XHBaseRvViewHolder) {
+                    XHBaseRvViewHolder viewHolder = (XHBaseRvViewHolder) holder;
+                    Map<String, String> data = viewHolder.getData();
+                    if (data == null || data.isEmpty())
+                        return;
+                    String url = data.get(WidgetDataHelper.KEY_URL);
+                    AppCommon.openUrl((Activity)HorizontalRecyclerView.this.getContext(), url, true);
+                    if(!TextUtils.isEmpty(id) && !TextUtils.isEmpty(twoLevel)){
+                        XHClick.mapStat(getContext(),id,twoLevel,threeLevel+position);
+                    }
                 }
             });
             mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {

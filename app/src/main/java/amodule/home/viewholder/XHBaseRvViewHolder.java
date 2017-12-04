@@ -30,14 +30,14 @@ import static android.view.View.GONE;
 
 public class XHBaseRvViewHolder extends RvBaseViewHolder<Map<String, String>> {
 
-
+    private Map<String, String> mDataMap;
     public XHBaseRvViewHolder(@NonNull View itemView) {
         super(itemView);
     }
 
     @Override
     public void bindData(int position, @Nullable Map<String, String> data) {
-
+        mDataMap = data;
     }
 
     protected void setViewImage(final ImageView v, String value) {
@@ -105,5 +105,9 @@ public class XHBaseRvViewHolder extends RvBaseViewHolder<Map<String, String>> {
         wh[0] = (int) w;
         wh[1] = (int) (w / originalW * originalH);
         return wh;
+    }
+
+    public Map<String, String> getData() {
+        return mDataMap;
     }
 }

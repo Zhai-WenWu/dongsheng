@@ -48,6 +48,7 @@ public class ViewHolder2 extends XHBaseRvViewHolder {
 
     @Override
     public void bindData(int position, @Nullable Map<String, String> data) {
+        super.bindData(position, data);
         if (mItemView == null || data == null || data.isEmpty())
             return;
         setViewImage(mImageView1, data.get("img"));
