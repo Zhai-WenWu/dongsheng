@@ -187,7 +187,7 @@ public class DetailDishDataManager {
     /**
      * 请求问答数据
      */
-    private void reqQAData(){
+    public void reqQAData(){
         String params = "dishCode=" + dishCode;
         //获取帖子数据
         ReqEncyptInternet.in().doEncypt(StringManager.API_MAIN8_QAINFO,getOtherCode(params), new InternetCallback(mContext) {
@@ -214,7 +214,7 @@ public class DetailDishDataManager {
     /**
      * 公共接口数据
      */
-    private void reqPublicData(){
+    public void reqPublicData(){
         String params = "dishCode=" + dishCode;
         //获取点赞数据
         ReqEncyptInternet.in().doEncypt(StringManager.API_MAIN8_RELATIONBYCODE, getOtherCode(params), new InternetCallback(mContext) {

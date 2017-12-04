@@ -324,7 +324,6 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         if (mShouldInitCling)
             ClingControl.getInstance(this).onNewIntent(intent);
     }
-
     public void refresh() {
         if(detailDishViewManager!=null)detailDishViewManager.refresh();
     }
@@ -392,11 +391,12 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
     public void notify(String name, Object sender, Object data) {
         switch (name){
             case ObserverManager.NOTIFY_LOGIN://登陆
-
-                break;
             case ObserverManager.NOTIFY_FOLLOW://关注
+                if(detailDishDataManager!=null)detailDishDataManager.reqPublicData();
                 break;
             case ObserverManager.NOTIFY_PAYFINISH://支付
+                if(detailDishDataManager!=null)detailDishDataManager.reqPublicData();
+                if(detailDishDataManager!=null)detailDishDataManager.reqQAData();
                 break;
         }
     }
