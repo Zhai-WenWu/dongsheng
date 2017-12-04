@@ -161,10 +161,11 @@ public class DishHeaderViewNew extends LinearLayout {
             String selfVideo = videoMap.get("video");
             String img = videoMap.get("img");
             String type = videoMap.get("type");
+            if(isAutoPaly)isAutoPaly = "2".equals(videoMap.get("autoPlay"));
 
             if ("2".equals(type) && !TextUtils.isEmpty(selfVideo) && !"[]".equals(selfVideo)) {
                 if (!setSelfVideo(title, selfVideo, img, permissionMap))
-                    Toast.makeText(context, "视频播放失败222", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "视频播放失败", Toast.LENGTH_SHORT).show();
             } else {
                 if(isLoadImg) {
                     handlerImage(img);

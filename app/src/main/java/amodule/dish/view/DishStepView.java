@@ -71,6 +71,13 @@ public class DishStepView extends ItemBaseView {
         itemGifHint = (ImageView) findViewById(R.id.dish_step_gif_hint);
     }
 
+    /**
+     * 隐藏边距
+     */
+    public void isDistance(boolean isShow){
+        findViewById(R.id.step_distance).setVisibility(isShow?View.VISIBLE:View.GONE);
+        itemText1.setVisibility(isShow?View.VISIBLE:View.GONE);
+    }
     public void setData(Map<String, String> maps, StepViewCallBack stepViewCallBack, int position) {
         this.map = maps;
         imgWidth=Tools.getPhoneWidth()-Tools.getDimen(context,R.dimen.dp_40);

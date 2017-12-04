@@ -200,7 +200,12 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
                 detailDishViewManager.handlerBannerView(list);
                 break;
             case DetailDishDataManager.DISH_DATA_STEP://步骤
-                if(list!=null&&list.size()>0&&!TextUtils.isEmpty(list.get(0).get("list")))maplist.addAll(StringManager.getListMapByJson(list.get(0).get("list")));
+                if(list!=null&&list.size()>0&&!TextUtils.isEmpty(list.get(0).get("list"))){
+                    Map<String,String> mapTemp = list.get(0);
+                    maplist.addAll(StringManager.getListMapByJson(mapTemp.get("list")));
+                    adapterDishRvListView.setShowDistance(mapTemp.containsKey("isCourseDish")&&"2".equals(mapTemp.get("isCourseDish")));
+//                    adapterDishRvListView.setShowDistance(true);
+                }
                 detailDishViewManager.handlerStepView(list);
                 break;
             case DetailDishDataManager.DISH_DATA_TIE://帖子

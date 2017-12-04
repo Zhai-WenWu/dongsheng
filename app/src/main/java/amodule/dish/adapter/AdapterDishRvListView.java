@@ -16,8 +16,8 @@ import amodule.dish.view.DishStepView;
  * 菜谱详情页面Adapter
  */
 public class AdapterDishRvListView extends RvBaseAdapter<Map<String,String>>{
-
     private ItemOnClickCallBack clickCallBack;
+    private boolean isShowDistance = false;
     public AdapterDishRvListView(Context context, @Nullable List<Map<String, String>> data) {
         super(context, data);
     }
@@ -29,6 +29,9 @@ public class AdapterDishRvListView extends RvBaseAdapter<Map<String,String>>{
 
     public void setClickCallBack(ItemOnClickCallBack itemOnClickCallBack){
         this.clickCallBack= itemOnClickCallBack;
+    }
+    public void setShowDistance(boolean isShowDistance){
+        this.isShowDistance= isShowDistance;
     }
     @Override
     public int getItemViewType(int position) {
@@ -49,15 +52,15 @@ public class AdapterDishRvListView extends RvBaseAdapter<Map<String,String>>{
                 }
                 @Override
                 public void onClick() {
-                    Log.i("xianghaTag","position::"+position);
                     clickCallBack.onClickPosition(position);
                 }
-
                 @Override
                 public void onGifPlayClick() {
                     clickCallBack.onGifClickPosition(position);
                 }
             },position);
+
+            if(isShowDistance)stepView.isDistance(position == mData.size()-1);
         }
     }
     public interface ItemOnClickCallBack{
