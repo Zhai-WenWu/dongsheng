@@ -124,6 +124,8 @@ public class BannerView extends Banner implements IBindMap, IStatictusData,ISave
                         .load(data.get("img"))
                         .asBitmap()
                         .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                        .placeholder(R.drawable.i_nopic)
+                        .error(R.drawable.i_nopic)
                         .into(new SubBitmapTarget() {
                             @Override
                             public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
@@ -209,7 +211,7 @@ public class BannerView extends Banner implements IBindMap, IStatictusData,ISave
                                 sendAdMessage(adStr);
                             }),
                     XHActivityManager.getInstance().getCurrentActivity(),
-                    "wz_wz");
+                    "sy_banner");
         }
     }
 
