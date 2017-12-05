@@ -285,7 +285,6 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
             @Override
             public void onFailed() {
                 if (!ToolsDevice.isNetworkAvailable(MainHomePage.this)) {
-                    //TODO
                     loadManager.changeMoreBtn(mViewContrloer.getRvListView(),
                             ReqInternet.REQ_OK_STRING,
                             LoadManager.FOOTTIME_PAGE,

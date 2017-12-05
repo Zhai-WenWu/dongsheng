@@ -39,7 +39,7 @@ import aplug.basic.XHConf;
 import static acore.tools.StringManager.api_getVideoList;
 
 /**
- * Description : //TODO
+ * Description :
  * PackageName : amodule.dish.view
  * Created on 2017/12/2 11:47.
  * Author : mrtrying
