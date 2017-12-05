@@ -161,7 +161,7 @@ public class DishHeaderViewNew extends LinearLayout {
             String selfVideo = videoMap.get("video");
             String img = videoMap.get("img");
             String type = videoMap.get("type");
-            if(isAutoPaly)isAutoPaly = "2".equals(videoMap.get("autoPlay"));
+            if(isAutoPaly)isAutoPaly = "2".equals(videoMap.get("isAutoPlay"));
 
             if ("2".equals(type) && !TextUtils.isEmpty(selfVideo) && !"[]".equals(selfVideo)) {
                 if (!setSelfVideo(title, selfVideo, img, permissionMap))
@@ -195,6 +195,7 @@ public class DishHeaderViewNew extends LinearLayout {
                         && mVideoPlayerController != null) {
                     mVideoPlayerController.setShowAd(true);
                 }
+                Log.i("xianghaTag","isAutoPaly::"+isAutoPaly+"::::mVideoPlayerController：："+mVideoPlayerController);
                 if (isAutoPaly && mVideoPlayerController != null)
                     mVideoPlayerController.setOnClick();
             }
