@@ -48,6 +48,8 @@ import amodule.dish.view.DishVipView;
 import third.cling.ui.ClingOptionView;
 import third.video.VideoPlayerController;
 
+import static amodule.dish.activity.DetailDish.startTime;
+
 /**
  * 当前只处理View的拼装
  * 不能牵扯如何业务逻辑处理----因为当前页面业务确定，采用直接数据指向方法（不抽象不模糊）
@@ -100,7 +102,8 @@ public class DetailDishViewManager {
         dishTitleViewControl.initView(activity);
         dishTitleViewControl.setstate(state);
         initTitle();
-
+        long endtime1= System.currentTimeMillis();
+        Log.i("xianghaTag","DetailDishViewManager::时间1：："+(endtime1-startTime));
         dishHoverViewControl = new DishHoverViewControl(activity);
         dishHoverViewControl.initView();
 
@@ -123,6 +126,8 @@ public class DetailDishViewManager {
                     mClingClickListener.onClick(v);
             }
         });
+        long endtime2= System.currentTimeMillis();
+        Log.i("xianghaTag","DetailDishViewManager::时间2：："+(endtime2-startTime));
         dishVipView = new DishVipView(mAct);
         dishVipView.setVisibility(View.GONE);
         //用户信息和菜谱基础信息
@@ -153,14 +158,22 @@ public class DetailDishViewManager {
         noStepView.setVisibility(View.GONE);
         layoutHeader.addView(textStep);
         layoutHeader.addView(noStepView);
+        long endtime3= System.currentTimeMillis();
+        Log.i("xianghaTag","DetailDishViewManager::时间3：："+(endtime3-startTime));
         dishQAView = new DishQAView(mAct);
         dishQAView.setVisibility(View.GONE);
+        long endtime8= System.currentTimeMillis();
+        Log.i("xianghaTag","DetailDishViewManager::时间8：："+(endtime8-startTime));
+
         //foot
         dishExplainView = new DishExplainView(mAct);
         dishExplainView.setVisibility(View.GONE);
+        long endtime7= System.currentTimeMillis();
+        Log.i("xianghaTag","DetailDishViewManager::时间7：："+(endtime7-startTime));
         dishRecommedAndAdView= new DishRecommedAndAdView(mAct);
         dishRecommedAndAdView.setVisibility(View.GONE);
-
+        long endtime6= System.currentTimeMillis();
+        Log.i("xianghaTag","DetailDishViewManager::时间6：："+(endtime6-startTime));
         layoutFooter.addView(dishExplainView);
         layoutFooter.addView(dishQAView);
         RelativeLayout layout= new RelativeLayout(mAct);
@@ -169,9 +182,13 @@ public class DetailDishViewManager {
         layout.setLayoutParams(layoutParams);
         layoutFooter.addView(dishRecommedAndAdView);
         layoutFooter.addView(layout);
+        long endtime5= System.currentTimeMillis();
+        Log.i("xianghaTag","DetailDishViewManager::时间5：："+(endtime5-startTime));
         listView.addHeaderView(dishHeaderViewNew);
         listView.addHeaderView(layoutHeader);
         listView.addFooterView(layoutFooter);
+        long endtime4= System.currentTimeMillis();
+        Log.i("xianghaTag","DetailDishViewManager::时间4：："+(endtime4-startTime));
         listView.setVisibility(View.VISIBLE);
         setListViewListener();
     }
@@ -316,19 +333,26 @@ public class DetailDishViewManager {
                 textStep.setText(map.get("title"));
             }else textStep.setVisibility(View.GONE);
             if("1".equals(map.get("isShow"))) {
+                if("2".equals(map.get("isCourseDish"))){
+                    textStep.setVisibility(View.GONE);
+                    return;
+                }
                 textStep.setPadding(Tools.getDimen(mAct, R.dimen.dp_20), Tools.getDimen(mAct, R.dimen.dp_35), 0, 0);
                 noStepView.setVisibility(View.VISIBLE);
                 ((TextView) noStepView.findViewById(R.id.dish_no_step_tv)).setText(map.get("promptMsg"));
             }
 
         }
-
         textStep.setVisibility(View.VISIBLE);
     }
     /**
      * 处理小贴士信息
      */
     public void handlerExplainView(Map<String,String> map) {
+        if(dishExplainView!=null){
+            dishExplainView.setVisibility(View.VISIBLE);
+            dishExplainView.setAdData();
+        }
         if(dishExplainView!=null && map!=null && !TextUtils.isEmpty(map.get("remark"))){
             dishExplainView.setVisibility(View.VISIBLE);
             dishExplainView.setData(map);
@@ -349,7 +373,7 @@ public class DetailDishViewManager {
     public void handlerQAView(ArrayList<Map<String, String>> list){
         if(dishQAView!=null){
             Map<String,String> map= list.get(0);
-            if(!map.containsKey("count")||TextUtils.isEmpty(map.get("count"))||Integer.parseInt(map.get("count"))<=0)return;
+            if(!map.containsKey("list")||TextUtils.isEmpty(map.get("list"))||"[]".equals(map.get("list")))return;
             dishQAView.setData(list);
             dishQAView.setVisibility(View.VISIBLE);
         }

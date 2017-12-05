@@ -36,9 +36,10 @@ public class DishExplainView extends ItemBaseView {
         super.init();
         mAdLayout = (LinearLayout)findViewById(R.id.a_dish_detail_ad);
         dishAdDataView = new DishAdDataViewNew(context,R.layout.view_dish_tips_ad_layout_distance);
+    }
+    public void setAdData(){
         dishAdDataView.getRequest(XHActivityManager.getInstance().getCurrentActivity(), mAdLayout);
     }
-
     public void setData(final Map<String,String> maps){
         TextView explain_content_tv= (TextView) findViewById(R.id.explain_content_tv);
         if(maps.containsKey("remark")&& !TextUtils.isEmpty(maps.get("remark"))){
