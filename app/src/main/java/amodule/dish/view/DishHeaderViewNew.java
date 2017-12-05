@@ -191,7 +191,6 @@ public class DishHeaderViewNew extends LinearLayout {
             public void callBack(Map<String, String> maps) {
                 String temp = maps.get(AdPlayIdConfig.DISH_MEDIA);
                 mapAd = StringManager.getFirstMap(temp);
-                Log.i("tzy", "needVideoControl time = " + System.currentTimeMillis());
                 if (mapAd != null && mapAd.size() > 0
                         && mVideoPlayerController != null) {
                     mVideoPlayerController.setShowAd(true);
