@@ -40,21 +40,9 @@ dependencies {
     compile 'com.qiyukf.unicorn:unicorn:3.10.0'
     compile project(':gsyVideoPlayer-java')
     compile project(':xh_dialog')
-    //Cling related-------start
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    // Cling library
-    compile 'org.fourthline.cling:cling-core:2.1.1'
-    compile 'org.fourthline.cling:cling-support:2.1.1'
-    // Jetty library
-    compile 'org.eclipse.jetty:jetty-server:8.1.12.v20130726'
-    compile 'org.eclipse.jetty:jetty-servlet:8.1.12.v20130726'
-    compile 'org.eclipse.jetty:jetty-client:8.1.12.v20130726'
-    //Cling related-------end
+    compile project(':cling_lib')
     //Java8的stream API第三方兼容包
     compile 'com.annimon:stream:1.0.3'
-
 }
 
 android {
@@ -67,7 +55,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 21
         versionCode 213
-        versionName "5.7.5.8"
+        versionName "5.7.5.10"
         // dex突破65535的限制
         multiDexEnabled true
         //GrowingIO
@@ -93,8 +81,8 @@ android {
             keyAlias 'caipu'
             keyPassword 'XH.comCaipu'
 //            storeFile file('F:/XH_Work/WorkSpace/Project/keystore/xiangha.keystore')
-//            storeFile file('D:/android_workspace/xiangha.keystore')
-            storeFile file('E:/keystore/xiangha.keystore')
+            storeFile file('D:/android_workspace/xiangha.keystore')
+//            storeFile file('E:/keystore/xiangha.keystore')
 
 //            storeFile file('E:/XHWork/xiangha/keystore/xiangha.keystore')
 //            storeFile file('/Users/tanzeyu/xiangha.keystore')
