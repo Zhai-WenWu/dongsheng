@@ -195,7 +195,6 @@ public class DishHeaderViewNew extends LinearLayout {
                         && mVideoPlayerController != null) {
                     mVideoPlayerController.setShowAd(true);
                 }
-                Log.i("xianghaTag","isAutoPaly::"+isAutoPaly+"::::mVideoPlayerController：："+mVideoPlayerController);
                 if (isAutoPaly && mVideoPlayerController != null)
                     mVideoPlayerController.setOnClick();
             }

@@ -238,7 +238,7 @@ public class VideoPlayerController {
             @Override
             public void mobileConnected() {
                 if(!"1".equals(FileManager.loadShared(mContext,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI).toString())){
-                    if(isNetworkDisconnect){
+                    if(!isNetworkDisconnect){
                         removeTipView();
                         if(view_Tip==null){
                             initView(mContext);

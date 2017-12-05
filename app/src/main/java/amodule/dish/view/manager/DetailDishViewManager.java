@@ -380,7 +380,7 @@ public class DetailDishViewManager {
         if(dishHeaderViewNew!=null)dishHeaderViewNew.onResume();
     }
     public void onPause(){
-
+        if(dishHeaderViewNew!=null)dishHeaderViewNew.onPause();
     }
     public void onDestroy() {
         if(dishHeaderViewNew!=null)dishHeaderViewNew.onDestroy();
