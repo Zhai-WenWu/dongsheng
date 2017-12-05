@@ -1,6 +1,8 @@
 package amodule.main.activity;
 
+import android.content.IntentFilter;
 import android.graphics.PixelFormat;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -11,6 +13,7 @@ import com.xiangha.R;
 
 import java.util.Map;
 
+import acore.broadcast.ConnectionChangeReceiver;
 import acore.logic.AppCommon;
 import acore.logic.SpecialWebControl;
 import acore.logic.XHClick;
@@ -56,6 +59,8 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
 
     protected long startTime = -1;//开始的时间戳
 
+    private ConnectionChangeReceiver mReceiver;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         mViewContrloer = new HomeViewControler(this);
@@ -71,6 +76,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
         initPostTime();
         //注册通知
         ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_VIPSTATE_CHANGED);
+        registerConnectionReceiver();
     }
 
     //初始化
@@ -99,6 +105,35 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
         mHomeAdapter = new HomeAdapter(this, mDataControler.getData(), mDataControler.getAdControl());
         mHomeAdapter.setHomeModuleBean(mDataControler.getHomeModuleBean());
         mHomeAdapter.setViewOnClickCallBack(isOnClick -> refresh());
+
+
+    }
+
+    private void registerConnectionReceiver(){
+        mReceiver = new ConnectionChangeReceiver(new ConnectionChangeReceiver.ConnectionChangeListener() {
+            @Override
+            public void disconnect() {
+                if(null != mViewContrloer){
+                    mViewContrloer.showNetworkTip();
+                }
+            }
+
+            @Override
+            public void wifi() {
+                if(null != mViewContrloer){
+                    mViewContrloer.hindNetworkTip();
+                }
+            }
+
+            @Override
+            public void mobile() {
+                if(null != mViewContrloer){
+                    mViewContrloer.hindNetworkTip();
+                }
+            }
+        });
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(mReceiver, filter);
     }
 
     private void initPostTime() {
@@ -245,12 +280,12 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
 
             @Override
             public void onSuccess() {
-
             }
 
             @Override
             public void onFailed() {
                 if (!ToolsDevice.isNetworkAvailable(MainHomePage.this)) {
+                    //TODO
                     loadManager.changeMoreBtn(mViewContrloer.getRvListView(),
                             ReqInternet.REQ_OK_STRING,
                             LoadManager.FOOTTIME_PAGE,
@@ -285,6 +320,9 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
     protected void onDestroy() {
         super.onDestroy();
         ObserverManager.getInstence().unRegisterObserver(this);
+        if(mReceiver != null){
+            unregisterReceiver(mReceiver);
+        }
     }
 
     private boolean mNeedRefCurrFm;

@@ -23,7 +23,6 @@ dependencies {
         exclude group: 'org.eclipse.jetty', module: 'jetty-util'
     })
     //Cling related-------end
-    compile files('libs/rt.jar')
 }
 
 android {

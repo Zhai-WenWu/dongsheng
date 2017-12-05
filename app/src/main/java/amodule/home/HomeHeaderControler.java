@@ -31,7 +31,7 @@ public class HomeHeaderControler implements ISaveStatistic {
 
     private LinearLayout mFeedLayout;
 
-    private TextView mFeedTitle, mTipMessage;
+    private TextView mFeedTitle;
 
     private WidgetVerticalLayout[] mLayouts = new WidgetVerticalLayout[6];
 
@@ -55,7 +55,6 @@ public class HomeHeaderControler implements ISaveStatistic {
 
         mFeedHeaderView = header.findViewById(R.id.a_home_feed_title);
         mFeedTitle = (TextView) header.findViewById(R.id.feed_title);
-        mTipMessage = (TextView) header.findViewById(R.id.tip_message);
         mLine = header.findViewById(R.id.line);
         mFeedLayout = (LinearLayout) header.findViewById(R.id.feed_title_layout);
     }
@@ -79,7 +78,7 @@ public class HomeHeaderControler implements ISaveStatistic {
 
         if(onLayoutChangeListener == null){
             onLayoutChangeListener = (v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
-                hasHeaderData = mHeaderView.getHeight() - mTipMessage.getHeight() > mFeedHeaderView.getHeight();
+                hasHeaderData = mHeaderView.getHeight() > mFeedHeaderView.getHeight();
                 int needVisibility = (hasFeedData && hasHeaderData) ? View.VISIBLE : View.GONE;
                 if(needVisibility != mFeedHeaderView.getVisibility()){
                     mFeedHeaderView.setVisibility(needVisibility);
@@ -113,8 +112,4 @@ public class HomeHeaderControler implements ISaveStatistic {
         WidgetUtility.setTextToView(mFeedTitle, text);
     }
 
-    @NonNull
-    public TextView getTipMessage() {
-        return mTipMessage;
-    }
 }

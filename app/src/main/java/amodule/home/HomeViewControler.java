@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.annimon.stream.Stream;
 import com.xiangha.R;
@@ -57,6 +58,10 @@ public class HomeViewControler {
     //feed头部view
     private View mHeaderView;
 
+    private TextView mTipMessage;
+
+    private View mNetworkTip;
+
     private int scrollDataIndex = -1;//滚动数据的位置
 
     @SuppressLint("InflateParams")
@@ -82,6 +87,8 @@ public class HomeViewControler {
             mBuoy.setClickCallback(() -> XHClick.mapStat(mActivity, MainHomePage.STATICTUS_ID_PULISH, "首页右侧侧边栏浮动图标", ""));
         }, 4000);
 
+        mTipMessage = (TextView) mActivity.findViewById(R.id.tip_message);
+        initNetworkTip();
         mRefreshLayout = (PtrClassicFrameLayout) mActivity.findViewById(R.id.refresh_list_view_frame);
         mRefreshLayout.disableWhenHorizontalMove(true);
         mRvListView = (RvListView) mActivity.findViewById(R.id.rvListview);
@@ -135,7 +142,7 @@ public class HomeViewControler {
 //            mHeaderControler.setVisibility(false);
             return;
         }
-        if(isShowCache){
+        if (isShowCache) {
             Stream.of(data).forEach(map -> {
                 Map<String, String> temp = StringManager.getFirstMap(map.get(WidgetDataHelper.KEY_WIDGET_DATA));
                 map.put("cache", "2".equals(temp.get("appFixed")) ? "2" : "1");
@@ -178,8 +185,6 @@ public class HomeViewControler {
         }
     }
 
-    private TextView mTipMessage;
-
     public void setTipMessage() {
         OnlineConfigControler.getInstance().getConfigByKey(
                 OnlineConfigControler.KEY_HOMENOTICE,
@@ -187,28 +192,12 @@ public class HomeViewControler {
         );
     }
 
-    public void refreshComplete(){
-        if(null != mRefreshLayout)
-            mRefreshLayout.refreshComplete();
-    }
-
-    public void autoRefresh(){
-        if(null != mRefreshLayout)
-            mRefreshLayout.autoRefresh();
-    }
-
+    //初始化tip数据
     private void initTipMessage(String configData) {
         Map<String, String> data = StringManager.getFirstMap(configData);
         if (null == data || data.isEmpty() || !"2".equals(data.get("isShow"))) {
-            if (null == mTipMessage) {
-                mTipMessage = mHeaderControler.getTipMessage();
-            }
             mTipMessage.setVisibility(View.GONE);
             return;
-        }
-        if (null == mTipMessage) {
-            mTipMessage = mHeaderControler.getTipMessage();
-            mTipMessage.getLayoutParams().width = ToolsDevice.getWindowPx(mActivity).widthPixels;
         }
         //获取文本
         String textValue = data.get("text");
@@ -222,17 +211,19 @@ public class HomeViewControler {
         //设置文本颜色
         String textColorValue = data.get("textColor");
         mTipMessage.setTextColor(WidgetUtility.parseColor(textColorValue));
-        mTipMessage.setOnClickListener(v -> openUri(data.get("type"),data.get("clickUrl")));
+        mTipMessage.setOnClickListener(v -> openUri(data.get("type"), data.get("clickUrl")));
         mTipMessage.setVisibility(View.VISIBLE);
+        //隐藏
+        hindNetworkTip();
     }
 
     private void openUri(String type, String clickUrl) {
-        if(TextUtils.isEmpty(clickUrl) || null == mActivity) return;
+        if (TextUtils.isEmpty(clickUrl) || null == mActivity) return;
         switch (type) {
             //原生打开H5
             case "1":
                 Intent showWeb = new Intent(mActivity, ShowWeb.class);
-                showWeb.putExtra("url",clickUrl);
+                showWeb.putExtra("url", clickUrl);
                 mActivity.startActivity(showWeb);
                 break;
             //外部吊起
@@ -250,22 +241,55 @@ public class HomeViewControler {
             //跳转其他App
             case "4":
                 //包名
-                try{
+                try {
                     Intent launchIntent = mActivity.getPackageManager().getLaunchIntentForPackage(clickUrl);
-                    if(null != launchIntent){
+                    if (null != launchIntent) {
                         mActivity.startActivity(launchIntent);
                     }
                     //通过Scheme
 //                    Intent intent = new Intent();
 //                    intent.setData(Uri.parse(clickUrl));
 //                    mActivity.startActivity(intent);
-                }catch (Exception ignored){
+                } catch (Exception ignored) {
                     ignored.printStackTrace();
                 }
                 break;
             default:
                 AppCommon.openUrl(mActivity, clickUrl, true);
         }
+    }
+
+    //初始化网络提示
+    private void initNetworkTip() {
+        mNetworkTip = mActivity.findViewById(R.id.network_tip_view);
+    }
+
+    //隐藏网络提示
+    public void hindNetworkTip() {
+        if (null != mNetworkTip) {
+            mNetworkTip.setVisibility(View.GONE);
+        }
+    }
+
+    //显示网络提示
+    public void showNetworkTip() {
+        if (null != mNetworkTip) {
+            if (mTipMessage != null && mTipMessage.getVisibility() == View.VISIBLE) {
+                hindNetworkTip();
+                return;
+            }
+            mNetworkTip.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void refreshComplete() {
+        if (null != mRefreshLayout)
+            mRefreshLayout.refreshComplete();
+    }
+
+    public void autoRefresh() {
+        if (null != mRefreshLayout)
+            mRefreshLayout.autoRefresh();
     }
 
     /*--------------------------------------------- Get&Set ---------------------------------------------*/

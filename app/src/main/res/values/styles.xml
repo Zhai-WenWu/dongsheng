@@ -61,7 +61,7 @@
         <!--Activity切换动画效果-->
     </style>
 
-    <style name="Video_Preview_Theme">
+    <style name="Video_Preview_Theme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowBackground">@color/video_preview_transparent</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowIsTranslucent">true</item>
@@ -474,6 +474,7 @@
         <item name="android:textSize">@dimen/sp_16</item>
         <item name="android:textColor">@color/c_black_text</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:includeFontPadding">false</item>
     </style>
 
     <style name="common_title_style.common_subtitle_style">
