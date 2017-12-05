@@ -20,7 +20,6 @@ import com.xh.manager.ViewManager;
 
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
-import acore.logic.load.view.LoadingView;
 import acore.override.XHApplication;
 import acore.tools.FileManager;
 import acore.tools.LogManager;
@@ -30,6 +29,7 @@ import acore.widget.LayoutScroll;
 import acore.widget.ScrollLinearListLayout;
 import acore.widget.rvlistview.RvListView;
 import acore.widget.rvlistview.adapter.RvBaseAdapter;
+import amodule.answer.view.UploadingView;
 import amodule.quan.adapter.AdapterCircle;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
@@ -533,7 +533,7 @@ public class LoadManager {
 			if (mProgressDialog != null && mProgressDialog.isShowing())
 				dismissProgress();
 			mProgressDialog = new DialogManager(mContext);
-			mProgressDialog.createDialog(new ViewManager(mProgressDialog).setView(new LoadingView(mContext).setText(title))).show();
+			mProgressDialog.createDialog(new ViewManager(mProgressDialog).setView(new UploadingView(mContext).setText(title))).noPadding().show();
 		}
 	}
 

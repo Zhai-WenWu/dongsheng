@@ -201,6 +201,7 @@ public class DishHoverViewControl implements View.OnClickListener{
      * 处理点赞点踩状态变化
      */
     private void handlerDishLikeState(String dishStatus,String likeNum){
+        if("0".equals(likeNum))likeNum="";
         if("2".equals(dishStatus)){//点赞
             mGoodImg.setImageResource(R.drawable.iv_good_good_arrow);
             mNoLikeImg.setImageResource(R.drawable.iv_bad_no_arrow);

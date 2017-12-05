@@ -84,7 +84,7 @@ public class DishSkillView extends ItemBaseView{
                     // 图片圆角和宽高适应auther_userImg
                     v.setScaleType(ImageView.ScaleType.CENTER_CROP);
 //                    v.setImageBitmap(bitmap);
-                    v.setImageBitmap(UtilImage.toRoundCorner(v.getResources(),bitmap,1, Tools.getDimen(context,R.dimen.dp_40)));
+                    v.setImageBitmap(UtilImage.toRoundCorner(v.getResources(),bitmap,1, Tools.getDimen(context,R.dimen.dp_4)));
                 }
             }
         };

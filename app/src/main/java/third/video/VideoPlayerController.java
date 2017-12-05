@@ -86,6 +86,7 @@ public class VideoPlayerController {
         GSYVideoManager.instance().canChange = true;
     }
     public VideoPlayerController(final Activity context,final ViewGroup viewGroup, String imgUrl,int type) {
+        isNetworkDisconnect="null".equals(ToolsDevice.getNetWorkSimpleType(context)) ? false : true;
         this.mContext = context;
         this.mPraentViewGroup = viewGroup;
         this.mImgUrl = imgUrl;
