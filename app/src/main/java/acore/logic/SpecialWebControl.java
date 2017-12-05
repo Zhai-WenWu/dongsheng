@@ -109,6 +109,9 @@ public class SpecialWebControl {
                 return true;
             }
         });
+        if(Tools.isDebug(context)){
+            return;
+        }
         webView.postDelayed(() -> {
             try {
                 loadUrl(webView, url, name);
