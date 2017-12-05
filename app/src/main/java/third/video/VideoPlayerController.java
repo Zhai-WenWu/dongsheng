@@ -70,6 +70,7 @@ public class VideoPlayerController {
 
     private OnClickListener mClingClickListener;
     private OnClickListener mFullScreenClickListener;
+    private OnSeekbarVisibilityListener mOnSeekbarVisibilityListener;
 
     public VideoPlayerController(Context context) {
         this.mContext = context;
@@ -106,6 +107,11 @@ public class VideoPlayerController {
                 }
                 //第一个true是否需要隐藏actionbar，第二个true是否需要隐藏statusbar
                 videoPlayer.startWindowFullscreen(context, true, true);
+            }
+        });
+        videoPlayer.setOnBottomContainerVisibilityChangeCallback(visibility -> {
+            if(mOnSeekbarVisibilityListener != null){
+                mOnSeekbarVisibilityListener.onVisibility(visibility);
             }
         });
         videoPlayer.setStandardVideoAllCallBack(new SampleListener(){
@@ -755,5 +761,13 @@ public class VideoPlayerController {
         if (videoPlayer == null)
             return -1;
         return videoPlayer.getCurrentState();
+    }
+
+    public interface OnSeekbarVisibilityListener{
+        void onVisibility(int visibility);
+    }
+
+    public void setOnSeekbarVisibilityListener(OnSeekbarVisibilityListener onSeekbarVisibilityListener) {
+        mOnSeekbarVisibilityListener = onSeekbarVisibilityListener;
     }
 }

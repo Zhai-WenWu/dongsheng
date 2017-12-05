@@ -587,6 +587,7 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
                 videoLayout.setVisibility(View.VISIBLE);
                 String imgUrl = itemMap.get("img");
                 mVideoPlayerController = new VideoPlayerController(this, videoLayout, imgUrl);
+                mVideoPlayerController.setOnSeekbarVisibilityListener(visibility -> mPointLayout.setVisibility(View.VISIBLE == visibility ? View.GONE : View.VISIBLE));
                 mVideoUrl = StringManager.getFirstMap(StringManager.getFirstMap(images.get(i).get("video")).get("video_url")).get("default_url");
                 mVideoPlayerController.setVideoUrl(mVideoUrl);
             } else {
@@ -635,11 +636,13 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
                                 mVideoPlayerController.onPause();
                             }
                         }
+                        mPointLayout.setVisibility(View.VISIBLE);
                     } else {
                         mHasInitPlayState = false;
                         if (videoCanResume()) {
                             mVideoPlayerController.onResume();
                         }
+                        mPointLayout.setVisibility(View.GONE);
                     }
                 }
             }
