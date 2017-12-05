@@ -25,7 +25,7 @@ import acore.tools.Tools;
 @SuppressLint("ResourceAsColor")
 public class AdapterSearch extends AdapterSimple {
 	public String[] searchWords;
-	public boolean markRed = true;
+	public boolean markRed = false;
 
 	public AdapterSearch(View parent, List<? extends Map<String, ?>> data, int resource, String[] from, int[] to) {
 		super(parent, data, resource, from, to);
@@ -58,9 +58,7 @@ public class AdapterSearch extends AdapterSimple {
 		} else if (searchWords == null) {
 			super.setViewText(v, text);
 		} else {
-			SpannableStringBuilder style = new SpannableStringBuilder(text);
-			if (markRed) {
-				for (String searchWord : searchWords) {
+			super.setViewText(v, text);
 //					if (textMaxWidth > 0 && v.getId() != R.id.tv_itemBurden) {
 //						v.setMaxWidth(textMaxWidth);
 //					}
@@ -80,23 +78,27 @@ public class AdapterSearch extends AdapterSimple {
 //							 }
 //						 }
 //					 }
-					for (int i = 0; i < searchWord.length(); i++) {
-						if (text.indexOf(searchWord.charAt(i)) > 0){
-							// 按搜索词逐个字标红
-							String keyWord = Character.toString(searchWord.charAt(i));
-							for (int j = text.indexOf(searchWord.charAt(i)); j < text.length(); j++) {
-								// 设置指定位置文字的颜色
-								if (keyWord.equals(Character.toString(text.charAt(j)))) {
-									String color = Tools.getColorStr(mParent.getContext(),R.color.comment_color);
-									style.setSpan(new ForegroundColorSpan(Color.parseColor(color)), j, j + 1,
-											Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
-								}
-							}
-						}
-					}
-				}
-			}
-			v.setText(style);
+					//二次注释
+//			SpannableStringBuilder style = new SpannableStringBuilder(text);
+//			if (markRed) {
+//				for (String searchWord : searchWords) {
+//					for (int i = 0; i < searchWord.length(); i++) {
+//						if (text.indexOf(searchWord.charAt(i)) > 0){
+//							// 按搜索词逐个字标红
+//							String keyWord = Character.toString(searchWord.charAt(i));
+//							for (int j = text.indexOf(searchWord.charAt(i)); j < text.length(); j++) {
+//								// 设置指定位置文字的颜色
+//								if (keyWord.equals(Character.toString(text.charAt(j)))) {
+//									String color = Tools.getColorStr(mParent.getContext(),R.color.comment_color);
+//									style.setSpan(new ForegroundColorSpan(Color.parseColor(color)), j, j + 1,
+//											Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+//								}
+//							}
+//						}
+//					}
+//				}
+//			}
+//			v.setText(style);
 		}
 	}
 }
