@@ -20,14 +20,14 @@ import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.shuyu.gsyvideoplayer.GSYVideoManager;
-import com.shuyu.gsyvideoplayer.utils.GSYVideoType;
-import com.shuyu.gsyvideoplayer.video.GSYBaseVideoPlayer;
-import com.xiangha.R;
 import com.example.gsyvideoplayer.listener.SampleListener;
+import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.GSYVideoPlayer;
+import com.shuyu.gsyvideoplayer.utils.GSYVideoType;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
+import com.xiangha.R;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -86,7 +86,6 @@ public class VideoPlayerController {
         GSYVideoManager.instance().canChange = true;
     }
     public VideoPlayerController(final Activity context,final ViewGroup viewGroup, String imgUrl,int type) {
-        isNetworkDisconnect="null".equals(ToolsDevice.getNetWorkSimpleType(context)) ? false : true;
         this.mContext = context;
         this.mPraentViewGroup = viewGroup;
         this.mImgUrl = imgUrl;
@@ -746,5 +745,15 @@ public class VideoPlayerController {
             return false;
         //视频比例大于3：4则为竖屏视频
         return videoW/videoH <= 3/4f;
+    }
+
+    /**
+     * 获取视频状态
+     * @return 返回-1表示视频播放器不存在
+     */
+    public int getPlayState() {
+        if (videoPlayer == null)
+            return -1;
+        return videoPlayer.getCurrentState();
     }
 }
