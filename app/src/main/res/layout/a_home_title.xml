@@ -7,13 +7,18 @@
 
     <amodule.home.view.HomeActivityIconView
         android:id="@+id/home_act_btn"
-        android:layout_width="@dimen/dp_52"
-        android:layout_height="match_parent"/>
+        android:layout_width="@dimen/dp_57"
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/dp_8.5"
+        android:paddingLeft="@dimen/dp_10"
+        android:paddingRight="@dimen/dp_10"
+        android:paddingTop="@dimen/dp_8.5"
+        android:scaleType="centerInside"/>
 
     <RelativeLayout
         android:id="@+id/home_search_layout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_30"
+        android:layout_height="@dimen/dp_32"
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@+id/home_publish_btn"
         android:layout_toRightOf="@+id/home_act_btn"
@@ -45,10 +50,10 @@
 
     <amodule.home.view.HomePushIconView
         android:id="@+id/home_publish_btn"
-        android:layout_width="@dimen/dp_52"
+        android:layout_width="@dimen/dp_57"
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"
-        android:paddingLeft="@dimen/dp_12"
+        android:paddingLeft="@dimen/dp_17"
         android:paddingRight="@dimen/dp_20"
         android:src="@drawable/home_pulish"/>
 
