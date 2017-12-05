@@ -1,11 +1,9 @@
 package third.cling.control;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Handler;
 import android.os.IBinder;
@@ -29,6 +27,7 @@ import third.cling.entity.IResponse;
 import third.cling.listener.BrowseRegistryListener;
 import third.cling.listener.DeviceListChangedListener;
 import third.cling.service.ClingUpnpService;
+import third.cling.service.callback.ActionCallback;
 import third.cling.service.manager.ClingManager;
 import third.cling.service.manager.DeviceManager;
 import third.cling.ui.ClingDevicesPopup;
@@ -72,7 +71,6 @@ public class ClingControl {
 
     private String mPlayUrl;
     private Handler mHandler = new InnerHandler();
-    private BroadcastReceiver mTransportStateBroadcastReceiver;
 
     /**
      * 投屏控制器
@@ -94,6 +92,7 @@ public class ClingControl {
     private boolean mServiceConnecting;
     private boolean mHasConnected;
     private boolean mConnectSucc;
+    private boolean mServiceBind;
 
     private static volatile ClingControl mInstance;
 
@@ -112,7 +111,29 @@ public class ClingControl {
 
                 ClingManager clingUpnpServiceManager = ClingManager.getInstance();
                 clingUpnpServiceManager.setUpnpService(beyondUpnpService);
-                clingUpnpServiceManager.setDeviceManager(new DeviceManager());
+                DeviceManager manager = new DeviceManager();
+                manager.setActionCallback(new ActionCallback() {
+                    @Override
+                    public void action(String action) {
+                        if (TextUtils.isEmpty(action))
+                            return;
+                        switch (action) {
+                            case Intents.ACTION_PLAYING:
+                                mHandler.sendEmptyMessage(action_play);
+                                break;
+                            case Intents.ACTION_PAUSED_PLAYBACK:
+                                mHandler.sendEmptyMessage(action_pause);
+                                break;
+                            case Intents.ACTION_STOPPED:
+                                mHandler.sendEmptyMessage(action_stop);
+                                break;
+                            case Intents.ACTION_TRANSITIONING:
+                                mHandler.sendEmptyMessage(action_transtioning);
+                                break;
+                        }
+                    }
+                });
+                clingUpnpServiceManager.setDeviceManager(manager);
 
                 clingUpnpServiceManager.getRegistry().addListener(mBrowseRegistryListener);
                 //Search on service created.
@@ -132,13 +153,16 @@ public class ClingControl {
     }
 
     public synchronized static ClingControl getInstance(Activity activity) {
-        return mInstance == null ? (mInstance = new ClingControl(activity)) : mInstance;
+        synchronized (ClingControl.class) {
+            if (mInstance == null)
+                mInstance = new ClingControl(activity);
+        }
+        return mInstance;
     }
 
     public void onCreate() {
         addListener();
         bindServices();
-        registerReceivers();
     }
 
     private void initView() {
@@ -205,11 +229,8 @@ public class ClingControl {
         Log.e(TAG, "onDestroy");
         mHandler.removeCallbacksAndMessages(null);
         // Unbind UPnP service
-        mActivity.unbindService(mUpnpServiceConnection);
-        // Unbind System service
-        //        unbindService(mSystemServiceConnection);
-        // UnRegister Receiver
-        mActivity.unregisterReceiver(mTransportStateBroadcastReceiver);
+        if (mServiceBind)
+            mActivity.unbindService(mUpnpServiceConnection);
 
         ClingManager.getInstance().destroy();
         ClingDeviceList.getInstance().destroy();
@@ -222,6 +243,7 @@ public class ClingControl {
         mServiceConnecting = false;
         mHasConnected = false;
         mConnectSucc = false;
+        mServiceBind = false;
         mInstance = null;
         mActivity = null;
     }
@@ -242,21 +264,13 @@ public class ClingControl {
     }
 
     private void bindServices() {
-        mServiceConnecting = true;
-        // Bind UPnP service
-        Intent upnpServiceIntent = new Intent(mActivity, ClingUpnpService.class);
-        mActivity.bindService(upnpServiceIntent, mUpnpServiceConnection, Context.BIND_AUTO_CREATE);
-    }
-
-    private void registerReceivers() {
-        //Register play status broadcast
-        mTransportStateBroadcastReceiver = new TransportStateBroadcastReceiver();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(Intents.ACTION_PLAYING);
-        filter.addAction(Intents.ACTION_PAUSED_PLAYBACK);
-        filter.addAction(Intents.ACTION_STOPPED);
-        filter.addAction(Intents.ACTION_TRANSITIONING);
-        mActivity.registerReceiver(mTransportStateBroadcastReceiver, filter);
+        if (!mServiceBind) {
+            mServiceConnecting = true;
+            // Bind UPnP service
+            Intent upnpServiceIntent = new Intent(mActivity, ClingUpnpService.class);
+            mActivity.bindService(upnpServiceIntent, mUpnpServiceConnection, Context.BIND_AUTO_CREATE);
+            mServiceBind = true;
+        }
     }
 
     private final class InnerHandler extends Handler {
@@ -297,30 +311,6 @@ public class ClingControl {
                     if (mClingOptionView != null)
                         mClingOptionView.onSucc();
                     break;
-            }
-        }
-    }
-
-    /**
-     * 接收状态改变信息
-     */
-    private class TransportStateBroadcastReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            Log.e(TAG, "Receive playback intent:" + action);
-            if (Intents.ACTION_PLAYING.equals(action)) {
-                mHandler.sendEmptyMessage(action_play);
-
-            } else if (Intents.ACTION_PAUSED_PLAYBACK.equals(action)) {
-                mHandler.sendEmptyMessage(action_pause);
-
-            } else if (Intents.ACTION_STOPPED.equals(action)) {
-                mHandler.sendEmptyMessage(action_stop);
-
-            } else if (Intents.ACTION_TRANSITIONING.equals(action)) {
-                mHandler.sendEmptyMessage(action_transtioning);
             }
         }
     }

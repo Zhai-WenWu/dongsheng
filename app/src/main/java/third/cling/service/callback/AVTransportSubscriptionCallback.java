@@ -25,6 +25,7 @@ import third.cling.util.Utils;
 public class AVTransportSubscriptionCallback  extends BaseSubscriptionCallback {
 
     private static final String TAG = AVTransportSubscriptionCallback.class.getSimpleName();
+    private ActionCallback mCallback;
 
     public AVTransportSubscriptionCallback(org.fourthline.cling.model.meta.Service service, Context context) {
         super(service, context);
@@ -53,23 +54,23 @@ public class AVTransportSubscriptionCallback  extends BaseSubscriptionCallback {
                 TransportState ts = transportState.getValue();
                 if (ts == TransportState.PLAYING) {
                     Log.e(TAG, "PLAYING");
-                    Intent intent = new Intent(Intents.ACTION_PLAYING);
-                    mContext.sendBroadcast(intent);
+                    if (mCallback != null)
+                        mCallback.action(Intents.ACTION_PLAYING);
                     return;
                 } else if (ts == TransportState.PAUSED_PLAYBACK) {
                     Log.e(TAG, "PAUSED_PLAYBACK");
-                    Intent intent = new Intent(Intents.ACTION_PAUSED_PLAYBACK);
-                    mContext.sendBroadcast(intent);
+                    if (mCallback != null)
+                        mCallback.action(Intents.ACTION_PAUSED_PLAYBACK);
                     return;
                 } else if (ts == TransportState.STOPPED) {
                     Log.e(TAG, "STOPPED");
-                    Intent intent = new Intent(Intents.ACTION_STOPPED);
-                    mContext.sendBroadcast(intent);
+                    if (mCallback != null)
+                        mCallback.action(Intents.ACTION_STOPPED);
                     return;
                 } else if (ts == TransportState.TRANSITIONING) { // 转菊花状态
                     Log.e(TAG, "BUFFER");
-                    Intent intent = new Intent(Intents.ACTION_TRANSITIONING);
-                    mContext.sendBroadcast(intent);
+                    if (mCallback != null)
+                        mCallback.action(Intents.ACTION_TRANSITIONING);
                     return;
                 }
             }
@@ -96,6 +97,10 @@ public class AVTransportSubscriptionCallback  extends BaseSubscriptionCallback {
             e.printStackTrace();
         }
 
+    }
+
+    public void setActionCallback(ActionCallback callback) {
+        this.mCallback = callback;
     }
 
 }

@@ -547,7 +547,7 @@ public class DetailDishViewManager {
                 case GSYVideoPlayer.CURRENT_STATE_ERROR:
                     break;
                 default:
-                    onPause();
+                    dishHeaderViewNew.onPause();
                     break;
             }
         }
@@ -558,7 +558,7 @@ public class DetailDishViewManager {
             int state = dishHeaderViewNew.getPlayState();
             switch (state) {
                 case GSYVideoPlayer.CURRENT_STATE_PAUSE:
-                    onResume();
+                    dishHeaderViewNew.onResume();
                     break;
                 default:
                     break;
