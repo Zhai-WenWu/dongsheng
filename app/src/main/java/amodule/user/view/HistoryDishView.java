@@ -151,6 +151,8 @@ public class HistoryDishView extends HistoryView {
             JSONObject dishInfoJson = new JSONObject();
             dishInfoJson.put("code",data.get("code"));
             dishInfoJson.put("name",data.get("name"));
+            dishInfoJson.put("img",data.get("img"));
+            dishInfoJson.put("type",TextUtils.equals(data.get("hasVideo"), "2") ? "2" : "1");
             dishInfoJson.put("favorites",data.get("favorites"));
             dishInfoJson.put("info", TextUtils.isEmpty(info) ? "" : info);
             JSONObject customerJson = new JSONObject();
