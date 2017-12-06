@@ -91,7 +91,6 @@ public class DishStepView extends ItemBaseView {
             itemText1.setText(Html.fromHtml(text));
             itemText1.setVisibility(View.VISIBLE);
         }else itemText1.setVisibility(View.GONE);
-
         this.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -156,6 +155,7 @@ public class DishStepView extends ItemBaseView {
      * gif不进行显示
      */
     public void stopGif(){
+        Log.i("xianghaTag","stopGif:::");
         itemGifHint.setVisibility(View.VISIBLE);
         itemImg1.setVisibility(View.VISIBLE);
     }

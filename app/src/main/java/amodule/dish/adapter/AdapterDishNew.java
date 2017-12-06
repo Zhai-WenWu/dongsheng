@@ -22,6 +22,7 @@ public class AdapterDishNew extends AdapterSimple {
     private ArrayList<Map<String,String>> data;
     private ItemOnClickCallBack clickCallBack;
     private Activity activity;
+    private boolean isShowDistance = false;
     public AdapterDishNew(View parent, List<? extends Map<String, ?>> data) {
         super(parent, data, 0, null, null);
         this.context= parent.getContext();
@@ -48,6 +49,9 @@ public class AdapterDishNew extends AdapterSimple {
         stepViewHolder.setData(map,position);
         return convertView;
     }
+    public void setShowDistance(boolean isShowDistance){
+        this.isShowDistance= isShowDistance;
+    }
     public class StepViewHolder{
         private DishStepView stepView;
 
@@ -69,14 +73,16 @@ public class AdapterDishNew extends AdapterSimple {
 
                 @Override
                 public void onGifPlayClick() {
-
+                    clickCallBack.onGifClickPosition(position);
                 }
             },position);
+            if(isShowDistance)stepView.isDistance(position == data.size()-1);
         }
     }
 
     public interface ItemOnClickCallBack{
         public void onClickPosition(int position);
+        public void onGifClickPosition(int position);
     }
 
 }

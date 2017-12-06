@@ -60,7 +60,7 @@ public class DetailDishViewManager {
     private boolean isHasVideoOnClick = false;
     private boolean isShowTitleColor=false;
     private View view_oneImage;
-    private RvListView listView;
+    private ListView listView;
     private int firstItemIndex,startY;
     private boolean isHasVideo=false,isRecored=false;
     private int wm_height;//屏幕高度
@@ -93,7 +93,7 @@ public class DetailDishViewManager {
     /**
      * 对view进行基础初始化
      */
-    public DetailDishViewManager(Activity activity, RvListView listView, String state) {
+    public DetailDishViewManager(Activity activity, ListView listView, String state) {
         wm_height = activity.getWindowManager().getDefaultDisplay().getHeight();
         mAct = activity;
         this.listView = listView;
@@ -115,7 +115,7 @@ public class DetailDishViewManager {
         }
         titleHeight = Tools.getDimen(mAct, R.dimen.dp_45);
         statusBarHeight = Tools.getStatusBarHeight(mAct);
-        headerLayoutHeight = ToolsDevice.getWindowPx(mAct).widthPixels * 9 / 16 + titleHeight + statusBarHeight;
+        headerLayoutHeight = ToolsDevice.getWindowPx(mAct).widthPixels * 9 / 16;
         //图片视频信息
         dishHeaderViewNew = new DishHeaderViewNew(mAct);
         dishHeaderViewNew.initView(mAct, headerLayoutHeight);
@@ -206,11 +206,15 @@ public class DetailDishViewManager {
      * 处理预先加载数据
      */
     public void initBeforeData(String img,String dishInfo){
-        if (dishHeaderViewNew != null&& !TextUtils.isEmpty(img))dishHeaderViewNew.setImg(img);
         if(dishAboutView != null && !TextUtils.isEmpty(dishInfo)) {
             dishAboutView.setVisibility(View.VISIBLE);
             Map<String,String> map=StringManager.getFirstMap(Uri.decode(dishInfo));
-            if(TextUtils.isEmpty(img)&&map.containsKey("img")&&!TextUtils.isEmpty(map.get("img"))&&dishHeaderViewNew!=null)dishHeaderViewNew.setImg(map.get("img"));
+            int height=0;
+            if(map.containsKey("type")&&!TextUtils.isEmpty(map.get("type"))&&"2".equals(map.get("type"))){
+                height=ToolsDevice.getWindowPx(mAct).widthPixels * 9 / 16;
+            }
+            if (dishHeaderViewNew != null&& !TextUtils.isEmpty(img))dishHeaderViewNew.setImg(img,height);
+            if(TextUtils.isEmpty(img)&&map.containsKey("img")&&!TextUtils.isEmpty(map.get("img"))&&dishHeaderViewNew!=null)dishHeaderViewNew.setImg(map.get("img"),height);
             dishAboutView.setData(map, mAct);
         }
     }
@@ -236,12 +240,8 @@ public class DetailDishViewManager {
         if("2".equals(list.get(0).get("type"))){
             isHasVideo=true;
         }
-        if(!isHasVideo){
-            mTimer = new MyTimer(handler);
-            headerLayoutHeight=ToolsDevice.getWindowPx(mAct).widthPixels *5/6;
-        }else{
-            headerLayoutHeight=ToolsDevice.getWindowPx(mAct).widthPixels * 9 / 16 + titleHeight + statusBarHeight ;
-        }
+        if(!isHasVideo)mTimer = new MyTimer(handler);
+        handlerHeight(isHasVideo);
         if (dishHeaderViewNew != null) {
             dishHeaderViewNew.setDistance(0);
             dishHeaderViewNew.setDishCallBack(new DishHeaderViewNew.DishHeaderVideoCallBack() {
@@ -257,6 +257,10 @@ public class DetailDishViewManager {
             dishHeaderViewNew.setData(list, permissionMap);
             dishVidioLayout=dishHeaderViewNew.getViewLayout();
         }
+    }
+    private void handlerHeight(boolean isvideo){
+        headerLayoutHeight=isvideo?ToolsDevice.getWindowPx(mAct).widthPixels * 9 / 16:ToolsDevice.getWindowPx(mAct).widthPixels *5/6;
+        if(dishHeaderViewNew!=null)dishHeaderViewNew.paramsLayout(headerLayoutHeight);
     }
     public void handlerLoginStatus(){
         if (dishHeaderViewNew != null)

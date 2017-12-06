@@ -82,8 +82,6 @@ public class DishHoverViewControl implements View.OnClickListener{
         this.code= dishcode;
         this.dishName = dishName;
         String temp = maps.get("likeNum");
-        Log.i("xianghaTag","temp:::"+temp);
-//        mHoverNum.setText("有用"+temp);
         handlerDishLikeState(maps.get("likeStatus"),temp);
         initStateButton(StringManager.getFirstMap(maps.get("qaButton")));
     }
@@ -168,22 +166,26 @@ public class DishHoverViewControl implements View.OnClickListener{
             @Override
             public void loaded(int i, String s, Object o) {
                 String numtext="";
-                if(i >= ReqInternet.REQ_OK_STRING){
-                    ArrayList<Map<String,String>> arrayList = StringManager.getListMapByJson(o);
-                    if(arrayList.size() > 0){
-                        numtext=arrayList.get(0).get("num");
+                if(i >= ReqInternet.REQ_OK_STRING) {
+                    Map<String, String> mapTemp = StringManager.getFirstMap(o);
+                    if (mapTemp!=null&&mapTemp.size() > 0) {
+                        numtext = mapTemp.get("num");
                     }
-                    if(isLike){//点赞
-                        if("2".equals(dishLikeStatus)){
-                            dishLikeStatus="3";
-                        }else {
-                            dishLikeStatus="2";
-                        }
-                    }else{//取消点赞
-                        if("1".equals(dishLikeStatus)){
-                            dishLikeStatus="3";
-                        }else {
-                            dishLikeStatus="1";
+                    if (mapTemp.size() > 0&&TextUtils.isEmpty(mapTemp.get("status"))) {
+                        dishLikeStatus= mapTemp.get("status");
+                    }else {
+                        if (isLike) {//点赞
+                            if ("2".equals(dishLikeStatus)) {
+                                dishLikeStatus = "3";
+                            } else {
+                                dishLikeStatus = "2";
+                            }
+                        } else {//取消点赞
+                            if ("1".equals(dishLikeStatus)) {
+                                dishLikeStatus = "3";
+                            } else {
+                                dishLikeStatus = "1";
+                            }
                         }
                     }
                 }
@@ -208,13 +210,13 @@ public class DishHoverViewControl implements View.OnClickListener{
             mNoLikeImg.setImageResource(R.drawable.iv_bad_no_arrow);
             hoverGoodImg.setImageResource(R.drawable.iv_dish_all_good);
             mHoverNum.setTextColor(Color.parseColor("#f23030"));
-            if(!TextUtils.isEmpty(likeNum)) mHoverNum.setText("有用"+likeNum);
+            mHoverNum.setText("有用"+likeNum);
         }else if("1".equals(dishStatus)){//点踩
             mNoLikeImg.setImageResource(R.drawable.iv_bad_good_arrow);
             mGoodImg.setImageResource(R.drawable.iv_good_no_arrow);
             hoverGoodImg.setImageResource(R.drawable.iv_dish_all_bad);
             mHoverNum.setTextColor(Color.parseColor("#f23030"));
-            if(!TextUtils.isEmpty(likeNum))mHoverNum.setText("没用");
+            mHoverNum.setText("没用");
         }else if("3".equals(dishStatus)){
             mGoodImg.setImageResource(R.drawable.iv_good_no_arrow);
             mNoLikeImg.setImageResource(R.drawable.iv_bad_no_arrow);
