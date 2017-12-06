@@ -34,6 +34,8 @@ public class DishExplainView extends ItemBaseView {
     @Override
     public void init() {
         super.init();
+        findViewById(R.id.tv_explain).setVisibility(View.GONE);
+        findViewById(R.id.explain_content_tv).setVisibility(View.GONE);
         mAdLayout = (LinearLayout)findViewById(R.id.a_dish_detail_ad);
         dishAdDataView = new DishAdDataViewNew(context,R.layout.view_dish_tips_ad_layout_distance);
     }
