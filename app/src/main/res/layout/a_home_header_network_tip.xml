@@ -11,7 +11,7 @@
     <ImageView
         android:id="@+id/icon"
         android:layout_width="@dimen/dp_21"
-        android:src="@drawable/icon_dishvideo_upload_fail"
+        android:src="@drawable/icon_network_tip"
         android:layout_centerVertical="true"
         android:layout_height="@dimen/dp_21"/>
 
@@ -32,6 +32,6 @@
         android:layout_height="@dimen/dp_15"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:src="@drawable/i_quan_right_arrow"/>
+        android:src="@drawable/icon_network_arrow"/>
 
 </RelativeLayout>
