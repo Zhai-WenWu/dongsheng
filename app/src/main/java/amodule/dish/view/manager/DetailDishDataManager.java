@@ -28,7 +28,7 @@ public class DetailDishDataManager {
     public final static String DISH_DATA_RELATION = "dish_relation";//菜谱公共数据接口
     public final static String DISH_DATA_RNTIC = "dish_rntic";//菜谱小技巧
     private String dishCode;//菜谱code
-    private Context mContext = XHActivityManager.getInstance().getCurrentActivity().getApplicationContext();
+    private Context mContext ;
     private String customerCode;//用户code
     //权限
     private Map<String,String> permissionMap = new HashMap<>();
@@ -45,6 +45,7 @@ public class DetailDishDataManager {
         this.courseCode= courseCode;
         this.chapterCode= chapterCode;
         this.detailAct = detailAct;
+        mContext=detailAct.getApplicationContext();
         resetData();
         reqTopInfo(true);
     }

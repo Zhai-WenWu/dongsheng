@@ -19,8 +19,6 @@
             android:id="@+id/dish_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:ellipsize="end"
             android:text="加载中"
             android:background="@color/transparent"
             android:textColor="#333333"

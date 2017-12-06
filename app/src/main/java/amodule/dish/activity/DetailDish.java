@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -29,6 +30,7 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.rvlistview.RvListView;
+import amodule.dish.adapter.AdapterDishNew;
 import amodule.dish.adapter.AdapterDishRvListView;
 import amodule.dish.db.DataOperate;
 import amodule.dish.view.DishStepView;
@@ -57,7 +59,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
     public String code, dishTitle, state,dishName;//页面开启状态所必须的数据。
     public static long startTime = 0;
     private Handler handlerScreen;
-    private RvListView rvListview;
+    private ListView listView;
     private DetailDishViewManager detailDishViewManager;//view控制器
     private DetailDishDataManager detailDishDataManager;//数据控制器
     private ArrayList<Map<String,String>> maplist = new ArrayList<>();
@@ -67,7 +69,8 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
     private RelativeLayout dredgeVipFullLayout;
     private XHWebView pageXhWebView;
     private String dishInfo = "";
-    private AdapterDishRvListView adapterDishRvListView;
+//    private AdapterDishRvListView adapterDishRvListView;
+    private AdapterDishNew adapterDishNew;
     private String courseCode;//课程分类
     private String chapterCode;//章节分类
 
@@ -163,7 +166,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
      */
     private void initView() {
         initActivity("", 2, 0, 0, R.layout.a_detail_dish);
-        rvListview = (RvListView) findViewById(R.id.rvListview);
+        listView = (ListView) findViewById(R.id.listview);
     }
     /**
      * 处理页面Ui
@@ -171,12 +174,14 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
     private void initData() {
         long endtime1= System.currentTimeMillis();
         Log.i("xianghaTag","initData::时间11：："+(endtime1-startTime));
-        adapterDishRvListView = new AdapterDishRvListView(this,maplist);
-        rvListview.setAdapter(adapterDishRvListView);
+//        adapterDishRvListView = new AdapterDishRvListView(this,maplist);
+//        rvListview.setAdapter(adapterDishRvListView);
+        adapterDishNew = new AdapterDishNew(listView,maplist);
+        listView.setAdapter(adapterDishNew);
         long endtime2= System.currentTimeMillis();
         Log.i("xianghaTag","initData::时间222：："+(endtime2-startTime));
         if (detailDishViewManager == null) {//view manager
-            detailDishViewManager = new DetailDishViewManager(this, rvListview, state);
+            detailDishViewManager = new DetailDishViewManager(this, listView, state);
             dishInfo= Uri.decode(dishInfo);
             detailDishViewManager.initBeforeData(img,dishInfo);
         }
@@ -191,7 +196,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         });
         long endtime4= System.currentTimeMillis();
         Log.i("xianghaTag","initData::时间444：："+(endtime4-startTime));
-        adapterDishRvListView.setClickCallBack(new AdapterDishRvListView.ItemOnClickCallBack() {
+        adapterDishNew.setClickCallBack(new AdapterDishNew.ItemOnClickCallBack() {
             @Override
             public void onClickPosition(int position) {
                 if(!getStateMakes(maplist)){//无图时不执行
@@ -216,11 +221,11 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
 
             @Override
             public void onGifClickPosition(int position) {
-                int length= rvListview.getChildCount();
+                int length= listView.getChildCount();
                 if(length>0){
                     for(int i=0;i<length;i++){
                         if(position!=i) {
-                            View itemView = rvListview.getChildAt(i);
+                            View itemView = listView.getChildAt(i);
                             if(itemView instanceof DishStepView)((DishStepView)itemView).stopGif();
                         }
                     }
@@ -257,8 +262,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
                 if(list!=null&&list.size()>0&&!TextUtils.isEmpty(list.get(0).get("list"))){
                     Map<String,String> mapTemp = list.get(0);
                     maplist.addAll(StringManager.getListMapByJson(mapTemp.get("list")));
-                    adapterDishRvListView.setShowDistance(mapTemp.containsKey("isCourseDish")&&"2".equals(mapTemp.get("isCourseDish")));
-//                    adapterDishRvListView.setShowDistance(true);
+                    adapterDishNew.setShowDistance(mapTemp.containsKey("isCourseDish")&&"2".equals(mapTemp.get("isCourseDish")));
                 }
                 detailDishViewManager.handlerStepView(list);
                 break;
@@ -275,15 +279,13 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
                 Map<String,String> relation= list.get(0);
                 detailDishViewManager.handlerUserPowerData(relation);//用户权限
                 detailDishViewManager.handlerHoverView(relation,code,dishName);
-                if(relation.containsKey("isShow")&&"2".equals(relation.get("isShow"))){
-                    detailDishViewManager.handlerVipView(StringManager.getFirstMap(relation.get("vipButton")));
-                }
+                detailDishViewManager.handlerVipView(relation);
                 showCaipuHint();
                 break;
             default:
                 break;
         }
-        adapterDishRvListView.notifyDataSetChanged();
+        adapterDishNew.notifyDataSetChanged();
     }
     @Override
     protected void onResume() {

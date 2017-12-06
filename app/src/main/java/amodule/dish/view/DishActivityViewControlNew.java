@@ -318,7 +318,7 @@ public class DishActivityViewControlNew {
     public void setDishOneView(String img){
         if(!TextUtils.isEmpty(img)){
             setDishHeaderViewCallBack();
-            dishHeaderView.setImg(img);
+            dishHeaderView.setImg(img,0);
             mScrollView.setVisibility(View.VISIBLE);
         }
     }

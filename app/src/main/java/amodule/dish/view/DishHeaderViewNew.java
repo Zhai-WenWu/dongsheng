@@ -111,20 +111,22 @@ public class DishHeaderViewNew extends LinearLayout {
         isAutoPaly = "wifi".equals(ToolsDevice.getNetWorkSimpleType(activity));
         //大图处理
         videoViewGroup = LayoutInflater.from(activity).inflate(R.layout.view_dish_header_oneimage, null);
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,videoHeight);
         dishVidioLayout = (RelativeLayout) videoViewGroup.findViewById(R.id.video_layout);
-        dishVidioLayout.setLayoutParams(params);
         dredgeVipLayout = (RelativeLayout) videoViewGroup.findViewById(R.id.video_dredge_vip_layout);
-        dredgeVipLayout.setLayoutParams(params);
         dishvideo_img = (LinearLayout) videoViewGroup.findViewById(R.id.video_img_layout);
-        dishvideo_img.setLayoutParams(params);
         adLayout = (FrameLayout) videoViewGroup.findViewById(R.id.video_ad_layout);
-        adLayout.setLayoutParams(params);
-
+        paramsLayout(videoHeight);
         //处理简介
         //头部加载view
         this.addView(videoViewGroup);
 //        INVisibiHeaderView();
+    }
+    public void paramsLayout(int videoHeight){
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,videoHeight);
+        dishVidioLayout.setLayoutParams(params);
+        dredgeVipLayout.setLayoutParams(params);
+        dishvideo_img.setLayoutParams(params);
+        adLayout.setLayoutParams(params);
     }
     public void setDistance(int distances){
         this.distance = distances;
@@ -170,7 +172,7 @@ public class DishHeaderViewNew extends LinearLayout {
                 if(isLoadImg) {
                     handlerImage(img);
                 }else{
-                    setImg(img);
+                    setImg(img,0);
                 }
 
             }
@@ -422,11 +424,11 @@ public class DishHeaderViewNew extends LinearLayout {
      * 展示顶图view,是大图还是视频
      * @param img          》图片链接
      */
-    public void setImg(final String img) {
+    public void setImg(final String img,int height) {
         Log.i("wyl","img:___:::"+img);
         isLoadImg=true;
         dishvideo_img.setVisibility(View.GONE);
-        int waith = ToolsDevice.getWindowPx(activity).widthPixels *5/6;
+        int waith = height>0?height:ToolsDevice.getWindowPx(activity).widthPixels *5/6;
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT);
         RelativeLayout.LayoutParams params_rela = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,waith);
         final ImageViewVideo imvv = new ImageViewVideo(activity);
