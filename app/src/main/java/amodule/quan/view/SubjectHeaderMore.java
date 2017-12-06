@@ -2,6 +2,7 @@ package amodule.quan.view;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -12,7 +13,13 @@ import android.widget.TextView;
 
 import com.xiangha.R;
 
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Map;
+
 import acore.logic.XHClick;
+import acore.tools.StringManager;
 import amodule.dish.activity.DetailDish;
 import amodule.quan.activity.ShowSubject;
 import amodule.search.avtivity.HomeSearch;
@@ -29,6 +36,13 @@ public class SubjectHeaderMore extends RelativeLayout implements View.OnClickLis
     String title="";
     String dishCode = "";
     String dishName = "";
+    private String mClickNum;
+    private String mFavNum;
+    private String mInfo;
+    private String mImg;
+
+    private Map<String, String> mFloorsInfo;
+    private Map<String, String> mSubjectIfo;
     public SubjectHeaderMore(Context context) {
         this(context,null);
     }
@@ -55,15 +69,36 @@ public class SubjectHeaderMore extends RelativeLayout implements View.OnClickLis
         setType(type);
     }
 
-    public void setDishInfo(String code,String name){
-        this.dishCode =code;
-        this.dishName = name;
+    public void setDishInfo(Map<String, String> subjectInfo){
+        mFloorsInfo = subjectInfo;
+        Map<String, String> map = StringManager.getFirstMap(subjectInfo.get("dish"));
+        this.dishCode =map.get("code");
+        this.dishName = map.get("name");
+        this.mClickNum = map.get("clickNum");
+        this.mFavNum = map.get("favorites");
+        this.mInfo = map.get("info");
         //设置text
         String des_title = handlerTitle(dishName);
         if (!TextUtils.isEmpty(des_title))
             moreText.setText("查看" + des_title + "的做法>>");
         else
             setVisibility(View.GONE);
+    }
+
+    public void setFloorInfo (Map<String, String> floorsInfo) {
+        mFloorsInfo = floorsInfo;
+        ArrayList<Map<String, String>> contents = StringManager.getListMapByJson(floorsInfo.get("content"));
+        if (contents.isEmpty())
+            return;
+        for (Map<String, String> content : contents) {
+            String img = content.get("img");
+            if (TextUtils.isEmpty(img))
+                continue;
+            else {
+                mImg = img;
+                break;
+            }
+        }
     }
 
     /**
@@ -129,6 +164,8 @@ public class SubjectHeaderMore extends RelativeLayout implements View.OnClickLis
             }
             intent.putExtra("code", dishCode);
             intent.putExtra("name", dishName);
+            intent.putExtra("img", mImg);
+            intent.putExtra("dishInfo", getDishInfo());
         } else {
             intent = new Intent(getContext(), HomeSearch.class);
             intent.putExtra("from", "美食贴更多");
@@ -136,5 +173,27 @@ public class SubjectHeaderMore extends RelativeLayout implements View.OnClickLis
             intent.putExtra("type", "4".equals(ShowSubject.types) ? "zhishi" : "caipu");
         }
         getContext().startActivity(intent);
+    }
+
+    private String getDishInfo() {
+        try{
+            JSONObject dishInfoJson = new JSONObject();
+            dishInfoJson.put("code",TextUtils.isEmpty(dishCode) ? "" : dishCode);
+            dishInfoJson.put("name",TextUtils.isEmpty(dishName) ? "" : dishName);
+            dishInfoJson.put("favorites",TextUtils.isEmpty(mFavNum) ? "" : mFavNum);
+            dishInfoJson.put("allClick",TextUtils.isEmpty(mClickNum) ? "" : mClickNum);
+            dishInfoJson.put("info", TextUtils.isEmpty(mInfo) ? "" : mInfo);
+            JSONObject customerJson = new JSONObject();
+            Map<String,String> userInfo = StringManager.getFirstMap(mFloorsInfo.get("customer"));
+            customerJson.put("customerCode",userInfo.get("code"));
+            customerJson.put("nickName",userInfo.get("nickName"));
+            customerJson.put("info",TextUtils.isEmpty(userInfo.get("info")) ? "" : userInfo.get("info"));
+            customerJson.put("img",userInfo.get("imgShow"));
+            dishInfoJson.put("customer",customerJson);
+            return Uri.encode(dishInfoJson.toString());
+        }catch (Exception e){
+            e.printStackTrace();
+            return "";
+        }
     }
 }

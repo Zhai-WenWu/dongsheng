@@ -129,9 +129,12 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
 
     private VideoPlayerController mVideoPlayerController = null;//视频控制器
     private int mInitPlayState = -2;
-    private boolean mHasInitPlayState;
+    private boolean mHasInitPlayStateOnPagerSelected;
+    private boolean mHasInitPlayStateOnScroll;
+    private boolean mHasInitPlayStateOnStateChanged;
 
     private LinearLayout mPointLayout;
+    private int mPagerLayoutHeight;
 
     @Override
     protected void onCreate(Bundle arg0) {
@@ -188,7 +191,21 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
 
             @Override
             public void setYandState(float y, boolean state) {
-                Log.i("zyj", "setInterfaceSv::" + state);
+                Log.i("zyj", "y = " + y + "   setInterfaceSv::" + state);
+            }
+        });
+        mall_commod_scroll.setOnScrollChangedListener(new MyScrollView.OnScrollChangedListener() {
+            @Override
+            public void onScrollChanged(int l, int t, int oldl, int oldt) {
+                if (!mHasInitPlayStateOnScroll && mVideoPlayerController != null) {
+                    mInitPlayState = mVideoPlayerController.getPlayState();
+                    mHasInitPlayStateOnScroll = true;
+                }
+                if (t >= mPagerLayoutHeight && videoCanPause()) {
+                    mVideoPlayerController.onPause();
+                } else if (t < mPagerLayoutHeight) {
+                    mHasInitPlayStateOnScroll = false;
+                }
             }
         });
         mall_ScrollViewContainer = (ScrollViewContainer) findViewById(R.id.mall_ScrollViewContainer);
@@ -198,6 +215,19 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
             public void setState(int state) {
                 titleState = state == 1 ? "1" : "2";
                 handleTitleState();
+                switch (titleState) {
+                    case "1":
+                        mHasInitPlayStateOnStateChanged = false;
+                        break;
+                    case "2":
+                        if (mVideoPlayerController != null && !mHasInitPlayStateOnStateChanged) {
+                            mInitPlayState = mVideoPlayerController.getPlayState();
+                            mHasInitPlayStateOnStateChanged = true;
+                        }
+                        if (videoCanPause())
+                            mVideoPlayerController.onPause();
+                        break;
+                }
                 if (load_state) {
                     foot_templateWebView.loadData(XHTemplateManager.DSUNDERSCOREPRODUCTINFO, XHTemplateManager.TEMPLATE_MATCHING.get(XHTemplateManager.DSUNDERSCOREPRODUCTINFO), new String[]{code});
                     XHClick.mapStat(CommodDetailActivity.this, "a_mail_goods", "上拉查看详细介绍", "");
@@ -210,6 +240,7 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
         });
         WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
         int width = wm.getDefaultDisplay().getWidth();
+        mPagerLayoutHeight = width;
         RelativeLayout viewpager_layout = (RelativeLayout) findViewById(R.id.viewpager_layout);
         viewpager_layout.setLayoutParams(new RelativeLayout.LayoutParams(width, width));
     }
@@ -629,16 +660,16 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
 
                 if (mVideoPlayerController != null) {
                     if (mVideoPosition != arg0) {
-                        if (Math.abs(arg0 - mVideoPosition) == 1 && !mHasInitPlayState) {
+                        if (Math.abs(arg0 - mVideoPosition) == 1 && !mHasInitPlayStateOnPagerSelected) {
                             mInitPlayState = mVideoPlayerController.getPlayState();
-                            mHasInitPlayState = true;
+                            mHasInitPlayStateOnPagerSelected = true;
                             if (videoCanPause()) {
                                 mVideoPlayerController.onPause();
                             }
                         }
                         mPointLayout.setVisibility(View.VISIBLE);
                     } else {
-                        mHasInitPlayState = false;
+                        mHasInitPlayStateOnPagerSelected = false;
                         if (videoCanResume()) {
                             mVideoPlayerController.onResume();
                         }
