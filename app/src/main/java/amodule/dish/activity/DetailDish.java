@@ -93,6 +93,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
     }
 
     private void initCling() {
+        handleClingBtnState();
         ClingControl.getInstance(this).onCreate();
         ClingControl.getInstance(this).setOnDeviceSelected(new OnDeviceSelectedListener() {
             @Override
@@ -123,6 +124,11 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
                 ClingControl.getInstance(DetailDish.this).showPopup();
             }
         });
+    }
+
+    private void handleClingBtnState() {
+        if (detailDishViewManager != null)
+            detailDishViewManager.showClingBtn(LoginManager.isVIP() || LoginManager.isTempVip());
     }
 
     /**
@@ -404,12 +410,14 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
             case ObserverManager.NOTIFY_LOGIN://登陆
             case ObserverManager.NOTIFY_FOLLOW://关注
                 if(detailDishDataManager!=null)detailDishDataManager.reqPublicData();
+                handleClingBtnState();
                 break;
             case ObserverManager.NOTIFY_PAYFINISH://支付
                 if(detailDishDataManager!=null) {
                     detailDishDataManager.reqPublicData();
                     detailDishDataManager.reqQAData();
                 }
+                handleClingBtnState();
                 break;
         }
     }

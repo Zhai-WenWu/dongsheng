@@ -40,6 +40,7 @@ public class SubjectHeaderMore extends RelativeLayout implements View.OnClickLis
     private String mFavNum;
     private String mInfo;
     private String mImg;
+    private String mHasVideo;
 
     private Map<String, String> mFloorsInfo;
     private Map<String, String> mSubjectIfo;
@@ -70,7 +71,7 @@ public class SubjectHeaderMore extends RelativeLayout implements View.OnClickLis
     }
 
     public void setDishInfo(Map<String, String> subjectInfo){
-        mFloorsInfo = subjectInfo;
+        mSubjectIfo = subjectInfo;
         Map<String, String> map = StringManager.getFirstMap(subjectInfo.get("dish"));
         this.dishCode =map.get("code");
         this.dishName = map.get("name");
@@ -96,6 +97,7 @@ public class SubjectHeaderMore extends RelativeLayout implements View.OnClickLis
                 continue;
             else {
                 mImg = img;
+                mHasVideo = content.get("hasVideo");
                 break;
             }
         }
@@ -180,6 +182,8 @@ public class SubjectHeaderMore extends RelativeLayout implements View.OnClickLis
             JSONObject dishInfoJson = new JSONObject();
             dishInfoJson.put("code",TextUtils.isEmpty(dishCode) ? "" : dishCode);
             dishInfoJson.put("name",TextUtils.isEmpty(dishName) ? "" : dishName);
+            dishInfoJson.put("img",mImg);
+            dishInfoJson.put("type",TextUtils.equals(mHasVideo, "2") ? "2" : "1");
             dishInfoJson.put("favorites",TextUtils.isEmpty(mFavNum) ? "" : mFavNum);
             dishInfoJson.put("allClick",TextUtils.isEmpty(mClickNum) ? "" : mClickNum);
             dishInfoJson.put("info", TextUtils.isEmpty(mInfo) ? "" : mInfo);
