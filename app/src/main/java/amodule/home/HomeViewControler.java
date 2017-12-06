@@ -1,6 +1,7 @@
 package amodule.home;
 
 import android.annotation.SuppressLint;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.LinearLayoutManager;
@@ -262,6 +263,12 @@ public class HomeViewControler {
     //初始化网络提示
     private void initNetworkTip() {
         mNetworkTip = mActivity.findViewById(R.id.network_tip_view);
+        mNetworkTip.setOnClickListener(v -> gotoSetting());
+    }
+
+    //去设置
+    private void gotoSetting(){
+        mActivity.startActivity(new Intent(android.provider.Settings.ACTION_SETTINGS));
     }
 
     //隐藏网络提示
