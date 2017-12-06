@@ -165,9 +165,10 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
             return objData.toString();
         String customerInfo = customerMap.get("info");
         String customerImg = customerMap.get("img");
+        String name = mDataMap.get("title");
         try {
             object.put("code", mDataMap.get("code"));
-            object.put("name", mDataMap.get("title"));
+            object.put("name", TextUtils.isEmpty(name) ? mDataMap.get("name") : name);
             object.put("allClick", mDataMap.get("allClick"));
             object.put("favorites", mDataMap.get("favorites"));
             object.put("info", mDataMap.get("content"));
