@@ -40,7 +40,6 @@
                 android:id="@+id/network_tip_view"
                 layout="@layout/a_home_header_network_tip"/>
 
-
         </LinearLayout>
 
         <cn.srain.cube.views.ptr.PtrClassicFrameLayout
