@@ -14,48 +14,50 @@ import third.ad.tools.GdtAdTools;
 /**
  * GDT广告
  */
-public class XHScrollerGdt extends XHScrollerAdParent{
-    private Map<String ,String > map_data;
+public class XHScrollerGdt extends XHScrollerAdParent {
+    private Map<String, String> map_data;
     private NativeADDataRef nativeADDataRef;
+
     public XHScrollerGdt(String mAdPlayId, int num) {
         super(mAdPlayId, num);
-        key="sdk_gdt";
+        key = "sdk_gdt";
     }
 
     @Override
-    public void onResumeAd(String oneLevel,String twoLevel) {
-        if(null != nativeADDataRef && null != view){
-            Log.i("tzy","广告展示:::"+XHScrollerAdParent.ADKEY_GDT+":::位置::"+twoLevel);
+    public void onResumeAd(String oneLevel, String twoLevel) {
+        if (null != nativeADDataRef && null != view) {
+            Log.i("tzy", "广告展示:::" + XHScrollerAdParent.ADKEY_GDT + ":::位置::" + twoLevel);
             nativeADDataRef.onExposured(view);
-            onAdShow(oneLevel,twoLevel,key);
+            onAdShow(oneLevel, twoLevel, key);
         }
     }
 
     @Override
     public void onPsuseAd() {
     }
+
     @Override
-    public void onThirdClick(String oneLevel,String twoLevel) {
-        if(null == nativeADDataRef){
-            Log.i("tzy","nativeResponseObject为null");
+    public void onThirdClick(String oneLevel, String twoLevel) {
+        if (null == nativeADDataRef) {
+            Log.i("tzy", "nativeResponseObject为null");
+            return;
         }
-        if(view==null){
-            Log.i("tzy","view为null");
+        if (view == null) {
+            Log.i("tzy", "view为null");
+            return;
         }
-        if(null != nativeADDataRef && null != view){
-            Log.i("tzy","广告点击:::"+XHScrollerAdParent.ADKEY_GDT+":::位置:"+twoLevel);
-            nativeADDataRef.onClicked(view);
-            onAdClick(oneLevel,twoLevel,key);
-        }
+        Log.i("tzy", "广告点击:::" + XHScrollerAdParent.ADKEY_GDT + ":::位置:" + twoLevel);
+        nativeADDataRef.onClicked(view);
+        onAdClick(oneLevel, twoLevel, key);
     }
 
     @Override
     public void getAdDataWithBackAdId(final XHAdDataCallBack xhAdDataCallBack) {
-        if(!isShow()){//判断是否显示---不显示
+        if (!isShow()) {//判断是否显示---不显示
             xhAdDataCallBack.onFail(XHScrollerAdParent.ADKEY_GDT);
             return;
         }
-        if(null == nativeADDataRef){
+        if (null == nativeADDataRef) {
             xhAdDataCallBack.onFail(XHScrollerAdParent.ADKEY_GDT);
         }
         GdtAdTools.newInstance().getNativeData(null, nativeADDataRef,
@@ -64,27 +66,27 @@ public class XHScrollerGdt extends XHScrollerAdParent{
                     public void addAdView(String title, String desc, String iconUrl,
                                           String imageUrl, View.OnClickListener clickListener) {
 //                        Log.i("tzy", "GDT NactiveAD onHandlerData");
-                        if(!TextUtils.isEmpty(title)&&!TextUtils.isEmpty(imageUrl)){
-                            Map<String,String> map= new HashMap<>();
-                            map.put("title",title);
-                            map.put("desc",desc);
-                            map.put("iconUrl",iconUrl);
-                            map.put("imgUrl",imageUrl);
-                            map.put("type",XHScrollerAdParent.ADKEY_GDT);
-                            map.put("hide","1");//2隐藏，1显示
-                            if(TextUtils.isEmpty(imageUrl)){
+                        if (!TextUtils.isEmpty(title) && !TextUtils.isEmpty(imageUrl)) {
+                            Map<String, String> map = new HashMap<>();
+                            map.put("title", title);
+                            map.put("desc", desc);
+                            map.put("iconUrl", iconUrl);
+                            map.put("imgUrl", imageUrl);
+                            map.put("type", XHScrollerAdParent.ADKEY_GDT);
+                            map.put("hide", "1");//2隐藏，1显示
+                            if (TextUtils.isEmpty(imageUrl)) {
                                 xhAdDataCallBack.onFail(XHScrollerAdParent.ADKEY_GDT);
-                            }else{
-                                map_data=map;
-                                xhAdDataCallBack.onSuccees(XHScrollerAdParent.ADKEY_GDT,map_data);
+                            } else {
+                                map_data = map;
+                                xhAdDataCallBack.onSuccees(XHScrollerAdParent.ADKEY_GDT, map_data);
                             }
-                        }else
+                        } else
                             xhAdDataCallBack.onFail(XHScrollerAdParent.ADKEY_GDT);
                     }
                 });
     }
 
-    public void setGdtData(NativeADDataRef data){
+    public void setGdtData(NativeADDataRef data) {
         this.nativeADDataRef = data;
     }
 }
