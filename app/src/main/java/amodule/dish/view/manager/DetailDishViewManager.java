@@ -293,10 +293,12 @@ public class DetailDishViewManager {
      * 处理vip按钮
      * @param map
      */
-    public void handlerVipView(Map<String,String> map){
+    public void handlerVipView(Map<String,String> relation){
         if(dishVipView != null){
-            dishVipView.setVisibility(View.VISIBLE);
-            dishVipView.setData(map);
+            if(relation.containsKey("isShow")&&"2".equals(relation.get("isShow"))) {
+                dishVipView.setVisibility(View.VISIBLE);
+                dishVipView.setData(StringManager.getFirstMap(relation.get("vipButton")));
+            }else dishVipView.setVisibility(View.GONE);
         }
     }
     /**

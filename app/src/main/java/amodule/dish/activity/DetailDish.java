@@ -279,9 +279,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
                 Map<String,String> relation= list.get(0);
                 detailDishViewManager.handlerUserPowerData(relation);//用户权限
                 detailDishViewManager.handlerHoverView(relation,code,dishName);
-                if(relation.containsKey("isShow")&&"2".equals(relation.get("isShow"))){
-                    detailDishViewManager.handlerVipView(StringManager.getFirstMap(relation.get("vipButton")));
-                }
+                detailDishViewManager.handlerVipView(relation);
                 showCaipuHint();
                 break;
             default:
