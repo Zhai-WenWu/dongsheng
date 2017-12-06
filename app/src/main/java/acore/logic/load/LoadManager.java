@@ -51,7 +51,7 @@ public class LoadManager {
 	public static int FOOTTIME_PAGE = -2;//特殊的值，用于标示时间戳翻页。
 
 	private String[] mLoadMoreTextArray = {
-			"— 吃,也是一种艺术 —",
+			"— 学名厨做菜 —",
 							/*"------------ 爱生活，尽在香哈新煮意 ------------",
 							"------------ 爱生活，爱香哈 ------------",
 							" ------------ 香哈，让生活更美好 ------------"*/};
