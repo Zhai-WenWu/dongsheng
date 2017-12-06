@@ -282,6 +282,7 @@ public class DishAdDataViewNew extends ItemBaseView {
         }
         Log.i("tzy", "addView");
         if(DishAdDataViewNew.this!=null&&context!=null)
+            parentView.removeAllViews();
             parentView.addView(DishAdDataViewNew.this);
     }
 

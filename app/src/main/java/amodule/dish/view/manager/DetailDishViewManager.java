@@ -291,7 +291,6 @@ public class DetailDishViewManager {
     }
     /**
      * 处理vip按钮
-     * @param map
      */
     public void handlerVipView(Map<String,String> relation){
         if(dishVipView != null){
