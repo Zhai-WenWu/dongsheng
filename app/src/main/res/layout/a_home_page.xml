@@ -33,7 +33,7 @@
                 android:paddingRight="@dimen/dp_20"
                 android:paddingTop="@dimen/dp_10"
                 android:visibility="gone"
-                tools:text="服务器升级中，请您稍后重试"
+                tools:text="服务器升级中，请您稍后重试。"
                 tools:visibility="visible"/>
 
             <include
