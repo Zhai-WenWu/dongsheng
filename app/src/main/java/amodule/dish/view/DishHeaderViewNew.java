@@ -311,7 +311,7 @@ public class DishHeaderViewNew extends LinearLayout {
             dishVidioLayout.setPadding(0, distance, 0, 0);
             mVideoPlayerController = new VideoPlayerController(activity, dishVidioLayout, img);
             mVideoPlayerController.showFullScrren();
-            mVideoPlayerController.showClingBtn(true);
+            mVideoPlayerController.showClingBtn(mShowClingBtn);
             if(permissionMap != null && permissionMap.containsKey("video")){
 
                 Map<String,String> videoPermionMap = StringManager.getFirstMap(permissionMap.get("video"));
@@ -368,6 +368,8 @@ public class DishHeaderViewNew extends LinearLayout {
 
     public void showClingBtn(boolean show) {
         mShowClingBtn = show;
+        if (mVideoPlayerController != null)
+            mVideoPlayerController.showClingBtn(show);
     }
 
     private RelativeLayout dredgeVipLayout;
@@ -379,7 +381,6 @@ public class DishHeaderViewNew extends LinearLayout {
             final String url = common.get("url");
             if(TextUtils.isEmpty(url)) return;
             mVideoPlayerController.hideFullScreen();
-            mVideoPlayerController.showClingBtn(false);
             vipView = new VideoDredgeVipView(context);
             dredgeVipLayout.addView(vipView);
             vipView.setTipMessaText(common.get("text"));
