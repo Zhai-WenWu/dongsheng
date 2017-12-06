@@ -170,11 +170,16 @@ public class AdapterUserDish extends AdapterSimple {
     private String getDishInfo(Map<String,String> data) {
         if (data == null || data.isEmpty())
             return "";
+        int allClick = 0;
+        try {
+            allClick = Integer.parseInt(data.get("allClick"));
+        } catch (Exception e) {}
         String info = data.get("info");
         try{
             JSONObject dishInfoJson = new JSONObject();
             dishInfoJson.put("code",data.get("code"));
             dishInfoJson.put("name",data.get("name"));
+            dishInfoJson.put("allClick", allClick);
             dishInfoJson.put("favorites",data.get("favorites"));
             dishInfoJson.put("info", TextUtils.isEmpty(info) ? "" : info);
             JSONObject customerJson = new JSONObject();
