@@ -173,7 +173,7 @@ public class HomeSecondListFragment extends Fragment {
         }
     }
     private void requestData() {
-        if(!mLoadOver && mIsVisible){
+        if(!mLoadOver && mIsVisible && mLoadManager != null){
             mLoadManager.setLoading(mPtrFrameLayout, mRv, mHomeAdapter, true, mIsVisible,
                     v -> entryptData(true),
                     v -> entryptData(!mLoadOver));
