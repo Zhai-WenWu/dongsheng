@@ -12,28 +12,28 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingBottom="@dimen/dp_8"
-        android:paddingLeft="@dimen/dp_16"
-        android:paddingRight="@dimen/dp_16"
-        android:paddingTop="@dimen/dp_18">
+        android:paddingRight="@dimen/dp_16">
 
         <ImageView
             android:id="@+id/back_icon"
-            android:layout_width="@dimen/dp_18"
-            android:layout_height="@dimen/dp_16"
-            android:paddingTop="@dimen/dp_1"
-            android:paddingLeft="@dimen/dp_4"
+            android:layout_width="@dimen/dp_34"
+            android:layout_height="@dimen/dp_42"
+            android:paddingBottom="@dimen/dp_8"
+            android:paddingLeft="@dimen/dp_20"
             android:paddingRight="@dimen/dp_7"
+            android:paddingTop="@dimen/dp_19"
             android:src="@drawable/icon_dialog_back"/>
 
         <TextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
+            android:paddingBottom="@dimen/dp_8"
+            android:paddingTop="@dimen/dp_18"
             android:text="课程选集"
             android:textColor="#333"
-            android:textSize="@dimen/sp_16"/>
+            android:textSize="@dimen/sp_16"
+            android:textStyle="bold"/>
 
     </LinearLayout>
 
