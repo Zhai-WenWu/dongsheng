@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
@@ -62,7 +63,6 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
     private ArrayList<Map<String,String>> maplist = new ArrayList<>();
     private Map<String,String> mapTop = new HashMap<>();
     private boolean isHasVideo;//当前是否是视频
-    private boolean mShouldInitCling;
     private String customerCode;
     private RelativeLayout dredgeVipFullLayout;
     private XHWebView pageXhWebView;
@@ -74,47 +74,52 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        startTime= System.currentTimeMillis();
         initBudle();
+        long endtime1= System.currentTimeMillis();
+        Log.i("xianghaTag","时间：："+(endtime1-startTime));
         initView();
+        long endtime2= System.currentTimeMillis();
+        Log.i("xianghaTag","时间：："+(endtime2-startTime));
         initData();
+        long endtime3= System.currentTimeMillis();
+        Log.i("xianghaTag","时间：："+(endtime3-startTime));
         initCling();
+        long endtime4= System.currentTimeMillis();
+        Log.i("xianghaTag","时间：："+(endtime4-startTime));
     }
 
     private void initCling() {
-        mShouldInitCling = !ToolsDevice.isTabletDevice(this);
-        if (mShouldInitCling) {
-            ClingControl.getInstance(this).onCreate();
-            ClingControl.getInstance(this).setOnDeviceSelected(new OnDeviceSelectedListener() {
-                @Override
-                public void onDeviceSelected(ClingDevice device) {
-                    if (detailDishViewManager != null) {
-                        detailDishViewManager.addClingOptionView(ClingControl.getInstance(DetailDish.this).getClingOptionView());
-                    }
+        ClingControl.getInstance(this).onCreate();
+        ClingControl.getInstance(this).setOnDeviceSelected(new OnDeviceSelectedListener() {
+            @Override
+            public void onDeviceSelected(ClingDevice device) {
+                if (detailDishViewManager != null) {
+                    detailDishViewManager.addClingOptionView(ClingControl.getInstance(DetailDish.this).getClingOptionView());
                 }
-            });
-            ClingControl.getInstance(this).setOnExitClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (detailDishViewManager != null) {
-                        detailDishViewManager.removeClingOptionView();
-                    }
+            }
+        });
+        ClingControl.getInstance(this).setOnExitClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (detailDishViewManager != null) {
+                    detailDishViewManager.removeClingOptionView();
                 }
-            });
-            detailDishViewManager.showClingBtn(true);
-            detailDishViewManager.setClingClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String videoUrl = detailDishViewManager.getVideoUrl();
-                    if (TextUtils.isEmpty(videoUrl)) {
-                        Toast.makeText(DetailDish.this, "无效的视频地址", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    Intent intent = DetailDish.this.getIntent();
-                    intent.putExtra(ClingControl.PLAY_URL, videoUrl);
-                    ClingControl.getInstance(DetailDish.this).showPopup();
+            }
+        });
+        detailDishViewManager.setClingClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String videoUrl = detailDishViewManager.getVideoUrl();
+                if (TextUtils.isEmpty(videoUrl)) {
+                    Toast.makeText(DetailDish.this, "无效的视频地址", Toast.LENGTH_SHORT).show();
+                    return;
                 }
-            });
-        }
+                Intent intent = DetailDish.this.getIntent();
+                intent.putExtra(ClingControl.PLAY_URL, videoUrl);
+                ClingControl.getInstance(DetailDish.this).showPopup();
+            }
+        });
     }
 
     /**
@@ -164,13 +169,19 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
      * 处理页面Ui
      */
     private void initData() {
+        long endtime1= System.currentTimeMillis();
+        Log.i("xianghaTag","initData::时间11：："+(endtime1-startTime));
         adapterDishRvListView = new AdapterDishRvListView(this,maplist);
         rvListview.setAdapter(adapterDishRvListView);
+        long endtime2= System.currentTimeMillis();
+        Log.i("xianghaTag","initData::时间222：："+(endtime2-startTime));
         if (detailDishViewManager == null) {//view manager
             detailDishViewManager = new DetailDishViewManager(this, rvListview, state);
             dishInfo= Uri.decode(dishInfo);
             detailDishViewManager.initBeforeData(img,dishInfo);
         }
+        long endtime3= System.currentTimeMillis();
+        Log.i("xianghaTag","initData::时间33：："+(endtime3-startTime));
         if (detailDishDataManager == null) detailDishDataManager = new DetailDishDataManager(code,this,courseCode,chapterCode);//数据manager
         detailDishDataManager.setDishDataCallBack(new DetailDishDataManager.DishDataCallBack() {
             @Override
@@ -178,6 +189,8 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
                 dishTypeData(type,list,PermissionMap);
             }
         });
+        long endtime4= System.currentTimeMillis();
+        Log.i("xianghaTag","initData::时间444：："+(endtime4-startTime));
         adapterDishRvListView.setClickCallBack(new AdapterDishRvListView.ItemOnClickCallBack() {
             @Override
             public void onClickPosition(int position) {
@@ -276,16 +289,14 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
     protected void onResume() {
         super.onResume();
         if(detailDishViewManager!=null)detailDishViewManager.onResume();
-        if (mShouldInitCling)
-            ClingControl.getInstance(this).onResume();
+        ClingControl.getInstance(this).onResume();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         if(detailDishViewManager!=null)detailDishViewManager.onPause();
-        if (mShouldInitCling)
-            ClingControl.getInstance(this).onPause();
+        ClingControl.getInstance(this).onPause();
     }
 
     @Override
@@ -313,16 +324,14 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
             handlerScreen.removeCallbacksAndMessages(null);
             handlerScreen=null;
         }
-        if (mShouldInitCling)
-            ClingControl.getInstance(this).onDestroy();
+        ClingControl.getInstance(this).onDestroy();
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
-        if (mShouldInitCling)
-            ClingControl.getInstance(this).onNewIntent(intent);
+        ClingControl.getInstance(this).onNewIntent(intent);
     }
     public void refresh() {
         if(detailDishViewManager!=null)detailDishViewManager.refresh();
@@ -395,8 +404,10 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
                 if(detailDishDataManager!=null)detailDishDataManager.reqPublicData();
                 break;
             case ObserverManager.NOTIFY_PAYFINISH://支付
-                if(detailDishDataManager!=null)detailDishDataManager.reqPublicData();
-                if(detailDishDataManager!=null)detailDishDataManager.reqQAData();
+                if(detailDishDataManager!=null) {
+                    detailDishDataManager.reqPublicData();
+                    detailDishDataManager.reqQAData();
+                }
                 break;
         }
     }
@@ -463,5 +474,12 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         if(detailDishViewManager!=null)detailDishViewManager.handlerLoginStatus();
         if(pageXhWebView!=null)
             pageXhWebView.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        long endtime1= System.currentTimeMillis();
+        Log.i("xianghaTag","onWindowFocusChanged：："+(endtime1-startTime));
     }
 }

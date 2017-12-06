@@ -92,9 +92,10 @@ public class DishHoverViewControl implements View.OnClickListener{
         if(mapQA==null||mapQA.size()<=0)return;
         this.mapQA= mapQA;
         int roundRadius = Tools.getDimen(mAct,R.dimen.dp_3); // 8dp 圆角半径
-        int fillColor = Color.parseColor(mapQA.containsKey("bgColor")&&!TextUtils.isEmpty(mapQA.get("bgColor"))?mapQA.get("bgColor"):"#f23030");//内部填充颜色
+        String bgColor=mapQA.containsKey("bgColor")&&!TextUtils.isEmpty(mapQA.get("bgColor"))?mapQA.get("bgColor"):"#f23030";
+        int fillColor = Color.parseColor(bgColor);//内部填充颜色
         GradientDrawable gd = new GradientDrawable();//创建drawable
-        gd.setColor(fillColor);
+        gd.setColor(Color.parseColor(bgColor));
         gd.setCornerRadius(roundRadius);
         mHoverTv.setBackgroundDrawable(gd);
         mHoverTv.setTextColor(Color.parseColor(mapQA.containsKey("color")&&!TextUtils.isEmpty(mapQA.get("color"))?mapQA.get("color"):"#fffffe"));

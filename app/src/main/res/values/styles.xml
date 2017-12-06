@@ -474,6 +474,7 @@
         <item name="android:textSize">@dimen/sp_16</item>
         <item name="android:textColor">@color/c_black_text</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:includeFontPadding">false</item>
     </style>
 
     <style name="common_title_style.common_subtitle_style">

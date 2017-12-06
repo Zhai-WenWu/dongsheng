@@ -90,7 +90,10 @@ public class DishQAView extends ItemBaseView{
     public void setData(ArrayList<Map<String,String>> list){
         maptemp= list.get(0);
         text_answer.setText(maptemp.get("answerNum"));
-        text_degree.setText(maptemp.get("satisfyRate")+"%");
+        if(maptemp.containsKey("satisfyRateIsShow")&&"2".equals(maptemp.get("satisfyRateIsShow"))) {
+            text_degree.setText(maptemp.get("satisfyRate"));
+            findViewById(R.id.degree_linear).setVisibility(View.VISIBLE);
+        }else findViewById(R.id.degree_linear).setVisibility(View.GONE);
         text_time.setText(maptemp.get("avgRespondTime"));
         ArrayList<Map<String,String>> listQA = StringManager.getListMapByJson(maptemp.get("list"));
         if(listQA!=null&&listQA.size()>0){
