@@ -68,7 +68,10 @@ public class DishGridDialog extends Dialog {
         setCancelable(true);
         mLoadMore = new LoadMoreManager(context);
         //初始化参数
-        updateParam(code, chapterCode, courseCode);
+        this.mCurrentCode = code;
+        handlerParams(PARAM_KEY_CODE,code);
+        handlerParams(PARAM_KEY_CHAPTERCODE,chapterCode);
+        handlerParams(PARAM_KEY_COURSECODE,courseCode);
         //初始化UI
         initUI();
     }
@@ -115,6 +118,7 @@ public class DishGridDialog extends Dialog {
 
     public void updateParam(String code) {
         updateParam(code, "", "");
+        refresh();
     }
 
     private final String PARAM_KEY_CODE = "code";
@@ -126,6 +130,7 @@ public class DishGridDialog extends Dialog {
         handlerParams(PARAM_KEY_CODE,code);
         handlerParams(PARAM_KEY_CHAPTERCODE,chapterCode);
         handlerParams(PARAM_KEY_COURSECODE,courseCode);
+        refresh();
         return this;
     }
 
@@ -146,7 +151,10 @@ public class DishGridDialog extends Dialog {
             return;
         }
         super.show();
-        refresh();
+        if(mData.isEmpty())
+            refresh();
+        else
+            mGridView.scrollToPosition(0);
 //        if (contentView != null) {
 //            contentView.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.in_from_bottom_alpha));
 //        }
