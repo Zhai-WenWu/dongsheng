@@ -8,6 +8,9 @@ import android.util.AttributeSet;
 import android.util.Log;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.xiangha.R;
 
 import java.util.Map;
@@ -85,6 +88,8 @@ public class HomeActivityIconView extends AppCompatImageView {
         this.mUrl = dataMap.get("url");
         Glide.with(getContext())
                 .load(imgUrl)
+                .placeholder(R.drawable.home_default_icon)
+                .error(R.drawable.home_default_icon)
                 .into(this);
     }
 
