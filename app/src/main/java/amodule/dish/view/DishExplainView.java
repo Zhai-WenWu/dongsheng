@@ -40,6 +40,7 @@ public class DishExplainView extends ItemBaseView {
         dishAdDataView = new DishAdDataViewNew(context,R.layout.view_dish_tips_ad_layout_distance);
     }
     public void setAdData(){
+        mAdLayout.removeAllViews();
         dishAdDataView.getRequest(XHActivityManager.getInstance().getCurrentActivity(), mAdLayout);
     }
     public void setData(final Map<String,String> maps){
