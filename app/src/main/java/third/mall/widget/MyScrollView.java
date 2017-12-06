@@ -109,5 +109,21 @@ public class MyScrollView extends ScrollView {
 	public void setNow_y(int now_y) {
 		this.now_y = now_y;
 	}
-	
+
+	@Override
+	protected void onScrollChanged(int l, int t, int oldl, int oldt) {
+		super.onScrollChanged(l, t, oldl, oldt);
+		if (mScrollChangedListener != null)
+			mScrollChangedListener.onScrollChanged(l, t, oldl, oldt);
+	}
+
+	public interface OnScrollChangedListener {
+		public abstract void onScrollChanged(int l, int t, int oldl, int oldt);
+	}
+
+	private OnScrollChangedListener mScrollChangedListener;
+
+	public void setOnScrollChangedListener (OnScrollChangedListener listener) {
+		mScrollChangedListener = listener;
+	}
 }
