@@ -27,7 +27,6 @@ import third.cling.entity.IResponse;
 import third.cling.listener.BrowseRegistryListener;
 import third.cling.listener.DeviceListChangedListener;
 import third.cling.service.ClingUpnpService;
-import third.cling.service.callback.ActionCallback;
 import third.cling.service.manager.ClingManager;
 import third.cling.service.manager.DeviceManager;
 import third.cling.ui.ClingDevicesPopup;
@@ -39,10 +38,9 @@ import third.cling.ui.ClingOptionView;
 
 public class ClingControl {
 
-    private Activity mActivity;
+    private Context mContext;
 
     private static final String TAG = ClingControl.class.getSimpleName();
-    public static final String PLAY_URL = "play_url";
     /**
      * 连接设备状态: 播放状态
      */
@@ -96,8 +94,8 @@ public class ClingControl {
 
     private static volatile ClingControl mInstance;
 
-    private ClingControl(Activity activity) {
-        mActivity = activity;
+    private ClingControl(Context context) {
+        mContext = context;
         mBrowseRegistryListener = new BrowseRegistryListener();
         mUpnpServiceConnection = new ServiceConnection() {
             @Override
@@ -112,25 +110,22 @@ public class ClingControl {
                 ClingManager clingUpnpServiceManager = ClingManager.getInstance();
                 clingUpnpServiceManager.setUpnpService(beyondUpnpService);
                 DeviceManager manager = new DeviceManager();
-                manager.setActionCallback(new ActionCallback() {
-                    @Override
-                    public void action(String action) {
-                        if (TextUtils.isEmpty(action))
-                            return;
-                        switch (action) {
-                            case Intents.ACTION_PLAYING:
-                                mHandler.sendEmptyMessage(action_play);
-                                break;
-                            case Intents.ACTION_PAUSED_PLAYBACK:
-                                mHandler.sendEmptyMessage(action_pause);
-                                break;
-                            case Intents.ACTION_STOPPED:
-                                mHandler.sendEmptyMessage(action_stop);
-                                break;
-                            case Intents.ACTION_TRANSITIONING:
-                                mHandler.sendEmptyMessage(action_transtioning);
-                                break;
-                        }
+                manager.setActionCallback(action -> {
+                    if (TextUtils.isEmpty(action))
+                        return;
+                    switch (action) {
+                        case Intents.ACTION_PLAYING:
+                            mHandler.sendEmptyMessage(action_play);
+                            break;
+                        case Intents.ACTION_PAUSED_PLAYBACK:
+                            mHandler.sendEmptyMessage(action_pause);
+                            break;
+                        case Intents.ACTION_STOPPED:
+                            mHandler.sendEmptyMessage(action_stop);
+                            break;
+                        case Intents.ACTION_TRANSITIONING:
+                            mHandler.sendEmptyMessage(action_transtioning);
+                            break;
                     }
                 });
                 clingUpnpServiceManager.setDeviceManager(manager);
@@ -152,10 +147,10 @@ public class ClingControl {
         };
     }
 
-    public synchronized static ClingControl getInstance(Activity activity) {
+    public synchronized static ClingControl getInstance(Context context) {
         synchronized (ClingControl.class) {
             if (mInstance == null)
-                mInstance = new ClingControl(activity);
+                mInstance = new ClingControl(context);
         }
         return mInstance;
     }
@@ -167,16 +162,13 @@ public class ClingControl {
 
     private void initView() {
         if (mDevicesPopup == null) {
-            mDevicesPopup = new ClingDevicesPopup(mActivity);
-            mDevicesPopup.setOnDeviceSelected(new OnDeviceSelectedListener() {
-                @Override
-                public void onDeviceSelected(ClingDevice device) {
-                    initClingOptionView();
-                    mClingOptionView.onTranstioning();
-                    if (mListener != null)
-                        mListener.onDeviceSelected(device);
-                    play();
-                }
+            mDevicesPopup = new ClingDevicesPopup(mContext);
+            mDevicesPopup.setOnDeviceSelected(device -> {
+                initClingOptionView();
+                mClingOptionView.onTranstioning();
+                if (mListener != null)
+                    mListener.onDeviceSelected(device);
+                play();
             });
         }
     }
@@ -187,24 +179,18 @@ public class ClingControl {
         mBrowseRegistryListener.setOnDeviceListChangedListener(new DeviceListChangedListener() {
             @Override
             public void onDeviceAdded(final IDevice device) {
-                if (mActivity != null)
-                    mActivity.runOnUiThread(new Runnable() {
-                        public void run() {
-                            if (mDevicesPopup != null)
-                                mDevicesPopup.addDevice(device);
-                        }
-                    });
+                mHandler.post(() -> {
+                    if (mDevicesPopup != null)
+                        mDevicesPopup.addDevice(device);
+                });
             }
 
             @Override
             public void onDeviceRemoved(final IDevice device) {
-                if (mActivity != null)
-                    mActivity.runOnUiThread(new Runnable() {
-                        public void run() {
-                            if (mDevicesPopup != null)
-                                mDevicesPopup.removeDevice(device);
-                        }
-                    });
+                mHandler.post(() -> {
+                    if (mDevicesPopup != null)
+                        mDevicesPopup.removeDevice(device);
+                });
             }
         });
     }
@@ -230,7 +216,7 @@ public class ClingControl {
         mHandler.removeCallbacksAndMessages(null);
         // Unbind UPnP service
         if (mServiceBind)
-            mActivity.unbindService(mUpnpServiceConnection);
+            mContext.unbindService(mUpnpServiceConnection);
 
         ClingManager.getInstance().destroy();
         ClingDeviceList.getInstance().destroy();
@@ -245,30 +231,15 @@ public class ClingControl {
         mConnectSucc = false;
         mServiceBind = false;
         mInstance = null;
-        mActivity = null;
-    }
-
-    public void onNewIntent(Intent intent) {
-        if (mActivity == null)
-            return;
-        mActivity.setIntent(intent);
-        initData();
-    }
-
-    private void initData() {
-        Intent intent = mActivity.getIntent();
-        if (intent != null && !TextUtils.isEmpty(intent.getStringExtra(PLAY_URL))) {
-            String url = intent.getStringExtra(PLAY_URL);
-            mPlayUrl = url.replace("https", "http");
-        }
+        mContext = null;
     }
 
     private void bindServices() {
         if (!mServiceBind) {
             mServiceConnecting = true;
             // Bind UPnP service
-            Intent upnpServiceIntent = new Intent(mActivity, ClingUpnpService.class);
-            mActivity.bindService(upnpServiceIntent, mUpnpServiceConnection, Context.BIND_AUTO_CREATE);
+            Intent upnpServiceIntent = new Intent(mContext, ClingUpnpService.class);
+            mContext.bindService(upnpServiceIntent, mUpnpServiceConnection, Context.BIND_AUTO_CREATE);
             mServiceBind = true;
         }
     }
@@ -333,8 +304,8 @@ public class ClingControl {
                     Log.e(TAG, "play success");
 
                     mHandler.sendEmptyMessage(action_succ);
-                    ClingManager.getInstance().registerAVTransport(mActivity);
-                    ClingManager.getInstance().registerRenderingControl(mActivity);
+                    ClingManager.getInstance().registerAVTransport(mContext);
+                    ClingManager.getInstance().registerRenderingControl(mContext);
                 }
 
                 @Override
@@ -401,37 +372,33 @@ public class ClingControl {
 
     private void initClingOptionView() {
         if (mClingOptionView == null) {
-            mClingOptionView = new ClingOptionView(mActivity);
-            mClingOptionView.setOnOptionListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mClingOptionView.onTranstioning();
-                    play();
-                }
-            }, new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    stop();
-                    mDevicesPopup.destroySelectedDevice();
-                    if (mOnExitClickListener != null)
-                        mOnExitClickListener.onClick(v);
-                }
+            mClingOptionView = new ClingOptionView(mContext);
+            mClingOptionView.setOnOptionListener(v -> {
+                mClingOptionView.onTranstioning();
+                play();
+            }, v -> {
+                stop();
+                mDevicesPopup.destroySelectedDevice();
+                if (mOnExitClickListener != null)
+                    mOnExitClickListener.onClick(v);
             });
         }
     }
 
     public void showPopup() {
-        if (mServiceConnecting || mActivity.isFinishing() || !mActivity.hasWindowFocus()) {
-            Toast.makeText(mActivity, "正在获取可投屏设备", Toast.LENGTH_SHORT).show();
+        if (mContext == null || !(mContext instanceof Activity))
+            return;
+        Activity activity = (Activity) mContext;
+        if (mServiceConnecting || activity.isFinishing() || !activity.hasWindowFocus()) {
+            Toast.makeText(mContext, "正在获取可投屏设备", Toast.LENGTH_SHORT).show();
             return;
         }
         if (mHasConnected && !mConnectSucc) {
-            Toast.makeText(mActivity, "投屏设备获取失败", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "投屏设备获取失败", Toast.LENGTH_SHORT).show();
             return;
         }
         if (mDevicesPopup != null && mDevicesPopup.isShowing())
             return;
-        initData();
         initView();
         Collection<ClingDevice> devices = ClingManager.getInstance().getDmrDevices();
         ClingDeviceList.getInstance().setClingDeviceList(devices);
@@ -439,13 +406,10 @@ public class ClingControl {
             mDevicesPopup.clear();
             mDevicesPopup.addAll(devices);
         }
-        View rootView = mActivity.findViewById(Window.ID_ANDROID_CONTENT);
-        rootView.post(new Runnable() {
-            @Override
-            public void run() {
-                if (mDevicesPopup != null && mActivity != null)
-                    mDevicesPopup.showAtLocation(mActivity.findViewById(Window.ID_ANDROID_CONTENT), Gravity.BOTTOM, 0, 0);
-            }
+        View rootView = activity.findViewById(Window.ID_ANDROID_CONTENT);
+        rootView.post(() -> {
+            if (mDevicesPopup != null && activity != null)
+                mDevicesPopup.showAtLocation(rootView, Gravity.BOTTOM, 0, 0);
         });
     }
 
@@ -455,6 +419,12 @@ public class ClingControl {
 
     public void setOnExitClickListener(View.OnClickListener listener) {
         mOnExitClickListener = listener;
+    }
+
+    public void setPlayUrl (String playUrl) {
+        if (TextUtils.isEmpty(playUrl))
+            return;
+        mPlayUrl = playUrl.replace("https", "http");
     }
 
 }
