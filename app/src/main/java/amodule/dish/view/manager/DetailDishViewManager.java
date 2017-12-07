@@ -290,10 +290,10 @@ public class DetailDishViewManager {
      * 处理用料
      */
     public void handlerIngreView(ArrayList<Map<String, String>> list) {
-        if(dishIngreDataShow!=null) {
+        if(list!=null&&list.size()>0) {
             dishIngreDataShow.setVisibility(View.VISIBLE);
             dishIngreDataShow.setData(list);
-        }
+        }else dishIngreDataShow.setVisibility(View.GONE);
     }
     /**
      * 处理广告信息
@@ -307,11 +307,14 @@ public class DetailDishViewManager {
     /**
      * 处理小技巧view
      */
-    public void handlerSkillView(ArrayList<Map<String, String>> list,String dishCode,String courseCode,String chapterCode) {
+    public void handlerSkillView(ArrayList<Map<String, String>> list,String dishCode,String courseCode,String chapterCode,DishModuleScrollView.onDishModuleClickCallBack callback) {
         if(dishModuleScrollView!=null&&"2".equals(list.get(0).get("isShow"))){
             dishModuleScrollView.setVisibility(View.VISIBLE);
-            if(list.get(0).containsKey("list"))dishModuleScrollView.setData(list,dishCode,courseCode,chapterCode);
-        }
+            if(list.get(0).containsKey("list")) {
+                dishModuleScrollView.setData(list, dishCode, courseCode, chapterCode);
+                dishModuleScrollView.setCallBack(callback);
+            }
+        }else  dishModuleScrollView.setVisibility(View.GONE);
     }
     /**
      * 处理步骤相关view
@@ -347,7 +350,7 @@ public class DetailDishViewManager {
         if(dishExplainView!=null && map!=null && !TextUtils.isEmpty(map.get("remark"))){
             dishExplainView.setVisibility(View.VISIBLE);
             dishExplainView.setData(map);
-        }
+        }else dishExplainView.setVisibility(View.GONE);
     }
     /**
      * 处理用户信息问答
@@ -364,9 +367,12 @@ public class DetailDishViewManager {
     public void handlerQAView(ArrayList<Map<String, String>> list){
         if(dishQAView!=null){
             Map<String,String> map= list.get(0);
-            if(!map.containsKey("list")||TextUtils.isEmpty(map.get("list"))||"[]".equals(map.get("list")))return;
-            dishQAView.setData(list);
-            dishQAView.setVisibility(View.VISIBLE);
+            if(!map.containsKey("list")||TextUtils.isEmpty(map.get("list"))||"[]".equals(map.get("list"))){
+                dishQAView.setVisibility(View.GONE);
+            }else {
+                dishQAView.setData(list);
+                dishQAView.setVisibility(View.VISIBLE);
+            }
         }
     }
     /**
@@ -500,7 +506,6 @@ public class DetailDishViewManager {
      */
     private void requestLayout(){
         if(dishVidioLayout==null)return;
-
         if(mMoveLen<=0){mMoveLen=0;}
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, headerLayoutHeight+mMoveLen);
         dishVidioLayout.setLayoutParams(layoutParams);
@@ -539,7 +544,6 @@ public class DetailDishViewManager {
 
         }
     }
-
     public void handleVipState(boolean isVip) {
         if (dishHeaderViewNew != null)
             dishHeaderViewNew.handleVipState(isVip);

@@ -66,7 +66,7 @@
     <View
         android:id="@+id/step_distance"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_21"
+        android:layout_height="@dimen/dp_19"
         android:background="@color/transparent"/>
 
 </LinearLayout>
