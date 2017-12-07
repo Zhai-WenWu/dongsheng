@@ -45,7 +45,6 @@ public class DishStepView extends ItemBaseView {
     private ImageView loadProgress;
     private ImageView itemImg1,itemGif,itemGifHint;
     private StepViewCallBack callback;
-
     private boolean isHasVideo = false;
     private int position;
 
@@ -118,7 +117,6 @@ public class DishStepView extends ItemBaseView {
                     findViewById(R.id.img_view).setVisibility(View.GONE);
                     isHasVideo = true;
                     loadImg(imgUrl);
-
                     itemImg1.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -155,9 +153,9 @@ public class DishStepView extends ItemBaseView {
      * gif不进行显示
      */
     public void stopGif(){
-        Log.i("xianghaTag","stopGif:::");
         itemGifHint.setVisibility(View.VISIBLE);
         itemImg1.setVisibility(View.VISIBLE);
+        loadProgress.setVisibility(GONE);
     }
 
     private void loadImg(String imgUrl){
@@ -188,12 +186,12 @@ public class DishStepView extends ItemBaseView {
         if(!TextUtils.isEmpty(gifUrl)){
             if(itemGif.getTag() == null)
                 itemGif.setTag(TAG_ID, gifUrl);
-            if(callback!=null)callback.onGifPlayClick();
             Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.loading_anim);
             loadProgress.startAnimation(animation);
             loadProgress.setVisibility(VISIBLE);
             itemImg1.setVisibility(VISIBLE);
             itemGifHint.setVisibility(View.GONE);
+
             GifRequestBuilder requestBuilder =  Glide.with(getContext())
                     .load(gifUrl)
                     .asGif()
@@ -223,6 +221,7 @@ public class DishStepView extends ItemBaseView {
                     itemGif.setVisibility(VISIBLE);
                 }
             }
+            if(callback!=null)callback.onGifPlayClick();
         }
     }
 
@@ -240,28 +239,6 @@ public class DishStepView extends ItemBaseView {
         layoutParams.setMargins(0,dp_12,0,0);
         imgView.setLayoutParams(layoutParams);
     }
-
-
-
-//    @Override
-//    public SubBitmapTarget getTarget(final ImageView v, final String url) {
-//        return new SubBitmapTarget() {
-//            @Override
-//            public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> arg1) {
-//                ImageView img = null;
-//                if (v.getTag(TAG_ID).equals(url))
-//                    img = v;
-//                if (img != null && bitmap != null) {
-//                    // 图片圆角和宽高适应
-//                    int imgHei = bitmap.getHeight();
-//                    v.setImageBitmap(bitmap);
-//                    setImageWH(v,imgHei);
-//                    if(callback!=null)callback.getHeight(String.valueOf(imgHei));
-//                }
-//            }
-//        };
-//    }
-
 
     public interface StepViewCallBack{
         public void getHeight(String height);

@@ -60,7 +60,7 @@ public class DetailDishViewManager {
     private boolean isHasVideoOnClick = false;
     private boolean isShowTitleColor=false;
     private View view_oneImage;
-    private ListView listView;
+    private RvListView listView;
     private int firstItemIndex,startY;
     private boolean isHasVideo=false,isRecored=false;
     private int wm_height;//屏幕高度
@@ -93,7 +93,7 @@ public class DetailDishViewManager {
     /**
      * 对view进行基础初始化
      */
-    public DetailDishViewManager(Activity activity, ListView listView, String state) {
+    public DetailDishViewManager(Activity activity, RvListView listView, String state) {
         wm_height = activity.getWindowManager().getDefaultDisplay().getHeight();
         mAct = activity;
         this.listView = listView;
@@ -102,8 +102,6 @@ public class DetailDishViewManager {
         dishTitleViewControl.initView(activity);
         dishTitleViewControl.setstate(state);
         initTitle();
-        long endtime1= System.currentTimeMillis();
-        Log.i("xianghaTag","DetailDishViewManager::时间1：："+(endtime1-startTime));
         dishHoverViewControl = new DishHoverViewControl(activity);
         dishHoverViewControl.initView();
 
@@ -126,8 +124,6 @@ public class DetailDishViewManager {
                     mClingClickListener.onClick(v);
             }
         });
-        long endtime2= System.currentTimeMillis();
-        Log.i("xianghaTag","DetailDishViewManager::时间2：："+(endtime2-startTime));
         dishVipView = new DishVipView(mAct);
         dishVipView.setVisibility(View.GONE);
         //用户信息和菜谱基础信息
@@ -158,22 +154,14 @@ public class DetailDishViewManager {
         noStepView.setVisibility(View.GONE);
         layoutHeader.addView(textStep);
         layoutHeader.addView(noStepView);
-        long endtime3= System.currentTimeMillis();
-        Log.i("xianghaTag","DetailDishViewManager::时间3：："+(endtime3-startTime));
         dishQAView = new DishQAView(mAct);
         dishQAView.setVisibility(View.GONE);
-        long endtime8= System.currentTimeMillis();
-        Log.i("xianghaTag","DetailDishViewManager::时间8：："+(endtime8-startTime));
 
         //foot
         dishExplainView = new DishExplainView(mAct);
         dishExplainView.setVisibility(View.GONE);
-        long endtime7= System.currentTimeMillis();
-        Log.i("xianghaTag","DetailDishViewManager::时间7：："+(endtime7-startTime));
         dishRecommedAndAdView= new DishRecommedAndAdView(mAct);
         dishRecommedAndAdView.setVisibility(View.GONE);
-        long endtime6= System.currentTimeMillis();
-        Log.i("xianghaTag","DetailDishViewManager::时间6：："+(endtime6-startTime));
         layoutFooter.addView(dishExplainView);
         layoutFooter.addView(dishQAView);
         RelativeLayout layout= new RelativeLayout(mAct);
@@ -182,13 +170,9 @@ public class DetailDishViewManager {
         layout.setLayoutParams(layoutParams);
         layoutFooter.addView(dishRecommedAndAdView);
         layoutFooter.addView(layout);
-        long endtime5= System.currentTimeMillis();
-        Log.i("xianghaTag","DetailDishViewManager::时间5：："+(endtime5-startTime));
         listView.addHeaderView(dishHeaderViewNew);
         listView.addHeaderView(layoutHeader);
         listView.addFooterView(layoutFooter);
-        long endtime4= System.currentTimeMillis();
-        Log.i("xianghaTag","DetailDishViewManager::时间4：："+(endtime4-startTime));
         listView.setVisibility(View.VISIBLE);
         setListViewListener();
     }

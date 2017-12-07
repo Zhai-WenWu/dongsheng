@@ -46,6 +46,7 @@ public class AdapterDishRvListView extends RvBaseAdapter<Map<String,String>>{
         }
         @Override
         public void bindData(int position, @Nullable Map<String, String> data) {
+            stepView.setTag(position);
             stepView.setData(data, new DishStepView.StepViewCallBack() {
                 @Override
                 public void getHeight(String height) {
@@ -62,6 +63,8 @@ public class AdapterDishRvListView extends RvBaseAdapter<Map<String,String>>{
 
             if(isShowDistance)stepView.isDistance(position == mData.size()-1);
         }
+    }
+    public void refreshView(int postion){
     }
     public interface ItemOnClickCallBack{
         public void onClickPosition(int position);
