@@ -273,6 +273,7 @@ public class LoginManager {
 				userInfo.put("isGourmet", map.get("isGourmet"));
 				userInfo.put("tel", map.get("tel"));
 				userInfo.put("vip", map.get("vip"));
+				userInfo.put("maturity_day", TextUtils.isEmpty(map.get("maturity_day")) ? "" : map.get("maturity_day"));
 				userInfo.put("email", TextUtils.isEmpty(map.get("email")) ? "" : map.get("email"));
 				userInfo.put("regTime", TextUtils.isEmpty(map.get("regTime")) ? "" : map.get("regTime"));
 				UtilLog.print("d", "是否是管理员: " + map.get("isManager"));
@@ -394,6 +395,10 @@ public class LoginManager {
     }
 
     public static boolean isVIP(){
+        return isUserVip() || isTempVip();
+    }
+
+    public static boolean isUserVip(){
         if(userInfo != null && userInfo.containsKey("vip")){
             Map<String,String> vipMap = StringManager.getFirstMap(userInfo.get("vip"));
             return "2".equals(vipMap.get("isVip"));
@@ -420,6 +425,23 @@ public class LoginManager {
                 FileManager.saveShared(XHApplication.in(),FileManager.xmlFile_appInfo,"isTempVip",tempVip ? "2" : "");
             }
         }).start();
+    }
+
+    public static void saveTempVipMaturityDay(String maturityTimeStr){
+        if(TextUtils.isEmpty(maturityTimeStr)){
+            FileManager.saveShared(XHApplication.in(),FileManager.xmlFile_appInfo,"maturity_day","");
+            return;
+        }
+        int maturityDay = (int) (Long.parseLong(maturityTimeStr) / (24 * 60 * 60 * 1000f));
+        FileManager.saveShared(XHApplication.in(),FileManager.xmlFile_appInfo,"maturity_day",String.valueOf(maturityDay));
+    }
+
+    public static int getTempVipMaturityDay(){
+        Object obj = FileManager.loadShared(XHApplication.in(),FileManager.xmlFile_appInfo,"maturity_day");
+        if(null != obj && !TextUtils.isEmpty(obj.toString())){
+            return Integer.parseInt(obj.toString());
+        }
+        return -1;
     }
 
     public static boolean isBindMobilePhone(){
@@ -579,6 +601,25 @@ public class LoginManager {
         return regTime;
     }
 
+    public static int getVipMaturityDay(){
+        if(isUserVip()){
+            return getUserVipMaturityDay();
+        } else if(isTempVip()) {
+            return getTempVipMaturityDay();
+        }
+        return 0;
+    }
+
+    public static int getUserVipMaturityDay(){
+        if(userInfo != null && userInfo.containsKey("maturity_day")){
+            String vipMaturityDay = userInfo.get("maturity_day");
+            if(!TextUtils.isEmpty(vipMaturityDay) && !"null".equals(vipMaturityDay)){
+                return Integer.parseInt(vipMaturityDay);
+            }
+        }
+        return -1;
+    }
+
     private static boolean mAutoBindYiYuanVIP;
 
     /**
@@ -658,6 +699,7 @@ public class LoginManager {
                 String vipFirstTime = vipContentMap.get("first_time");
                 String vipLastTime = vipContentMap.get("last_time");
                 String vipMaturityTime = vipContentMap.get("maturity_time");
+                saveTempVipMaturityDay(vipMaturityTime);
                 if (TextUtils.isEmpty(vipFirstTime) || TextUtils.isEmpty(vipLastTime) || TextUtils.isEmpty(vipMaturityTime)) {
                     if (callback != null)
                         callback.run();
