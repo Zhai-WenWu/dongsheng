@@ -339,11 +339,13 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
             bar_title_2.findViewById(R.id.back).setOnClickListener(backClickListener);
             bar_title_2.findViewById(R.id.leftClose).setOnClickListener(backClickListener);
             bar_title_2.findViewById(R.id.leftClose).setVisibility(View.VISIBLE);
-            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) bar_title_2.getLayoutParams();
-            int statusBarHeight = Tools.getStatusBarHeight(this);
-            layoutParams.height = Tools.getDimen(this,R.dimen.dp_45) + statusBarHeight;
-            View title_state_bar_page = findViewById(R.id.title_state_bar_page);
-             layoutParams.height = statusBarHeight;
+//            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) bar_title_2.getLayoutParams();
+//            int statusBarHeight = Tools.getStatusBarHeight(this);
+//            Log.i("tzy","analyzePagePermissionData :: statusBarHeight = " + statusBarHeight);
+//            layoutParams.height = Tools.getDimen(this,R.dimen.dp_45) + statusBarHeight;
+//            View title_state_bar_page = findViewById(R.id.title_state_bar_page);
+//            layoutParams = (RelativeLayout.LayoutParams) title_state_bar_page.getLayoutParams();
+//            layoutParams.height = statusBarHeight;
             dredgeVipFullLayout.setVisibility(View.VISIBLE);
             return false;
         }
