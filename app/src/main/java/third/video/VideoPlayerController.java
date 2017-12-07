@@ -700,12 +700,20 @@ public class VideoPlayerController {
         view_Tip.findViewById(R.id.btnCloseTip).setOnClickListener(disconnectClick);
     }
 
-    private OnClickListener disconnectClick = v -> mContext.startActivity(new Intent(Settings.ACTION_SETTINGS));
+    private OnClickListener disconnectClick = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            mContext.startActivity(new Intent(Settings.ACTION_SETTINGS));
+        }
+    };
 
-    private OnClickListener onClickListener= v -> {
-        setShowMedia(true);
-        setOnClick();
-        new Thread(() -> FileManager.saveShared(mContext,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI,"1")).start();
+    private OnClickListener onClickListener= new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            setShowMedia(true);
+            setOnClick();
+            new Thread(() -> FileManager.saveShared(mContext,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI,"1")).start();
+        }
     };
 
     public boolean isPortrait() {
