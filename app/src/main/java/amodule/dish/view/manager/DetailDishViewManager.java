@@ -405,30 +405,6 @@ public class DetailDishViewManager {
      * listview滑动监听
      */
     private void setListViewListener() {
-//        setViewOneState();
-//        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
-//            @Override
-//            public void onScrollStateChanged(AbsListView view, int scrollState) {
-//                /** 当滑动时停止播放 ...star.... */
-////                changeGifState(view,scrollState);
-//                /** 当滑动时停止播放 .....end....*/
-//                switch (scrollState) {
-//                    // 当不滚动时
-//                    case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
-//                        setViewOneState();
-//                        break;
-//                    case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
-//                        setViewOneState();
-//                        break;
-//                    case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
-//                        break;
-//                }
-//            }
-//            @Override
-//            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-//                firstItemIndex = firstVisibleItem;
-//            }
-//        });
         listView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {

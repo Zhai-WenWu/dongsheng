@@ -209,31 +209,6 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
 
             @Override
             public void onGifClickPosition(int position) {
-                int length= rvListview.getChildCount();
-
-//                Log.i("xianghaTag","position:::"+position);
-//                if(length>0){
-//                    for(int i=0;i<length;i++){
-////                        if(position!=i) {
-//                            View itemView = rvListview.getChildAt(i);
-//                            Log.i("xianghaTag","onGifClickPosition:::"+itemView.getTag());
-////                            if(itemView instanceof DishStepView)((DishStepView)itemView).stopGif();
-////                        }
-//                    }
-//                }
-////                rvListview.get
-//                if(maplist.size()>0){
-//                    int size= maplist.size();
-//                    for(int i=0;i<size;i++){
-//                        Map<String,String> map = maplist.get(i);
-//                        if(map.containsKey("isNoShowGif")){
-//                            if(position!=i){
-//                                map.put("isNoShowGif","2");
-//                            }
-//                        }
-//                    }
-//                    adapterDishRvListView.notifyDataSetChanged();
-//                }
             }
         });
     }
