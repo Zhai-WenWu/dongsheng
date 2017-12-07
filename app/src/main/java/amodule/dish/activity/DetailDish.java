@@ -70,9 +70,9 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
     private XHWebView pageXhWebView;
     private String dishInfo = "";
     private AdapterDishRvListView adapterDishRvListView;
-//    private AdapterDishNew adapterDishNew;
     private String courseCode;//课程分类
     private String chapterCode;//章节分类
+    private boolean isShowPowerPermission=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,7 +157,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         }, 15 * 60 * 1000);
         getWindow().setFormat(PixelFormat.TRANSLUCENT);//sufureView页面闪烁
         XHClick.track(XHApplication.in(), "浏览菜谱详情页");
-        ObserverManager.getInstence().registerObserver(this,ObserverManager.NOTIFY_LOGIN,ObserverManager.NOTIFY_FOLLOW,ObserverManager.NOTIFY_PAYFINISH);
+        ObserverManager.getInstence().registerObserver(this,ObserverManager.NOTIFY_LOGIN,ObserverManager.NOTIFY_FOLLOW,ObserverManager.NOTIFY_PAYFINISH,ObserverManager.NOTIFY_UPLOADOVER);
     }
     /**
      * 处理页面Ui
@@ -340,6 +340,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
             bar_title_2.findViewById(R.id.leftClose).setOnClickListener(backClickListener);
             bar_title_2.findViewById(R.id.leftClose).setVisibility(View.VISIBLE);
             dredgeVipFullLayout.setVisibility(View.VISIBLE);
+            isShowPowerPermission=true;
             return false;
         }
         if(dredgeVipFullLayout!=null)
@@ -371,26 +372,21 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
     @Override
     public void notify(String name, Object sender, Object data) {
         switch (name){
+            case ObserverManager.NOTIFY_PAYFINISH://支付
+                if(detailDishDataManager!=null)detailDishDataManager.reqQAData();
             case ObserverManager.NOTIFY_LOGIN://登陆
                 refreshTopInfo();
+                handleClingBtnState();
             case ObserverManager.NOTIFY_FOLLOW://关注
+            case ObserverManager.NOTIFY_UPLOADOVER://问答
                 if(detailDishDataManager!=null)detailDishDataManager.reqPublicData();
-                handleClingBtnState();
-                break;
-            case ObserverManager.NOTIFY_PAYFINISH://支付
-                refreshTopInfo();
-                if(detailDishDataManager!=null) {
-                    detailDishDataManager.reqPublicData();
-                    detailDishDataManager.reqQAData();
-                }
-                handleClingBtnState();
                 break;
         }
     }
     private void refreshTopInfo(){
         if(detailDishDataManager!=null){
             detailDishDataManager.resetTopInfo();
-            detailDishDataManager.reqTopInfo(false);
+            detailDishDataManager.reqTopInfo(isShowPowerPermission);
         }
     }
     private boolean saveDishInfo = false;
