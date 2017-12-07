@@ -361,11 +361,8 @@ public class StringManager extends UtilString {
     public final static String API_SET_FAVORITE_STATUS = apiUrl + "main8/favorites/setFavorites";//设置收藏状态
 
     //菜谱详情页面
-    public final static String API_GETDISHBASICINFOBYCODE = apiUrl + "main7/Dish/getDishBasicInfoByCode";//菜谱基本信息
     public final static String API_GETDISHBURDENBYCODE = apiUrl + "main7/Dish/getDishBurdenByCode";//用料信息
     public final static String API_GETBELOWBURDENBANNER = apiUrl + "main7/Dish/getBelowBurdenBanner";//用料下方banner
-    public final static String API_getDishMakeByCode = apiUrl + "main7/Dish/getDishMakeByCode";//做法
-    public final static String API_GETUSERINFOBYCODE = apiUrl + "main7/Dish/getUserInfoByCode";//用户信息
 
     public final static String API_MAIN8_TOPINFP = apiUrl  + "main8/Dish/topInfo";//菜谱详情页顶部
     public final static String API_MAIN8_DISHMAKE = apiUrl  + "main8/Dish/getDishMakeByCode";//菜谱详情页做法

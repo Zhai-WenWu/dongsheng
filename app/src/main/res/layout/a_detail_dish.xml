@@ -40,7 +40,7 @@
         android:id="@+id/a_dish_detail_new_footer_hover"
         layout="@layout/a_dish_detail_hove_viewr"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_55"
+        android:layout_height="@dimen/dp_49"
         android:layout_alignParentBottom="true"
         android:background="@android:color/transparent"
         android:visibility="visible" />
@@ -51,7 +51,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_marginBottom="@dimen/dp_55"
+        android:layout_marginBottom="@dimen/dp_49"
         android:layout_marginRight="@dimen/dp_15"
         android:visibility="gone">
 

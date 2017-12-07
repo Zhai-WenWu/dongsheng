@@ -62,6 +62,7 @@ public class AdapterDishRvListView extends RvBaseAdapter<Map<String,String>>{
             },position);
 
             if(isShowDistance)stepView.isDistance(position == mData.size()-1);
+            stepView.hideStepDistance(position==mData.size()-1);
         }
     }
     public void refreshView(int postion){

@@ -33,6 +33,7 @@ import acore.widget.rvlistview.RvListView;
 import amodule.dish.adapter.AdapterDishNew;
 import amodule.dish.adapter.AdapterDishRvListView;
 import amodule.dish.db.DataOperate;
+import amodule.dish.view.DishModuleScrollView;
 import amodule.dish.view.DishStepView;
 import amodule.dish.view.manager.DetailDishDataManager;
 import amodule.dish.view.manager.DetailDishViewManager;
@@ -83,7 +84,6 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         initView();
         initData();
     }
-
     /**
      * 处理页面初始数据
      */
@@ -168,7 +168,6 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
                 intent.putExtra("key", tongjiId);
                 DetailDish.this.startActivity(intent);
             }
-
             @Override
             public void onGifClickPosition(int position) {
             }
@@ -214,7 +213,18 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
                 detailDishViewManager.handlerQAView(list);
                 break;
             case DetailDishDataManager.DISH_DATA_RNTIC://技巧
-                detailDishViewManager.handlerSkillView(list,code,courseCode,chapterCode);
+                detailDishViewManager.handlerSkillView(list, code, courseCode, chapterCode, new DishModuleScrollView.onDishModuleClickCallBack() {
+                    @Override
+                    public void getData(Map<String, String> map) {
+                        String url= map.get("appurl");
+                        if(url.contains("?")) {
+                            String temp = url.substring(url.indexOf("?")+1,url.length());
+                            Map<String,String> map1 = StringManager.getMapByString(temp,"&","=");
+                            detailDishDataManager.setDataNew(map1.get("code"),map1.get("courseCode"),map1.get("chapterCode"));
+                            detailDishDataManager.reqTopInfo(true);
+                        }
+                    }
+                });
                 break;
             case DetailDishDataManager.DISH_DATA_RELATION://公共数据
                 Map<String,String> relation= list.get(0);
@@ -232,25 +242,22 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         super.onResume();
         if(detailDishViewManager!=null)detailDishViewManager.onResume();
     }
-
     @Override
     protected void onPause() {
         super.onPause();
         if(detailDishViewManager!=null)detailDishViewManager.onPause();
     }
-
     @Override
     protected void onRestart() {
         super.onRestart();
         isHasVideo = false;
         if(detailDishViewManager!=null)detailDishViewManager.handlerLoginStatus();
     }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
         //反注册。
-        ObserverManager.getInstence().unRegisterObserver(ObserverManager.NOTIFY_LOGIN,ObserverManager.NOTIFY_FOLLOW,ObserverManager.NOTIFY_PAYFINISH);
+        ObserverManager.getInstence().unRegisterObserver(ObserverManager.NOTIFY_LOGIN,ObserverManager.NOTIFY_FOLLOW,ObserverManager.NOTIFY_PAYFINISH,ObserverManager.NOTIFY_UPLOADOVER);
         if(detailDishViewManager!=null)detailDishViewManager.onDestroy();
         long nowTime=System.currentTimeMillis();
         if(startTime>0&&(nowTime-startTime)>0&&!TextUtils.isEmpty(data_type)&&!TextUtils.isEmpty(module_type)){
@@ -261,7 +268,6 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
             handlerScreen=null;
         }
     }
-
     public void refresh() {
         if(detailDishViewManager!=null)detailDishViewManager.refresh();
     }
@@ -320,12 +326,10 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
             SpecialWebControl.initSpecialWeb(this,rl,"dishInfo",map.get("name"),code);
         }
     }
-
     private void handleVipState () {
         if (detailDishViewManager != null)
             detailDishViewManager.handleVipState(LoginManager.isVIP() || LoginManager.isTempVip());
     }
-
     @Override
     public void notify(String name, Object sender, Object data) {
         switch (name){

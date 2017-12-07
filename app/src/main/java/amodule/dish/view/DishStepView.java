@@ -75,8 +75,11 @@ public class DishStepView extends ItemBaseView {
      * 隐藏边距
      */
     public void isDistance(boolean isShow){
-        findViewById(R.id.step_distance).setVisibility(isShow?View.VISIBLE:View.GONE);
+        findViewById(R.id.step_distance).setVisibility(View.GONE);
         itemText1.setVisibility(isShow?View.VISIBLE:View.GONE);
+    }
+    public void hideStepDistance(boolean isShow){
+        findViewById(R.id.step_distance).setVisibility(isShow?View.GONE:View.VISIBLE);
     }
     public void setData(Map<String, String> maps, StepViewCallBack stepViewCallBack, int position) {
         this.map = maps;

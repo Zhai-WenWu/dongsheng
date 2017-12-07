@@ -42,7 +42,7 @@
         android:layout_below="@+id/title_dish_exp_rela"
         android:layout_width="match_parent"
         android:background="@color/transparent"
-        android:paddingTop="@dimen/dp_35"
+        android:paddingTop="@dimen/dp_26"
         android:layout_height="wrap_content">
         <RelativeLayout
             android:layout_width="match_parent"
@@ -147,13 +147,13 @@
         android:layout_height="wrap_content"
         android:background="@color/transparent"
         android:layout_below="@+id/dish_exp_user_rela"
-        android:paddingTop="@dimen/dp_35">
+        android:paddingTop="@dimen/dp_22">
 
         <TextView
             android:id="@+id/dish_work_exp_tv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:lineSpacingExtra="@dimen/dp_4"
+            android:lineSpacingExtra="@dimen/dp_7"
             android:text="加载中"
             android:textColor="#333333"
             android:textSize="@dimen/dp_17" />

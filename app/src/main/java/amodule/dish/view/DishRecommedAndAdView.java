@@ -47,7 +47,7 @@ import static xh.basic.tool.UtilString.getListMapByJson;
  */
 
 public class DishRecommedAndAdView extends ItemBaseView implements View.OnClickListener{
-    private LinearLayout mAdLayout,userDishLayout;
+    private LinearLayout userDishLayout;
     private RelativeLayout mRecomentLayout;
     private TextView mRecommentNum,mRelevantTv;
     private String code,mDishName;
@@ -66,7 +66,6 @@ public class DishRecommedAndAdView extends ItemBaseView implements View.OnClickL
     @Override
     public void init() {
         super.init();
-        mAdLayout = (LinearLayout)findViewById(R.id.a_dish_detail_new_tieshi_ad);
         mRecomentLayout = (RelativeLayout)findViewById(R.id.a_dish_detail_new_xiangguan);
         userDishLayout = (LinearLayout)findViewById(R.id.a_dish_detail_new_xiangguan_scroll_linear);
 

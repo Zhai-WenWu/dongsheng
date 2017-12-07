@@ -49,6 +49,12 @@ public class DetailDishDataManager {
         resetData();
         reqTopInfo(true);
     }
+    public void setDataNew(String code,String courseCode,String chapterCode){
+        this.dishCode = code;
+        this.courseCode= courseCode;
+        this.chapterCode= chapterCode;
+        resetData();
+    }
     //重置权限数据
     private void resetData(){
         loadOver = false;

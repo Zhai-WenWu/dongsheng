@@ -98,6 +98,7 @@ public class DishModuleScrollView extends ItemBaseView{
                         @Override
                         public void onItemClick(View view, int position, Map<String, String> stringStringMap) {
                             //点击回调
+//                            if(callBack!=null)callBack.getData(stringStringMap);
                             AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(),stringStringMap.get("appurl"),false);
                             dishGridDialog.dismiss();
                         }
@@ -149,5 +150,12 @@ public class DishModuleScrollView extends ItemBaseView{
         public void bindData(int position, @Nullable Map<String, String> data) {
             view.setData(data,position);
         }
+    }
+    public onDishModuleClickCallBack callBack;
+    public void setCallBack(onDishModuleClickCallBack callBack){
+        this.callBack = callBack;
+    }
+    public interface onDishModuleClickCallBack{
+        public void getData(Map<String,String> map);
     }
 }
