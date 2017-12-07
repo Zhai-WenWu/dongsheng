@@ -282,7 +282,7 @@ public class DetailDishViewManager {
         if(dishVipView != null){
             if(relation.containsKey("isShow")&&"2".equals(relation.get("isShow"))) {
                 dishVipView.setVisibility(View.VISIBLE);
-                dishVipView.setData(StringManager.getFirstMap(relation.get("vipButton")));
+                dishVipView.setData(relation);
             }else dishVipView.setVisibility(View.GONE);
         }
     }
