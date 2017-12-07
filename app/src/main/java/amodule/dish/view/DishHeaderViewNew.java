@@ -47,7 +47,6 @@ import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
 import third.ad.scrollerAd.XHAllAdControl;
 import third.ad.tools.AdPlayIdConfig;
-import third.cling.ui.ClingOptionView;
 import third.video.VideoPlayerController;
 import xh.basic.tool.UtilImage;
 import xh.basic.tool.UtilString;
@@ -75,8 +74,6 @@ public class DishHeaderViewNew extends LinearLayout {
     private int distance;
     private boolean isLoadImg=false;
     private boolean mShowClingBtn;
-
-    private OnClickListener mClingClickListener;
 
     public DishHeaderViewNew(Context context) {
         super(context);
@@ -346,13 +343,6 @@ public class DishHeaderViewNew extends LinearLayout {
                 }
             });
 
-            mVideoPlayerController.setClingClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mClingClickListener != null)
-                        mClingClickListener.onClick(v);
-                }
-            });
             dishvideo_img.setVisibility(View.GONE);
             callBack.getVideoControl(mVideoPlayerController, dishVidioLayout, videoViewGroup);
             callBack.videoImageOnClick();
@@ -362,14 +352,10 @@ public class DishHeaderViewNew extends LinearLayout {
         return isUrlVaild;
     }
 
-    public void setClingClickListener(OnClickListener clickListener) {
-        this.mClingClickListener = clickListener;
-    }
-
-    public void showClingBtn(boolean show) {
-        mShowClingBtn = show;
+    public void handleVipState (boolean isVip) {
+        mShowClingBtn = isVip;
         if (mVideoPlayerController != null)
-            mVideoPlayerController.showClingBtn(show);
+            mVideoPlayerController.showClingBtn(mShowClingBtn);
     }
 
     private RelativeLayout dredgeVipLayout;
@@ -385,35 +371,27 @@ public class DishHeaderViewNew extends LinearLayout {
             dredgeVipLayout.addView(vipView);
             vipView.setTipMessaText(common.get("text"));
             vipView.setDredgeVipText(common.get("button1"));
-            vipView.setDredgeVipClick(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(!TextUtils.isEmpty(url)){
-                        String currentUrl = url + "&vipFrom=" +Uri.encode(LoginManager.isLogin() ? "视频菜谱会员按钮（登录后）" : "视频菜谱会员按钮（登录前）");
-                        AppCommon.openUrl(activity,currentUrl,true);
-                        return;
-                    }
-
+            vipView.setDredgeVipClick(v -> {
+                if(!TextUtils.isEmpty(url)){
+                    String currentUrl = url + "&vipFrom=" +Uri.encode(LoginManager.isLogin() ? "视频菜谱会员按钮（登录后）" : "视频菜谱会员按钮（登录前）");
+                    AppCommon.openUrl(activity,currentUrl,true);
                 }
             });
             dredgeVipLayout.setPadding(0, distance, 0, 0);
-            mVideoPlayerController.setOnProgressChangedCallback(new GSYVideoPlayer.OnProgressChangedCallback() {
-                @Override
-                public void onProgressChanged(int progress, int secProgress, int currentTime, int totalTime) {
-                    int currentS = Math.round(currentTime / 1000f);
-                    int durationS = Math.round(totalTime / 1000f);
-                    if (currentS >= 0 && durationS >= 0) {
-                        if (isHaspause) {
-                            mVideoPlayerController.onPause();
-                            return;
-                        }
-                        if ((currentS > limitTime
+            mVideoPlayerController.setOnProgressChangedCallback((progress, secProgress, currentTime1, totalTime) -> {
+                int currentS = Math.round(currentTime / 1000f);
+                int durationS = Math.round(totalTime / 1000f);
+                if (currentS >= 0 && durationS >= 0) {
+                    if (isHaspause) {
+                        mVideoPlayerController.onPause();
+                        return;
+                    }
+                    if ((currentS > limitTime
 //                            || limitTime > durationS
-                        ) && !isContinue) {
-                            dredgeVipLayout.setVisibility(VISIBLE);
-                            mVideoPlayerController.onPause();
-                            isHaspause = true;
-                        }
+                    ) && !isContinue) {
+                        dredgeVipLayout.setVisibility(VISIBLE);
+                        mVideoPlayerController.onPause();
+                        isHaspause = true;
                     }
                 }
             });
@@ -438,26 +416,23 @@ public class DishHeaderViewNew extends LinearLayout {
         dishVidioLayout.removeAllViews();
         dishVidioLayout.setLayoutParams(params_rela);
         dishVidioLayout.addView(imvv);
-        dishVidioLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dishVidioLayout.setClickable(false);
-                XHClick.mapStat(activity, tongjiId, "菜谱区域的点击", "菜谱大图点击");
-                ArrayList<Map<String, String>> listmap = new ArrayList<>();
-                Map<String, String> map = new HashMap<>();
-                map.put("img", img);
-                map.put("info", "");
-                map.put("num", "1");
-                listmap.add(map);
+        dishVidioLayout.setOnClickListener(v -> {
+            dishVidioLayout.setClickable(false);
+            XHClick.mapStat(activity, tongjiId, "菜谱区域的点击", "菜谱大图点击");
+            ArrayList<Map<String, String>> listmap = new ArrayList<>();
+            Map<String, String> map = new HashMap<>();
+            map.put("img", img);
+            map.put("info", "");
+            map.put("num", "1");
+            listmap.add(map);
 
-                Intent intent = new Intent(activity, MoreImageShow.class);
-                intent.putExtra("data", listmap);
-                intent.putExtra("from", "dish");
-                intent.putExtra("index", 0);
-                intent.putExtra("isShowAd", false);
-                dishVidioLayout.setClickable(true);
-                activity.startActivity(intent);
-            }
+            Intent intent = new Intent(activity, MoreImageShow.class);
+            intent.putExtra("data", listmap);
+            intent.putExtra("from", "dish");
+            intent.putExtra("index", 0);
+            intent.putExtra("isShowAd", false);
+            dishVidioLayout.setClickable(true);
+            activity.startActivity(intent);
         });
         if(callBack!=null) {
             callBack.getVideoControl(mVideoPlayerController, dishVidioLayout, videoViewGroup);
@@ -487,10 +462,6 @@ public class DishHeaderViewNew extends LinearLayout {
 
     public boolean onBackPressed(){
         return mVideoPlayerController != null ? mVideoPlayerController.onBackPressed() : false;
-    }
-
-    public View getVideoView(){
-        return videoViewGroup;
     }
 
     /**
@@ -560,7 +531,7 @@ public class DishHeaderViewNew extends LinearLayout {
     public void onDestroy(){
         if(mVideoPlayerController!=null){
             mVideoPlayerController.onDestroy();
-//            mVideoPlayerController=null;
+            mVideoPlayerController=null;
         }
     }
 
