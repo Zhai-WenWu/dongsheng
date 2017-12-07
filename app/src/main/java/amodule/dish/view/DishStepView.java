@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -137,10 +138,32 @@ public class DishStepView extends ItemBaseView {
              if( map.containsKey("img")&&!TextUtils.isEmpty(map.get("img"))){
                  findViewById(R.id.view_linear).setVisibility(View.VISIBLE);
                  itemImg1.setVisibility(View.VISIBLE);
-                 setViewImage(itemImg1, map.get("img"));
-                 if (map.containsKey("height") && Integer.parseInt(map.get("height")) > 0) {
-                     setImageWH(itemImg1, Integer.parseInt(map.get("height")));
+                 String img = map.get("img");
+                 Log.i("xianghaTag","img:存在::"+img);
+                 if(img.contains("?")&&!map.containsKey("height")){
+                     Log.i("xianghaTag","处理高度：：：");
+                    String temp = img.substring(img.indexOf("?")+1,img.length());
+                    if(temp.contains("_")){
+                        String img_waith= temp.substring(0,temp.indexOf("_"));
+                        String img_height= temp.substring(temp.indexOf("_")+1,temp.length());
+                        int viewWaith=Tools.getPhoneWidth()-Tools.getDimen(context,R.dimen.dp_40);
+                        if(!TextUtils.isEmpty(img_waith)&&!TextUtils.isEmpty(img_height)&&viewWaith>0){
+                            double intTemp=Double.parseDouble(img_height)/Double.parseDouble(img_waith);
+                            int viewHeight= (int) (intTemp*viewWaith);
+                            map.put("height",String.valueOf(viewHeight));
+                            RelativeLayout.LayoutParams layoutParams= new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,viewHeight);
+                            itemImg1.setLayoutParams(layoutParams);
+                        }
+                    }
+                 }else if(map.containsKey("height")&&!TextUtils.isEmpty(map.get("height"))){
+                     Log.i("xianghaTag","height存在：：：");
+                     RelativeLayout.LayoutParams layoutParams= new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,Integer.parseInt(map.get("height")));
+                     itemImg1.setLayoutParams(layoutParams);
                  }
+                 setViewImage(itemImg1, map.get("img"));
+//                 if (map.containsKey("height") && Integer.parseInt(map.get("height")) > 0) {
+//                     setImageWH(itemImg1, Integer.parseInt(map.get("height")));
+//                 }
              }else{
                  findViewById(R.id.view_linear).setVisibility(View.GONE);
                  itemImg1.setVisibility(View.GONE);

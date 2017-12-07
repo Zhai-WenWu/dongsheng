@@ -70,6 +70,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
     private XHWebView pageXhWebView;
     private String dishInfo = "";
     private AdapterDishRvListView adapterDishRvListView;
+//    private AdapterDishNew adapterDishNew;
     private String courseCode;//课程分类
     private String chapterCode;//章节分类
     private boolean isShowPowerPermission=false;

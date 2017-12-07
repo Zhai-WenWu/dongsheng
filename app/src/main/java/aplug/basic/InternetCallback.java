@@ -238,10 +238,8 @@ public abstract class InternetCallback extends InterCallback {
         }
 		String isAccept= AppCommon.getConfigByLocal("imageAccept");//isWebp 2表示使用，1不
 		if(!TextUtils.isEmpty(isAccept)){
-			Log.i("xianghaTag","imageAccept:::"+isAccept);
 			Map<String,String> map=StringManager.getFirstMap(isAccept);
 			if(!TextUtils.isEmpty(map.get("sdk"))&&Integer.parseInt(map.get("sdk"))<= Build.VERSION.SDK_INT){
-				Log.i("xianghaTag","1111:::"+isAccept);
 				String accept = header.containsKey("Accept") ? header.get("Accept") : "";
 				if(accept.length() > 0){
 					if(!accept.contains("image/webp")){

@@ -1,11 +1,15 @@
 package amodule.dish.view.manager;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -52,7 +56,7 @@ public class DetailDishViewManager {
     private boolean isShowTitleColor=false;
     private View view_oneImage;
     private RvListView listView;
-    private int firstItemIndex,startY;
+    private int firstItemIndex = -1,startY;
     private boolean isHasVideo=false,isRecored=false;
     private int wm_height;//屏幕高度
 
@@ -385,14 +389,34 @@ public class DetailDishViewManager {
     /**
      * listview滑动监听
      */
+    @TargetApi(Build.VERSION_CODES.M)
     private void setListViewListener() {
+        listView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+                if (layoutManager instanceof LinearLayoutManager) {
+                    LinearLayoutManager linearManager = (LinearLayoutManager) layoutManager;
+                    //获取最后一个可见view的位置
+                    int lastItemPosition = linearManager.findLastVisibleItemPosition();
+                    //获取第一个可见view的位置
+                    firstItemIndex = linearManager.findFirstVisibleItemPosition();
+                    System.out.println(lastItemPosition + "   " + firstItemIndex);
+                }
+            }
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
         listView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         if (!isHasVideo) {
-                            if (firstItemIndex == 0 && !isRecored) {
+                            if (firstItemIndex == 0 && !isRecored && isShowScreen()) {
                                 startY = (int) event.getY();
                                 isRecored = true;
                             }
@@ -401,10 +425,10 @@ public class DetailDishViewManager {
                     case MotionEvent.ACTION_MOVE:
                         if (!isHasVideo) {
                             int tempY = (int) event.getY();
-                            if (!isRecored && firstItemIndex == 0) {// 如果首item索引为0，且尚未记录startY,则在拖动时记录之，并执行isRecored
+                            if (!isRecored && firstItemIndex == 0&&isShowScreen()) {// 如果首item索引为0，且尚未记录startY,则在拖动时记录之，并执行isRecored
                                 isRecored = true;
                                 startY = tempY;
-                            } else if (firstItemIndex == 0) {
+                            } else if (firstItemIndex == 0&&isShowScreen()) {
                                 int y = tempY - startY;
                                 if (wm_height > 0 && y > 0) {
                                     if (headerLayoutHeight + y <= wm_height * 2 / 3) {
@@ -430,6 +454,14 @@ public class DetailDishViewManager {
                 return false;
             }
         });
+    }
+    private boolean isShowScreen(){
+        int[] location = new int[2];
+        dishHeaderViewNew.getLocationOnScreen(location);
+        if(location[1]>Tools.getDimen(mAct,R.dimen.dp_45)){
+            return true;
+        }
+        return false;
     }
     private int mMoveLen = 0;
     private MyTimer mTimer;
