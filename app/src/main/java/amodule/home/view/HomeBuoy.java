@@ -13,7 +13,10 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.BitmapRequestBuilder;
+import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.xiangha.R;
 
 import java.util.HashMap;
@@ -23,6 +26,7 @@ import acore.logic.AppCommon;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
+import acore.tools.ToolsDevice;
 import aplug.basic.LoadImage;
 import third.ad.tools.AdConfigTools;
 import third.ad.tools.AdPlayIdConfig;
@@ -181,13 +185,8 @@ public class HomeBuoy {
         }
         imageButton.setScaleType(ImageView.ScaleType.CENTER_CROP);
         imageButton.setVisibility(View.VISIBLE);
-        BitmapRequestBuilder<GlideUrl, Bitmap> bitmapRequest = LoadImage.with(mAct)
-                .load(imgUrl)
-                .setPlaceholderId(R.drawable.z_quan_float_activity)
-                .setErrorId(R.drawable.z_quan_float_activity)
-                .build();
-        if (bitmapRequest != null)
-            bitmapRequest.into(imageButton);
+
+        Glide.with(mAct).load(imgUrl).into(imageButton);
     }
 
     public void executeOpenAnim() {

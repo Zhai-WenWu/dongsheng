@@ -165,6 +165,9 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
             );
             loadManager.getSingleLoadMore(mViewContrloer.getRvListView()).setVisibility(View.GONE);
             mViewContrloer.addOnScrollListener();
+            if(!ToolsDevice.isNetworkAvailable(this)){
+                loadManager.hideProgressBar();
+            }
         }
         loadCacheData();
         mViewContrloer.setTipMessage();
@@ -275,6 +278,8 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
                 if (ToolsDevice.isNetworkAvailable(MainHomePage.this)) {
                     loadManager.changeMoreBtn(mViewContrloer.getRvListView(), flag, LoadManager.FOOTTIME_PAGE,
                             refresh ? mDataControler.getData().size() : loadCount, 0, refresh);
+                }else {
+
                 }
             }
 

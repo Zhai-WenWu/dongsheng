@@ -234,6 +234,8 @@ public class ListDish extends BaseActivity {
             JSONObject dishInfoJson = new JSONObject();
             dishInfoJson.put("code",data.get("code"));
             dishInfoJson.put("name",data.get("name"));
+            dishInfoJson.put("img",data.get("img"));
+            dishInfoJson.put("type",TextUtils.equals(data.get("hasVideo"), "2") ? "2" : "1");
             dishInfoJson.put("allClick",data.get("allClick").replace("浏览",""));
             dishInfoJson.put("favorites",data.get("favorites").replace("收藏",""));
             dishInfoJson.put("info",data.get("info"));

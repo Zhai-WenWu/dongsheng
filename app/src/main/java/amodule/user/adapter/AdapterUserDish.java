@@ -179,6 +179,8 @@ public class AdapterUserDish extends AdapterSimple {
             JSONObject dishInfoJson = new JSONObject();
             dishInfoJson.put("code",data.get("code"));
             dishInfoJson.put("name",data.get("name"));
+            dishInfoJson.put("img",data.get("img"));
+            dishInfoJson.put("type",data.get("type"));
             dishInfoJson.put("allClick", allClick);
             dishInfoJson.put("favorites",data.get("favorites"));
             dishInfoJson.put("info", TextUtils.isEmpty(info) ? "" : info);

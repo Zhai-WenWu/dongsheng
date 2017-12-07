@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -26,16 +25,13 @@ import org.json.JSONObject;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 import acore.logic.AppCommon;
 import acore.logic.XHClick;
 import acore.override.helper.XHActivityManager;
 import acore.tools.StringManager;
-import acore.tools.Tools;
 import acore.tools.ToolsDevice;
-import amodule.home.view.HomeSecondRecipeItem;
 import amodule.main.activity.MainHome;
 import amodule.main.adapter.HomeAdapter;
 import amodule.main.bean.HomeModuleBean;
@@ -169,12 +165,15 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
             return objData.toString();
         String customerInfo = customerMap.get("info");
         String customerImg = customerMap.get("img");
+        String name = mDataMap.get("title");
         try {
             object.put("code", mDataMap.get("code"));
-            object.put("name", mDataMap.get("name"));
+            object.put("name", TextUtils.isEmpty(name) ? mDataMap.get("name") : name);
             object.put("allClick", mDataMap.get("allClick"));
             object.put("favorites", mDataMap.get("favorites"));
             object.put("info", mDataMap.get("content"));
+            object.put("img", mDataMap.get("img"));
+            object.put("type", mDataMap.get("type"));
             objData.put("customerCode", customerMap.get("code"));
             objData.put("nickName", customerMap.get("nickName"));
             objData.put("info", TextUtils.isEmpty(customerInfo) ? "" : customerInfo);
