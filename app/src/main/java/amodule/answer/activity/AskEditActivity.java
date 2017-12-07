@@ -464,14 +464,15 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
                             mSQLite.deleteData(mUploadPoolData.getDraftId());
                             if (mFromHome)
                                 startQADetail();
-                            else
-                                ObserverManager.getInstence().notify(ObserverManager.NOTIFY_UPLOADOVER, null, true);
+                            ObserverManager.getInstence().notify(ObserverManager.NOTIFY_UPLOADOVER, null, true);
                             finish();
                         }
                     } else {
                         if ("0".equals(mAskPrice) || "0.0".equals(mAskPrice) || "0.00".equals(mAskPrice)) {
                             mSQLite.deleteData(mUploadPoolData.getDraftId());//删除草稿
                             startQADetail();
+                            if (flag)
+                                ObserverManager.getInstence().notify(ObserverManager.NOTIFY_UPLOADOVER, null, true);
                         } else {
                             startPay();
                         }
