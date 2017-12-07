@@ -91,6 +91,7 @@ public class TimeView {
                 Intent intent = new Intent(mAct, DetailDish.class);
                 if (position < arrayList.size()) {
                     intent.putExtra("code", arrayList.get(position).get("code"));
+                    intent.putExtra("img", arrayList.get(position).get("img"));
                     intent.putExtra("name", arrayList.get(position).get("name"));
                     mAct.startActivity(intent);
                 }

@@ -394,6 +394,12 @@
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan"/>
         <activity
+            android:name="amodule.dish.activity.OfflineDishNew"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/titleTheme"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity
             android:name="amodule.dish.activity.VideoClassifyDish"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"

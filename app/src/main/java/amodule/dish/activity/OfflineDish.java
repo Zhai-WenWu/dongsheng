@@ -159,6 +159,7 @@ public class OfflineDish extends BaseActivity {
 				if(position > -1 && position < offlineDishLimit){
 					Intent intent = new Intent(OfflineDish.this, DetailDish.class);
 					intent.putExtra("code", arrayList.get(position).get("code"));
+					intent.putExtra("img", arrayList.get(position).get("img"));
 					intent.putExtra("name", arrayList.get(position).get("name"));
 					startActivity(intent);
 				}

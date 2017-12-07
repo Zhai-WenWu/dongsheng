@@ -55,6 +55,7 @@ public class AdapterVideoDish extends AdapterSimple{
 				XHClick.mapStat(mCon, VideoDish.STATISTICS_ID ,"视频内容击量 ", String.valueOf(position + 1));
 				Intent intent = new Intent(mCon, DetailDish.class);
 				intent.putExtra("code", map.get("code"));
+				intent.putExtra("img", map.get("img"));
 				intent.putExtra("name", map.get("name"));
 				mCon.startActivity(intent);
 			}
