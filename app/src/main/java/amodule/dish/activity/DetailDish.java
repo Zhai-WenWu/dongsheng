@@ -339,13 +339,6 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
             bar_title_2.findViewById(R.id.back).setOnClickListener(backClickListener);
             bar_title_2.findViewById(R.id.leftClose).setOnClickListener(backClickListener);
             bar_title_2.findViewById(R.id.leftClose).setVisibility(View.VISIBLE);
-//            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) bar_title_2.getLayoutParams();
-//            int statusBarHeight = Tools.getStatusBarHeight(this);
-//            Log.i("tzy","analyzePagePermissionData :: statusBarHeight = " + statusBarHeight);
-//            layoutParams.height = Tools.getDimen(this,R.dimen.dp_45) + statusBarHeight;
-//            View title_state_bar_page = findViewById(R.id.title_state_bar_page);
-//            layoutParams = (RelativeLayout.LayoutParams) title_state_bar_page.getLayoutParams();
-//            layoutParams.height = statusBarHeight;
             dredgeVipFullLayout.setVisibility(View.VISIBLE);
             return false;
         }
@@ -390,7 +383,6 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
                     detailDishDataManager.reqPublicData();
                     detailDishDataManager.reqQAData();
                 }
-
                 handleClingBtnState();
                 break;
         }
@@ -464,12 +456,5 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         if(detailDishViewManager!=null)detailDishViewManager.handlerLoginStatus();
         if(pageXhWebView!=null)
             pageXhWebView.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-        long endtime1= System.currentTimeMillis();
-        Log.i("xianghaTag","onWindowFocusChanged：："+(endtime1-startTime));
     }
 }

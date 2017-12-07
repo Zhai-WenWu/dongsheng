@@ -416,7 +416,6 @@ public class DetailDishViewManager {
                                 isRecored = true;
                             }
                         }
-                        oneY=(int) event.getY();
                         break;
                     case MotionEvent.ACTION_MOVE:
                         if (!isHasVideo) {
@@ -451,7 +450,6 @@ public class DetailDishViewManager {
             }
         });
     }
-    private int oneY = 0;
     private int mMoveLen = 0;
     private MyTimer mTimer;
     @SuppressLint("HandlerLeak")
