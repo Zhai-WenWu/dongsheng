@@ -222,7 +222,7 @@ public class TencenApiAdTools {
        return dm.densityDpi / 160;
     }
 
-    public void getLocation(){
+    private void getLocation(){
         WebView webview = new WebView(XHApplication.in());
         webview.layout(0, 0, 0, 0);
         WebSettings settings = webview.getSettings();
