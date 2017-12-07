@@ -82,46 +82,6 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         initBudle();
         initView();
         initData();
-        initCling();
-    }
-
-    private void initCling() {
-        handleClingBtnState();
-        ClingControl.getInstance(this).onCreate();
-        ClingControl.getInstance(this).setOnDeviceSelected(new OnDeviceSelectedListener() {
-            @Override
-            public void onDeviceSelected(ClingDevice device) {
-                if (detailDishViewManager != null) {
-                    detailDishViewManager.addClingOptionView(ClingControl.getInstance(DetailDish.this).getClingOptionView());
-                }
-            }
-        });
-        ClingControl.getInstance(this).setOnExitClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (detailDishViewManager != null) {
-                    detailDishViewManager.removeClingOptionView();
-                }
-            }
-        });
-        detailDishViewManager.setClingClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String videoUrl = detailDishViewManager.getVideoUrl();
-                if (TextUtils.isEmpty(videoUrl)) {
-                    Toast.makeText(DetailDish.this, "无效的视频地址", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                Intent intent = DetailDish.this.getIntent();
-                intent.putExtra(ClingControl.PLAY_URL, videoUrl);
-                ClingControl.getInstance(DetailDish.this).showPopup();
-            }
-        });
-    }
-
-    private void handleClingBtnState() {
-        if (detailDishViewManager != null)
-            detailDishViewManager.showClingBtn(LoginManager.isVIP() || LoginManager.isTempVip());
     }
 
     /**
@@ -177,6 +137,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
             detailDishViewManager = new DetailDishViewManager(this, rvListview, state);
             dishInfo= Uri.decode(dishInfo);
             detailDishViewManager.initBeforeData(img,dishInfo);
+            handleVipState();
         }
         if (detailDishDataManager == null) detailDishDataManager = new DetailDishDataManager(code,this,courseCode,chapterCode);//数据manager
         detailDishDataManager.setDishDataCallBack(new DetailDishDataManager.DishDataCallBack() {
@@ -271,14 +232,12 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
     protected void onResume() {
         super.onResume();
         if(detailDishViewManager!=null)detailDishViewManager.onResume();
-        ClingControl.getInstance(this).onResume();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         if(detailDishViewManager!=null)detailDishViewManager.onPause();
-        ClingControl.getInstance(this).onPause();
     }
 
     @Override
@@ -302,15 +261,8 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
             handlerScreen.removeCallbacksAndMessages(null);
             handlerScreen=null;
         }
-        ClingControl.getInstance(this).onDestroy();
     }
 
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        setIntent(intent);
-        ClingControl.getInstance(this).onNewIntent(intent);
-    }
     public void refresh() {
         if(detailDishViewManager!=null)detailDishViewManager.refresh();
     }
@@ -370,6 +322,11 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         }
     }
 
+    private void handleVipState () {
+        if (detailDishViewManager != null)
+            detailDishViewManager.handleVipState(LoginManager.isVIP() || LoginManager.isTempVip());
+    }
+
     @Override
     public void notify(String name, Object sender, Object data) {
         switch (name){
@@ -377,7 +334,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
                 if(detailDishDataManager!=null)detailDishDataManager.reqQAData();
             case ObserverManager.NOTIFY_LOGIN://登陆
                 refreshTopInfo();
-                handleClingBtnState();
+                handleVipState();
             case ObserverManager.NOTIFY_FOLLOW://关注
             case ObserverManager.NOTIFY_UPLOADOVER://问答
                 if(detailDishDataManager!=null)detailDishDataManager.reqPublicData();

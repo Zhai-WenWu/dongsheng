@@ -12,27 +12,21 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextPaint;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.widget.AbsListView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.shuyu.gsyvideoplayer.GSYVideoPlayer;
 import com.xiangha.R;
 
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+
 import acore.logic.load.LoadManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -49,10 +43,7 @@ import amodule.dish.view.DishQAView;
 import amodule.dish.view.DishRecommedAndAdView;
 import amodule.dish.view.DishTitleViewControl;
 import amodule.dish.view.DishVipView;
-import third.cling.ui.ClingOptionView;
 import third.video.VideoPlayerController;
-
-import static amodule.dish.activity.DetailDish.startTime;
 
 /**
  * 当前只处理View的拼装
@@ -91,9 +82,6 @@ public class DetailDishViewManager {
     public View noStepView;
     private RelativeLayout bar_title_1;
 
-    private ClingOptionView mClingOptionView;
-    private View.OnClickListener mClingClickListener;
-
     /**
      * 对view进行基础初始化
      */
@@ -121,13 +109,6 @@ public class DetailDishViewManager {
         //图片视频信息
         dishHeaderViewNew = new DishHeaderViewNew(mAct);
         dishHeaderViewNew.initView(mAct, headerLayoutHeight);
-        dishHeaderViewNew.setClingClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mClingClickListener != null)
-                    mClingClickListener.onClick(v);
-            }
-        });
         dishVipView = new DishVipView(mAct);
         dishVipView.setVisibility(View.GONE);
         //用户信息和菜谱基础信息
@@ -542,47 +523,8 @@ public class DetailDishViewManager {
         }
     }
 
-    public void setClingClickListener(View.OnClickListener clickListener) {
-        this.mClingClickListener = clickListener;
-    }
-
-    public String getVideoUrl() {
-        return dishHeaderViewNew == null ? null : dishHeaderViewNew.getVideoUrl();
-    }
-
-    public void showClingBtn(boolean show) {
+    public void handleVipState(boolean isVip) {
         if (dishHeaderViewNew != null)
-            dishHeaderViewNew.showClingBtn(show);
-    }
-
-    public void addClingOptionView(ClingOptionView view) {
-        if (dishVidioLayout != null && view != null) {
-            mClingOptionView = view;
-            dishVidioLayout.addView(view);
-            int state = dishHeaderViewNew.getPlayState();
-            switch (state) {
-                case GSYVideoPlayer.CURRENT_STATE_PAUSE:
-                case GSYVideoPlayer.CURRENT_STATE_AUTO_COMPLETE:
-                case GSYVideoPlayer.CURRENT_STATE_ERROR:
-                    break;
-                default:
-                    dishHeaderViewNew.onPause();
-                    break;
-            }
-        }
-    }
-
-    public void removeClingOptionView() {
-        if (dishVidioLayout != null && mClingOptionView != null) {
-            int state = dishHeaderViewNew.getPlayState();
-            switch (state) {
-                case GSYVideoPlayer.CURRENT_STATE_PAUSE:
-                    dishHeaderViewNew.onResume();
-                    break;
-                default:
-                    break;
-            }
-            dishVidioLayout.removeView(mClingOptionView);
-        }
+            dishHeaderViewNew.handleVipState(isVip);
     }
 }

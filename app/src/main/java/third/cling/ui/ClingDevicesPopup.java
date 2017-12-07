@@ -74,47 +74,41 @@ public class ClingDevicesPopup extends PopupWindow {
     }
 
     private void addListener() {
-        View.OnClickListener listener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ClingDevicesPopup.this.dismiss();
-            }
-        };
+        View.OnClickListener listener = v -> ClingDevicesPopup.this.dismiss();
         mContentView.setOnClickListener(listener);
         mCloseImage.setOnClickListener(listener);
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ClingDevicesPopup.this.dismiss();
-                // 选择连接设备
-                ClingDevice item = mDevicesAdapter.getItem(position);
-                if (Utils.isNull(item)) {
-                    return;
-                }
-                boolean canSelected = false;
-                if (mSelectedDevice == null) {
-                    mSelectedDevice = item;
-                    mSelectedItem = view;
-                    mDevicesAdapter.setDeviceSelected(view, true);
-                    canSelected = true;
-                } else if (!item.getDevice().equals(mSelectedDevice.getDevice())){
-                    mDevicesAdapter.setDeviceSelected(mSelectedItem, false);
-                    mSelectedDevice = item;
-                    mSelectedItem = view;
-                    mDevicesAdapter.setDeviceSelected(mSelectedItem, true);
-                    canSelected = true;
-                }
-                if (canSelected) {
-                    ClingManager.getInstance().setSelectedDevice(item);
-                    mOnDeviceSelected.onDeviceSelected(mSelectedDevice);
-                }
+        mListView.setOnItemClickListener((parent, view, position, id) -> {
+            ClingDevicesPopup.this.dismiss();
+            // 选择连接设备
+            ClingDevice item = mDevicesAdapter.getItem(position);
+            if (Utils.isNull(item)) {
+                return;
+            }
+            boolean canSelected = false;
+            if (mSelectedDevice == null) {
+                mSelectedDevice = item;
+                mSelectedItem = view;
+                mDevicesAdapter.setDeviceSelected(view, true);
+                canSelected = true;
+            } else if (!item.getDevice().equals(mSelectedDevice.getDevice())){
+                mDevicesAdapter.setDeviceSelected(mSelectedItem, false);
+                mSelectedDevice = item;
+                mSelectedItem = view;
+                mDevicesAdapter.setDeviceSelected(mSelectedItem, true);
+                canSelected = true;
+            }
+            if (canSelected) {
+                ClingManager.getInstance().setSelectedDevice(item);
+                mOnDeviceSelected.onDeviceSelected(mSelectedDevice);
             }
         });
         mDataSetObserver = new DataSetObserver() {
             @Override
             public void onChanged() {
-                if (ClingDevicesPopup.this.isShowing())
-                    mEmptyView.setVisibility(mDevicesAdapter.isEmpty() ? View.VISIBLE : View.GONE);
+                mEmptyView.post(() -> {
+                    if (ClingDevicesPopup.this.isShowing())
+                        mEmptyView.setVisibility(mDevicesAdapter.isEmpty() ? View.VISIBLE : View.GONE);
+                });
             }
 
             @Override
