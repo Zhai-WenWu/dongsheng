@@ -129,7 +129,7 @@ public class DishRecommedAndAdView extends ItemBaseView implements View.OnClickL
                 }
 
                 final String zanNumberStr = map.get("likeNum");
-                final String subjectCode = map.get("code");
+                final String subjectCode = map.get("tieCode");
                 setViewImage(dishImg, map.get("img"), 0);
                 final boolean isLike = "2".equals(map.get("isLike"));
                 zanImg.setImageResource(isLike ? R.drawable.z_menu_praiseselected : R.drawable.z_menu_praisenomal);
