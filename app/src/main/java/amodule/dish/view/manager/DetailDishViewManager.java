@@ -27,6 +27,8 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import acore.logic.AppCommon;
+import acore.logic.LoginManager;
 import acore.logic.load.LoadManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -186,6 +188,21 @@ public class DetailDishViewManager {
             if(TextUtils.isEmpty(img)&&map.containsKey("img")&&!TextUtils.isEmpty(map.get("img"))&&dishHeaderViewNew!=null)dishHeaderViewNew.setImg(map.get("img"),height);
             dishAboutView.setData(map, mAct);
         }
+        initVipView(dishInfo);
+    }
+
+    private void initVipView(String dishInfo){
+        String caipuVipConfig = AppCommon.getConfigByLocal("caipuVip");
+        Map<String,String> configMap = StringManager.getFirstMap(caipuVipConfig);
+        Map<String,String> dishInfoMap=StringManager.getFirstMap(Uri.decode(dishInfo));
+        String key = "2".equals(dishInfoMap.get("type")) ? "caipuVideo" : "caipu";
+        configMap = StringManager.getFirstMap(configMap.get(key));
+        String delayDayValue = configMap.get("delayDay");
+        int delayDay = TextUtils.isEmpty(delayDayValue) ? 7 : Integer.parseInt(delayDayValue);
+        boolean isShowByConfig = "2".equals(configMap.get("isShow"));
+        boolean isShowByUser = !LoginManager.isVIP() || (delayDay >= LoginManager.getVipMaturityDay() && LoginManager.getVipMaturityDay() >= 0);
+        configMap.put("isShow", isShowByConfig && isShowByUser ? "2" : "1");
+        handlerVipView(configMap);
     }
     /**
      * 处理标题信息数据
