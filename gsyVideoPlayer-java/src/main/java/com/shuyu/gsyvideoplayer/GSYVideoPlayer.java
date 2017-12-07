@@ -375,8 +375,12 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
                 }
                 startButtonLogic();
             } else if (mCurrentState == CURRENT_STATE_PLAYING) {
-                if(GSYVideoManager.instance().getMediaPlayer() != null)
-                    GSYVideoManager.instance().getMediaPlayer().pause();
+                try{
+                    if(GSYVideoManager.instance().getMediaPlayer() != null)
+                        GSYVideoManager.instance().getMediaPlayer().pause();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
                 setStateAndUi(CURRENT_STATE_PAUSE);
                 if (mVideoAllCallBack != null && isCurrentMediaListener()) {
                     if (mIfCurrentIsFullscreen) {
@@ -465,9 +469,13 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
                     });
                     break;
                 case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
-                    if (GSYVideoManager.instance().getMediaPlayer() != null
-                            && GSYVideoManager.instance().getMediaPlayer().isPlaying()) {
-                        GSYVideoManager.instance().getMediaPlayer().pause();
+                    try{
+                        if (GSYVideoManager.instance().getMediaPlayer() != null
+                                && GSYVideoManager.instance().getMediaPlayer().isPlaying()) {
+                            GSYVideoManager.instance().getMediaPlayer().pause();
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
                     }
                     break;
                 case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
@@ -489,12 +497,16 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
      */
     @Override
     public void onVideoPause() {
-        if (GSYVideoManager.instance().getMediaPlayer() != null
-                && GSYVideoManager.instance().getMediaPlayer().isPlaying()) {
-            setStateAndUi(CURRENT_STATE_PAUSE);
-            mPauseTime = System.currentTimeMillis();
-            mCurrentPosition = GSYVideoManager.instance().getMediaPlayer().getCurrentPosition();
-            GSYVideoManager.instance().getMediaPlayer().pause();
+        try{
+            if (GSYVideoManager.instance().getMediaPlayer() != null
+                    && GSYVideoManager.instance().getMediaPlayer().isPlaying()) {
+                setStateAndUi(CURRENT_STATE_PAUSE);
+                mPauseTime = System.currentTimeMillis();
+                mCurrentPosition = GSYVideoManager.instance().getMediaPlayer().getCurrentPosition();
+                GSYVideoManager.instance().getMediaPlayer().pause();
+            }
+        }catch (Exception e){
+
         }
     }
 
