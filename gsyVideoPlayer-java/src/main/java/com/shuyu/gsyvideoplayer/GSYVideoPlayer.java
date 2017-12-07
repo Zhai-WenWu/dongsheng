@@ -375,7 +375,8 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
                 }
                 startButtonLogic();
             } else if (mCurrentState == CURRENT_STATE_PLAYING) {
-                GSYVideoManager.instance().getMediaPlayer().pause();
+                if(GSYVideoManager.instance().getMediaPlayer() != null)
+                    GSYVideoManager.instance().getMediaPlayer().pause();
                 setStateAndUi(CURRENT_STATE_PAUSE);
                 if (mVideoAllCallBack != null && isCurrentMediaListener()) {
                     if (mIfCurrentIsFullscreen) {
@@ -396,7 +397,8 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
                         mVideoAllCallBack.onClickResume(mOriginUrl, mTitle, GSYVideoPlayer.this);
                     }
                 }
-                GSYVideoManager.instance().getMediaPlayer().start();
+                if(GSYVideoManager.instance().getMediaPlayer() != null)
+                    GSYVideoManager.instance().getMediaPlayer().start();
                 setStateAndUi(CURRENT_STATE_PLAYING);
             } else if (mCurrentState == CURRENT_STATE_AUTO_COMPLETE) {
                 startButtonLogic();
@@ -463,7 +465,8 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
                     });
                     break;
                 case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
-                    if (GSYVideoManager.instance().getMediaPlayer().isPlaying()) {
+                    if (GSYVideoManager.instance().getMediaPlayer() != null
+                            && GSYVideoManager.instance().getMediaPlayer().isPlaying()) {
                         GSYVideoManager.instance().getMediaPlayer().pause();
                     }
                     break;
@@ -486,12 +489,12 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
      */
     @Override
     public void onVideoPause() {
-        if (GSYVideoManager.instance().getMediaPlayer().isPlaying()) {
+        if (GSYVideoManager.instance().getMediaPlayer() != null
+                && GSYVideoManager.instance().getMediaPlayer().isPlaying()) {
             setStateAndUi(CURRENT_STATE_PAUSE);
             mPauseTime = System.currentTimeMillis();
             mCurrentPosition = GSYVideoManager.instance().getMediaPlayer().getCurrentPosition();
-            if (GSYVideoManager.instance().getMediaPlayer() != null)
-                GSYVideoManager.instance().getMediaPlayer().pause();
+            GSYVideoManager.instance().getMediaPlayer().pause();
         }
     }
 
@@ -504,7 +507,8 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
             mPauseTime = 0;
             Log.i("tzy","onVideoResume");
 //            if (mCurrentState == CURRENT_STATE_PAUSE) {
-            if (!GSYVideoManager.instance().getMediaPlayer().isPlaying()) {
+            if (GSYVideoManager.instance().getMediaPlayer() != null
+                    && !GSYVideoManager.instance().getMediaPlayer().isPlaying()) {
                 if (mCurrentPosition > 0 && GSYVideoManager.instance().getMediaPlayer() != null) {
                     setStateAndUi(CURRENT_STATE_PLAYING);
                     GSYVideoManager.instance().getMediaPlayer().seekTo(mCurrentPosition);
@@ -716,7 +720,8 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
                     dismissProgressDialog();
                     dismissVolumeDialog();
                     dismissBrightnessDialog();
-                    if (mChangePosition && GSYVideoManager.instance().getMediaPlayer() != null && (mCurrentState == CURRENT_STATE_PLAYING || mCurrentState == CURRENT_STATE_PAUSE)) {
+                    if (mChangePosition && GSYVideoManager.instance().getMediaPlayer() != null
+                            && (mCurrentState == CURRENT_STATE_PLAYING || mCurrentState == CURRENT_STATE_PAUSE)) {
                         GSYVideoManager.instance().getMediaPlayer().seekTo(mSeekTimePosition);
                         int duration = getDuration();
                         int progress = mSeekTimePosition * 100 / (duration == 0 ? 1 : duration);

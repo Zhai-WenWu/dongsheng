@@ -586,8 +586,10 @@ public class VideoPlayerController {
         if(null != videoPlayer && !isNetworkDisconnect)
             videoPlayer.onVideoResume();
         ClingControl.getInstance(mContext).onResume();
-        Log.i("tzy","width = " + GSYVideoManager.instance().getMediaPlayer().getVideoWidth());
-        Log.i("tzy","height = " + GSYVideoManager.instance().getMediaPlayer().getVideoHeight());
+        if(GSYVideoManager.instance().getMediaPlayer() != null){
+            Log.i("tzy","width = " + GSYVideoManager.instance().getMediaPlayer().getVideoWidth());
+            Log.i("tzy","height = " + GSYVideoManager.instance().getMediaPlayer().getVideoHeight());
+        }
     }
 
     public void onPause(boolean showVideoImage) {
