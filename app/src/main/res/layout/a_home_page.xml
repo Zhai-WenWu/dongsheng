@@ -38,6 +38,8 @@
 
             <include
                 android:id="@+id/network_tip_view"
+                android:visibility="gone"
+                tools:visibility="visible"
                 layout="@layout/a_home_header_network_tip"/>
 
         </LinearLayout>
