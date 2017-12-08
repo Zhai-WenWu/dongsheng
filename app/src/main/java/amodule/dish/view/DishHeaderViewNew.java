@@ -398,13 +398,14 @@ public class DishHeaderViewNew extends LinearLayout {
         }
     }
 
-
+  private String oneImgUrl="";
     /**
      * 展示顶图view,是大图还是视频
      * @param img          》图片链接
      */
     public void setImg(final String img,int height) {
         Log.i("wyl","img:___:::"+img);
+        oneImgUrl=img;
         isLoadImg=true;
         dishvideo_img.setVisibility(View.GONE);
         int waith = height>0?height:ToolsDevice.getWindowPx(activity).widthPixels *5/6;
@@ -421,7 +422,7 @@ public class DishHeaderViewNew extends LinearLayout {
             XHClick.mapStat(activity, tongjiId, "菜谱区域的点击", "菜谱大图点击");
             ArrayList<Map<String, String>> listmap = new ArrayList<>();
             Map<String, String> map = new HashMap<>();
-            map.put("img", img);
+            map.put("img", oneImgUrl);
             map.put("info", "");
             map.put("num", "1");
             listmap.add(map);
@@ -501,6 +502,7 @@ public class DishHeaderViewNew extends LinearLayout {
         imageView.setLayoutParams(params);
         dishVidioLayout.addView(imageView);
         Log.i("wyl","处理图片：：："+url);
+        oneImgUrl = url;
         BitmapRequestBuilder<GlideUrl, Bitmap> bitmapRequest = LoadImage.with(getContext())
                 .load(url)
                 .setSaveType(FileManager.save_cache)

@@ -187,8 +187,9 @@ public class DetailDishViewManager {
             if (dishHeaderViewNew != null&& !TextUtils.isEmpty(img))dishHeaderViewNew.setImg(img,height);
             if(TextUtils.isEmpty(img)&&map.containsKey("img")&&!TextUtils.isEmpty(map.get("img"))&&dishHeaderViewNew!=null)dishHeaderViewNew.setImg(map.get("img"),height);
             dishAboutView.setData(map, mAct);
-        }
-        initVipView(dishInfo);
+            initVipView(dishInfo);
+        }else if (dishHeaderViewNew != null&& !TextUtils.isEmpty(img))dishHeaderViewNew.setImg(img,0);
+
     }
 
     private void initVipView(String dishInfo){
