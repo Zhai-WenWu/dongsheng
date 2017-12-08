@@ -63,7 +63,7 @@ public class DishGridDialog extends Dialog {
         this(context, code, "", "");
     }
 
-    public DishGridDialog(@NonNull Context context, @NonNull String code, String chapterCode, String courseCode) {
+    public DishGridDialog(@NonNull Context context, @NonNull String code, String courseCode, String chapterCode) {
         super(context, R.style.dishGridStyle);
         setCancelable(true);
         mLoadMore = new LoadMoreManager(context);
@@ -125,7 +125,7 @@ public class DishGridDialog extends Dialog {
     private final String PARAM_KEY_CHAPTERCODE = "chapterCode";
     private final String PARAM_KEY_COURSECODE = "courseCode";
 
-    public DishGridDialog updateParam(@NonNull String code, String chapterCode, String courseCode) {
+    public DishGridDialog updateParam(@NonNull String code, String courseCode, String chapterCode) {
         this.mCurrentCode = code;
         handlerParams(PARAM_KEY_CODE,code);
         handlerParams(PARAM_KEY_CHAPTERCODE,chapterCode);
@@ -214,7 +214,7 @@ public class DishGridDialog extends Dialog {
                         transferData(map, dish, "name");
                         transferData(map, dish, "image", map.get("image"));
                         map.put("isCurrent", TextUtils.equals(mCurrentCode, dish.get("code")) ? "2" : "1");
-                        mData.add(map);
+//                        mData.add(map);
                     });
                     if (mCurrentPage == 1) {
                         mAdapter.updateData(data);
