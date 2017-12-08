@@ -185,11 +185,13 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
                         state = "";
                 }
                 detailDishViewManager.handlerTitle(mapTop,code,isHasVideo,mapTop.get("dishState"),loadManager,state);//title导航
+                detailDishViewManager.initVipView(mapTop.containsKey("type")?mapTop.get("type"):"");
                 detailDishViewManager.handlerDishData(list);//菜谱基本信息
                 detailDishViewManager.handlerExplainView(mapTop);//小贴士
                 requestWeb(mapTop);
                 saveDishInfo(mapTop);
                 tongjiId_detail=isHasVideo?"a_menu_detail_video":"a_menu_detail_normal";
+
                 break;
             case DetailDishDataManager.DISH_DATA_INGRE://用料
                 detailDishViewManager.handlerIngreView(list);
@@ -340,13 +342,13 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
     public void notify(String name, Object sender, Object data) {
         switch (name){
             case ObserverManager.NOTIFY_PAYFINISH://支付
-                if(detailDishDataManager!=null)detailDishDataManager.reqQAData();
+                if(detailDishDataManager!=null&&!isShowPowerPermission)detailDishDataManager.reqQAData();
             case ObserverManager.NOTIFY_LOGIN://登陆
                 refreshTopInfo();
                 handleVipState();
             case ObserverManager.NOTIFY_FOLLOW://关注
             case ObserverManager.NOTIFY_UPLOADOVER://问答
-                if(detailDishDataManager!=null)detailDishDataManager.reqPublicData();
+                if(detailDishDataManager!=null&&!isShowPowerPermission)detailDishDataManager.reqPublicData();
                 break;
         }
     }

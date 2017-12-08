@@ -83,6 +83,7 @@ public class DetailDishViewManager {
     public DishModuleScrollView dishModuleScrollView;
     public View noStepView;
     private RelativeLayout bar_title_1;
+    private boolean isLoadVip= false;
 
     /**
      * 对view进行基础初始化
@@ -163,7 +164,6 @@ public class DetailDishViewManager {
         listView.setVisibility(View.VISIBLE);
         setListViewListener();
     }
-
     /**
      * 处理标题
      */
@@ -187,16 +187,16 @@ public class DetailDishViewManager {
             if (dishHeaderViewNew != null&& !TextUtils.isEmpty(img))dishHeaderViewNew.setImg(img,height);
             if(TextUtils.isEmpty(img)&&map.containsKey("img")&&!TextUtils.isEmpty(map.get("img"))&&dishHeaderViewNew!=null)dishHeaderViewNew.setImg(map.get("img"),height);
             dishAboutView.setData(map, mAct);
-
+            initVipView(map.containsKey("type")?map.get("type"):"");
         }else if (dishHeaderViewNew != null&& !TextUtils.isEmpty(img))dishHeaderViewNew.setImg(img,0);
-        initVipView(dishInfo);
-    }
 
-    private void initVipView(String dishInfo){
+    }
+    public void initVipView(String type){
+        if(isLoadVip)return;
+        isLoadVip=true;
         String caipuVipConfig = AppCommon.getConfigByLocal("caipuVip");
         Map<String,String> configMap = StringManager.getFirstMap(caipuVipConfig);
-        Map<String,String> dishInfoMap=StringManager.getFirstMap(Uri.decode(dishInfo));
-        String key = "2".equals(dishInfoMap.get("type")) ? "caipuVideo" : "caipu";
+        String key = !TextUtils.isEmpty(type)&&"2".equals(type) ? "caipuVideo" : "caipu";
         configMap = StringManager.getFirstMap(configMap.get(key));
         String delayDayValue = configMap.get("delayDay");
         int delayDay = TextUtils.isEmpty(delayDayValue) ? 7 : Integer.parseInt(delayDayValue);

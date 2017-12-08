@@ -22,12 +22,15 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import acore.logic.AppCommon;
+import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.helper.XHActivityManager;
 import acore.override.view.ItemBaseView;
 import acore.tools.StringManager;
 import acore.tools.Tools;
+import amodule.comment.activity.CommentActivity;
 import amodule.dish.activity.DetailDish;
+import amodule.user.activity.login.LoginByAccout;
 import aplug.imageselector.ImgWallActivity;
 
 /**
@@ -111,6 +114,10 @@ public class DishQAView extends ItemBaseView{
                     qaItem.findViewById(R.id.money_linear).setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            if(!LoginManager.isLogin()){
+                                context.startActivity(new Intent(context, LoginByAccout.class));
+                                return;
+                            }
                             XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), DetailDish.tongjiId_detail, "问答", "点击第"+index+"条问答");
                             AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(),mapQA.get("link"),false);
                         }
@@ -119,6 +126,10 @@ public class DishQAView extends ItemBaseView{
                 content_one.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        if(!LoginManager.isLogin()){
+                            context.startActivity(new Intent(context, LoginByAccout.class));
+                            return;
+                        }
                         XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), DetailDish.tongjiId_detail, "问答", "点击第"+index+"条问答");
                         AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(),mapQA.get("link"),false);
                     }

@@ -4,11 +4,11 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import acore.override.helper.XHActivityManager;
 import acore.tools.StringManager;
 import amodule.dish.activity.DetailDish;
 import aplug.basic.InternetCallback;
@@ -60,7 +60,6 @@ public class DetailDishDataManager {
         loadOver = false;
         hasPermission = true;
         contiunRefresh = true;
-        lastPermission = "";
         detailPermissionMap.clear();
         permissionMap.clear();
     }
@@ -117,6 +116,7 @@ public class DetailDishDataManager {
             @Override
             public void getPower(int flag, String url, Object obj) {
                 //权限检测
+                if(TextUtils.isEmpty((String)obj) || "[]".equals(obj)||"{}".equals(obj))hasPermission=true;
                 if(permissionMap.isEmpty() && !TextUtils.isEmpty((String)obj) && !"[]".equals(obj)&& !"{}".equals(obj)){
                     if(TextUtils.isEmpty(lastPermission)){
                         lastPermission = (String) obj;
