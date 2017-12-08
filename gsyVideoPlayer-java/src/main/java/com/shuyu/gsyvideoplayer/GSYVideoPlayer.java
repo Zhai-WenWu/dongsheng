@@ -379,6 +379,7 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
                     if(GSYVideoManager.instance().getMediaPlayer() != null)
                         GSYVideoManager.instance().getMediaPlayer().pause();
                 }catch (Exception e){
+                    onVideoReset();
                     e.printStackTrace();
                 }
                 setStateAndUi(CURRENT_STATE_PAUSE);
@@ -405,6 +406,7 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
                     if(GSYVideoManager.instance().getMediaPlayer() != null)
                         GSYVideoManager.instance().getMediaPlayer().start();
                 }catch (Exception e){
+                    onVideoReset();
                     e.printStackTrace();
                 }
                 setStateAndUi(CURRENT_STATE_PLAYING);
@@ -479,6 +481,7 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
                             GSYVideoManager.instance().getMediaPlayer().pause();
                         }
                     }catch (Exception e){
+                        onVideoReset();
                         e.printStackTrace();
                     }
                     break;
@@ -510,7 +513,8 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
                 GSYVideoManager.instance().getMediaPlayer().pause();
             }
         }catch (Exception e){
-
+            onVideoReset();
+            e.printStackTrace();
         }
     }
 
@@ -742,6 +746,7 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
                         try{
                             GSYVideoManager.instance().getMediaPlayer().seekTo(mSeekTimePosition);
                         }catch (Exception e){
+                            onVideoReset();
                             e.printStackTrace();
                         }
                         int duration = getDuration();
@@ -917,6 +922,7 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
                 mSeekToInAdvance = -1;
             }
         }catch (Exception e){
+            onVideoReset();
             e.printStackTrace();
         }
 
@@ -935,6 +941,7 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
                 mSeekOnStart = 0;
             }
         }catch (Exception e){
+            onVideoReset();
             e.printStackTrace();
         }
         createNetWorkState();
