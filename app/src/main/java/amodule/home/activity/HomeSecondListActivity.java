@@ -91,6 +91,9 @@ public class HomeSecondListActivity extends BaseAppCompatActivity {
                 case "day":
                     titleV.setText("今日三餐");
                     break;
+                case "video":
+                    titleV.setText("视频菜谱");
+                    break;
                 default:
                     titleV.setText(mModuleBean.getTitle());
                     break;
