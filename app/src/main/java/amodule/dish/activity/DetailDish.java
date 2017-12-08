@@ -216,10 +216,12 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
                 detailDishViewManager.handlerSkillView(list, code, courseCode, chapterCode, new DishModuleScrollView.onDishModuleClickCallBack() {
                     @Override
                     public void getData(Map<String, String> map) {
-                        String url= map.get("appurl");
+                        String url= map.get("appUrl");
+                        if(url.contains("xiangha://welcome?"))url=url.replace("xiangha://welcome?","");
                         if(url.contains("?")) {
                             String temp = url.substring(url.indexOf("?")+1,url.length());
                             Map<String,String> map1 = StringManager.getMapByString(temp,"&","=");
+                            rvListview.smoothScrollToPosition(0);
                             detailDishDataManager.setDataNew(map1.get("code"),map1.get("courseCode"),map1.get("chapterCode"));
                             detailDishDataManager.reqTopInfo(true);
                         }
@@ -304,6 +306,10 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         if(dredgeVipFullLayout!=null)
             dredgeVipFullLayout.setVisibility(View.GONE);
         return true;
+    }
+    public void hidePermissionData(){
+        if(dredgeVipFullLayout!=null)
+            dredgeVipFullLayout.setVisibility(View.GONE);
     }
     private View.OnClickListener backClickListener = new View.OnClickListener() {
         @Override

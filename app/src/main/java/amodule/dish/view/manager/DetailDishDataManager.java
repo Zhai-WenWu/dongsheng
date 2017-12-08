@@ -69,6 +69,7 @@ public class DetailDishDataManager {
      * 重置处理数据
      */
     public void resetTopInfo(){
+        if(detailAct!=null)detailAct.hidePermissionData();
         detailPermissionMap.clear();
         permissionMap.clear();
     }

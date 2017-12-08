@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -23,6 +24,7 @@ import acore.override.helper.XHActivityManager;
 import acore.override.view.ItemBaseView;
 import acore.tools.StringManager;
 import acore.widget.rvlistview.RvHorizatolListView;
+import acore.widget.rvlistview.RvListView;
 import acore.widget.rvlistview.adapter.RvBaseAdapter;
 import acore.widget.rvlistview.holder.RvBaseViewHolder;
 import aplug.basic.SubBitmapTarget;
@@ -71,6 +73,7 @@ public class DishModuleScrollView extends ItemBaseView{
         this.dishCode = code;
         this.courseCode = courseCode;
         this.chapterCode = chapterCode;
+        mapList.clear();
         if(listMaps==null||listMaps.size()<=0)return;
         Map<String,String> map= listMaps.get(0);
         ArrayList<Map<String,String>> listTemp = StringManager.getListMapByJson(map.get("list"));
@@ -98,8 +101,8 @@ public class DishModuleScrollView extends ItemBaseView{
                         @Override
                         public void onItemClick(View view, int position, Map<String, String> stringStringMap) {
                             //点击回调
-//                            if(callBack!=null)callBack.getData(stringStringMap);
-                            AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(),stringStringMap.get("appurl"),false);
+                            if(callBack!=null)callBack.getData(stringStringMap);
+//                            AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(),stringStringMap.get("appurl"),false);
                             dishGridDialog.dismiss();
                         }
                     });

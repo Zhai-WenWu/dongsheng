@@ -8,6 +8,7 @@
     <View
         android:id="@+id/a_dish_detail_new_line0"
         style="@style/lineView"
+        android:layout_marginTop="@dimen/dp_25"
         android:layout_marginBottom="@dimen/dp_20"/>
     <RelativeLayout
         android:id="@+id/ad_big_pic_layout"

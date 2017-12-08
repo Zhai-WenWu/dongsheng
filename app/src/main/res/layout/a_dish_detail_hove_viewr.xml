@@ -52,8 +52,9 @@
                 android:layout_height="match_parent"
                 android:layout_marginBottom="@dimen/dp_7"
                 android:layout_marginTop="@dimen/dp_7"
-                android:background="@color/transparent"
+                android:background="@drawable/bg_circle_yellow_5"
                 android:gravity="center"
+                android:text="问作者"
                 android:textColor="#fffffe"
                 android:textSize="@dimen/sp_15" />
 
