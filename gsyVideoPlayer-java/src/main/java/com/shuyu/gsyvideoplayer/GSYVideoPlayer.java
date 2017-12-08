@@ -379,6 +379,7 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
                     if(GSYVideoManager.instance().getMediaPlayer() != null)
                         GSYVideoManager.instance().getMediaPlayer().pause();
                 }catch (Exception e){
+                    onVideoReset();
                     e.printStackTrace();
                 }
                 setStateAndUi(CURRENT_STATE_PAUSE);
@@ -401,8 +402,13 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
                         mVideoAllCallBack.onClickResume(mOriginUrl, mTitle, GSYVideoPlayer.this);
                     }
                 }
-                if(GSYVideoManager.instance().getMediaPlayer() != null)
-                    GSYVideoManager.instance().getMediaPlayer().start();
+                try{
+                    if(GSYVideoManager.instance().getMediaPlayer() != null)
+                        GSYVideoManager.instance().getMediaPlayer().start();
+                }catch (Exception e){
+                    onVideoReset();
+                    e.printStackTrace();
+                }
                 setStateAndUi(CURRENT_STATE_PLAYING);
             } else if (mCurrentState == CURRENT_STATE_AUTO_COMPLETE) {
                 startButtonLogic();
@@ -475,6 +481,7 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
                             GSYVideoManager.instance().getMediaPlayer().pause();
                         }
                     }catch (Exception e){
+                        onVideoReset();
                         e.printStackTrace();
                     }
                     break;
@@ -506,7 +513,8 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
                 GSYVideoManager.instance().getMediaPlayer().pause();
             }
         }catch (Exception e){
-
+            onVideoReset();
+            e.printStackTrace();
         }
     }
 
@@ -528,7 +536,8 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
                 }
             }
         }catch (Exception igored){
-
+            onVideoReset();
+            igored.printStackTrace();
         }
     }
 
@@ -734,7 +743,12 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
                     dismissBrightnessDialog();
                     if (mChangePosition && GSYVideoManager.instance().getMediaPlayer() != null
                             && (mCurrentState == CURRENT_STATE_PLAYING || mCurrentState == CURRENT_STATE_PAUSE)) {
-                        GSYVideoManager.instance().getMediaPlayer().seekTo(mSeekTimePosition);
+                        try{
+                            GSYVideoManager.instance().getMediaPlayer().seekTo(mSeekTimePosition);
+                        }catch (Exception e){
+                            onVideoReset();
+                            e.printStackTrace();
+                        }
                         int duration = getDuration();
                         int progress = mSeekTimePosition * 100 / (duration == 0 ? 1 : duration);
                         mProgressBar.setProgress(progress);
@@ -898,13 +912,18 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
     public void onPrepared() {
         if (mCurrentState != CURRENT_STATE_PREPAREING) return;
 
-        if (GSYVideoManager.instance().getMediaPlayer() != null) {
-            GSYVideoManager.instance().getMediaPlayer().start();
-        }
+        try{
+            if (GSYVideoManager.instance().getMediaPlayer() != null) {
+                GSYVideoManager.instance().getMediaPlayer().start();
+            }
 
-        if (GSYVideoManager.instance().getMediaPlayer() != null && mSeekToInAdvance != -1) {
-            GSYVideoManager.instance().getMediaPlayer().seekTo(mSeekToInAdvance);
-            mSeekToInAdvance = -1;
+            if (GSYVideoManager.instance().getMediaPlayer() != null && mSeekToInAdvance != -1) {
+                GSYVideoManager.instance().getMediaPlayer().seekTo(mSeekToInAdvance);
+                mSeekToInAdvance = -1;
+            }
+        }catch (Exception e){
+            onVideoReset();
+            e.printStackTrace();
         }
 
         startProgressTimer();
@@ -916,9 +935,14 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
             mVideoAllCallBack.onPrepared(mOriginUrl, mTitle, GSYVideoPlayer.this);
         }
 
-        if (GSYVideoManager.instance().getMediaPlayer() != null && mSeekOnStart > 0) {
-            GSYVideoManager.instance().getMediaPlayer().seekTo(mSeekOnStart);
-            mSeekOnStart = 0;
+        try{
+            if (GSYVideoManager.instance().getMediaPlayer() != null && mSeekOnStart > 0) {
+                GSYVideoManager.instance().getMediaPlayer().seekTo(mSeekOnStart);
+                mSeekOnStart = 0;
+            }
+        }catch (Exception e){
+            onVideoReset();
+            e.printStackTrace();
         }
         createNetWorkState();
         listenerNetWorkState();
