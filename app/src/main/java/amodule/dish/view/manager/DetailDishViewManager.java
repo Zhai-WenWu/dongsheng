@@ -154,7 +154,6 @@ public class DetailDishViewManager {
         layoutFooter.addView(dishQAView);
         RelativeLayout layout= new RelativeLayout(mAct);
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,Tools.getDimen(mAct,R.dimen.dp_60));
-//        layout.setPadding(0,Tools.getDimen(mAct,R.dimen.dp_100),0,0);
         layout.setLayoutParams(layoutParams);
         layoutFooter.addView(dishRecommedAndAdView);
         layoutFooter.addView(layout);

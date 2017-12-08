@@ -121,6 +121,7 @@ public class DishStepView extends ItemBaseView {
                     findViewById(R.id.img_view).setVisibility(View.GONE);
                     isHasVideo = true;
                     loadImg(imgUrl);
+                    handlerImgHeight(imgUrl);
                     itemImg1.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -143,26 +144,7 @@ public class DishStepView extends ItemBaseView {
                  itemImg1.setVisibility(View.VISIBLE);
                  String img = map.get("img");
                  Log.i("xianghaTag","img:存在::"+img);
-                 if(img.contains("?")&&!map.containsKey("height")){
-                     Log.i("xianghaTag","处理高度：：：");
-                    String temp = img.substring(img.indexOf("?")+1,img.length());
-                    if(temp.contains("_")){
-                        String img_waith= temp.substring(0,temp.indexOf("_"));
-                        String img_height= temp.substring(temp.indexOf("_")+1,temp.length());
-                        int viewWaith=Tools.getPhoneWidth()-Tools.getDimen(context,R.dimen.dp_40);
-                        if(!TextUtils.isEmpty(img_waith)&&!TextUtils.isEmpty(img_height)&&viewWaith>0){
-                            double intTemp=Double.parseDouble(img_height)/Double.parseDouble(img_waith);
-                            int viewHeight= (int) (intTemp*viewWaith);
-                            map.put("height",String.valueOf(viewHeight));
-                            RelativeLayout.LayoutParams layoutParams= new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,viewHeight);
-                            itemImg1.setLayoutParams(layoutParams);
-                        }
-                    }
-                 }else if(map.containsKey("height")&&!TextUtils.isEmpty(map.get("height"))){
-                     Log.i("xianghaTag","height存在：：：");
-                     RelativeLayout.LayoutParams layoutParams= new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,Integer.parseInt(map.get("height")));
-                     itemImg1.setLayoutParams(layoutParams);
-                 }
+                 handlerImgHeight(img);
                  setViewImage(itemImg1, map.get("img"));
 //                 if (map.containsKey("height") && Integer.parseInt(map.get("height")) > 0) {
 //                     setImageWH(itemImg1, Integer.parseInt(map.get("height")));
@@ -172,6 +154,28 @@ public class DishStepView extends ItemBaseView {
                  itemImg1.setVisibility(View.GONE);
              }
 
+        }
+    }
+    private void handlerImgHeight(String img ){
+        if(img.contains("?")&&!map.containsKey("height")){
+            Log.i("xianghaTag","处理高度：：：");
+            String temp = img.substring(img.indexOf("?")+1,img.length());
+            if(temp.contains("_")){
+                String img_waith= temp.substring(0,temp.indexOf("_"));
+                String img_height= temp.substring(temp.indexOf("_")+1,temp.length());
+                int viewWaith=Tools.getPhoneWidth()-Tools.getDimen(context,R.dimen.dp_40);
+                if(!TextUtils.isEmpty(img_waith)&&!TextUtils.isEmpty(img_height)&&viewWaith>0){
+                    double intTemp=Double.parseDouble(img_height)/Double.parseDouble(img_waith);
+                    int viewHeight= (int) (intTemp*viewWaith);
+                    map.put("height",String.valueOf(viewHeight));
+                    RelativeLayout.LayoutParams layoutParams= new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,viewHeight);
+                    itemImg1.setLayoutParams(layoutParams);
+                }
+            }
+        }else if(map.containsKey("height")&&!TextUtils.isEmpty(map.get("height"))){
+            Log.i("xianghaTag","height存在：：：");
+            RelativeLayout.LayoutParams layoutParams= new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,Integer.parseInt(map.get("height")));
+            itemImg1.setLayoutParams(layoutParams);
         }
     }
 

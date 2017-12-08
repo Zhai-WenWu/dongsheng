@@ -37,6 +37,7 @@ import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
+import acore.override.helper.XHActivityManager;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -194,11 +195,19 @@ public class DishHeaderViewNew extends LinearLayout {
                         && mVideoPlayerController != null) {
                     mVideoPlayerController.setShowAd(true);
                 }
-                if (isAutoPaly && mVideoPlayerController != null)
+                if (isAutoPaly && mVideoPlayerController != null && isShowActivity())
                     mVideoPlayerController.setOnClick();
             }
         }, activity, "result_media");
 
+    }
+
+    private boolean  isShowActivity(){
+        try {
+            if ("amodule.dish.activity.DetailDish".equals(XHActivityManager.getInstance().getCurrentActivity().getComponentName().getClassName()))
+                return true;
+        }catch (Exception e){return false;}
+        return false;
     }
 
     private int num = 4;
