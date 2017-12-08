@@ -202,7 +202,8 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
                     mHasInitPlayStateOnScroll = true;
                 }
                 if (t >= mPagerLayoutHeight && videoCanPause()) {
-                    mVideoPlayerController.onPause();
+                    if(null != mVideoPlayerController)
+                        mVideoPlayerController.onPause();
                 } else if (t < mPagerLayoutHeight) {
                     mHasInitPlayStateOnScroll = false;
                 }
@@ -224,7 +225,7 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
                             mInitPlayState = mVideoPlayerController.getPlayState();
                             mHasInitPlayStateOnStateChanged = true;
                         }
-                        if (videoCanPause())
+                        if (videoCanPause() && null != mVideoPlayerController)
                             mVideoPlayerController.onPause();
                         break;
                 }
@@ -412,7 +413,8 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
 
     private boolean videoCanResume() {
         boolean ret = false;
-        if (mVideoPlayerController.getPlayState() == GSYVideoPlayer.CURRENT_STATE_PLAYING)
+        if (null != mVideoPlayerController
+                && mVideoPlayerController.getPlayState() == GSYVideoPlayer.CURRENT_STATE_PLAYING)
             return ret;
         switch (mInitPlayState) {
             case GSYVideoPlayer.CURRENT_STATE_PAUSE:
@@ -428,7 +430,8 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
 
     private boolean videoCanPause() {
         boolean ret = false;
-        if (mVideoPlayerController.getPlayState() == GSYVideoPlayer.CURRENT_STATE_PAUSE)
+        if (mVideoPlayerController != null &&
+                mVideoPlayerController.getPlayState() == GSYVideoPlayer.CURRENT_STATE_PAUSE)
             return ret;
         switch (mInitPlayState) {
             case GSYVideoPlayer.CURRENT_STATE_PAUSE:
