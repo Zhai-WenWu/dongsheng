@@ -44,7 +44,7 @@ public class DishVipView extends ItemBaseView {
 
     public void setData(final Map<String, String> maps) {
 //        int strokeWidth = 5; // 3dp 边框宽度
-        int roundRadius = Tools.getDimen(context,R.dimen.dp_4); // 8dp 圆角半径
+        int roundRadius = Tools.getDimen(context,R.dimen.dp_2); // 8dp 圆角半径
 //        int strokeColor = Color.parseColor("#2E3135");//边框颜色
         String bgColor = handlerColorValue(maps.get("backColor"));
         int fillColor = Color.parseColor(TextUtils.isEmpty(bgColor) ? "#f23030" : bgColor);//内部填充颜色
