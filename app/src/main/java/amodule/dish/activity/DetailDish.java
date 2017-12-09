@@ -342,7 +342,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
     }
     private void handleVipState () {
         if (detailDishViewManager != null)
-            detailDishViewManager.handleVipState(LoginManager.isVIP() || LoginManager.isTempVip());
+            detailDishViewManager.handleVipState(LoginManager.isVIP());
     }
     @Override
     public void notify(String name, Object sender, Object data) {
