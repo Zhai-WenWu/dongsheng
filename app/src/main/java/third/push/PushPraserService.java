@@ -182,7 +182,7 @@ public class PushPraserService extends Service{
 									}
 								}
 							} else {
-								AppCommon.quanMessage++;
+								AppCommon.feekbackMessage++;
 								QiYvHelper.getInstance().getUnreadCount(new QiYvHelper.NumberCallback() {
 									@Override
 									public void onNumberReady(int count) {
