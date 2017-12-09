@@ -184,7 +184,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
             if (count >= 0) {
                 AppCommon.qiyvMessage = count;
                 if (count > 0)
-                    Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
+                    Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
             }
         });
     }
@@ -212,7 +212,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
                 if (count >= 0) {
                     AppCommon.qiyvMessage = count;
                     if (count > 0)
-                        Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
+                        Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
                 }
             };
         }
@@ -252,7 +252,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
                 if (LoginManager.isLogin()) {
                     initQiYvUnreadCount();
                     //防止七鱼回调有问题
-                    Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
+                    Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
                 }
                 addQiYvListener();
 
@@ -866,12 +866,12 @@ public class Main extends Activity implements OnClickListener, IObserver {
                         if (count >= 0) {
                             AppCommon.qiyvMessage = count;
                             if (count > 0)
-                                Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
+                                Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
                         }
                     }
                 });
                 //防止七鱼回调不回来
-                Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
+                Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
             }
         } else if (ObserverManager.NOTIFY_LOGOUT.equals(name)) {
             if (data != null && data instanceof Boolean) {

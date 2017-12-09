@@ -139,12 +139,12 @@ public class PushPraserService extends Service{
 												if (count >= 0) {
 													AppCommon.qiyvMessage = count;
 													if (count > 0)
-														Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
+														Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
 												}
 											}
 										});
 										//防止七鱼回调不回来
-										Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
+										Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
 										new NotificationManager().notificationActivity(context, data);
 									}
 								}
@@ -172,12 +172,12 @@ public class PushPraserService extends Service{
 												if (count >= 0) {
 													AppCommon.qiyvMessage = count;
 													if (count > 0)
-														Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
+														Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
 												}
 											}
 										});
 										//防止七鱼回调不回来
-										Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
+										Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
 										new NotificationManager().notificationActivity(context, data);
 									}
 								}
@@ -189,12 +189,12 @@ public class PushPraserService extends Service{
 										if (count >= 0) {
 											AppCommon.qiyvMessage = count;
 											if (count > 0)
-												Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
+												Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
 										}
 									}
 								});
 								//防止七鱼回调不回来
-								Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
+								Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
 								new NotificationManager().notificationActivity(context, data);
 							}
 							break;
@@ -207,12 +207,12 @@ public class PushPraserService extends Service{
 									if (count >= 0) {
 										AppCommon.qiyvMessage = count;
 										if (count > 0)
-											Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
+											Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
 									}
 								}
 							});
 							//防止七鱼回调不回来
-							Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
+							Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
 							if (context != null && ToolsDevice.isAppInPhone(context, context.getPackageName()) < 2) {
 								if (data.url.indexOf("subjectInfo.app?") > -1) {
 									// 叠加消息数量
