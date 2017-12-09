@@ -115,11 +115,11 @@ public class AppCommon {
                                     if (count >= 0) {
                                         qiyvMessage = count;
                                         if (count > 0)
-                                            Main.setNewMsgNum(3, quanMessage + feekbackMessage + myQAMessage + qiyvMessage);
+                                            Main.setNewMsgNum(2, quanMessage + feekbackMessage + myQAMessage + qiyvMessage);
                                     }
                                 }
                             });
-                            Main.setNewMsgNum(3, quanMessage + feekbackMessage + myQAMessage + qiyvMessage);
+                            Main.setNewMsgNum(2, quanMessage + feekbackMessage + myQAMessage + qiyvMessage);
                             // tok值
                             long tok = Integer.parseInt(alertArr[0]);
                             int c = (new Random()).nextInt(9) + 1;

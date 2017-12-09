@@ -135,11 +135,11 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
                         return;
                     }
                     imageView.setTag(TAG_ID, data.get("img"));
-                    LoadImage.with(getContext())
+                    Glide.with(getContext())
                             .load(data.get("img"))
-                            .setSaveType(LoadImage.SAVE_LONG)
-                            .build()
-                            .fitCenter()
+                            .dontAnimate()
+                            .dontTransform()
+//                            .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .into(imageView);
                     if ("2".equals(data.get("isAd"))) {
                         adView = view;
@@ -210,7 +210,11 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
 
     private void loadImage(ImageView imageView){
         if(!mArrayList.isEmpty())
-            LoadImage.with(getContext()).load(mArrayList.get(0).get("imgUrl")).build().into(imageView);
+            Glide.with(getContext())
+                    .load(mArrayList.get(0).get("img"))
+                    .dontAnimate()
+                    .dontTransform()
+                    .into(imageView);
     }
 
     public void initAdData() {

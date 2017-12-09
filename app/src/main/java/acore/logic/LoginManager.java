@@ -184,7 +184,7 @@ public class LoginManager {
                     AppCommon.quanMessage = 0;
                     AppCommon.qiyvMessage = 0;
                     AppCommon.myQAMessage = 0;
-                    Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.qiyvMessage + AppCommon.myQAMessage + AppCommon.feekbackMessage );
+                    Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.qiyvMessage + AppCommon.myQAMessage + AppCommon.feekbackMessage );
                     //XG解绑
                     new XGPushServer(mAct).initPush();
                     //如果是用户设置页面finish掉自己

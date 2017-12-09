@@ -138,7 +138,7 @@ public class MyMessage extends MainBaseActivity{
 				setRefresh();
 			}
 			AppCommon.quanMessage = 0;
-			Main.setNewMsgNum(3,AppCommon.qiyvMessage + AppCommon.myQAMessage + AppCommon.feekbackMessage);
+			Main.setNewMsgNum(2,AppCommon.qiyvMessage + AppCommon.myQAMessage + AppCommon.feekbackMessage);
 		}else{
 			findViewById(R.id.no_login_rela).setVisibility(View.VISIBLE);
 			mNoLoginLayout.setVisibility(View.VISIBLE);
@@ -200,7 +200,7 @@ public class MyMessage extends MainBaseActivity{
 					case R.id.my_qa:
 						if (mMyQANum != null && mMyQANum.getVisibility() == View.VISIBLE) {
 							AppCommon.myQAMessage = 0;
-							Main.setNewMsgNum(3, AppCommon.qiyvMessage + AppCommon.feekbackMessage + AppCommon.quanMessage);
+							Main.setNewMsgNum(2, AppCommon.qiyvMessage + AppCommon.feekbackMessage + AppCommon.quanMessage);
 							mMyQANum.setText("");
 							mMyQANum.setVisibility(View.GONE);
 						}
@@ -227,6 +227,7 @@ public class MyMessage extends MainBaseActivity{
 		}
 
 		setFeekbackMsg();
+		setQAMsgNum();
 		listDataMessage = new ArrayList<Map<String, String>>();
 		adapter = new AdapterMainMsg(this, listMessage, listDataMessage, 0, null, null);
 		loadManager.setLoading(listMessage, adapter, true, new OnClickListener() {
@@ -302,14 +303,6 @@ public class MyMessage extends MainBaseActivity{
 			} else {
 				feekback_msg_num.setVisibility(View.VISIBLE);
 				feekback_msg_num.setText("" + AppCommon.feekbackMessage);
-			}
-		}
-		if (mMyQANum != null) {
-			if (AppCommon.myQAMessage == 0) {
-				mMyQANum.setVisibility(View.GONE);
-			} else {
-				mMyQANum.setVisibility(View.VISIBLE);
-				mMyQANum.setText(String.valueOf(AppCommon.myQAMessage));
 			}
 		}
 	}
