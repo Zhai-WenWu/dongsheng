@@ -396,7 +396,7 @@ public class LoginManager {
     }
 
     public static boolean isVIP(){
-        return isUserVip() || isTempVip();
+        return isUserVip();
     }
 
     public static boolean isUserVip(){
@@ -433,7 +433,7 @@ public class LoginManager {
             FileManager.saveShared(XHApplication.in(),FileManager.xmlFile_appInfo,"maturity_day","");
             return;
         }
-        int maturityDay = (int) (Long.parseLong(maturityTimeStr) / (24 * 60 * 60 * 1000f));
+        int maturityDay = (int) ((Long.parseLong(maturityTimeStr)*1000-System.currentTimeMillis()) / (24 * 60 * 60 * 1000f));
         FileManager.saveShared(XHApplication.in(),FileManager.xmlFile_appInfo,"maturity_day",String.valueOf(maturityDay));
     }
 

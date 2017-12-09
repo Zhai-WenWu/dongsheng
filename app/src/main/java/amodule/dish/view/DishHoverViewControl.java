@@ -105,10 +105,10 @@ public class DishHoverViewControl implements View.OnClickListener{
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.a_dish_detail_new_footer_hover_tv: //提问作者
-                if(!LoginManager.isLogin()){
-                    mAct.startActivity(new Intent(mAct,LoginByAccout.class));
-                    return;
-                }
+//                if(!LoginManager.isLogin()){
+//                    mAct.startActivity(new Intent(mAct,LoginByAccout.class));
+//                    return;
+//                }
                 if(mapQA!=null&&mapQA.containsKey("isJump")&&"2".equals(mapQA.get("isJump"))){
                    AppCommon.openUrl(mAct,mapQA.get("url"),false);
                 }else{

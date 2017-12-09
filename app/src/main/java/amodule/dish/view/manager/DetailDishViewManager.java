@@ -12,6 +12,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextPaint;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -21,7 +22,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.xiangha.R;
-
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Timer;
@@ -191,8 +191,7 @@ public class DetailDishViewManager {
 
     }
     public void initVipView(String type){
-        if(isLoadVip)return;
-        isLoadVip=true;
+        if(isLoadVip)return;isLoadVip=true;
         String caipuVipConfig = AppCommon.getConfigByLocal("caipuVip");
         if(TextUtils.isEmpty(caipuVipConfig)){isLoadVip=false;return;}
         Map<String,String> configMap = StringManager.getFirstMap(caipuVipConfig);
@@ -201,7 +200,12 @@ public class DetailDishViewManager {
         String delayDayValue = configMap.get("delayDay");
         int delayDay = TextUtils.isEmpty(delayDayValue) ? 7 : Integer.parseInt(delayDayValue);
         boolean isShowByConfig = "2".equals(configMap.get("isShow"));
-        boolean isShowByUser = !LoginManager.isVIP() || (delayDay >= LoginManager.getVipMaturityDay() && LoginManager.getVipMaturityDay() >= 0);
+        boolean isShowByUser=false;
+        if(LoginManager.isLogin()){
+            isShowByUser=!LoginManager.isVIP()||(delayDay>=LoginManager.getUserVipMaturityDay()&&LoginManager.getUserVipMaturityDay()>=0);
+        }else{
+            isShowByUser=!LoginManager.isTempVip()||(delayDay >= LoginManager.getTempVipMaturityDay()&& LoginManager.getTempVipMaturityDay()>=0);
+        }
         configMap.put("isShow", isShowByConfig && isShowByUser ? "2" : "1");
         handlerVipView(configMap);
     }
