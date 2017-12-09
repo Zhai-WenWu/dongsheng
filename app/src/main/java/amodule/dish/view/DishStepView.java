@@ -158,13 +158,12 @@ public class DishStepView extends ItemBaseView {
     }
     private void handlerImgHeight(String img ){
         if(img.contains("?")&&!map.containsKey("height")){
-            Log.i("xianghaTag","处理高度：：：");
             String temp = img.substring(img.indexOf("?")+1,img.length());
             if(temp.contains("_")){
                 String img_waith= temp.substring(0,temp.indexOf("_"));
                 String img_height= temp.substring(temp.indexOf("_")+1,temp.length());
                 int viewWaith=Tools.getPhoneWidth()-Tools.getDimen(context,R.dimen.dp_40);
-                if(!TextUtils.isEmpty(img_waith)&&!TextUtils.isEmpty(img_height)&&viewWaith>0){
+                if(!TextUtils.isEmpty(img_waith)&&!TextUtils.isEmpty(img_height)&&stringIsNum(img_height)&&stringIsNum(img_waith)&&viewWaith>0){
                     double intTemp=Double.parseDouble(img_height)/Double.parseDouble(img_waith);
                     int viewHeight= (int) (intTemp*viewWaith);
                     map.put("height",String.valueOf(viewHeight));
@@ -179,6 +178,15 @@ public class DishStepView extends ItemBaseView {
         }
     }
 
+    /**
+     * 字符串是否数字
+     * @param str
+     * @return
+     */
+    private boolean  stringIsNum(String str){
+        if(TextUtils.isEmpty(str))return false;
+        return str.matches("[0-9]+");
+    }
     /**
      * gif不进行显示
      */
