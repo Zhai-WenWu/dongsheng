@@ -75,6 +75,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
     private String courseCode;//课程分类
     private String chapterCode;//章节分类
     private boolean isShowPowerPermission=false;
+    private boolean isShowVip = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -185,7 +186,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
                         state = "";
                 }
                 detailDishViewManager.handlerTitle(mapTop,code,isHasVideo,mapTop.get("dishState"),loadManager,state);//title导航
-                detailDishViewManager.initVipView(mapTop.containsKey("type")?mapTop.get("type"):"");
+                if(isShowVip)detailDishViewManager.initVipView(mapTop.containsKey("type")?mapTop.get("type"):"");
                 detailDishViewManager.handlerDishData(list);//菜谱基本信息
                 detailDishViewManager.handlerExplainView(mapTop);//小贴士
                 requestWeb(mapTop);
@@ -234,6 +235,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
                 Map<String,String> relation= list.get(0);
                 detailDishViewManager.handlerUserPowerData(relation);//用户权限
                 detailDishViewManager.handlerHoverView(relation,code,dishName);
+                if(!isShowVip)detailDishViewManager.handlerVipView(relation);
                 showCaipuHint();
                 break;
             default:
@@ -344,6 +346,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
             case ObserverManager.NOTIFY_PAYFINISH://支付
                 if(detailDishDataManager!=null&&!isShowPowerPermission)detailDishDataManager.reqQAData();
             case ObserverManager.NOTIFY_LOGIN://登陆
+                isShowVip=false;
                 refreshTopInfo();
                 handleVipState();
             case ObserverManager.NOTIFY_FOLLOW://关注

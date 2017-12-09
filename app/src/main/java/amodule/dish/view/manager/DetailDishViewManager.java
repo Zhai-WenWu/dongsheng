@@ -194,6 +194,7 @@ public class DetailDishViewManager {
         if(isLoadVip)return;
         isLoadVip=true;
         String caipuVipConfig = AppCommon.getConfigByLocal("caipuVip");
+        if(TextUtils.isEmpty(caipuVipConfig)){isLoadVip=false;return;}
         Map<String,String> configMap = StringManager.getFirstMap(caipuVipConfig);
         String key = !TextUtils.isEmpty(type)&&"2".equals(type) ? "caipuVideo" : "caipu";
         configMap = StringManager.getFirstMap(configMap.get(key));
