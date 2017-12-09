@@ -2,6 +2,7 @@ package acore.widget.banner;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -52,6 +53,8 @@ public class Banner extends RelativeLayout {
     private static final int RMP = LayoutParams.MATCH_PARENT;
     private static final int RWC = LayoutParams.WRAP_CONTENT;
     private static final int LWC = LinearLayout.LayoutParams.WRAP_CONTENT;
+
+    private ImageView mBackImageView;
     /**
      * 循环轮播的Viewpager
      */
@@ -240,6 +243,10 @@ public class Banner extends RelativeLayout {
         mContext = context;
 
         mItemArrays = new SparseArray<>();
+
+        mBackImageView = new ImageView(context);
+        mBackImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        addView(mBackImageView, new LayoutParams(RMP, RMP));
 
         //初始化ViewPager
         mViewPager = new SLooperViewPager(context);
@@ -624,6 +631,16 @@ public class Banner extends RelativeLayout {
         setSource();
     }
 
+    public void setBackImageView(OnLoadImageCallback callback){
+        if(null != callback){
+            callback.onLoadImage(mBackImageView);
+        }
+    }
+
+    public interface OnLoadImageCallback{
+        void onLoadImage(ImageView imageView);
+    }
+
 
     /**
      * 通知数据已经放生改变
@@ -631,6 +648,7 @@ public class Banner extends RelativeLayout {
     public void notifyDataHasChanged() {
         mItemArrays.clear();
         initPoints();
+
         mViewPager.getAdapter().notifyDataSetChanged();
         mViewPager.setCurrentItem(0, false);
         if (mData.size() > 1){

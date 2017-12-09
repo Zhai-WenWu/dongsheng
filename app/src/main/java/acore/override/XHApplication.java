@@ -23,6 +23,7 @@ import java.util.Map;
 import acore.logic.AppCommon;
 import acore.override.helper.XHActivityManager;
 import acore.tools.ChannelUtil;
+import acore.tools.FileManager;
 import acore.tools.LogManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -59,6 +60,8 @@ public class XHApplication extends MobApplication {
         mAppApplication = this;
         startTime = System.currentTimeMillis();
         LogManager.printStartTime("zhangyujian","XhApplication::11111.oncreate::");
+        boolean isOnce = TextUtils.isEmpty(FileManager.loadShared(this,FileManager.xmlFile_appInfo,"once").toString());
+        FileManager.saveShared(this,FileManager.xmlFile_appInfo,"once",String.valueOf(isOnce));
         try{
             super.onCreate();
         }catch (SecurityException e) {
