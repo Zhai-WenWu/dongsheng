@@ -2,6 +2,7 @@ package amodule.dish.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
@@ -23,6 +24,7 @@ import acore.logic.AppCommon;
 import acore.override.helper.XHActivityManager;
 import acore.override.view.ItemBaseView;
 import acore.tools.StringManager;
+import acore.tools.Tools;
 import acore.widget.rvlistview.RvHorizatolListView;
 import acore.widget.rvlistview.RvListView;
 import acore.widget.rvlistview.adapter.RvBaseAdapter;
@@ -58,6 +60,19 @@ public class DishModuleScrollView extends ItemBaseView{
         super.init();
         module_tv= (TextView) findViewById(R.id.module_tv);
         rvHorizatolListView= (RvHorizatolListView) findViewById(R.id.rvHorizatolListView);
+        int padding = Tools.getDimen(getContext(),R.dimen.dp_20);
+        rvHorizatolListView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+                super.getItemOffsets(outRect, view, parent, state);
+                int position = parent.getChildAdapterPosition(view);
+                if (position == 0) {
+                    outRect.left = padding;
+                } else if (position == mapList.size() - 1) {
+                    outRect.right = padding;
+                }
+            }
+        });
         module_more= (TextView) findViewById(R.id.module_more);
 
     }
