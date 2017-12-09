@@ -265,6 +265,7 @@ public class  ShowWeb extends WebActivity implements IObserver {
     }
 
     protected void setTitle() {
+		if(TextUtils.isEmpty(url))return;
         //积分商城
         if (url.indexOf(StringManager.api_scoreStore) == 0) {
             //返回,返回上一界面
