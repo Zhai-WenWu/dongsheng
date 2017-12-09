@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.xiangha.R;
 import java.util.ArrayList;
@@ -28,13 +27,10 @@ import acore.tools.IObserver;
 import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
-import acore.tools.ToolsDevice;
 import acore.widget.rvlistview.RvListView;
-import amodule.dish.adapter.AdapterDishNew;
 import amodule.dish.adapter.AdapterDishRvListView;
 import amodule.dish.db.DataOperate;
 import amodule.dish.view.DishModuleScrollView;
-import amodule.dish.view.DishStepView;
 import amodule.dish.view.manager.DetailDishDataManager;
 import amodule.dish.view.manager.DetailDishViewManager;
 import amodule.main.Main;
@@ -42,9 +38,6 @@ import amodule.user.db.BrowseHistorySqlite;
 import amodule.user.db.HistoryData;
 import aplug.web.tools.WebviewManager;
 import aplug.web.view.XHWebView;
-import third.cling.control.ClingControl;
-import third.cling.control.OnDeviceSelectedListener;
-import third.cling.entity.ClingDevice;
 
 import static amodule.dish.activity.DetailDishWeb.tongjiId;
 import static java.lang.System.currentTimeMillis;
@@ -235,7 +228,18 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
                 Map<String,String> relation= list.get(0);
                 detailDishViewManager.handlerUserPowerData(relation);//用户权限
                 detailDishViewManager.handlerHoverView(relation,code,dishName);
-                if(!isShowVip)detailDishViewManager.handlerVipView(relation);
+                if(!isShowVip) {
+                    Map<String, String> mapVip = new HashMap<>();
+                    mapVip.put("isShow", relation.containsKey("isShow") ? relation.get("isShow") : "");
+                    Map<String, String> mapTemp = StringManager.getFirstMap(relation.get("vipButton"));
+                    if (mapTemp!=null && mapTemp.size()>0){
+                        mapVip.put("text", mapTemp.get("title"));
+                        mapVip.put("backColor", mapTemp.get("bgColor"));
+                        mapVip.put("textColor", mapTemp.get("color"));
+                        mapVip.put("clickUrl", mapTemp.get("url"));
+                    }
+                    detailDishViewManager.handlerVipView(mapVip);
+                }
                 showCaipuHint();
                 break;
             default:
@@ -267,7 +271,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         if(detailDishViewManager!=null)detailDishViewManager.onDestroy();
         long nowTime=System.currentTimeMillis();
         if(startTime>0&&(nowTime-startTime)>0&&!TextUtils.isEmpty(data_type)&&!TextUtils.isEmpty(module_type)){
-            XHClick.saveStatictisFile("DetailDishWeb",module_type,data_type,code,"","stop",String.valueOf((nowTime-startTime)/1000),"","","","");
+            XHClick.saveStatictisFile("DetailDish",module_type,data_type,code,"","stop",String.valueOf((nowTime-startTime)/1000),"","","","");
         }
         if(handlerScreen!=null){
             handlerScreen.removeCallbacksAndMessages(null);
