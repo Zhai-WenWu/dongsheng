@@ -15,6 +15,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.TitleMessageView;
 import com.xiangha.R;
 
 import java.util.ArrayList;
@@ -32,6 +36,7 @@ import acore.override.activity.base.BaseActivity;
 import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
+import acore.tools.ToolsDevice;
 import amodule.answer.db.AskAnswerSQLite;
 import amodule.answer.model.AskAnswerModel;
 import amodule.answer.view.AskAnswerImgController;
@@ -204,15 +209,16 @@ public class BaseEditActivity extends BaseActivity {
                         break;
                     case R.id.upload:
                         saveDraft();
+                        XHClick.mapStat(BaseEditActivity.this, getTjId(), "点击发布按钮", "");
                         if (handleUpload()) {//单独处理提问的上传
                             break;
                         }
                         //处理回答的上传
-                        Intent intent = new Intent(BaseEditActivity.this, AskAnswerUploadListActivity.class);
-                        intent.putExtra("draftId", (int)mModel.getmId());
-                        intent.putExtra("isAutoUpload", true);
-                        startActivityForResult(intent, REQUEST_CODE_A);
-                        XHClick.mapStat(BaseEditActivity.this, getTjId(), "点击发布按钮", "");
+                        if (!"wifi".equals(ToolsDevice.getNetWorkType(BaseEditActivity.this)) && hasImgs()) {
+                            hintNetWork();
+                        } else {
+                            gotoUploadActivity();
+                        }
                         break;
                     case R.id.back:
                         XHClick.mapStat(BaseEditActivity.this, getTjId(), "点击返回按钮", "");
@@ -493,5 +499,29 @@ public class BaseEditActivity extends BaseActivity {
                 break;
         }
         return tjId;
+    }
+
+    private void gotoUploadActivity () {
+        Intent intent = new Intent(BaseEditActivity.this, AskAnswerUploadListActivity.class);
+        intent.putExtra("draftId", (int)mModel.getmId());
+        intent.putExtra("isAutoUpload", true);
+        startActivityForResult(intent, REQUEST_CODE_A);
+    }
+
+    public boolean hasImgs () {
+        return mImgsContainer.getChildCount() > 0;
+    }
+
+    private void hintNetWork() {
+        final DialogManager dialogManager = new DialogManager(BaseEditActivity.this);
+        dialogManager.createDialog(new ViewManager(dialogManager)
+                .setView(new TitleMessageView(BaseEditActivity.this)
+                        .setText("当前不是WiFi环境，是否继续上传？"))
+                .setView(new HButtonView(BaseEditActivity.this)
+                        .setNegativeText("取消", v -> dialogManager.cancel())
+                        .setPositiveText("确定", v -> {
+                            dialogManager.cancel();
+                            gotoUploadActivity();
+                        }))).show();
     }
 }
