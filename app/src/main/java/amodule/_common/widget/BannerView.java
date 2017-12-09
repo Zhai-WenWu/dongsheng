@@ -120,7 +120,7 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
         }
         mArrayList.clear();
         mArrayList.addAll(arrayList);
-        postDelayed(()->{
+//        postDelayed(()->{
             //创建数据适配器
             BannerAdapter<Map<String, String>> bannerAdapter = new BannerAdapter<Map<String, String>>(mArrayList) {
                 @Override
@@ -135,10 +135,11 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
                         return;
                     }
                     imageView.setTag(TAG_ID, data.get("img"));
-                    Glide.with(getContext())
+                    LoadImage.with(getContext())
                             .load(data.get("img"))
-                            .asBitmap()
-                            .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                            .setSaveType(LoadImage.SAVE_LONG)
+                            .build()
+                            .fitCenter()
                             .into(imageView);
                     if ("2".equals(data.get("isAd"))) {
                         adView = view;
@@ -203,7 +204,7 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
             setRandomItem(arrayList);
             setVisibility(VISIBLE);
             postDelayed(() -> setBackImageView(this::loadImage) , 400);
-        },300);
+//        },300);
 
     }
 
