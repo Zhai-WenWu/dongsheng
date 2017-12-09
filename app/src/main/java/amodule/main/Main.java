@@ -14,14 +14,10 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.popdialog.util.GoodCommentManager;
@@ -185,8 +181,11 @@ public class Main extends Activity implements OnClickListener, IObserver {
      */
     private void initQiYvUnreadCount() {
         QiYvHelper.getInstance().getUnreadCount(count -> {
-            int messageNum = AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + (count > 0 ? count : 0);
-            Main.setNewMsgNum(2, messageNum);
+            if (count >= 0) {
+                AppCommon.qiyvMessage = count;
+                if (count > 0)
+                    Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
+            }
         });
     }
 
@@ -211,13 +210,9 @@ public class Main extends Activity implements OnClickListener, IObserver {
         if (mUnreadCountListener == null) {
             mUnreadCountListener = count -> {
                 if (count >= 0) {
-                    if (nowTab == TAB_MESSAGE || allTab.containsKey(MyMessage.KEY)) {
-                        MyMessage myMessage = (MyMessage) allTab.get(MyMessage.KEY);
-                        if(myMessage != null){
-                            myMessage.setQiYvNum(count);
-                        }
-                    }
-                    Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + count);
+                    AppCommon.qiyvMessage = count;
+                    if (count > 0)
+                        Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
                 }
             };
         }
@@ -254,8 +249,11 @@ public class Main extends Activity implements OnClickListener, IObserver {
                 //初始化电商页面统计
                 PageStatisticsUtils.getInstance().getPageInfo(getApplicationContext());
                 //处理
-                if (LoginManager.isLogin())
+                if (LoginManager.isLogin()) {
                     initQiYvUnreadCount();
+                    //防止七鱼回调有问题
+                    Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
+                }
                 addQiYvListener();
 
                 if (showQAUploading())
@@ -752,12 +750,20 @@ public class Main extends Activity implements OnClickListener, IObserver {
                     messageNumStr = 99 + "+";
                 }
                 textMsgNum.setText(messageNumStr);
-                MyMessage.notifiMessage(MyMessage.MSG_FEEKBACK_ONREFURESH, 0, "");
             } else {
                 view.findViewById(R.id.tv_tab_msg_num).setVisibility(View.GONE);
                 view.findViewById(R.id.tv_tab_msg_tow_num).setVisibility(View.GONE);
             }
         }
+        dispatchUpdateMsgNum();
+    }
+
+    private static void dispatchUpdateMsgNum() {
+        dispatchMsgListNum();
+    }
+
+    private static void dispatchMsgListNum() {
+        MyMessage.notifiMessage(MyMessage.MSG_DISPATCH_ONREFURESH, 0, "");
     }
     /**
      * 点击下方tab切换,并且加上美食圈点击后进去第一个页面并刷新
@@ -857,15 +863,15 @@ public class Main extends Activity implements OnClickListener, IObserver {
                 QiYvHelper.getInstance().getUnreadCount(new QiYvHelper.NumberCallback() {
                     @Override
                     public void onNumberReady(int count) {
-                        if (nowTab == 2 || allTab.containsKey(MyMessage.KEY)) {
-                            MyMessage myMessage = (MyMessage) allTab.get(MyMessage.KEY);
-                            if(myMessage != null){
-                                myMessage.setQiYvNum(count);
-                            }
+                        if (count >= 0) {
+                            AppCommon.qiyvMessage = count;
+                            if (count > 0)
+                                Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
                         }
-                        Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + (count > 0 ? count : 0));
                     }
                 });
+                //防止七鱼回调不回来
+                Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
             }
         } else if (ObserverManager.NOTIFY_LOGOUT.equals(name)) {
             if (data != null && data instanceof Boolean) {

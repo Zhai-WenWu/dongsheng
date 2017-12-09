@@ -48,7 +48,6 @@ import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
-import amodule.dish.activity.DishTestActivity;
 import amodule.health.activity.HealthTest;
 import amodule.health.activity.MyPhysique;
 import amodule.main.Main;
@@ -76,6 +75,7 @@ import static xh.basic.tool.UtilString.getListMapByJson;
 //
 
 public class AppCommon {
+    public static int qiyvMessage = 0;//七鱼新消息条数
     public static int quanMessage = 0; // 美食圈新消息条数
     public static int feekbackMessage = 0; // 系统新消息条数
     public static int myQAMessage = 0;//我的问答新消息条数
@@ -112,9 +112,14 @@ public class AppCommon {
                             QiYvHelper.getInstance().getUnreadCount(new QiYvHelper.NumberCallback() {
                                 @Override
                                 public void onNumberReady(int count) {
-                                    Main.setNewMsgNum(2, quanMessage + feekbackMessage + myQAMessage + count);
+                                    if (count >= 0) {
+                                        qiyvMessage = count;
+                                        if (count > 0)
+                                            Main.setNewMsgNum(3, quanMessage + feekbackMessage + myQAMessage + qiyvMessage);
+                                    }
                                 }
                             });
+                            Main.setNewMsgNum(3, quanMessage + feekbackMessage + myQAMessage + qiyvMessage);
                             // tok值
                             long tok = Integer.parseInt(alertArr[0]);
                             int c = (new Random()).nextInt(9) + 1;

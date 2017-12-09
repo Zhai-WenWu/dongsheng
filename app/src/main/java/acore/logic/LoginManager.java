@@ -10,7 +10,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.webkit.CookieManager;
 
-
 import com.xh.manager.DialogManager;
 import com.xh.manager.ViewManager;
 import com.xh.view.HButtonView;
@@ -183,7 +182,9 @@ public class LoginManager {
                     UtilFile.delShared(mAct, FileManager.xmlFile_userInfo, "");
                     //清空消息数角标
                     AppCommon.quanMessage = 0;
-                    Main.setNewMsgNum(2, AppCommon.quanMessage);
+                    AppCommon.qiyvMessage = 0;
+                    AppCommon.myQAMessage = 0;
+                    Main.setNewMsgNum(3, AppCommon.quanMessage + AppCommon.qiyvMessage + AppCommon.myQAMessage + AppCommon.feekbackMessage );
                     //XG解绑
                     new XGPushServer(mAct).initPush();
                     //如果是用户设置页面finish掉自己

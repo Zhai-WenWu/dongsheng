@@ -1,7 +1,5 @@
 package third.push;
 
-import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -37,7 +35,7 @@ public class NotificationManager {
      * @param data
      */
     public void notificationActivity(Context context, NotificationData data) {
-        if (data == null) {
+        if (data == null || context == null) {
             return;
         }
         //开关
