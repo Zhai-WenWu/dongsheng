@@ -306,7 +306,6 @@ public class DishHeaderViewNew extends LinearLayout {
 
     boolean isContinue = false;
     boolean isHaspause = false;
-    long currentTime = 0;
     int limitTime = 0;
     private boolean setSelfVideo(final String title, final String selfVideoJson, final String img, Map<String, String> permissionMap) {
         boolean isUrlVaild = false;
@@ -387,7 +386,7 @@ public class DishHeaderViewNew extends LinearLayout {
                 }
             });
             dredgeVipLayout.setPadding(0, distance, 0, 0);
-            mVideoPlayerController.setOnProgressChangedCallback((progress, secProgress, currentTime1, totalTime) -> {
+            mVideoPlayerController.setOnProgressChangedCallback((progress, secProgress, currentTime, totalTime) -> {
                 int currentS = Math.round(currentTime / 1000f);
                 int durationS = Math.round(totalTime / 1000f);
                 if (currentS >= 0 && durationS >= 0) {
