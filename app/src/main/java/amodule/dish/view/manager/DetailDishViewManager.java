@@ -411,7 +411,10 @@ public class DetailDishViewManager {
     public void onDestroy() {
         if(dishHeaderViewNew!=null)dishHeaderViewNew.onDestroy();
     }
-
+    public boolean onBackPressed(){
+        if(dishHeaderViewNew==null)return false;
+        return dishHeaderViewNew.onBackPressed();
+    }
     public void refresh() {
     }
     /**

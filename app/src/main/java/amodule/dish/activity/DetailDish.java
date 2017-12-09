@@ -429,4 +429,12 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         if(pageXhWebView!=null)
             pageXhWebView.setVisibility(View.GONE);
     }
+    @Override
+    public void onBackPressed() {
+        if(detailDishViewManager != null && detailDishViewManager.onBackPressed()){
+            return;
+        }
+        super.onBackPressed();
+    }
+
 }
