@@ -50,6 +50,9 @@ public class MyMessage extends MainBaseActivity{
 	public final static int MSG_LOGIN_OUT_CLEAR_VIEW = 11;
 	public final static int MSG_LOGIN_ON = 12;
 	public final static int MSG_FEEKBACK_ONREFURESH = 13;
+	public final static int MSG_QIYV_ONREFURESH = 14;
+	public final static int MSG_QA_ONREFURESH = 15;
+	public final static int MSG_DISPATCH_ONREFURESH = 16;
 	private String pageTime="";
 	private int currentPage = 0, everyPage = 0;
 	private boolean clickFlag = true , isCreated=false;
@@ -83,19 +86,22 @@ public class MyMessage extends MainBaseActivity{
 		QiYvHelper.getInstance().getUnreadCount(new QiYvHelper.NumberCallback() {
 			@Override
 			public void onNumberReady(int count) {
-				setQiYvNum(count);
+				if (count >= 0) {
+					AppCommon.qiyvMessage = count;
+					if (count > 0)
+						setQiYvNum();
+				}
 			}
 		});
 	}
 
 	/**
 	 * 设置消息数的显示
-	 * @param count
 	 */
-	public void setQiYvNum(int count) {
+	private void setQiYvNum() {
 		if (mQiYvNum != null) {
-			if (count > 0) {
-				mQiYvNum.setText(String.valueOf(count));
+			if (AppCommon.qiyvMessage > 0) {
+				mQiYvNum.setText(String.valueOf(AppCommon.qiyvMessage));
 				mQiYvNum.setVisibility(View.VISIBLE);
 			} else {
 				mQiYvNum.setVisibility(View.GONE);
@@ -132,7 +138,7 @@ public class MyMessage extends MainBaseActivity{
 				setRefresh();
 			}
 			AppCommon.quanMessage = 0;
-			Main.setNewMsgNum(2,AppCommon.quanMessage);
+			Main.setNewMsgNum(3,AppCommon.qiyvMessage + AppCommon.myQAMessage + AppCommon.feekbackMessage);
 		}else{
 			findViewById(R.id.no_login_rela).setVisibility(View.VISIBLE);
 			mNoLoginLayout.setVisibility(View.VISIBLE);
@@ -194,7 +200,7 @@ public class MyMessage extends MainBaseActivity{
 					case R.id.my_qa:
 						if (mMyQANum != null && mMyQANum.getVisibility() == View.VISIBLE) {
 							AppCommon.myQAMessage = 0;
-							Main.setNewMsgNum(2, AppCommon.myQAMessage);
+							Main.setNewMsgNum(3, AppCommon.qiyvMessage + AppCommon.feekbackMessage + AppCommon.quanMessage);
 							mMyQANum.setText("");
 							mMyQANum.setVisibility(View.GONE);
 						}
@@ -202,7 +208,8 @@ public class MyMessage extends MainBaseActivity{
 						XHClick.mapStat(MyMessage.this, "a_message", "点击我问我答", "");
 						break;
 					case R.id.qiyv:
-						setQiYvNum(0);
+						AppCommon.qiyvMessage = 0;
+						setQiYvNum();
 						Map<String, String> customMap = new HashMap<String, String>();
 						customMap.put("pageTitle", "消息列表页");
 						QiYvHelper.getInstance().startServiceAcitivity(MyMessage.this, null, null, customMap);
@@ -252,9 +259,20 @@ public class MyMessage extends MainBaseActivity{
 					load(false);
 					AppCommon.quanMessage = 0;
 					break;
-				case MSG_FEEKBACK_ONREFURESH:
-					setFeekbackMsg();
-					break;
+					case MSG_FEEKBACK_ONREFURESH:
+						setFeekbackMsg();
+						break;
+					case MSG_QIYV_ONREFURESH:
+						setQiYvNum();
+						break;
+					case MSG_QA_ONREFURESH:
+						setQAMsgNum();
+						break;
+					case MSG_DISPATCH_ONREFURESH:
+						setFeekbackMsg();
+						setQiYvNum();
+						setQAMsgNum();
+						break;
 				}
 			}
 		};
@@ -286,6 +304,17 @@ public class MyMessage extends MainBaseActivity{
 				feekback_msg_num.setText("" + AppCommon.feekbackMessage);
 			}
 		}
+		if (mMyQANum != null) {
+			if (AppCommon.myQAMessage == 0) {
+				mMyQANum.setVisibility(View.GONE);
+			} else {
+				mMyQANum.setVisibility(View.VISIBLE);
+				mMyQANum.setText(String.valueOf(AppCommon.myQAMessage));
+			}
+		}
+	}
+
+	private void setQAMsgNum() {
 		if (mMyQANum != null) {
 			if (AppCommon.myQAMessage == 0) {
 				mMyQANum.setVisibility(View.GONE);
@@ -428,18 +457,27 @@ public class MyMessage extends MainBaseActivity{
 		msg.arg1 = id;
 		msg.obj = returnObj;
 		switch (type) {
-		case MSG_LOGIN_OUT_CLEAR_VIEW:
-			msg.what = MSG_LOGIN_OUT_CLEAR_VIEW;
-			break;
-		case MSG_LOGIN_ON:
-			msg.what = MSG_LOGIN_ON;
-			break;
-		case MSG_FEEKBACK_ONREFURESH:
-			msg.what = MSG_FEEKBACK_ONREFURESH;
-			break;
-		case MSG_ONREFRESH_MESSAGE:
-			msg.what = MSG_ONREFRESH_MESSAGE;
-			break;
+			case MSG_LOGIN_OUT_CLEAR_VIEW:
+				msg.what = MSG_LOGIN_OUT_CLEAR_VIEW;
+				break;
+			case MSG_LOGIN_ON:
+				msg.what = MSG_LOGIN_ON;
+				break;
+			case MSG_FEEKBACK_ONREFURESH:
+				msg.what = MSG_FEEKBACK_ONREFURESH;
+				break;
+			case MSG_QIYV_ONREFURESH:
+				msg.what = MSG_QIYV_ONREFURESH;
+				break;
+			case MSG_QA_ONREFURESH:
+				msg.what = MSG_QA_ONREFURESH;
+				break;
+			case MSG_DISPATCH_ONREFURESH:
+				msg.what = MSG_DISPATCH_ONREFURESH;
+				break;
+			case MSG_ONREFRESH_MESSAGE:
+				msg.what = MSG_ONREFRESH_MESSAGE;
+				break;
 		}
 		if (handler != null)
 			handler.sendMessage(msg);
