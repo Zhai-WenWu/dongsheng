@@ -303,8 +303,9 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         dredgeVipFullLayout = (RelativeLayout)findViewById(R.id.dredge_vip_full_layout);
         if(pagePermission.containsKey("url") && !TextUtils.isEmpty(pagePermission.get("url"))){
             //xhwebView
+            WebviewManager.syncXHCookie();
             WebviewManager manager = new WebviewManager(this,loadManager,true);
-            pageXhWebView = manager.createWebView(R.id.XHWebview);
+            pageXhWebView = manager.createWebView(R.id.XHWebview,false);
             String url = pagePermission.get("url");
             pageXhWebView.loadUrl(url);
             RelativeLayout bar_title_2 = (RelativeLayout) dredgeVipFullLayout.findViewById(R.id.dish_title_page);
