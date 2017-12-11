@@ -73,6 +73,7 @@ public class CustomGSYVideoPlayer extends StandardGSYVideoPlayer {
         }
         mPreviewTexture = null;
         mPreviewTexture = new GSYTextureView(getActivityContext());
+        mPreviewTexture.setGSYVideoManager(mGSYVideoManager);
         mPreviewTexture.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
             @Override
             public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {

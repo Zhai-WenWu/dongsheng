@@ -88,7 +88,7 @@ public class VideoPlayerController {
      */
     public VideoPlayerController(final Activity context,final ViewGroup viewGroup, String imgUrl) {
         this(context,viewGroup,imgUrl,GSYVideoType.SCREEN_TYPE_DEFAULT);
-        GSYVideoManager.instance().canChange = true;
+        GSYVideoManager.canChange = true;
     }
     public VideoPlayerController(final Activity context,final ViewGroup viewGroup, String imgUrl,int type) {
         this.mContext = context;
@@ -129,9 +129,9 @@ public class VideoPlayerController {
                 super.onPrepared(url, objects);
                 if(url.startsWith("http"))
                     setNetworkCallback();
-                if(!GSYVideoManager.instance().canChange){
-                    GSYVideoManager.instance().setCurrentVideoWidth(viewGroup.getWidth());
-                    GSYVideoManager.instance().setCurrentVideoHeight(viewGroup.getHeight());
+                if(!GSYVideoManager.canChange){
+                    videoPlayer.getGSYVideoManager().setCurrentVideoWidth(viewGroup.getWidth());
+                    videoPlayer.getGSYVideoManager().setCurrentVideoHeight(viewGroup.getHeight());
                 }
             }
 
@@ -564,7 +564,7 @@ public class VideoPlayerController {
         //先返回正常状态
         if (orientationUtils.getScreenType() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
                 || isPortrait) {
-            return StandardGSYVideoPlayer.backFromWindowFull(mContext);
+            return videoPlayer.backFromWindowFull(mContext);
         }
         return false;
     }
@@ -611,10 +611,10 @@ public class VideoPlayerController {
         if(null != videoPlayer && !isNetworkDisconnect)
             videoPlayer.onVideoResume();
         ClingControl.getInstance(mContext).onResume();
-        if(GSYVideoManager.instance().getMediaPlayer() != null){
-            Log.i("tzy","width = " + GSYVideoManager.instance().getMediaPlayer().getVideoWidth());
-            Log.i("tzy","height = " + GSYVideoManager.instance().getMediaPlayer().getVideoHeight());
-        }
+//        if(GSYVideoManager.instance().getMediaPlayer() != null){
+//            Log.i("tzy","width = " + GSYVideoManager.instance().getMediaPlayer().getVideoWidth());
+//            Log.i("tzy","height = " + GSYVideoManager.instance().getMediaPlayer().getVideoHeight());
+//        }
     }
 
     public void onPause(boolean showVideoImage) {

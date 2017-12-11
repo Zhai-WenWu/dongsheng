@@ -231,6 +231,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
         }
         mTextureView = null;
         mTextureView = new GSYTextureView(getContext());
+        mTextureView.setGSYVideoManager(mGSYVideoManager);
         mTextureView.setSurfaceTextureListener(this);
         mTextureView.setRotation(mRotate);
 
