@@ -60,6 +60,7 @@ public class AdapterDishNew extends AdapterSimple {
         }
 
         public void setData(Map<String,String> map, final int position){
+            stepView.setTag(position);
             stepView.setData(map, new DishStepView.StepViewCallBack() {
                 @Override
                 public void getHeight(String height) {
@@ -77,6 +78,7 @@ public class AdapterDishNew extends AdapterSimple {
                 }
             },position);
             if(isShowDistance)stepView.isDistance(position == data.size()-1);
+            stepView.hideStepDistance(position==data.size()-1);
         }
     }
 

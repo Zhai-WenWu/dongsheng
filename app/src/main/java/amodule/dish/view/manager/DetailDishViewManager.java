@@ -17,7 +17,9 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -57,7 +59,7 @@ public class DetailDishViewManager {
     private boolean isHasVideoOnClick = false;
     private boolean isShowTitleColor=false;
     private View view_oneImage;
-    private RvListView listView;
+    private ListView listView;
     private int firstItemIndex = -1,startY;
     private boolean isHasVideo=false,isRecored=false;
     private int wm_height;//屏幕高度
@@ -84,11 +86,12 @@ public class DetailDishViewManager {
     public View noStepView;
     private RelativeLayout bar_title_1;
     private boolean isLoadVip= false;
+    private LinearLayout linearLayoutOne;
 
     /**
      * 对view进行基础初始化
      */
-    public DetailDishViewManager(Activity activity, RvListView listView, String state) {
+    public DetailDishViewManager(Activity activity, ListView listView, String state) {
         wm_height = activity.getWindowManager().getDefaultDisplay().getHeight();
         mAct = activity;
         this.listView = listView;
@@ -129,8 +132,16 @@ public class DetailDishViewManager {
         layoutHeader.addView(dishVipView);
         layoutHeader.addView(dishAboutView);
         layoutHeader.addView(dishADBannerView);
-        layoutHeader.addView(dishIngreDataShow);
-        layoutHeader.addView(dishModuleScrollView);
+
+        linearLayoutOne= new LinearLayout(mAct);
+        RelativeLayout.LayoutParams layoutParamsOne = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        linearLayoutOne.setLayoutParams(layoutParamsOne);
+        linearLayoutOne.setOrientation(LinearLayout.VERTICAL);
+        linearLayoutOne.addView(dishIngreDataShow);
+        linearLayoutOne.addView(dishModuleScrollView);
+
+        layoutHeader.addView(linearLayoutOne);
+
         textStep = new TextView(activity);
         textStep.setPadding(Tools.getDimen(activity, R.dimen.dp_20), Tools.getDimen(activity, R.dimen.dp_35), 0,  Tools.getDimen(activity, R.dimen.dp_14));
         textStep.setTextSize(Tools.getDimenSp(activity, R.dimen.sp_18));
@@ -426,23 +437,13 @@ public class DetailDishViewManager {
      */
     @TargetApi(Build.VERSION_CODES.M)
     private void setListViewListener() {
-        listView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
-                if (layoutManager instanceof LinearLayoutManager) {
-                    LinearLayoutManager linearManager = (LinearLayoutManager) layoutManager;
-                    //获取最后一个可见view的位置
-                    int lastItemPosition = linearManager.findLastVisibleItemPosition();
-                    //获取第一个可见view的位置
-                    firstItemIndex = linearManager.findFirstVisibleItemPosition();
-                    System.out.println(lastItemPosition + "   " + firstItemIndex);
-                }
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
             }
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                firstItemIndex=firstVisibleItem;
             }
         });
         listView.setOnTouchListener(new View.OnTouchListener() {
