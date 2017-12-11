@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
 import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.JsResult;
 import android.webkit.SslErrorHandler;
@@ -32,10 +33,15 @@ import java.util.TimerTask;
 
 import acore.logic.AppCommon;
 import acore.logic.load.LoadManager;
+import acore.override.XHApplication;
+import acore.tools.LogManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
+import aplug.basic.ReqInternet;
 import aplug.basic.XHConf;
 import aplug.web.view.XHWebView;
+import third.mall.aplug.MallReqInternet;
+import third.mall.aplug.MallStringManager;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilString;
 
@@ -305,6 +311,34 @@ public class  WebviewManager {
             }
 
         });
+    }
+
+    public static void syncXHCookie(){
+        Map<String,String> header = ReqInternet.in().getHeader(XHApplication.in());
+        String cookieStr=header.containsKey("Cookie")?header.get("Cookie"):"";
+        String[] cookie = cookieStr.split(";");
+        CookieManager cookieManager = CookieManager.getInstance();
+        for (int i = 0; i < cookie.length; i++) {
+            cookieManager.setCookie(StringManager.domain, cookie[i]);
+        }
+        CookieSyncManager.createInstance(XHApplication.in());
+        CookieSyncManager.getInstance().sync();
+        LogManager.print(XHConf.log_tag_net,"d", "设置webview的cookie："+cookieStr);
+    }
+
+    public static void syncDSCookie(){
+        Map<String,String> header= MallReqInternet.in().getHeader(XHApplication.in());
+        String cookieKey_mall= MallStringManager.mall_web_apiUrl.replace(MallStringManager.appWebTitle, "");
+        String cookieStr=header.containsKey("Cookie")?header.get("Cookie"):"";
+        String[] cookie = cookieStr.split(";");
+        CookieManager cookieManager = CookieManager.getInstance();
+        cookieManager.setAcceptCookie(true);
+        for (int i = 0; i < cookie.length; i++) {
+            cookieManager.setCookie(cookieKey_mall, cookie[i]);
+        }
+        CookieSyncManager.createInstance(XHApplication.in());
+        CookieSyncManager.getInstance().sync();
+        LogManager.print(XHConf.log_tag_net,"d", "设置webview的cookie："+cookieStr);
     }
 
     private OnWebviewLoadFinish onWebviewLoadFinish;
