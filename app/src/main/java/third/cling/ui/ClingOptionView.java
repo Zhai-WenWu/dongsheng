@@ -17,6 +17,8 @@ import com.xiangha.R;
 
 public class ClingOptionView extends RelativeLayout implements View.OnClickListener {
 
+    private Context mContext;
+
     private TextView mTitleTextView;
     private LinearLayout mTryAgainLayout;
     private LinearLayout mExitLayout;
@@ -102,5 +104,13 @@ public class ClingOptionView extends RelativeLayout implements View.OnClickListe
         mTitleTextView.setTextColor(Color.parseColor("#1db01d"));
         if (mTryAgainLayout.getVisibility() == View.VISIBLE)
             mTryAgainLayout.setVisibility(View.GONE);
+    }
+
+    public void setContext(Context context) {
+        mContext = context;
+    }
+
+    public Context getCurrContext() {
+        return mContext;
     }
 }

@@ -42,6 +42,8 @@ public class ClingDevicesPopup extends PopupWindow {
 
     private OnDeviceSelectedListener mOnDeviceSelected;
     private DataSetObserver mDataSetObserver;
+
+    private Context mContext;
     public ClingDevicesPopup(Context context) {
         super(context);
         initView(context);
@@ -160,5 +162,13 @@ public class ClingDevicesPopup extends PopupWindow {
             mDevicesAdapter.unregisterDataSetObserver(mDataSetObserver);
         mOnDeviceSelected = null;
         mDataSetObserver = null;
+    }
+
+    public void setContext(Context context) {
+        mContext = context;
+    }
+
+    public Context getContext() {
+        return mContext;
     }
 }
