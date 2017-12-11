@@ -188,7 +188,6 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
                 requestWeb(mapTop);
                 saveDishInfo(mapTop);
                 tongjiId_detail=isHasVideo?"a_menu_detail_video":"a_menu_detail_normal";
-
                 break;
             case DetailDishDataManager.DISH_DATA_INGRE://用料
                 detailDishViewManager.handlerIngreView(list);
@@ -199,6 +198,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
                 break;
             case DetailDishDataManager.DISH_DATA_STEP://步骤
                 if(list!=null&&list.size()>0&&!TextUtils.isEmpty(list.get(0).get("list"))){
+                    maplist.clear();
                     Map<String,String> mapTemp = list.get(0);
                     maplist.addAll(StringManager.getListMapByJson(mapTemp.get("list")));
                     adapterDishNew.setShowDistance(mapTemp.containsKey("isCourseDish")&&"2".equals(mapTemp.get("isCourseDish")));
@@ -359,6 +359,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
             case ObserverManager.NOTIFY_LOGIN://登陆
                 isShowVip=false;
                 refreshTopInfo();
+                if(detailDishDataManager!=null&&!isShowPowerPermission)detailDishDataManager.reqAnticData();
                 handleVipState();
             case ObserverManager.NOTIFY_FOLLOW://关注
             case ObserverManager.NOTIFY_UPLOADOVER://问答

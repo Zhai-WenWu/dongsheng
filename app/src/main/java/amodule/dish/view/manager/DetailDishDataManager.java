@@ -208,7 +208,7 @@ public class DetailDishDataManager {
     /**
      * 请求小技巧
      */
-    private void reqAnticData(){
+    public void reqAnticData(){
         String params = "dishCode=" + dishCode;
         //获取帖子数据
         ReqEncyptInternet.in().doEncypt(StringManager.API_MAIN8_ANTIC,getOtherCode(params), new InternetCallback(mContext) {
@@ -242,9 +242,7 @@ public class DetailDishDataManager {
     public void handleDataSuccess(int flag, String type,Object object){
         if (flag >= UtilInternet.REQ_OK_STRING && dishDataCallBack != null) {
             ArrayList<Map<String,String>> list=StringManager.getListMapByJson(object);
-            if(list.size()>0) {
-                    dishDataCallBack.handlerTypeData(type, list,type.equals(DISH_DATA_TOP)?detailPermissionMap:null);
-            }
+            dishDataCallBack.handlerTypeData(type, list,type.equals(DISH_DATA_TOP)?detailPermissionMap:null);
         }
     }
 
