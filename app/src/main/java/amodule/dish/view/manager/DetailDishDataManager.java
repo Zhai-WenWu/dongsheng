@@ -242,9 +242,7 @@ public class DetailDishDataManager {
     public void handleDataSuccess(int flag, String type,Object object){
         if (flag >= UtilInternet.REQ_OK_STRING && dishDataCallBack != null) {
             ArrayList<Map<String,String>> list=StringManager.getListMapByJson(object);
-            if(list.size()>0) {
-                    dishDataCallBack.handlerTypeData(type, list,type.equals(DISH_DATA_TOP)?detailPermissionMap:null);
-            }
+            dishDataCallBack.handlerTypeData(type, list,type.equals(DISH_DATA_TOP)?detailPermissionMap:null);
         }
     }
 

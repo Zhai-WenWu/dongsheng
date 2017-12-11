@@ -26,7 +26,7 @@ import third.mall.widget.ListViewForScrollView;
  */
 public class DishIngreDataShow extends ItemBaseView implements View.OnClickListener {
     private LinearLayout recommendAd_linear;
-    private ArrayList<Map<String, String>> listAll;
+    private ArrayList<Map<String, String>> listAll= new ArrayList<>();
     private ArrayList<Map<String, String>> lists = new ArrayList<>();
     private ArrayList<Map<String, String>> listNoAll = new ArrayList<>();
     private AdapterSimple adapter;
@@ -61,8 +61,9 @@ public class DishIngreDataShow extends ItemBaseView implements View.OnClickListe
      * 设置数据
      */
     public void setData(final ArrayList<Map<String, String>> listmap) {
+        listAll.clear();lists.clear();listNoAll.clear();
         if (listmap == null || listmap.size() <= 0) return;
-        this.listAll = listmap;
+        this.listAll.addAll(listmap);
         for (Map<String, String> map : listAll) {
             map.put("goIngre", map.get("url").length() > 0 ? "ignore" : "hide");
         }
