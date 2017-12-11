@@ -240,6 +240,8 @@ public class HomeSecondListFragment extends Fragment {
         //更新加载按钮状态
         mLoadManager.changeMoreBtn(mRv, ReqInternet.REQ_OK_STRING, -1, -1, mLoadOver?2:1, refresh && mIsVisible);
         mLoadOver = true;
+        if (refresh)
+            mCompelClearData = true;
         ReqEncyptInternet.in().doEncyptAEC(url,data, new InternetCallback(mActivity) {
             @Override
             public void loaded(int flag, String url, Object object) {
