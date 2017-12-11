@@ -264,6 +264,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
             if(detailDishDataManager!=null&&!isShowPowerPermission)detailDishDataManager.reqQAData();
         }
         if(detailDishViewManager!=null)detailDishViewManager.handlerLoginStatus();
+        if(loadManager!=null)loadManager.hideProgressBar();
     }
     @Override
     protected void onDestroy() {
