@@ -102,6 +102,7 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
     private ImageView vipIcon, qaIcon;
 
     private boolean mYiYuanDialogShowing;
+    private boolean mNeedRefVipState;
 
     private boolean mIsOnResuming;
 
@@ -134,6 +135,8 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
         if(MallPayActivity.pay_state){
             onListEventCommon("order");
         }
+        if (mNeedRefVipState)
+            getYiYuanBindState();
     }
 
     @Override
@@ -149,6 +152,8 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
     }
 
     private void getYiYuanBindState() {
+        if (mIsOnResuming)
+            mNeedRefVipState = false;
         LoginManager.initYiYuanBindState(this, () -> {
             Object shouldShowDialog = FileManager.loadShared(MainMyself.this, FileManager.xmlFile_appInfo, "shouldShowDialog");
             onBindStateDataReady(LoginManager.isTempVip(), "2".equals(shouldShowDialog));
@@ -685,6 +690,7 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
                     break;
                 case ObserverManager.NOTIFY_PAYFINISH:
                     if (data != null && data instanceof Boolean && (Boolean)data) {
+                        mNeedRefVipState = true;
                         getYiYuanBindState();
                     }
                     break;
