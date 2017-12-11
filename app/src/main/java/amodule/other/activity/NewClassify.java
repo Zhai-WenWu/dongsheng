@@ -83,6 +83,7 @@ public class NewClassify extends BaseActivity {
 			nameTitle = bundle.getString("name");
 			type = bundle.getString("type");
 			if ("caipu".equals(type) || TextUtils.isEmpty(type)) {
+				type="caipu";
 				title = "菜谱分类";
 				coverStr = "搜菜谱  如：糖醋排骨  或  鸡蛋";
 				mEventId = "a_menu_table";
@@ -418,10 +419,7 @@ public class NewClassify extends BaseActivity {
 		bannerAd.marginLeft = ToolsDevice.dp2px(this,60);
 		bannerAd.marginRight = ToolsDevice.dp2px(this,60);
 		AdParent[] ads1 = { bannerAd};
-		String adPlayId = AdPlayIdConfig.HEALTH_ClASSIFY;
-		if (type.equals("caipu")) {
-			adPlayId = AdPlayIdConfig.Dish_CLASSIFY;
-		}
+		String adPlayId = "caipu".equals(type)?AdPlayIdConfig.Dish_CLASSIFY:AdPlayIdConfig.HEALTH_ClASSIFY;
 		AdsShow ad1 = new AdsShow(ads1, adPlayId);
 		mAds = new AdsShow[]{ad1};
 	}
