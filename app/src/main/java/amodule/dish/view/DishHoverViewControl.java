@@ -72,6 +72,9 @@ public class DishHoverViewControl implements View.OnClickListener{
         goodLayoutParent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {}});
+        hoverLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {}});
     }
 
     /**
