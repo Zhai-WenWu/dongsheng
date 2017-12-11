@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.annimon.stream.Stream;
@@ -134,6 +135,13 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
                     if (tagValue != null && tagValue.equals(data.get("img"))) {
                         return;
                     }
+                    RelativeLayout adlayout = (RelativeLayout) view.findViewById(R.id.ad_layout);
+                    adlayout.setPadding(
+                            adlayout.getPaddingLeft(),
+                            adlayout.getPaddingTop(),
+                            mPointContainerLl.getMeasuredWidth() + Tools.getDimen(getContext(),R.dimen.dp_16),
+                            adlayout.getPaddingBottom()
+                    );
                     imageView.setTag(TAG_ID, data.get("img"));
                     Glide.with(getContext())
                             .load(data.get("img"))
@@ -238,7 +246,11 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
             adMap = new HashMap<>();
             adMap.put("isAd", "2");
             adMap.put("img", imageUrl);
-            adMap.put("title", adDataMap.get("title"));
+            String title = adDataMap.get("title");
+            String desc = adDataMap.get("desc");
+            String text = TextUtils.equals(title,desc) ? desc : title + " | " + desc;
+            adMap.put("title", text);
+            Log.i("tzy","data = " + adDataMap.toString());
             if (!mArrayList.isEmpty()
                     && !adMap.isEmpty()
                     && !mArrayList.contains(adMap)

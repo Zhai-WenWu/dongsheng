@@ -79,7 +79,7 @@ public class Banner extends RelativeLayout {
     /**
      * 存放点的容器
      */
-    private LinearLayout mPointContainerLl;
+    protected LinearLayout mPointContainerLl;
     /**
      * 点的drawable资源id
      */
