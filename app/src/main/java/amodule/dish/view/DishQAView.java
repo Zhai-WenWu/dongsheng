@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ImageSpan;
@@ -147,6 +148,9 @@ public class DishQAView extends ItemBaseView{
                 }
             }
         });
+        if(maptemp.containsKey("count")&& !TextUtils.isEmpty(maptemp.get("count"))&&Integer.parseInt(maptemp.get("count"))>0){
+            this.findViewById(R.id.qa_more_linaer).setVisibility(View.VISIBLE);
+        }else  this.findViewById(R.id.qa_more_linaer).setVisibility(View.GONE);
     }
 
     private SpannableString getClickableSpan(String content, final Map<String,String> maps) {
