@@ -16,8 +16,9 @@
     <TextView
         android:id="@+id/text_1"
         android:paddingTop="@dimen/dp_7"
-        android:layout_width="@dimen/dp_55"
+        android:layout_width="wrap_content"
         android:minWidth="@dimen/dp_55"
+        android:maxLines="1"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textColor="#333333"

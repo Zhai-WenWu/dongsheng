@@ -6,6 +6,7 @@ import org.fourthline.cling.model.meta.Device;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 
 import third.cling.util.Utils;
 
@@ -49,10 +50,14 @@ public class ClingDeviceList {
     public ClingDevice getClingDevice(Device device){
         if (mClingDeviceList == null)
             return null;
-        for (ClingDevice clingDevice : mClingDeviceList){
-            Device deviceTemp = clingDevice.getDevice();
-            if (deviceTemp != null && deviceTemp.equals(device)){
-                return clingDevice;
+        Iterator<ClingDevice> iterator = mClingDeviceList.iterator();
+        while (iterator != null && iterator.hasNext()) {
+            ClingDevice clingDevice = iterator.next();
+            if (clingDevice != null) {
+                Device deviceTemp = clingDevice.getDevice();
+                if (deviceTemp != null && deviceTemp.equals(device)){
+                    return clingDevice;
+                }
             }
         }
         return null;
