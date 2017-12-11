@@ -233,6 +233,7 @@ public class  WebviewManager {
                             @Override
                             public void onClick(View v) {
                                 AppCommon.openUrl(act, url, true);
+                                loadManager.hideProgressBar();
                             }
                         });
                     } else {
