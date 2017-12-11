@@ -1,5 +1,7 @@
 package amodule.answer.activity;
 
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -11,6 +13,7 @@ import com.xiangha.R;
 
 import java.util.Map;
 
+import acore.broadcast.ConnectionChangeReceiver;
 import acore.logic.XHClick;
 import amodule.answer.model.AskAnswerModel;
 import amodule.answer.view.AskAnswerImgController;
@@ -22,6 +25,7 @@ public class AnswerEditActivity extends BaseEditActivity {
 
     private TextView mQATitleTextView;
     private LinearLayout mAnswerContainer;
+    private ConnectionChangeReceiver mConnectionChangeReceiver;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +51,7 @@ public class AnswerEditActivity extends BaseEditActivity {
             mAnswerContainer.setVisibility(View.VISIBLE);
         }
         setListener();
+        registnetworkListener();
         getLocalData();
     }
 
@@ -57,6 +62,30 @@ public class AnswerEditActivity extends BaseEditActivity {
                 XHClick.mapStat(AnswerEditActivity.this, getTjId(), "删除图片", "");
             }
         });
+    }
+
+    private void registnetworkListener() {
+        mConnectionChangeReceiver = new ConnectionChangeReceiver(new ConnectionChangeReceiver.ConnectionChangeListener() {
+            @Override
+            public void disconnect() {
+                Toast.makeText(AnswerEditActivity.this, "网络异常，请检查网络", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void wifi() {}
+
+            @Override
+            public void mobile() {
+            }
+        });
+        IntentFilter filter=new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(mConnectionChangeReceiver,filter);
+    }
+
+    public void unregistnetworkListener(){
+        if(mConnectionChangeReceiver != null){
+            unregisterReceiver(mConnectionChangeReceiver);
+        }
     }
 
     private void getLocalData() {
@@ -100,6 +129,7 @@ public class AnswerEditActivity extends BaseEditActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        unregistnetworkListener();
     }
 
     @Override
