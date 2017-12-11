@@ -27,8 +27,7 @@ import acore.tools.IObserver;
 import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
-import acore.widget.rvlistview.RvListView;
-import amodule.dish.adapter.AdapterDishRvListView;
+import amodule.dish.adapter.AdapterDishNew;
 import amodule.dish.db.DataOperate;
 import amodule.dish.view.DishModuleScrollView;
 import amodule.dish.view.manager.DetailDishDataManager;
@@ -53,7 +52,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
     public String code, dishTitle, state,dishName;//页面开启状态所必须的数据。
     public static long startTime = 0;
     private Handler handlerScreen;
-    private RvListView rvListview;
+    private ListView listview;
     private DetailDishViewManager detailDishViewManager;//view控制器
     private DetailDishDataManager detailDishDataManager;//数据控制器
     private ArrayList<Map<String,String>> maplist = new ArrayList<>();
@@ -63,12 +62,12 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
     private RelativeLayout dredgeVipFullLayout;
     private XHWebView pageXhWebView;
     private String dishInfo = "";
-    private AdapterDishRvListView adapterDishRvListView;
-//    private AdapterDishNew adapterDishNew;
+    private AdapterDishNew adapterDishNew;
     private String courseCode;//课程分类
     private String chapterCode;//章节分类
     private boolean isShowPowerPermission=false;
     private boolean isShowVip = true;
+    private boolean isPay=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,16 +118,16 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
      */
     private void initView() {
         initActivity("", 2, 0, 0, R.layout.a_detail_dish);
-        rvListview = (RvListView) findViewById(R.id.rvListview);
+        listview = (ListView) findViewById(R.id.listview);
     }
     /**
      * 处理页面Ui
      */
     private void initData() {
-        adapterDishRvListView = new AdapterDishRvListView(this,maplist);
-        rvListview.setAdapter(adapterDishRvListView);
+        adapterDishNew = new AdapterDishNew(listview,maplist);
+        listview.setAdapter(adapterDishNew);
         if (detailDishViewManager == null) {//view manager
-            detailDishViewManager = new DetailDishViewManager(this, rvListview, state);
+            detailDishViewManager = new DetailDishViewManager(this, listview, state);
             dishInfo= Uri.decode(dishInfo);
             detailDishViewManager.initBeforeData(img,dishInfo);
             handleVipState();
@@ -140,7 +139,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
                 dishTypeData(type,list,PermissionMap);
             }
         });
-        adapterDishRvListView.setClickCallBack(new AdapterDishRvListView.ItemOnClickCallBack() {
+        adapterDishNew.setClickCallBack(new AdapterDishNew.ItemOnClickCallBack() {
             @Override
             public void onClickPosition(int position) {
                 if(!getStateMakes(maplist)){//无图时不执行
@@ -179,7 +178,10 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
                         state = "";
                 }
                 detailDishViewManager.handlerTitle(mapTop,code,isHasVideo,mapTop.get("dishState"),loadManager,state);//title导航
-                if(isShowVip)detailDishViewManager.initVipView(mapTop.containsKey("type")?mapTop.get("type"):"");
+                if(isShowVip){
+                    Log.i("xianghaTag","VIP::::initVipView:::mapTop");
+                    detailDishViewManager.initVipView(mapTop.containsKey("type")?mapTop.get("type"):"");
+                }
                 detailDishViewManager.handlerDishData(list);//菜谱基本信息
                 detailDishViewManager.handlerExplainView(mapTop);//小贴士
                 requestWeb(mapTop);
@@ -198,7 +200,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
                 if(list!=null&&list.size()>0&&!TextUtils.isEmpty(list.get(0).get("list"))){
                     Map<String,String> mapTemp = list.get(0);
                     maplist.addAll(StringManager.getListMapByJson(mapTemp.get("list")));
-                    adapterDishRvListView.setShowDistance(mapTemp.containsKey("isCourseDish")&&"2".equals(mapTemp.get("isCourseDish")));
+                    adapterDishNew.setShowDistance(mapTemp.containsKey("isCourseDish")&&"2".equals(mapTemp.get("isCourseDish")));
                 }
                 detailDishViewManager.handlerStepView(list);
                 break;
@@ -217,7 +219,8 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
                         if(url.contains("?")) {
                             String temp = url.substring(url.indexOf("?")+1,url.length());
                             Map<String,String> map1 = StringManager.getMapByString(temp,"&","=");
-                            rvListview.smoothScrollToPosition(0);
+//                            rvListview.smoothScrollToPosition(0);
+                            listview.setSelection(0);
                             detailDishDataManager.setDataNew(map1.get("code"),map1.get("courseCode"),map1.get("chapterCode"));
                             detailDishDataManager.reqTopInfo(true);
                         }
@@ -229,23 +232,17 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
                 detailDishViewManager.handlerUserPowerData(relation);//用户权限
                 detailDishViewManager.handlerHoverView(relation,code,dishName);
                 if(!isShowVip) {
-                    Map<String, String> mapVip = new HashMap<>();
-                    mapVip.put("isShow", relation.containsKey("isShow") ? relation.get("isShow") : "");
+                    Log.i("xianghaTag","VIP::::DISH_DATA_RELATION");
                     Map<String, String> mapTemp = StringManager.getFirstMap(relation.get("vipButton"));
-                    if (mapTemp!=null && mapTemp.size()>0){
-                        mapVip.put("text", mapTemp.get("title"));
-                        mapVip.put("backColor", mapTemp.get("bgColor"));
-                        mapVip.put("textColor", mapTemp.get("color"));
-                        mapVip.put("clickUrl", mapTemp.get("url"));
-                    }
-                    detailDishViewManager.handlerVipView(mapVip);
+                    mapTemp.put("isShow", relation.containsKey("isShow") ? relation.get("isShow") : "");
+                    detailDishViewManager.handlerVipView(mapTemp);
                 }
                 showCaipuHint();
                 break;
             default:
                 break;
         }
-        adapterDishRvListView.notifyDataSetChanged();
+        adapterDishNew.notifyDataSetChanged();
     }
     @Override
     protected void onResume() {
@@ -261,6 +258,11 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
     protected void onRestart() {
         super.onRestart();
         isHasVideo = false;
+        Log.i("xianghaTag","isPay:::"+isPay);
+        if(isPay){//支付
+            notify(ObserverManager.NOTIFY_LOGIN,null,null);
+            if(detailDishDataManager!=null&&!isShowPowerPermission)detailDishDataManager.reqQAData();
+        }
         if(detailDishViewManager!=null)detailDishViewManager.handlerLoginStatus();
     }
     @Override
@@ -346,9 +348,11 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
     }
     @Override
     public void notify(String name, Object sender, Object data) {
+        Log.i("xianghaTag","name:::"+name);
         switch (name){
             case ObserverManager.NOTIFY_PAYFINISH://支付
-                if(detailDishDataManager!=null&&!isShowPowerPermission)detailDishDataManager.reqQAData();
+                isPay=true;
+                break;
             case ObserverManager.NOTIFY_LOGIN://登陆
                 isShowVip=false;
                 refreshTopInfo();

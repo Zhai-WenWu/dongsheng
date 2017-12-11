@@ -167,6 +167,7 @@ public class HomeWeekListActivity extends BaseAppCompatActivity {
         loadManager.changeMoreBtn(mRv, ReqInternet.REQ_OK_STRING, -1, -1, mLoadOver?2:1, refresh);
         mLoadOver = true;
         if (refresh) {
+            mCompelClearData = true;
             if(TextUtils.isEmpty(mBackUrl)&&mListData.size()<=0)
                 loadManager.showProgressBar();
             else

@@ -93,6 +93,10 @@ public class DishStepView extends ItemBaseView {
             text = text.replace("\n", "").replace("\r", "");
             itemText1.setText(Html.fromHtml(text));
             itemText1.setVisibility(View.VISIBLE);
+        }else if(!TextUtils.isEmpty(map.get("num").trim())){
+            String text = "<b><tt>" + map.get("num") + "</tt></b>";
+            itemText1.setText(Html.fromHtml(text));
+            itemText1.setVisibility(View.VISIBLE);
         }else itemText1.setVisibility(View.GONE);
         this.setOnClickListener(new View.OnClickListener() {
             @Override

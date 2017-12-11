@@ -46,7 +46,7 @@ public class DishVipView extends ItemBaseView {
 //        int strokeWidth = 5; // 3dp 边框宽度
         int roundRadius = Tools.getDimen(context,R.dimen.dp_3); // 8dp 圆角半径
 //        int strokeColor = Color.parseColor("#2E3135");//边框颜色
-        String bgColor = handlerColorValue(maps.get("backColor"));
+        String bgColor = handlerColorValue(maps.get("bgColor"));
         int fillColor = Color.parseColor(TextUtils.isEmpty(bgColor) ? "#f23030" : bgColor);//内部填充颜色
 
         GradientDrawable gd = new GradientDrawable();//创建drawable
@@ -55,14 +55,14 @@ public class DishVipView extends ItemBaseView {
 //        gd.setStroke(strokeWidth, strokeColor);
 
         text_vip.setBackgroundDrawable(gd);
-        text_vip.setText(maps.get("text"));
-        String textColorValue = handlerColorValue(maps.get("textColor"));
+        text_vip.setText(maps.get("title"));
+        String textColorValue = handlerColorValue(maps.get("color"));
         int textColor = Color.parseColor(TextUtils.isEmpty(textColorValue) ? "#FFFFFE" : textColorValue);
         text_vip.setTextColor(textColor);
         text_vip.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), maps.get("clickUrl"), false);
+                AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), maps.get("url"), false);
             }
         });
     }
