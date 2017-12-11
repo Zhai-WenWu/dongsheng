@@ -132,14 +132,11 @@ public class DetailDishViewManager {
         layoutHeader.addView(dishVipView);
         layoutHeader.addView(dishAboutView);
         layoutHeader.addView(dishADBannerView);
-
+        //处理特殊逻辑判断
         linearLayoutOne= new LinearLayout(mAct);
         RelativeLayout.LayoutParams layoutParamsOne = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         linearLayoutOne.setLayoutParams(layoutParamsOne);
         linearLayoutOne.setOrientation(LinearLayout.VERTICAL);
-        linearLayoutOne.addView(dishIngreDataShow);
-        linearLayoutOne.addView(dishModuleScrollView);
-
         layoutHeader.addView(linearLayoutOne);
 
         textStep = new TextView(activity);
@@ -221,6 +218,16 @@ public class DetailDishViewManager {
         }
         configMap.put("isShow", isShowByConfig && isShowByUser ? "2" : "1");
         handlerVipView(configMap);
+    }
+    public void handlerIsSchool(String isSchool){
+        linearLayoutOne.removeAllViews();
+        if(!TextUtils.isEmpty(isSchool)&&"2".equals(isSchool)){
+            linearLayoutOne.addView(dishModuleScrollView);
+            linearLayoutOne.addView(dishIngreDataShow);
+        }else {
+            linearLayoutOne.addView(dishIngreDataShow);
+            linearLayoutOne.addView(dishModuleScrollView);
+        }
     }
     /**
      * 处理标题信息数据

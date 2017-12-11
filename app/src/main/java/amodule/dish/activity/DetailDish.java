@@ -184,6 +184,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
                 }
                 detailDishViewManager.handlerDishData(list);//菜谱基本信息
                 detailDishViewManager.handlerExplainView(mapTop);//小贴士
+                detailDishViewManager.handlerIsSchool(mapTop.get("isSchool"));//处理用料和小技巧顺序
                 requestWeb(mapTop);
                 saveDishInfo(mapTop);
                 tongjiId_detail=isHasVideo?"a_menu_detail_video":"a_menu_detail_normal";
