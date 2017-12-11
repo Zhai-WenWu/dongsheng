@@ -70,7 +70,7 @@ public class DishSkillView extends ItemBaseView{
         this.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!LoginManager.isLogin()){
+                if(!LoginManager.isLogin()&&!LoginManager.isTempVip()){
                     if(data.containsKey("iconType")&&"2".equals(data.get("iconType"))){
                         context.startActivity(new Intent(context, LoginByAccout.class));
                         return;
