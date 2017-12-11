@@ -38,6 +38,7 @@ import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import aplug.web.tools.JsAppCommon;
+import aplug.web.tools.WebviewManager;
 import third.growingio.GrowingIOController;
 import third.mall.aplug.MallCommon;
 import third.push.umeng.UMPushServer;
@@ -201,7 +202,9 @@ public class LoginManager {
                     removeAllCookie(mAct);
 
                     setVipStateChanged();
-                    
+
+                    WebviewManager.syncXHCookie();
+
                 }
                 ObserverManager.getInstence().notify(ObserverManager.NOTIFY_LOGOUT, null, flag >= UtilInternet.REQ_OK_STRING);
             }
@@ -306,6 +309,8 @@ public class LoginManager {
             new XGPushServer(mAct).initPush(userInfo.get("code"));
         getUserPowers(mAct);
         getActivityInfo(mAct);
+
+        WebviewManager.syncXHCookie();
     }
 
     private static void getUserPowers(Activity act) {

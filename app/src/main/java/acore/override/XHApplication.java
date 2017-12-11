@@ -32,6 +32,7 @@ import aplug.basic.LoadImage;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import aplug.basic.XHConf;
+import aplug.web.tools.WebviewManager;
 import third.growingio.GrowingIOController;
 import third.mall.aplug.MallReqInternet;
 import third.push.umeng.UMPushServer;
@@ -103,6 +104,7 @@ public class XHApplication extends MobApplication {
         ReqInternet.init(getApplicationContext());
         ReqEncyptInternet.init(getApplicationContext());
         LoadImage.init(getApplicationContext());
+        WebviewManager.syncXHCookie();
         LogManager.printStartTime("zhangyujian","XhApplication:1111:initData::");
         //设置百度appid
         Map<String,String> map = StringManager.getFirstMap(AppCommon.getConfigByLocal("baiduappid"));
