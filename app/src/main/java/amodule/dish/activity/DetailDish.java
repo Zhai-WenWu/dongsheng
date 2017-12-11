@@ -69,6 +69,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
     private String chapterCode;//章节分类
     private boolean isShowPowerPermission=false;
     private boolean isShowVip = true;
+    private boolean isPay=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -179,7 +180,10 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
                         state = "";
                 }
                 detailDishViewManager.handlerTitle(mapTop,code,isHasVideo,mapTop.get("dishState"),loadManager,state);//title导航
-                if(isShowVip)detailDishViewManager.initVipView(mapTop.containsKey("type")?mapTop.get("type"):"");
+                if(isShowVip){
+                    Log.i("xianghaTag","VIP::::initVipView:::mapTop");
+                    detailDishViewManager.initVipView(mapTop.containsKey("type")?mapTop.get("type"):"");
+                }
                 detailDishViewManager.handlerDishData(list);//菜谱基本信息
                 detailDishViewManager.handlerExplainView(mapTop);//小贴士
                 requestWeb(mapTop);
@@ -229,16 +233,10 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
                 detailDishViewManager.handlerUserPowerData(relation);//用户权限
                 detailDishViewManager.handlerHoverView(relation,code,dishName);
                 if(!isShowVip) {
-                    Map<String, String> mapVip = new HashMap<>();
-                    mapVip.put("isShow", relation.containsKey("isShow") ? relation.get("isShow") : "");
+                    Log.i("xianghaTag","VIP::::DISH_DATA_RELATION");
                     Map<String, String> mapTemp = StringManager.getFirstMap(relation.get("vipButton"));
-                    if (mapTemp!=null && mapTemp.size()>0){
-                        mapVip.put("text", mapTemp.get("title"));
-                        mapVip.put("backColor", mapTemp.get("bgColor"));
-                        mapVip.put("textColor", mapTemp.get("color"));
-                        mapVip.put("clickUrl", mapTemp.get("url"));
-                    }
-                    detailDishViewManager.handlerVipView(mapVip);
+                    mapTemp.put("isShow", relation.containsKey("isShow") ? relation.get("isShow") : "");
+                    detailDishViewManager.handlerVipView(mapTemp);
                 }
                 showCaipuHint();
                 break;
@@ -261,6 +259,11 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
     protected void onRestart() {
         super.onRestart();
         isHasVideo = false;
+        Log.i("xianghaTag","isPay:::"+isPay);
+        if(isPay){//支付
+            notify(ObserverManager.NOTIFY_LOGIN,null,null);
+            if(detailDishDataManager!=null&&!isShowPowerPermission)detailDishDataManager.reqQAData();
+        }
         if(detailDishViewManager!=null)detailDishViewManager.handlerLoginStatus();
     }
     @Override
@@ -346,9 +349,11 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
     }
     @Override
     public void notify(String name, Object sender, Object data) {
+        Log.i("xianghaTag","name:::"+name);
         switch (name){
             case ObserverManager.NOTIFY_PAYFINISH://支付
-                if(detailDishDataManager!=null&&!isShowPowerPermission)detailDishDataManager.reqQAData();
+                isPay=true;
+                break;
             case ObserverManager.NOTIFY_LOGIN://登陆
                 isShowVip=false;
                 refreshTopInfo();

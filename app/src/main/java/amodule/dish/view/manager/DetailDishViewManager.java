@@ -186,13 +186,15 @@ public class DetailDishViewManager {
             if (dishHeaderViewNew != null&& !TextUtils.isEmpty(img))dishHeaderViewNew.setImg(img,height);
             if(TextUtils.isEmpty(img)&&map.containsKey("img")&&!TextUtils.isEmpty(map.get("img"))&&dishHeaderViewNew!=null)dishHeaderViewNew.setImg(map.get("img"),height);
             dishAboutView.setData(map, mAct);
+            Log.i("xianghaTag","VIP::::initVipView:::无数据");
             initVipView(map.containsKey("type")?map.get("type"):"");
         }else if (dishHeaderViewNew != null&& !TextUtils.isEmpty(img))dishHeaderViewNew.setImg(img,0);
 
     }
     public void initVipView(String type){
+        Log.i("xianghaTag","VIP::::initVipView:::type"+type);
         if(isLoadVip)return;isLoadVip=true;
-        String caipuVipConfig = AppCommon.getConfigByLocal("caipuVip");
+        String caipuVipConfig = AppCommon.getConfigByLocal("caipuVIP");
         if(TextUtils.isEmpty(caipuVipConfig)){isLoadVip=false;return;}
         Map<String,String> configMap = StringManager.getFirstMap(caipuVipConfig);
         String key = !TextUtils.isEmpty(type)&&"2".equals(type) ? "caipuVideo" : "caipu";
@@ -285,9 +287,11 @@ public class DetailDishViewManager {
      */
     public void handlerVipView(Map<String,String> relation){
         if(dishVipView != null){
+            Log.i("xianghaTag","VIP::::handlerVipView:::isShow:::"+relation.get("isShow"));
             if(relation.containsKey("isShow")&&"2".equals(relation.get("isShow"))) {
                 dishVipView.setVisibility(View.VISIBLE);
                 dishVipView.setData(relation);
+                Log.i("xianghaTag","VIP::::handlerVipView:::title:::"+relation.get("title"));
             }else dishVipView.setVisibility(View.GONE);
         }
     }

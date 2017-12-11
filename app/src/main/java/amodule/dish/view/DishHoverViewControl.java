@@ -69,7 +69,6 @@ public class DishHoverViewControl implements View.OnClickListener{
         mNoLikeImg = (ImageView) mAct.findViewById(R.id.a_dish_hover_img);
         hoverGoodImg= (ImageView) mAct.findViewById(R.id.a_dish_detail_new_footer_hover_good_show);
         hoverGoodImg.setOnClickListener(this);
-        hoverGoodImg.setVisibility(View.GONE);
     }
 
     /**
