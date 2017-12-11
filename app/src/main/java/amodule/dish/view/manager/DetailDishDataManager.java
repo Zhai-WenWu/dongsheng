@@ -208,7 +208,7 @@ public class DetailDishDataManager {
     /**
      * 请求小技巧
      */
-    private void reqAnticData(){
+    public void reqAnticData(){
         String params = "dishCode=" + dishCode;
         //获取帖子数据
         ReqEncyptInternet.in().doEncypt(StringManager.API_MAIN8_ANTIC,getOtherCode(params), new InternetCallback(mContext) {
