@@ -35,7 +35,6 @@ import acore.logic.load.LoadManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
-import acore.widget.rvlistview.RvListView;
 import amodule.dish.view.DishADBannerView;
 import amodule.dish.view.DishAboutView;
 import amodule.dish.view.DishExplainView;
@@ -193,14 +192,14 @@ public class DetailDishViewManager {
             }
             if (dishHeaderViewNew != null&& !TextUtils.isEmpty(img))dishHeaderViewNew.setImg(img,height);
             if(TextUtils.isEmpty(img)&&map.containsKey("img")&&!TextUtils.isEmpty(map.get("img"))&&dishHeaderViewNew!=null)dishHeaderViewNew.setImg(map.get("img"),height);
-            dishAboutView.setData(map, mAct);
-            Log.i("xianghaTag","VIP::::initVipView:::无数据");
+            dishAboutView.setData(map, mAct,true);
+            Map<String,String> mapTemp = StringManager.getFirstMap(map.get("customer"));
+            if(mapTemp.containsKey("nickName")&&!TextUtils.isEmpty(mapTemp.get("nickName")))handlerTitleName(mapTemp.get("nickName"));
             initVipView(map.containsKey("type")?map.get("type"):"");
         }else if (dishHeaderViewNew != null&& !TextUtils.isEmpty(img))dishHeaderViewNew.setImg(img,0);
 
     }
     public void initVipView(String type){
-        Log.i("xianghaTag","VIP::::initVipView:::type"+type);
         if(isLoadVip)return;isLoadVip=true;
         String caipuVipConfig = AppCommon.getConfigByLocal("caipuVIP");
         if(TextUtils.isEmpty(caipuVipConfig)){isLoadVip=false;return;}
@@ -283,7 +282,7 @@ public class DetailDishViewManager {
     public void handlerDishData(ArrayList<Map<String, String>> list) {
         if(dishAboutView!=null) {
             dishAboutView.setVisibility(View.VISIBLE);
-            dishAboutView.setData(list.get(0), mAct);
+            dishAboutView.setData(list.get(0), mAct,false);
             //设置标题用户名：
             if(list.get(0).containsKey("customer")){
                 Map<String,String> map = StringManager.getFirstMap(list.get(0).get("customer"));
@@ -305,7 +304,6 @@ public class DetailDishViewManager {
      */
     public void handlerVipView(Map<String,String> relation){
         if(dishVipView != null){
-            Log.i("xianghaTag","VIP::::handlerVipView:::isShow:::"+relation.get("isShow"));
             if(relation.containsKey("isShow")&&"2".equals(relation.get("isShow"))) {
                 dishVipView.setVisibility(View.VISIBLE);
                 dishVipView.setData(relation);

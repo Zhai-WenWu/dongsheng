@@ -28,13 +28,14 @@
                 android:layout_marginBottom="@dimen/dp_2"
                 android:layout_marginRight="@dimen/dp_1.5"
                 android:layout_marginTop="@dimen/dp_7"
-                android:src="@drawable/i_dish_detail_zan" />
+                android:src="@drawable/iv_dish_all_no" />
 
             <TextView
                 android:id="@+id/a_dish_detail_new_footer_hover_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#333"
+                android:text="有用"
                 android:textSize="@dimen/sp_12" />
 
         </LinearLayout>

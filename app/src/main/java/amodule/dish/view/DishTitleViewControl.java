@@ -68,12 +68,14 @@ public class DishTitleViewControl implements View.OnClickListener{
         detailDish.findViewById(R.id.fav_layout).setOnClickListener(this);
         detailDish.findViewById(R.id.share_layout).setOnClickListener(this);
         detailDish.findViewById(R.id.more_layout).setOnClickListener(this);
-        detailDish.findViewById(R.id.fav_layout).setVisibility(View.GONE);
+        detailDish.findViewById(R.id.fav_layout).setVisibility(View.VISIBLE);
         detailDish.findViewById(R.id.leftClose).setVisibility(View.GONE);
-        detailDish.findViewById(R.id.share_layout).setVisibility(View.GONE);
+        detailDish.findViewById(R.id.share_layout).setVisibility(View.VISIBLE);
         detailDish.findViewById(R.id.more_layout).setVisibility(View.GONE);
         favText = (TextView) detailDish.findViewById(R.id.tv_fav);
         favImg = (ImageView) detailDish.findViewById(R.id.img_fav);
+        favImg.setVisibility(View.VISIBLE);
+        favImg.setImageResource(R.drawable.z_caipu_xiangqing_topbar_ico_fav);
 //        detailDish.findViewById(R.id.leftClose).setOnClickListener(this);
 //        detailDish.findViewById(R.id.leftClose).setVisibility(View.VISIBLE);
         bar_title_1 = (RelativeLayout) detailDish.findViewById(R.id.a_dish_detail_new_title);

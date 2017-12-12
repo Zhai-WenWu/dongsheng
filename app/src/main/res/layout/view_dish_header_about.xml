@@ -125,7 +125,7 @@
                 android:layout_width="@dimen/dp_60"
                 android:layout_height="@dimen/dp_26"
                 android:gravity="center"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:background="@drawable/bg_circle_red_stroke_5">
                     <TextView
                         android:id="@+id/dish_follow_tv"

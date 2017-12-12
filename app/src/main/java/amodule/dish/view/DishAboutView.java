@@ -70,10 +70,10 @@ public class DishAboutView extends ItemBaseView {
      * @param map
      * @param activitys
      */
-    public void setData(Map<String,String> map, Activity activitys){
+    public void setData(Map<String,String> map, Activity activitys,boolean isExclusive){
         this.mapAbout = map;
         this.activity= activitys;
-        setDishData();
+        setDishData(isExclusive);
         setExplainData(map.containsKey("info")&&!TextUtils.isEmpty(map.get("info"))?map.get("info"):"");
         setUserData(StringManager.getFirstMap(map.get("customer")));
     }
@@ -132,13 +132,13 @@ public class DishAboutView extends ItemBaseView {
     /**
      * 设置菜谱数据
      */
-    private void setDishData(){
+    private void setDishData(boolean isExclusive){
         findViewById(R.id.title_dish_exp_rela).setVisibility(View.VISIBLE);
         if(mapAbout.containsKey("name")&&!TextUtils.isEmpty(mapAbout.get("name"))){
             dish_title.setText(mapAbout.get("name"));
         }
         String exclusive="";
-        if(mapAbout.containsKey("isExclusive")&&mapAbout.get("isExclusive").equals("2"))exclusive="独家・";
+        if((mapAbout.containsKey("isExclusive")&&mapAbout.get("isExclusive").equals("2"))||isExclusive)exclusive="独家・";
         dish_explain.setText(exclusive+mapAbout.get("allClick")+"浏览・"+mapAbout.get("favorites")+"收藏");
     }
 
