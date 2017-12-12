@@ -33,6 +33,7 @@ import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.activity.mian.MainBaseActivity;
+import acore.override.helper.XHActivityManager;
 import acore.tools.FileManager;
 import acore.tools.IObserver;
 import acore.tools.LogManager;
@@ -103,7 +104,6 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
 
     private boolean mYiYuanDialogShowing;
     private boolean mNeedRefVipState;
-
     private boolean mIsOnResuming;
 
     @Override
@@ -287,17 +287,19 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
         if(!LoginManager.isLogin()){
             return;
         }
-//        int x = Integer.parseInt(DataOperate.buyBurden(this, "x"));
         Object olddishdata = FileManager.loadShared(this, "olddishdata", "olddishdata");
-        if(olddishdata!=null){
-            Log.i("wyl","数据：：：：：00000：：："+olddishdata);
-        }
-
-        if (olddishdata!=null&&!TextUtils.isEmpty(String.valueOf(olddishdata))&&"2".equals(String.valueOf(olddishdata))) {
+        if (olddishdata!=null&&!TextUtils.isEmpty(String.valueOf(olddishdata))&&"2".equals(String.valueOf(olddishdata))&&!isShowActivity()) {
             Intent intent = new Intent(this, HintMyselfDialog.class);
             startActivity(intent);
             FileManager.saveShared(this, "olddishdata", "olddishdata", "1");
         }
+    }
+    private boolean  isShowActivity(){
+        try {
+            if ("amodule.main.view.HintMyselfDialog".equals(XHActivityManager.getInstance().getCurrentActivity().getComponentName().getClassName()))
+                return true;
+        }catch (Exception e){return false;}
+        return false;
     }
 
     /**

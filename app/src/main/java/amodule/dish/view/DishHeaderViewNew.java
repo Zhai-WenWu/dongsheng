@@ -1,5 +1,6 @@
 package amodule.dish.view;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -231,8 +232,10 @@ public class DishHeaderViewNew extends LinearLayout {
             @Override
             public void onClick(View v) {
                 view.setVisibility(View.GONE);
-                mVideoPlayerController.setShowAd(false);
-                mVideoPlayerController.setOnClick();
+                if(mVideoPlayerController != null){
+                    mVideoPlayerController.setShowAd(false);
+                    mVideoPlayerController.setOnClick();
+                }
             }
         });
         view.findViewById(R.id.ad_vip_lead).setOnClickListener(new OnClickListener() {
@@ -249,6 +252,7 @@ public class DishHeaderViewNew extends LinearLayout {
             }
         });
         //初始化倒计时
+        @SuppressLint("HandlerLeak")
         final Handler handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
@@ -256,7 +260,7 @@ public class DishHeaderViewNew extends LinearLayout {
                 mNum.setText("" + msg.what);
                 if (msg.what == 0) {
                     view.setVisibility(View.GONE);
-                    if (!mVideoPlayerController.isPlaying()) {
+                    if (mVideoPlayerController != null && !mVideoPlayerController.isPlaying()) {
                         mVideoPlayerController.setShowAd(false);
                         if (isOnResuming) mVideoPlayerController.setOnClick();
                     }
@@ -374,7 +378,6 @@ public class DishHeaderViewNew extends LinearLayout {
             Log.i("tzy","common = " + common.toString());
             final String url = common.get("url");
             if(TextUtils.isEmpty(url)) return;
-            mVideoPlayerController.hideFullScreen();
             vipView = new VideoDredgeVipView(context);
             dredgeVipLayout.addView(vipView);
             vipView.setTipMessaText(common.get("text"));
@@ -386,23 +389,26 @@ public class DishHeaderViewNew extends LinearLayout {
                 }
             });
             dredgeVipLayout.setPadding(0, distance, 0, 0);
-            mVideoPlayerController.setOnProgressChangedCallback((progress, secProgress, currentTime, totalTime) -> {
-                int currentS = Math.round(currentTime / 1000f);
-                int durationS = Math.round(totalTime / 1000f);
-                if (currentS >= 0 && durationS >= 0) {
-                    if (isHaspause) {
-                        mVideoPlayerController.onPause();
-                        return;
-                    }
-                    if ((currentS > limitTime
+            if(mVideoPlayerController != null){
+                mVideoPlayerController.hideFullScreen();
+                mVideoPlayerController.setOnProgressChangedCallback((progress, secProgress, currentTime, totalTime) -> {
+                    int currentS = Math.round(currentTime / 1000f);
+                    int durationS = Math.round(totalTime / 1000f);
+                    if (currentS >= 0 && durationS >= 0) {
+                        if (isHaspause) {
+                            onPause();
+                            return;
+                        }
+                        if ((currentS > limitTime
 //                            || limitTime > durationS
-                    ) && !isContinue) {
-                        dredgeVipLayout.setVisibility(VISIBLE);
-                        mVideoPlayerController.onPause();
-                        isHaspause = true;
+                        ) && !isContinue) {
+                            dredgeVipLayout.setVisibility(VISIBLE);
+                            onPause();
+                            isHaspause = true;
+                        }
                     }
-                }
-            });
+                });
+            }
         }
     }
 
