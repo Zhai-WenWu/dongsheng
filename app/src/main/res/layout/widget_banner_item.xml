@@ -23,6 +23,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingRight="@dimen/dp_5"
             android:layout_alignParentBottom="true">
 
             <TextView
