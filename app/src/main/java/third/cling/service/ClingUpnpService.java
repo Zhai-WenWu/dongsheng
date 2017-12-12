@@ -23,7 +23,7 @@ public class ClingUpnpService extends AndroidUpnpServiceImpl {
         try {
             super.onCreate();
         } catch (Exception e) {
-            throw e;
+            e.printStackTrace();
         }
 
         //LocalBinder instead of binder
