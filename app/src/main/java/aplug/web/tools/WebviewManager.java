@@ -321,9 +321,13 @@ public class  WebviewManager {
         for (int i = 0; i < cookie.length; i++) {
             cookieManager.setCookie(StringManager.domain, cookie[i]);
         }
-        CookieSyncManager.createInstance(XHApplication.in());
-        CookieSyncManager.getInstance().sync();
-        LogManager.print(XHConf.log_tag_net,"d", "设置webview的cookie："+cookieStr);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            cookieManager.flush();
+        }else{
+            CookieSyncManager.createInstance(XHApplication.in());
+            CookieSyncManager.getInstance().sync();
+        }
+        LogManager.print("tzy","d", "设置webview的cookie："+cookieStr);
     }
 
     public static void syncDSCookie(){
@@ -336,8 +340,12 @@ public class  WebviewManager {
         for (int i = 0; i < cookie.length; i++) {
             cookieManager.setCookie(cookieKey_mall, cookie[i]);
         }
-        CookieSyncManager.createInstance(XHApplication.in());
-        CookieSyncManager.getInstance().sync();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            cookieManager.flush();
+        }else{
+            CookieSyncManager.createInstance(XHApplication.in());
+            CookieSyncManager.getInstance().sync();
+        }
         LogManager.print(XHConf.log_tag_net,"d", "设置webview的cookie："+cookieStr);
     }
 

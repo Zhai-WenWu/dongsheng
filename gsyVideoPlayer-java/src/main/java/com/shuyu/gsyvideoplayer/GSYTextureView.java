@@ -17,6 +17,8 @@ public class GSYTextureView extends TextureView {
 
     private MeasureHelper measureHelper;
 
+    private GSYVideoManager mGSYVideoManager;
+
     public GSYTextureView(Context context) {
         super(context);
         init();
@@ -34,13 +36,13 @@ public class GSYTextureView extends TextureView {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 
-        int videoWidth = GSYVideoManager.instance().getCurrentVideoWidth();
-        int videoHeight = GSYVideoManager.instance().getCurrentVideoHeight();
+        int videoWidth = mGSYVideoManager.getCurrentVideoWidth();
+        int videoHeight = mGSYVideoManager.getCurrentVideoHeight();
 
         int videoSarNum = 0,videoSarDen = 0;
-        if(GSYVideoManager.instance().getMediaPlayer() != null){
-            videoSarNum = GSYVideoManager.instance().getMediaPlayer().getVideoSarNum();
-            videoSarDen = GSYVideoManager.instance().getMediaPlayer().getVideoSarDen();
+        if(mGSYVideoManager.getMediaPlayer() != null){
+            videoSarNum = mGSYVideoManager.getMediaPlayer().getVideoSarNum();
+            videoSarDen = mGSYVideoManager.getMediaPlayer().getVideoSarDen();
         }
 
         if (videoWidth > 0 && videoHeight > 0) {
@@ -59,5 +61,13 @@ public class GSYTextureView extends TextureView {
 
     public int getSizeW() {
         return measureHelper.getMeasuredWidth();
+    }
+
+    public GSYVideoManager getGSYVideoManager() {
+        return mGSYVideoManager;
+    }
+
+    public void setGSYVideoManager(GSYVideoManager GSYVideoManager) {
+        mGSYVideoManager = GSYVideoManager;
     }
 }

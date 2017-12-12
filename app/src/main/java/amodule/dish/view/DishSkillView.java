@@ -1,6 +1,7 @@
 package amodule.dish.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import acore.logic.AppCommon;
+import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.helper.XHActivityManager;
 import acore.override.view.ItemBaseView;
@@ -28,6 +30,7 @@ import acore.widget.rvlistview.RvHorizatolListView;
 import acore.widget.rvlistview.adapter.RvBaseAdapter;
 import acore.widget.rvlistview.holder.RvBaseViewHolder;
 import amodule.dish.activity.DetailDish;
+import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.SubBitmapTarget;
 import xh.basic.tool.UtilImage;
 
@@ -67,6 +70,12 @@ public class DishSkillView extends ItemBaseView{
         this.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(!LoginManager.isLogin()&&!LoginManager.isTempVip()){
+                    if(data.containsKey("iconType")&&"2".equals(data.get("iconType"))){
+                        context.startActivity(new Intent(context, LoginByAccout.class));
+                        return;
+                    }
+                }
                 XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), DetailDish.tongjiId_detail, "食材小技巧", "食材小技巧点击量");
                 AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(),url,false);
             }

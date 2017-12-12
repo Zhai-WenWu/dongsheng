@@ -90,7 +90,7 @@ public class RvListView extends RecyclerView {
     protected void initialize() {
         mHeaderContainer = new LinearLayout(getContext());
         mFooterContainer = new LinearLayout(getContext());
-        Log.d("tzy", "Constructor execute.");
+//        Log.d("tzy", "Constructor execute.");
     }
 
     @Override

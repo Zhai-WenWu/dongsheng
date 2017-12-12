@@ -46,7 +46,7 @@ public class GSYPreViewManager implements IMediaPlayer.OnPreparedListener, IjkMe
     }
 
     public GSYPreViewManager() {
-        IjkLibLoader libLoader = GSYVideoManager.getIjkLibLoader();
+        IjkLibLoader libLoader = null;//GSYVideoManager.getIjkLibLoader(); 暂时为null
         mediaPlayer = (libLoader == null) ? new IjkMediaPlayer() : new IjkMediaPlayer(libLoader);
         ijkLibLoader = libLoader;
 

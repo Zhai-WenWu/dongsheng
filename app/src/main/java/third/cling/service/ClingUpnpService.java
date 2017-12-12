@@ -20,7 +20,11 @@ public class ClingUpnpService extends AndroidUpnpServiceImpl {
 
     @Override
     public void onCreate() {
-        super.onCreate();
+        try {
+            super.onCreate();
+        } catch (Exception e) {
+            throw e;
+        }
 
         //LocalBinder instead of binder
         binder = new LocalBinder();

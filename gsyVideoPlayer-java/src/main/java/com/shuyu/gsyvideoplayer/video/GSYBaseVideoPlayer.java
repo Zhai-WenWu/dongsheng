@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Handler;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -150,24 +151,30 @@ public abstract class GSYBaseVideoPlayer extends FrameLayout implements GSYMedia
 
     private int mSystemUiVisibility;
 
+    protected GSYVideoManager mGSYVideoManager;
+
     /**
      * 1.5.0开始加入，如果需要不同布局区分功能，需要重载
      */
     public GSYBaseVideoPlayer(Context context, Boolean fullFlag) {
         super(context);
         mIfCurrentIsFullscreen = fullFlag;
+        mGSYVideoManager = new GSYVideoManager();
     }
 
     public GSYBaseVideoPlayer(Context context) {
         super(context);
+        mGSYVideoManager = new GSYVideoManager();
     }
 
     public GSYBaseVideoPlayer(Context context, AttributeSet attrs) {
         super(context, attrs);
+        mGSYVideoManager = new GSYVideoManager();
     }
 
     public GSYBaseVideoPlayer(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        mGSYVideoManager = new GSYVideoManager(null);
     }
 
     public Context getActivityContext() {
@@ -255,19 +262,19 @@ public abstract class GSYBaseVideoPlayer extends FrameLayout implements GSYMedia
      * 恢复
      */
     protected void resolveNormalVideoShow(View oldF, ViewGroup vp, GSYVideoPlayer gsyVideoPlayer) {
-
+        Log.i("tzy","resolveNormalVideoShow");
         if (oldF != null && oldF.getParent() != null) {
             ViewGroup viewGroup = (ViewGroup) oldF.getParent();
             vp.removeView(viewGroup);
         }
-        mCurrentState = GSYVideoManager.instance().getLastState();
+        mCurrentState = mGSYVideoManager.getLastState();
         if (gsyVideoPlayer != null) {
             mCurrentState = gsyVideoPlayer.getCurrentState();
             mNetChanged = gsyVideoPlayer.mNetChanged;
             mNetSate = gsyVideoPlayer.mNetSate;
         }
-        GSYVideoManager.instance().setListener(GSYVideoManager.instance().lastListener());
-        GSYVideoManager.instance().setLastListener(null);
+        mGSYVideoManager.setListener(mGSYVideoManager.lastListener());
+        mGSYVideoManager.setLastListener(null);
         setStateAndUi(mCurrentState);
         addTextureView();
         CLICK_QUIT_FULLSCREEN_TIME = System.currentTimeMillis();
@@ -342,7 +349,7 @@ public abstract class GSYBaseVideoPlayer extends FrameLayout implements GSYMedia
                 constructor = (Constructor<GSYBaseVideoPlayer>) GSYBaseVideoPlayer.this.getClass().getConstructor(Context.class, Boolean.class);
                 gsyVideoPlayer = constructor.newInstance(getActivityContext(), true);
             }
-
+            gsyVideoPlayer.setGSYVideoManager(mGSYVideoManager);
             gsyVideoPlayer.setId(FULLSCREEN_ID);
             gsyVideoPlayer.setIfCurrentIsFullscreen(true);
             gsyVideoPlayer.setVideoAllCallBack(mVideoAllCallBack);
@@ -405,8 +412,8 @@ public abstract class GSYBaseVideoPlayer extends FrameLayout implements GSYMedia
                 }
             });
 
-            GSYVideoManager.instance().setLastListener(this);
-            GSYVideoManager.instance().setListener(gsyVideoPlayer);
+            mGSYVideoManager.setLastListener(this);
+            mGSYVideoManager.setListener(gsyVideoPlayer);
             return gsyVideoPlayer;
         } catch (Exception e) {
             e.printStackTrace();
@@ -586,8 +593,8 @@ public abstract class GSYBaseVideoPlayer extends FrameLayout implements GSYMedia
             gsyVideoPlayer.setSpeed(getSpeed());
             gsyVideoPlayer.setSmallVideoTextureView(new SmallVideoTouch(gsyVideoPlayer, marginLeft, marginTop));
 
-            GSYVideoManager.instance().setLastListener(this);
-            GSYVideoManager.instance().setListener(gsyVideoPlayer);
+            mGSYVideoManager.setLastListener(this);
+            mGSYVideoManager.setListener(gsyVideoPlayer);
 
             if (mVideoAllCallBack != null) {
                 Debuger.printfError("onEnterSmallWidget");
@@ -609,14 +616,14 @@ public abstract class GSYBaseVideoPlayer extends FrameLayout implements GSYMedia
         final ViewGroup vp = getViewGroup();
         GSYVideoPlayer gsyVideoPlayer = (GSYVideoPlayer) vp.findViewById(SMALL_ID);
         removeVideo(vp, SMALL_ID);
-        mCurrentState = GSYVideoManager.instance().getLastState();
+        mCurrentState = mGSYVideoManager.getLastState();
         if (gsyVideoPlayer != null) {
             mCurrentState = gsyVideoPlayer.getCurrentState();
             mNetChanged = gsyVideoPlayer.mNetChanged;
             mNetSate = gsyVideoPlayer.mNetSate;
         }
-        GSYVideoManager.instance().setListener(GSYVideoManager.instance().lastListener());
-        GSYVideoManager.instance().setLastListener(null);
+        mGSYVideoManager.setListener(mGSYVideoManager.lastListener());
+        mGSYVideoManager.setLastListener(null);
         setStateAndUi(mCurrentState);
         addTextureView();
         CLICK_QUIT_FULLSCREEN_TIME = System.currentTimeMillis();
@@ -770,22 +777,22 @@ public abstract class GSYBaseVideoPlayer extends FrameLayout implements GSYMedia
      */
     public void setSpeed(float speed, boolean soundTouch) {
         this.mSpeed = speed;
-        if (GSYVideoManager.instance().getMediaPlayer() != null
-                && GSYVideoManager.instance().getMediaPlayer() instanceof IjkMediaPlayer) {
+        if (mGSYVideoManager.getMediaPlayer() != null
+                && mGSYVideoManager.getMediaPlayer() instanceof IjkMediaPlayer) {
             if (speed > 0) {
-                ((IjkMediaPlayer) GSYVideoManager.instance().getMediaPlayer()).setSpeed(speed);
+                ((IjkMediaPlayer) mGSYVideoManager.getMediaPlayer()).setSpeed(speed);
 
                 if (soundTouch) {
                     VideoOptionModel videoOptionModel =
                             new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "soundtouch", 1);
-                    List<VideoOptionModel> list = GSYVideoManager.instance().getOptionModelList();
+                    List<VideoOptionModel> list = mGSYVideoManager.getOptionModelList();
                     if (list != null) {
                         list.add(videoOptionModel);
                     } else {
                         list = new ArrayList<>();
                         list.add(videoOptionModel);
                     }
-                    GSYVideoManager.instance().setOptionModelList(list);
+                    mGSYVideoManager.setOptionModelList(list);
                 }
             }
         }
@@ -917,4 +924,11 @@ public abstract class GSYBaseVideoPlayer extends FrameLayout implements GSYMedia
         this.mRotateWithSystem = rotateWithSystem;
     }
 
+    public void setGSYVideoManager(GSYVideoManager GSYVideoManager) {
+        mGSYVideoManager = GSYVideoManager;
+    }
+
+    public GSYVideoManager getGSYVideoManager() {
+        return mGSYVideoManager;
+    }
 }

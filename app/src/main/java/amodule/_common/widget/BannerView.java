@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.annimon.stream.Stream;
@@ -97,7 +98,6 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
             return;
         }
         Map<String, String> dataMap = StringManager.getFirstMap(data.get(WidgetDataHelper.KEY_DATA));
-
         ArrayList<Map<String, String>> arrayList = StringManager.getListMapByJson(dataMap.get(WidgetDataHelper.KEY_LIST));
         if (arrayList.isEmpty()) {
             setVisibility(GONE);
@@ -115,106 +115,108 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
             arrayList.add(adMap);
         }
 
-        if(mArrayList.equals(arrayList)){
+        if (mArrayList.equals(arrayList)) {
             return;
         }
         mArrayList.clear();
         mArrayList.addAll(arrayList);
-//        postDelayed(()->{
-            //创建数据适配器
-            BannerAdapter<Map<String, String>> bannerAdapter = new BannerAdapter<Map<String, String>>(mArrayList) {
-                @Override
-                protected void bindTips(TextView tv, Map<String, String> stringStringMap) {
-                }
-
-                @Override
-                public void bindView(View view, Map<String, String> data) {
-                    ImageView imageView = (ImageView) view.findViewById(R.id.image);
-                    Object tagValue = imageView.getTag(TAG_ID);
-                    if (tagValue != null && tagValue.equals(data.get("img"))) {
-                        return;
-                    }
-                    imageView.setTag(TAG_ID, data.get("img"));
-                    Glide.with(getContext())
-                            .load(data.get("img"))
-                            .dontAnimate()
-                            .dontTransform()
-//                            .diskCacheStrategy(DiskCacheStrategy.ALL)
-                            .into(imageView);
-                    if ("2".equals(data.get("isAd"))) {
-                        adView = view;
-                        TextView textView = (TextView) view.findViewById(R.id.title);
-                        textView.setText(TextUtils.isEmpty(data.get("title")) ? "" : data.get("title"));
-                        ImageView icon = (ImageView) view.findViewById(R.id.ad_icon);
-                        icon.setOnClickListener(v ->
-                                AppCommon.setAdHintClick(XHActivityManager.getInstance().getCurrentActivity(), v, mAdControl, 0, "")
-                        );
-                        icon.setVisibility(VISIBLE);
-                    } else {
-                        view.findViewById(R.id.ad_layout).setVisibility(GONE);
-                    }
-                }
-
-                @SuppressLint("InflateParams")
-                @Override
-                public View getView(int position) {
-                    return mInflater.inflate(R.layout.widget_banner_item, null, true);
-                }
-            };
-            setBannerAdapter(bannerAdapter);
-            notifyDataHasChanged();
-            addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                @Override
-                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                }
-
-                @Override
-                public void onPageSelected(int position) {
-                    int[] location = new int[2];
-                    getLocationInWindow(location);
-                    if (location[1] > showMinH && location[1] < showMaxH
-                            && arrayList.contains(adMap)
-                            && arrayList.indexOf(adMap) == position
-                            && !adMap.isEmpty()
-                            && !adMap.containsKey(KEY_ALREADY_SHOW)) {
-                        adMap.put(KEY_ALREADY_SHOW, "2");
-                        mAdControl.onAdBind(0, adView, "");
-                    }
-                }
-
-                @Override
-                public void onPageScrollStateChanged(int state) {
-
-                }
-            });
-            setOnBannerItemClickListener(position -> {
-                if (position < 0 || position >= arrayList.size()) return;
-                Map<String, String> dataMapTemp = arrayList.get(position);
-                if ("2".equals(dataMapTemp.get("isAd"))) {
-                    mAdControl.onAdClick(adView, 0, "");
-                    return;
-                }
-                String url = arrayList.get(position).get("url");
-                AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), url, true);
-                if (!TextUtils.isEmpty(id) && !TextUtils.isEmpty(twoLevel)) {
-                    XHClick.mapStat(getContext(), id, twoLevel, threeLevel + position);
-                }
-            });
-            setPageChangeDuration(5 * 1000);
-            setRandomItem(arrayList);
-            setVisibility(VISIBLE);
-            postDelayed(() -> setBackImageView(this::loadImage) , 400);
-//        },300);
-
+        setBackImageView(imageView -> loadImage(mArrayList.get(0).get("img"), imageView));
+        //设置adapter
+        setAdapter();
+        notifyDataHasChanged();
+        setPageChangeListener();
+        setOnBannerItemClickListener(position -> {
+            if (position < 0 || position >= arrayList.size()) return;
+            Map<String, String> dataMapTemp = arrayList.get(position);
+            if ("2".equals(dataMapTemp.get("isAd"))) {
+                mAdControl.onAdClick(adView, 0, "");
+                return;
+            }
+            String url = arrayList.get(position).get("url");
+            AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), url, true);
+            if (!TextUtils.isEmpty(id) && !TextUtils.isEmpty(twoLevel)) {
+                XHClick.mapStat(getContext(), id, twoLevel, threeLevel + position);
+            }
+        });
+        setPageChangeDuration(5 * 1000);
+        setRandomItem(arrayList);
+        setVisibility(VISIBLE);
     }
 
-    private void loadImage(ImageView imageView){
-        if(!mArrayList.isEmpty())
-            Glide.with(getContext())
-                    .load(mArrayList.get(0).get("img"))
-                    .dontAnimate()
-                    .dontTransform()
-                    .into(imageView);
+    private void setAdapter() {
+        //创建数据适配器
+        BannerAdapter<Map<String, String>> bannerAdapter = new BannerAdapter<Map<String, String>>(mArrayList) {
+            @Override
+            protected void bindTips(TextView tv, Map<String, String> stringStringMap) {
+            }
+
+            @Override
+            public void bindView(View view, Map<String, String> data) {
+                ImageView imageView = (ImageView) view.findViewById(R.id.image);
+                Object tagValue = imageView.getTag(TAG_ID);
+                if (tagValue != null && tagValue.equals(data.get("img"))) {
+                    return;
+                }
+                RelativeLayout adlayout = (RelativeLayout) view.findViewById(R.id.ad_layout);
+                adlayout.setPadding(
+                        adlayout.getPaddingLeft(),
+                        adlayout.getPaddingTop(),
+                        mPointContainerLl.getMeasuredWidth() + Tools.getDimen(getContext(), R.dimen.dp_16),
+                        adlayout.getPaddingBottom()
+                );
+                imageView.setTag(TAG_ID, data.get("img"));
+                loadImage(data.get("img"), imageView);
+                if ("2".equals(data.get("isAd"))) {
+                    adView = view;
+                    TextView textView = (TextView) view.findViewById(R.id.title);
+                    textView.setText(TextUtils.isEmpty(data.get("title")) ? "" : data.get("title"));
+                    ImageView icon = (ImageView) view.findViewById(R.id.ad_icon);
+                    icon.setOnClickListener(v ->
+                            AppCommon.setAdHintClick(XHActivityManager.getInstance().getCurrentActivity(), v, mAdControl, 0, "")
+                    );
+                    icon.setVisibility(VISIBLE);
+                } else {
+                    view.findViewById(R.id.ad_layout).setVisibility(GONE);
+                }
+            }
+
+            @SuppressLint("InflateParams")
+            @Override
+            public View getView(int position) {
+                return mInflater.inflate(R.layout.widget_banner_item, null, true);
+            }
+        };
+        setBannerAdapter(bannerAdapter);
+    }
+
+    private ViewPager.OnPageChangeListener pageChangeListener;
+    private void setPageChangeListener(){
+        if(pageChangeListener != null) return;
+        pageChangeListener =  new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                int[] location = new int[2];
+                getLocationInWindow(location);
+                if (location[1] > showMinH && location[1] < showMaxH
+                        && mArrayList.contains(adMap)
+                        && mArrayList.indexOf(adMap) == position
+                        && !adMap.isEmpty()
+                        && !adMap.containsKey(KEY_ALREADY_SHOW)) {
+                    adMap.put(KEY_ALREADY_SHOW, "2");
+                    mAdControl.onAdBind(0, adView, "");
+                }
+            }
+        };
+        addOnPageChangeListener(pageChangeListener);
+    }
+
+    private void loadImage(String imageUrl, ImageView imageView) {
+        if (TextUtils.isEmpty(imageUrl) || null == imageView) return;
+        Glide.with(getContext())
+                .load(imageUrl)
+                .dontAnimate()
+                .dontTransform()
+                .into(imageView);
     }
 
     public void initAdData() {
@@ -238,7 +240,10 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
             adMap = new HashMap<>();
             adMap.put("isAd", "2");
             adMap.put("img", imageUrl);
-            adMap.put("title", adDataMap.get("title"));
+            String title = adDataMap.get("title");
+            String desc = adDataMap.get("desc");
+            String text = TextUtils.equals(title, desc) ? desc : title + " | " + desc;
+            adMap.put("title", text);
             if (!mArrayList.isEmpty()
                     && !adMap.isEmpty()
                     && !mArrayList.contains(adMap)
