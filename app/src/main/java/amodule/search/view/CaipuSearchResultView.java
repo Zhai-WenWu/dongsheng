@@ -417,7 +417,7 @@ public class CaipuSearchResultView extends LinearLayout {
     private void setLoadMoreBtn() {
         Button moreBtn = loadManager.getSingleLoadMore(list_search_result);
         moreBtn.setEnabled(false);
-        moreBtn.setText("— 学名厨做菜 —");
+        moreBtn.setText("- 学名厨做菜, 用香哈 -");
     }
 
 
