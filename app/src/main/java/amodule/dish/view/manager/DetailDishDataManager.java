@@ -102,6 +102,11 @@ public class DetailDishDataManager {
                     detailAct.reset();
                     customerCode= StringManager.getFirstMap(object).get("customerCode");
                     if (!TextUtils.isEmpty(object.toString()) && !object.toString().equals("[]")) {
+                        Map<String,String> mapTemp = StringManager.getFirstMap(object);
+                        if(mapTemp!=null&&mapTemp.containsKey("dishState")&&"4".equals(mapTemp.get("dishState"))){
+                            if(detailAct!=null)detailAct.finish();
+                            return;
+                        }
                         handleDataSuccess(flag, DISH_DATA_TOP, object);
                         if(isGon)reqOne();
                         Map<String,String> maps= StringManager.getFirstMap(object);
