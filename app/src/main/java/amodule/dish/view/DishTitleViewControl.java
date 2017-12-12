@@ -278,6 +278,8 @@ public class DishTitleViewControl implements View.OnClickListener{
                     if (loading&&context!=null) loadManager.startProgress("仍在进行");
                 }
             }, 1000);
+            if (dishInfoMap == null)
+                return;
             FavoriteHelper.instance().setFavoriteStatus(detailDish.getApplicationContext(), code, dishInfoMap.get("name"),
                     isHasVideo ? FavoriteHelper.TYPE_DISH_VIDEO : FavoriteHelper.TYPE_DISH_ImageNText,
                     new FavoriteHelper.FavoriteStatusCallback() {
