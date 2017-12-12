@@ -125,13 +125,13 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
      */
     private void initData() {
         adapterDishNew = new AdapterDishNew(listview,maplist);
-        listview.setAdapter(adapterDishNew);
         if (detailDishViewManager == null) {//view manager
             detailDishViewManager = new DetailDishViewManager(this, listview, state);
             dishInfo= Uri.decode(dishInfo);
             detailDishViewManager.initBeforeData(img,dishInfo);
             handleVipState();
         }
+        listview.setAdapter(adapterDishNew);
         if (detailDishDataManager == null) detailDishDataManager = new DetailDishDataManager(code,this,courseCode,chapterCode);//数据manager
         detailDishDataManager.setDishDataCallBack(new DetailDishDataManager.DishDataCallBack() {
             @Override
@@ -179,7 +179,6 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
                 }
                 detailDishViewManager.handlerTitle(mapTop,code,isHasVideo,mapTop.get("dishState"),loadManager,state);//title导航
                 if(isShowVip){
-                    Log.i("xianghaTag","VIP::::initVipView:::mapTop");
                     detailDishViewManager.initVipView(mapTop.containsKey("type")?mapTop.get("type"):"");
                 }
                 detailDishViewManager.handlerDishData(list);//菜谱基本信息
@@ -233,7 +232,6 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
                 detailDishViewManager.handlerUserPowerData(relation);//用户权限
                 detailDishViewManager.handlerHoverView(relation,code,dishName);
                 if(!isShowVip) {
-                    Log.i("xianghaTag","VIP::::DISH_DATA_RELATION");
                     Map<String, String> mapTemp = StringManager.getFirstMap(relation.get("vipButton"));
                     mapTemp.put("isShow", relation.containsKey("isShow") ? relation.get("isShow") : "");
                     detailDishViewManager.handlerVipView(mapTemp);
@@ -259,7 +257,6 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
     protected void onRestart() {
         super.onRestart();
         isHasVideo = false;
-        Log.i("xianghaTag","isPay:::"+isPay);
         if(isPay){//支付
             notify(ObserverManager.NOTIFY_LOGIN,null,null);
             if(detailDishDataManager!=null&&!isShowPowerPermission)detailDishDataManager.reqQAData();
