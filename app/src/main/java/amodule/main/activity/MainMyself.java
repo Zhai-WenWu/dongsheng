@@ -656,6 +656,8 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
         BitmapRequestBuilder<GlideUrl, Bitmap> bitmapRequest = LoadImage.with(this)
                 .load(value)
                 .setImageRound(ToolsDevice.dp2px(MainMyself.this, 500))
+                .setPlaceholderId(R.drawable.z_me_head)
+                .setErrorId(R.drawable.z_me_head)
                 .build();
         if(bitmapRequest != null)
             bitmapRequest.into(v);

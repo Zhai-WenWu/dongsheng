@@ -103,23 +103,26 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
             setVisibility(GONE);
             return;
         }
-        //添加数据
+        //处理通用数据
         Stream.of(arrayList).forEach(map -> {
             map.put("isAd", "1");
             map.put("title", "");
         });
+        //添加广告数据
         if (!arrayList.isEmpty()
                 && !adMap.isEmpty()
                 && !arrayList.contains(adMap)
                 && LoginManager.isShowAd()) {
             arrayList.add(adMap);
         }
-
+        //判断数据是否改变
         if (mArrayList.equals(arrayList)) {
             return;
         }
+        //重新添加数据
         mArrayList.clear();
         mArrayList.addAll(arrayList);
+        //设置默认BG
         setBackImageView(imageView -> loadImage(mArrayList.get(0).get("img"), imageView));
         //设置adapter
         setAdapter();
@@ -143,8 +146,8 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
         setVisibility(VISIBLE);
     }
 
+    //创建数据适配器
     private void setAdapter() {
-        //创建数据适配器
         BannerAdapter<Map<String, String>> bannerAdapter = new BannerAdapter<Map<String, String>>(mArrayList) {
             @Override
             protected void bindTips(TextView tv, Map<String, String> stringStringMap) {
@@ -211,7 +214,8 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
     }
 
     private void loadImage(String imageUrl, ImageView imageView) {
-        if (TextUtils.isEmpty(imageUrl) || null == imageView) return;
+        if (TextUtils.isEmpty(imageUrl) || null == imageView)
+            return;
         Glide.with(getContext())
                 .load(imageUrl)
                 .dontAnimate()
