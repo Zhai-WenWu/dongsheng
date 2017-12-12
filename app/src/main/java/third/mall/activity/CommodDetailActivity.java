@@ -53,6 +53,7 @@ import acore.logic.XHClick;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
+import acore.tools.ToolsDevice;
 import amodule.other.activity.PlayVideo;
 import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.LoadImage;
@@ -690,7 +691,7 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
             }
         });
 
-        if (mVideoPlayerController != null) {
+        if (mVideoPlayerController != null && "wifi".equals(ToolsDevice.getNetWorkSimpleType(this))) {
             mVideoPlayerController.setOnClick();
         }
     }
