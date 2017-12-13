@@ -143,6 +143,7 @@ public class CircleMainFragment extends Fragment {
         super.onAttach(activity);
         isAutoPaly = "wifi".equals(ToolsDevice.getNetWorkSimpleType(activity));
         registnetworkListener();
+        mPlateData = (PlateData) getArguments().getSerializable(PLATEDATA);
     }
 
     @Override
