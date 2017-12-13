@@ -174,6 +174,8 @@ public class ClingControl {
     }
 
     private void initClingOptionView() {
+        if (mContext == null)
+            return;
         if (mClingOptionView == null) {
             mClingOptionView = new ClingOptionView(mContext);
             mClingOptionView.setOnOptionListener(v -> {
