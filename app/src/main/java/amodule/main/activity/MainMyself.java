@@ -1,6 +1,7 @@
 package amodule.main.activity;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
@@ -45,7 +47,6 @@ import amodule.answer.activity.QAMsgListActivity;
 import amodule.dish.activity.OfflineDish;
 import amodule.dish.db.DataOperate;
 import amodule.main.Main;
-import amodule.main.view.HintMyselfDialog;
 import amodule.user.activity.BrowseHistory;
 import amodule.user.activity.FansAndFollwers;
 import amodule.user.activity.FriendHome;
@@ -288,20 +289,29 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
             return;
         }
         Object olddishdata = FileManager.loadShared(this, "olddishdata", "olddishdata");
-        if (olddishdata!=null&&!TextUtils.isEmpty(String.valueOf(olddishdata))&&"2".equals(String.valueOf(olddishdata))&&!isShowActivity()) {
-            Intent intent = new Intent(this, HintMyselfDialog.class);
-            startActivity(intent);
+        if (olddishdata!=null&&!TextUtils.isEmpty(String.valueOf(olddishdata))&&"2".equals(String.valueOf(olddishdata))) {
+            showHintDialog();
             FileManager.saveShared(this, "olddishdata", "olddishdata", "1");
         }
-    }
-    private boolean  isShowActivity(){
-        try {
-            if ("amodule.main.view.HintMyselfDialog".equals(XHActivityManager.getInstance().getCurrentActivity().getComponentName().getClassName()))
-                return true;
-        }catch (Exception e){return false;}
-        return false;
-    }
 
+    }
+    private Dialog dialogHint;
+    private void showHintDialog(){
+        if(dialogHint==null) {
+            dialogHint = new Dialog(this, R.style.dialog_style);
+            dialogHint.setContentView(R.layout.a_myself_hint);
+            Window window = dialogHint.getWindow();
+            window.findViewById(R.id.a_hint_img).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MainMyself.this, MyFavorite.class);
+                    startActivity(intent);
+                    dialogHint.dismiss();
+                }
+            });
+        }
+        dialogHint.show();
+    }
     /**
      * 获取用户信息
      */
