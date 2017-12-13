@@ -128,7 +128,7 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
         mArrayList.addAll(arrayList);
         //设置默认BG
         if(bgLoadOver){
-            postDelayed(()->setBackImageView(imageView -> loadImage(mArrayList.get(0).get("img"), imageView)),400);
+            postDelayed(()->setBackImageView(imageView -> loadImage(mArrayList.get(0).get("img"), imageView)),800);
         }else{
             bgLoadOver = true;
             setBackImageView(imageView -> loadImage(mArrayList.get(0).get("img"), imageView));
@@ -225,8 +225,11 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
     private void loadImage(String imageUrl, ImageView imageView) {
         if (TextUtils.isEmpty(imageUrl) || null == imageView)
             return;
-        Glide.with(getContext())
+        LoadImage.with(getContext())
                 .load(imageUrl)
+                .setSaveType(LoadImage.SAVE_LONG)
+                .setPlaceholderId(0)
+                .build()
                 .dontAnimate()
                 .dontTransform()
                 .into(imageView);
