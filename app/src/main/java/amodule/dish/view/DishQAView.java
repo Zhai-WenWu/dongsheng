@@ -99,6 +99,11 @@ public class DishQAView extends ItemBaseView{
             findViewById(R.id.degree_linear).setVisibility(View.VISIBLE);
         }else findViewById(R.id.degree_linear).setVisibility(View.GONE);
         text_time.setText(maptemp.get("avgRespondTime"));
+        boolean isShowCount=false;
+        if(maptemp.containsKey("count")&& !TextUtils.isEmpty(maptemp.get("count"))&&Integer.parseInt(maptemp.get("count"))>0){
+            this.findViewById(R.id.qa_more_linaer).setVisibility(View.VISIBLE);
+            isShowCount = true;
+        }else  this.findViewById(R.id.qa_more_linaer).setVisibility(View.GONE);
         ArrayList<Map<String,String>> listQA = StringManager.getListMapByJson(maptemp.get("list"));
         if(listQA!=null&&listQA.size()>0){
             for(int i=0;i<listQA.size();i++){
@@ -109,6 +114,8 @@ public class DishQAView extends ItemBaseView{
                 TextView content_two= (TextView) qaItem.findViewById(R.id.content_two);
                 content_one.setText(getClickableSpan(mapQA.get("text"),mapQA));
                 content_one.setMovementMethod(LinkMovementMethod.getInstance());//必须设置否则无效
+                content_two.setText(mapQA.get("useRate")+"%觉的有用");
+                qaItem.findViewById(R.id.qa_line).setVisibility(i==listQA.size()-1&&!isShowCount?View.GONE:View.VISIBLE);
                 if(mapQA.containsKey("isAttend")&&"1".equals(mapQA.get("isAttend"))) {
                     qaItem.findViewById(R.id.money_linear).setVisibility(View.VISIBLE);
                     ((TextView)qaItem.findViewById(R.id.money_qa)).setText(mapQA.get("peekMoney")+"元偷看");
@@ -135,7 +142,7 @@ public class DishQAView extends ItemBaseView{
                         AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(),mapQA.get("link"),false);
                     }
                 });
-                content_two.setText(listQA.get(0).get("useRate")+"%觉的有用");
+
                 qa_content_linear.addView(qaItem);
             }
         }
@@ -148,9 +155,6 @@ public class DishQAView extends ItemBaseView{
                 }
             }
         });
-        if(maptemp.containsKey("count")&& !TextUtils.isEmpty(maptemp.get("count"))&&Integer.parseInt(maptemp.get("count"))>0){
-            this.findViewById(R.id.qa_more_linaer).setVisibility(View.VISIBLE);
-        }else  this.findViewById(R.id.qa_more_linaer).setVisibility(View.GONE);
     }
 
     private SpannableString getClickableSpan(String content, final Map<String,String> maps) {
