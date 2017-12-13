@@ -62,6 +62,8 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
     private View adView = null;
     private Map<String, String> adMap = new HashMap<>();
     public static final int TAG_ID = R.string.tag;
+    int imageHeight = 0,imageWidth=0;
+    boolean bgLoadOver = false;
 
     public BannerView(Context context) {
         this(context, null);
@@ -76,8 +78,10 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
         int paddingBottom = getResources().getDimensionPixelSize(R.dimen.dp_10);
         setPadding(0, 0, 0, paddingBottom);
         mInflater = LayoutInflater.from(context);
-        int height = (int) (ToolsDevice.getWindowPx(context).widthPixels * 320 / 750f) + paddingBottom;
-//        Log.i("tzy","width = " + ToolsDevice.getWindowPx(context).widthPixels + " , height = " + height);
+        imageWidth = ToolsDevice.getWindowPx(context).widthPixels;
+        imageHeight = (int) (imageWidth * 320 / 750f);
+        int height = imageHeight + paddingBottom;
+        Log.i("tzy","width = " + ToolsDevice.getWindowPx(context).widthPixels + " , height = " + height);
         post(() -> {
             getLayoutParams().height = height;
             setMinimumHeight(height);
@@ -123,7 +127,12 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
         mArrayList.clear();
         mArrayList.addAll(arrayList);
         //设置默认BG
-        setBackImageView(imageView -> loadImage(mArrayList.get(0).get("img"), imageView));
+        if(bgLoadOver){
+            postDelayed(()->setBackImageView(imageView -> loadImage(mArrayList.get(0).get("img"), imageView)),200);
+        }else{
+            bgLoadOver = true;
+            setBackImageView(imageView -> loadImage(mArrayList.get(0).get("img"), imageView));
+        }
         //设置adapter
         setAdapter();
         notifyDataHasChanged();
@@ -262,7 +271,7 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
     int[] weightArray;
 
     private void setRandomItem(ArrayList<Map<String, String>> arrayList) {
-        if (null == arrayList || arrayList.isEmpty()) {
+        if (null == arrayList || arrayList.size() <= 1) {
             return;
         }
         weightSum = 0;
@@ -359,6 +368,26 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
 
         }
         return super.dispatchTouchEvent(ev);
+    }
+
+    private void loadAdImage(String imgUrl,ImageView imageView){
+        Glide.with(getContext())
+                .load(imgUrl)
+                .asBitmap()
+                .dontAnimate()
+                .dontTransform()
+                .into(new SubBitmapTarget() {
+                    @Override
+                    public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
+                        float width = bitmap.getWidth();
+                        float height = bitmap.getHeight();
+                        float scaleWidth = width;
+                        float scaleHeight = scaleWidth / imageWidth * height;
+                        int offsetY = (int) (height - Math.abs(height - scaleHeight));
+                        Bitmap resultBitmap = Bitmap.createBitmap(bitmap,0,offsetY,(int)scaleWidth,((int)height- offsetY));
+                        imageView.setImageBitmap(resultBitmap);
+                    }
+                });
     }
 
 }
