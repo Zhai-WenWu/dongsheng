@@ -73,6 +73,7 @@ import aplug.basic.ReqInternet;
 import aplug.shortvideo.ShortVideoInit;
 import third.ad.control.AdControlHomeDish;
 import third.ad.tools.AdConfigTools;
+import third.cling.control.ClingPresenter;
 import third.mall.MainMall;
 import third.mall.alipay.MallPayActivity;
 import third.mall.aplug.MallCommon;
@@ -149,7 +150,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
         mainInitDataControl = new MainInitDataControl();
         showWelcome();
         LogManager.printStartTime("zhangyujian","main::oncreate::");
-//        ClingPresenter.getInstance().onCreate(this, null);
+        ClingPresenter.getInstance().onCreate(this, null);
     }
 
     /** 处理一下非明确功能的逻辑 */
@@ -847,7 +848,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
         mUnreadCountListener = null;
         if (!LoginManager.isLogin())
             QiYvHelper.getInstance().destroyQiYvHelper();
-//        ClingPresenter.getInstance().onDestroy(this, null);
+        ClingPresenter.getInstance().onDestroy(this);
     }
 
     @Override

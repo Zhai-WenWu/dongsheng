@@ -17,8 +17,6 @@ import com.xiangha.R;
 
 public class ClingOptionView extends RelativeLayout implements View.OnClickListener {
 
-    private Context mContext;
-
     private TextView mTitleTextView;
     private LinearLayout mTryAgainLayout;
     private LinearLayout mExitLayout;
@@ -106,11 +104,7 @@ public class ClingOptionView extends RelativeLayout implements View.OnClickListe
             mTryAgainLayout.setVisibility(View.GONE);
     }
 
-    public void setContext(Context context) {
-        mContext = context;
-    }
-
-    public Context getCurrContext() {
-        return mContext;
+    public boolean isShowing() {
+        return getVisibility() == View.VISIBLE;
     }
 }
