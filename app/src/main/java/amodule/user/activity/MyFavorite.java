@@ -226,10 +226,7 @@ public class MyFavorite extends BaseActivity implements View.OnClickListener {
             //回到首页第一页
             case R.id.btn_no_data:
                 if (Main.allMain != null) {
-                    Main.allMain.setCurrentTabByClass(MainHome.class);
-                    if (Main.allMain.allTab != null && Main.allMain.allTab.get(MainHomePage.KEY) != null) {
-                        ((MainHome) Main.allMain.allTab.get(MainHomePage.KEY)).setCurrentTab(TAB_HOME);
-                    }
+                    Main.allMain.setCurrentTabByClass(MainHomePage.class);
                 }
                 Main.colse_level = 1;
                 finish();
