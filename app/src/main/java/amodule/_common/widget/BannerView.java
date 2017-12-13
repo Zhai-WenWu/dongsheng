@@ -128,7 +128,7 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
         mArrayList.addAll(arrayList);
         //设置默认BG
         if(bgLoadOver){
-            postDelayed(()->setBackImageView(imageView -> loadImage(mArrayList.get(0).get("img"), imageView)),200);
+            postDelayed(()->setBackImageView(imageView -> loadImage(mArrayList.get(0).get("img"), imageView)),400);
         }else{
             bgLoadOver = true;
             setBackImageView(imageView -> loadImage(mArrayList.get(0).get("img"), imageView));
