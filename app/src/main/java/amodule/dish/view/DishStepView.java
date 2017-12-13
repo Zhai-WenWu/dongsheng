@@ -287,4 +287,12 @@ public class DishStepView extends ItemBaseView {
         public void onClick();
         public void onGifPlayClick();
     }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        if(this!=null){
+            context=null;
+        }
+    }
 }

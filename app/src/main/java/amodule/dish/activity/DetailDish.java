@@ -278,6 +278,11 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
             handlerScreen.removeCallbacksAndMessages(null);
             handlerScreen=null;
         }
+        listview = null;
+        if(adapterDishNew!=null){
+            adapterDishNew=null;
+        }
+
     }
     public void refresh() {
         if(detailDishViewManager!=null)detailDishViewManager.refresh();

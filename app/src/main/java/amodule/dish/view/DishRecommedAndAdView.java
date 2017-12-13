@@ -270,4 +270,5 @@ public class DishRecommedAndAdView extends ItemBaseView implements View.OnClickL
         }
     }
 
+
 }
