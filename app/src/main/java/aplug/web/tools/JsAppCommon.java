@@ -61,6 +61,7 @@ import third.mall.aplug.MallCommon;
 import third.mall.aplug.MallInternetCallback;
 import third.mall.aplug.MallReqInternet;
 import third.mall.aplug.MallStringManager;
+import third.mall.dialog.FavorableDialog;
 import third.mall.wx.WxPay;
 import third.share.BarShare;
 import third.share.BarShareImage;
@@ -467,7 +468,9 @@ public class JsAppCommon extends JsBase {
 
             @Override
             public void run() {
-                if (!LoginManager.isLogin()) {
+                if (LoginManager.isLogin()) {
+                    FavorableDialog dialog = new FavorableDialog(mAct, shop_code);
+                } else {
                     Intent intent_user = new Intent(mAct, LoginByAccout.class);
                     mAct.startActivity(intent_user);
                 }
