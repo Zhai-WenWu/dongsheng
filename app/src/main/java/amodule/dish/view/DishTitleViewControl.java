@@ -201,7 +201,10 @@ public class DishTitleViewControl implements View.OnClickListener{
 
         boolean isAuthor = false;
         String userCode="";
-        userCode=StringManager.getFirstMap(dishInfoMap.get("customer")).get("customerCode");
+        if(dishInfoMap != null){
+            Map<String,String> customerMap = StringManager.getFirstMap(dishInfoMap.get("customer"));
+            userCode = customerMap.get("customerCode");
+        }
             //登录并是自己的菜谱贴
         if (LoginManager.isLogin() && !TextUtils.isEmpty(userCode) && userCode.equals(LoginManager.userInfo.get("code"))) {
                 isAuthor = true;
