@@ -29,6 +29,7 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.ToastCustom;
+import third.push.xg.XGPushServer;
 import xh.basic.internet.InterCallback;
 import xh.basic.tool.UtilString;
 
@@ -228,7 +229,7 @@ public abstract class InternetCallback extends InterCallback {
 			cookie += "umCode=" + PushAgent.getInstance(context).getRegistrationId() + ";";
 
 		}catch (Exception e){e.printStackTrace();}
-		cookie += "xgCode=" + XGPushConfig.getToken(context) + ";";
+		cookie += "xgCode=" + XGPushServer.getXGToken(context) + ";";
 		String location = getLocation();
 		cookie += "geo=" + location + ";";
 		header.put("Cookie", cookie);

@@ -267,7 +267,7 @@ public class ListDish extends BaseActivity {
             }
         });
         img_fav = (ImageView) findViewById(R.id.rightImgBtn4);
-        img_fav.setVisibility(View.VISIBLE);
+        img_fav.setVisibility("caidan".equals(type) ? View.VISIBLE : View.GONE);
         img_fav.setImageResource(R.drawable.z_caipu_xiangqing_topbar_ico_fav);
         img_fav.setOnClickListener(new OnClickListener() {
             @Override
