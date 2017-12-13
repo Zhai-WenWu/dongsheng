@@ -425,12 +425,7 @@ public class LoginManager {
      * @param tempVip
      */
     public static void setTempVip(final boolean tempVip) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                FileManager.saveShared(XHApplication.in(),FileManager.xmlFile_appInfo,"isTempVip",tempVip ? "2" : "");
-            }
-        }).start();
+        FileManager.saveShared(XHApplication.in(),FileManager.xmlFile_appInfo,"isTempVip",tempVip ? "2" : "");
     }
 
     public static void saveTempVipMaturityDay(String maturityTimeStr){
