@@ -638,8 +638,7 @@ public class VideoPlayerController {
             videoPlayer.setStandardVideoAllCallBack(null);
             videoPlayer.release();
         }
-        if (mPraentViewGroup != null)
-            mPraentViewGroup.removeView(mClingControl.getClingOptionView());
+        removeClingOptionView();
         mClingControl.onDestroy(mContext);
     }
 
@@ -808,7 +807,7 @@ public class VideoPlayerController {
 
 
     public void removeClingOptionView() {
-        if (mPraentViewGroup != null && videoPlayer != null) {
+        if (mPraentViewGroup != null) {
             mPraentViewGroup.removeView(mClingControl.getClingOptionView());
         }
     }
