@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -237,11 +238,17 @@ public class DetailHealth extends BaseActivity {
 			AdapterSimple adapter = new AdapterSimple(table, list, 
 					R.layout.a_health_item_table_detail, 
 					new String[] { "img", "name" },
-					new int[] { R.id.table_detail_health_img, R.id.table_detail_health_tv });
-			adapter.imgHeight = height;
-			adapter.imgWidth = height;
-			adapter.imgZoom = true;
-			SetDataView.view(table, 5, adapter, 
+					new int[] { R.id.table_detail_health_img, R.id.table_detail_health_tv }){
+				@Override
+				public View getView(int position, View convertView, ViewGroup parent) {
+					View view = super.getView(position, convertView, parent);
+					ImageView image = (ImageView) view.findViewById(R.id.table_detail_health_img);
+					image.getLayoutParams().width = height;
+					image.getLayoutParams().height = height;
+					return view;
+				}
+			};
+			SetDataView.view(table, 0,5, adapter,
 					new int[] { R.id.table_detail_health_img, R.id.table_detail_health_tv },
 					new SetDataView.ClickFunc[] { new SetDataView.ClickFunc() {
 						@Override

@@ -5,8 +5,7 @@
     android:layout_marginLeft="@dimen/dp_20"
     android:layout_marginRight="@dimen/dp_20"
     android:background="@color/transparent"
-    android:orientation="vertical"
-    android:paddingBottom="@dimen/dp_21">
+    android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/view_linear"
@@ -64,5 +63,10 @@
         android:textColor="#333333"
         android:layout_marginTop="@dimen/dp_7"
         android:textSize="@dimen/sp_17" />
+    <View
+        android:id="@+id/step_distance"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_19"
+        android:background="@color/transparent"/>
 
 </LinearLayout>

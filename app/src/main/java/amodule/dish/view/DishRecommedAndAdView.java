@@ -22,12 +22,11 @@ import java.util.Map;
 
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
-import acore.override.helper.XHActivityManager;
 import acore.override.view.ItemBaseView;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
-import amodule.dish.activity.DetailDishNew;
+import amodule.dish.activity.DetailDish;
 import amodule.quan.activity.FollowSubject;
 import amodule.quan.activity.ShowSubject;
 import amodule.quan.activity.upload.UploadSubjectNew;
@@ -40,7 +39,7 @@ import aplug.basic.ReqInternet;
 import aplug.basic.SubBitmapTarget;
 import xh.basic.tool.UtilImage;
 
-import static amodule.dish.activity.DetailDish.tongjiId;
+import static amodule.dish.activity.DetailDishWeb.tongjiId;
 import static xh.basic.tool.UtilString.getListMapByJson;
 
 /**
@@ -48,7 +47,7 @@ import static xh.basic.tool.UtilString.getListMapByJson;
  */
 
 public class DishRecommedAndAdView extends ItemBaseView implements View.OnClickListener{
-    private LinearLayout mAdLayout,userDishLayout;
+    private LinearLayout userDishLayout;
     private RelativeLayout mRecomentLayout;
     private TextView mRecommentNum,mRelevantTv;
     private String code,mDishName;
@@ -67,7 +66,6 @@ public class DishRecommedAndAdView extends ItemBaseView implements View.OnClickL
     @Override
     public void init() {
         super.init();
-        mAdLayout = (LinearLayout)findViewById(R.id.a_dish_detail_new_tieshi_ad);
         mRecomentLayout = (RelativeLayout)findViewById(R.id.a_dish_detail_new_xiangguan);
         userDishLayout = (LinearLayout)findViewById(R.id.a_dish_detail_new_xiangguan_scroll_linear);
 
@@ -93,6 +91,7 @@ public class DishRecommedAndAdView extends ItemBaseView implements View.OnClickL
      */
     public void initUserDish(ArrayList<Map<String, String>> arrayList){
 //        mRelevantTv.setVisibility(View.VISIBLE);
+        userDishLayout.removeAllViews();
         if(arrayList.size() > 0) {
             findViewById(R.id.qa_line).setVisibility(View.VISIBLE);
             Map<String, String> TieMap = arrayList.get(0);
@@ -129,50 +128,52 @@ public class DishRecommedAndAdView extends ItemBaseView implements View.OnClickL
                 }
 
                 final String zanNumberStr = map.get("likeNum");
-                final String subjectCode = map.get("code");
+                final String subjectCode = map.get("tieCode");
                 setViewImage(dishImg, map.get("img"), 0);
                 final boolean isLike = "2".equals(map.get("isLike"));
                 zanImg.setImageResource(isLike ? R.drawable.z_menu_praiseselected : R.drawable.z_menu_praisenomal);
                 dishTime.setText(map.get("timeShow"));
                 zanNumber.setText(zanNumberStr);
-                zanImg.setOnClickListener(new View.OnClickListener() {
-                    boolean newIsLike = isLike;
-                    @Override
-                    public void onClick(View v) {
-                        if(newIsLike){
-                            Tools.showToast(context,"已点过赞");
-                        }else {
-                            XHClick.mapStat(context, DetailDishNew.tongjiId_detail, "哈友相关作品", "点赞按钮点击量");
-                            if(!LoginManager.isLogin()){//未登录，直接去登录
-                                Intent intent = new Intent(context, LoginByAccout.class);
-                                context.startActivity(intent);
-                                return;
-                            }
-                            LinkedHashMap<String, String> map = new LinkedHashMap<>();
-                            map.put("subjectCode", subjectCode);
-                            map.put("type", "likeList");
-                            ReqEncyptInternet.in().doEncypt(StringManager.api_quanSetSubject, map, new InternetCallback(context) {
-                                @Override
-                                public void loaded(int flag, String s, Object o) {
-                                    if (flag >= ReqInternet.REQ_OK_STRING) {
-                                        try {
-                                            newIsLike = true;
-                                            zanImg.setImageResource(R.drawable.i_good_activity);
-                                            int zanNum = Integer.parseInt(zanNumberStr);
-                                            zanNumber.setText(String.valueOf(++zanNum));
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
+                OnClickListener viewOnClickListener= new View.OnClickListener(){
+                        boolean newIsLike = isLike;
+                        @Override
+                        public void onClick(View v) {
+                            if(newIsLike){
+                                Tools.showToast(context,"已点过赞");
+                            }else {
+                                XHClick.mapStat(context, DetailDish.tongjiId_detail, "哈友相关作品", "点赞按钮点击量");
+                                if(!LoginManager.isLogin()){//未登录，直接去登录
+                                    Intent intent = new Intent(context, LoginByAccout.class);
+                                    context.startActivity(intent);
+                                    return;
+                                }
+                                LinkedHashMap<String, String> map = new LinkedHashMap<>();
+                                map.put("subjectCode", subjectCode);
+                                map.put("type", "likeList");
+                                ReqEncyptInternet.in().doEncypt(StringManager.api_quanSetSubject, map, new InternetCallback(context) {
+                                    @Override
+                                    public void loaded(int flag, String s, Object o) {
+                                        if (flag >= ReqInternet.REQ_OK_STRING) {
+                                            try {
+                                                newIsLike = true;
+                                                zanImg.setImageResource(R.drawable.i_good_activity);
+                                                int zanNum = Integer.parseInt(zanNumberStr);
+                                                zanNumber.setText(String.valueOf(++zanNum));
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
                                         }
                                     }
-                                }
-                            });
+                                });
+                            }
                         }
-                    }
-                });
+                };
+                zanImg.setOnClickListener(viewOnClickListener);
+                view.findViewById(R.id.dish_zan_linear).setOnClickListener(viewOnClickListener);
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        XHClick.mapStat(context, DetailDishNew.tongjiId_detail, "哈友相关作品", "相关作品帖子点击量");
+                        XHClick.mapStat(context, DetailDish.tongjiId_detail, "哈友相关作品", "相关作品帖子点击量");
                         Intent it = new Intent(context, ShowSubject.class);
                         it.putExtra("code", subjectCode);
                         context.startActivity(it);
@@ -234,7 +235,7 @@ public class DishRecommedAndAdView extends ItemBaseView implements View.OnClickL
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                XHClick.mapStat(context, DetailDishNew.tongjiId_detail, "哈友相关作品", "相关作品帖子用户头像点击量");
+                XHClick.mapStat(context, DetailDish.tongjiId_detail, "哈友相关作品", "相关作品帖子用户头像点击量");
                 Intent intent = new Intent(context, FriendHome.class);
                 intent.putExtra("code",userCode);
                 context.startActivity(intent);
@@ -268,5 +269,6 @@ public class DishRecommedAndAdView extends ItemBaseView implements View.OnClickL
                 break;
         }
     }
+
 
 }

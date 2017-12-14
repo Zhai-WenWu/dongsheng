@@ -103,4 +103,8 @@ public class ClingOptionView extends RelativeLayout implements View.OnClickListe
         if (mTryAgainLayout.getVisibility() == View.VISIBLE)
             mTryAgainLayout.setVisibility(View.GONE);
     }
+
+    public boolean isShowing() {
+        return getVisibility() == View.VISIBLE;
+    }
 }

@@ -89,7 +89,7 @@ public class WelcomeDialog extends Dialog {
     public WelcomeDialog(@NonNull Activity act, int adShowTime,DialogShowCallBack callBack) {
         super(act, R.style.welcomeDialog);
         String app_welocme= (String) FileManager.loadShared(act,FileManager.app_welcome,FileManager.app_welcome);
-        if(TextUtils.isEmpty(app_welocme)||!"2".equals(app_welocme)){
+        if(TextUtils.isEmpty(app_welocme) || !"2".equals(app_welocme)){
             adShowTime=3;
             FileManager.saveShared(act,FileManager.app_welcome,FileManager.app_welcome,"2");
         }
@@ -101,8 +101,6 @@ public class WelcomeDialog extends Dialog {
         this.mAdTime = adShowTime;
         this.dialogShowCallBack=callBack;
         Window window = this.getWindow();
-//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
         this.view = this.getLayoutInflater().inflate(R.layout.xh_welcome, null);
         setContentView(view);
@@ -162,6 +160,10 @@ public class WelcomeDialog extends Dialog {
     }
 
     private void initAd() {
+        if(null == FileManager.ifFileModifyByCompletePath(FileManager.getDataDir() + FileManager.file_ad,-1)){
+            mAdTime = 3;
+            return;
+        }
         //设置广点通广告回调
         WelcomeAdTools.getInstance().setmGdtCallback(
                 new WelcomeAdTools.GdtCallback() {
@@ -321,6 +323,7 @@ public class WelcomeDialog extends Dialog {
     }
     private void showSkipContainer(){
         view.findViewById(R.id.line_1).setVisibility(View.VISIBLE);
+        view.findViewById(R.id.ad_linear).setVisibility(View.VISIBLE);
         textLead.setVisibility(View.VISIBLE);
         textSkip.setVisibility(View.VISIBLE);
         mADLayout.setVisibility(View.VISIBLE);
@@ -337,7 +340,6 @@ public class WelcomeDialog extends Dialog {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-
                 textLead.setVisibility(View.VISIBLE);
                 textSkip.setVisibility(View.VISIBLE);
                 mADLayout.setVisibility(View.VISIBLE);
@@ -454,12 +456,12 @@ public class WelcomeDialog extends Dialog {
             startCountDown(false);
             LogManager.printStartTime("zhangyujian","dialog::onWindowFocusChanged333::");
             //
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
+//            new Thread(new Runnable() {
+//                @Override
+//                public void run() {
                     WelcomeAdTools.getInstance().handlerAdData(false, null,isTwoShow);
-                }
-            }).start();
+//                }
+//            }).start();
 
             LogManager.printStartTime("zhangyujian","dialog::onWindowFocusChanged::");
         }

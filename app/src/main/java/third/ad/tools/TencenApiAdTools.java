@@ -37,43 +37,8 @@ import static xh.basic.tool.UtilString.getListMapByJson;
 public class TencenApiAdTools {
 
     private volatile static TencenApiAdTools tencenApiAdTools;
-    //-----------------广告id list-----------------------
-    //首页知识id  尺寸：230*152   loid:101
-    public static final String TX_ID_HOME_ZHISHI = "_adb_14678_10147654";
-    //首页最新佳作 尺寸：640:330  loid:202
-    public static final String TX_ID_HOME_GOOD_DISH_1 = "_adb_14678_10147655";
-    public static final String TX_ID_HOME_GOOD_DISH_2 = "_adb_14678_10147656";
-    public static final String TX_ID_HOME_GOOD_DISH_3 = "_adb_14678_10147657";
-    public static final String TX_ID_HOME_GOOD_DISH_4 = "_adb_14678_10147658";
-    public static final String TX_ID_HOME_GOOD_DISH_5 = "_adb_14678_10147659";
-    public static final String TX_ID_HOME_GOOD_DISH_6 = "_adb_14678_10147660";
     //搜索默认页banner  尺寸：582:166  loid:1
     public static final String TX_ID_SEARCH_DIFAULT = "_adb_14678_10147661";
-    //搜索菜谱列表  尺寸：230*152   loid:101
-    public static final String TX_ID_SEARCH_1 = "_adb_14678_10147662";
-    public static final String TX_ID_SEARCH_2 = "_adb_14678_10147663";
-    public static final String TX_ID_SEARCH_3 = "_adb_14678_10147664";
-    public static final String TX_ID_SEARCH_4 = "_adb_14678_10147665";
-    public static final String TX_ID_SEARCH_5 = "_adb_14678_10147666";
-    public static final String TX_ID_SEARCH_6 = "_adb_14678_10147667";
-    //菜谱详情用料上方banner   尺寸：582:166  loid:1
-    public static final String TX_ID_DISH_DETAIL_BURDEN_TOP = "_adb_14678_10147668";
-    //菜谱详情分享下方banner   尺寸：582:166  loid:1
-    public static final String TX_ID_DISH_DETAIL_BURDEN_BOTTOM = "_adb_14678_10147669";
-    //菜谱详情页相关推荐   尺寸：230*152   loid:101
-    public static final String TX_ID_DISH_DETAIL_SCOMMEND_1 = "_adb_14678_10147670";
-    //菜谱详情页相关推荐   尺寸：640:330  loid:202
-    public static final String TX_ID_DISH_DETAIL_SCOMMEND_2 = "_adb_14678_10147671";
-    //菜谱详情页精选作品   尺寸：640:330  loid:202
-    public static final String TX_ID_DISH_DETAIL_SUBJECT_1 = "_adb_14678_10147672";
-    public static final String TX_ID_DISH_DETAIL_SUBJECT_2 = "_adb_14678_10147673";
-    //美食圈列表 尺寸：640:330  loid:202
-    public static final String TX_ID_QUAN_1= "_adb_14678_10147674";
-    public static final String TX_ID_QUAN_2= "_adb_14678_10147675";
-    public static final String TX_ID_QUAN_3= "_adb_14678_10147676";
-    public static final String TX_ID_QUAN_4= "_adb_14678_10147677";
-    public static final String TX_ID_QUAN_5= "_adb_14678_10147678";
-    public static final String TX_ID_QUAN_6= "_adb_14678_10147679";
     //美食圈美食贴详情banner  尺寸：582:166  loid:1
     public static final String TX_ID_QUAN_DETAIL= "_adb_14678_10147680";
 
@@ -108,38 +73,6 @@ public class TencenApiAdTools {
                     if(!TextUtils.isEmpty(data)){
                         ArrayList<Map<String, String>> array = getListMapByJson(data);
                         if(callback != null) callback.onAdShow(array);
-//                        if(array.size() > 0) {
-//                            Map<String, String> map = array.get(0);
-//                            String bidid = map.get("bidid");
-//                            String id = map.get("id");
-//                            String seatbid = map.get("seatbid");
-//                            array = getListMapByJson(seatbid);
-//                            if(array.size() > 0) {
-//                                map = array.get(0);
-//                                String bid = map.get("bid");
-//                                array = getListMapByJson(bid);
-//                                if(array.size() > 0) {
-//                                    map = array.get(0);
-//                                    String w = map.get("w");
-//                                    String h = map.get("h");
-//                                    String bid_id = map.get("id");
-//                                    String impid = map.get("impid");
-//                                    String ext = map.get("ext");
-//                                    array = getListMapByJson(ext);
-//                                    if(array.size() > 0) {
-//                                        map = array.get(0);
-//                                        String aurl = map.get("aurl");
-//                                        //点击的监测地址数组(最多三个）
-//                                        String cmurl = map.get("cmurl");
-//                                        String curl = map.get("curl");
-//                                        //曝光监测地址数组（最多五个）
-//                                        String murl = map.get("murl");
-//                                        String stype = map.get("stype");
-//                                        String type = map.get("type");
-//                                    }
-//                                }
-//                            }
-//                        }
                     }else{
                         if(callback != null) callback.onAdFail();
                     }
@@ -289,7 +222,7 @@ public class TencenApiAdTools {
        return dm.densityDpi / 160;
     }
 
-    public void getLocation(){
+    private void getLocation(){
         WebView webview = new WebView(XHApplication.in());
         webview.layout(0, 0, 0, 0);
         WebSettings settings = webview.getSettings();

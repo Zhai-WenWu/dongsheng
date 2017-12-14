@@ -22,6 +22,7 @@ import acore.tools.FileManager;
 import acore.tools.Tools;
 import amodule.main.Main;
 import aplug.basic.ReqInternet;
+import aplug.web.tools.WebviewManager;
 import third.mall.MainMall;
 import third.mall.alipay.MallAlipay;
 import third.mall.override.MallBaseActivity;
@@ -143,6 +144,7 @@ public class MallCommon {
 					customer_code = listMapByJson.get(0).get("customer_code");
 					token = listMapByJson.get(0).get("token");
 					setSaveMall(context);
+					WebviewManager.syncDSCookie();
 					if(interfaceMall!=null)
 						interfaceMall.setState(flag);
 					//成功

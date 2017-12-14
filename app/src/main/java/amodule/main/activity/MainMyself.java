@@ -1,6 +1,7 @@
 package amodule.main.activity;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
@@ -33,6 +35,7 @@ import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.activity.mian.MainBaseActivity;
+import acore.override.helper.XHActivityManager;
 import acore.tools.FileManager;
 import acore.tools.IObserver;
 import acore.tools.LogManager;
@@ -44,7 +47,6 @@ import amodule.answer.activity.QAMsgListActivity;
 import amodule.dish.activity.OfflineDish;
 import amodule.dish.db.DataOperate;
 import amodule.main.Main;
-import amodule.main.view.HintMyselfDialog;
 import amodule.user.activity.BrowseHistory;
 import amodule.user.activity.FansAndFollwers;
 import amodule.user.activity.FriendHome;
@@ -102,7 +104,7 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
     private ImageView vipIcon, qaIcon;
 
     private boolean mYiYuanDialogShowing;
-
+    private boolean mNeedRefVipState;
     private boolean mIsOnResuming;
 
     @Override
@@ -134,6 +136,8 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
         if(MallPayActivity.pay_state){
             onListEventCommon("order");
         }
+        if (mNeedRefVipState)
+            getYiYuanBindState();
     }
 
     @Override
@@ -149,6 +153,8 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
     }
 
     private void getYiYuanBindState() {
+        if (mIsOnResuming)
+            mNeedRefVipState = false;
         LoginManager.initYiYuanBindState(this, () -> {
             Object shouldShowDialog = FileManager.loadShared(MainMyself.this, FileManager.xmlFile_appInfo, "shouldShowDialog");
             onBindStateDataReady(LoginManager.isTempVip(), "2".equals(shouldShowDialog));
@@ -282,19 +288,30 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
         if(!LoginManager.isLogin()){
             return;
         }
-//        int x = Integer.parseInt(DataOperate.buyBurden(this, "x"));
         Object olddishdata = FileManager.loadShared(this, "olddishdata", "olddishdata");
-        if(olddishdata!=null){
-            Log.i("wyl","数据：：：：：00000：：："+olddishdata);
-        }
-
         if (olddishdata!=null&&!TextUtils.isEmpty(String.valueOf(olddishdata))&&"2".equals(String.valueOf(olddishdata))) {
-            Intent intent = new Intent(this, HintMyselfDialog.class);
-            startActivity(intent);
+            showHintDialog();
             FileManager.saveShared(this, "olddishdata", "olddishdata", "1");
         }
-    }
 
+    }
+    private Dialog dialogHint;
+    private void showHintDialog(){
+        if(dialogHint==null) {
+            dialogHint = new Dialog(this, R.style.dialog_style);
+            dialogHint.setContentView(R.layout.a_myself_hint);
+            Window window = dialogHint.getWindow();
+            window.findViewById(R.id.a_hint_img).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MainMyself.this, MyFavorite.class);
+                    startActivity(intent);
+                    dialogHint.dismiss();
+                }
+            });
+        }
+        dialogHint.show();
+    }
     /**
      * 获取用户信息
      */
@@ -651,6 +668,8 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
         BitmapRequestBuilder<GlideUrl, Bitmap> bitmapRequest = LoadImage.with(this)
                 .load(value)
                 .setImageRound(ToolsDevice.dp2px(MainMyself.this, 500))
+                .setPlaceholderId(R.drawable.z_me_head)
+                .setErrorId(R.drawable.z_me_head)
                 .build();
         if(bitmapRequest != null)
             bitmapRequest.into(v);
@@ -685,6 +704,7 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
                     break;
                 case ObserverManager.NOTIFY_PAYFINISH:
                     if (data != null && data instanceof Boolean && (Boolean)data) {
+                        mNeedRefVipState = true;
                         getYiYuanBindState();
                     }
                     break;

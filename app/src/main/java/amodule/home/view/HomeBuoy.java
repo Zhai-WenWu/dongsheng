@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
@@ -12,7 +13,10 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.BitmapRequestBuilder;
+import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.xiangha.R;
 
 import java.util.HashMap;
@@ -22,6 +26,7 @@ import acore.logic.AppCommon;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
+import acore.tools.ToolsDevice;
 import aplug.basic.LoadImage;
 import third.ad.tools.AdConfigTools;
 import third.ad.tools.AdPlayIdConfig;
@@ -71,39 +76,25 @@ public class HomeBuoy {
             }
         }
         //储存数据
-        String countStr = FileManager.loadShared(mAct, FileManager.xmlFile_appInfo, AdPlayIdConfig.HOME_FLOAT).toString();
         final String path = FileManager.getDataDir() + AdPlayIdConfig.HOME_FLOAT;
         String originalData = FileManager.readFile(path).trim();
         String currentData = Tools.map2Json(buoyData);
         //如果不一样，重新存储数据
         if (!currentData.equals(originalData)) {
-            FileManager.saveFileToCompletePath(FileManager.getSDCacheDir() + AdPlayIdConfig.HOME_FLOAT, currentData, false);
-            FileManager.saveShared(mAct, FileManager.xmlFile_appInfo, AdPlayIdConfig.HOME_FLOAT, "0");
+            FileManager.saveFileToCompletePath(path, currentData, false);
         }
-        int count = TextUtils.isEmpty(countStr) ? 0 : Integer.parseInt(countStr);
-        int defaultMaxCount = 3;
-        final String showNumValue = bannerMap.get("showNum");
-        if (!TextUtils.isEmpty(showNumValue)
-                && !"null".equals(showNumValue)) {
-            defaultMaxCount = Integer.parseInt(showNumValue);
-        }
-        if (count < defaultMaxCount) {
-            //初始化浮标
-            initBuoy();
-            //初始化动画
-            initAnimation();
-            //初始化hanlder
-            initHandler();
-            //绑定点击
-            bindClick(bannerMap.get("url"));
-            //设置图片
-            setBuoyImage(StringManager.getFirstMap(bannerMap.get("imgs")).get("appImg"));
-            //显示
-            setFloatMenuData();
-            FileManager.saveShared(mAct, FileManager.xmlFile_appInfo, AdPlayIdConfig.HOME_FLOAT, String.valueOf(++count));
-        } else {
-            hide();
-        }
+        //初始化浮标
+        initBuoy();
+        //初始化动画
+        initAnimation();
+        //初始化hanlder
+        initHandler();
+        //绑定点击
+        bindClick(bannerMap.get("url"));
+        //设置图片
+        setBuoyImage(StringManager.getFirstMap(bannerMap.get("imgs")).get("rightFloatImg"));
+        //显示
+        setFloatMenuData();
     }
 
     public void setFloatMenuData() {
@@ -188,14 +179,14 @@ public class HomeBuoy {
      */
     private void setBuoyImage(String imgUrl) {
         if (imageButton == null) return;
+        if(TextUtils.isEmpty(imgUrl)){
+            imageButton.setVisibility(View.GONE);
+            return;
+        }
         imageButton.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        BitmapRequestBuilder<GlideUrl, Bitmap> bitmapRequest = LoadImage.with(mAct)
-                .load(imgUrl)
-                .setPlaceholderId(R.drawable.z_quan_float_activity)
-                .setErrorId(R.drawable.z_quan_float_activity)
-                .build();
-        if (bitmapRequest != null)
-            bitmapRequest.into(imageButton);
+        imageButton.setVisibility(View.VISIBLE);
+
+        Glide.with(mAct).load(imgUrl).into(imageButton);
     }
 
     public void executeOpenAnim() {

@@ -140,9 +140,10 @@ public class PlayVideo extends BaseAppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         //释放所有
-        if (videoPlayer != null)
+        if (videoPlayer != null){
             videoPlayer.setStandardVideoAllCallBack(null);
-        GSYVideoPlayer.releaseAllVideos();
+            videoPlayer.releaseAllVideos();
+        }
         if (orientationUtils != null)
             orientationUtils.releaseListener();
     }

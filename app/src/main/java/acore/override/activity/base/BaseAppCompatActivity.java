@@ -89,6 +89,10 @@ public class BaseAppCompatActivity extends AppCompatActivity {
      * @param contentXml  ：主内容xml
      */
     public void initActivity(String title, int level, int color, int barTitleXml, int contentXml) {
+        initActivity(title, level, color, barTitleXml, contentXml, R.color.common_bg);
+    }
+
+    public void initActivity(String title, int level, int color, int barTitleXml, int contentXml, int contentBgResId) {
         this.level = level;
         className = this.getComponentName().getClassName();
 
@@ -98,6 +102,7 @@ public class BaseAppCompatActivity extends AppCompatActivity {
             View view_all = LayoutInflater.from(this).inflate(R.layout.a_all, null);
             RelativeLayout all_title = (RelativeLayout) view_all.findViewById(R.id.all_title);
             RelativeLayout all_content = (RelativeLayout) view_all.findViewById(R.id.all_content);
+            all_content.setBackgroundResource(contentBgResId);
             all_content.addView(control.setCommonBottonView(className, this, contentXml));
             View view_title = LayoutInflater.from(this).inflate(barTitleXml, null);
 //			if(Tools.isShowTitle()&&showStateColor(className)) {
@@ -149,7 +154,6 @@ public class BaseAppCompatActivity extends AppCompatActivity {
         String colors = Tools.getColorStr(this, R.color.common_top_bg);
         Tools.setStatusBarColor(this, Color.parseColor(colors));
         setCommonStyle();
-
     }
 
     public View.OnClickListener getBackBtnAction() {

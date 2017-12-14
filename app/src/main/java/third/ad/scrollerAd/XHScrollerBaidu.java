@@ -3,7 +3,6 @@ package third.ad.scrollerAd;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
 
 import com.baidu.mobad.feeds.NativeResponse;
 

@@ -158,8 +158,11 @@ public class ArticleVideoFolderAdapter extends BaseAdapter implements View.OnCli
             if (videos != null && videos.size() > 0) {
                 size.setText(videos.size()+"张");
             }
+            String path = FileToolsCammer.getImgPath(videoPath);
+            if (TextUtils.isEmpty(path))
+                return;
             Glide.with(itemView.getContext())
-                    .load(new File(FileToolsCammer.getImgPath(videoPath)))
+                    .load(new File(path))
                     .skipMemoryCache(true)
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .error(R.drawable.default_error)

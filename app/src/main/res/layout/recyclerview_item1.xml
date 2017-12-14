@@ -30,7 +30,8 @@
         android:paddingBottom="@dimen/dp_10"
         android:orientation="vertical"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/bg_home_horizontal_gradation">
+        android:background="@drawable/bg_home_horizontal_gradation"
+        android:gravity="bottom">
 
         <TextView
             android:id="@+id/textview1"
@@ -40,8 +41,7 @@
             android:ellipsize="end"
             android:textColor="@color/c_white_text"
             android:textStyle="bold"
-            android:textSize="@dimen/sp_16"
-            android:layout_alignParentBottom="true"/>
+            android:textSize="@dimen/sp_16"/>
 
         <TextView
             android:id="@+id/textview2"
@@ -51,17 +51,19 @@
             android:ellipsize="end"
             android:lines="1"
             android:textColor="@color/c_white_text"
-            android:textSize="@dimen/sp_11" />
+            android:textSize="@dimen/sp_11"
+            android:maxEms="8"/>
 
         <TextView
             android:id="@+id/textview3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_3"
+            android:maxEms="10"
             android:lines="1"
             android:ellipsize="end"
             android:textColor="@color/c_white_text"
-            android:textSize="@dimen/sp_9"/>
+            android:textSize="@dimen/sp_11"/>
 
     </LinearLayout>
 

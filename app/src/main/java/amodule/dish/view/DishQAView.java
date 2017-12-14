@@ -6,11 +6,11 @@ import android.graphics.drawable.Drawable;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ImageSpan;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -23,15 +23,16 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import acore.logic.AppCommon;
+import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.helper.XHActivityManager;
 import acore.override.view.ItemBaseView;
 import acore.tools.StringManager;
 import acore.tools.Tools;
-import amodule.dish.activity.DetailDishNew;
-import amodule.main.Main;
+import amodule.comment.activity.CommentActivity;
+import amodule.dish.activity.DetailDish;
+import amodule.user.activity.login.LoginByAccout;
 import aplug.imageselector.ImgWallActivity;
-import xh.basic.tool.UtilString;
 
 /**
  * 菜谱详情页问答
@@ -81,7 +82,7 @@ public class DishQAView extends ItemBaseView{
     private View.OnClickListener onClickListener= new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), DetailDishNew.tongjiId_detail, "问答", "点击作者头像");
+            XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), DetailDish.tongjiId_detail, "问答", "点击作者头像");
             AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), mapuser.get("url"),true);
         }
     };
@@ -93,8 +94,16 @@ public class DishQAView extends ItemBaseView{
     public void setData(ArrayList<Map<String,String>> list){
         maptemp= list.get(0);
         text_answer.setText(maptemp.get("answerNum"));
-        text_degree.setText(maptemp.get("satisfyRate")+"%");
+        if(maptemp.containsKey("satisfyRateIsShow")&&"2".equals(maptemp.get("satisfyRateIsShow"))) {
+            text_degree.setText(maptemp.get("satisfyRate"));
+            findViewById(R.id.degree_linear).setVisibility(View.VISIBLE);
+        }else findViewById(R.id.degree_linear).setVisibility(View.GONE);
         text_time.setText(maptemp.get("avgRespondTime"));
+        boolean isShowCount=false;
+        if(maptemp.containsKey("count")&& !TextUtils.isEmpty(maptemp.get("count"))&&Integer.parseInt(maptemp.get("count"))>0){
+            this.findViewById(R.id.qa_more_linaer).setVisibility(View.VISIBLE);
+            isShowCount = true;
+        }else  this.findViewById(R.id.qa_more_linaer).setVisibility(View.GONE);
         ArrayList<Map<String,String>> listQA = StringManager.getListMapByJson(maptemp.get("list"));
         if(listQA!=null&&listQA.size()>0){
             for(int i=0;i<listQA.size();i++){
@@ -105,13 +114,19 @@ public class DishQAView extends ItemBaseView{
                 TextView content_two= (TextView) qaItem.findViewById(R.id.content_two);
                 content_one.setText(getClickableSpan(mapQA.get("text"),mapQA));
                 content_one.setMovementMethod(LinkMovementMethod.getInstance());//必须设置否则无效
+                content_two.setText(mapQA.get("useRate")+"%觉的有用");
+                qaItem.findViewById(R.id.qa_line).setVisibility(i==listQA.size()-1&&!isShowCount?View.GONE:View.VISIBLE);
                 if(mapQA.containsKey("isAttend")&&"1".equals(mapQA.get("isAttend"))) {
                     qaItem.findViewById(R.id.money_linear).setVisibility(View.VISIBLE);
                     ((TextView)qaItem.findViewById(R.id.money_qa)).setText(mapQA.get("peekMoney")+"元偷看");
                     qaItem.findViewById(R.id.money_linear).setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), DetailDishNew.tongjiId_detail, "问答", "点击第"+index+"条问答");
+                            if(!LoginManager.isLogin()){
+                                context.startActivity(new Intent(context, LoginByAccout.class));
+                                return;
+                            }
+                            XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), DetailDish.tongjiId_detail, "问答", "点击第"+index+"条问答");
                             AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(),mapQA.get("link"),false);
                         }
                     });
@@ -119,11 +134,15 @@ public class DishQAView extends ItemBaseView{
                 content_one.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), DetailDishNew.tongjiId_detail, "问答", "点击第"+index+"条问答");
+                        if(!LoginManager.isLogin()){
+                            context.startActivity(new Intent(context, LoginByAccout.class));
+                            return;
+                        }
+                        XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), DetailDish.tongjiId_detail, "问答", "点击第"+index+"条问答");
                         AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(),mapQA.get("link"),false);
                     }
                 });
-                content_two.setText(listQA.get(0).get("useRate")+"%觉的有用");
+
                 qa_content_linear.addView(qaItem);
             }
         }
@@ -131,7 +150,7 @@ public class DishQAView extends ItemBaseView{
             @Override
             public void onClick(View v) {
                 if(maptemp!= null&&maptemp.containsKey("moreQaLink")){
-                    XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), DetailDishNew.tongjiId_detail, "问答", "点击【更多问答】");
+                    XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), DetailDish.tongjiId_detail, "问答", "点击【更多问答】");
                     AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(),maptemp.get("moreQaLink"),false);
                 }
             }

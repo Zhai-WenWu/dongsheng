@@ -12,7 +12,6 @@
         android:textSize="@dimen/sp_20"
         android:visibility="invisible" />
 
-
     <amodule.search.view.GlobalSearchView
         android:id="@+id/bar_search_global"
         android:layout_width="match_parent"

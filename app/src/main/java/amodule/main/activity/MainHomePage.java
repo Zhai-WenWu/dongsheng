@@ -1,6 +1,8 @@
 package amodule.main.activity;
 
+import android.content.IntentFilter;
 import android.graphics.PixelFormat;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -11,6 +13,7 @@ import com.xiangha.R;
 
 import java.util.Map;
 
+import acore.broadcast.ConnectionChangeReceiver;
 import acore.logic.AppCommon;
 import acore.logic.SpecialWebControl;
 import acore.logic.XHClick;
@@ -56,10 +59,12 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
 
     protected long startTime = -1;//开始的时间戳
 
+    private ConnectionChangeReceiver mReceiver;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        mViewContrloer = new HomeViewControler(this);
         super.onCreate(savedInstanceState);
+        mViewContrloer = new HomeViewControler(this);
         setContentView(R.layout.a_home_page);
         getWindow().setFormat(PixelFormat.TRANSLUCENT);
         Main.allMain.allTab.put(KEY, this);//这个Key值不变
@@ -71,6 +76,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
         initPostTime();
         //注册通知
         ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_VIPSTATE_CHANGED);
+        registerConnectionReceiver();
     }
 
     //初始化
@@ -89,13 +95,45 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
                     adControlParent.getNewAdData(listDatas, isBack) : listDatas;
         });
         mDataControler.setNotifyDataSetChangedCallback(() -> {
-            if (mHomeAdapter != null) mHomeAdapter.notifyDataSetChanged();
+            if (mHomeAdapter != null
+                    && mViewContrloer.getRvListView() != null
+                    &&! mViewContrloer.getRvListView().isComputingLayout())
+                mHomeAdapter.notifyDataSetChanged();
         });
         mDataControler.setEntryptDataCallback(this::EntryptData);
         //初始化adapter
         mHomeAdapter = new HomeAdapter(this, mDataControler.getData(), mDataControler.getAdControl());
         mHomeAdapter.setHomeModuleBean(mDataControler.getHomeModuleBean());
         mHomeAdapter.setViewOnClickCallBack(isOnClick -> refresh());
+
+
+    }
+
+    private void registerConnectionReceiver(){
+        mReceiver = new ConnectionChangeReceiver(new ConnectionChangeReceiver.ConnectionChangeListener() {
+            @Override
+            public void disconnect() {
+                if(null != mViewContrloer){
+                    mViewContrloer.showNetworkTip();
+                }
+            }
+
+            @Override
+            public void wifi() {
+                if(null != mViewContrloer){
+                    mViewContrloer.hindNetworkTip();
+                }
+            }
+
+            @Override
+            public void mobile() {
+                if(null != mViewContrloer){
+                    mViewContrloer.hindNetworkTip();
+                }
+            }
+        });
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(mReceiver, filter);
     }
 
     private void initPostTime() {
@@ -127,6 +165,9 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
             );
             loadManager.getSingleLoadMore(mViewContrloer.getRvListView()).setVisibility(View.GONE);
             mViewContrloer.addOnScrollListener();
+            if(!ToolsDevice.isNetworkAvailable(this)){
+                loadManager.hideProgressBar();
+            }
         }
         loadCacheData();
         mViewContrloer.setTipMessage();
@@ -135,7 +176,6 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
     @Override
     protected void onStart() {
         super.onStart();
-        startLoadTime = System.currentTimeMillis();
         loadRemoteData();
     }
 
@@ -144,6 +184,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
     }
 
     private void loadRemoteData(){
+        startLoadTime = System.currentTimeMillis();
         mDataControler.loadServiceHomeData(getHeaderCallback(false));
         mDataControler.loadServiceTopData(new InternetCallback(this) {
             @Override
@@ -177,9 +218,6 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
                         mDataControler.saveCacheHomeData((String) o);
                     }
                 }
-                if(!LoadOver){
-                    EntryptData(true);
-                }
                 isRefreshingHeader = false;
                 mViewContrloer.refreshComplete();
             }
@@ -192,6 +230,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
      * @param refresh，是否刷新
      */
     private void EntryptData(final boolean refresh) {
+        Log.i("tzy_data","EntryptData::"+refresh);
         //已经load
         LoadOver = true;
         if (refresh && mDataControler != null) {
@@ -217,6 +256,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
         mDataControler.loadServiceFeedData(refresh, new HomeDataControler.OnLoadDataCallback() {
             @Override
             public void onPrepare() {
+                loadManager.changeMoreBtn(mViewContrloer.getRvListView(), ReqInternet.REQ_OK_STRING, -1, -1, LoadOver ? 2 : 1, !LoadOver);
                 if (refresh) {
                     XHClick.mapStat(MainHomePage.this, "a_recommend", "刷新效果", "下拉刷新");
                     loadManager.hideProgressBar();
@@ -226,7 +266,6 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
                 if(null != loadmore){
                     loadmore.setVisibility(View.VISIBLE);
                 }
-                loadManager.changeMoreBtn(mViewContrloer.getRvListView(), ReqInternet.REQ_OK_STRING, -1, -1, LoadOver ? 2 : 1, refresh);
             }
 
             @Override
@@ -239,12 +278,13 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
                 if (ToolsDevice.isNetworkAvailable(MainHomePage.this)) {
                     loadManager.changeMoreBtn(mViewContrloer.getRvListView(), flag, LoadManager.FOOTTIME_PAGE,
                             refresh ? mDataControler.getData().size() : loadCount, 0, refresh);
+                }else {
+
                 }
             }
 
             @Override
             public void onSuccess() {
-
             }
 
             @Override
@@ -284,6 +324,9 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
     protected void onDestroy() {
         super.onDestroy();
         ObserverManager.getInstence().unRegisterObserver(this);
+        if(mReceiver != null){
+            unregisterReceiver(mReceiver);
+        }
     }
 
     private boolean mNeedRefCurrFm;
@@ -303,6 +346,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
     boolean isRefreshingHeader = false;
     boolean isRefreshingFeed = false;
     public void refresh() {
+        Log.i("tzy_data","refresh()");
         mViewContrloer.autoRefresh();
     }
 

@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -45,7 +46,6 @@ public class DishStepView extends ItemBaseView {
     private ImageView loadProgress;
     private ImageView itemImg1,itemGif,itemGifHint;
     private StepViewCallBack callback;
-
     private boolean isHasVideo = false;
     private int position;
 
@@ -71,17 +71,33 @@ public class DishStepView extends ItemBaseView {
         itemGifHint = (ImageView) findViewById(R.id.dish_step_gif_hint);
     }
 
+    /**
+     * 隐藏边距
+     */
+    public void isDistance(boolean isShow){
+        findViewById(R.id.step_distance).setVisibility(View.GONE);
+        itemText1.setVisibility(isShow?View.VISIBLE:View.GONE);
+    }
+    public void hideStepDistance(boolean isShow){
+        findViewById(R.id.step_distance).setVisibility(isShow?View.GONE:View.VISIBLE);
+    }
     public void setData(Map<String, String> maps, StepViewCallBack stepViewCallBack, int position) {
         this.map = maps;
         imgWidth=Tools.getPhoneWidth()-Tools.getDimen(context,R.dimen.dp_40);
         this.position= position;
         this.callback = stepViewCallBack;
-        String text ="<b><tt>"+map.get("num")+".</tt></b>";
-        int size_num= text.length();
-        text += map.get("info").trim();
-        text = text.replace("\n","").replace("\r","");
-        itemText1.setText(Html.fromHtml(text));
-
+        if(!TextUtils.isEmpty(map.get("info").trim())) {
+            String text = "<b><tt>" + map.get("num") + ".</tt></b>";
+            int size_num = text.length();
+            text += map.get("info").trim();
+            text = text.replace("\n", "").replace("\r", "");
+            itemText1.setText(Html.fromHtml(text));
+            itemText1.setVisibility(View.VISIBLE);
+        }else if(!TextUtils.isEmpty(map.get("num").trim())){
+            String text = "<b><tt>" + map.get("num") + "</tt></b>";
+            itemText1.setText(Html.fromHtml(text));
+            itemText1.setVisibility(View.VISIBLE);
+        }else itemText1.setVisibility(View.GONE);
         this.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,7 +125,7 @@ public class DishStepView extends ItemBaseView {
                     findViewById(R.id.img_view).setVisibility(View.GONE);
                     isHasVideo = true;
                     loadImg(imgUrl);
-
+                    handlerImgHeight(imgUrl);
                     itemImg1.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -130,10 +146,13 @@ public class DishStepView extends ItemBaseView {
              if( map.containsKey("img")&&!TextUtils.isEmpty(map.get("img"))){
                  findViewById(R.id.view_linear).setVisibility(View.VISIBLE);
                  itemImg1.setVisibility(View.VISIBLE);
+                 String img = map.get("img");
+                 Log.i("xianghaTag","img:存在::"+img);
+                 handlerImgHeight(img);
                  setViewImage(itemImg1, map.get("img"));
-                 if (map.containsKey("height") && Integer.parseInt(map.get("height")) > 0) {
-                     setImageWH(itemImg1, Integer.parseInt(map.get("height")));
-                 }
+//                 if (map.containsKey("height") && Integer.parseInt(map.get("height")) > 0) {
+//                     setImageWH(itemImg1, Integer.parseInt(map.get("height")));
+//                 }
              }else{
                  findViewById(R.id.view_linear).setVisibility(View.GONE);
                  itemImg1.setVisibility(View.GONE);
@@ -141,10 +160,44 @@ public class DishStepView extends ItemBaseView {
 
         }
     }
+    private void handlerImgHeight(String img ){
+        if(img.contains("?")&&!map.containsKey("height")){
+            String temp = img.substring(img.indexOf("?")+1,img.length());
+            if(temp.contains("_")){
+                String img_waith= temp.substring(0,temp.indexOf("_"));
+                String img_height= temp.substring(temp.indexOf("_")+1,temp.length());
+                int viewWaith=Tools.getPhoneWidth()-Tools.getDimen(context,R.dimen.dp_40);
+                if(!TextUtils.isEmpty(img_waith)&&!TextUtils.isEmpty(img_height)&&stringIsNum(img_height)&&stringIsNum(img_waith)&&viewWaith>0){
+                    double intTemp=Double.parseDouble(img_height)/Double.parseDouble(img_waith);
+                    int viewHeight= (int) (intTemp*viewWaith);
+                    map.put("height",String.valueOf(viewHeight));
+                    RelativeLayout.LayoutParams layoutParams= new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,viewHeight);
+                    itemImg1.setLayoutParams(layoutParams);
+                }
+            }
+        }else if(map.containsKey("height")&&!TextUtils.isEmpty(map.get("height"))){
+            Log.i("xianghaTag","height存在：：：");
+            RelativeLayout.LayoutParams layoutParams= new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,Integer.parseInt(map.get("height")));
+            itemImg1.setLayoutParams(layoutParams);
+        }
+    }
 
+    /**
+     * 字符串是否数字
+     * @param str
+     * @return
+     */
+    private boolean  stringIsNum(String str){
+        if(TextUtils.isEmpty(str))return false;
+        return str.matches("[0-9]+");
+    }
+    /**
+     * gif不进行显示
+     */
     public void stopGif(){
         itemGifHint.setVisibility(View.VISIBLE);
         itemImg1.setVisibility(View.VISIBLE);
+        loadProgress.setVisibility(GONE);
     }
 
     private void loadImg(String imgUrl){
@@ -180,6 +233,7 @@ public class DishStepView extends ItemBaseView {
             loadProgress.setVisibility(VISIBLE);
             itemImg1.setVisibility(VISIBLE);
             itemGifHint.setVisibility(View.GONE);
+
             GifRequestBuilder requestBuilder =  Glide.with(getContext())
                     .load(gifUrl)
                     .asGif()
@@ -209,6 +263,7 @@ public class DishStepView extends ItemBaseView {
                     itemGif.setVisibility(VISIBLE);
                 }
             }
+            if(callback!=null)callback.onGifPlayClick();
         }
     }
 
@@ -227,30 +282,17 @@ public class DishStepView extends ItemBaseView {
         imgView.setLayoutParams(layoutParams);
     }
 
-
-
-//    @Override
-//    public SubBitmapTarget getTarget(final ImageView v, final String url) {
-//        return new SubBitmapTarget() {
-//            @Override
-//            public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> arg1) {
-//                ImageView img = null;
-//                if (v.getTag(TAG_ID).equals(url))
-//                    img = v;
-//                if (img != null && bitmap != null) {
-//                    // 图片圆角和宽高适应
-//                    int imgHei = bitmap.getHeight();
-//                    v.setImageBitmap(bitmap);
-//                    setImageWH(v,imgHei);
-//                    if(callback!=null)callback.getHeight(String.valueOf(imgHei));
-//                }
-//            }
-//        };
-//    }
-
-
     public interface StepViewCallBack{
         public void getHeight(String height);
         public void onClick();
+        public void onGifPlayClick();
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        if(this!=null){
+            context=null;
+        }
     }
 }

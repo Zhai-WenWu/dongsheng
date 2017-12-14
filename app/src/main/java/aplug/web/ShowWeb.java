@@ -235,7 +235,8 @@ public class  ShowWeb extends WebActivity implements IObserver {
 	@Override
 	protected void onRestart() {
 		super.onRestart();
-		loadManager.hideProgressBar();
+		if(loadManager != null)
+			loadManager.hideProgressBar();
 	}
 
 	@Override
@@ -264,6 +265,7 @@ public class  ShowWeb extends WebActivity implements IObserver {
     }
 
     protected void setTitle() {
+		if(TextUtils.isEmpty(url))return;
         //积分商城
         if (url.indexOf(StringManager.api_scoreStore) == 0) {
             //返回,返回上一界面
@@ -365,7 +367,15 @@ public class  ShowWeb extends WebActivity implements IObserver {
         return false;
     }
 
-    @Override
+	@Override
+	protected void onPause() {
+		super.onPause();
+		if(loadManager != null){
+			loadManager.hideProgressBar();
+		}
+	}
+
+	@Override
     protected void onDestroy() {
         long nowTime = System.currentTimeMillis();
         if (startTime > 0 && (nowTime - startTime) > 0 && !TextUtils.isEmpty(data_type) && !TextUtils.isEmpty(module_type)) {

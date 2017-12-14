@@ -70,14 +70,6 @@ public class PushPraserService extends Service{
 		ArrayList<Map<String, String>> msgt = StringManager.getListMapByJson(extrajson);
 		if (msgt.size() > 0) {
 			Map<String, String> msgMap = msgt.get(0);
-			//用于解决：服务端会两个推送都推，根据pushCode存储本地情况，判断是否已经接受了推送
-			if (FileManager.ifFileModifyByCompletePath(FileManager.getDataDir() + msgMap.get("pushCode"), -1) != null) {
-//				XHClick.onEvent(context, PUSH_ID, channel, "2");
-				return;
-			} else {
-//				XHClick.onEvent(context, PUSH_ID, channel, "1");
-				FileManager.saveFileToCompletePath(FileManager.getDataDir() + msgMap.get("pushCode"), "", false);
-			}
 			//创建NotificationData
 			NotificationData data = new NotificationData();
 			data.setContent(msgAlert);
@@ -139,15 +131,22 @@ public class PushPraserService extends Service{
 									//获取当前activity类名判断是否为com.xiangha.Feekback
 									if (Feedback.handler != null && info.topActivity.getClassName().equals("com.xiangha.Feekback"))
 										Feedback.notifySendMsg(Feedback.MSG_FROM_NOTIFY);
-								} else {
-									AppCommon.feekbackMessage++;
-									QiYvHelper.getInstance().getUnreadCount(new QiYvHelper.NumberCallback() {
-										@Override
-										public void onNumberReady(int count) {
-											Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + count);
-										}
-									});
-									new NotificationManager().notificationActivity(context, data);
+									else {
+										AppCommon.feekbackMessage++;
+										QiYvHelper.getInstance().getUnreadCount(new QiYvHelper.NumberCallback() {
+											@Override
+											public void onNumberReady(int count) {
+												if (count >= 0) {
+													AppCommon.qiyvMessage = count;
+													if (count > 0)
+														Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
+												}
+											}
+										});
+										//防止七鱼回调不回来
+										Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
+										new NotificationManager().notificationActivity(context, data);
+									}
 								}
 							} else {
 								new NotificationManager().notificationActivity(context, data);
@@ -158,14 +157,44 @@ public class PushPraserService extends Service{
 							if (context != null && ToolsDevice.isAppInPhone(context, context.getPackageName()) < 2) {
 								data.setStartAvtiviyWhenClick(Main.class);
 								new NotificationManager().notificationActivity(context, data);
+							} else if (data.url.indexOf("dialog.app") > -1) { //判断是否是开启反馈的url
+								if (context != null) {
+									ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+									ActivityManager.RunningTaskInfo info = manager.getRunningTasks(1).get(0);
+									//获取当前activity类名判断是否为com.xiangha.Feekback
+									if (Feedback.handler != null && info.topActivity.getClassName().equals("com.xiangha.Feekback"))
+										Feedback.notifySendMsg(Feedback.MSG_FROM_NOTIFY);
+									else {
+										AppCommon.feekbackMessage++;
+										QiYvHelper.getInstance().getUnreadCount(new QiYvHelper.NumberCallback() {
+											@Override
+											public void onNumberReady(int count) {
+												if (count >= 0) {
+													AppCommon.qiyvMessage = count;
+													if (count > 0)
+														Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
+												}
+											}
+										});
+										//防止七鱼回调不回来
+										Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
+										new NotificationManager().notificationActivity(context, data);
+									}
+								}
 							} else {
-								AppCommon.quanMessage++;
+								AppCommon.feekbackMessage++;
 								QiYvHelper.getInstance().getUnreadCount(new QiYvHelper.NumberCallback() {
 									@Override
 									public void onNumberReady(int count) {
-										Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + count);
+										if (count >= 0) {
+											AppCommon.qiyvMessage = count;
+											if (count > 0)
+												Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
+										}
 									}
 								});
+								//防止七鱼回调不回来
+								Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
 								new NotificationManager().notificationActivity(context, data);
 							}
 							break;
@@ -175,9 +204,15 @@ public class PushPraserService extends Service{
 							QiYvHelper.getInstance().getUnreadCount(new QiYvHelper.NumberCallback() {
 								@Override
 								public void onNumberReady(int count) {
-									Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + count);
+									if (count >= 0) {
+										AppCommon.qiyvMessage = count;
+										if (count > 0)
+											Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
+									}
 								}
 							});
+							//防止七鱼回调不回来
+							Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
 							if (context != null && ToolsDevice.isAppInPhone(context, context.getPackageName()) < 2) {
 								if (data.url.indexOf("subjectInfo.app?") > -1) {
 									// 叠加消息数量

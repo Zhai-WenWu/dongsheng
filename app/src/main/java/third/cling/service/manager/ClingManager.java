@@ -144,7 +144,9 @@ public class ClingManager implements IClingManager {
 
     @Override
     public void destroy() {
-        mUpnpService.onDestroy();
-        mDeviceManager.destroy();
+        if (mUpnpService != null)
+            mUpnpService.onDestroy();
+        if (mDeviceManager != null)
+            mDeviceManager.destroy();
     }
 }

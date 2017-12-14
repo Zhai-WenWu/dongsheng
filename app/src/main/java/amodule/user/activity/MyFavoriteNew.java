@@ -32,6 +32,8 @@ import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
 
+import static amodule.main.Main.TAB_HOME;
+
 /**
  * 我的收藏页面改版
  */
@@ -183,7 +185,7 @@ public class MyFavoriteNew extends BaseActivity implements View.OnClickListener 
                 if (Main.allMain != null) {
                     Main.allMain.setCurrentTabByClass(MainHome.class);
                     if (Main.allMain.allTab != null && Main.allMain.allTab.get(MainHomePage.KEY) != null) {
-                        ((MainHome) Main.allMain.allTab.get(MainHomePage.KEY)).setCurrentTab(0);
+                        ((MainHome) Main.allMain.allTab.get(MainHomePage.KEY)).setCurrentTab(TAB_HOME);
                     }
                 }
                 Main.colse_level = 1;

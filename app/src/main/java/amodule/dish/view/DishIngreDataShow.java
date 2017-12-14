@@ -1,18 +1,11 @@
 package amodule.dish.view;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.xiangha.R;
@@ -21,26 +14,19 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import acore.logic.AppCommon;
-import acore.logic.SetDataView;
 import acore.logic.XHClick;
 import acore.override.adapter.AdapterSimple;
 import acore.override.helper.XHActivityManager;
 import acore.override.view.ItemBaseView;
-import acore.tools.Tools;
-import amodule.dish.activity.DetailDishNew;
-import amodule.health.activity.DetailIngre;
-import third.mall.tool.ToolView;
+import amodule.dish.activity.DetailDish;
 import third.mall.widget.ListViewForScrollView;
-import xh.basic.tool.UtilString;
-
-import static amodule.dish.activity.DetailDish.tongjiId;
 
 /**
  * 主辅料
  */
 public class DishIngreDataShow extends ItemBaseView implements View.OnClickListener {
     private LinearLayout recommendAd_linear;
-    private ArrayList<Map<String, String>> listAll;
+    private ArrayList<Map<String, String>> listAll= new ArrayList<>();
     private ArrayList<Map<String, String>> lists = new ArrayList<>();
     private ArrayList<Map<String, String>> listNoAll = new ArrayList<>();
     private AdapterSimple adapter;
@@ -75,8 +61,9 @@ public class DishIngreDataShow extends ItemBaseView implements View.OnClickListe
      * 设置数据
      */
     public void setData(final ArrayList<Map<String, String>> listmap) {
+        listAll.clear();lists.clear();listNoAll.clear();
         if (listmap == null || listmap.size() <= 0) return;
-        this.listAll = listmap;
+        this.listAll.addAll(listmap);
         for (Map<String, String> map : listAll) {
             map.put("goIngre", map.get("url").length() > 0 ? "ignore" : "hide");
         }
@@ -102,7 +89,7 @@ public class DishIngreDataShow extends ItemBaseView implements View.OnClickListe
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Map<String, String> ingre = lists.get(position);
                     if (ingre.get("url").length() > 0) {
-                        XHClick.mapStat(context, DetailDishNew.tongjiId_detail, "用料", "食材信息按钮点击量");
+                        XHClick.mapStat(context, DetailDish.tongjiId_detail, "用料", "食材信息按钮点击量");
                         AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), ingre.get("url"), false);
                     }
                 }
@@ -126,14 +113,14 @@ public class DishIngreDataShow extends ItemBaseView implements View.OnClickListe
             ingre_all_tv.setText("收起");
             ingre_all_img.setBackgroundResource(R.drawable.dish_ingre_pack);
             adapter.notifyDataSetChanged();
-            XHClick.mapStat(context, DetailDishNew.tongjiId_detail, "用料", "折叠用料点击量");
+            XHClick.mapStat(context, DetailDish.tongjiId_detail, "用料", "折叠用料点击量");
         }else if("2".equals(isSpread)){
             lists.addAll(listNoAll);
             isSpread="1";
             ingre_all_tv.setText("展开全部");
             ingre_all_img.setBackgroundResource(R.drawable.dish_ingre_show);
             adapter.notifyDataSetChanged();
-            XHClick.mapStat(context, DetailDishNew.tongjiId_detail, "用料", "展开用料点击量");
+            XHClick.mapStat(context, DetailDish.tongjiId_detail, "用料", "展开用料点击量");
         }
     }
 }

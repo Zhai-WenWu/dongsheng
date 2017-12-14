@@ -19,7 +19,7 @@ public class StringManager extends UtilString {
     public static boolean httpState=false;//false为https，true为http；
     //固定URL基础配置
     public final static String defaultDomain = ".xiangha.com";
-    public static String defaultProtocol = "http://";
+    public static String defaultProtocol = "https://";
     public final static String apiTitle = "api";
     public final static String appWebTitle = "appweb";
     public final static String wwwTitle = "www";
@@ -255,6 +255,7 @@ public class StringManager extends UtilString {
     public final static String api_askButtonStatus = apiUrl + "main7/dish/askButtonStatus";
     public final static String api_authorInfo = apiUrl + "main7/dish/authorInfo";
     public final static String api_basicInfo = apiUrl + "main7/dish/basicInfo";
+    public final static String api_getVideoList = apiUrl + "main7/school/getVideoList";
 
     public final static String api_getConf = apiUrl + urlSection.get("other6") + "getConf";
     public final static String api_subjectOverHead = apiUrl + urlSection.get("user6") + "subjectOverHeadLast";//用户美食贴置顶
@@ -360,19 +361,17 @@ public class StringManager extends UtilString {
     public final static String API_SET_FAVORITE_STATUS = apiUrl + "main8/favorites/setFavorites";//设置收藏状态
 
     //菜谱详情页面
-    public final static String API_GETDISHBASICINFOBYCODE = apiUrl + "main7/Dish/getDishBasicInfoByCode";//菜谱基本信息
-    public final static String API_GETDISHBURDENBYCODE = apiUrl + "main7/Dish/getDishBurdenByCode";//用料信息
-    public final static String API_GETBELOWBURDENBANNER = apiUrl + "main7/Dish/getBelowBurdenBanner";//用料下方banner
-    public final static String API_getDishMakeByCode = apiUrl + "main7/Dish/getDishMakeByCode";//做法
-    public final static String API_GETUSERINFOBYCODE = apiUrl + "main7/Dish/getUserInfoByCode";//用户信息
+    public final static String API_GETDISHBURDENBYCODE = apiUrl + "main7/dish/getDishBurdenByCode";//用料信息
+    public final static String API_GETBELOWBURDENBANNER = apiUrl + "main7/dish/getBelowBurdenBanner";//用料下方banner
 
-    public final static String API_MAIN8_TOPINFP = apiUrl  + "main8/Dish/topInfo";//菜谱详情页顶部
-    public final static String API_MAIN8_DISHMAKE = apiUrl  + "main8/Dish/getDishMakeByCode";//菜谱详情页做法
-    public final static String API_MAIN8_QAINFO = apiUrl + "main8/Dish/getQaInfo";//菜谱详情页做法
-    public final static String API_MAIN8_TIEINFO = apiUrl + "main8/Dish/tieInfo";//菜谱详情页做法
-    public final static String API_MAIN8_RELATIONBYCODE = apiUrl + "main8/Dish/getDishRelationByCode";//菜谱详情页公共
-    public final static String API_MAIN8_ANTIC = apiUrl + "main8/Dish/getDishAntic";//菜谱详情页小技巧
+    public final static String API_MAIN8_TOPINFP = apiUrl  + "main8/dish/topInfo";//菜谱详情页顶部
+    public final static String API_MAIN8_DISHMAKE = apiUrl  + "main8/dish/getDishMakeByCode";//菜谱详情页做法
+    public final static String API_MAIN8_QAINFO = apiUrl + "main8/dish/getQaInfo";//菜谱详情页做法
+    public final static String API_MAIN8_TIEINFO = apiUrl + "main8/dish/tieInfo";//菜谱详情页做法
+    public final static String API_MAIN8_RELATIONBYCODE = apiUrl + "main8/dish/getDishRelationByCode";//菜谱详情页公共
+    public final static String API_MAIN8_ANTIC = apiUrl + "main8/dish/getDishAntic";//菜谱详情页小技巧
     public final static String API_HOMEPAGE_6_0 = apiUrl + "main8/recommend/recommend";//首页
+    public final static String API_GETDISHTYPE = apiUrl + "main8/dish/getDishType";//首页
 
     //替换url
     public final static String replaceUrl(String url) {

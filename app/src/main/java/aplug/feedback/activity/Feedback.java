@@ -28,6 +28,7 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.DownRefreshList;
+import amodule.main.Main;
 import amodule.user.activity.MyMessage;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
@@ -121,6 +122,7 @@ public class Feedback extends BaseActivity implements OnClickListener {
 
     private void init() {
         AppCommon.feekbackMessage = 0;
+        Main.setNewMsgNum(2, AppCommon.qiyvMessage + AppCommon.myQAMessage + AppCommon.quanMessage);
         MyMessage.notifiMessage(MyMessage.MSG_FEEKBACK_ONREFURESH, 0, null);
         feebback_reply_content = (EditText) findViewById(R.id.feebback_reply_content);
         EditText keyboradEdit = (EditText) findViewById(R.id.feekback_keyboard_view);

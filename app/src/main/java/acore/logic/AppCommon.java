@@ -75,6 +75,7 @@ import static xh.basic.tool.UtilString.getListMapByJson;
 //
 
 public class AppCommon {
+    public static int qiyvMessage = 0;//七鱼新消息条数
     public static int quanMessage = 0; // 美食圈新消息条数
     public static int feekbackMessage = 0; // 系统新消息条数
     public static int myQAMessage = 0;//我的问答新消息条数
@@ -111,9 +112,14 @@ public class AppCommon {
                             QiYvHelper.getInstance().getUnreadCount(new QiYvHelper.NumberCallback() {
                                 @Override
                                 public void onNumberReady(int count) {
-                                    Main.setNewMsgNum(2, quanMessage + feekbackMessage + myQAMessage + count);
+                                    if (count >= 0) {
+                                        qiyvMessage = count;
+                                        if (count > 0)
+                                            Main.setNewMsgNum(2, quanMessage + feekbackMessage + myQAMessage + qiyvMessage);
+                                    }
                                 }
                             });
+                            Main.setNewMsgNum(2, quanMessage + feekbackMessage + myQAMessage + qiyvMessage);
                             // tok值
                             long tok = Integer.parseInt(alertArr[0]);
                             int c = (new Random()).nextInt(9) + 1;
@@ -395,7 +401,6 @@ public class AppCommon {
             });
         }
         Intent intent = null;
-        LogManager.print("d", "parseURL:" + url);
         //特殊处理体质
         if (url.contains("tizhitest.app")) {
             String result = isHealthTest();
@@ -422,6 +427,7 @@ public class AppCommon {
         try {
             String[] urls = newUrl.split("\\?");
             if (urls.length > 0) {
+//                String urlTemp="amodule.dish.activity.DetailDish".equals(urls[0])?"amodule.dish.activity.DishTestActivity":urls[0];
                 final Class<?> c = Class.forName(urls[0]);
                 if (urls[0].contains("amodule.main.activity.") || urls[0].contains("third.mall.MainMall")) {
                     Main.colse_level = 2;

@@ -8,6 +8,7 @@ import org.fourthline.cling.model.meta.Device;
 
 import third.cling.entity.IDevice;
 import third.cling.service.callback.AVTransportSubscriptionCallback;
+import third.cling.service.callback.ActionCallback;
 import third.cling.service.callback.RenderingControlSubscriptionCallback;
 import third.cling.service.manager.ClingManager;
 import third.cling.util.ClingUtils;
@@ -23,6 +24,7 @@ public class SubscriptionControl implements ISubscriptionControl<Device> {
 
     private AVTransportSubscriptionCallback mAVTransportSubscriptionCallback;
     private RenderingControlSubscriptionCallback mRenderingControlSubscriptionCallback;
+    private ActionCallback mCallback;
 
     public SubscriptionControl() {
     }
@@ -38,6 +40,7 @@ public class SubscriptionControl implements ISubscriptionControl<Device> {
         }
 
         mAVTransportSubscriptionCallback = new AVTransportSubscriptionCallback(device.getDevice().findService(ClingManager.AV_TRANSPORT_SERVICE), context);
+        mAVTransportSubscriptionCallback.setActionCallback(mCallback);
         controlPointImpl.execute(mAVTransportSubscriptionCallback);
     }
 
@@ -63,5 +66,9 @@ public class SubscriptionControl implements ISubscriptionControl<Device> {
         if (Utils.isNotNull(mRenderingControlSubscriptionCallback)) {
             mRenderingControlSubscriptionCallback.end();
         }
+    }
+
+    public void setActionCallbak (ActionCallback callbak) {
+        this.mCallback = callbak;
     }
 }

@@ -1,21 +1,18 @@
 package amodule.dish.view.manager;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Log;
+
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import acore.override.helper.XHActivityManager;
 import acore.tools.StringManager;
 import amodule.dish.activity.DetailDish;
-import amodule.dish.activity.DetailDishNew;
-import amodule.main.Main;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
-import aplug.basic.ReqInternet;
 import xh.basic.internet.UtilInternet;
 
 /**
@@ -31,7 +28,7 @@ public class DetailDishDataManager {
     public final static String DISH_DATA_RELATION = "dish_relation";//菜谱公共数据接口
     public final static String DISH_DATA_RNTIC = "dish_rntic";//菜谱小技巧
     private String dishCode;//菜谱code
-    private Context mContext = XHActivityManager.getInstance().getCurrentActivity().getApplicationContext();
+    private Context mContext ;
     private String customerCode;//用户code
     //权限
     private Map<String,String> permissionMap = new HashMap<>();
@@ -40,20 +37,29 @@ public class DetailDishDataManager {
     private boolean hasPermission = true;
     private boolean contiunRefresh = true;
     private boolean loadOver = false;
-    private DetailDishNew detailAct;
+    private DetailDish detailAct;
+    private String courseCode,chapterCode;
 
-    public DetailDishDataManager(String code, DetailDishNew detailAct) {
+    public DetailDishDataManager(String code, DetailDish detailAct,String courseCode,String chapterCode) {
         dishCode = code;
+        this.courseCode= courseCode;
+        this.chapterCode= chapterCode;
         this.detailAct = detailAct;
+        mContext=detailAct.getApplicationContext();
         resetData();
-        reqOne();
+        reqTopInfo(true);
+    }
+    public void setDataNew(String code,String courseCode,String chapterCode){
+        this.dishCode = code;
+        this.courseCode= courseCode;
+        this.chapterCode= chapterCode;
+        resetData();
     }
     //重置权限数据
     private void resetData(){
         loadOver = false;
         hasPermission = true;
         contiunRefresh = true;
-        lastPermission = "";
         detailPermissionMap.clear();
         permissionMap.clear();
     }
@@ -62,6 +68,7 @@ public class DetailDishDataManager {
      * 重置处理数据
      */
     public void resetTopInfo(){
+        if(detailAct!=null)detailAct.hidePermissionData();
         detailPermissionMap.clear();
         permissionMap.clear();
     }
@@ -69,7 +76,6 @@ public class DetailDishDataManager {
      * 第一次请求接口合集
      */
     public void reqOne() {
-        reqTopInfo();
         reqPublicData();
         reqIngre();
         reqBanner();
@@ -84,17 +90,25 @@ public class DetailDishDataManager {
 
     /**
      * 请求topInfo数据---第一请求，有权限请求
+     * boolean isGon
      */
-    public void reqTopInfo() {
+    public void reqTopInfo(boolean isGon) {
         String params = "dishCode=" + dishCode;
-        ReqEncyptInternet.in().doEncypt(StringManager.API_MAIN8_TOPINFP, params, new InternetCallback(mContext) {
+        ReqEncyptInternet.in().doEncypt(StringManager.API_MAIN8_TOPINFP, getOtherCode(params), new InternetCallback(mContext) {
             @Override
             public void loaded(int flag, String url, Object object) {
                 if(flag>=UtilInternet.REQ_OK_STRING) {
                     if(!hasPermission || !contiunRefresh) return;
+                    detailAct.reset();
                     customerCode= StringManager.getFirstMap(object).get("customerCode");
                     if (!TextUtils.isEmpty(object.toString()) && !object.toString().equals("[]")) {
+                        Map<String,String> mapTemp = StringManager.getFirstMap(object);
+                        if(mapTemp!=null&&mapTemp.containsKey("dishState")&&"4".equals(mapTemp.get("dishState"))){
+                            if(detailAct!=null)detailAct.finish();
+                            return;
+                        }
                         handleDataSuccess(flag, DISH_DATA_TOP, object);
+                        if(isGon)reqOne();
                         Map<String,String> maps= StringManager.getFirstMap(object);
                         if(maps.containsKey("isHide")&&!"2".equals(maps.get("isHide"))){
                             reqOtherTieData();
@@ -107,6 +121,7 @@ public class DetailDishDataManager {
             @Override
             public void getPower(int flag, String url, Object obj) {
                 //权限检测
+                if(TextUtils.isEmpty((String)obj) || "[]".equals(obj)||"{}".equals(obj))hasPermission=true;
                 if(permissionMap.isEmpty() && !TextUtils.isEmpty((String)obj) && !"[]".equals(obj)&& !"{}".equals(obj)){
                     if(TextUtils.isEmpty(lastPermission)){
                         lastPermission = (String) obj;
@@ -135,7 +150,7 @@ public class DetailDishDataManager {
      */
     private void reqIngre() {
         String params = "code=" + dishCode;
-        ReqEncyptInternet.in().doEncypt(StringManager.API_GETDISHBURDENBYCODE, params, new InternetCallback(mContext) {
+        ReqEncyptInternet.in().doEncypt(StringManager.API_GETDISHBURDENBYCODE, getOtherCode(params), new InternetCallback(mContext) {
             @Override
             public void loaded(int flag, String url, Object object) {
                 handleDataSuccess(flag,DISH_DATA_INGRE,object);
@@ -161,7 +176,7 @@ public class DetailDishDataManager {
      */
     private void reqStep() {
         String params = "dishCode=" + dishCode;
-        ReqEncyptInternet.in().doEncypt(StringManager.API_MAIN8_DISHMAKE, params, new InternetCallback(mContext) {
+        ReqEncyptInternet.in().doEncypt(StringManager.API_MAIN8_DISHMAKE, getOtherCode(params), new InternetCallback(mContext) {
             @Override
             public void loaded(int flag, String url, Object object) {
                 handleDataSuccess(flag,DISH_DATA_STEP,object);
@@ -175,7 +190,7 @@ public class DetailDishDataManager {
     private void reqOtherTieData(){
         String params = "dishCode=" + dishCode;
         //获取帖子数据
-        ReqEncyptInternet.in().doEncypt(StringManager.API_MAIN8_TIEINFO,params, new InternetCallback(mContext) {
+        ReqEncyptInternet.in().doEncypt(StringManager.API_MAIN8_TIEINFO,getOtherCode(params), new InternetCallback(mContext) {
             @Override
             public void loaded(int flag, String s, Object object) {
                 handleDataSuccess(flag,DISH_DATA_TIE,object);
@@ -185,10 +200,10 @@ public class DetailDishDataManager {
     /**
      * 请求问答数据
      */
-    private void reqQAData(){
+    public void reqQAData(){
         String params = "dishCode=" + dishCode;
         //获取帖子数据
-        ReqEncyptInternet.in().doEncypt(StringManager.API_MAIN8_QAINFO,params, new InternetCallback(mContext) {
+        ReqEncyptInternet.in().doEncypt(StringManager.API_MAIN8_QAINFO,getOtherCode(params), new InternetCallback(mContext) {
             @Override
             public void loaded(int flag, String s, Object object) {
                 handleDataSuccess(flag,DISH_DATA_QA,object);
@@ -198,10 +213,10 @@ public class DetailDishDataManager {
     /**
      * 请求小技巧
      */
-    private void reqAnticData(){
+    public void reqAnticData(){
         String params = "dishCode=" + dishCode;
         //获取帖子数据
-        ReqEncyptInternet.in().doEncypt(StringManager.API_MAIN8_ANTIC,params, new InternetCallback(mContext) {
+        ReqEncyptInternet.in().doEncypt(StringManager.API_MAIN8_ANTIC,getOtherCode(params), new InternetCallback(mContext) {
             @Override
             public void loaded(int flag, String s, Object object) {
                 handleDataSuccess(flag,DISH_DATA_RNTIC,object);
@@ -212,10 +227,10 @@ public class DetailDishDataManager {
     /**
      * 公共接口数据
      */
-    private void reqPublicData(){
+    public void reqPublicData(){
         String params = "dishCode=" + dishCode;
         //获取点赞数据
-        ReqEncyptInternet.in().doEncypt(StringManager.API_MAIN8_RELATIONBYCODE, params, new InternetCallback(mContext) {
+        ReqEncyptInternet.in().doEncypt(StringManager.API_MAIN8_RELATIONBYCODE, getOtherCode(params), new InternetCallback(mContext) {
             @Override
             public void loaded(int flag, String s, Object object) {
                 handleDataSuccess(flag,DISH_DATA_RELATION,object);
@@ -232,9 +247,7 @@ public class DetailDishDataManager {
     public void handleDataSuccess(int flag, String type,Object object){
         if (flag >= UtilInternet.REQ_OK_STRING && dishDataCallBack != null) {
             ArrayList<Map<String,String>> list=StringManager.getListMapByJson(object);
-            if(list.size()>0) {
-                    dishDataCallBack.handlerTypeData(type, list,type.equals(DISH_DATA_TOP)?detailPermissionMap:null);
-            }
+            dishDataCallBack.handlerTypeData(type, list,type.equals(DISH_DATA_TOP)?detailPermissionMap:null);
         }
     }
 
@@ -247,5 +260,10 @@ public class DetailDishDataManager {
     }
     public void setDishDataCallBack(DishDataCallBack callBack) {
         dishDataCallBack = callBack;
+    }
+    private String getOtherCode(@NonNull String params){
+        if(!TextUtils.isEmpty(courseCode))params+="&courseCode="+courseCode;
+        if(!TextUtils.isEmpty(chapterCode))params+="&chapterCode="+chapterCode;
+        return params;
     }
 }

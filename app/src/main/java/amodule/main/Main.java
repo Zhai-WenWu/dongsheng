@@ -14,14 +14,10 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.popdialog.util.GoodCommentManager;
@@ -77,6 +73,7 @@ import aplug.basic.ReqInternet;
 import aplug.shortvideo.ShortVideoInit;
 import third.ad.control.AdControlHomeDish;
 import third.ad.tools.AdConfigTools;
+import third.cling.control.ClingPresenter;
 import third.mall.MainMall;
 import third.mall.alipay.MallPayActivity;
 import third.mall.aplug.MallCommon;
@@ -95,6 +92,10 @@ public class Main extends Activity implements OnClickListener, IObserver {
     private String[] tabTitle = {"学做菜", "商城", "消息", "我的"};
     private Class<?>[] classes = new Class<?>[]{MainHomePage.class, MainMall.class, MyMessage.class, MainMyself.class};
     private int[] tabImgs = new int[]{R.drawable.tab_index, R.drawable.tab_mall, R.drawable.tab_four, R.drawable.tab_myself};
+    public static final int TAB_HOME = 0;
+    public static final int TAB_MALL = 1;
+    public static final int TAB_MESSAGE = 2;
+    public static final int TAB_SELF = 3;
 
     @SuppressLint("StaticFieldLeak")
     public static Main allMain;
@@ -149,6 +150,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
         mainInitDataControl = new MainInitDataControl();
         showWelcome();
         LogManager.printStartTime("zhangyujian","main::oncreate::");
+        ClingPresenter.getInstance().onCreate(this, null);
     }
 
     /** 处理一下非明确功能的逻辑 */
@@ -181,8 +183,11 @@ public class Main extends Activity implements OnClickListener, IObserver {
      */
     private void initQiYvUnreadCount() {
         QiYvHelper.getInstance().getUnreadCount(count -> {
-            int messageNum = AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + (count > 0 ? count : 0);
-            Main.setNewMsgNum(2, messageNum);
+            if (count >= 0) {
+                AppCommon.qiyvMessage = count;
+                if (count > 0)
+                    Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
+            }
         });
     }
 
@@ -207,11 +212,9 @@ public class Main extends Activity implements OnClickListener, IObserver {
         if (mUnreadCountListener == null) {
             mUnreadCountListener = count -> {
                 if (count >= 0) {
-                    if (nowTab == 3 || allTab.containsKey(MyMessage.KEY)) {
-                        MyMessage myMessage = (MyMessage) allTab.get(MyMessage.KEY);
-                        myMessage.setQiYvNum(count);
-                    }
-                    Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + count);
+                    AppCommon.qiyvMessage = count;
+                    if (count > 0)
+                        Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
                 }
             };
         }
@@ -248,8 +251,11 @@ public class Main extends Activity implements OnClickListener, IObserver {
                 //初始化电商页面统计
                 PageStatisticsUtils.getInstance().getPageInfo(getApplicationContext());
                 //处理
-                if (LoginManager.isLogin())
+                if (LoginManager.isLogin()) {
                     initQiYvUnreadCount();
+                    //防止七鱼回调有问题
+                    Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
+                }
                 addQiYvListener();
 
                 if (showQAUploading())
@@ -468,12 +474,6 @@ public class Main extends Activity implements OnClickListener, IObserver {
 //        }
 //        setTabItemMargins(linear_item, 0, 0, margin);
 //        setTabItemMargins(linear_item, length - 1, margin, 0);
-    }
-
-    public void setTabItemMargins(ViewGroup viewGroup, int index, int leftMargin, int rightMargin) {
-        RelativeLayout child = (RelativeLayout) viewGroup.getChildAt(index);
-        LinearLayout.LayoutParams params_child = (LinearLayout.LayoutParams) child.getLayoutParams();
-        params_child.setMargins(leftMargin, 0, leftMargin, 0);
     }
 
     // 时刻取得导航提醒
@@ -752,12 +752,20 @@ public class Main extends Activity implements OnClickListener, IObserver {
                     messageNumStr = 99 + "+";
                 }
                 textMsgNum.setText(messageNumStr);
-                MyMessage.notifiMessage(MyMessage.MSG_FEEKBACK_ONREFURESH, 0, "");
             } else {
                 view.findViewById(R.id.tv_tab_msg_num).setVisibility(View.GONE);
                 view.findViewById(R.id.tv_tab_msg_tow_num).setVisibility(View.GONE);
             }
         }
+        dispatchUpdateMsgNum();
+    }
+
+    private static void dispatchUpdateMsgNum() {
+        dispatchMsgListNum();
+    }
+
+    private static void dispatchMsgListNum() {
+        MyMessage.notifiMessage(MyMessage.MSG_DISPATCH_ONREFURESH, 0, "");
     }
     /**
      * 点击下方tab切换,并且加上美食圈点击后进去第一个页面并刷新
@@ -766,18 +774,18 @@ public class Main extends Activity implements OnClickListener, IObserver {
     public void onClick(View v) {
         for (int i = 0; i < tabViews.length; i++) {
             if (v == tabViews[i].findViewById(R.id.tab_layout) && allTab.size() > 0) {
-                if (i == 0 && allTab.containsKey(MainHomePage.KEY) && i == nowTab) {
+                if (i == TAB_HOME && allTab.containsKey(MainHomePage.KEY) && i == nowTab) {
                     MainHomePage mainIndex = (MainHomePage) allTab.get(MainHomePage.KEY);
                     mainIndex.refresh();
-                } else if (i == 1 && allTab.containsKey(MainMall.KEY) && tabHost.getCurrentTab() == i) {  //当所在页面正式你要刷新的页面,就直接刷新
+                } else if (i == TAB_MALL && allTab.containsKey(MainMall.KEY) && tabHost.getCurrentTab() == i) {  //当所在页面正式你要刷新的页面,就直接刷新
                     MainMall mall = (MainMall) allTab.get(MainMall.KEY);
                     mall.scrollTop();
                     mall.refresh();
-                } else if (i == 3 && allTab.containsKey(MainMyself.KEY)) {
+                } else if (i == TAB_SELF && allTab.containsKey(MainMyself.KEY)) {
                     //在onResume方法添加了刷新方法
 //                    MainMyself mainMyself = (MainMyself) allTab.get(MainMyself.KEY);
 //                    mainMyself.scrollToTop();
-                } else if (i == 2 && allTab.containsKey(MyMessage.KEY) && i == nowTab) {
+                } else if (i == TAB_MESSAGE && allTab.containsKey(MyMessage.KEY) && i == nowTab) {
 //                    MyMessage myMessage = (MyMessage) allTab.get(MyMessage.KEY);
 //                    myMessage.onRefresh();
                 }
@@ -807,17 +815,6 @@ public class Main extends Activity implements OnClickListener, IObserver {
             return tabViews[index];
         }
         return null;
-    }
-
-    /**
-     * 执行一个旋转动画
-     * @param view
-     */
-    private void setRoteAnimation(View view) {
-        RotateAnimation animation = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-        animation.setDuration(800);
-        view.clearAnimation();
-        view.startAnimation(animation);
     }
 
     public LocalActivityManager getLocalActivityManager() {
@@ -851,6 +848,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
         mUnreadCountListener = null;
         if (!LoginManager.isLogin())
             QiYvHelper.getInstance().destroyQiYvHelper();
+        ClingPresenter.getInstance().onDestroy(this);
     }
 
     @Override
@@ -858,7 +856,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
         if (ObserverManager.NOTIFY_LOGIN.equals(name)) {
             if (data != null && data instanceof Boolean && (Boolean)data) {
                 addQiYvListener();
-                if (nowTab == 2 || allTab.containsKey(MyMessage.KEY)) {
+                if (nowTab == TAB_MESSAGE || allTab.containsKey(MyMessage.KEY)) {
                     MyMessage myMessage = (MyMessage) allTab.get(MyMessage.KEY);
                     if(myMessage != null){
                         myMessage.onRefresh();
@@ -868,20 +866,20 @@ public class Main extends Activity implements OnClickListener, IObserver {
                 QiYvHelper.getInstance().getUnreadCount(new QiYvHelper.NumberCallback() {
                     @Override
                     public void onNumberReady(int count) {
-                        if (nowTab == 3 || allTab.containsKey(MyMessage.KEY)) {
-                            MyMessage myMessage = (MyMessage) allTab.get(MyMessage.KEY);
-                            if(myMessage != null){
-                                myMessage.setQiYvNum(count);
-                            }
+                        if (count >= 0) {
+                            AppCommon.qiyvMessage = count;
+                            if (count > 0)
+                                Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
                         }
-                        Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + (count > 0 ? count : 0));
                     }
                 });
+                //防止七鱼回调不回来
+                Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
             }
         } else if (ObserverManager.NOTIFY_LOGOUT.equals(name)) {
             if (data != null && data instanceof Boolean) {
                 if ((Boolean)data) {
-                    if (nowTab == 3 || allTab.containsKey(MyMessage.KEY)) {
+                    if (nowTab == TAB_MESSAGE || allTab.containsKey(MyMessage.KEY)) {
                         MyMessage myMessage = (MyMessage) allTab.get(MyMessage.KEY);
                         myMessage.onRefresh();
                     }

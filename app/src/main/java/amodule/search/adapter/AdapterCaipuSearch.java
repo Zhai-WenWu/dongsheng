@@ -2,6 +2,7 @@ package amodule.search.adapter;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,8 @@ import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.xiangha.R;
+
+import org.json.JSONObject;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -55,7 +58,7 @@ public class AdapterCaipuSearch extends BaseAdapter {
     private int shicaiInsertPos;
     private int caidanInsertPos;
     private int zhishiInsertPos;
-    private CopyOnWriteArrayList<Map<String, String>> adDdata = new CopyOnWriteArrayList<Map<String, String>>();
+    private CopyOnWriteArrayList<Map<String, String>> adDdata = new CopyOnWriteArrayList<>();
     private CaipuSearchResultCallback callback;
 
     private int imgResource = R.drawable.i_nopic;
@@ -286,26 +289,11 @@ public class AdapterCaipuSearch extends BaseAdapter {
         setViewText(viewHolder.tv_caipu_collected, caipuMap.get("favorites"));
         setViewText(viewHolder.tv_caipu_origin, caipuMap.get("cusNickName"));
 
-        boolean vipShow = false;
-        if ("2".equals(caipuMap.get("isVip"))) {
-            viewHolder.vip.setVisibility(View.VISIBLE);
-            vipShow = true;
-        } else {
-            viewHolder.vip.setVisibility(View.GONE);
-        }
-
-        if (("2").equals(caipuMap.get("exclusive")) && !vipShow) {
-            viewHolder.iv_itemIsSolo.setVisibility(View.VISIBLE);
-        } else {
-            viewHolder.iv_itemIsSolo.setVisibility(View.GONE);
-        }
-
-        if (("2").equals(caipuMap.get("isFine"))) {
-            viewHolder.iv_itemIsFine.setVisibility(View.VISIBLE);
-        } else {
-            viewHolder.iv_itemIsFine.setVisibility(View.GONE);
-        }
-
+        boolean vipShow = "2".equals(caipuMap.get("isVip"));
+        viewHolder.vip.setVisibility(vipShow?View.VISIBLE:View.GONE);
+        viewHolder.iv_itemIsSolo.setVisibility(("2").equals(caipuMap.get("exclusive")) && !vipShow?View.VISIBLE:View.GONE);
+        viewHolder.iv_itemIsFine.setVisibility(("2").equals(caipuMap.get("isFine"))?View.VISIBLE:View.GONE);
+        viewHolder.v_bottom_line.setVisibility(viewHolder.v_caipu_item_tail.getVisibility() == View.VISIBLE?View.GONE:View.VISIBLE);
 
         viewHolder.v_caipu_item_tail.setVisibility(View.GONE);
         for (int index : listPosUsed) {
@@ -316,26 +304,39 @@ public class AdapterCaipuSearch extends BaseAdapter {
             }
         }
 
-        if (viewHolder.v_caipu_item_tail.getVisibility() == View.VISIBLE) {
-            viewHolder.v_bottom_line.setVisibility(View.GONE);
-        } else {
-            viewHolder.v_bottom_line.setVisibility(View.VISIBLE);
-        }
-
-        convertView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                XHClick.mapStat(mActivity, "a_search_result", "菜谱结果页", "点击菜谱");
-                Intent intent = new Intent(mActivity, DetailDish.class);
-                intent.putExtra("code", caipuMap.get("code"));
-                intent.putExtra("name", caipuMap.get("name"));
-                if(!"2".equals(caipuMap.get("hasVideo"))){
-                    intent.putExtra("img", caipuMap.get("img"));
-                }
-                mActivity.startActivity(intent);
-            }
+        convertView.setOnClickListener(v -> {
+            XHClick.mapStat(mActivity, "a_search_result", "菜谱结果页", "点击菜谱");
+            Intent intent = new Intent(mActivity, DetailDish.class);
+            intent.putExtra("code", caipuMap.get("code"))
+                    .putExtra("name", caipuMap.get("name"))
+                    .putExtra("dishInfo",getDishInfo(caipuMap))
+                    .putExtra("img", caipuMap.get("img"));
+            mActivity.startActivity(intent);
         });
         return convertView;
+    }
+
+    private String getDishInfo(Map<String,String> data) {
+        try{
+            JSONObject dishInfoJson = new JSONObject();
+            dishInfoJson.put("code",data.get("code"));
+            dishInfoJson.put("name",data.get("name"));
+            dishInfoJson.put("img",data.get("img"));
+            dishInfoJson.put("type",TextUtils.equals(data.get("hasVideo"), "2") ? "2" : "1");
+            dishInfoJson.put("allClick",data.get("allClick").replace("浏览",""));
+            dishInfoJson.put("favorites",data.get("favorites").replace("收藏",""));
+            dishInfoJson.put("info","");
+            JSONObject customerJson = new JSONObject();
+            customerJson.put("customerCode",data.get("cusCode"));
+            customerJson.put("nickName",data.get("cusNickName"));
+            customerJson.put("info","");
+            customerJson.put("img",data.get("cusImg"));
+            dishInfoJson.put("customer",customerJson);
+            return Uri.encode(dishInfoJson.toString());
+        }catch (Exception e){
+            e.printStackTrace();
+            return "";
+        }
     }
 
     private View createZhishiView() {
@@ -354,27 +355,20 @@ public class AdapterCaipuSearch extends BaseAdapter {
         setViewText(tv_des_zhishi, zhishiMap.get("title"));
         setViewText(tv_cate_zhishi, zhishiMap.get("classifyName"));
         setViewText(tv_observed_candan, zhishiMap.get("allClick"));
-        if (zhishiMap.get("hasMore").equals("2")) {
+        if ("2".equals(zhishiMap.get("hasMore"))) {
             rl_zhishi_more_item.setVisibility(View.VISIBLE);
-            rl_zhishi_more_item.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (callback != null) {
-                        XHClick.mapStat(mActivity, "a_search_result", "菜谱结果页", "点击更多知识");
-                        callback.searchMoreZhishi();
-                    }
-
+            rl_zhishi_more_item.setOnClickListener(v -> {
+                if (callback != null) {
+                    XHClick.mapStat(mActivity, "a_search_result", "菜谱结果页", "点击更多知识");
+                    callback.searchMoreZhishi();
                 }
             });
         } else {
             rl_zhishi_more_item.setVisibility(View.GONE);
         }
-        rl_zhishi_info.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                XHClick.mapStat(mActivity, "a_search_result", "菜谱结果页", "点击知识");
-                AppCommon.openUrl(mActivity, "nousInfo.app?code=" + zhishiMap.get("code"), true);
-            }
+        rl_zhishi_info.setOnClickListener(v -> {
+            XHClick.mapStat(mActivity, "a_search_result", "菜谱结果页", "点击知识");
+            AppCommon.openUrl(mActivity, "nousInfo.app?code=" + zhishiMap.get("code"), true);
         });
         return view;
     }
@@ -401,31 +395,25 @@ public class AdapterCaipuSearch extends BaseAdapter {
         setViewText(tv_num_caidan, caidanMap.get("dishNum"));
         setViewText(tv_observed_caidan, caidanMap.get("allClick"));
 
-        if (caidanMap.get("hasMore").equals("2")) {
+        if ("2".equals(caidanMap.get("hasMore"))) {
             rl_caidan_more_item.setVisibility(View.VISIBLE);
-            rl_caidan_more_item.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (callback != null) {
-                        callback.searchMoreCaidan();
-                        XHClick.mapStat(mActivity, "a_search_result", "菜谱结果页", "点击更多菜单");
-                    }
-
+            rl_caidan_more_item.setOnClickListener(v -> {
+                if (callback != null) {
+                    callback.searchMoreCaidan();
+                    XHClick.mapStat(mActivity, "a_search_result", "菜谱结果页", "点击更多菜单");
                 }
+
             });
         } else {
             rl_caidan_more_item.setVisibility(View.GONE);
         }
-        rl_caidan_info.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(mActivity, ListDish.class);
-                intent.putExtra("name", caidanMap.get("name"));
-                intent.putExtra("type", "caidan");
-                intent.putExtra("g1", caidanMap.get("code"));
-                mActivity.startActivity(intent);
-                XHClick.mapStat(mActivity, "a_search_result", "菜谱结果页", "点击菜单");
-            }
+        rl_caidan_info.setOnClickListener(v -> {
+            Intent intent = new Intent(mActivity, ListDish.class);
+            intent.putExtra("name", caidanMap.get("name"));
+            intent.putExtra("type", "caidan");
+            intent.putExtra("g1", caidanMap.get("code"));
+            mActivity.startActivity(intent);
+            XHClick.mapStat(mActivity, "a_search_result", "菜谱结果页", "点击菜单");
         });
 
         return view;
@@ -447,24 +435,18 @@ public class AdapterCaipuSearch extends BaseAdapter {
         setViewText(tv_shicai_decrip, shicaiMap.get("info"));
 
         View tagView3 = view.findViewById(R.id.iv_shicai_tag3);
-        if (shicaiMap.get("hasTaboo").equals("2")) {
-            tagView3.setVisibility(View.VISIBLE);
-        } else {
-            tagView3.setVisibility(View.GONE);
-        }
+        if(null != tagView3)
+            tagView3.setVisibility("2".equals(shicaiMap.get("hasTaboo"))?View.VISIBLE:View.GONE);
 
-        view.findViewById(R.id.rl_shicai).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (TextUtils.isEmpty(shicaiMap.get("name")))
-                    return;
-                Intent intent = new Intent(mActivity, DetailIngre.class);
-                intent.putExtra("name", shicaiMap.get("name").replace("百科", ""));
-                intent.putExtra("code", shicaiMap.get("code"));
-                intent.putExtra("page", "0");
-                mActivity.startActivity(intent);
-                XHClick.mapStat(mActivity, "a_search_result", "菜谱结果页", "点击食材");
-            }
+        view.findViewById(R.id.rl_shicai).setOnClickListener(v -> {
+            if (TextUtils.isEmpty(shicaiMap.get("name")))
+                return;
+            Intent intent = new Intent(mActivity, DetailIngre.class);
+            intent.putExtra("name", shicaiMap.get("name").replace("百科", ""));
+            intent.putExtra("code", shicaiMap.get("code"));
+            intent.putExtra("page", "0");
+            mActivity.startActivity(intent);
+            XHClick.mapStat(mActivity, "a_search_result", "菜谱结果页", "点击食材");
         });
 
         return view;

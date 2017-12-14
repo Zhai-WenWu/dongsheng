@@ -97,6 +97,7 @@ public class AdapterClassifyDish extends AdapterSimple{
 				public void onClick(View v) {
 					Intent intent = new Intent(mAct, DetailDish.class);
 					intent.putExtra("code", left.get("code"));
+					intent.putExtra("img", left.get("img"));
 					intent.putExtra("name", left.get("name"));
 					mAct.startActivity(intent);
 				}
@@ -114,6 +115,7 @@ public class AdapterClassifyDish extends AdapterSimple{
 					public void onClick(View v) {
 						Intent intent = new Intent(mAct, DetailDish.class);
 						intent.putExtra("code", right.get("code"));
+						intent.putExtra("img", right.get("img"));
 						intent.putExtra("name", right.get("name"));
 						mAct.startActivity(intent);
 					}

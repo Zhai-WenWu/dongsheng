@@ -52,6 +52,14 @@ public class WebActivity extends BaseActivity{
 		super.onRestart();
 		loadManager.hideProgressBar();
 	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		if(null != loadManager){
+			loadManager.hideProgressBar();
+		}
+	}
 	
 	@Override
 	public OnClickListener getBackBtnAction() {

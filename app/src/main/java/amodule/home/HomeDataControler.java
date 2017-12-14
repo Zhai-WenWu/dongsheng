@@ -186,6 +186,8 @@ public class HomeDataControler {
                                     }
                                 }
                             }
+                            if (callback != null)
+                                callback.onSuccess();
                         } else {
                             if (callback != null)
                                 callback.onFailed();

@@ -71,7 +71,7 @@ public class XHConf extends BasicConf {
 			StringManager.changeUrl(protocol,domain);
 			//设置电商url切换
 			String mall_domain= UtilFile.loadShared(context, FileManager.xmlFile_appInfo,FileManager.xmlKey_mall_domain).toString();
-			MallStringManager.changeUrl(mall_domain);
+			MallStringManager.changeUrl(protocol, mall_domain);
 		}
 		//调试模式下不处理domain2ip
 //		if(!log_isDebug){

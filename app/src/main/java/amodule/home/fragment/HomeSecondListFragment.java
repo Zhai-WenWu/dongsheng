@@ -73,8 +73,6 @@ public class HomeSecondListFragment extends Fragment {
     private HomeSecondModule mSecondModuleBean;
     private int mPosition;
 
-    private OnTabDataReadyCallback mCallback;
-    
     public HomeSecondListFragment() {
         // Required empty public constructor
     }
@@ -175,7 +173,7 @@ public class HomeSecondListFragment extends Fragment {
         }
     }
     private void requestData() {
-        if(!mLoadOver && mIsVisible){
+        if(!mLoadOver && mIsVisible && mLoadManager != null){
             mLoadManager.setLoading(mPtrFrameLayout, mRv, mHomeAdapter, true, mIsVisible,
                     v -> entryptData(true),
                     v -> entryptData(!mLoadOver));
@@ -221,7 +219,7 @@ public class HomeSecondListFragment extends Fragment {
                 params=mBackUrl;
             }else{
                 params= "type="+mModuleBean.getType();
-                if(!TextUtils.isEmpty(mSecondModuleBean.getType()) && mActivity.hasInitTabData())
+                if(!TextUtils.isEmpty(mSecondModuleBean.getType()))
                     params+="&two_type="+mSecondModuleBean.getType();
             }
         }else{//向下翻页
@@ -229,7 +227,7 @@ public class HomeSecondListFragment extends Fragment {
                 params=mNextUrl;
             }else{
                 params= "type="+mModuleBean.getType();
-                if(!TextUtils.isEmpty(mSecondModuleBean.getType()) && mActivity.hasInitTabData())
+                if(!TextUtils.isEmpty(mSecondModuleBean.getType()))
                     params+="&two_type="+mSecondModuleBean.getType();
             }
         }
@@ -242,6 +240,8 @@ public class HomeSecondListFragment extends Fragment {
         //更新加载按钮状态
         mLoadManager.changeMoreBtn(mRv, ReqInternet.REQ_OK_STRING, -1, -1, mLoadOver?2:1, refresh && mIsVisible);
         mLoadOver = true;
+        if (refresh)
+            mCompelClearData = true;
         ReqEncyptInternet.in().doEncyptAEC(url,data, new InternetCallback(mActivity) {
             @Override
             public void loaded(int flag, String url, Object object) {
@@ -250,16 +250,6 @@ public class HomeSecondListFragment extends Fragment {
                     //Log.i("FRJ","获取  服务端   数据回来了-------------");
 
                     Map<String,String> dataMap = StringManager.getFirstMap(object);
-                    //针对三餐会有默认选中不同的tab，第一次请求的数据不保留，防止系统本身第一次默认的加载和第二次默认选中页面数据相同
-                    if (!mActivity.hasInitTabData() && TextUtils.equals(mModuleBean.getType(), "day")) {
-                        mLoadOver = false;
-                    }
-                    //初始化二级
-                    if (mCallback != null) {
-                        mCallback.onTabDataReady(dataMap.get("trigger_two_type"));
-                    }
-                    if (!mLoadOver)//如果是三餐列表并且是第一次加载的，直接跳出，不填充当前Fragment里的数据。
-                        return;
                     //当前数据有问题，直接return数据
                     if(!(!dataMap.containsKey("list")
                             ||StringManager.getListMapByJson(dataMap.get("list")).size()<=0)){
@@ -414,13 +404,5 @@ public class HomeSecondListFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-    }
-
-    public void setOnTabDataReadyCallback(OnTabDataReadyCallback callback) {
-        mCallback = callback;
-    }
-
-    public interface OnTabDataReadyCallback {
-        void onTabDataReady(String selectedType);
     }
 }

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.bumptech.glide.request.animation.GlideAnimation;
@@ -54,7 +55,11 @@ public class AllPopDialogHelper {
                     @Override
                     public String getFullScreenData() {
                         Log.i(TAG,"AllPopDialogHelper :: getFullScreenData");
-                        return Tools.map2Json(AdConfigTools.getInstance().getAdConfigData(AdPlayIdConfig.FULLSCREEN));
+                        String data = Tools.map2Json(AdConfigTools.getInstance().getAdConfigData(AdPlayIdConfig.FULLSCREEN));
+                        if("true".equals(FileManager.loadShared(activity,FileManager.xmlFile_appInfo,"once").toString())){
+                            data = "";
+                        }
+                        return data;
                     }
 
                     @Override

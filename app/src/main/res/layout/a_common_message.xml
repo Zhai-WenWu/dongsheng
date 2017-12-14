@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activityLayout"
-    style="@style/layout">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:id="@+id/msg_title_bar_rela"
@@ -48,7 +49,7 @@
         android:id="@+id/lv_message"
         style="@style/listNoDivider"
         android:layout_below="@+id/msg_title_bar_rela"
-        android:background="@android:color/transparent"
+        android:background="@color/common_bg"
         android:paddingLeft="0dp"
         android:paddingRight="0dp"
         android:visibility="gone">
