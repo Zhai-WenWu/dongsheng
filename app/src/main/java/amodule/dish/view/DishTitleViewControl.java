@@ -201,15 +201,17 @@ public class DishTitleViewControl implements View.OnClickListener{
 
         boolean isAuthor = false;
         String userCode="";
-        if(dishInfoMap != null){
-            Map<String,String> customerMap = StringManager.getFirstMap(dishInfoMap.get("customer"));
-            userCode = customerMap.get("customerCode");
-        }
+        if(dishInfoMap == null)
+            return;
+        Map<String,String> customerMap = StringManager.getFirstMap(dishInfoMap.get("customer"));
+        userCode = customerMap.get("customerCode");
             //登录并是自己的菜谱贴
         if (LoginManager.isLogin() && !TextUtils.isEmpty(userCode) && userCode.equals(LoginManager.userInfo.get("code"))) {
                 isAuthor = true;
         }
         Map<String, String> mapData = getShareData(isAuthor);
+        if (mapData == null)
+            return;
         Intent intent = new Intent(detailDish, ShareActivityDialog.class);
         intent.putExtra("tongjiId", DetailDish.tongjiId_detail);
         intent.putExtra("isHasReport", !isAuthor);
@@ -226,6 +228,8 @@ public class DishTitleViewControl implements View.OnClickListener{
     }
 
     public Map<String, String> getShareData(boolean isAuthor) {
+        if (dishInfoMap == null)
+            return null;
         //点击显示数据
         String mType, mTitle, mClickUrl, mContent, mImgUrl,isVideo;
         //登录并是自己的菜谱贴
