@@ -32,6 +32,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import acore.logic.AppCommon;
+import acore.logic.UrlFilter;
 import acore.logic.load.LoadManager;
 import acore.override.XHApplication;
 import acore.tools.LogManager;
@@ -234,15 +235,16 @@ public class  WebviewManager {
                             return super.shouldOverrideUrlLoading(view, url);
                     }
                 } else {
+                    final String newUrl = UrlFilter.filterAdDownloadUrl(url);
                     if (state) {
                         loadManager.setLoading(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                AppCommon.openUrl(act, url, true);
+                                AppCommon.openUrl(act, newUrl, true);
                             }
                         });
                     } else {
-                        AppCommon.openUrl(act, url, true);
+                        AppCommon.openUrl(act, newUrl, true);
                     }
                 }
                 return true;
