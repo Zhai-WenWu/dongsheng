@@ -111,55 +111,8 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         }, 15 * 60 * 1000);
         getWindow().setFormat(PixelFormat.TRANSLUCENT);//sufureView页面闪烁
         XHClick.track(XHApplication.in(), "浏览菜谱详情页");
-<<<<<<< HEAD
-        //注册监听
-        ObserverManager.getInstence().registerObserver(this,ObserverManager.NOTIFY_LOGIN,ObserverManager.NOTIFY_FOLLOW,ObserverManager.NOTIFY_PAYFINISH);
-        if (mShouldInitCling) {
-            ClingControl.getInstance(this).onCreate();
-            ClingControl.getInstance(this).setOnDeviceSelected(new OnDeviceSelectedListener() {
-                @Override
-                public void onDeviceSelected(ClingDevice device) {
-                    if (dishActivityViewControl != null) {
-                        dishActivityViewControl.addClingOptionView(ClingControl.getInstance(DetailDish.this).getClingOptionView());
-                    }
-                }
-            });
-            ClingControl.getInstance(this).setOnExitClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (dishActivityViewControl != null) {
-                        dishActivityViewControl.removeClingOptionView();
-                    }
-                }
-            });
-        }
-    }
-
-    private void handlerNew(){
-        findViewById(R.id.button1).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(DetailDish.this,DetailDishNew.class);
-                intent.putExtra("code",code);
-                intent.putExtra("img",img);
-                DetailDish.this.startActivity(intent);
-            }
-        });
-    }
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        isHasVideo = false;
-        detailPermissionMap.clear();
-        permissionMap.clear();
-        dishActivityViewControl.setLoginStatus();
-        loadDishInfo();
-    }
-
-=======
         ObserverManager.getInstence().registerObserver(this,ObserverManager.NOTIFY_LOGIN,ObserverManager.NOTIFY_FOLLOW,ObserverManager.NOTIFY_PAYFINISH,ObserverManager.NOTIFY_UPLOADOVER);
     }
->>>>>>> master_1025_develop_1109_v580
     /**
      * 处理页面Ui
      */
