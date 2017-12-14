@@ -19,15 +19,16 @@ import android.widget.Button;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.shuyu.gsyvideoplayer.GSYVideoManager;
-import com.shuyu.gsyvideoplayer.utils.GSYVideoType;
-import com.shuyu.gsyvideoplayer.video.GSYBaseVideoPlayer;
-import com.xiangha.R;
 import com.example.gsyvideoplayer.listener.SampleListener;
+import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.GSYVideoPlayer;
+import com.shuyu.gsyvideoplayer.utils.GSYVideoType;
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils;
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
+import com.xiangha.R;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +40,7 @@ import acore.tools.ToolsDevice;
 import acore.widget.ImageViewVideo;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
+import third.cling.control.ClingControl;
 
 import static com.shuyu.gsyvideoplayer.GSYVideoPlayer.CURRENT_STATE_PLAYING;
 
@@ -70,6 +72,9 @@ public class VideoPlayerController {
 
     private OnClickListener mClingClickListener;
     private OnClickListener mFullScreenClickListener;
+    private OnSeekbarVisibilityListener mOnSeekbarVisibilityListener;
+
+    private ClingControl mClingControl;
 
     public VideoPlayerController(Context context) {
         this.mContext = context;
@@ -83,7 +88,7 @@ public class VideoPlayerController {
      */
     public VideoPlayerController(final Activity context,final ViewGroup viewGroup, String imgUrl) {
         this(context,viewGroup,imgUrl,GSYVideoType.SCREEN_TYPE_DEFAULT);
-        GSYVideoManager.instance().canChange = true;
+        GSYVideoManager.canChange = true;
     }
     public VideoPlayerController(final Activity context,final ViewGroup viewGroup, String imgUrl,int type) {
         this.mContext = context;
@@ -97,15 +102,17 @@ public class VideoPlayerController {
         orientationUtils.setRotateWithSystem(false);
         videoPlayer.getTitleTextView().setVisibility(View.GONE);
         videoPlayer.setShowFullAnimation(false);
-        videoPlayer.getFullscreenButton().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mFullScreenClickListener != null) {
-                    mFullScreenClickListener.onClick(videoPlayer.getFullscreenButton());
-                    return;
-                }
-                //第一个true是否需要隐藏actionbar，第二个true是否需要隐藏statusbar
-                videoPlayer.startWindowFullscreen(context, true, true);
+        videoPlayer.getFullscreenButton().setOnClickListener(v -> {
+            if (mFullScreenClickListener != null) {
+                mFullScreenClickListener.onClick(videoPlayer.getFullscreenButton());
+                return;
+            }
+            //第一个true是否需要隐藏actionbar，第二个true是否需要隐藏statusbar
+            videoPlayer.startWindowFullscreen(context, true, true);
+        });
+        videoPlayer.setOnBottomContainerVisibilityChangeCallback(visibility -> {
+            if(mOnSeekbarVisibilityListener != null){
+                mOnSeekbarVisibilityListener.onVisibility(visibility);
             }
         });
         videoPlayer.setStandardVideoAllCallBack(new SampleListener(){
@@ -122,9 +129,9 @@ public class VideoPlayerController {
                 super.onPrepared(url, objects);
                 if(url.startsWith("http"))
                     setNetworkCallback();
-                if(!GSYVideoManager.instance().canChange){
-                    GSYVideoManager.instance().setCurrentVideoWidth(viewGroup.getWidth());
-                    GSYVideoManager.instance().setCurrentVideoHeight(viewGroup.getHeight());
+                if(!GSYVideoManager.canChange){
+                    videoPlayer.getGSYVideoManager().setCurrentVideoWidth(viewGroup.getWidth());
+                    videoPlayer.getGSYVideoManager().setCurrentVideoHeight(viewGroup.getHeight());
                 }
             }
 
@@ -159,15 +166,6 @@ public class VideoPlayerController {
         videoPlayer.setIsTouchWiget(false);
         videoPlayer.setIsTouchWigetFull(true);
 
-        videoPlayer.setClingClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mClingClickListener != null)
-                    mClingClickListener.onClick(v);
-            }
-        });
-
-
 //        videoPlayerStandard.setOnPlayErrorCallback(new JCVideoPlayerStandard.OnPlayErrorCallback() {
 //            @Override
 //            public boolean onError() {
@@ -201,16 +199,50 @@ public class VideoPlayerController {
             mImageView.setLayoutParams(params);
             mPraentViewGroup.addView(mImageView);
             this.view_dish=mImageView;
-            mImageView.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    setOnClick();
-                }
-            });
+            mImageView.setOnClickListener(v -> setOnClick());
         }
         String temp= (String) FileManager.loadShared(context,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI);
         if(!TextUtils.isEmpty(temp)&&"1".equals(temp))
             setShowMedia(true);
+        mClingControl = new ClingControl(context);
+        mClingControl.onCreate();
+        mClingControl.setOnDeviceSelected(device -> {
+            addOptionsView();
+            if (videoPlayer != null) {
+                int state = videoPlayer.getCurrentState();
+                switch (state) {
+                    case GSYVideoPlayer.CURRENT_STATE_PAUSE:
+                    case GSYVideoPlayer.CURRENT_STATE_AUTO_COMPLETE:
+                    case GSYVideoPlayer.CURRENT_STATE_ERROR:
+                        break;
+                    default:
+                        videoPlayer.onVideoPause();
+                        break;
+                }
+            }
+        });
+        mClingControl.setOnExitClickListener(v -> {
+            removeClingOptionView();
+            int state = videoPlayer.getCurrentState();
+            switch (state) {
+                case GSYVideoPlayer.CURRENT_STATE_PAUSE:
+                    videoPlayer.onVideoResume();
+                    break;
+                default:
+                    break;
+            }
+        });
+        videoPlayer.setClingClickListener(v -> {
+            if (mClingClickListener != null) {
+                mClingClickListener.onClick(v);
+                return;
+            }
+            if (TextUtils.isEmpty(mVideoUrl)) {
+                Toast.makeText(context, "无效的视频地址", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            mClingControl.showPopup(context);
+        });
     }
 
     public void setFullScreenClickListener(OnClickListener clickListener) {
@@ -238,7 +270,7 @@ public class VideoPlayerController {
             @Override
             public void mobileConnected() {
                 if(!"1".equals(FileManager.loadShared(mContext,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI).toString())){
-                    if(isNetworkDisconnect){
+                    if(!isNetworkDisconnect){
                         removeTipView();
                         if(view_Tip==null){
                             initView(mContext);
@@ -280,12 +312,7 @@ public class VideoPlayerController {
         if(view_Tip != null)
             mPraentViewGroup.addView(view_Tip);
         mPraentViewGroup.addView(view_dish);
-        view_dish.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setOnClick();
-            }
-        });
+        view_dish.setOnClickListener(v -> setOnClick());
     }
 
     /**
@@ -295,29 +322,29 @@ public class VideoPlayerController {
         Log.i("tzy","广告点:::"+mHasVideoInfo);
         isAutoPaly = "wifi".equals(ToolsDevice.getNetWorkSimpleType(mContext));
         if (mHasVideoInfo) {
-                if(isShowAd){
-                    if(mediaViewCallBack != null)
-                        mediaViewCallBack.onclick();
+            if(isShowAd){
+                if(mediaViewCallBack != null)
+                    mediaViewCallBack.onclick();
+                return;
+            }
+            Log.i("tzy","isShowMedia:::"+isShowMedia);
+            if(!isShowMedia){
+                Log.i("tzy","isAutoPaly:::"+isAutoPaly);
+                if(isAutoPaly){//当前wifi
+                    removeTipView();
+                }else{
+                    removeDishView();
+                    hideVideoImage();
                     return;
                 }
-                Log.i("tzy","isShowMedia:::"+isShowMedia);
-                if(!isShowMedia){
-                    Log.i("tzy","isAutoPaly:::"+isAutoPaly);
-                    if(isAutoPaly){//当前wifi
-                        removeTipView();
-                    }else{
-                        removeDishView();
-                        hideVideoImage();
-                        return;
-                    }
-                }
-                removeDishView();
-                hideVideoImage();
-                removeTipView();
-                videoPlayer.startPlayLogic();
-                if (mStatisticsPlayCountCallback != null) {
-                    mStatisticsPlayCountCallback.onStatistics();
-                }
+            }
+            removeDishView();
+            hideVideoImage();
+            removeTipView();
+            videoPlayer.startPlayLogic();
+            if (mStatisticsPlayCountCallback != null) {
+                mStatisticsPlayCountCallback.onStatistics();
+            }
         } else {
             Tools.showToast(mContext, "努力获取视频信息中...");
             initVideoView(mVideoUnique, mUserUnique);
@@ -375,6 +402,7 @@ public class VideoPlayerController {
                             byte[] bytes = Base64.decode(main_url, Base64.DEFAULT);
                             mVideoUrl = new String(bytes);
                             videoPlayer.setUp(mVideoUrl,false,"");
+                            mClingControl.setPlayUrl(mVideoUrl);
                             mHasVideoInfo = true;
                             if (mVideoInfoRequestNumber > 1) {
                                 mPraentViewGroup.removeView(view_dish);
@@ -425,6 +453,7 @@ public class VideoPlayerController {
                             byte[] bytes = Base64.decode(main_url, Base64.DEFAULT);
                             mVideoUrl = new String(bytes);
                             videoPlayer.setUp(mVideoUrl,false,"");
+                            mClingControl.setPlayUrl(mVideoUrl);
                             mHasVideoInfo = true;
                             if (mVideoInfoRequestNumber > 1) {
 
@@ -460,6 +489,7 @@ public class VideoPlayerController {
     public void initVideoView2(final String url,String title, final View view) {
         this.mVideoUrl = url;
         videoPlayer.setUp(mVideoUrl,false,"");
+        mClingControl.setPlayUrl(mVideoUrl);
         mHasVideoInfo = true;
     }
 
@@ -470,6 +500,7 @@ public class VideoPlayerController {
     public void setVideoUrl(String videoUrl) {
         this.mVideoUrl = videoUrl;
         videoPlayer.setUp(mVideoUrl, false, "");
+        mClingControl.setPlayUrl(mVideoUrl);
         mHasVideoInfo = true;
     }
 
@@ -533,7 +564,7 @@ public class VideoPlayerController {
         //先返回正常状态
         if (orientationUtils.getScreenType() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
                 || isPortrait) {
-            return StandardGSYVideoPlayer.backFromWindowFull(mContext);
+            return videoPlayer.backFromWindowFull(mContext);
         }
         return false;
     }
@@ -573,13 +604,17 @@ public class VideoPlayerController {
     public void onStart(){
         if(null != videoPlayer)
             videoPlayer.startPlayLogic();
+        mClingControl.onStart();
     }
 
     public void onResume() {
-        if(null != videoPlayer && !isNetworkDisconnect)
+        mClingControl.onResume(mContext);
+        if (mClingControl.getClingOptionView().isShowing()) {
+            return;
+        }
+        if(null != videoPlayer && !isNetworkDisconnect) {
             videoPlayer.onVideoResume();
-        Log.i("tzy","width = " + GSYVideoManager.instance().getMediaPlayer().getVideoWidth());
-        Log.i("tzy","height = " + GSYVideoManager.instance().getMediaPlayer().getVideoHeight());
+        }
     }
 
     public void onPause(boolean showVideoImage) {
@@ -594,6 +629,7 @@ public class VideoPlayerController {
     public void onPause() {
         if(null != videoPlayer)
             videoPlayer.onVideoPause();
+        mClingControl.onPause();
     }
 
     public void onDestroy() {
@@ -602,6 +638,8 @@ public class VideoPlayerController {
             videoPlayer.setStandardVideoAllCallBack(null);
             videoPlayer.release();
         }
+        removeClingOptionView();
+        mClingControl.onDestroy(mContext);
     }
 
     /**
@@ -702,12 +740,7 @@ public class VideoPlayerController {
         public void onClick(View v) {
             setShowMedia(true);
             setOnClick();
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    FileManager.saveShared(mContext,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI,"1");
-                }
-            }).start();
+            new Thread(() -> FileManager.saveShared(mContext,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI,"1")).start();
         }
     };
 
@@ -745,5 +778,37 @@ public class VideoPlayerController {
             return false;
         //视频比例大于3：4则为竖屏视频
         return videoW/videoH <= 3/4f;
+    }
+
+    /**
+     * 获取视频状态
+     * @return 返回-1表示视频播放器不存在
+     */
+    public int getPlayState() {
+        if (videoPlayer == null)
+            return -1;
+        return videoPlayer.getCurrentState();
+    }
+
+    public interface OnSeekbarVisibilityListener{
+        void onVisibility(int visibility);
+    }
+
+    public void setOnSeekbarVisibilityListener(OnSeekbarVisibilityListener onSeekbarVisibilityListener) {
+        mOnSeekbarVisibilityListener = onSeekbarVisibilityListener;
+    }
+
+    private void addOptionsView() {
+        if (mPraentViewGroup != null) {
+            mPraentViewGroup.removeView(mClingControl.getClingOptionView());
+            mPraentViewGroup.addView(mClingControl.getClingOptionView());
+        }
+    }
+
+
+    public void removeClingOptionView() {
+        if (mPraentViewGroup != null) {
+            mPraentViewGroup.removeView(mClingControl.getClingOptionView());
+        }
     }
 }

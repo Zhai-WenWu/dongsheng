@@ -5,8 +5,25 @@
     style="@style/layout"
     android:background="@color/transparent">
 
+    <include
+        android:id="@+id/a_dish_detail_new_title"
+        layout="@layout/a_dish_detail_bar_title_new"
+        android:background="@color/transparent" />
+    <!--<acore.widget.rvlistview.RvListView-->
+        <!--android:id="@+id/rvListview"-->
+        <!--android:layout_below="@+id/a_dish_detail_new_title"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="fill_parent"-->
+        <!--android:background="@color/transparent"-->
+        <!--android:divider="@android:color/transparent"-->
+        <!--android:dividerHeight="0dp"-->
+        <!--android:paddingLeft="0dp"-->
+        <!--android:paddingRight="0dp"-->
+        <!--android:scrollbars="none"-->
+        <!--android:visibility="gone" />-->
     <ListView
         android:id="@+id/listview"
+        android:layout_below="@+id/a_dish_detail_new_title"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:background="@color/transparent"
@@ -17,19 +34,16 @@
         android:scrollbars="none"
         android:visibility="gone" />
 
-    <include
-        android:id="@+id/a_dish_detail_new_title"
-        layout="@layout/a_dish_detail_bar_title_new"
-        android:background="@color/transparent" />
+
 
     <include
         android:id="@+id/a_dish_detail_new_footer_hover"
         layout="@layout/a_dish_detail_hove_viewr"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_55"
+        android:layout_height="@dimen/dp_49"
         android:layout_alignParentBottom="true"
         android:background="@android:color/transparent"
-        android:visibility="gone" />
+        android:visibility="visible" />
 
     <RelativeLayout
         android:id="@+id/dish_show_rela"
@@ -37,7 +51,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_marginBottom="@dimen/dp_55"
+        android:layout_marginBottom="@dimen/dp_49"
         android:layout_marginRight="@dimen/dp_15"
         android:visibility="gone">
 
@@ -57,7 +71,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone"
-        tools:visibility="visible">
+        tools:visibility="gone">
 
         <include
             android:id="@+id/dish_title_page"

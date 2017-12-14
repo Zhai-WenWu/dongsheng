@@ -3,6 +3,7 @@ package amodule.home;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.xiangha.R;
@@ -26,11 +27,15 @@ import amodule.main.activity.MainHomePage;
 
 public class HomeHeaderControler implements ISaveStatistic {
 
-    private View mHeaderView, mFeedHeaderView;
+    private View mHeaderView, mFeedHeaderView,mLine;
 
-    private TextView mFeedTitle, mTipMessage;
+    private LinearLayout mFeedLayout;
+
+    private TextView mFeedTitle;
 
     private WidgetVerticalLayout[] mLayouts = new WidgetVerticalLayout[6];
+
+    private View.OnLayoutChangeListener onLayoutChangeListener;
 
     private boolean hasFeedData = false;
     private boolean hasHeaderData = false;
@@ -50,14 +55,15 @@ public class HomeHeaderControler implements ISaveStatistic {
 
         mFeedHeaderView = header.findViewById(R.id.a_home_feed_title);
         mFeedTitle = (TextView) header.findViewById(R.id.feed_title);
-        mTipMessage = (TextView) header.findViewById(R.id.tip_message);
+        mLine = header.findViewById(R.id.line);
+        mFeedLayout = (LinearLayout) header.findViewById(R.id.feed_title_layout);
     }
 
     public void setData(List<Map<String, String>> array, boolean isShowCache) {
         if (null == array || array.isEmpty()) return;
         String[] twoLevelArray = {"轮播banner", "功能入口", "功能入口", "精品厨艺", "限时抢购", "精选菜单"};
         String[] threeLevelArray = {"轮播banner位置", "", "", "精品厨艺位置", "限时抢购位置", "精选菜单位置"};
-        setVisibility(false);
+//        setVisibility(false);
         final int length = Math.min(array.size(), mLayouts.length);
         for (int index = 0; index < length; index++) {
             Map<String, String> map = array.get(index);
@@ -69,11 +75,19 @@ public class HomeHeaderControler implements ISaveStatistic {
             mLayouts[index].setStatictusData(MainHomePage.STATICTUS_ID_HOMEPAGE, twoLevelArray[index], threeLevelArray[index]);
             mLayouts[index].setVisibility(View.VISIBLE);
         }
-        View.OnLayoutChangeListener onLayoutChangeListener = (v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
-            hasHeaderData = mHeaderView.getHeight() - mTipMessage.getHeight() > mFeedHeaderView.getHeight();
-            mFeedHeaderView.setVisibility((hasFeedData && hasHeaderData) ? View.VISIBLE : View.GONE);
-        };
-        mHeaderView.addOnLayoutChangeListener(onLayoutChangeListener);
+
+        if(onLayoutChangeListener == null){
+            onLayoutChangeListener = (v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
+                hasHeaderData = mHeaderView.getHeight() > mFeedHeaderView.getHeight();
+                int needVisibility = (hasFeedData && hasHeaderData) ? View.VISIBLE : View.GONE;
+                if(needVisibility != mFeedHeaderView.getVisibility()){
+                    mFeedHeaderView.setVisibility(needVisibility);
+                    mLine.setVisibility(needVisibility);
+                    mFeedLayout.setVisibility(needVisibility);
+                }
+            };
+            mHeaderView.addOnLayoutChangeListener(onLayoutChangeListener);
+        }
     }
 
     public void setVisibility(boolean isShow) {
@@ -98,8 +112,4 @@ public class HomeHeaderControler implements ISaveStatistic {
         WidgetUtility.setTextToView(mFeedTitle, text);
     }
 
-    @NonNull
-    public TextView getTipMessage() {
-        return mTipMessage;
-    }
 }

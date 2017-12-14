@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -513,7 +514,7 @@ public class ImageSelectorFragment extends Fragment {
                         long dateTime = data.getLong(data.getColumnIndexOrThrow(IMAGE_PROJECTION[2]));
                         Image image = new Image(path, name, dateTime);
                         images.add(image);
-                        if( !hasFolderGened ) {
+                        if( !hasFolderGened && !TextUtils.isEmpty(path)) {
                             // 获取文件夹名称
                             File imageFile = new File(path);
                             File folderFile = imageFile.getParentFile();

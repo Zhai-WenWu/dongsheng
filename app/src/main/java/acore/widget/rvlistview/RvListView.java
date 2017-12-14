@@ -46,14 +46,14 @@ public class RvListView extends RecyclerView {
     static final int VIEW_TYPE_FOOTER = -2;
     static final int VIEW_TYPE_EMPTY = Integer.MAX_VALUE - 1;
 
-    private final LinearLayout mHeaderContainer;
-    private final LinearLayout mFooterContainer;
+    protected LinearLayout mHeaderContainer;
+    protected LinearLayout mFooterContainer;
 
-    private View mEmptyView;
+    protected View mEmptyView;
 
     private EmptyHandler mEmptyHandler;
 
-    private RvHeaderAndFooterViewAdapter mAdapter;
+    protected RvHeaderAndFooterViewAdapter mAdapter;
 
     private OnItemClickListener mOnItemClickListener;
 
@@ -76,9 +76,21 @@ public class RvListView extends RecyclerView {
 
     public RvListView(Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        mHeaderContainer = new LinearLayout(context);
-        mFooterContainer = new LinearLayout(context);
-        Log.d(TAG, "Constructor execute.");
+        initializeAttr(attrs);
+        initializeStyle(defStyle);
+        initialize();
+    }
+
+    protected void initializeAttr(AttributeSet attrs) {
+    }
+
+    protected void initializeStyle(int defStyle) {
+    }
+
+    protected void initialize() {
+        mHeaderContainer = new LinearLayout(getContext());
+        mFooterContainer = new LinearLayout(getContext());
+//        Log.d("tzy", "Constructor execute.");
     }
 
     @Override
@@ -292,9 +304,9 @@ public class RvListView extends RecyclerView {
                 this.mOriginalAdapter.onDetachedFromRecyclerView(RvListView.this);
             }
             this.mOriginalAdapter = adapter;
-            if (adapter != null) {
-                adapter.registerAdapterDataObserver(adapterDataObserver);
-                adapter.onAttachedToRecyclerView(RvListView.this);
+            if (mOriginalAdapter != null) {
+                mOriginalAdapter.registerAdapterDataObserver(adapterDataObserver);
+                mOriginalAdapter.onAttachedToRecyclerView(RvListView.this);
             }
         }
 
@@ -536,7 +548,8 @@ public class RvListView extends RecyclerView {
                     @Override
                     public void onClick(View v) {
                         int position = viewHolder.getAdapterPosition();
-                        mOnItemClickListener.onItemClick(v, viewHolder, position);
+                        if(position >=0)
+                            mOnItemClickListener.onItemClick(v, viewHolder, position);
                     }
                 });
             }
@@ -546,7 +559,10 @@ public class RvListView extends RecyclerView {
                     @Override
                     public boolean onLongClick(View v) {
                         int position = viewHolder.getAdapterPosition();
-                        return mOnItemLongClickListener.onItemLongClick(v, viewHolder, position);
+                        if(position >= 0)
+                            return mOnItemLongClickListener.onItemLongClick(v, viewHolder, position);
+                        else
+                            return false;
                     }
                 });
             }

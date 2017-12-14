@@ -264,19 +264,11 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
         dialogManager.createDialog(new ViewManager(dialogManager)
         .setView(new TitleMessageView(AskEditActivity.this).setText("当前不是WiFi环境，是否继续上传？"))
         .setView(new HButtonView(AskEditActivity.this).setNegativeTextColor(Color.parseColor("#333333"))
-        .setNegativeText("取消", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialogManager.cancel();
-            }
-        })
+        .setNegativeText("取消", v -> dialogManager.cancel())
         .setPositiveTextColor(Color.parseColor("#333333"))
-        .setPositiveText("确定", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialogManager.cancel();
-                allStartOrPause(true);
-            }
+        .setPositiveText("确定", v -> {
+            dialogManager.cancel();
+            allStartOrPause(true);
         }))).show();
     }
 
@@ -326,8 +318,12 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
             if ("wifi".equals(ToolsDevice.getNetWorkType(this))) {
                 allStartOrPause(true);
             } else {
-                allStartOrPause(false);
-                hintNetWork();
+                if (hasImgs()) {
+                    allStartOrPause(false);
+                    hintNetWork();
+                } else {
+                    allStartOrPause(true);
+                }
             }
         }
         return true;
@@ -464,14 +460,15 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
                             mSQLite.deleteData(mUploadPoolData.getDraftId());
                             if (mFromHome)
                                 startQADetail();
-                            else
-                                ObserverManager.getInstence().notify(ObserverManager.NOTIFY_UPLOADOVER, null, true);
+                            ObserverManager.getInstence().notify(ObserverManager.NOTIFY_UPLOADOVER, null, true);
                             finish();
                         }
                     } else {
                         if ("0".equals(mAskPrice) || "0.0".equals(mAskPrice) || "0.00".equals(mAskPrice)) {
                             mSQLite.deleteData(mUploadPoolData.getDraftId());//删除草稿
                             startQADetail();
+                            if (flag)
+                                ObserverManager.getInstence().notify(ObserverManager.NOTIFY_UPLOADOVER, null, true);
                         } else {
                             startPay();
                         }

@@ -20,7 +20,6 @@ import com.xh.manager.ViewManager;
 
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
-import acore.logic.load.view.LoadingView;
 import acore.override.XHApplication;
 import acore.tools.FileManager;
 import acore.tools.LogManager;
@@ -30,6 +29,7 @@ import acore.widget.LayoutScroll;
 import acore.widget.ScrollLinearListLayout;
 import acore.widget.rvlistview.RvListView;
 import acore.widget.rvlistview.adapter.RvBaseAdapter;
+import amodule.answer.view.UploadingView;
 import amodule.quan.adapter.AdapterCircle;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
@@ -51,8 +51,9 @@ public class LoadManager {
 	public static int FOOTTIME_PAGE = -2;//特殊的值，用于标示时间戳翻页。
 
 	private String[] mLoadMoreTextArray = {
-			"— 吃,也是一种艺术 —",
-							/*"------------ 爱生活，尽在香哈新煮意 ------------",
+			"- 学名厨做菜, 用香哈 -",
+							/*"— 学名厨做菜 —",
+							"------------ 爱生活，尽在香哈新煮意 ------------",
 							"------------ 爱生活，爱香哈 ------------",
 							" ------------ 香哈，让生活更美好 ------------"*/};
 
@@ -533,7 +534,7 @@ public class LoadManager {
 			if (mProgressDialog != null && mProgressDialog.isShowing())
 				dismissProgress();
 			mProgressDialog = new DialogManager(mContext);
-			mProgressDialog.createDialog(new ViewManager(mProgressDialog).setView(new LoadingView(mContext).setText(title))).show();
+			mProgressDialog.createDialog(new ViewManager(mProgressDialog).setView(new UploadingView(mContext).setText(title))).noPadding().show();
 		}
 	}
 

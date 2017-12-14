@@ -263,6 +263,8 @@ public class UploadDishVideoControl extends UploadDishParrentControl implements 
                 if (!TextUtils.isEmpty(vidieInfo)) {
                     JSONObject jsonObject = new JSONObject(vidieInfo);
                     String dideoPath = jsonObject.getString("path");
+                    if (TextUtils.isEmpty(dideoPath))
+                        continue;
                     if(!new File(dideoPath).exists()){
                         map.put("videoInfo","");
                     }

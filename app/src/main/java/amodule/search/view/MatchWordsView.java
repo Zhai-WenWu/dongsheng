@@ -76,7 +76,6 @@ public class MatchWordsView extends LinearLayout {
     private void initView() {
         matchwords_header_list_view_frame = (PtrClassicFrameLayout) findViewById(R.id.matchwords_header_list_view_frame);
         tb_matchwords = (TableLayout) findViewById(R.id.tb_matchwords);
-
     }
 
     private void setListener() {
@@ -88,26 +87,12 @@ public class MatchWordsView extends LinearLayout {
                 ToolsDevice.keyboardControl(false, context, MatchWordsView.this);
             }
         });
-
     }
-
 
     public void getMatchWords(final String searchKey) {
         searchWord = searchKey;
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                if (!TextUtils.isEmpty(searchKey)) {
-                    matchWords = new SearchDataImp().getMatchWords(XHApplication.in(), searchKey);
-                    mActivity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            showMatchWordsView();
-                        }
-                    });
-                }
-            }
-        }).start();
+        matchWords = new SearchDataImp().getMatchWords(XHApplication.in(), searchKey);
+        showMatchWordsView();
     }
 
     private void showMatchWordsView() {
@@ -122,11 +107,8 @@ public class MatchWordsView extends LinearLayout {
             public View getView(int position, View convertView, ViewGroup parent) {
 
                 View view = super.getView(position, convertView, parent);
-                if (position == matchWords.size() - 1) {
-                    view.findViewById(R.id.item_sub_line).setVisibility(View.VISIBLE);
-                } else {
-                    view.findViewById(R.id.item_sub_line).setVisibility(View.GONE);
-                }
+                boolean isShow = position == matchWords.size() - 1;
+                view.findViewById(R.id.item_sub_line).setVisibility(isShow ? VISIBLE : GONE);
                 return view;
             }
 

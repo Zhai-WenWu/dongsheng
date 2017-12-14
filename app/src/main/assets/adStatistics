@@ -158,5 +158,10 @@
 "show":"ad_show_wz",
 "click":"ad_click_wz",
 "twoData":"视频前贴"
+},
+"sy_banner":{
+"show":"ad_show_index",
+"click":"ad_click_index",
+"twoData":"banner1"
 }
 }

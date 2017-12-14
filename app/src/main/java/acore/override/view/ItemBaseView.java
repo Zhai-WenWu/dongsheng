@@ -80,7 +80,7 @@ public class ItemBaseView extends RelativeLayout {
         if (value.indexOf("http") == 0) {
             if (value.length() < 10)
                 return;
-            v.setImageResource(roundImgPixels == 0 ? imgResource : R.drawable.bg_round_user_icon);
+            if(v.getId()!=R.id.auther_userImg)v.setImageResource(roundImgPixels == 0 ? imgResource : R.drawable.bg_round_user_icon);
             v.setScaleType(ImageView.ScaleType.CENTER_CROP);
             v.setTag(TAG_ID, value);
             if(context==null)return;

@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -21,6 +20,10 @@ import com.tencent.bugly.crashreport.BuglyLog;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.xiangha.R;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -136,9 +139,50 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
             return;
         }
         if (!handleClickEvent(v)) {
+            if (isDishData()) {
+                String dishStr = "dishInfo=" + URLEncoder.encode(appendDishData());
+                mTransferUrl = mTransferUrl + "&" + dishStr;
+            }
             AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), mTransferUrl, true);
             onItemClick();
         }
+    }
+
+    private boolean isDishData() {
+        boolean ret = false;
+        if (mDataMap == null || mDataMap.isEmpty())
+            return ret;
+        String type = mDataMap.get("type");
+        ret = TextUtils.equals(type, "1") || TextUtils.equals(type, "2");
+        return ret;
+    }
+
+    private String appendDishData() {
+        JSONObject object = new JSONObject();
+        JSONObject objData = new JSONObject();
+        Map<String, String> customerMap = StringManager.getFirstMap(mDataMap.get("customer"));
+        if (customerMap.isEmpty())
+            return objData.toString();
+        String customerInfo = customerMap.get("info");
+        String customerImg = customerMap.get("img");
+        String name = mDataMap.get("title");
+        try {
+            object.put("code", mDataMap.get("code"));
+            object.put("name", TextUtils.isEmpty(name) ? mDataMap.get("name") : name);
+            object.put("allClick", mDataMap.get("allClick"));
+            object.put("favorites", mDataMap.get("favorites"));
+            object.put("info", mDataMap.get("content"));
+            object.put("img", mDataMap.get("img"));
+            object.put("type", mDataMap.get("type"));
+            objData.put("customerCode", customerMap.get("code"));
+            objData.put("nickName", customerMap.get("nickName"));
+            objData.put("info", TextUtils.isEmpty(customerInfo) ? "" : customerInfo);
+            objData.put("img", TextUtils.isEmpty(customerImg) ? "" : customerImg);
+            object.put("customer", objData);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return object.toString();
     }
 
     private ADImageLoadCallback mCallback;

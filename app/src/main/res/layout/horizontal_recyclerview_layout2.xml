@@ -9,7 +9,7 @@
         android:id="@+id/subtitle_view"
         style="@style/subtitle_style"/>
 
-    <acore.widget.rvlistview.RvListView
+    <acore.widget.rvlistview.RvHorizatolListView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

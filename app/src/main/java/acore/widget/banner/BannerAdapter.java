@@ -21,11 +21,14 @@ public abstract class BannerAdapter<T> {
     }
 
     void setViewSource(View view, int position) {
-        bindView(view, mDataList.get(position));
+        if(mDataList != null && mDataList.size() > 0
+                && position >= 0 && mDataList.size() > position)
+            bindView(view, mDataList.get(position));
     }
 
     void selectTips(TextView tv, int position) {
-        if (mDataList != null && mDataList.size() > 0)
+        if (mDataList != null && mDataList.size() > 0
+                && mDataList.size() > position && position >= 0)
             bindTips(tv, mDataList.get(position));
     }
 

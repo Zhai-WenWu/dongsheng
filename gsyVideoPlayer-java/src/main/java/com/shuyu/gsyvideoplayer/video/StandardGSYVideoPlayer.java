@@ -231,6 +231,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
         }
         mTextureView = null;
         mTextureView = new GSYTextureView(getContext());
+        mTextureView.setGSYVideoManager(mGSYVideoManager);
         mTextureView.setSurfaceTextureListener(this);
         mTextureView.setRotation(mRotate);
 
@@ -533,6 +534,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
         Debuger.printfLog("changeUiToNormal");
         mTopContainer.setVisibility(View.VISIBLE);
         mBottomContainer.setVisibility(View.INVISIBLE);
+        onBottomContainerVisibilityChange(INVISIBLE);
         mStartButton.setVisibility(View.VISIBLE);
         mLoadingProgressBar.setVisibility(View.INVISIBLE);
         if (mLoadingProgressBar instanceof ENDownloadView) {
@@ -548,6 +550,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
         Debuger.printfLog("changeUiToPrepareingShow");
         mTopContainer.setVisibility(View.VISIBLE);
         mBottomContainer.setVisibility(View.VISIBLE);
+        onBottomContainerVisibilityChange(VISIBLE);
         mStartButton.setVisibility(View.INVISIBLE);
         mLoadingProgressBar.setVisibility(View.VISIBLE);
         if (mLoadingProgressBar instanceof ENDownloadView) {
@@ -565,6 +568,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
         Debuger.printfLog("changeUiToPrepareingClear");
         mTopContainer.setVisibility(View.INVISIBLE);
         mBottomContainer.setVisibility(View.INVISIBLE);
+        onBottomContainerVisibilityChange(INVISIBLE);
         mStartButton.setVisibility(View.INVISIBLE);
         mLoadingProgressBar.setVisibility(View.INVISIBLE);
         if (mLoadingProgressBar instanceof ENDownloadView) {
@@ -579,6 +583,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
         Debuger.printfLog("changeUiToPlayingShow");
         mTopContainer.setVisibility(View.VISIBLE);
         mBottomContainer.setVisibility(View.VISIBLE);
+        onBottomContainerVisibilityChange(VISIBLE);
         mStartButton.setVisibility(View.VISIBLE);
         mLoadingProgressBar.setVisibility(View.INVISIBLE);
         if (mLoadingProgressBar instanceof ENDownloadView) {
@@ -600,6 +605,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
         Debuger.printfLog("changeUiToPauseShow");
         mTopContainer.setVisibility(View.VISIBLE);
         mBottomContainer.setVisibility(View.VISIBLE);
+        onBottomContainerVisibilityChange(VISIBLE);
         mStartButton.setVisibility(View.VISIBLE);
         mLoadingProgressBar.setVisibility(View.INVISIBLE);
         if (mLoadingProgressBar instanceof ENDownloadView) {
@@ -624,6 +630,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
         Debuger.printfLog("changeUiToPlayingBufferingShow");
         mTopContainer.setVisibility(View.VISIBLE);
         mBottomContainer.setVisibility(View.VISIBLE);
+        onBottomContainerVisibilityChange(VISIBLE);
         mStartButton.setVisibility(View.INVISIBLE);
         mLoadingProgressBar.setVisibility(View.VISIBLE);
         if (mLoadingProgressBar instanceof ENDownloadView) {
@@ -641,6 +648,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
         Debuger.printfLog("changeUiToPlayingBufferingClear");
         mTopContainer.setVisibility(View.INVISIBLE);
         mBottomContainer.setVisibility(View.INVISIBLE);
+        onBottomContainerVisibilityChange(INVISIBLE);
         mStartButton.setVisibility(View.INVISIBLE);
         mLoadingProgressBar.setVisibility(View.VISIBLE);
         if (mLoadingProgressBar instanceof ENDownloadView) {
@@ -659,6 +667,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
         Debuger.printfLog("changeUiToClear");
         mTopContainer.setVisibility(View.INVISIBLE);
         mBottomContainer.setVisibility(View.INVISIBLE);
+        onBottomContainerVisibilityChange(INVISIBLE);
         mStartButton.setVisibility(View.INVISIBLE);
         mLoadingProgressBar.setVisibility(View.INVISIBLE);
         if (mLoadingProgressBar instanceof ENDownloadView) {
@@ -673,6 +682,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
         Debuger.printfLog("changeUiToCompleteShow");
         mTopContainer.setVisibility(View.VISIBLE);
         mBottomContainer.setVisibility(View.VISIBLE);
+        onBottomContainerVisibilityChange(VISIBLE);
         mStartButton.setVisibility(View.VISIBLE);
         mLoadingProgressBar.setVisibility(View.INVISIBLE);
         if (mLoadingProgressBar instanceof ENDownloadView) {
@@ -688,6 +698,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
         Debuger.printfLog("changeUiToCompleteClear");
         mTopContainer.setVisibility(View.INVISIBLE);
         mBottomContainer.setVisibility(View.INVISIBLE);
+        onBottomContainerVisibilityChange(INVISIBLE);
         mStartButton.setVisibility(View.VISIBLE);
         mLoadingProgressBar.setVisibility(View.INVISIBLE);
         if (mLoadingProgressBar instanceof ENDownloadView) {
@@ -703,6 +714,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
         Debuger.printfLog("changeUiToError");
         mTopContainer.setVisibility(View.INVISIBLE);
         mBottomContainer.setVisibility(View.INVISIBLE);
+        onBottomContainerVisibilityChange(INVISIBLE);
         mStartButton.setVisibility(View.VISIBLE);
         mLoadingProgressBar.setVisibility(View.INVISIBLE);
         if (mLoadingProgressBar instanceof ENDownloadView) {
@@ -1070,6 +1082,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
 
     public void hideAllWidget() {
         mBottomContainer.setVisibility(View.INVISIBLE);
+        onBottomContainerVisibilityChange(INVISIBLE);
         mTopContainer.setVisibility(View.INVISIBLE);
         mBottomProgressBar.setVisibility(View.VISIBLE);
         mStartButton.setVisibility(View.INVISIBLE);
@@ -1311,4 +1324,19 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
         void nothingConnected();
     }
 
+    public interface OnBottomContainerVisibilityChangeCallback{
+        void onBottomContainerVisibilityChange(int visibility);
+    }
+
+    private OnBottomContainerVisibilityChangeCallback mOnBottomContainerVisibilityChangeCallback;
+
+    public void setOnBottomContainerVisibilityChangeCallback(OnBottomContainerVisibilityChangeCallback onBottomContainerVisibilityChangeCallback) {
+        mOnBottomContainerVisibilityChangeCallback = onBottomContainerVisibilityChangeCallback;
+    }
+
+    private void onBottomContainerVisibilityChange(int visibility){
+        if(mOnBottomContainerVisibilityChangeCallback != null){
+            mOnBottomContainerVisibilityChangeCallback.onBottomContainerVisibilityChange(visibility);
+        }
+    }
 }

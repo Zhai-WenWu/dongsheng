@@ -4,8 +4,14 @@
     android:layout_height="wrap_content">
 
     <View
+        android:id="@+id/qa_fffffe"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_25"
+        />
+    <View
         android:id="@+id/qa_line"
         android:layout_width="match_parent"
+        android:layout_below="@+id/qa_fffffe"
         android:layout_height="@dimen/dp_5"
         android:background="#f2f2f2"
         android:visibility="visible"/>
@@ -101,6 +107,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/degree_linear"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/dp_35"
@@ -131,7 +138,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="评价响应时间 "
+                android:text="平均响应时间 "
                 android:textColor="#999999"
                 android:textSize="@dimen/dp_13" />
 
@@ -156,9 +163,10 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_0.5"
-            android:layout_alignParentBottom="true"
+            android:layout_alignBottom="@+id/img_line"
             android:background="#e8e8e8"/>
         <ImageView
+            android:id="@+id/img_line"
             android:layout_width="@dimen/dp_16"
             android:layout_height="@dimen/dp_10"
             android:layout_marginLeft="@dimen/dp_20"

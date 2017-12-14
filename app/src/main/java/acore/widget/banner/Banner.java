@@ -2,6 +2,7 @@ package acore.widget.banner;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -52,6 +53,8 @@ public class Banner extends RelativeLayout {
     private static final int RMP = LayoutParams.MATCH_PARENT;
     private static final int RWC = LayoutParams.WRAP_CONTENT;
     private static final int LWC = LinearLayout.LayoutParams.WRAP_CONTENT;
+
+    private ImageView mBackImageView;
     /**
      * 循环轮播的Viewpager
      */
@@ -76,7 +79,7 @@ public class Banner extends RelativeLayout {
     /**
      * 存放点的容器
      */
-    private LinearLayout mPointContainerLl;
+    protected LinearLayout mPointContainerLl;
     /**
      * 点的drawable资源id
      */
@@ -241,6 +244,10 @@ public class Banner extends RelativeLayout {
 
         mItemArrays = new SparseArray<>();
 
+        mBackImageView = new ImageView(context);
+        mBackImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        addView(mBackImageView, new LayoutParams(RMP, RMP));
+
         //初始化ViewPager
         mViewPager = new SLooperViewPager(context);
 
@@ -348,7 +355,7 @@ public class Banner extends RelativeLayout {
             return;
         }
         if (offset < 0) {
-            mPointContainerLl.removeViews(dataSize, -offset);
+            mPointContainerLl.removeViews(0, -offset);
         }
     }
 
@@ -467,8 +474,8 @@ public class Banner extends RelativeLayout {
                     }
                 }
             });
-
-            container.addView(view);
+            if(container.indexOfChild(view) <= -1)
+                container.addView(view);
             return view;
         }
 
@@ -566,6 +573,12 @@ public class Banner extends RelativeLayout {
     }
 
     @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        goScroll();
+    }
+
+    @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         pauseScroll();
@@ -618,13 +631,24 @@ public class Banner extends RelativeLayout {
         setSource();
     }
 
+    public void setBackImageView(OnLoadImageCallback callback){
+        if(null != callback){
+            callback.onLoadImage(mBackImageView);
+        }
+    }
+
+    public interface OnLoadImageCallback{
+        void onLoadImage(ImageView imageView);
+    }
+
 
     /**
      * 通知数据已经放生改变
      */
     public void notifyDataHasChanged() {
-        pauseScroll();
+        mItemArrays.clear();
         initPoints();
+
         mViewPager.getAdapter().notifyDataSetChanged();
         mViewPager.setCurrentItem(0, false);
         if (mData.size() > 1){

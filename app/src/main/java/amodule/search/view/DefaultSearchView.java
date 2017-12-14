@@ -91,6 +91,11 @@ public class DefaultSearchView extends LinearLayout implements View.OnClickListe
     private void initView() {
 
         search_header_list_view_frame = (PtrClassicFrameLayout) findViewById(R.id.search_header_list_view_frame);
+        search_header_list_view_frame.setKeepHeaderWhenRefresh(false);
+        if(search_header_list_view_frame.getHeader() != null
+                && search_header_list_view_frame.getHeader().findViewById(R.id.framelayout_refresh) != null){
+            search_header_list_view_frame.getHeader().findViewById(R.id.framelayout_refresh).setVisibility(INVISIBLE);
+        }
         rl_no_history = (LinearLayout) findViewById(R.id.rl_no_history);
         ll_has_his = (LinearLayout) findViewById(R.id.ll_has_his);
         his_search_title = (LinearLayout) findViewById(R.id.his_search_title);
@@ -144,7 +149,6 @@ public class DefaultSearchView extends LinearLayout implements View.OnClickListe
         if (isShow) {
             listSearchHistory.clear();
             listSearchHistory = new SearchDataImp().getHistoryWords();
-            Log.i("tzy","listSearchHistory = " + listSearchHistory.toString());
             showHisTable();
         }
         showHotTable();

@@ -331,11 +331,11 @@ public class SampleVideo extends StandardGSYVideoPlayer {
                 if (mSourcePosition != position) {
                     if ((mCurrentState == GSYVideoPlayer.CURRENT_STATE_PLAYING
                             || mCurrentState == GSYVideoPlayer.CURRENT_STATE_PAUSE)
-                            && GSYVideoManager.instance().getMediaPlayer() != null) {
+                            && mGSYVideoManager.getMediaPlayer() != null) {
                         final String url = mUrlList.get(position).getUrl();
                         onVideoPause();
                         final long currentPosition = mCurrentPosition;
-                        GSYVideoManager.instance().releaseMediaPlayer();
+                        mGSYVideoManager.releaseMediaPlayer();
                         cancelProgressTimer();
                         hideAllWidget();
                         new Handler().postDelayed(new Runnable() {

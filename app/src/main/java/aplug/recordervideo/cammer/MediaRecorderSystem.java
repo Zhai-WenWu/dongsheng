@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.hardware.Camera;
 import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.widget.Toast;
@@ -107,6 +108,9 @@ public class MediaRecorderSystem extends MediaRecorderBase implements MediaRecor
 
 //            mMediaRecorder.setMaxDuration(maxDurationInMs);
 
+            if (TextUtils.isEmpty(filePath)) {
+                return;
+            }
             File tempFile = new File(filePath);
             if(!tempFile.getParentFile().exists()){
                 tempFile.getParentFile().mkdirs();

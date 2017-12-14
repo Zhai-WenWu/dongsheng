@@ -108,18 +108,22 @@ public class XGPushServer {
 	 * @return token
 	 */
 	public static String getXGToken(Context context) {
-		if (context != null) {
-			if (XGPushConfig.getToken(context).length() >= 40) {
-				return XGPushConfig.getToken(context);
+		try{
+			if (context != null) {
+				if (XGPushConfig.getToken(context).length() >= 40) {
+					return XGPushConfig.getToken(context);
+				}
+				String token = FileManager.loadShared(context, FileManager.xmlFile_appInfo, FileManager.xmlKey_XGToken).toString().trim();
+				if (token.length() >= 40) {
+					return token;
+				}
+			} else {
+				String token = FileManager.readFile(FileManager.getDataDir() + FileManager.file_XGToken).trim();
+				if (token.length() >= 40)
+					return token;
 			}
-			String token = FileManager.loadShared(context, FileManager.xmlFile_appInfo, FileManager.xmlKey_XGToken).toString().trim();
-			if (token.length() >= 40) {
-				return token;
-			}
-		} else {
-			String token = FileManager.readFile(FileManager.getDataDir() + FileManager.file_XGToken).trim();
-			if (token.length() >= 40)
-				return token;
+		}catch (Exception e){
+			e.printStackTrace();
 		}
 		return "000000000000000";
 	}

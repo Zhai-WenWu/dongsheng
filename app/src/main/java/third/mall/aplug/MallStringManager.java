@@ -1,5 +1,6 @@
 package third.mall.aplug;
 
+import android.text.TextUtils;
 import xh.basic.tool.UtilString;
 
 public class MallStringManager extends UtilString {
@@ -12,6 +13,9 @@ public class MallStringManager extends UtilString {
 
     public static String apiTitle = httpData + apiAPI;
     public static String appWebTitle = httpData + appm;
+
+    //当前协议
+    public static String protocol = httpData;
     //当前域名
     public static String domain = defaultDomain;
     //API请求地址
@@ -108,11 +112,11 @@ public class MallStringManager extends UtilString {
      * @return
      */
     public static String replaceUrl(String url) {
-        if (domain != defaultDomain) {
-            String[] find = new String[]{apiTitle, appWebTitle};
+        if (domain != defaultDomain || httpData != protocol) {
+            String[] find = new String[]{apiAPI, appm};
             String[] replace = new String[]{mall_apiUrl, mall_web_apiUrl};
             for (int i = 0; i < find.length; i++) {
-                String findStr = find[i] + defaultDomain;
+                String findStr = httpData + find[i] + defaultDomain;
                 if (url.indexOf(findStr) == 0) {
                     return url.replace(findStr, replace[i]);
                 }
@@ -122,11 +126,14 @@ public class MallStringManager extends UtilString {
     }
 
     //更换url
-    public final static void changeUrl(String newDomain) {
+    public final static void changeUrl(String newProtocol, String newDomain) {
+        if (!TextUtils.isEmpty(newProtocol)) {
+            protocol = new String(newProtocol);
+        }
         if (newDomain.length() > 1) {
-            domain = newDomain;
-            mall_apiUrl = apiTitle + domain;
-            mall_web_apiUrl = appWebTitle + domain;
+            domain = new String(newDomain);
+            mall_apiUrl = protocol + apiAPI + domain;
+            mall_web_apiUrl = protocol + appm + domain;
         }
     }
 }

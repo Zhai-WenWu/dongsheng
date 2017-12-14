@@ -478,6 +478,7 @@ public class UploadListControl {
     public void destroyUploadPool(Class<? extends UploadListPool> clazz, int draftId) {
 
         UploadListPool uploadListPool = getPool(clazz.getSimpleName() + draftId);
+        if(uploadListPool==null)return;
         UploadPoolData uploadPoolData = uploadListPool.getUploadPoolData();
         uploadPoolData.loopPoolData(uploadPoolData.getTotalDataList(),
                 new UploadPoolData.LoopCallback() {

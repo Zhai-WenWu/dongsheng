@@ -77,8 +77,7 @@ public class FuncNavView1 extends HomeFuncNavView1 implements IBindMap,IStatictu
         }
         final int length = Math.min(navIds.size(),data.size());
         for(int index = 0 ; index < length ; index ++){
-            View navView = findViewById(navIds.get(index));
-            setMapToView(navView,data.get(index));
+            setMapToView(findViewById(navIds.get(index)),data.get(index));
         }
         setVisibility(VISIBLE);
     }

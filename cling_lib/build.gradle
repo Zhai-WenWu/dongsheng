@@ -1,0 +1,55 @@
+apply plugin: 'com.android.library'
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    // https://mvnrepository.com/artifact/org.slf4j/slf4j-api
+    compile 'org.slf4j:slf4j-api:1.7.25'
+    //Cling related-------start
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    // Cling library
+    compile 'org.fourthline.cling:cling-core:2.1.1'
+    compile 'org.fourthline.cling:cling-support:2.1.1'
+    // Jetty library
+    compile('org.eclipse.jetty:jetty-server:8.1.20.v20160902', {
+        exclude group: 'org.eclipse.jetty', module: 'jetty-util'
+    })
+    compile('org.eclipse.jetty:jetty-servlet:8.1.20.v20160902', {
+        exclude group: 'org.eclipse.jetty', module: 'jetty-util'
+    })
+    compile('org.eclipse.jetty:jetty-client:8.1.20.v20160902', {
+        exclude group: 'org.eclipse.jetty', module: 'jetty-util'
+    })
+    //Cling related-------end
+}
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion '26.0.2'
+
+
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 21
+        versionCode 1
+        versionName "1.0"
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+
+}
+
+

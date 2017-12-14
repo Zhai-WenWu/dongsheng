@@ -89,7 +89,7 @@ public class MoreImageShow extends BaseActivity{
                 classContainter.get(position).onShow();
                 pageNum = position;
                 if("dish".equals(from))
-                    XHClick.mapStat(MoreImageShow.this, DetailDish.tongjiId, "菜谱区域的点击", "步骤图大图-滑动");
+                    XHClick.mapStat(MoreImageShow.this, DetailDish.tongjiId_detail, "菜谱区域的点击", "步骤图大图-滑动");
             }
 
             @Override

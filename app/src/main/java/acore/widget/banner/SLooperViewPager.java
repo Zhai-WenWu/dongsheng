@@ -105,8 +105,12 @@ public class SLooperViewPager extends ViewPager {
         //上一次的位置
         private float mPreviousPosition = -1;
 
+        private long  mPreviousTime = -1;
+        private int count = 0;
+
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
             if (mSLooperAdapter != null) {
                 int innerPosition = mSLooperAdapter.getInnerAdapterPosition(position);
 
@@ -115,13 +119,25 @@ public class SLooperViewPager extends ViewPager {
                     position =0 :开始的边界
                     position =mSLooperAdapter.getCount():结束的边界
                  */
-//                    Log.w("tzy","position = " + position);//0
-//                    Log.w("tzy","mSLooperAdapter.getCount() = " + mSLooperAdapter.getCount());//8
-//                    Log.w("tzy","innerPosition = " + innerPosition);//5
-                if (positionOffset == 0 && mPreviousOffset == 0 && (position == 0 || position == mSLooperAdapter.getCount())) {
+                if (positionOffset == 0
+                        && mPreviousOffset == 0
+                        && mSLooperAdapter.getCount() > 1
+                        && (position == 0 || position == mSLooperAdapter.getCount() - 1)
+                        && count < 50
+                        && ((mPreviousTime != -1 && System.currentTimeMillis() - mPreviousTime >= 200) || mPreviousTime == -1)
+                        ) {
                     //强制回到映射位置
-                    setCurrentItem(innerPosition, false);
+                    try{
+                        setCurrentItem(innerPosition, false);
+                        count++;
+                        mPreviousTime = System.currentTimeMillis();
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }catch (Error e){
+                        e.printStackTrace();
+                    }
                 }
+                count = 0;
                 mPreviousOffset = positionOffset;
 
                 if (mOnPageChangeListeners != null) {
@@ -149,20 +165,29 @@ public class SLooperViewPager extends ViewPager {
 
         @Override
         public void onPageSelected(int position) {
+//            Log.i("tzy","------------------------------- onPageSelected -------------------------------");
+            if(mSLooperAdapter != null ){
+                int realPosition = mSLooperAdapter.getInnerAdapterPosition(position);
 
-            int realPosition = mSLooperAdapter.getInnerAdapterPosition(position);
-            if (mPreviousPosition != realPosition) {
-                mPreviousPosition = realPosition;
-                if (mOnPageChangeListeners != null) {
-                    for (int i = 0; i < mOnPageChangeListeners.size(); i++) {
-                        OnPageChangeListener listener = mOnPageChangeListeners.get(i);
-                        if (listener != null) {
-                            listener.onPageSelected(realPosition);
+                if (mSLooperAdapter.getCount() > 1
+                        && (position == 0 || position == mSLooperAdapter.getCount() - 1)) {
+                    //强制回到映射位置
+//                    Log.i("tzy","onPageSelected -> setCurrentItem");
+//                    postDelayed(()->setCurrentItem(realPosition, false),mPageChangeDuration);
+                }
+
+                if (mPreviousPosition != realPosition) {
+                    mPreviousPosition = realPosition;
+                    if (mOnPageChangeListeners != null) {
+                        for (int i = 0; i < mOnPageChangeListeners.size(); i++) {
+                            OnPageChangeListener listener = mOnPageChangeListeners.get(i);
+                            if (listener != null) {
+                                listener.onPageSelected(realPosition);
+                            }
                         }
                     }
                 }
             }
-
         }
 
         @Override
@@ -170,7 +195,9 @@ public class SLooperViewPager extends ViewPager {
             if (mSLooperAdapter != null) {
                 int position = SLooperViewPager.super.getCurrentItem();
                 int realPosition = mSLooperAdapter.getInnerAdapterPosition(position);
-                if (state == ViewPager.SCROLL_STATE_IDLE && (position == 0 || position == mSLooperAdapter.getCount() - 1)) {
+                if (state == ViewPager.SCROLL_STATE_IDLE
+                        && mSLooperAdapter.getCount() > 1
+                        && (position == 0 || position == mSLooperAdapter.getCount() - 1)) {
                     setCurrentItem(realPosition, false);
                 }
             }

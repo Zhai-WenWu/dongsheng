@@ -27,7 +27,9 @@
             android:layout_marginLeft="@dimen/dp_10"
             android:textSize="@dimen/sp_16.5"
             android:text="正在提交......"
-            android:textColor="@color/c_black_text"/>
+            android:textColor="@color/c_black_text"
+            android:lines="1"
+            android:ellipsize="end"/>
     </LinearLayout>
 
 </RelativeLayout>

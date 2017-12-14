@@ -16,9 +16,9 @@ import third.ad.tools.AdConfigTools;
  */
 public abstract class AdParent {
 	public static final String ADKEY_GDT = "isGdt";
-	public static final String ADKEY_JD = "isJD";
 	public static final String ADKEY_BANNER = "isBanner";
-	
+	public static final String ADKEY_TX = "";
+
 	public static final String TONGJI_GDT = "gdt";
 	public static final String TONGJI_JD = "jingdong";
 	public static final String TONGJI_BANNER = "banner";
@@ -60,10 +60,8 @@ public abstract class AdParent {
 			mAdKey = ADKEY_GDT;
 		}else if(this instanceof BannerAd){
 			mAdKey = ADKEY_BANNER;
-		}else if(this instanceof AdeazAdCreate){
-			mAdKey = ADKEY_JD;
 		}else if(this instanceof TencenApiAd){
-			mAdKey = ADKEY_JD;
+			mAdKey = ADKEY_TX;
 		}
 	}
 	

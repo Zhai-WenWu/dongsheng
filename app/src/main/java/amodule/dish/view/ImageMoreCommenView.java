@@ -30,7 +30,7 @@ import acore.tools.Tools;
 import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
 
-import static amodule.dish.activity.DetailDish.tongjiId;
+import static amodule.dish.activity.DetailDishWeb.tongjiId;
 
 /**
  * 图片预览单个view

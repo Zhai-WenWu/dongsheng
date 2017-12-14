@@ -11,6 +11,7 @@ import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.view.Display;
 import android.view.WindowManager;
 
@@ -73,8 +74,7 @@ public class ToolsCammer {
     }
 
     public static Bitmap getFrameAtTime(String filePath) {
-        File file = new File(filePath);
-        if(!file.exists()) return null;
+        if(TextUtils.isEmpty(filePath) || !new File(filePath).exists()) return null;
         Bitmap bitmap = ThumbnailUtils.createVideoThumbnail(filePath, MediaStore.Images.Thumbnails.MINI_KIND);
         if (bitmap != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
             bitmap.setConfig(Bitmap.Config.RGB_565);
@@ -110,7 +110,8 @@ public class ToolsCammer {
     }
 
     public static float getLongTime(String filePath) {
-
+        if (TextUtils.isEmpty(filePath))
+            return 0;
         MediaPlayer mediaPlayer = MediaPlayer.create(XHApplication.in(), Uri.fromFile(new File(filePath)));
         try {
             mediaPlayer.setDataSource(filePath);

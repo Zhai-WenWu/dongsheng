@@ -25,7 +25,7 @@ import xh.basic.tool.UtilFile;
 
 public class ChangeUrl extends BaseActivity {
 
-    private String mInitXHData, mInitMallData,
+    private String mInitXHData, mInitMallData, mInitProtocol,
             mProtocol = StringManager.defaultProtocol,
             mXHDomain = StringManager.defaultDomain, mXHPort,
             mMallDefDomain = ".ds.xiangha.com",
@@ -61,8 +61,9 @@ public class ChangeUrl extends BaseActivity {
 
             @Override
             public void onClick(View v) {
+                boolean protocolChanged = !TextUtils.equals(mInitProtocol, mProtocol);
                 String tempXHData = mProtocol + mXHDomain + mXHPort;
-                if (!tempXHData.equals(mInitXHData)) {//香哈
+                if (!tempXHData.equals(mInitXHData) || protocolChanged) {//香哈
                     if (!TextUtils.isEmpty(mXHDomain) && mXHTestDomain.equals(mXHDomain) && TextUtils.isEmpty(mXHPort)) {
                         Tools.showToast(ChangeUrl.this, "请填写香哈测试端口号");
                         return;
@@ -74,10 +75,10 @@ public class ChangeUrl extends BaseActivity {
                     String newDomain = mXHDomain + tempPort;
                     StringManager.changeUrl(mProtocol, newDomain);
                     UtilFile.saveShared(ChangeUrl.this, FileManager.xmlFile_appInfo, FileManager.xmlKey_domain, newDomain);
-                    UtilFile.saveShared(ChangeUrl.this, FileManager.xmlFile_appInfo, FileManager.xmlKey_protocol, mProtocol);
                 }
+                UtilFile.saveShared(ChangeUrl.this, FileManager.xmlFile_appInfo, FileManager.xmlKey_protocol, mProtocol);
                 String tempMallData = mMallDomain + mMallPort;
-                if (!tempMallData.equals(mInitMallData)) {//电商
+                if (!tempMallData.equals(mInitMallData) || protocolChanged) {//电商
                     if (!TextUtils.isEmpty(mMallDomain) && mMallTestDomain.equals(mMallDomain) && TextUtils.isEmpty(mMallPort)) {
                         Tools.showToast(ChangeUrl.this, "请填写电商测试端口号");
                         return;
@@ -87,7 +88,7 @@ public class ChangeUrl extends BaseActivity {
                         tempPort = ":" + mMallPort;
                     }
                     String newDomain = mMallDomain + tempPort;
-                    MallStringManager.changeUrl(newDomain);
+                    MallStringManager.changeUrl(mProtocol, newDomain);
                     UtilFile.saveShared(ChangeUrl.this, FileManager.xmlFile_appInfo, FileManager.xmlKey_mall_domain, newDomain);
                 }
                 ChangeUrl.this.finish();
@@ -210,7 +211,7 @@ public class ChangeUrl extends BaseActivity {
     private void initData() {
         String protocol = (String) UtilFile.loadShared(ChangeUrl.this, FileManager.xmlFile_appInfo, FileManager.xmlKey_protocol);
         if (!TextUtils.isEmpty(protocol)) {
-            mProtocol = protocol;
+            mInitProtocol = protocol;
             if (protocol.contains("http://"))
                 mProtocolBtn2.setChecked(true);
             else

@@ -25,8 +25,10 @@ dependencies {
     compile(name: 'xh_popdialog-release', ext: 'aar')
     compile(name: 'XH_WindowView-release', ext: 'aar')
     compile(name: 'SMSSDK-3.0.0', ext: 'aar')
+    compile(name: 'xh_dialog-release', ext: 'aar')
     //    compile 'com.github.chrisbanes:photoview:latest.release'
     compile 'com.android.support:recyclerview-v7:25.3.1'
+    compile 'com.android.support:cardview-v7:25.3.1'
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:design:25.3.1'
     compile 'com.bartoszlipinski.recyclerviewheader:library:1.2.0'
@@ -38,19 +40,7 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.qiyukf.unicorn:unicorn:3.10.0'
     compile project(':gsyVideoPlayer-java')
-    compile project(':xh_dialog')
-    //Cling related-------start
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    // Cling library
-    compile 'org.fourthline.cling:cling-core:2.1.1'
-    compile 'org.fourthline.cling:cling-support:2.1.1'
-    // Jetty library
-    compile 'org.eclipse.jetty:jetty-server:8.1.12.v20130726'
-    compile 'org.eclipse.jetty:jetty-servlet:8.1.12.v20130726'
-    compile 'org.eclipse.jetty:jetty-client:8.1.12.v20130726'
-    //Cling related-------end
+    compile project(':cling_lib')
     //Java8的stream API第三方兼容包
     compile 'com.annimon:stream:1.0.3'
 }
@@ -58,14 +48,14 @@ dependencies {
 android {
 
     compileSdkVersion 25
-    buildToolsVersion '26.0.3'
+    buildToolsVersion '26.0.2'
 
     defaultConfig {
         applicationId "com.xiangha"
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 212
-        versionName "5.7.5.2"
+        versionCode 213
+        versionName "5.7.5.21"
         // dex突破65535的限制
         multiDexEnabled true
         //GrowingIO
@@ -88,21 +78,10 @@ android {
 
     signingConfigs {
         MainXiangha {
+            storeFile file("$projectDir/xiangha.keystore")
+            storePassword 'XH.com'
             keyAlias 'caipu'
             keyPassword 'XH.comCaipu'
-//            storeFile file('F:/XH_Work/WorkSpace/Project/keystore/xiangha.keystore')
-//            storeFile file('D:/android_workspace/xiangha.keystore')
-//            storeFile file('E:/keystore/xiangha.keystore')
-
-//            storeFile file('E:/XHWork/xiangha/keystore/xiangha.keystore')
-//            storeFile file('/Users/tanzeyu/xiangha.keystore')
-//            yulekwok
-            storeFile file('/Users/yulekwok/Documents/MacDev/keystore/xiangha.keystore')
-//            mac
-//            storeFile file('/Users/xiangha_android/Documents/MacDev/keystore/xiangha.keystore')
-//            storeFile file('/Users/xiangha-zhangyujian/Desktop/project/keystore/xiangha.keystore')
-//            storeFile file('/Users/xiangha-zhangyujian/Desktop/project/keystore/xiangha.keystore')
-            storePassword 'XH.com'
 //            v2SigningEnabled false
         }
     }

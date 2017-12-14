@@ -320,6 +320,13 @@
 
         <!-- dish start -->
         <activity
+            android:name="amodule.dish.activity.GridDish"
+              android:configChanges="orientation|keyboardHidden"
+              android:screenOrientation="portrait"
+              android:theme="@style/AppMainTheme"
+              android:windowSoftInputMode="adjustPan"
+            />
+        <activity
             android:name="amodule.dish.activity.upload.UploadDishActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
@@ -332,27 +339,28 @@
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan"/>
         <activity
+            android:name="amodule.dish.activity.DetailDishWeb"
+            android:configChanges="orientation|keyboardHidden|locale|screenSize|layoutDirection"
+            android:hardwareAccelerated="true"
+            android:keepScreenOn="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppMainTheme"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name="amodule.dish.activity.DishTestActivity"
+            android:configChanges="orientation|keyboardHidden|locale|screenSize|layoutDirection"
+            android:hardwareAccelerated="true"
+            android:keepScreenOn="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/common_AllTransParentTheme"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity
             android:name="amodule.dish.activity.DetailDish"
             android:configChanges="orientation|keyboardHidden|locale|screenSize|layoutDirection"
             android:hardwareAccelerated="true"
             android:keepScreenOn="true"
             android:screenOrientation="portrait"
             android:theme="@style/AppMainTheme"
-            android:windowSoftInputMode="adjustPan"/>
-        <activity
-            android:name="amodule.dish.activity.DetailDishNew"
-            android:configChanges="orientation|keyboardHidden|locale|screenSize|layoutDirection"
-            android:hardwareAccelerated="true"
-            android:keepScreenOn="true"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppMainTheme"
-            android:windowSoftInputMode="adjustPan"/>
-        <activity
-            android:name="amodule.main.view.HintMyselfDialog"
-            android:configChanges="orientation|keyboardHidden"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/myself_hint_off"
             android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name="amodule.dish.activity.ListDish"
@@ -374,6 +382,12 @@
             android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name="amodule.dish.activity.OfflineDish"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/titleTheme"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name="amodule.dish.activity.OfflineDishNew"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
@@ -1201,14 +1215,6 @@
             android:windowSoftInputMode="adjustPan"
             />
         <!-- mall end -->
-        <!-- ad start -->
-        <activity
-            android:name="third.ad.tools.AdWebView"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"
-            android:theme="@style/titleTheme"
-            android:windowSoftInputMode="adjustPan"/>
-        <!-- ad end -->
 
         <activity
             android:name="amodule.dish.activity.upload.UploadDishListActivity"
@@ -1512,14 +1518,14 @@
             android:configChanges="keyboard|keyboardHidden"
             android:screenOrientation="portrait"
             android:hardwareAccelerated="true"
-            android:theme="@style/titleTheme"/>
+            android:theme="@style/common_TransParentTheme"/>
 
         <activity
             android:name="amodule.home.activity.HomeWeekListActivity"
             android:configChanges="keyboard|keyboardHidden"
             android:screenOrientation="portrait"
             android:hardwareAccelerated="true"
-            android:theme="@style/titleTheme"/>
+            android:theme="@style/common_TransParentTheme"/>
 
         <!--Baidu AD end-->
         <!--全面屏适配-->
@@ -1529,10 +1535,6 @@
         <!--Cling start-->
         <service
             android:name="third.cling.service.ClingUpnpService"
-            android:exported="false" />
-
-        <service
-            android:name="third.cling.service.SystemService"
             android:exported="false" />
         <!--Cling end-->
 

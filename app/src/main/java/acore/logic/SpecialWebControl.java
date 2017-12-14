@@ -109,6 +109,9 @@ public class SpecialWebControl {
                 return true;
             }
         });
+        if(Tools.isDebug(context)){
+            return;
+        }
         webView.postDelayed(() -> {
             try {
                 loadUrl(webView, url, name);
@@ -122,10 +125,10 @@ public class SpecialWebControl {
         WebView webView =null;
         View view = parent.getChildAt(parent.getChildCount() - 1);
         if(view != null && view instanceof WebView){
-            Log.i("tzy","复用已存在的webview");
+//            Log.i("tzy","复用已存在的webview");
             webView = (WebView)view;
         }else{
-            Log.i("tzy","创建webview");
+//            Log.i("tzy","创建webview");
             webView = new WebView(context);
         }
         //同步cookie并获得webview

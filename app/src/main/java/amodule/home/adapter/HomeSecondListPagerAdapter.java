@@ -19,18 +19,15 @@ public class HomeSecondListPagerAdapter extends FragmentStatePagerAdapter {
 
     private ArrayList<HomeSecondModule> mModules;
     private HomeModuleBean mHomeModuleBean;
-    private HomeSecondListFragment.OnTabDataReadyCallback mCallback;
-    public HomeSecondListPagerAdapter(FragmentManager fm, ArrayList<HomeSecondModule> modules, HomeModuleBean homeModuleBean, HomeSecondListFragment.OnTabDataReadyCallback callback) {
+    public HomeSecondListPagerAdapter(FragmentManager fm, ArrayList<HomeSecondModule> modules, HomeModuleBean homeModuleBean) {
         super(fm);
         mHomeModuleBean = homeModuleBean;
         mModules = modules;
-        mCallback = callback;
     }
 
     @Override
     public Fragment getItem(int i) {
         HomeSecondListFragment fragment = HomeSecondListFragment.newInstance(mHomeModuleBean, i, mModules.get(i));
-        fragment.setOnTabDataReadyCallback(mCallback);
         return fragment;
     }
 

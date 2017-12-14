@@ -9,6 +9,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Environment;
+import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -364,6 +366,14 @@ public class FileManager extends UtilFile{
 	 */
 	public static void scynSaveFile(final String filePath, final InputStream content, final boolean append){
 		new Thread(() -> saveFileToCompletePath(filePath,content,append)).start();
+	}
+
+	public static void scynSaveSharePreference(Context context, String xmlName, @NonNull String key, @NonNull String value) {
+		if(context == null || TextUtils.isEmpty(xmlName)) return;
+		SharedPreferences preferences = context.getSharedPreferences(xmlName, 0);
+		Editor editor = preferences.edit();
+		editor.putString(key, value);
+		editor.apply();
 	}
 
 }
