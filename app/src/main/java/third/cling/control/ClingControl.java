@@ -32,7 +32,6 @@ public class ClingControl {
     private Context mContext;
 
     private static final String TAG = ClingControl.class.getSimpleName();
-    private static final String TAG2 = "SLL";
     private ClingOptionView mClingOptionView;
     private View.OnClickListener mOnExitClickListener;
 
