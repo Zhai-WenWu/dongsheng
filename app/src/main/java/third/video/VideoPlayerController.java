@@ -41,6 +41,7 @@ import acore.widget.ImageViewVideo;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
 import third.cling.control.ClingControl;
+import third.cling.ui.ClingOptionView;
 
 import static com.shuyu.gsyvideoplayer.GSYVideoPlayer.CURRENT_STATE_PLAYING;
 
@@ -609,7 +610,8 @@ public class VideoPlayerController {
 
     public void onResume() {
         mClingControl.onResume(mContext);
-        if (mClingControl.getClingOptionView().isShowing()) {
+        ClingOptionView clingOptionView = mClingControl.getClingOptionView();
+        if (clingOptionView != null && clingOptionView.isShowing()) {
             return;
         }
         if(null != videoPlayer && !isNetworkDisconnect) {
@@ -799,16 +801,18 @@ public class VideoPlayerController {
     }
 
     private void addOptionsView() {
-        if (mPraentViewGroup != null) {
-            mPraentViewGroup.removeView(mClingControl.getClingOptionView());
-            mPraentViewGroup.addView(mClingControl.getClingOptionView());
+        ClingOptionView clingOptionView = mClingControl.getClingOptionView();
+        if (mPraentViewGroup != null && clingOptionView != null) {
+            mPraentViewGroup.removeView(clingOptionView);
+            mPraentViewGroup.addView(clingOptionView);
         }
     }
 
 
     public void removeClingOptionView() {
-        if (mPraentViewGroup != null) {
-            mPraentViewGroup.removeView(mClingControl.getClingOptionView());
+        ClingOptionView clingOptionView = mClingControl.getClingOptionView();
+        if (mPraentViewGroup != null && clingOptionView != null) {
+            mPraentViewGroup.removeView(clingOptionView);
         }
     }
 }
