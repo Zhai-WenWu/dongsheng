@@ -243,6 +243,8 @@ public class  WebviewManager {
                                 AppCommon.openUrl(act, newUrl, true);
                             }
                         });
+                        if(!TextUtils.equals(newUrl,url))
+                            loadManager.hideProgressBar();
                     } else {
                         AppCommon.openUrl(act, newUrl, true);
                     }
