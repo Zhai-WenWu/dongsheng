@@ -18,6 +18,8 @@
 
 package org.eclipse.jetty.util.resource;
 
+import android.text.TextUtils;
+
 import org.eclipse.jetty.util.IO;
 import org.eclipse.jetty.util.URIUtil;
 import org.eclipse.jetty.util.log.Log;
@@ -226,7 +228,10 @@ public class JarResource extends URLResource
             else
             {
                 // make directory (some jars don't list dirs)
-                File dir = new File(file.getParent());
+                String pathName = file.getParent();
+                if (TextUtils.isEmpty(pathName))
+                    return;
+                File dir = new File(pathName);
                 if (!dir.exists())
                     dir.mkdirs();
 

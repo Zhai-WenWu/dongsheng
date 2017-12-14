@@ -18,6 +18,8 @@
 
 package org.eclipse.jetty.util.resource;
 
+import android.text.TextUtils;
+
 import org.eclipse.jetty.util.URIUtil;
 import org.eclipse.jetty.util.log.Log;
 import org.eclipse.jetty.util.log.Logger;
@@ -176,8 +178,12 @@ public class URLResource extends Resource
         if (checkConnection())
         {
             Permission perm = _connection.getPermission();
-            if (perm instanceof java.io.FilePermission)
-                return new File(perm.getName());
+            if (perm instanceof java.io.FilePermission) {
+                String pathName = perm.getName();
+                if (TextUtils.isEmpty(pathName))
+                    return null;
+                return new File(pathName);
+            }
         }
 
         // Try the URL file arg

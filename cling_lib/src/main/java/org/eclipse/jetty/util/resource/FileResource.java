@@ -18,6 +18,8 @@
 
 package org.eclipse.jetty.util.resource;
 
+import android.text.TextUtils;
+
 import org.eclipse.jetty.util.IO;
 import org.eclipse.jetty.util.URIUtil;
 import org.eclipse.jetty.util.log.Log;
@@ -111,7 +113,10 @@ public class FileResource extends URLResource
                 // Still can't get the file.  Doh! try good old hack!
                 checkConnection();
                 Permission perm = _connection.getPermission();
-                _file = new File(perm==null?url.getFile():perm.getName());
+                String pathName = perm==null?url.getFile():perm.getName();
+                if (TextUtils.isEmpty(pathName))
+                    return;
+                _file = new File(pathName);
             }
         }
         if (_file.isDirectory())
@@ -335,7 +340,7 @@ public class FileResource extends URLResource
             return null;
         for (int i=list.length;i-->0;)
         {
-            if (new File(_file,list[i]).isDirectory() &&
+            if (!TextUtils.isEmpty(list[i]) && new File(_file,list[i]).isDirectory() &&
                 !list[i].endsWith("/"))
                 list[i]+="/";
         }

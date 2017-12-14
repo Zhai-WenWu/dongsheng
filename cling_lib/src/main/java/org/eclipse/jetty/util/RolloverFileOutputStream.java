@@ -18,6 +18,8 @@
 
 package org.eclipse.jetty.util;
 
+import android.text.TextUtils;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FilterOutputStream;
@@ -210,11 +212,18 @@ public class RolloverFileOutputStream extends FilterOutputStream
     private synchronized void setFile()
         throws IOException
     {
+        if (TextUtils.isEmpty(_filename))
+            return;
         // Check directory
         File file = new File(_filename);
         _filename=file.getCanonicalPath();
+        if (TextUtils.isEmpty(_filename))
+            return;
         file=new File(_filename);
-        File dir= new File(file.getParent());
+        String parent = file.getParent();
+        if (TextUtils.isEmpty(parent))
+            return;
+        File dir= new File(parent);
         if (!dir.isDirectory() || !dir.canWrite())
             throw new IOException("Cannot write log directory "+dir);
             
@@ -252,12 +261,17 @@ public class RolloverFileOutputStream extends FilterOutputStream
     /* ------------------------------------------------------------ */
     private void removeOldFiles()
     {
+        if (TextUtils.isEmpty(_filename))
+            return;
         if (_retainDays>0)
         {
             long now = System.currentTimeMillis();
             
             File file= new File(_filename);
-            File dir = new File(file.getParent());
+            String parent = file.getParent();
+            if (TextUtils.isEmpty(parent))
+                return;
+            File dir = new File(parent);
             String fn=file.getName();
             int s=fn.toLowerCase(Locale.ENGLISH).indexOf(YYYY_MM_DD);
             if (s<0)

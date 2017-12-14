@@ -132,6 +132,8 @@ public class GSYVideoManager implements IMediaPlayer.OnPreparedListener, IMediaP
     public static void clearAllDefaultCache(Context context) {
         String path = StorageUtils.getIndividualCacheDirectory
                 (context.getApplicationContext()).getAbsolutePath();
+        if (TextUtils.isEmpty(path))
+            return;
         FileUtils.deleteFiles(new File(path));
     }
 

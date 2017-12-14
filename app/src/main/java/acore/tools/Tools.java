@@ -413,12 +413,15 @@ public class Tools {
     }
 
     public static String formatPhotoDate(String path) {
+        String retStr = "1970-01-01";
+        if (TextUtils.isEmpty(path))
+            return retStr;
         File file = new File(path);
         if (file.exists()) {
             long time = file.lastModified();
-            return formatPhotoDate(time);
+            retStr = formatPhotoDate(time);
         }
-        return "1970-01-01";
+        return retStr;
     }
 
     public static String InputStream2String(InputStream is) {

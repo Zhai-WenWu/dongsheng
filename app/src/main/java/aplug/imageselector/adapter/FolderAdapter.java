@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,13 +82,17 @@ public class FolderAdapter extends BaseAdapter {
                 holder.size.setText(getTotalImageSize()+"张");
                 if(mFolders.size()>0){
                     Folder f = mFolders.get(0);
-                    Glide.with(mContext)
-                            .load(new File(f.cover.path))
-                            .error(R.drawable.default_error)
-        					.placeholder(R.drawable.mall_recommed_product_backgroup)
-                            .override(mImageSize, mImageSize)
-                            .centerCrop()
-                            .into(holder.cover);
+                    String path = f.cover.path;
+                    if (!TextUtils.isEmpty(path)) {
+                        Glide.with(mContext)
+                                .load(new File(path))
+                                .error(R.drawable.default_error)
+                                .placeholder(R.drawable.mall_recommed_product_backgroup)
+                                .override(mImageSize, mImageSize)
+                                .centerCrop()
+                                .into(holder.cover);
+                    } else
+                        holder.cover.setImageResource(R.drawable.default_error);
                 }
             }else {
                 holder.bindData(getItem(i));
@@ -139,8 +144,13 @@ public class FolderAdapter extends BaseAdapter {
             name.setText(data.name);
             size.setText(data.images.size()+"张");
             // 显示图片
+            String path = data.cover.path;
+            if (TextUtils.isEmpty(path)) {
+                cover.setImageResource(R.drawable.default_error);
+                return;
+            }
             Glide.with(mContext)
-                    .load(new File(data.cover.path))
+                    .load(new File(path))
                     .error(R.drawable.default_error)
 					.placeholder(R.drawable.mall_recommed_product_backgroup)
                     .override(mImageSize, mImageSize)

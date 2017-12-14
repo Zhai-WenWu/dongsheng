@@ -18,6 +18,8 @@
 
 package org.eclipse.jetty.util;
 
+import android.text.TextUtils;
+
 import org.eclipse.jetty.util.log.Log;
 import org.eclipse.jetty.util.log.Logger;
 
@@ -249,6 +251,8 @@ public class MultiPartInputStream
          */
         public void write(String fileName) throws IOException
         {
+            if (TextUtils.isEmpty(fileName))
+                return;
             if (_file == null)
             {
                 _temporary = false;

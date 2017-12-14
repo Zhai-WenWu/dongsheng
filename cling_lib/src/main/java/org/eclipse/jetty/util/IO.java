@@ -291,7 +291,7 @@ public class IO
             for (int i=0;i<files.length;i++)
             {
                 String name = files[i].getName();
-                if (".".equals(name) || "..".equals(name))
+                if (".".equals(name) || "..".equals(name) || name == null)
                     continue;
                 copy(files[i],new File(to,name));
             }

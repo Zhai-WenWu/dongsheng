@@ -18,6 +18,8 @@
 
 package org.eclipse.jetty.util.resource;
 
+import android.text.TextUtils;
+
 import org.eclipse.jetty.util.log.Log;
 import org.eclipse.jetty.util.log.Logger;
 
@@ -126,7 +128,10 @@ class JarFileResource extends JarResource
         if (_path.length()==0)
             _path=null;   
         _jarFile=_jarConnection.getJarFile();
-        _file=new File(_jarFile.getName());
+        String pathName = _jarFile.getName();
+        if (TextUtils.isEmpty(pathName))
+            return;
+        _file=new File(pathName);
     }
     
     
