@@ -425,7 +425,7 @@ public class Tools {
     }
 
     public static String InputStream2String(InputStream is) {
-        String str = "";
+        String str = ""; 
         ByteArrayOutputStream os = null;
         try {
             os = new ByteArrayOutputStream();
