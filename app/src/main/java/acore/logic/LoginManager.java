@@ -277,7 +277,8 @@ public class LoginManager {
 				userInfo.put("isGourmet", map.get("isGourmet"));
 				userInfo.put("tel", map.get("tel"));
 				userInfo.put("vip", map.get("vip"));
-				userInfo.put("maturity_day", TextUtils.isEmpty(map.get("maturity_day")) ? "" : map.get("maturity_day"));
+				Map<String,String> vipMap = StringManager.getFirstMap(map.get("vip"));
+				userInfo.put("maturity_day", TextUtils.isEmpty(vipMap.get("maturity_day")) ? "" : vipMap.get("maturity_day"));
 				userInfo.put("email", TextUtils.isEmpty(map.get("email")) ? "" : map.get("email"));
 				userInfo.put("regTime", TextUtils.isEmpty(map.get("regTime")) ? "" : map.get("regTime"));
 				UtilLog.print("d", "是否是管理员: " + map.get("isManager"));

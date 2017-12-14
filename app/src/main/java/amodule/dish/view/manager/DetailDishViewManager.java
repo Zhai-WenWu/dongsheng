@@ -211,9 +211,17 @@ public class DetailDishViewManager {
         boolean isShowByConfig = "2".equals(configMap.get("isShow"));
         boolean isShowByUser=false;
         if(LoginManager.isLogin()){
-            isShowByUser=!LoginManager.isVIP()||(delayDay>=LoginManager.getUserVipMaturityDay()&&LoginManager.getUserVipMaturityDay()>=0);
+            boolean isFastExpiry = LoginManager.getUserVipMaturityDay() <= delayDay
+                    && LoginManager.getUserVipMaturityDay() >= 0;
+            if(isFastExpiry)
+                configMap.put("title",configMap.get("renewTitle"));
+            isShowByUser = !LoginManager.isVIP() || isFastExpiry;
         }else{
-            isShowByUser=!LoginManager.isTempVip()||(delayDay >= LoginManager.getTempVipMaturityDay()&& LoginManager.getTempVipMaturityDay()>=0);
+            boolean isFastExpiry = LoginManager.getTempVipMaturityDay() <= delayDay
+                    && LoginManager.getTempVipMaturityDay() >= 0;
+            if(isFastExpiry)
+                configMap.put("title",configMap.get("renewTitle"));
+            isShowByUser = !LoginManager.isTempVip() || isFastExpiry;
         }
         configMap.put("isShow", isShowByConfig && isShowByUser ? "2" : "1");
         handlerVipView(configMap);
