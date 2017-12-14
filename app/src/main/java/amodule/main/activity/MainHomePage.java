@@ -63,8 +63,8 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        mViewContrloer = new HomeViewControler(this);
         super.onCreate(savedInstanceState);
+        mViewContrloer = new HomeViewControler(this);
         setContentView(R.layout.a_home_page);
         getWindow().setFormat(PixelFormat.TRANSLUCENT);
         Main.allMain.allTab.put(KEY, this);//这个Key值不变

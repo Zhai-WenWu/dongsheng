@@ -19,6 +19,8 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.text.TextUtils;
+import android.widget.ImageView;
 
 import aplug.basic.LoadImage;
 
@@ -86,7 +88,7 @@ public class ImgManager extends UtilImage {
      * @param type
      */
     public static void saveImg(String imgUrl, String type) {
-        if (imgUrl.length() == 0)
+        if (TextUtils.isEmpty(imgUrl))
             return;
         String name = UtilString.toMD5(imgUrl, false);
         // 图片不存在则下载
@@ -95,6 +97,44 @@ public class ImgManager extends UtilImage {
                     .load(imgUrl)
                     .setSaveType(type)
                     .preload();
+        }
+    }
+
+    public static void saveImgLong(String imgUrl){
+        saveImg(imgUrl,LoadImage.SAVE_LONG);
+    }
+
+    public static void loadLongImage(ImageView imageView, String imgUrl){
+        loadImage(imageView,imgUrl,LoadImage.SAVE_LONG);
+    }
+
+    public static void loadCacheImage(ImageView imageView, String imgUrl){
+        loadImage(imageView,imgUrl,LoadImage.SAVE_CACHE);
+    }
+
+    public static void loadImage(ImageView imageView, String imgUrl, String type){
+        if (TextUtils.isEmpty(imgUrl) || null == imageView)
+            return;
+        String name = UtilString.toMD5(imgUrl, false);
+        final String imagePath = UtilFile.getSDDir() + type + "/" + name;
+        if (UtilFile.ifFileModifyByCompletePath(imagePath, -1) == null) {
+            LoadImage.with(XHApplication.in())
+                    .load(imgUrl)
+                    .setSaveType(type)
+                    .build()
+                    .into(imageView);
+        }else{
+            try{
+                InputStream inputStream = FileManager.loadFile(imagePath);
+                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                imageView.setImageBitmap(bitmap);
+            }catch (Exception e){
+                LoadImage.with(XHApplication.in())
+                        .load(imgUrl)
+                        .setSaveType(type)
+                        .build()
+                        .into(imageView);
+            }
         }
     }
 
