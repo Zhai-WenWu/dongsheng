@@ -1,26 +1,23 @@
 package amodule.dish.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.PixelFormat;
-import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import com.xiangha.R;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
-import acore.logic.AppCommon;
-import acore.logic.FavoriteHelper;
+import acore.logic.LoginManager;
 import acore.logic.SpecialWebControl;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
@@ -30,94 +27,125 @@ import acore.tools.IObserver;
 import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
-import acore.tools.ToolsDevice;
+import amodule.dish.adapter.AdapterDishNew;
 import amodule.dish.db.DataOperate;
-import amodule.dish.view.DishActivityViewControlNew;
+import amodule.dish.view.DishModuleScrollView;
+import amodule.dish.view.manager.DetailDishDataManager;
+import amodule.dish.view.manager.DetailDishViewManager;
 import amodule.main.Main;
-import aplug.basic.InternetCallback;
-import aplug.basic.LoadImage;
-import aplug.basic.ReqEncyptInternet;
-import aplug.basic.ReqInternet;
-import aplug.web.tools.TemplateWebViewControl;
-import aplug.web.view.TemplateWebView;
-import third.video.VideoPlayerController;
+import amodule.user.db.BrowseHistorySqlite;
+import amodule.user.db.HistoryData;
+import aplug.web.tools.WebviewManager;
+import aplug.web.view.XHWebView;
+
+import static amodule.dish.activity.DetailDishWeb.tongjiId;
+import static java.lang.System.currentTimeMillis;
 
 /**
- * 菜谱详情页：头部大图、视频，底部广告以下是原生，中间是h5
+ * 菜谱详情页原生标准
  */
 public class DetailDish extends BaseAppCompatActivity implements IObserver {
-    public static String tongjiId = "a_menu_detail_normal430";//统计标示
-    public static String DishName="amodule.dish.activity.DetailDish";
-    private final int LOAD_DISH = 1;
-    private final int LOAD_DISH_OVER = 2;
-
-    private DishActivityViewControlNew dishActivityViewControl;//view处理控制
-
-    private Map<String,String> permissionMap = new HashMap<>();
-    private Map<String,String> detailPermissionMap = new HashMap<>();
-    private int statusBarHeight = 0;//广告所用bar高度
-    private String dishJson;
-    public String code, dishTitle, state;//页面开启状态所必须的数据。
-    private String imgLevel = FileManager.save_cache;//图片缓存机制---是离线菜谱改变其缓存机制
-    public boolean isHasVideo = false;//是否显示视频数据
-    private boolean hasPermission = true;
-    private boolean contiunRefresh = true;
-    private String lastPermission = "";
-    private boolean loadOver = false;
-
-    public static long startTime= 0;
-    private String data_type="";
-    private String module_type="";
-    private int height;
-    private String img = "";
+    public static String tongjiId_detail = "a_menu_detail_normal";//统计标示
+    private String data_type = "";
+    private String module_type = "";
+    private String img = "";//预加载图片
+    public String code, dishTitle, state,dishName;//页面开启状态所必须的数据。
+    public static long startTime = 0;
     private Handler handlerScreen;
+    private ListView listview;
+    private DetailDishViewManager detailDishViewManager;//view控制器
+    private DetailDishDataManager detailDishDataManager;//数据控制器
+    private ArrayList<Map<String,String>> maplist = new ArrayList<>();
+    private Map<String,String> mapTop = new HashMap<>();
+    private boolean isHasVideo;//当前是否是视频
+    private String customerCode;
+    private RelativeLayout dredgeVipFullLayout;
+    private XHWebView pageXhWebView;
+    private String dishInfo = "";
+    private AdapterDishNew adapterDishNew;
     private String courseCode;//课程分类
     private String chapterCode;//章节分类
+    private boolean isShowPowerPermission=false;
+    private boolean isShowVip = true;
+    private boolean isPay=false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
         super.onCreate(savedInstanceState);
-        //处理广告
-        Bundle bundle = getIntent().getExtras();
         startTime= System.currentTimeMillis();
-        // 正常调用
+        initBudle();
+        initView();
+        initData();
+    }
+    /**
+     * 处理页面初始数据
+     */
+    private void initBudle() {
+        Bundle bundle = getIntent().getExtras();
+        startTime = System.currentTimeMillis();
         if (bundle != null) {
             code = bundle.getString("code");
             dishTitle = bundle.getString("name");
+            if (dishTitle == null) dishTitle = "香哈菜谱";
             courseCode = bundle.getString("courseCode","");
             chapterCode = bundle.getString("chapterCode","");
-            if (dishTitle == null) dishTitle = "香哈菜谱";
             state = bundle.getString("state");
-            data_type=bundle.getString("data_type");
-            module_type=bundle.getString("module_type");
-            img=bundle.getString("img");
-            //保存历史记录
-            DataOperate.saveHistoryCode(code);
+            data_type = bundle.getString("data_type");
+            module_type = bundle.getString("module_type");
+            img = bundle.getString("img");
+            dishInfo = bundle.getString("dishInfo");
+            DataOperate.saveHistoryCode(code);//保存历史记录
         }
-        if(TextUtils.isEmpty(code)){
+        if (TextUtils.isEmpty(code)) {
             Tools.showToast(getApplicationContext(), "抱歉，未找到相应菜谱");
-            DetailDish.this.finish();
+            this.finish();
             return;
         }
-
-        //保持高亮
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        handlerScreen=new Handler();
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);//保持高亮
+        handlerScreen = new Handler();
         handlerScreen.postDelayed(new Runnable() {
             @Override
             public void run() {
                 getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             }
-        },15 * 60 * 1000);
-        //sufureView页面闪烁
-        getWindow().setFormat(PixelFormat.TRANSLUCENT);
-        Log.i(Main.TAG,"菜谱详情页");
-        init();
+        }, 15 * 60 * 1000);
+        getWindow().setFormat(PixelFormat.TRANSLUCENT);//sufureView页面闪烁
         XHClick.track(XHApplication.in(), "浏览菜谱详情页");
+<<<<<<< HEAD
         //注册监听
         ObserverManager.getInstence().registerObserver(this,ObserverManager.NOTIFY_LOGIN,ObserverManager.NOTIFY_FOLLOW,ObserverManager.NOTIFY_PAYFINISH);
+        if (mShouldInitCling) {
+            ClingControl.getInstance(this).onCreate();
+            ClingControl.getInstance(this).setOnDeviceSelected(new OnDeviceSelectedListener() {
+                @Override
+                public void onDeviceSelected(ClingDevice device) {
+                    if (dishActivityViewControl != null) {
+                        dishActivityViewControl.addClingOptionView(ClingControl.getInstance(DetailDish.this).getClingOptionView());
+                    }
+                }
+            });
+            ClingControl.getInstance(this).setOnExitClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (dishActivityViewControl != null) {
+                        dishActivityViewControl.removeClingOptionView();
+                    }
+                }
+            });
+        }
     }
 
+    private void handlerNew(){
+        findViewById(R.id.button1).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(DetailDish.this,DetailDishNew.class);
+                intent.putExtra("code",code);
+                intent.putExtra("img",img);
+                DetailDish.this.startActivity(intent);
+            }
+        });
+    }
     @Override
     protected void onRestart() {
         super.onRestart();
@@ -128,239 +156,167 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         loadDishInfo();
     }
 
+=======
+        ObserverManager.getInstence().registerObserver(this,ObserverManager.NOTIFY_LOGIN,ObserverManager.NOTIFY_FOLLOW,ObserverManager.NOTIFY_PAYFINISH,ObserverManager.NOTIFY_UPLOADOVER);
+    }
+>>>>>>> master_1025_develop_1109_v580
     /**
-     * 数据的初始化
+     * 处理页面Ui
      */
-    private void init() {
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.a_dish_detail_new);
-        level = 2;
-        if(Tools.isShowTitle()){
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+    private void initView() {
+        initActivity("", 2, 0, 0, R.layout.a_detail_dish);
+        listview = (ListView) findViewById(R.id.listview);
+    }
+    /**
+     * 处理页面Ui
+     */
+    private void initData() {
+        adapterDishNew = new AdapterDishNew(listview,maplist);
+        if (detailDishViewManager == null) {//view manager
+            detailDishViewManager = new DetailDishViewManager(this, listview, state);
+            dishInfo= Uri.decode(dishInfo);
+            detailDishViewManager.initBeforeData(img,dishInfo);
+            handleVipState();
         }
-        setCommonStyle();
-        dishActivityViewControl= new DishActivityViewControlNew(this);
-        dishActivityViewControl.init(state, loadManager, new DishActivityViewControlNew.DishViewCallBack() {
+        listview.setAdapter(adapterDishNew);
+        if (detailDishDataManager == null) detailDishDataManager = new DetailDishDataManager(code,this,courseCode,chapterCode);//数据manager
+        detailDishDataManager.setDishDataCallBack(new DetailDishDataManager.DishDataCallBack() {
             @Override
-            public void getVideoPlayerController(VideoPlayerController mVideoPlayerController) {
-            }
-        }, new TemplateWebView.OnTemplateCallBack() {
-            @Override
-            public void readLoad(String param) {
-                Log.i(Main.TAG,"数据：：："+param);
-                Map<String,String> map= StringManager.getMapByString(param,"&","=");
-                code=map.get("code");
-                courseCode=map.get("courseCode");
-                chapterCode=map.get("chapterCode");
-                initData();
+            public void handlerTypeData(String type, ArrayList<Map<String,String>> list,Map<String,String> PermissionMap) {
+                dishTypeData(type,list,PermissionMap);
             }
         });
-        //优先处理：img
-        if(!TextUtils.isEmpty(img)) {
-            dishActivityViewControl.setDishOneView(img);
-        }
-        initData();
-    }
-    private void initData(){
-        loadOver = false;
-        hasPermission = true;
-        contiunRefresh = true;
-        lastPermission = "";
-        detailPermissionMap.clear();
-        permissionMap.clear();
-        dishActivityViewControl.setCode(courseCode,chapterCode);
-        dishActivityViewControl.initData(code);
-        loadManager.setLoading(new View.OnClickListener() {
+        adapterDishNew.setClickCallBack(new AdapterDishNew.ItemOnClickCallBack() {
             @Override
-            public void onClick(View v) {
-                loadDishInfo();
-                loadOtherData();
+            public void onClickPosition(int position) {
+                if(!getStateMakes(maplist)){//无图时不执行
+                    return;
+                }
+                XHClick.mapStat(DetailDish.this, DetailDish.tongjiId_detail, "步骤", "步骤图点击量");
+                Intent intent = new Intent(DetailDish.this, MoreImageShow.class);
+                ArrayList<Map<String, String>> listdata = new ArrayList<>();
+                listdata.addAll(maplist);
+                if (!TextUtils.isEmpty(mapTop.get("remark"))) {
+                    Map<String, String> map_temp = new HashMap();
+                    map_temp.put("img", maplist.get(maplist.size()-1).get("img"));
+                    map_temp.put("info", "小贴士：\n" + mapTop.get("remark"));
+                    map_temp.put("num", String.valueOf(maplist.size() + 1));
+                    listdata.add(map_temp);
+                }
+                intent.putExtra("data", listdata);
+                intent.putExtra("index", position);
+                intent.putExtra("key", tongjiId);
+                DetailDish.this.startActivity(intent);
+            }
+            @Override
+            public void onGifClickPosition(int position) {
             }
         });
     }
-
-    private void requestFavoriteState(){
-        FavoriteHelper.instance().getFavoriteStatus(this, code,
-                dishActivityViewControl.isHasVideo() ? FavoriteHelper.TYPE_DISH_VIDEO : FavoriteHelper.TYPE_DISH_ImageNText,
-                new FavoriteHelper.FavoriteStatusCallback() {
+    private void dishTypeData(String type,ArrayList<Map<String,String>> list,Map<String,String> map){
+        switch (type){
+            case DetailDishDataManager.DISH_DATA_TOP://topInfo,菜谱的基本信息和用户的基本信息
+                mapTop= list.get(0);
+                dishName= mapTop.get("name");
+                isHasVideo = "2".equals(mapTop.get("type"));
+                detailDishViewManager.handlerHeaderView(list,map);//header
+                customerCode= StringManager.getFirstMap(mapTop.get("customer")).get("customerCode");
+                if (!TextUtils.isEmpty(customerCode)&&LoginManager.userInfo != null && customerCode.equals(LoginManager.userInfo.get("code"))){
+                        state = "";
+                }
+                detailDishViewManager.handlerTitle(mapTop,code,isHasVideo,mapTop.get("dishState"),loadManager,state);//title导航
+                if(isShowVip){
+                    detailDishViewManager.initVipView(mapTop.containsKey("type")?mapTop.get("type"):"");
+                }
+                detailDishViewManager.handlerDishData(list);//菜谱基本信息
+                detailDishViewManager.handlerExplainView(mapTop);//小贴士
+                detailDishViewManager.handlerIsSchool(mapTop.get("isSchool"));//处理用料和小技巧顺序
+                requestWeb(mapTop);
+                saveDishInfo(mapTop);
+                tongjiId_detail=isHasVideo?"a_menu_detail_video":"a_menu_detail_normal";
+                break;
+            case DetailDishDataManager.DISH_DATA_INGRE://用料
+                detailDishViewManager.handlerIngreView(list);
+                savaJsAdata(list);
+                break;
+            case DetailDishDataManager.DISH_DATA_BANNER://banner
+                detailDishViewManager.handlerBannerView(list);
+                break;
+            case DetailDishDataManager.DISH_DATA_STEP://步骤
+                if(list!=null&&list.size()>0&&!TextUtils.isEmpty(list.get(0).get("list"))){
+                    maplist.clear();
+                    Map<String,String> mapTemp = list.get(0);
+                    maplist.addAll(StringManager.getListMapByJson(mapTemp.get("list")));
+                    adapterDishNew.setShowDistance(mapTemp.containsKey("isCourseDish")&&"2".equals(mapTemp.get("isCourseDish")));
+                }
+                detailDishViewManager.handlerStepView(list);
+                break;
+            case DetailDishDataManager.DISH_DATA_TIE://帖子
+                detailDishViewManager.handlerRecommedAndAd(list,code,dishName);
+                break;
+            case DetailDishDataManager.DISH_DATA_QA://问答
+                detailDishViewManager.handlerQAView(list);
+                break;
+            case DetailDishDataManager.DISH_DATA_RNTIC://技巧
+                detailDishViewManager.handlerSkillView(list, code, courseCode, chapterCode, new DishModuleScrollView.onDishModuleClickCallBack() {
                     @Override
-                    public void onSuccess(boolean state) {
-                        //处理收藏状态
-                        if(dishActivityViewControl != null && dishActivityViewControl.getDishTitleViewControl() != null){
-                            dishActivityViewControl.getDishTitleViewControl().setFavStatus(state);
-                        }
-                    }
-
-                    @Override
-                    public void onFailed() {
-                        if(dishActivityViewControl != null && dishActivityViewControl.getDishTitleViewControl() != null){
-                            dishActivityViewControl.getDishTitleViewControl().setFavStatus(false);
+                    public void getData(Map<String, String> map) {
+                        String url= map.get("appUrl");
+                        if(url.contains("xiangha://welcome?"))url=url.replace("xiangha://welcome?","");
+                        if(url.contains("?")) {
+                            String temp = url.substring(url.indexOf("?")+1,url.length());
+                            Map<String,String> map1 = StringManager.getMapByString(temp,"&","=");
+//                            rvListview.smoothScrollToPosition(0);
+                            listview.setSelection(0);
+                            detailDishDataManager.setDataNew(map1.get("code"),map1.get("courseCode"),map1.get("chapterCode"));
+                            detailDishDataManager.reqTopInfo(true);
                         }
                     }
                 });
-    }
-
-    /**
-     * 请求网络
-     */
-    private void loadDishInfo() {
-        String params = "code=" + code;
-        ReqEncyptInternet.in().doEncypt(StringManager.api_getDishTopInfo,params, new InternetCallback(this.getApplicationContext()) {
-
-            @Override
-            public void getPower(int flag, String url, Object obj) {
-                //权限检测
-                if(permissionMap.isEmpty() && !TextUtils.isEmpty((String)obj) && !"[]".equals(obj)&& !"{}".equals(obj)){
-                    if(TextUtils.isEmpty(lastPermission)){
-                        lastPermission = (String) obj;
-                    }else{
-                        contiunRefresh = !lastPermission.equals(obj.toString());
-                        if(contiunRefresh)
-                            lastPermission = obj.toString();
-                    }
-                    permissionMap = StringManager.getFirstMap(obj);
-                    if(permissionMap.containsKey("page")){
-                        Map<String,String> pagePermission = StringManager.getFirstMap(permissionMap.get("page"));
-                        hasPermission = dishActivityViewControl.analyzePagePermissionData(pagePermission);
-                        if(!hasPermission) return;
-                    }
-                    if(permissionMap.containsKey("detail"))
-                        detailPermissionMap = StringManager.getFirstMap(permissionMap.get("detail"));
-                }else if(loadOver && TextUtils.isEmpty(lastPermission)){
-                    contiunRefresh = false;
+                break;
+            case DetailDishDataManager.DISH_DATA_RELATION://公共数据
+                Map<String,String> relation= list.get(0);
+                detailDishViewManager.handlerUserPowerData(relation);//用户权限
+                detailDishViewManager.handlerHoverView(relation,code,dishName);
+                if(!isShowVip) {
+                    Map<String, String> mapTemp = StringManager.getFirstMap(relation.get("vipButton"));
+                    mapTemp.put("isShow", relation.containsKey("isShow") ? relation.get("isShow") : "");
+                    detailDishViewManager.handlerVipView(mapTemp);
                 }
-            }
-            @Override
-            public void loaded(int flag, String s, Object o) {
-                if (flag >= ReqInternet.REQ_OK_STRING) {
-                    Log.i(Main.TAG,"topinfo返回数据");
-                    if(!hasPermission || !contiunRefresh) return;
-                    dishActivityViewControl.reset();
-                    if (!TextUtils.isEmpty(o.toString()) && !o.toString().equals("[]")) {
-                        analyzeData(String.valueOf(o),detailPermissionMap);
-                        Map<String,String> maps= StringManager.getFirstMap(o);
-
-                        if(maps.containsKey("isHide")&&!"2".equals(maps.get("isHide"))){
-                            handlerOtherTieData();//不隐藏。
-                        }
-                    } else {
-                        loadManager.loadOver(flag, 1, true);
-                    }
-                }
-                if(ToolsDevice.isNetworkAvailable(context)|| !LoadImage.SAVE_LONG.equals(imgLevel)){
-                    loadManager.loadOver(flag, 1, true);
-                }else loadManager.hideProgressBar();
-                loadOver = true;
-            }
-        });
-    }
-
-    private void handlerOtherTieData(){
-        String params = "code=" + code;
-        //获取帖子数据
-        ReqEncyptInternet.in().doEncypt(StringManager.api_getDishTieInfo,params, new InternetCallback(DetailDish.this.getApplicationContext()) {
-            @Override
-            public void loaded(int i, String s, Object o) {
-                if(i >= ReqInternet.REQ_OK_STRING){
-                    Log.i(Main.TAG,"tieinfo返回数据");
-                    dishActivityViewControl.analyzeUserShowDishInfoData(String.valueOf(o));
-                }
-            }
-        });
-    }
-    /**
-     * 请求其他接口数据
-     */
-    private void loadOtherData(){
-        String params = "code=" + code;
-        //获取点赞数据
-        ReqEncyptInternet.in().doEncypt(StringManager.api_getDishLikeNumStatus, params, new InternetCallback(DetailDish.this.getApplicationContext()) {
-            @Override
-            public void loaded(int i, String s, Object o) {
-                if (i >= ReqInternet.REQ_OK_STRING){
-                    dishActivityViewControl.analyzeDishLikeNumberInfoData(String.valueOf(o));
-                }
-            }
-        });
-
-        ReqEncyptInternet.in().doEncypt(StringManager.api_getDishstatusValue, params, new InternetCallback(DetailDish.this.getApplicationContext()) {
-            @Override
-            public void loaded(int i, String s, Object o) {
-                if (i >= ReqInternet.REQ_OK_STRING){
-                    saveApiData(o.toString());
-                }
-            }
-        });
-    }
-
-    /**
-     * 处理业务数据
-     * @param data 数据
-     * @param permissionMap 权限数据
-     */
-    private void analyzeData(String data,Map<String,String> permissionMap) {
-        ArrayList<Map<String, String>> list = StringManager.getListMapByJson(data);
-        //第一页未请求到数据，直接关闭改页面
-        if (list.size() < 1) {
-            Tools.showToast(getApplicationContext(), "抱歉，未找到相应菜谱");
-            DetailDish.this.finish();
-            return;
+                showCaipuHint();
+                break;
+            default:
+                break;
         }
-        requestWeb(data);
-        dishActivityViewControl.analyzeDishInfoData(data,permissionMap);
-        //请求收藏数据
-        requestFavoriteState();
+        adapterDishNew.notifyDataSetChanged();
     }
-
-    private void requestWeb(String dishJson) {
-        Map<String,String> dishInfo = StringManager.getFirstMap(dishJson);
-        if(dishInfo != null){
-            SpecialWebControl.initSpecialWeb(this,rl,"dishInfo",dishInfo.get("name"),code);
-        }
-    }
-    //**********************************************Activity生命周期方法**************************************************
-    @Override
-    public void onBackPressed() {
-        mFavePopWindowDialog=dishActivityViewControl.getDishTitleViewControl().getPopWindowDialog();
-        if(dishActivityViewControl != null && dishActivityViewControl.onBackPressed()){
-            return;
-        }
-        super.onBackPressed();
-    }
-
     @Override
     protected void onResume() {
-        Log.i("zyj","onResume::"+(System.currentTimeMillis()-startTime));
-        Log.i("tzy","onResume()");
-        mFavePopWindowDialog=dishActivityViewControl.getDishTitleViewControl().getPopWindowDialog();
         super.onResume();
-        Rect outRect = new Rect();
-        this.getWindow().getDecorView().getWindowVisibleDisplayFrame(outRect);
-        statusBarHeight = outRect.top;
-        if(dishActivityViewControl != null){
-            dishActivityViewControl.onResume();
-        }
+        if(detailDishViewManager!=null)detailDishViewManager.onResume();
     }
-
     @Override
     protected void onPause() {
-        Log.i("tzy","onPause()");
-        mFavePopWindowDialog=dishActivityViewControl.getDishTitleViewControl().getPopWindowDialog();
         super.onPause();
-        if(dishActivityViewControl != null){
-            dishActivityViewControl.onPause();
-        }
+        if(detailDishViewManager!=null)detailDishViewManager.onPause();
     }
-
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        isHasVideo = false;
+        if(isPay){//支付
+            notify(ObserverManager.NOTIFY_LOGIN,null,null);
+            if(detailDishDataManager!=null&&!isShowPowerPermission)detailDishDataManager.reqQAData();
+        }
+        if(detailDishViewManager!=null)detailDishViewManager.handlerLoginStatus();
+        if(loadManager!=null)loadManager.hideProgressBar();
+    }
     @Override
     protected void onDestroy() {
         super.onDestroy();
         //反注册。
-        ObserverManager.getInstence().unRegisterObserver(ObserverManager.NOTIFY_LOGIN,ObserverManager.NOTIFY_FOLLOW,ObserverManager.NOTIFY_PAYFINISH);
-        if(dishActivityViewControl != null){
-            dishActivityViewControl.onDestroy();
-            dishActivityViewControl=null;
-        }
+        ObserverManager.getInstence().unRegisterObserver(ObserverManager.NOTIFY_LOGIN,ObserverManager.NOTIFY_FOLLOW,ObserverManager.NOTIFY_PAYFINISH,ObserverManager.NOTIFY_UPLOADOVER);
+        if(detailDishViewManager!=null)detailDishViewManager.onDestroy();
         long nowTime=System.currentTimeMillis();
         if(startTime>0&&(nowTime-startTime)>0&&!TextUtils.isEmpty(data_type)&&!TextUtils.isEmpty(module_type)){
             XHClick.saveStatictisFile("DetailDish",module_type,data_type,code,"","stop",String.valueOf((nowTime-startTime)/1000),"","","","");
@@ -369,84 +325,173 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
             handlerScreen.removeCallbacksAndMessages(null);
             handlerScreen=null;
         }
+        listview = null;
+        if(adapterDishNew!=null){
+            adapterDishNew=null;
+        }
 
     }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
+    public void refresh() {
+        if(detailDishViewManager!=null)detailDishViewManager.refresh();
+    }
+    private boolean getStateMakes(ArrayList<Map<String, String>> listdata){
+        if(listdata!=null&&listdata.size()>0){
+            for(int i=0,size=listdata.size();i<size;i++){
+                if(!TextUtils.isEmpty(listdata.get(i).get("img")))
+                    return true;
+            }
+        }
         return false;
     }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (dishActivityViewControl == null)
-            return;
-        if(requestCode==10000&& resultCode== Activity.RESULT_OK){
-            Map<String, String> dishInfoMap = dishActivityViewControl.getDishInfoMap();
-            if (dishInfoMap == null)
-                return;
-            String subjectCode=dishInfoMap.get("subjectCode");
-            String url="subjectInfo.app?code=" + subjectCode + "&title=" + dishInfoMap.get("name");
-            AppCommon.openUrl(this,url,true);
-        }
-    }
-
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-        Log.i("zyj","onWindowFocusChanged::"+(System.currentTimeMillis()-startTime));
-    }
-
     /**
-     * 保存来自Api的数据
-     * @param dataStr
-     */
-    public void saveApiData(String dataStr){
-        if(dishActivityViewControl != null)
-            dishActivityViewControl.saveApiData(dataStr);
-    }
-
-    public void savaJsAdata(String burden,String allClick,String favrites,String nickName){
-        if(dishActivityViewControl != null)
-            dishActivityViewControl.savaJsAdata(burden,allClick,favrites,nickName);
-    }
-
-    /**
-     * 监听回调
-     * @param name
-     * @param sender
-     * @param data
-     */
-    @Override
-    public void notify(String name, Object sender, Object data) {
-        switch (name){
-            case ObserverManager.NOTIFY_LOGIN://登陆
-                if(dishActivityViewControl!=null) {
-                    dishActivityViewControl.refreshTemplateWebView();
-                    dishActivityViewControl.refreshAskStatus();
-                    dishActivityViewControl.refreshQaWebView();
-                }
-                requestFavoriteState();
-                break;
-            case ObserverManager.NOTIFY_FOLLOW://关注
-                if(dishActivityViewControl!=null) {
-                    dishActivityViewControl.refreshTemplateWebView();
-                }
-                break;
-            case ObserverManager.NOTIFY_PAYFINISH://支付
-                if(dishActivityViewControl!=null) {
-                    dishActivityViewControl.refreshQaWebView();
-                }
-                break;
-        }
-    }
-
-    /**
-     * 获取图片链接
+     * 页面限制：显示h5页面，例如：显示一个开通会员页面
+     * @param pagePermission
      * @return
      */
-    public String getImg(){
-        return img;
+    public boolean analyzePagePermissionData(Map<String,String> pagePermission){
+        dredgeVipFullLayout = (RelativeLayout)findViewById(R.id.dredge_vip_full_layout);
+        if(pagePermission.containsKey("url") && !TextUtils.isEmpty(pagePermission.get("url"))){
+            //xhwebView
+            WebviewManager manager = new WebviewManager(this,loadManager,true);
+            pageXhWebView = manager.createWebView(R.id.XHWebview,false);
+            WebviewManager.syncXHCookie();
+            String url = pagePermission.get("url");
+            pageXhWebView.loadUrl(url);
+            RelativeLayout bar_title_2 = (RelativeLayout) dredgeVipFullLayout.findViewById(R.id.dish_title_page);
+            bar_title_2.findViewById(R.id.back).setOnClickListener(backClickListener);
+            bar_title_2.findViewById(R.id.leftClose).setOnClickListener(backClickListener);
+            bar_title_2.findViewById(R.id.leftClose).setVisibility(View.VISIBLE);
+            dredgeVipFullLayout.setVisibility(View.VISIBLE);
+            isShowPowerPermission=true;
+            return false;
+        }
+        if(dredgeVipFullLayout!=null)
+            dredgeVipFullLayout.setVisibility(View.GONE);
+        return true;
     }
+    public void hidePermissionData(){
+        if(dredgeVipFullLayout!=null)
+            dredgeVipFullLayout.setVisibility(View.GONE);
+    }
+    private View.OnClickListener backClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()){
+                case R.id.back:
+                    XHClick.mapStat(DetailDish.this, tongjiId, "顶部导航栏", "返回点击量");
+                    DetailDish.this.finish();
+                    break;
+                case R.id.leftClose:
+                    XHClick.mapStat(DetailDish.this, tongjiId, "顶部导航栏", "关闭点击量");
+                    Main.colse_level = 1;
+                    DetailDish.this.finish();
+                    break;
+            }
+        }
+    };
+    private void requestWeb(Map<String,String> map) {
+        if(map != null){
+            SpecialWebControl.initSpecialWeb(this,rl,"dishInfo",map.get("name"),code);
+        }
+    }
+    private void handleVipState () {
+        if (detailDishViewManager != null)
+            detailDishViewManager.handleVipState(LoginManager.isVIP());
+    }
+    @Override
+    public void notify(String name, Object sender, Object data) {
+        Log.i("xianghaTag","name:::"+name);
+        switch (name){
+            case ObserverManager.NOTIFY_PAYFINISH://支付
+                isPay=true;
+                break;
+            case ObserverManager.NOTIFY_LOGIN://登陆
+                isShowVip=false;
+                refreshTopInfo();
+                if(detailDishDataManager!=null&&!isShowPowerPermission)detailDishDataManager.reqAnticData();
+                handleVipState();
+            case ObserverManager.NOTIFY_FOLLOW://关注
+            case ObserverManager.NOTIFY_UPLOADOVER://问答
+                if(detailDishDataManager!=null&&!isShowPowerPermission)detailDishDataManager.reqPublicData();
+                break;
+        }
+    }
+    private void refreshTopInfo(){
+        if(detailDishDataManager!=null){
+            detailDishDataManager.resetTopInfo();
+            detailDishDataManager.reqTopInfo(isShowPowerPermission);
+        }
+    }
+    private boolean saveDishInfo = false;
+    private boolean isSaveJsData = false;
+    private Map<String, String> needSaveDishInfo = new HashMap<>();
+
+    private void saveDishInfo(Map<String,String> map){
+        saveDishInfo = true;
+        needSaveDishInfo.put("name", map.get("name"));
+        needSaveDishInfo.put("img", map.get("img"));
+        needSaveDishInfo.put("code", map.get("dishCode"));
+        needSaveDishInfo.put("hasVideo", map.get("type"));
+        needSaveDishInfo.put("isFine", map.get("isFine"));
+        needSaveDishInfo.put("isMakeImg", map.get("isMakeImg"));
+        needSaveDishInfo.put("allClick",map.get("allClick"));
+        needSaveDishInfo.put("nickName",StringManager.getFirstMap(map.get("customer")).get("nickName"));
+        needSaveDishInfo.put("favorites",map.get("favorites"));
+        needSaveDishInfo.put("customer", map.get("customer"));
+        needSaveDishInfo.put("info", map.get("info"));
+        saveHistoryToDB();
+    }
+
+    public void savaJsAdata(ArrayList<Map<String,String>> list){
+        isSaveJsData = true;
+        String burdens="";
+        for(Map<String,String> map:list){
+            burdens+=map.get("name");
+        }
+        needSaveDishInfo.put("burdens",burdens);
+        saveHistoryToDB();
+    }
+
+    /**保存数据到数据库*/
+    private synchronized void saveHistoryToDB() {
+        if (saveDishInfo && isSaveJsData) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    HistoryData data = new HistoryData();
+                    data.setBrowseTime(currentTimeMillis());
+                    data.setCode(code);
+                    data.setDataJson(StringManager.getJsonByMap(needSaveDishInfo).toString());
+                    BrowseHistorySqlite sqlite = new BrowseHistorySqlite(XHApplication.in());
+                    sqlite.insertSubject(BrowseHistorySqlite.TB_DISH_NAME, data);
+                }
+            }).start();
+        }
+    }
+    private void showCaipuHint(){
+       String hint= (String) FileManager.loadShared(this, FileManager.dish_caipu_hint,FileManager.dish_caipu_hint);
+        if(TextUtils.isEmpty(hint)||!"2".equals(hint)){
+            findViewById(R.id.dish_show_rela).setVisibility(View.VISIBLE);
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    findViewById(R.id.dish_show_rela).setVisibility(View.GONE);
+                    FileManager.saveShared(DetailDish.this, FileManager.dish_caipu_hint,FileManager.dish_caipu_hint,"2");
+                }
+            },5*1000);
+        }
+    }
+    public void reset(){
+        if(detailDishViewManager!=null)detailDishViewManager.handlerLoginStatus();
+        if(pageXhWebView!=null)
+            pageXhWebView.setVisibility(View.GONE);
+    }
+    @Override
+    public void onBackPressed() {
+        if(detailDishViewManager != null && detailDishViewManager.onBackPressed()){
+            return;
+        }
+        super.onBackPressed();
+    }
+
 }

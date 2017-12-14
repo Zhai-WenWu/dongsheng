@@ -6,7 +6,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="@dimen/dp_42"
+        android:minHeight="@dimen/dp_44"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingBottom="@dimen/dp_8"
@@ -25,7 +25,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingBottom="0dp"
-                android:paddingLeft="@dimen/dp_5"
                 android:paddingTop="0dp"
                 android:textColor="#333333"
                 android:textSize="@dimen/sp_17" />
@@ -35,6 +34,7 @@
                 android:layout_width="@dimen/dp_14"
                 android:layout_height="@dimen/dp_14"
                 android:layout_gravity="center_vertical"
+                android:layout_marginTop="@dimen/dp_1"
                 android:layout_marginLeft="@dimen/dp_5"
                 android:src="@drawable/z_caipu_xiangqing_ico_shicai" />
         </LinearLayout>
@@ -55,7 +55,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_0.5"
+        android:layout_height="1px"
         android:background="#ececec"
         android:layout_alignParentBottom="true"/>
 </RelativeLayout>

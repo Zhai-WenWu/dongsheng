@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/transparent">
+
+    <include
+        android:id="@+id/devices_header"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_50"
+        android:layout_above="@+id/content"
+        android:clickable="true"
+        layout="@layout/cling_devices_itemlayout"/>
+
+    <RelativeLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_184"
+        android:layout_alignParentBottom="true">
+
+        <ListView
+            android:id="@+id/devices_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none"
+            android:layout_alignParentBottom="true"
+            android:background="@color/ysf_white"
+            android:divider="@null"/>
+
+        <TextView
+            android:id="@+id/empty_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="没有可投屏设备"
+            android:textSize="@dimen/sp_13"
+            android:textColor="@color/c_black_text"
+            android:layout_alignParentBottom="true"
+            android:background="@color/ysf_white"
+            android:lines="1"
+            android:ellipsize="end"
+            android:gravity="center"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>

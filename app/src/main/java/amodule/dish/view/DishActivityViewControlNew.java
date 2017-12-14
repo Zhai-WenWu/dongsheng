@@ -39,14 +39,14 @@ import aplug.web.view.TemplateWebView;
 import aplug.web.view.XHWebView;
 import third.video.VideoPlayerController;
 
-import static amodule.dish.activity.DetailDish.startTime;
-import static amodule.dish.activity.DetailDish.tongjiId;
+import static amodule.dish.activity.DetailDishWeb.startTime;
+import static amodule.dish.activity.DetailDishWeb.tongjiId;
 import static java.lang.System.currentTimeMillis;
 
 /**
  * 菜谱界面的总控制类
  */
-public class  DishActivityViewControlNew {
+public class DishActivityViewControlNew {
     private Activity mAct;
     private RelativeLayout bar_title_1;
     private TemplateWebView templateWebView;
@@ -194,8 +194,14 @@ public class  DishActivityViewControlNew {
 
             @Override
             public void scrollOritention(int scrollState) {
-                if(scrollState==XhScrollView.SCROLL_DOWN){//向下滑动
+                if (scrollState == XhScrollView.SCROLL_DOWN) {//向下滑动
+<<<<<<< HEAD
+=======
 
+=======
+                if(scrollState==XhScrollView.SCROLL_DOWN){//向下滑动
+>>>>>>> master_1025_develop_1109_v580
+>>>>>>> master_1025_develop_1109
                     bar_title_1.setVisibility(View.GONE);
                 }else if(scrollState==XhScrollView.SCROLL_UP){//向上滑动
                     bar_title_1.setVisibility(View.VISIBLE);
@@ -319,7 +325,7 @@ public class  DishActivityViewControlNew {
     public void setDishOneView(String img){
         if(!TextUtils.isEmpty(img)){
             setDishHeaderViewCallBack();
-            dishHeaderView.setImg(img);
+            dishHeaderView.setImg(img,0);
             mScrollView.setVisibility(View.VISIBLE);
         }
     }

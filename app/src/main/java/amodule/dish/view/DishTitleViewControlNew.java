@@ -14,7 +14,6 @@ import com.xiangha.R;
 import java.util.HashMap;
 import java.util.Map;
 
-import acore.logic.AppCommon;
 import acore.logic.FavoriteHelper;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
@@ -24,20 +23,17 @@ import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.PopWindowDialog;
-import amodule.article.activity.ArticleDetailActivity;
 import amodule.dish.activity.upload.UploadDishActivity;
 import amodule.dish.tools.OffDishToFavoriteControl;
 import amodule.main.Main;
 import amodule.user.activity.login.LoginByAccout;
-import aplug.basic.InternetCallback;
 import third.share.BarShare;
 import third.share.activity.ShareActivityDialog;
 import third.share.tools.ShareTools;
 import third.video.VideoPlayerController;
-import xh.basic.internet.UtilInternet;
 import xh.windowview.BottomDialog;
 
-import static amodule.dish.activity.DetailDish.tongjiId;
+import static amodule.dish.activity.DetailDishWeb.tongjiId;
 
 /**
  * 顶部view控制
@@ -100,10 +96,10 @@ public class DishTitleViewControlNew implements View.OnClickListener{
      * @param isHasVideo----是否是视频贴
      */
     public void setData(Map<String, String> dishInfoMaps,String code,boolean isHasVideo,String dishState,LoadManager loadManager){
-        this.dishInfoMap=dishInfoMaps;
-        this.code= code;
-        this.isHasVideo=isHasVideo;
-        this.dishState = dishState;
+            this.dishInfoMap=dishInfoMaps;
+            this.code= code;
+            this.isHasVideo=isHasVideo;
+            this.dishState = dishState;
         this.loadManager= loadManager;
     }
     public PopWindowDialog getPopWindowDialog(){
@@ -240,7 +236,7 @@ public class DishTitleViewControlNew implements View.OnClickListener{
         intent.putExtra("content", mapData.get("mContent"));
         intent.putExtra("type", mapData.get("mType"));
         intent.putExtra("shareFrom", "文章详情");
-        intent.putExtra("reportUrl", "Feedback.app?feekUrl=http://www.xiangha.com/caipu/"+code+".html");
+        intent.putExtra("reportUrl", "Feedback.app?feekUrl=https://www.xiangha.com/caipu/"+code+".html");
         detailDish.startActivity(intent);
     }
 
@@ -329,7 +325,7 @@ public class DishTitleViewControlNew implements View.OnClickListener{
                                         ;
                                         String content = "顶级大厨的做菜视频，讲的真是太详细啦！想吃就赶快进来免费学习吧~ " ;
 //                                            Bitmap bitmap = mVideoPlayerController.getVideoImageView().getBitmap();
-//                                            String imgUrl = ShareTools.getBarShare(DetailDish.this).saveDrawable(bitmap, FileManager.save_cache + "/share_" + currentTimeMillis() + ".png");
+//                                            String imgUrl = ShareTools.getBarShare(DetailDishWeb.this).saveDrawable(bitmap, FileManager.save_cache + "/share_" + currentTimeMillis() + ".png");
                                         String type = BarShare.IMG_TYPE_WEB;
                                         String imgUrl = dishInfoMap.get("img");
                                         if (imgUrl == null) {

@@ -254,7 +254,7 @@ public class VideoImagePlayerController {
     public boolean onBackPressed(){
         //先返回正常状态
         if (orientationUtils.getScreenType() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE || isPortrait) {
-            return StandardGSYVideoPlayer.backFromWindowFull(mContext);
+            return videoPlayer != null ? videoPlayer.backFromWindowFull(mContext) : false;
         }
         return false;
     }

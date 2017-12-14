@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<amodule._common.widget.horizontal.HorizontalRecyclerView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/horizontal_recyclerview_1"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"/>

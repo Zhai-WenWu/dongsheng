@@ -41,6 +41,10 @@
         <attr name="quoteCapWidth" format="reference|dimension" />
     </declare-styleable>
 
+    <declare-styleable name="RvGridView">
+        <attr name="spanCount" format="integer"/>
+    </declare-styleable>
+
     <declare-styleable name="OverScrollView">
         <attr name="defaultPaddingTop" format="dimension"></attr>
         <attr name="defaultPaddingBottom" format="dimension"></attr>
@@ -63,6 +67,13 @@
         <attr name="pstsPaddingMiddle" format="boolean" />
         <attr name="pstsTabColumn" format="integer" />
         <attr name="pstsTabPaddingLeftRight" format="dimension" />
+        <attr name="pstsTabTextPaddingLeftRight" format="dimension"/>
+        <attr name="pstsTabTextPaddingTopBottom" format="dimension"/>
+        <attr name="pstsTabItemIntervalSize" format="dimension"/>
+        <attr name="pstsTabItemMarginTopBottom" format="dimension"/>
+        <attr name="pstsTabStartLeftMargin" format="dimension"/>
+        <attr name="pstsTabEndRightMargin" format="dimension"/>
+        <attr name="pstsTabItemInnerBackground" format="reference"/>
         <attr name="pstsTabBackground" format="reference" />
         <attr name="pstsTabTextSize" format="dimension" />
         <attr name="pstsTabSelectedTextSize" format="dimension" />
@@ -75,10 +86,6 @@
         <attr name="pstsTabTextAllCaps" format="boolean" />
         <attr name="pstsTabTextAlpha" format="integer" />
         <attr name="pstsTabTextFontFamily" format="string" />
-    </declare-styleable>
-    <!-- 首页头部title -->
-    <declare-styleable name="HomeTitle">
-        <attr name="htTitle" format="string" />
     </declare-styleable>
 
     <declare-styleable name="TagTextView">

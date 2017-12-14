@@ -28,7 +28,6 @@ import acore.widget.DownRefreshList;
 import amodule.dish.activity.DetailDish;
 import amodule.dish.activity.MenuDish;
 import amodule.dish.db.DishOffSqlite;
-import amodule.user.activity.MyFavorite;
 import amodule.user.activity.login.LoginByAccout;
 import amodule.user.adapter.AdapterMyselfFavorite;
 import aplug.basic.InternetCallback;

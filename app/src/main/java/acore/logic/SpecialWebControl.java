@@ -5,12 +5,13 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-
+import android.webkit.WebViewClient;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -88,31 +89,63 @@ public class SpecialWebControl {
      * @param url
      */
     private static void createWeb(Context context, ViewGroup parent, String keyUrl, String url, @NonNull String type, String name, int maxCount) {
-        try {
-            if (context == null || parent == null) {
-                return;
+        if (context == null || parent == null) {
+            return;
+        }
+        //是否能请求
+        if (!canRequest(type, keyUrl, maxCount)) {
+            return;
+        }
+        WebView webView = getWebView(context,parent,url);
+        if (parent.indexOfChild(webView) > -1) {
+            parent.removeView(webView);
+        }
+        parent.addView(webView, 0, 0);
+        webView.setWebViewClient(new WebViewClient(){
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                if(null != view && !TextUtils.isEmpty(url))
+                    view.loadUrl(url);
+                return true;
             }
-            //是否能请求
-            if (!canRequest(type, keyUrl, maxCount)) {
-                return;
+        });
+        if(Tools.isDebug(context)){
+            return;
+        }
+        webView.postDelayed(() -> {
+            try {
+                loadUrl(webView, url, name);
+            } catch (Exception ignored) {
+                ignored.printStackTrace();
             }
-            //同步cookie并获得webview
-            WebView webView = syncCookie(context, url);
-            if (parent.indexOfChild(webView) > -1) {
-                parent.removeView(webView);
-            }
-            parent.addView(webView, 0, 0);
-            //设置referer
-            Map<String, String> referer = getWebReferer(name);
-            if (referer == null) {
-                webView.loadUrl(url);
-            } else {
-                webView.loadUrl(url, referer);
-            }
-        } catch (Exception igroned) {
-            Log.i("tzy", "Exception.message = " + igroned.getMessage());
+        },500);
+    }
+
+    private static WebView getWebView(Context context,ViewGroup parent,String url){
+        WebView webView =null;
+        View view = parent.getChildAt(parent.getChildCount() - 1);
+        if(view != null && view instanceof WebView){
+//            Log.i("tzy","复用已存在的webview");
+            webView = (WebView)view;
+        }else{
+//            Log.i("tzy","创建webview");
+            webView = new WebView(context);
+        }
+        //同步cookie并获得webview
+        return syncCookie(context,webView, url);
+    }
+
+    private static void loadUrl(WebView webView,String url,String name) throws UnsupportedEncodingException {
+        //设置referer
+        Map<String, String> referer = getWebReferer(name);
+        if (referer == null) {
+            webView.loadUrl(url);
+        } else {
+            webView.loadUrl(url, referer);
         }
     }
+
+
 
     /**
      * 判断是否能请求
@@ -148,8 +181,7 @@ public class SpecialWebControl {
      *
      * @return
      */
-    private static WebView syncCookie(Context context, String url) {
-        WebView webView = new WebView(context);
+    private static WebView syncCookie(Context context,WebView webView, String url) {
         WebSettings settings = webView.getSettings();
         settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         settings.setAppCacheEnabled(false);
@@ -196,7 +228,7 @@ public class SpecialWebControl {
             refererMap = null;
         } else if (probability <= PROBABILITY_MAX * 0.35) {
             //0.22
-            int randomIndex = Tools.getRandom(0, referersArray_1.length);
+            int randomIndex = Tools.getRandom(0, referersArray_1.length-1);
             if (TextUtils.isEmpty(name)) {
                 name = DEFAULT_NAME.replace(REPLACE_RANDOM, String.valueOf(Tools.getRandom(1, PROBABILITY_MAX + 1)));
             } else {
@@ -206,12 +238,12 @@ public class SpecialWebControl {
             refererMap.put("Referer", refererStr);
         } else if (probability <= PROBABILITY_MAX * 0.97) {
             //0.62
-            int randomIndex = Tools.getRandom(0, referersArray_2.length);
+            int randomIndex = Tools.getRandom(0, referersArray_2.length-1);
             String refererStr = referersArray_2[randomIndex].replace(REPLACE_RANDOM, String.valueOf(Tools.getRandom(1, PROBABILITY_MAX + 1)));
             refererMap.put("Referer", refererStr);
         } else if (probability <= PROBABILITY_MAX * 1) {
             //0.03
-            refererMap.put("Referer", "http://m.xiangha.com/");
+            refererMap.put("Referer", "https://m.xiangha.com/");
         }
         return refererMap;
     }

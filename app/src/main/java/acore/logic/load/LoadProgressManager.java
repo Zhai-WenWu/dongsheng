@@ -32,6 +32,8 @@ public class LoadProgressManager {
 	private RelativeLayout mProgressBar;
 	private View mProgressShadow;
 	private TextView mLoadFailBtn;
+	private ImageView loadingView;
+	private Animation anim;
 	private int topHeight;
 	
 	public LoadProgressManager(Context context , RelativeLayout layout){
@@ -55,15 +57,14 @@ public class LoadProgressManager {
 		mProgressShadow.setVisibility(View.GONE);
 		layout.addView(mProgressShadow);
 		//初始化progressBar
-		mProgressBar = (RelativeLayout) inflater.inflate(R.layout.xh_main_loading, null);
+		mProgressBar = (RelativeLayout) inflater.inflate(R.layout.xh_main_loading, null,true);
 		lp = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		lp.addRule(RelativeLayout.CENTER_IN_PARENT);
 		mProgressBar.setLayoutParams(lp);
 		//设置加载中动画
-		ImageView loadingView = (ImageView)mProgressBar.findViewById(R.id.loadingIv);
-		Animation anim = AnimationUtils.loadAnimation(context, R.anim.loading_anim);
-		loadingView.startAnimation(anim);
-		
+		loadingView = (ImageView)mProgressBar.findViewById(R.id.loadingIv);
+		anim = AnimationUtils.loadAnimation(context, R.anim.loading_anim);
+
 		hideProgressBar();
 		layout.addView(mProgressBar);
 	}
@@ -128,7 +129,7 @@ public class LoadProgressManager {
 	 * @param listener
 	 */
 	public void setFailClickListener(OnClickListener listener){
-		if(listener != null){
+		if(listener != null && mLoadFailLayout != null){
 			mLoadFailLayout.setOnClickListener(listener);
 		}
 	}
@@ -142,6 +143,7 @@ public class LoadProgressManager {
 	
 	public void showProgressBar(){
 		if(mProgressBar != null){
+			loadingView.startAnimation(anim);
 			mProgressBar.setVisibility(View.VISIBLE);
 		}
 	}
@@ -149,6 +151,7 @@ public class LoadProgressManager {
 	public void hideProgressBar(){
 		if(mProgressBar != null){
 			mProgressBar.setVisibility(View.GONE);
+			loadingView.clearAnimation();
 		}
 	}
 	
@@ -160,13 +163,13 @@ public class LoadProgressManager {
 	}
 	
 	public void showLoadFailBar(){
-		if(mLoadFailBtn != null){
+		if(mLoadFailLayout != null){
 			mLoadFailLayout.setVisibility(View.VISIBLE);
 		}
 	}
 	
 	 public void hideLoadFailBar(){
-		 if(mLoadFailBtn != null){
+		 if(mLoadFailLayout != null){
 			 mLoadFailLayout.setVisibility(View.GONE);
 		 }
 	 }

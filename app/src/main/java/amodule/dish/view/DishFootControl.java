@@ -41,7 +41,7 @@ import aplug.basic.ReqInternet;
 import aplug.basic.SubBitmapTarget;
 import xh.basic.tool.UtilImage;
 
-import static amodule.dish.activity.DetailDish.tongjiId;
+import static amodule.dish.activity.DetailDishWeb.tongjiId;
 import static xh.basic.tool.UtilString.getListMapByJson;
 
 /**
@@ -83,7 +83,7 @@ public class DishFootControl implements View.OnClickListener{
         mRecommentNum = (TextView) mAct.findViewById(R.id.a_dish_detail_new_tv_num);
         mRelevantTv = (TextView) mAct.findViewById(R.id.a_dish_detail_new_relevantTv);
 
-        dishAdDataView = new DishAdDataViewNew(mAct);
+        dishAdDataView = new DishAdDataViewNew(mAct,R.layout.view_dish_tips_ad_layout_new);
         dishAdDataView.getRequest(mAct, mAdLayout);
         mRecomentLayout.setOnClickListener(this);
         mRelevantTv.setOnClickListener(this);

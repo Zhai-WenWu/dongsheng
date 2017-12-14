@@ -493,7 +493,7 @@ a {
 	padding-bottom: .1rem;	
 }
 .buy-reason a {
-	color: #ff533c;
+	color: #f23030;
 }
 
 .comment-block {
@@ -514,7 +514,7 @@ a {
 	background-size: .055rem auto;
 }
 .comment-title .comment-rate i {
-	color: #ff533c;
+	color: #f23030;
 	font-size: .13rem;
 }
 
@@ -675,7 +675,7 @@ a {
 }
 .product-list li h4 {
 	font-size: .13rem;
-	color: #ff533c;
+	color: #f23030;
 }
 
 .up-desc {

@@ -58,10 +58,8 @@ public class AdsShow {
 			mAds[index].isShowAd(mAdPlayId, new AdIsShowListener() {
 				@Override
 				public void onIsShowAdCallback(AdParent adParent , boolean isShow) {
-//					Log.i("tzy","onIsShowAdCallback() isShow:" + isShow + "  adParent:" + adParent);
 					if(isShow){
 						mAd = mAds[index];
-//						Log.i("tzy","onIsShowAdCallback() mAd.isNeedOnScreen:" + mAd.isNeedOnScreen);
 						if(mAd.isNeedOnScreen){
 							if(isOnScreent){
 								mAlreadyShow = true;

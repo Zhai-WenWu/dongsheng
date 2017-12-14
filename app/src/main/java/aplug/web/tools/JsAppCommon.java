@@ -38,11 +38,9 @@ import acore.tools.ToolsDevice;
 import amodule.answer.activity.AnswerEditActivity;
 import amodule.answer.activity.AskEditActivity;
 import amodule.answer.activity.QAReportActivity;
-import amodule.dish.activity.DetailDish;
+import amodule.dish.activity.DetailDishWeb;
 import amodule.dish.activity.MoreImageShow;
 import amodule.dish.activity.upload.UploadDishActivity;
-import amodule.dish.db.DataOperate;
-import amodule.dish.db.DishOffSqlite;
 import amodule.other.activity.PlayVideo;
 import amodule.quan.activity.upload.UploadSubjectNew;
 import amodule.user.activity.ChooseDish;
@@ -150,18 +148,19 @@ public class JsAppCommon extends JsBase {
 
     /**
      * 保持菜谱详情的浏览记录
+     *
      * @param burden
      * @param allClick
      * @param favrites
      * @param nickName
      */
     @JavascriptInterface
-    public void setIngreStr(final String burden,final String allClick,final String favrites,final String nickName) {
+    public void setIngreStr(final String burden, final String allClick, final String favrites, final String nickName) {
         handler.post(new Runnable() {
             @Override
             public void run() {
-            if (mAct != null && mAct instanceof DetailDish)
-                ((DetailDish)mAct).savaJsAdata(burden,allClick,favrites,nickName);
+                if (mAct != null && mAct instanceof DetailDishWeb)
+                    ((DetailDishWeb) mAct).savaJsAdata(burden, allClick, favrites, nickName);
             }
         });
     }
@@ -207,8 +206,8 @@ public class JsAppCommon extends JsBase {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                if(mAct instanceof ShowWeb){
-                    ((ShowWeb)mAct).shareCallback = callback;
+                if (mAct instanceof ShowWeb) {
+                    ((ShowWeb) mAct).shareCallback = callback;
                 }
 //				barShare.setShare(BarShare.IMG_TYPE_WEB, am.get("title"), content, am.get("img"), zhishiurl);
 //				if (act.barShare == null) {//由于二级页面也会吊起分享,但是分享内容不同,所以不加判断.防止分享内容改不了
@@ -265,20 +264,20 @@ public class JsAppCommon extends JsBase {
     }
 
     @JavascriptInterface
-    public void initImageShare(final String imageUrl,final String callback){
+    public void initImageShare(final String imageUrl, final String callback) {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                if(mAct instanceof ShowWeb){
-                    ((ShowWeb)mAct).shareCallback = callback;
+                if (mAct instanceof ShowWeb) {
+                    ((ShowWeb) mAct).shareCallback = callback;
                 }
                 RelativeLayout shareLayout = (RelativeLayout) mAct.findViewById(R.id.shar_layout);
-                if(shareLayout != null){
+                if (shareLayout != null) {
                     shareLayout.setVisibility(View.VISIBLE);
                     shareLayout.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            new BarShareImage(mAct,imageUrl).openShareImage();
+                            new BarShareImage(mAct, imageUrl).openShareImage();
                         }
                     });
                 }
@@ -287,17 +286,17 @@ public class JsAppCommon extends JsBase {
     }
 
     @JavascriptInterface
-    public void openImageShare(final String imageUrl,final String callback){
-        initImageShare(imageUrl,callback);
+    public void openImageShare(final String imageUrl, final String callback) {
+        initImageShare(imageUrl, callback);
         handler.post(new Runnable() {
             @Override
             public void run() {
                 RelativeLayout shareLayout = (RelativeLayout) mAct.findViewById(R.id.shar_layout);
-                if(shareLayout != null){
+                if (shareLayout != null) {
                     shareLayout.performClick();
-                }else{
+                } else {
                     //若为null则直接分享，以免说这是bug
-                    new BarShareImage(mAct,imageUrl).openShareImage();
+                    new BarShareImage(mAct, imageUrl).openShareImage();
                 }
             }
         });
@@ -470,7 +469,9 @@ public class JsAppCommon extends JsBase {
 
             @Override
             public void run() {
-                if (!LoginManager.isLogin()) {
+                if (LoginManager.isLogin()) {
+                    FavorableDialog dialog = new FavorableDialog(mAct, shop_code);
+                } else {
                     Intent intent_user = new Intent(mAct, LoginByAccout.class);
                     mAct.startActivity(intent_user);
                 }
@@ -631,7 +632,7 @@ public class JsAppCommon extends JsBase {
                         public void onFail() {
                             mLoadManager.dismissProgress();
                         }
-                    },true);
+                    }, true);
                 }
             }
         });
@@ -757,7 +758,7 @@ public class JsAppCommon extends JsBase {
 
     @JavascriptInterface
     public void showDishStep(final String[] imgArr, final String[] stepArr, final int index) {
-        Log.i("zyj","showDishStep");
+        Log.i("zyj", "showDishStep");
         handler.post(new Runnable() {
             @Override
             public void run() {
@@ -776,7 +777,7 @@ public class JsAppCommon extends JsBase {
                 }
                 if (listMaps.size() > 0) {
                     Intent intent = new Intent(mAct, MoreImageShow.class);
-                    intent.putExtra("data",listMaps);
+                    intent.putExtra("data", listMaps);
                     intent.putExtra("index", index);
                     intent.putExtra("from", "dish");
                     mAct.startActivity(intent);
@@ -821,8 +822,8 @@ public class JsAppCommon extends JsBase {
             public void run() {
                 if (mAct != null && mWebView != null) {
                     ViewGroup.LayoutParams params = mWebView.getLayoutParams();
-                    params.height=(int) (height * mAct.getResources().getDisplayMetrics().density);
-                    params.width=mAct.getResources().getDisplayMetrics().widthPixels;
+                    params.height = (int) (height * mAct.getResources().getDisplayMetrics().density);
+                    params.width = mAct.getResources().getDisplayMetrics().widthPixels;
                 }
             }
         });
@@ -866,7 +867,7 @@ public class JsAppCommon extends JsBase {
     @JavascriptInterface
     public void goPay(String url, String params, final String type) {
 
-        if(!ToolsDevice.isNetworkAvailable(mAct)){
+        if (!ToolsDevice.isNetworkAvailable(mAct)) {
             onPayCallback(false, "网络异常，请检查网络");
             return;
         }
@@ -940,14 +941,16 @@ public class JsAppCommon extends JsBase {
                     if (mOnPayFinishListener != null) {
                         mOnPayFinishListener.onPayFinish(isOk, data);
                     }
-                    ObserverManager.getInstence().notify(ObserverManager.NOTIFY_PAYFINISH, null, isOk);
                     if (isOk)//支付成功，如果是开通的VIP，设置VIP状态。因为无法区分此次支付是否是购买VIP，所以每次支付成功都设置一次。
-                        LoginManager.initYiYuanBindState(mAct, new Runnable() {
-                            @Override
-                            public void run() {
-                                LoginManager.setVipStateChanged();
-                            }
-                        });
+                        mWebView.postDelayed(() -> {
+                            LoginManager.initYiYuanBindState(mAct, new Runnable() {
+                                @Override
+                                public void run() {
+                                    LoginManager.setVipStateChanged();
+                                }
+                            });
+                        }, 2000);
+                    ObserverManager.getInstence().notify(ObserverManager.NOTIFY_PAYFINISH, null, isOk);
                 }
             });
         }
@@ -957,29 +960,31 @@ public class JsAppCommon extends JsBase {
     public String getSign() {
         return ReqEncyptInternet.in().getEncryptParam();
     }
+
     @JavascriptInterface
-    public String getCookie(){
+    public String getCookie() {
         try {
-                    //cookie结构json
-                    Map<String, String> header = ReqInternet.in().getHeader(mAct);
-                    String cookieStr = header.containsKey("Cookie") ? header.get("Cookie") : "";
-                    Map<String, String> mapdata = StringManager.getMapByString(cookieStr, ";", "=");
-                    JSONObject jsonObject = new JSONObject();
-                    for (Map.Entry<String, String> entry : mapdata.entrySet()) {
-                        jsonObject.put(entry.getKey(), entry.getValue());
-                    }
-                    String data= jsonObject.toString();
+            //cookie结构json
+            Map<String, String> header = ReqInternet.in().getHeader(mAct);
+            String cookieStr = header.containsKey("Cookie") ? header.get("Cookie") : "";
+            Map<String, String> mapdata = StringManager.getMapByString(cookieStr, ";", "=");
+            JSONObject jsonObject = new JSONObject();
+            for (Map.Entry<String, String> entry : mapdata.entrySet()) {
+                jsonObject.put(entry.getKey(), entry.getValue());
+            }
+            String data = jsonObject.toString();
 //                    data=data.replace("\"","\\\"");
-                    data= Uri.encode(data);
-                    return data;
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-                return "";
+            data = Uri.encode(data);
+            return data;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
 
     }
+
     @JavascriptInterface
-    public String getDsCookie(){
+    public String getDsCookie() {
         try {
             //cookie结构json
             Map<String, String> header = MallReqInternet.in().getHeader(mAct);
@@ -989,11 +994,11 @@ public class JsAppCommon extends JsBase {
             for (Map.Entry<String, String> entry : mapdata.entrySet()) {
                 jsonObject.put(entry.getKey(), entry.getValue());
             }
-            String data= jsonObject.toString();
+            String data = jsonObject.toString();
 //            data=data.replace("\"","\\\"");
-            data=Uri.encode(data);
+            data = Uri.encode(data);
             return data;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return "";
@@ -1012,11 +1017,12 @@ public class JsAppCommon extends JsBase {
 
     /**
      * h5跳转到回答/追答编辑页面
-     * @param dishId 菜谱code
-     * @param authorId 作者code
-     * @param qaId 问答code
-     * @param answerCode 回答code
-     * @param qaTitle 回答的问题
+     *
+     * @param dishId       菜谱code
+     * @param authorId     作者code
+     * @param qaId         问答code
+     * @param answerCode   回答code
+     * @param qaTitle      回答的问题
      * @param isAnswerMore 是否是 追答
      */
     @JavascriptInterface
@@ -1040,11 +1046,12 @@ public class JsAppCommon extends JsBase {
 
     /**
      * h5跳转到提问/追问编辑页面
-     * @param dishId 菜谱code
-     * @param authorId 作者code
-     * @param qaId 问答code
+     *
+     * @param dishId     菜谱code
+     * @param authorId   作者code
+     * @param qaId       问答code
      * @param answerCode 回答code
-     * @param isAskMore 是否是 追问
+     * @param isAskMore  是否是 追问
      */
     @JavascriptInterface
     public void goAsk(final String dishId, final String authorId, final String qaId, final String answerCode, final String isAskMore) {
@@ -1063,17 +1070,19 @@ public class JsAppCommon extends JsBase {
             }
         });
     }
-	/**
-	 * 问答举报
-	 * @param nickName 被举报人的昵称
-	 * @param authorCode 菜谱作者的code
-	 * @param qaCode 问答code
-	 * @param askAuthorCode 提问人的code
-	 * @param dishCode 菜谱code
-	 */
-	@JavascriptInterface
-	public void report(final String nickName, final String authorCode, final String qaCode, final String askAuthorCode, final String dishCode) {
-		handler.post(new Runnable() {
+
+    /**
+     * 问答举报
+     *
+     * @param nickName      被举报人的昵称
+     * @param authorCode    菜谱作者的code
+     * @param qaCode        问答code
+     * @param askAuthorCode 提问人的code
+     * @param dishCode      菜谱code
+     */
+    @JavascriptInterface
+    public void report(final String nickName, final String authorCode, final String qaCode, final String askAuthorCode, final String dishCode) {
+        handler.post(new Runnable() {
             @Override
             public void run() {
                 Bundle bundle = new Bundle();
@@ -1087,7 +1096,7 @@ public class JsAppCommon extends JsBase {
                 mAct.startActivity(intent);
             }
         });
-	}
+    }
 
     /**
      * h5页面的一些操作，可以关闭客户端的webview
@@ -1131,7 +1140,7 @@ public class JsAppCommon extends JsBase {
     }
 
     @JavascriptInterface
-    public void showCommentBar(final String userName,final String userCode){
+    public void showCommentBar(final String userName, final String userCode) {
         handler.post(new Runnable() {
             @Override
             public void run() {
@@ -1144,7 +1153,7 @@ public class JsAppCommon extends JsBase {
     }
 
     @JavascriptInterface
-    public void initMallCloseBtn(){
+    public void initMallCloseBtn() {
         handler.post(new Runnable() {
             @Override
             public void run() {
@@ -1154,12 +1163,14 @@ public class JsAppCommon extends JsBase {
             }
         });
     }
+
     /**
      * webview自己处理物理返回键
+     *
      * @param loadUrl
      */
     @JavascriptInterface
-    public void handleBackSelf (final String loadUrl) {
+    public void handleBackSelf(final String loadUrl) {
         handler.post(new Runnable() {
             @Override
             public void run() {
@@ -1170,6 +1181,7 @@ public class JsAppCommon extends JsBase {
 
     /**
      * 获取网络状态
+     *
      * @return
      */
     @JavascriptInterface
@@ -1179,17 +1191,18 @@ public class JsAppCommon extends JsBase {
 
     /**
      * 来源
+     *
      * @param dsfrom
      */
     @JavascriptInterface
-    public void dsFrom(String dsfrom){
-        if(!TextUtils.isEmpty(dsfrom)){
+    public void dsFrom(String dsfrom) {
+        if (!TextUtils.isEmpty(dsfrom)) {
             MallCommon.setStatictisFrom(dsfrom);
         }
     }
 
     /**
-     *一元购登录
+     * 一元购登录
      */
     @JavascriptInterface
     public void vipTransfer() {

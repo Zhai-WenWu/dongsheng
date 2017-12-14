@@ -2,8 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="@dimen/dp_43"
-    android:paddingLeft="@dimen/dp_20"
-    android:background="@color/backgroup_color">
+    android:paddingLeft="@dimen/dp_20">
 
     <TextView
         android:id="@+id/text_myself"
@@ -50,7 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@+id/my_new_info"
             android:clickable="false"
-            android:textColor="#ff533c"
+            android:textColor="#f23030"
             android:textSize="@dimen/sp_12" />
 
         <TextView

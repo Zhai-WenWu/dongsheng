@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="@dimen/dp_336"
+    android:layout_height="@dimen/dp_181">
+
+    <ImageView
+        android:id="@+id/imageview1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#4c000000"/>
+
+    <LinearLayout
+        android:id="@+id/linearlayout1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="@dimen/dp_34"
+        android:layout_marginRight="@dimen/dp_34"
+        android:gravity="center"
+        android:background="@color/transparent_fe"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textview1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/c_white_text"
+            android:textSize="@dimen/sp_20"
+            android:lineSpacingExtra="@dimen/dp_5"
+            android:gravity="center"
+            android:textStyle="bold"
+            tools:text="啊啊啊啊"
+            android:maxLines="2"
+            android:ellipsize="end"/>
+
+        <TextView
+            android:id="@+id/textview2"
+            tools:text="啊啊啊啊"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/sp_14"
+            android:textColor="@color/c_white_text"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

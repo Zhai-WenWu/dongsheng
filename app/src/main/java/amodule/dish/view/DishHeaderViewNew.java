@@ -1,9 +1,11 @@
 package amodule.dish.view;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
@@ -33,8 +35,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import acore.logic.AppCommon;
+import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
+import acore.override.helper.XHActivityManager;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -49,7 +53,7 @@ import third.video.VideoPlayerController;
 import xh.basic.tool.UtilImage;
 import xh.basic.tool.UtilString;
 
-import static amodule.dish.activity.DetailDish.tongjiId;
+import static amodule.dish.activity.DetailDishWeb.tongjiId;
 
 /**
  * Created by Administrator on 2016/9/21.
@@ -71,6 +75,7 @@ public class DishHeaderViewNew extends LinearLayout {
 
     private int distance;
     private boolean isLoadImg=false;
+    private boolean mShowClingBtn;
 
     public DishHeaderViewNew(Context context) {
         super(context);
@@ -105,22 +110,29 @@ public class DishHeaderViewNew extends LinearLayout {
         isAutoPaly = "wifi".equals(ToolsDevice.getNetWorkSimpleType(activity));
         //大图处理
         videoViewGroup = LayoutInflater.from(activity).inflate(R.layout.view_dish_header_oneimage, null);
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,videoHeight);
         dishVidioLayout = (RelativeLayout) videoViewGroup.findViewById(R.id.video_layout);
-        dishVidioLayout.setLayoutParams(params);
         dredgeVipLayout = (RelativeLayout) videoViewGroup.findViewById(R.id.video_dredge_vip_layout);
-        dredgeVipLayout.setLayoutParams(params);
         dishvideo_img = (LinearLayout) videoViewGroup.findViewById(R.id.video_img_layout);
-        dishvideo_img.setLayoutParams(params);
         adLayout = (FrameLayout) videoViewGroup.findViewById(R.id.video_ad_layout);
-        adLayout.setLayoutParams(params);
-
+        paramsLayout(videoHeight);
         //处理简介
         //头部加载view
         this.addView(videoViewGroup);
 //        INVisibiHeaderView();
     }
-
+    public void paramsLayout(int videoHeight){
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,videoHeight);
+        dishVidioLayout.setLayoutParams(params);
+        dredgeVipLayout.setLayoutParams(params);
+        dishvideo_img.setLayoutParams(params);
+        adLayout.setLayoutParams(params);
+    }
+    public void setDistance(int distances){
+        this.distance = distances;
+    }
+    public RelativeLayout getViewLayout(){
+        return  dishVidioLayout;
+    }
     /**
      * 设置当前header的callback回调
      */
@@ -146,10 +158,11 @@ public class DishHeaderViewNew extends LinearLayout {
     public void setData(ArrayList<Map<String, String>> list, Map<String, String> permissionMap) {
         Map<String, String> videoMap = list.get(0);
         String title = videoMap.get("title");
-        try {
+//        try {
             String selfVideo = videoMap.get("video");
             String img = videoMap.get("img");
             String type = videoMap.get("type");
+            if(isAutoPaly)isAutoPaly = "2".equals(videoMap.get("isAutoPlay"));
 
             if ("2".equals(type) && !TextUtils.isEmpty(selfVideo) && !"[]".equals(selfVideo)) {
                 if (!setSelfVideo(title, selfVideo, img, permissionMap))
@@ -158,13 +171,13 @@ public class DishHeaderViewNew extends LinearLayout {
                 if(isLoadImg) {
                     handlerImage(img);
                 }else{
-                    setImg(img);
+                    setImg(img,0);
                 }
 
             }
-        } catch (Exception e) {
-            Toast.makeText(context, "视频播放失败", Toast.LENGTH_SHORT).show();
-        }
+//        } catch (Exception e) {
+//            Toast.makeText(context, "视频播放失败111", Toast.LENGTH_SHORT).show();
+//        }
     }
 
     private void initVideoAd() {
@@ -179,16 +192,23 @@ public class DishHeaderViewNew extends LinearLayout {
             public void callBack(Map<String, String> maps) {
                 String temp = maps.get(AdPlayIdConfig.DISH_MEDIA);
                 mapAd = StringManager.getFirstMap(temp);
-                Log.i("tzy", "needVideoControl time = " + System.currentTimeMillis());
                 if (mapAd != null && mapAd.size() > 0
                         && mVideoPlayerController != null) {
                     mVideoPlayerController.setShowAd(true);
                 }
-                if (isAutoPaly && mVideoPlayerController != null)
+                if (isAutoPaly && mVideoPlayerController != null && isShowActivity())
                     mVideoPlayerController.setOnClick();
             }
         }, activity, "result_media");
 
+    }
+
+    private boolean  isShowActivity(){
+        try {
+            if ("amodule.dish.activity.DetailDish".equals(XHActivityManager.getInstance().getCurrentActivity().getComponentName().getClassName()))
+                return true;
+        }catch (Exception e){return false;}
+        return false;
     }
 
     private int num = 4;
@@ -212,8 +232,10 @@ public class DishHeaderViewNew extends LinearLayout {
             @Override
             public void onClick(View v) {
                 view.setVisibility(View.GONE);
-                mVideoPlayerController.setShowAd(false);
-                mVideoPlayerController.setOnClick();
+                if(mVideoPlayerController != null){
+                    mVideoPlayerController.setShowAd(false);
+                    mVideoPlayerController.setOnClick();
+                }
             }
         });
         view.findViewById(R.id.ad_vip_lead).setOnClickListener(new OnClickListener() {
@@ -230,6 +252,7 @@ public class DishHeaderViewNew extends LinearLayout {
             }
         });
         //初始化倒计时
+        @SuppressLint("HandlerLeak")
         final Handler handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
@@ -237,27 +260,13 @@ public class DishHeaderViewNew extends LinearLayout {
                 mNum.setText("" + msg.what);
                 if (msg.what == 0) {
                     view.setVisibility(View.GONE);
-                    if (!mVideoPlayerController.isPlaying()) {
+                    if (mVideoPlayerController != null && !mVideoPlayerController.isPlaying()) {
                         mVideoPlayerController.setShowAd(false);
                         if (isOnResuming) mVideoPlayerController.setOnClick();
                     }
                 }
             }
         };
-//        mThread = new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                for(; num > 0; num--) {
-//                    handler.sendEmptyMessage(num);
-//                    try {
-//                        Thread.sleep(1000);
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//                handler.sendEmptyMessage(0);
-//            }
-//        });
         BitmapRequestBuilder<GlideUrl, Bitmap> bitmapRequest = LoadImage.with(XHApplication.in())
                 .load(imgUrl)
                 .setRequestListener(new RequestListener<GlideUrl, Bitmap>() {
@@ -301,7 +310,6 @@ public class DishHeaderViewNew extends LinearLayout {
 
     boolean isContinue = false;
     boolean isHaspause = false;
-    long currentTime = 0;
     int limitTime = 0;
     private boolean setSelfVideo(final String title, final String selfVideoJson, final String img, Map<String, String> permissionMap) {
         boolean isUrlVaild = false;
@@ -312,6 +320,7 @@ public class DishHeaderViewNew extends LinearLayout {
             dishVidioLayout.setPadding(0, distance, 0, 0);
             mVideoPlayerController = new VideoPlayerController(activity, dishVidioLayout, img);
             mVideoPlayerController.showFullScrren();
+            mVideoPlayerController.showClingBtn(mShowClingBtn);
             if(permissionMap != null && permissionMap.containsKey("video")){
 
                 Map<String,String> videoPermionMap = StringManager.getFirstMap(permissionMap.get("video"));
@@ -345,6 +354,7 @@ public class DishHeaderViewNew extends LinearLayout {
                     setVideoAdData(mapAd, adLayout);
                 }
             });
+
             dishvideo_img.setVisibility(View.GONE);
             callBack.getVideoControl(mVideoPlayerController, dishVidioLayout, videoViewGroup);
             callBack.videoImageOnClick();
@@ -352,6 +362,12 @@ public class DishHeaderViewNew extends LinearLayout {
         }
         initVideoAd();
         return isUrlVaild;
+    }
+
+    public void handleVipState (boolean isVip) {
+        mShowClingBtn = isVip;
+        if (mVideoPlayerController != null)
+            mVideoPlayerController.showClingBtn(mShowClingBtn);
     }
 
     private RelativeLayout dredgeVipLayout;
@@ -362,55 +378,51 @@ public class DishHeaderViewNew extends LinearLayout {
             Log.i("tzy","common = " + common.toString());
             final String url = common.get("url");
             if(TextUtils.isEmpty(url)) return;
-            mVideoPlayerController.hideFullScreen();
             vipView = new VideoDredgeVipView(context);
             dredgeVipLayout.addView(vipView);
             vipView.setTipMessaText(common.get("text"));
             vipView.setDredgeVipText(common.get("button1"));
-            vipView.setDredgeVipClick(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(!TextUtils.isEmpty(url)){
-                        AppCommon.openUrl(activity,url,true);
-                        return;
-                    }
-
+            vipView.setDredgeVipClick(v -> {
+                if(!TextUtils.isEmpty(url)){
+                    String currentUrl = url + "&vipFrom=" +Uri.encode(LoginManager.isLogin() ? "视频菜谱会员按钮（登录后）" : "视频菜谱会员按钮（登录前）");
+                    AppCommon.openUrl(activity,currentUrl,true);
                 }
             });
             dredgeVipLayout.setPadding(0, distance, 0, 0);
-            mVideoPlayerController.setOnProgressChangedCallback(new GSYVideoPlayer.OnProgressChangedCallback() {
-                @Override
-                public void onProgressChanged(int progress, int secProgress, int currentTime, int totalTime) {
+            if(mVideoPlayerController != null){
+                mVideoPlayerController.hideFullScreen();
+                mVideoPlayerController.setOnProgressChangedCallback((progress, secProgress, currentTime, totalTime) -> {
                     int currentS = Math.round(currentTime / 1000f);
                     int durationS = Math.round(totalTime / 1000f);
                     if (currentS >= 0 && durationS >= 0) {
                         if (isHaspause) {
-                            mVideoPlayerController.onPause();
+                            onPause();
                             return;
                         }
                         if ((currentS > limitTime
 //                            || limitTime > durationS
                         ) && !isContinue) {
                             dredgeVipLayout.setVisibility(VISIBLE);
-                            mVideoPlayerController.onPause();
+                            onPause();
                             isHaspause = true;
                         }
                     }
-                }
-            });
+                });
+            }
         }
     }
 
-
+  private String oneImgUrl="";
     /**
      * 展示顶图view,是大图还是视频
      * @param img          》图片链接
      */
-    public void setImg(final String img) {
+    public void setImg(final String img,int height) {
         Log.i("wyl","img:___:::"+img);
+        oneImgUrl=img;
         isLoadImg=true;
         dishvideo_img.setVisibility(View.GONE);
-        int waith = ToolsDevice.getWindowPx(activity).widthPixels *5/6;
+        int waith = height>0?height:ToolsDevice.getWindowPx(activity).widthPixels *5/6;
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT);
         RelativeLayout.LayoutParams params_rela = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,waith);
         final ImageViewVideo imvv = new ImageViewVideo(activity);
@@ -419,26 +431,23 @@ public class DishHeaderViewNew extends LinearLayout {
         dishVidioLayout.removeAllViews();
         dishVidioLayout.setLayoutParams(params_rela);
         dishVidioLayout.addView(imvv);
-        dishVidioLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dishVidioLayout.setClickable(false);
-                XHClick.mapStat(activity, tongjiId, "菜谱区域的点击", "菜谱大图点击");
-                ArrayList<Map<String, String>> listmap = new ArrayList<>();
-                Map<String, String> map = new HashMap<>();
-                map.put("img", img);
-                map.put("info", "");
-                map.put("num", "1");
-                listmap.add(map);
+        dishVidioLayout.setOnClickListener(v -> {
+            dishVidioLayout.setClickable(false);
+            XHClick.mapStat(activity, tongjiId, "菜谱区域的点击", "菜谱大图点击");
+            ArrayList<Map<String, String>> listmap = new ArrayList<>();
+            Map<String, String> map = new HashMap<>();
+            map.put("img", oneImgUrl);
+            map.put("info", "");
+            map.put("num", "1");
+            listmap.add(map);
 
-                Intent intent = new Intent(activity, MoreImageShow.class);
-                intent.putExtra("data", listmap);
-                intent.putExtra("from", "dish");
-                intent.putExtra("index", 0);
-                intent.putExtra("isShowAd", false);
-                dishVidioLayout.setClickable(true);
-                activity.startActivity(intent);
-            }
+            Intent intent = new Intent(activity, MoreImageShow.class);
+            intent.putExtra("data", listmap);
+            intent.putExtra("from", "dish");
+            intent.putExtra("index", 0);
+            intent.putExtra("isShowAd", false);
+            dishVidioLayout.setClickable(true);
+            activity.startActivity(intent);
         });
         if(callBack!=null) {
             callBack.getVideoControl(mVideoPlayerController, dishVidioLayout, videoViewGroup);
@@ -453,22 +462,21 @@ public class DishHeaderViewNew extends LinearLayout {
     public void onResume() {
         isOnResuming = true;
         if(mVideoPlayerController != null
-                && (dredgeVipLayout == null || dredgeVipLayout.getVisibility() == GONE))
+                && (dredgeVipLayout == null || dredgeVipLayout.getVisibility() == GONE)) {
             mVideoPlayerController.onResume();
+            Log.i("xianghaTag","onResume:::header");
+        }
     }
 
     public void onPause() {
         isOnResuming = false;
         if(mVideoPlayerController != null)
         mVideoPlayerController.onPause();
+        Log.i("xianghaTag","onPause:::header");
     }
 
     public boolean onBackPressed(){
         return mVideoPlayerController != null ? mVideoPlayerController.onBackPressed() : false;
-    }
-
-    public View getVideoView(){
-        return videoViewGroup;
     }
 
     /**
@@ -508,6 +516,7 @@ public class DishHeaderViewNew extends LinearLayout {
         imageView.setLayoutParams(params);
         dishVidioLayout.addView(imageView);
         Log.i("wyl","处理图片：：："+url);
+        oneImgUrl = url;
         BitmapRequestBuilder<GlideUrl, Bitmap> bitmapRequest = LoadImage.with(getContext())
                 .load(url)
                 .setSaveType(FileManager.save_cache)
@@ -538,8 +547,18 @@ public class DishHeaderViewNew extends LinearLayout {
     public void onDestroy(){
         if(mVideoPlayerController!=null){
             mVideoPlayerController.onDestroy();
-//            mVideoPlayerController=null;
+            mVideoPlayerController=null;
         }
+    }
+
+    public String getVideoUrl() {
+        return mVideoPlayerController == null ? null : mVideoPlayerController.getVideoUrl();
+    }
+
+    public int getPlayState() {
+        if (mVideoPlayerController != null)
+            return mVideoPlayerController.videoPlayer.getCurrentState();
+        return -1;//状态的初始化
     }
 
 }

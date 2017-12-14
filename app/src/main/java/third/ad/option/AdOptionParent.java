@@ -96,11 +96,18 @@ public abstract class AdOptionParent {
                             Map<String, String> adMap = adList.get(0);
                             if (adMap != null && adMap.size() > 0) {
                                 //广告为自己的类型
-                                if (XHScrollerAdParent.ADKEY_BANNER.equals(adMap.get("adClass")) && !TextUtils.isEmpty(adMap.get("imgUrl2"))) {
+                                if (XHScrollerAdParent.ADKEY_BANNER.equals(adMap.get("adClass"))
+                                        && !TextUtils.isEmpty(adMap.get("imgUrl2"))) {
                                     adMap.put("imgUrl", adMap.get("imgUrl2"));
                                 }
-                                Map<String, String> newMap = getAdListItemData(adMap.get("title"), adMap.get("desc"),
-                                        adMap.get("iconUrl"), adMap.get("imgUrl"), adMap.get("type"), adMap.containsKey("isBigPic") ? adMap.get("isBigPic") : "");
+                                Map<String, String> newMap = getAdListItemData(
+                                        adMap.get("title"),
+                                        adMap.get("desc"),
+                                        adMap.get("iconUrl"),
+                                        adMap.get("imgUrl"),
+                                        adMap.get("type"),
+                                        adMap.containsKey("isBigPic") ? adMap.get("isBigPic") : ""
+                                );
                                 if (newMap != null) {
                                     if (!newMap.containsKey("adClass"))
                                         newMap.put("adClass", adMap.get("type"));
@@ -256,7 +263,7 @@ public abstract class AdOptionParent {
                                     int aboveIndex = index - 1; //广告要跟上一个样式保持一致
                                     if (aboveIndex < 0) aboveIndex = index;
                                     Map<String, String> aboveMap = old_list.get(aboveIndex);
-                                    ArrayList<Map<String, String>> arrayList = StringManager.getListMapByJson(aboveMap.get("imgs"));
+//                                    ArrayList<Map<String, String>> arrayList = StringManager.getListMapByJson(aboveMap.get("imgs"));
                                     String type = aboveMap.get("style");
                                     if (TextUtils.isEmpty(type)) {//如果上一个样式的字段不存在则默认右图样式
                                         JSONObject styleObject = new JSONObject();
@@ -475,10 +482,6 @@ public abstract class AdOptionParent {
 
     public void setStartIndex(int index) {
         this.startIndex = index;
-    }
-
-    public int getStartIndex() {
-        return startIndex;
     }
 
     /**

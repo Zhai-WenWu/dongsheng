@@ -69,8 +69,7 @@ public class FileToolsCammer {
                     if(videoFile.exists()){
                         olddArrayList.add(map);
                         String imgPath = map.get(RecorderVideoData.video_img_path);
-                        File imgFile = new File(imgPath);
-                        if(!imgFile.exists()){
+                        if(!TextUtils.isEmpty(imgPath) && !new File(imgPath).exists()){
                             FileToolsCammer.getBitmapByImgPath(videoPath);
                         }
                     }else{
@@ -187,8 +186,10 @@ public class FileToolsCammer {
     }
 
     public static Map<String, String> data(String videoPath){
-        File file = new File(videoPath);
         Map<String, String> map = new HashMap<>();
+        if (TextUtils.isEmpty(videoPath))
+            return map;
+        File file = new File(videoPath);
         if(!file.exists()) return map;
 
         map.put(RecorderVideoData.video_add_time,"" + file.lastModified());

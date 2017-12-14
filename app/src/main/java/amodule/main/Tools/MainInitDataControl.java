@@ -16,6 +16,7 @@ import com.iflytek.cloud.SpeechUtility;
 import com.tencent.android.tpush.XGPushManager;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.onlineconfig.OnlineConfigAgent;
+import com.umeng.onlineconfig.OnlineConfigLog;
 import com.xh.manager.DialogManager;
 import com.xh.manager.ViewManager;
 import com.xh.view.HButtonView;
@@ -100,7 +101,6 @@ public class MainInitDataControl {
             public void run() {
                 super.run();
                 MobclickAgent.setDebugMode(true);
-                OnlineConfigAgent.getInstance().updateOnlineConfig(activity);
 
                 //待处理问题。
                 HomeToutiaoAdControl.getInstance().getAdData(activity);

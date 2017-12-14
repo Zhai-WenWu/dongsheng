@@ -73,6 +73,7 @@ public class CustomGSYVideoPlayer extends StandardGSYVideoPlayer {
         }
         mPreviewTexture = null;
         mPreviewTexture = new GSYTextureView(getActivityContext());
+        mPreviewTexture.setGSYVideoManager(mGSYVideoManager);
         mPreviewTexture.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
             @Override
             public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
@@ -124,7 +125,11 @@ public class CustomGSYVideoPlayer extends StandardGSYVideoPlayer {
                     && GSYPreViewManager.instance().isSeekToComplete()) {
                 GSYPreViewManager.instance().setSeekToComplete(false);
                 int time = progress * getDuration() / 100;
-                GSYPreViewManager.instance().getMediaPlayer().seekTo(time);
+                try{
+                    GSYPreViewManager.instance().getMediaPlayer().seekTo(time);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
                 mPreProgress = progress;
             }
         }

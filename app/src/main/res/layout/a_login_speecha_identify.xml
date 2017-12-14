@@ -23,7 +23,7 @@
         android:paddingBottom="@dimen/dp_3"
         android:text="语音验证码"
         android:textSize="@dimen/sp_13"
-        android:textColor="#ff533c"
+        android:textColor="#f23030"
         />
 
 </LinearLayout>

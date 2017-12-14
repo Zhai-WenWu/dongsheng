@@ -306,8 +306,8 @@ public class VideoHeaderView extends RelativeLayout {
         if (!TextUtils.isEmpty(videoUrl)
                 && videoUrl.startsWith("http")) {
             if(null == mVideoPlayerController){
-                GSYVideoManager.instance().canChange = false;
                 mVideoPlayerController = new VideoPlayerController(activity, dishVidioLayout, img,GSYVideoType.SCREEN_MATCH_WIDTH);
+                GSYVideoManager.canChange = false;
             }
 
             if(permissionMap != null && permissionMap.containsKey("video")){

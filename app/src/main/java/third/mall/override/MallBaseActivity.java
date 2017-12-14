@@ -2,7 +2,6 @@ package third.mall.override;
 
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 
 import acore.override.activity.base.BaseActivity;
 import acore.tools.PageStatisticsUtils;

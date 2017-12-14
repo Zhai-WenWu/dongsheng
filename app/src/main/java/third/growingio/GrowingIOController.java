@@ -16,7 +16,6 @@ import acore.tools.ChannelUtil;
 import acore.tools.FileManager;
 import acore.tools.LogManager;
 import acore.tools.StringManager;
-import xh.basic.tool.UtilFile;
 
 /**
  * PackageName : third.growingio
@@ -33,6 +32,7 @@ public class GrowingIOController {
         if (!isGrowingUser(context)) {
             return;
         }
+        Log.i("tzy","GrowingIO init.");
         GrowingIO.startWithConfiguration(XHApplication.in(), new Configuration()
                 .useID()
                 .trackAllFragments()

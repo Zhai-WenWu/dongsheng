@@ -9,6 +9,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Environment;
+import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -144,8 +146,8 @@ public class FileManager extends UtilFile{
 	public static final  String STATICTIS_S6 = "statictis_s6";//s6统计数据体
 	public static final  String file_homeTopModle = "homeTopModle" + VersionOp.getVerName(XHApplication.in());//首页一级导航的内置数据
 	public static final String xmlKey_ds_from_show = "ds_from_show";
+	public static final String dish_caipu_hint = "dish_caipu_hint";
 	public static final String app_welcome = "app_welcome";
-
 	/**
 	 * 获取字符串数组
 	 */
@@ -353,12 +355,7 @@ public class FileManager extends UtilFile{
 	 * @param append 是否可以追加
 	 */
 	public static void scynSaveFile(final String filePath,final String content,final boolean append){
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				saveFileToCompletePath(filePath,content,append);
-			}
-		}).start();
+		new Thread(() -> saveFileToCompletePath(filePath,content,append)).start();
 	}
 
 	/**
@@ -368,12 +365,15 @@ public class FileManager extends UtilFile{
 	 * @param append 是否可以追加
 	 */
 	public static void scynSaveFile(final String filePath, final InputStream content, final boolean append){
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				saveFileToCompletePath(filePath,content,append);
-			}
-		}).start();
+		new Thread(() -> saveFileToCompletePath(filePath,content,append)).start();
+	}
+
+	public static void scynSaveSharePreference(Context context, String xmlName, @NonNull String key, @NonNull String value) {
+		if(context == null || TextUtils.isEmpty(xmlName)) return;
+		SharedPreferences preferences = context.getSharedPreferences(xmlName, 0);
+		Editor editor = preferences.edit();
+		editor.putString(key, value);
+		editor.apply();
 	}
 
 }

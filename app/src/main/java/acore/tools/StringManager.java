@@ -65,13 +65,13 @@ public class StringManager extends UtilString {
     //第三方下载链接（应用宝）
     public final static String third_downLoadUrl = "http://a.app.qq.com/o/simple.jsp?pkgname=com.xiangha";
     //崩溃
-    public final static String api_uploadCrashLog = "http://crash.xiangha.com/report";
+    public final static String api_uploadCrashLog = "https://crash.xiangha.com/report";
     //统计
-    public final static String api_stat = "http://stat.xiangha.com/s2.gif";
+    public final static String api_stat = "https://stat.xiangha.com/s2.gif";
     //用户手机应用列表
-    public final static String api_uploadFavorLog = "http://favor.xiangha.com/list";
+    public final static String api_uploadFavorLog = "https://favor.xiangha.com/list";
     //用户发贴发菜谱用户日志
-    public final static String api_uploadUserLog = "http://crash.xiangha.com/crash/report2";
+    public final static String api_uploadUserLog = "https://crash.xiangha.com/crash/report2";
     //获取广告信息
     public final static String api_adData = apiUrl + "main6/ads/getBasicList";
     public final static String api_indexDataNew = apiUrl + urlSection.get("main6") + "baseData";
@@ -227,7 +227,7 @@ public class StringManager extends UtilString {
     public final static String api_homeDish = apiUrl + "main6/index/indexTodayGood";
     public final static String api_homeTodayGoodShare = wwwUrl + "caipu/youzhi";
     public final static String api_homeGetTieList = apiUrl + "main6/index/getTieList";
-    public final static String api_monitoring = "http://stat.xiangha.com/s4.gif";
+    public final static String api_monitoring = "https://stat.xiangha.com/s4.gif";
 
     //钱包会员
     public final static String api_money = appWebUrl + "vip/walletV1?fullScreen=2"; //我的钱包
@@ -241,7 +241,7 @@ public class StringManager extends UtilString {
 
 
     //广告统计
-    public final static String api_monitoring_5 = "http://stat.xiangha.com/s5.gif"; //广告统计
+    public final static String api_monitoring_5 = "https://stat.xiangha.com/s5.gif"; //广告统计
     public final static String api_clickAds = apiUrl + "main6/ads/clickAds"; //广告统计,用于加积分
     public final static String api_myQuanV2 = apiUrl + urlSection.get("quan6") + "myQuanV2";//修改贴子模块
     //菜谱详情页
@@ -255,6 +255,7 @@ public class StringManager extends UtilString {
     public final static String api_askButtonStatus = apiUrl + "main7/dish/askButtonStatus";
     public final static String api_authorInfo = apiUrl + "main7/dish/authorInfo";
     public final static String api_basicInfo = apiUrl + "main7/dish/basicInfo";
+    public final static String api_getVideoList = apiUrl + "main7/school/getVideoList";
 
     public final static String api_getConf = apiUrl + urlSection.get("other6") + "getConf";
     public final static String api_subjectOverHead = apiUrl + urlSection.get("user6") + "subjectOverHeadLast";//用户美食贴置顶
@@ -297,9 +298,9 @@ public class StringManager extends UtilString {
     /***
      * 推荐列表的统计
      */
-    public final static String API_STATISTIC_S6 = "http://stat.xiangha.com/s6.gif"; //新首页统计
-    public final static String API_STATISTIC_S7 = "http://stat.xiangha.com/s7.gif"; //页面统计时间
-    public final static String API_STATISTIC_S8 = "http://stat.xiangha.com/s8.gif"; //页面统计时间
+    public final static String API_STATISTIC_S6 = "https://stat.xiangha.com/s6.gif"; //新首页统计
+    public final static String API_STATISTIC_S7 = "https://stat.xiangha.com/s7.gif"; //页面统计时间
+    public final static String API_STATISTIC_S8 = "https://stat.xiangha.com/s8.gif"; //页面统计时间
 
     /*文章*/
     public final static String api_getArticleClass = apiUrl + "main7/article/getArticleClass"; //文章分类
@@ -359,6 +360,18 @@ public class StringManager extends UtilString {
     public final static String API_GET_FAVORITE_STATUS = apiUrl + "main8/favorites/getFavoritesStatus";//获取收藏状态
     public final static String API_SET_FAVORITE_STATUS = apiUrl + "main8/favorites/setFavorites";//设置收藏状态
 
+    //菜谱详情页面
+    public final static String API_GETDISHBURDENBYCODE = apiUrl + "main7/dish/getDishBurdenByCode";//用料信息
+    public final static String API_GETBELOWBURDENBANNER = apiUrl + "main7/dish/getBelowBurdenBanner";//用料下方banner
+
+    public final static String API_MAIN8_TOPINFP = apiUrl  + "main8/dish/topInfo";//菜谱详情页顶部
+    public final static String API_MAIN8_DISHMAKE = apiUrl  + "main8/dish/getDishMakeByCode";//菜谱详情页做法
+    public final static String API_MAIN8_QAINFO = apiUrl + "main8/dish/getQaInfo";//菜谱详情页做法
+    public final static String API_MAIN8_TIEINFO = apiUrl + "main8/dish/tieInfo";//菜谱详情页做法
+    public final static String API_MAIN8_RELATIONBYCODE = apiUrl + "main8/dish/getDishRelationByCode";//菜谱详情页公共
+    public final static String API_MAIN8_ANTIC = apiUrl + "main8/dish/getDishAntic";//菜谱详情页小技巧
+    public final static String API_HOMEPAGE_6_0 = apiUrl + "main8/recommend/recommend";//首页
+    public final static String API_GETDISHTYPE = apiUrl + "main8/dish/getDishType";//首页
 
     //替换url
     public final static String replaceUrl(String url) {

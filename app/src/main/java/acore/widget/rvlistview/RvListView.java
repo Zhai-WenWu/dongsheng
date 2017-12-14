@@ -46,14 +46,14 @@ public class RvListView extends RecyclerView {
     static final int VIEW_TYPE_FOOTER = -2;
     static final int VIEW_TYPE_EMPTY = Integer.MAX_VALUE - 1;
 
-    private final LinearLayout mHeaderContainer;
-    private final LinearLayout mFooterContainer;
+    protected LinearLayout mHeaderContainer;
+    protected LinearLayout mFooterContainer;
 
-    private View mEmptyView;
+    protected View mEmptyView;
 
     private EmptyHandler mEmptyHandler;
 
-    private RvHeaderAndFooterViewAdapter mAdapter;
+    protected RvHeaderAndFooterViewAdapter mAdapter;
 
     private OnItemClickListener mOnItemClickListener;
 
@@ -76,11 +76,21 @@ public class RvListView extends RecyclerView {
 
     public RvListView(Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        //默认使用LinearLayoutManager，并且处置布局
-        setLayoutManager(new LinearLayoutManagerWrapper(context));
-        mHeaderContainer = new LinearLayout(context);
-        mFooterContainer = new LinearLayout(context);
-        Log.d(TAG, "Constructor execute.");
+        initializeAttr(attrs);
+        initializeStyle(defStyle);
+        initialize();
+    }
+
+    protected void initializeAttr(AttributeSet attrs) {
+    }
+
+    protected void initializeStyle(int defStyle) {
+    }
+
+    protected void initialize() {
+        mHeaderContainer = new LinearLayout(getContext());
+        mFooterContainer = new LinearLayout(getContext());
+//        Log.d("tzy", "Constructor execute.");
     }
 
     @Override
@@ -92,6 +102,10 @@ public class RvListView extends RecyclerView {
 
     @Override
     public void setAdapter(Adapter adapter) {
+        if(getLayoutManager() == null){
+            //默认使用LinearLayoutManager，并且处置布局
+            setLayoutManager(new LinearLayoutManager(getContext()));
+        }
         mAdapter = new RvHeaderAndFooterViewAdapter(adapter);
         super.setAdapter(mAdapter);
     }
@@ -290,9 +304,9 @@ public class RvListView extends RecyclerView {
                 this.mOriginalAdapter.onDetachedFromRecyclerView(RvListView.this);
             }
             this.mOriginalAdapter = adapter;
-            if (adapter != null) {
-                adapter.registerAdapterDataObserver(adapterDataObserver);
-                adapter.onAttachedToRecyclerView(RvListView.this);
+            if (mOriginalAdapter != null) {
+                mOriginalAdapter.registerAdapterDataObserver(adapterDataObserver);
+                mOriginalAdapter.onAttachedToRecyclerView(RvListView.this);
             }
         }
 
@@ -534,7 +548,8 @@ public class RvListView extends RecyclerView {
                     @Override
                     public void onClick(View v) {
                         int position = viewHolder.getAdapterPosition();
-                        mOnItemClickListener.onItemClick(v, viewHolder, position);
+                        if(position >=0)
+                            mOnItemClickListener.onItemClick(v, viewHolder, position);
                     }
                 });
             }
@@ -544,7 +559,10 @@ public class RvListView extends RecyclerView {
                     @Override
                     public boolean onLongClick(View v) {
                         int position = viewHolder.getAdapterPosition();
-                        return mOnItemLongClickListener.onItemLongClick(v, viewHolder, position);
+                        if(position >= 0)
+                            return mOnItemLongClickListener.onItemLongClick(v, viewHolder, position);
+                        else
+                            return false;
                     }
                 });
             }
@@ -564,7 +582,6 @@ public class RvListView extends RecyclerView {
         Adapter getOriginalAdapter() {
             return mOriginalAdapter;
         }
-
     }
 
     /*------------------------------------------------------- Inner Interface -------------------------------------------------------*/
@@ -583,7 +600,7 @@ public class RvListView extends RecyclerView {
 
     /*------------------------------------------------------- Common Get&Set -------------------------------------------------------*/
 
-    public OnItemClickListener getmOnItemClickListener() {
+    public OnItemClickListener getOnItemClickListener() {
         return mOnItemClickListener;
     }
 
@@ -591,7 +608,7 @@ public class RvListView extends RecyclerView {
         this.mOnItemClickListener = mOnItemClickListener;
     }
 
-    public OnItemLongClickListener getmOnItemLongClickListener() {
+    public OnItemLongClickListener getOnItemLongClickListener() {
         return mOnItemLongClickListener;
     }
 

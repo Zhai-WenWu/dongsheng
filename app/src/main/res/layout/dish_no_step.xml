@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="@dimen/dp_20"
+    android:paddingRight="@dimen/dp_20">
+
+    <View
+        android:id="@+id/view_temp"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_10" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/view_temp"
+        android:layout_centerVertical="true"
+        android:background="@drawable/dish_no_step_backgroup"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/dp_10"
+        android:paddingTop="@dimen/dp_17">
+
+        <ImageView
+            android:layout_width="@dimen/dp_22"
+            android:layout_height="@dimen/dp_22"
+            android:background="@drawable/dish_no_step_icon" />
+
+        <TextView
+            android:id="@+id/dish_no_step_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/dp_6"
+            android:text="本菜谱为视频菜谱，暂无做法步骤"
+            android:textColor="#fd8922"
+            android:textSize="@dimen/dp_16" />
+    </LinearLayout>
+</RelativeLayout>

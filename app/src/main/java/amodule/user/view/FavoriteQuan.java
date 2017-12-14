@@ -20,7 +20,6 @@ import com.xiangha.R;
 import java.util.ArrayList;
 import java.util.Map;
 
-import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.load.LoadManager;
 import acore.override.activity.base.BaseActivity;
@@ -28,8 +27,7 @@ import acore.override.adapter.AdapterSimple;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.DownRefreshList;
-import amodule.main.Main;
-import amodule.main.activity.MainCircle;
+import amodule.quan.activity.MainCircle;
 import amodule.quan.activity.ShowSubject;
 import amodule.search.adapter.AdapterSearch;
 import aplug.basic.InternetCallback;
@@ -91,17 +89,14 @@ public class FavoriteQuan {
 			
 			@Override
 			public void onClick(View v) {
+				mAct.startActivity(new Intent(mAct,MainCircle.class));
 				mAct.finish();
-				if(Main.allMain != null){
-					Main.colse_level = 2;
-					Main.allMain.setCurrentTabByClass(MainCircle.class);
-				}
 			}
 		});
 		list_quan = (DownRefreshList) view.findViewById(R.id.quan_list);
 		list_quan.setDivider(null);
 		list_quan.paddingBottom = 0;
-		listDataTabNew = new ArrayList<Map<String, String>>();
+		listDataTabNew = new ArrayList<>();
 		adapterImageNew = new AdapterSearch(list_quan, listDataTabNew, 
 				R.layout.a_search_home_item_quan,
 				new String[] { "title", "content", "nickName", "commentNum", "likeNum" }, 

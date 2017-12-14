@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.hardware.Camera;
 import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.SurfaceHolder;
 
@@ -144,8 +145,10 @@ public class MediaRecorderShortVideo extends MediaRecorderBaseShortNew implement
             }
             mMediaRecorder.setVideoSize(recorderW, recorderH);// 视频尺寸
 
+            if (TextUtils.isEmpty(filePath))
+                return;
             File tempFile = new File(filePath);
-            if(!tempFile.getParentFile().exists()){
+            if (!tempFile.getParentFile().exists()) {
                 tempFile.getParentFile().mkdirs();
             }
 //            Log.i(TAG,"filePath:" + filePath);

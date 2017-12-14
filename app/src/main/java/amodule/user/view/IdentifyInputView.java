@@ -75,7 +75,7 @@ public class IdentifyInputView extends RelativeLayout implements View.OnClickLis
             @Override
             public void onFinish() {
                 btn_identify_request.setText("获取验证码");
-                btn_identify_request.setTextColor(Color.parseColor("#ff533c"));
+                btn_identify_request.setTextColor(Color.parseColor("#f23030"));
                 btn_identify_request.setClickable(true);
                 btn_identify_request.setBackgroundResource(R.drawable.bg_round_red_identify);
                 callback.onCountDownEnd();

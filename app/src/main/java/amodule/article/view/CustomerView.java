@@ -21,7 +21,6 @@ import acore.logic.XHClick;
 import acore.override.helper.XHActivityManager;
 import acore.override.view.ItemBaseView;
 import amodule.article.activity.ArticleDetailActivity;
-import amodule.dish.activity.DetailDish;
 import amodule.main.Main;
 import amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver;
 import amodule.user.activity.FriendHome;
@@ -137,7 +136,6 @@ public class CustomerView extends ItemBaseView {
         @Override
         public void onClick(View v) {
             statistics("用户信息", "用户头像");
-            XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), DetailDish.tongjiId, "用户点击", "头像点击量");
 //            AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), mapUser.get("url"),true);
             Intent intent = new Intent(getContext(), FriendHome.class);
             intent.putExtra("code", mapUser.get("code"));
@@ -156,7 +154,7 @@ public class CustomerView extends ItemBaseView {
                 follow_rela.setBackgroundResource(R.drawable.bg_follow);
                 follow_rela.setClickable(true);
                 follow_tv.setText("关注");
-                follow_tv.setTextColor(Color.parseColor("#ff533c"));
+                follow_tv.setTextColor(Color.parseColor("#f23030"));
             } else {
                 follow_rela.setBackgroundColor(Color.parseColor("#fffffe"));
                 follow_rela.setClickable(false);

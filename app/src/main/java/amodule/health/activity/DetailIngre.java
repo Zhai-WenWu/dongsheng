@@ -501,18 +501,18 @@ public class DetailIngre extends BaseActivity {
 			break;
 		case R.id.fankui_info:
 			try {
-				intent_feek.putExtra("feekUrl", "http://www.xiangha.com/shicai/"+URLEncoder.encode(ingre, "utf-8"));
+				intent_feek.putExtra("feekUrl", "https://www.xiangha.com/shicai/"+URLEncoder.encode(ingre, "utf-8"));
 				startActivity(intent_feek);
 			} catch (UnsupportedEncodingException e) {
 				UtilLog.reportError("URLEncoder异常", e);
 			}
 			break;
 		case R.id.fankui_taboo:
-			intent_feek.putExtra("feekUrl", "http://www.xiangha.com/xiangke/"+code);
+			intent_feek.putExtra("feekUrl", "https://www.xiangha.com/xiangke/"+code);
 			startActivity(intent_feek);
 			break;
 		case R.id.fankui_taboo_2:
-			intent_feek.putExtra("feekUrl", "http://www.xiangha.com/xiangke/"+code);
+			intent_feek.putExtra("feekUrl", "https://www.xiangha.com/xiangke/"+code);
 			startActivity(intent_feek);
 			break;
 		}

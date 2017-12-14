@@ -1,12 +1,14 @@
 apply plugin: 'com.android.application'
 apply plugin: 'walle'
 apply plugin: 'com.growingio.android'
+apply plugin: 'me.tatarka.retrolambda'
 
 repositories {
     flatDir {
         dirs 'libsxh'
     }
 }
+
 dependencies {
     //添加广点通广告
     compile fileTree(include: '*.jar', dir: 'libsAddGd')
@@ -23,21 +25,28 @@ dependencies {
     compile(name: 'xh_popdialog-release', ext: 'aar')
     compile(name: 'XH_WindowView-release', ext: 'aar')
     compile(name: 'SMSSDK-3.0.0', ext: 'aar')
+    compile(name: 'xh_dialog-release', ext: 'aar')
     //    compile 'com.github.chrisbanes:photoview:latest.release'
     compile 'com.android.support:recyclerview-v7:25.3.1'
+    compile 'com.android.support:cardview-v7:25.3.1'
     compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:design:25.3.1'
     compile 'com.bartoszlipinski.recyclerviewheader:library:1.2.0'
     compile 'com.tencent.bugly:crashreport:2.3.1'
     compile 'com.android.support:multidex:1.0.1'
     //    compile 'com.google.code.gson:gson:2.7'
     compile 'com.meituan.android.walle:library:1.0.3'
-    compile 'com.growingio.android:vds-android-agent:0.9.103@aar'
+    compile 'com.growingio.android:vds-android-agent:1.1.1@aar'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.qiyukf.unicorn:unicorn:3.10.0'
     compile project(':gsyVideoPlayer-java')
-    compile project(':xh_dialog')
+    compile project(':cling_lib')
+    //Java8的stream API第三方兼容包
+    compile 'com.annimon:stream:1.0.3'
 }
+
 android {
+
     compileSdkVersion 25
     buildToolsVersion '26.0.2'
 
@@ -45,8 +54,8 @@ android {
         applicationId "com.xiangha"
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 212
-        versionName "5.7.2"
+        versionCode 213
+        versionName "5.7.5.21"
         // dex突破65535的限制
         multiDexEnabled true
         //GrowingIO
@@ -57,26 +66,22 @@ android {
             moduleName "gsyVideoPlayer-java"
             abiFilters 'armeabi-v7a'
         }
+//        jackOptions {
+//            enabled true
+//        }
+    }
+
+    packagingOptions {
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/beans.xml'
     }
 
     signingConfigs {
         MainXiangha {
+            storeFile file("$projectDir/xiangha.keystore")
+            storePassword 'XH.com'
             keyAlias 'caipu'
             keyPassword 'XH.comCaipu'
-//            storeFile file('F:/XH_Work/WorkSpace/Project/keystore/xiangha.keystore')
-//            storeFile file('D:/android_workspace/xiangha.keystore')
-            storeFile file('E:/keystore/xiangha.keystore')
-
-//            storeFile file('E:/XHWork/xiangha/keystore/xiangha.keystore')
-//            storeFile file('/Users/tanzeyu/androidProject/xiangha.keystore')
-
-//            yulekwok
-//            storeFile file('/Users/yulekwok/Documents/MacDev/keystore/xiangha.keystore')
-//            mac
-//            storeFile file('/Users/xiangha_android/Documents/MacDev/keystore/xiangha.keystore')
-//            storeFile file('/Users/xiangha-zhangyujian/Desktop/project/keystore/xiangha.keystore')
-//            storeFile file('/Users/xiangha-zhangyujian/Desktop/project/keystore/xiangha.keystore')
-            storePassword 'XH.com'
 //            v2SigningEnabled false
         }
     }
@@ -107,8 +112,8 @@ android {
 
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     lintOptions {

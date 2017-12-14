@@ -36,21 +36,22 @@ public class DishAdDataViewNew extends ItemBaseView {
     private Map<String, String> adDataMap = new HashMap<>();
     RelativeLayout root_layout;
 
-    public DishAdDataViewNew(Context context) {
-        super(context, R.layout.view_dish_tips_ad_layout_new);
+    public DishAdDataViewNew(Context context,int layoutId) {
+        super(context, layoutId);
     }
 
-    public DishAdDataViewNew(Context context, AttributeSet attrs) {
-        super(context, attrs, R.layout.view_dish_tips_ad_layout_new);
+    public DishAdDataViewNew(Context context, AttributeSet attrs,int layoutId) {
+        super(context, attrs, layoutId);
     }
 
-    public DishAdDataViewNew(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr, R.layout.view_dish_tips_ad_layout_new);
+    public DishAdDataViewNew(Context context, AttributeSet attrs, int defStyleAttr,int layoutId) {
+        super(context, attrs, defStyleAttr, layoutId);
     }
 
     @Override
     public void init() {
         root_layout = (RelativeLayout) findViewById(R.id.root_layout);
+        DishAdDataViewNew.this.setVisibility(View.GONE);
     }
 
     /**
@@ -59,6 +60,7 @@ public class DishAdDataViewNew extends ItemBaseView {
      * @param activity
      */
     public void getRequest(final Activity activity, final ViewGroup parentView) {
+        DishAdDataViewNew.this.setVisibility(View.GONE);
         ArrayList<String> list = new ArrayList<>();
         list.add(AdPlayIdConfig.DISH_TIESHI);
         xhAllAdControl = new XHAllAdControl(list, new XHAllAdControl.XHBackIdsDataCallBack() {
@@ -68,21 +70,24 @@ public class DishAdDataViewNew extends ItemBaseView {
                 String data = map.get(AdPlayIdConfig.DISH_TIESHI);
                 Log.i("tzy", AdPlayIdConfig.DISH_TIESHI + " : " + data);
                 adDataMap = StringManager.getFirstMap(data);
+                DishAdDataViewNew.this.setVisibility(View.VISIBLE);
                 if (adDataMap.containsKey("type")) {
                     switch (adDataMap.get("type")) {
                         case AdPlayIdConfig.ADTYPE_API:
+                            DishAdDataViewNew.this.setVisibility(View.VISIBLE);
                             setApiADData(adDataMap, parentView);
                             break;
                         case AdPlayIdConfig.ADTYPE_GDT:
                         case AdPlayIdConfig.ADTYPE_BAIDU:
                         case AdPlayIdConfig.ADTYPE_BANNER:
+                            DishAdDataViewNew.this.setVisibility(View.VISIBLE);
                             setBigPicADData(adDataMap, parentView);
                             break;
                         default:
-
+                            DishAdDataViewNew.this.setVisibility(View.GONE);
                             break;
                     }
-                }
+                }else DishAdDataViewNew.this.setVisibility(View.GONE);
             }
         }, activity, "result_tip");
     }
@@ -282,6 +287,7 @@ public class DishAdDataViewNew extends ItemBaseView {
         }
         Log.i("tzy", "addView");
         if(DishAdDataViewNew.this!=null&&context!=null)
+            parentView.removeAllViews();
             parentView.addView(DishAdDataViewNew.this);
     }
 

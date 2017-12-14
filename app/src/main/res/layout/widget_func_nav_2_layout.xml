@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingLeft="@dimen/dp_20"
+    android:paddingRight="@dimen/dp_20"
+    android:paddingTop="@dimen/dp_10"
+    android:paddingBottom="@dimen/dp_10">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/left_nav"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_70"
+        android:layout_weight="1"
+        android:background="@drawable/bg_widget_func_nav_2">
+
+        <ImageView
+            android:id="@+id/icon_left_1"
+            android:layout_width="@dimen/dp_52"
+            android:layout_height="@dimen/dp_42"
+            android:layout_marginRight="@dimen/dp_15"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/ic_launcher"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/text_left_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dp_1.5"
+                android:paddingLeft="@dimen/dp_10"
+                android:textColor="#333333"
+                android:textSize="@dimen/sp_15"
+                android:textStyle="bold"
+                tools:text="今日三餐"/>
+
+            <TextView
+                android:id="@+id/text_left_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_1.5"
+                android:paddingLeft="@dimen/dp_10"
+                android:textColor="#AFAEAE"
+                android:textSize="@dimen/sp_11"
+                tools:text="早.中.晚餐食谱"/>
+
+        </LinearLayout>
+
+    </android.support.constraint.ConstraintLayout>
+
+    <View
+        android:layout_width="@dimen/dp_10"
+        android:layout_height="0dp"
+        android:visibility="invisible"/>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/right_nav"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_70"
+        android:layout_weight="1"
+        android:background="@drawable/bg_widget_func_nav_2">
+
+        <ImageView
+            android:id="@+id/icon_right_1"
+            android:layout_width="@dimen/dp_42"
+            android:layout_height="@dimen/dp_39"
+            android:layout_marginRight="@dimen/dp_15"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/ic_launcher"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/text_right_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dp_1.5"
+                android:paddingLeft="@dimen/dp_10"
+                android:textColor="#333333"
+                android:textSize="@dimen/sp_15"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/guideline_righr"
+                tools:text="关注/社区"/>
+
+            <TextView
+                android:id="@+id/text_right_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_1.5"
+                android:paddingLeft="@dimen/dp_10"
+                android:textColor="#AFAEAE"
+                android:textSize="@dimen/sp_11"
+                app:layout_constraintTop_toTopOf="@+id/guideline_righr"
+                tools:text="晒美食，关注美食家"/>
+
+        </LinearLayout>
+
+    </android.support.constraint.ConstraintLayout>
+
+</LinearLayout>

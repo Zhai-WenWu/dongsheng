@@ -7,8 +7,8 @@ import android.view.ViewGroup;
 import java.util.List;
 import java.util.Map;
 
-import acore.widget.rvlistview.RvBaseAdapter;
-import acore.widget.rvlistview.RvBaseViewHolder;
+import acore.widget.rvlistview.adapter.RvBaseAdapter;
+import acore.widget.rvlistview.holder.RvBaseViewHolder;
 import amodule.user.view.module.ModuleItemS0View;
 
 /**

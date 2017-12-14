@@ -2,8 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/barTitle"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/dp_45"
-    android:background="@color/common_top_bg" >
+    android:background="@color/transparent"
+    android:layout_height="@dimen/dp_45">
 
     <View
         android:id="@+id/title_state_bar"

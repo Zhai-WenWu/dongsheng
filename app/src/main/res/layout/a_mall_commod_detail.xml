@@ -96,12 +96,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/title_all_rela"
+        android:focusableInTouchMode="true"
         android:scrollbars="none">
 
         <third.mall.widget.MyScrollView
             android:id="@+id/mall_commod_scroll"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:descendantFocusability="blocksDescendants"
             android:scrollbars="none"
             android:visibility="visible">
 
@@ -312,6 +314,7 @@
             android:id="@+id/scroll_two"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:descendantFocusability="blocksDescendants"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true">

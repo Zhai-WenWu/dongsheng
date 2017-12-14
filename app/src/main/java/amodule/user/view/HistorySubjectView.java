@@ -20,8 +20,7 @@ import java.util.Map;
 
 import acore.override.activity.base.BaseActivity;
 import acore.override.adapter.AdapterSimple;
-import amodule.main.Main;
-import amodule.main.activity.MainCircle;
+import amodule.quan.activity.MainCircle;
 import amodule.quan.activity.ShowSubject;
 import amodule.user.db.BrowseHistorySqlite;
 import aplug.basic.ReqInternet;
@@ -69,11 +68,8 @@ public class HistorySubjectView extends HistoryView{
 		noDataBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				mContext.startActivity(new Intent(mContext,MainCircle.class));
 				mContext.finish();
-				if(Main.allMain != null){
-					Main.colse_level = 2;
-					Main.allMain.setCurrentTabByClass(MainCircle.class);
-				}
 			}
 		});
 		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

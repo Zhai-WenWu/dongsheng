@@ -24,6 +24,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -39,9 +40,9 @@ import android.widget.TextView;
 import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.animation.GlideAnimation;
+import com.shuyu.gsyvideoplayer.GSYVideoPlayer;
 import com.xiangha.R;
 
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -52,6 +53,7 @@ import acore.logic.XHClick;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
+import acore.tools.ToolsDevice;
 import amodule.other.activity.PlayVideo;
 import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.LoadImage;
@@ -77,6 +79,7 @@ import third.mall.widget.ScrollViewContainer.ScrollviewContaninerInter;
 import third.qiyu.QiYvHelper;
 import third.share.BarShare;
 import third.share.activity.ShareActivityDialog;
+import third.video.VideoPlayerController;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilString;
@@ -100,7 +103,7 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
     private boolean load_state = true;
     private ImageView commod_add;
     private TextView mall_news_num;
-    private TextView commod_shop,commod_buy;
+    private TextView commod_shop, commod_buy;
     private MallCommon common;
     private Rect scrollBounds;
     private RelativeLayout share_layout;
@@ -121,8 +124,18 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
     private FavorableDialog favorableDialog;
     private int productNum = 1;//购买商品数量
     private BuyDialog buyDialog;
-    private TemplateWebView middle_templateWebView,foot_templateWebView;
-    private boolean isNeedResume=false;//是否需要刷新
+    private TemplateWebView middle_templateWebView, foot_templateWebView;
+    private boolean isNeedResume = false;//是否需要刷新
+    private int mVideoPosition = -1;
+
+    private VideoPlayerController mVideoPlayerController = null;//视频控制器
+    private int mInitPlayState = -2;
+    private boolean mHasInitPlayStateOnPagerSelected;
+    private boolean mHasInitPlayStateOnScroll;
+    private boolean mHasInitPlayStateOnStateChanged;
+
+    private LinearLayout mPointLayout;
+    private int mPagerLayoutHeight;
 
     @Override
     protected void onCreate(Bundle arg0) {
@@ -163,7 +176,7 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
         findViewById(R.id.linear_buy).setVisibility(View.GONE);
         findViewById(R.id.commod_shop_linear).setOnClickListener(this);
         findViewById(R.id.service_mercat).setOnClickListener(this);
-        commod_buy= (TextView) findViewById(R.id.commod_buy);
+        commod_buy = (TextView) findViewById(R.id.commod_buy);
         commod_buy.setOnClickListener(this);
 
         mall_commod_scroll = (MyScrollView) findViewById(R.id.mall_commod_scroll);
@@ -179,26 +192,57 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
 
             @Override
             public void setYandState(float y, boolean state) {
-                Log.i("zyj", "setInterfaceSv::" + state);
+                Log.i("zyj", "y = " + y + "   setInterfaceSv::" + state);
+            }
+        });
+        mall_commod_scroll.setOnScrollChangedListener(new MyScrollView.OnScrollChangedListener() {
+            @Override
+            public void onScrollChanged(int l, int t, int oldl, int oldt) {
+                if (!mHasInitPlayStateOnScroll && mVideoPlayerController != null) {
+                    mInitPlayState = mVideoPlayerController.getPlayState();
+                    mHasInitPlayStateOnScroll = true;
+                }
+                if (t >= mPagerLayoutHeight && videoCanPause()) {
+                    if(null != mVideoPlayerController)
+                        mVideoPlayerController.onPause();
+                } else if (t < mPagerLayoutHeight) {
+                    mHasInitPlayStateOnScroll = false;
+                }
             }
         });
         mall_ScrollViewContainer = (ScrollViewContainer) findViewById(R.id.mall_ScrollViewContainer);
         mall_ScrollViewContainer.setInterface(new ScrollviewContaninerInter() {
             @Override
+
             public void setState(int state) {
                 titleState = state == 1 ? "1" : "2";
                 handleTitleState();
+                switch (titleState) {
+                    case "1":
+                        mHasInitPlayStateOnStateChanged = false;
+                        break;
+                    case "2":
+                        if (mVideoPlayerController != null && !mHasInitPlayStateOnStateChanged) {
+                            mInitPlayState = mVideoPlayerController.getPlayState();
+                            mHasInitPlayStateOnStateChanged = true;
+                        }
+                        if (videoCanPause() && null != mVideoPlayerController)
+                            mVideoPlayerController.onPause();
+                        break;
+                }
                 if (load_state) {
-                    foot_templateWebView.loadData(XHTemplateManager.DSUNDERSCOREPRODUCTINFO,XHTemplateManager.TEMPLATE_MATCHING.get(XHTemplateManager.DSUNDERSCOREPRODUCTINFO),new String[]{code});
+                    foot_templateWebView.loadData(XHTemplateManager.DSUNDERSCOREPRODUCTINFO, XHTemplateManager.TEMPLATE_MATCHING.get(XHTemplateManager.DSUNDERSCOREPRODUCTINFO), new String[]{code});
                     XHClick.mapStat(CommodDetailActivity.this, "a_mail_goods", "上拉查看详细介绍", "");
                 }
             }
+
             @Override
             public void changeTitleState(boolean state) {
             }
         });
         WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
         int width = wm.getDefaultDisplay().getWidth();
+        mPagerLayoutHeight = width;
         RelativeLayout viewpager_layout = (RelativeLayout) findViewById(R.id.viewpager_layout);
         viewpager_layout.setLayoutParams(new RelativeLayout.LayoutParams(width, width));
     }
@@ -227,22 +271,24 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
     /**
      * 初始化web
      */
-    private void initWeb(){
+    private void initWeb() {
         //中间模版数据
-        middle_templateWebView= (TemplateWebView) findViewById(R.id.middle_templateWebView);
-        middle_templateWebView.initBaseData(this,loadManager);
+        middle_templateWebView = (TemplateWebView) findViewById(R.id.middle_templateWebView);
+        middle_templateWebView.initBaseData(this, loadManager);
         middle_templateWebView.setWebViewCallBack(new TemplateWebView.OnWebviewStateCallBack() {
             @Override
             public void onLoadFinish() {
-                int height=middle_templateWebView.getMeasuredHeight();
-                if(mall_ScrollViewContainer!=null)mall_ScrollViewContainer.setOneViewHeight(height);
+                int height = middle_templateWebView.getMeasuredHeight();
+                if (mall_ScrollViewContainer != null)
+                    mall_ScrollViewContainer.setOneViewHeight(height);
             }
+
             @Override
             public void onLoadStart() {
             }
         });
-        foot_templateWebView= (TemplateWebView) findViewById(R.id.foot_templateWebView);
-        foot_templateWebView.initBaseData(this,loadManager);
+        foot_templateWebView = (TemplateWebView) findViewById(R.id.foot_templateWebView);
+        foot_templateWebView.initBaseData(this, loadManager);
         foot_templateWebView.setWebViewCallBack(new TemplateWebView.OnWebviewStateCallBack() {
             @Override
             public void onLoadFinish() {
@@ -250,6 +296,7 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
                 findViewById(R.id.widget_progress).setVisibility(View.GONE);
                 findViewById(R.id.foot_templateWebView).setVisibility(View.VISIBLE);
             }
+
             @Override
             public void onLoadStart() {
                 load_state = true;
@@ -279,7 +326,7 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
      * 展示购物车数量
      */
     private void setShopcatNum() {
-        Log.i("zyj","MallCommon.num_shopcat::"+MallCommon.num_shopcat);
+        Log.i("zyj", "MallCommon.num_shopcat::" + MallCommon.num_shopcat);
         if (MallCommon.num_shopcat > 0) {
             if (MallCommon.num_shopcat > 9) {
                 mall_news_num.setVisibility(View.GONE);
@@ -357,10 +404,46 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
     @Override
     protected void onResume() {
         super.onResume();
-//        setShopcatNum();
-        if(LoginManager.isLogin() && isNeedResume){
-            MallCommon.getShoppingNum(this,mall_news_num,mall_news_num_two);
+        if (LoginManager.isLogin() && isNeedResume) {
+            MallCommon.getShoppingNum(this, mall_news_num, mall_news_num_two);
         }
+        if (null != mVideoPlayerController && viewpager != null && viewpager.getCurrentItem() == mVideoPosition && videoCanResume()) {
+            mVideoPlayerController.onResume();
+        }
+    }
+
+    private boolean videoCanResume() {
+        boolean ret = false;
+        if (null != mVideoPlayerController
+                && mVideoPlayerController.getPlayState() == GSYVideoPlayer.CURRENT_STATE_PLAYING)
+            return ret;
+        switch (mInitPlayState) {
+            case GSYVideoPlayer.CURRENT_STATE_PAUSE:
+            case GSYVideoPlayer.CURRENT_STATE_AUTO_COMPLETE:
+            case GSYVideoPlayer.CURRENT_STATE_ERROR:
+                break;
+            default:
+                ret = true;
+                break;
+        }
+        return ret;
+    }
+
+    private boolean videoCanPause() {
+        boolean ret = false;
+        if (mVideoPlayerController != null &&
+                mVideoPlayerController.getPlayState() == GSYVideoPlayer.CURRENT_STATE_PAUSE)
+            return ret;
+        switch (mInitPlayState) {
+            case GSYVideoPlayer.CURRENT_STATE_PAUSE:
+            case GSYVideoPlayer.CURRENT_STATE_AUTO_COMPLETE:
+            case GSYVideoPlayer.CURRENT_STATE_ERROR:
+                break;
+            default:
+                ret = true;
+                break;
+        }
+        return ret;
     }
 
 
@@ -387,7 +470,7 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
         initViewPager(images);
 //        if (map.containsKey("product_introduce_flag") && "2".equals(map.get("product_introduce_flag"))) {
         mall_ScrollViewContainer.setState_two(false);
-        middle_templateWebView.loadData(XHTemplateManager.DSPRODUCTINFO,XHTemplateManager.TEMPLATE_MATCHING.get(XHTemplateManager.DSPRODUCTINFO),new String[]{code});
+        middle_templateWebView.loadData(XHTemplateManager.DSPRODUCTINFO, XHTemplateManager.TEMPLATE_MATCHING.get(XHTemplateManager.DSPRODUCTINFO), new String[]{code});
     }
 
     /**
@@ -500,9 +583,9 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
     /**
      * 设置好评度
      */
-    private void setProductPraise(){
-        String product_praise= map.get("product_praise");
-        if(!TextUtils.isEmpty(product_praise)&&!"0".equals(product_praise)) {
+    private void setProductPraise() {
+        String product_praise = map.get("product_praise");
+        if (!TextUtils.isEmpty(product_praise) && !"0".equals(product_praise)) {
             findViewById(R.id.scroe_linear).setVisibility(View.VISIBLE);
             findViewById(R.id.scroe_line).setVisibility(View.VISIBLE);
 
@@ -511,11 +594,13 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
             title_good_scroe.setText(map.get("product_praise"));
             TextView title_buy = (TextView) findViewById(R.id.title_buy);
             title_buy.setText(map.get("saled_num") + "人购买");
-        }else{
+        } else {
             findViewById(R.id.scroe_linear).setVisibility(View.GONE);
             findViewById(R.id.scroe_line).setVisibility(View.GONE);
         }
     }
+
+    private String mVideoUrl;
 
     /**
      * 初始化viewpager
@@ -524,16 +609,28 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
      */
     private void initViewPager(ArrayList<Map<String, String>> images) {
         viewpager = (ViewPager) findViewById(R.id.viewpager);
-        LinearLayout point_linear = (LinearLayout) findViewById(R.id.point_linear);
+        mPointLayout = (LinearLayout) findViewById(R.id.point_linear);
         List<View> views = new ArrayList<View>();
         for (int i = 0; i < images.size(); i++) {
             View topView = LayoutInflater.from(this).inflate(R.layout.v_product_top_view, null);
-            if (images.get(i).containsKey("type") && "1".equals(images.get(i).get("type"))) {
-                topView.findViewById(R.id.image_video).setVisibility(View.VISIBLE);
-            } else topView.findViewById(R.id.image_video).setVisibility(View.GONE);
-            ImageView iv = (ImageView) topView.findViewById(R.id.image);
-            iv.setScaleType(ScaleType.FIT_XY);
-            setImageView(iv, images.get(i).get("img"), false);
+            Map<String, String> itemMap = images.get(i);
+            String type = itemMap.get("type");
+
+            if ("1".equals(type)) {
+                mVideoPosition = i;
+                ViewGroup videoLayout = (ViewGroup) topView.findViewById(R.id.video_layout);
+                videoLayout.setVisibility(View.VISIBLE);
+                String imgUrl = itemMap.get("img");
+                mVideoPlayerController = new VideoPlayerController(this, videoLayout, imgUrl);
+                mVideoPlayerController.setOnSeekbarVisibilityListener(visibility -> mPointLayout.setVisibility(View.VISIBLE == visibility ? View.GONE : View.VISIBLE));
+                mVideoUrl = StringManager.getFirstMap(StringManager.getFirstMap(images.get(i).get("video")).get("video_url")).get("default_url");
+                mVideoPlayerController.setVideoUrl(mVideoUrl);
+            } else {
+                topView.findViewById(R.id.image).setVisibility(View.VISIBLE);
+                ImageView iv = (ImageView) topView.findViewById(R.id.image);
+                iv.setScaleType(ScaleType.FIT_XY);
+                setImageView(iv, images.get(i).get("img"), false);
+            }
             views.add(topView);
         }
         imageviews = new ImageView[views.size()];
@@ -542,7 +639,7 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
             int dp_2_5 = Tools.getDimen(this, R.dimen.dp_2_5);
             int dp_12 = Tools.getDimen(this, R.dimen.dp_12);
             iv.setPadding(dp_2_5, 0, dp_2_5, 0);
-            LinearLayout.LayoutParams layoutParams= new LinearLayout.LayoutParams(dp_12,dp_12);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(dp_12, dp_12);
             imageviews[i] = iv;
             imageviews[i].setLayoutParams(layoutParams);
             imageviews[i].setImageResource(R.drawable.z_home_banner_bg_pic_white);
@@ -550,9 +647,9 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
                 imageviews[i].setImageResource(R.drawable.z_home_banner_bg_pic_active);
             }
             if (imageviews.length > 1) {
-                point_linear.setVisibility(View.VISIBLE);
+                mPointLayout.setVisibility(View.VISIBLE);
             }
-            point_linear.addView(imageviews[i]);
+            mPointLayout.addView(imageviews[i]);
         }
         viewpager.setAdapter(new MyViewPagerAdapter(views));
         viewpager.addOnPageChangeListener(new OnPageChangeListener() {
@@ -562,6 +659,25 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
                     imageviews[arg0].setImageResource(R.drawable.z_home_banner_bg_pic_active);
                     if (arg0 != i) {
                         imageviews[i].setImageResource(R.drawable.z_home_banner_bg_pic_white);
+                    }
+                }
+
+                if (mVideoPlayerController != null) {
+                    if (mVideoPosition != arg0) {
+                        if (Math.abs(arg0 - mVideoPosition) == 1 && !mHasInitPlayStateOnPagerSelected) {
+                            mInitPlayState = mVideoPlayerController.getPlayState();
+                            mHasInitPlayStateOnPagerSelected = true;
+                            if (videoCanPause()) {
+                                mVideoPlayerController.onPause();
+                            }
+                        }
+                        mPointLayout.setVisibility(View.VISIBLE);
+                    } else {
+                        mHasInitPlayStateOnPagerSelected = false;
+                        if (videoCanResume()) {
+                            mVideoPlayerController.onResume();
+                        }
+                        mPointLayout.setVisibility(View.GONE);
                     }
                 }
             }
@@ -574,6 +690,10 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
             public void onPageScrollStateChanged(int arg0) {
             }
         });
+
+        if (mVideoPlayerController != null && "wifi".equals(ToolsDevice.getNetWorkSimpleType(this))) {
+            mVideoPlayerController.setOnClick();
+        }
     }
 
     /**
@@ -635,9 +755,9 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
                 public void onClick(View v) {
                     Intent intent = new Intent();
                     if (images.get(position).containsKey("type") && "1".equals(images.get(position).get("type"))) {
-                        Map<String,String> videoMap= StringManager.getFirstMap(StringManager.getFirstMap(images.get(position).get("video")).get("video_url"));
-                        if(videoMap.containsKey("default_url")) {
-                            String default_url= videoMap.get("default_url");
+                        Map<String, String> videoMap = StringManager.getFirstMap(StringManager.getFirstMap(images.get(position).get("video")).get("video_url"));
+                        if (videoMap.containsKey("default_url")) {
+                            String default_url = videoMap.get("default_url");
                             intent.putExtra("url", default_url);
                             intent.setClass(CommodDetailActivity.this, PlayVideo.class);
                         }
@@ -712,7 +832,7 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
                 XHClick.mapStat(CommodDetailActivity.this, "a_mail_goods", "底部导航", "购物车");
                 if (LoginManager.isLogin()) {
                     MallClickContorl.getInstance().setStatisticUrl(actionUrl, null, mall_stat_statistic, this);
-                    Intent intent_shop= new Intent(this,ShoppingActivity.class);
+                    Intent intent_shop = new Intent(this, ShoppingActivity.class);
                     this.startActivity(intent_shop);
 
                 } else {
@@ -758,8 +878,8 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
                 XHClick.mapStat(CommodDetailActivity.this, "a_mail_goods", "顶部tab", "详情点击量");
                 break;
             case R.id.scroe_linear://评论列表
-                Intent intent= new Intent(this,EvalutionListActivity.class);
-                intent.putExtra(ShowTemplateWeb.NOW_DATA_ARR,new String[]{code});
+                Intent intent = new Intent(this, EvalutionListActivity.class);
+                intent.putExtra(ShowTemplateWeb.NOW_DATA_ARR, new String[]{code});
                 this.startActivity(intent);
                 break;
         }
@@ -790,7 +910,7 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
         intent.putExtra("content", map.get("product_share_desc"));
         intent.putExtra("type", BarShare.IMG_TYPE_WEB);
         intent.putExtra("shareFrom", "商品详情页");
-        intent.putExtra("shareTwoContent","分享");
+        intent.putExtra("shareTwoContent", "分享");
         this.startActivity(intent);
 //        barShare.openShare();
     }
@@ -878,9 +998,19 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
     }
 
     @Override
+    public void onBackPressed() {
+        if (null != mVideoPlayerController && mVideoPlayerController.onBackPressed())
+            return;
+        super.onBackPressed();
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
         isNeedResume = true;
+        if (mVideoPlayerController != null && viewpager != null && viewpager.getCurrentItem() == mVideoPosition && videoCanPause()) {
+            mVideoPlayerController.onPause();
+        }
     }
 
     @Override
@@ -890,6 +1020,8 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
             XHClick.saveStatictisFile("CommodDetail", module_type, data_type, code, "", "stop", String.valueOf((nowTime - startTime) / 1000), "", "", "", "");
         }
         super.onDestroy();
+        if (mVideoPlayerController != null)
+            mVideoPlayerController.onDestroy();
         mall_ScrollViewContainer = null;
         common = null;
         System.gc();

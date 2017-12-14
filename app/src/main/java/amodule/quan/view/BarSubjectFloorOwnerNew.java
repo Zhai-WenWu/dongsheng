@@ -93,13 +93,14 @@ public class BarSubjectFloorOwnerNew extends RelativeLayout implements OnClickLi
     public boolean setData(final Map<String, String> subjectInfo, final Map<String, String> floorsOneInfo) {
         title = subjectInfo.get("title");
         folState = subjectInfo.get("folState");
+        String type = subjectInfo.get("type");
 
         //设置来自的circle
         fromCircle.setData(subjectInfo.get("classId"));
         //设置user
         headerUser.setData(mAct,folState,floorsOneInfo);
         //设置title
-        headerTitle.setTitle(title, subjectInfo.get("type"), subjectInfo.get("isJingHua"));
+        headerTitle.setTitle(title, type, subjectInfo.get("isJingHua"));
         //设置title的长按右键点击事件
         doDeleteLou(folState, floorsOneInfo.get("id"));
         //设置video
@@ -109,15 +110,10 @@ public class BarSubjectFloorOwnerNew extends RelativeLayout implements OnClickLi
             tongjiId = "a_post_detail_video";
         }
         //设置more
-        headerMore.setData(title, subjectInfo.get("type"));
+        headerMore.setData(title, type);
         //获取菜谱数据
-        if (subjectInfo.containsKey("dish")) {
-            Map<String, String> dishMap = StringManager.getFirstMap(subjectInfo.get("dish"));
-            if (dishMap != null) {
-                headerMore.setDishInfo(dishMap.get("code"), dishMap.get("name"));
-            }
-        }
-
+        headerMore.setDishInfo(subjectInfo);
+        headerMore.setFloorInfo(floorsOneInfo);
         //设置地址
         address.setData(subjectInfo.get("address"));
         //设置底部数据

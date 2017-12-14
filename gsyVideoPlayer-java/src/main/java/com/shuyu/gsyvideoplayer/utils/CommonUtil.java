@@ -9,11 +9,10 @@ import android.os.Build;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.view.ContextThemeWrapper;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import java.io.File;
@@ -102,8 +101,8 @@ public class CommonUtil {
 
 
     public static void hideSupportActionBar(Context context, boolean actionBar, boolean statusBar) {
-        if (actionBar) {
-            AppCompatActivity appCompatActivity = CommonUtil.getAppCompActivity(context);
+        if (actionBar && context != null && context instanceof AppCompatActivity) {
+            AppCompatActivity appCompatActivity = (AppCompatActivity) context;
             if (appCompatActivity != null) {
                 ActionBar ab = appCompatActivity.getSupportActionBar();
                 if (ab != null) {
@@ -118,15 +117,15 @@ public class CommonUtil {
                 fragmentActivity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                         WindowManager.LayoutParams.FLAG_FULLSCREEN);
             } else {
-                CommonUtil.getAppCompActivity(context).getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                getActivityContext(context).getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                         WindowManager.LayoutParams.FLAG_FULLSCREEN);
             }
         }
     }
 
     public static void showSupportActionBar(Context context, boolean actionBar, boolean statusBar) {
-        if (actionBar) {
-            AppCompatActivity appCompatActivity = CommonUtil.getAppCompActivity(context);
+        if (actionBar && context != null && context instanceof AppCompatActivity) {
+            AppCompatActivity appCompatActivity = (AppCompatActivity) context;
             if (appCompatActivity != null) {
                 ActionBar ab = appCompatActivity.getSupportActionBar();
                 if (ab != null) {
@@ -141,7 +140,7 @@ public class CommonUtil {
                 FragmentActivity fragmentActivity = (FragmentActivity) context;
                 fragmentActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
             } else {
-                CommonUtil.getAppCompActivity(context).getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                getActivityContext(context).getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
             }
         }
     }
@@ -165,24 +164,6 @@ public class CommonUtil {
     public static void showNavKey(Context context, int systemUiVisibility) {
         ((Activity) context).getWindow().getDecorView().setSystemUiVisibility(systemUiVisibility);
     }
-
-
-    /**
-     * Get AppCompatActivity from context
-     *
-     * @param context
-     * @return AppCompatActivity if it's not null
-     */
-    public static AppCompatActivity getAppCompActivity(Context context) {
-        if (context == null) return null;
-        if (context instanceof AppCompatActivity) {
-            return (AppCompatActivity) context;
-        } else if (context instanceof ContextThemeWrapper) {
-            return getAppCompActivity(((ContextThemeWrapper) context).getBaseContext());
-        }
-        return null;
-    }
-
 
     /**
      * dip转为PX
@@ -242,6 +223,8 @@ public class CommonUtil {
     }
 
     public static void deleteFile(String filePath) {
+        if (TextUtils.isEmpty(filePath))
+            return;
         File file = new File(filePath);
         if (file.exists()) {
             if (file.isFile()) {

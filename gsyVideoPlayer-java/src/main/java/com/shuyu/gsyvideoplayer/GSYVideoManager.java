@@ -48,7 +48,7 @@ public class GSYVideoManager implements IMediaPlayer.OnPreparedListener, IMediaP
 
     public static String TAG = "GSYVideoManager";
 
-    private static GSYVideoManager videoManager;
+//    private static GSYVideoManager videoManager;
 
     public static final int HANDLER_PREPARE = 0;
     public static final int HANDLER_SETDISPLAY = 1;
@@ -81,7 +81,7 @@ public class GSYVideoManager implements IMediaPlayer.OnPreparedListener, IMediaP
 
     private int currentVideoHeight = 0; //当前播放的视屏的高
 
-    public boolean canChange = true;
+    public static boolean canChange = true;
 
     private int lastState;//当前视频的最后状态
 
@@ -98,33 +98,33 @@ public class GSYVideoManager implements IMediaPlayer.OnPreparedListener, IMediaP
     private boolean needTimeOutOther; //是否需要外部超时判断
 
 
-    public static synchronized GSYVideoManager instance() {
-        if (videoManager == null) {
-            videoManager = new GSYVideoManager(ijkLibLoader);
-        }
-        return videoManager;
-    }
+//    public static synchronized GSYVideoManager instance() {
+//        if (videoManager == null) {
+//            videoManager = new GSYVideoManager(ijkLibLoader);
+//        }
+//        return videoManager;
+//    }
 
     /**
      * 设置自定义so包加载类
      * 需要在instance之前设置
      */
-    public static void setIjkLibLoader(IjkLibLoader libLoader) {
+    public void setIjkLibLoader(IjkLibLoader libLoader) {
         ijkLibLoader = libLoader;
     }
 
-    public static IjkLibLoader getIjkLibLoader() {
+    public IjkLibLoader getIjkLibLoader() {
        return ijkLibLoader;
     }
 
     /**
      * 获取缓存代理服务
      */
-    public static HttpProxyCacheServer getProxy(Context context) {
-        HttpProxyCacheServer proxy = GSYVideoManager.instance().proxy;
-        return proxy == null ? (GSYVideoManager.instance().proxy =
-                GSYVideoManager.instance().newProxy(context)) : proxy;
-    }
+//    public static HttpProxyCacheServer getProxy(Context context) {
+//        HttpProxyCacheServer proxy = GSYVideoManager.instance().proxy;
+//        return proxy == null ? (GSYVideoManager.instance().proxy =
+//                GSYVideoManager.instance().newProxy(context)) : proxy;
+//    }
 
     /**
      * 删除默认所有缓存文件
@@ -132,6 +132,8 @@ public class GSYVideoManager implements IMediaPlayer.OnPreparedListener, IMediaP
     public static void clearAllDefaultCache(Context context) {
         String path = StorageUtils.getIndividualCacheDirectory
                 (context.getApplicationContext()).getAbsolutePath();
+        if (TextUtils.isEmpty(path))
+            return;
         FileUtils.deleteFiles(new File(path));
     }
 
@@ -155,33 +157,33 @@ public class GSYVideoManager implements IMediaPlayer.OnPreparedListener, IMediaP
     /**
      * 获取缓存代理服务,带文件目录的
      */
-    public static HttpProxyCacheServer getProxy(Context context, File file) {
-
-        //如果为空，返回默认的
-        if (file == null) {
-            return getProxy(context);
-        }
-
-        //如果已经有缓存文件路径，那么判断缓存文件路径是否一致
-        if (GSYVideoManager.instance().cacheFile != null
-                && !GSYVideoManager.instance().cacheFile.getAbsolutePath().equals(file.getAbsolutePath())) {
-            //不一致先关了旧的
-            HttpProxyCacheServer proxy = GSYVideoManager.instance().proxy;
-
-            if (proxy != null) {
-                proxy.shutdown();
-            }
-            //开启新的
-            return (GSYVideoManager.instance().proxy =
-                    GSYVideoManager.instance().newProxy(context, file));
-        } else {
-            //还没有缓存文件的或者一致的，返回原来
-            HttpProxyCacheServer proxy = GSYVideoManager.instance().proxy;
-
-            return proxy == null ? (GSYVideoManager.instance().proxy =
-                    GSYVideoManager.instance().newProxy(context, file)) : proxy;
-        }
-    }
+//    public static HttpProxyCacheServer getProxy(Context context, File file) {
+//
+//        //如果为空，返回默认的
+//        if (file == null) {
+//            return getProxy(context);
+//        }
+//
+//        //如果已经有缓存文件路径，那么判断缓存文件路径是否一致
+//        if (GSYVideoManager.instance().cacheFile != null
+//                && !GSYVideoManager.instance().cacheFile.getAbsolutePath().equals(file.getAbsolutePath())) {
+//            //不一致先关了旧的
+//            HttpProxyCacheServer proxy = GSYVideoManager.instance().proxy;
+//
+//            if (proxy != null) {
+//                proxy.shutdown();
+//            }
+//            //开启新的
+//            return (GSYVideoManager.instance().proxy =
+//                    GSYVideoManager.instance().newProxy(context, file));
+//        } else {
+//            //还没有缓存文件的或者一致的，返回原来
+//            HttpProxyCacheServer proxy = GSYVideoManager.instance().proxy;
+//
+//            return proxy == null ? (GSYVideoManager.instance().proxy =
+//                    GSYVideoManager.instance().newProxy(context, file)) : proxy;
+//        }
+//    }
 
     /**
      * 创建缓存代理服务,带文件目录的.
@@ -234,6 +236,9 @@ public class GSYVideoManager implements IMediaPlayer.OnPreparedListener, IMediaP
     //public GSYVideoManager() {
         //this(null);
     //}
+    public GSYVideoManager(){
+        this(null);
+    }
 
     /***
      * @param libLoader 是否使用外部动态加载so
@@ -551,18 +556,18 @@ public class GSYVideoManager implements IMediaPlayer.OnPreparedListener, IMediaP
     /**
      * 暂停播放
      */
-    public static void onPause() {
-        if (GSYVideoManager.instance().listener() != null) {
-            GSYVideoManager.instance().listener().onVideoPause();
+    public void onPause() {
+        if (listener() != null) {
+            listener().onVideoPause();
         }
     }
 
     /**
      * 恢复播放
      */
-    public static void onResume() {
-        if (GSYVideoManager.instance().listener() != null) {
-            GSYVideoManager.instance().listener().onVideoResume();
+    public void onResume() {
+        if (listener() != null) {
+            listener().onVideoResume();
         }
     }
 

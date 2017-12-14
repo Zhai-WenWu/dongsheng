@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Handler.Callback;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -81,12 +82,13 @@ public class NewClassify extends BaseActivity {
 		if (bundle != null) {
 			nameTitle = bundle.getString("name");
 			type = bundle.getString("type");
-			if (type.equals("caipu")) {
+			if ("caipu".equals(type) || TextUtils.isEmpty(type)) {
+				type="caipu";
 				title = "菜谱分类";
 				coverStr = "搜菜谱  如：糖醋排骨  或  鸡蛋";
 				mEventId = "a_menu_table";
 				statistics="other_detail_sort";
-			} else if (type.equals("jiankang")) {
+			} else if ("jiankang".equals(type)) {
 				title = "美食养生";
 				coverStr = "搜养生内容";
 				mEventId = "a_health_chart";
@@ -417,10 +419,7 @@ public class NewClassify extends BaseActivity {
 		bannerAd.marginLeft = ToolsDevice.dp2px(this,60);
 		bannerAd.marginRight = ToolsDevice.dp2px(this,60);
 		AdParent[] ads1 = { bannerAd};
-		String adPlayId = AdPlayIdConfig.HEALTH_ClASSIFY;
-		if (type.equals("caipu")) {
-			adPlayId = AdPlayIdConfig.Dish_CLASSIFY;
-		}
+		String adPlayId = "caipu".equals(type)?AdPlayIdConfig.Dish_CLASSIFY:AdPlayIdConfig.HEALTH_ClASSIFY;
 		AdsShow ad1 = new AdsShow(ads1, adPlayId);
 		mAds = new AdsShow[]{ad1};
 	}

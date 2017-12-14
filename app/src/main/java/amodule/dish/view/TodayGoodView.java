@@ -113,6 +113,7 @@ public class TodayGoodView extends CircleItemBaseRelativeLayout {
 				case DISH_TYPE:
 					Intent intentdish = new Intent(context, DetailDish.class);
 					intentdish.putExtra("code",map.get("code"));
+					intentdish.putExtra("img",map.get("img"));
 					intentdish.putExtra("name",map.get("name"));
 					context.startActivity(intentdish);
 					break;

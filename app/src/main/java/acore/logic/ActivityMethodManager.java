@@ -17,7 +17,7 @@ import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import amodule.main.Main;
-import amodule.main.activity.MainHomePageNew;
+import amodule.main.activity.MainHome;
 import amodule.other.listener.HomeKeyListener;
 import amodule.other.listener.HomeKeyListener.OnHomePressedListener;
 import aplug.basic.ReqEncyptInternet;
@@ -110,7 +110,7 @@ public class ActivityMethodManager {
         if (colse_level <= level) {
             if (level == 1 && colse_level != 0) {
                 if (Main.allMain != null) {
-                    Main.allMain.setCurrentTabByClass(MainHomePageNew.class);
+                    Main.allMain.setCurrentTabByClass(MainHome.class);
                 }
                 colse_level = 1000;
             } else {

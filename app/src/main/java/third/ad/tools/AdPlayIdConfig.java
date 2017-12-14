@@ -12,7 +12,6 @@ public class AdPlayIdConfig {
      * 欢迎页面
      */
     public static final String WELCOME = "kaiping";
-    public static  final  String welcome_gdt_two="2090116985265199";//广点通id,二次开屏的
     /**
      * 全屏广告
      */
@@ -118,6 +117,11 @@ public class AdPlayIdConfig {
     public static final String ARTICLE_RECM_1 = "wz_tuijian1";
     public static final String ARTICLE_RECM_2 = "wz_tuijian2";
     public static final String ARTICLE_TIEPIAN = "wz_tiepian";
+
+
+    public static final String HOME_TOPLEFT = "sy_tubiao";
+    public static final String HOME_FLOAT = "sy_fudong";
+    public static final String HOME_BANNEER_1 = "sy_banner1";
 
 
 }

@@ -3,6 +3,7 @@ package amodule.dish.video.View;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
@@ -49,8 +50,7 @@ public class MediaImageCover extends ItemBaseView {
     }
 
     public Bitmap getBitmapFromPath(String path) {
-
-        if (!new File(path).exists()) {
+        if (TextUtils.isEmpty(path) || !new File(path).exists()) {
             return null;
         }
         byte[] buf = new byte[1024 * 1024];// 1M

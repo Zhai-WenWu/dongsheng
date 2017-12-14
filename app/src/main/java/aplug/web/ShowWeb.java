@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.webkit.WebSettings;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -27,11 +28,9 @@ import java.util.Map;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.activity.base.WebActivity;
-import acore.override.helper.XHActivityManager;
 import acore.tools.FileManager;
 import acore.tools.IObserver;
 import acore.tools.ObserverManager;
-import acore.tools.PageStatisticsUtils;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -236,7 +235,8 @@ public class  ShowWeb extends WebActivity implements IObserver {
 	@Override
 	protected void onRestart() {
 		super.onRestart();
-		loadManager.hideProgressBar();
+		if(loadManager != null)
+			loadManager.hideProgressBar();
 	}
 
 	@Override
@@ -265,6 +265,7 @@ public class  ShowWeb extends WebActivity implements IObserver {
     }
 
     protected void setTitle() {
+		if(TextUtils.isEmpty(url))return;
         //积分商城
         if (url.indexOf(StringManager.api_scoreStore) == 0) {
             //返回,返回上一界面
@@ -366,7 +367,15 @@ public class  ShowWeb extends WebActivity implements IObserver {
         return false;
     }
 
-    @Override
+	@Override
+	protected void onPause() {
+		super.onPause();
+		if(loadManager != null){
+			loadManager.hideProgressBar();
+		}
+	}
+
+	@Override
     protected void onDestroy() {
         long nowTime = System.currentTimeMillis();
         if (startTime > 0 && (nowTime - startTime) > 0 && !TextUtils.isEmpty(data_type) && !TextUtils.isEmpty(module_type)) {
