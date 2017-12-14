@@ -241,7 +241,7 @@ public class DishStepView extends ItemBaseView {
                     .listener(new RequestListener<String, GifDrawable>() {
                         @Override
                         public boolean onException(Exception e, String s, Target<GifDrawable> target, boolean b) {
-                            Log.i("xianghaTag","e"+e.getMessage());
+                            Log.i("xianghaTag","e"+(e == null ? "Message is null." : e.getMessage()));
                             return false;
                         }
                         @Override
