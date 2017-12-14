@@ -636,8 +636,11 @@ public class Main extends Activity implements OnClickListener, IObserver {
                 //请求广告位
                 AdConfigTools.getInstance().getAdConfigInfo();
                 UploadDishControl.getInstance().updataAllUploadingDish(getApplicationContext());
-                // 开启自我唤醒
-                if (act != null) new XGLocalPushServer(act).initLocalPush();
+                try {
+                    // 开启自我唤醒
+                    if (act != null) new XGLocalPushServer(act).initLocalPush();
+                } catch (Exception e) {
+                }
                 // 关闭时发送页面停留时间统计
                 if (act != null) XHClick.finishToSendPath(act);
                 // 关闭页面停留时间统计计时器
