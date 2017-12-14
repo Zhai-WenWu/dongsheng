@@ -152,8 +152,8 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
         notifyDataHasChanged();
         setPageChangeListener();
         setOnBannerItemClickListener(position -> {
-            if (position < 0 || position >= arrayList.size()) return;
-            Map<String, String> dataMapTemp = arrayList.get(position);
+            if (position < 0 || position >= mArrayList.size()) return;
+            Map<String, String> dataMapTemp = mArrayList.get(position);
             if ("2".equals(dataMapTemp.get("isAd"))) {
                 mAdControl.onAdClick(adView, 0, "");
                 return;
