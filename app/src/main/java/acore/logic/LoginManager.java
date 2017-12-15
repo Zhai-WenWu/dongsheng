@@ -24,6 +24,7 @@ import java.util.Map;
 import acore.override.XHApplication;
 import acore.override.activity.base.WebActivity;
 import acore.override.helper.XHActivityManager;
+import acore.tools.ChannelUtil;
 import acore.tools.FileManager;
 import acore.tools.ObserverManager;
 import acore.tools.StringManager;
@@ -379,9 +380,11 @@ public class LoginManager {
             mIsShowAd = getIsShowAd();
         }
         //在线参数，判断vivo市场单独处理（广告是否开启）
-        String showAD= AppCommon.getConfigByLocal("vivoAD");//release 2表示显示发布，显示广告，1不显示广告
-        if(showAD!=null&&!TextUtils.isEmpty(showAD)&&"1".equals(StringManager.getFirstMap(showAD).get("release"))){
-            return false;
+        if("developer.vivo.com.cn".equals(ChannelUtil.getChannel(XHApplication.in()))) {
+            String showAD = AppCommon.getConfigByLocal("vivoAD");//release 2表示显示发布，显示广告，1不显示广告
+            if (showAD != null && !TextUtils.isEmpty(showAD) && "1".equals(StringManager.getFirstMap(showAD).get("release"))) {
+                return false;
+            }
         }
         if (isTempVip())
             return false;
