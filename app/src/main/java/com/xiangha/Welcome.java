@@ -303,12 +303,12 @@ public class Welcome extends BaseActivity {
             isInit = true;
             startCountDown(false);
             //
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
+//            new Thread(new Runnable() {
+//                @Override
+//                public void run() {
                     WelcomeAdTools.getInstance().handlerAdData(false, null,true);
-                }
-            }).start();
+//                }
+//            }).start();
         }
     }
     /**
