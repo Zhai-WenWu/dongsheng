@@ -65,6 +65,7 @@ import amodule.dish.db.UploadDishData;
 import amodule.dish.tools.OffDishToFavoriteControl;
 import amodule.dish.tools.UploadDishControl;
 import amodule.main.Tools.MainInitDataControl;
+import amodule.main.activity.MainCircle;
 import amodule.main.activity.MainHomePage;
 import amodule.main.activity.MainMyself;
 import amodule.main.view.WelcomeDialog;
@@ -74,9 +75,7 @@ import aplug.shortvideo.ShortVideoInit;
 import third.ad.control.AdControlHomeDish;
 import third.ad.tools.AdConfigTools;
 import third.cling.control.ClingPresenter;
-import third.mall.MainMall;
 import third.mall.alipay.MallPayActivity;
-import third.mall.aplug.MallCommon;
 import third.push.xg.XGLocalPushServer;
 import third.qiyu.QiYvHelper;
 import xh.basic.tool.UtilFile;
@@ -89,11 +88,12 @@ import static com.xiangha.R.id.iv_itemIsFine;
 public class Main extends Activity implements OnClickListener, IObserver {
     public static final String TAG="xianghaTag";
 
-    private String[] tabTitle = {"学做菜", "商城", "消息", "我的"};
-    private Class<?>[] classes = new Class<?>[]{MainHomePage.class, MainMall.class, MyMessage.class, MainMyself.class};
+    private String[] tabTitle = {"学做菜", "社区", "消息", "我的"};
+    private Class<?>[] classes = new Class<?>[]{MainHomePage.class, MainCircle.class, MyMessage.class, MainMyself.class};
+    //TODO icon待确认
     private int[] tabImgs = new int[]{R.drawable.tab_index, R.drawable.tab_mall, R.drawable.tab_four, R.drawable.tab_myself};
     public static final int TAB_HOME = 0;
-    public static final int TAB_MALL = 1;
+    public static final int TAB_CIRCLE = 1;
     public static final int TAB_MESSAGE = 2;
     public static final int TAB_SELF = 3;
 
@@ -375,7 +375,6 @@ public class Main extends Activity implements OnClickListener, IObserver {
             initRunTime();
             mainInitDataControl.initWelcomeOncreate();
             mainInitDataControl.initWelcomeAfter(Main.this);
-            if(LoginManager.isLogin())MallCommon.getShoppingNum(Main.this,null,null);
 
         }
 
@@ -780,10 +779,11 @@ public class Main extends Activity implements OnClickListener, IObserver {
                 if (i == TAB_HOME && allTab.containsKey(MainHomePage.KEY) && i == nowTab) {
                     MainHomePage mainIndex = (MainHomePage) allTab.get(MainHomePage.KEY);
                     mainIndex.refresh();
-                } else if (i == TAB_MALL && allTab.containsKey(MainMall.KEY) && tabHost.getCurrentTab() == i) {  //当所在页面正式你要刷新的页面,就直接刷新
-                    MainMall mall = (MainMall) allTab.get(MainMall.KEY);
-                    mall.scrollTop();
-                    mall.refresh();
+                } else if (i == TAB_CIRCLE && allTab.containsKey(MainCircle.KEY) && tabHost.getCurrentTab() == i) {
+                    //当所在页面正式你要刷新的页面,就直接刷新
+                    MainCircle circle = (MainCircle) allTab.get(MainCircle.KEY);
+                    if(circle != null)
+                        circle.refresh();
                 } else if (i == TAB_SELF && allTab.containsKey(MainMyself.KEY)) {
                     //在onResume方法添加了刷新方法
 //                    MainMyself mainMyself = (MainMyself) allTab.get(MainMyself.KEY);

@@ -58,7 +58,7 @@ public class HomeFuncNavView1 extends LinearLayout {
                 "xiangha://welcome?fenlei.app",
                 "xiangha://welcome?url=https://appweb.xiangha.com/recom/xiangHaSchool",
                 "xiangha://welcome?HomeSecond.app?type=video",
-                "xiangha://welcome?WeekDish.app",
+                "xiangha://welcome?xhds.home.app",
         };
         for (int index = 0; index < navIds.size(); index++) {
             View navView = findViewById(navIds.get(index));
