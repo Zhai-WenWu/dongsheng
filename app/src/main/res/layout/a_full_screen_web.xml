@@ -7,7 +7,6 @@
     <aplug.web.view.XHWebView
         android:id="@+id/XHWebview"
         android:overScrollMode="never"
-        android:layerType="software"
         style="@style/layout"
         android:scrollbars="none"/>
 
