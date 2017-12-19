@@ -202,7 +202,7 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,
 
     @Override
     public void saveStatisticData() {
-        XHClick.saveStatictisFile("home", MainHome.recommedType_statictus, "", "", String.valueOf(scrollDataIndex), "list", "", "", "", "", "");
+
     }
 
     @Override
