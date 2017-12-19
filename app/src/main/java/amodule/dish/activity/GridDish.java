@@ -56,7 +56,6 @@ public class GridDish extends BaseAppCompatActivity {
     private void initExtra() {
         Bundle bundle = getIntent().getExtras();
         String code = bundle.getString(EXTRA_CODE);
-        code = "99399090";
         if (TextUtils.isEmpty(code)) {
             Toast.makeText(this, "数据错误", Toast.LENGTH_SHORT).show();
             finish();
@@ -115,6 +114,7 @@ public class GridDish extends BaseAppCompatActivity {
                     });
                     if (mCurrentPage == 1) {
                         mAdapter.updateData(data);
+                        mRefreshLayout.refreshComplete();
                     } else {
                         mData.addAll(data);
                         mAdapter.notifyDataSetChanged();
