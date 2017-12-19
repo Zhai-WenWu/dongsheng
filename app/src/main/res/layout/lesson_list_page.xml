@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activityLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="amodule.lesson.activity.LessonHome">
+    tools:context="amodule.lesson.activity.LessonHome"
+    >
 
     <cn.srain.cube.views.ptr.PtrClassicFrameLayout
         android:id="@+id/ptr_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/home_title"
         app:ptr_duration_to_close="200"
         app:ptr_duration_to_close_header="500"
+        android:layout_above="@+id/vip_button"
         app:ptr_pull_to_fresh="false"
         app:ptr_ratio_of_header_height_to_refresh="1"
         app:ptr_resistance="1.7">
@@ -22,4 +25,16 @@
 
     </cn.srain.cube.views.ptr.PtrClassicFrameLayout>
 
-</android.support.constraint.ConstraintLayout>
+    <amodule.lesson.view.VIPButton
+        android:id="@+id/vip_button"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:layout_marginRight="@dimen/dp_10"
+        android:layout_marginBottom="@dimen/dp_5"
+        android:layout_marginTop="@dimen/dp_5"
+        app:cardBackgroundColor="@color/quan_text_red_color"
+        android:layout_alignParentBottom="true"
+        app:cardCornerRadius="@dimen/dp_4"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_45"/>
+
+</RelativeLayout>

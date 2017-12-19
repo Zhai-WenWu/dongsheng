@@ -744,6 +744,13 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppMainTheme"
             android:windowSoftInputMode="adjustResize"/>
+
+        <activity
+            android:name="amodule.lesson.activity.LessonListPage"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppMainTheme"
+            android:windowSoftInputMode="adjustResize"/>
         <!--lesson end-->
 
         <!-- user start -->

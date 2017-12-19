@@ -79,7 +79,6 @@ public class VIPButton extends CardView {
         void handerData(VIPButton button);
     }
 
-    //click、textColor、bgColor ----set
     // 文本显示逻辑、自身显示罗、行为逻辑
 
 }
