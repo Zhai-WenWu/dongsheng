@@ -38,7 +38,7 @@ import xh.basic.tool.UtilString;
  * 
  * @author Jerry
  */
-public abstract class InternetCallback extends InterCallback {
+public abstract class InternetCallback extends XHInternetCallBack {
 	private String encryptparams;
 	public InternetCallback(Context context) {
 		super(context);
@@ -216,23 +216,8 @@ public abstract class InternetCallback extends InterCallback {
 	@Override
 	public Map<String, String> getReqHeader(Map<String, String> header, String url, Map<String, String> params) {
 		// 配置cookie
-		String cookie = header.containsKey("Cookie") ? header.get("Cookie") : "";
-		if (LoginManager.userInfo.containsKey("userCode")) {
-			LogManager.print(XHConf.log_tag_net, "d", "userCode=" + LoginManager.userInfo.get("userCode") + ";");
-			cookie += "userCode=" + LoginManager.userInfo.get("userCode") + ";";
-		}
-		cookie += "device=" + ToolsDevice.getDevice(context) + ToolsDevice.getNetWorkType(context) + "#"
-				+ ToolsDevice.getAvailMemory(context) + "#" + ToolsDevice.getPackageName(context) + "#"
-				+ StringManager.appID + "#" + LoadManager.tok + ";";
-		cookie += "xhCode=" + ToolsDevice.getXhIMEI(context) + ";";
-		try{
-			cookie += "umCode=" + PushAgent.getInstance(context).getRegistrationId() + ";";
-
-		}catch (Exception e){e.printStackTrace();}
-		cookie += "xgCode=" + XGPushServer.getXGToken(context) + ";";
-		String location = getLocation();
-		cookie += "geo=" + location + ";";
-		header.put("Cookie", cookie);
+//		header.put("Cookie", cookie);
+		header.put("XH-Client-Data",getCookieStr());
         if(!TextUtils.isEmpty(url)&&(url.contains("main7")||url.contains("Main7")||url.contains("main8"))&&!TextUtils.isEmpty(encryptparams)){
 			encryptparams=encryptparams.replaceAll("\\n","");
 			header.put("xh-parameter", encryptparams);

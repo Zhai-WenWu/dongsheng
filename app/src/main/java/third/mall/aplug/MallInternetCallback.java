@@ -20,6 +20,7 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import aplug.basic.XHConf;
+import aplug.basic.XHInternetCallBack;
 import xh.basic.internet.InterCallback;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilFile;
@@ -30,7 +31,7 @@ import xh.basic.tool.UtilFile;
  * @author yu
  *
  */
-public abstract class MallInternetCallback extends InterCallback {
+public abstract class MallInternetCallback extends XHInternetCallBack {
 
 	private Context context;
 
@@ -109,20 +110,7 @@ public abstract class MallInternetCallback extends InterCallback {
 	@Override
 	public Map<String, String> getReqHeader(Map<String, String> header, String url, Map<String, String> params) {
 		// 配置cookie
-		String cookie = header.containsKey("Cookie") ? header.get("Cookie") : "";
-		if (LoginManager.userInfo.containsKey("userCode"))
-			cookie += "userCode=" + LoginManager.userInfo.get("userCode") + ";";
-		if (context != null)
-			cookie += "device=" + ToolsDevice.getDevice(context) + ToolsDevice.getNetWorkType(context) + "#" + ToolsDevice.getAvailMemory(context) + "#" + context.getPackageName() + "#"
-				+ StringManager.appID + "#" + LoadManager.tok + ";";
-		cookie += "xhCode=" + ToolsDevice.getXhIMEI(context) + ";";
-		if (!TextUtils.isEmpty(MallCommon.mall_key))
-			cookie += MallCommon.mall_key + "=" + MallCommon.mall_value + ";";
-		if (!TextUtils.isEmpty(MallCommon.customer_code) && !TextUtils.isEmpty(MallReqInternet.dsHmac))
-			cookie += "dsUser=" + MallCommon.customer_code + ";" + "dsTime=" + MallReqInternet.time_mall + ";" + "dsHmac=" + MallReqInternet.dsHmac + ";";
-		cookie += "xhDsFlag=mall;";
-		header.put("Cookie", cookie);
-
+		header.put("XH-Client-Data",getCookieStr());
 		String isAccept= AppCommon.getConfigByLocal("imageAccept");//1不,sdk版本
 		if(!TextUtils.isEmpty(isAccept)){
 			Log.i("xianghaTag","isAccept:::"+isAccept);
