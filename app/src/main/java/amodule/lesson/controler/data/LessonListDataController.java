@@ -1,16 +1,15 @@
 package amodule.lesson.controler.data;
 
+import android.content.Context;
 import android.text.TextUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import acore.logic.load.LoadManager;
 import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
-import acore.widget.rvlistview.RvListView;
 import acore.widget.rvlistview.adapter.RvBaseAdapter;
 import amodule.home.adapter.HorizontalAdapter1;
 import amodule.home.adapter.HorizontalAdapter2;
@@ -18,7 +17,6 @@ import amodule.home.adapter.HorizontalAdapter3;
 import amodule.lesson.listener.IDataListener;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
-import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
 
 /**
  * Description : //TODO
@@ -27,54 +25,48 @@ import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
  * e_mail : ztanzeyu@gmail.com
  */
 public class LessonListDataController {
-    private BaseAppCompatActivity mAct;
-
     private IDataListener<List<Map<String, String>>> mListener;
-    public LoadManager mLoadManager = null;
     private int mCurrentPage = 0;
     private int mEveryPageCount = 10;
     private List<Map<String, String>> mDatas;
     private RvBaseAdapter<Map<String, String>> mRecyclerAdapter;
+    private int mLoadCount;
+    private boolean mNeedRef;
 
     public LessonListDataController(BaseAppCompatActivity appCompatActivity, String style) {
-        mAct = appCompatActivity;
-        mLoadManager = mAct.loadManager;
-        initData(style);
+        initData(style, appCompatActivity);
     }
 
-    private void initData(String style) {
+    private void initData(String style, Context context) {
         mDatas = new ArrayList<>();
         if (!TextUtils.isEmpty(style)) {
             if (style != null) {
                 switch (style) {
                     case "1":
                     case "6":
-                        mRecyclerAdapter = new HorizontalAdapter1(mAct, mDatas);
+                        mRecyclerAdapter = new HorizontalAdapter1(context, mDatas);
                         break;
                     case "2":
                     case "4":
                     case "5":
-                        mRecyclerAdapter = new HorizontalAdapter2(mAct, mDatas);
+                        mRecyclerAdapter = new HorizontalAdapter2(context, mDatas);
                         break;
                     case "3":
-                        mRecyclerAdapter = new HorizontalAdapter3(mAct, mDatas);
+                        mRecyclerAdapter = new HorizontalAdapter3(context, mDatas);
                         break;
                     default:
-                        mRecyclerAdapter = new HorizontalAdapter1(mAct, mDatas);
+                        mRecyclerAdapter = new HorizontalAdapter1(context, mDatas);
                         break;
                 }
             }
         }
     }
 
-    public void startLoadData(PtrClassicFrameLayout refreshLayout, RvListView gridView) {
-        mLoadManager.setLoading(refreshLayout, gridView, mRecyclerAdapter, true,
-                v -> getData(true),
-                v -> getData(false));
-    }
-
-    public void onResume() {
-
+    public void onResume(Context context) {
+        if (mNeedRef) {
+            mNeedRef = false;
+            loadData(true, context);
+        }
     }
 
     public void onPause() {
@@ -82,18 +74,20 @@ public class LessonListDataController {
     }
 
     public void onDestroy() {
-
+        mListener = null;
+        mDatas = null;
+        mRecyclerAdapter = null;
+        mNeedRef = false;
     }
 
-    private void getData(boolean refresh) {
-        if (mListener != null)
-            mListener.onGetData(refresh);
+    public void loadData(boolean refresh, Context context) {
         if (refresh)
             mCurrentPage = 0;
         else
             mCurrentPage++;
-        mLoadManager.changeMoreBtn(ReqEncyptInternet.REQ_OK_STRING, -1, -1, mCurrentPage, mDatas == null || mDatas.size() == 0);
-        ReqEncyptInternet.in().doEncypt(StringManager.API_RECOMMEND, "", new InternetCallback(mAct) {
+        if (mListener != null)
+            mListener.onGetData(mDatas, refresh);
+        ReqEncyptInternet.in().doEncypt(StringManager.API_RECOMMEND, "", new InternetCallback(context) {
             @Override
             public void loaded(int flag, String s, Object o) {
 
@@ -118,9 +112,9 @@ public class LessonListDataController {
 
                 //TODO 测试--------end
 
-                int loadCount = 0;
+                mLoadCount = 0;
                 if (flag >= ReqEncyptInternet.REQ_OK_STRING) {
-                    loadCount = list.size();
+                    mLoadCount = list.size();
                     ArrayList<Map<String, String>> datas = list;
                     if (mCurrentPage > 0) {
                         mDatas.addAll(datas);
@@ -130,21 +124,40 @@ public class LessonListDataController {
                     }
                 }
                 if (mEveryPageCount == 0) {
-                    mEveryPageCount = loadCount;
+                    mEveryPageCount = mLoadCount;
                 }
-                onDataReady(refresh);
-                mLoadManager.changeMoreBtn(flag, mEveryPageCount, loadCount, mCurrentPage, false);
+                onDataReady(refresh, flag);
             }
         });
     }
 
-    private void onDataReady(boolean refresh) {
+    private void onDataReady(boolean refresh, int flag) {
         if (mListener != null)
-            mListener.onDataReady(mDatas, refresh);
+            mListener.onDataReady(mDatas, refresh, flag);
     }
 
     public void setOnDataListener(IDataListener<List<Map<String, String>>> listener) {
         mListener = listener;
+    }
+
+    public RvBaseAdapter<Map<String, String>> getAdapter() {
+        return mRecyclerAdapter;
+    }
+
+    public int getEveryPageCount() {
+        return mEveryPageCount;
+    }
+
+    public int getCurrentPage() {
+        return mCurrentPage;
+    }
+
+    public int getLoadCount() {
+        return mLoadCount;
+    }
+
+    public void setNeedRefresh(boolean refresh) {
+        mNeedRef = refresh;
     }
 
 }

@@ -1,6 +1,7 @@
 package amodule.lesson.activity;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 
 import com.xiangha.R;
 
@@ -8,12 +9,15 @@ import java.util.List;
 import java.util.Map;
 
 import acore.override.activity.base.BaseAppCompatActivity;
+import acore.tools.IObserver;
+import acore.tools.ObserverManager;
 import amodule._common.helper.WidgetDataHelper;
 import amodule.lesson.controler.data.LessonListDataController;
 import amodule.lesson.controler.view.LessonListViewController;
 import amodule.lesson.listener.IDataListener;
+import aplug.basic.ReqEncyptInternet;
 
-public class LessonListPage extends BaseAppCompatActivity {
+public class LessonListPage extends BaseAppCompatActivity implements IObserver {
 
     private LessonListDataController mDataController;
     private LessonListViewController mViewController;
@@ -24,19 +28,26 @@ public class LessonListPage extends BaseAppCompatActivity {
         super.onCreate(savedInstanceState);
         initActivity("",2,0,R.layout.back_title_bar,R.layout.lesson_list_page);
         initData();
+        if (TextUtils.isEmpty(mStyle))
+            return;
         initController();
         addListener();
         startLoadData();
+        ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_VIPSTATE_CHANGED);
     }
 
     private void initData() {
         Bundle bundle = getIntent().getExtras();
-        mStyle = bundle.getString(WidgetDataHelper.KEY_STYLE);
-        mTitle = bundle.getString(WidgetDataHelper.KEY_TITLE);
+        if (bundle != null) {
+            mStyle = bundle.getString(WidgetDataHelper.KEY_STYLE);
+            mTitle = bundle.getString(WidgetDataHelper.KEY_TITLE);
+        }
     }
 
     private void startLoadData() {
-        mDataController.startLoadData(mViewController.getPtrFrame(), mViewController.getListView());
+        loadManager.setLoading(mViewController.getPtrFrame(), mViewController.getListView(), mDataController.getAdapter(), true,
+                v -> mDataController.loadData(true, this),
+                v -> mDataController.loadData(false, this));
     }
 
     private void initController() {
@@ -48,15 +59,16 @@ public class LessonListPage extends BaseAppCompatActivity {
     private void addListener() {
         mDataController.setOnDataListener(new IDataListener<List<Map<String, String>>>() {
             @Override
-            public void onGetData(boolean refresh) {
-
+            public void onGetData(List<Map<String, String>> maps, boolean refresh) {
+                loadManager.changeMoreBtn(ReqEncyptInternet.REQ_OK_STRING, -1, -1, mDataController.getCurrentPage(), maps == null || maps.size() == 0);
             }
 
             @Override
-            public void onDataReady(List<Map<String, String>> maps, boolean refresh) {
+            public void onDataReady(List<Map<String, String>> maps, boolean refresh, int flag) {
                 if (refresh && mViewController != null) {
                     mViewController.refreshComplete();
                 }
+                loadManager.changeMoreBtn(flag, mDataController.getEveryPageCount(), mDataController.getLoadCount(), mDataController.getCurrentPage(), false);
             }
         });
     }
@@ -69,6 +81,8 @@ public class LessonListPage extends BaseAppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        if (mDataController != null)
+            mDataController.onResume(this);
     }
 
     @Override
@@ -84,5 +98,26 @@ public class LessonListPage extends BaseAppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (mViewController != null) {
+            mViewController.onDestroy();
+            mViewController = null;
+        }
+        if (mDataController != null) {
+            mDataController.onDestroy();
+            mDataController = null;
+        }
+        ObserverManager.getInstence().unRegisterObserver(this);
+    }
+
+    @Override
+    public void notify(String name, Object sender, Object data) {
+        if (!TextUtils.isEmpty(name)) {
+            switch (name) {
+                case ObserverManager.NOTIFY_VIPSTATE_CHANGED:
+                    if (mDataController != null)
+                        mDataController.setNeedRefresh(true);
+                    break;
+            }
+        }
     }
 }
