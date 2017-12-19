@@ -1,6 +1,7 @@
 package amodule.lesson.activity;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 
 import com.xiangha.R;
 
@@ -25,6 +26,8 @@ public class LessonListPage extends BaseAppCompatActivity {
         super.onCreate(savedInstanceState);
         initActivity("",2,0,R.layout.back_title_bar,R.layout.lesson_list_page);
         initData();
+        if (TextUtils.isEmpty(mStyle))
+            return;
         initController();
         addListener();
         startLoadData();
@@ -32,8 +35,10 @@ public class LessonListPage extends BaseAppCompatActivity {
 
     private void initData() {
         Bundle bundle = getIntent().getExtras();
-        mStyle = bundle.getString(WidgetDataHelper.KEY_STYLE);
-        mTitle = bundle.getString(WidgetDataHelper.KEY_TITLE);
+        if (bundle != null) {
+            mStyle = bundle.getString(WidgetDataHelper.KEY_STYLE);
+            mTitle = bundle.getString(WidgetDataHelper.KEY_TITLE);
+        }
     }
 
     private void startLoadData() {
