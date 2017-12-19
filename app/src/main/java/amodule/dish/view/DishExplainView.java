@@ -43,6 +43,14 @@ public class DishExplainView extends ItemBaseView {
         mAdLayout.removeAllViews();
         dishAdDataView.getRequest(XHActivityManager.getInstance().getCurrentActivity(), mAdLayout);
     }
+
+    /**
+     * 隐藏布局
+     */
+    public void hideViewRemark(){
+        findViewById(R.id.tv_explain).setVisibility(View.GONE);
+        findViewById(R.id.explain_content_tv).setVisibility(View.GONE);
+    }
     public void setData(final Map<String,String> maps){
         TextView explain_content_tv= (TextView) findViewById(R.id.explain_content_tv);
         if(maps.containsKey("remark")&& !TextUtils.isEmpty(maps.get("remark"))){

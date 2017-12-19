@@ -93,6 +93,7 @@ public class DishQAView extends ItemBaseView{
      */
     public void setData(ArrayList<Map<String,String>> list){
         maptemp= list.get(0);
+        qa_content_linear.removeAllViews();
         text_answer.setText(maptemp.get("answerNum"));
         if(maptemp.containsKey("satisfyRateIsShow")&&"2".equals(maptemp.get("satisfyRateIsShow"))) {
             text_degree.setText(maptemp.get("satisfyRate"));

@@ -383,7 +383,7 @@ public class DetailDishViewManager {
         if(dishExplainView!=null && map!=null && !TextUtils.isEmpty(map.get("remark"))){
             dishExplainView.setVisibility(View.VISIBLE);
             dishExplainView.setData(map);
-        }else dishExplainView.setVisibility(View.GONE);
+        }else dishExplainView.hideViewRemark();
     }
     /**
      * 处理用户信息问答
