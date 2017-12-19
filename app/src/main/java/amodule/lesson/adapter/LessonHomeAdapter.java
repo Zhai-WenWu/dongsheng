@@ -11,7 +11,7 @@ import java.util.Map;
 
 import acore.widget.rvlistview.adapter.RvBaseAdapter;
 import acore.widget.rvlistview.holder.RvBaseViewHolder;
-import amodule._common.widget.horizontal.HorizontalRecyclerView;
+import amodule.lesson.view.HorizontalRecyclerView;
 
 /**
  * Description :
@@ -26,12 +26,17 @@ public class LessonHomeAdapter extends RvBaseAdapter<Map<String,String>> {
 
     @Override
     public RvBaseViewHolder<Map<String, String>> onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new LessonViewHolder(new HorizontalRecyclerView(mContext));
+        return new LessonViewHolder(new HorizontalRecyclerView(mContext,viewType));
     }
 
     @Override
     public int getItemViewType(int position) {
-        return 0;
+        try{
+            String styleValue = mData.get(position).get("style");
+            return Integer.parseInt(styleValue);
+        }catch (Exception e){
+            return 0;
+        }
     }
 
     class LessonViewHolder extends RvBaseViewHolder<Map<String,String>>{
