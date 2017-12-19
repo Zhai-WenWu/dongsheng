@@ -14,6 +14,11 @@ import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.Map;
+
+import acore.tools.StringManager;
+import amodule.vip.VipDataController;
+
 /**
  * Description :
  * PackageName : amodule.lesson.view
@@ -23,6 +28,8 @@ import android.widget.TextView;
 public class VIPButton extends CardView {
 
     TextView mTextView;
+
+    VipDataController mVipDataController;
 
     public VIPButton(Context context) {
         super(context);
@@ -48,8 +55,15 @@ public class VIPButton extends CardView {
         addView(mTextView, ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT);
         setCardElevation(0);
 
+        mVipDataController = new VipDataController();
+        loadData();
         //TODO
         mTextView.setText("开通会员");
+    }
+
+    private void loadData(){
+        if(null == mVipDataController) return;
+        mVipDataController.loadVIPButtonData(obj -> setData(StringManager.getFirstMap(obj)));
     }
 
     public void setText(String text){
@@ -75,8 +89,12 @@ public class VIPButton extends CardView {
         super.setCardBackgroundColor(color);
     }
 
-    public interface HandlerDataAction{
-        void handerData(VIPButton button);
+    public void setData(Map<String,String> data){
+
+    }
+
+    public void refresh(){
+        loadData();
     }
 
     // 文本显示逻辑、自身显示罗、行为逻辑
