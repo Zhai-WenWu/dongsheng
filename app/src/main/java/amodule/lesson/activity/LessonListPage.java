@@ -9,13 +9,15 @@ import java.util.List;
 import java.util.Map;
 
 import acore.override.activity.base.BaseAppCompatActivity;
+import acore.tools.IObserver;
+import acore.tools.ObserverManager;
 import amodule._common.helper.WidgetDataHelper;
 import amodule.lesson.controler.data.LessonListDataController;
 import amodule.lesson.controler.view.LessonListViewController;
 import amodule.lesson.listener.IDataListener;
 import aplug.basic.ReqEncyptInternet;
 
-public class LessonListPage extends BaseAppCompatActivity {
+public class LessonListPage extends BaseAppCompatActivity implements IObserver {
 
     private LessonListDataController mDataController;
     private LessonListViewController mViewController;
@@ -31,6 +33,7 @@ public class LessonListPage extends BaseAppCompatActivity {
         initController();
         addListener();
         startLoadData();
+        ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_VIPSTATE_CHANGED);
     }
 
     private void initData() {
@@ -78,6 +81,8 @@ public class LessonListPage extends BaseAppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        if (mDataController != null)
+            mDataController.onResume(this);
     }
 
     @Override
@@ -93,5 +98,26 @@ public class LessonListPage extends BaseAppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (mViewController != null) {
+            mViewController.onDestroy();
+            mViewController = null;
+        }
+        if (mDataController != null) {
+            mDataController.onDestroy();
+            mDataController = null;
+        }
+        ObserverManager.getInstence().unRegisterObserver(this);
+    }
+
+    @Override
+    public void notify(String name, Object sender, Object data) {
+        if (!TextUtils.isEmpty(name)) {
+            switch (name) {
+                case ObserverManager.NOTIFY_VIPSTATE_CHANGED:
+                    if (mDataController != null)
+                        mDataController.setNeedRefresh(true);
+                    break;
+            }
+        }
     }
 }

@@ -31,6 +31,7 @@ public class LessonListDataController {
     private List<Map<String, String>> mDatas;
     private RvBaseAdapter<Map<String, String>> mRecyclerAdapter;
     private int mLoadCount;
+    private boolean mNeedRef;
 
     public LessonListDataController(BaseAppCompatActivity appCompatActivity, String style) {
         initData(style, appCompatActivity);
@@ -61,8 +62,11 @@ public class LessonListDataController {
         }
     }
 
-    public void onResume() {
-
+    public void onResume(Context context) {
+        if (mNeedRef) {
+            mNeedRef = false;
+            loadData(true, context);
+        }
     }
 
     public void onPause() {
@@ -70,7 +74,10 @@ public class LessonListDataController {
     }
 
     public void onDestroy() {
-
+        mListener = null;
+        mDatas = null;
+        mRecyclerAdapter = null;
+        mNeedRef = false;
     }
 
     public void loadData(boolean refresh, Context context) {
@@ -149,6 +156,8 @@ public class LessonListDataController {
         return mLoadCount;
     }
 
-
+    public void setNeedRefresh(boolean refresh) {
+        mNeedRef = refresh;
+    }
 
 }

@@ -78,7 +78,11 @@ public class LessonListViewController {
     }
 
     public void onDestroy() {
-
+        mGridView.stopScroll();
+        mAct = null;
+        mPtrFrame = null;
+        mGridView = null;
+        mTitleView = null;
     }
 
     public PtrClassicFrameLayout getPtrFrame() {
