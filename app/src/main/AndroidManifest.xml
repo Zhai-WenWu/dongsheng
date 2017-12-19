@@ -737,6 +737,14 @@
             android:windowSoftInputMode="adjustResize"/>
         <!-- global search end -->
 
+        <!--lesson-->
+        <activity
+            android:name="amodule.lesson.activity.LessonHome"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppMainTheme"
+            android:windowSoftInputMode="adjustResize"/>
+        <!--lesson end-->
 
         <!-- user start -->
         <activity
