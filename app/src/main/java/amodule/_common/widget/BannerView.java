@@ -2,6 +2,7 @@ package amodule._common.widget;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
@@ -10,14 +11,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.annimon.stream.Stream;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.animation.GlideAnimation;
@@ -26,6 +25,7 @@ import com.xiangha.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import acore.logic.AppCommon;
@@ -42,13 +42,12 @@ import acore.widget.banner.BannerAdapter;
 import amodule._common.delegate.IBindMap;
 import amodule._common.delegate.IHandlerClickEvent;
 import amodule._common.delegate.ISaveStatistic;
+import amodule._common.delegate.ISetAdID;
 import amodule._common.delegate.IStatictusData;
 import amodule._common.helper.WidgetDataHelper;
 import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
 import third.ad.scrollerAd.XHAllAdControl;
-
-import static third.ad.tools.AdPlayIdConfig.HOME_BANNEER_1;
 
 /**
  * Description :
@@ -58,9 +57,8 @@ import static third.ad.tools.AdPlayIdConfig.HOME_BANNEER_1;
  * E_mail : ztanzeyu@gmail.com
  */
 
-public class BannerView extends Banner implements IBindMap, IStatictusData, ISaveStatistic, IHandlerClickEvent {
+public class BannerView extends Banner implements IBindMap, IStatictusData, ISaveStatistic, IHandlerClickEvent,ISetAdID {
     public static final String KEY_ALREADY_SHOW = "alreadyshow";
-    public static final String XML_KEY_BANNER_BG = "bannerBg";
     private LayoutInflater mInflater;
     private XHAllAdControl mAdControl;
     private ArrayList<String> mAdIDArray = new ArrayList<>();
@@ -71,6 +69,7 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
     public static final int TAG_ID = R.string.tag;
     int imageHeight = 0, imageWidth = 0;
     boolean bgLoadOver = false;
+    private String bgKey = "";
 
     public BannerView(Context context) {
         this(context, null);
@@ -82,6 +81,20 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
 
     public BannerView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        setViewSize(context);
+
+        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.BannerView);
+        bgKey = typedArray.getString(R.styleable.BannerView_bgKey);
+        typedArray.recycle();
+        if(!TextUtils.isEmpty(bgKey)){
+            Log.i("tzy", "BannerView: bgKey = " + bgKey);
+            //同步设置bg图片
+            String firstImageUrl = FileManager.loadShared(getContext(), FileManager.xmlFile_appInfo, bgKey).toString();
+            setBackImageView(imageView -> ImgManager.loadLongImage(imageView, firstImageUrl));
+        }
+    }
+
+    private void setViewSize(Context context) {
         int paddingBottom = getResources().getDimensionPixelSize(R.dimen.dp_10);
         setPadding(0, 0, 0, paddingBottom);
         mInflater = LayoutInflater.from(context);
@@ -90,18 +103,12 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
         int height = imageHeight + paddingBottom;
         Log.i("tzy", "width = " + ToolsDevice.getWindowPx(context).widthPixels + " , height = " + height);
         post(() -> {
-//            ViewGroup.LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,height);
-//            setLayoutParams(layoutParams);
             getLayoutParams().height = height;
             setMinimumHeight(height);
         });
         setVisibility(VISIBLE);
-        mAdIDArray.add(HOME_BANNEER_1);
         showMinH = Tools.getStatusBarHeight(context) + Tools.getDimen(context, R.dimen.dp_45) - height;
         showMaxH = ToolsDevice.getWindowPx(getContext()).heightPixels - Tools.getDimen(context, R.dimen.dp_50);
-        //同步设置bg图片
-        String firstImageUrl = FileManager.loadShared(getContext(), FileManager.xmlFile_appInfo, XML_KEY_BANNER_BG).toString();
-        setBackImageView(imageView -> ImgManager.loadLongImage(imageView, firstImageUrl));
     }
 
     ArrayList<Map<String, String>> mArrayList = new ArrayList<>();
@@ -139,7 +146,9 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
         mArrayList.clear();
         mArrayList.addAll(arrayList);
         final String firstImageUrl = mArrayList.get(0).get("img");
-        FileManager.scynSaveSharePreference(getContext(), FileManager.xmlFile_appInfo, XML_KEY_BANNER_BG, firstImageUrl);
+        if(!TextUtils.isEmpty(bgKey)){
+            FileManager.scynSaveSharePreference(getContext(), FileManager.xmlFile_appInfo, bgKey, firstImageUrl);
+        }
         //设置默认BG
         if (bgLoadOver) {
             postDelayed(() -> setBackImageView(imageView -> loadBgImage(firstImageUrl, imageView)), 800);
@@ -413,24 +422,31 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
         return super.dispatchTouchEvent(ev);
     }
 
-    private void loadAdImage(String imgUrl, ImageView imageView) {
-        Glide.with(getContext())
-                .load(imgUrl)
-                .asBitmap()
-                .dontAnimate()
-                .dontTransform()
-                .into(new SubBitmapTarget() {
-                    @Override
-                    public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
-                        float width = bitmap.getWidth();
-                        float height = bitmap.getHeight();
-                        float scaleWidth = width;
-                        float scaleHeight = scaleWidth / imageWidth * height;
-                        int offsetY = (int) (height - Math.abs(height - scaleHeight));
-                        Bitmap resultBitmap = Bitmap.createBitmap(bitmap, 0, offsetY, (int) scaleWidth, ((int) height - offsetY));
-                        imageView.setImageBitmap(resultBitmap);
-                    }
-                });
-    }
+//    private void loadAdImage(String imgUrl, ImageView imageView) {
+//        Glide.with(getContext())
+//                .load(imgUrl)
+//                .asBitmap()
+//                .dontAnimate()
+//                .dontTransform()
+//                .into(new SubBitmapTarget() {
+//                    @Override
+//                    public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
+//                        float width = bitmap.getWidth();
+//                        float height = bitmap.getHeight();
+//                        float scaleWidth = width;
+//                        float scaleHeight = scaleWidth / imageWidth * height;
+//                        int offsetY = (int) (height - Math.abs(height - scaleHeight));
+//                        Bitmap resultBitmap = Bitmap.createBitmap(bitmap, 0, offsetY, (int) scaleWidth, ((int) height - offsetY));
+//                        imageView.setImageBitmap(resultBitmap);
+//                    }
+//                });
+//    }
 
+
+    @Override
+    public void setAdID(List<String> adIDs) {
+        if(adIDs != null){
+            mAdIDArray.addAll(adIDs);
+        }
+    }
 }

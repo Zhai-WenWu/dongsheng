@@ -41,6 +41,9 @@
         <attr name="quoteCapWidth" format="reference|dimension" />
     </declare-styleable>
 
+    <declare-styleable name="BannerView">
+        <attr name="bgKey" format="string"/>
+    </declare-styleable>
     <declare-styleable name="RvGridView">
         <attr name="spanCount" format="integer"/>
     </declare-styleable>

@@ -16,6 +16,7 @@ import java.util.Map;
 import acore.tools.StringManager;
 import amodule._common.delegate.IBindMap;
 import amodule._common.delegate.ISaveStatistic;
+import amodule._common.delegate.ISetAdID;
 import amodule._common.delegate.IStatictusData;
 import amodule._common.widgetlib.AllWeightLibrary;
 
@@ -33,7 +34,7 @@ import static amodule._common.widgetlib.IWidgetLibrary.NO_FIND_ID;
  * E_mail : ztanzeyu@gmail.com
  */
 
-public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, String>> implements IStatictusData, ISaveStatistic {
+public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, String>> implements IStatictusData, ISaveStatistic,ISetAdID {
 
     public static final int LLM = LinearLayout.LayoutParams.MATCH_PARENT;
     public static final int LLW = LinearLayout.LayoutParams.WRAP_CONTENT;
@@ -79,11 +80,14 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
             if (null != view) {
                 view.setVisibility(VISIBLE);
                 currentID = viewId;
-                if (view instanceof IBindMap && !TextUtils.isEmpty(widgetData)) {
-                    ((IBindMap) view).setData(dataMap);
+                if(view instanceof  ISetAdID){
+                    ((ISetAdID)view).setAdID(adIDs);
                 }
                 if (view instanceof IStatictusData) {
                     ((IStatictusData) view).setStatictusData(id, twoLevel, threeLevel);
+                }
+                if (view instanceof IBindMap && !TextUtils.isEmpty(widgetData)) {
+                    ((IBindMap) view).setData(dataMap);
                 }
             } else {
                 hideView();
@@ -195,5 +199,11 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
                 ((ISaveStatistic) view).saveStatisticData();
             }
         }
+    }
+
+    List<String> adIDs;
+    @Override
+    public void setAdID(List<String> adIDs) {
+        this.adIDs = adIDs;
     }
 }

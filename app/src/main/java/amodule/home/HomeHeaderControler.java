@@ -8,6 +8,8 @@ import android.widget.TextView;
 
 import com.xiangha.R;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -16,7 +18,7 @@ import amodule._common.delegate.ISaveStatistic;
 import amodule._common.plugin.WidgetVerticalLayout;
 import amodule._common.utility.WidgetUtility;
 import amodule.main.activity.MainHomePage;
-
+import static third.ad.tools.AdPlayIdConfig.HOME_BANNEER_1;
 /**
  * Description :
  * PackageName : amodule.home
@@ -44,6 +46,7 @@ public class HomeHeaderControler implements ISaveStatistic {
         this.mHeaderView = header;
         //banner
         mLayouts[0] = (WidgetVerticalLayout) header.findViewById(R.id.banner_widget);
+        mLayouts[0].setAdID(Arrays.asList(HOME_BANNEER_1));
         //功能导航 4按钮
         mLayouts[1] = (WidgetVerticalLayout) header.findViewById(R.id.funcnav1_widget);
         //功能导航 2按钮
