@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,10 +20,12 @@ import acore.logic.AppCommon;
 import acore.logic.XHClick;
 import acore.override.helper.XHActivityManager;
 import acore.tools.StringManager;
+import acore.tools.Tools;
 import amodule._common.delegate.IBindMap;
 import amodule._common.delegate.IHandlerClickEvent;
 import amodule._common.delegate.ISaveStatistic;
 import amodule._common.delegate.IStatictusData;
+import amodule._common.helper.WidgetDataHelper;
 import amodule._common.utility.WidgetUtility;
 import amodule.home.view.HomeFuncNavView1;
 
@@ -35,6 +38,8 @@ import amodule.home.view.HomeFuncNavView1;
  */
 
 public class FuncNavView1 extends HomeFuncNavView1 implements IBindMap,IStatictusData,ISaveStatistic,IHandlerClickEvent {
+
+    private int mOriginalPaddingTop = 0;
     public FuncNavView1(Context context) {
         super(context);
     }
@@ -50,6 +55,8 @@ public class FuncNavView1 extends HomeFuncNavView1 implements IBindMap,IStatictu
     @Override
     protected void initData() {
         super.initData();
+        mOriginalPaddingTop = getPaddingTop();
+        Log.i("tzy", "initData: mOriginalPaddingTop = " + mOriginalPaddingTop);
     }
 
     @Override
@@ -66,7 +73,10 @@ public class FuncNavView1 extends HomeFuncNavView1 implements IBindMap,IStatictu
             setVisibility(GONE);
             return;
         }
-
+        //设置顶部边距
+        String sort = data.get(WidgetDataHelper.KEY_SORT);
+        int paddingTop = "1".equals(sort) ? Tools.getDimen(getContext(),R.dimen.dp_10)  : 0;
+        setPadding(getPaddingLeft(),paddingTop,getPaddingRight(),getPaddingBottom());
         setDataToView(arrayList);
     }
 

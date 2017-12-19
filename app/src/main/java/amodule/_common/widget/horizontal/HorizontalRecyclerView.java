@@ -18,6 +18,7 @@ import java.util.Map;
 import acore.logic.AppCommon;
 import acore.logic.XHClick;
 import acore.tools.StringManager;
+import acore.tools.Tools;
 import acore.widget.rvlistview.RvListView;
 import acore.widget.rvlistview.adapter.RvBaseAdapter;
 import amodule._common.delegate.IBindMap;
@@ -93,6 +94,11 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,
             setVisibility(GONE);
             return;
         }
+        //设置顶部边距
+        String sort = map.get(WidgetDataHelper.KEY_SORT);
+        int paddingTop = "1".equals(sort) ? Tools.getDimen(getContext(),R.dimen.dp_10) : 0;
+        setPadding(getPaddingLeft(),paddingTop,getPaddingRight(),getPaddingBottom());
+
         if (isResetData)
             return;
         String style = map.get(KEY_STYLE);
