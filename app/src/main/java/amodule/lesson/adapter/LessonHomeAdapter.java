@@ -16,8 +16,8 @@ import acore.widget.rvlistview.holder.RvBaseViewHolder;
  * Created by mrtrying on 2017/12/19 11:26:54.
  * e_mail : ztanzeyu@gmail.com
  */
-public class LessonChefAdapter extends RvBaseAdapter<Map<String,String>> {
-    public LessonChefAdapter(Context context, @Nullable List<Map<String, String>> data) {
+public class LessonHomeAdapter extends RvBaseAdapter<Map<String,String>> {
+    public LessonHomeAdapter(Context context, @Nullable List<Map<String, String>> data) {
         super(context, data);
     }
 
