@@ -5,6 +5,6 @@ package amodule.lesson.listener;
  */
 
 public interface IDataListener<T> {
-    void onGetData(boolean refresh);
-    void onDataReady(T t, boolean refresh);
+    void onGetData(T t, boolean refresh);
+    void onDataReady(T t, boolean refresh, int flag);
 }

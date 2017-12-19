@@ -12,6 +12,7 @@ import amodule._common.helper.WidgetDataHelper;
 import amodule.lesson.controler.data.LessonListDataController;
 import amodule.lesson.controler.view.LessonListViewController;
 import amodule.lesson.listener.IDataListener;
+import aplug.basic.ReqEncyptInternet;
 
 public class LessonListPage extends BaseAppCompatActivity {
 
@@ -36,7 +37,9 @@ public class LessonListPage extends BaseAppCompatActivity {
     }
 
     private void startLoadData() {
-        mDataController.startLoadData(mViewController.getPtrFrame(), mViewController.getListView());
+        loadManager.setLoading(mViewController.getPtrFrame(), mViewController.getListView(), mDataController.getAdapter(), true,
+                v -> mDataController.loadData(true, this),
+                v -> mDataController.loadData(false, this));
     }
 
     private void initController() {
@@ -48,15 +51,16 @@ public class LessonListPage extends BaseAppCompatActivity {
     private void addListener() {
         mDataController.setOnDataListener(new IDataListener<List<Map<String, String>>>() {
             @Override
-            public void onGetData(boolean refresh) {
-
+            public void onGetData(List<Map<String, String>> maps, boolean refresh) {
+                loadManager.changeMoreBtn(ReqEncyptInternet.REQ_OK_STRING, -1, -1, mDataController.getCurrentPage(), maps == null || maps.size() == 0);
             }
 
             @Override
-            public void onDataReady(List<Map<String, String>> maps, boolean refresh) {
+            public void onDataReady(List<Map<String, String>> maps, boolean refresh, int flag) {
                 if (refresh && mViewController != null) {
                     mViewController.refreshComplete();
                 }
+                loadManager.changeMoreBtn(flag, mDataController.getEveryPageCount(), mDataController.getLoadCount(), mDataController.getCurrentPage(), false);
             }
         });
     }
