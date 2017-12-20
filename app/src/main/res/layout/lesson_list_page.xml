@@ -6,8 +6,8 @@
     android:id="@+id/activityLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="amodule.lesson.activity.LessonHome"
-    >
+    tools:context="amodule.lesson.activity.LessonListPage"
+    android:background="@android:color/white">
 
     <cn.srain.cube.views.ptr.PtrClassicFrameLayout
         android:id="@+id/ptr_frame"
