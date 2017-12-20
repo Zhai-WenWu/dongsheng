@@ -43,7 +43,7 @@ public class AdapterRecommed extends MallAdapterSimple{
 	}
 	
 	public InternetCallback getCallback(final ImageView v) {
-		return new InternetCallback(mContext) {
+		return new InternetCallback() {
 			@Override
 			public void loaded(int flag, String url, Object returnObj) {
 				if (flag >= UtilInternet.REQ_OK_STRING) {

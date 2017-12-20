@@ -374,7 +374,7 @@ public class AskAnswerUploadListActivity extends BaseActivity {
     }
 
     private void getIsTip() {
-        ReqEncyptInternet.in().doEncypt(StringManager.API_QA_ISTIP, "type=2", new InternetCallback(this) {
+        ReqEncyptInternet.in().doEncypt(StringManager.API_QA_ISTIP, "type=2", new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object obj) {
                 {

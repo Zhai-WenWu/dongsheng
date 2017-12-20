@@ -160,7 +160,7 @@ public class QuanRecommend extends BaseActivity implements OnClickListener {
 									dialogManager.cancel();
 									String url = StringManager.api_setSubjectRecommend;
 									String params = "code=" + code;
-									ReqInternet.in().doPost(url, params, new InternetCallback(QuanRecommend.this) {
+									ReqInternet.in().doPost(url, params, new InternetCallback() {
 
 										@Override
 										public void loaded(int flag, String url, Object returnObj) {
@@ -191,7 +191,7 @@ public class QuanRecommend extends BaseActivity implements OnClickListener {
 				return;
 			}
 			String url = StringManager.api_changeSubjectClassify+"?subCode="+code+"&cid="+item.getCid();
-			ReqInternet.in().doGet(url, new InternetCallback(QuanRecommend.this) {
+			ReqInternet.in().doGet(url, new InternetCallback() {
 				
 				@Override
 				public void loaded(int flag, String url, Object returnObj) {
@@ -221,7 +221,7 @@ public class QuanRecommend extends BaseActivity implements OnClickListener {
 								dialogManager.cancel();
 								String url =StringManager.api_addJingHua+"?code="+code;
 								QuanRecommend.this.finish();
-								ReqInternet.in().doGet(url, new InternetCallback(QuanRecommend.this) {
+								ReqInternet.in().doGet(url, new InternetCallback() {
 									@Override
 									public void loaded(int flag, String url, Object returnObj) {
 										if (flag < UtilInternet.REQ_OK_STRING){

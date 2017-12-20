@@ -16,20 +16,18 @@ public class ReqInternet extends UtilInternet {
     @SuppressLint("StaticFieldLeak")
     private static ReqInternet instance = null;
     @SuppressLint("StaticFieldLeak")
-    private static Context initContext = null;
 
-    private ReqInternet(Context context) {
-        super(context);
+    private ReqInternet() {
+        super();
     }
 
-    public static ReqInternet init(Context context) {
-        initContext = context;
+    public static ReqInternet init() {
         return in();
     }
 
     public static ReqInternet in() {
         if (instance == null)
-            instance = new ReqInternet(initContext);
+            instance = new ReqInternet();
         return instance;
     }
 
@@ -41,7 +39,7 @@ public class ReqInternet extends UtilInternet {
      * @return
      */
     public Map<String, String> getHeader(Context context) {
-        InternetCallback callback = new InternetCallback(context) {
+        InternetCallback callback = new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object msg) {
             }

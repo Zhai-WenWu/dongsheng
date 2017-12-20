@@ -8,7 +8,6 @@ repositories {
         dirs 'libsxh'
     }
 }
-
 dependencies {
     //添加广点通广告
     compile fileTree(include: '*.jar', dir: 'libsAddGd')
@@ -46,7 +45,6 @@ dependencies {
 }
 
 android {
-
     compileSdkVersion 25
     buildToolsVersion '26.0.2'
 

@@ -119,7 +119,7 @@ public class FriendHome extends BaseActivity {
             //消息是否读过
             if (bundle.getString("newsId") != null) {
                 String params = "type=news&p1=" + bundle.getString("newsId");
-                ReqInternet.in().doPost(StringManager.api_setUserData, params, new InternetCallback(this) {
+                ReqInternet.in().doPost(StringManager.api_setUserData, params, new InternetCallback() {
                     @Override
                     public void loaded(int flag, String url, Object returnObj) {
                     }
@@ -202,7 +202,7 @@ public class FriendHome extends BaseActivity {
     private void getData() {
         initDefTabData();
         String getUrl = StringManager.api_getUserInfoByCode + "?code=" + userCode;
-        ReqInternet.in().doGet(getUrl, new InternetCallback(this) {
+        ReqInternet.in().doGet(getUrl, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
                 Map<String, String> userinfo_map = null;
@@ -221,7 +221,7 @@ public class FriendHome extends BaseActivity {
                 onLoaded(flag);
             }
         });
-        ReqEncyptInternet.in().doEncypt(StringManager.API_USERMAIN_LEVEL, "code=" + userCode, new InternetCallback(this) {
+        ReqEncyptInternet.in().doEncypt(StringManager.API_USERMAIN_LEVEL, "code=" + userCode, new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
                 if (i >= UtilInternet.REQ_OK_STRING) {
@@ -432,7 +432,7 @@ public class FriendHome extends BaseActivity {
                             articleData.setUploadType(UploadDishData.UPLOAD_ING);
                             parentSQL.update(articleData.getId(), articleData);
                             final UploadParentSQLite mySql = parentSQL;
-                            articleData.upload(StringManager.api_videoAdd, new InternetCallback(this) {
+                            articleData.upload(StringManager.api_videoAdd, new InternetCallback() {
                                 @Override
                                 public void loaded(int i, String s, Object o) {
                                     if (i >= UtilInternet.REQ_OK_STRING) {
@@ -457,7 +457,7 @@ public class FriendHome extends BaseActivity {
                             String url = StringManager.api_articleAdd;
                             if ("1".equals(type)) url = StringManager.api_videoAdd;
 
-                            articleData.upload(url, new InternetCallback(this) {
+                            articleData.upload(url, new InternetCallback() {
                                 @Override
                                 public void loaded(int i, String s, Object o) {
                                     if (i >= UtilInternet.REQ_OK_STRING) {

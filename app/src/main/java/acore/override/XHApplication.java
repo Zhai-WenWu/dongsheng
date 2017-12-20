@@ -100,9 +100,6 @@ public class XHApplication extends MobApplication {
 
         //初始化config变量
         XHConf.init(this);
-        MallReqInternet.init(getApplicationContext());
-        ReqInternet.init(getApplicationContext());
-        ReqEncyptInternet.init(getApplicationContext());
         LoadImage.init(getApplicationContext());
         LogManager.printStartTime("zhangyujian","XhApplication:1111:initData::");
         //设置百度appid

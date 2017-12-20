@@ -83,7 +83,7 @@ public class VideoClassifyDish extends BaseActivity {
 		}
 		loadManager.changeMoreBtn(UtilInternet.REQ_OK_STRING, -1, -1, currentPage,listDataMySuro.size() == 0);
 		String getUrl = StringManager.api_getVideoClassifyDish + "?code=" + code + "&page=" + currentPage;
-		ReqInternet.in().doGet(getUrl, new InternetCallback(this) {
+		ReqInternet.in().doGet(getUrl, new InternetCallback() {
 			@Override
 			public void loaded(int flag, String url, Object returnObj) {
 				int loadCount = 0;

@@ -207,7 +207,7 @@ public class OrderStateActivity extends MallBaseActivity implements OnClickListe
 
 	private void setRequest() {
 		url_statistic =MallStringManager.mall_api_order_info_v2+"?type="+order_satus+"&id="+order_id;
-		MallReqInternet.in().doGet(url_statistic, new MallInternetCallback(this) {
+		MallReqInternet.in().doGet(url_statistic, new MallInternetCallback() {
 
 			@Override
 			public void loadstat(int flag, String url, Object msg, Object... stat) {
@@ -433,7 +433,7 @@ public class OrderStateActivity extends MallBaseActivity implements OnClickListe
 	/** 物流信息 */
 	private void getShoppingurl(){
 		url_statistic = MallStringManager.mall_getShippingUrl+"?order_id="+listMapByJson_payment.get(0).get("order_id");
-		MallReqInternet.in().doGet(url_statistic, new MallInternetCallback(this) {
+		MallReqInternet.in().doGet(url_statistic, new MallInternetCallback() {
 			
 			@Override
 			public void loadstat(int flag, String url, Object msg, Object... stat) {

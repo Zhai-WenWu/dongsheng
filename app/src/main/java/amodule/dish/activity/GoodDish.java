@@ -68,7 +68,7 @@ public class GoodDish extends BaseActivity implements OnClickListener{
 		mCurrentPage++;
 		loadManager.changeMoreBtn(ReqInternet.REQ_OK_STRING, -1	, -1, mCurrentPage,false);
 		String params= "?type=1&page="+mCurrentPage;
-		ReqInternet.in().doGet(StringManager.api_homeTodayGood+params, new InternetCallback(this) {
+		ReqInternet.in().doGet(StringManager.api_homeTodayGood+params, new InternetCallback() {
 			
 			@Override
 			public void loaded(int flag, String url, Object msg) {

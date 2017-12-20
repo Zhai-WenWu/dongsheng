@@ -38,7 +38,7 @@ public class MatchWordsDbUtil {
             createTime = createTimeStr;
         }
         String url = StringManager.api_matchWords + "?createTime=" + createTime;
-        ReqInternet.in().doGet(url, new InternetCallback(context) {
+        ReqInternet.in().doGet(url, new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
                 if (i >= UtilInternet.REQ_OK_STRING) {
@@ -75,7 +75,7 @@ public class MatchWordsDbUtil {
      * @param createTime
      */
     private void downloadMatchWords(final String url, final String createTime) {
-        ReqInternet.in().getInputStream(url, new InternetCallback(XHApplication.in()) {
+        ReqInternet.in().getInputStream(url, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, final Object msg) {
                 if (flag >= ReqInternet.REQ_OK_IS) {

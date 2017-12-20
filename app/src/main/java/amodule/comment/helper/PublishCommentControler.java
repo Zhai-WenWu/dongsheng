@@ -106,7 +106,7 @@ public class PublishCommentControler {
                     });
             view.setTag(path);
             imagePath.put(path, "");
-            new UploadImg("", path, new InternetCallback(mAct) {
+            new UploadImg("", path, new InternetCallback() {
                 @Override
                 public void loaded(int i, String s, Object o) {
                     if (i < ReqInternet.REQ_OK_STRING) {

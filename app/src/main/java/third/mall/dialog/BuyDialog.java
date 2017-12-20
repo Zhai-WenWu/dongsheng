@@ -170,7 +170,7 @@ public class BuyDialog extends SimpleDialog {
         }
         findViewById(R.id.next_order).setEnabled(false);
         String param="order_info="+orderInfo;
-        MallReqInternet.in().doPost(MallStringManager.mall_checkoutOrder_v2, param, new MallInternetCallback(context) {
+        MallReqInternet.in().doPost(MallStringManager.mall_checkoutOrder_v2, param, new MallInternetCallback() {
 
             @Override
             public void loadstat(int flag, String url, Object msg, Object... stat) {

@@ -205,7 +205,7 @@ public class XGLocalPushServer {
             return;
         }
         String url = StringManager.api_nousList + "?type=new" + "&page=" + page++;
-        ReqInternet.in().doGet(url, new InternetCallback(mContext) {
+        ReqInternet.in().doGet(url, new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
                 if (i >= ReqInternet.REQ_OK_STRING) {

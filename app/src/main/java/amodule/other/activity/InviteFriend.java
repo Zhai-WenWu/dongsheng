@@ -228,7 +228,7 @@ public class InviteFriend extends BaseActivity {
 
 	private void loadNetData() {
 		String url = StringManager.api_getDownloadUrl;
-		ReqInternet.in().doGet(url, new InternetCallback(this) {
+		ReqInternet.in().doGet(url, new InternetCallback() {
 			@Override
 			public void loaded(int flag, String url, Object returnObj) {
 				loadManager.loadOver(flag, 1,true);
@@ -265,7 +265,7 @@ public class InviteFriend extends BaseActivity {
 	 */
 	private void load_inviteCheck() {
 		String url = StringManager.api_inviteCheck;
-		ReqInternet.in().doGet(url, new InternetCallback(this) {
+		ReqInternet.in().doGet(url, new InternetCallback() {
 
 			@Override
 			public void loaded(int flag, String url, Object returnObj) {
@@ -309,7 +309,7 @@ public class InviteFriend extends BaseActivity {
 		String url = StringManager.api_parseInvitationCode;
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
 		map.put("invCode", value);
-		ReqInternet.in().doPost(url, map, new InternetCallback(this) {
+		ReqInternet.in().doPost(url, map, new InternetCallback() {
 
 			@Override
 			public void loaded(int flag, String url, Object returnObj) {
@@ -336,7 +336,7 @@ public class InviteFriend extends BaseActivity {
 		String url = StringManager.api_inviteCustomer;
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
 		map.put("invCode", value);
-		ReqInternet.in().doPost(url, map, new InternetCallback(this) {
+		ReqInternet.in().doPost(url, map, new InternetCallback() {
 
 			@Override
 			public void loaded(int flag, String url, Object returnObj) {

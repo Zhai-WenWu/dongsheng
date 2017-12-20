@@ -232,7 +232,7 @@ public class BuyCommodActivity extends MallBaseActivity implements OnClickListen
 		findViewById(R.id.buycommod_commod_explian_data_add).setEnabled(false);
 		String actionUrl = MallStringManager.mall_api_computeOrderAmt;
 		String param = "product_code=" + code + "&product_num=" + num;
-		MallReqInternet.in().doPost(actionUrl, param, new MallInternetCallback(this) {
+		MallReqInternet.in().doPost(actionUrl, param, new MallInternetCallback() {
 
 			@Override
 			public void loadstat(int flag, String url, Object msg, Object... stat) {
@@ -335,7 +335,7 @@ public class BuyCommodActivity extends MallBaseActivity implements OnClickListen
 			if(!TextUtils.isEmpty(MallCommon.statictisFrom)){
 				param+="&ds_from="+MallCommon.getStatictisFrom();
 			}
-			MallReqInternet.in().doPost(url, param, new MallInternetCallback(this) {
+			MallReqInternet.in().doPost(url, param, new MallInternetCallback() {
 
 				@Override
 				public void loadstat(int flag, String url, Object msg, Object... stat) {
@@ -407,7 +407,7 @@ public class BuyCommodActivity extends MallBaseActivity implements OnClickListen
 	private void setRequestAddress() {
 		loadManager.showProgressBar();
 		String url = MallStringManager.mall_api_getShippingAddress;
-		MallReqInternet.in().doGet(url, new MallInternetCallback(this) {
+		MallReqInternet.in().doGet(url, new MallInternetCallback() {
 
 			@Override
 			public void loadstat(int flag, String url, Object msg, Object... stat) {

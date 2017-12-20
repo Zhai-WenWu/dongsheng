@@ -189,7 +189,7 @@ public class QAReportActivity extends BaseActivity {
             }
         }
         params += (TextUtils.isEmpty(params) ? "" : "&") + "code=" + mDishCode + "&askAuthorCode=" + mAskAuthorCode + "&qaCode=" + mQACode;
-        ReqEncyptInternet.in().doEncypt(StringManager.API_QA_COMMITREPORT, params, new InternetCallback(QAReportActivity.this) {
+        ReqEncyptInternet.in().doEncypt(StringManager.API_QA_COMMITREPORT, params, new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
                 QAReportActivity.this.finish();
@@ -206,7 +206,7 @@ public class QAReportActivity extends BaseActivity {
             onDataReady(0, null);
             return;
         }
-        ReqEncyptInternet.in().doEncypt(StringManager.API_QA_GETREPORT, "authorCode=" + mAuthorCode + "&askAuthorCode=" + mAskAuthorCode, new InternetCallback(this) {
+        ReqEncyptInternet.in().doEncypt(StringManager.API_QA_GETREPORT, "authorCode=" + mAuthorCode + "&askAuthorCode=" + mAskAuthorCode, new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
                 if (i >= UtilInternet.REQ_OK_STRING) {

@@ -90,7 +90,7 @@ public class CircleUserBlack extends BaseActivity implements OnClickListener {
 		@Override
 		public void oAddBlack(final View parentView,final int position) {
 			String code = mListData.get(position).get("code");
-			ReqInternet.in().doPost(StringManager.api_circleCustomerPower, "&type=2" + "&customerId=" + code + "&cid=" + mCid, new InternetCallback(CircleUserBlack.this) {
+			ReqInternet.in().doPost(StringManager.api_circleCustomerPower, "&type=2" + "&customerId=" + code + "&cid=" + mCid, new InternetCallback() {
 				
 				@Override
 				public void loaded(int flag, String url, Object msg) {
@@ -128,7 +128,7 @@ public class CircleUserBlack extends BaseActivity implements OnClickListener {
 		}
 		loadManager.changeMoreBtn(UtilInternet.REQ_OK_STRING, -1, -1, currentPage,mListData.size() == 0);
 		String getUrl = StringManager.api_circleCustomerBlackList + "?cid=" + mCid + "&page=" + currentPage;
-		ReqInternet.in().doGet(getUrl, new InternetCallback(this) {
+		ReqInternet.in().doGet(getUrl, new InternetCallback() {
 			@Override
 			public void loaded(int flag, String url, Object returnObj) {
 				int loadCount = 0;

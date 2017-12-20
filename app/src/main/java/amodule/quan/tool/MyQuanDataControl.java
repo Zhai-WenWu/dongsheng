@@ -30,7 +30,7 @@ public class MyQuanDataControl {
 	 * @param dataCallback
 	 */
 	public static void getNewMyQuanData(Context context,final DataCallback dataCallback) {
-		ReqInternet.in().doGet(StringManager.api_circleMyQuan, new InternetCallback(context) {
+		ReqInternet.in().doGet(StringManager.api_circleMyQuan, new InternetCallback() {
 
 			@Override
 			public void loaded(int flag, String url, Object msg) {

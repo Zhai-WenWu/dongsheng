@@ -201,7 +201,7 @@ public class ScoreStore extends BaseActivity implements OnClickListener {
 		}
 		loadManager.changeMoreBtn(UtilInternet.REQ_OK_STRING, -1, -1, currentPage, isBlankSpace);
 		String getUrl = StringManager.api_getProductList + "?page=" + currentPage;
-		ReqInternet.in().doGet(getUrl, new InternetCallback(this) {
+		ReqInternet.in().doGet(getUrl, new InternetCallback() {
 			@Override
 			public void loaded(int flag, String url, Object returnObj) {
 				int loadCount = 0;
@@ -238,7 +238,7 @@ public class ScoreStore extends BaseActivity implements OnClickListener {
 
 	private void getActivityData() {
 		String getUrl = StringManager.api_getSurpriseActivity;
-		ReqInternet.in().doGet(getUrl, new InternetCallback(this) {
+		ReqInternet.in().doGet(getUrl, new InternetCallback() {
 			@Override
 			public void loaded(int flag, String url, Object returnObj) {
 				if (flag > 1) {
@@ -362,7 +362,7 @@ public class ScoreStore extends BaseActivity implements OnClickListener {
 	}
 
 	private void getTaskCount() {
-		ReqInternet.in().doGet(StringManager.api_getTaskCount, new InternetCallback(this) {
+		ReqInternet.in().doGet(StringManager.api_getTaskCount, new InternetCallback() {
 
 			@Override
 			public void loaded(int flag, String url, Object returnObj) {

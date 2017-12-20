@@ -225,7 +225,7 @@ public class JsAppCommon extends JsBase {
                                 if (mBarShare != null) {
                                     mBarShare.openShare();
                                     if (callback != null && callback.length() > 0) {
-                                        ReqInternet.in().doGet(StringManager.apiUrl + callback, new InternetCallback(mAct) {
+                                        ReqInternet.in().doGet(StringManager.apiUrl + callback, new InternetCallback() {
                                             @Override
                                             public void loaded(int flag, String url, Object returnObj) {
                                             }
@@ -492,7 +492,7 @@ public class JsAppCommon extends JsBase {
             public void run() {
                 if (LoginManager.isLogin()) {
                     String param = "shop_coupon_package_code=" + code;
-                    MallReqInternet.in().doPost(MallStringManager.mall_getAShopCoupon, param, new MallInternetCallback(mAct) {
+                    MallReqInternet.in().doPost(MallStringManager.mall_getAShopCoupon, param, new MallInternetCallback() {
 
                         @Override
                         public void loadstat(int flag, String url, Object msg, Object... stat) {
@@ -842,7 +842,7 @@ public class JsAppCommon extends JsBase {
     public void getSecretData(String url, String params) {
         if (mAct != null && mWebView != null) {
             url = StringManager.apiUrl + url;
-            ReqInternet.in().doPost(url, params, new InternetCallback(mAct) {
+            ReqInternet.in().doPost(url, params, new InternetCallback() {
                 @Override
                 public void loaded(int i, String s, Object data) {
                     onAcceptCallback(i >= ReqInternet.REQ_OK_STRING, data);
@@ -882,7 +882,7 @@ public class JsAppCommon extends JsBase {
         params += "&userCode=" + LoginManager.userInfo.get("code");
         url = StringManager.apiUrl + url;
         //Log.i("FRJ", "goPay() url: " + url + "  params:" + params + "  tpye:" + type);
-        ReqEncyptInternet.in().doEncypt(url, params, new InternetCallback(mAct) {
+        ReqEncyptInternet.in().doEncypt(url, params, new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object data) {
 

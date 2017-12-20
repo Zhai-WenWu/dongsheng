@@ -418,7 +418,7 @@ public class XHClick {
             public void run() {
                 if (!path.equals(""))
                     //  发送请求的操作
-                    ReqInternet.in().doGet(StringManager.api_stat, new InternetCallback(context) {
+                    ReqInternet.in().doGet(StringManager.api_stat, new InternetCallback() {
 
                         @Override
                         public void loaded(int flag, String url, Object msg) {
@@ -490,7 +490,7 @@ public class XHClick {
         }
         if (!path.equals(""))
             // 发送请求的操作
-            ReqInternet.in().doGet(StringManager.api_stat, new InternetCallback(allActivity) {
+            ReqInternet.in().doGet(StringManager.api_stat, new InternetCallback() {
 
                 @Override
                 public void loaded(int flag, String url, Object msg) {
@@ -529,7 +529,7 @@ public class XHClick {
 
         if (!path.equals(""))
             // 发送请求的操作
-            ReqInternet.in().doGet(StringManager.api_stat, new InternetCallback(allActivity) {
+            ReqInternet.in().doGet(StringManager.api_stat, new InternetCallback() {
 
                 @Override
                 public void loaded(int flag, String url, Object msg) {
@@ -634,7 +634,7 @@ public class XHClick {
         String param;
         try {
             param = "from=" + URLEncoder.encode(from, "utf-8") + "&link=" + link + "&type=" + type;
-            ReqInternet.in().doPost(actionUrl, param, new InternetCallback(XHApplication.in()) {
+            ReqInternet.in().doPost(actionUrl, param, new InternetCallback() {
 
                 @Override
                 public void loaded(int flag, String url, Object returnObj) {
@@ -689,7 +689,7 @@ public class XHClick {
         for (int index = 0; index < length; index++) {
             params.append(codesClone.get(index)).append(",");
         }
-        ReqInternet.in().doPost(StringManager.api_setClickList, params.toString(), new InternetCallback(context) {
+        ReqInternet.in().doPost(StringManager.api_setClickList, params.toString(), new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object msg) {
             }
@@ -921,7 +921,7 @@ public class XHClick {
             map1.put("log_json", jsonObject.toString());
             Log.i("wyl", "log_json::::" + jsonObject.toString());
 
-            ReqInternet.in().doPost(url, map1, new InternetCallback(XHApplication.in()) {
+            ReqInternet.in().doPost(url, map1, new InternetCallback() {
                 @Override
                 public void loaded(int flag, String url, Object object) {
                     if (flag >= ReqInternet.REQ_OK_STRING) {
@@ -1064,7 +1064,7 @@ public class XHClick {
             map1.put("log_json", jsonObject.toString());
             Log.i("wyl", "log_json::::" + jsonObject.toString());
 
-            ReqInternet.in().doPost(url, map1, new InternetCallback(XHApplication.in()) {
+            ReqInternet.in().doPost(url, map1, new InternetCallback() {
                 @Override
                 public void loaded(int flag, String url, Object object) {
                     if (flag >= ReqInternet.REQ_OK_STRING) {

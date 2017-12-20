@@ -51,7 +51,7 @@ public class AdConfigTools {
 
     public void getAdConfigInfo() {
         // 请求网络信息
-        ReqInternet.in().doGet(StringManager.api_adData, new InternetCallback(XHApplication.in()) {
+        ReqInternet.in().doGet(StringManager.api_adData, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, final Object returnObj) {
                 if (flag >= ReqInternet.REQ_OK_STRING) {
@@ -88,7 +88,7 @@ public class AdConfigTools {
                         } catch (Exception ignored) {
                             ignored.printStackTrace();
                         }
-                        FullScreenManager.saveWelcomeInfo(context, array.toString(),
+                        FullScreenManager.saveWelcomeInfo(XHApplication.in(), array.toString(),
                                 (imageUrl, callback) -> LoadImage.with(XHApplication.in())
                                         .load(imageUrl)
                                         .setSaveType(LoadImage.SAVE_LONG)
@@ -114,7 +114,7 @@ public class AdConfigTools {
      */
     public void setRequest(Context context) {
         String url = StringManager.api_getQuanList;
-        ReqInternet.in().doGet(url, new InternetCallback(context) {
+        ReqInternet.in().doGet(url, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object msg) {
                 if (flag >= ReqInternet.REQ_OK_STRING) {
@@ -194,7 +194,7 @@ public class AdConfigTools {
                 .append("&").append("channel=").append(channel)
                 .append("&").append("bannerId=").append(bannerId)
                 .append("&").append("event=").append(event);
-        ReqInternet.in().doGet(urlBuffer.toString(), new InternetCallback(XHApplication.in()) {
+        ReqInternet.in().doGet(urlBuffer.toString(), new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
             }
@@ -224,7 +224,7 @@ public class AdConfigTools {
         }
 
         ReqInternet.in().doGet(url + "?adType=圈子广告位" + "&adid=" + map.get("showAdid") + "&cid=" + map.get("showCid") +
-                "&mid=" + map.get("showMid") + "site=" + map.get("showSite") + "&event=" + event + "&clickSite=" + onClickSite, new InternetCallback(context) {
+                "&mid=" + map.get("showMid") + "site=" + map.get("showSite") + "&event=" + event + "&clickSite=" + onClickSite, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object msg) {
             }
@@ -244,7 +244,7 @@ public class AdConfigTools {
         map.put("id", id);
         map.put("adType", adType);
         map.put("adTypeId", adTypeId);
-        ReqInternet.in().doPost(StringManager.api_clickAds, map, new InternetCallback(XHApplication.in()) {
+        ReqInternet.in().doPost(StringManager.api_clickAds, map, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
 
@@ -261,7 +261,7 @@ public class AdConfigTools {
         LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
         map.put("type", "quanList");
         map.put("id", id);
-        ReqInternet.in().doPost(StringManager.api_clickAds, map, new InternetCallback(XHApplication.in()) {
+        ReqInternet.in().doPost(StringManager.api_clickAds, map, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
 

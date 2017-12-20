@@ -151,7 +151,7 @@ public class ZhishiResultView extends RelativeLayout {
         //更新加载按钮状态
         mLoadManager.changeMoreBtn(mListview, ReqInternet.REQ_OK_STRING, -1, -1, mCurrentPage, mListData.size() == 0);
         String url = StringManager.api_soList + "?type=zhishi&s=" + searchKey + "&page=" + mCurrentPage;
-        ReqInternet.in().doGet(url, new InternetCallback(mActivity.getApplicationContext()) {
+        ReqInternet.in().doGet(url, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
                 int loadPage = 0;

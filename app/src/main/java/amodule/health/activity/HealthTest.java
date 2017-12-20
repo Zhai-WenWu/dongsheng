@@ -423,7 +423,7 @@ public class HealthTest extends BaseActivity {
 					map.put("testQue[" + i++ + "]", entry.getKey() + ":" + entry.getValue());
 				}
 				Tools.showToast(HealthTest.this, "正在提交，请稍候~");
-				ReqInternet.in().doPost(StringManager.api_setHealthTest, map, new InternetCallback(getApplicationContext()) {
+				ReqInternet.in().doPost(StringManager.api_setHealthTest, map, new InternetCallback() {
 					@Override
 					public void loaded(int flag, String url, Object returnObj) {
 						if(flag > 1){

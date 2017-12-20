@@ -197,7 +197,7 @@ public class FavoriteQuan {
 		}
 		String getUrl = StringManager.api_getUSerData + "?code="+ LoginManager.userInfo.get("code")+ "&type=favSubject&page=" + currentPageTabNew;
 		loadManager.changeMoreBtn(list_quan,UtilInternet.REQ_OK_STRING, -1, -1, currentPageTabNew,listDataTabNew.size() == 0);
-		ReqInternet.in().doGet(getUrl, new InternetCallback(mAct) {
+		ReqInternet.in().doGet(getUrl, new InternetCallback() {
 			@Override
 			public void loaded(int flag, String url, Object returnObj) {
 				int loadCount = 0;

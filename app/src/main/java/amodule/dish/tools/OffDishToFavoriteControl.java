@@ -164,7 +164,7 @@ public class OffDishToFavoriteControl {
             params.append(",");
             Log.i("wyl","离线数据：：："+code);
         }
-        ReqEncyptInternet.in().doEncypt(StringManager.api_addCollection, params.toString(), new InternetCallback(context) {
+        ReqEncyptInternet.in().doEncypt(StringManager.api_addCollection, params.toString(), new InternetCallback() {
             @Override
             public void loaded(int flag, String s, Object o) {
                 if(flag >= ReqInternet.REQ_OK_STRING){

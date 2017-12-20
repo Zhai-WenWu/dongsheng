@@ -167,7 +167,7 @@ public class DishHoverViewControl implements View.OnClickListener{
         LinkedHashMap<String,String> map = new LinkedHashMap<>();
         map.put("code",code);
         map.put("status",isLike ? "2" : "1");
-        ReqEncyptInternet.in().doEncypt(StringManager.api_getDishLikeHate,map, new InternetCallback(mAct) {
+        ReqEncyptInternet.in().doEncypt(StringManager.api_getDishLikeHate,map, new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
                 String numtext="";

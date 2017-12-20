@@ -77,7 +77,7 @@ public class LoginManager {
             new GrowingIOController().setUserProperties(act,userInfo);
         }else if(length > 0 || length <= 12){
             String params = "type=getData&devCode=" + XGPushServer.getXGToken(act);
-            ReqInternet.in().doPost(StringManager.api_getUserInfo, params, new InternetCallback(act) {
+            ReqInternet.in().doPost(StringManager.api_getUserInfo, params, new InternetCallback() {
                 @Override
                 public void loaded(int flag, String url, Object returnObj) {
                     if (flag >= UtilInternet.REQ_OK_STRING) {
@@ -170,7 +170,7 @@ public class LoginManager {
      */
     public static void logout(final Activity mAct) {
         String params = "type=userOut&devCode=" + XGPushServer.getXGToken(mAct);
-        ReqInternet.in().doPost(StringManager.api_getUserInfo, params, new InternetCallback(mAct) {
+        ReqInternet.in().doPost(StringManager.api_getUserInfo, params, new InternetCallback() {
 
             @Override
             public void loaded(int flag, String url, Object returnObj) {
@@ -317,7 +317,7 @@ public class LoginManager {
 
     private static void getUserPowers(Activity act) {
 
-        ReqInternet.in().doGet(StringManager.api_getUserPowers, new InternetCallback(act) {
+        ReqInternet.in().doGet(StringManager.api_getUserPowers, new InternetCallback() {
             @Override
             public void loaded(int flag, String s, Object o) {
                 //Log.i("FRJ","getUserPowers()" + flag + "    o:" + o);
@@ -350,7 +350,7 @@ public class LoginManager {
     }
 
     private static void getActivityInfo(Activity activity) {
-        ReqInternet.in().doGet(StringManager.api_getActivityInfo, new InternetCallback(activity) {
+        ReqInternet.in().doGet(StringManager.api_getActivityInfo, new InternetCallback() {
             @Override
             public void loaded(int flag, String s, Object o) {
                 if (flag >= UtilInternet.REQ_OK_STRING) {
@@ -649,7 +649,7 @@ public class LoginManager {
      */
     public static void bindYiYuanVIP(final Context context) {
         mAutoBindYiYuanVIP = false;
-        ReqEncyptInternet.in().doEncypt(StringManager.api_yiyuan_binduser, "", new InternetCallback(context) {
+        ReqEncyptInternet.in().doEncypt(StringManager.api_yiyuan_binduser, "", new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
                 if (i >= UtilInternet.REQ_OK_STRING) {
@@ -692,7 +692,7 @@ public class LoginManager {
      * @param callback
      */
     public static void initYiYuanBindState(Context context, final Runnable callback) {
-        ReqEncyptInternet.in().doEncypt(StringManager.api_yiyuan_bindstate, "", new InternetCallback(context) {
+        ReqEncyptInternet.in().doEncypt(StringManager.api_yiyuan_bindstate, "", new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object obj) {
                 Map<String, String> data = StringManager.getFirstMap(obj);

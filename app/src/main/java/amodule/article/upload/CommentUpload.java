@@ -38,7 +38,7 @@ public class CommentUpload {
                 .append("&").append("content").append("=").append(content);
         //发请求
         ReqEncyptInternet.in().doEncypt(StringManager.api_addForum, sbuilder.toString(),
-                new InternetCallback(context) {
+                new InternetCallback() {
                     @Override
                     public void loaded(int i, String s, Object o) {
                         if (i >= ReqEncyptInternet.REQ_OK_STRING) {

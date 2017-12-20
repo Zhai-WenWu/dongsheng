@@ -177,7 +177,7 @@ public class CommentBar extends RelativeLayout implements View.OnClickListener {
 
         //发请求
         ReqEncyptInternet.in().doEncypt(praiseAPI, "code=" + code,
-                new InternetCallback(getContext()) {
+                new InternetCallback() {
                     @Override
                     public void loaded(int flag, String url, Object obj) {
                     }
@@ -216,7 +216,7 @@ public class CommentBar extends RelativeLayout implements View.OnClickListener {
                 .append("code=").append(code).append("&")
                 .append("content=").append(Uri.encode(getContent()));
         ReqEncyptInternet.in().doEncypt(StringManager.api_addForum, sbuild.toString(),
-                new InternetCallback(getContext()) {
+                new InternetCallback() {
                     @Override
                     public void loaded(int flag, String url, Object obj) {
                         if (flag >= ReqEncyptInternet.REQ_OK_STRING) {
@@ -231,7 +231,7 @@ public class CommentBar extends RelativeLayout implements View.OnClickListener {
                                 onCommentSuccessCallback.onCommentSuccess(isSofa, obj);
                             }
                         } else {
-                            Tools.showToast(context, "评论失败，请重试");
+                            Tools.showToast(CommentBar.this.getContext(), "评论失败，请重试");
                         }
                         sendComment.setVisibility(VISIBLE);
                         progressBar.setVisibility(GONE);

@@ -56,7 +56,7 @@ public class SubjectControl {
                             @Override
                             public void onClick(View v) {
                                 dialogManager.cancel();
-                                ReqInternet.in().doPost(StringManager.api_quanSetSubject, params, new InternetCallback(mAct) {
+                                ReqInternet.in().doPost(StringManager.api_quanSetSubject, params, new InternetCallback() {
                                     @Override
                                     public void loaded(int flag, String url, Object returnObj) {
                                         if (flag >= UtilInternet.REQ_OK_STRING) {

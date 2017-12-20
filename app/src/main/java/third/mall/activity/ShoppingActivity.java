@@ -240,7 +240,7 @@ public class ShoppingActivity extends MallBaseActivity implements OnClickListene
 				url+="?"+list_statistic.get(i);
 			}else url+="&"+list_statistic.get(i);
 		}
-		MallReqInternet.in().doGet(url, new MallInternetCallback(this) {
+		MallReqInternet.in().doGet(url, new MallInternetCallback() {
 
 			@Override
 			public void loadstat(int flag, String url, Object msg, Object... stat) {
@@ -542,7 +542,7 @@ public class ShoppingActivity extends MallBaseActivity implements OnClickListene
 				}
 		}
 		String param= "product_code="+json_code.toString();
-		MallReqInternet.in().doPost(MallStringManager.mall_delCartProudct, param, new MallInternetCallback(this) {
+		MallReqInternet.in().doPost(MallStringManager.mall_delCartProudct, param, new MallInternetCallback() {
 
 			@Override
 			public void loadstat(int flag, String url, Object msg, Object... stat) {
@@ -584,7 +584,7 @@ public class ShoppingActivity extends MallBaseActivity implements OnClickListene
 			json_code.put(list_none.get(i).get("code"));
 		}
 		String param= "product_code="+json_code.toString();
-		MallReqInternet.in().doPost(MallStringManager.mall_delCartProudct, param, new MallInternetCallback(this) {
+		MallReqInternet.in().doPost(MallStringManager.mall_delCartProudct, param, new MallInternetCallback() {
 
 			@Override
 			public void loadstat(int flag, String url, Object msg, Object... stat) {
@@ -618,7 +618,7 @@ public class ShoppingActivity extends MallBaseActivity implements OnClickListene
 		setStatisticIndex();
 		end_shopping_tv.setEnabled(false);
 		String param="order_info="+setListUseToJson().toString();
-		MallReqInternet.in().doPost(MallStringManager.mall_checkoutOrder_v2, param, new MallInternetCallback(this) {
+		MallReqInternet.in().doPost(MallStringManager.mall_checkoutOrder_v2, param, new MallInternetCallback() {
 
 			@Override
 			public void loadstat(int flag, String url, Object msg, Object... stat) {

@@ -382,7 +382,7 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
         for (String key : map_statistic.keySet()) {
             actionUrl += "&" + key + "=" + map_statistic.get(key);
         }
-        MallReqInternet.in().doGet(actionUrl, new MallInternetCallback(this) {
+        MallReqInternet.in().doGet(actionUrl, new MallInternetCallback() {
 
             @Override
             public void loadstat(int flag, String url, Object msg, Object... stat) {

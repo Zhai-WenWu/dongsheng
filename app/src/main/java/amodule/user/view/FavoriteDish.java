@@ -229,7 +229,7 @@ public class FavoriteDish {
 			currentPage++;
 		loadManager.changeMoreBtn(theListView,UtilInternet.REQ_OK_STRING, -1, -1, currentPage,listDataMyFav.size() == 0);
 		String getUrl = StringManager.api_getUSerData + "?code=" + userCode + "&type=favDish&page=" + currentPage;
-		ReqInternet.in().doGet(getUrl, new InternetCallback(mAct) {
+		ReqInternet.in().doGet(getUrl, new InternetCallback() {
 			@Override
 			public void loaded(int flag, String url, Object returnObj) {
 				int loadCount = 0;

@@ -191,7 +191,7 @@ public class ClassifyHealthFragment extends Fragment {
      * 设置活动相关
      */
     private void setActImg() {
-        ReqInternet.in().doGet(StringManager.api_soIndex + "?type=" + mType, new InternetCallback(mActivity) {
+        ReqInternet.in().doGet(StringManager.api_soIndex + "?type=" + mType, new InternetCallback() {
 
             @Override
             public void loaded(int flag, String url, Object returnObj) {

@@ -27,8 +27,8 @@ public class XHInternetCallBack extends InterCallback {
     public static Map<String, String> mapCookie = new HashMap<>();//基础cookie的存储
     public static boolean isCookieChange = false;//cookie 是否需要变化记录
 
-    public XHInternetCallBack(Context context) {
-        super(context);
+    public XHInternetCallBack() {
+        super();
     }
 
     @Override

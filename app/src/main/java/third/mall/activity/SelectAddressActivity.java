@@ -128,7 +128,7 @@ public class SelectAddressActivity extends MallBaseActivity implements OnClickLi
 			this.url=mall_index;
 			this.params=param;
 		}
-		MallReqInternet.in().doPost(mall_index, param, new MallInternetCallback(this) {
+		MallReqInternet.in().doPost(mall_index, param, new MallInternetCallback() {
 			
 			@Override
 			public void loadstat(int flag, String url, Object msg, Object... stat) {

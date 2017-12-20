@@ -14,6 +14,7 @@ import java.util.Map;
 
 import acore.logic.XHClick;
 import acore.logic.login.LoginCheck;
+import acore.override.XHApplication;
 import acore.override.activity.base.BaseLoginActivity;
 import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
@@ -112,7 +113,7 @@ public class CheckSrcret extends BaseLoginActivity implements View.OnClickListen
         loadManager.showProgressBar();
         String param = "phone=" + phone_info.getPhoneNum() + "&&cc=" + phone_info.getZoneCode()
                 + "&&password=" + ll_secret.getPassword();
-        ReqInternet.in().doPost(StringManager.api_checkAccount, param, new InternetCallback(this) {
+        ReqInternet.in().doPost(StringManager.api_checkAccount, param, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object msg) {
                 if (flag >= UtilInternet.REQ_OK_STRING) {
@@ -126,12 +127,12 @@ public class CheckSrcret extends BaseLoginActivity implements View.OnClickListen
                                     phone_info.getPhoneNum(),
                                    TYPE_PSW);
                         } else {
-                            XHClick.mapStat(context, TAG_ACCOCUT, "修改手机号", " 方法2失败原因：手机号或密码错误");
-                            Toast.makeText(context, "手机号或密码错误", Toast.LENGTH_SHORT).show();
+                            XHClick.mapStat(XHApplication.in(), TAG_ACCOCUT, "修改手机号", " 方法2失败原因：手机号或密码错误");
+                            Toast.makeText(CheckSrcret.this, "手机号或密码错误", Toast.LENGTH_SHORT).show();
                         }
                     }
                 } else {
-                    Toast.makeText(context, "请求失败", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CheckSrcret.this, "请求失败", Toast.LENGTH_SHORT).show();
                 }
             }
         });

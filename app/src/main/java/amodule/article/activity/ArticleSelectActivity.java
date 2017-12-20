@@ -209,7 +209,7 @@ public class ArticleSelectActivity extends BaseActivity implements View.OnClickL
             url = StringManager.api_getArticleClass;
         else if(dataType == EditParentActivity.DATA_TYPE_VIDEO)
             url = StringManager.getVideoClass;
-        ReqEncyptInternet.in().doEncypt(url, "", new InternetCallback(this) {
+        ReqEncyptInternet.in().doEncypt(url, "", new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
                 Log.i("commentUpload","getClassifyData() falg:" + i + "  return data:" + o);
@@ -255,7 +255,7 @@ public class ArticleSelectActivity extends BaseActivity implements View.OnClickL
             intent.putExtra("finalVideoPath", videoPath);
             startActivity(intent);
         }else{
-            InternetCallback internetCallback = new InternetCallback(ArticleSelectActivity.this) {
+            InternetCallback internetCallback = new InternetCallback() {
                 @Override
                 public void loaded(int flag, String s, Object o) {
                     if(flag >= ReqInternet.REQ_OK_STRING){
