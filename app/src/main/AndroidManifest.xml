@@ -749,6 +749,7 @@
         <activity
             android:name="amodule.lesson.activity.LessonListPage"
             android:configChanges="orientation|keyboardHidden"
+            android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
             android:theme="@style/AppMainTheme"
             android:windowSoftInputMode="adjustResize"/>

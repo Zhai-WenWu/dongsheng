@@ -51,9 +51,6 @@ public class LessonListDataController {
                     case "5":
                         mRecyclerAdapter = new HorizontalAdapter2(context, mDatas);
                         break;
-                    case "3":
-                        mRecyclerAdapter = new HorizontalAdapter3(context, mDatas);
-                        break;
                     default:
                         mRecyclerAdapter = new HorizontalAdapter1(context, mDatas);
                         break;
@@ -97,8 +94,10 @@ public class LessonListDataController {
 
 
                 ArrayList<Map<String, String>> list = new ArrayList<>();
-                for (Map<String, String> map:
-                ls){
+                for (int i = 0; i < ls.size(); i ++){
+                    if (i != 5)
+                        continue;
+                    Map<String, String> map = ls.get(i);
                     if (TextUtils.equals(map.get("widgetType"), "3")) {
                         String wd = map.get("widgetData");
                         Map<String, String> map1 = StringManager.getFirstMap(wd);
