@@ -19,6 +19,8 @@ import java.util.Map;
 import acore.logic.AppCommon;
 import acore.override.helper.XHActivityManager;
 import acore.tools.StringManager;
+import amodule._common.delegate.IStatisticCallback;
+import amodule._common.delegate.StatisticCallback;
 import amodule._common.helper.WidgetDataHelper;
 import amodule._common.utility.WidgetUtility;
 import amodule.vip.VipDataController;
@@ -32,11 +34,13 @@ import static amodule.vip.VipDataController.KEY_BTN_SHOW;
  * Created by mrtrying on 2017/12/19 15:43:13.
  * e_mail : ztanzeyu@gmail.com
  */
-public class VIPButton extends CardView {
+public class VIPButton extends CardView implements IStatisticCallback {
 
     TextView mTextView;
 
     VipDataController mVipDataController;
+
+    private StatisticCallback mStatisticCallback;
 
     public VIPButton(Context context) {
         super(context);
@@ -53,47 +57,47 @@ public class VIPButton extends CardView {
         initialze();
     }
 
-    private void initialze(){
+    private void initialze() {
         mTextView = new TextView(getContext());
         mTextView.setGravity(Gravity.CENTER);
         mTextView.setTextColor(Color.WHITE);
         mTextView.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-        mTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP,16.0f);
-        addView(mTextView, ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT);
+        mTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16.0f);
+        addView(mTextView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         setCardElevation(0);
 
         mVipDataController = new VipDataController();
         loadData();
     }
 
-    private void loadData(){
-        if(null == mVipDataController) return;
+    private void loadData() {
+        if (null == mVipDataController) return;
         mVipDataController.loadVIPButtonData(obj -> setData(StringManager.getFirstMap(obj)));
     }
 
-    public void setText(String text){
-        if(TextUtils.isEmpty(text)) return;
+    public void setText(String text) {
+        if (TextUtils.isEmpty(text)) return;
         mTextView.setText(text);
     }
 
-    public void setTextColor(String colorValue){
-        if(!TextUtils.isEmpty(colorValue)
+    public void setTextColor(String colorValue) {
+        if (!TextUtils.isEmpty(colorValue)
                 && colorValue.startsWith("#")
                 && (colorValue.length() == 7 || colorValue.length() == 9)
-                ){
+                ) {
             mTextView.setTextColor(Color.parseColor(colorValue));
         }
     }
 
-    public void setTextColor(int color){
+    public void setTextColor(int color) {
         mTextView.setTextColor(color);
     }
 
-    public void setBackgroundColor(String colorValue){
-        if(!TextUtils.isEmpty(colorValue)
+    public void setBackgroundColor(String colorValue) {
+        if (!TextUtils.isEmpty(colorValue)
                 && colorValue.startsWith("#")
                 && (colorValue.length() == 7 || colorValue.length() == 9)
-                ){
+                ) {
             setBackgroundColor(Color.parseColor(colorValue));
         }
     }
@@ -103,21 +107,32 @@ public class VIPButton extends CardView {
         super.setCardBackgroundColor(color);
     }
 
-    public void setData(Map<String,String> data){
-        if("2".equals(data.get(KEY_BTN_SHOW))){
-            Map<String,String> buttonData = StringManager.getFirstMap(data.get(KEY_BTN_DATA));
-            WidgetUtility.setTextToView(mTextView,buttonData.get("title"));
+    public void setData(Map<String, String> data) {
+        if ("2".equals(data.get(KEY_BTN_SHOW))) {
+            Map<String, String> buttonData = StringManager.getFirstMap(data.get(KEY_BTN_DATA));
+            WidgetUtility.setTextToView(mTextView, buttonData.get("title"));
             setTextColor(buttonData.get("color"));
             setBackgroundColor(buttonData.get("bgColor"));
-            setOnClickListener(v -> AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(),buttonData.get("url"),false));
+            setOnClickListener(v -> {
+                AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), buttonData.get("url"), false);
+                if (mStatisticCallback != null) {
+                    mStatisticCallback.onStatistic("", "", "", -1);
+                }
+            });
             setVisibility(VISIBLE);
-        }else{
+        } else {
             setVisibility(GONE);
         }
     }
 
-    public void refresh(){
+    public void refresh() {
         loadData();
+    }
+
+    @Override
+    public void setStatisticCallback(StatisticCallback callback) {
+        if (null == callback) return;
+        mStatisticCallback = callback;
     }
 
     // 文本显示逻辑、自身显示罗、行为逻辑
