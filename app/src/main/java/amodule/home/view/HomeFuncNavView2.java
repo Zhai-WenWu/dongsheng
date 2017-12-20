@@ -75,10 +75,9 @@ public class HomeFuncNavView2 extends LinearLayout {
         }
         WidgetUtility.setResToImage(getImageView(R.id.icon_left_1),resId);
         mLeftView.setOnClickListener(v->getContext().startActivity(new Intent(getContext(), HomeSecondListActivity.class).putExtra(HomeSecondListActivity.TAG,"day")));
-        //TODO 文案待确认
-        WidgetUtility.setTextToView(getTextView(R.id.text_right_1),"关注/社区");
-        WidgetUtility.setTextToView(getTextView(R.id.text_right_2),"与哈友一起交流");
-        WidgetUtility.setResToImage(getImageView(R.id.icon_right_1),R.drawable.home_nav_circle);
+        WidgetUtility.setTextToView(getTextView(R.id.text_right_1),"本周佳作");
+        WidgetUtility.setTextToView(getTextView(R.id.text_right_2),"一周食谱精选");
+        WidgetUtility.setResToImage(getImageView(R.id.icon_right_1),R.drawable.home_nav_weekly);
         mRightView.setOnClickListener(v->getContext().startActivity(new Intent(getContext(), HomeWeekListActivity.class)));
     }
 

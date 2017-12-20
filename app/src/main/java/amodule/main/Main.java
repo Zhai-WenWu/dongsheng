@@ -90,8 +90,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
 
     private String[] tabTitle = {"学做菜", "社区", "消息", "我的"};
     private Class<?>[] classes = new Class<?>[]{MainHomePage.class, MainCircle.class, MyMessage.class, MainMyself.class};
-    //TODO icon待确认
-    private int[] tabImgs = new int[]{R.drawable.tab_index, R.drawable.tab_mall, R.drawable.tab_four, R.drawable.tab_myself};
+    private int[] tabImgs = new int[]{R.drawable.tab_index, R.drawable.tab_circle, R.drawable.tab_four, R.drawable.tab_myself};
     public static final int TAB_HOME = 0;
     public static final int TAB_CIRCLE = 1;
     public static final int TAB_MESSAGE = 2;
@@ -451,9 +450,6 @@ public class Main extends Activity implements OnClickListener, IObserver {
 
             ImageView imgView = (ImageView) tabViews[i].findViewById(iv_itemIsFine);
             imgView.setImageResource(tabImgs[i]);
-            if(1 == i){
-                imgView.getLayoutParams().width = Tools.getDimen(this,R.dimen.dp_30);
-            }
 
             if (url != null && i == 0) {
                 Intent homePage = new Intent(this, classes[i]);
