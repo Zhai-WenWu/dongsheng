@@ -21,7 +21,7 @@
         app:ptr_resistance="1.7">
 
         <include
-            layout="@layout/a_dish_grid_content"/>
+            layout="@layout/grid_content_2colums"/>
 
     </cn.srain.cube.views.ptr.PtrClassicFrameLayout>
 
