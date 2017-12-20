@@ -22,6 +22,8 @@ import amodule._common.delegate.IBindMap;
 import amodule._common.delegate.IHandlerClickEvent;
 import amodule._common.delegate.ISaveStatistic;
 import amodule._common.delegate.IStatictusData;
+import amodule._common.delegate.IStatisticCallback;
+import amodule._common.delegate.StatisticCallback;
 import amodule._common.helper.WidgetDataHelper;
 import amodule._common.utility.WidgetUtility;
 import amodule.home.view.HomeFuncNavView2;
@@ -34,8 +36,9 @@ import amodule.home.view.HomeFuncNavView2;
  * E_mail : ztanzeyu@gmail.com
  */
 
-public class FuncNavView2 extends HomeFuncNavView2 implements IBindMap, IStatictusData,ISaveStatistic,IHandlerClickEvent {
+public class FuncNavView2 extends HomeFuncNavView2 implements IBindMap, IStatictusData,ISaveStatistic,IHandlerClickEvent,IStatisticCallback {
     private int mOriginalPaddingTop = 0;
+    private StatisticCallback mStatisticCallback;
     public FuncNavView2(Context context) {
         super(context);
     }
@@ -84,9 +87,7 @@ public class FuncNavView2 extends HomeFuncNavView2 implements IBindMap, IStatict
             String leftUrl = leftMap.get("url");
             mLeftView.setOnClickListener(v -> {
                 AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), leftUrl, true);
-                if (!TextUtils.isEmpty(id) && !TextUtils.isEmpty(twoLevel)) {
-                    XHClick.mapStat(getContext(), id, twoLevel, leftMap.get("text1"));
-                }
+                statistic(0,leftMap);
             });
         }
 
@@ -102,14 +103,22 @@ public class FuncNavView2 extends HomeFuncNavView2 implements IBindMap, IStatict
                 String rightUrl = rightMap.get("url");
                 mRightView.setOnClickListener(v -> {
                     AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), rightUrl, true);
-                    if (!TextUtils.isEmpty(id) && !TextUtils.isEmpty(twoLevel)) {
-                        XHClick.mapStat(getContext(), id, twoLevel, rightMap.get("text1"));
-                    }
+                    statistic(1,rightMap);
                 });
             }
         }
 
         setVisibility(VISIBLE);
+    }
+
+    private void statistic(int index,Map<String, String> rightMap) {
+        if(mStatisticCallback != null){
+            mStatisticCallback.onStatistic(id,twoLevel,threeLevel,index);
+        }else{
+            if (!TextUtils.isEmpty(id) && !TextUtils.isEmpty(twoLevel)) {
+                XHClick.mapStat(getContext(), id, twoLevel, rightMap.get("text1"));
+            }
+        }
     }
 
     String id, twoLevel, threeLevel;
@@ -129,5 +138,10 @@ public class FuncNavView2 extends HomeFuncNavView2 implements IBindMap, IStatict
     @Override
     public boolean handlerClickEvent(String url, String moduleType, String dataType, int position) {
         return false;
+    }
+
+    @Override
+    public void setStatisticCallback(StatisticCallback statisticCallback) {
+        mStatisticCallback = statisticCallback;
     }
 }

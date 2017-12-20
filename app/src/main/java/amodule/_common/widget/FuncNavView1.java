@@ -25,6 +25,8 @@ import amodule._common.delegate.IBindMap;
 import amodule._common.delegate.IHandlerClickEvent;
 import amodule._common.delegate.ISaveStatistic;
 import amodule._common.delegate.IStatictusData;
+import amodule._common.delegate.IStatisticCallback;
+import amodule._common.delegate.StatisticCallback;
 import amodule._common.helper.WidgetDataHelper;
 import amodule._common.utility.WidgetUtility;
 import amodule.home.view.HomeFuncNavView1;
@@ -37,9 +39,10 @@ import amodule.home.view.HomeFuncNavView1;
  * E_mail : ztanzeyu@gmail.com
  */
 
-public class FuncNavView1 extends HomeFuncNavView1 implements IBindMap,IStatictusData,ISaveStatistic,IHandlerClickEvent {
+public class FuncNavView1 extends HomeFuncNavView1 implements IBindMap,IStatictusData,ISaveStatistic,IHandlerClickEvent,IStatisticCallback {
 
     private int mOriginalPaddingTop = 0;
+    private StatisticCallback mStatisticCallback;
     public FuncNavView1(Context context) {
         super(context);
     }
@@ -87,12 +90,12 @@ public class FuncNavView1 extends HomeFuncNavView1 implements IBindMap,IStatictu
         }
         final int length = Math.min(navIds.size(),data.size());
         for(int index = 0 ; index < length ; index ++){
-            setMapToView(findViewById(navIds.get(index)),data.get(index));
+            setMapToView(index,findViewById(navIds.get(index)),data.get(index));
         }
         setVisibility(VISIBLE);
     }
 
-    private boolean setMapToView(View itemView,Map<String,String> data){
+    private boolean setMapToView(final int index,View itemView,Map<String,String> data){
         if(null == itemView || null == data || data.isEmpty()) return false;
 
         TextView textView = (TextView) itemView.findViewById(R.id.text_1);
@@ -104,12 +107,20 @@ public class FuncNavView1 extends HomeFuncNavView1 implements IBindMap,IStatictu
                 Glide.with(getContext()).load(data.get("img")).into(imageView);
             itemView.setOnClickListener(v->{
                 AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(),data.get("url"),true);
-                if(!TextUtils.isEmpty(id) && !TextUtils.isEmpty(twoLevel)){
-                    XHClick.mapStat(getContext(),id,twoLevel,data.get("text1"));
-                }
+                statistic(index,data);
             });
         }
         return true;
+    }
+
+    private void statistic(int index,Map<String, String> data) {
+        if(mStatisticCallback != null){
+            mStatisticCallback.onStatistic(id,twoLevel,threeLevel,index);
+        }else{
+            if(!TextUtils.isEmpty(id) && !TextUtils.isEmpty(twoLevel)){
+                XHClick.mapStat(getContext(),id,twoLevel,data.get("text1"));
+            }
+        }
     }
 
     String id, twoLevel, threeLevel;
@@ -129,5 +140,10 @@ public class FuncNavView1 extends HomeFuncNavView1 implements IBindMap,IStatictu
     @Override
     public boolean handlerClickEvent(String url, String moduleType, String dataType, int position) {
         return false;
+    }
+
+    @Override
+    public void setStatisticCallback(StatisticCallback statisticCallback) {
+        mStatisticCallback = statisticCallback;
     }
 }

@@ -1,6 +1,7 @@
 package amodule._common.plugin;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -18,6 +19,8 @@ import amodule._common.delegate.IBindMap;
 import amodule._common.delegate.ISaveStatistic;
 import amodule._common.delegate.ISetAdID;
 import amodule._common.delegate.IStatictusData;
+import amodule._common.delegate.IStatisticCallback;
+import amodule._common.delegate.StatisticCallback;
 import amodule._common.widgetlib.AllWeightLibrary;
 
 import static amodule._common.helper.WidgetDataHelper.KEY_BOTTOM;
@@ -34,7 +37,7 @@ import static amodule._common.widgetlib.IWidgetLibrary.NO_FIND_ID;
  * E_mail : ztanzeyu@gmail.com
  */
 
-public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, String>> implements IStatictusData, ISaveStatistic,ISetAdID {
+public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, String>> implements IStatictusData, ISaveStatistic,ISetAdID,IStatisticCallback {
 
     public static final int LLM = LinearLayout.LayoutParams.MATCH_PARENT;
     public static final int LLW = LinearLayout.LayoutParams.WRAP_CONTENT;
@@ -44,6 +47,8 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
     LinearLayout mExtraTop, mExtraBottom;
 
     int currentID = -1;
+
+    private StatisticCallback mStatisticCallback;
 
     public WidgetVerticalLayout(Context context) {
         super(context);
@@ -82,6 +87,9 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
                 currentID = viewId;
                 if(view instanceof  ISetAdID){
                     ((ISetAdID)view).setAdID(adIDs);
+                }
+                if(view instanceof IStatisticCallback){
+                    ((IStatisticCallback)view).setStatisticCallback(mStatisticCallback);
                 }
                 if (view instanceof IStatictusData) {
                     ((IStatictusData) view).setStatictusData(id, twoLevel, threeLevel);
@@ -205,5 +213,10 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
     @Override
     public void setAdID(List<String> adIDs) {
         this.adIDs = adIDs;
+    }
+
+    @Override
+    public void setStatisticCallback(@NonNull StatisticCallback callback) {
+        mStatisticCallback = callback;
     }
 }

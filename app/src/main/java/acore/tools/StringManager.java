@@ -373,6 +373,8 @@ public class StringManager extends UtilString {
     public final static String API_HOMEPAGE_6_0 = apiUrl + "main8/recommend/recommend";//首页
     public final static String API_GETDISHTYPE = apiUrl + "main8/dish/getDishType";//首页
 
+    public final static String API_SCHOOLHOME = apiUrl + "main8/school/home";//会员首页
+
     //替换url
     public final static String replaceUrl(String url) {
         if (defaultDomain != domain || defaultProtocol != protocol) {

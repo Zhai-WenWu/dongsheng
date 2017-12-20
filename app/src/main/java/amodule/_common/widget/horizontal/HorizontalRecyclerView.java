@@ -25,6 +25,8 @@ import amodule._common.delegate.IBindMap;
 import amodule._common.delegate.IHandlerClickEvent;
 import amodule._common.delegate.ISaveStatistic;
 import amodule._common.delegate.IStatictusData;
+import amodule._common.delegate.IStatisticCallback;
+import amodule._common.delegate.StatisticCallback;
 import amodule._common.helper.WidgetDataHelper;
 import amodule._common.widget.baseview.BaseSubTitleView;
 import amodule.home.adapter.HorizontalAdapter1;
@@ -45,11 +47,12 @@ import static amodule._common.helper.WidgetDataHelper.KEY_STYLE;
  */
 
 public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,
-        IStatictusData,ISaveStatistic,IHandlerClickEvent {
+        IStatictusData,ISaveStatistic,IHandlerClickEvent,IStatisticCallback {
 
     private RvListView mRecyclerView;
     private BaseSubTitleView mSubTitleView;
     private RvBaseAdapter mRecyclerAdapter;
+    private StatisticCallback mStatisticCallback;
     public HorizontalRecyclerView(Context context) {
         this(context,null);
     }
@@ -140,9 +143,7 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,
                         return;
                     String url = data.get(WidgetDataHelper.KEY_URL);
                     AppCommon.openUrl((Activity)HorizontalRecyclerView.this.getContext(), url, true);
-                    if(!TextUtils.isEmpty(id) && !TextUtils.isEmpty(twoLevel)){
-                        XHClick.mapStat(getContext(),id,twoLevel,threeLevel+position);
-                    }
+                    statistic(position);
                 }
             });
             mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
@@ -178,6 +179,19 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,
         setVisibility(VISIBLE);
     }
 
+    private void statistic(int position) {
+        if(mStatisticCallback != null){
+            mStatisticCallback.onStatistic(id,twoLevel,threeLevel,position);
+        }else{
+            if(!TextUtils.isEmpty(id) && !TextUtils.isEmpty(twoLevel)){
+                if(TextUtils.isEmpty(threeLevel))
+                    XHClick.mapStat(getContext(),id,twoLevel + position,"");
+                else
+                    XHClick.mapStat(getContext(),id,twoLevel,threeLevel+position);
+            }
+        }
+    }
+
     protected boolean isScrollData = false;//是否滚动数据
     protected int scrollDataIndex = -1;//滚动数据的位置
 
@@ -199,11 +213,15 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,
 
     @Override
     public void saveStatisticData() {
-        XHClick.saveStatictisFile("home", MainHome.recommedType_statictus, "", "", String.valueOf(scrollDataIndex), "list", "", "", "", "", "");
     }
 
     @Override
     public boolean handlerClickEvent(String url, String moduleType, String dataType, int position) {
         return false;
+    }
+
+    @Override
+    public void setStatisticCallback(StatisticCallback statisticCallback) {
+        mStatisticCallback = statisticCallback;
     }
 }

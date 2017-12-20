@@ -48,17 +48,4 @@
 
     </amodule._common.plugin.WidgetVerticalLayout>
 
-    <amodule._common.plugin.WidgetVerticalLayout
-        android:id="@+id/horizontal3_widget"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone">
-
-        <include
-            layout="@layout/widget_horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-    </amodule._common.plugin.WidgetVerticalLayout>
-
 </LinearLayout>

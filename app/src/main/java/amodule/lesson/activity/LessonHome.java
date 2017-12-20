@@ -1,6 +1,7 @@
 package amodule.lesson.activity;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +14,8 @@ import java.util.Map;
 import acore.logic.XHClick;
 import acore.logic.load.LoadManager;
 import acore.override.activity.base.BaseAppCompatActivity;
+import acore.tools.IObserver;
+import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
 import amodule.lesson.adapter.LessonHomeAdapter;
@@ -24,7 +27,9 @@ import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 
-public class LessonHome extends BaseAppCompatActivity {
+import static acore.tools.ObserverManager.NOTIFY_VIPSTATE_CHANGED;
+
+public class LessonHome extends BaseAppCompatActivity implements IObserver {
 
     LessonHomeViewController mViewController;
     LessonHomeDataController mDataController;
@@ -43,6 +48,8 @@ public class LessonHome extends BaseAppCompatActivity {
         initialize();
         //加载数据
         loadData();
+
+        ObserverManager.getInstence().registerObserver(this,NOTIFY_VIPSTATE_CHANGED);
     }
 
     private void initialize() {
@@ -158,6 +165,7 @@ public class LessonHome extends BaseAppCompatActivity {
     }
 
     private void inerRefresh(){
+        Log.i("tzy", "inerRefresh: ");
         if(isRefreshingHeader || isRefreshingFeed){
             return;
         }
@@ -167,5 +175,20 @@ public class LessonHome extends BaseAppCompatActivity {
         EntryptData(true);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ObserverManager.getInstence().unRegisterObserver(this);
+    }
 
+    @Override
+    public void notify(String name, Object sender, Object data) {
+        if (!TextUtils.isEmpty(name)) {
+            switch (name) {
+                case ObserverManager.NOTIFY_VIPSTATE_CHANGED:
+                    inerRefresh();
+                    break;
+            }
+        }
+    }
 }

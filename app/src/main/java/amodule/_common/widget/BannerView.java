@@ -44,6 +44,8 @@ import amodule._common.delegate.IHandlerClickEvent;
 import amodule._common.delegate.ISaveStatistic;
 import amodule._common.delegate.ISetAdID;
 import amodule._common.delegate.IStatictusData;
+import amodule._common.delegate.IStatisticCallback;
+import amodule._common.delegate.StatisticCallback;
 import amodule._common.helper.WidgetDataHelper;
 import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
@@ -57,7 +59,7 @@ import third.ad.scrollerAd.XHAllAdControl;
  * E_mail : ztanzeyu@gmail.com
  */
 
-public class BannerView extends Banner implements IBindMap, IStatictusData, ISaveStatistic, IHandlerClickEvent,ISetAdID {
+public class BannerView extends Banner implements IBindMap, IStatictusData, ISaveStatistic, IHandlerClickEvent,ISetAdID ,IStatisticCallback {
     public static final String KEY_ALREADY_SHOW = "alreadyshow";
     private LayoutInflater mInflater;
     private XHAllAdControl mAdControl;
@@ -70,6 +72,7 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
     int imageHeight = 0, imageWidth = 0;
     boolean bgLoadOver = false;
     private String bgKey = "";
+    private StatisticCallback mStatisticCallback;
 
     public BannerView(Context context) {
         this(context, null);
@@ -169,13 +172,24 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
             }
             String url = arrayList.get(position).get("url");
             AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), url, true);
-            if (!TextUtils.isEmpty(id) && !TextUtils.isEmpty(twoLevel)) {
-                XHClick.mapStat(getContext(), id, twoLevel, threeLevel + position);
-            }
+            statistic(position);
         });
         setPageChangeDuration(5 * 1000);
         setRandomItem(arrayList);
         setVisibility(VISIBLE);
+    }
+
+    private void statistic(int position) {
+        if(mStatisticCallback != null){
+            mStatisticCallback.onStatistic(id,twoLevel,threeLevel,position);
+        }else{
+            if (!TextUtils.isEmpty(id) && !TextUtils.isEmpty(twoLevel)) {
+                if(TextUtils.isEmpty(threeLevel))
+                    XHClick.mapStat(getContext(),id,twoLevel + position,"");
+                else
+                    XHClick.mapStat(getContext(),id,twoLevel,threeLevel+position);
+            }
+        }
     }
 
     //创建数据适配器
@@ -448,5 +462,10 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
         if(adIDs != null){
             mAdIDArray.addAll(adIDs);
         }
+    }
+
+    @Override
+    public void setStatisticCallback(StatisticCallback statisticCallback) {
+        mStatisticCallback = statisticCallback;
     }
 }

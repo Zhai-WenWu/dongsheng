@@ -26,6 +26,7 @@ import amodule._common.delegate.IBindMap;
 import amodule._common.delegate.IHandlerClickEvent;
 import amodule._common.delegate.ISaveStatistic;
 import amodule._common.delegate.IStatictusData;
+import amodule._common.delegate.StatisticCallback;
 import amodule._common.helper.WidgetDataHelper;
 import amodule._common.widget.baseview.BaseSubTitleView;
 import amodule.home.adapter.HorizontalAdapter1;
@@ -113,8 +114,11 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,
                     return;
                 String url = data.get(WidgetDataHelper.KEY_URL);
                 AppCommon.openUrl((Activity)HorizontalRecyclerView.this.getContext(), url, true);
-                if(!TextUtils.isEmpty(id) && !TextUtils.isEmpty(twoLevel)){
-                    XHClick.mapStat(getContext(),id,twoLevel,threeLevel+position);
+                if(null != mStatisticCallback){
+                    if(mSubTitleView.getData() != null){
+                        Map<String,String> map = StringManager.getFirstMap(mSubTitleView.getData().get("title"));
+                        mStatisticCallback.onStatistic(id,map.get("text1")+"-"+data.get("text1"),"",position);
+                    }
                 }
             }
         });
@@ -160,7 +164,6 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,
             setVisibility(GONE);
             return;
         }
-        boolean isResetData = false;
         Map<String,String> parameterMap = StringManager.getFirstMap(map.get(KEY_PARAMETER));
         if (mSubTitleView != null) {
             mSubTitleView.setData(parameterMap);
@@ -208,5 +211,11 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,
     @Override
     public boolean handlerClickEvent(String url, String moduleType, String dataType, int position) {
         return false;
+    }
+
+    private StatisticCallback mStatisticCallback;
+
+    public void setStatisticCallback(StatisticCallback statisticCallback) {
+        mStatisticCallback = statisticCallback;
     }
 }

@@ -7,6 +7,8 @@ import com.xiangha.R;
 import java.util.List;
 import java.util.Map;
 
+import acore.logic.LoginManager;
+import amodule._common.delegate.StatisticCallback;
 import amodule._common.plugin.WidgetVerticalLayout;
 
 /**
@@ -19,7 +21,7 @@ public class LessonHomeHeaderControler {
 
     private View mHeader;
 
-    private WidgetVerticalLayout[] mLayouts = new WidgetVerticalLayout[4];
+    private WidgetVerticalLayout[] mLayouts = new WidgetVerticalLayout[3];
 
     LessonHomeHeaderControler(View header){
         this.mHeader = header;
@@ -29,17 +31,17 @@ public class LessonHomeHeaderControler {
         //横向滑动
         mLayouts[1] = (WidgetVerticalLayout) header.findViewById(R.id.horizontal1_widget);
         mLayouts[2] = (WidgetVerticalLayout) header.findViewById(R.id.horizontal2_widget);
-        mLayouts[3] = (WidgetVerticalLayout) header.findViewById(R.id.horizontal3_widget);
     }
 
     public void setData(List<Map<String, String>> array) {
         if (null == array || array.isEmpty()) return;
-//        String[] twoLevelArray = {"轮播banner", "功能入口", "功能入口", "精品厨艺", "限时抢购", "精选菜单"};
-//        String[] threeLevelArray = {"轮播banner位置", "", "", "精品厨艺位置", "限时抢购位置", "精选菜单位置"};
-//        setVisibility(false);
+        String[] ids = {"vip_homepage_banner","vip_recommend","vip_chief_list"};
+        String[] twoLevelArray = {"banner", "最新推荐-", "VIP名厨-"};
         final int length = Math.min(array.size(), mLayouts.length);
         for (int index = 0; index < length; index++) {
             Map<String, String> map = array.get(index);
+            final String ID = LoginManager.isVIP() || LoginManager.isTempVip() ? ids[index] : "non" + ids[index];
+            mLayouts[index].setStatictusData(ID,twoLevelArray[index],"");
             mLayouts[index].setData(map);
             mLayouts[index].setVisibility(View.VISIBLE);
         }
