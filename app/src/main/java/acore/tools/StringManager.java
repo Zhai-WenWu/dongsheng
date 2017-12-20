@@ -373,7 +373,10 @@ public class StringManager extends UtilString {
     public final static String API_HOMEPAGE_6_0 = apiUrl + "main8/recommend/recommend";//首页
     public final static String API_GETDISHTYPE = apiUrl + "main8/dish/getDishType";//首页
 
-    public final static String API_SCHOOLHOME = apiUrl + "main8/school/home";//会员首页
+    public final static String API_SCHOOL_HOME = apiUrl + "main8/school/home";//会员首页
+    public final static String API_SCHOOL_COURSELIST = apiUrl + "main8/school/courseList";//会员首页列表
+    public final static String API_SCHOOL_CHAPTERLIST = apiUrl + "main8/school/chapterList";//会员首页列表
+    public final static String API_SCHOOL_VIPBUTTON = apiUrl + "main8/school/getVipButtonStatus";//获取会员的button状态
 
     //替换url
     public final static String replaceUrl(String url) {
