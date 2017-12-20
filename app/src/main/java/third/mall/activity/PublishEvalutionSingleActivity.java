@@ -422,21 +422,21 @@ public class PublishEvalutionSingleActivity extends MallBaseActivity implements 
     private void showSureBackDialog() {
         final DialogManager dialogManager = new DialogManager(this);
         dialogManager.createDialog(new ViewManager(dialogManager)
-                .setView(new TitleMessageView(this).setText("是否取消发布？"))
+                .setView(new TitleMessageView(this).setText("确认取消发布吗？"))
                 .setView(new HButtonView(this)
-                        .setNegativeText("否", new View.OnClickListener() {
+                        .setNegativeText("取消发布", new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 dialogManager.cancel();
-                                XHClick.mapStat(PublishEvalutionSingleActivity.this, STATISTICS_RETURN_ID,"是否取消发布","否");
+                                XHClick.mapStat(PublishEvalutionSingleActivity.this, STATISTICS_RETURN_ID,"确认取消发布吗？","取消发布");
                                 isSureBack = false;
                             }
                         })
-                        .setPositiveText("是", new View.OnClickListener() {
+                        .setPositiveText("继续发布", new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 dialogManager.cancel();
-                                XHClick.mapStat(PublishEvalutionSingleActivity.this, STATISTICS_RETURN_ID,"是否取消发布","是");
+                                XHClick.mapStat(PublishEvalutionSingleActivity.this, STATISTICS_RETURN_ID,"确认取消发布吗？","继续发布");
                                 isSureBack = true;
                                 PublishEvalutionSingleActivity.this.onBackPressed();
                             }

@@ -210,8 +210,8 @@
                     android:ellipsize="end"
                     android:gravity="top"
                     android:hint="只支持中英文、阿拉伯数字"
-                    android:maxLength="32"
-                    android:maxLines="2"
+                    android:maxLength="100"
+                    android:maxLines="4"
                     android:minLines="2"
                     android:textSize="@dimen/sp_13" />
 
