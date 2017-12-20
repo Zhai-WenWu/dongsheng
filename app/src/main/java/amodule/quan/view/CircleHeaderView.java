@@ -65,6 +65,7 @@ public class CircleHeaderView extends LinearLayout {
         super(context);
         this.setOrientation(VERTICAL);
         this.context = context;
+        setPadding(0,1,0,0);
     }
 
     public void setStiaticID(String stiaticID){

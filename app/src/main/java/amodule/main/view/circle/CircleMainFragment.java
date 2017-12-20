@@ -275,11 +275,13 @@ public class CircleMainFragment extends Fragment {
         mAdapter.setmRecommendCutomerCallBack(() -> getSpareUser(false));
         if (!LoadOver) {
             //设置加载，并传入PlaceHoderHeaderLayout设置滑动加载
-            mLoadManager.setLoading(refreshLayout, mListView, mAdapter, true, v -> {
-                getData(true);
-                //刷新广告
-                quanAdvertControl.getAdData(mActivity);
-            }, v -> getData(!LoadOver));
+            mLoadManager.setLoading(refreshLayout, mListView, mAdapter, true,
+                    v -> {
+                        getData(true);
+                        //刷新广告
+                        quanAdvertControl.getAdData(mActivity);
+                    },
+                    v -> getData(!LoadOver));
             mListView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 final int topRedundant = Tools.getDimen(getContext(), R.dimen.dp_45) + Tools.getStatusBarHeight(getContext());
                 final int bottomRedundant = Tools.getDimen(getContext(), R.dimen.dp_50);
