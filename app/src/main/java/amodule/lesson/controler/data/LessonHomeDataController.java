@@ -37,8 +37,7 @@ public class LessonHomeDataController {
     }
 
     public void laodRemoteHeaderData(@Nullable InternetCallback callback) {
-        //TODO ceshi
-        String url = StringManager.API_HOMEPAGE_6_0;
+        String url = StringManager.API_SCHOOL_HOME;
         LinkedHashMap<String, String> params = new LinkedHashMap<>();
         ReqEncyptInternet.in().doEncypt(url, params, callback);
     }
@@ -46,11 +45,11 @@ public class LessonHomeDataController {
     public void laodRemoeteExtraData(boolean refresh,@Nullable InternetCallback callback) {
         if(refresh)
             mCurrentPage = 0;
-        //TODO ceshi
         mOnLoadDataCallback.onPrepare();
         mCurrentPage++;
-        String url = StringManager.API_HOMEPAGE_6_0;
+        String url = StringManager.API_SCHOOL_COURSELIST;
         LinkedHashMap<String, String> params = new LinkedHashMap<>();
+        params.put("page",String.valueOf(mCurrentPage));
         ReqEncyptInternet.in().doEncypt(url, params, new InternetCallback(mActivity) {
             @Override
             public void loaded(int i, String s, Object o) {
@@ -58,10 +57,6 @@ public class LessonHomeDataController {
                 if (i >= ReqEncyptInternet.REQ_OK_STRING) {
                     mOnLoadDataCallback.onSuccess();
                     List<Map<String, String>> tempData = StringManager.getListMapByJson(o);
-                    //TODO
-                    tempData.remove(0);
-                    tempData.remove(0);
-                    tempData.remove(0);
                     if(refresh)
                         mData.clear();
                     Stream.of(tempData).forEach(map -> {

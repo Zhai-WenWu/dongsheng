@@ -89,6 +89,7 @@ public class RvListView extends RecyclerView {
 
     protected void initialize() {
         mHeaderContainer = new LinearLayout(getContext());
+        mHeaderContainer.setPadding(0,1,0,0);
         mFooterContainer = new LinearLayout(getContext());
 //        Log.d("tzy", "Constructor execute.");
     }

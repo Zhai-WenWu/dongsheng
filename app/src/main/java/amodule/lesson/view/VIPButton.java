@@ -16,8 +16,15 @@ import android.widget.TextView;
 
 import java.util.Map;
 
+import acore.logic.AppCommon;
+import acore.override.helper.XHActivityManager;
 import acore.tools.StringManager;
+import amodule._common.helper.WidgetDataHelper;
+import amodule._common.utility.WidgetUtility;
 import amodule.vip.VipDataController;
+
+import static amodule.vip.VipDataController.KEY_BTN_DATA;
+import static amodule.vip.VipDataController.KEY_BTN_SHOW;
 
 /**
  * Description :
@@ -57,8 +64,6 @@ public class VIPButton extends CardView {
 
         mVipDataController = new VipDataController();
         loadData();
-        //TODO
-        mTextView.setText("开通会员");
     }
 
     private void loadData(){
@@ -84,13 +89,31 @@ public class VIPButton extends CardView {
         mTextView.setTextColor(color);
     }
 
+    public void setBackgroundColor(String colorValue){
+        if(!TextUtils.isEmpty(colorValue)
+                && colorValue.startsWith("#")
+                && (colorValue.length() == 7 || colorValue.length() == 9)
+                ){
+            setBackgroundColor(Color.parseColor(colorValue));
+        }
+    }
+
     @Override
     public void setBackgroundColor(int color) {
         super.setCardBackgroundColor(color);
     }
 
     public void setData(Map<String,String> data){
-
+        if("2".equals(data.get(KEY_BTN_SHOW))){
+            Map<String,String> buttonData = StringManager.getFirstMap(data.get(KEY_BTN_DATA));
+            WidgetUtility.setTextToView(mTextView,buttonData.get("title"));
+            setTextColor(buttonData.get("color"));
+            setBackgroundColor(buttonData.get("bgColor"));
+            setOnClickListener(v -> AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(),buttonData.get("url"),false));
+            setVisibility(VISIBLE);
+        }else{
+            setVisibility(GONE);
+        }
     }
 
     public void refresh(){

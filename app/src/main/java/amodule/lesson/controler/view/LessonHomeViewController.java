@@ -56,9 +56,6 @@ public class LessonHomeViewController implements View.OnClickListener{
         if (data == null || data.isEmpty()) {
             return;
         }
-        //TODO ceshi
-        data.remove(1);
-        data.remove(1);
         mHeaderControler.setData(data);
     }
 
