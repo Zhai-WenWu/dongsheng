@@ -54,10 +54,6 @@ import third.video.VideoPlayerController;
  */
 public class DetailDishViewManager {
     private RelativeLayout dishVidioLayout;
-    public static int showNumLookImage = 0;//点击展示次数
-    private boolean isHasVideoOnClick = false;
-    private boolean isShowTitleColor=false;
-    private View view_oneImage;
     private ListView listView;
     private int firstItemIndex = -1,startY;
     private boolean isHasVideo=false,isRecored=false;
@@ -197,7 +193,6 @@ public class DetailDishViewManager {
             if(mapTemp.containsKey("nickName")&&!TextUtils.isEmpty(mapTemp.get("nickName")))handlerTitleName(mapTemp.get("nickName"));
             initVipView(map.containsKey("type")?map.get("type"):"");
         }else if (dishHeaderViewNew != null&& !TextUtils.isEmpty(img))dishHeaderViewNew.setImg(img,0);
-
     }
     public void initVipView(String type){
         if(isLoadVip)return;isLoadVip=true;
@@ -269,7 +264,6 @@ public class DetailDishViewManager {
                 @Override
                 public void getVideoControl(VideoPlayerController mVideoPlayerController, RelativeLayout dishVidioLayouts, View view_oneImage) {
                     dishVidioLayout=dishVidioLayouts;
-                    DetailDishViewManager.this.view_oneImage= view_oneImage;
                 }
             });
             dishHeaderViewNew.setData(list, permissionMap);
@@ -447,8 +441,6 @@ public class DetailDishViewManager {
         if(dishHeaderViewNew==null)return false;
         return dishHeaderViewNew.onBackPressed();
     }
-    public void refresh() {
-    }
     /**
      * listview滑动监听
      */
@@ -572,7 +564,6 @@ public class DetailDishViewManager {
             public void run() {
                 handler.obtainMessage().sendToTarget();
             }
-
         }
     }
     public void handleVipState(boolean isVip) {
