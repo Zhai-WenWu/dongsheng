@@ -41,7 +41,7 @@ public class VIPButton extends TextView implements IStatisticCallback, View.OnCl
         setGravity(Gravity.CENTER);
         setTextColor(Color.WHITE);
         setBackgroundColor(getResources().getColor(android.R.color.transparent));
-        setTextSize(30);
+        setTextSize(15);
         setOnClickListener(this);
     }
 

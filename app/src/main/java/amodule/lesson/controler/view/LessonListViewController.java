@@ -136,6 +136,6 @@ public class LessonListViewController {
 
     public void setVIPButtonClickListener(View.OnClickListener listener) {
         if (listener != null && mVIPButton != null)
-            mVIPButton.setOnClickListener(listener);
+            mVIPButton.setBtnClickListener(listener);
     }
 }
