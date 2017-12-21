@@ -407,6 +407,7 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
         if (LoginManager.isLogin() && isNeedResume) {
             MallCommon.getShoppingNum(this, mall_news_num, mall_news_num_two);
         }
+        setShopcatNum();
         if (null != mVideoPlayerController && viewpager != null && viewpager.getCurrentItem() == mVideoPosition && videoCanResume()) {
             mVideoPlayerController.onResume();
         }
