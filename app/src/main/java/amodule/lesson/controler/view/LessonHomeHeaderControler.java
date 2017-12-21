@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import acore.logic.LoginManager;
+import acore.logic.XHClick;
 import amodule._common.delegate.StatisticCallback;
 import amodule._common.plugin.WidgetVerticalLayout;
 
@@ -23,7 +24,7 @@ public class LessonHomeHeaderControler {
 
     private WidgetVerticalLayout[] mLayouts = new WidgetVerticalLayout[3];
 
-    LessonHomeHeaderControler(View header){
+    LessonHomeHeaderControler(View header) {
         this.mHeader = header;
 
         //banner
@@ -35,13 +36,19 @@ public class LessonHomeHeaderControler {
 
     public void setData(List<Map<String, String>> array) {
         if (null == array || array.isEmpty()) return;
-        String[] ids = {"vip_homepage_banner","vip_recommend","vip_chief_list"};
+        String[] ids = {"vip_homepage_banner", "vip_recommend", "vip_chief_list"};
         String[] twoLevelArray = {"banner", "最新推荐-", "VIP名厨-"};
         final int length = Math.min(array.size(), mLayouts.length);
         for (int index = 0; index < length; index++) {
             Map<String, String> map = array.get(index);
             final String ID = LoginManager.isVIP() || LoginManager.isTempVip() ? ids[index] : "non" + ids[index];
-            mLayouts[index].setStatictusData(ID,twoLevelArray[index],"");
+            if (index == 1 || index == 2) {
+                final int i = index;
+                mLayouts[index].setTitleStaticCallback(
+                        (id, twoLevel, threeLevel, position) -> XHClick.mapStat(mLayouts[i].getContext(), ids[i], "查看更多", "")
+                );
+            }
+            mLayouts[index].setStatictusData(ID, twoLevelArray[index], "");
             mLayouts[index].setData(map);
             mLayouts[index].setVisibility(View.VISIBLE);
         }

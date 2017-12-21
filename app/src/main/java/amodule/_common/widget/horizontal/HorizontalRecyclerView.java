@@ -26,6 +26,7 @@ import amodule._common.delegate.IHandlerClickEvent;
 import amodule._common.delegate.ISaveStatistic;
 import amodule._common.delegate.IStatictusData;
 import amodule._common.delegate.IStatisticCallback;
+import amodule._common.delegate.ITitleStaticCallback;
 import amodule._common.delegate.StatisticCallback;
 import amodule._common.helper.WidgetDataHelper;
 import amodule._common.widget.baseview.BaseSubTitleView;
@@ -47,12 +48,12 @@ import static amodule._common.helper.WidgetDataHelper.KEY_STYLE;
  */
 
 public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,
-        IStatictusData,ISaveStatistic,IHandlerClickEvent,IStatisticCallback {
+        IStatictusData,ISaveStatistic,IHandlerClickEvent,IStatisticCallback,ITitleStaticCallback {
 
     private RvListView mRecyclerView;
     private BaseSubTitleView mSubTitleView;
     private RvBaseAdapter mRecyclerAdapter;
-    private StatisticCallback mStatisticCallback;
+    private StatisticCallback mStatisticCallback,mTitleStatisticCallback;
     public HorizontalRecyclerView(Context context) {
         this(context,null);
     }
@@ -128,6 +129,9 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,
                     break;
             }
             mSubTitleView = (BaseSubTitleView) findViewById(R.id.subtitle_view);
+            if(mSubTitleView instanceof ITitleStaticCallback){
+                ((ITitleStaticCallback)mSubTitleView).setTitleStaticCallback(mTitleStatisticCallback);
+            }
             mSubTitleView.setData(parameterMap);
 
             mRecyclerView = (RvListView) findViewById(R.id.recycler_view);
@@ -223,5 +227,10 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,
     @Override
     public void setStatisticCallback(StatisticCallback statisticCallback) {
         mStatisticCallback = statisticCallback;
+    }
+
+    @Override
+    public void setTitleStaticCallback(StatisticCallback callback) {
+        mTitleStatisticCallback = callback;
     }
 }

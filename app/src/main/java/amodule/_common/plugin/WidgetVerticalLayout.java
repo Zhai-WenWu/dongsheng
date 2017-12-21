@@ -20,6 +20,7 @@ import amodule._common.delegate.ISaveStatistic;
 import amodule._common.delegate.ISetAdID;
 import amodule._common.delegate.IStatictusData;
 import amodule._common.delegate.IStatisticCallback;
+import amodule._common.delegate.ITitleStaticCallback;
 import amodule._common.delegate.StatisticCallback;
 import amodule._common.widgetlib.AllWeightLibrary;
 
@@ -37,7 +38,8 @@ import static amodule._common.widgetlib.IWidgetLibrary.NO_FIND_ID;
  * E_mail : ztanzeyu@gmail.com
  */
 
-public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, String>> implements IStatictusData, ISaveStatistic,ISetAdID,IStatisticCallback {
+public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, String>>
+        implements IStatictusData, ISaveStatistic,ISetAdID,IStatisticCallback,ITitleStaticCallback {
 
     public static final int LLM = LinearLayout.LayoutParams.MATCH_PARENT;
     public static final int LLW = LinearLayout.LayoutParams.WRAP_CONTENT;
@@ -48,7 +50,7 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
 
     int currentID = -1;
 
-    private StatisticCallback mStatisticCallback;
+    private StatisticCallback mStatisticCallback,mTitleStatisticCallback;
 
     public WidgetVerticalLayout(Context context) {
         super(context);
@@ -90,6 +92,9 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
                 }
                 if(view instanceof IStatisticCallback && mStatisticCallback != null){
                     ((IStatisticCallback)view).setStatisticCallback(mStatisticCallback);
+                }
+                if(view instanceof ITitleStaticCallback && mTitleStatisticCallback != null){
+                    ((ITitleStaticCallback)view).setTitleStaticCallback((mTitleStatisticCallback));
                 }
                 if (view instanceof IStatictusData) {
                     ((IStatictusData) view).setStatictusData(id, twoLevel, threeLevel);
@@ -218,5 +223,10 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
     @Override
     public void setStatisticCallback(@NonNull StatisticCallback callback) {
         mStatisticCallback = callback;
+    }
+
+    @Override
+    public void setTitleStaticCallback(StatisticCallback callback) {
+        mTitleStatisticCallback = callback;
     }
 }
