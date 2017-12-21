@@ -24,7 +24,7 @@ import aplug.basic.ReqEncyptInternet;
  */
 public class LessonListDataController {
     private IDataListener<List<Map<String, String>>> mListener;
-    private int mCurrentPage = 0;
+    private int mCurrentPage;
     private int mEveryPageCount = 10;
     private List<Map<String, String>> mDatas;
     private RvBaseAdapter<Map<String, String>> mRecyclerAdapter;
@@ -81,12 +81,12 @@ public class LessonListDataController {
 
     public void loadData(boolean refresh, Context context) {
         if (refresh)
-            mCurrentPage = 0;
+            mCurrentPage = 1;
         else
             mCurrentPage++;
         if (mListener != null)
             mListener.onGetData(mDatas, refresh);
-        ReqEncyptInternet.in().doEncypt(StringManager.API_SCHOOL_CHAPTERLIST, "code=" + mCode + "&page=" + (mCurrentPage + 1), new InternetCallback(context) {
+        ReqEncyptInternet.in().doEncypt(StringManager.API_SCHOOL_CHAPTERLIST, "code=" + mCode + "&page=" + mCurrentPage, new InternetCallback(context) {
             @Override
             public void loaded(int flag, String s, Object o) {
 
@@ -96,7 +96,7 @@ public class LessonListDataController {
                 mLoadCount = 0;
                 if (flag >= ReqEncyptInternet.REQ_OK_STRING) {
                     mLoadCount = list.size();
-                    if (mCurrentPage > 0) {
+                    if (!refresh) {
                         mDatas.addAll(list);
                         mRecyclerAdapter.notifyDataSetChanged();
                     } else {
