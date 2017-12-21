@@ -54,8 +54,11 @@ public abstract class BaseSubTitleView extends RelativeLayout implements IBindMa
     @Override
     public void setData(Map<String, String> map) {
         mData = map;
-        if (mData != null)
+        if (mData != null && !mData.isEmpty()) {
+            setVisibility(View.VISIBLE);
             onDataReady(mData);
+        } else
+            setVisibility(View.GONE);
     }
 
     public Map<String, String> getData() {

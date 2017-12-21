@@ -82,6 +82,19 @@ public class CountDownSubTitleView extends BaseSubTitleView {
         Map<String, String> titleMap = StringManager.getFirstMap(map.get(WidgetDataHelper.KEY_TITLE));
         WidgetUtility.setTextToView(mTitle1,titleMap.get("text1"));
         WidgetUtility.setTextToView(mTitle6,titleMap.get("text2"));
+        this.setTitle1ClickListener(v -> {
+            String url1 = titleMap.get("url1");
+            if (TextUtils.isEmpty(url1))
+                return;
+            AppCommon.openUrl((Activity) CountDownSubTitleView.this.getContext(), url1, true);
+        });
+        this.setTitle6ClickListener(v -> {
+            Log.e("SLL", "title6");
+            String url2 = titleMap.get("url2");
+            if (TextUtils.isEmpty(url2))
+                return;
+            AppCommon.openUrl((Activity) CountDownSubTitleView.this.getContext(), url2, true);
+        });
         String millisInFuture = titleMap.get("endTime");
         if(TextUtils.isEmpty(millisInFuture)){
             mLinearLayout1.setVisibility(GONE);
@@ -95,18 +108,6 @@ public class CountDownSubTitleView extends BaseSubTitleView {
         mDataReady = true;
         startCountDownTime();
         mLinearLayout1.setVisibility(VISIBLE);
-        this.setTitle1ClickListener(v -> {
-            String url1 = titleMap.get("url1");
-            if (TextUtils.isEmpty(url1))
-                return;
-            AppCommon.openUrl((Activity) CountDownSubTitleView.this.getContext(), url1, true);
-        });
-        this.setTitle2ClickListener(v -> {
-            String url2 = titleMap.get("url2");
-            if (TextUtils.isEmpty(url2))
-                return;
-            AppCommon.openUrl((Activity) CountDownSubTitleView.this.getContext(), url2, true);
-        });
     }
 
     public void startCountDownTime() {
@@ -218,9 +219,9 @@ public class CountDownSubTitleView extends BaseSubTitleView {
         }
     }
 
-    public void setTitle2ClickListener(OnClickListener listener) {
+    public void setTitle6ClickListener(OnClickListener listener) {
         if (listener != null) {
-            mTitle2.setOnClickListener(listener);
+            mTitle6.setOnClickListener(listener);
         }
     }
 }

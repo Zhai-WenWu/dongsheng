@@ -169,6 +169,10 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,
             mSubTitleView.setData(parameterMap);
         }
         ArrayList<Map<String, String>> list = StringManager.getListMapByJson(dataMap.get(WidgetDataHelper.KEY_LIST));
+        if(list.isEmpty()) {
+            setVisibility(View.GONE);
+            return;
+        }
         if (mRecyclerAdapter != null) {
             mRecyclerAdapter.updateData(list);
             mRecyclerView.scrollToPosition(0);
