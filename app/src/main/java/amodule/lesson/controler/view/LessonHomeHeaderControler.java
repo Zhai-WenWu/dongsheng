@@ -36,19 +36,23 @@ public class LessonHomeHeaderControler {
 
     public void setData(List<Map<String, String>> array) {
         if (null == array || array.isEmpty()) return;
-        String[] ids = {"vip_homepage_banner", "vip_recommend", "vip_chief_list"};
-        String[] twoLevelArray = {"banner", "最新推荐-", "VIP名厨-"};
+        String[] ids = {"vip_homepage", "vip_homepage", "vip_homepage"};
+        String[] twoLevelArray = {"会员首页banner", "VIP最新推荐", "VIP特邀名厨"};
+        String[] threeLevelArray = {"banner", "VIP最新推荐-", "VIP特邀名厨-"};
         final int length = Math.min(array.size(), mLayouts.length);
         for (int index = 0; index < length; index++) {
             Map<String, String> map = array.get(index);
             final String ID = LoginManager.isVIP() || LoginManager.isTempVip() ? ids[index] : "non" + ids[index];
+            final int i = index;
             if (index == 1 || index == 2) {
-                final int i = index;
                 mLayouts[index].setTitleStaticCallback(
                         (id, twoLevel, threeLevel, position) -> XHClick.mapStat(mLayouts[i].getContext(), ids[i], "查看更多", "")
                 );
             }
-            mLayouts[index].setStatictusData(ID, twoLevelArray[index], "");
+            mLayouts[index].setStatisticCallback(
+                    (id, itemTwoLevel, itemThreeLevel, position) -> XHClick.mapStat(mLayouts[i].getContext(), id, itemTwoLevel,  itemThreeLevel + position)
+            );
+            mLayouts[index].setStatictusData(ID, twoLevelArray[index], threeLevelArray[index]);
             mLayouts[index].setData(map);
             mLayouts[index].setVisibility(View.VISIBLE);
         }
