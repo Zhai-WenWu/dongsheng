@@ -8,12 +8,10 @@ import java.util.List;
 import java.util.Map;
 
 import acore.override.activity.base.BaseAppCompatActivity;
-import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.widget.rvlistview.adapter.RvBaseAdapter;
 import amodule.home.adapter.HorizontalAdapter1;
 import amodule.home.adapter.HorizontalAdapter2;
-import amodule.home.adapter.HorizontalAdapter3;
 import amodule.lesson.listener.IDataListener;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
@@ -32,8 +30,12 @@ public class LessonListDataController {
     private RvBaseAdapter<Map<String, String>> mRecyclerAdapter;
     private int mLoadCount;
     private boolean mNeedRef;
+    private String mCode;
 
-    public LessonListDataController(BaseAppCompatActivity appCompatActivity, String style) {
+    private String mTitle;
+
+    public LessonListDataController(BaseAppCompatActivity appCompatActivity, String style, String code) {
+        mCode = code;
         initData(style, appCompatActivity);
     }
 
@@ -84,42 +86,21 @@ public class LessonListDataController {
             mCurrentPage++;
         if (mListener != null)
             mListener.onGetData(mDatas, refresh);
-        ReqEncyptInternet.in().doEncypt(StringManager.API_RECOMMEND, "", new InternetCallback(context) {
+        ReqEncyptInternet.in().doEncypt(StringManager.API_SCHOOL_CHAPTERLIST, "code=" + mCode + "&page=" + (mCurrentPage + 1), new InternetCallback(context) {
             @Override
             public void loaded(int flag, String s, Object o) {
 
-                //TODO 测试--------start
-                String hoemDataStr = FileManager.readFile(FileManager.getSDCacheDir() + "homeDataCache").trim();
-                ArrayList<Map<String, String>> ls = StringManager.getListMapByJson(hoemDataStr);
-
-
-                ArrayList<Map<String, String>> list = new ArrayList<>();
-                for (int i = 0; i < ls.size(); i ++){
-                    if (i != 5)
-                        continue;
-                    Map<String, String> map = ls.get(i);
-                    if (TextUtils.equals(map.get("widgetType"), "3")) {
-                        String wd = map.get("widgetData");
-                        Map<String, String> map1 = StringManager.getFirstMap(wd);
-                        String data1 = map1.get("data");
-                        Map<String, String> map2 = StringManager.getFirstMap(data1);
-                        String list1 = map2.get("list");
-                        list = StringManager.getListMapByJson(list1);
-                        break;
-                    }
-                }
-
-                //TODO 测试--------end
-
+                Map<String, String> map = StringManager.getFirstMap(o);
+                mTitle = map.get("title");
+                ArrayList<Map<String, String>> list = StringManager.getListMapByJson(map.get("list"));
                 mLoadCount = 0;
                 if (flag >= ReqEncyptInternet.REQ_OK_STRING) {
                     mLoadCount = list.size();
-                    ArrayList<Map<String, String>> datas = list;
                     if (mCurrentPage > 0) {
-                        mDatas.addAll(datas);
+                        mDatas.addAll(list);
                         mRecyclerAdapter.notifyDataSetChanged();
                     } else {
-                        mRecyclerAdapter.updateData(datas);
+                        mRecyclerAdapter.updateData(list);
                     }
                 }
                 if (mEveryPageCount == 0) {
@@ -159,4 +140,7 @@ public class LessonListDataController {
         mNeedRef = refresh;
     }
 
+    public String getTitle() {
+        return mTitle;
+    }
 }

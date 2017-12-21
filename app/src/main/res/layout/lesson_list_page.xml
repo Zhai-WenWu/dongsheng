@@ -27,14 +27,8 @@
 
     <amodule.lesson.view.VIPButton
         android:id="@+id/vip_button"
-        android:layout_marginLeft="@dimen/dp_10"
-        android:layout_marginRight="@dimen/dp_10"
-        android:layout_marginBottom="@dimen/dp_5"
-        android:layout_marginTop="@dimen/dp_5"
-        app:cardBackgroundColor="@color/quan_text_red_color"
         android:layout_alignParentBottom="true"
-        app:cardCornerRadius="@dimen/dp_4"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_45"/>
+        android:layout_height="@dimen/dp_49"/>
 
 </RelativeLayout>

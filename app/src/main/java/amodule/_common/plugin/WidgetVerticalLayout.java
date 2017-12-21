@@ -88,7 +88,7 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
                 if(view instanceof  ISetAdID){
                     ((ISetAdID)view).setAdID(adIDs);
                 }
-                if(view instanceof IStatisticCallback){
+                if(view instanceof IStatisticCallback && mStatisticCallback != null){
                     ((IStatisticCallback)view).setStatisticCallback(mStatisticCallback);
                 }
                 if (view instanceof IStatictusData) {

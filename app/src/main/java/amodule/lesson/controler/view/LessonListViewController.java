@@ -17,10 +17,11 @@ import acore.widget.rvlistview.RvGridView;
 import acore.widget.rvlistview.RvListView;
 import amodule._common.helper.WidgetDataHelper;
 import amodule.home.viewholder.XHBaseRvViewHolder;
+import amodule.lesson.view.VIPButton;
 import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
 
 /**
- * Description : //TODO
+ * Description :
  * PackageName : amodule.lesson.controler.view
  * Created by mrtrying on 2017/12/19 11:23:38.
  * e_mail : ztanzeyu@gmail.com
@@ -31,6 +32,7 @@ public class LessonListViewController {
     private TextView mTitleView;
     private RvGridView mGridView;
     private PtrClassicFrameLayout mPtrFrame;
+    private VIPButton mVIPButton;
 
     public LessonListViewController(BaseAppCompatActivity appCompatActivity) {
         mAct = appCompatActivity;
@@ -40,8 +42,11 @@ public class LessonListViewController {
     }
 
     private void initView() {
+        mVIPButton = (VIPButton) mAct.findViewById(R.id.vip_button);
+        mVIPButton.setVisibility(View.GONE);
         mTitleView = (TextView) mAct.findViewById(R.id.title);
         mTitleView.setMaxWidth(ToolsDevice.getWindowPx(mAct).widthPixels - ToolsDevice.dp2px(mAct, 45 + 40));
+        mTitleView.setVisibility(View.GONE);
         mPtrFrame = (PtrClassicFrameLayout) mAct.findViewById(R.id.ptr_frame);
         mGridView = (RvGridView) mAct.findViewById(R.id.rvGridView);
         final int padding_5 = Tools.getDimen(mAct, R.dimen.dp_5);
@@ -83,6 +88,10 @@ public class LessonListViewController {
         mPtrFrame = null;
         mGridView = null;
         mTitleView = null;
+        if (mVIPButton != null) {
+            mVIPButton.onDestroy();
+            mVIPButton = null;
+        }
     }
 
     public PtrClassicFrameLayout getPtrFrame() {
@@ -101,5 +110,32 @@ public class LessonListViewController {
     public void refreshComplete() {
         if (mPtrFrame != null)
             mPtrFrame.refreshComplete();
+    }
+
+    public boolean titleShowing() {
+        return mTitleView != null && mTitleView.getVisibility() == View.VISIBLE;
+    }
+
+    public void setTitleViewVisibility(int visibility) {
+        if (mTitleView != null)
+            mTitleView.setVisibility(visibility);
+    }
+
+    public void setVIPButton(String text, int textColor, int bgColor) {
+        if (mVIPButton != null) {
+            mVIPButton.setText(text);
+            mVIPButton.setTextColor(textColor);
+            mVIPButton.setBackgroundColor(bgColor);
+        }
+    }
+
+    public void setVIPButtonVisibility(int visibility) {
+        if (mVIPButton != null)
+            mVIPButton.setVisibility(visibility);
+    }
+
+    public void setVIPButtonClickListener(View.OnClickListener listener) {
+        if (listener != null && mVIPButton != null)
+            mVIPButton.setOnClickListener(listener);
     }
 }
