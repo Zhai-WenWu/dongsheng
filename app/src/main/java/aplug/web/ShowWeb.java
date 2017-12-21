@@ -13,7 +13,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.webkit.WebSettings;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -197,6 +196,7 @@ public class  ShowWeb extends WebActivity implements IObserver {
 
 	public void showCommentBar(String userName,String userCode){
 		this.userCode = userCode;
+		editControlerLayout.setVisibility(View.VISIBLE);
 		commentBar.setVisibility(View.VISIBLE);
 		commentBar.setEditTextHint("回复 ：" + userName);
 	}
