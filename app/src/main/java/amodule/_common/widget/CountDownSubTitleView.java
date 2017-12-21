@@ -17,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.Map;
 import java.util.TimeZone;
 
+import acore.logic.AppCommon;
 import acore.tools.StringManager;
 import amodule._common.helper.WidgetDataHelper;
 import amodule._common.utility.WidgetUtility;
@@ -38,6 +39,7 @@ public class CountDownSubTitleView extends BaseSubTitleView {
     private TextView mTitle3;
     private TextView mTitle4;
     private TextView mTitle5;
+    private TextView mTitle6;
     private LinearLayout mLinearLayout1;
 
     private long mMillisInFuture;
@@ -71,6 +73,7 @@ public class CountDownSubTitleView extends BaseSubTitleView {
         mTitle3 = (TextView) findViewById(R.id.text3);
         mTitle4 = (TextView) findViewById(R.id.text4);
         mTitle5 = (TextView) findViewById(R.id.text5);
+        mTitle6 = (TextView) findViewById(R.id.text6);
         mPoint1 = (TextView) findViewById(R.id.title_3);
     }
 
@@ -78,6 +81,7 @@ public class CountDownSubTitleView extends BaseSubTitleView {
     protected void onDataReady(Map<String, String> map) {
         Map<String, String> titleMap = StringManager.getFirstMap(map.get(WidgetDataHelper.KEY_TITLE));
         WidgetUtility.setTextToView(mTitle1,titleMap.get("text1"));
+        WidgetUtility.setTextToView(mTitle6,titleMap.get("text2"));
         String millisInFuture = titleMap.get("endTime");
         if(TextUtils.isEmpty(millisInFuture)){
             mLinearLayout1.setVisibility(GONE);
@@ -91,6 +95,18 @@ public class CountDownSubTitleView extends BaseSubTitleView {
         mDataReady = true;
         startCountDownTime();
         mLinearLayout1.setVisibility(VISIBLE);
+        this.setTitle1ClickListener(v -> {
+            String url1 = titleMap.get("url1");
+            if (TextUtils.isEmpty(url1))
+                return;
+            AppCommon.openUrl((Activity) CountDownSubTitleView.this.getContext(), url1, true);
+        });
+        this.setTitle2ClickListener(v -> {
+            String url2 = titleMap.get("url2");
+            if (TextUtils.isEmpty(url2))
+                return;
+            AppCommon.openUrl((Activity) CountDownSubTitleView.this.getContext(), url2, true);
+        });
     }
 
     public void startCountDownTime() {
@@ -194,5 +210,17 @@ public class CountDownSubTitleView extends BaseSubTitleView {
         this.id = id;
         this.twoLevel =twoLevel;
         this.threeLevel =threeLevel;
+    }
+
+    public void setTitle1ClickListener(OnClickListener listener) {
+        if (listener != null) {
+            mTitle1.setOnClickListener(listener);
+        }
+    }
+
+    public void setTitle2ClickListener(OnClickListener listener) {
+        if (listener != null) {
+            mTitle2.setOnClickListener(listener);
+        }
     }
 }
