@@ -645,9 +645,9 @@ public class Main extends Activity implements OnClickListener, IObserver {
                 if (act != null) XHClick.finishToSendPath(act);
                 // 关闭页面停留时间统计计时器
                 XHClick.closeHandler();
-                ReqInternet.in().finish();
                 VersionOp.getInstance().onDesotry();
                 finish();
+                System.exit(0);
                 UtilFile.saveShared(this, FileManager.MALL_STAT, FileManager.MALL_STAT, "");
             }
         } else {
