@@ -55,7 +55,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 21
         versionCode 221
-        versionName "5.8.0.1"
+        versionName "5.8.1.1"
         // dex突破65535的限制
         multiDexEnabled true
         //GrowingIO
