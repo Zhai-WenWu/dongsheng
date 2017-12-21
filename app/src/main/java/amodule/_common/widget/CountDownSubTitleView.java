@@ -6,7 +6,6 @@ import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -89,7 +88,6 @@ public class CountDownSubTitleView extends BaseSubTitleView {
             AppCommon.openUrl((Activity) CountDownSubTitleView.this.getContext(), url1, true);
         });
         this.setTitle6ClickListener(v -> {
-            Log.e("SLL", "title6");
             String url2 = titleMap.get("url2");
             if (TextUtils.isEmpty(url2))
                 return;

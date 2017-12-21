@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 
 import acore.logic.AppCommon;
+import acore.logic.LoginManager;
+import acore.logic.XHClick;
 import acore.override.activity.base.BaseAppCompatActivity;
 import acore.override.helper.XHActivityManager;
 import acore.tools.IObserver;
@@ -88,15 +90,32 @@ public class LessonListPage extends BaseAppCompatActivity implements IObserver {
                 loadManager.changeMoreBtn(flag, mDataController.getEveryPageCount(), mDataController.getLoadCount(), mDataController.getCurrentPage(), false);
             }
         });
+        mViewController.setContentStatisticCallback((id, twoLevel, threeLevel, position) -> {
+            boolean isVIP = LoginManager.isVIP();
+            XHClick.mapStat(this, isVIP ? "vip_chief_list" : "nonvip_chief_list", "课程数据", "");
+        });
+        mViewController.setVIPBtnStatisticCallback((id, twoLevel, threeLevel, position) -> {
+            boolean isVIP = LoginManager.isVIP();
+            XHClick.mapStat(this, isVIP ? "vip_chief_list" : "nonvip_chief_list", isVIP ? "底部续费按钮" : "底部开通按钮", "");
+        });
         mVipDataController.setDataCallback(() -> {
             if (mViewController != null) {
-                mViewController.setVIPButton(mVipDataController.getTitle(), Color.parseColor(mVipDataController.getTextColor()), Color.parseColor(mVipDataController.getBgColor()));
+                boolean show = mVipDataController.isVipBtnShow();
+                mViewController.setVIPButtonVisibility(show ? View.VISIBLE : View.GONE);
+                if (!show)
+                    return;
+                String title = mVipDataController.getTitle();
+                String textColor = mVipDataController.getTextColor();
+                String bgColor = mVipDataController.getBgColor();
+                if (TextUtils.isEmpty(title) || TextUtils.isEmpty(textColor) || TextUtils.isEmpty(bgColor)) {
+                    return;
+                }
+                mViewController.setVIPButton(title, Color.parseColor(textColor), Color.parseColor(bgColor));
                 mViewController.setVIPButtonClickListener(v -> {
                     String url = mVipDataController.getUrl();
                     if (!TextUtils.isEmpty(url))
                         AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), url, false);
                 });
-                mViewController.setVIPButtonVisibility(mVipDataController.isVipBtnShow() ? View.VISIBLE : View.GONE);
             }
         });
     }

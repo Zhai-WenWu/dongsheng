@@ -15,6 +15,7 @@ import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.rvlistview.RvGridView;
 import acore.widget.rvlistview.RvListView;
+import amodule._common.delegate.StatisticCallback;
 import amodule._common.helper.WidgetDataHelper;
 import amodule.home.viewholder.XHBaseRvViewHolder;
 import amodule.lesson.view.VIPButton;
@@ -33,6 +34,8 @@ public class LessonListViewController {
     private RvGridView mGridView;
     private PtrClassicFrameLayout mPtrFrame;
     private VIPButton mVIPButton;
+
+    private StatisticCallback mContentStatisticCallback;
 
     public LessonListViewController(BaseAppCompatActivity appCompatActivity) {
         mAct = appCompatActivity;
@@ -70,6 +73,8 @@ public class LessonListViewController {
                     return;
                 String url = data.get(WidgetDataHelper.KEY_URL);
                 AppCommon.openUrl(mAct, url, true);
+                if (mContentStatisticCallback != null)
+                    mContentStatisticCallback.onStatistic("", "", "", -1);
             }
         });
     }
@@ -137,5 +142,14 @@ public class LessonListViewController {
     public void setVIPButtonClickListener(View.OnClickListener listener) {
         if (listener != null && mVIPButton != null)
             mVIPButton.setBtnClickListener(listener);
+    }
+
+    public void setContentStatisticCallback(StatisticCallback callback) {
+        mContentStatisticCallback = callback;
+    }
+
+    public void setVIPBtnStatisticCallback(StatisticCallback callback) {
+        if (callback != null && mVIPButton != null)
+            mVIPButton.setStatisticCallback(callback);
     }
 }
