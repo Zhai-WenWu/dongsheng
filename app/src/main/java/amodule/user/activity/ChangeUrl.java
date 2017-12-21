@@ -50,8 +50,8 @@ public class ChangeUrl extends BaseActivity {
         super.onCreate(savedInstanceState);
         initActivity("切换url", 2, 0, R.layout.c_view_bar_title, R.layout.a_core_change_url);
         initView();
-        initData();
         addListener();
+        initData();
         loadManager.hideProgressBar();
     }
 
