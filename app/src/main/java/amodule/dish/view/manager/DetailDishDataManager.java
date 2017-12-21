@@ -62,6 +62,7 @@ public class DetailDishDataManager {
         contiunRefresh = true;
         detailPermissionMap.clear();
         permissionMap.clear();
+        lastPermission="";
     }
 
     /**
