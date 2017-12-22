@@ -142,6 +142,7 @@
     <RelativeLayout
         android:id="@+id/edit_controler_layout"
         android:layout_width="match_parent"
+        android:visibility="gone"
         android:layout_height="match_parent">
 
         <acore.widget.CommentBar

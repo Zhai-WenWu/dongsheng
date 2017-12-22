@@ -19,6 +19,7 @@ import com.xiangha.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import acore.override.XHApplication;
@@ -169,8 +170,8 @@ public class LoginManager {
      * @param mAct
      */
     public static void logout(final Activity mAct) {
-        String params = "type=userOut&devCode=" + XGPushServer.getXGToken(mAct);
-        ReqInternet.in().doPost(StringManager.api_getUserInfo, params, new InternetCallback(mAct) {
+        LinkedHashMap<String,String> params = new LinkedHashMap<>();
+        ReqInternet.in().doPost(StringManager.api_loginOut, params, new InternetCallback(mAct) {
 
             @Override
             public void loaded(int flag, String url, Object returnObj) {

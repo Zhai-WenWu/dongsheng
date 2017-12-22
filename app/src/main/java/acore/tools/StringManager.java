@@ -270,6 +270,7 @@ public class StringManager extends UtilString {
     public final static String api_getActivityInfo = apiUrl + urlSection.get("other6") + "getActivityInfo"; //获取活动入口
     public final static String api_getUserPowers = apiUrl + urlSection.get("user6") + "permissions"; //获取用户权限按钮
     public final static String api_getUserInfo = apiUrl + urlSection.get("home5") + "getUser"; //用户登录
+    public final static String api_loginOut = apiUrl + "v1/customer/loginOut"; //用户登录
     public final static String api_appmenu = apiUrl + urlSection.get("user6") + "appmenu"; //我的界面
     public final static String api_smsReport = defaultProtocol + "crash.xiangha.com/sms/report"; //验证0码获取错误
     public final static String api_setSecret = apiUrl + urlSection.get("user6") + "modifyPassword"; //设置，修改密码
