@@ -2,6 +2,7 @@ package amodule.lesson.controler.view;
 
 import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
@@ -37,11 +38,36 @@ public class LessonListViewController {
 
     private StatisticCallback mContentStatisticCallback;
 
-    public LessonListViewController(BaseAppCompatActivity appCompatActivity) {
+    private int mFirstRawTopPadding;
+    private int mTopPadding;
+    private int mLeftPadding;
+    private int mRightPadding;
+    private int mBottomPadding;
+
+    public LessonListViewController(BaseAppCompatActivity appCompatActivity, String style) {
         mAct = appCompatActivity;
         if (mAct == null)
             return;
+        initData(style);
         initView();
+    }
+
+    private void initData(String style) {
+        int padding_5 = Tools.getDimen(mAct, R.dimen.dp_5);
+        int padding_4 = Tools.getDimen(mAct, R.dimen.dp_4);
+        mFirstRawTopPadding = padding_5 * 4;
+        mTopPadding = padding_5;
+        mLeftPadding = padding_4;
+        mRightPadding = padding_4;
+        mBottomPadding = padding_5;
+        if (TextUtils.isEmpty(style))
+            return;
+        switch (style) {
+            case "2":
+            case "4":
+                mBottomPadding = padding_4 + padding_5;
+                break;
+        }
     }
 
     private void initView() {
@@ -52,17 +78,15 @@ public class LessonListViewController {
         mTitleView.setVisibility(View.GONE);
         mPtrFrame = (PtrClassicFrameLayout) mAct.findViewById(R.id.ptr_frame);
         mGridView = (RvGridView) mAct.findViewById(R.id.rvGridView);
-        final int padding_5 = Tools.getDimen(mAct, R.dimen.dp_5);
-        final int padding_4 = Tools.getDimen(mAct, R.dimen.dp_4);
         mGridView.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
             public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
                 super.getItemOffsets(outRect, view, parent, state);
                 int position = parent.getChildAdapterPosition(view) - mGridView.getHeaderViewsSize();
-                outRect.top = (position == 0 || position == 1) ? padding_5 * 4 : padding_5;
-                outRect.left = padding_4;
-                outRect.right = padding_4;
-                outRect.bottom = padding_5;
+                outRect.top = (position == 0 || position == 1) ? mFirstRawTopPadding : mTopPadding;
+                outRect.left = mLeftPadding;
+                outRect.right = mRightPadding;
+                outRect.bottom = mBottomPadding;
             }
         });
         mGridView.setOnItemClickListener((view, holder, position) -> {

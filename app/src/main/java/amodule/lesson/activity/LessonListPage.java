@@ -62,7 +62,7 @@ public class LessonListPage extends BaseAppCompatActivity implements IObserver {
 
     private void initController() {
         mDataController = new LessonListDataController(this, mStyle, mCode);
-        mViewController = new LessonListViewController(this);
+        mViewController = new LessonListViewController(this, mStyle);
         mVipDataController = new VipDataController();
     }
 
