@@ -164,17 +164,8 @@ public class Main extends Activity implements OnClickListener, IObserver {
      * 展示welcome
      */
     private void showWelcome(){
-        if("developer.huawei".equals(ChannelUtil.getChannel(this))){
-            //单独处理华为渠道
-            String showHuaweiAD= AppCommon.getConfigByLocal("huaweiAD");//release 2表示显示发布，显示广告，1不显示广告
-            boolean isShowAdHuawei = !TextUtils.isEmpty(showHuaweiAD)
-                    && "2".equals(StringManager.getFirstMap(showHuaweiAD).get("release"));
-            welcomeDialog = LoginManager.isShowAd() && isShowAdHuawei?
-                    new WelcomeDialog(Main.allMain,dialogShowCallBack) : new WelcomeDialog(Main.allMain,1,dialogShowCallBack);
-        }else{
-            welcomeDialog = LoginManager.isShowAd() ?
-                    new WelcomeDialog(Main.allMain,dialogShowCallBack) : new WelcomeDialog(Main.allMain,1,dialogShowCallBack);
-        }
+        welcomeDialog = LoginManager.isShowAd() ?
+                new WelcomeDialog(Main.allMain,dialogShowCallBack) : new WelcomeDialog(Main.allMain,1,dialogShowCallBack);
         welcomeDialog.show();
     }
 

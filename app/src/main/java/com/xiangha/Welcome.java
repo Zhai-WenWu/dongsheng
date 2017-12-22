@@ -94,16 +94,7 @@ public class Welcome extends BaseActivity {
                 closeActivity();
             }
         });
-        if("developer.huawei".equals(ChannelUtil.getChannel(this))) {
-            String showHuaweiAD = AppCommon.getConfigByLocal("huaweiAD");//release 2表示显示发布，显示广告，1不显示广告
-            //单独处理华为渠道
-            boolean isShowAdHuawei = !TextUtils.isEmpty(showHuaweiAD)
-                    && "2".equals(StringManager.getFirstMap(showHuaweiAD).get("release"));
-            if(isShowAdHuawei)
-                initAd();
-        }else{
-            initAd();
-        }
+        initAd();
     }
 
     private void initAd() {
