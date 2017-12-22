@@ -7,6 +7,7 @@
 
     <amodule._common.widget.CountDownSubTitleView
         android:id="@+id/subtitle_view"
+        android:visibility="gone"
         style="@style/subtitle_style"/>
 
     <acore.widget.rvlistview.RvHorizatolListView

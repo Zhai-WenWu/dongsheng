@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -164,10 +165,6 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,
             setVisibility(GONE);
             return;
         }
-        Map<String,String> parameterMap = StringManager.getFirstMap(map.get(KEY_PARAMETER));
-        if (mSubTitleView != null) {
-            mSubTitleView.setData(parameterMap);
-        }
         ArrayList<Map<String, String>> list = StringManager.getListMapByJson(dataMap.get(WidgetDataHelper.KEY_LIST));
         if(list.isEmpty()) {
             setVisibility(View.GONE);
@@ -177,9 +174,9 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,
             mRecyclerAdapter.updateData(list);
             mRecyclerView.scrollToPosition(0);
         }
-        if(list.isEmpty()){
-            setVisibility(GONE);
-            return;
+        Map<String,String> parameterMap = StringManager.getFirstMap(map.get(KEY_PARAMETER));
+        if (mSubTitleView != null) {
+            mSubTitleView.setData(parameterMap);
         }
         //设置顶部边距
         String sort = map.get(WidgetDataHelper.KEY_SORT);
