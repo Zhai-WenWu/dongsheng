@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.text.style.StrikethroughSpan;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -28,11 +29,13 @@ public class ViewHolder2 extends XHBaseRvViewHolder {
     private TextView mTextView1;
     private TextView mTextView2;
     private TextView mTextView3;
+    private LinearLayout mLinearlayout1;
     public ViewHolder2(@NonNull View itemView) {
         super(itemView);
         mItemView = itemView;
         if (mItemView == null)
             return;
+        mLinearlayout1 = (LinearLayout) mItemView.findViewById(R.id.linearlayout1);
         mImageView1 = (ImageView) mItemView.findViewById(R.id.imageview1);
         mTextView1 = (TextView) mItemView.findViewById(R.id.textview1);
         mTextView2 = (TextView) mItemView.findViewById(R.id.textview2);
@@ -53,8 +56,15 @@ public class ViewHolder2 extends XHBaseRvViewHolder {
             return;
         setViewImage(mImageView1, data.get("img"));
         WidgetUtility.setTextToView(mTextView1, data.get("text1"));
-        WidgetUtility.setTextToView(mTextView2, data.get("text2"));
+        String t2 = data.get("text2");
         String t3 = data.get("text3");
+        boolean gone = TextUtils.isEmpty(t2) && TextUtils.isEmpty(t3);
+        if (mLinearlayout1 != null) {
+            mLinearlayout1.setVisibility(gone ? View.GONE : View.VISIBLE);
+            if (gone)
+                return;
+        }
+        WidgetUtility.setTextToView(mTextView2, t2);
         if(null != mTextView3){
             if(!TextUtils.isEmpty(t3)){
                 Spannable spanStrikethrough = new SpannableString(t3);
