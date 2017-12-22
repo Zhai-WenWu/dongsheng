@@ -72,10 +72,8 @@ public class PushPraserService extends Service{
 			Map<String, String> msgMap = msgt.get(0);
 			//用于解决：服务端会两个推送都推，根据pushCode存储本地情况，判断是否已经接受了推送
 			if (FileManager.ifFileModifyByCompletePath(FileManager.getDataDir() + msgMap.get("pushCode"), -1) != null) {
-//				XHClick.onEvent(mContext, PUSH_ID, type, "2");
 				return;
 			} else {
-//				XHClick.onEvent(mContext, PUSH_ID, type, "1");
 				FileManager.saveFileToCompletePath(FileManager.getDataDir() + msgMap.get("pushCode"), "", false);
 			}
 			//创建NotificationData
