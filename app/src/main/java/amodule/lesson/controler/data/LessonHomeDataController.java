@@ -32,6 +32,8 @@ public class LessonHomeDataController {
 
     private NotifyDataSetChangedCallback mNotifyDataSetChangedCallback;
 
+    private HasDataCallback mNoDataCallback;
+
     public LessonHomeDataController(Activity activity) {
         this.mActivity = activity;
     }
@@ -42,10 +44,10 @@ public class LessonHomeDataController {
         ReqEncyptInternet.in().doEncypt(url, params, callback);
     }
 
-    public void laodRemoeteExtraData(boolean refresh,@Nullable InternetCallback callback) {
+    public void laodRemoeteExtraData(boolean refresh) {
         if(refresh)
             mCurrentPage = 0;
-        mOnLoadDataCallback.onPrepare();
+        mOnLoadDataCallback.onPrepare(refresh);
         mCurrentPage++;
         String url = StringManager.API_SCHOOL_COURSELIST;
         LinkedHashMap<String, String> params = new LinkedHashMap<>();
@@ -55,7 +57,7 @@ public class LessonHomeDataController {
             public void loaded(int i, String s, Object o) {
                 int loadCount = 0;
                 if (i >= ReqEncyptInternet.REQ_OK_STRING) {
-                    mOnLoadDataCallback.onSuccess();
+                    mOnLoadDataCallback.onSuccess(refresh);
                     List<Map<String, String>> tempData = StringManager.getListMapByJson(o);
                     if(refresh)
                         mData.clear();
@@ -65,8 +67,11 @@ public class LessonHomeDataController {
                     });
                     loadCount = tempData.size();
                     notifyDataSetChanged();
+                    if(null != mNoDataCallback){
+                        mNoDataCallback.hasData(mData.isEmpty());
+                    }
                 } else {
-                    mOnLoadDataCallback.onFailed();
+                    mOnLoadDataCallback.onFailed(refresh);
                 }
                 mOnLoadDataCallback.onAfter(refresh, i, loadCount);
             }
@@ -95,7 +100,7 @@ public class LessonHomeDataController {
     class DefaultOnLoadDataCallback implements OnLoadDataCallback {
 
         @Override
-        public void onPrepare() {
+        public void onPrepare(boolean refersh) {
 
         }
 
@@ -105,12 +110,12 @@ public class LessonHomeDataController {
         }
 
         @Override
-        public void onSuccess() {
+        public void onSuccess(boolean refersh) {
 
         }
 
         @Override
-        public void onFailed() {
+        public void onFailed(boolean refersh) {
 
         }
     }
@@ -119,17 +124,25 @@ public class LessonHomeDataController {
         mNotifyDataSetChangedCallback = notifyDataSetChangedCallback;
     }
 
+    public void setNoDataCallback(HasDataCallback noDataCallback) {
+        mNoDataCallback = noDataCallback;
+    }
+
     public interface OnLoadDataCallback {
-        void onPrepare();
+        void onPrepare(boolean refersh);
 
         void onAfter(boolean refersh, int flag, int loadCount);
 
-        void onSuccess();
+        void onSuccess(boolean refersh);
 
-        void onFailed();
+        void onFailed(boolean refersh);
     }
 
     public interface NotifyDataSetChangedCallback {
         void notifyDataSetChanged();
+    }
+
+    public interface HasDataCallback {
+        void hasData(boolean hasData);
     }
 }

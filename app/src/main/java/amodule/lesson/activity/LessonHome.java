@@ -8,21 +8,16 @@ import android.widget.Button;
 
 import com.xiangha.R;
 
-import java.util.List;
-import java.util.Map;
-
-import acore.logic.XHClick;
 import acore.logic.load.LoadManager;
 import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.IObserver;
 import acore.tools.ObserverManager;
 import acore.tools.StringManager;
+import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.lesson.adapter.LessonHomeAdapter;
 import amodule.lesson.controler.data.LessonHomeDataController;
-import amodule.lesson.controler.view.LessonHomeHeaderControler;
 import amodule.lesson.controler.view.LessonHomeViewController;
-import amodule.main.activity.MainHomePage;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
@@ -42,14 +37,14 @@ public class LessonHome extends BaseAppCompatActivity implements IObserver {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mViewController = new LessonHomeViewController(this);
-        initActivity("",2,0,R.layout.back_title_bar,R.layout.a_lesson_home);
+        initActivity("", 2, 0, R.layout.back_title_bar, R.layout.a_lesson_home);
 
         //初始化
         initialize();
         //加载数据
         loadData();
 
-        ObserverManager.getInstence().registerObserver(this,NOTIFY_VIPSTATE_CHANGED);
+        ObserverManager.getInstence().registerObserver(this, NOTIFY_VIPSTATE_CHANGED);
     }
 
     private void initialize() {
@@ -59,11 +54,11 @@ public class LessonHome extends BaseAppCompatActivity implements IObserver {
         mDataController = new LessonHomeDataController(this);
         mDataController.setNotifyDataSetChangedCallback(() -> mAdapter.notifyDataSetChanged());
 
-        mAdapter = new LessonHomeAdapter(this,mDataController.getData());
+        mAdapter = new LessonHomeAdapter(this, mDataController.getData());
     }
 
     private void loadData() {
-        if(!LoadOver){
+        if (!LoadOver) {
             loadManager.setLoading(
                     mViewController.getRefreshLayout(),
                     mViewController.getRvListView(),
@@ -76,7 +71,7 @@ public class LessonHome extends BaseAppCompatActivity implements IObserver {
                     }
             );
             loadManager.getSingleLoadMore(mViewController.getRvListView()).setVisibility(View.GONE);
-            if(!ToolsDevice.isNetworkAvailable(this)){
+            if (!ToolsDevice.isNetworkAvailable(this)) {
                 loadManager.hideProgressBar();
             }
         }
@@ -88,57 +83,56 @@ public class LessonHome extends BaseAppCompatActivity implements IObserver {
             @Override
             public void loaded(int i, String s, Object o) {
                 HeaderDataLoaded = true;
-                if(i >= ReqEncyptInternet.REQ_OK_STRING){
+                if (i >= ReqEncyptInternet.REQ_OK_STRING) {
                     if (mViewController != null)
                         mViewController.setHeaderData(StringManager.getListMapByJson(o));
                 }
                 isRefreshingHeader = false;
                 mViewController.refreshComplete();
-                if(!LoadOver){
+                if (!LoadOver) {
+                    setDataControllerCallback();
                     EntryptData(true);
                 }
             }
         });
     }
 
-    private void EntryptData(boolean refresh) {
-        //已经load
-        LoadOver = true;
+    private void setDataControllerCallback() {
         mDataController.setOnLoadDataCallback(new LessonHomeDataController.OnLoadDataCallback() {
             @Override
-            public void onPrepare() {
+            public void onPrepare(boolean refersh) {
                 loadManager.changeMoreBtn(mViewController.getRvListView(), ReqInternet.REQ_OK_STRING, -1, -1, LoadOver ? 2 : 1, !LoadOver);
-                if (refresh) {
+                if (refersh) {
                     loadManager.hideProgressBar();
                     mViewController.returnListTop();
                 }
                 Button loadmore = loadManager.getSingleLoadMore(mViewController.getRvListView());
-                if(null != loadmore){
+                if (null != loadmore) {
                     loadmore.setVisibility(View.VISIBLE);
                 }
             }
 
             @Override
             public void onAfter(boolean refersh, int flag, int loadCount) {
-                if(refresh){
+                if (refersh) {
                     isRefreshingFeed = false;
                 }
                 loadManager.hideProgressBar();
                 if (ToolsDevice.isNetworkAvailable(LessonHome.this)) {
                     loadManager.changeMoreBtn(mViewController.getRvListView(), flag, LoadManager.FOOTTIME_PAGE,
-                            refresh ? mDataController.getData().size() : loadCount, 0, refresh);
-                }else {
+                            refersh ? mDataController.getData().size() : loadCount, 0, refersh);
+                } else {
 
                 }
             }
 
             @Override
-            public void onSuccess() {
+            public void onSuccess(boolean refresh) {
 
             }
 
             @Override
-            public void onFailed() {
+            public void onFailed(boolean refresh) {
                 if (!ToolsDevice.isNetworkAvailable(LessonHome.this)) {
                     loadManager.changeMoreBtn(mViewController.getRvListView(),
                             ReqInternet.REQ_OK_STRING,
@@ -147,26 +141,25 @@ public class LessonHome extends BaseAppCompatActivity implements IObserver {
                 }
             }
         });
-        mDataController.laodRemoeteExtraData(refresh,new InternetCallback(this) {
-            @Override
-            public void loaded(int i, String s, Object o) {
-                if(i >= ReqEncyptInternet.REQ_OK_STRING){
+    }
 
-                }
-            }
-        });
+    private void EntryptData(boolean refresh) {
+        //已经load
+        LoadOver = true;
+        mDataController.laodRemoeteExtraData(refresh);
     }
 
     boolean isRefreshingHeader = false;
     boolean isRefreshingFeed = false;
+
     public void refresh() {
-        Log.i("tzy_data","refresh()");
+        Log.i("tzy_data", "refresh()");
         mViewController.autoRefresh();
     }
 
-    private void inerRefresh(){
+    private void inerRefresh() {
         Log.i("tzy", "inerRefresh: ");
-        if(isRefreshingHeader || isRefreshingFeed){
+        if (isRefreshingHeader || isRefreshingFeed) {
             return;
         }
         isRefreshingHeader = true;
