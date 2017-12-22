@@ -404,8 +404,17 @@ public class LoginManager {
         return true;
     }
 
-    public static boolean isVIP(){
-        return isUserVip();
+    /**
+     * VIP策略：
+     * 有账号，以账号Vip为准
+     * 无账号，以设备vip为准
+     */
+    public static boolean isVIP(){//体现逻辑
+        if(LoginManager.isLogin()){
+            return isUserVip();
+        }else {
+           return isTempVip();
+        }
     }
 
     public static boolean isUserVip(){
@@ -417,6 +426,7 @@ public class LoginManager {
     }
 
     /**
+     *
      * 是否是临时vip
      * @return
      */
@@ -728,7 +738,7 @@ public class LoginManager {
     public static void setVipStateChanged() {
         Object vipState = FileManager.loadShared(XHApplication.in(), FileManager.xmlFile_appInfo, "vipState");
         boolean lastVipState = "2".equals(vipState);
-        boolean currVipState = isVIP() || isTempVip();
+        boolean currVipState = isVIP();
         if(lastVipState != currVipState) {//如果vip状态改变
             FileManager.saveShared(XHApplication.in(), FileManager.xmlFile_appInfo, "vipState", currVipState ? "2" : "1");
             ObserverManager.getInstence().notify(ObserverManager.NOTIFY_VIPSTATE_CHANGED, null, null);
