@@ -53,7 +53,7 @@ public class HomeFuncNavView1 extends LinearLayout {
 
     protected void initData() {
         int[] iconArray = {R.drawable.home_fanc_nav_1, R.drawable.home_fanc_nav_2, R.drawable.home_fanc_nav_3, R.drawable.home_fanc_nav_4};
-        String[] textArray = {"菜谱分类", "VIP名厨课", "视频菜谱", "商城"};
+        String[] textArray = {"菜谱分类", "VIP名厨课", "视频菜谱", "香哈优品"};
         String[] urls = {
                 "xiangha://welcome?fenlei.app",
                 "xiangha://welcome?url=https://appweb.xiangha.com/recom/xiangHaSchool",
