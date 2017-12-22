@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.webkit.CookieManager;
 
@@ -62,7 +63,7 @@ public class LoginManager {
     private static String mPlatformName = "QQ";
 
     private static boolean mIsShowAd = true;
-    private static boolean mIsInitShowAdData = true;
+    private static boolean mIsInitShowAdData = false;
     private static boolean mIsTempVip = false;
     private static boolean mIsInitTempVipData = false;
 
@@ -387,15 +388,24 @@ public class LoginManager {
             else {
                 mIsShowAd = !TextUtils.equals("1", String.valueOf(data));
             }
+
+            Log.e("SLL", "M_isShowAd   " + "mIsInitShowAdData = " + mIsInitShowAdData + "   mIsShowAd = " + mIsShowAd);
+
             mIsInitShowAdData = true;
         }
 
-        mIsShowAd = isVIP();
+        mIsShowAd = !isVIP();
+
+        Log.e("SLL", "M_isShowAd   mIsShowAd = " + mIsShowAd);
+
         return mIsShowAd;
     }
 
     private static synchronized void setIsShowAd(boolean isShowAd){
         mIsShowAd = isShowAd;
+
+        Log.e("SLL", "M_setIsShowAd   " + "isShowAd = " + isShowAd +"  mIsShowAd = " + mIsShowAd);
+
         FileManager.saveShared(XHApplication.in(),FileManager.xmlFile_adIsShow,"isShowAd",isShowAd ? "2" : "1");
     }
 
@@ -436,6 +446,9 @@ public class LoginManager {
         if (!mIsInitTempVipData) {//进入APP时初始化到内存
             mIsTempVip = "2".equals(FileManager.loadShared(XHApplication.in(), FileManager.xmlFile_appInfo, "isTempVip"));
             mIsInitTempVipData = true;
+
+            Log.e("SLL", "M_isTempVip   mIsTempVip = " + mIsTempVip);
+
         }
         return mIsTempVip;
     }
@@ -446,6 +459,9 @@ public class LoginManager {
      */
     public static void setTempVip(final boolean tempVip) {
         mIsTempVip = tempVip;
+
+        Log.e("SLL", "M_setTempVip   " + "tempVip = " + tempVip +"  mIsTempVip = " + mIsTempVip);
+
         FileManager.saveShared(XHApplication.in(),FileManager.xmlFile_appInfo,"isTempVip",tempVip ? "2" : "");
     }
 
