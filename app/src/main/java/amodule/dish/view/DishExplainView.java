@@ -38,12 +38,16 @@ public class DishExplainView extends ItemBaseView {
         findViewById(R.id.explain_content_tv).setVisibility(View.GONE);
         mAdLayout = (LinearLayout)findViewById(R.id.a_dish_detail_ad);
         dishAdDataView = new DishAdDataViewNew(context,R.layout.view_dish_tips_ad_layout_distance);
+        setAdData();
     }
     public void setAdData(){
         mAdLayout.removeAllViews();
         dishAdDataView.getRequest(XHActivityManager.getInstance().getCurrentActivity(), mAdLayout);
     }
 
+    public void onListScroll(){
+        if(dishAdDataView!=null)dishAdDataView.onListScroll();
+    }
     /**
      * 隐藏布局
      */

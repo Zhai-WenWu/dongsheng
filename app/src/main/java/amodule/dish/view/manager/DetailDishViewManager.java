@@ -37,6 +37,7 @@ import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.dish.view.DishADBannerView;
 import amodule.dish.view.DishAboutView;
+import amodule.dish.view.DishAdDataViewNew;
 import amodule.dish.view.DishExplainView;
 import amodule.dish.view.DishHeaderViewNew;
 import amodule.dish.view.DishHoverViewControl;
@@ -372,7 +373,6 @@ public class DetailDishViewManager {
     public void handlerExplainView(Map<String,String> map) {
         if(dishExplainView!=null){
             dishExplainView.setVisibility(View.VISIBLE);
-            dishExplainView.setAdData();
         }
         if(dishExplainView!=null && map!=null && !TextUtils.isEmpty(map.get("remark"))){
             dishExplainView.setVisibility(View.VISIBLE);
@@ -453,6 +453,9 @@ public class DetailDishViewManager {
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 firstItemIndex=firstVisibleItem;
+                if(layoutFooter!=null){
+                    onSrollView();
+                }
             }
         });
         listView.setOnTouchListener(new View.OnTouchListener() {
@@ -569,5 +572,21 @@ public class DetailDishViewManager {
     public void handleVipState(boolean isVip) {
         if (dishHeaderViewNew != null)
             dishHeaderViewNew.handleVipState(isVip);
+    }
+    /**
+     * scrollview滚动监听
+     */
+    public void onSrollView(){
+        for (int i = 0; i < layoutFooter.getChildCount(); i++) {
+            View dishAdDataView = layoutFooter.getChildAt(i);
+            if (dishAdDataView != null && dishAdDataView instanceof DishExplainView) {
+                int[] viewLocation = new int[2];
+                dishAdDataView.getLocationOnScreen(viewLocation);
+                if ((viewLocation[1] > Tools.getStatusBarHeight(mAct)
+                        && viewLocation[1] < Tools.getScreenHeight() - ToolsDevice.dp2px(mAct, 57))) {
+                    ((DishExplainView) dishAdDataView).onListScroll();
+                }
+            }
+        }
     }
 }
