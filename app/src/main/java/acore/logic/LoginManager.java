@@ -7,7 +7,6 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.webkit.CookieManager;
 
@@ -385,9 +384,6 @@ public class LoginManager {
             return mIsShowAd;
         }
         mIsShowAd = !(isVIP() || isGourmet());
-
-        Log.e("SLL", "M_isShowAd   mIsGourmet = " + mIsGourmet);
-
         return mIsShowAd;
     }
 
@@ -413,22 +409,16 @@ public class LoginManager {
      */
     private static synchronized void setIsShowAd(boolean isShowAd){
         mIsGourmet = !isShowAd;
-        Log.e("SLL", "M_setIsShowAd   " + "isShowAd = " + isShowAd +"  mIsGourmet = " + mIsGourmet);
-
         FileManager.saveShared(XHApplication.in(),FileManager.xmlFile_adIsShow,"isShowAd",isShowAd ? "2" : "1");
     }
 
     private synchronized static boolean isGourmet() {
         if (!mIsInitGourmetData) {//进入APP时初始化到内存
+            boolean showAd = true;
             Object data = FileManager.loadShared(XHApplication.in(), FileManager.xmlFile_adIsShow, "isShowAd");
-            if (data == null)
-                mIsGourmet = true;
-            else {
-                mIsGourmet = !TextUtils.equals("1", String.valueOf(data));
-            }
-
-            Log.e("SLL", "M_isShowAd   " + "mIsInitGourmetData = " + mIsInitGourmetData + "   mIsGourmet = " + mIsGourmet);
-
+            if (data != null && TextUtils.equals("1", String.valueOf(data)))
+                showAd = false;
+            mIsGourmet = !showAd;//字段转化
             mIsInitGourmetData = true;
         }
         return mIsGourmet;
@@ -471,9 +461,6 @@ public class LoginManager {
         if (!mIsInitTempVipData) {//进入APP时初始化到内存
             mIsTempVip = "2".equals(FileManager.loadShared(XHApplication.in(), FileManager.xmlFile_appInfo, "isTempVip"));
             mIsInitTempVipData = true;
-
-            Log.e("SLL", "M_isTempVip   mIsTempVip = " + mIsTempVip);
-
         }
         return mIsTempVip;
     }
@@ -484,9 +471,6 @@ public class LoginManager {
      */
     public static void setTempVip(final boolean tempVip) {
         mIsTempVip = tempVip;
-
-        Log.e("SLL", "M_setTempVip   " + "tempVip = " + tempVip +"  mIsTempVip = " + mIsTempVip);
-
         FileManager.saveShared(XHApplication.in(),FileManager.xmlFile_appInfo,"isTempVip",tempVip ? "2" : "");
     }
 
