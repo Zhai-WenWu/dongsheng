@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.support.annotation.Nullable;
 
 import com.annimon.stream.Stream;
+import com.annimon.stream.function.Predicate;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -45,13 +46,13 @@ public class LessonHomeDataController {
     }
 
     public void laodRemoeteExtraData(boolean refresh) {
-        if(refresh)
+        if (refresh)
             mCurrentPage = 0;
         mOnLoadDataCallback.onPrepare(refresh);
         mCurrentPage++;
         String url = StringManager.API_SCHOOL_COURSELIST;
         LinkedHashMap<String, String> params = new LinkedHashMap<>();
-        params.put("page",String.valueOf(mCurrentPage));
+        params.put("page", String.valueOf(mCurrentPage));
         ReqEncyptInternet.in().doEncypt(url, params, new InternetCallback(mActivity) {
             @Override
             public void loaded(int i, String s, Object o) {
@@ -59,15 +60,22 @@ public class LessonHomeDataController {
                 if (i >= ReqEncyptInternet.REQ_OK_STRING) {
                     mOnLoadDataCallback.onSuccess(refresh);
                     List<Map<String, String>> tempData = StringManager.getListMapByJson(o);
-                    if(refresh)
+                    if (refresh)
                         mData.clear();
-                    Stream.of(tempData).forEach(map -> {
-                        Map<String,String> widgetMap = StringManager.getFirstMap(map.get("widgetData"));
-                        mData.add(widgetMap);
-                    });
+                    Stream.of(tempData)
+                            .filter(map -> {
+                                Map<String, String> data = StringManager.getFirstMap(map.get("widgetData"));
+                                data = StringManager.getFirstMap(data.get("data"));
+                                ArrayList<Map<String, String>> dataArray = StringManager.getListMapByJson(data.get("list"));
+                                return !dataArray.isEmpty();
+                            })
+                            .forEach(map -> {
+                                Map<String, String> widgetMap = StringManager.getFirstMap(map.get("widgetData"));
+                                mData.add(widgetMap);
+                            });
                     loadCount = tempData.size();
                     notifyDataSetChanged();
-                    if(null != mNoDataCallback){
+                    if (null != mNoDataCallback) {
                         mNoDataCallback.hasData(mData.isEmpty());
                     }
                 } else {
@@ -78,8 +86,8 @@ public class LessonHomeDataController {
         });
     }
 
-    private void notifyDataSetChanged(){
-        if(null != mNotifyDataSetChangedCallback){
+    private void notifyDataSetChanged() {
+        if (null != mNotifyDataSetChangedCallback) {
             mNotifyDataSetChangedCallback.notifyDataSetChanged();
         }
     }
