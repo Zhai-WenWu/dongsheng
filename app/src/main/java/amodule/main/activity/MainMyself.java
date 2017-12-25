@@ -295,9 +295,7 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
 
         Object guidanceShow = FileManager.loadShared(this, FileManager.xmlKey_favoriteGuidanceShow, FileManager.xmlKey_favoriteGuidanceShow);
         BrowseHistorySqlite sqlite = new BrowseHistorySqlite(this);
-        if ((guidanceShow == null || (guidanceShow != null && !TextUtils.equals("2", guidanceShow.toString())))
-                && !sqlite.isEmpty()
-                && TextUtils.equals(ToolsDevice.getVerName(this), "5.8.0.1")) {
+        if ((guidanceShow == null || (guidanceShow != null && !TextUtils.equals("2", guidanceShow.toString()))) && !sqlite.isEmpty()) {
             new Handler(Looper.getMainLooper()).post(() -> showHintDialog());
             FileManager.saveShared(this, FileManager.xmlKey_favoriteGuidanceShow, FileManager.xmlKey_favoriteGuidanceShow, "2");
         }
