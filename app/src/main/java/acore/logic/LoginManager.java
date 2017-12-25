@@ -44,6 +44,8 @@ import aplug.web.tools.JsAppCommon;
 import aplug.web.tools.WebviewManager;
 import third.growingio.GrowingIOController;
 import third.mall.aplug.MallCommon;
+import third.mall.aplug.MallReqInternet;
+import third.mall.aplug.MallStringManager;
 import third.push.umeng.UMPushServer;
 import third.push.xg.XGPushServer;
 import xh.basic.internet.UtilInternet;
@@ -174,9 +176,8 @@ public class LoginManager {
      * @param mAct
      */
     public static void logout(final Activity mAct) {
-        LinkedHashMap<String,String> params = new LinkedHashMap<>();
-        ReqInternet.in().doPost(StringManager.api_loginOut, params, new InternetCallback(mAct) {
-
+        String params = "type=userOut&devCode=" + XGPushServer.getXGToken(mAct);
+        ReqInternet.in().doPost(StringManager.api_getUserInfo, params, new InternetCallback(mAct) {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
                 if (flag >= UtilInternet.REQ_OK_STRING) {
@@ -213,6 +214,12 @@ public class LoginManager {
 
                 }
                 ObserverManager.getInstence().notify(ObserverManager.NOTIFY_LOGOUT, null, flag >= UtilInternet.REQ_OK_STRING);
+            }
+        });
+        MallReqInternet.in().doPost(MallStringManager.mall_api_loginOut, new LinkedHashMap<>(), new InternetCallback(mAct) {
+            @Override
+            public void loaded(int i, String s, Object o) {
+
             }
         });
     }
