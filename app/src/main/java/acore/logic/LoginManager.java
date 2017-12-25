@@ -65,7 +65,8 @@ public class LoginManager {
     private static String mPlatformName = "QQ";
 
     private static boolean mIsShowAd = true;
-    private static boolean mIsInitShowAdData = false;
+    private static boolean mIsGourmet = false;
+    private static boolean mIsInitGourmetData = false;
     private static boolean mIsTempVip = false;
     private static boolean mIsInitTempVipData = false;
 
@@ -379,41 +380,58 @@ public class LoginManager {
      * @return true:显示广告   false：去掉广告
      */
     public synchronized static boolean isShowAd(){
-        //在线参数，判断vivo市场单独处理（广告是否开启）
-        if("developer.vivo.com.cn".equals(ChannelUtil.getChannel(XHApplication.in()))) {
-            String showAD = AppCommon.getConfigByLocal("vivoAD");//release 2表示显示发布，显示广告，1不显示广告
-            if (showAD != null && !TextUtils.isEmpty(showAD) && "1".equals(StringManager.getFirstMap(showAD).get("release"))) {
-                mIsShowAd = false;
-                return mIsShowAd;//属于特殊处理，直接return.
-            }
+        if (!isVIVOShowAd()) {
+            mIsShowAd = false;
+            return mIsShowAd;
         }
+        mIsShowAd = !(isVIP() || isGourmet());
 
-        if (!mIsInitShowAdData) {//进入APP时初始化到内存
-            Object data = FileManager.loadShared(XHApplication.in(), FileManager.xmlFile_adIsShow, "isShowAd");
-            if (data == null)
-                mIsShowAd = true;
-            else {
-                mIsShowAd = !TextUtils.equals("1", String.valueOf(data));
-            }
-
-            Log.e("SLL", "M_isShowAd   " + "mIsInitShowAdData = " + mIsInitShowAdData + "   mIsShowAd = " + mIsShowAd);
-
-            mIsInitShowAdData = true;
-        }
-
-        mIsShowAd = !isVIP();
-
-        Log.e("SLL", "M_isShowAd   mIsShowAd = " + mIsShowAd);
+        Log.e("SLL", "M_isShowAd   mIsGourmet = " + mIsGourmet);
 
         return mIsShowAd;
     }
 
-    private static synchronized void setIsShowAd(boolean isShowAd){
-        mIsShowAd = isShowAd;
+    /**
+     * 在线参数，判断vivo市场单独处理（广告是否开启）
+     * @return
+     */
+    private synchronized static boolean isVIVOShowAd() {
+        boolean ret = true;
+        if("developer.vivo.com.cn".equals(ChannelUtil.getChannel(XHApplication.in()))) {
+            String showAD = AppCommon.getConfigByLocal("vivoAD");//release 2表示显示发布，显示广告，1不显示广告
+            if (showAD != null && !TextUtils.isEmpty(showAD) && "1".equals(StringManager.getFirstMap(showAD).get("release"))) {
+                ret = false;
+            }
+        }
+        return ret;
+    }
 
-        Log.e("SLL", "M_setIsShowAd   " + "isShowAd = " + isShowAd +"  mIsShowAd = " + mIsShowAd);
+    /**
+     * 此方法的本质是保存是否是美食家的数据
+     * @param isShowAd true 表示当前登录用户为非美食家，显示广告
+     *                 false 表示当前登录用户为美食家，不显示广告
+     */
+    private static synchronized void setIsShowAd(boolean isShowAd){
+        mIsGourmet = !isShowAd;
+        Log.e("SLL", "M_setIsShowAd   " + "isShowAd = " + isShowAd +"  mIsGourmet = " + mIsGourmet);
 
         FileManager.saveShared(XHApplication.in(),FileManager.xmlFile_adIsShow,"isShowAd",isShowAd ? "2" : "1");
+    }
+
+    private synchronized static boolean isGourmet() {
+        if (!mIsInitGourmetData) {//进入APP时初始化到内存
+            Object data = FileManager.loadShared(XHApplication.in(), FileManager.xmlFile_adIsShow, "isShowAd");
+            if (data == null)
+                mIsGourmet = true;
+            else {
+                mIsGourmet = !TextUtils.equals("1", String.valueOf(data));
+            }
+
+            Log.e("SLL", "M_isShowAd   " + "mIsInitGourmetData = " + mIsInitGourmetData + "   mIsGourmet = " + mIsGourmet);
+
+            mIsInitGourmetData = true;
+        }
+        return mIsGourmet;
     }
 
     /**
