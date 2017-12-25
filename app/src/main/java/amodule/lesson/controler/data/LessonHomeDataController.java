@@ -96,10 +96,6 @@ public class LessonHomeDataController {
         return mData;
     }
 
-    public OnLoadDataCallback getOnLoadDataCallback() {
-        return mOnLoadDataCallback;
-    }
-
     public void setOnLoadDataCallback(OnLoadDataCallback onLoadDataCallback) {
         if (null == onLoadDataCallback) return;
         mOnLoadDataCallback = onLoadDataCallback;
