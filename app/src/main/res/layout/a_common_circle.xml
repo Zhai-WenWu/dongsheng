@@ -30,7 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_horizontal"
-            tools:context="amodule.quan.activity.MainCircle" >
+            tools:context="amodule.main.activity.MainCircle" >
 
             <aplug.stickheaderlayout.StickHeader
                 android:id="@+id/circle_stick_header"

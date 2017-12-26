@@ -242,7 +242,7 @@ public class MallCommon {
 					//保存到sp中
 					num_shopcat= Integer.parseInt(num);
 					if(num_shopcat>0){
-						Main.setNewMsgNum(1,MallCommon.num_shopcat);
+//						Main.setNewMsgNum(1,MallCommon.num_shopcat);
 						if(num_shopcat>9){
 							if(view!=null)view.setVisibility(View.GONE);
 							if(view_two!=null)view_two.setVisibility(View.VISIBLE);
@@ -258,7 +258,7 @@ public class MallCommon {
 						}
 //						Main.setNewMsgNum(Integer.parseInt(CommonBottomView.BOTTOM_TWO),num_shopcat);
 					}else{
-						Main.setNewMsgNum(1,0);
+//						Main.setNewMsgNum(1,0);
 						if(view!=null)view.setVisibility(View.GONE);
 						if(view_two!=null)view_two.setVisibility(View.GONE);
 					}

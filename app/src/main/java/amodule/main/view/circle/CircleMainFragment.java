@@ -31,6 +31,7 @@ import acore.broadcast.ConnectionChangeReceiver;
 import acore.logic.AppCommon;
 import acore.logic.load.LoadManager;
 import acore.override.activity.base.BaseAppCompatActivity;
+import acore.override.activity.mian.MainBaseActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -58,7 +59,7 @@ public class CircleMainFragment extends Fragment {
     protected static final String PLATEDATA = "plate_data";
     public static final String CIRCLENAME = "circle_name";
     /** 依附的Activity */
-    private BaseAppCompatActivity mActivity;
+    private MainBaseActivity mActivity;
     /** 是否加载完成 */
     private boolean LoadOver = false;
     private LoadManager mLoadManager = null;
@@ -139,7 +140,7 @@ public class CircleMainFragment extends Fragment {
 
     @Override
     public void onAttach(Activity activity) {
-        mActivity = (BaseAppCompatActivity) activity;
+        mActivity = (MainBaseActivity) activity;
         super.onAttach(activity);
         isAutoPaly = "wifi".equals(ToolsDevice.getNetWorkSimpleType(activity));
         registnetworkListener();

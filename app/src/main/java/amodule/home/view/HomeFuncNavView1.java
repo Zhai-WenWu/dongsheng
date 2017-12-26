@@ -53,12 +53,12 @@ public class HomeFuncNavView1 extends LinearLayout {
 
     protected void initData() {
         int[] iconArray = {R.drawable.home_fanc_nav_1, R.drawable.home_fanc_nav_2, R.drawable.home_fanc_nav_3, R.drawable.home_fanc_nav_4};
-        String[] textArray = {"菜谱分类", "VIP名厨课", "做菜视频", "本周佳作"};
+        String[] textArray = {"菜谱分类", "VIP名厨课", "视频菜谱", "香哈优品"};
         String[] urls = {
                 "xiangha://welcome?fenlei.app",
                 "xiangha://welcome?url=https://appweb.xiangha.com/recom/xiangHaSchool",
                 "xiangha://welcome?HomeSecond.app?type=video",
-                "xiangha://welcome?WeekDish.app",
+                "xiangha://welcome?xhds.home.app",
         };
         for (int index = 0; index < navIds.size(); index++) {
             View navView = findViewById(navIds.get(index));

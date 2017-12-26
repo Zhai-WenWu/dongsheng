@@ -27,7 +27,8 @@ import acore.override.adapter.AdapterSimple;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.DownRefreshList;
-import amodule.quan.activity.MainCircle;
+import amodule.main.Main;
+import amodule.main.activity.MainCircle;
 import amodule.quan.activity.ShowSubject;
 import amodule.search.adapter.AdapterSearch;
 import aplug.basic.InternetCallback;
@@ -89,7 +90,8 @@ public class FavoriteQuan {
 			
 			@Override
 			public void onClick(View v) {
-				mAct.startActivity(new Intent(mAct,MainCircle.class));
+				Main.allMain.setCurrentTabByClass(MainCircle.class);
+				Main.colse_level = 1;
 				mAct.finish();
 			}
 		});
