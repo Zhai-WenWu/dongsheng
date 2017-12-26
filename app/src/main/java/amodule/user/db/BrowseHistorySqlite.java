@@ -150,4 +150,34 @@ public class BrowseHistorySqlite extends SQLiteOpenHelper {
 				+ HistoryData._dataJson + " text)";
 	}
 
+	public boolean isEmpty() {
+		boolean ret = true;
+		SQLiteDatabase db = null;
+		Cursor cursor = null;
+		try {
+			db = getReadableDatabase();
+			cursor = db.rawQuery("SELECT * FROM " + TB_DISH_NAME + " LIMIT 1", null);
+			if (cursor != null && cursor.getCount() > 0) {
+				ret = false;
+				return ret;
+			}
+			cursor = db.rawQuery("SELECT * FROM " + TB_SUBJECT_NAME + " LIMIT 1", null);
+			if (cursor != null && cursor.getCount() > 0) {
+				ret = false;
+				return ret;
+			}
+			cursor = db.rawQuery("SELECT * FROM " + TB_NOUS_NAME + " LIMIT 1", null);
+			if (cursor != null && cursor.getCount() > 0) {
+				ret = false;
+				return ret;
+			}
+		} finally {
+			if (cursor != null)
+				cursor.close();
+			if (db != null)
+				db.close();
+		}
+		return ret;
+	}
+
 }
