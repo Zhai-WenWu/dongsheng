@@ -381,7 +381,7 @@ public class CircleMainFragment extends Fragment {
             }
 
             video_layout = (LinearLayout) parentView.findViewById(R.id.video_layout);
-            if (videoImageView != null) {
+            if (videoImageView != null && video_layout != null) {
                 video_layout.addView(videoImageView);
                 videoImageView.onBegin();
                 videoImageView.setVideoClickCallBack(() -> {
