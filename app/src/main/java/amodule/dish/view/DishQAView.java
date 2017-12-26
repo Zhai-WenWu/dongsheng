@@ -166,7 +166,7 @@ public class DishQAView extends ItemBaseView{
         SpannableString spanableInfo = new SpannableString(content);
         //处理问图片
         Drawable d = getResources().getDrawable(R.drawable.dish_qa_icon);
-        d.setBounds(1, 1, Tools.getDimen(context,R.dimen.dp_20), Tools.getDimen(context,R.dimen.dp_20));
+        d.setBounds(1, 1, Tools.getDimen(context,R.dimen.dp_19), Tools.getDimen(context,R.dimen.dp_19));
         ImageSpan span = new ImageSpan(d, ImageSpan.ALIGN_BASELINE);
         spanableInfo.setSpan( span, 0, 1, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
 
