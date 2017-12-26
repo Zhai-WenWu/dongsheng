@@ -88,7 +88,9 @@ public class LessonHome extends BaseAppCompatActivity implements IObserver {
                         mViewController.setHeaderData(StringManager.getListMapByJson(o));
                 }
                 isRefreshingHeader = false;
-                mViewController.refreshComplete();
+                if (mViewController != null) {
+                    mViewController.refreshComplete();
+                }
                 if (!LoadOver) {
                     setDataControllerCallback();
                     EntryptData(true);
