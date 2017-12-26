@@ -122,6 +122,8 @@ public class Feedback extends BaseActivity implements OnClickListener {
 
     private void init() {
         AppCommon.feekbackMessage = 0;
+        if (Main.allMain != null && Main.allMain.getCurrentTab() == Main.TAB_MESSAGE)
+            AppCommon.quanMessage = 0;
         Main.setNewMsgNum(2, AppCommon.qiyvMessage + AppCommon.myQAMessage + AppCommon.quanMessage);
         MyMessage.notifiMessage(MyMessage.MSG_FEEKBACK_ONREFURESH, 0, null);
         feebback_reply_content = (EditText) findViewById(R.id.feebback_reply_content);

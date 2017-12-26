@@ -117,12 +117,16 @@ public class PushPraser {
 										@Override
 										public void onNumberReady(int count) {
 											if (count >= 0) {
+												if (Main.allMain != null && Main.allMain.getCurrentTab() == Main.TAB_MESSAGE)
+													AppCommon.quanMessage = 0;
 												AppCommon.qiyvMessage = count;
 												if (count > 0)
 													Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
 											}
 										}
 									});
+									if (Main.allMain != null && Main.allMain.getCurrentTab() == Main.TAB_MESSAGE)
+										AppCommon.quanMessage = 0;
 									//防止七鱼回调不回来
 									Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
 									new NotificationManager().notificationActivity(mContext, data);
@@ -137,17 +141,25 @@ public class PushPraser {
 								data.setStartAvtiviyWhenClick(Main.class);
 								new NotificationManager().notificationActivity(mContext, data);
 							} else {
-								AppCommon.quanMessage++;
+								if (Main.allMain != null && Main.allMain.getCurrentTab() == Main.TAB_MESSAGE) {
+									AppCommon.quanMessage = 0;
+								} else {
+									AppCommon.quanMessage++;
+								}
 								QiYvHelper.getInstance().getUnreadCount(new QiYvHelper.NumberCallback() {
 									@Override
 									public void onNumberReady(int count) {
 										if (count >= 0) {
+											if (Main.allMain != null && Main.allMain.getCurrentTab() == Main.TAB_MESSAGE)
+												AppCommon.quanMessage = 0;
 											AppCommon.qiyvMessage = count;
 											if (count > 0)
 												Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
 										}
 									}
 								});
+								if (Main.allMain != null && Main.allMain.getCurrentTab() == Main.TAB_MESSAGE)
+									AppCommon.quanMessage = 0;
 								//防止七鱼回调不回来
 								Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
 								new NotificationManager().notificationActivity(mContext, data);
@@ -155,17 +167,25 @@ public class PushPraser {
 							break;
 						// 显示通知，存在消息列表中，使用app不通知
 						case XHClick.NOTIFY_C:
-							AppCommon.quanMessage++;
+							if (Main.allMain != null && Main.allMain.getCurrentTab() == Main.TAB_MESSAGE) {
+								AppCommon.quanMessage = 0;
+							} else {
+								AppCommon.quanMessage++;
+							}
 							QiYvHelper.getInstance().getUnreadCount(new QiYvHelper.NumberCallback() {
 								@Override
 								public void onNumberReady(int count) {
 									if (count >= 0) {
+										if (Main.allMain != null && Main.allMain.getCurrentTab() == Main.TAB_MESSAGE)
+											AppCommon.quanMessage = 0;
 										AppCommon.qiyvMessage = count;
 										if (count > 0)
 											Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
 									}
 								}
 							});
+							if (Main.allMain != null && Main.allMain.getCurrentTab() == Main.TAB_MESSAGE)
+								AppCommon.quanMessage = 0;
 							//防止七鱼回调不回来
 							Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
 							if (mContext != null && ToolsDevice.isAppInPhone(mContext, mContext.getPackageName()) < 2) {

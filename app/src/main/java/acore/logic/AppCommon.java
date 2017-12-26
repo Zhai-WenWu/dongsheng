@@ -113,12 +113,18 @@ public class AppCommon {
                                 @Override
                                 public void onNumberReady(int count) {
                                     if (count >= 0) {
+                                        if (Main.allMain != null && Main.allMain.getCurrentTab() == Main.TAB_MESSAGE) {
+                                            quanMessage = 0;
+                                        }
                                         qiyvMessage = count;
                                         if (count > 0)
                                             Main.setNewMsgNum(2, quanMessage + feekbackMessage + myQAMessage + qiyvMessage);
                                     }
                                 }
                             });
+                            if (Main.allMain != null && Main.allMain.getCurrentTab() == Main.TAB_MESSAGE) {
+                                quanMessage = 0;
+                            }
                             Main.setNewMsgNum(2, quanMessage + feekbackMessage + myQAMessage + qiyvMessage);
                             // tok值
                             long tok = Integer.parseInt(alertArr[0]);
