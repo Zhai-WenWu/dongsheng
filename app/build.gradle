@@ -57,6 +57,7 @@ android {
         versionCode 223
         versionName "5.8.5.1"
         // dex突破65535的限制
+
         multiDexEnabled true
         //GrowingIO
         resValue("string", "growingio_project_id", "bf5bf872bedc95d3")
