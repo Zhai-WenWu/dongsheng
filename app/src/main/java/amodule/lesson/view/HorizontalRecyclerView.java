@@ -73,7 +73,6 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,
     private void initialize() {
         setVisibility(GONE);
         inflateView();
-        initView();
     }
 
     private void inflateView() {
@@ -156,6 +155,7 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,
 
     @Override
     public void setData(Map<String, String> map) {
+        initView();
         if (map == null || map.isEmpty()){
             setVisibility(GONE);
             return;
