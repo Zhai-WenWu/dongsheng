@@ -10,6 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.xiangha.R;
 
 import java.util.Map;
@@ -67,6 +68,6 @@ public class ViewHolder1 extends XHBaseRvViewHolder {
         mLinearLayout.setBackgroundResource((empty1 && empty2 && empty3 && empty4) ? 0 : R.drawable.bg_home_horizontal_gradation);
         String img2 = data.get("img2");
         if (!TextUtils.isEmpty(img2) && !TextUtils.equals(img, img2))
-            Glide.with(mItemView.getContext()).load(img2);
+            Glide.with(mItemView.getContext()).load(img2).diskCacheStrategy(DiskCacheStrategy.SOURCE).preload();
     }
 }

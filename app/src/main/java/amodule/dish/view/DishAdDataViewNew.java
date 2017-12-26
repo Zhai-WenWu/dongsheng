@@ -68,7 +68,7 @@ public class DishAdDataViewNew extends ItemBaseView {
             public void callBack(Map<String, String> map) {
                 //对数据进行处理
                 String data = map.get(AdPlayIdConfig.DISH_TIESHI);
-                Log.i("tzy", AdPlayIdConfig.DISH_TIESHI + " : " + data);
+                Log.i("xianghaTag", AdPlayIdConfig.DISH_TIESHI + " : " + data);
                 adDataMap = StringManager.getFirstMap(data);
                 DishAdDataViewNew.this.setVisibility(View.VISIBLE);
                 if (adDataMap.containsKey("type")) {
@@ -187,7 +187,7 @@ public class DishAdDataViewNew extends ItemBaseView {
         imgWidth = (int) ((ToolsDevice.getWindowPx(getContext()).widthPixels - Tools.getDimen(getContext(), R.dimen.dp_61)) / 3f);
         imgHeight = imgWidth * 2 / 3;
         final List<Map<String, String>> imgsArray = StringManager.getListMapByJson(adDataMap.get("imgs"));
-        Log.i("tzy", "imgsArray : " + imgsArray.toString());
+        Log.i("xianghaTag", "imgsArray : " + imgsArray.toString());
         int[] ids = {R.id.ad_three_pic_1, R.id.ad_three_pic_2, R.id.ad_three_pic_3};
         if (imgsArray.size() >= ids.length) {
             for (int i = 0; i < ids.length; i++) {
@@ -212,7 +212,7 @@ public class DishAdDataViewNew extends ItemBaseView {
         //曝光数据
         exposureAdData();
         //添加到parent
-        Log.i("tzy", "id = " + R.id.ad_three_pic_layout);
+        Log.i("xianghaTag", "id = " + R.id.ad_three_pic_layout);
         addViewToPraent(R.id.ad_three_pic_layout, parentView);
     }
 
@@ -282,17 +282,17 @@ public class DishAdDataViewNew extends ItemBaseView {
         int[] layoutIds = {R.id.ad_big_pic_layout, R.id.ad_small_pic_layout, R.id.ad_three_pic_layout};
         int count = 0;
         for (int id : layoutIds) {
-            Log.i("tzy", "id :" + count++);
+            Log.i("xianghaTag", "id :" + count++);
             findViewById(id).setVisibility(id == showId ? View.VISIBLE : View.GONE);
         }
-        Log.i("tzy", "addView");
+        Log.i("xianghaTag", "addView");
         if(DishAdDataViewNew.this!=null&&context!=null)
             parentView.removeAllViews();
             parentView.addView(DishAdDataViewNew.this);
     }
 
     public void onListScroll() {
-        if (adDataMap != null && !"2".equals(adDataMap.get("isShow"))) {
+        if (xhAllAdControl!=null&&adDataMap.size()>0 && !"2".equals(adDataMap.get("isShow"))) {
             xhAllAdControl.onAdBind(0, root_layout, "");
             adDataMap.put("isShow", "2");
         }

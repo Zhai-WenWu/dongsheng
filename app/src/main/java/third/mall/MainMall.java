@@ -18,7 +18,7 @@ import java.util.Map;
 
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
-import acore.override.activity.mian.MainBaseActivity;
+import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.FileManager;
 import acore.tools.LogManager;
 import acore.tools.Tools;
@@ -41,8 +41,8 @@ import xh.basic.tool.UtilFile;
  * @author yu
  *
  */
-public class MainMall extends MainBaseActivity implements OnClickListener{
-	public static final String KEY = "MainMall";
+public class MainMall extends BaseAppCompatActivity implements OnClickListener{
+//	public static final String KEY = "MainMall";
 
 	// 加载管理
 	private TextView mall_news_num;
@@ -54,11 +54,11 @@ public class MainMall extends MainBaseActivity implements OnClickListener{
 	@Override
 	protected void onCreate(Bundle arg0) {
 		super.onCreate(arg0);
-		setContentView(R.layout.a_mall);
+//		setContentView(R.layout.a_mall);
 		getWindow().setFormat(PixelFormat.TRANSLUCENT);
 		//在Main中保存首页的对象
-		Main.allMain.allTab.put(KEY, this);
-//		initActivity("电商首页",2, 0, 0, R.layout.a_mall);
+//		Main.allMain.allTab.put(KEY, this);
+		initActivity("",2, 0, 0, R.layout.a_mall);
 		common= new MallCommon(this);
 		initView();
 //		init();
@@ -92,7 +92,7 @@ public class MainMall extends MainBaseActivity implements OnClickListener{
 //		findViewById(R.id.mall_title_rela).setOnClickListener(this);
 //		findViewById(R.id.ed_search_layout_mall).setOnClickListener(this);
 		findViewById(R.id.back).setOnClickListener(this);
-		findViewById(R.id.back).setVisibility(View.GONE);
+		findViewById(R.id.back).setVisibility(View.VISIBLE);
 		findViewById(R.id.shopping_layout).setOnClickListener(this);
 		findViewById(R.id.shopping_layout).setVisibility(View.VISIBLE);
 		//处理webView
@@ -143,7 +143,7 @@ public class MainMall extends MainBaseActivity implements OnClickListener{
 		super.onResume();
 		Log.i("zyj","ma::::MallCommon.num_shopcat::"+MallCommon.num_shopcat);
 		if(MallCommon.num_shopcat>0){
-			Main.setNewMsgNum(1,MallCommon.num_shopcat);
+//			Main.setNewMsgNum(1,MallCommon.num_shopcat);
 			if(MallCommon.num_shopcat>9){
 				mall_news_num.setVisibility(View.GONE);
 				mall_news_num_two.setVisibility(View.VISIBLE);
@@ -157,7 +157,7 @@ public class MainMall extends MainBaseActivity implements OnClickListener{
 				mall_news_num.setText(""+MallCommon.num_shopcat);
 			}
 		}else{
-			Main.setNewMsgNum(1,0);
+//			Main.setNewMsgNum(1,0);
 			mall_news_num.setVisibility(View.GONE);
 			mall_news_num_two.setVisibility(View.GONE);
 		}

@@ -37,6 +37,7 @@ import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.dish.view.DishADBannerView;
 import amodule.dish.view.DishAboutView;
+import amodule.dish.view.DishAdDataViewNew;
 import amodule.dish.view.DishExplainView;
 import amodule.dish.view.DishHeaderViewNew;
 import amodule.dish.view.DishHoverViewControl;
@@ -54,10 +55,6 @@ import third.video.VideoPlayerController;
  */
 public class DetailDishViewManager {
     private RelativeLayout dishVidioLayout;
-    public static int showNumLookImage = 0;//点击展示次数
-    private boolean isHasVideoOnClick = false;
-    private boolean isShowTitleColor=false;
-    private View view_oneImage;
     private ListView listView;
     private int firstItemIndex = -1,startY;
     private boolean isHasVideo=false,isRecored=false;
@@ -197,7 +194,6 @@ public class DetailDishViewManager {
             if(mapTemp.containsKey("nickName")&&!TextUtils.isEmpty(mapTemp.get("nickName")))handlerTitleName(mapTemp.get("nickName"));
             initVipView(map.containsKey("type")?map.get("type"):"");
         }else if (dishHeaderViewNew != null&& !TextUtils.isEmpty(img))dishHeaderViewNew.setImg(img,0);
-
     }
     public void initVipView(String type){
         if(isLoadVip)return;isLoadVip=true;
@@ -269,7 +265,6 @@ public class DetailDishViewManager {
                 @Override
                 public void getVideoControl(VideoPlayerController mVideoPlayerController, RelativeLayout dishVidioLayouts, View view_oneImage) {
                     dishVidioLayout=dishVidioLayouts;
-                    DetailDishViewManager.this.view_oneImage= view_oneImage;
                 }
             });
             dishHeaderViewNew.setData(list, permissionMap);
@@ -378,12 +373,11 @@ public class DetailDishViewManager {
     public void handlerExplainView(Map<String,String> map) {
         if(dishExplainView!=null){
             dishExplainView.setVisibility(View.VISIBLE);
-            dishExplainView.setAdData();
         }
         if(dishExplainView!=null && map!=null && !TextUtils.isEmpty(map.get("remark"))){
             dishExplainView.setVisibility(View.VISIBLE);
             dishExplainView.setData(map);
-        }else dishExplainView.setVisibility(View.GONE);
+        }else dishExplainView.hideViewRemark();
     }
     /**
      * 处理用户信息问答
@@ -447,8 +441,6 @@ public class DetailDishViewManager {
         if(dishHeaderViewNew==null)return false;
         return dishHeaderViewNew.onBackPressed();
     }
-    public void refresh() {
-    }
     /**
      * listview滑动监听
      */
@@ -461,6 +453,9 @@ public class DetailDishViewManager {
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 firstItemIndex=firstVisibleItem;
+                if(layoutFooter!=null){
+                    onSrollView();
+                }
             }
         });
         listView.setOnTouchListener(new View.OnTouchListener() {
@@ -474,6 +469,7 @@ public class DetailDishViewManager {
                                 isRecored = true;
                             }
                         }
+                        if(dishHoverViewControl!=null)dishHoverViewControl.hindGoodLayout();
                         break;
                     case MotionEvent.ACTION_MOVE:
                         if (!isHasVideo) {
@@ -571,11 +567,26 @@ public class DetailDishViewManager {
             public void run() {
                 handler.obtainMessage().sendToTarget();
             }
-
         }
     }
     public void handleVipState(boolean isVip) {
         if (dishHeaderViewNew != null)
             dishHeaderViewNew.handleVipState(isVip);
+    }
+    /**
+     * scrollview滚动监听
+     */
+    public void onSrollView(){
+        for (int i = 0; i < layoutFooter.getChildCount(); i++) {
+            View dishAdDataView = layoutFooter.getChildAt(i);
+            if (dishAdDataView != null && dishAdDataView instanceof DishExplainView) {
+                int[] viewLocation = new int[2];
+                dishAdDataView.getLocationOnScreen(viewLocation);
+                if ((viewLocation[1] > Tools.getStatusBarHeight(mAct)
+                        && viewLocation[1] < Tools.getScreenHeight() - ToolsDevice.dp2px(mAct, 57))) {
+                    ((DishExplainView) dishAdDataView).onListScroll();
+                }
+            }
+        }
     }
 }

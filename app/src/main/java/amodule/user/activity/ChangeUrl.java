@@ -16,7 +16,10 @@ import android.widget.TextView;
 
 import com.xiangha.R;
 
+import acore.logic.LoginManager;
+import acore.override.XHApplication;
 import acore.override.activity.base.BaseActivity;
+import acore.tools.ChannelUtil;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -50,9 +53,12 @@ public class ChangeUrl extends BaseActivity {
         super.onCreate(savedInstanceState);
         initActivity("切换url", 2, 0, R.layout.c_view_bar_title, R.layout.a_core_change_url);
         initView();
-        initData();
         addListener();
+        initData();
         loadManager.hideProgressBar();
+        if(LoginManager.isLogin()&&LoginManager.isManager()){
+            Tools.showToast(XHApplication.in(), ChannelUtil.getChannel(this));
+        }
     }
 
     private void addListener() {
@@ -206,6 +212,7 @@ public class ChangeUrl extends BaseActivity {
         mMallSwitchBtn = (Switch) findViewById(R.id.mall_switch);
         mRequsetFailTipSwitch = (Switch) findViewById(R.id.request_fail_tip_switch);
         ds_from_switch = (Switch) findViewById(R.id.ds_from_switch);
+        ((TextView)findViewById(R.id.text_channel)).setText("渠道号:  "+ChannelUtil.getChannel(this));
     }
 
     private void initData() {

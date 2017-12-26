@@ -372,6 +372,7 @@ public class StringManager extends UtilString {
     public final static String API_MAIN8_ANTIC = apiUrl + "main8/dish/getDishAntic";//菜谱详情页小技巧
     public final static String API_HOMEPAGE_6_0 = apiUrl + "main8/recommend/recommend";//首页
     public final static String API_GETDISHTYPE = apiUrl + "main8/dish/getDishType";//首页
+    public final static String API_PAYVIP = apiUrl + "main7/vip/payVip";//支付vip处理
 
     public final static String API_SCHOOL_HOME = apiUrl + "main8/school/home";//会员首页
     public final static String API_SCHOOL_COURSELIST = apiUrl + "main8/school/courseList";//会员首页列表

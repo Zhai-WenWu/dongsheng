@@ -38,7 +38,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:lines="1"
-            android:ellipsize="end"
+            android:maxEms="7"
             android:textColor="@color/c_white_text"
             android:textStyle="bold"
             android:textSize="@dimen/sp_16"/>
@@ -48,20 +48,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_2"
-            android:ellipsize="end"
             android:lines="1"
+            android:maxEms="10"
             android:textColor="@color/c_white_text"
-            android:textSize="@dimen/sp_11"
-            android:maxEms="8"/>
+            android:textSize="@dimen/sp_11"/>
 
         <TextView
             android:id="@+id/textview3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_3"
-            android:maxEms="10"
             android:lines="1"
-            android:ellipsize="end"
+            android:maxEms="10"
             android:textColor="@color/c_white_text"
             android:textSize="@dimen/sp_11"/>
 

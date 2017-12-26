@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/transparent"
+    android:id="@+id/root_container"
     >
 
     <ImageView
         android:id="@+id/a_hint_img"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingTop="@dimen/dp_14"
+        android:layout_height="wrap_content"
         android:src="@drawable/hint_myself"
-        />
-
-</LinearLayout>
+        android:adjustViewBounds="true"
+        android:layout_alignParentBottom="true"/>
+</RelativeLayout>

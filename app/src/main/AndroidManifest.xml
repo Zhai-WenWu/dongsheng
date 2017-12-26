@@ -276,6 +276,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/common_TransParentThemeNew"
             android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name="amodule.main.activity.MainCircle"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/common_TransParentThemeNew"
+            android:windowSoftInputMode="adjustPan"/>
 
         <activity
             android:name="amodule.main.activity.MainHome"
@@ -617,13 +623,6 @@
 
 
         <!-- quan start -->
-        <activity
-            android:name="amodule.quan.activity.MainCircle"
-            android:configChanges="orientation|keyboardHidden"
-            android:hardwareAccelerated="true"
-            android:screenOrientation="portrait"
-            android:theme="@style/titleTheme"
-            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name="amodule.quan.activity.FriendQuan"
             android:configChanges="orientation|keyboardHidden"

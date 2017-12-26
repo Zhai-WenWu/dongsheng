@@ -1,4 +1,4 @@
-package amodule.quan.activity;
+package amodule.main.activity;
 
 import android.annotation.SuppressLint;
 import android.graphics.PixelFormat;
@@ -19,7 +19,7 @@ import java.util.Map;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
-import acore.override.activity.base.BaseAppCompatActivity;
+import acore.override.activity.mian.MainBaseActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -35,7 +35,8 @@ import aplug.basic.ReqInternet;
  *
  * @author tanzeyu
  */
-public class MainCircle extends BaseAppCompatActivity implements View.OnClickListener {
+public class MainCircle extends MainBaseActivity implements View.OnClickListener {
+    public static final String KEY = "MainCircle";
     public static final String STATISTICS_ID = "a_quan_homepage430";
     /** 顶部tab */
     private PagerSlidingTabStrip mTabs;
@@ -56,7 +57,8 @@ public class MainCircle extends BaseAppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         //sufureView页面闪烁
         getWindow().setFormat(PixelFormat.TRANSLUCENT);
-        initActivity("", 2, 0, 0, R.layout.a_circle_home);
+        setContentView(R.layout.a_circle_home);
+//        initActivity("", 2, 0, 0, R.layout.a_circle_home);
 
         //
         initView();
@@ -76,6 +78,7 @@ public class MainCircle extends BaseAppCompatActivity implements View.OnClickLis
 
         mPushIconView.setOnClickListener(this);
         findViewById(R.id.back).setOnClickListener(this);
+        findViewById(R.id.back_ll).setVisibility(View.GONE);
         //获取模块数据
         loadManager.setLoading(v -> loadModuleData());
     }

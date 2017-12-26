@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -14,13 +13,13 @@ import android.widget.TextView;
 import com.xiangha.R;
 
 import java.text.SimpleDateFormat;
-import java.util.TimeZone;
 
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule._common.utility.WidgetUtility;
 import amodule.home.activity.HomeSecondListActivity;
-import amodule.quan.activity.MainCircle;
+import amodule.home.activity.HomeWeekListActivity;
+import third.mall.MainMall;
 
 /**
  * Description :
@@ -76,11 +75,10 @@ public class HomeFuncNavView2 extends LinearLayout {
         }
         WidgetUtility.setResToImage(getImageView(R.id.icon_left_1),resId);
         mLeftView.setOnClickListener(v->getContext().startActivity(new Intent(getContext(), HomeSecondListActivity.class).putExtra(HomeSecondListActivity.TAG,"day")));
-
-        WidgetUtility.setTextToView(getTextView(R.id.text_right_1),"关注/社区");
-        WidgetUtility.setTextToView(getTextView(R.id.text_right_2),"与哈友一起交流");
-        WidgetUtility.setResToImage(getImageView(R.id.icon_right_1),R.drawable.home_nav_circle);
-        mRightView.setOnClickListener(v->getContext().startActivity(new Intent(getContext(), MainCircle.class)));
+        WidgetUtility.setTextToView(getTextView(R.id.text_right_1),"本周佳作");
+        WidgetUtility.setTextToView(getTextView(R.id.text_right_2),"一周食谱精选");
+        WidgetUtility.setResToImage(getImageView(R.id.icon_right_1),R.drawable.home_nav_weekly);
+        mRightView.setOnClickListener(v->getContext().startActivity(new Intent(getContext(), HomeWeekListActivity.class)));
     }
 
     protected TextView getTextView(int id){

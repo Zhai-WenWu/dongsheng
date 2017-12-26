@@ -30,6 +30,7 @@ import acore.logic.PayCallback;
 import acore.logic.VersionOp;
 import acore.logic.XHClick;
 import acore.logic.load.LoadManager;
+import acore.override.XHApplication;
 import acore.tools.FileManager;
 import acore.tools.ObserverManager;
 import acore.tools.StringManager;
@@ -77,6 +78,9 @@ public class JsAppCommon extends JsBase {
     private BarShare mBarShare = null;
     public static boolean isReloadWebView = false;
     private String url;
+    public String payType = "";//支付业务类型
+    public static final String PAY_TYPE_VIP_OPEN="openVip";//支付vip类型--开通
+    public static final String PAY_TYPE_VIP_RENEW="vipRenew";//支付vip类型--续费
 
     public JsAppCommon(Activity activity, XHWebView webView, LoadManager loadManager, BarShare barShare) {
         this.mAct = activity;
@@ -862,11 +866,18 @@ public class JsAppCommon extends JsBase {
             });
         }
     }
-
+    @JavascriptInterface
+    public void goPayBs(String url, String params, String type,String typeBs){
+        if (!ToolsDevice.isNetworkAvailable(mAct)) {
+            onPayCallback(false, "网络异常，请检查网络");
+            return;
+        }
+        if(!TextUtils.isEmpty(typeBs)) payType = typeBs;//记录当前支付类型
+        goPay(url,params,type);
+    }
 
     @JavascriptInterface
     public void goPay(String url, String params, final String type) {
-
         if (!ToolsDevice.isNetworkAvailable(mAct)) {
             onPayCallback(false, "网络异常，请检查网络");
             return;
@@ -925,13 +936,11 @@ public class JsAppCommon extends JsBase {
 
 
     public void onPayCallback(final boolean isOk, final Object data) {
-//		Tools.showToast(mAct,"onPayCallback() isOk:" + isOk);
-//		//Log.i("FRJ","onPayCallback() isOk:" + isOk + "  data: " + data);
+//		Log.i("xianghaTag","onPayCallback() isOk:" + isOk + "  data: " + data);
         if (mAct != null && mWebView != null) {
             mWebView.post(new Runnable() {
                 @Override
                 public void run() {
-                    //Log.i("FRJ", "onPayCallback() isOk:" + isOk + "  data: " + data);
 //					StringManager.getListMapByJson(data);
                     String newData = String.valueOf(data);
 
@@ -941,7 +950,7 @@ public class JsAppCommon extends JsBase {
                     if (mOnPayFinishListener != null) {
                         mOnPayFinishListener.onPayFinish(isOk, data);
                     }
-                    if (isOk)//支付成功，如果是开通的VIP，设置VIP状态。因为无法区分此次支付是否是购买VIP，所以每次支付成功都设置一次。
+                    if (isOk) {//支付成功，如果是开通的VIP，设置VIP状态。因为无法区分此次支付是否是购买VIP，所以每次支付成功都设置一次。
                         mWebView.postDelayed(() -> {
                             LoginManager.initYiYuanBindState(mAct, new Runnable() {
                                 @Override
@@ -950,10 +959,26 @@ public class JsAppCommon extends JsBase {
                                 }
                             });
                         }, 2000);
+                        if(PAY_TYPE_VIP_OPEN.equals(payType)||PAY_TYPE_VIP_RENEW.equals(payType)){
+                            payType="";
+                            payVip();//支付类型
+                        }
+                    }
                     ObserverManager.getInstence().notify(ObserverManager.NOTIFY_PAYFINISH, null, isOk);
                 }
             });
         }
+    }
+    /**
+     * 支付成功通知服务端---不可删除
+     */
+    private void payVip(){
+        String url = StringManager.API_PAYVIP;
+        ReqEncyptInternet.in().doEncypt(url, "", new InternetCallback(XHApplication.in()) {
+            @Override
+            public void loaded(int i, String s, Object o) {
+            }
+        });
     }
 
     @JavascriptInterface

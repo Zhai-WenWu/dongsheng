@@ -282,10 +282,6 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         if(adapterDishNew!=null){
             adapterDishNew=null;
         }
-
-    }
-    public void refresh() {
-        if(detailDishViewManager!=null)detailDishViewManager.refresh();
     }
     private boolean getStateMakes(ArrayList<Map<String, String>> listdata){
         if(listdata!=null&&listdata.size()>0){

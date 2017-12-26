@@ -19,6 +19,7 @@ import com.xiangha.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import acore.override.XHApplication;
@@ -42,6 +43,8 @@ import aplug.web.tools.JsAppCommon;
 import aplug.web.tools.WebviewManager;
 import third.growingio.GrowingIOController;
 import third.mall.aplug.MallCommon;
+import third.mall.aplug.MallReqInternet;
+import third.mall.aplug.MallStringManager;
 import third.push.umeng.UMPushServer;
 import third.push.xg.XGPushServer;
 import xh.basic.internet.UtilInternet;
@@ -60,7 +63,11 @@ public class LoginManager {
 
     private static String mPlatformName = "QQ";
 
-    private static boolean mIsShowAd = true,isLoadFile = false;
+    private static boolean mIsShowAd = true;
+    private static boolean mIsGourmet = false;
+    private static boolean mIsInitGourmetData = false;
+    private static boolean mIsTempVip = false;
+    private static boolean mIsInitTempVipData = false;
 
     /**
      * 自动登录
@@ -171,7 +178,6 @@ public class LoginManager {
     public static void logout(final Activity mAct) {
         String params = "type=userOut&devCode=" + XGPushServer.getXGToken(mAct);
         ReqInternet.in().doPost(StringManager.api_getUserInfo, params, new InternetCallback(mAct) {
-
             @Override
             public void loaded(int flag, String url, Object returnObj) {
                 if (flag >= UtilInternet.REQ_OK_STRING) {
@@ -208,6 +214,12 @@ public class LoginManager {
 
                 }
                 ObserverManager.getInstence().notify(ObserverManager.NOTIFY_LOGOUT, null, flag >= UtilInternet.REQ_OK_STRING);
+            }
+        });
+        MallReqInternet.in().doPost(MallStringManager.mall_api_loginOut, new LinkedHashMap<>(), new InternetCallback(mAct) {
+            @Override
+            public void loaded(int i, String s, Object o) {
+
             }
         });
     }
@@ -320,31 +332,23 @@ public class LoginManager {
         ReqInternet.in().doGet(StringManager.api_getUserPowers, new InternetCallback(act) {
             @Override
             public void loaded(int flag, String s, Object o) {
-                //Log.i("FRJ","getUserPowers()" + flag + "    o:" + o);
+                boolean isShowAd = true;
                 if (flag >= UtilInternet.REQ_OK_STRING) {
                     ArrayList<Map<String, String>> arrayList = StringManager.getListMapByJson(o);
                     if (arrayList.size() > 0) {
-                        ArrayList<Map<String, String>> sendArrayList = StringManager.getListMapByJson(arrayList.get(0).get("send"));
+                        Map<String, String> firstMap = arrayList.get(0);
+                        ArrayList<Map<String, String>> sendArrayList = StringManager.getListMapByJson(firstMap.get("send"));
                         if (sendArrayList.size() > 0) {
                             MainChangeSend.sendMap = sendArrayList.get(0);
                         } else {
                             MainChangeSend.sendMap = null;
                         }
-                        String adBlock = arrayList.get(0).get("adBlock");
-                        //Log.i("FRJ","getUserPowers adBlock:" + adBlock);
-                        if(!TextUtils.isEmpty(adBlock) && "2".equals(adBlock)){
-                            mIsShowAd = false;
-                        }else{
-                            mIsShowAd = true;
-                        }
+                        isShowAd = !TextUtils.equals("2", firstMap.get("adBlock"));
                     } else {
                         MainChangeSend.sendMap = null;
-                        mIsShowAd = true;
                     }
-                }else{
-                    mIsShowAd = true;
                 }
-                setIsShowAd();
+                setIsShowAd(isShowAd);
             }
         });
     }
@@ -374,38 +378,63 @@ public class LoginManager {
      * 判断是否有去掉广告的权利
      * @return true:显示广告   false：去掉广告
      */
-    public static boolean isShowAd(){
-        if(!isLoadFile){
-            isLoadFile = true;
-            mIsShowAd = getIsShowAd();
+    public synchronized static boolean isShowAd(){
+        if (!isVIVOShowAd()) {
+            mIsShowAd = false;
+            return mIsShowAd;
         }
-        //在线参数，判断vivo市场单独处理（广告是否开启）
-        if("developer.vivo.com.cn".equals(ChannelUtil.getChannel(XHApplication.in()))) {
-            String showAD = AppCommon.getConfigByLocal("vivoAD");//release 2表示显示发布，显示广告，1不显示广告
-            if (showAD != null && !TextUtils.isEmpty(showAD) && "1".equals(StringManager.getFirstMap(showAD).get("release"))) {
-                return false;
-            }
-        }
-        if (isTempVip())
-            return false;
+        mIsShowAd = !(isVIP() || isGourmet());
         return mIsShowAd;
     }
 
-    private static synchronized void setIsShowAd(){
-//        //Log.i("FRJ","setIsShowAd():" + mIsShowAd);
-        FileManager.saveShared(XHApplication.in(),FileManager.xmlFile_adIsShow,"isShowAd",mIsShowAd?"2":"1");
+    /**
+     * 在线参数，判断vivo市场单独处理（广告是否开启）
+     * @return
+     */
+    private synchronized static boolean isVIVOShowAd() {
+        boolean ret = true;
+        if("developer.vivo.com.cn".equals(ChannelUtil.getChannel(XHApplication.in()))) {
+            String showAD = AppCommon.getConfigByLocal("vivoAD");//release 2表示显示发布，显示广告，1不显示广告
+            if (showAD != null && !TextUtils.isEmpty(showAD) && "1".equals(StringManager.getFirstMap(showAD).get("release"))) {
+                ret = false;
+            }
+        }
+        return ret;
     }
 
-    private static boolean getIsShowAd(){
-        Object data = FileManager.loadShared(XHApplication.in(),FileManager.xmlFile_adIsShow,"isShowAd");
-//        //Log.i("FRJ","getIsShowAd():" + data);
-        if(data != null && "1".equals(String.valueOf(data)))
-            return false;
-        return true;
+    /**
+     * 此方法的本质是保存是否是美食家的数据
+     * @param isShowAd true 表示当前登录用户为非美食家，显示广告
+     *                 false 表示当前登录用户为美食家，不显示广告
+     */
+    private static synchronized void setIsShowAd(boolean isShowAd){
+        mIsGourmet = !isShowAd;
+        FileManager.saveShared(XHApplication.in(),FileManager.xmlFile_adIsShow,"isShowAd",isShowAd ? "2" : "1");
     }
 
-    public static boolean isVIP(){
-        return isUserVip();
+    private synchronized static boolean isGourmet() {
+        if (!mIsInitGourmetData) {//进入APP时初始化到内存
+            boolean showAd = true;
+            Object data = FileManager.loadShared(XHApplication.in(), FileManager.xmlFile_adIsShow, "isShowAd");
+            if (data != null && TextUtils.equals("1", String.valueOf(data)))
+                showAd = false;
+            mIsGourmet = !showAd;//字段转化
+            mIsInitGourmetData = true;
+        }
+        return mIsGourmet;
+    }
+
+    /**
+     * VIP策略：
+     * 有账号，以账号Vip为准
+     * 无账号，以设备vip为准
+     */
+    public static boolean isVIP(){//体现逻辑
+        if(LoginManager.isLogin()){
+            return isUserVip();
+        }else {
+           return isTempVip();
+        }
     }
 
     public static boolean isUserVip(){
@@ -417,11 +446,23 @@ public class LoginManager {
     }
 
     /**
-     * 是否是临时vip
+     *是否是临时vip
+     *
+     * 此方法只有在特殊时候需要单独判断是否临时会员的时候才能在外部调用；
+     * 目前外部用到的地方：
+     *      1.DishSkillView：点击事件中的判断
+     *      2.DetailDishViewManager：菜谱详情页用于判断是否显示VIP相关的View
+     *      3.MainMyself：我的页面
+     *          （1）：初始化页面时，会员迁移View的显隐
+     *          （2）：登录成功时，会员迁移弹框的显示
      * @return
      */
-    public static boolean isTempVip() {
-        return "2".equals(FileManager.loadShared(XHApplication.in(), FileManager.xmlFile_appInfo, "isTempVip"));
+    public synchronized static boolean isTempVip() {
+        if (!mIsInitTempVipData) {//进入APP时初始化到内存
+            mIsTempVip = "2".equals(FileManager.loadShared(XHApplication.in(), FileManager.xmlFile_appInfo, "isTempVip"));
+            mIsInitTempVipData = true;
+        }
+        return mIsTempVip;
     }
 
     /**
@@ -429,6 +470,7 @@ public class LoginManager {
      * @param tempVip
      */
     public static void setTempVip(final boolean tempVip) {
+        mIsTempVip = tempVip;
         FileManager.saveShared(XHApplication.in(),FileManager.xmlFile_appInfo,"isTempVip",tempVip ? "2" : "");
     }
 
@@ -606,15 +648,6 @@ public class LoginManager {
         return regTime;
     }
 
-    public static int getVipMaturityDay(){
-        if(isUserVip()){
-            return getUserVipMaturityDay();
-        } else if(isTempVip()) {
-            return getTempVipMaturityDay();
-        }
-        return 0;
-    }
-
     public static int getUserVipMaturityDay(){
         if(userInfo != null && userInfo.containsKey("maturity_day")){
             String vipMaturityDay = userInfo.get("maturity_day");
@@ -728,7 +761,7 @@ public class LoginManager {
     public static void setVipStateChanged() {
         Object vipState = FileManager.loadShared(XHApplication.in(), FileManager.xmlFile_appInfo, "vipState");
         boolean lastVipState = "2".equals(vipState);
-        boolean currVipState = isVIP() || isTempVip();
+        boolean currVipState = isVIP();
         if(lastVipState != currVipState) {//如果vip状态改变
             FileManager.saveShared(XHApplication.in(), FileManager.xmlFile_appInfo, "vipState", currVipState ? "2" : "1");
             ObserverManager.getInstence().notify(ObserverManager.NOTIFY_VIPSTATE_CHANGED, null, null);

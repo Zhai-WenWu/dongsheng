@@ -13,7 +13,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.webkit.WebSettings;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -94,6 +93,7 @@ public class  ShowWeb extends WebActivity implements IObserver {
 		});
 		MallCommon common= new MallCommon(this);
 		common.setStatisticStat(url);
+		ObserverManager.getInstence().registerObserver(this,ObserverManager.NOTIFY_LOGIN,ObserverManager.NOTIFY_LOGIN);
 //		webview.upWebViewNum();
 	}
 
@@ -196,6 +196,7 @@ public class  ShowWeb extends WebActivity implements IObserver {
 
 	public void showCommentBar(String userName,String userCode){
 		this.userCode = userCode;
+		editControlerLayout.setVisibility(View.VISIBLE);
 		commentBar.setVisibility(View.VISIBLE);
 		commentBar.setEditTextHint("回复 ：" + userName);
 	}
@@ -237,6 +238,8 @@ public class  ShowWeb extends WebActivity implements IObserver {
 		super.onRestart();
 		if(loadManager != null)
 			loadManager.hideProgressBar();
+		//同cookie并刷新
+		syncCookieReload();
 	}
 
 	@Override
@@ -395,6 +398,28 @@ public class  ShowWeb extends WebActivity implements IObserver {
 					Log.i("tzy","javascript:"+shareCallback+"(\""+dataMap.get("status")+"\")");
 				}
 				break;
+			case ObserverManager.NOTIFY_LOGIN:
+				needSyncCookieReload = true;
+				break;
+			case ObserverManager.NOTIFY_LOGOUT:
+				needSyncCookieReload = true;
+				break;
+		}
+	}
+
+	private boolean needSyncCookieReload= false;
+	private void syncCookieReload(){
+		if(needSyncCookieReload){
+			needSyncCookieReload = false;
+			try{
+				WebviewManager.syncXHCookie();
+				WebviewManager.syncDSCookie();
+			}catch (Exception e){
+
+			}
+			if(webview != null) {
+				webview.reload();
+			}
 		}
 	}
 }

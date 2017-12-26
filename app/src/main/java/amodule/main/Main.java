@@ -65,6 +65,7 @@ import amodule.dish.db.UploadDishData;
 import amodule.dish.tools.OffDishToFavoriteControl;
 import amodule.dish.tools.UploadDishControl;
 import amodule.main.Tools.MainInitDataControl;
+import amodule.main.activity.MainCircle;
 import amodule.main.activity.MainHomePage;
 import amodule.main.activity.MainMyself;
 import amodule.main.view.WelcomeDialog;
@@ -74,9 +75,7 @@ import aplug.shortvideo.ShortVideoInit;
 import third.ad.control.AdControlHomeDish;
 import third.ad.tools.AdConfigTools;
 import third.cling.control.ClingPresenter;
-import third.mall.MainMall;
 import third.mall.alipay.MallPayActivity;
-import third.mall.aplug.MallCommon;
 import third.push.xg.XGLocalPushServer;
 import third.qiyu.QiYvHelper;
 import xh.basic.tool.UtilFile;
@@ -89,11 +88,11 @@ import static com.xiangha.R.id.iv_itemIsFine;
 public class Main extends Activity implements OnClickListener, IObserver {
     public static final String TAG="xianghaTag";
 
-    private String[] tabTitle = {"学做菜", "商城", "消息", "我的"};
-    private Class<?>[] classes = new Class<?>[]{MainHomePage.class, MainMall.class, MyMessage.class, MainMyself.class};
-    private int[] tabImgs = new int[]{R.drawable.tab_index, R.drawable.tab_mall, R.drawable.tab_four, R.drawable.tab_myself};
+    private String[] tabTitle = {"学做菜", "社区", "消息", "我的"};
+    private Class<?>[] classes = new Class<?>[]{MainHomePage.class, MainCircle.class, MyMessage.class, MainMyself.class};
+    private int[] tabImgs = new int[]{R.drawable.tab_index, R.drawable.tab_circle, R.drawable.tab_four, R.drawable.tab_myself};
     public static final int TAB_HOME = 0;
-    public static final int TAB_MALL = 1;
+    public static final int TAB_CIRCLE = 1;
     public static final int TAB_MESSAGE = 2;
     public static final int TAB_SELF = 3;
 
@@ -164,17 +163,8 @@ public class Main extends Activity implements OnClickListener, IObserver {
      * 展示welcome
      */
     private void showWelcome(){
-        if("developer.huawei".equals(ChannelUtil.getChannel(this))){
-            //单独处理华为渠道
-            String showHuaweiAD= AppCommon.getConfigByLocal("huaweiAD");//release 2表示显示发布，显示广告，1不显示广告
-            boolean isShowAdHuawei = !TextUtils.isEmpty(showHuaweiAD)
-                    && "2".equals(StringManager.getFirstMap(showHuaweiAD).get("release"));
-            welcomeDialog = LoginManager.isShowAd() && isShowAdHuawei?
-                    new WelcomeDialog(Main.allMain,dialogShowCallBack) : new WelcomeDialog(Main.allMain,1,dialogShowCallBack);
-        }else{
-            welcomeDialog = LoginManager.isShowAd() ?
-                    new WelcomeDialog(Main.allMain,dialogShowCallBack) : new WelcomeDialog(Main.allMain,1,dialogShowCallBack);
-        }
+        welcomeDialog = LoginManager.isShowAd() ?
+                new WelcomeDialog(Main.allMain,dialogShowCallBack) : new WelcomeDialog(Main.allMain,1,dialogShowCallBack);
         welcomeDialog.show();
     }
 
@@ -375,7 +365,6 @@ public class Main extends Activity implements OnClickListener, IObserver {
             initRunTime();
             mainInitDataControl.initWelcomeOncreate();
             mainInitDataControl.initWelcomeAfter(Main.this);
-            if(LoginManager.isLogin())MallCommon.getShoppingNum(Main.this,null,null);
 
         }
 
@@ -452,9 +441,6 @@ public class Main extends Activity implements OnClickListener, IObserver {
 
             ImageView imgView = (ImageView) tabViews[i].findViewById(iv_itemIsFine);
             imgView.setImageResource(tabImgs[i]);
-            if(1 == i){
-                imgView.getLayoutParams().width = Tools.getDimen(this,R.dimen.dp_30);
-            }
 
             if (url != null && i == 0) {
                 Intent homePage = new Intent(this, classes[i]);
@@ -645,9 +631,9 @@ public class Main extends Activity implements OnClickListener, IObserver {
                 if (act != null) XHClick.finishToSendPath(act);
                 // 关闭页面停留时间统计计时器
                 XHClick.closeHandler();
-                ReqInternet.in().finish();
                 VersionOp.getInstance().onDesotry();
                 finish();
+                System.exit(0);
                 UtilFile.saveShared(this, FileManager.MALL_STAT, FileManager.MALL_STAT, "");
             }
         } else {
@@ -780,10 +766,11 @@ public class Main extends Activity implements OnClickListener, IObserver {
                 if (i == TAB_HOME && allTab.containsKey(MainHomePage.KEY) && i == nowTab) {
                     MainHomePage mainIndex = (MainHomePage) allTab.get(MainHomePage.KEY);
                     mainIndex.refresh();
-                } else if (i == TAB_MALL && allTab.containsKey(MainMall.KEY) && tabHost.getCurrentTab() == i) {  //当所在页面正式你要刷新的页面,就直接刷新
-                    MainMall mall = (MainMall) allTab.get(MainMall.KEY);
-                    mall.scrollTop();
-                    mall.refresh();
+                } else if (i == TAB_CIRCLE && allTab.containsKey(MainCircle.KEY) && tabHost.getCurrentTab() == i) {
+                    //当所在页面正式你要刷新的页面,就直接刷新
+                    MainCircle circle = (MainCircle) allTab.get(MainCircle.KEY);
+                    if(circle != null)
+                        circle.refresh();
                 } else if (i == TAB_SELF && allTab.containsKey(MainMyself.KEY)) {
                     //在onResume方法添加了刷新方法
 //                    MainMyself mainMyself = (MainMyself) allTab.get(MainMyself.KEY);
