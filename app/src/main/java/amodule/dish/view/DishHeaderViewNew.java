@@ -315,6 +315,10 @@ public class DishHeaderViewNew extends LinearLayout {
         boolean isUrlVaild = false;
         isContinue=false;
         isHaspause=false;
+        if(dredgeVipLayout!=null){
+            dredgeVipLayout.removeAllViews();
+            dredgeVipLayout.setVisibility(View.GONE);
+        }
         tongjiId = "a_menu_detail_video";
         Map<String, String> selfVideoMap = UtilString.getListMapByJson(selfVideoJson).get(0);
         String videoUrl = selfVideoMap.get("url");
