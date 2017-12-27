@@ -19,7 +19,10 @@ public class WelcomeStart extends Activity{
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         LogManager.printStartTime("zhangyujian","WelcomeStart::oncreate:start:");
-
+        if ((getIntent().getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0) {
+            finish();
+            return;
+        }
         Intent intent = new Intent(this,Main.class);
         Bundle bundle = this.getIntent().getExtras();
         if (bundle != null) {
