@@ -786,6 +786,8 @@ public class AppCommon {
                                     super.run();
                                     FileManager.delDirectoryOrFile(urlRulePath);
                                     FileManager.saveFileToCompletePath(urlRulePath, msg.toString(), false);
+                                    if(urlRuleMap != null)
+                                        urlRuleMap.clear();
                                 }
                             }.start();
                         }
@@ -799,20 +801,14 @@ public class AppCommon {
     private static Map<String, String> urlRuleMap = null;
 
     public static Map<String, String> geturlRule(Context context) {
-        if (urlRuleMap == null) {
+        if (urlRuleMap == null || urlRuleMap.isEmpty()) {
             final String urlRulePath = FileManager.getDataDir() + FileManager.file_urlRule;
             String urlRuleJson = readFile(urlRulePath);
             if (TextUtils.isEmpty(urlRuleJson)) {
                 urlRuleJson = FileManager.getFromAssets(context, FileManager.file_urlRule);
             }
-            List<Map<String, String>> data = getListMapByJson(urlRuleJson);
-            if (data.size() > 0) {
-                String urlRule = data.get(0).get("data");
-                data = getListMapByJson(urlRule);
-                if (data.size() > 0) {
-                    urlRuleMap = data.get(0);
-                }
-            }
+            Map<String, String> data = StringManager.getFirstMap(urlRuleJson);
+            urlRuleMap = StringManager.getFirstMap(data.get("data"));
         }
         return urlRuleMap;
     }

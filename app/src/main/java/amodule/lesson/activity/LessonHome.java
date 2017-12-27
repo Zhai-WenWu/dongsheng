@@ -82,6 +82,7 @@ public class LessonHome extends BaseAppCompatActivity implements IObserver {
         mDataController.laodRemoteHeaderData(new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
+                loadManager.hideProgressBar();
                 HeaderDataLoaded = true;
                 if (i >= ReqEncyptInternet.REQ_OK_STRING) {
                     if (mViewController != null)

@@ -59,7 +59,7 @@ public class HomeFuncNavView2 extends LinearLayout {
 
     protected void initData() {
         WidgetUtility.setTextToView(getTextView(R.id.text_left_1),"今日三餐");
-        WidgetUtility.setTextToView(getTextView(R.id.text_left_2),"早.中.晚餐食谱");
+        WidgetUtility.setTextToView(getTextView(R.id.text_left_2),"每日三餐推荐");
         //10之前早上，10~14中午，14~23晚上
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH");
         String currentHourStr = dateFormat.format(System.currentTimeMillis());

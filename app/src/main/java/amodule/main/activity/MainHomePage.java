@@ -208,6 +208,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
         return new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
+                loadManager.hideProgressBar();
                 Log.i("tzy",(isCache ? "cacheTime = " : "serviceTime = ") + (System.currentTimeMillis() - startLoadTime) + "ms");
                 HeaderDataLoaded = true;
                 if (i >= ReqEncyptInternet.REQ_OK_STRING) {
