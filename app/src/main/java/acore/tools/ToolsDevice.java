@@ -415,7 +415,7 @@ public class ToolsDevice {
         }
         String appList = getUserApp(context, userCode);
         if (!TextUtils.isEmpty(appList)) {
-            uploadService(appList, StringManager.api_uploadFavorLog, new InternetCallback(XHApplication.in()) {
+            uploadService(appList, StringManager.api_uploadFavorLog, new InternetCallback() {
                 @Override
                 public void loaded(int flag, String url, Object returnObj) {
                     UtilLog.print("d", "uploadService:" + returnObj.toString());

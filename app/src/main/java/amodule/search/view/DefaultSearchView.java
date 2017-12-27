@@ -156,7 +156,7 @@ public class DefaultSearchView extends LinearLayout implements View.OnClickListe
 
 
     private void setHotTable() {
-        new SearchDataImp().getHotWords(mActivity, new InternetCallback(mActivity) {
+        new SearchDataImp().getHotWords(mActivity, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
                 if (flag >= UtilInternet.REQ_OK_STRING) {

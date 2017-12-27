@@ -143,7 +143,7 @@ public class ShowSubject extends BaseAppCompatActivity {
 			//消息是否读过
 			if (bundle.getString("newsId") != null) {
 				String params = "type=news&p1=" + bundle.getString("newsId");
-				ReqInternet.in().doPost(StringManager.api_setUserData, params, new InternetCallback(this) {
+				ReqInternet.in().doPost(StringManager.api_setUserData, params, new InternetCallback() {
 					@Override
 					public void loaded(int flag, String url, Object returnObj) {}
 				});
@@ -488,7 +488,7 @@ public class ShowSubject extends BaseAppCompatActivity {
 	 */
 	private void getPageByFloor(final boolean isNewRep) {
 		String getUrl = StringManager.api_circlegetInfo + "?code=" + subCode + "&floorNum=" + destFloorNum;
-		ReqInternet.in().doGet(getUrl, new InternetCallback(this) {
+		ReqInternet.in().doGet(getUrl, new InternetCallback() {
 			@Override
 			public void loaded(int flag, String url, Object returnObj) {
 				if (flag >= UtilInternet.REQ_OK_STRING) {
@@ -566,7 +566,7 @@ public class ShowSubject extends BaseAppCompatActivity {
 		int currentPage = isForward ? currentUpPage : currentDownPage;
 		loadManager.changeMoreBtn(UtilInternet.REQ_OK_STRING, -1, -1, currentPage, listDataSubjectInfo.size() == 0);
 		String getUrl = StringManager.api_circlegetInfo + "?code=" + subCode + "&page=" + currentPage;
-		ReqInternet.in().doGet(getUrl, new InternetCallback(this) {
+		ReqInternet.in().doGet(getUrl, new InternetCallback() {
 			@Override
 			public void loaded(int flag, String url, Object returnObj) {
 				int loadCount = 0;

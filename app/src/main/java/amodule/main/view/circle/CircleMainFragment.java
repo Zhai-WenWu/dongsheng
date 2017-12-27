@@ -444,7 +444,7 @@ public class CircleMainFragment extends Fragment {
         if (isRefresh) {
             mLoadManager.hideProgressBar();
         }
-        ReqInternet.in().doGet(url + param, new InternetCallback(mActivity.getApplication()) {
+        ReqInternet.in().doGet(url + param, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object msg) {
                 int loadCount = 0;
@@ -573,7 +573,7 @@ public class CircleMainFragment extends Fragment {
 
     private void getTopUser() {
         if (mPlateData.isShowRecUser()) {
-            ReqInternet.in().doGet(StringManager.api_topCustomer + "?cid=" + mPlateData.getCid() + "&mid=" + mPlateData.getMid(), new InternetCallback(getContext()) {
+            ReqInternet.in().doGet(StringManager.api_topCustomer + "?cid=" + mPlateData.getCid() + "&mid=" + mPlateData.getMid(), new InternetCallback() {
                 @Override
                 public void loaded(int flag, String url, Object msg) {
                     if (flag >= ReqInternet.REQ_OK_STRING) {
@@ -593,7 +593,7 @@ public class CircleMainFragment extends Fragment {
             mAdapter.clearRecCutomerArray();
         }
         ReqInternet.in().doGet(StringManager.api_recCustomer + "?cid=" + mPlateData.getCid() + "&mid=" + mPlateData.getMid(),
-                new InternetCallback(mActivity) {
+                new InternetCallback() {
                     @Override
                     public void loaded(int flag, String url, Object msg) {
                         if (flag >= ReqInternet.REQ_OK_STRING) {

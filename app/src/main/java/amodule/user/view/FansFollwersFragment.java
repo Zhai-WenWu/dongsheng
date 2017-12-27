@@ -138,7 +138,7 @@ public class FansFollwersFragment {
 		}
 		loadManager.changeMoreBtn(listView,UtilInternet.REQ_OK_STRING, -1, -1, currentPage,listData.size() == 0);
 		String getUrl = StringManager.api_getUSerData + "?code="+userCode+"&type=" + type + "&page=" + currentPage;
-		ReqInternet.in().doGet(getUrl, new InternetCallback(mAct) {
+		ReqInternet.in().doGet(getUrl, new InternetCallback() {
 			@Override
 			public void loaded(int flag, String url, Object returnObj) {
 				int loadCount = 0;

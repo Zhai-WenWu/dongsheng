@@ -150,7 +150,7 @@ public class EvalutionUploadControl {
             //正式发布评价请求
             MallReqInternet.in().doPost(MallStringManager.mall_addComment,
                     combineParameter(),
-                    new MallInternetCallback(context) {
+                    new MallInternetCallback() {
                         @Override
                         public void loadstat(int flag, String url, Object msg, Object... stat) {
                             isRequesting = false;

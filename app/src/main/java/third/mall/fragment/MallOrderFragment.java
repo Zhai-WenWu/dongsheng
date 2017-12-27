@@ -196,7 +196,7 @@ public class MallOrderFragment extends MallBaseFragment implements OnClickListen
 			currentPage++;
 		loadManager.changeMoreBtn(UtilInternet.REQ_OK_STRING, -1, -1, currentPage,listData.size()==0);
 		String url = MallStringManager.mall_api_listOrder_v3 + "?type=" + id + "&pn=" + currentPage + "&" + common.setStatistic(icon_but);
-		MallReqInternet.in().doGet(url, new MallInternetCallback(mAct) {
+		MallReqInternet.in().doGet(url, new MallInternetCallback() {
 
 			@Override
 			public void loadstat(int flag, String url, Object msg, Object... stat) {

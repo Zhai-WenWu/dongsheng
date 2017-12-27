@@ -252,7 +252,7 @@ public class ListHealthTime extends BaseActivity {
 
 	private void getData(String getUrl, final int index) {
 		loadManager.showProgressBar();
-		ReqInternet.in().doGet(getUrl, new InternetCallback(this.getApplicationContext()) {
+		ReqInternet.in().doGet(getUrl, new InternetCallback() {
 			@Override
 			public void loaded(int flag, String url, Object returnObj) {
 				if (flag >= UtilInternet.REQ_OK_STRING) {

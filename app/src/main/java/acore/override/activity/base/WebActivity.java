@@ -17,6 +17,7 @@ import acore.tools.StringManager;
 import amodule.main.Main;
 import aplug.basic.ReqInternet;
 import aplug.basic.XHConf;
+import aplug.basic.XHInternetCallBack;
 import aplug.web.tools.JSAction;
 import aplug.web.tools.WebviewManager;
 import aplug.web.view.XHWebView;
@@ -157,30 +158,50 @@ public class WebActivity extends BaseActivity{
 		if (TextUtils.isEmpty(theUrl))
 			return;
 //		String cookieKey = StringManager.apiUrl.replace(StringManager.apiTitle, "").replace("/", "");
-		if(theUrl.indexOf(MallStringManager.domain)>-1){//电商 ds.xiangha.com
-			Map<String,String> header=MallReqInternet.in().getHeader(mShowWeb);
-			String cookieKey_mall=MallStringManager.mall_web_apiUrl.replace(MallStringManager.appWebTitle, "");
-			String cookieStr=header.containsKey("Cookie")?header.get("Cookie"):"";
-			String[] cookie = cookieStr.split(";");
+//		if(theUrl.indexOf(MallStringManager.domain)>-1){//电商 ds.xiangha.com
+//			Map<String,String> header=MallReqInternet.in().getHeader(mShowWeb);
+//			String cookieKey_mall=MallStringManager.mall_web_apiUrl.replace(MallStringManager.appWebTitle, "");
+//			String cookieStr=header.containsKey("Cookie")?header.get("Cookie"):"";
+//			String[] cookie = cookieStr.split(";");
+//			CookieManager cookieManager = CookieManager.getInstance();
+//			cookieManager.setAcceptCookie(true);
+//			for (int i = 0; i < cookie.length; i++) {
+//				cookieManager.setCookie(cookieKey_mall, cookie[i]);
+//			}
+//			CookieSyncManager.createInstance(XHApplication.in().getApplicationContext());
+//			CookieSyncManager.getInstance().sync();
+//			LogManager.print(XHConf.log_tag_net,"d", "设置webview的cookie："+cookieStr);
+//		}else if (theUrl.indexOf(StringManager.domain) > -1) {//菜谱  .xiangha.com
+//			Map<String,String> header = ReqInternet.in().getHeader(mShowWeb);
+//			String cookieStr=header.containsKey("Cookie")?header.get("Cookie"):"";
+//			String[] cookie = cookieStr.split(";");
+//			CookieManager cookieManager = CookieManager.getInstance();
+//			for (int i = 0; i < cookie.length; i++) {
+//				cookieManager.setCookie(StringManager.domain, cookie[i]);
+//			}
+//			CookieSyncManager.createInstance(XHApplication.in().getApplicationContext());
+//			CookieSyncManager.getInstance().sync();
+//			LogManager.print(XHConf.log_tag_net,"d", "设置webview的cookie："+cookieStr);
+//		}
+		if(theUrl.indexOf(MallStringManager.domain)>-1||theUrl.indexOf(StringManager.domain) > -1){
+			Map<String,String> mapCookie= XHInternetCallBack.getCookieMap();
+			String cookieKey="";
+			if(theUrl.indexOf(MallStringManager.domain)>-1){
+				cookieKey=MallStringManager.mall_web_apiUrl.replace(MallStringManager.appWebTitle, "");
+			}else if(theUrl.indexOf(StringManager.domain) > -1){
+				cookieKey=StringManager.domain;
+			}
 			CookieManager cookieManager = CookieManager.getInstance();
 			cookieManager.setAcceptCookie(true);
-			for (int i = 0; i < cookie.length; i++) {
-				cookieManager.setCookie(cookieKey_mall, cookie[i]);
+			for(String str:mapCookie.keySet()){
+				String temp=str+"="+mapCookie.get(str);
+				if(temp.indexOf("device")==0) temp=temp.replace(" ", "");
+				LogManager.print(XHConf.log_tag_net,"d", "设置cookie："+temp);
+				cookieManager.setCookie(cookieKey, temp);
 			}
 			CookieSyncManager.createInstance(XHApplication.in().getApplicationContext());
 			CookieSyncManager.getInstance().sync();
-			LogManager.print(XHConf.log_tag_net,"d", "设置webview的cookie："+cookieStr);
-		}else if (theUrl.indexOf(StringManager.domain) > -1) {//菜谱  .xiangha.com
-			Map<String,String> header = ReqInternet.in().getHeader(mShowWeb);
-			String cookieStr=header.containsKey("Cookie")?header.get("Cookie"):"";
-			String[] cookie = cookieStr.split(";");
-			CookieManager cookieManager = CookieManager.getInstance();
-			for (int i = 0; i < cookie.length; i++) {
-				cookieManager.setCookie(StringManager.domain, cookie[i]);
-			}
-			CookieSyncManager.createInstance(XHApplication.in().getApplicationContext());
-			CookieSyncManager.getInstance().sync();
-			LogManager.print(XHConf.log_tag_net,"d", "设置webview的cookie："+cookieStr);
+			LogManager.print(XHConf.log_tag_net,"d", "设置webview的cookie："+mapCookie.toString());
 		}
 	}
 }

@@ -122,7 +122,7 @@ public class ModifyNickName extends BaseActivity {
 			info = "对美食的敬意，便是与你分享";
 		}
 		String params = "type=setOther&info=" + info;
-		ReqInternet.in().doPost(StringManager.api_setUserData, params, new InternetCallback(this) {
+		ReqInternet.in().doPost(StringManager.api_setUserData, params, new InternetCallback() {
 
 			@Override
 			public void loaded(int flag, String url, Object returnObj) {
@@ -139,7 +139,7 @@ public class ModifyNickName extends BaseActivity {
 		nickname = edit_nickname.getText().toString();
 		if (nickname.length() > 0) {
 			String params = "type=nickName&p1=" + nickname;
-			ReqInternet.in().doPost(StringManager.api_setUserData, params, new InternetCallback(this) {
+			ReqInternet.in().doPost(StringManager.api_setUserData, params, new InternetCallback() {
 
 				@Override
 				public void loaded(int flag, String url, Object returnObj) {

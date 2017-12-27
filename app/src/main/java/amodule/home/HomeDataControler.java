@@ -105,7 +105,7 @@ public class HomeDataControler {
         if (callback != null)
             callback.onPrepare();
         ReqEncyptInternet.in().doEncyptAEC(StringManager.API_RECOMMEND, params.toString(),
-                new InternetCallback(mActivity) {
+                new InternetCallback() {
                     @Override
                     public void loaded(int flag, String url, Object object) {
                         int loadCount = 0;

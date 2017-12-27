@@ -559,7 +559,7 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
     private void requestVideoData(final boolean onlyUser) {
 //        loadManager.showProgressBar();
         String params = new StringBuilder().append("code=").append(code).append("&type=RAW").toString();
-        ReqEncyptInternet.in().doEncypt(StringManager.api_getVideoInfo, params, new InternetCallback(this) {
+        ReqEncyptInternet.in().doEncypt(StringManager.api_getVideoInfo, params, new InternetCallback() {
 
             @Override
             public void getPower(int flag, String url, Object obj) {
@@ -748,7 +748,7 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
 
     private void requestRelateData(boolean onlyUser) {
         String param = "code=" + code + "&page=" + ++page + "&pagesize=10";
-        ReqEncyptInternet.in().doEncypt(StringManager.api_getVideoRelated, param, new InternetCallback(this) {
+        ReqEncyptInternet.in().doEncypt(StringManager.api_getVideoRelated, param, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object object) {
                 if (flag >= ReqInternet.REQ_OK_STRING) {
@@ -852,7 +852,7 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
     private void requestForumData(final boolean isRefresh) {
         String url = StringManager.api_forumList;
         String param = "from=1&type=" + TYPE_VIDEO + "&code=" + code;
-        ReqEncyptInternet.in().doEncypt(url, param, new InternetCallback(this) {
+        ReqEncyptInternet.in().doEncypt(url, param, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object object) {
                 if (flag >= ReqInternet.REQ_OK_STRING) {
@@ -963,7 +963,7 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
 
     private void deleteThis() {
         ReqEncyptInternet.in().doEncypt(StringManager.api_videoDel, "code=" + code,
-                new InternetCallback(VideoDetailActivity.this) {
+                new InternetCallback() {
                     @Override
                     public void loaded(int flag, String url, Object obj) {
                         if (flag >= ReqEncyptInternet.REQ_OK_STRING) {

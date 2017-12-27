@@ -303,7 +303,7 @@ public class UploadListControl {
      */
     private int startUploadImg(final UploadItemData itemData, final UploadListNetCallBack callback) {
         Log.i("articleUpload", "startUploadImg() path:" + itemData.getPath());
-        new UploadImg("", itemData.getPath(), new InternetCallback(XHApplication.in().getApplicationContext()) {
+        new UploadImg("", itemData.getPath(), new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object msg) {
                 if (flag >= UtilInternet.REQ_OK_STRING) {
@@ -420,7 +420,7 @@ public class UploadListControl {
                     }
                     String path = itemData.getUploadUrl();
                     Log.i("articleUpload", "uploadLastInfo() getUploadUrl:" + path);
-                    InternetCallback internetCallback = new InternetCallback(XHApplication.in()) {
+                    InternetCallback internetCallback = new InternetCallback() {
                         @Override
                         public void loaded(int flag, String url, Object msg) {
                             if (flag >= UtilInternet.REQ_OK_STRING) {

@@ -110,7 +110,7 @@ public class UserHomeDish extends TabContentView {
             public void onDelete(final int index) {
                 XHClick.mapStat(mAct, "a_my", "菜谱", "删除菜谱");
                 String code = listDataMyDish.get(index).get("code");
-                ReqInternet.in().doPost(StringManager.api_deleteDish, "code=" + code,new InternetCallback(mAct) {
+                ReqInternet.in().doPost(StringManager.api_deleteDish, "code=" + code,new InternetCallback() {
                     @Override
                     public void loaded(int flag, String url, Object returnObj) {
                         if (flag >= UtilInternet.REQ_OK_STRING) {
@@ -246,7 +246,7 @@ public class UserHomeDish extends TabContentView {
     private void loadFromServer() {
         loadManager.changeMoreBtn(theListView, UtilInternet.REQ_OK_STRING, -1, -1, currentPage, isBlankSpace);
         String getUrl = StringManager.api_getDishByCode + "?code=" + userCode + "&page=" + currentPage;
-        ReqInternet.in().doGet(getUrl, new InternetCallback(mAct) {
+        ReqInternet.in().doGet(getUrl, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
                 int loadPage = 0;

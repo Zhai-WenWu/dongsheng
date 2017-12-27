@@ -203,7 +203,7 @@ public class MallShopProductView extends ViewItemBase{
 		shopping_item_commod_cut.setEnabled(false);
 		shopping_item_commod_add.setEnabled(false);
 		String param="product_code="+bean_product.getCode()+"&product_num="+bean_product.getNum();
-		MallReqInternet.in().doPost(MallStringManager.mall_updateCartInfo, param, new MallInternetCallback(context) {
+		MallReqInternet.in().doPost(MallStringManager.mall_updateCartInfo, param, new MallInternetCallback() {
 			
 			@Override
 			public void loadstat(int flag, String url, Object msg, Object... stat) {

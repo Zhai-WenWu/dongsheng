@@ -25,7 +25,7 @@ public class ReqEncryptState {
             String url = StringManager.API_LOGIN_APP;
             String token = ReqEncryptCommon.getInstance().getToken();
             String params = "token=" + URLEncoder.encode(token, "utf-8");
-            ReqInternet.in().doPost(url, params, new InternetCallback(XHApplication.in()) {
+            ReqInternet.in().doPost(url, params, new InternetCallback() {
                 @Override
                 public void loaded(int flag, String url, Object object) {
                     if (flag >= ReqInternet.REQ_OK_STRING) {

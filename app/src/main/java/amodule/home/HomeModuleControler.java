@@ -79,7 +79,7 @@ public class HomeModuleControler {
         if (isRequest && !isRefresh) return;
         final String modulePath = FileManager.getDataDir() + FileManager.file_homeTopModle;
         ReqEncyptInternet.in().doEncyptAEC(StringManager.API_GET_LEVEL, "version=" + "v1",
-                new InternetCallback(Main.allMain) {
+                new InternetCallback() {
                     @Override
                     public void loaded(int flag, String url, final Object o) {
                         if (flag >= ReqInternet.REQ_OK_STRING) {

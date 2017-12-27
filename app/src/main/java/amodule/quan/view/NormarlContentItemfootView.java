@@ -179,7 +179,7 @@ public class NormarlContentItemfootView extends NormarlContentItemView{
             // 请求网络;
             like_linear.setClickable(false);
             ReqInternet.in().doPost(StringManager.api_quanSetSubject, "type=likeList&subjectCode=" + map.get("code") + "&floorId=0&isLike" + map.get("isLike"),
-                    new InternetCallback(context) {
+                    new InternetCallback() {
                         @Override
                         public void loaded(int flag, String url, Object returnObj) {
                             like_linear.setClickable(true);

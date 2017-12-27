@@ -83,7 +83,7 @@ public class PaySuccedActvity extends MallBaseActivity implements OnClickListene
 
 	private void setRequest() {
 		String url=MallStringManager.mall_getHotRecommend;
-		MallReqInternet.in().doGet(url, new MallInternetCallback(this) {
+		MallReqInternet.in().doGet(url, new MallInternetCallback() {
 			
 			@Override
 			public void loadstat(int flag, String url, Object msg, Object... stat) {

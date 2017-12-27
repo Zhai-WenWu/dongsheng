@@ -39,7 +39,7 @@ public class HomeAdvertControl {
 	public void advertStatisticRequest(Context context, Map<String, String> map, String onClickSite) {
 		String url = StringManager.api_monitoring_5;
 		ReqInternet.in().doGet(url + "?adType=" + map.get("type") + "&adid=" + map.get("showAdid") + "&cid=" + map.get("showCid") +
-				"&mid=" + map.get("showMid") + "site=" + map.get("showSite") + "&event=click&clickSite=" + onClickSite, new InternetCallback(context) {
+				"&mid=" + map.get("showMid") + "site=" + map.get("showSite") + "&event=click&clickSite=" + onClickSite, new InternetCallback() {
 
 			@Override
 			public void loaded(int flag, String url, Object msg) {

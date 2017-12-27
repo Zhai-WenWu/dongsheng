@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import acore.override.XHApplication;
 import xh.basic.internet.InterCallback;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilFile;
@@ -16,21 +17,19 @@ import android.util.Log;
 @SuppressLint("DefaultLocale")
 public class MallReqInternet extends UtilInternet{
 	private static MallReqInternet instance=null;
-	private static Context initContext=null;
 	public static String time_mall="";
 	public static String dsHmac="";
 	
-	private MallReqInternet(Context context){
-		super(context);
+	private MallReqInternet(){
+		super();
 	}
-	public static MallReqInternet init(Context context) {
-		initContext=context;
+	public static MallReqInternet init() {
 		return in();
 	}
 
 	public static MallReqInternet in() {
 		if(instance==null) 
-			instance=new MallReqInternet(initContext);
+			instance=new MallReqInternet();
 		return instance;
 	}
 	
@@ -39,7 +38,7 @@ public class MallReqInternet extends UtilInternet{
 	 * @return
 	 */
 	public Map<String,String> getHeader(Context context){
-		MallInternetCallback callback=new MallInternetCallback(context){
+		MallInternetCallback callback=new MallInternetCallback(){
 
 			@Override
 			public void loadstat(int flag, String url, Object msg, Object... stat) {
@@ -96,7 +95,7 @@ public class MallReqInternet extends UtilInternet{
 		if(url.indexOf(MallStringManager.replaceUrl(MallStringManager.mall_api_register))>-1||url.indexOf(MallStringManager.replaceUrl(MallStringManager.mall_getDsToken))>-1){
 			return url;
 		}
-		String mall_stat=(String) UtilFile.loadShared(initContext, FileManager.MALL_STAT, FileManager.MALL_STAT);
+		String mall_stat=(String) UtilFile.loadShared(XHApplication.in(), FileManager.MALL_STAT, FileManager.MALL_STAT);
 //		mall_stat=setStatisticUrl(url, mall_stat);
 		if(url.contains("?")){
 			url+="&"+mall_stat;

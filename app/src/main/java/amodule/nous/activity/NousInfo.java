@@ -15,6 +15,7 @@ import java.util.Map;
 import acore.logic.FavoriteHelper;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
+import acore.override.XHApplication;
 import acore.tools.IObserver;
 import acore.tools.ObserverManager;
 import acore.tools.StringManager;
@@ -120,7 +121,7 @@ public class NousInfo extends ApiShowWeb {
 //        requestFavoriteState();
 
         String apiUrl = StringManager.api_nousInfo + "?code=" + code;
-        ReqInternet.in().doGet(apiUrl, new InternetCallback(this) {
+        ReqInternet.in().doGet(apiUrl, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
                 if (flag >= UtilInternet.REQ_OK_STRING) {
@@ -138,7 +139,7 @@ public class NousInfo extends ApiShowWeb {
                     htmlData = am.get("html");
                     //http://www.xiangha.com/zhishi/236824.html   http://nativeapp.xiangha.com/
                     webview.loadDataWithBaseURL("https://www.xiangha.com/zhishi/" + NousInfo.this.getIntent().getStringExtra("code") + ".html", htmlData, "text/html", "utf-8", null);
-                    XHClick.mapStat(context, "a_share400", "香哈头条", "");
+                    XHClick.mapStat(XHApplication.in(), "a_share400", "香哈头条", "");
                     //这里的小知识文案不能动，影响统计加积分--FangRuijiao
                     barShare = new BarShare(NousInfo.this, "香哈头条", "");
                     String zhishiurl = StringManager.wwwUrl + "zhishi/" + am.get("code") + ".html";

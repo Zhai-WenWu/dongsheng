@@ -213,7 +213,7 @@ public class MallMyFavorableFragment extends MallBaseFragment{
 			currentPage++;
 		loadManager.changeMoreBtn(UtilInternet.REQ_OK_STRING, -1, -1, currentPage,listData.size()==0);
 		String url =MallStringManager.getShopCouponList+"?status="+id+"&page="+currentPage+"&"+common.setStatistic("my_coupon");
-		MallReqInternet.in().doGet(url, new MallInternetCallback(activity) {
+		MallReqInternet.in().doGet(url, new MallInternetCallback() {
 			
 			@Override
 			public void loadstat(int flag, String url, Object msg, Object... stat) {

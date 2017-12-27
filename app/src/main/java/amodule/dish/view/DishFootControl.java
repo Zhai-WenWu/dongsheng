@@ -188,7 +188,7 @@ public class DishFootControl implements View.OnClickListener{
                             LinkedHashMap<String, String> map = new LinkedHashMap<>();
                             map.put("subjectCode", subjectCode);
                             map.put("type", "likeList");
-                            ReqEncyptInternet.in().doEncypt(StringManager.api_quanSetSubject, map, new InternetCallback(mAct) {
+                            ReqEncyptInternet.in().doEncypt(StringManager.api_quanSetSubject, map, new InternetCallback() {
                                 @Override
                                 public void loaded(int flag, String s, Object o) {
                                     if (flag >= ReqInternet.REQ_OK_STRING) {
@@ -412,7 +412,7 @@ public class DishFootControl implements View.OnClickListener{
         LinkedHashMap<String,String> map = new LinkedHashMap<>();
         map.put("code",code);
         map.put("status",isLike ? "2" : "1");
-        ReqEncyptInternet.in().doEncypt(StringManager.api_getDishLikeHate,map, new InternetCallback(mAct) {
+        ReqEncyptInternet.in().doEncypt(StringManager.api_getDishLikeHate,map, new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
                 if(i >= ReqInternet.REQ_OK_STRING){
@@ -483,7 +483,7 @@ public class DishFootControl implements View.OnClickListener{
     private void setRequestAskButtonStatus(){
         LinkedHashMap<String,String> map = new LinkedHashMap<>();
         map.put("code",code);
-        ReqEncyptInternet.in().doEncypt(StringManager.api_askButtonStatus,map, new InternetCallback(mAct) {
+        ReqEncyptInternet.in().doEncypt(StringManager.api_askButtonStatus,map, new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
                 if(i >= ReqInternet.REQ_OK_STRING){

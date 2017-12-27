@@ -206,7 +206,7 @@ public class DetailDishWeb extends BaseAppCompatActivity implements IObserver {
      */
     private void loadDishInfo() {
         String params = "code=" + code;
-        ReqEncyptInternet.in().doEncypt(StringManager.api_getDishTopInfo,params, new InternetCallback(this.getApplicationContext()) {
+        ReqEncyptInternet.in().doEncypt(StringManager.api_getDishTopInfo,params, new InternetCallback() {
 
             @Override
             public void getPower(int flag, String url, Object obj) {
@@ -248,7 +248,7 @@ public class DetailDishWeb extends BaseAppCompatActivity implements IObserver {
                         loadManager.loadOver(flag, 1, true);
                     }
                 }
-                if(ToolsDevice.isNetworkAvailable(context)|| !LoadImage.SAVE_LONG.equals(imgLevel)){
+                if(ToolsDevice.isNetworkAvailable(XHApplication.in())|| !LoadImage.SAVE_LONG.equals(imgLevel)){
                     loadManager.loadOver(flag, 1, true);
                 }else loadManager.hideProgressBar();
                 loadOver = true;
@@ -259,7 +259,7 @@ public class DetailDishWeb extends BaseAppCompatActivity implements IObserver {
     private void handlerOtherTieData(){
         String params = "code=" + code;
         //获取帖子数据
-        ReqEncyptInternet.in().doEncypt(StringManager.api_getDishTieInfo,params, new InternetCallback(DetailDishWeb.this.getApplicationContext()) {
+        ReqEncyptInternet.in().doEncypt(StringManager.api_getDishTieInfo,params, new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
                 if(i >= ReqInternet.REQ_OK_STRING){
@@ -275,7 +275,7 @@ public class DetailDishWeb extends BaseAppCompatActivity implements IObserver {
     private void loadOtherData(){
         String params = "code=" + code;
         //获取点赞数据
-        ReqEncyptInternet.in().doEncypt(StringManager.api_getDishLikeNumStatus, params, new InternetCallback(DetailDishWeb.this.getApplicationContext()) {
+        ReqEncyptInternet.in().doEncypt(StringManager.api_getDishLikeNumStatus, params, new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
                 if (i >= ReqInternet.REQ_OK_STRING){
@@ -284,7 +284,7 @@ public class DetailDishWeb extends BaseAppCompatActivity implements IObserver {
             }
         });
 
-        ReqEncyptInternet.in().doEncypt(StringManager.api_getDishstatusValue, params, new InternetCallback(DetailDishWeb.this.getApplicationContext()) {
+        ReqEncyptInternet.in().doEncypt(StringManager.api_getDishstatusValue, params, new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
                 if (i >= ReqInternet.REQ_OK_STRING){

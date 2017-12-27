@@ -125,7 +125,7 @@ public class FollowView extends LinearLayout{
 	 */
 	public void onAttentionClick() {
 		ReqInternet.in().doPost(mUrl,mParams + "&" + mKey + "=" + mFollowState,
-				new InternetCallback(XHApplication.in()) {
+				new InternetCallback() {
 					@Override
 					public void loaded(int flag, String url, Object returnObj) {
 						if(mFollowCallback != null)

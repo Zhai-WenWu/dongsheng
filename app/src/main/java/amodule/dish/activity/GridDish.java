@@ -97,7 +97,7 @@ public class GridDish extends BaseAppCompatActivity {
         mCurrentPage++;
         loadManager.changeMoreBtn(ReqEncyptInternet.REQ_OK_STRING, -1, -1, mCurrentPage, mData.size() == 0);
         params.put("page", String.valueOf(mCurrentPage));
-        ReqEncyptInternet.in().doEncypt(StringManager.api_getVideoList, params, new InternetCallback(this) {
+        ReqEncyptInternet.in().doEncypt(StringManager.api_getVideoList, params, new InternetCallback() {
             @Override
             public void loaded(int flag, String s, Object o) {
                 int loadCount = 0;

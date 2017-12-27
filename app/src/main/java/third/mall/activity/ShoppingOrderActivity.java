@@ -229,7 +229,7 @@ public class ShoppingOrderActivity extends MallBaseActivity implements OnClickLi
 		setStatisticIndex();
 		loadManager.showProgressBar();
 		url = MallStringManager.mall_api_getShippingAddress;
-		MallReqInternet.in().doGet(url, new MallInternetCallback(this) {
+		MallReqInternet.in().doGet(url, new MallInternetCallback() {
 
 			@Override
 			public void loadstat(int flag, String url, Object msg, Object... stat) {
@@ -428,7 +428,7 @@ public class ShoppingOrderActivity extends MallBaseActivity implements OnClickLi
                             }
                             Log.i("wyl","param:::"+param);
 			Log.i("remark", jsonArray.toString());
-			MallReqInternet.in().doPost(MallStringManager.mall_createOrderByCart_v2, param, new MallInternetCallback(this) {
+			MallReqInternet.in().doPost(MallStringManager.mall_createOrderByCart_v2, param, new MallInternetCallback() {
 				@Override
 				public void loadstat(int flag, String url, Object msg, Object... stat) {
 					if (flag >= UtilInternet.REQ_OK_STRING) {

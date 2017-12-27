@@ -199,7 +199,7 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
     //获取用户数据
     private void getUserData() {
         String param = "type=getData&devCode=" + XGPushServer.getXGToken(this);
-        ReqInternet.in().doPost(StringManager.api_getUserInfo, param, new InternetCallback(this) {
+        ReqInternet.in().doPost(StringManager.api_getUserInfo, param, new InternetCallback() {
 
             @Override
             public void loaded(int flag, String url, Object returnObj) {
@@ -539,7 +539,7 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
 
     private void setIsAuto(final boolean isAuto) {
         XHClick.mapStat(Setting.this, tongjiId, "香哈会员自动续费", "");
-        ReqInternet.in().doPost(StringManager.api_setIsAuto, "userCode=" + LoginManager.userInfo.get("code") + "&isAuto=" + (isAuto ? "2" : "1"), new InternetCallback(this) {
+        ReqInternet.in().doPost(StringManager.api_setIsAuto, "userCode=" + LoginManager.userInfo.get("code") + "&isAuto=" + (isAuto ? "2" : "1"), new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
                 isChecked = i >= ReqInternet.REQ_OK_STRING ? isAuto : !isAuto;
@@ -549,7 +549,7 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
     }
 
     private void getIsAuto() {
-        ReqInternet.in().doGet(StringManager.api_isAuto + "?userCode=" + LoginManager.userInfo.get("code"), new InternetCallback(this) {
+        ReqInternet.in().doGet(StringManager.api_isAuto + "?userCode=" + LoginManager.userInfo.get("code"), new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
                 if (i >= ReqInternet.REQ_OK_STRING) {

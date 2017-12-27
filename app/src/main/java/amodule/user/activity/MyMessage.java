@@ -335,7 +335,7 @@ public class MyMessage extends MainBaseActivity{
 			getUrl=StringManager.api_message + "?type="+(clickFlag?"all":"asc")+"&page="+currentPage+"&pageTime=" + pageTime;
 		}
 		loadManager.changeMoreBtn(UtilInternet.REQ_OK_STRING, -1, -1, currentPage,listDataMessage.size() == 0);
-		ReqInternet.in().doGet(getUrl, new InternetCallback(this) {
+		ReqInternet.in().doGet(getUrl, new InternetCallback() {
 			@Override
 			public void loaded(int flag, String url, Object returnObj) {
 				int loadCount = 0;

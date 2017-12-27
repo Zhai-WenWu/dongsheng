@@ -216,7 +216,7 @@ public class MainHome extends MainBaseActivity implements IObserver {
     private void setRequestModuleData() {
         final String modulePath = FileManager.getDataDir() + FileManager.file_homeTopModle;
         String url = StringManager.API_GET_LEVEL;
-        ReqEncyptInternet.in().doEncyptAEC(url, "version=" + "v1", new InternetCallback(this) {
+        ReqEncyptInternet.in().doEncyptAEC(url, "version=" + "v1", new InternetCallback() {
             @Override
             public void loaded(int flag, String url, final Object o) {
                 if (flag >= ReqInternet.REQ_OK_STRING) {

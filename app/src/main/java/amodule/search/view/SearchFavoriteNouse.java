@@ -74,7 +74,7 @@ public class SearchFavoriteNouse extends SearchFavorite{
 		mAct.loadManager.changeMoreBtn(UtilInternet.REQ_OK_STRING, -1, -1, currentPage,dishVideo.size() == 0);
 //		String getUrl = "http://api.xiangha.com/home5/getUserData/?code=763423177&type=favNous&page=" + currentPage;
 		String getUrl = StringManager.api_soFavorite + "type=zhishi&cusCode=" + LoginManager.userInfo.get("code") + "&page=" + currentPage + "&c=" + mSearchContent;
-		ReqInternet.in().doGet(getUrl, new InternetCallback(mAct) {
+		ReqInternet.in().doGet(getUrl, new InternetCallback() {
 			@Override
 			public void loaded(int flag, String url, Object returnObj) {
 				data_list.onRefreshComplete();

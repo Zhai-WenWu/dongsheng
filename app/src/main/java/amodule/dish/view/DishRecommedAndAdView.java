@@ -150,7 +150,7 @@ public class DishRecommedAndAdView extends ItemBaseView implements View.OnClickL
                                 LinkedHashMap<String, String> map = new LinkedHashMap<>();
                                 map.put("subjectCode", subjectCode);
                                 map.put("type", "likeList");
-                                ReqEncyptInternet.in().doEncypt(StringManager.api_quanSetSubject, map, new InternetCallback(context) {
+                                ReqEncyptInternet.in().doEncypt(StringManager.api_quanSetSubject, map, new InternetCallback() {
                                     @Override
                                     public void loaded(int flag, String s, Object o) {
                                         if (flag >= ReqInternet.REQ_OK_STRING) {

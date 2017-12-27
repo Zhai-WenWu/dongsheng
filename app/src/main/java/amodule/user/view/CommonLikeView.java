@@ -96,7 +96,7 @@ public class CommonLikeView extends LinearLayout{
 			setLikeNum();
 			// 请求网络;
 			ReqInternet.in().doPost(mUrl, mParams + "&" + mKey + "=" + mValue, 
-					new InternetCallback(mCon) {
+					new InternetCallback() {
 						@Override
 						public void loaded(int flag, String url,Object returnObj) {
 							if(mCallback != null)

@@ -158,7 +158,7 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
 
         //发请求
         ReqEncyptInternet.in().doEncypt(praiseAPI, "code=" + code,
-                new InternetCallback(getContext()) {
+                new InternetCallback() {
                     @Override
                     public void loaded(int flag, String url, Object obj) {
                     }
@@ -191,7 +191,7 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
                 .append("code=").append(code).append("&")
                 .append("content=").append(getContent());
         ReqEncyptInternet.in().doEncypt(StringManager.api_addForum, sbuild.toString(),
-                new InternetCallback(getContext()) {
+                new InternetCallback() {
                     @Override
                     public void loaded(int flag, String url, Object obj) {
                         if(flag >= ReqEncyptInternet.REQ_OK_STRING){
@@ -204,7 +204,7 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
                                 editText.setHint(getTextHint());
                             }
                         }else{
-                            Tools.showToast(context,"评论失败，请重试");
+                            Tools.showToast(ArticleCommentBar.this.getContext(),"评论失败，请重试");
                         }
                         sendComment.setVisibility(VISIBLE);
                         progressBar.setVisibility(GONE);
