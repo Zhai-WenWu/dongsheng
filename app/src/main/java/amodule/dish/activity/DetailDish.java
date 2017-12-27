@@ -223,6 +223,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
                             listview.setSelection(0);
                             detailDishDataManager.setDataNew(map1.get("code"),map1.get("courseCode"),map1.get("chapterCode"));
                             detailDishDataManager.reqTopInfo(true);
+                            detailDishViewManager.onReset();
                         }
                     }
                 });

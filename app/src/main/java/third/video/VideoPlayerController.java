@@ -644,6 +644,11 @@ public class VideoPlayerController {
         mClingControl.onDestroy(mContext);
     }
 
+    public void onReset(){
+        if(null!=videoPlayer)
+            videoPlayer.release();
+    }
+
     /**
      * 播放统计接口
      *

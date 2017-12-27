@@ -313,6 +313,8 @@ public class DishHeaderViewNew extends LinearLayout {
     int limitTime = 0;
     private boolean setSelfVideo(final String title, final String selfVideoJson, final String img, Map<String, String> permissionMap) {
         boolean isUrlVaild = false;
+        isContinue=false;
+        isHaspause=false;
         tongjiId = "a_menu_detail_video";
         Map<String, String> selfVideoMap = UtilString.getListMapByJson(selfVideoJson).get(0);
         String videoUrl = selfVideoMap.get("url");
@@ -548,6 +550,11 @@ public class DishHeaderViewNew extends LinearLayout {
         if(mVideoPlayerController!=null){
             mVideoPlayerController.onDestroy();
             mVideoPlayerController=null;
+        }
+    }
+    public void onReset(){
+        if(mVideoPlayerController!=null){
+            mVideoPlayerController.onReset();
         }
     }
 

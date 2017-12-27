@@ -437,6 +437,9 @@ public class DetailDishViewManager {
             mTimer = null;
         }
     }
+    public void onReset(){
+        if(dishHeaderViewNew!=null)dishHeaderViewNew.onReset();
+    }
     public boolean onBackPressed(){
         if(dishHeaderViewNew==null)return false;
         return dishHeaderViewNew.onBackPressed();
