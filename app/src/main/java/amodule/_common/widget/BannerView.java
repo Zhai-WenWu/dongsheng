@@ -105,13 +105,18 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
         imageHeight = (int) (imageWidth * 320 / 750f);
         int height = imageHeight + paddingBottom;
         Log.i("tzy", "width = " + ToolsDevice.getWindowPx(context).widthPixels + " , height = " + height);
-        post(() -> {
-            getLayoutParams().height = height;
-            setMinimumHeight(height);
-        });
+        setTargetHeight(height);
         setVisibility(VISIBLE);
         showMinH = Tools.getStatusBarHeight(context) + Tools.getDimen(context, R.dimen.topbar_height) - height;
         showMaxH = ToolsDevice.getWindowPx(getContext()).heightPixels - Tools.getDimen(context, R.dimen.dp_50);
+    }
+
+    private void setTargetHeight(int height) {
+        post(() -> {
+            if (getLayoutParams() != null)
+                getLayoutParams().height = height;
+            setMinimumHeight(height);
+        });
     }
 
     ArrayList<Map<String, String>> mArrayList = new ArrayList<>();
@@ -176,6 +181,10 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
         });
         setPageChangeDuration(5 * 1000);
         setRandomItem(arrayList);
+        String sort = data.get(WidgetDataHelper.KEY_SORT);
+        int paddingTop = (!TextUtils.isEmpty(sort) && !"1".equals(sort)) ? Tools.getDimen(getContext(),R.dimen.dp_10)  : 0;
+        setPadding(getPaddingLeft(),paddingTop,getPaddingRight(),getPaddingBottom());
+        setTargetHeight(imageHeight + paddingTop + getPaddingBottom());
         setVisibility(VISIBLE);
     }
 

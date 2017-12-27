@@ -429,7 +429,8 @@ public class PublishEvalutionSingleActivity extends MallBaseActivity implements 
                             public void onClick(View v) {
                                 dialogManager.cancel();
                                 XHClick.mapStat(PublishEvalutionSingleActivity.this, STATISTICS_RETURN_ID,"确认取消发布吗？","取消发布");
-                                isSureBack = false;
+                                isSureBack = true;
+                                PublishEvalutionSingleActivity.this.onBackPressed();
                             }
                         })
                         .setPositiveText("继续发布", new View.OnClickListener() {
@@ -437,8 +438,7 @@ public class PublishEvalutionSingleActivity extends MallBaseActivity implements 
                             public void onClick(View v) {
                                 dialogManager.cancel();
                                 XHClick.mapStat(PublishEvalutionSingleActivity.this, STATISTICS_RETURN_ID,"确认取消发布吗？","继续发布");
-                                isSureBack = true;
-                                PublishEvalutionSingleActivity.this.onBackPressed();
+                                isSureBack = false;
                             }
                         }))).show();
     }
