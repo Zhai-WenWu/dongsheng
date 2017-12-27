@@ -122,36 +122,45 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,
                 }
             }
         });
-        mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
-            @Override
-            public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-                super.getItemOffsets(outRect, view, parent, state);
-                int position = parent.getChildAdapterPosition(view) - mRecyclerView.getHeaderViewsSize();
-                if (position == 0) {
-                    outRect.left = getPxByDp(R.dimen.dp_20);
-                    outRect.right = getPxByDp(R.dimen.dp_5);
-                } else if (position == mData.size() - 1) {
-                    outRect.left = getPxByDp(R.dimen.dp_5);
-                    outRect.right = getPxByDp(R.dimen.dp_20);
-                } else {
-                    outRect.left = getPxByDp(R.dimen.dp_5);
-                    outRect.right = getPxByDp(R.dimen.dp_5);
+        if(mItemDecoration == null){
+            mItemDecoration = new RecyclerView.ItemDecoration() {
+                @Override
+                public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+                    super.getItemOffsets(outRect, view, parent, state);
+                    int position = parent.getChildAdapterPosition(view) - mRecyclerView.getHeaderViewsSize();
+                    if (position == 0) {
+                        outRect.left = getPxByDp(R.dimen.dp_20);
+                        outRect.right = getPxByDp(R.dimen.dp_5);
+                    } else if (position == mData.size() - 1) {
+                        outRect.left = getPxByDp(R.dimen.dp_5);
+                        outRect.right = getPxByDp(R.dimen.dp_20);
+                    } else {
+                        outRect.left = getPxByDp(R.dimen.dp_5);
+                        outRect.right = getPxByDp(R.dimen.dp_5);
+                    }
+                    outRect.bottom = getPxByDp(R.dimen.dp_10);
                 }
-                outRect.bottom = getPxByDp(R.dimen.dp_10);
-            }
-        });
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
-                isScrollData = true;
-                if (scrollDataIndex < (lastVisibleItemPosition - 1)) {
-                    scrollDataIndex = (lastVisibleItemPosition - 1);
+            };
+            mRecyclerView.addItemDecoration(mItemDecoration);
+        }
+        if(mOnScrollListener == null){
+            mOnScrollListener = new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                    int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
+                    isScrollData = true;
+                    if (scrollDataIndex < (lastVisibleItemPosition - 1)) {
+                        scrollDataIndex = (lastVisibleItemPosition - 1);
+                    }
                 }
-            }
-        });
+            };
+            mRecyclerView.addOnScrollListener(mOnScrollListener);
+        }
     }
+
+    RecyclerView.OnScrollListener mOnScrollListener = null;
+    RecyclerView.ItemDecoration mItemDecoration = null;
 
     @Override
     public void setData(Map<String, String> map) {
