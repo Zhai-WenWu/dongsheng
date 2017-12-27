@@ -1,3 +1,4 @@
+/*
 package amodule.dish.activity;
 
 import android.graphics.Rect;
@@ -24,13 +25,15 @@ import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
 
+*/
 /**
  * Description :
  * PackageName : amodule.dish.activity
  * Created on 2017/12/1 16:18.
  * Author : mrtrying
  * E_mail : ztanzeyu@gmail.com
- */
+ *//*
+
 
 public class GridDish extends BaseAppCompatActivity {
 
@@ -55,6 +58,8 @@ public class GridDish extends BaseAppCompatActivity {
 
     private void initExtra() {
         Bundle bundle = getIntent().getExtras();
+        if (bundle == null)
+            return;
         String code = bundle.getString(EXTRA_CODE);
         if (TextUtils.isEmpty(code)) {
             Toast.makeText(this, "数据错误", Toast.LENGTH_SHORT).show();
@@ -144,3 +149,4 @@ public class GridDish extends BaseAppCompatActivity {
         target.put(key, TextUtils.isEmpty(timeValue) ? defaultValue : timeValue);
     }
 }
+*/
