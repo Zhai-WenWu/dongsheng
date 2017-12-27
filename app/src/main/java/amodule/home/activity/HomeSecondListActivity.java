@@ -89,7 +89,7 @@ public class HomeSecondListActivity extends BaseAppCompatActivity {
         if (mModuleBean != null && !TextUtils.isEmpty(mType)) {
             switch (mType) {
                 case "day":
-                    titleV.setText("今日三餐");
+                    titleV.setText("早中晚餐");
                     break;
                 case "video":
                     titleV.setText("视频菜谱");
