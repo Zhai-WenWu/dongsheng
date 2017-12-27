@@ -1140,7 +1140,7 @@ public class AppCommon {
                                                     break;
                                                 }
                                             }
-
+                                            text = text.length() < 3 ? "" : text;
                                             FileManager.scynSaveFile(FileManager.getDataDir() + FileManager.file_randPromotionConfig, text, false);
                                         }
                                     }
