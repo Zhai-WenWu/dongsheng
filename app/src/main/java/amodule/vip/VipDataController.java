@@ -34,7 +34,7 @@ public class VipDataController {
         String url = StringManager.API_SCHOOL_VIPBUTTON;
         LinkedHashMap<String,String> params = new LinkedHashMap<>();
         params.put("sourcePage", mSourcePage);
-        ReqEncyptInternet.in().doEncypt(url, params, new InternetCallback(XHApplication.in()) {
+        ReqEncyptInternet.in().doEncypt(url, params, new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
                 if(i>=ReqEncyptInternet.REQ_OK_STRING){

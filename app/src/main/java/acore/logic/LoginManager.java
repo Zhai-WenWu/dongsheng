@@ -216,7 +216,7 @@ public class LoginManager {
                 ObserverManager.getInstence().notify(ObserverManager.NOTIFY_LOGOUT, null, flag >= UtilInternet.REQ_OK_STRING);
             }
         });
-        MallReqInternet.in().doPost(MallStringManager.mall_api_loginOut, new LinkedHashMap<>(), new InternetCallback(mAct) {
+        MallReqInternet.in().doPost(MallStringManager.mall_api_loginOut, new LinkedHashMap<>(), new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
 

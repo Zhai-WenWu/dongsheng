@@ -53,7 +53,7 @@ public class LessonHomeDataController {
         String url = StringManager.API_SCHOOL_COURSELIST;
         LinkedHashMap<String, String> params = new LinkedHashMap<>();
         params.put("page", String.valueOf(mCurrentPage));
-        ReqEncyptInternet.in().doEncypt(url, params, new InternetCallback(mActivity) {
+        ReqEncyptInternet.in().doEncypt(url, params, new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
                 int loadCount = 0;
