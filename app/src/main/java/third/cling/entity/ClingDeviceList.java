@@ -4,11 +4,9 @@ import android.support.annotation.Nullable;
 
 import org.fourthline.cling.model.meta.Device;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-
-import third.cling.util.Utils;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * 说明：单例设备列表, 保证全局只有一个设备列表
@@ -18,22 +16,17 @@ import third.cling.util.Utils;
 
 public class ClingDeviceList {
 
-    private static ClingDeviceList INSTANCE = null;
-
     /**
      * 投屏设备列表 都是引用该 list
      */
     private Collection<ClingDevice> mClingDeviceList;
 
     private ClingDeviceList(){
-        mClingDeviceList = new ArrayList<>();
+        mClingDeviceList = new CopyOnWriteArrayList<>();
     }
 
     public static ClingDeviceList getInstance() {
-        if (Utils.isNull(INSTANCE)) {
-            INSTANCE = new ClingDeviceList();
-        }
-        return INSTANCE;
+        return SingletonHolder.mInstance;
     }
 
     public void removeDevice(ClingDevice device){
@@ -86,6 +79,9 @@ public class ClingDeviceList {
 
     public void destroy(){
         mClingDeviceList = null;
-        INSTANCE = null;
+    }
+
+    private static class SingletonHolder {
+        private static final ClingDeviceList mInstance = new ClingDeviceList();
     }
 }

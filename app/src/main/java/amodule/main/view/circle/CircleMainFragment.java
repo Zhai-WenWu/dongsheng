@@ -356,6 +356,8 @@ public class CircleMainFragment extends Fragment {
             int firstVisiPosi = ((LinearLayoutManager) mListView.getLayoutManager()).findFirstVisibleItemPosition();
             //要获得listview的第n个View,则需要n减去第一个可见View的位置。+1是因为有header
             View parentView = mListView.getChildAt(position - firstVisiPosi + headerCount);
+            if (parentView == null)
+                return;
             setVideoLayout(parentView, position);
         });
     }
@@ -379,7 +381,7 @@ public class CircleMainFragment extends Fragment {
             }
 
             video_layout = (LinearLayout) parentView.findViewById(R.id.video_layout);
-            if (videoImageView != null) {
+            if (videoImageView != null && video_layout != null) {
                 video_layout.addView(videoImageView);
                 videoImageView.onBegin();
                 videoImageView.setVideoClickCallBack(() -> {
