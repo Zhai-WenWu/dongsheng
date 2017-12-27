@@ -81,8 +81,8 @@ public class ChooseVideoActivity extends BaseActivity implements View.OnClickLis
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
         if(Tools.isShowTitle()) {
-            int dp_45 = Tools.getDimen(this, R.dimen.dp_45);
-            int height = dp_45 + Tools.getStatusBarHeight(this);
+            int topbarHeight = Tools.getDimen(this, R.dimen.topbar_height);
+            int height = topbarHeight + Tools.getStatusBarHeight(this);
 
             RelativeLayout bar_title = (RelativeLayout)findViewById(R.id.title_all_rela);
             RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height);

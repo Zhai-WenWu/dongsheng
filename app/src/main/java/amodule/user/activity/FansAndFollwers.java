@@ -51,8 +51,8 @@ public class FansAndFollwers extends BaseActivity implements OnClickListener {
 	private void initTitle() {
 //		if (Tools.isShowTitle()) {
 //			getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-//			int dp_45 = Tools.getDimen(this, R.dimen.dp_45);
-//			int height = dp_45 + Tools.getStatusBarHeight(this);
+//			int topbarHeight = Tools.getDimen(this, R.dimen.topbar_height);
+//			int height = topbarHeight + Tools.getStatusBarHeight(this);
 //
 //			RelativeLayout bar_title = (RelativeLayout) findViewById(R.id.top_bar);
 //			RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height);

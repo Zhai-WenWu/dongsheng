@@ -110,7 +110,7 @@ public class DishActivityViewControlNew {
      */
     private void initView(TemplateWebView.OnTemplateCallBack onTemplateCallBack){
         Log.i("zyj","H5______initView::"+(System.currentTimeMillis()-startTime));
-        titleHeight = Tools.getDimen(mAct,R.dimen.dp_45);
+        titleHeight = Tools.getDimen(mAct,R.dimen.topbar_height);
         initTitle();
         //头部view处理
         dishHeaderView= (DishHeaderViewNew) mAct.findViewById(R.id.a_dish_detail_new_headview);

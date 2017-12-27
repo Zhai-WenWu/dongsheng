@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- 适配平板 -->
 <resources>
-
+    <dimen name="topbar_height">@dimen/dp_49</dimen>
     <!--<string name="plantForm">and_pad</string>-->
     <!-- 控件大小 *1.6 -->
     <dimen name="dp__100">-160dp</dimen>

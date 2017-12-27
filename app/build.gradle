@@ -8,7 +8,6 @@ repositories {
         dirs 'libsxh'
     }
 }
-
 dependencies {
     //添加广点通广告
     compile fileTree(include: '*.jar', dir: 'libsAddGd')
@@ -54,10 +53,9 @@ android {
         applicationId "com.xiangha"
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 223
-        versionName "5.8.5.3"
+        versionCode 221
+        versionName "5.8.3.1"
         // dex突破65535的限制
-
         multiDexEnabled true
         //GrowingIO
         resValue("string", "growingio_project_id", "bf5bf872bedc95d3")

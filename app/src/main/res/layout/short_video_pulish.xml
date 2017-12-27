@@ -15,7 +15,7 @@
             android:id="@+id/top_bar"
             layout="@layout/a_common_post_new_title"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_45"/>
+            android:layout_height="@dimen/topbar_height"/>
 
     </RelativeLayout>
 

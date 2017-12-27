@@ -9,7 +9,7 @@
     <include
         android:id="@+id/circle_view_bar_title"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_45"
+        android:layout_height="@dimen/topbar_height"
         layout="@layout/c_view_bar_title_circle" />
 
     <cn.srain.cube.views.ptr.PtrClassicFrameLayout

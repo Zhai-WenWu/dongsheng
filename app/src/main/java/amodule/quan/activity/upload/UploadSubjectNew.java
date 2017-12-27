@@ -152,9 +152,7 @@ public class UploadSubjectNew extends BaseActivity implements OnClickListener{
 	private void initView(){
 		DisplayMetrics metrics = ToolsDevice.getWindowPx(this);
 		//屏幕高-标题高-发布的的高-定位高-状态栏高-协议高度
-//		int wH = metrics.heightPixels - Tools.getDimen(this, R.dimen.dp_45) - Tools.getDimen(this, R.dimen.dp_35)
-//				- Tools.getDimen(this, R.dimen.dp_101) - Tools.getDimen(this, R.dimen.dp_20);
-		int wH = metrics.heightPixels - Tools.getDimen(this,R.dimen.dp_45) - Tools.getDimen(this,R.dimen.dp_50) *2 - Tools.getStatusBarHeight(this);
+		int wH = metrics.heightPixels - Tools.getDimen(this,R.dimen.topbar_height) - Tools.getDimen(this,R.dimen.dp_50) *2 - Tools.getStatusBarHeight(this);
 		LinearLayout parentRl = (LinearLayout)findViewById(R.id.post_content);
 		parentRl.setMinimumHeight(wH);
 		//-----------内容控制----------

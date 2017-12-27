@@ -37,7 +37,7 @@ public class LoadProgressManager {
 	private int topHeight;
 	
 	public LoadProgressManager(Context context , RelativeLayout layout){
-		topHeight = Tools.getStatusBarHeight(context) + Tools.getDimen(context,R.dimen.dp_45);
+		topHeight = Tools.getStatusBarHeight(context) + Tools.getDimen(context,R.dimen.topbar_height);
 		initProgress(context , layout);
 		initLoadFailLayout(context, layout);
 	}

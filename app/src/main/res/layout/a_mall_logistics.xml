@@ -6,7 +6,7 @@
     <RelativeLayout
         android:id="@+id/title_rela"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_45"
+        android:layout_height="@dimen/topbar_height"
         android:background="#ffffff" >
 
         <TextView

@@ -135,7 +135,7 @@ public class UserHomeSubject extends TabContentView {
 				mAct.doReload();
 			}
 		}, listDataMySb.size() == 0, new LoadManager.ViewScrollCallBack() {
-			final int topRedundant = Tools.getDimen(mAct,R.dimen.dp_45) + Tools.getStatusBarHeight(mAct);
+			final int topRedundant = Tools.getDimen(mAct,R.dimen.topbar_height) + Tools.getStatusBarHeight(mAct);
 			final int bottomRedundant = Tools.getDimen(mAct,R.dimen.dp_50);
 			final int Min = topRedundant;
 			final int Max = (ToolsDevice.getWindowPx(mAct).heightPixels  - topRedundant - bottomRedundant) * 3 / 5 + topRedundant;

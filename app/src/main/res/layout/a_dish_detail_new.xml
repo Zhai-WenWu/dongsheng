@@ -68,7 +68,7 @@
         <include
             android:id="@+id/dish_title_page"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_45"
+            android:layout_height="@dimen/topbar_height"
             android:visibility="visible"
             layout="@layout/a_dish_detail_bar_title_page"/>
 

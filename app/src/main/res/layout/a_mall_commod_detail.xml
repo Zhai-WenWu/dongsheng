@@ -17,7 +17,7 @@
         <RelativeLayout
             android:id="@+id/commod_title"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_45"
+            android:layout_height="@dimen/topbar_height"
             android:layout_alignParentTop="true"
             android:background="@color/common_top_bg">
 

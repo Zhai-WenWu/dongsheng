@@ -3,7 +3,7 @@
     android:id="@+id/barTitle"
     android:layout_width="match_parent"
     android:background="@color/transparent"
-    android:layout_height="@dimen/dp_45">
+    android:layout_height="@dimen/topbar_height">
 
     <View
         android:id="@+id/title_state_bar"

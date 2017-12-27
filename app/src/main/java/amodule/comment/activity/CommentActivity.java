@@ -89,7 +89,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
         titleLayout = (LinearLayout) findViewById(R.id.comment_title_layout);
         titleTv = (TextView) findViewById(R.id.comment_title);
         final LinearLayout bottomBarLayout = (LinearLayout) findViewById(R.id.a_comment_keyboard_parent);
-        final int dp45 = Tools.getDimen(this,R.dimen.dp_45);
+        final int topbarHeight = Tools.getDimen(this,R.dimen.topbar_height);
         rl.getViewTreeObserver().addOnGlobalLayoutListener(
                 new ViewTreeObserver.OnGlobalLayoutListener() {
                     public void onGlobalLayout() {
@@ -99,7 +99,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                         int screenHeight = rl.getRootView().getHeight();
                         int heightDifference = screenHeight - (r.bottom - r.top);
                         isShowKeyboard = heightDifference > 200;
-                        heightDifference = isShowKeyboard ? heightDifference - heightDiff + dp45 : 0;
+                        heightDifference = isShowKeyboard ? heightDifference - heightDiff + topbarHeight : 0;
                         bottomBarLayout.setPadding(0, 0, 0, heightDifference);
                     }
                 });

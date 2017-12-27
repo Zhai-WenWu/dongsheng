@@ -2,7 +2,7 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/barTitle"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/dp_45" >
+    android:layout_height="@dimen/topbar_height" >
 
     <TextView
         android:id="@+id/title"

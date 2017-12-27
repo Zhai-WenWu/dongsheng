@@ -240,7 +240,7 @@ public class CircleFragment extends Fragment {
                             getData(!LoadOver);
                         }
                     },new AutoLoadMore.OnListScrollListener() {
-                        final int topRedundant = Tools.getDimen(getContext(),R.dimen.dp_45) + Tools.getStatusBarHeight(getContext());
+                        final int topRedundant = Tools.getDimen(getContext(),R.dimen.topbar_height) + Tools.getStatusBarHeight(getContext());
                         final int bottomRedundant = Tools.getDimen(getContext(),R.dimen.dp_50);
                         final int Min = topRedundant;
                         final int Max = (ToolsDevice.getWindowPx(getContext()).heightPixels  - topRedundant - bottomRedundant) *4 / 5 + topRedundant;

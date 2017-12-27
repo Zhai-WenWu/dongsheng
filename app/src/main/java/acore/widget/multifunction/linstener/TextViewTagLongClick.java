@@ -243,7 +243,7 @@ public class TextViewTagLongClick implements OnLongClickListener{
 			anchorCenter[0] = location[0] + anchor.getWidth() / 2;
 			anchorCenter[1] = location[1];
 			int popupWindH = mPopupWindow.getHeight();
-			int titleH = Tools.getDimen(XHApplication.in(),R.dimen.dp_45);
+			int titleH = Tools.getDimen(XHApplication.in(),R.dimen.topbar_height);
 			if(location[1] < titleH * 2 + popupWindH - yoff) {
 				upArrow.setVisibility(View.VISIBLE);
 				downArrow.setVisibility(View.GONE);
