@@ -279,7 +279,7 @@ public class FragmentNous {
         } else {
             getUrl = StringManager.api_nousList + "?type=classify&pinyin=" + url + "&page=" + currentPage;
         }
-        ReqInternet.in().doGet(getUrl, new InternetCallback(mAct) {
+        ReqInternet.in().doGet(getUrl, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
                 int loadCount = 0;

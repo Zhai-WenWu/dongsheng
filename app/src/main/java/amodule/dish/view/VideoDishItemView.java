@@ -138,7 +138,7 @@ public class VideoDishItemView {
 		}
 		mAct.loadManager.changeMoreBtn(UtilInternet.REQ_OK_STRING, -1, -1, currentPage,listDataMySuro.size() == 0);
 		String getUrl = StringManager.api_getVideoClassifyDish + "?code=" + mCode + "&page=" + currentPage;
-		ReqInternet.in().doGet(getUrl, new InternetCallback(mAct) {
+		ReqInternet.in().doGet(getUrl, new InternetCallback() {
 			@Override
 			public void loaded(int flag, String url, Object returnObj) {
 				int loadCount = 0;

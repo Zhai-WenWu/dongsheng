@@ -77,7 +77,7 @@ public class Feedback extends BaseActivity implements OnClickListener {
         Token = XGPushServer.getXGToken(this);
         initActivity("香哈小秘书", 2, 0, R.layout.c_view_bar_title, R.layout.a_xh_feedback);
         // 设置加载
-        loadManager.setLoading("香哈小秘书", new InternetCallback(this) {
+        loadManager.setLoading("香哈小秘书", new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
                 loadManager.setLoading(new OnClickListener() {
@@ -122,6 +122,8 @@ public class Feedback extends BaseActivity implements OnClickListener {
 
     private void init() {
         AppCommon.feekbackMessage = 0;
+        if (Main.allMain != null && Main.allMain.getCurrentTab() == Main.TAB_MESSAGE)
+            AppCommon.quanMessage = 0;
         Main.setNewMsgNum(2, AppCommon.qiyvMessage + AppCommon.myQAMessage + AppCommon.quanMessage);
         MyMessage.notifiMessage(MyMessage.MSG_FEEKBACK_ONREFURESH, 0, null);
         feebback_reply_content = (EditText) findViewById(R.id.feebback_reply_content);
@@ -177,7 +179,7 @@ public class Feedback extends BaseActivity implements OnClickListener {
                 .append("?token=").append(Token)
                 .append((isForward ? "" :  "&timePage=" + timePage))
                 .toString();
-        ReqInternet.in().doGet(StringManager.api_getDialogInfo + params, new InternetCallback(this) {
+        ReqInternet.in().doGet(StringManager.api_getDialogInfo + params, new InternetCallback() {
 
             @Override
             public void loaded(int flag, String url, Object returnObj) {
@@ -306,7 +308,7 @@ public class Feedback extends BaseActivity implements OnClickListener {
         fileMap.put("token", Token);
         fileMap.put("content", "");
         fileMap.put("uploadImg_img_0", imgUrl);
-        ReqInternet.in().doPostImg(StringManager.api_sendDialog, fileMap, new InternetCallback(this) {
+        ReqInternet.in().doPostImg(StringManager.api_sendDialog, fileMap, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
                 if (flag >= UtilInternet.REQ_OK_STRING)
@@ -339,7 +341,7 @@ public class Feedback extends BaseActivity implements OnClickListener {
             mapparams.put("token",Token);
             mapparams.put("content",feektext);
 
-            ReqInternet.in().doPost(StringManager.api_sendDialog, mapparams, new InternetCallback(this) {
+            ReqInternet.in().doPost(StringManager.api_sendDialog, mapparams, new InternetCallback() {
                 @Override
                 public void loaded(int flag, String url, Object returnObj) {
                     if (flag >= UtilInternet.REQ_OK_STRING) {

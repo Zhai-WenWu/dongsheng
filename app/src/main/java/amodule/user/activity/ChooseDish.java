@@ -189,7 +189,7 @@ public class ChooseDish extends BaseActivity{
 			mSearchData.clear();
 			mData.clear();
 		}
-		ReqInternet.in().doGet(StringManager.api_getUserDishAll, new InternetCallback(this) {
+		ReqInternet.in().doGet(StringManager.api_getUserDishAll, new InternetCallback() {
 			@Override
 			public void loaded(int flag, String url, Object returnObj) {
 				if(flag > 1){

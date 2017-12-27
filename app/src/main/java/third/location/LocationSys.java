@@ -2,6 +2,8 @@ package third.location;
 
 import acore.tools.FileManager;
 import amodule.main.Main;
+import aplug.basic.XHInternetCallBack;
+
 import android.content.Context;
 import android.text.TextUtils;
 
@@ -74,8 +76,10 @@ public class LocationSys implements BDLocationListener {
 		 * @param lng ：经度
 		 */
 		public void onLocationSuccess(String country,String countryCode,String province,String city,String district,String lat,String lng){
-			if(Main.mainActivity != null)
-				FileManager.saveShared(Main.mainActivity , FileManager.file_location, FileManager.file_location, lng + "#" + lat);
+			if(Main.mainActivity != null) {
+				FileManager.saveShared(Main.mainActivity, FileManager.file_location, FileManager.file_location, lng + "#" + lat);
+				XHInternetCallBack.setIsCookieChange(true);
+			}
 		}
 	}
 }

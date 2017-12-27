@@ -426,7 +426,7 @@ public class NormalContentItemUserView extends NormarlContentItemView {
         String url=StringManager.api_deleteSubject;
         url+="?userCode="+customers.get(0).get("code");
         url+="&subjectCode="+map.get("code");
-        aplug.basic.ReqInternet.in().doGet(url, new InternetCallback(mAct) {
+        aplug.basic.ReqInternet.in().doGet(url, new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
                 if(i>= aplug.basic.ReqInternet.REQ_OK_STRING){//成功
@@ -454,7 +454,7 @@ public class NormalContentItemUserView extends NormarlContentItemView {
             isConfirm = true;
         }
         url+="&type="+type;
-        aplug.basic.ReqInternet.in().doGet(url, new InternetCallback(mAct) {
+        aplug.basic.ReqInternet.in().doGet(url, new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
                 if(i>= aplug.basic.ReqInternet.REQ_OK_STRING){//成功

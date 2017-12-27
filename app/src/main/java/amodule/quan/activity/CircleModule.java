@@ -118,7 +118,7 @@ public class CircleModule extends BaseActivity implements OnClickListener {
 		if (isRefresh) {
 			loadManager.hideProgressBar();
 		}
-		ReqInternet.in().doGet(url + param, new InternetCallback(this) {
+		ReqInternet.in().doGet(url + param, new InternetCallback() {
 
 			@Override
 			public void loaded(int flag, String url, Object msg) {

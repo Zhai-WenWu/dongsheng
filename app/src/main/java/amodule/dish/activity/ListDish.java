@@ -310,7 +310,7 @@ public class ListDish extends BaseActivity {
             url = StringManager.api_getDishList + "?type=" + type + "&g1=" + g1 + "&page=" + currentPage;
         else
             url = StringManager.api_getDishList + "?type=" + type + "&g1=" + g1 + "&page=" + currentPage;
-        ReqInternet.in().doGet(url, new InternetCallback(this) {
+        ReqInternet.in().doGet(url, new InternetCallback() {
 
             @Override
             public void getPower(int flag, String url, Object obj) {

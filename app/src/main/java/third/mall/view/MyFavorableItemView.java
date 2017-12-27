@@ -109,7 +109,7 @@ public class MyFavorableItemView extends ViewItemBase{
 	private void setRequest(){
 		MallClickContorl.getInstance().setStatisticUrl(url, null,mall_stat_statistic, context);
 		String param="shop_coupon_package_code="+map.get("shop_coupon_package_code");
-		MallReqInternet.in().doPost(MallStringManager.mall_getAShopCoupon, param, new MallInternetCallback(context) {
+		MallReqInternet.in().doPost(MallStringManager.mall_getAShopCoupon, param, new MallInternetCallback() {
 			
 			@Override
 			public void loadstat(int flag, String url, Object msg, Object... stat) {

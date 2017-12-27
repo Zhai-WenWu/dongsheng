@@ -200,7 +200,7 @@ public class DishGridDialog extends Dialog {
         mCurrentPage++;
         changeMoreBtn(mGridView, ReqEncyptInternet.REQ_OK_STRING, -1, -1, mCurrentPage, mData.size() == 0);
         params.put("page", String.valueOf(mCurrentPage));
-        ReqEncyptInternet.in().doEncypt(api_getVideoList, params, new InternetCallback(getContext()) {
+        ReqEncyptInternet.in().doEncypt(api_getVideoList, params, new InternetCallback() {
             @Override
             public void loaded(int flag, String s, Object o) {
                 int loadCount = 0;

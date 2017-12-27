@@ -142,7 +142,7 @@ public class FriendQuan extends BaseActivity {
 	}
 
 	private void refershNetworkData(String getUrl) {
-		ReqInternet.in().doGet(getUrl, new InternetCallback(this) {
+		ReqInternet.in().doGet(getUrl, new InternetCallback() {
 			@Override
 			public void loaded(int flag, String url, Object returnObj) {
 				int loadCount = 0; 

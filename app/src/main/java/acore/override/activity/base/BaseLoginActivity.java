@@ -175,7 +175,7 @@ public class BaseLoginActivity extends BaseActivity {
     public void userLogin(final BaseLoginActivity mAct, final String loginType, String param, final String zoneCode,
                           final String phoneNum, final BaseLoginCallback callback) {
         loadManager.showProgressBar();
-        ReqInternet.in().doPost(StringManager.api_getUserInfo, param, new InternetCallback(mAct) {
+        ReqInternet.in().doPost(StringManager.api_getUserInfo, param, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
                 loadManager.hideProgressBar();
@@ -262,7 +262,7 @@ public class BaseLoginActivity extends BaseActivity {
                 .append("&verCode=").append(identifyCode)
                 .append("&sdkVes=").append(SMS_SDK_VERSION).toString();
         loadManager.showProgressBar();
-        ReqInternet.in().doPost(StringManager.api_phoneLogin, param, new InternetCallback(mAct) {
+        ReqInternet.in().doPost(StringManager.api_phoneLogin, param, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
                 loadManager.hideProgressBar();
@@ -283,7 +283,7 @@ public class BaseLoginActivity extends BaseActivity {
                                       final BaseLoginCallback callback) {
         String param = "email=" + email;
         loadManager.showProgressBar();
-        ReqInternet.in().doPost(StringManager.api_checkEmailRegisterState, param, new InternetCallback(context) {
+        ReqInternet.in().doPost(StringManager.api_checkEmailRegisterState, param, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object msg) {
                 loadManager.hideProgressBar();
@@ -311,7 +311,7 @@ public class BaseLoginActivity extends BaseActivity {
         //发起请求
         String param = "phone=" + phoneNum + "&phoneZone=" + zoneCode;
         loadManager.showProgressBar();
-        ReqInternet.in().doPost(StringManager.api_checkPhoneRegisterState, param, new InternetCallback(context) {
+        ReqInternet.in().doPost(StringManager.api_checkPhoneRegisterState, param, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object msg) {
                 loadManager.hideProgressBar();
@@ -347,7 +347,7 @@ public class BaseLoginActivity extends BaseActivity {
         String errorType = LoginCheck.checkPhoneFormatWell(this, "86", phoneNum);
         if (LoginCheck.WELL_TYPE.equals(errorType)) {
             ReqEncyptInternet.in().doEncypt(StringManager.api_sendVoiceVerify, "phone=" + phoneNum,
-                    new InternetCallback(this) {
+                    new InternetCallback() {
                         @Override
                         public void loaded(int flag, String s, Object data) {
                             if (flag >= ReqInternet.REQ_OK_STRING) {
@@ -460,7 +460,7 @@ public class BaseLoginActivity extends BaseActivity {
         if (!TextUtils.isEmpty(countyrCode))
             stringBuilder.append("&code=").append(countyrCode);
         ReqInternet.in().doPost(StringManager.api_smsReport, stringBuilder.toString(),
-                new InternetCallback(mAct.getApplicationContext()) {
+                new InternetCallback() {
                     @Override
                     public void loaded(int flag, String url, Object returnObj) {
                     }
@@ -478,7 +478,7 @@ public class BaseLoginActivity extends BaseActivity {
                              String pwd, final BaseLoginCallback callback) {
         String param = "password=" + pwd + "&zone=" + zoneCode + "&phone=" + phoneNum;
         loadManager.showProgressBar();
-        ReqInternet.in().doPost(StringManager.api_setSecret, param, new InternetCallback(context) {
+        ReqInternet.in().doPost(StringManager.api_setSecret, param, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
                 loadManager.hideProgressBar();
@@ -502,7 +502,7 @@ public class BaseLoginActivity extends BaseActivity {
         String param = "phoneNum=" + phoneNum + "&zone=" + zoneCode + "&verCode="
                 + identify_code + "&sdkVes=" + SMS_SDK_VERSION;
         loadManager.showProgressBar();
-        ReqInternet.in().doPost(url, param, new InternetCallback(context) {
+        ReqInternet.in().doPost(url, param, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
                 loadManager.hideProgressBar();
@@ -523,7 +523,7 @@ public class BaseLoginActivity extends BaseActivity {
                 + newZoneCode + "&sdkVes=" + SMS_SDK_VERSION + "&currentPhoneZone=" + currentZoneCode
                 + "&currentPhone=" + currentPhone + "&verifyCode=" + verifyCode;
 
-        ReqInternet.in().doPost(StringManager.api_modifyPhone, param, new InternetCallback(context) {
+        ReqInternet.in().doPost(StringManager.api_modifyPhone, param, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
                 loadManager.hideProgressBar();
@@ -552,7 +552,7 @@ public class BaseLoginActivity extends BaseActivity {
         loadManager.showProgressBar();
         String param = "phoneNum=" + phoneNum + "&zone=" + zoneCode + "&verCode=" + vertiCode +
                 "&sdkVes=" + BaseLoginActivity.SMS_SDK_VERSION;
-        ReqInternet.in().doPost(StringManager.api_phoneBind, param, new InternetCallback(context) {
+        ReqInternet.in().doPost(StringManager.api_phoneBind, param, new InternetCallback() {
 
             @Override
             public void loaded(int flag, String url, Object returnObj) {

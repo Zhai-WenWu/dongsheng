@@ -125,7 +125,7 @@ public class ReportActivity extends BaseActivity {
 
     private void getReportData() {
         loadManager.showProgressBar();
-        ReqEncyptInternet.in().doEncypt(StringManager.API_COMMENTS_REPORT, "type=" + mType + "&reportType=" + mReportType, new InternetCallback(this) {
+        ReqEncyptInternet.in().doEncypt(StringManager.API_COMMENTS_REPORT, "type=" + mType + "&reportType=" + mReportType, new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
                 if (i >= UtilInternet.REQ_OK_STRING) {
@@ -262,7 +262,7 @@ public class ReportActivity extends BaseActivity {
                 + "&reasonId=" + mLastSelectedReportChild.getKey()
                 + "&operationId=" + (mLastSelectedAdminChild == null ? "" : mLastSelectedAdminChild.getKey())
                 + "&reportContent=" + mReportContent;
-        ReqEncyptInternet.in().doEncypt(StringManager.API_COMMIT_REPORT, params, new InternetCallback(this) {
+        ReqEncyptInternet.in().doEncypt(StringManager.API_COMMIT_REPORT, params, new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
                 ReportActivity.this.finish();

@@ -104,7 +104,7 @@ public class ArticleCommentView extends ItemBaseView {
                                 .append("pagesize=").append(Integer.parseInt(dataMap.get("replay_num")) + 3);
 
                         ReqEncyptInternet.in().doEncypt(StringManager.api_replayList, sbuild.toString(),
-                                new InternetCallback(getContext()) {
+                                new InternetCallback() {
                                     @Override
                                     public void loaded(int flag, String url, Object obj) {
                                         if (flag >= ReqEncyptInternet.REQ_OK_STRING) {

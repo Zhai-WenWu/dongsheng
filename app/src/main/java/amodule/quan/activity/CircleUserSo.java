@@ -151,7 +151,7 @@ public class CircleUserSo extends BaseActivity implements OnClickListener {
 		public void oRemoManager(final int position) {
 			final Map<String, String> map = mListData.get(position);
 			String code = map.get("code");
-			ReqInternet.in().doPost(StringManager.api_circleCustomerPower, "&type=4" + "&customerId=" + code + "&cid=" + mCid, new InternetCallback(CircleUserSo.this) {
+			ReqInternet.in().doPost(StringManager.api_circleCustomerPower, "&type=4" + "&customerId=" + code + "&cid=" + mCid, new InternetCallback() {
 				
 				@Override
 				public void loaded(int flag, String url, Object msg) {
@@ -168,7 +168,7 @@ public class CircleUserSo extends BaseActivity implements OnClickListener {
 		@Override
 		public void oAddManager(final int position) {
 			String code = mListData.get(position).get("code");
-			ReqInternet.in().doPost(StringManager.api_circleCustomerPower, "&type=3" + "&customerId=" + code + "&cid=" + mCid, new InternetCallback(CircleUserSo.this) {
+			ReqInternet.in().doPost(StringManager.api_circleCustomerPower, "&type=3" + "&customerId=" + code + "&cid=" + mCid, new InternetCallback() {
 				
 				@Override
 				public void loaded(int flag, String url, Object msg) {
@@ -187,7 +187,7 @@ public class CircleUserSo extends BaseActivity implements OnClickListener {
 		@Override
 		public void oAddBlack(final View parentView,final int position) {
 			String code = mListData.get(position).get("code");
-			ReqInternet.in().doPost(StringManager.api_circleCustomerPower, "&type=1" + "&customerId=" + code + "&cid=" + mCid, new InternetCallback(CircleUserSo.this) {
+			ReqInternet.in().doPost(StringManager.api_circleCustomerPower, "&type=1" + "&customerId=" + code + "&cid=" + mCid, new InternetCallback() {
 				
 				@Override
 				public void loaded(int flag, String url, Object msg) {
@@ -230,7 +230,7 @@ public class CircleUserSo extends BaseActivity implements OnClickListener {
 			getUrl = mUircleUser + "?cid=" + mCid + "&page=" + currentPage + "&s=" + mSoContent;
 		else 
 			getUrl = mUircleBlackUser + "?cid=" + mCid + "&page=" + currentPage + "&s=" + mSoContent;
-		ReqInternet.in().doGet(getUrl, new InternetCallback(this) {
+		ReqInternet.in().doGet(getUrl, new InternetCallback() {
 			@Override
 			public void loaded(int flag, String url, Object returnObj) {
 				int loadCount = 0;

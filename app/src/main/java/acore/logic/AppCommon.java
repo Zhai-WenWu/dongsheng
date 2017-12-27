@@ -41,6 +41,7 @@ import acore.logic.load.LoadManager;
 import acore.override.XHApplication;
 import acore.override.activity.base.WebActivity;
 import acore.override.activity.mian.MainBaseActivity;
+import acore.override.helper.XHActivityManager;
 import acore.tools.Base64Utils;
 import acore.tools.FileManager;
 import acore.tools.LogManager;
@@ -93,7 +94,7 @@ public class AppCommon {
      * 获取公用数据消息
      */
     public static void getCommonData(final InternetCallback callback) {
-        ReqInternet.in().doGet(StringManager.api_commonData + "?m=commonData", new InternetCallback(XHApplication.in()) {
+        ReqInternet.in().doGet(StringManager.api_commonData + "?m=commonData", new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
                 if (flag >= ReqInternet.REQ_OK_STRING) {
@@ -113,12 +114,18 @@ public class AppCommon {
                                 @Override
                                 public void onNumberReady(int count) {
                                     if (count >= 0) {
+                                        if (Main.allMain != null && Main.allMain.getCurrentTab() == Main.TAB_MESSAGE) {
+                                            quanMessage = 0;
+                                        }
                                         qiyvMessage = count;
                                         if (count > 0)
                                             Main.setNewMsgNum(2, quanMessage + feekbackMessage + myQAMessage + qiyvMessage);
                                     }
                                 }
                             });
+                            if (Main.allMain != null && Main.allMain.getCurrentTab() == Main.TAB_MESSAGE) {
+                                quanMessage = 0;
+                            }
                             Main.setNewMsgNum(2, quanMessage + feekbackMessage + myQAMessage + qiyvMessage);
                             // tok值
                             long tok = Integer.parseInt(alertArr[0]);
@@ -158,7 +165,7 @@ public class AppCommon {
             // String url = StringManager.api_indexData + "?type=newData";
             String url = StringManager.api_indexDataNew;
             // 请求网络信息
-            ReqInternet.in().doGet(url, new InternetCallback(XHApplication.in()) {
+            ReqInternet.in().doGet(url, new InternetCallback() {
                 @Override
                 public void loaded(int flag, String url, final Object returnObj) {
                     if (flag >= ReqInternet.REQ_OK_STRING) {
@@ -393,7 +400,7 @@ public class AppCommon {
     public static Intent parseURL(Context act, Bundle bundle, String url) {
         if (url.contains("stat=1")) {
             //服务端做统计用的
-            ReqInternet.in().doGet(StringManager.api_setAppUrl + "?url=" + url, new InternetCallback(XHApplication.in()) {
+            ReqInternet.in().doGet(StringManager.api_setAppUrl + "?url=" + url, new InternetCallback() {
                 @Override
                 public void loaded(int flag, String url, Object returnObj) {
                     LogManager.print("d", "res=" + flag + "----data=" + returnObj.toString());
@@ -507,13 +514,13 @@ public class AppCommon {
     public synchronized static void saveAppData() {
         final String appDataPath = FileManager.getDataDir() + FileManager.file_appData;
         if (FileManager.ifFileModifyByCompletePath(appDataPath, 6 * 60) == null) {
-            ReqInternet.in().doGet(StringManager.api_appData + "?type=newData", new InternetCallback(XHApplication.in()) {
+            ReqInternet.in().doGet(StringManager.api_appData + "?type=newData", new InternetCallback() {
                 @Override
                 public void loaded(int flag, String url, final Object returnObj) {
                     if (flag >= ReqInternet.REQ_OK_STRING) {
                         saveAppDataToFile(returnObj.toString());
                     } else {
-                        String json = FileManager.getFromAssets(context, FileManager.file_appData);
+                        String json = FileManager.getFromAssets(XHActivityManager.getInstance().getCurrentActivity(), FileManager.file_appData);
                         saveAppDataToFile(json);
                     }
                 }
@@ -573,7 +580,7 @@ public class AppCommon {
     public static void onAttentionClick(String code, final String type, final Runnable succRun) {
         if (code != null) {
             ReqInternet.in().doPost(StringManager.api_setUserData, "type=" + type + "&p1=" + code.toString(),
-                    new InternetCallback(XHApplication.in()) {
+                    new InternetCallback() {
                         @Override
                         public void loaded(int flag, String url, Object returnObj) {
                             if (flag >= ReqInternet.REQ_OK_STRING) {
@@ -649,7 +656,7 @@ public class AppCommon {
      * 获取惊喜页面的红点是否显示
      */
     public static void getActivityState(final Context context) {
-        ReqInternet.in().doGet(StringManager.api_getChangeTime, new InternetCallback(XHApplication.in()) {
+        ReqInternet.in().doGet(StringManager.api_getChangeTime, new InternetCallback() {
 
             private String noGoTime = "";
             private String goTime = "";
@@ -765,7 +772,7 @@ public class AppCommon {
         }
         String url = StringManager.api_getWebRule;
         String params = TextUtils.isEmpty(uptime) ? "" : "?uptime=" + uptime;
-        ReqInternet.in().doGet(url + params, new InternetCallback(context) {
+        ReqInternet.in().doGet(url + params, new InternetCallback() {
 
             @Override
             public void loaded(int flag, String url, final Object msg) {
@@ -822,7 +829,7 @@ public class AppCommon {
             String allCircleJsonByAssets = FileManager.getFromAssets(context, FileManager.file_allCircle);
             saveCircleData(allCircleJsonPath, allCircleJsonByAssets, circleSqlite);
         }
-        ReqInternet.in().doGet(StringManager.api_circleStaticData, new InternetCallback(context) {
+        ReqInternet.in().doGet(StringManager.api_circleStaticData, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object msg) {
                 //成功
@@ -878,7 +885,7 @@ public class AppCommon {
      * 保存config
      */
     public static void saveConfigData(Context context) {
-        ReqInternet.in().doGet(StringManager.api_getConf, new InternetCallback(context) {
+        ReqInternet.in().doGet(StringManager.api_getConf, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, final Object msg) {
                 if (flag >= ReqInternet.REQ_OK_STRING) {
@@ -1097,7 +1104,7 @@ public class AppCommon {
                 }
                 url = url + "?rand=" + Math.abs(new Random().nextInt());
                 ReqEncyptInternet.in().doEncypt(url, "",
-                        new InternetCallback(context) {
+                        new InternetCallback() {
                             @Override
                             public void loaded(int flag, String url, final Object msg) {
                                 try {

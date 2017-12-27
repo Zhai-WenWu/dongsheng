@@ -117,6 +117,7 @@ public class DishTitleViewControl implements View.OnClickListener{
                 detailDish.findViewById(R.id.share_layout).setVisibility(View.VISIBLE);
             }else{
                 detailDish.findViewById(R.id.more_layout).setVisibility(View.VISIBLE);
+                detailDish.findViewById(R.id.share_layout).setVisibility(View.GONE);
             }
         }else{
             detailDish.findViewById(R.id.more_layout).setVisibility(View.GONE);

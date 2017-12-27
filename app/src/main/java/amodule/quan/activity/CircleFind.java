@@ -100,7 +100,7 @@ public class CircleFind extends BaseActivity{
 		}
 		loadManager.changeMoreBtn(UtilInternet.REQ_OK_STRING, -1, -1, currentPage,listData.size() == 0);
 		String getUrl = StringManager.api_circleFind + "?page=" + currentPage;
-		ReqInternet.in().doGet(getUrl, new InternetCallback(this) {
+		ReqInternet.in().doGet(getUrl, new InternetCallback() {
 			@Override
 			public void loaded(int flag, String url, Object returnObj) {
 				int loadCount = 0;

@@ -237,7 +237,7 @@ public class BarSubjectReply2 extends RelativeLayout implements OnClickListener{
 
 		}
 		try {
-			ReqInternet.in().doPost(url, params, new InternetCallback(mAct){
+			ReqInternet.in().doPost(url, params, new InternetCallback(){
 
 				@Override
 				public void loaded(int flag, String url, Object returnObj) {

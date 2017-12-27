@@ -246,7 +246,7 @@ public class AddressActivity extends MallBaseActivity implements OnClickListener
 	private void setAddRequest(final String detail,final String name,final String mobile){
 		url=MallStringManager.mall_api_addShippingAddress;
 		params= "region_id="+code+"&detail="+detail+"&name="+name+"&mobile="+mobile+"&type="+address_type;
-		MallReqInternet.in().doPost(url, params, new MallInternetCallback(this) {
+		MallReqInternet.in().doPost(url, params, new MallInternetCallback() {
 			
 			@Override
 			public void loadstat(int flag, String url, Object msg, Object... stat) {
@@ -286,8 +286,8 @@ public class AddressActivity extends MallBaseActivity implements OnClickListener
 		setStatisticIndex();
 		params= "address_id="+address_id+"&region_id="+code+"&detail="+detail+"&name="+name+"&mobile="+mobile+"&type="+address_type;
 		url=MallStringManager.mall_api_setShippingAddress;
-		MallReqInternet.in().doPost(url, params, new MallInternetCallback(this) {
-			
+		MallReqInternet.in().doPost(url, params, new MallInternetCallback() {
+
 			@Override
 			public void loadstat(int flag, String url, Object msg, Object... stat) {
 				if(flag>=UtilInternet.REQ_OK_STRING){
@@ -301,7 +301,7 @@ public class AddressActivity extends MallBaseActivity implements OnClickListener
 					//处理code过期问题
 					if(MallCommon.code_past.equals(map.get("code"))){
 						common.setLoading(new InterfaceMallReqIntert() {
-							
+
 							@Override
 							public void setState(int state) {
 								if(state>=UtilInternet.REQ_OK_STRING){
@@ -314,7 +314,7 @@ public class AddressActivity extends MallBaseActivity implements OnClickListener
 					}
 					Tools.showToast(AddressActivity.this, map.get("msg"));
 				}
-			
+
 			}
 		});
 	}
@@ -323,7 +323,7 @@ public class AddressActivity extends MallBaseActivity implements OnClickListener
 	 */
 	private void setGetRequest(){
 		url= MallStringManager.mall_api_getShippingAddressDetail+"?address_id="+address_id;
-		MallReqInternet.in().doGet(url, new MallInternetCallback(this) {
+		MallReqInternet.in().doGet(url, new MallInternetCallback() {
 			
 			@Override
 			public void loadstat(int flag, String url, Object msg, Object... stat) {
@@ -440,7 +440,7 @@ public class AddressActivity extends MallBaseActivity implements OnClickListener
 		setStatisticIndex();
 		params="address_id="+address_id;
 		url=MallStringManager.mall_delShippingAddress;
-		MallReqInternet.init(this).doPost(url, params, new MallInternetCallback(this) {
+		MallReqInternet.in().doPost(url, params, new MallInternetCallback() {
 			
 			@Override
 			public void loadstat(int flag, String url, Object msg, Object... stat) {

@@ -389,7 +389,7 @@ public class VideoPlayerController {
         this.mUserUnique = userUnique;
         this.mVideoUnique = videoUnique;
         String url = getUrl(videoUnique, userUnique);//cebb8cfcb9-----grpbim18nn
-        ReqInternet.in().doGet(url, new InternetCallback(mContext) {
+        ReqInternet.in().doGet(url, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object msg) {
                 if (flag >= ReqInternet.REQ_OK_STRING && msg != null) {
@@ -440,7 +440,7 @@ public class VideoPlayerController {
         this.mUserUnique = userUnique;
         this.mVideoUnique = videoUnique;
         String url = getUrl(videoUnique, userUnique);//cebb8cfcb9-----grpbim18nn
-        ReqInternet.in().doGet(url, new InternetCallback(mContext) {
+        ReqInternet.in().doGet(url, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object msg) {
                 if (flag >= ReqInternet.REQ_OK_STRING && msg != null) {

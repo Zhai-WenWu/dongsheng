@@ -121,7 +121,7 @@ public class PublishEvalutionMultiActivity extends MallBaseActivity {
                 .append(order_id);
         MallReqInternet.in().doGet(
                 params.toString(),
-                new MallInternetCallback(this) {
+                new MallInternetCallback() {
                     @Override
                     public void loadstat(int flag, String url, Object msg, Object... stat) {
                         commodData.clear();
@@ -161,7 +161,7 @@ public class PublishEvalutionMultiActivity extends MallBaseActivity {
         showUploadingDialog();
         MallReqInternet.in().doPost(MallStringManager.mall_addMuiltComment,
                 getParams(),
-                new MallInternetCallback(this) {
+                new MallInternetCallback() {
                     @Override
                     public void loadstat(int flag, String url, Object msg, Object... stat) {
                         cancelUploadingDialog();

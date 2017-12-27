@@ -203,7 +203,7 @@ public class SetPersonalInfo extends BaseLoginActivity implements View.OnClickLi
         fileMap.put("uploadImg_file_1", imgUrl);
         Tools.showToast(getApplicationContext(), "图片正在上传,请稍等!");
         dataStatistics("完善资料页，上传头像");
-        ReqInternet.in().doPostImg(StringManager.api_setUserData, fileMap, new InternetCallback(this) {
+        ReqInternet.in().doPostImg(StringManager.api_setUserData, fileMap, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
                 if (flag >= UtilInternet.REQ_OK_STRING) {
@@ -226,7 +226,7 @@ public class SetPersonalInfo extends BaseLoginActivity implements View.OnClickLi
             btn_next_step.setClickCenterable(false);
         } else {
             String params = "type=nickName&p1=" + nickname;
-            ReqInternet.in().doPost(StringManager.api_setUserData, params, new InternetCallback(this) {
+            ReqInternet.in().doPost(StringManager.api_setUserData, params, new InternetCallback() {
                 @Override
                 public void loaded(int flag, String url, Object returnObj) {
                     if (flag >= UtilInternet.REQ_OK_STRING) {
@@ -283,7 +283,7 @@ public class SetPersonalInfo extends BaseLoginActivity implements View.OnClickLi
 
 
         loadManager.showProgressBar();
-        ReqInternet.in().doPost(StringManager.api_getUserInfo, "type=getData", new InternetCallback(mAct) {
+        ReqInternet.in().doPost(StringManager.api_getUserInfo, "type=getData", new InternetCallback() {
 
             @Override
             public void loaded(int flag, String url, Object returnObj) {
@@ -354,7 +354,7 @@ public class SetPersonalInfo extends BaseLoginActivity implements View.OnClickLi
     // 发送请求，保存用户信息
     private void saveUserData(String key, String value) {
         String param = "type=setOther&" + key + "=" + value;
-        ReqInternet.in().doPost(StringManager.api_setUserData, param, new InternetCallback(this) {
+        ReqInternet.in().doPost(StringManager.api_setUserData, param, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
                 Tools.showToast(SetPersonalInfo.this, returnObj.toString());

@@ -94,7 +94,7 @@ public class FollowSubject extends BaseActivity {
         if (isRefresh) {
             loadManager.hideProgressBar();
         }
-        ReqInternet.in().doGet(url, new InternetCallback(this) {
+        ReqInternet.in().doGet(url, new InternetCallback() {
 
             @Override
             public void loaded(int flag, String url, Object msg) {

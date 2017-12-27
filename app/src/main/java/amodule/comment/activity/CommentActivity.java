@@ -168,7 +168,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
         return new ViewCommentItem.OnCommentItenListener() {
             @Override
             public void onShowAllReplayClick(String comment_id) {
-                ReqEncyptInternet.in().doEncypt(StringManager.api_replayList, "type=" + type + "&code=" + code + "&commentId=" + comment_id , new InternetCallback(CommentActivity.this) {
+                ReqEncyptInternet.in().doEncypt(StringManager.api_replayList, "type=" + type + "&code=" + code + "&commentId=" + comment_id , new InternetCallback() {
                     @Override
                     public void loaded(int flag, String s, Object o) {
                         if(flag >= ReqInternet.REQ_OK_STRING){
@@ -227,7 +227,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
             public void onDeleteReplayClick(final int replayIndex, String comment_id, String replay_id) {
                 XHClick.mapStat(CommentActivity.this,deleteTongjiId,deleteTwoLeven,"点击楼中楼的删除按钮");
                 ReqEncyptInternet.in().doEncypt(StringManager.api_delReplay, "type=" + type + "&code=" + code + "&commentId="+comment_id + "&replayId=" + replay_id,
-                        new InternetCallback(CommentActivity.this) {
+                        new InternetCallback() {
                     @Override
                     public void loaded(int flag, String s, Object o) {
                         Log.i("commentReplay","deleteReplay() flag:" + flag + "   obj:" + o);
@@ -266,7 +266,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                                     @Override
                                     public void onClick(View v) {
                                         String params = "type=" + type + "&code=" + code + "&commentId="+comment_id;
-                                        ReqEncyptInternet.in().doEncypt(StringManager.api_delForum, params, new InternetCallback(CommentActivity.this) {
+                                        ReqEncyptInternet.in().doEncypt(StringManager.api_delForum, params, new InternetCallback() {
                                             @Override
                                             public void loaded(int flag, String s, Object o) {
                                                 if(flag >= ReqInternet.REQ_OK_STRING){
@@ -298,7 +298,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                  XHClick.mapStat(CommentActivity.this,contentTongjiId,"点赞","");
                 XHClick.mapStat(CommentActivity.this,likeTongjiId,likeTwoLeven,"");
                 String params = "type=" + type + "&code=" + code + "&commentId=" + comment_id;
-                ReqEncyptInternet.in().doEncypt(StringManager.api_likeForum, params, new InternetCallback(CommentActivity.this) {
+                ReqEncyptInternet.in().doEncypt(StringManager.api_likeForum, params, new InternetCallback() {
                     @Override
                     public void loaded(int i, String s, Object o) {
                         if(i >= ReqInternet.REQ_OK_STRING) {
@@ -363,7 +363,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void requstInternet(String url, String params){
-        ReqEncyptInternet.in().doEncypt(url, params, new InternetCallback(CommentActivity.this) {
+        ReqEncyptInternet.in().doEncypt(url, params, new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
 
@@ -379,7 +379,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
         //消息是否读过
         if (!TextUtils.isEmpty(newsId)) {
             String params = "type=news&p1=" + newsId;
-            ReqInternet.in().doPost(StringManager.api_setUserData, params, new InternetCallback(this) {
+            ReqInternet.in().doPost(StringManager.api_setUserData, params, new InternetCallback() {
                 @Override
                 public void loaded(int flag, String url, Object returnObj) {}
             });
@@ -460,7 +460,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
             params += "&replayId=" + gotoReplayId;;
         params += "&from=" + from + "&source=" + source + "&slide=" + slide + "&dropPage=" + dropPage;
         Log.i("commentReplay","getCommentData() params:" + params);
-        ReqEncyptInternet.in().doEncypt(StringManager.api_forumList, params, new InternetCallback(this) {
+        ReqEncyptInternet.in().doEncypt(StringManager.api_forumList, params, new InternetCallback() {
             @Override
             public void loaded(int flag, String s, Object o) {
                 int loadCount = 0;
@@ -568,7 +568,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
         }
         newParams += "&commentIds=" + commentIdStrBuffer;
         Log.i("commentReplay","sendData() newParams:" + newParams);
-        ReqEncyptInternet.in().doEncypt(currentUrl,newParams,new InternetCallback(this){
+        ReqEncyptInternet.in().doEncypt(currentUrl,newParams,new InternetCallback(){
             @Override
             public void loaded(int flag, String s, Object o) {
                 Log.i("commentReplay","sendData() flag:" + flag + "   o:" + o);

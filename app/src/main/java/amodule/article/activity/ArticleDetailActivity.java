@@ -516,7 +516,7 @@ public class ArticleDetailActivity extends BaseActivity {
         LinkedHashMap<String,String> params = new LinkedHashMap<>();
         params.put("code",code);
         params.put("type","HTML");
-        ReqEncyptInternet.in().doEncypt(StringManager.api_getArticleInfo, params, new InternetCallback(this) {
+        ReqEncyptInternet.in().doEncypt(StringManager.api_getArticleInfo, params, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object object) {
                 refreshLayout.refreshComplete();
@@ -676,7 +676,7 @@ public class ArticleDetailActivity extends BaseActivity {
     private void requestForumData(final boolean isRefresh) {
         String url = StringManager.api_forumList;
         String param = "from=1&type=" + getType() + "&code=" + code;
-        ReqEncyptInternet.in().doEncypt(url, param, new InternetCallback(this) {
+        ReqEncyptInternet.in().doEncypt(url, param, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object object) {
                 if (flag >= ReqInternet.REQ_OK_STRING) {
@@ -709,7 +709,7 @@ public class ArticleDetailActivity extends BaseActivity {
         params.put("code",code);
         params.put("page",String.valueOf(++page));
         params.put("pagesize","10");
-        ReqEncyptInternet.in().doEncypt(StringManager.api_getArticleRelated, params, new InternetCallback(this) {
+        ReqEncyptInternet.in().doEncypt(StringManager.api_getArticleRelated, params, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object object) {
                 if (flag >= ReqInternet.REQ_OK_STRING) {
@@ -874,7 +874,7 @@ public class ArticleDetailActivity extends BaseActivity {
 
     private void deleteThis() {
         ReqEncyptInternet.in().doEncypt(StringManager.api_articleDel, "code=" + code,
-                new InternetCallback(ArticleDetailActivity.this) {
+                new InternetCallback() {
                     @Override
                     public void loaded(int flag, String url, Object obj) {
                         if (flag >= ReqEncyptInternet.REQ_OK_STRING) {

@@ -139,7 +139,7 @@ public class CaidanResultView extends RelativeLayout {
         //更新加载按钮状态
         mLoadManager.changeMoreBtn(mListview, ReqInternet.REQ_OK_STRING, -1, -1, mCurrentPage, mCurrentPage == 1);
         String url = StringManager.api_soList + "?type=caidan&s=" + searchKey + "&page=" + mCurrentPage;
-        ReqInternet.in().doGet(url, new InternetCallback(mActivity) {
+        ReqInternet.in().doGet(url, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
                 int loadPage = 0;

@@ -276,7 +276,7 @@ public class DetailIngre extends BaseActivity {
 			return;
 		}
 		String url = StringManager.api_ingreInfo + "?code=" + code + "&type=" + type;
-		ReqInternet.in().doGet(url, new InternetCallback(this.getApplicationContext()) {
+		ReqInternet.in().doGet(url, new InternetCallback() {
 
 			@Override
 			public void loaded(int flag, String url, Object returnObj) {

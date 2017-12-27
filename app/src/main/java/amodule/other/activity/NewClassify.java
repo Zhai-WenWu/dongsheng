@@ -426,7 +426,7 @@ public class NewClassify extends BaseActivity {
 
 	//设置活动相关
 	private void setActImg() {
-		ReqInternet.in().doGet(StringManager.api_soIndex + "?type=" + type, new InternetCallback(this) {
+		ReqInternet.in().doGet(StringManager.api_soIndex + "?type=" + type, new InternetCallback() {
 
 			@Override
 			public void loaded(int flag, String url, Object returnObj) {

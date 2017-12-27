@@ -114,7 +114,7 @@ public class MyFavoriteNew extends BaseActivity implements View.OnClickListener 
         LinkedHashMap<String, String> params = new LinkedHashMap<>();
         params.put("page", String.valueOf(currentpage));
         loadManager.changeMoreBtn(ReqInternet.REQ_OK_STRING, -1, -1, currentpage, false);
-        ReqEncyptInternet.in().doEncypt(StringManager.API_COLLECTIONLIST, params, new InternetCallback(this) {
+        ReqEncyptInternet.in().doEncypt(StringManager.API_COLLECTIONLIST, params, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object msg) {
                 int loadCount = 0;

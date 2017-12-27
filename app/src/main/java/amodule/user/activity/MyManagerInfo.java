@@ -107,7 +107,7 @@ public class MyManagerInfo extends BaseActivity {
         loadManager.showProgressBar();
         String url = StringManager.api_getUserInfo;
         String params = "type=getMajia&devCode=" + XGPushServer.getXGToken(this);
-        ReqInternet.in().doPost(url, params, new InternetCallback(this) {
+        ReqInternet.in().doPost(url, params, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
                 if (flag >= UtilInternet.REQ_OK_STRING) {

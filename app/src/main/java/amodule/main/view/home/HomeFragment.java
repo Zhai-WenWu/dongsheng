@@ -310,7 +310,7 @@ public class HomeFragment extends BaseHomeFragment{
         //处理推荐的置顶数据
         if(isRecom()) {
             String url = StringManager.API_RECOMMEND_TOP;
-            ReqEncyptInternet.in().doEncyptAEC(url, "", new InternetCallback(mActivity) {
+            ReqEncyptInternet.in().doEncyptAEC(url, "", new InternetCallback() {
                 @Override
                 public void loaded(int flag, String url, Object object) {
                     if (flag >= ReqInternet.REQ_OK_STRING) {
@@ -456,7 +456,7 @@ public class HomeFragment extends BaseHomeFragment{
                 else  mLoadManager.hideProgressBar();
             }
         }
-        ReqEncyptInternet.in().doEncyptAEC(url,data, new InternetCallback(mActivity) {
+        ReqEncyptInternet.in().doEncyptAEC(url,data, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object object) {
                 int loadCount = 0;

@@ -78,7 +78,7 @@ public class UserSetting extends BaseLoginActivity implements OnClickListener {
             public void handleMessage(Message msg) {
                 switch (msg.what) {
                     case ONREFRESH:
-                        loadManager.setLoading("", new InternetCallback(mAct) {
+                        loadManager.setLoading("", new InternetCallback() {
                             @Override
                             public void loaded(int flag, String url, Object returnObj) {
                                 loadManager.setLoading(new OnClickListener() {
@@ -209,7 +209,7 @@ public class UserSetting extends BaseLoginActivity implements OnClickListener {
     //获取用户数据
     private void getUserData() {
         String param = "type=getData&devCode=" + XGPushServer.getXGToken(this);
-        ReqInternet.in().doPost(StringManager.api_getUserInfo, param, new InternetCallback(mAct) {
+        ReqInternet.in().doPost(StringManager.api_getUserInfo, param, new InternetCallback() {
 
             @Override
             public void loaded(int flag, String url, Object returnObj) {
@@ -411,7 +411,7 @@ public class UserSetting extends BaseLoginActivity implements OnClickListener {
     // 发送请求，保存用户信息
     private void saveUserData(String key, String code) {
         String param = "type=setOther&" + key + "=" + code;
-        ReqInternet.in().doPost(StringManager.api_setUserData, param, new InternetCallback(mAct) {
+        ReqInternet.in().doPost(StringManager.api_setUserData, param, new InternetCallback() {
 
             @Override
             public void loaded(int flag, String url, Object returnObj) {
@@ -486,7 +486,7 @@ public class UserSetting extends BaseLoginActivity implements OnClickListener {
         fileMap.put("type", "img");
         fileMap.put("uploadImg_file_1", imgUrl);
         Tools.showToast(getApplicationContext(), "图片正在上传,请稍等!");
-        ReqInternet.in().doPostImg(StringManager.api_setUserData, fileMap, new InternetCallback(mAct) {
+        ReqInternet.in().doPostImg(StringManager.api_setUserData, fileMap, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
                 if (flag >= UtilInternet.REQ_OK_STRING) {

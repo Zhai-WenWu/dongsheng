@@ -82,7 +82,7 @@ public class ElementHealth extends BaseActivity {
 	private void contentLoad() {
 		loadManager.showProgressBar();
 		String url = StringManager.api_getIngreList + "?type=element&g1=" + code;
-		ReqInternet.in().doGet(url, new InternetCallback(getApplicationContext()) {
+		ReqInternet.in().doGet(url, new InternetCallback() {
 			@Override
 			public void loaded(int flag, String url, Object returnObj) {
 				if (flag >= UtilInternet.REQ_OK_STRING) {

@@ -57,7 +57,7 @@ public abstract class UploadHelper {
 		String img=getImgFromPool(uploadTimeCode,type,dir);
 		if(img.equals(STATE_EMPTY)||img.equals(STATE_FAILED)) {
 			putImgPool(uploadTimeCode, type, dir, STATE_UPLOADING);
-			UploadImg uploadImg = new UploadImg(type,dir, new InternetCallback(XHApplication.in()) {
+			UploadImg uploadImg = new UploadImg(type,dir, new InternetCallback() {
 				
 				@Override
 				public void loaded(int flag, String url, Object msg) {
@@ -151,13 +151,13 @@ public abstract class UploadHelper {
      */
 	protected void doUpload(final long uploadTimeCode,final LinkedHashMap<String, String> uploadData) {
 		timeoutTimer(uploadTimeCode,false);
-		AppCommon.getCommonData(new InternetCallback(XHApplication.in()) {
+		AppCommon.getCommonData(new InternetCallback() {
 			@Override
 			public void loaded(int flag, String url, Object returnObj) {
 				if(flag >= ReqInternet.REQ_OK_STRING){
 					if(uploadData!=null&&uploadDataMap.containsKey(uploadTimeCode)){
 						UploadData data = uploadDataMap.get(uploadTimeCode);
-						ReqInternet.in().doPost(getUploadAPi(data), uploadData, new InternetCallback(XHApplication.in()) {
+						ReqInternet.in().doPost(getUploadAPi(data), uploadData, new InternetCallback() {
 
 							@Override
 							public void loaded(int flag, String url, Object msg) {
@@ -271,7 +271,7 @@ public abstract class UploadHelper {
 	 */
 	protected void uploadLog(String status,Object msg){
 		LinkedHashMap<String, String> map = LogManager.getReportLog("upload" + UPLOADTYPE,status,Tools.getAssignTime("yyyy-MM-dd HH:mm:ss", 0),msg);
-		ReqInternet.in().doPost(StringManager.api_uploadUserLog, map , new InternetCallback(XHApplication.in()) {
+		ReqInternet.in().doPost(StringManager.api_uploadUserLog, map , new InternetCallback() {
 			@Override
 			public void loaded(int flag, String url, Object returnObj) {
 				

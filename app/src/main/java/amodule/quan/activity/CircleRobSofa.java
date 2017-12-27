@@ -105,7 +105,7 @@ public class CircleRobSofa extends BaseAppCompatActivity implements OnClickListe
 		mCurrentPage ++;
 		String url = StringManager.api_circleSafaList + "?cid=" + mCid + "&page=" + mCurrentPage + "&pageTime=" + mPageTime;
 		loadManager.changeMoreBtn(ReqInternet.REQ_OK_STRING, -1, -1, mCurrentPage,isRefresh);
-		ReqInternet.in().doGet(url, new InternetCallback(this) {
+		ReqInternet.in().doGet(url, new InternetCallback() {
 			@Override
 			public void loaded(int flag, String url, Object msg) {
 				int loadCount = 0;

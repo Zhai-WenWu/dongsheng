@@ -115,7 +115,7 @@ public class VersionOp extends BaseDialogControl {
             map.put("update", "1");
         //请求检查升级接口
         ReqInternet.in().doPost(StringManager.api_versionInfo, map,
-                new InternetCallback(XHApplication.in()) {
+                new InternetCallback() {
                     @Override
                     public void loaded(int flag, final String url, Object returnObj) {
                         if (flag >= ReqInternet.REQ_OK_STRING) {

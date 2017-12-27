@@ -31,6 +31,7 @@ import acore.logic.VersionOp;
 import acore.logic.XHClick;
 import acore.logic.load.LoadManager;
 import acore.override.XHApplication;
+import acore.override.helper.XHActivityManager;
 import acore.tools.FileManager;
 import acore.tools.ObserverManager;
 import acore.tools.StringManager;
@@ -42,6 +43,7 @@ import amodule.answer.activity.QAReportActivity;
 import amodule.dish.activity.DetailDishWeb;
 import amodule.dish.activity.MoreImageShow;
 import amodule.dish.activity.upload.UploadDishActivity;
+import amodule.main.activity.MainMyself;
 import amodule.other.activity.PlayVideo;
 import amodule.quan.activity.upload.UploadSubjectNew;
 import amodule.user.activity.ChooseDish;
@@ -64,6 +66,7 @@ import third.mall.aplug.MallReqInternet;
 import third.mall.aplug.MallStringManager;
 import third.mall.dialog.FavorableDialog;
 import third.mall.wx.WxPay;
+import third.push.xg.XGPushServer;
 import third.share.BarShare;
 import third.share.BarShareImage;
 import xh.basic.tool.UtilFile;
@@ -229,7 +232,7 @@ public class JsAppCommon extends JsBase {
                                 if (mBarShare != null) {
                                     mBarShare.openShare();
                                     if (callback != null && callback.length() > 0) {
-                                        ReqInternet.in().doGet(StringManager.apiUrl + callback, new InternetCallback(mAct) {
+                                        ReqInternet.in().doGet(StringManager.apiUrl + callback, new InternetCallback() {
                                             @Override
                                             public void loaded(int flag, String url, Object returnObj) {
                                             }
@@ -496,7 +499,7 @@ public class JsAppCommon extends JsBase {
             public void run() {
                 if (LoginManager.isLogin()) {
                     String param = "shop_coupon_package_code=" + code;
-                    MallReqInternet.in().doPost(MallStringManager.mall_getAShopCoupon, param, new MallInternetCallback(mAct) {
+                    MallReqInternet.in().doPost(MallStringManager.mall_getAShopCoupon, param, new MallInternetCallback() {
 
                         @Override
                         public void loadstat(int flag, String url, Object msg, Object... stat) {
@@ -521,7 +524,6 @@ public class JsAppCommon extends JsBase {
      * 发美食贴
      *
      * @param code  发美食贴code
-     * @param title 标题
      */
     @JavascriptInterface
     public void addQuan(String title, String code) {
@@ -846,7 +848,7 @@ public class JsAppCommon extends JsBase {
     public void getSecretData(String url, String params) {
         if (mAct != null && mWebView != null) {
             url = StringManager.apiUrl + url;
-            ReqInternet.in().doPost(url, params, new InternetCallback(mAct) {
+            ReqInternet.in().doPost(url, params, new InternetCallback() {
                 @Override
                 public void loaded(int i, String s, Object data) {
                     onAcceptCallback(i >= ReqInternet.REQ_OK_STRING, data);
@@ -872,6 +874,7 @@ public class JsAppCommon extends JsBase {
             onPayCallback(false, "网络异常，请检查网络");
             return;
         }
+        Log.i("xianghaTag","goPayBs() url: " + url + "  params:" + params + "  tpye:" + type+"::typeBs::"+typeBs);
         if(!TextUtils.isEmpty(typeBs)) payType = typeBs;//记录当前支付类型
         goPay(url,params,type);
     }
@@ -883,7 +886,6 @@ public class JsAppCommon extends JsBase {
             return;
         }
 //		Tools.showToast(mAct,"url:"+url);
-//		//Log.i("FRJ","goPay() url: " + url + "  params:" + params + "  tpye:" + type);
         PayCallback.setPayCallBack(new PayCallback.OnPayCallback() {
             @Override
             public void onPay(boolean isOk, Object data) {
@@ -893,7 +895,7 @@ public class JsAppCommon extends JsBase {
         params += "&userCode=" + LoginManager.userInfo.get("code");
         url = StringManager.apiUrl + url;
         //Log.i("FRJ", "goPay() url: " + url + "  params:" + params + "  tpye:" + type);
-        ReqEncyptInternet.in().doEncypt(url, params, new InternetCallback(mAct) {
+        ReqEncyptInternet.in().doEncypt(url, params, new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object data) {
 
@@ -951,23 +953,36 @@ public class JsAppCommon extends JsBase {
                         mOnPayFinishListener.onPayFinish(isOk, data);
                     }
                     if (isOk) {//支付成功，如果是开通的VIP，设置VIP状态。因为无法区分此次支付是否是购买VIP，所以每次支付成功都设置一次。
-                        mWebView.postDelayed(() -> {
-                            LoginManager.initYiYuanBindState(mAct, new Runnable() {
-                                @Override
-                                public void run() {
-                                    LoginManager.setVipStateChanged();
-                                }
-                            });
-                        }, 2000);
                         if(PAY_TYPE_VIP_OPEN.equals(payType)||PAY_TYPE_VIP_RENEW.equals(payType)){
                             payType="";
                             payVip();//支付类型
+                            mWebView.postDelayed(() -> {
+                                LoginManager.initYiYuanBindState(mAct, new Runnable() {//一元
+                                    @Override
+                                    public void run() {
+                                        LoginManager.setVipStateChanged();
+                                    }
+                                });
+                                if(LoginManager.isLogin())getUserData();//登陆状态下更改用户信息
+                            }, 2000);
                         }
                     }
                     ObserverManager.getInstence().notify(ObserverManager.NOTIFY_PAYFINISH, null, isOk);
                 }
             });
         }
+    }
+    private void getUserData(){
+        String params = "type=getData&devCode=" + XGPushServer.getXGToken(XHApplication.in());
+        ReqInternet.in().doPost(StringManager.api_getUserInfo, params, new InternetCallback(XHApplication.in()) {
+            @Override
+            public void loaded(int flag, String url, Object returnObj) {
+                if (flag >= ReqInternet.REQ_OK_STRING) {
+                    if(XHActivityManager.getInstance().getCurrentActivity()!=null)
+                    LoginManager.setDataUser(XHActivityManager.getInstance().getCurrentActivity(), returnObj);
+                }
+            }
+        });
     }
     /**
      * 支付成功通知服务端---不可删除

@@ -56,7 +56,7 @@ public class BreakPointUploadManager {
         if(tokenBeans.get(type).isReqstate())return;
         tokenBeans.get(type).setReqstate(true);
         String params= "type="+type;
-        ReqInternet.in().doPost(StringManager.api_getQiniuToken,params, new InternetCallback(context) {
+        ReqInternet.in().doPost(StringManager.api_getQiniuToken,params, new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
                 if(i>=ReqInternet.REQ_OK_STRING){

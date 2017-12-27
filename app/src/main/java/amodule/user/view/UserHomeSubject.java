@@ -261,7 +261,7 @@ public class UserHomeSubject extends TabContentView {
 	private void loadFromServer() {
 		loadManager.changeMoreBtn(theListView,UtilInternet.REQ_OK_STRING, -1, -1, currentPage,listDataMySb.size() == 0);
 		String getUrl = StringManager.api_getPostByCode + "?code=" + userCode + "&page=" + currentPage;
-		ReqInternet.in().doGet(getUrl, new InternetCallback(mAct) {
+		ReqInternet.in().doGet(getUrl, new InternetCallback() {
 			@Override
 			public void loaded(int flag, String url, Object returnObj) {
 				loadData(flag, returnObj);

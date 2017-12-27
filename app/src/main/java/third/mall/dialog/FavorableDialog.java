@@ -62,7 +62,7 @@ public class FavorableDialog extends SimpleDialog {
 	 */
 	private void setRequest(String shop_code) {
 		String url=MallStringManager.mall_getShopCouponInfo+"?shop_code="+shop_code;
-		MallReqInternet.in().doGet(url, new MallInternetCallback(context) {
+		MallReqInternet.in().doGet(url, new MallInternetCallback() {
 			
 			@Override
 			public void loadstat(int flag, String url, Object msg, Object... stat) {

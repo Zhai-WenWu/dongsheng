@@ -67,7 +67,10 @@ public class ClingManager implements IClingManager {
             return null;
         }
 
-        Collection<Device> devices = mUpnpService.getRegistry().getDevices(DMR_DEVICE_TYPE);
+        Registry registry = mUpnpService.getRegistry();
+        if (registry == null)
+            return null;
+        Collection<Device> devices = registry.getDevices(DMR_DEVICE_TYPE);
         if (ListUtils.isEmpty(devices)) {
             return null;
         }
@@ -93,6 +96,8 @@ public class ClingManager implements IClingManager {
 
     @Override
     public Registry getRegistry() {
+        if (mUpnpService == null)
+            return null;
         return mUpnpService.getRegistry();
     }
 

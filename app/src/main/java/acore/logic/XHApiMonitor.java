@@ -111,7 +111,7 @@ public class XHApiMonitor {
 		LinkedHashMap<String, String> paramsMap = new LinkedHashMap<>();
 		paramsMap.put("monitoringData", json);
 		//发送请求
-		ReqInternet.in().doPost(StringManager.api_monitoring, paramsMap , new InternetCallback(XHApplication.in()) {
+		ReqInternet.in().doPost(StringManager.api_monitoring, paramsMap , new InternetCallback() {
 			@Override public void loaded(int flag, String url, Object msg) {}
 		});
 	}

@@ -23,6 +23,8 @@ import acore.logic.LoginManager;
 import acore.logic.XHApiMonitor;
 import acore.logic.XHClick;
 import acore.logic.load.LoadManager;
+import acore.override.XHApplication;
+import acore.override.helper.XHActivityManager;
 import acore.tools.FileManager;
 import acore.tools.LogManager;
 import acore.tools.StringManager;
@@ -38,13 +40,13 @@ import xh.basic.tool.UtilString;
  * 
  * @author Jerry
  */
-public abstract class InternetCallback extends InterCallback {
+public abstract class InternetCallback extends XHInternetCallBack {
 	private String encryptparams;
-	public InternetCallback(Context context) {
-		super(context);
+	public InternetCallback() {
+		super();
 	}
-	public InternetCallback(Context context,String encryptparams){
-		super(context);
+	public InternetCallback(String encryptparams){
+		super();
 		this.encryptparams= encryptparams;
 	}
 	public void  setEncryptparams(String encryptparams){
@@ -84,13 +86,13 @@ public abstract class InternetCallback extends InterCallback {
 								// for(Map<String,String> mesMap : array){
 								// playAddScoreAnim(context,mesMap.get(""));
 								// }
-								playAddScoreAnim(context.getApplicationContext(), array);
+								if(XHActivityManager.getInstance().getCurrentActivity()!=null)playAddScoreAnim(XHActivityManager.getInstance().getCurrentActivity().getApplicationContext(), array);
 							} else if (map.containsKey("promptMsg") && !TextUtils.isEmpty(map.get("promptMsg"))) {
-								Tools.showToast(context, map.get("promptMsg"));
+								Tools.showToast(XHApplication.in(), map.get("promptMsg"));
 							}
 							if (XHConf.log_isDebug && map.containsKey("debugMsg")
 									&& !TextUtils.isEmpty(map.get("debugMsg"))) {
-								showDialog(context, map.get("debugMsg"));
+								if(XHActivityManager.getInstance().getCurrentActivity()!=null)showDialog(XHActivityManager.getInstance().getCurrentActivity(), map.get("debugMsg"));
 							}
 						}
 					} catch (Exception e) {
@@ -103,7 +105,7 @@ public abstract class InternetCallback extends InterCallback {
 						loaded(ReqInternet.REQ_OK_STRING, url, resData);
 					} else if (msg.equals("网络不稳定")) {
 						msg = "网络不稳定，请重试";
-						XHClick.mapStat(context, "a_apiError", msg, theUrl);
+						XHClick.mapStat(XHApplication.in(), "a_apiError", msg, theUrl);
 						AppCommon.getCommonData(null);
 						loaded(ReqInternet.REQ_CODE_ERROR, url, msg);
 					} else {
@@ -114,14 +116,14 @@ public abstract class InternetCallback extends InterCallback {
 					e.printStackTrace();
 					msg = "数据展示异常，请反馈给我们";
 					loaded(ReqInternet.REQ_STRING_ERROR, url, msg);
-					XHClick.mapStat(context, "a_apiError", msg, theUrl);
-					XHApiMonitor.monitoringAPI(context, "数据展示异常", url, cookie, method, params, "", str);
+					XHClick.mapStat(XHApplication.in(), "a_apiError", msg, theUrl);
+					XHApiMonitor.monitoringAPI(XHApplication.in(), "数据展示异常", url, cookie, method, params, "", str);
 				}
 			} else {
 				msg = "解析错误，请重试或反馈给我们";
 				loaded(ReqInternet.REQ_STRING_ERROR, url, msg);
-				XHClick.mapStat(context, "a_apiError", msg, theUrl);
-				XHApiMonitor.monitoringAPI(context, "解析错误", url, cookie, method, params, "", str);
+				XHClick.mapStat(XHApplication.in(), "a_apiError", msg, theUrl);
+				XHApiMonitor.monitoringAPI(XHApplication.in(), "解析错误", url, cookie, method, params, "", str);
 			}
 		} else
 			loaded(ReqInternet.REQ_OK_STRING, url, str);
@@ -169,7 +171,7 @@ public abstract class InternetCallback extends InterCallback {
 			statMsg = "连接异常";
 			String expMsg = e.getMessage();
 			statContent += expMsg == null ? e.toString() : expMsg;
-			XHApiMonitor.monitoringAPI(context, statMsg, url, cookie, method, params,LogManager.reportError("网络异常" + url, e), "");
+			XHApiMonitor.monitoringAPI(XHApplication.in(), statMsg, url, cookie, method, params,LogManager.reportError("网络异常" + url, e), "");
 			break;
 		case ReqInternet.REQ_STATE_ERROR:
 			backMsg = "状态错误" + obj.toString() + "，请重试";
@@ -177,7 +179,7 @@ public abstract class InternetCallback extends InterCallback {
 			statContent += obj.toString();
 			break;
 		}
-		XHClick.mapStat(context, "a_apiError", statMsg, statContent);
+		XHClick.mapStat(XHApplication.in(), "a_apiError", statMsg, statContent);
 
 		// if(statMsg!=""){
 		// statContent+="\n时长："+requestTime;
@@ -216,23 +218,8 @@ public abstract class InternetCallback extends InterCallback {
 	@Override
 	public Map<String, String> getReqHeader(Map<String, String> header, String url, Map<String, String> params) {
 		// 配置cookie
-		String cookie = header.containsKey("Cookie") ? header.get("Cookie") : "";
-		if (LoginManager.userInfo.containsKey("userCode")) {
-			LogManager.print(XHConf.log_tag_net, "d", "userCode=" + LoginManager.userInfo.get("userCode") + ";");
-			cookie += "userCode=" + LoginManager.userInfo.get("userCode") + ";";
-		}
-		cookie += "device=" + ToolsDevice.getDevice(context) + ToolsDevice.getNetWorkType(context) + "#"
-				+ ToolsDevice.getAvailMemory(context) + "#" + ToolsDevice.getPackageName(context) + "#"
-				+ StringManager.appID + "#" + LoadManager.tok + ";";
-		cookie += "xhCode=" + ToolsDevice.getXhIMEI(context) + ";";
-		try{
-			cookie += "umCode=" + PushAgent.getInstance(context).getRegistrationId() + ";";
-
-		}catch (Exception e){e.printStackTrace();}
-		cookie += "xgCode=" + XGPushServer.getXGToken(context) + ";";
-		String location = getLocation();
-		cookie += "geo=" + location + ";";
-		header.put("Cookie", cookie);
+//		header.put("Cookie", cookie);
+		header.put("XH-Client-Data",getCookieStr());
         if(!TextUtils.isEmpty(url)&&(url.contains("main7")||url.contains("Main7")||url.contains("main8"))&&!TextUtils.isEmpty(encryptparams)){
 			encryptparams=encryptparams.replaceAll("\\n","");
 			header.put("xh-parameter", encryptparams);
@@ -254,9 +241,9 @@ public abstract class InternetCallback extends InterCallback {
 		}
 
 		try {
-			String ua = "imei=" + ToolsDevice.getXhIMEI(context) + ";";
-			ua += "device=" + ToolsDevice.getDevice(context) + ";";
-			ua += "AndroidId=" + ToolsDevice.getAndroidId(context) + ";";
+			String ua = "imei=" + ToolsDevice.getXhIMEI(XHApplication.in()) + ";";
+			ua += "device=" + ToolsDevice.getDevice(XHApplication.in()) + ";";
+			ua += "AndroidId=" + ToolsDevice.getAndroidId(XHApplication.in()) + ";";
 			header.put("ua", ua);
 		}catch (Exception e){e.printStackTrace();}
 
@@ -268,11 +255,6 @@ public abstract class InternetCallback extends InterCallback {
 		return super.getReqHeader(header, url, params);
 	}
 
-	private String getLocation() {
-		String location = FileManager.loadShared(context, FileManager.file_location, FileManager.file_location)
-				.toString();
-		return location;
-	}
 
 	/**
 	 * toast请求失败的返回值
@@ -283,8 +265,8 @@ public abstract class InternetCallback extends InterCallback {
 	private void toastFaildRes(Object returnObj) {
 		String returnRes = returnObj.toString();
 		if (returnRes.length() > 0) {
-			if (Tools.isDebug(context) || Tools.isOpenRequestTip(context))
-				Tools.showToast(context, returnRes);
+			if (Tools.isDebug(XHApplication.in()) || Tools.isOpenRequestTip(XHApplication.in()))
+				Tools.showToast(XHApplication.in(), returnRes);
 		}
 	}
 
@@ -306,7 +288,7 @@ public abstract class InternetCallback extends InterCallback {
 			time = "3-10s";
 		else if (requestTime > 1000)
 			time = "1-3s";
-		XHClick.mapStat(context, "a_apiTime", time, theUrl);
+		XHClick.mapStat(XHApplication.in(), "a_apiTime", time, theUrl);
 //		XHClick.mapStat(context, "a_apiTime", time, theUrl, (int) requestTime);
 		return theUrl;
 	}

@@ -70,7 +70,7 @@ public class DishTestActivity extends BaseAppCompatActivity{
     public void reqTopInfo() {
         loadManager.showProgressBar();
         String params = "dishCode=" + code;
-        ReqEncyptInternet.in().doEncypt(StringManager.API_GETDISHTYPE, params, new InternetCallback(this) {
+        ReqEncyptInternet.in().doEncypt(StringManager.API_GETDISHTYPE, params, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object object) {
                 loadManager.hideProgressBar();

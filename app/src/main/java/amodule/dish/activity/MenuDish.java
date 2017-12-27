@@ -121,7 +121,7 @@ public class MenuDish extends BaseActivity {
 			listView.setVisibility(View.GONE);
 		loadManager.changeMoreBtn(UtilInternet.REQ_OK_STRING, -1, -1, currentPage,arrayList.size() == 0);
 		String url = StringManager.api_getMenuData + "?type=list&page=" + currentPage;
-		ReqInternet.in().doGet(url, new InternetCallback(this) {
+		ReqInternet.in().doGet(url, new InternetCallback() {
 
 			@Override
 			public void loaded(int flag, String url, Object returnObj) {
