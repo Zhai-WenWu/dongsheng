@@ -520,7 +520,7 @@ public class DetailDishViewManager {
         public void handleMessage(Message msg) {
             if (mMoveLen!=0){
                 mMoveLen= mMoveLen-3;
-            }else{
+            }else if (mTimer != null){
                 mTimer.cancel();
             }
             requestLayout();
