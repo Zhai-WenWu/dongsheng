@@ -71,7 +71,9 @@ public class XHInternetCallBack extends InterCallback {
     }
     public static void setCookie() {
     }
-
+    public static void clearCookie(){
+        if(mapCookie!=null&&mapCookie.size()>0)mapCookie.clear();
+    }
     public static String getCookieStr() {
         return getCookieStr(null);
     }

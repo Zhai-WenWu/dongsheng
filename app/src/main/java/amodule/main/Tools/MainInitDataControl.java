@@ -47,6 +47,7 @@ import amodule.main.view.home.HomeToutiaoAdControl;
 import amodule.quan.db.SubjectData;
 import amodule.quan.db.SubjectSqlite;
 import amodule.search.db.MatchWordsDbUtil;
+import aplug.basic.XHInternetCallBack;
 import aplug.web.tools.XHTemplateManager;
 import third.ad.tools.AdConfigTools;
 import third.mall.aplug.MallCommon;
@@ -245,6 +246,7 @@ public class MainInitDataControl {
                 Map<String, String> map = new HashMap<String, String>();
                 map.put(FileManager.xmlKey_device, ToolsDevice.getPhoneDevice(context));
                 UtilFile.saveShared(context, FileManager.xmlFile_appInfo, map);
+                XHInternetCallBack.clearCookie();
 
                 // 存储启动时间
                 map = new HashMap<String, String>();
