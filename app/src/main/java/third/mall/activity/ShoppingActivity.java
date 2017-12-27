@@ -379,7 +379,8 @@ public class ShoppingActivity extends MallBaseActivity implements OnClickListene
 
 	private void setRecommendProduct(){
 		//推荐位置
-		Layout_no = new RelativeLayout(this);
+		if (Layout_no == null)
+			Layout_no = new RelativeLayout(this);
 		LayoutParams lp = new LayoutParams(android.view.ViewGroup.LayoutParams.MATCH_PARENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
 		Layout_no.setLayoutParams(lp);
 		shopping_list.addFooterView(Layout_no);
