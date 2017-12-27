@@ -79,7 +79,7 @@ public class LessonHome extends BaseAppCompatActivity implements IObserver {
     }
 
     private void loadHeaderData() {
-        mDataController.laodRemoteHeaderData(new InternetCallback(this) {
+        mDataController.laodRemoteHeaderData(new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
                 HeaderDataLoaded = true;
