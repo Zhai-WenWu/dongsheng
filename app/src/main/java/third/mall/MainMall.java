@@ -71,8 +71,8 @@ public class MainMall extends BaseAppCompatActivity implements OnClickListener{
 	 */
 	private void init() {
 		if(Tools.isShowTitle()) {
-			int dp_45 = Tools.getDimen(this, R.dimen.dp_45);
-			int height = dp_45 + Tools.getStatusBarHeight(this);
+			int topbarHeight = Tools.getDimen(this, R.dimen.topbar_height);
+			int height = topbarHeight + Tools.getStatusBarHeight(this);
 
 			RelativeLayout bar_title = (RelativeLayout) findViewById(R.id.mall_title_rela);
 			RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height);

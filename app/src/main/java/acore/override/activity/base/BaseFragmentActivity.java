@@ -72,8 +72,8 @@ public class BaseFragmentActivity extends FragmentActivity {
 			all_content.addView(control.setCommonBottonView(className,this,contentXml));
 			View view_title = LayoutInflater.from(this).inflate(barTitleXml,null);
 //			if(Tools.isShowTitle()) {
-//				int dp_45 = Tools.getDimen(this, R.dimen.dp_45);
-//				int height = dp_45 + Tools.getStatusBarHeight(this);
+//				int topbarHeight = Tools.getDimen(this, R.dimen.topbar_height);
+//				int height = topbarHeight + Tools.getStatusBarHeight(this);
 //				RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height);
 //				all_title.setLayoutParams(layout);
 //				all_title.setPadding(0, Tools.getStatusBarHeight(this), 0, 0);

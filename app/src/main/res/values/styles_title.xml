@@ -57,7 +57,7 @@
     <!-- 头部titleBar -->
     <style name="top_titleBarLayout">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/dp_45</item>
+        <item name="android:layout_height">@dimen/topbar_height</item>
         <item name="android:background">#F0EEEE</item>
     </style>
 </resources>

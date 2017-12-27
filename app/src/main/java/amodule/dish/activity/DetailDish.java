@@ -213,8 +213,8 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
             case DetailDishDataManager.DISH_DATA_RNTIC://技巧
                 detailDishViewManager.handlerSkillView(list, code, courseCode, chapterCode, new DishModuleScrollView.onDishModuleClickCallBack() {
                     @Override
-                    public void getData(Map<String, String> map) {
-                        String url= map.get("appUrl");
+                    public void getDataUrl(String url) {
+                        if(TextUtils.isEmpty(url))return;
                         if(url.contains("xiangha://welcome?"))url=url.replace("xiangha://welcome?","");
                         if(url.contains("?")) {
                             String temp = url.substring(url.indexOf("?")+1,url.length());

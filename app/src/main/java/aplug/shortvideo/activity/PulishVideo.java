@@ -95,9 +95,9 @@ public class PulishVideo extends BaseActivity implements View.OnClickListener {
 
     private void initTitles() {
         if (Tools.isShowTitle()) {
-            int dp_45 = Tools.getDimen(this, R.dimen.dp_45);
+            int topbarHeight = Tools.getDimen(this, R.dimen.topbar_height);
             final int statusBarHeight = Tools.getStatusBarHeight(this);
-            int height = dp_45 + statusBarHeight;
+            int height = topbarHeight + statusBarHeight;
 
             RelativeLayout bar_title = (RelativeLayout) findViewById(R.id.title_all_rela);
             RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height);

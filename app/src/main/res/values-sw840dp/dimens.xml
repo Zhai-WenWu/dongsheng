@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- 适配平板 -->
 <resources>
-
+    <dimen name="topbar_height">@dimen/dp_49</dimen>
     <!-- 控件大小 *2.4 -->
     <dimen name="dp__100">-240dp</dimen>
     <dimen name="dp__30">-72dp</dimen>

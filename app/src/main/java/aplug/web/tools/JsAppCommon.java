@@ -974,7 +974,7 @@ public class JsAppCommon extends JsBase {
     }
     private void getUserData(){
         String params = "type=getData&devCode=" + XGPushServer.getXGToken(XHApplication.in());
-        ReqInternet.in().doPost(StringManager.api_getUserInfo, params, new InternetCallback(XHApplication.in()) {
+        ReqInternet.in().doPost(StringManager.api_getUserInfo, params, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
                 if (flag >= ReqInternet.REQ_OK_STRING) {
@@ -989,7 +989,7 @@ public class JsAppCommon extends JsBase {
      */
     private void payVip(){
         String url = StringManager.API_PAYVIP;
-        ReqEncyptInternet.in().doEncypt(url, "", new InternetCallback(XHApplication.in()) {
+        ReqEncyptInternet.in().doEncypt(url, "", new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
             }

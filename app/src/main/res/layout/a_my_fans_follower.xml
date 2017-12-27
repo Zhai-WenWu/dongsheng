@@ -9,12 +9,12 @@
         android:id="@+id/top_bar"
         android:layout_width="match_parent"
         android:background="@color/common_top_bg"
-        android:layout_height="@dimen/dp_45">
+        android:layout_height="@dimen/topbar_height">
 
         <RelativeLayout
             android:id="@+id/ll_foot"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_45"
+            android:layout_height="match_parent"
             android:background="@color/common_top_bg">
 
             <include

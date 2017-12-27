@@ -8,7 +8,7 @@
     <RelativeLayout
         android:id="@+id/bar_title"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_45"
+        android:layout_height="@dimen/topbar_height"
         android:background="@color/classify_health_titlecolor">
 
         <ImageView

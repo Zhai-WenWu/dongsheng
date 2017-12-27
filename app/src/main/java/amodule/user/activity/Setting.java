@@ -174,8 +174,8 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
 
     protected void initTitle() {
 //        if (Tools.isShowTitle()) {
-//            int dp_45 = Tools.getDimen(this, R.dimen.dp_45);
-//            int height = dp_45 + Tools.getStatusBarHeight(this);
+//            int topbarHeight = Tools.getDimen(this, R.dimen.topbar_height);
+//            int height = topbarHeight + Tools.getStatusBarHeight(this);
 //            RelativeLayout bar_title = (RelativeLayout) findViewById(R.id.title_rela_all);
 //            RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height);
 //            bar_title.setLayoutParams(layout);

@@ -86,7 +86,7 @@ public class LessonListDataController {
             mCurrentPage++;
         if (mListener != null)
             mListener.onGetData(mDatas, refresh);
-        ReqEncyptInternet.in().doEncypt(StringManager.API_SCHOOL_CHAPTERLIST, "code=" + mCode + "&page=" + mCurrentPage, new InternetCallback(context) {
+        ReqEncyptInternet.in().doEncypt(StringManager.API_SCHOOL_CHAPTERLIST, "code=" + mCode + "&page=" + mCurrentPage, new InternetCallback() {
             @Override
             public void loaded(int flag, String s, Object o) {
 

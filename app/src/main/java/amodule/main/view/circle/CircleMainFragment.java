@@ -284,7 +284,7 @@ public class CircleMainFragment extends Fragment {
                     },
                     v -> getData(!LoadOver));
             mListView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                final int topRedundant = Tools.getDimen(getContext(), R.dimen.dp_45) + Tools.getStatusBarHeight(getContext());
+                final int topRedundant = Tools.getDimen(getContext(), R.dimen.topbar_height) + Tools.getStatusBarHeight(getContext());
                 final int bottomRedundant = Tools.getDimen(getContext(), R.dimen.dp_50);
                 final int Min = topRedundant;
                 final int Max = (ToolsDevice.getWindowPx(getContext()).heightPixels - topRedundant - bottomRedundant) * 3 / 5 + topRedundant;

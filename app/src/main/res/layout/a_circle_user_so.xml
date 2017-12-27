@@ -7,7 +7,7 @@
     <RelativeLayout
 	    android:id="@+id/barTitle"
 	    android:layout_width="match_parent"
-	    android:layout_height="@dimen/dp_45"
+	    android:layout_height="@dimen/topbar_height"
 	    android:background="@color/common_top_bg" >
 	    
         <ImageView

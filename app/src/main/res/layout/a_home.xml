@@ -14,7 +14,6 @@
         android:id="@+id/all_title_rela"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/my_toolbar"
         android:background="@color/common_top_bg">
 
         <include

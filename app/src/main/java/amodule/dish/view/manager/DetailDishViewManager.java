@@ -91,7 +91,7 @@ public class DetailDishViewManager {
         wm_height = activity.getWindowManager().getDefaultDisplay().getHeight();
         mAct = activity;
         this.listView = listView;
-        titleHeight = Tools.getDimen(mAct,R.dimen.dp_45);
+        titleHeight = Tools.getDimen(mAct,R.dimen.topbar_height);
         dishTitleViewControl = new DishTitleViewControl(activity);
         dishTitleViewControl.initView(activity);
         dishTitleViewControl.setstate(state);
@@ -507,7 +507,7 @@ public class DetailDishViewManager {
     private boolean isShowScreen(){
         int[] location = new int[2];
         dishHeaderViewNew.getLocationOnScreen(location);
-        if(location[1]>Tools.getDimen(mAct,R.dimen.dp_45)){
+        if(location[1]>Tools.getDimen(mAct,R.dimen.topbar_height)){
             return true;
         }
         return false;
@@ -520,7 +520,7 @@ public class DetailDishViewManager {
         public void handleMessage(Message msg) {
             if (mMoveLen!=0){
                 mMoveLen= mMoveLen-3;
-            }else{
+            }else if (mTimer != null){
                 mTimer.cancel();
             }
             requestLayout();

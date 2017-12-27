@@ -110,7 +110,7 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
             setMinimumHeight(height);
         });
         setVisibility(VISIBLE);
-        showMinH = Tools.getStatusBarHeight(context) + Tools.getDimen(context, R.dimen.dp_45) - height;
+        showMinH = Tools.getStatusBarHeight(context) + Tools.getDimen(context, R.dimen.topbar_height) - height;
         showMaxH = ToolsDevice.getWindowPx(getContext()).heightPixels - Tools.getDimen(context, R.dimen.dp_50);
     }
 

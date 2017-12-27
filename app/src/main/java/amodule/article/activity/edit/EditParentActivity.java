@@ -195,7 +195,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
             }
         });
         contentLayout = (LinearLayout) findViewById(R.id.content_layout);
-        int contentLayoutHeight = ToolsDevice.getWindowPx(this).heightPixels - Tools.getDimen(this, R.dimen.dp_45) - Tools.getStatusBarHeight(this);
+        int contentLayoutHeight = ToolsDevice.getWindowPx(this).heightPixels - Tools.getDimen(this, R.dimen.topbar_height) - Tools.getStatusBarHeight(this);
         contentLayout.setMinimumHeight(contentLayoutHeight);
         contentLayout.setOnClickListener(new View.OnClickListener() {
             @Override

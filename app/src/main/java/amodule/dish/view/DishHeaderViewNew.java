@@ -106,7 +106,7 @@ public class DishHeaderViewNew extends LinearLayout {
      */
     public void initView(Activity activity,int videoHeight) {
         this.activity = activity;
-        distance = Tools.getDimen(activity, R.dimen.dp_45) + Tools.getStatusBarHeight(getContext());
+        distance = Tools.getDimen(activity, R.dimen.topbar_height) + Tools.getStatusBarHeight(getContext());
         isAutoPaly = "wifi".equals(ToolsDevice.getNetWorkSimpleType(activity));
         //大图处理
         videoViewGroup = LayoutInflater.from(activity).inflate(R.layout.view_dish_header_oneimage, null);

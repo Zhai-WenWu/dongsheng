@@ -9,13 +9,13 @@
     <RelativeLayout
         android:id="@+id/msg_title_bar_rela"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_45"
+        android:layout_height="@dimen/topbar_height"
         android:background="@color/common_top_bg">
 
         <RelativeLayout
             android:id="@+id/msg_title_bar"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_45"
+            android:layout_height="@dimen/topbar_height"
             android:background="@color/common_top_bg">
 
             <include layout="@layout/a_bar_item_back"/>

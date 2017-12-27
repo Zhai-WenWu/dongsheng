@@ -11,7 +11,6 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewCompat;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -431,7 +430,7 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
         listView.setAdapter(detailAdapter);
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
 
-            int dp45 = Tools.getDimen(VideoDetailActivity.this,R.dimen.dp_45);
+            int topbarHeight = Tools.getDimen(VideoDetailActivity.this,R.dimen.topbar_height);
             int screenH = ToolsDevice.getWindowPx(VideoDetailActivity.this).heightPixels;
             String comTopBgColor = getResources().getString(R.color.common_top_bg);
             @Override
@@ -446,7 +445,7 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
                     int[] location = new int[2];
                     headerView.getLocationOnScreen(location);
                     int viewBottom = location[1] + headerView.getHeight();
-                    int mixHeight = (isPortrait ? 0 : statusBarH) + dp45;
+                    int mixHeight = (isPortrait ? 0 : statusBarH) + topbarHeight;
                     //设置Vip框是否显示
                     if(mHaederLayout.getVideoHeaderView().getLimitTime() > 0){
                         boolean isVipShow = viewBottom <= mixHeight;
@@ -459,7 +458,7 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
                         mCommentBar.setVisibility(isCommentShow?View.VISIBLE:View.GONE);
                     }
                     //
-                    allTitleRelaPort.setBackgroundColor(Color.parseColor(isPortrait && viewBottom <= dp45 + statusBarH ? comTopBgColor : "#00000000"));
+                    allTitleRelaPort.setBackgroundColor(Color.parseColor(isPortrait && viewBottom <= topbarHeight + statusBarH ? comTopBgColor : "#00000000"));
                 }
             }
         });

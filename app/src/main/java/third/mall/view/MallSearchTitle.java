@@ -117,8 +117,8 @@ public class MallSearchTitle extends RelativeLayout implements OnClickListener {
 
 	private void initTitle() {
 		if(Tools.isShowTitle()) {
-			int dp_45 = Tools.getDimen(context, R.dimen.dp_45);
-			int height = dp_45 + Tools.getStatusBarHeight(context);
+			int topbarHeight = Tools.getDimen(context, R.dimen.topbar_height);
+			int height = topbarHeight + Tools.getStatusBarHeight(context);
 
 			RelativeLayout bar_title = (RelativeLayout) findViewById(R.id.title_all_rela);
 			RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height);

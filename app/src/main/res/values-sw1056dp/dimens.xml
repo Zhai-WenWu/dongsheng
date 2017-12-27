@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="topbar_height">@dimen/dp_49</dimen>
     <!-- 控件大小 *3.2 -->
     <dimen name="dp__100">-320dp</dimen>
     <dimen name="dp__30">-96dp</dimen>
