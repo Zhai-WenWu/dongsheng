@@ -1,23 +1,16 @@
 package amodule.dish.view;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.xiangha.R;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import acore.logic.AppCommon;
@@ -26,11 +19,7 @@ import acore.logic.XHClick;
 import acore.override.helper.XHActivityManager;
 import acore.override.view.ItemBaseView;
 import acore.tools.Tools;
-import acore.widget.rvlistview.RvHorizatolListView;
-import acore.widget.rvlistview.adapter.RvBaseAdapter;
-import acore.widget.rvlistview.holder.RvBaseViewHolder;
 import amodule.dish.activity.DetailDish;
-import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.SubBitmapTarget;
 import xh.basic.tool.UtilImage;
 
@@ -72,12 +61,18 @@ public class DishSkillView extends ItemBaseView{
             public void onClick(View v) {
                 if(!LoginManager.isLogin()&&!LoginManager.isTempVip()){
                     if(data.containsKey("iconType")&&"2".equals(data.get("iconType"))){
-                        context.startActivity(new Intent(context, LoginByAccout.class));
+                        String url="xiangha://welcome?VipWebView.app?url=https%3A%2F%2Fappweb.xiangha.com%2Fvip%2Fmyvip%3Fpayset%3D2%26fullScreen%3D2%26vipFrom%3D%E9%A6%99%E5%93%88%E8%AF%BE%E7%A8%8B%E8%AF%A6%E6%83%85%E9%A1%B5%E7%AB%8B%E5%88%BB%E6%8B%A5%E6%9C%89%E7%89%B9%E6%9D%83%E6%8C%89%E9%92%AE";
+                        if(XHActivityManager.getInstance().getCurrentActivity() != null)
+                            AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(),url,false);
                         return;
                     }
                 }
-                XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), DetailDish.tongjiId_detail, "食材小技巧", "食材小技巧点击量");
-                AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(),url,false);
+                if(!TextUtils.isEmpty(moduleType)&&"2".equals(moduleType)) {
+                    if(callBack!=null)callBack.getDataUrl(url);
+                }else {
+                    XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), DetailDish.tongjiId_detail, "食材小技巧", "食材小技巧点击量");
+                    AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), url, false);
+                }
             }
         });
     }
@@ -97,5 +92,11 @@ public class DishSkillView extends ItemBaseView{
                 }
             }
         };
+    }
+    private DishModuleScrollView.onDishModuleClickCallBack callBack;
+    private String moduleType = "";
+    public void setDishModuleClickCallBack(DishModuleScrollView.onDishModuleClickCallBack callBack,String type){
+        this.callBack= callBack;if(!TextUtils.isEmpty(type))moduleType=type;
+
     }
 }

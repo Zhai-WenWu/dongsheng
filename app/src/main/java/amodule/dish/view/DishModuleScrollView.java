@@ -40,7 +40,8 @@ public class DishModuleScrollView extends ItemBaseView{
     private AdapterModuleScroll adapterModuleScroll;
     private ArrayList<Map<String,String>> mapList = new ArrayList<>();
     private DishGridDialog dishGridDialog;
-    private String dishCode,courseCode,chapterCode;
+    private String dishCode;
+    private String type;
 
     public DishModuleScrollView(Context context) {
         super(context, R.layout.dish_module_scroll_view);
@@ -86,8 +87,6 @@ public class DishModuleScrollView extends ItemBaseView{
      */
     public void setData(ArrayList<Map<String,String>> listMaps,String code,String courseCode,String chapterCode){
         this.dishCode = code;
-        this.courseCode = courseCode;
-        this.chapterCode = chapterCode;
         mapList.clear();
         if(listMaps==null||listMaps.size()<=0)return;
         Map<String,String> map= listMaps.get(0);
@@ -96,6 +95,7 @@ public class DishModuleScrollView extends ItemBaseView{
             module_tv.setText(map.get("title"));
             module_tv.setVisibility(View.VISIBLE);
         }else module_tv.setVisibility(View.GONE);
+        if(map.containsKey("type"))type=map.get("type");
         module_more.setVisibility(map.containsKey("type")&&"2".equals(map.get("type"))?View.VISIBLE:View.GONE);
         int size= listTemp.size();
         for( int i = 0; i<size; i++){
@@ -116,7 +116,7 @@ public class DishModuleScrollView extends ItemBaseView{
                         @Override
                         public void onItemClick(View view, int position, Map<String, String> stringStringMap) {
                             //点击回调
-                            if(callBack!=null)callBack.getData(stringStringMap);
+                            if(callBack!=null)callBack.getDataUrl(stringStringMap.get("appUrl"));
 //                            AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(),stringStringMap.get("appurl"),false);
                             dishGridDialog.dismiss();
                         }
@@ -167,6 +167,7 @@ public class DishModuleScrollView extends ItemBaseView{
         @Override
         public void bindData(int position, @Nullable Map<String, String> data) {
             view.setData(data,position);
+            view.setDishModuleClickCallBack(callBack,type);
         }
     }
     public onDishModuleClickCallBack callBack;
@@ -174,6 +175,6 @@ public class DishModuleScrollView extends ItemBaseView{
         this.callBack = callBack;
     }
     public interface onDishModuleClickCallBack{
-        public void getData(Map<String,String> map);
+        public void getDataUrl(String url);
     }
 }
