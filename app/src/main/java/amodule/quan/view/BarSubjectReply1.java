@@ -151,7 +151,7 @@ public class BarSubjectReply1 extends LinearLayout{
 						isLikeString = "2";
 						
 						String params = "type=likeList&subjectCode=" + subjectCode + "&floorId=0";
-						ReqInternet.in().doPost(StringManager.api_quanSetSubject, params,new InternetCallback(act) {
+						ReqInternet.in().doPost(StringManager.api_quanSetSubject, params,new InternetCallback() {
 							@Override
 							public void loaded(int flag, String url,Object returnObj) {
 								if (flag >= UtilInternet.REQ_OK_STRING) {

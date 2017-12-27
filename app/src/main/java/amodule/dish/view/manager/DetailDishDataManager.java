@@ -95,7 +95,7 @@ public class DetailDishDataManager {
      */
     public void reqTopInfo(boolean isGon) {
         String params = "dishCode=" + dishCode;
-        ReqEncyptInternet.in().doEncypt(StringManager.API_MAIN8_TOPINFP, getOtherCode(params), new InternetCallback(mContext) {
+        ReqEncyptInternet.in().doEncypt(StringManager.API_MAIN8_TOPINFP, getOtherCode(params), new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object object) {
                 if(flag>=UtilInternet.REQ_OK_STRING) {
@@ -151,7 +151,7 @@ public class DetailDishDataManager {
      */
     private void reqIngre() {
         String params = "code=" + dishCode;
-        ReqEncyptInternet.in().doEncypt(StringManager.API_GETDISHBURDENBYCODE, getOtherCode(params), new InternetCallback(mContext) {
+        ReqEncyptInternet.in().doEncypt(StringManager.API_GETDISHBURDENBYCODE, getOtherCode(params), new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object object) {
                 handleDataSuccess(flag,DISH_DATA_INGRE,object);
@@ -164,7 +164,7 @@ public class DetailDishDataManager {
      */
     private void reqBanner() {
         String params = "code=" + dishCode;
-        ReqEncyptInternet.in().doEncypt(StringManager.API_GETBELOWBURDENBANNER, params, new InternetCallback(mContext) {
+        ReqEncyptInternet.in().doEncypt(StringManager.API_GETBELOWBURDENBANNER, params, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object object) {
                 handleDataSuccess(flag,DISH_DATA_BANNER,object);
@@ -177,7 +177,7 @@ public class DetailDishDataManager {
      */
     private void reqStep() {
         String params = "dishCode=" + dishCode;
-        ReqEncyptInternet.in().doEncypt(StringManager.API_MAIN8_DISHMAKE, getOtherCode(params), new InternetCallback(mContext) {
+        ReqEncyptInternet.in().doEncypt(StringManager.API_MAIN8_DISHMAKE, getOtherCode(params), new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object object) {
                 handleDataSuccess(flag,DISH_DATA_STEP,object);
@@ -191,7 +191,7 @@ public class DetailDishDataManager {
     private void reqOtherTieData(){
         String params = "dishCode=" + dishCode;
         //获取帖子数据
-        ReqEncyptInternet.in().doEncypt(StringManager.API_MAIN8_TIEINFO,getOtherCode(params), new InternetCallback(mContext) {
+        ReqEncyptInternet.in().doEncypt(StringManager.API_MAIN8_TIEINFO,getOtherCode(params), new InternetCallback() {
             @Override
             public void loaded(int flag, String s, Object object) {
                 handleDataSuccess(flag,DISH_DATA_TIE,object);
@@ -204,7 +204,7 @@ public class DetailDishDataManager {
     public void reqQAData(){
         String params = "dishCode=" + dishCode;
         //获取帖子数据
-        ReqEncyptInternet.in().doEncypt(StringManager.API_MAIN8_QAINFO,getOtherCode(params), new InternetCallback(mContext) {
+        ReqEncyptInternet.in().doEncypt(StringManager.API_MAIN8_QAINFO,getOtherCode(params), new InternetCallback() {
             @Override
             public void loaded(int flag, String s, Object object) {
                 handleDataSuccess(flag,DISH_DATA_QA,object);
@@ -217,7 +217,7 @@ public class DetailDishDataManager {
     public void reqAnticData(){
         String params = "dishCode=" + dishCode;
         //获取帖子数据
-        ReqEncyptInternet.in().doEncypt(StringManager.API_MAIN8_ANTIC,getOtherCode(params), new InternetCallback(mContext) {
+        ReqEncyptInternet.in().doEncypt(StringManager.API_MAIN8_ANTIC,getOtherCode(params), new InternetCallback() {
             @Override
             public void loaded(int flag, String s, Object object) {
                 handleDataSuccess(flag,DISH_DATA_RNTIC,object);
@@ -231,7 +231,7 @@ public class DetailDishDataManager {
     public void reqPublicData(){
         String params = "dishCode=" + dishCode;
         //获取点赞数据
-        ReqEncyptInternet.in().doEncypt(StringManager.API_MAIN8_RELATIONBYCODE, getOtherCode(params), new InternetCallback(mContext) {
+        ReqEncyptInternet.in().doEncypt(StringManager.API_MAIN8_RELATIONBYCODE, getOtherCode(params), new InternetCallback() {
             @Override
             public void loaded(int flag, String s, Object object) {
                 handleDataSuccess(flag,DISH_DATA_RELATION,object);

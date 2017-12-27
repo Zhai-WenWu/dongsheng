@@ -91,7 +91,7 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
             public void handleMessage(Message msg) {
                 switch (msg.what) {
                     case ONREFRESH:
-                        loadManager.setLoading("", new InternetCallback(AccoutActivity.this) {
+                        loadManager.setLoading("", new InternetCallback() {
                             @Override
                             public void loaded(int flag, String url, Object returnObj) {
                                 loadManager.setLoading(new View.OnClickListener() {
@@ -228,7 +228,7 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
         String param = new StringBuffer()
                 .append("type=getData")
                 .append("&devCode=").append(XGPushServer.getXGToken(this)).toString();
-        ReqInternet.in().doPost(StringManager.api_getUserInfo, param, new InternetCallback(this) {
+        ReqInternet.in().doPost(StringManager.api_getUserInfo, param, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
                 if (flag >= ReqInternet.REQ_OK_STRING) {
@@ -241,7 +241,7 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
             }
         });
 
-        ReqInternet.in().doPost(StringManager.api_getThirdBind, "", new InternetCallback(this) {
+        ReqInternet.in().doPost(StringManager.api_getThirdBind, "", new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
                 if (flag >= ReqInternet.REQ_OK_STRING) {
@@ -379,7 +379,7 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
     private void unbindEmail() {
         loadManager.showProgressBar();
         String params = "email=" + bindMap.get("email");
-        ReqInternet.in().doPost(StringManager.api_unbindEmail, params, new InternetCallback(this) {
+        ReqInternet.in().doPost(StringManager.api_unbindEmail, params, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object msg) {
                 loadManager.hideProgressBar();
@@ -406,7 +406,7 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
     private void unbindThirdParty(final String type) {
         loadManager.showProgressBar();
         String params = "thiredPartyName=" + type;
-        ReqInternet.in().doPost(StringManager.api_unbindThirdParty, params, new InternetCallback(this) {
+        ReqInternet.in().doPost(StringManager.api_unbindThirdParty, params, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object msg) {
                 loadManager.hideProgressBar();
@@ -550,7 +550,7 @@ public class AccoutActivity extends BaseLoginActivity implements View.OnClickLis
 
                         final String finalParam = param;
                         ReqInternet.in().doPost(StringManager.api_getUserInfo, finalParam.toString(),
-                                new InternetCallback(AccoutActivity.this) {
+                                new InternetCallback() {
 
                                     @Override
                                     public void loaded(int flag, String url, Object returnObj) {

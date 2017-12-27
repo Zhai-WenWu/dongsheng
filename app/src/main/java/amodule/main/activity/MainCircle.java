@@ -84,7 +84,7 @@ public class MainCircle extends MainBaseActivity implements View.OnClickListener
     }
 
     private void loadModuleData(){
-        ReqInternet.in().doGet(StringManager.api_indexModules, new InternetCallback(XHApplication.in()) {
+        ReqInternet.in().doGet(StringManager.api_indexModules, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object msg) {
                 if (flag >= ReqInternet.REQ_OK_STRING) {

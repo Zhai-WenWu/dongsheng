@@ -160,7 +160,7 @@ public class SreachFavoriteActivity extends BaseActivity implements View.OnClick
         params.put("page", String.valueOf(currentpage));
         params.put("name", searchWord);
         loadManager.changeMoreBtn(ReqInternet.REQ_OK_STRING, -1, -1, currentpage, false);
-        ReqEncyptInternet.in().doEncypt(StringManager.API_COLLECTIONLIST, params, new InternetCallback(this) {
+        ReqEncyptInternet.in().doEncypt(StringManager.API_COLLECTIONLIST, params, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object msg) {
                 int loadCount = 0;

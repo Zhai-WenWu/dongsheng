@@ -45,7 +45,7 @@ public class TemplateWebViewControl {
         isCallBack=false;
         String url= StringManager.API_TEMPLATE_GETTEMPLATENAME;
         String params= "requestMethod="+requestMethod;
-        ReqEncyptInternet.in().doEncypt(url, params, new InternetCallback(XHActivityManager.getInstance().getCurrentActivity()) {
+        ReqEncyptInternet.in().doEncypt(url, params, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, final Object msg) {
                 if (flag >= ReqInternet.REQ_OK_STRING) {
@@ -98,7 +98,7 @@ public class TemplateWebViewControl {
     public void handlerDsModuleData(String requestMethod){
         isCallBack=false;
         String url= MallStringManager.mall_api_getTemplateName+"?request_method="+requestMethod;
-        MallReqInternet.in().doGet(url, new MallInternetCallback(XHActivityManager.getInstance().getCurrentActivity()) {
+        MallReqInternet.in().doGet(url, new MallInternetCallback() {
             @Override
             public void loadstat(int flag, String url, Object msg, Object... stat)  {
                 if(flag>=ReqInternet.REQ_OK_STRING){
@@ -161,7 +161,7 @@ public class TemplateWebViewControl {
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
-                        ReqInternet.in().getInputStream(finalDataUrl, new InternetCallback(XHActivityManager.getInstance().getCurrentActivity()) {
+                        ReqInternet.in().getInputStream(finalDataUrl, new InternetCallback() {
                             @Override
                             public void loaded(int flag, String url, final Object msg) {
                                 if (flag >= ReqInternet.REQ_OK_IS) {

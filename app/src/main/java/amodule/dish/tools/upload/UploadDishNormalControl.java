@@ -116,7 +116,7 @@ public class UploadDishNormalControl extends UploadDishParrentControl implements
      */
     @Override
     protected void initNetDishView(String dishCode) {
-        ReqInternet.in().doGet(StringManager.api_getDishInfo + "?code=" + dishCode+"&isNew=1", new InternetCallback(mAct) {
+        ReqInternet.in().doGet(StringManager.api_getDishInfo + "?code=" + dishCode+"&isNew=1", new InternetCallback() {
 
             @Override
             public void loaded(int flag, String url, Object returnObj) {

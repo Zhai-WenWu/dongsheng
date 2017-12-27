@@ -70,7 +70,7 @@ public class QuanReport extends BaseActivity{
 			return;
 		}
 		//请求数据
-		ReqInternet.in().doPost(StringManager.api_getCheckIngore, "customerCode=" + code, new InternetCallback(this) {
+		ReqInternet.in().doPost(StringManager.api_getCheckIngore, "customerCode=" + code, new InternetCallback() {
 			@Override
 			public void loaded(int flag, String url, Object returnObj) {
 				if (flag >= UtilInternet.REQ_OK_STRING) {
@@ -155,7 +155,7 @@ public class QuanReport extends BaseActivity{
 						}
 						if (isBlackChange^isBlack) {
 							String param = isBlack ?  "type=ignore&cusCode=" + code: "type=restore&cusCode=" + code;
-							ReqInternet.in().doPost(StringManager.api_setUserData, param, new InternetCallback(QuanReport.this) {
+							ReqInternet.in().doPost(StringManager.api_setUserData, param, new InternetCallback() {
 								
 								@Override
 								public void loaded(int flag, String url, Object returnObj) {
@@ -191,7 +191,7 @@ public class QuanReport extends BaseActivity{
 				String param="type=report&subjectCode="+subjectCode
 						+"&repType="+repType+"&repTypeCode=" + code
 						+ "&content" + "" + "&info="+ infoString + "&operation=" + operation;
-				ReqInternet.in().doPost(StringManager.api_quanSetSubject, param, new InternetCallback(QuanReport.this) {
+				ReqInternet.in().doPost(StringManager.api_quanSetSubject, param, new InternetCallback() {
 					
 					@Override
 					public void loaded(int flag, String url, Object returnObj) {

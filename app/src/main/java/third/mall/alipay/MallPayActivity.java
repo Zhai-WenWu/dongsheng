@@ -131,7 +131,7 @@ public class MallPayActivity extends MallBaseActivity implements OnClickListener
 		findViewById(R.id.pay_type_alipay).setEnabled(false);
 		String actionUrl=MallStringManager.mall_api_direct;
 		String param="payment_order_id="+payment_order_id+"&pay_type=alipay";
-		MallReqInternet.in().doPost(actionUrl, param, new MallInternetCallback(this) {
+		MallReqInternet.in().doPost(actionUrl, param, new MallInternetCallback() {
 			
 			@Override
 			public void loadstat(int flag, String url, Object msg, Object... stat) {

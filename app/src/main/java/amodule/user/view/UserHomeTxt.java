@@ -276,7 +276,7 @@ public class UserHomeTxt extends TabContentView {
             }).start();
         }
 
-		ReqEncyptInternet.in().doEncypt(StringManager.API_USERHOME_ARTICLE, "code=" + userCode + "&page=" + currentPage, new InternetCallback(mAct) {
+		ReqEncyptInternet.in().doEncypt(StringManager.API_USERHOME_ARTICLE, "code=" + userCode + "&page=" + currentPage, new InternetCallback() {
 			@Override
 			public void loaded(int flag, String url, Object returnObj) {
                 int loadCount = 0;

@@ -68,7 +68,7 @@ public class FavoriteHelper {
         params.put("code", code);
         params.put("type", type);
         ReqEncyptInternet.in().doEncypt(StringManager.API_GET_FAVORITE_STATUS, params,
-                new InternetCallback(context) {
+                new InternetCallback() {
                     @Override
                     public void loaded(int i, String s, Object o) {
                         if(i >= ReqEncyptInternet.REQ_OK_STRING){
@@ -104,7 +104,7 @@ public class FavoriteHelper {
         if(!TextUtils.isEmpty(typeName))
             params.put("typeName", typeName);
         ReqEncyptInternet.in().doEncypt(StringManager.API_SET_FAVORITE_STATUS, params,
-                new InternetCallback(context) {
+                new InternetCallback() {
                     @Override
                     public void loaded(int i, String s, Object o) {
                         if(i >= ReqEncyptInternet.REQ_OK_STRING){

@@ -93,7 +93,7 @@ public class MyMsgInformSetting extends BaseActivity{
 			stoneObject.put("caipu", jxDish);
 			array1.put(stoneObject);
 			msgString = "list="+ array1.get(0).toString();
-			ReqInternet.in().doPost(url, msgString, new InternetCallback(this) {
+			ReqInternet.in().doPost(url, msgString, new InternetCallback() {
 				
 				@Override
 				public void loaded(int flag, String url, Object returnObj) {

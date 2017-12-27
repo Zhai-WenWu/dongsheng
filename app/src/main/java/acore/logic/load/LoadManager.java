@@ -91,7 +91,7 @@ public class LoadManager {
 			clicker.onClick(null);
 		} else {
 			// 长时间未使用情况下，重新获取tok
-			AppCommon.getCommonData(new InternetCallback(XHApplication.in()) {
+			AppCommon.getCommonData(new InternetCallback() {
 				@Override
 				public void loaded(int flag, String url, Object returnObj) {
 					LogManager.print("d", "重新获取tok____" + LoadManager.tok);

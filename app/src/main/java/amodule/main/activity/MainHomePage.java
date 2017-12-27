@@ -186,7 +186,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
     private void loadRemoteData(){
         startLoadTime = System.currentTimeMillis();
         mDataControler.loadServiceHomeData(getHeaderCallback(false));
-        mDataControler.loadServiceTopData(new InternetCallback(this) {
+        mDataControler.loadServiceTopData(new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
                 if (i >= ReqEncyptInternet.REQ_OK_STRING
@@ -205,7 +205,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
      * @return 回调
      */
     public InternetCallback getHeaderCallback(boolean isCache) {
-        return new InternetCallback(this) {
+        return new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
                 Log.i("tzy",(isCache ? "cacheTime = " : "serviceTime = ") + (System.currentTimeMillis() - startLoadTime) + "ms");

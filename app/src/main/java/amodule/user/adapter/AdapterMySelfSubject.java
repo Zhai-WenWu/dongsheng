@@ -329,7 +329,7 @@ public class AdapterMySelfSubject extends AdapterSimple {
 													String params = "type=delFloor&subjectCode=" + map.get("code") + "&floorId=" + map.get("floorId")
 															+ "&commentId=" + map.get("commentId");
 													// 请求网络;
-													ReqInternet.in().doPost(StringManager.api_quanSetSubject, params, new InternetCallback(mAct) {
+													ReqInternet.in().doPost(StringManager.api_quanSetSubject, params, new InternetCallback() {
 														@Override
 														public void loaded(int flag, String url, Object returnObj) {
 															if (flag >= UtilInternet.REQ_OK_STRING) {

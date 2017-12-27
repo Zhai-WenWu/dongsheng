@@ -187,7 +187,7 @@ public class MallSearchActivity extends MallBaseActivity {
 				url+="?"+list_statistic.get(i);
 			}else url+="&"+list_statistic.get(i);
 		}
-		MallReqInternet.in().doGet(url, new MallInternetCallback(this) {
+		MallReqInternet.in().doGet(url, new MallInternetCallback() {
 
 			@Override
 			public void loadstat(int flag, String url, Object msg, Object... stat) {

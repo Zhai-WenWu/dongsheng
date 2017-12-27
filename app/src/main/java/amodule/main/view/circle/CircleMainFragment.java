@@ -358,6 +358,8 @@ public class CircleMainFragment extends Fragment {
             int firstVisiPosi = ((LinearLayoutManager) mListView.getLayoutManager()).findFirstVisibleItemPosition();
             //要获得listview的第n个View,则需要n减去第一个可见View的位置。+1是因为有header
             View parentView = mListView.getChildAt(position - firstVisiPosi + headerCount);
+            if (parentView == null)
+                return;
             setVideoLayout(parentView, position);
         });
     }
@@ -381,7 +383,7 @@ public class CircleMainFragment extends Fragment {
             }
 
             video_layout = (LinearLayout) parentView.findViewById(R.id.video_layout);
-            if (videoImageView != null) {
+            if (videoImageView != null && video_layout != null) {
                 video_layout.addView(videoImageView);
                 videoImageView.onBegin();
                 videoImageView.setVideoClickCallBack(() -> {
@@ -444,7 +446,7 @@ public class CircleMainFragment extends Fragment {
         if (isRefresh) {
             mLoadManager.hideProgressBar();
         }
-        ReqInternet.in().doGet(url + param, new InternetCallback(mActivity.getApplication()) {
+        ReqInternet.in().doGet(url + param, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object msg) {
                 int loadCount = 0;
@@ -573,7 +575,7 @@ public class CircleMainFragment extends Fragment {
 
     private void getTopUser() {
         if (mPlateData.isShowRecUser()) {
-            ReqInternet.in().doGet(StringManager.api_topCustomer + "?cid=" + mPlateData.getCid() + "&mid=" + mPlateData.getMid(), new InternetCallback(getContext()) {
+            ReqInternet.in().doGet(StringManager.api_topCustomer + "?cid=" + mPlateData.getCid() + "&mid=" + mPlateData.getMid(), new InternetCallback() {
                 @Override
                 public void loaded(int flag, String url, Object msg) {
                     if (flag >= ReqInternet.REQ_OK_STRING) {
@@ -593,7 +595,7 @@ public class CircleMainFragment extends Fragment {
             mAdapter.clearRecCutomerArray();
         }
         ReqInternet.in().doGet(StringManager.api_recCustomer + "?cid=" + mPlateData.getCid() + "&mid=" + mPlateData.getMid(),
-                new InternetCallback(mActivity) {
+                new InternetCallback() {
                     @Override
                     public void loaded(int flag, String url, Object msg) {
                         if (flag >= ReqInternet.REQ_OK_STRING) {

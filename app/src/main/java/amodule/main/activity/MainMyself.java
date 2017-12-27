@@ -331,7 +331,7 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
      */
     private void getData() {
         String params = "type=getData&devCode=" + XGPushServer.getXGToken(getApplicationContext());
-        ReqInternet.in().doPost(StringManager.api_getUserInfo, params, new InternetCallback(getApplicationContext()) {
+        ReqInternet.in().doPost(StringManager.api_getUserInfo, params, new InternetCallback() {
 
             @Override
             public void loaded(int flag, String url, Object returnObj) {

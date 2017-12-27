@@ -255,7 +255,7 @@ public class MallButtonView {
 	 */
 	private void postRequest(final String actionUrl,final String param,final InterfaceViewCallback callback) {
 		
-		MallReqInternet.in().doPost(actionUrl, param, new MallInternetCallback(context) {
+		MallReqInternet.in().doPost(actionUrl, param, new MallInternetCallback() {
 
 			@Override
 			public void loadstat(int flag, String url, Object msg, Object... stat) {

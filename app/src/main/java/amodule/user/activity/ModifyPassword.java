@@ -94,7 +94,7 @@ public class ModifyPassword extends BaseActivity implements OnClickListener{
 		}
 		String url = StringManager.api_setUserData;
 		String param = "type=pwd&p1=" + old_pwd + "&p2=" + new_pwd + "&p3=" + new_pwd;
-		ReqInternet.in().doPost(url, param, new InternetCallback(this) {
+		ReqInternet.in().doPost(url, param, new InternetCallback() {
 
 			@Override
 			public void loaded(int flag, String url, Object returnObj) {

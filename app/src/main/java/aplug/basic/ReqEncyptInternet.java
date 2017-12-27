@@ -24,21 +24,19 @@ import xh.basic.internet.UtilInternet;
 
 public class ReqEncyptInternet extends UtilInternet {
     private static ReqEncyptInternet instance=null;
-    private static Context initContext=null;
     private boolean isLoginSign=false;//是否进行loginApp,获取sign
     private ArrayList<Map<String,Object>> listInternet= new ArrayList<>();
-    private ReqEncyptInternet(Context context) {
-        super(context);
+    private ReqEncyptInternet() {
+        super();
     }
     private int loginNum=0;
     private long now_login_time;
-    public static ReqEncyptInternet init(Context context) {
-        initContext=context;
+    public static ReqEncyptInternet init() {
         return in();
     }
     public static ReqEncyptInternet in() {
         if(instance==null)
-            instance=new ReqEncyptInternet(initContext);
+            instance=new ReqEncyptInternet();
         return instance;
     }
 
@@ -113,7 +111,7 @@ public class ReqEncyptInternet extends UtilInternet {
         Log.i("zhangyujian","time::"+time);
         Log.i("zhangyujian","now_parms::"+now_parms);
         String encryptparams=ReqEncryptCommon.getInstance().getData(now_parms,sign_yes);
-        InternetCallback internetCallback= new InternetCallback(XHApplication.in()) {
+        InternetCallback internetCallback= new InternetCallback() {
 
             @Override
             public void getPower(int flag, String url, Object obj) {
@@ -184,7 +182,7 @@ public class ReqEncyptInternet extends UtilInternet {
             String url = StringManager.API_LOGIN_APP;
             String token = ReqEncryptCommon.getInstance().getToken();
             final String params = "token=" + URLEncoder.encode(token, "utf-8");
-            ReqInternet.in().doPost(url, params, new InternetCallback(XHApplication.in()) {
+            ReqInternet.in().doPost(url, params, new InternetCallback() {
                 @Override
                 public void loaded(int flag, String url, Object object) {
                     Log.i("zhangyujian","getLoginApp() falg:" + flag + "  url:" + url + "  object:" + object);

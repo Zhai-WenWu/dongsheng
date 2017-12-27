@@ -114,7 +114,7 @@ public class TencenApiAdTools {
     }
 
     private static void doGetOnAdClickOrShow(Context con,String url){
-        ReqInternet.in().doGet(url, new InternetCallback(con) {
+        ReqInternet.in().doGet(url, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
 

@@ -81,7 +81,7 @@ public class TextEditView extends LinearLayout{
 	
 	private void onUpload() {
 		ReqInternet.in().doPost(mUrl,mParams + "&" + mKey + "=" + mValue,
-				new InternetCallback(XHApplication.in()) {
+				new InternetCallback() {
 					@Override
 					public void loaded(int flag, String url, Object returnObj) {
 						if(mFollowCallback != null)

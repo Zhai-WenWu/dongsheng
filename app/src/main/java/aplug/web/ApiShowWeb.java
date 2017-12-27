@@ -73,7 +73,7 @@ public class ApiShowWeb extends WebActivity {
 	
 	@Override
 	public void loadData() {
-		ReqInternet.in().doGet(apiUrl, new InternetCallback(this) {
+		ReqInternet.in().doGet(apiUrl, new InternetCallback() {
 			@Override
 			public void loaded(int flag, String url, Object returnObj) {
 				if (flag >= UtilInternet.REQ_OK_STRING) {

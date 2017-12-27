@@ -280,7 +280,7 @@ public class UploadDishVideoControl extends UploadDishParrentControl implements 
      */
     @Override
     protected void initNetDishView(final String dishCode) {
-        ReqInternet.in().doGet(StringManager.api_getDishInfoNew + "?code=" + dishCode+"&isNew=1&pg=1", new InternetCallback(mAct) {
+        ReqInternet.in().doGet(StringManager.api_getDishInfoNew + "?code=" + dishCode+"&isNew=1&pg=1", new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
                 if (flag >= UtilInternet.REQ_OK_STRING) {

@@ -395,7 +395,7 @@ public class OrderItem2View extends ViewItemBase {
 	private void getShoppingurl(Map<String, String> map,int position) {
 		setStatisticIndex();
 		url = MallStringManager.mall_getShippingUrl + "?order_id=" + map.get("order_id");
-		MallReqInternet.in().doGet(url, new MallInternetCallback(activity) {
+		MallReqInternet.in().doGet(url, new MallInternetCallback() {
 
 			@Override
 			public void loadstat(int flag, String url, Object msg, Object... stat) {

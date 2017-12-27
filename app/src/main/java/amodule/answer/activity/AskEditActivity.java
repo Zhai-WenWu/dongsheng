@@ -221,7 +221,7 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
         loadManager.showProgressBar();
         mLoadPrice = true;
         String params = "code=" + mDishCode + "&authorCode=" + mAuthorCode + "&type=" + mType;
-        ReqEncyptInternet.in().doEncypt(StringManager.API_QA_GETPRICE, params, new InternetCallback(this) {
+        ReqEncyptInternet.in().doEncypt(StringManager.API_QA_GETPRICE, params, new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
                 boolean success = i >= UtilInternet.REQ_OK_STRING;
@@ -509,7 +509,7 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
     }
 
     private void getIsTip() {
-        ReqEncyptInternet.in().doEncypt(StringManager.API_QA_ISTIP, "type=1", new InternetCallback(this) {
+        ReqEncyptInternet.in().doEncypt(StringManager.API_QA_ISTIP, "type=1", new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object obj) {
                 //比较特殊的弹框，涉及到页面跳转不能影响弹框

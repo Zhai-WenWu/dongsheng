@@ -104,7 +104,7 @@ public class DishVideoDownloaderManager {
 
         checkFileExist(context);
         String getUrl = StringManager.api_getConf;
-        ReqInternet.in().doGet(getUrl, new InternetCallback(context) {
+        ReqInternet.in().doGet(getUrl, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
 
@@ -291,7 +291,7 @@ public class DishVideoDownloaderManager {
             String url = map.get("url");
             if (!TextUtils.isEmpty(url)) {
                 UtilInternetFile.in().downloadFileProgress(url, map.get("path"),
-                        new InternetCallback(context) {
+                        new InternetCallback() {
                             @Override
                             public void loaded(int flag, String url, Object msg) {
 

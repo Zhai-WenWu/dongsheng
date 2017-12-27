@@ -92,7 +92,7 @@ public class MyPhysique extends BaseActivity {
 	private void getUserCrowdData() {
 		//如果体质测试结果为null,有用户则请求数据进行加载
 		String params = "type=getData&devCode=" + XGPushServer.getXGToken(this);
-		ReqInternet.in().doPost(StringManager.api_getUserInfo, params,new InternetCallback(getApplicationContext()) {
+		ReqInternet.in().doPost(StringManager.api_getUserInfo, params,new InternetCallback() {
 			@Override
 			public void loaded(int flag, String url, Object returnObj) {
 				if (flag >= UtilInternet.REQ_OK_STRING){

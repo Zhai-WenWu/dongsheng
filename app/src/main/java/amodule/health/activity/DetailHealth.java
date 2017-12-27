@@ -153,7 +153,7 @@ public class DetailHealth extends BaseActivity {
 	private void contentLoad() {
 		loadManager.showProgressBar();
 		String url = StringManager.api_getIngreList + "?type=" + datatype + "&g1=" + code;
-		ReqInternet.in().doGet(url, new InternetCallback(this.getApplicationContext()) {
+		ReqInternet.in().doGet(url, new InternetCallback() {
 
 			@Override
 			public void loaded(int flag, String url, Object returnObj) {

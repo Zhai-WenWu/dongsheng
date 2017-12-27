@@ -35,7 +35,7 @@ public class UploadImg {
 		LinkedHashMap<String, String> fileMap = new LinkedHashMap<String, String>();
 		fileMap.put("uploadImg_imgs_1", mPath);
 		ReqInternet.in().doPostImg(StringManager.api_uploadImg, fileMap,
-				new InternetCallback(XHApplication.in()) {
+				new InternetCallback() {
 					@Override
 					public void loaded(int flag, String url,Object returnObj) {
 						if (flag >= UtilInternet.REQ_OK_STRING) { //成功,回调成功
@@ -71,7 +71,7 @@ public class UploadImg {
 	 */
 	protected void uploadLog(String status,Object msg){
 		LinkedHashMap<String, String> map = LogManager.getReportLog("uploadSubject",status,Tools.getAssignTime("yyyy-MM-dd HH:mm:ss", 0),msg);
-		ReqInternet.in().doPost(StringManager.api_uploadUserLog, map , new InternetCallback(XHApplication.in()) {
+		ReqInternet.in().doPost(StringManager.api_uploadUserLog, map , new InternetCallback() {
 			@Override
 			public void loaded(int flag, String url, Object returnObj) {
 				

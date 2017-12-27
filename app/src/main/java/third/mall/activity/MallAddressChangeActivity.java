@@ -102,7 +102,7 @@ public class MallAddressChangeActivity extends MallBaseActivity implements OnCli
 		ListData.clear();
 		loadManager.changeMoreBtn(UtilInternet.REQ_OK_STRING, -1, -1, 1,ListData.size()==0);
 		url=MallStringManager.mall_getShippingAddress;
-		MallReqInternet.init(this).doGet(url, new MallInternetCallback(this) {
+		MallReqInternet.in().doGet(url, new MallInternetCallback() {
 			@Override
 			public void loadstat(int flag, String url, Object msg, Object... stat) {
 

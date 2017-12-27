@@ -303,7 +303,7 @@ public class MallAlipay {
 		try {
 			String actionUrl = MallStringManager.mall_getToken;
 			String param = "url=" + Base64.encode(orderInfo.getBytes()) + "&type=sync&config=1";
-			MallReqInternet.in().doPost(actionUrl, param, new MallInternetCallback(mAct) {
+			MallReqInternet.in().doPost(actionUrl, param, new MallInternetCallback() {
 				@Override
 				public void loadstat(int flag, String url, Object msg, Object... stat) {
 

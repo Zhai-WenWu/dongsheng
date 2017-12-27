@@ -128,7 +128,7 @@ public class ActivityList extends BaseActivity {
 		String getUrl = StringManager.api_activityList + "?type=all&page=" + currentPage;
 		loadManager.changeMoreBtn(UtilInternet.REQ_OK_STRING, -1, -1, currentPage,dataActicity.size() == 0);
 
-		ReqInternet.in().doGet(getUrl, new InternetCallback(this) {
+		ReqInternet.in().doGet(getUrl, new InternetCallback() {
 			@Override
 			public void loaded(int flag, String url, Object returnObj) {
 				int loadCount = 0;

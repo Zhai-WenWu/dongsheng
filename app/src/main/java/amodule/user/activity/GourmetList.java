@@ -229,7 +229,7 @@ public class GourmetList extends BaseActivity {
 		currentPage++;
 		loadManager.changeMoreBtn(UtilInternet.REQ_OK_STRING, -1, -1, currentPage,leftData.size() == 0);
 		String url = leftData.get(index).get("url") + "&page=" + currentPage;
-		ReqInternet.in().doGet(url, new InternetCallback(this) {
+		ReqInternet.in().doGet(url, new InternetCallback() {
 			@Override
 			public void loaded(int flag, String url, Object returnObj) {
 				int loadCount = 0;

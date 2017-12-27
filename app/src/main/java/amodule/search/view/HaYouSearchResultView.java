@@ -122,7 +122,7 @@ public class HaYouSearchResultView extends RelativeLayout {
         currentPage++;
         loadManager.changeMoreBtn(listView, UtilInternet.REQ_OK_STRING, -1, -1, currentPage, arrayList.size() == 0);
         String url = StringManager.api_soList + "?type=customer&s=" + searchKey + "&page=" + currentPage;
-        ReqInternet.in().doGet(url, new InternetCallback(mActivity.getBaseContext()) {
+        ReqInternet.in().doGet(url, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
                 int loadPage = 0;

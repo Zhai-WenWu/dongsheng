@@ -176,7 +176,7 @@ public class VideoDish extends BaseActivity{
 	private void initData(){
 		mHSLinear.removeAllViews();
 		String getUrl = StringManager.api_getRecommendDish;
-		ReqInternet.in().doGet(getUrl, new InternetCallback(this) {
+		ReqInternet.in().doGet(getUrl, new InternetCallback() {
 			@Override
 			public void loaded(int flag, String url, Object returnObj) {
 				if(flag >= UtilInternet.REQ_OK_STRING){

@@ -93,7 +93,7 @@ public class MallCommon {
 			return;
 		}
 		String acticonUrl = MallStringManager.mall_getDsToken;
-		MallReqInternet.in().doGet(acticonUrl, new MallInternetCallback(context) {
+		MallReqInternet.in().doGet(acticonUrl, new MallInternetCallback() {
 
 			@Override
 			public void loadstat(int flag, String url, Object msg, Object... stat) {
@@ -132,7 +132,7 @@ public class MallCommon {
 			return;
 		}
 		String url = MallStringManager.mall_api_register;
-		MallReqInternet.in().doGet(url, new MallInternetCallback(context) {
+		MallReqInternet.in().doGet(url, new MallInternetCallback() {
 
 			@Override
 			public void loadstat(int flag, String url, Object msg, Object... stat) {
@@ -232,7 +232,7 @@ public class MallCommon {
 	 * @param context
 	 */
 	public static void getShoppingNum(final Context context,final TextView view,final TextView view_two){
-		MallReqInternet.in().doGet(MallStringManager.mall_getCartProductNum, new MallInternetCallback(context) {
+		MallReqInternet.in().doGet(MallStringManager.mall_getCartProductNum, new MallInternetCallback() {
 			
 			@Override
 			public void loadstat(int flag, String url, Object msg, Object... stat) {
@@ -274,7 +274,7 @@ public class MallCommon {
 	 */
 	public static void getDsInfo(final Activity context,final LoadManager loadManager){
 		
-		MallReqInternet.in().doGet(MallStringManager.mall_dsInfo_v3, new MallInternetCallback(context) {
+		MallReqInternet.in().doGet(MallStringManager.mall_dsInfo_v3, new MallInternetCallback() {
 			
 			@Override
 			public void loadstat(int flag, String url, Object msg, Object... stat) {
@@ -323,7 +323,7 @@ public class MallCommon {
 	 */
 	public  void addShoppingcat(final Context context,final String code,final InterfaceMallAddShopping interfaceAddshop){
 		String param="product_code="+code+"&product_num="+1;
-		MallReqInternet.in().doPost(MallStringManager.mall_addCartProduct, param, new MallInternetCallback(context) {
+		MallReqInternet.in().doPost(MallStringManager.mall_addCartProduct, param, new MallInternetCallback() {
 			@Override
 			public void loadstat(int flag, String url, Object msg, Object... stat) {
 				if(interfaceAddshop!=null){
@@ -368,7 +368,7 @@ public class MallCommon {
 		}
 		String actionUrl=MallStringManager.mall_api_direct;
 		String param="payment_order_id="+payment_order_id+"&pay_type="+type;
-		MallReqInternet.in().doPost(actionUrl, param, new MallInternetCallback(context) {
+		MallReqInternet.in().doPost(actionUrl, param, new MallInternetCallback() {
 			@Override
 			public void loadstat(int flag, String url, Object msg, Object... stat) {
 				paystate.payState(flag);

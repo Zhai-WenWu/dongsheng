@@ -162,7 +162,7 @@ public class CircleHome extends BaseAppCompatActivity implements OnClickListener
 
     private void getCirclerInfo() {
         String url = StringManager.api_circleGetInfo + "?cid=" + cid;
-        ReqInternet.in().doGet(url, new InternetCallback(XHApplication.in()) {
+        ReqInternet.in().doGet(url, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object msg) {
                 if (flag >= ReqInternet.REQ_OK_STRING) {

@@ -173,7 +173,7 @@ public class HomeWeekListActivity extends BaseAppCompatActivity {
             else
                 loadManager.hideProgressBar();
         }
-        ReqEncyptInternet.in().doEncyptAEC(url,data, new InternetCallback(this) {
+        ReqEncyptInternet.in().doEncyptAEC(url,data, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object object) {
                 int loadCount = 0;

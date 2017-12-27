@@ -384,7 +384,7 @@ public class CircleFragment extends Fragment {
         if (isRefresh) {
             mLoadManager.hideProgressBar();
         }
-        ReqInternet.in().doGet(url + param, new InternetCallback(mActivity.getApplication()) {
+        ReqInternet.in().doGet(url + param, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object msg) {
                 int loadCount = 0;

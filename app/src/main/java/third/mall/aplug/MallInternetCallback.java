@@ -14,12 +14,14 @@ import acore.logic.LoginManager;
 import acore.logic.XHApiMonitor;
 import acore.logic.XHClick;
 import acore.logic.load.LoadManager;
+import acore.override.XHApplication;
 import acore.tools.FileManager;
 import acore.tools.LogManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import aplug.basic.XHConf;
+import aplug.basic.XHInternetCallBack;
 import xh.basic.internet.InterCallback;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilFile;
@@ -30,13 +32,10 @@ import xh.basic.tool.UtilFile;
  * @author yu
  *
  */
-public abstract class MallInternetCallback extends InterCallback {
+public abstract class MallInternetCallback extends XHInternetCallBack {
 
-	private Context context;
-
-	public MallInternetCallback(Context context) {
-		super(context);
-		this.context = context;
+	public MallInternetCallback() {
+		super();
 	}
 
 	@Override
@@ -65,15 +64,15 @@ public abstract class MallInternetCallback extends InterCallback {
 					loadstat(UtilInternet.REQ_CODE_ERROR, url, result,result.get("stat"));
 				}
 				if(!TextUtils.isEmpty(result.get("stat"))){
-					UtilFile.saveShared(context, FileManager.MALL_STAT, FileManager.MALL_STAT, result.get("stat"));
+					UtilFile.saveShared(XHApplication.in(), FileManager.MALL_STAT, FileManager.MALL_STAT, result.get("stat"));
 				}
 			
 			} catch (Exception e) {
 				msg = "解析错误，请重试或反馈给我们";
 				result.put("msg", msg);
 				loadstat(UtilInternet.REQ_STRING_ERROR, url, result,result.get("stat"));
-				XHClick.mapStat(context, "a_apiError", msg, theUrl, 1);
-				XHApiMonitor.monitoringAPI(context, "解析错误", url, cookie, method, params, "", str);
+				XHClick.mapStat(XHApplication.in(), "a_apiError", msg, theUrl, 1);
+				XHApiMonitor.monitoringAPI(XHApplication.in(), "解析错误", url, cookie, method, params, "", str);
 			}
 		} else {
 			ArrayList<Map<String, String>> array = StringManager.getListMapByJson(str);
@@ -94,8 +93,8 @@ public abstract class MallInternetCallback extends InterCallback {
 				msg = "解析错误，请重试或反馈给我们";
 				result.put("msg", msg);
 				loadstat(UtilInternet.REQ_STRING_ERROR, url, result,"");
-				XHClick.mapStat(context, "a_apiError", msg, theUrl, 1);
-				XHApiMonitor.monitoringAPI(context, "解析错误", url, cookie, method, params, "", str);
+				XHClick.mapStat(XHApplication.in(), "a_apiError", msg, theUrl, 1);
+				XHApiMonitor.monitoringAPI(XHApplication.in(), "解析错误", url, cookie, method, params, "", str);
 			}
 		}
 		finish();
@@ -109,20 +108,7 @@ public abstract class MallInternetCallback extends InterCallback {
 	@Override
 	public Map<String, String> getReqHeader(Map<String, String> header, String url, Map<String, String> params) {
 		// 配置cookie
-		String cookie = header.containsKey("Cookie") ? header.get("Cookie") : "";
-		if (LoginManager.userInfo.containsKey("userCode"))
-			cookie += "userCode=" + LoginManager.userInfo.get("userCode") + ";";
-		if (context != null)
-			cookie += "device=" + ToolsDevice.getDevice(context) + ToolsDevice.getNetWorkType(context) + "#" + ToolsDevice.getAvailMemory(context) + "#" + context.getPackageName() + "#"
-				+ StringManager.appID + "#" + LoadManager.tok + ";";
-		cookie += "xhCode=" + ToolsDevice.getXhIMEI(context) + ";";
-		if (!TextUtils.isEmpty(MallCommon.mall_key))
-			cookie += MallCommon.mall_key + "=" + MallCommon.mall_value + ";";
-		if (!TextUtils.isEmpty(MallCommon.customer_code) && !TextUtils.isEmpty(MallReqInternet.dsHmac))
-			cookie += "dsUser=" + MallCommon.customer_code + ";" + "dsTime=" + MallReqInternet.time_mall + ";" + "dsHmac=" + MallReqInternet.dsHmac + ";";
-		cookie += "xhDsFlag=mall;";
-		header.put("Cookie", cookie);
-
+		header.put("XH-Client-Data",getCookieStr());
 		String isAccept= AppCommon.getConfigByLocal("imageAccept");//1不,sdk版本
 		if(!TextUtils.isEmpty(isAccept)){
 			Log.i("xianghaTag","isAccept:::"+isAccept);
@@ -164,7 +150,7 @@ public abstract class MallInternetCallback extends InterCallback {
 			break;
 		case UtilInternet.REQ_EXP:
 			msg = "连接异常，请检查网络或重试";
-			XHApiMonitor.monitoringAPI(context, "连接异常", url, cookie, method, params, LogManager.reportError("网络异常"+url, (Exception) obj), "");
+			XHApiMonitor.monitoringAPI(XHApplication.in(), "连接异常", url, cookie, method, params, LogManager.reportError("网络异常"+url, (Exception) obj), "");
 			break;
 		case UtilInternet.REQ_STATE_ERROR:
 			msg = "服务状态" + obj.toString() + "，请重试或反馈给我们";
@@ -172,7 +158,7 @@ public abstract class MallInternetCallback extends InterCallback {
 		}
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("msg", msg);
-		XHClick.mapStat(context, "a_apiError", msg, theUrl, 1);
+		XHClick.mapStat(XHApplication.in(), "a_apiError", msg, theUrl, 1);
 		super.backResError(reqCode, url, map, backMsg,method,params,cookie);
 	}
 
@@ -185,8 +171,8 @@ public abstract class MallInternetCallback extends InterCallback {
 	private void toastFaildRes(Object returnObj) {
 		String returnRes = returnObj.toString();
 		if (returnRes.length() > 0) {
-			if (Tools.isDebug(context) || Tools.isOpenRequestTip(context))
-				Tools.showToast(context, returnRes);
+			if (Tools.isDebug(XHApplication.in()) || Tools.isOpenRequestTip(XHApplication.in()))
+				Tools.showToast(XHApplication.in(), returnRes);
 		}
 	}
 
@@ -208,13 +194,12 @@ public abstract class MallInternetCallback extends InterCallback {
 			time = "3-10s";
 		else if (requestTime > 1000)
 			time = "1-3s";
-		XHClick.mapStat(context, "a_apiTime", time, theUrl, (int) requestTime);
+		XHClick.mapStat(XHApplication.in(), "a_apiTime", time, theUrl, (int) requestTime);
 		return theUrl;
 	}
 	
 	@Override
 	public void finish() {
 		super.finish();
-		context = null;
 	}
 }

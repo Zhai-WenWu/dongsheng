@@ -94,6 +94,8 @@ public class ClingPresenter {
                 mServiceConnecting = false;
                 mHasConnected = true;
                 mConnectSucc = true;
+                if (!(service instanceof ClingUpnpService.LocalBinder))
+                    return;
                 ClingUpnpService.LocalBinder binder = (ClingUpnpService.LocalBinder) service;
                 ClingUpnpService beyondUpnpService = binder.getService();
 

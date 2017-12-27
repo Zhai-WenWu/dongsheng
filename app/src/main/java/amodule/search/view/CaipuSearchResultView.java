@@ -218,7 +218,7 @@ public class CaipuSearchResultView extends LinearLayout {
             loadManager.hideProgressBar();
             isRefreash.set(false);
         }
-        new SearchDataImp().getCaipuAndShicaiResult(context, searchKey, currentCaipuPage, new InternetCallback(context) {
+        new SearchDataImp().getCaipuAndShicaiResult(context, searchKey, currentCaipuPage, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
 
@@ -291,7 +291,7 @@ public class CaipuSearchResultView extends LinearLayout {
     private void searchCaiDan() {
 
         currentCaiDanPage++;
-        new SearchDataImp().getCaidanResult(context, searchKey, currentCaiDanPage, new InternetCallback(context) {
+        new SearchDataImp().getCaidanResult(context, searchKey, currentCaiDanPage, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
                 if (flag >= UtilInternet.REQ_OK_STRING) { // 表示成功
@@ -339,7 +339,7 @@ public class CaipuSearchResultView extends LinearLayout {
     private void searchZhiShi() {
 
         currentZhishiPage++;
-        new SearchDataImp().getZhishiResult(context, searchKey, currentZhishiPage, new InternetCallback(context) {
+        new SearchDataImp().getZhishiResult(context, searchKey, currentZhishiPage, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
                 if (flag >= UtilInternet.REQ_OK_STRING) {

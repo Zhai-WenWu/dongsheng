@@ -76,7 +76,7 @@ public class XHTemplateManager {
      */
     private void checkXHUplateAllTemplate(){
         String url=StringManager.API_TEMPLATE_AUTOLOADTEMPLATE;
-        ReqEncyptInternet.in().doEncypt(url, "",new InternetCallback(XHActivityManager.getInstance().getCurrentActivity()) {
+        ReqEncyptInternet.in().doEncypt(url, "",new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object msg) {
                 if(flag>=ReqInternet.REQ_OK_STRING){
@@ -101,7 +101,7 @@ public class XHTemplateManager {
      */
     public void checkDsUplateAllTemplate(){
         String url= MallStringManager.mall_api_autoloadTemplate;
-        MallReqInternet.in().doGet(url,new MallInternetCallback(XHActivityManager.getInstance().getCurrentActivity()) {
+        MallReqInternet.in().doGet(url,new MallInternetCallback() {
             @Override
             public void loadstat(int flag, String url, Object msg, Object... stat) {
                 if(flag>= ReqInternet.REQ_OK_STRING){
