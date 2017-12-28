@@ -106,11 +106,15 @@ public class XHApplication extends MobApplication {
             AdView.setAppSid(this, "db905294");
 
         // 百度AD-设置'广告着陆页'动作栏的颜色主题
-        AppActivity.getActionBarColorTheme().setBackgroundColor(Color.parseColor(getString(R.color.common_top_bg)));
-        int commonTopTextColor = Color.parseColor(getString(R.color.common_top_text));
-        AppActivity.getActionBarColorTheme().setTitleColor(commonTopTextColor);
-        AppActivity.getActionBarColorTheme().setCloseColor(commonTopTextColor);
-        AppActivity.getActionBarColorTheme().setProgressColor(commonTopTextColor);
+        try{
+            AppActivity.getActionBarColorTheme().setBackgroundColor(Color.parseColor(getString(R.color.common_top_bg)));
+            int commonTopTextColor = Color.parseColor(getString(R.color.common_top_text));
+            AppActivity.getActionBarColorTheme().setTitleColor(commonTopTextColor);
+            AppActivity.getActionBarColorTheme().setCloseColor(commonTopTextColor);
+            AppActivity.getActionBarColorTheme().setProgressColor(commonTopTextColor);
+        }catch (Exception e){
+            Log.i("", "initData: SB");
+        }
 
         LogManager.printStartTime("zhangyujian","XhApplication:222:initData::");
         //GrowingIO初始化
