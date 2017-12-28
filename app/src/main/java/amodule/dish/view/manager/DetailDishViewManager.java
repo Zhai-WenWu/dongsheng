@@ -472,7 +472,6 @@ public class DetailDishViewManager {
                                 isRecored = true;
                             }
                         }
-                        if(dishHoverViewControl!=null)dishHoverViewControl.hindGoodLayout();
                         break;
                     case MotionEvent.ACTION_MOVE:
                         if (!isHasVideo) {
@@ -591,5 +590,8 @@ public class DetailDishViewManager {
                 }
             }
         }
+    }
+    public void hideLayout(){
+        if(dishHoverViewControl!=null)dishHoverViewControl.hindGoodLayout();
     }
 }

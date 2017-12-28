@@ -97,5 +97,10 @@
         android:layout_alignParentBottom="true"
         android:visibility="gone"
         tools:visibility="gone" />
+    <View
+        android:id="@+id/view_tounch"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/dp_49"/>
 
 </RelativeLayout>

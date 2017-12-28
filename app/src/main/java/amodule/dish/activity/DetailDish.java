@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ListView;
@@ -119,6 +120,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
     private void initView() {
         initActivity("", 2, 0, 0, R.layout.a_detail_dish);
         listview = (ListView) findViewById(R.id.listview);
+        handlerTounch();
     }
     /**
      * 处理页面Ui
@@ -442,6 +444,19 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
             return;
         }
         super.onBackPressed();
+    }
+    private void handlerTounch(){
+        findViewById(R.id.view_tounch).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()){
+                    case MotionEvent.ACTION_DOWN:
+                        if(detailDishViewManager!=null)detailDishViewManager.hideLayout();
+                        break;
+                }
+                return false;
+            }
+        });
     }
 
 }
