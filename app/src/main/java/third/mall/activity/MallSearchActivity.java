@@ -20,6 +20,7 @@ import acore.tools.FileManager;
 import acore.tools.LogManager;
 import aplug.basic.ReqInternet;
 import aplug.basic.XHConf;
+import aplug.basic.XHInternetCallBack;
 import aplug.web.tools.JsAppCommon;
 import aplug.web.tools.WebviewManager;
 import aplug.web.view.XHWebView;
@@ -209,20 +210,19 @@ public class MallSearchActivity extends MallBaseActivity {
 				@Override
 				public void onClick(View v) {
 					if(theUrl.indexOf(MallStringManager.domain)>-1){//电商
-						Map<String,String> header=MallReqInternet.in().getHeader(MallSearchActivity.this);
+						Map<String,String> mapCookie= XHInternetCallBack.getCookieMap();
 						String cookieKey=MallStringManager.mall_web_apiUrl.replace(MallStringManager.appWebTitle, "");
-						String cookieStr=header.containsKey("Cookie")?header.get("Cookie"):"";
-						String[] cookie = cookieStr.split(";");
 						CookieManager cookieManager = CookieManager.getInstance();
 						cookieManager.setAcceptCookie(true);
-						for (int i = 0; i < cookie.length; i++) {
-							if(cookie[i].indexOf("device")==0) cookie[i]=cookie[i].replace(" ", "");
-							LogManager.print(XHConf.log_tag_net,"d", "设置cookie："+i+"::"+cookie[i]);
-							cookieManager.setCookie(cookieKey, cookie[i]);
+						for(String str:mapCookie.keySet()){
+							String temp=str+"="+mapCookie.get(str);
+							if(temp.indexOf("device")==0) temp=temp.replace(" ", "");
+							LogManager.print(XHConf.log_tag_net,"d", "设置cookie："+temp);
+							cookieManager.setCookie(cookieKey, temp);
 						}
 						CookieSyncManager.createInstance(MallSearchActivity.this);
 						CookieSyncManager.getInstance().sync();
-						LogManager.print(XHConf.log_tag_net,"d", "设置webview的cookie："+cookieStr);
+						LogManager.print(XHConf.log_tag_net,"d", "设置webview的cookie："+mapCookie.toString());
 					}
 
 					LogManager.print(XHConf.log_tag_net,"d","------------------打开网页------------------\n"+theUrl);

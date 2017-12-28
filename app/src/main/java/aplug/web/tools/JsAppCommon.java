@@ -53,6 +53,7 @@ import amodule.user.db.HistoryData;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
+import aplug.basic.XHInternetCallBack;
 import aplug.imageselector.ImgWallActivity;
 import aplug.web.ShowWeb;
 import aplug.web.view.XHWebView;
@@ -1005,9 +1006,7 @@ public class JsAppCommon extends JsBase {
     public String getCookie() {
         try {
             //cookie结构json
-            Map<String, String> header = ReqInternet.in().getHeader(mAct);
-            String cookieStr = header.containsKey("Cookie") ? header.get("Cookie") : "";
-            Map<String, String> mapdata = StringManager.getMapByString(cookieStr, ";", "=");
+            Map<String,String> mapdata= XHInternetCallBack.getCookieMap();
             JSONObject jsonObject = new JSONObject();
             for (Map.Entry<String, String> entry : mapdata.entrySet()) {
                 jsonObject.put(entry.getKey(), entry.getValue());
@@ -1027,9 +1026,7 @@ public class JsAppCommon extends JsBase {
     public String getDsCookie() {
         try {
             //cookie结构json
-            Map<String, String> header = MallReqInternet.in().getHeader(mAct);
-            String cookieStr = header.containsKey("Cookie") ? header.get("Cookie") : "";
-            Map<String, String> mapdata = StringManager.getMapByString(cookieStr, ";", "=");
+            Map<String,String> mapdata= XHInternetCallBack.getCookieMap();
             JSONObject jsonObject = new JSONObject();
             for (Map.Entry<String, String> entry : mapdata.entrySet()) {
                 jsonObject.put(entry.getKey(), entry.getValue());

@@ -24,6 +24,7 @@ import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import aplug.basic.ReqInternet;
 import aplug.basic.XHConf;
+import aplug.basic.XHInternetCallBack;
 import aplug.web.tools.JsAppCommon;
 import aplug.web.tools.WebviewManager;
 import aplug.web.view.XHWebView;
@@ -92,16 +93,15 @@ public class QAMsgListActivity extends BaseFragmentActivity implements IObserver
 
     private void getTabData() {
         loadManager.showProgressBar();
-        Map<String,String> header= ReqInternet.in().getHeader(this);
+        Map<String,String> mapCookie= XHInternetCallBack.getCookieMap();
         String cookieKey= StringManager.appWebUrl.replace(StringManager.appWebTitle, "");
-        String cookieStr=header.containsKey("Cookie")?header.get("Cookie"):"";
-        String[] cookie = cookieStr.split(";");
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.setAcceptCookie(true);
-        for (int i = 0; i < cookie.length; i++) {
-            if(cookie[i].indexOf("device")==0) cookie[i]=cookie[i].replace(" ", "");
-            LogManager.print(XHConf.log_tag_net,"d", "设置cookie："+i+"::"+cookie[i]);
-            cookieManager.setCookie(cookieKey, cookie[i]);
+        for(String str:mapCookie.keySet()){
+            String temp=str+"="+mapCookie.get(str);
+            if(temp.indexOf("device")==0) temp=temp.replace(" ", "");
+            LogManager.print(XHConf.log_tag_net,"d", "设置cookie："+temp);
+            cookieManager.setCookie(cookieKey, temp);
         }
         CookieSyncManager.createInstance(this);
         CookieSyncManager.getInstance().sync();
