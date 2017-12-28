@@ -9,6 +9,7 @@ import com.umeng.message.PushAgent;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 import acore.logic.LoginManager;
 import acore.logic.load.LoadManager;
@@ -24,7 +25,7 @@ import xh.basic.internet.InterCallback;
  * 网络层回调的公共位置
  */
 public class XHInternetCallBack extends InterCallback {
-    public static Map<String, String> mapCookie = new HashMap<>();//基础cookie的存储
+    private static Map<String, String> mapCookie = new ConcurrentSkipListMap<String, String>();//基础cookie的存储
     public static boolean isCookieChange = false;//cookie 是否需要变化记录
 
     public XHInternetCallBack() {
