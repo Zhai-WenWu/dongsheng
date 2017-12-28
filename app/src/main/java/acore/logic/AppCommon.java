@@ -1126,7 +1126,7 @@ public class AppCommon {
                                                 return ;
                                             }
                                             java.util.Random r = new java.util.Random();
-                                            int randomWeight = r.nextInt() % totalWeight;
+                                            int randomWeight = Math.abs(r.nextInt()) % totalWeight;
                                             int tempWeight = 0;
                                             for (Map<String,String> dict : dataArr)
                                             {
@@ -1135,6 +1135,7 @@ public class AppCommon {
                                                     text =  dict.get("sign") + dict.get("text") + dict.get("sign");
                                                     break;
                                                 }
+                                                tempWeight += weight;
                                             }
                                             text = text.length() < 3 ? "" : text;
                                             FileManager.scynSaveFile(FileManager.getDataDir() + FileManager.file_randPromotionConfig, text, false);
