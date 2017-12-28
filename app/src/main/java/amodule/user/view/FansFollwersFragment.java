@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -137,7 +138,7 @@ public class FansFollwersFragment {
 			currentPage++;
 		}
 		loadManager.changeMoreBtn(listView,UtilInternet.REQ_OK_STRING, -1, -1, currentPage,listData.size() == 0);
-		String getUrl = StringManager.api_getUSerData + "?code="+userCode+"&type=" + type + "&page=" + currentPage;
+		String getUrl = StringManager.api_getUSerData + "?" + (TextUtils.isEmpty(userCode) ? "" : "code="+userCode+ "&" ) + "type=" + type + "&page=" + currentPage;
 		ReqInternet.in().doGet(getUrl, new InternetCallback() {
 			@Override
 			public void loaded(int flag, String url, Object returnObj) {
