@@ -319,6 +319,8 @@ public class UploadSubjectNew extends BaseActivity implements OnClickListener{
 		final String IMGLEGNTH = "imgNumber";
 		CircleSqlite sqlite = new CircleSqlite(this);
 		CircleData circleData = sqlite.select(CircleDB.db_cid , mChooseCid);
+		if (circleData == null)
+			return;
 		cName = circleData.getName();
 		String ruleJson = circleData.getRule();
 		ArrayList<Map<String,String>> ruleDataArray = StringManager.getListMapByJson(ruleJson);

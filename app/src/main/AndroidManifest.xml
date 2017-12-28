@@ -326,13 +326,6 @@
 
         <!-- dish start -->
         <activity
-            android:name="amodule.dish.activity.GridDish"
-              android:configChanges="orientation|keyboardHidden"
-              android:screenOrientation="portrait"
-              android:theme="@style/AppMainTheme"
-              android:windowSoftInputMode="adjustPan"
-            />
-        <activity
             android:name="amodule.dish.activity.upload.UploadDishActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"

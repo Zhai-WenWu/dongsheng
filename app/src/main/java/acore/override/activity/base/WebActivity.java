@@ -146,6 +146,8 @@ public class WebActivity extends BaseActivity{
 				public void onClick(View v) {
 					setCookie(theUrl);
 					LogManager.print(XHConf.log_tag_net,"d","------------------打开网页------------------\n"+theUrl);
+					if (TextUtils.isEmpty(theUrl))
+						return;
 					webview.loadUrl(theUrl);
 				}
 			});

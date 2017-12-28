@@ -61,6 +61,8 @@ public class XHWebView extends WebView {
 	@Override
 	public void loadUrl(String url) {
 		super.loadUrl(url);
+		if (url == null)
+			return;
 		if(url.startsWith("http"))
 			this.mUrl = url;
 	}
@@ -68,6 +70,8 @@ public class XHWebView extends WebView {
 	@Override
 	public void loadUrl(String url, Map<String, String> additionalHttpHeaders) {
 		super.loadUrl(url, additionalHttpHeaders);
+		if (url == null)
+			return;
 		if(url.startsWith("http"))
 			this.mUrl = url;
 	}
