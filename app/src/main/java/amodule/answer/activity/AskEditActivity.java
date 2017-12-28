@@ -47,6 +47,7 @@ import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import aplug.basic.XHConf;
+import aplug.basic.XHInternetCallBack;
 import aplug.web.tools.WebviewManager;
 import xh.basic.internet.UtilInternet;
 
@@ -332,16 +333,15 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
     private void startPay() {
         if (TextUtils.isEmpty(mWebUrl) || TextUtils.isEmpty(mQAID))
             return ;
-        Map<String,String> header= ReqInternet.in().getHeader(this);
         String cookieKey= StringManager.appWebUrl.replace(StringManager.appWebTitle, "");
-        String cookieStr=header.containsKey("Cookie")?header.get("Cookie"):"";
-        String[] cookie = cookieStr.split(";");
+        Map<String,String> mapCookie= XHInternetCallBack.getCookieMap();
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.setAcceptCookie(true);
-        for (int i = 0; i < cookie.length; i++) {
-            if(cookie[i].indexOf("device")==0) cookie[i]=cookie[i].replace(" ", "");
-            LogManager.print(XHConf.log_tag_net,"d", "设置cookie："+i+"::"+cookie[i]);
-            cookieManager.setCookie(cookieKey, cookie[i]);
+        for(String str:mapCookie.keySet()){
+            String temp=str+"="+mapCookie.get(str);
+            if(temp.indexOf("device")==0) temp=temp.replace(" ", "");
+            LogManager.print(XHConf.log_tag_net,"d", "设置cookie："+temp);
+            cookieManager.setCookie(cookieKey, temp);
         }
         CookieSyncManager.createInstance(this);
         CookieSyncManager.getInstance().sync();

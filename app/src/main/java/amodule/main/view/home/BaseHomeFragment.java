@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.widget.RelativeLayout;
 
 
@@ -19,9 +20,11 @@ import acore.override.activity.mian.MainBaseActivity;
 import acore.tools.LogManager;
 import amodule.main.bean.HomeModuleBean;
 import aplug.basic.XHConf;
+import aplug.basic.XHInternetCallBack;
 import aplug.web.tools.JsAppCommon;
 import aplug.web.tools.WebviewManager;
 import aplug.web.view.XHWebView;
+import third.mall.activity.MallSearchActivity;
 import third.mall.aplug.MallReqInternet;
 import third.mall.aplug.MallStringManager;
 
@@ -148,17 +151,18 @@ public class BaseHomeFragment extends Fragment {
         if (isRefresh)
             mWebview.setScrollY(0);
         if (mModuleBean != null && "2".equals(mModuleBean.getIsSelf())) {
-            Map<String,String> header= MallReqInternet.in().getHeader(mActivity);
+            Map<String,String> mapCookie= XHInternetCallBack.getCookieMap();
             String cookieKey= MallStringManager.mall_web_apiUrl.replace(MallStringManager.appWebTitle, "");
-            String cookieStr=header.containsKey("Cookie")?header.get("Cookie"):"";
-            String[] cookie = cookieStr.split(";");
             CookieManager cookieManager = CookieManager.getInstance();
             cookieManager.setAcceptCookie(true);
-            for (int i = 0; i < cookie.length; i++) {
-                if(cookie[i].indexOf("device")==0) cookie[i]=cookie[i].replace(" ", "");
-                LogManager.print(XHConf.log_tag_net,"d", "设置cookie："+i+"::"+cookie[i]);
-                cookieManager.setCookie(cookieKey, cookie[i]);
+            for(String str:mapCookie.keySet()){
+                String temp=str+"="+mapCookie.get(str);
+                if(temp.indexOf("device")==0) temp=temp.replace(" ", "");
+                LogManager.print(XHConf.log_tag_net,"d", "设置cookie："+temp);
+                cookieManager.setCookie(cookieKey, temp);
             }
+            CookieSyncManager.createInstance(mActivity);
+            CookieSyncManager.getInstance().sync();
         }
         mWebview.loadUrl(webUrl);
         LoadOver = true;
