@@ -1092,7 +1092,7 @@ public class AppCommon {
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
-                Map<String,String> randprotionMap =  StringManager.getFirstMap(getConfigByLocal("randpromotionurl"));
+                Map<String,String> randprotionMap =  StringManager.getFirstMap(getConfigByLocal("randpromotionurlnew"));
                 String url = randprotionMap.get("url");
                 final ArrayList<Map<String,String>> replaceArr = StringManager.getListMapByJson(randprotionMap.get("replaceArray"));
                 if(TextUtils.isEmpty(url)){
