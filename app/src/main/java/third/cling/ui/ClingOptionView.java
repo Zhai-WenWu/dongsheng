@@ -35,7 +35,7 @@ public class ClingOptionView extends RelativeLayout implements View.OnClickListe
     public ClingOptionView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         LayoutInflater.from(context).inflate(R.layout.cling_options_layout, this, true);
-
+        setVisibility(View.GONE);
         initView();
         addListener();
     }
@@ -106,5 +106,13 @@ public class ClingOptionView extends RelativeLayout implements View.OnClickListe
 
     public boolean isShowing() {
         return getVisibility() == View.VISIBLE;
+    }
+
+    public void show() {
+        setVisibility(View.VISIBLE);
+    }
+
+    public void hide() {
+        setVisibility(View.GONE);
     }
 }
