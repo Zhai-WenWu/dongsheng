@@ -74,8 +74,12 @@ public class SpeechIflytek {
 		//3.设置回调接口
 		mDialog.setListener(mRecognizerDialogListener);
 		//4.显示dialog，接收语音输入
-		mDialog.show();
-		showTip("请开始说话…");
+		try{
+			mDialog.show();
+			showTip("请开始说话…");
+		}catch (Exception e){
+
+		}
 		//3.开始听写
 //		mIat.startListening(mRecoListener);
 	}

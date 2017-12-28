@@ -65,14 +65,10 @@ public class XHApplication extends MobApplication {
         FileManager.saveShared(this,FileManager.xmlFile_appInfo,"once",String.valueOf(isOnce));
         try{
             super.onCreate();
-        }catch (SecurityException e) {
-            //捕捉已知MobSDK定位bug
-            e.printStackTrace();
         }catch (Exception e){
-            CrashReport.postCatchedException(e);
+            e.printStackTrace();
         }
         LogManager.printStartTime("zhangyujian","XhApplication::222222.oncreate::");
-
 
         //初始化umeng推送
         initUmengPush();
