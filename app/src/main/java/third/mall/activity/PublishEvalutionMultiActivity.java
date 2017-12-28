@@ -61,6 +61,16 @@ public class PublishEvalutionMultiActivity extends MallBaseActivity {
         setLoading();
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        try{
+            refersh();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     private void initData() {
         Intent intent = getIntent();
         if (intent != null) {
@@ -205,7 +215,7 @@ public class PublishEvalutionMultiActivity extends MallBaseActivity {
                 if(resultCode == OrderStateActivity.result_comment_success
                         || resultCode == OrderStateActivity.result_comment_part_success){
                     status = resultCode;
-                    refersh();
+//                    refersh();
                 }
                 break;
             case OrderStateActivity.request_order:
