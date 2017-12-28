@@ -809,6 +809,7 @@
         <activity
             android:name="amodule.user.activity.MyFavorite"
             android:configChanges="orientation|keyboardHidden"
+            android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustResize"/>
