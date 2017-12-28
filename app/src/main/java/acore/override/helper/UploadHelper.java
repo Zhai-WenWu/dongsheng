@@ -179,7 +179,8 @@ public abstract class UploadHelper {
 										broadIntent.setAction(UploadStateChangeBroadcasterReceiver.ACTION);
 										broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.DATA_TYPE, "0");
 										broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.STATE_KEY, UploadStateChangeBroadcasterReceiver.STATE_SUCCESS);
-										Main.allMain.sendBroadcast(broadIntent);
+										if (Main.allMain != null)
+											Main.allMain.sendBroadcast(broadIntent);
 									}
 									XHClick.track(XHApplication.in(),"发菜谱成功");
 								}

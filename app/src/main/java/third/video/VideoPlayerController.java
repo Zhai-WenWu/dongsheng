@@ -810,6 +810,7 @@ public class VideoPlayerController {
         if (mPraentViewGroup != null && clingOptionView != null) {
             mPraentViewGroup.removeView(clingOptionView);
             mPraentViewGroup.addView(clingOptionView);
+            clingOptionView.show();
         }
     }
 
@@ -818,6 +819,7 @@ public class VideoPlayerController {
         ClingOptionView clingOptionView = mClingControl.getClingOptionView();
         if (mPraentViewGroup != null && clingOptionView != null) {
             mPraentViewGroup.removeView(clingOptionView);
+            clingOptionView.hide();
         }
     }
 }

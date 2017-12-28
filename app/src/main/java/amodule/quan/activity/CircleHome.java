@@ -475,6 +475,8 @@ public class CircleHome extends BaseAppCompatActivity implements OnClickListener
         int current = mViewPager.getCurrentItem();
         //调用页面的刷新方法
         List<Fragment> fragments = getSupportFragmentManager().getFragments();
+        if (fragments == null)
+            return;
         for(Fragment fragment:fragments){
             if (fragment instanceof CircleFragment) {
                 CircleFragment circleMainFragment = (CircleFragment) fragment;
