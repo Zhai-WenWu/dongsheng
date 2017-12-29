@@ -375,8 +375,8 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
                             }
                         }
                     }
-
-                    AppCommon.setLvImage(Integer.valueOf(listMap.get("lv")), myself_lv);
+                    String lv = listMap.get("lv");
+                    AppCommon.setLvImage(TextUtils.isEmpty(lv) ? 0 : Integer.valueOf(lv), myself_lv);
                     boolean isVip = AppCommon.setVip(MainMyself.this,isVipImg,listMap.get("vip"),tongjiId,"头部", AppCommon.VipFrom.MY_SELF);
                     if(isVip){
                         my_vip.setText("会员续费");
