@@ -1,5 +1,7 @@
 package third.cling.listener;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import org.fourthline.cling.model.meta.Device;
@@ -23,6 +25,8 @@ public class BrowseRegistryListener extends DefaultRegistryListener {
     private static final String TAG = BrowseRegistryListener.class.getSimpleName();
 
     private DeviceListChangedListener mOnDeviceListChangedListener;
+
+    private Handler mMainHandler = new Handler(Looper.getMainLooper());
 
     /* Discovery performance optimization for very slow Android devices! */
     @Override
@@ -65,21 +69,25 @@ public class BrowseRegistryListener extends DefaultRegistryListener {
             return;
         }
 
-        if (Utils.isNotNull(mOnDeviceListChangedListener)) {
-            ClingDevice clingDevice = new ClingDevice(device);
-            ClingDeviceList.getInstance().addDevice(clingDevice);
-            mOnDeviceListChangedListener.onDeviceAdded(clingDevice);
+        if (Utils.isNotNull(mOnDeviceListChangedListener) && mMainHandler != null) {
+            mMainHandler.post(() -> {
+                ClingDevice clingDevice = new ClingDevice(device);
+                ClingDeviceList.getInstance().addDevice(clingDevice);
+                mOnDeviceListChangedListener.onDeviceAdded(clingDevice);
+            });
         }
     }
 
     public void deviceRemoved(Device device) {
         Log.e(TAG, "deviceRemoved");
-        if (Utils.isNotNull(mOnDeviceListChangedListener)) {
-            ClingDevice clingDevice = ClingDeviceList.getInstance().getClingDevice(device);
-            if (clingDevice != null) {
-                ClingDeviceList.getInstance().removeDevice(clingDevice);
-                mOnDeviceListChangedListener.onDeviceRemoved(clingDevice);
-            }
+        if (Utils.isNotNull(mOnDeviceListChangedListener) && mMainHandler != null) {
+            mMainHandler.post(() -> {
+                ClingDevice clingDevice = ClingDeviceList.getInstance().getClingDevice(device);
+                if (clingDevice != null) {
+                    ClingDeviceList.getInstance().removeDevice(clingDevice);
+                    mOnDeviceListChangedListener.onDeviceRemoved(clingDevice);
+                }
+            });
         }
     }
 
