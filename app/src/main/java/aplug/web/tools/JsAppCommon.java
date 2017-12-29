@@ -1256,4 +1256,10 @@ public class JsAppCommon extends JsBase {
         });
     }
 
+    @JavascriptInterface
+    public void inputToClipboard(String content){
+        if(null == mAct || TextUtils.isEmpty(content)) return;
+        handler.post(()->Tools.inputToClipboard(mAct,content));
+    }
+
 }
