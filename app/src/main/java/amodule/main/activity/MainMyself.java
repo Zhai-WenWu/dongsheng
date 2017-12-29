@@ -115,7 +115,8 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.a_common_myself);
-        Main.allMain.allTab.put(KEY,this);
+        if (Main.allMain != null && Main.allMain.allTab != null)
+            Main.allMain.allTab.put(KEY,this);
         loadManager.showProgressBar();
         initUI();
         XHClick.track(this,"浏览我的页面");
