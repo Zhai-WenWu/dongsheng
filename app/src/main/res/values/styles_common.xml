@@ -19,7 +19,7 @@
         <!--Activity切换动画效果-->
     </style>
     <!-- 半透明效果,例如:下面会弹出三个按钮，上面是半透明的效果 -->
-    <style name="common_TransParentThemeNew">
+    <style name="common_TransParentThemeNew" parent="AppMainTheme">
         <item name="android:windowBackground">@color/c_white_transparent_F8</item>
         <item name="android:windowIsTranslucent">true</item>
         <!--Activity切换动画效果-->

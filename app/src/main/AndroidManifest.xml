@@ -280,7 +280,7 @@
             android:name="amodule.main.activity.MainCircle"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
-            android:theme="@style/common_TransParentThemeNew"
+            android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan"/>
 
         <activity
@@ -289,7 +289,7 @@
             android:keepScreenOn="true"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
-            android:theme="@style/common_TransParentTheme"
+            android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name="amodule.main.activity.MainHomePage"
@@ -297,7 +297,7 @@
                   android:keepScreenOn="true"
                   android:hardwareAccelerated="true"
                   android:screenOrientation="portrait"
-                  android:theme="@style/common_TransParentTheme"
+                  android:theme="@style/titleTheme"
                   android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name="amodule.main.activity.MainMyself"
@@ -307,6 +307,12 @@
             android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name="third.mall.MainMall"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/titleTheme"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name="amodule.user.activity.MyMessage"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
@@ -819,12 +825,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustResize"/>
-        <activity
-            android:name="amodule.user.activity.MyMessage"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"
-            android:theme="@style/titleTheme"
-            android:windowSoftInputMode="adjustPan"/>
+
         <activity
             android:name="amodule.user.activity.MyMsgInformSetting"
             android:configChanges="orientation|keyboardHidden"
