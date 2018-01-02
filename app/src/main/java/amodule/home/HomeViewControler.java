@@ -82,10 +82,10 @@ public class HomeViewControler {
         mHomeFeedHeaderControler = new HomeFeedHeaderControler(mActivity);
 
         HomeTitleLayout titleLayout = (HomeTitleLayout) mActivity.findViewById(R.id.home_title);
-        titleLayout.setStatictusData(MainHomePage.STATICTUS_ID_PULISH, "顶部topbar", "");
+        titleLayout.setStatictusData(MainHomePage.STATICTUS_ID_HOMEPAGE, "顶部topbar", "");
         titleLayout.postDelayed(() -> {
             mBuoy = new HomeBuoy(mActivity);
-            mBuoy.setClickCallback(() -> XHClick.mapStat(mActivity, MainHomePage.STATICTUS_ID_PULISH, "首页右侧侧边栏浮动图标", ""));
+            mBuoy.setClickCallback(() -> XHClick.mapStat(mActivity, MainHomePage.STATICTUS_ID_HOMEPAGE, "首页右侧侧边栏浮动图标", ""));
         }, 4000);
 
         mTipMessage = (TextView) mActivity.findViewById(R.id.tip_message);
