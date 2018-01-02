@@ -48,6 +48,7 @@ import amodule.answer.activity.QAMsgListActivity;
 import amodule.dish.activity.OfflineDish;
 import amodule.dish.db.DataOperate;
 import amodule.main.Main;
+import amodule.other.activity.InviteFriend;
 import amodule.user.activity.BrowseHistory;
 import amodule.user.activity.FansAndFollwers;
 import amodule.user.activity.FriendHome;
@@ -80,10 +81,10 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
     private LinearLayout gourp1, gourp2,gourp3;
     private String[] name1 = {"我的订单"},
             name2 = {"我的收藏","我的会员", "当前设备已开通会员", "我的问答",/*"缓存下载","浏览历史"*/},
-            name3 = {"反馈帮助","设置"};
+            name3 = {"邀请好友", "反馈帮助","设置"};
     private String[] clickTag1 = {"order"},
             clickTag2 = {"favor","vip", "yiyuan", "qa",/*"download","hitstory"*/},
-            clickTag3 = {"helpe","setting"};
+            clickTag3 = {"invitation", "helpe","setting"};
 
     private final String tongjiId = "a_mine";
 
@@ -247,12 +248,12 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
             vipIcon.setVisibility(View.GONE);
         }
 
-        gourp3.getChildAt(1).findViewById(R.id.ico_right_myself).setVisibility(View.GONE);
+        gourp3.getChildAt(2).findViewById(R.id.ico_right_myself).setVisibility(View.GONE);
         if (TextUtils.isEmpty(String.valueOf(isShowOpinion))) {
-            gourp3.getChildAt(0).findViewById(R.id.my_new_info).setVisibility(View.VISIBLE);
-            gourp3.getChildAt(0).findViewById(R.id.ico_right_myself).setVisibility(View.GONE);
+            gourp3.getChildAt(1).findViewById(R.id.my_new_info).setVisibility(View.VISIBLE);
+            gourp3.getChildAt(1).findViewById(R.id.ico_right_myself).setVisibility(View.GONE);
         }
-        TextView setting = (TextView) gourp3.getChildAt(1).findViewById(R.id.text_right_myself);
+        TextView setting = (TextView) gourp3.getChildAt(2).findViewById(R.id.text_right_myself);
         setting.setText("版本号：" + ToolsDevice.getVerName(this));
 
         userPage = (RelativeLayout) findViewById(R.id.rl_userPage);
@@ -628,8 +629,8 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
                     break;
                 case "helpe"://意见反馈
                     FileManager.saveShared(this,FileManager.xmlFile_appInfo,"isShowOpinion","2");
-                    gourp3.getChildAt(0).findViewById(R.id.my_new_info).setVisibility(View.GONE);
-                    gourp3.getChildAt(0).findViewById(R.id.ico_right_myself).setVisibility(View.VISIBLE);
+                    gourp3.getChildAt(1).findViewById(R.id.my_new_info).setVisibility(View.GONE);
+                    gourp3.getChildAt(1).findViewById(R.id.ico_right_myself).setVisibility(View.VISIBLE);
                     Intent intent2 = new Intent(MainMyself.this, Feedback.class);
                     startActivity(intent2);
                     break;
@@ -639,6 +640,10 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
                     Intent intent_setting = new Intent(MainMyself.this, Setting.class);
                     intent_setting.putExtra("isGoManagerInfo",goManagerInfo.getVisibility() == View.VISIBLE);
                     startActivity(intent_setting);
+                    break;
+                case "invitation":
+                    XHClick.mapStat(MainMyself.this, tongjiId, "列表", "邀请好友");
+                    startActivity(new Intent(this, InviteFriend.class));
                     break;
             }
         }

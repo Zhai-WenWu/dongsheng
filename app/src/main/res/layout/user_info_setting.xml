@@ -179,11 +179,6 @@
                     android:layout_height="wrap_content" />
 
                 <amodule.user.view.LeftAndRightTextView
-                    android:id="@+id/view_invite"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <amodule.user.view.LeftAndRightTextView
                     android:id="@+id/view_advise"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
