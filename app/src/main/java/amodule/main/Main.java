@@ -233,7 +233,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
                 }
                 WelcomeDialogstate = true;
                 openUri();
-                new AllPopDialogHelper(Main.this).start();
+//                new AllPopDialogHelper(Main.this).start();
                 com.popdialog.util.PushManager.tongjiPush(Main.this, isEnable ->
                         XHClick.mapStat(XHApplication.in(),"a_push_user",isEnable ? "开启推送" : "关闭推送","")
                 );

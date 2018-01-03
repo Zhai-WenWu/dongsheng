@@ -9,11 +9,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.popdialog.view.XHADView;
 import com.xiangha.R;
 
 import java.util.Map;
 
 import acore.broadcast.ConnectionChangeReceiver;
+import acore.logic.AllPopDialogHelper;
 import acore.logic.AppCommon;
 import acore.logic.SpecialWebControl;
 import acore.logic.XHClick;
@@ -66,6 +68,8 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
         super.onCreate(savedInstanceState);
         mViewContrloer = new HomeViewControler(this);
         setContentView(R.layout.a_home_page);
+        //只在首页弹出，所以activity使用首页的
+        XHADView.getInstence(this).refreshContext(this);
         getWindow().setFormat(PixelFormat.TRANSLUCENT);
         Main.allMain.allTab.put(KEY, this);//这个Key值不变
         //初始化
@@ -177,6 +181,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
     protected void onStart() {
         super.onStart();
         loadRemoteData();
+        new AllPopDialogHelper(this).start();
     }
 
     private void loadCacheData(){

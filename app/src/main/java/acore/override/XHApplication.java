@@ -20,6 +20,7 @@ import com.xiangha.R;
 
 import java.util.Map;
 
+import acore.logic.AllPopDialogHelper;
 import acore.logic.AppCommon;
 import acore.override.helper.XHActivityManager;
 import acore.tools.ChannelUtil;
@@ -63,6 +64,8 @@ public class XHApplication extends MobApplication {
         LogManager.printStartTime("zhangyujian","XhApplication::11111.oncreate::");
         boolean isOnce = TextUtils.isEmpty(FileManager.loadShared(this,FileManager.xmlFile_appInfo,"once").toString());
         FileManager.saveShared(this,FileManager.xmlFile_appInfo,"once",String.valueOf(isOnce));
+        //记录开启次数
+        AllPopDialogHelper.updateIntervalCount(this);
         try{
             super.onCreate();
         }catch (Exception e){

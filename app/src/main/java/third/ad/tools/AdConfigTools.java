@@ -33,6 +33,8 @@ public class AdConfigTools {
 
     private String showAdId = "cancel";
 
+    public boolean isLoadOver = false;
+
     private AdConfigTools() {
     }
 
@@ -50,57 +52,19 @@ public class AdConfigTools {
     }
 
     public void getAdConfigInfo() {
+        getAdConfigInfo(null);
+    }
+
+    public void getAdConfigInfo(InternetCallback callback){
         // 请求网络信息
         ReqInternet.in().doGet(StringManager.api_adData, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, final Object returnObj) {
                 if (flag >= ReqInternet.REQ_OK_STRING) {
                     FileManager.saveFileToCompletePath(FileManager.getDataDir() + FileManager.file_ad, (String) returnObj, false);
-                    Map<String, String> map = StringManager.getFirstMap(returnObj);
-                    map = StringManager.getFirstMap(map.get(AdPlayIdConfig.FULLSCREEN));
-                    map = StringManager.getFirstMap(map.get("banner"));
-                    ArrayList<Map<String, String>> imgsList = StringManager.getListMapByJson(map.get("imgs"));
-                    JSONArray array = new JSONArray();
-                    JSONObject object = new JSONObject();
-                    if (imgsList != null && imgsList.size() > 0) {
-                        Map<String, String> imgsMap = imgsList.get(0);
-                        try {
-                            String indexImg3Str = imgsMap.get("indexImg3");
-                            //判断 indexImg3 是否为 null
-                            if (!TextUtils.isEmpty(indexImg3Str)) {
-                                object.put("img", indexImg3Str);
-                            } else {
-                                //走以前的逻辑
-                                DisplayMetrics dm = ToolsDevice.getWindowPx(Main.allMain);
-                                float beishu = (float) (dm.heightPixels * 1.0) / dm.widthPixels;
-                                if (Math.abs(beishu - (2900 / 1700)) > Math.abs(beishu - (2730 / 2000))) {
-                                    object.put("img", imgsMap.get("indexImg2"));
-                                } else {
-                                    object.put("img", imgsMap.get("indexImg1"));
-                                }
-                            }
-
-                            object.put("url", map.get("url"));
-                            object.put("showNum", map.get("showNum"));
-                            object.put("times", map.get("times"));
-                            object.put("delay", map.get("delay"));
-                            array.put(object);
-                        } catch (Exception ignored) {
-                            ignored.printStackTrace();
-                        }
-                        FullScreenManager.saveWelcomeInfo(XHApplication.in(), array.toString(),
-                                (imageUrl, callback) -> LoadImage.with(XHApplication.in())
-                                        .load(imageUrl)
-                                        .setSaveType(LoadImage.SAVE_LONG)
-                                        .build()
-                                        .into(new SubBitmapTarget() {
-                                            @Override
-                                            public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> arg1) {
-                                                if (callback != null) {
-                                                    callback.onAfterLoadImage(bitmap);
-                                                }
-                                            }
-                                        }));
+                    isLoadOver = true;
+                    if(callback != null){
+                        callback.loaded(ReqInternet.REQ_OK_STRING,url,returnObj);
                     }
                 }
             }
@@ -122,6 +86,12 @@ public class AdConfigTools {
                 }
             }
         });
+    }
+
+    public String getAdConfigDataString(String adPlayId) {
+        String data = FileManager.readFile(FileManager.getDataDir() + FileManager.file_ad);
+        Map<String, String> map = StringManager.getFirstMap(data);
+        return map.get(adPlayId);
     }
 
     public Map<String, String> getAdConfigData(String adPlayId) {
