@@ -30,6 +30,8 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import amodule.dish.adapter.AdapterDishNew;
 import amodule.dish.db.DataOperate;
+import amodule.dish.share.module.ShareConfDataController;
+import amodule.dish.share.module.listener.DataListener;
 import amodule.dish.view.DishModuleScrollView;
 import amodule.dish.view.manager.DetailDishDataManager;
 import amodule.dish.view.manager.DetailDishViewManager;
@@ -38,6 +40,7 @@ import amodule.user.db.BrowseHistorySqlite;
 import amodule.user.db.HistoryData;
 import aplug.web.tools.WebviewManager;
 import aplug.web.view.XHWebView;
+import xh.basic.internet.UtilInternet;
 
 import static amodule.dish.activity.DetailDishWeb.tongjiId;
 import static java.lang.System.currentTimeMillis;
@@ -69,6 +72,8 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
     private boolean isShowPowerPermission=false;
     private boolean isShowVip = true;
     private boolean isPay=false;
+
+    private ShareConfDataController mShareConfDataController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -167,6 +172,26 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
             public void onGifClickPosition(int position) {
             }
         });
+
+        mShareConfDataController = new ShareConfDataController();
+        mShareConfDataController.setOnDataListener(new DataListener() {
+            @Override
+            public void onLoadData() {
+
+            }
+
+            @Override
+            public void onDataReady(int flag, String type, Object object) {
+                if (flag >= UtilInternet.REQ_OK_STRING) {
+                    Map<String, String> data = mShareConfDataController.getMap(object);
+                    if (data == null || data.isEmpty())
+                        return;
+                    if (detailDishViewManager != null)
+                        detailDishViewManager.handlerShareData(data);
+                }
+            }
+        });
+        mShareConfDataController.loadData(code);
     }
     private void dishTypeData(String type,ArrayList<Map<String,String>> list,Map<String,String> map){
         switch (type){
@@ -177,7 +202,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
                 detailDishViewManager.handlerHeaderView(list,map);//header
                 customerCode= StringManager.getFirstMap(mapTop.get("customer")).get("customerCode");
                 if (!TextUtils.isEmpty(customerCode)&&LoginManager.userInfo != null && customerCode.equals(LoginManager.userInfo.get("code"))){
-                        state = "";
+                    state = "";
                 }
                 detailDishViewManager.handlerTitle(mapTop,code,isHasVideo,mapTop.get("dishState"),loadManager,state);//title导航
                 if(isShowVip){
@@ -421,7 +446,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         }
     }
     private void showCaipuHint(){
-       String hint= (String) FileManager.loadShared(this, FileManager.dish_caipu_hint,FileManager.dish_caipu_hint);
+        String hint= (String) FileManager.loadShared(this, FileManager.dish_caipu_hint,FileManager.dish_caipu_hint);
         if(TextUtils.isEmpty(hint)||!"2".equals(hint)){
             findViewById(R.id.dish_show_rela).setVisibility(View.VISIBLE);
             new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {

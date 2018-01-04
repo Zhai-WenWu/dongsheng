@@ -10,6 +10,7 @@ package third.share.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -39,6 +40,12 @@ public class ShareNewActivity extends Activity{
     private String mType,mTitle,mClickUrl,mContent,mImgUrl,mFrom,mParent;
 
     private Boolean isHasReport;
+
+    private String mShareType;
+    private String mDesc;
+    private String mPath;//分享小程序
+    private String mWebpageUrl;//分享小程序
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -55,6 +62,12 @@ public class ShareNewActivity extends Activity{
                 mImgUrl = bundle.getString("imgUrl");
                 mFrom = bundle.getString("from");
                 mParent = bundle.getString("parent");
+
+                //分享小程序的数据
+                mShareType = getIntent().getStringExtra("shareType");
+                mDesc = getIntent().getStringExtra("desc");
+                mPath = getIntent().getStringExtra("path");
+                mWebpageUrl = getIntent().getStringExtra("webpageUrl");
             }catch(Exception e){}
         }
         init();
@@ -75,7 +88,24 @@ public class ShareNewActivity extends Activity{
                 XHClick.mapStat(ShareNewActivity.this, tongjiId, "分享", mNames[position]);
                 String platfrom = mSharePlatforms[position];
                 ShareTools barShare = ShareTools.getBarShare(ShareNewActivity.this);
-                barShare.showSharePlatform(mTitle,mContent,mType,mImgUrl,mClickUrl,platfrom,mFrom,mParent);
+                Map<String, String> dataMap = new HashMap<>();
+                dataMap.put("type", mType);
+                dataMap.put("title", mTitle);
+                dataMap.put("clickUrl", mClickUrl);
+                dataMap.put("content", mContent);
+                dataMap.put("imgUrl", mImgUrl);
+                dataMap.put("from", mFrom);
+                dataMap.put("parent", mParent);
+                dataMap.put("platform", platfrom);
+                if (!TextUtils.isEmpty(mShareType))
+                    dataMap.put("shareType", mShareType);
+                if (!TextUtils.isEmpty(mDesc))
+                    dataMap.put("desc", mDesc);
+                if (!TextUtils.isEmpty(mPath))
+                    dataMap.put("path", mPath);
+                if (!TextUtils.isEmpty(mWebpageUrl))
+                    dataMap.put("webpageUrl", mWebpageUrl);
+                barShare.showSharePlatform(dataMap);
                 ShareNewActivity.this.finish();
             }
         });

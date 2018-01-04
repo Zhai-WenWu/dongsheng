@@ -15,6 +15,19 @@
         android:textColor="#000000"
         android:textSize="@dimen/sp_15" />
 
+    <TextView
+        android:id="@+id/text_myself_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/text_myself"
+        android:layout_marginLeft="@dimen/dp__4"
+        android:includeFontPadding="false"
+        android:layout_alignBaseline="@+id/text_myself"
+        android:clickable="false"
+        android:gravity="center_vertical"
+        android:textColor="#f23030"
+        android:textSize="@dimen/sp_12" />
+
     <View
         android:layout_width="0px"
         android:layout_height="0px"

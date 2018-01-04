@@ -247,6 +247,13 @@ public class DetailDishViewManager {
             dishTitleViewControl.setNickName(name);
         }
     }
+
+    public void handlerShareData(Map<String, String> shareMap) {
+        if (dishTitleViewControl != null) {
+            dishTitleViewControl.setShareData(shareMap);
+        }
+    }
+
     /**
      * 处理header图片，和视频数据
      */
@@ -327,10 +334,10 @@ public class DetailDishViewManager {
      * 处理广告信息
      */
     public void handlerBannerView(ArrayList<Map<String, String>> list) {
-            if(dishADBannerView!=null&& list!=null && list.size()>0&&!TextUtils.isEmpty(list.get(0).get("img"))){
-                dishADBannerView.setVisibility(View.VISIBLE);
-                dishADBannerView.setData(list.get(0));
-            }
+        if(dishADBannerView!=null&& list!=null && list.size()>0&&!TextUtils.isEmpty(list.get(0).get("img"))){
+            dishADBannerView.setVisibility(View.VISIBLE);
+            dishADBannerView.setData(list.get(0));
+        }
     }
     /**
      * 处理小技巧view

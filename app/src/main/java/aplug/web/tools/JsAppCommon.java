@@ -271,6 +271,44 @@ public class JsAppCommon extends JsBase {
         });
     }
 
+    /**
+     * 直接打开一个中间显示的分享页面
+     * title：        分享标题
+     * content：  分享内容
+     * img：          分享图片
+     * url:	   分享链接地址
+     * type：        分享类型
+     * shareType:   1：普通分享  2：分享小程序
+     * desc:        描述
+     * webpageUrl:  低版本点击分享的小程序打开的网页
+     * path:        小程序路径
+     * callback:    回调统计
+     */
+    @JavascriptInterface
+    public void openShareNew(final String title, final String content, final String img, final String url,
+                             final String type, final String shareType, final String desc,
+                             final String webpageUrl, final String path, final String callback) {
+        if (TextUtils.equals("2", shareType)) {
+            initShare(title, content, img, url, type, callback);
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    if (mBarShare != null) {
+                        Map<String, String> programMap = new HashMap<>();
+                        programMap.put("desc", desc);
+                        programMap.put("path", path);
+                        programMap.put("webpageUrl", webpageUrl);
+                        programMap.put("shareType", shareType);
+                        mBarShare.setShareProgram(programMap);
+                        mBarShare.openShare();
+                    }
+                }
+            });
+        } else {
+            openShareNew(title, content, img, url, type, callback);
+        }
+    }
+
     @JavascriptInterface
     public void initImageShare(final String imageUrl, final String callback) {
         handler.post(new Runnable() {

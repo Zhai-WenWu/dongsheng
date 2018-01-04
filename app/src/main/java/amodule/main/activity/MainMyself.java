@@ -458,6 +458,10 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
 
             TextView text = (TextView) itemView.findViewById(R.id.text_myself);
             text.setText(groupNames[i]);
+            if ("invitation".equals(tag)) {
+                TextView hint = (TextView) itemView.findViewById(R.id.text_myself_hint);
+                hint.setText("（获100积分）");
+            }
             parent.addView(itemView);
             if ("qa".equals(tag)) {
                 mQAItemView = itemView;
