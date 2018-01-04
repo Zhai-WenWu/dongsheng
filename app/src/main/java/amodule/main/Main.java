@@ -48,7 +48,6 @@ import acore.tools.IObserver;
 import acore.tools.LogManager;
 import acore.tools.ObserverManager;
 import acore.tools.PageStatisticsUtils;
-import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.XiangHaTabHost;
 import amodule.answer.activity.AnswerEditActivity;
@@ -65,12 +64,12 @@ import amodule.dish.db.UploadDishData;
 import amodule.dish.tools.OffDishToFavoriteControl;
 import amodule.dish.tools.UploadDishControl;
 import amodule.main.Tools.MainInitDataControl;
+import amodule.main.Tools.WelcomeControls;
 import amodule.main.activity.MainCircle;
 import amodule.main.activity.MainHomePage;
 import amodule.main.activity.MainMyself;
 import amodule.main.view.WelcomeDialog;
 import amodule.user.activity.MyMessage;
-import aplug.basic.ReqInternet;
 import aplug.shortvideo.ShortVideoInit;
 import third.ad.control.AdControlHomeDish;
 import third.ad.tools.AdConfigTools;
@@ -145,27 +144,67 @@ public class Main extends Activity implements OnClickListener, IObserver {
         //腾讯统计
         initMTA();
         allMain = this;
+        init();
+
+    }
+    private void init(){
+        initUI();
+        initData();
+        setCurrentTabByIndex(defaultTab);
         initOther();
         mainInitDataControl = new MainInitDataControl();
-        showWelcome();
+        WelcomeControls welcomeControls= LoginManager.isShowAd()?new WelcomeControls(this,callBack):
+                new WelcomeControls(this,1,callBack);
         LogManager.printStartTime("zhangyujian","main::oncreate::");
         ClingPresenter.getInstance().onCreate(this, null);
     }
 
+    private WelcomeControls.WelcomeCallBack callBack = new WelcomeControls.WelcomeCallBack() {
+        @Override
+        public void welcomeShowState(boolean isShow) {
+            if (!isShow) {//展示后关闭
+                Log.i("zhangyujian", "________________________________________________________");
+                if (mainInitDataControl != null) {
+                    mainInitDataControl.initMainOnResume(Main.this);
+                    mainInitDataControl.iniMainAfter(Main.this);
+                }
+                WelcomeDialogstate = true;
+                openUri();
+                new AllPopDialogHelper(Main.this).start();
+                com.popdialog.util.PushManager.tongjiPush(Main.this, isEnable ->
+                        XHClick.mapStat(XHApplication.in(),"a_push_user",isEnable ? "开启推送" : "关闭推送","")
+                );
+                isShowWelcomeDialog = false;
+
+                OffDishToFavoriteControl.addCollection(Main.this);
+                //初始化电商页面统计
+                PageStatisticsUtils.getInstance().getPageInfo(getApplicationContext());
+                //处理
+                if (LoginManager.isLogin()) {
+                    initQiYvUnreadCount();
+                    //防止七鱼回调有问题
+                    Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
+                }
+                addQiYvListener();
+                if(mainInitDataControl!=null)mainInitDataControl.mainAfterUpload(Main.this);
+            }
+        }
+
+        @Override
+        public void welcomeFree() {
+            AdControlHomeDish.getInstance();
+            initThrid();
+            initRunTime();
+            mainInitDataControl.initWelcomeOncreate();
+            mainInitDataControl.initWelcomeAfter(Main.this);
+        }
+    };
     /** 处理一下非明确功能的逻辑 */
     private void initOther(){
         String[] times = FileManager.getSharedPreference(XHApplication.in(), FileManager.xmlKey_appKillTime);
         if (times != null && times.length > 1 && !TextUtils.isEmpty(times[1])) {
             Tools.getApiSurTime("killback", Long.parseLong(times[1]), System.currentTimeMillis());
         }
-    }
-    /**
-     * 展示welcome
-     */
-    private void showWelcome(){
-        welcomeDialog = LoginManager.isShowAd() ?
-                new WelcomeDialog(Main.allMain,dialogShowCallBack) : new WelcomeDialog(Main.allMain,1,dialogShowCallBack);
-        welcomeDialog.show();
     }
 
     /**
@@ -174,6 +213,8 @@ public class Main extends Activity implements OnClickListener, IObserver {
     private void initQiYvUnreadCount() {
         QiYvHelper.getInstance().getUnreadCount(count -> {
             if (count >= 0) {
+                if (nowTab == TAB_MESSAGE)
+                    AppCommon.quanMessage = 0;
                 AppCommon.qiyvMessage = count;
                 if (count > 0)
                     Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
@@ -202,6 +243,8 @@ public class Main extends Activity implements OnClickListener, IObserver {
         if (mUnreadCountListener == null) {
             mUnreadCountListener = count -> {
                 if (count >= 0) {
+                    if (nowTab == TAB_MESSAGE)
+                        AppCommon.quanMessage = 0;
                     AppCommon.qiyvMessage = count;
                     if (count > 0)
                         Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
@@ -219,165 +262,6 @@ public class Main extends Activity implements OnClickListener, IObserver {
         StatService.setContext(this.getApplication());
     }
 
-    /** welcomeDialog的回调封装 */
-    private WelcomeDialog.DialogShowCallBack dialogShowCallBack = new WelcomeDialog.DialogShowCallBack() {
-        @Override
-        public void dialogState(boolean show) {
-            if (!show) {//展示后关闭
-                Log.i("zhangyujian", "________________________________________________________");
-                if (mainInitDataControl != null) {
-                    mainInitDataControl.initMainOnResume(Main.this);
-                    mainInitDataControl.iniMainAfter(Main.this);
-                }
-                WelcomeDialogstate = true;
-                openUri();
-                new AllPopDialogHelper(Main.this).start();
-                com.popdialog.util.PushManager.tongjiPush(Main.this, isEnable ->
-                        XHClick.mapStat(XHApplication.in(),"a_push_user",isEnable ? "开启推送" : "关闭推送","")
-                );
-                isShowWelcomeDialog = false;
-
-                OffDishToFavoriteControl.addCollection(Main.this);
-                //初始化电商页面统计
-                PageStatisticsUtils.getInstance().getPageInfo(getApplicationContext());
-                //处理
-                if (LoginManager.isLogin()) {
-                    initQiYvUnreadCount();
-                    //防止七鱼回调有问题
-                    Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
-                }
-                addQiYvListener();
-
-                if (showQAUploading())
-                    return;
-                if (showUploading(new UploadArticleSQLite(XHApplication.in().getApplicationContext()), EditParentActivity.DATA_TYPE_ARTICLE, "您的文章还未上传完毕，是否继续上传？"))
-                    return;
-                if (showUploading(new UploadVideoSQLite(XHApplication.in().getApplicationContext()), EditParentActivity.DATA_TYPE_VIDEO, "您的视频还未上传完毕，是否继续上传？"))
-                    return;
-            }
-        }
-
-        private boolean showQAUploading() {
-            boolean show = false;
-            final AskAnswerSQLite sqLite = new AskAnswerSQLite(XHApplication.in().getApplicationContext());
-            final AskAnswerModel model = sqLite.queryFirstData();
-            String msg = "";
-            Intent intent = null;
-            Class tempC = null;
-            if (model != null) {
-                intent = new Intent();
-                intent.putExtra("fromHome", true);
-                intent.putExtra("code", model.getmDishCode());
-                intent.putExtra("qaCode", model.getmQACode());
-                intent.putExtra("authorCode", model.getmAuthorCode());
-                intent.putExtra("qaTitle", model.getmTitle());
-                intent.putExtra("answerCode", model.getmAnswerCode());
-                boolean isAskAgain = false;
-                boolean isAnswerAgain = false;
-                String qaType = model.getmType();
-                if (!TextUtils.isEmpty(qaType)) {
-                    switch (qaType) {
-                        case AskAnswerModel.TYPE_ANSWER:
-                            msg = "您有一个回答尚未发布，是否继续？";
-                            tempC = AnswerEditActivity.class;
-                            break;
-                        case AskAnswerModel.TYPE_ANSWER_AGAIN:
-                            msg = "您有一个回答尚未发布，是否继续？";
-                            tempC = AnswerEditActivity.class;
-                            isAnswerAgain = true;
-                            break;
-                        case AskAnswerModel.TYPE_ASK:
-                            msg = "您有一个问题尚未发布，是否继续？";
-                            tempC = AskEditActivity.class;
-                            break;
-                        case AskAnswerModel.TYPE_ASK_AGAIN:
-                            msg = "您有一个问题尚未发布，是否继续？";
-                            tempC = AskEditActivity.class;
-                            isAskAgain = true;
-                            break;
-                    }
-                }
-                intent.putExtra("mIsAnswerMore", isAnswerAgain ? "2" : "1");
-                intent.putExtra("isAskMore", isAskAgain ? "2" : "1");
-                if (tempC == null)
-                    return show;
-                show = true;
-                intent.setClass(Main.this, tempC);
-                final Intent finalIntent = intent;
-                final DialogManager dialogManager = new DialogManager(Main.this);
-                dialogManager.createDialog(new ViewManager(dialogManager)
-                        .setView(new TitleMessageView(Main.this).setText(msg))
-                        .setView(new HButtonView(Main.this)
-                                .setNegativeText("否", v -> {
-                                    dialogManager.cancel();
-                                    new Thread(() -> sqLite.deleteAll()).start();
-                                })
-                                .setPositiveTextColor(Color.parseColor("#007aff"))
-                                .setPositiveText("是", v -> {
-                                    dialogManager.cancel();
-                                    Main.this.startActivity(finalIntent);
-                                }))).show();
-            }
-            return show;
-        }
-
-        private boolean showUploading(final UploadParentSQLite sqLite, final int dataType, String title) {
-            final UploadArticleData uploadArticleData = sqLite.getUploadIngData();
-            if (uploadArticleData != null) {
-                final DialogManager dialogManager = new DialogManager(Main.this);
-                dialogManager.createDialog(new ViewManager(dialogManager)
-                        .setView(new TitleMessageView(Main.this).setText(title))
-                        .setView(new HButtonView(Main.this)
-                                .setNegativeText("取消", v -> {
-                                    dialogManager.cancel();
-                                    uploadArticleData.setUploadType(UploadDishData.UPLOAD_PAUSE);
-                                    sqLite.update(uploadArticleData.getId(),uploadArticleData);
-                                })
-                                .setPositiveTextColor(Color.parseColor("#007aff"))
-                                .setPositiveText("确定", v -> {
-                                    Intent intent = new Intent(Main.this, ArticleUploadListActivity.class);
-                                    intent.putExtra("draftId", uploadArticleData.getId());
-                                    intent.putExtra("dataType", dataType);
-                                    intent.putExtra("coverPath", uploadArticleData.getImg());
-                                    String videoPath = "";
-                                    ArrayList<Map<String,String>> videoArray = uploadArticleData.getVideoArray();
-                                    if(videoArray.size() > 0){
-                                        videoPath = videoArray.get(0).get("video");
-                                    }
-                                    intent.putExtra("finalVideoPath", videoPath);
-                                    dialogManager.cancel();
-                                    startActivity(intent);
-                                }))).show();
-                return true;
-            }
-            return false;
-        }
-
-        @Override
-        public void dialogOnLayout() {
-            Log.i("zhangyujian", "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-            if(!isInit){
-                dialogOnCreate();
-            }
-            AdControlHomeDish.getInstance();
-            setCurrentTabByIndex(defaultTab);
-            init();
-            initRunTime();
-            mainInitDataControl.initWelcomeOncreate();
-            mainInitDataControl.initWelcomeAfter(Main.this);
-
-        }
-
-        @Override
-        public void dialogOnCreate() {
-            initUI();
-            initData();
-        }
-
-        @Override
-        public void dialogAdComplete() {
-        }
-    };
 
     /**
      * 外部传递参数
@@ -404,7 +288,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
     /**
      * 初始化第三方控件
      */
-    private void init() {
+    private void initThrid() {
         //初始化短视频拍摄
         //从Welcome方法
         ShortVideoInit.init(Main.this);
@@ -689,6 +573,10 @@ public class Main extends Activity implements OnClickListener, IObserver {
 //                mainIndex.onResumeFake();
             }
         }
+        if (index == TAB_MESSAGE) {
+            AppCommon.quanMessage = 0;
+            setNewMsgNum(index, AppCommon.qiyvMessage + AppCommon.myQAMessage + AppCommon.feekbackMessage);
+        }
         //特殊逻辑
 //        changeSendLayout.setVisibility(View.VISIBLE);
         if(index == 0){
@@ -857,12 +745,16 @@ public class Main extends Activity implements OnClickListener, IObserver {
                     @Override
                     public void onNumberReady(int count) {
                         if (count >= 0) {
+                            if (nowTab == TAB_MESSAGE)
+                                AppCommon.quanMessage = 0;
                             AppCommon.qiyvMessage = count;
                             if (count > 0)
                                 Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
                         }
                     }
                 });
+                if (nowTab == TAB_MESSAGE)
+                    AppCommon.quanMessage = 0;
                 //防止七鱼回调不回来
                 Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
             }

@@ -71,4 +71,9 @@
             </LinearLayout>
         </FrameLayout>
     </RelativeLayout>
+    <include
+        android:id="@+id/xh_welcome"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        layout="@layout/xh_welcome"/>
 </RelativeLayout>
