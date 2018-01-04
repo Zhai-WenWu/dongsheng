@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -550,8 +551,9 @@ public class AdapterCaipuSearch extends BaseAdapter {
                 view = SearchResultAdViewGenerater.generateTopAdView(mActivity, xhAllAdControl, adDdata.get(0));
         } else {
             int adIndex = -1;
-            for (int i = 0; i < adPosList.size(); i++) {
-                if (pos == adPosList.get(i)) {
+            int[] adPos = new int[]{2, 8, 15, 23, 32, 42};
+            for (int i = 0; i < adPos.length; i++) {
+                if (pos == adPos[i]) {
                     adIndex = i;
                     break;
                 }
@@ -610,7 +612,9 @@ public class AdapterCaipuSearch extends BaseAdapter {
             adPos = new int[]{2, 8, 15, 23, 32, 42};
         }
         for (int i = 0; i < adDdata.size() && i < adPos.length; i++) {
-            adPosList.add(adPos[i]);
+            if(adDdata.get(i) != null && !adDdata.get(i).isEmpty()){
+                adPosList.add(adPos[i]);
+            }
         }
         int adNumCanInsert = computeAdNumCanInsert(adPosList);
         adPosList = adPosList.subList(0, adNumCanInsert);

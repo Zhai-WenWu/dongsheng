@@ -3,6 +3,8 @@ package amodule.search.view;
 import android.text.TextUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -53,9 +55,7 @@ public class SearchResultAdDataProvider {
     public void getAdData(){
 
         final ArrayList<String> adPosList = new ArrayList<>();
-        for (String posStr : AD_IDS) {
-            adPosList.add(posStr);
-        }
+        Collections.addAll(adPosList, AD_IDS);
 
         xhAllAdControl = new XHAllAdControl(adPosList, new XHAllAdControl.XHBackIdsDataCallBack() {
             @Override
@@ -76,6 +76,9 @@ public class SearchResultAdDataProvider {
                                 adDataMap.put("allClick", String.valueOf(Tools.getRandom(4000,10000)));
                                 list.add(adDataMap);
                             }
+                        }else{
+                            Map<String, String> adDataMap = new HashMap<>();
+                            list.add(adDataMap);
                         }
 
                         //处理搜索列表顶部广告
