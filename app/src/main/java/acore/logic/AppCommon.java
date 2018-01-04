@@ -223,6 +223,10 @@ public class AppCommon {
     }
 
     public static final String XH_PROTOCOL = "xiangha://welcome?";
+    public static void openUrl( String url, Boolean openThis) {
+        if(XHActivityManager.getInstance().getCurrentActivity()!=null)
+            openUrl(XHActivityManager.getInstance().getCurrentActivity(),url,openThis);
+    }
     /**
      * 打开url 如果url能打开原生页面就开原生
      * 如果不能就开webview，如果openThis为true,或已打开的webview太多，则直接使用WebView打开Url
