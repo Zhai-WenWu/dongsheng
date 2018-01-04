@@ -4,6 +4,7 @@ import android.content.IntentFilter;
 import android.graphics.PixelFormat;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -59,6 +60,8 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
 
     boolean HeaderDataLoaded = false;
 
+    boolean dialogLoadOver = false;
+
     protected long startTime = -1;//开始的时间戳
 
     private ConnectionChangeReceiver mReceiver;
@@ -101,7 +104,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
         mDataControler.setNotifyDataSetChangedCallback(() -> {
             if (mHomeAdapter != null
                     && mViewContrloer.getRvListView() != null
-                    &&! mViewContrloer.getRvListView().isComputingLayout())
+                    && !mViewContrloer.getRvListView().isComputingLayout())
                 mHomeAdapter.notifyDataSetChanged();
         });
         mDataControler.setEntryptDataCallback(this::EntryptData);
@@ -113,25 +116,25 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
 
     }
 
-    private void registerConnectionReceiver(){
+    private void registerConnectionReceiver() {
         mReceiver = new ConnectionChangeReceiver(new ConnectionChangeReceiver.ConnectionChangeListener() {
             @Override
             public void disconnect() {
-                if(null != mViewContrloer){
+                if (null != mViewContrloer) {
                     mViewContrloer.showNetworkTip();
                 }
             }
 
             @Override
             public void wifi() {
-                if(null != mViewContrloer){
+                if (null != mViewContrloer) {
                     mViewContrloer.hindNetworkTip();
                 }
             }
 
             @Override
             public void mobile() {
-                if(null != mViewContrloer){
+                if (null != mViewContrloer) {
                     mViewContrloer.hindNetworkTip();
                 }
             }
@@ -152,6 +155,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
     }
 
     long startLoadTime;
+
     public void loadData() {
         startLoadTime = System.currentTimeMillis();
         if (!LoadOver) {
@@ -169,7 +173,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
             );
             loadManager.getSingleLoadMore(mViewContrloer.getRvListView()).setVisibility(View.GONE);
             mViewContrloer.addOnScrollListener();
-            if(!ToolsDevice.isNetworkAvailable(this)){
+            if (!ToolsDevice.isNetworkAvailable(this)) {
                 loadManager.hideProgressBar();
             }
         }
@@ -181,14 +185,13 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
     protected void onStart() {
         super.onStart();
         loadRemoteData();
-        new AllPopDialogHelper(this).start();
     }
 
-    private void loadCacheData(){
+    private void loadCacheData() {
         mDataControler.loadCacheHomeData(getHeaderCallback(true));
     }
 
-    private void loadRemoteData(){
+    private void loadRemoteData() {
         startLoadTime = System.currentTimeMillis();
         mDataControler.loadServiceHomeData(getHeaderCallback(false));
         mDataControler.loadServiceTopData(new InternetCallback() {
@@ -206,7 +209,6 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
      * 获取header数据回调
      *
      * @param isCache 是否是缓存
-     *
      * @return 回调
      */
     public InternetCallback getHeaderCallback(boolean isCache) {
@@ -214,12 +216,12 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
             @Override
             public void loaded(int i, String s, Object o) {
                 loadManager.hideProgressBar();
-                Log.i("tzy",(isCache ? "cacheTime = " : "serviceTime = ") + (System.currentTimeMillis() - startLoadTime) + "ms");
+                Log.i("tzy", (isCache ? "cacheTime = " : "serviceTime = ") + (System.currentTimeMillis() - startLoadTime) + "ms");
                 HeaderDataLoaded = true;
                 if (i >= ReqEncyptInternet.REQ_OK_STRING) {
                     if (mViewContrloer != null)
                         mViewContrloer.setHeaderData(StringManager.getListMapByJson(o), isCache);
-                    Log.i("tzy" , "setHeaderData " + (isCache ? "cacheTime = " : "serviceTime = ") + (System.currentTimeMillis() - startLoadTime) + "ms");
+                    Log.i("tzy", "setHeaderData " + (isCache ? "cacheTime = " : "serviceTime = ") + (System.currentTimeMillis() - startLoadTime) + "ms");
                     if (!isCache && mDataControler != null) {
                         mDataControler.saveCacheHomeData((String) o);
                     }
@@ -236,7 +238,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
      * @param refresh，是否刷新
      */
     private void EntryptData(final boolean refresh) {
-        Log.i("tzy_data","EntryptData::"+refresh);
+        Log.i("tzy_data", "EntryptData::" + refresh);
         //已经load
         LoadOver = true;
         if (refresh && mDataControler != null) {
@@ -269,14 +271,14 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
                     mViewContrloer.returnListTop();
                 }
                 Button loadmore = loadManager.getSingleLoadMore(mViewContrloer.getRvListView());
-                if(null != loadmore){
+                if (null != loadmore) {
                     loadmore.setVisibility(View.VISIBLE);
                 }
             }
 
             @Override
             public void onAfter(boolean refresh, int flag, int loadCount) {
-                if(refresh){
+                if (refresh) {
                     isRefreshingFeed = false;
                 }
                 loadManager.hideProgressBar();
@@ -284,7 +286,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
                 if (ToolsDevice.isNetworkAvailable(MainHomePage.this)) {
                     loadManager.changeMoreBtn(mViewContrloer.getRvListView(), flag, LoadManager.FOOTTIME_PAGE,
                             refresh ? mDataControler.getData().size() : loadCount, 0, refresh);
-                }else {
+                } else {
 
                 }
             }
@@ -308,6 +310,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
     @Override
     protected void onResume() {
         super.onResume();
+        showDialog();
         if (mDataControler != null) {
             mDataControler.isNeedRefresh(false);
         }
@@ -317,6 +320,15 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
         if (mNeedRefCurrFm) {
             mNeedRefCurrFm = false;
             refresh();
+        }
+    }
+
+    private void showDialog(){
+        if(!dialogLoadOver){
+            dialogLoadOver = true;
+            new Handler().postDelayed(
+                    () -> new AllPopDialogHelper(this).start(),
+                    1000);
         }
     }
 
@@ -330,7 +342,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
     protected void onDestroy() {
         super.onDestroy();
         ObserverManager.getInstence().unRegisterObserver(this);
-        if(mReceiver != null){
+        if (mReceiver != null) {
             unregisterReceiver(mReceiver);
         }
     }
@@ -342,7 +354,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
         if (!TextUtils.isEmpty(name)) {
             switch (name) {
                 case ObserverManager.NOTIFY_VIPSTATE_CHANGED://VIP 状态发生改变需要刷新
-                    Log.i("tzy","VIP 状态发生改变需要刷新");
+                    Log.i("tzy", "VIP 状态发生改变需要刷新");
                     mNeedRefCurrFm = true;
                     break;
             }
@@ -351,13 +363,14 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
 
     boolean isRefreshingHeader = false;
     boolean isRefreshingFeed = false;
+
     public void refresh() {
-        Log.i("tzy_data","refresh()");
+        Log.i("tzy_data", "refresh()");
         mViewContrloer.autoRefresh();
     }
 
-    private void inerRefresh(){
-        if(isRefreshingHeader || isRefreshingFeed){
+    private void inerRefresh() {
+        if (isRefreshingHeader || isRefreshingFeed) {
             return;
         }
         isRefreshingHeader = true;

@@ -8,7 +8,10 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.Target;
 import com.download.container.DownloadCallBack;
 import com.download.down.DownLoad;
 import com.download.tools.FileUtils;
@@ -37,7 +40,7 @@ import third.ad.tools.AdConfigTools;
 import third.ad.tools.AdPlayIdConfig;
 
 import static com.popdialog.AllPopDialogControler.TAG;
-import static com.tencent.stat.StatTrackLog.log;
+import static com.popdialog.AllPopDialogControler.log;
 import static third.ad.tools.AdPlayIdConfig.FULL_SRCEEN_ACTIVITY;
 
 /**
@@ -67,6 +70,12 @@ public class AllPopDialogHelper {
 
                     @Override
                     public void loadFullScreenData(AllPopDialogControler.GetFullScreenDataCallback callback) {
+                        String onceValue = FileManager.loadShared(activity,FileManager.xmlFile_appInfo,"once").toString();
+                        boolean isOnce = TextUtils.isEmpty(onceValue) || "true".equals(onceValue);
+                        if(isOnce){
+                            if(callback != null) callback.loadFullScreenData("");
+                            return;
+                        }
                         String intervalCountValue = FileManager.loadShared(activity,INERVAL_XML,KEY_INERVAL_COUNT).toString();
                         int intervalCount = TextUtils.isEmpty(intervalCountValue)?0:Integer.parseInt(intervalCountValue);
                         String intervalValue = FileManager.loadShared(activity,INERVAL_XML,KEY_INERVAL).toString();
@@ -88,11 +97,13 @@ public class AllPopDialogHelper {
 
                     private void handlerFullData(AllPopDialogControler.GetFullScreenDataCallback callback){
                         String data = AdConfigTools.getInstance().getAdConfigData(FULL_SRCEEN_ACTIVITY).get("quanping");
+                        log("quanping = "+data);
                         Map<String, String> map =  StringManager.getFirstMap(data);
                         String intervalValue = map.get("interval");
                         int interval = TextUtils.isEmpty(intervalValue) ? 0 : Integer.parseInt(intervalValue);
-                        FileManager.saveShared(activity,FileManager.xmlFile_appInfo,"interval",String.valueOf(interval));
+                        FileManager.saveShared(activity,INERVAL_XML,KEY_INERVAL,String.valueOf(interval));
                         data = map.get("list");
+                        log(data);
                         if(callback != null){
                             callback.loadFullScreenData(data);
                         }
@@ -220,6 +231,21 @@ public class AllPopDialogHelper {
                         .load(imageUrl)
                         .setSaveType(LoadImage.SAVE_LONG)
                         .build()
+                        .listener(new RequestListener<GlideUrl, Bitmap>() {
+                            @Override
+                            public boolean onException(Exception e, GlideUrl glideUrl, Target<Bitmap> target, boolean b) {
+                                if (callback != null) {
+                                    log("FullScreen :: 执行回调，显示图片");
+                                    callback.onAfterLoadImage(null);
+                                }
+                                return false;
+                            }
+
+                            @Override
+                            public boolean onResourceReady(Bitmap bitmap, GlideUrl glideUrl, Target<Bitmap> target, boolean b, boolean b1) {
+                                return false;
+                            }
+                        })
                         .into(new SubBitmapTarget() {
                             @Override
                             public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> arg1) {

@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.popdialog.db.FullSrceenDB;
 import com.popdialog.util.GoodCommentManager;
 import com.tencent.stat.StatConfig;
 import com.tencent.stat.StatService;
@@ -633,6 +634,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
                 }
                 // 关闭时发送页面停留时间统计
                 if (act != null) XHClick.finishToSendPath(act);
+                new FullSrceenDB(act).clearExpireAllData();
                 // 关闭页面停留时间统计计时器
                 XHClick.closeHandler();
                 VersionOp.getInstance().onDesotry();
