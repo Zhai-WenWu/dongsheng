@@ -48,7 +48,6 @@ import acore.tools.IObserver;
 import acore.tools.LogManager;
 import acore.tools.ObserverManager;
 import acore.tools.PageStatisticsUtils;
-import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.XiangHaTabHost;
 import amodule.answer.activity.AnswerEditActivity;
@@ -71,7 +70,6 @@ import amodule.main.activity.MainHomePage;
 import amodule.main.activity.MainMyself;
 import amodule.main.view.WelcomeDialog;
 import amodule.user.activity.MyMessage;
-import aplug.basic.ReqInternet;
 import aplug.shortvideo.ShortVideoInit;
 import third.ad.control.AdControlHomeDish;
 import third.ad.tools.AdConfigTools;
@@ -211,6 +209,8 @@ public class Main extends Activity implements OnClickListener, IObserver {
     private void initQiYvUnreadCount() {
         QiYvHelper.getInstance().getUnreadCount(count -> {
             if (count >= 0) {
+                if (nowTab == TAB_MESSAGE)
+                    AppCommon.quanMessage = 0;
                 AppCommon.qiyvMessage = count;
                 if (count > 0)
                     Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
@@ -239,6 +239,8 @@ public class Main extends Activity implements OnClickListener, IObserver {
         if (mUnreadCountListener == null) {
             mUnreadCountListener = count -> {
                 if (count >= 0) {
+                    if (nowTab == TAB_MESSAGE)
+                        AppCommon.quanMessage = 0;
                     AppCommon.qiyvMessage = count;
                     if (count > 0)
                         Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
@@ -567,6 +569,10 @@ public class Main extends Activity implements OnClickListener, IObserver {
 //                mainIndex.onResumeFake();
             }
         }
+        if (index == TAB_MESSAGE) {
+            AppCommon.quanMessage = 0;
+            setNewMsgNum(index, AppCommon.qiyvMessage + AppCommon.myQAMessage + AppCommon.feekbackMessage);
+        }
         //特殊逻辑
 //        changeSendLayout.setVisibility(View.VISIBLE);
         if(index == 0){
@@ -735,12 +741,16 @@ public class Main extends Activity implements OnClickListener, IObserver {
                     @Override
                     public void onNumberReady(int count) {
                         if (count >= 0) {
+                            if (nowTab == TAB_MESSAGE)
+                                AppCommon.quanMessage = 0;
                             AppCommon.qiyvMessage = count;
                             if (count > 0)
                                 Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
                         }
                     }
                 });
+                if (nowTab == TAB_MESSAGE)
+                    AppCommon.quanMessage = 0;
                 //防止七鱼回调不回来
                 Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
             }
