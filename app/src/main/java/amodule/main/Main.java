@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.text.TextUtils;
@@ -50,17 +51,6 @@ import acore.tools.ObserverManager;
 import acore.tools.PageStatisticsUtils;
 import acore.tools.Tools;
 import acore.widget.XiangHaTabHost;
-import amodule.answer.activity.AnswerEditActivity;
-import amodule.answer.activity.AskEditActivity;
-import amodule.answer.db.AskAnswerSQLite;
-import amodule.answer.model.AskAnswerModel;
-import amodule.article.activity.ArticleUploadListActivity;
-import amodule.article.activity.edit.EditParentActivity;
-import amodule.article.db.UploadArticleData;
-import amodule.article.db.UploadArticleSQLite;
-import amodule.article.db.UploadParentSQLite;
-import amodule.article.db.UploadVideoSQLite;
-import amodule.dish.db.UploadDishData;
 import amodule.dish.tools.OffDishToFavoriteControl;
 import amodule.dish.tools.UploadDishControl;
 import amodule.main.Tools.MainInitDataControl;
@@ -132,6 +122,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
     private boolean isInit=false;
     private WelcomeDialog welcomeDialog;//dialog,显示
     private QiYvHelper.UnreadCountChangeListener mUnreadCountListener;
+    private WelcomeControls welcomeControls;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -142,18 +133,15 @@ public class Main extends Activity implements OnClickListener, IObserver {
         mLocalActivityManager.dispatchCreate(savedInstanceState);
         LogManager.printStartTime("zhangyujian","main::oncreate::start::");
         //腾讯统计
-        initMTA();
+
         allMain = this;
         init();
 
     }
     private void init(){
-        initUI();
-        initData();
-        setCurrentTabByIndex(defaultTab);
-        initOther();
+
         mainInitDataControl = new MainInitDataControl();
-        WelcomeControls welcomeControls= LoginManager.isShowAd()?new WelcomeControls(this,callBack):
+        welcomeControls= LoginManager.isShowAd()?new WelcomeControls(this,callBack):
                 new WelcomeControls(this,1,callBack);
         LogManager.printStartTime("zhangyujian","main::oncreate::");
         ClingPresenter.getInstance().onCreate(this, null);
@@ -194,6 +182,8 @@ public class Main extends Activity implements OnClickListener, IObserver {
         public void welcomeFree() {
             AdControlHomeDish.getInstance();
             initThrid();
+            initMTA();
+            initOther();
             initRunTime();
             mainInitDataControl.initWelcomeOncreate();
             mainInitDataControl.initWelcomeAfter(Main.this);
@@ -516,7 +506,6 @@ public class Main extends Activity implements OnClickListener, IObserver {
                 // 关闭页面停留时间统计计时器
                 XHClick.closeHandler();
                 VersionOp.getInstance().onDesotry();
-                finish();
                 System.exit(0);
                 UtilFile.saveShared(this, FileManager.MALL_STAT, FileManager.MALL_STAT, "");
             }
@@ -704,9 +693,19 @@ public class Main extends Activity implements OnClickListener, IObserver {
         super.onWindowFocusChanged(hasFocus);
         if (hasFocus && !isInit) {
             isInit = true;
+            if(welcomeControls!=null)welcomeControls.startShow();
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    initUI();
+                    initData();
+                    setCurrentTabByIndex(defaultTab);
+                }
+            },1000);
+
         }
         //此处可以进行分级处理:暂时无需要
-        Log.i("zhangyujian", "main::onWindowFocusChanged");
+        LogManager.printStartTime("zhangyujian", "main::onWindowFocusChanged");
     }
 
     @Override

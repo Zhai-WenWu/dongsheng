@@ -66,10 +66,13 @@ public class WelcomeControls {
         this.welcomeCallBack = callBack;
         activity.findViewById(R.id.xh_welcome).setVisibility(View.VISIBLE);
         initWelcome();
+
+    }
+
+    public void startShow(){
         startCountDown(false);
         WelcomeAdTools.getInstance().handlerAdData(false, null,false);
     }
-
     /**
      * 初始化view
      */
