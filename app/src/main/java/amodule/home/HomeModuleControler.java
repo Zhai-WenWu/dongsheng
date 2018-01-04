@@ -1,6 +1,7 @@
 package amodule.home;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
@@ -25,27 +26,17 @@ import aplug.basic.ReqInternet;
  */
 
 public class HomeModuleControler {
-    private static boolean isRequest = false;
+    private static volatile boolean isRequest = false;
 
-    public HomeModuleBean getHomeModuleByType(@Nullable Context context, @Nullable String mType) {
-        return getHomeModuleByType(false,context,mType);
-    }
-
-    /**
-     * 获取数据模块
-     *
-     * @param context 上下文
-     * @param mType 模块类型，默认null为首页
-     *
-     * @return 数据类型对象
-     */
     @Nullable
-    public HomeModuleBean getHomeModuleByType(boolean isRefresh,@Nullable Context context, @Nullable String mType) {
+    public HomeModuleBean getHomeModuleByType(@NonNull Context context, @Nullable String mType) {
         HomeModuleBean mModuleBean = null;
-        if(null == context) return null;
+        //请求数据
+        setRequestModuleData(null);
+        //读取本地数据
         final String modulePath = FileManager.getDataDir() + FileManager.file_homeTopModle;
         String moduleJson = FileManager.readFile(modulePath);
-        if (TextUtils.isEmpty(moduleJson)) {
+        if (TextUtils.isEmpty(moduleJson) && context != null) {
             moduleJson = FileManager.getFromAssets(context, "homeTopModle");
             FileManager.saveFileToCompletePath(modulePath, moduleJson, false);
         }
@@ -68,15 +59,12 @@ public class HomeModuleControler {
                 return mModuleBean;
             }
         }
-        setRequestModuleData(isRefresh);
         return mModuleBean;
     }
 
-    /**
-     * 请求模块数据
-     */
-    private void setRequestModuleData(boolean isRefresh) {
-        if (isRequest && !isRefresh) return;
+    /** 请求模块数据 */
+    private void setRequestModuleData(InternetCallback callback) {
+        if (isRequest) return;
         final String modulePath = FileManager.getDataDir() + FileManager.file_homeTopModle;
         ReqEncyptInternet.in().doEncyptAEC(StringManager.API_GET_LEVEL, "version=" + "v1",
                 new InternetCallback() {
@@ -85,6 +73,9 @@ public class HomeModuleControler {
                         if (flag >= ReqInternet.REQ_OK_STRING) {
                             isRequest = true;
                             FileManager.saveFileToCompletePath(modulePath, o.toString(), false);
+                            if(callback != null){
+                                callback.loaded(ReqInternet.REQ_OK_STRING,url,o);
+                            }
                         }
                     }
                 });
