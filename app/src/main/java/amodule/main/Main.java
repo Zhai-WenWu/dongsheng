@@ -144,6 +144,10 @@ public class Main extends Activity implements OnClickListener, IObserver {
         //腾讯统计
         initMTA();
         allMain = this;
+        init();
+
+    }
+    private void init(){
         initUI();
         initData();
         setCurrentTabByIndex(defaultTab);
@@ -189,7 +193,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
         @Override
         public void welcomeFree() {
             AdControlHomeDish.getInstance();
-            init();
+            initThrid();
             initRunTime();
             mainInitDataControl.initWelcomeOncreate();
             mainInitDataControl.initWelcomeAfter(Main.this);
@@ -284,7 +288,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
     /**
      * 初始化第三方控件
      */
-    private void init() {
+    private void initThrid() {
         //初始化短视频拍摄
         //从Welcome方法
         ShortVideoInit.init(Main.this);
