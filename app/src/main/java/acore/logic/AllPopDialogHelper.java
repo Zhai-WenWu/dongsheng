@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.RequestListener;
@@ -37,9 +36,7 @@ import aplug.basic.InternetCallback;
 import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
 import third.ad.tools.AdConfigTools;
-import third.ad.tools.AdPlayIdConfig;
 
-import static com.popdialog.AllPopDialogControler.TAG;
 import static com.popdialog.AllPopDialogControler.log;
 import static third.ad.tools.AdPlayIdConfig.FULL_SRCEEN_ACTIVITY;
 
