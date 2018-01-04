@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -550,8 +551,9 @@ public class AdapterCaipuSearch extends BaseAdapter {
                 view = SearchResultAdViewGenerater.generateTopAdView(mActivity, xhAllAdControl, adDdata.get(0));
         } else {
             int adIndex = -1;
-            for (int i = 0; i < adPosList.size(); i++) {
-                if (pos == adPosList.get(i)) {
+            int[] adPos = new int[]{2, 8, 15, 23, 32, 42};
+            for (int i = 0; i < adPos.length; i++) {
+                if (pos == adPos[i]) {
                     adIndex = i;
                     break;
                 }
@@ -596,11 +598,22 @@ public class AdapterCaipuSearch extends BaseAdapter {
      */
     private int generateAdPos(boolean isRefresh) {
         adPosList.clear();
-        int adPos[];
+        int adPos[] = new int[]{2, 8, 15, 23, 32, 42};
         if ((mListShicaiData == null || mListShicaiData.size() == 0) && topAdHasData.get()) {
-            if (isRefresh && adDdata.size()>1)
-                adDdata.remove(1);
-            adPos = new int[]{0, 8, 15, 23, 32, 42};
+            if(adDdata.size() > 0){
+                if(!adDdata.get(0).isEmpty()){
+                    if (isRefresh && adDdata.size()>1)
+                        adDdata.remove(1);
+                    adPos = new int[]{0, 8, 15, 23, 32, 42};
+                }else{
+                    if (topAdHasData.get()) {
+                        topAdHasData.set(false);
+                    }
+                    if (isRefresh && adDdata.size()>0)
+                        adDdata.remove(0);
+                    adPos = new int[]{2, 8, 15, 23, 32, 42};
+                }
+            }
         } else {
             if (topAdHasData.get()) {
                 topAdHasData.set(false);
@@ -609,9 +622,13 @@ public class AdapterCaipuSearch extends BaseAdapter {
                 adDdata.remove(0);
             adPos = new int[]{2, 8, 15, 23, 32, 42};
         }
+        Log.i("tzy", "generateAdPos: adDdata.size()=" + adDdata.size());
         for (int i = 0; i < adDdata.size() && i < adPos.length; i++) {
-            adPosList.add(adPos[i]);
+            if(adDdata.get(i) != null && !adDdata.get(i).isEmpty()){
+                adPosList.add(adPos[i]);
+            }
         }
+        Log.i("tzy","adPosList = " + adPosList.toString());
         int adNumCanInsert = computeAdNumCanInsert(adPosList);
         adPosList = adPosList.subList(0, adNumCanInsert);
         this.adNum = adNumCanInsert;
