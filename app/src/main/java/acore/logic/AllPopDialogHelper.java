@@ -59,7 +59,7 @@ public class AllPopDialogHelper {
     AllPopDialogControler allPopDialogControler;
 
     public AllPopDialogHelper(Activity activity) {
-        AllPopDialogControler.DEBUG = true;
+        AllPopDialogControler.DEBUG = false;
         this.allPopDialogControler = new AllPopDialogControler(activity, VersionOp.getVerName(activity),
                 new AllPopDialogControler.OnGetAllDataCallback() {
                     @Override
@@ -80,6 +80,7 @@ public class AllPopDialogHelper {
                         int intervalCount = TextUtils.isEmpty(intervalCountValue)?0:Integer.parseInt(intervalCountValue);
                         String intervalValue = FileManager.loadShared(activity,INERVAL_XML,KEY_INERVAL).toString();
                         int interval = TextUtils.isEmpty(intervalValue)?0:Integer.parseInt(intervalValue);
+                        interval = 1;
                         if(intervalCount >= interval){
                             log("AllPopDialogHelper :: getFullScreenData");
                             if(AdConfigTools.getInstance().isLoadOver){

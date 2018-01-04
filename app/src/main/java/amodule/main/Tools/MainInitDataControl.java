@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import acore.logic.AllPopDialogHelper;
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.VersionOp;
@@ -193,6 +194,8 @@ public class MainInitDataControl {
 
         //获取随机推广数据
         AppCommon.saveRandPromotionData(act);
+
+        new AllPopDialogHelper(act).start();
 
         onMainResumeStatics();
 

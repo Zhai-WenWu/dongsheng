@@ -310,7 +310,6 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
     @Override
     protected void onResume() {
         super.onResume();
-        showDialog();
         if (mDataControler != null) {
             mDataControler.isNeedRefresh(false);
         }
@@ -320,15 +319,6 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
         if (mNeedRefCurrFm) {
             mNeedRefCurrFm = false;
             refresh();
-        }
-    }
-
-    private void showDialog(){
-        if(!dialogLoadOver){
-            dialogLoadOver = true;
-            new Handler().postDelayed(
-                    () -> new AllPopDialogHelper(this).start(),
-                    1000);
         }
     }
 
