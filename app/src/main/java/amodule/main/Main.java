@@ -133,13 +133,14 @@ public class Main extends Activity implements OnClickListener, IObserver {
         mLocalActivityManager.dispatchCreate(savedInstanceState);
         LogManager.printStartTime("zhangyujian","main::oncreate::start::");
         //腾讯统计
-
+        initMTA();
         allMain = this;
         init();
-
     }
     private void init(){
-
+        initUI();
+        initData();
+        setCurrentTabByIndex(defaultTab);
         mainInitDataControl = new MainInitDataControl();
         welcomeControls= LoginManager.isShowAd()?new WelcomeControls(this,callBack):
                 new WelcomeControls(this,1,callBack);
@@ -182,7 +183,6 @@ public class Main extends Activity implements OnClickListener, IObserver {
         public void welcomeFree() {
             AdControlHomeDish.getInstance();
             initThrid();
-            initMTA();
             initOther();
             initRunTime();
             mainInitDataControl.initWelcomeOncreate();
@@ -694,14 +694,6 @@ public class Main extends Activity implements OnClickListener, IObserver {
         if (hasFocus && !isInit) {
             isInit = true;
             if(welcomeControls!=null)welcomeControls.startShow();
-            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    initUI();
-                    initData();
-                    setCurrentTabByIndex(defaultTab);
-                }
-            },1000);
 
         }
         //此处可以进行分级处理:暂时无需要
