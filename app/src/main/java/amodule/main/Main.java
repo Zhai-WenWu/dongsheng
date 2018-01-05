@@ -414,8 +414,8 @@ public class Main extends Activity implements OnClickListener, IObserver {
         //从Welcome方法
         ShortVideoInit.init(Main.this);
         //从Welcome方法
-        ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_LOGIN);
-        ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_LOGOUT);
+        ObserverManager.getInstance().registerObserver(this, ObserverManager.NOTIFY_LOGIN);
+        ObserverManager.getInstance().registerObserver(this, ObserverManager.NOTIFY_LOGOUT);
     }
 
     /**
@@ -843,7 +843,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
             welcomeDialog.dismiss();
         }
         super.onDestroy();
-        ObserverManager.getInstence().unRegisterObserver(this);
+        ObserverManager.getInstance().unRegisterObserver(this);
         mUnreadCountListener = null;
         if (!LoginManager.isLogin())
             QiYvHelper.getInstance().destroyQiYvHelper();
