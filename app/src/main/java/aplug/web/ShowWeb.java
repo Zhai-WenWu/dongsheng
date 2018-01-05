@@ -395,8 +395,8 @@ public class  ShowWeb extends WebActivity implements IObserver {
 			case ObserverManager.NOTIFY_SHARE:
 				if (!TextUtils.isEmpty(shareCallback) && data != null) {
 					Map<String, String> dataMap = (Map<String, String>) data;
-					webview.loadUrl("javascript:" + shareCallback + "(\"" + dataMap.get("status") + "\")");
-					Log.i("tzy", "javascript:" + shareCallback + "(\"" + dataMap.get("status") + "\")");
+					webview.loadUrl("javascript:" + shareCallback + "(" + TextUtils.equals("2", dataMap.get("status")) + ")");
+					Log.i("tzy", "javascript:" + shareCallback + "(" + TextUtils.equals("2", dataMap.get("status")) + ")");
 				}
 				break;
 			case ObserverManager.NOTIFY_LOGIN:
