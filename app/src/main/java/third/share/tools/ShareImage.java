@@ -124,7 +124,7 @@ public class ShareImage {
         Map<String,String> data = new HashMap<>();
         data.put("platform",platform);
         data.put("status",success);
-        ObserverManager.getInstence().notify(ObserverManager.NOTIFY_SHARE,this,data);
+        ObserverManager.getInstance().notify(ObserverManager.NOTIFY_SHARE,this,data);
     }
 
     public Handler shareHandler = new Handler(new Handler.Callback() {

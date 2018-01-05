@@ -43,7 +43,6 @@ import amodule.answer.activity.QAReportActivity;
 import amodule.dish.activity.DetailDishWeb;
 import amodule.dish.activity.MoreImageShow;
 import amodule.dish.activity.upload.UploadDishActivity;
-import amodule.main.activity.MainMyself;
 import amodule.other.activity.PlayVideo;
 import amodule.quan.activity.upload.UploadSubjectNew;
 import amodule.user.activity.ChooseDish;
@@ -250,62 +249,68 @@ public class JsAppCommon extends JsBase {
     }
 
     /**
-     * 直接打开一个中间显示的分享页面
-     * title：        分享标题
-     * content：  分享内容
-     * img：          分享图片
-     * url:	   分享链接地址
-     * type：        分享类型
-     * callback:    回调统计
-     */
-    @JavascriptInterface
-    public void openShareNew(final String title, final String content, final String img, final String url, final String type, final String callback) {
-        initShare(title, content, img, url, type, callback);
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                if (mBarShare != null) {
-                    mBarShare.openShare();
-                }
-            }
-        });
+     * 打开分享，普通分享和分享小程序都可以调用这个方法
+     * @param jsonStr
+     * "shareParams":{
+     * "title":"分享标题",
+     * "content":"分享内容",
+     * "imgUrl":"分享图片地址",
+     * "clickUrl":"点击跳转链接",
+     * "type":"分享统计类型",
+     * "shareType":"分享类型，1：普通分享，2：分享小程序",
+     * "desc":"描述",
+     * "webpageUrl":"低版本点击分享的小程序打开的网页",
+     * "path":"小程序路径",
+     * "callback":"回调"
     }
-
-    /**
-     * 直接打开一个中间显示的分享页面
-     * title：        分享标题
-     * content：  分享内容
-     * img：          分享图片
-     * url:	   分享链接地址
-     * type：        分享类型
-     * shareType:   1：普通分享  2：分享小程序
-     * desc:        描述
-     * webpageUrl:  低版本点击分享的小程序打开的网页
-     * path:        小程序路径
-     * callback:    回调统计
      */
     @JavascriptInterface
-    public void openShareNew(final String title, final String content, final String img, final String url,
-                             final String type, final String shareType, final String desc,
-                             final String webpageUrl, final String path, final String callback) {
-        if (TextUtils.equals("2", shareType)) {
-            initShare(title, content, img, url, type, callback);
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    if (mBarShare != null) {
-                        Map<String, String> programMap = new HashMap<>();
-                        programMap.put("desc", desc);
-                        programMap.put("path", path);
-                        programMap.put("webpageUrl", webpageUrl);
-                        programMap.put("shareType", shareType);
-                        mBarShare.setShareProgram(programMap);
-                        mBarShare.openShare();
+    public void openShareNew(String jsonStr) {
+        if (TextUtils.isEmpty(jsonStr))
+            return;
+        Map<String, String> shareMap = StringManager.getFirstMap(jsonStr);
+        String shareStr = shareMap.get("shareParams");
+        if (TextUtils.isEmpty(shareStr))
+            return;
+        Map<String, String> shareParamsMap = StringManager.getFirstMap(shareStr);
+        String shareType = shareParamsMap.get("shareType");
+        if (TextUtils.isEmpty(shareType))
+            return;
+        String title = shareParamsMap.get("title");
+        String content = shareParamsMap.get("content");
+        String imgUrl = shareParamsMap.get("imgUrl");
+        String clickUrl = shareParamsMap.get("clickUrl");
+        String type = shareParamsMap.get("type");
+        String callback = shareParamsMap.get("callback");
+        initShare(title, content, imgUrl, clickUrl, type, callback);
+        switch (shareType) {
+            case "2":
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (mBarShare != null) {
+                            Map<String, String> programMap = new HashMap<>();
+                            programMap.put("desc", shareParamsMap.get("desc"));
+                            programMap.put("path", shareParamsMap.get("path"));
+                            programMap.put("webpageUrl", shareParamsMap.get("webpageUrl"));
+                            programMap.put("shareType", shareType);
+                            programMap.put("imgUrl", imgUrl);
+                            mBarShare.setShareProgram(programMap);
+                            mBarShare.openShare();
+                        }
                     }
-                }
-            });
-        } else {
-            openShareNew(title, content, img, url, type, callback);
+                });
+                break;
+            default:
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (mBarShare != null) {
+                            mBarShare.openShare();
+                        }
+                    }
+                });
+                break;
         }
     }
 
@@ -1006,7 +1011,7 @@ public class JsAppCommon extends JsBase {
                             }, 2000);
                         }
                     }
-                    ObserverManager.getInstence().notify(ObserverManager.NOTIFY_PAYFINISH, null, isOk);
+                    ObserverManager.getInstance().notify(ObserverManager.NOTIFY_PAYFINISH, null, isOk);
                 }
             });
         }

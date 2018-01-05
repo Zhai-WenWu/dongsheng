@@ -147,7 +147,7 @@ public class LoginManager {
 
     public static void loginSuccess(final Activity mAct, Object returnObj) {
         loginSuccess(mAct, returnObj, false);
-        ObserverManager.getInstence().notify(ObserverManager.NOTIFY_LOGIN, null, true);
+        ObserverManager.getInstance().notify(ObserverManager.NOTIFY_LOGIN, null, true);
         setVipStateChanged();
     }
 
@@ -156,7 +156,7 @@ public class LoginManager {
      * @param obj 失败后返回的数据
      */
     public static void loginFail(Object obj) {
-        ObserverManager.getInstence().notify(ObserverManager.NOTIFY_LOGIN, null, false);
+        ObserverManager.getInstance().notify(ObserverManager.NOTIFY_LOGIN, null, false);
     }
 
     /**
@@ -213,7 +213,7 @@ public class LoginManager {
                     WebviewManager.syncXHCookie();
 
                 }
-                ObserverManager.getInstence().notify(ObserverManager.NOTIFY_LOGOUT, null, flag >= UtilInternet.REQ_OK_STRING);
+                ObserverManager.getInstance().notify(ObserverManager.NOTIFY_LOGOUT, null, flag >= UtilInternet.REQ_OK_STRING);
             }
         });
         MallReqInternet.in().doPost(MallStringManager.mall_api_loginOut, new LinkedHashMap<>(), new InternetCallback() {
@@ -706,14 +706,14 @@ public class LoginManager {
                                 }).setNegativeTextColor(Color.parseColor("#007aff")))).show();
                             }
                         }, 200);
-                        ObserverManager.getInstence().notify(ObserverManager.NOTIFY_YIYUAN_BIND, null, state);
+                        ObserverManager.getInstance().notify(ObserverManager.NOTIFY_YIYUAN_BIND, null, state);
                     } else {
                         //绑定失败
-                        ObserverManager.getInstence().notify(ObserverManager.NOTIFY_YIYUAN_BIND, null, state);
+                        ObserverManager.getInstance().notify(ObserverManager.NOTIFY_YIYUAN_BIND, null, state);
                     }
                 } else {
                     //绑定失败
-                    ObserverManager.getInstence().notify(ObserverManager.NOTIFY_YIYUAN_BIND, null, null);
+                    ObserverManager.getInstance().notify(ObserverManager.NOTIFY_YIYUAN_BIND, null, null);
                 }
             }
         });
@@ -764,7 +764,7 @@ public class LoginManager {
         boolean currVipState = isVIP();
         if(lastVipState != currVipState) {//如果vip状态改变
             FileManager.saveShared(XHApplication.in(), FileManager.xmlFile_appInfo, "vipState", currVipState ? "2" : "1");
-            ObserverManager.getInstence().notify(ObserverManager.NOTIFY_VIPSTATE_CHANGED, null, null);
+            ObserverManager.getInstance().notify(ObserverManager.NOTIFY_VIPSTATE_CHANGED, null, null);
         }
     }
 

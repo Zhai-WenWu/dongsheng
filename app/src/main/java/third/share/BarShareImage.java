@@ -30,7 +30,7 @@ public class BarShareImage {
         this.mContext = context;
         this.imageUrl = imageUrl;
         if(context instanceof IObserver){
-            ObserverManager.getInstence().registerObserver((IObserver) context,ObserverManager.NOTIFY_SHARE);
+            ObserverManager.getInstance().registerObserver((IObserver) context,ObserverManager.NOTIFY_SHARE);
         }
     }
 

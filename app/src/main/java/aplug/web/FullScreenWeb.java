@@ -61,7 +61,7 @@ public class FullScreenWeb extends WebActivity implements IObserver {
             }
         });
 
-        ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_YIYUAN_BIND);
+        ObserverManager.getInstance().registerObserver(this, ObserverManager.NOTIFY_YIYUAN_BIND);
     }
 
     /**
@@ -95,7 +95,7 @@ public class FullScreenWeb extends WebActivity implements IObserver {
         }
         super.onDestroy();
 
-        ObserverManager.getInstence().unRegisterObserver(this);
+        ObserverManager.getInstance().unRegisterObserver(this);
     }
 
     @Override

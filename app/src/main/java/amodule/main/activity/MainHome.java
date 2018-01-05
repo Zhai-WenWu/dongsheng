@@ -28,7 +28,6 @@ import acore.tools.FileManager;
 import acore.tools.IObserver;
 import acore.tools.ObserverManager;
 import acore.tools.StringManager;
-import acore.tools.Tools;
 import acore.widget.PagerSlidingTabStrip;
 import amodule.main.Main;
 import amodule.main.bean.HomeModuleBean;
@@ -79,7 +78,7 @@ public class MainHome extends MainBaseActivity implements IObserver {
                 XHClick.HOME_STATICTIS_TIME = Integer.parseInt(map.get("postTime"), 10) * 1000;
             }
         }
-        ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_VIPSTATE_CHANGED);
+        ObserverManager.getInstance().registerObserver(this, ObserverManager.NOTIFY_VIPSTATE_CHANGED);
     }
 
     /**
@@ -323,7 +322,7 @@ public class MainHome extends MainBaseActivity implements IObserver {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ObserverManager.getInstence().unRegisterObserver(this);
+        ObserverManager.getInstance().unRegisterObserver(this);
     }
 
     private boolean mNeedRefCurrFm;

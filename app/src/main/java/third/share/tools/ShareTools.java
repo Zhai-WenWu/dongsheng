@@ -277,7 +277,7 @@ public class ShareTools {
 		Map<String,String> data = new HashMap<>();
 		data.put("platform",platform);
 		data.put("status",success);
-		ObserverManager.getInstence().notify(ObserverManager.NOTIFY_SHARE,this,data);
+		ObserverManager.getInstance().notify(ObserverManager.NOTIFY_SHARE,this,data);
 	}
 
 	public String[] getPlatform(String name){

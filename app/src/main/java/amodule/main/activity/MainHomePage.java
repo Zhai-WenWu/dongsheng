@@ -80,7 +80,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
 
         initPostTime();
         //注册通知
-        ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_VIPSTATE_CHANGED);
+        ObserverManager.getInstance().registerObserver(this, ObserverManager.NOTIFY_VIPSTATE_CHANGED);
         registerConnectionReceiver();
     }
 
@@ -329,7 +329,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ObserverManager.getInstence().unRegisterObserver(this);
+        ObserverManager.getInstance().unRegisterObserver(this);
         if (mReceiver != null) {
             unregisterReceiver(mReceiver);
         }

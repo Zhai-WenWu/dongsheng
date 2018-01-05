@@ -35,7 +35,7 @@ public class BarShare {
 		mFrom = from;
 		mParent = parent;
 		if(context instanceof IObserver){
-			ObserverManager.getInstence().registerObserver((IObserver) context,ObserverManager.NOTIFY_SHARE);
+			ObserverManager.getInstance().registerObserver((IObserver) context,ObserverManager.NOTIFY_SHARE);
 		}
 	}
 	

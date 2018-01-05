@@ -42,7 +42,7 @@ public class LessonListPage extends BaseAppCompatActivity implements IObserver {
         initController();
         addListener();
         startLoadData();
-        ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_VIPSTATE_CHANGED);
+        ObserverManager.getInstance().registerObserver(this, ObserverManager.NOTIFY_VIPSTATE_CHANGED);
     }
 
     private void initData() {
@@ -158,7 +158,7 @@ public class LessonListPage extends BaseAppCompatActivity implements IObserver {
         if (mVipDataController != null) {
             mVipDataController.onDestroy();
         }
-        ObserverManager.getInstence().unRegisterObserver(this);
+        ObserverManager.getInstance().unRegisterObserver(this);
     }
 
     @Override
