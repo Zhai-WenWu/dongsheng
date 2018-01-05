@@ -69,8 +69,6 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
         super.onCreate(savedInstanceState);
         mViewContrloer = new HomeViewControler(this);
         setContentView(R.layout.a_home_page);
-        //只在首页弹出，所以activity使用首页的
-        XHADView.getInstence(this).refreshContext(this);
         getWindow().setFormat(PixelFormat.TRANSLUCENT);
         Main.allMain.allTab.put(KEY, this);//这个Key值不变
         //初始化

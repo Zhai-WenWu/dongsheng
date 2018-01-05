@@ -13,6 +13,7 @@ import android.webkit.CookieManager;
 
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;
+import com.popdialog.view.XHADView;
 import com.tencent.android.tpush.XGPushManager;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.onlineconfig.OnlineConfigAgent;
@@ -44,6 +45,7 @@ import amodule.dish.db.DishOffData;
 import amodule.dish.db.ShowBuySqlite;
 import amodule.dish.db.UploadDishSqlite;
 import amodule.dish.tools.UploadDishControl;
+import amodule.main.Main;
 import amodule.main.view.home.HomeToutiaoAdControl;
 import amodule.quan.db.SubjectData;
 import amodule.quan.db.SubjectSqlite;
@@ -195,6 +197,12 @@ public class MainInitDataControl {
         //获取随机推广数据
         AppCommon.saveRandPromotionData(act);
 
+        XHADView.getInstence(act).setCanShowCallback(new XHADView.CanShowCallback() {
+            @Override
+            public boolean canShow() {
+                return Main.allMain != null && Main.allMain.getCurrentTab() == 0;
+            }
+        });
         new AllPopDialogHelper(act).start();
 
         onMainResumeStatics();

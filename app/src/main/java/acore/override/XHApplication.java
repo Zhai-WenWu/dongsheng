@@ -11,6 +11,7 @@ import android.widget.ProgressBar;
 
 import com.baidu.mobads.AdView;
 import com.baidu.mobads.AppActivity;
+import com.facebook.stetho.Stetho;
 import com.mob.MobApplication;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.analytics.MobclickAgent;
@@ -60,6 +61,7 @@ public class XHApplication extends MobApplication {
     @Override
     public void onCreate() {
         mAppApplication = this;
+        Stetho.initializeWithDefaults(this);
         startTime = System.currentTimeMillis();
         LogManager.printStartTime("zhangyujian","XhApplication::11111.oncreate::");
         boolean isOnce = TextUtils.isEmpty(FileManager.loadShared(this,FileManager.xmlFile_appInfo,"once").toString());

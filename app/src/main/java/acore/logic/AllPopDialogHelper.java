@@ -49,7 +49,6 @@ import static third.ad.tools.AdPlayIdConfig.FULL_SRCEEN_ACTIVITY;
 public class AllPopDialogHelper {
 
     public static final String INERVAL_XML = "intervalSP";
-    public static final String KEY_INERVAL = "interval";
     public static final String KEY_INERVAL_COUNT = "interval_count";
 
     /**所有弹框的控制器*/
@@ -73,37 +72,34 @@ public class AllPopDialogHelper {
                             if(callback != null) callback.loadFullScreenData("");
                             return;
                         }
-                        String intervalCountValue = FileManager.loadShared(activity,INERVAL_XML,KEY_INERVAL_COUNT).toString();
-                        int intervalCount = TextUtils.isEmpty(intervalCountValue)?0:Integer.parseInt(intervalCountValue);
-                        String intervalValue = FileManager.loadShared(activity,INERVAL_XML,KEY_INERVAL).toString();
-                        int interval = TextUtils.isEmpty(intervalValue)?0:Integer.parseInt(intervalValue);
-                        interval = 1;
-                        if(intervalCount >= interval){
-                            log("AllPopDialogHelper :: getFullScreenData");
-                            if(AdConfigTools.getInstance().isLoadOver){
-                                handlerFullData(callback);
-                            }else{
-                                AdConfigTools.getInstance().getAdConfigInfo(new InternetCallback() {
-                                    @Override
-                                    public void loaded(int i, String s, Object o) {
-                                        handlerFullData(callback);
-                                    }
-                                });
-                            }
+                        log("AllPopDialogHelper :: getFullScreenData");
+                        if(AdConfigTools.getInstance().isLoadOver){
+                            handlerFullData(callback);
+                        }else{
+                            AdConfigTools.getInstance().getAdConfigInfo(new InternetCallback() {
+                                @Override
+                                public void loaded(int i, String s, Object o) {
+                                    handlerFullData(callback);
+                                }
+                            });
                         }
                     }
 
                     private void handlerFullData(AllPopDialogControler.GetFullScreenDataCallback callback){
+                        String intervalCountValue = FileManager.loadShared(activity,INERVAL_XML,KEY_INERVAL_COUNT).toString();
+                        int intervalCount = TextUtils.isEmpty(intervalCountValue)?0:Integer.parseInt(intervalCountValue);
                         String data = AdConfigTools.getInstance().getAdConfigData(FULL_SRCEEN_ACTIVITY).get("quanping");
-                        log("quanping = "+data);
                         Map<String, String> map =  StringManager.getFirstMap(data);
                         String intervalValue = map.get("interval");
                         int interval = TextUtils.isEmpty(intervalValue) ? 0 : Integer.parseInt(intervalValue);
-                        FileManager.saveShared(activity,INERVAL_XML,KEY_INERVAL,String.valueOf(interval));
+                        log(intervalCountValue);
                         data = map.get("list");
                         log(data);
                         if(callback != null){
-                            callback.loadFullScreenData(data);
+                            if(intervalCount > interval)
+                                callback.loadFullScreenData(data);
+                            else
+                                callback.loadFullScreenData("");
                         }
                     }
 
