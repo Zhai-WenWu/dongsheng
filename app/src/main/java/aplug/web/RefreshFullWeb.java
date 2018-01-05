@@ -2,6 +2,9 @@ package aplug.web;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
+
+import java.util.Map;
 
 import acore.tools.IObserver;
 import acore.tools.ObserverManager;
@@ -15,7 +18,7 @@ public class RefreshFullWeb extends FullScreenWeb implements IObserver {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ObserverManager.getInstance().registerObserver(this,ObserverManager.NOTIFY_LOGIN, ObserverManager.NOTIFY_UPLOADOVER, ObserverManager.NOTIFY_PAYFINISH);
+        ObserverManager.getInstance().registerObserver(this,ObserverManager.NOTIFY_LOGIN, ObserverManager.NOTIFY_UPLOADOVER, ObserverManager.NOTIFY_PAYFINISH, ObserverManager.NOTIFY_SHARE);
     }
 
     @Override
@@ -63,6 +66,13 @@ public class RefreshFullWeb extends FullScreenWeb implements IObserver {
                 break;
             case ObserverManager.NOTIFY_PAYFINISH:
                 resetRefreShstatus(data);
+                break;
+            case ObserverManager.NOTIFY_SHARE:
+                if (!TextUtils.isEmpty(shareCallback) && data != null) {
+                    Map<String, String> dataMap = (Map<String, String>) data;
+                    webview.loadUrl("javascript:" + shareCallback + "(\"" + dataMap.get("status") + "\")");
+                    Log.i("tzy", "javascript:" + shareCallback + "(\"" + dataMap.get("status") + "\")");
+                }
                 break;
             default:
                 break;

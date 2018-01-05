@@ -92,7 +92,7 @@ public class  ShowWeb extends WebActivity implements IObserver {
 		});
 		MallCommon common= new MallCommon(this);
 		common.setStatisticStat(url);
-		ObserverManager.getInstance().registerObserver(this,ObserverManager.NOTIFY_LOGIN,ObserverManager.NOTIFY_LOGOUT);
+		ObserverManager.getInstance().registerObserver(this,ObserverManager.NOTIFY_LOGIN, ObserverManager.NOTIFY_LOGOUT, ObserverManager.NOTIFY_SHARE);
 //		webview.upWebViewNum();
 	}
 
@@ -389,7 +389,16 @@ public class  ShowWeb extends WebActivity implements IObserver {
 
 	@Override
 	public void notify(String name, Object sender, Object data) {
+		if (TextUtils.isEmpty(name))
+			return;
 		switch (name){
+			case ObserverManager.NOTIFY_SHARE:
+				if (!TextUtils.isEmpty(shareCallback) && data != null) {
+					Map<String, String> dataMap = (Map<String, String>) data;
+					webview.loadUrl("javascript:" + shareCallback + "(\"" + dataMap.get("status") + "\")");
+					Log.i("tzy", "javascript:" + shareCallback + "(\"" + dataMap.get("status") + "\")");
+				}
+				break;
 			case ObserverManager.NOTIFY_LOGIN:
 				needSyncCookieReload = true;
 				break;

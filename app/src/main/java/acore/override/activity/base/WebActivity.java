@@ -2,31 +2,25 @@ package acore.override.activity.base;
 
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
-
 import java.util.Map;
 
 import acore.override.XHApplication;
-import acore.tools.IObserver;
 import acore.tools.LogManager;
-import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import amodule.main.Main;
-import aplug.basic.ReqInternet;
 import aplug.basic.XHConf;
 import aplug.basic.XHInternetCallBack;
 import aplug.web.tools.JSAction;
 import aplug.web.tools.WebviewManager;
 import aplug.web.view.XHWebView;
-import third.mall.aplug.MallReqInternet;
 import third.mall.aplug.MallStringManager;
 
-public class WebActivity extends BaseActivity implements IObserver{
+public class WebActivity extends BaseActivity {
 	private static WebActivity mShowWeb;
 	public XHWebView webview = null;
 	public WebviewManager webViewManager = null;
@@ -37,7 +31,6 @@ public class WebActivity extends BaseActivity implements IObserver{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mShowWeb = this;
-		ObserverManager.getInstance().registerObserver(this,ObserverManager.NOTIFY_SHARE);
 	}
 	
 	@Override
@@ -134,7 +127,6 @@ public class WebActivity extends BaseActivity implements IObserver{
 			webview.destroy();
 		}
 		super.onDestroy();
-		ObserverManager.getInstance().unRegisterObserver(this);
 	}
 	
 	//供外部吊起reload
@@ -184,21 +176,6 @@ public class WebActivity extends BaseActivity implements IObserver{
 			CookieSyncManager.createInstance(XHApplication.in().getApplicationContext());
 			CookieSyncManager.getInstance().sync();
 			LogManager.print(XHConf.log_tag_net,"d", "设置webview的cookie："+mapCookie.toString());
-		}
-	}
-
-	@Override
-	public void notify(String name, Object sender, Object data) {
-		if (TextUtils.isEmpty(name))
-			return;
-		switch (name) {
-			case ObserverManager.NOTIFY_SHARE:
-				if (!TextUtils.isEmpty(shareCallback) && data != null) {
-					Map<String, String> dataMap = (Map<String, String>) data;
-					webview.loadUrl("javascript:" + shareCallback + "(\"" + dataMap.get("status") + "\")");
-					Log.i("tzy", "javascript:" + shareCallback + "(\"" + dataMap.get("status") + "\")");
-				}
-				break;
 		}
 	}
 }
