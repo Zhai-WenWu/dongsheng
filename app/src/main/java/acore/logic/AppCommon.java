@@ -589,7 +589,7 @@ public class AppCommon {
                                 if (succRun != null)
                                     succRun.run();
                                 //关注监听回调
-                                ObserverManager.getInstence().notify(ObserverManager.NOTIFY_FOLLOW,null,false);
+                                ObserverManager.getInstance().notify(ObserverManager.NOTIFY_FOLLOW,null,false);
                             }
                         }
                     });

@@ -4,6 +4,13 @@
     android:layout_height="@dimen/dp_43"
     android:paddingLeft="@dimen/dp_20">
 
+    <View
+        android:id="@+id/my_item_line_top"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#edeaea"
+        android:visibility="gone"/>
+
     <TextView
         android:id="@+id/text_myself"
         android:layout_width="wrap_content"
@@ -88,11 +95,4 @@
         android:layout_marginRight="@dimen/dp_20"
         android:src="@drawable/z_find_home_ico_go" />
 
-    <View
-        android:id="@+id/my_item_line"
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="#edeaea"
-        android:layout_alignParentBottom="true"
-        />
 </RelativeLayout>

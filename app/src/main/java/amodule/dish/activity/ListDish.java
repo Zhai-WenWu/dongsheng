@@ -112,7 +112,7 @@ public class ListDish extends BaseActivity {
                 requestFavoriteState();
             }
         };
-        ObserverManager.getInstence().registerObserver(mIObserver,ObserverManager.NOTIFY_LOGIN);
+        ObserverManager.getInstance().registerObserver(mIObserver,ObserverManager.NOTIFY_LOGIN);
     }
 
     /**
@@ -183,7 +183,7 @@ public class ListDish extends BaseActivity {
         if (startTime > 0 && (nowTime - startTime) > 0 && !TextUtils.isEmpty(data_type) && !TextUtils.isEmpty(module_type)) {
             XHClick.saveStatictisFile("ListDish", module_type, data_type, g1, "", "stop", String.valueOf((nowTime - startTime) / 1000), "", "", "", "");
         }
-        ObserverManager.getInstence().unRegisterObserver(mIObserver);
+        ObserverManager.getInstance().unRegisterObserver(mIObserver);
     }
 
     //初始化

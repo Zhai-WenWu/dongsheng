@@ -29,7 +29,6 @@ import acore.logic.XHClick;
 import acore.tools.FileManager;
 import acore.tools.IObserver;
 import acore.tools.ObserverManager;
-import acore.tools.PageStatisticsUtils;
 import acore.tools.Tools;
 import acore.widget.LayoutScroll;
 import acore.widget.PagerSlidingTabStrip;
@@ -39,7 +38,6 @@ import third.mall.alipay.MallPayActivity;
 import third.mall.aplug.MallCommon;
 import third.mall.bean.OrderBean;
 import third.mall.fragment.MallOrderFragment;
-import third.mall.override.MallBaseActivity;
 import third.mall.override.MallOrderBaseActivity;
 import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilString;
@@ -170,7 +168,7 @@ public class MyOrderActivity extends MallOrderBaseActivity implements OnClickLis
 
 	private void initData() {
 		//注册评价成功通知
-		ObserverManager.getInstence().registerObserver(this,ObserverManager.NOTIFY_COMMENT_SUCCESS);
+		ObserverManager.getInstance().registerObserver(this,ObserverManager.NOTIFY_COMMENT_SUCCESS);
 
 		viewpager.addOnPageChangeListener(new OnPageChangeListener() {
 
@@ -367,7 +365,7 @@ public class MyOrderActivity extends MallOrderBaseActivity implements OnClickLis
 
 	@Override
 	protected void onDestroy() {
-		ObserverManager.getInstence().unRegisterObserver(this);
+		ObserverManager.getInstance().unRegisterObserver(this);
 		super.onDestroy();
 	}
 }

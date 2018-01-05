@@ -13,7 +13,6 @@ import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.IObserver;
 import acore.tools.ObserverManager;
 import acore.tools.StringManager;
-import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.lesson.adapter.LessonHomeAdapter;
 import amodule.lesson.controler.data.LessonHomeDataController;
@@ -44,7 +43,7 @@ public class LessonHome extends BaseAppCompatActivity implements IObserver {
         //加载数据
         loadData();
 
-        ObserverManager.getInstence().registerObserver(this, NOTIFY_VIPSTATE_CHANGED);
+        ObserverManager.getInstance().registerObserver(this, NOTIFY_VIPSTATE_CHANGED);
     }
 
     private void initialize() {
@@ -174,7 +173,7 @@ public class LessonHome extends BaseAppCompatActivity implements IObserver {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ObserverManager.getInstence().unRegisterObserver(this);
+        ObserverManager.getInstance().unRegisterObserver(this);
     }
 
     @Override

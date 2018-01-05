@@ -15,13 +15,13 @@ public class RefreshFullWeb extends FullScreenWeb implements IObserver {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ObserverManager.getInstence().registerObserver(this,ObserverManager.NOTIFY_LOGIN, ObserverManager.NOTIFY_UPLOADOVER, ObserverManager.NOTIFY_PAYFINISH);
+        ObserverManager.getInstance().registerObserver(this,ObserverManager.NOTIFY_LOGIN, ObserverManager.NOTIFY_UPLOADOVER, ObserverManager.NOTIFY_PAYFINISH);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ObserverManager.getInstence().unRegisterObserver(this);
+        ObserverManager.getInstance().unRegisterObserver(this);
     }
 
     @Override

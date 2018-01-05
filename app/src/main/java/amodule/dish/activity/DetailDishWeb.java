@@ -114,7 +114,7 @@ public class DetailDishWeb extends BaseAppCompatActivity implements IObserver {
         init();
         XHClick.track(XHApplication.in(), "浏览菜谱详情页");
         //注册监听
-        ObserverManager.getInstence().registerObserver(this,ObserverManager.NOTIFY_LOGIN,ObserverManager.NOTIFY_FOLLOW,ObserverManager.NOTIFY_PAYFINISH);
+        ObserverManager.getInstance().registerObserver(this,ObserverManager.NOTIFY_LOGIN,ObserverManager.NOTIFY_FOLLOW,ObserverManager.NOTIFY_PAYFINISH);
     }
     @Override
     protected void onRestart() {
@@ -357,7 +357,7 @@ public class DetailDishWeb extends BaseAppCompatActivity implements IObserver {
     protected void onDestroy() {
         super.onDestroy();
         //反注册。
-        ObserverManager.getInstence().unRegisterObserver(ObserverManager.NOTIFY_LOGIN,ObserverManager.NOTIFY_FOLLOW,ObserverManager.NOTIFY_PAYFINISH);
+        ObserverManager.getInstance().unRegisterObserver(ObserverManager.NOTIFY_LOGIN,ObserverManager.NOTIFY_FOLLOW,ObserverManager.NOTIFY_PAYFINISH);
         if(dishActivityViewControl != null){
             dishActivityViewControl.onDestroy();
             dishActivityViewControl=null;
