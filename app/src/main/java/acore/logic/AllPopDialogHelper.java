@@ -38,6 +38,7 @@ import aplug.basic.SubBitmapTarget;
 import third.ad.tools.AdConfigTools;
 
 import static com.popdialog.AllPopDialogControler.log;
+import static com.tencent.stat.StatTrackLog.log;
 import static third.ad.tools.AdPlayIdConfig.FULL_SRCEEN_ACTIVITY;
 
 /**
@@ -96,10 +97,7 @@ public class AllPopDialogHelper {
                         data = map.get("list");
                         log(data);
                         if(callback != null){
-                            if(intervalCount > interval)
-                                callback.loadFullScreenData(data);
-                            else
-                                callback.loadFullScreenData("");
+                            callback.loadFullScreenData(intervalCount > interval?data:"");
                         }
                     }
 
