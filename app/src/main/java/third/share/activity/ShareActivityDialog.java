@@ -46,10 +46,7 @@ public class ShareActivityDialog extends Activity implements View.OnClickListene
 
     private String tongjiId = "a_user";
 
-    private String mShareType;
-    private String mDesc;
-    private String mPath;//分享小程序
-    private String mWebPageUrl;//分享小程序
+    private String mShareParams;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,11 +82,8 @@ public class ShareActivityDialog extends Activity implements View.OnClickListene
         //举报跳转页面
         reportUrl=getIntent().getStringExtra("reportUrl");
 
-        //分享小程序的数据
-        mShareType = getIntent().getStringExtra("shareType");
-        mDesc = getIntent().getStringExtra("desc");
-        mPath = getIntent().getStringExtra("path");
-        mWebPageUrl = getIntent().getStringExtra("webpageUrl");
+        //分享的配置数据
+        mShareParams = getIntent().getStringExtra("shareParams");
 
         init();
     }
@@ -134,14 +128,8 @@ public class ShareActivityDialog extends Activity implements View.OnClickListene
                     dataMap.put("from", mShareFrom);
                     dataMap.put("parent", mParent);
                     dataMap.put("platform", platfrom);
-                    if (!TextUtils.isEmpty(mShareType))
-                        dataMap.put("shareType", mShareType);
-                    if (!TextUtils.isEmpty(mDesc))
-                        dataMap.put("desc", mDesc);
-                    if (!TextUtils.isEmpty(mPath))
-                        dataMap.put("path", mPath);
-                    if (!TextUtils.isEmpty(mWebPageUrl))
-                        dataMap.put("webpageUrl", mWebPageUrl);
+                    if (!TextUtils.isEmpty(mShareParams))
+                        dataMap.put("shareParams", mShareParams);
                     barShare.showSharePlatform(dataMap);
                 }
                 ShareActivityDialog.this.finish();

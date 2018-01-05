@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.popdialog.util.PushManager;
 import com.xiangha.R;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -31,6 +32,7 @@ import acore.logic.VersionOp;
 import acore.logic.XHClick;
 import acore.logic.load.LoadManager;
 import acore.override.XHApplication;
+import acore.override.activity.base.WebActivity;
 import acore.override.helper.XHActivityManager;
 import acore.tools.FileManager;
 import acore.tools.ObserverManager;
@@ -213,104 +215,142 @@ public class JsAppCommon extends JsBase {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                if (mAct instanceof ShowWeb) {
-                    ((ShowWeb) mAct).shareCallback = callback;
-                }
-//				barShare.setShare(BarShare.IMG_TYPE_WEB, am.get("title"), content, am.get("img"), zhishiurl);
-//				if (act.barShare == null) {//由于二级页面也会吊起分享,但是分享内容不同,所以不加判断.防止分享内容改不了
-                if (title != "" && content != "" && img != "" && url != "" && type != "") {
-                    Log.i("zhangyujian", "type::::" + type);
-                    mBarShare = new BarShare(mAct, type, "");
-                    mBarShare.setShare(BarShare.IMG_TYPE_WEB, title, content, img, url);
-                    RelativeLayout shareLayout = (RelativeLayout) mAct.findViewById(R.id.shar_layout);
-                    if (shareLayout != null) {
-                        shareLayout.setVisibility(View.VISIBLE);
-                        shareLayout.setOnClickListener(new OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                setStiaticType(type);
-                                if (mBarShare != null) {
-                                    mBarShare.openShare();
-                                    if (callback != null && callback.length() > 0) {
-                                        ReqInternet.in().doGet(StringManager.apiUrl + callback, new InternetCallback() {
-                                            @Override
-                                            public void loaded(int flag, String url, Object returnObj) {
-                                            }
-                                        });
-                                    }
-                                }
-                            }
-                        });
-                    }
-                }
-//				}
+                initShareBar(title, content, img, url, type, callback, "", "");
             }
         });
     }
 
     /**
-     * 打开分享，普通分享和分享小程序都可以调用这个方法
-     * @param jsonStr
-     * "shareParams":{
-     * "title":"分享标题",
-     * "content":"分享内容",
-     * "imgUrl":"分享图片地址",
-     * "clickUrl":"点击跳转链接",
-     * "type":"分享统计类型",
-     * "shareType":"分享类型，1：普通分享，2：分享小程序",
-     * "desc":"描述",
-     * "webpageUrl":"低版本点击分享的小程序打开的网页",
-     * "path":"小程序路径",
-     * "callback":"回调"
-    }
+     * 初始化分享按钮,并添加分享按钮.
+     * title：        分享标题
+     * content：  分享内容
+     * img：          分享图片
+     * url:	   分享链接地址
+     * type：        分享统计类型
+     * callback:    回调统计
+     * shareType:   分享类型 1：普通分享  2：分享小程序
+     * path:        小程序路径
      */
     @JavascriptInterface
-    public void openShareNew(String jsonStr) {
-        if (TextUtils.isEmpty(jsonStr))
-            return;
-        Map<String, String> shareMap = StringManager.getFirstMap(jsonStr);
-        String shareStr = shareMap.get("shareParams");
-        if (TextUtils.isEmpty(shareStr))
-            return;
-        Map<String, String> shareParamsMap = StringManager.getFirstMap(shareStr);
-        String shareType = shareParamsMap.get("shareType");
-        if (TextUtils.isEmpty(shareType))
-            return;
-        String title = shareParamsMap.get("title");
-        String content = shareParamsMap.get("content");
-        String imgUrl = shareParamsMap.get("imgUrl");
-        String clickUrl = shareParamsMap.get("clickUrl");
-        String type = shareParamsMap.get("type");
-        String callback = shareParamsMap.get("callback");
-        initShare(title, content, imgUrl, clickUrl, type, callback);
-        switch (shareType) {
-            case "2":
-                handler.post(new Runnable() {
+    public void initShare(final String title, final String content, final String img, final String url, final String type, final String callback, final String shareType, final String path) {
+
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                initShareBar(title, content, img, url, type, callback, shareType, path);
+            }
+        });
+    }
+
+    private void initShareBar(final String title, final String content, final String img, final String url, final String type, final String callback, final String shareType, final String path) {
+        if (mAct instanceof WebActivity) {
+            ((ShowWeb) mAct).shareCallback = callback;
+        }
+
+        if (title != "" && content != "" && img != "" && url != "" && type != "") {
+            Log.i("zhangyujian", "type::::" + type);
+            mBarShare = new BarShare(mAct, type, "");
+            mBarShare.setShare(BarShare.IMG_TYPE_WEB, title, content, img, url);
+            mBarShare.setShareProgram(transferData(title, content, img, url, type, shareType, path));
+            RelativeLayout shareLayout = (RelativeLayout) mAct.findViewById(R.id.shar_layout);
+            if (shareLayout != null) {
+                shareLayout.setVisibility(View.VISIBLE);
+                shareLayout.setOnClickListener(new OnClickListener() {
                     @Override
-                    public void run() {
+                    public void onClick(View v) {
+                        setStiaticType(type);
                         if (mBarShare != null) {
-                            Map<String, String> programMap = new HashMap<>();
-                            programMap.put("desc", shareParamsMap.get("desc"));
-                            programMap.put("path", shareParamsMap.get("path"));
-                            programMap.put("webpageUrl", shareParamsMap.get("webpageUrl"));
-                            programMap.put("shareType", shareType);
-                            programMap.put("imgUrl", imgUrl);
-                            mBarShare.setShareProgram(programMap);
                             mBarShare.openShare();
+                            if (callback != null && callback.length() > 0) {
+                                ReqInternet.in().doGet(StringManager.apiUrl + callback, new InternetCallback() {
+                                    @Override
+                                    public void loaded(int flag, String url, Object returnObj) {
+                                    }
+                                });
+                            }
                         }
                     }
                 });
-                break;
-            default:
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (mBarShare != null) {
-                            mBarShare.openShare();
-                        }
-                    }
-                });
-                break;
+            }
+        }
+    }
+
+    /**
+     * 直接打开一个中间显示的分享页面
+     * title：        分享标题
+     * content：  分享内容
+     * img：          分享图片
+     * url:	   分享链接地址
+     * type：        分享类型
+     * callback:    回调统计
+     */
+    @JavascriptInterface
+    public void openShareNew(final String title, final String content, final String img, final String url, final String type, final String callback) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                startShareNew(title, content, img, url, type, callback, "", "");
+            }
+        });
+    }
+
+    /**
+     * 直接打开一个中间显示的分享页面
+     * title：        分享标题
+     * content：  分享内容
+     * img：          分享图片
+     * url:	   分享链接地址
+     * type：        分享类型
+     * callback:    回调统计
+     * shareType:   分享类型 1：普通分享  2：分享小程序
+     * path:        小程序路径
+     */
+    @JavascriptInterface
+    public void openShareNew(final String title, final String content, final String img, final String url, final String type, final String callback, final String shareType, final String path) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                startShareNew(title, content, img, url, type, callback, shareType, path);
+            }
+        });
+    }
+
+    private String transferData(final String title, final String content, final String img, final String url, final String type, final String shareType, final String path) {
+        String retStr = null;
+        JSONObject object = new JSONObject();
+        JSONObject entityObject = new JSONObject();
+        JSONObject confObject = new JSONObject();
+        try {
+            object.put("shareType", transferStr(shareType));
+            entityObject.put("shareType", transferStr(shareType));
+            confObject.put("title", transferStr(title));
+            confObject.put("content", transferStr(content));
+            confObject.put("img", transferStr(img));
+            confObject.put("url", transferStr(url));
+            confObject.put("type", transferStr(type));
+            confObject.put("path", transferStr(path));
+            entityObject.put(shareType, confObject);
+            object.put("shareConfig", entityObject);
+            retStr = object.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return retStr;
+    }
+
+    private String transferStr(String str) {
+        return TextUtils.isEmpty(str) ? "" : str;
+    }
+
+    private void startShareNew(final String title, final String content, final String img, final String url, final String type, final String callback, final String shareType, final String path) {
+        if (mAct instanceof WebActivity && !TextUtils.isEmpty(callback)) {
+            ((WebActivity)mAct).shareCallback = callback;
+        }
+        if (title != "" && content != "" && img != "" && url != "" && type != "") {
+            mBarShare = new BarShare(mAct, type, "");
+            mBarShare.setShare(BarShare.IMG_TYPE_WEB, title, content, img, url);
+            mBarShare.setShareProgram(transferData(title, content, img, url, type, shareType, path));
+            mBarShare.openShare();
         }
     }
 

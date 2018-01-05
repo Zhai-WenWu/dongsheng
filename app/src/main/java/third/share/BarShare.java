@@ -28,7 +28,7 @@ public class BarShare {
 	private Context mContext;
 	private String mTitle,mType,mClickUrl,mContent,mImgUrl,mFrom,mParent;
 
-	private Map<String, String> mProgramMap;
+	private String mShareParamsStr;
 	
 	public BarShare(Context context,String from,String parent){
 		mContext = context;
@@ -72,8 +72,8 @@ public class BarShare {
 		}
 	}
 
-	public void setShareProgram(Map<String, String> programMap) {
-		mProgramMap = programMap;
+	public void setShareProgram(String jsonStr) {
+		mShareParamsStr = jsonStr;
 	}
 	
 	public void openShare(){
@@ -85,23 +85,8 @@ public class BarShare {
 		intent.putExtra("imgUrl", mImgUrl);
 		intent.putExtra("from", mFrom);
 		intent.putExtra("parent", mParent);
-
-		if (mProgramMap != null) {
-			String shareType = mProgramMap.get("shareType");
-			String desc = mProgramMap.get("desc");
-			String path = mProgramMap.get("path");
-			String webpageUrl = mProgramMap.get("webpageUrl");
-			String imgUrl = mProgramMap.get("imgUrl");
-			if (!TextUtils.isEmpty(shareType))
-				intent.putExtra("shareType", shareType);
-			if (!TextUtils.isEmpty(desc))
-				intent.putExtra("desc", desc);
-			if (!TextUtils.isEmpty(path))
-				intent.putExtra("path", path);
-			if (!TextUtils.isEmpty(webpageUrl))
-				intent.putExtra("webpageUrl", webpageUrl);
-			if (!TextUtils.isEmpty(imgUrl))
-				intent.putExtra("imgUrl", imgUrl);
+		if (!TextUtils.isEmpty(mShareParamsStr)) {
+			intent.putExtra("shareParams", mShareParamsStr);
 		}
 		mContext.startActivity(intent);
 	}

@@ -41,10 +41,7 @@ public class ShareNewActivity extends Activity{
 
     private Boolean isHasReport;
 
-    private String mShareType;
-    private String mDesc;
-    private String mPath;//分享小程序
-    private String mWebpageUrl;//分享小程序
+    private String mShareParams;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,11 +60,8 @@ public class ShareNewActivity extends Activity{
                 mFrom = bundle.getString("from");
                 mParent = bundle.getString("parent");
 
-                //分享小程序的数据
-                mShareType = getIntent().getStringExtra("shareType");
-                mDesc = getIntent().getStringExtra("desc");
-                mPath = getIntent().getStringExtra("path");
-                mWebpageUrl = getIntent().getStringExtra("webpageUrl");
+                //分享的配置数据
+                mShareParams = getIntent().getStringExtra("shareParams");
             }catch(Exception e){}
         }
         init();
@@ -97,14 +91,8 @@ public class ShareNewActivity extends Activity{
                 dataMap.put("from", mFrom);
                 dataMap.put("parent", mParent);
                 dataMap.put("platform", platfrom);
-                if (!TextUtils.isEmpty(mShareType))
-                    dataMap.put("shareType", mShareType);
-                if (!TextUtils.isEmpty(mDesc))
-                    dataMap.put("desc", mDesc);
-                if (!TextUtils.isEmpty(mPath))
-                    dataMap.put("path", mPath);
-                if (!TextUtils.isEmpty(mWebpageUrl))
-                    dataMap.put("webpageUrl", mWebpageUrl);
+                if (!TextUtils.isEmpty(mShareParams))
+                    dataMap.put("shareParams", mShareParams);
                 barShare.showSharePlatform(dataMap);
                 ShareNewActivity.this.finish();
             }

@@ -32,6 +32,7 @@ import java.util.Map;
 import acore.logic.XHClick;
 import acore.tools.ImgManager;
 import acore.tools.ObserverManager;
+import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import cn.sharesdk.framework.Platform;
@@ -188,15 +189,23 @@ public class ShareTools {
 	}
 
 	public void showSharePlatform(Map<String, String> map) {
-		String shareType = map.get("shareType");
+		if (map == null || map.isEmpty())
+			return;
+		String shareParams = map.get("shareParams");
+		Map<String, String> shareParamsMap = StringManager.getFirstMap(shareParams);
+		String shareType = shareParamsMap.get("shareType");
+		String shareConfig = shareParamsMap.get("shareConfig");
+		Map<String, String> shareConfigMap = StringManager.getFirstMap(shareConfig);
+		Map<String, String> shareMap = StringManager.getFirstMap(shareConfigMap.get(shareType));
 		if (TextUtils.equals(shareType, "2") && TextUtils.equals(WEI_XIN, map.get("platform"))) {
-			showShareMiniProgram(map);
+			shareMap.put("type", map.get("type"));
+			showShareMiniProgram(shareMap);
 		} else {
-			String title = map.get("title");
+			String title = shareMap.get("title");
+			String content = shareMap.get("content");
+			String imgUrl = shareMap.get("img");
+			String clickUrl = shareMap.get("url");
 			String type = map.get("type");
-			String content = map.get("content");
-			String imgUrl = map.get("imgUrl");
-			String clickUrl = map.get("clickUrl");
 			String from = map.get("from");
 			String parent = map.get("parent");
 			String platform = map.get("platform");
@@ -324,9 +333,9 @@ public class ShareTools {
 		configShare.put("Enable", "true");
 		ShareSDK.setPlatformDevInfo(Wechat.NAME, configShare);
 		String type = map.get("type");
-		String img = map.get("imgUrl");
+		String img = map.get("img");
 		String defaultpageUrl = "https://m.xiangha.com";
-		String webpageUrl = map.get("webpageUrl");
+		String webpageUrl = map.get("url");
 		if(img == null || img.length()==0){
 			type = IMG_TYPE_RES;
 			img = R.drawable.share_launcher+"";
@@ -336,23 +345,15 @@ public class ShareTools {
 			imgUrl = img;
 			if (imgUrl != null && imgUrl.endsWith(".webp"))
 				imgUrl = imgUrl.replace(".webp", "");
-		}
-		else if(type.equals(IMG_TYPE_RES)){
+		} else if(type.equals(IMG_TYPE_RES)){
 			imgPath = drawableToPath(img);
-		}
-		else if(type.equals(IMG_TYPE_LOC)){
+		} else if(type.equals(IMG_TYPE_LOC)){
 			imgPath = img;
-		}
-		else if(type.equals(IMG_TYPE_RES)){
-			imgPath = drawableToPath(map.get("imgUrl"));
-		}
-		else if(type.equals(IMG_TYPE_LOC)){
-			imgPath = map.get("imgUrl");
 		}
 
 		Platform platform = ShareSDK.getPlatform(Wechat.NAME);
 		Platform.ShareParams shareParams = new  Platform.ShareParams();
-		shareParams.setText(map.get("desc"));
+		shareParams.setText(map.get("content"));
 		shareParams.setTitle(map.get("title"));
 		shareParams.setUrl(TextUtils.isEmpty(webpageUrl) ? defaultpageUrl : webpageUrl);
 		if (!TextUtils.isEmpty(imgUrl))

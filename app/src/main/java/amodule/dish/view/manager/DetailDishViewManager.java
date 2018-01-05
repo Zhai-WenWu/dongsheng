@@ -248,9 +248,9 @@ public class DetailDishViewManager {
         }
     }
 
-    public void handlerShareData(Map<String, String> shareMap) {
+    public void handlerShareData(String shareStr) {
         if (dishTitleViewControl != null) {
-            dishTitleViewControl.setShareData(shareMap);
+            dishTitleViewControl.setShareData(shareStr);
         }
     }
 

@@ -183,11 +183,10 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
             @Override
             public void onDataReady(int flag, String type, Object object) {
                 if (flag >= UtilInternet.REQ_OK_STRING) {
-                    Map<String, String> data = mShareConfDataController.getMap(object);
-                    if (data == null || data.isEmpty())
+                    if (object == null || object.toString().length() == 0)
                         return;
                     if (detailDishViewManager != null)
-                        detailDishViewManager.handlerShareData(data);
+                        detailDishViewManager.handlerShareData(object.toString());
                 }
             }
         });

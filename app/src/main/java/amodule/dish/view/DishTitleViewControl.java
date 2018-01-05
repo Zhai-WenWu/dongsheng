@@ -56,7 +56,7 @@ public class DishTitleViewControl implements View.OnClickListener {
     private String nickName = "";
     private RelativeLayout bar_title_1;
 
-    private Map<String, String> mShareMap;
+    private String mShareStr;
 
     public DishTitleViewControl(Context context) {
         this.context = context;
@@ -99,8 +99,8 @@ public class DishTitleViewControl implements View.OnClickListener {
         requestFavoriteState();
     }
 
-    public void setShareData(Map<String, String> shareData) {
-        mShareMap = shareData;
+    public void setShareData(String shareData) {
+        mShareStr = shareData;
     }
 
     public PopWindowDialog getPopWindowDialog() {
@@ -236,37 +236,13 @@ public class DishTitleViewControl implements View.OnClickListener {
         intent.putExtra("type", mapData.get("mType"));
         intent.putExtra("shareFrom", "菜谱详情页");
         intent.putExtra("reportUrl", "Feedback.app?feekUrl=http://www.xiangha.com/caipu/" + code + ".html");
-        if (mShareMap == null) {
+        if (TextUtils.isEmpty(mShareStr)) {
             intent.putExtra("imgUrl", mapData.get("mImgUrl"));
             intent.putExtra("clickUrl", mapData.get("mClickUrl"));
             intent.putExtra("title", mapData.get("mTitle"));
             intent.putExtra("content", mapData.get("mContent"));
         } else {
-            String shareType = mShareMap.get("shareType");
-            if (shareType == null)
-                return;
-            switch (shareType) {
-                case "1":
-                    intent.putExtra("imgUrl", mShareMap.get("imgUrl"));
-                    intent.putExtra("clickUrl", mShareMap.get("clickUrl"));
-                    intent.putExtra("title", mShareMap.get("title"));
-                    intent.putExtra("content", mShareMap.get("content"));
-                    break;
-                case "2":
-                    intent.putExtra("desc", mShareMap.get("desc"));
-                    intent.putExtra("path", mShareMap.get("path"));
-                    intent.putExtra("title", mShareMap.get("title"));
-                    intent.putExtra("imgUrl", mShareMap.get("imgUrl"));
-                    intent.putExtra("webpageUrl", mShareMap.get("webpageUrl"));
-                    intent.putExtra("shareType", shareType);
-                    break;
-                default:
-                    intent.putExtra("imgUrl", mapData.get("mImgUrl"));
-                    intent.putExtra("clickUrl", mapData.get("mClickUrl"));
-                    intent.putExtra("title", mapData.get("mTitle"));
-                    intent.putExtra("content", mapData.get("mContent"));
-                    break;
-            }
+            intent.putExtra("shareParams", mShareStr);
         }
         detailDish.startActivity(intent);
     }
