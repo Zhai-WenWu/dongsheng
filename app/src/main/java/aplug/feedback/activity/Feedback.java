@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import acore.logic.AppCommon;
 import acore.logic.MessageTipController;
 import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;
@@ -29,8 +28,6 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.DownRefreshList;
-import amodule.main.Main;
-import amodule.user.activity.MyMessage;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
 import aplug.feedback.adapter.AdapterFeedback;
@@ -122,7 +119,7 @@ public class Feedback extends BaseActivity implements OnClickListener {
     }
 
     private void init() {
-        MessageTipController.setFeekbackMessage(0);
+        MessageTipController.newInstance().setFeekbackMessage(0);
         feebback_reply_content = (EditText) findViewById(R.id.feebback_reply_content);
         EditText keyboradEdit = (EditText) findViewById(R.id.feekback_keyboard_view);
         feekback_list = (DownRefreshList) findViewById(R.id.feebback_reply_list);

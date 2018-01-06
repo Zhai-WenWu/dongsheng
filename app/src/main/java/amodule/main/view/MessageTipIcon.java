@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import com.xiangha.R;
 
-import acore.logic.AppCommon;
 import acore.logic.MessageTipController;
 import amodule._common.utility.WidgetUtility;
 import amodule.main.delegate.ISetMessageTip;
@@ -69,7 +68,7 @@ public class MessageTipIcon extends RelativeLayout implements ISetMessageTip ,Vi
     @Override
     public void onClick(View v) {
         getContext().startActivity(new Intent(getContext(), MyMessage.class));
-        MessageTipController.setQuanMessage(0);
-        setMessage(MessageTipController.getMessageNum());
+        MessageTipController.newInstance().setQuanMessage(0);
+        setMessage(MessageTipController.newInstance().getMessageNum());
     }
 }

@@ -21,7 +21,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.annimon.stream.Stream;
-import com.annimon.stream.function.Predicate;
 import com.popdialog.util.GoodCommentManager;
 import com.tencent.stat.StatConfig;
 import com.tencent.stat.StatService;
@@ -71,7 +70,6 @@ import amodule.main.activity.MainCircle;
 import amodule.main.activity.MainHomePage;
 import amodule.main.activity.MainMyself;
 import amodule.main.delegate.ISetMessageTip;
-import amodule.main.view.MessageTipIcon;
 import amodule.main.view.WelcomeDialog;
 import amodule.user.activity.MyFavorite;
 import aplug.shortvideo.ShortVideoInit;
@@ -85,7 +83,6 @@ import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilLog;
 
 import static acore.tools.Tools.getApiSurTime;
-import static com.xiangha.R.id.all;
 import static com.xiangha.R.id.iv_itemIsFine;
 
 @SuppressWarnings("deprecation")
@@ -178,7 +175,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
      * 初始化七鱼未读消息数
      */
     private void initQiYvUnreadCount() {
-        MessageTipController.loadQiyuUnreadCount();
+        MessageTipController.newInstance().loadQiyuUnreadCount();
     }
 
     /**
@@ -202,7 +199,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
         if (mUnreadCountListener == null) {
             mUnreadCountListener = count -> {
                 if (count >= 0) {
-                    MessageTipController.setQiyvMessage(count);
+                    MessageTipController.newInstance().setQiyvMessage(count);
                 }
             };
         }
@@ -241,7 +238,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                 //处理
                 if (LoginManager.isLogin()) {
                     initQiYvUnreadCount();
-                    MessageTipController.setMessageCount();
+                    MessageTipController.newInstance().setMessageCount();
                 }
                 addQiYvListener();
 
@@ -467,7 +464,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
         TimerTask tt = new TimerTask() {
             @Override
             public void run() {
-                handler.post(() -> MessageTipController.getCommonData(null));
+                handler.post(() -> MessageTipController.newInstance().getCommonData(null));
             }
         };
         timer.schedule(tt, everyReq * 1000, everyReq * 1000);
@@ -837,8 +834,8 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                 if (data != null && data instanceof Boolean && (Boolean) data) {
                     addQiYvListener();
                     QiYvHelper.getInstance().onUserLogin();
-                    MessageTipController.loadQiyuUnreadCount();
-                    MessageTipController.setMessageCount();
+                    MessageTipController.newInstance().loadQiyuUnreadCount();
+                    MessageTipController.newInstance().setMessageCount();
                 }
                 break;
             case ObserverManager.NOTIFY_LOGOUT:
@@ -849,7 +846,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                 }
                 break;
             case ObserverManager.NOTIFY_MESSAGE_REFRESH:
-                setMessageTip(MessageTipController.getMessageNum());
+                setMessageTip(MessageTipController.newInstance().getMessageNum());
                 break;
             default:
                 break;

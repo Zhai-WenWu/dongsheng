@@ -13,6 +13,8 @@ import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
 import third.qiyu.QiYvHelper;
 
+import static acore.tools.ObserverManager.NOTIFY_MESSAGE_REFRESH;
+
 /**
  * Description :
  * PackageName : acore.logic
@@ -20,21 +22,23 @@ import third.qiyu.QiYvHelper;
  * e_mail : ztanzeyu@gmail.com
  */
 public class MessageTipController {
-    private static int qiyvMessage = 0;//七鱼新消息条数
-    private static int quanMessage = 0; // 美食圈新消息条数
-    private static int feekbackMessage = 0; // 系统新消息条数
-    private static int myQAMessage = 0;//我的问答新消息条数
+    private int qiyvMessage = 0;//七鱼新消息条数
+    private int quanMessage = 0; // 美食圈新消息条数
+    private int feekbackMessage = 0; // 系统新消息条数
+    private int myQAMessage = 0;//我的问答新消息条数
 
-    private static int fiallNum = 0;
+    private int fiallNum = 0;
 
-    public static boolean hasArbitration;
+    public boolean hasArbitration;
 
     private static volatile MessageTipController mInstance = null;
-    private MessageTipController(){}
 
-    public static MessageTipController getInstance(){
-        if(null == mInstance){
-            synchronized (MessageTipController.class){
+    private MessageTipController() {
+    }
+
+    public static MessageTipController newInstance() {
+        if (null == mInstance) {
+            synchronized (MessageTipController.class) {
                 mInstance = new MessageTipController();
             }
         }
@@ -42,7 +46,7 @@ public class MessageTipController {
     }
 
     /** 获取公用数据消息 */
-    public static void getCommonData(final InternetCallback callback) {
+    public void getCommonData(final InternetCallback callback) {
         String url = StringManager.api_commonData + "?m=commonData";
         ReqInternet.in().doGet(url, new InternetCallback() {
             @Override
@@ -55,7 +59,7 @@ public class MessageTipController {
                 } else if (fiallNum < 3) {
                     fiallNum++;
                     getCommonData(callback);
-                } else{
+                } else {
                     if (callback != null)
                         callback.loaded(flag, url, "加载失败");
                 }
@@ -63,8 +67,8 @@ public class MessageTipController {
         });
     }
 
-    private static boolean handlerMessageData(String returnObj) {
-        if(TextUtils.isEmpty(returnObj)) return false;
+    private boolean handlerMessageData(String returnObj) {
+        if (TextUtils.isEmpty(returnObj)) return false;
         String[] alertArr = returnObj.split("-");
         if (alertArr != null && alertArr.length > 2) {
             quanMessage = Integer.parseInt(alertArr[1]);
@@ -90,66 +94,66 @@ public class MessageTipController {
         return false;
     }
 
-    public static int getMessageNum() {
+    public int getMessageNum() {
         return quanMessage + feekbackMessage + myQAMessage + qiyvMessage;
     }
 
-    public static void loadQiyuUnreadCount(){
+    public void loadQiyuUnreadCount() {
         loadQiyuUnreadCount(count -> {
             setMessageCount();
         });
     }
 
-    public static void loadQiyuUnreadCount(QiYvHelper.NumberCallback callback){
+    public void loadQiyuUnreadCount(QiYvHelper.NumberCallback callback) {
         QiYvHelper.getInstance().getUnreadCount(count -> {
             qiyvMessage = count >= 0 ? count : qiyvMessage;
-            if(count >= 0 && callback != null)
+            if (count >= 0 && callback != null)
                 callback.onNumberReady(count);
         });
     }
 
-    public static void setMessageCount(){
-        ObserverManager.getInstence().notify(ObserverManager.NOTIFY_MESSAGE_REFRESH,null,"");
+    public void setMessageCount() {
+        ObserverManager.getInstence().notify(NOTIFY_MESSAGE_REFRESH, null, "");
     }
 
-    public static void setQiyvMessage(int qiyvMessage) {
-        MessageTipController.qiyvMessage = qiyvMessage;
+    public void setQiyvMessage(int qiyvMessage) {
+        this.qiyvMessage = qiyvMessage;
         setMessageCount();
     }
 
-    public static void setQuanMessage(int quanMessage) {
-        MessageTipController.quanMessage = quanMessage;
+    public void setQuanMessage(int quanMessage) {
+        this.quanMessage = quanMessage;
         setMessageCount();
     }
 
-    public static void autoIncreaseOneFeek(){
-        MessageTipController.feekbackMessage ++;
+    public void autoIncreaseOneFeek() {
+        this.feekbackMessage++;
         setMessageCount();
     }
 
-    public static void setFeekbackMessage(int feekbackMessage) {
-        MessageTipController.feekbackMessage = feekbackMessage;
+    public void setFeekbackMessage(int feekbackMessage) {
+        this.feekbackMessage = feekbackMessage;
         setMessageCount();
     }
 
-    public static void setMyQAMessage(int myQAMessage) {
-        MessageTipController.myQAMessage = myQAMessage;
+    public void setMyQAMessage(int myQAMessage) {
+        this.myQAMessage = myQAMessage;
         setMessageCount();
     }
 
-    public static int getQiyvMessage() {
+    public int getQiyvMessage() {
         return qiyvMessage;
     }
 
-    public static int getQuanMessage() {
+    public int getQuanMessage() {
         return quanMessage;
     }
 
-    public static int getFeekbackMessage() {
+    public int getFeekbackMessage() {
         return feekbackMessage;
     }
 
-    public static int getMyQAMessage() {
+    public int getMyQAMessage() {
         return myQAMessage;
     }
 }

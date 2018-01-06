@@ -17,11 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.MessageTipController;
 import acore.logic.XHClick;
-import acore.override.XHApplication;
 import acore.override.activity.mian.MainBaseActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -271,7 +269,7 @@ public class MainCircle extends MainBaseActivity implements View.OnClickListener
             defaultHasUser = LoginManager.isLogin();
             loadModuleData();
         }
-        mMessageTipIcon.setMessage(MessageTipController.getMessageNum());
+        mMessageTipIcon.setMessage(MessageTipController.newInstance().getMessageNum());
     }
 
     /** 刷新 */

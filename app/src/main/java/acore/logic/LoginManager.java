@@ -189,9 +189,9 @@ public class LoginManager {
                     new GrowingIOController().setUserProperties(mAct,userInfo);
                     UtilFile.delShared(mAct, FileManager.xmlFile_userInfo, "");
                     //清空消息数角标
-                    MessageTipController.setQuanMessage(0);
-                    MessageTipController.setQiyvMessage(0);
-                    MessageTipController.setMyQAMessage(0);
+                    MessageTipController.newInstance().setQuanMessage(0);
+                    MessageTipController.newInstance().setQiyvMessage(0);
+                    MessageTipController.newInstance().setMyQAMessage(0);
                     //XG解绑
                     new XGPushServer(mAct).initPush();
                     //如果是用户设置页面finish掉自己

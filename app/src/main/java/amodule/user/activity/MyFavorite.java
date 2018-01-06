@@ -51,7 +51,6 @@ public class MyFavorite extends MainBaseActivity implements View.OnClickListener
     public static final String KEY = "MyFavorite";
     private ArrayList<Map<String, String>> mData = new ArrayList<>();
     private PtrClassicFrameLayout refreshLayout;
-    private RelativeLayout seekLayout;
     private MessageTipIcon mMessageTipIcon;
     private LinearLayout noDataLayout,noLoginLayout;
     private RvListView rvListview;
@@ -83,15 +82,14 @@ public class MyFavorite extends MainBaseActivity implements View.OnClickListener
         mMessageTipIcon = (MessageTipIcon) findViewById(R.id.message_tip);
         refreshLayout = (PtrClassicFrameLayout) findViewById(R.id.refresh_list_view_frame);
         rvListview = (RvListView) findViewById(R.id.rvListview);
-        seekLayout = (RelativeLayout) findViewById(R.id.seek_layout);
         noDataLayout = (LinearLayout) findViewById(R.id.noData_layout);
         noLoginLayout = (LinearLayout) findViewById(R.id.noLogin_layout);
         noLoginLayout.setVisibility(LoginManager.isLogin() ? View.GONE:View.VISIBLE);
+        findViewById(R.id.no_login_rela).setOnClickListener(this);
 
-        seekLayout.setOnClickListener(this);
         noLoginLayout.setOnClickListener(this);
+        findViewById(R.id.seek_layout).setOnClickListener(this);
         findViewById(R.id.title).setOnClickListener(this);
-//        findViewById(R.id.back).setOnClickListener(this);
         findViewById(R.id.back).setVisibility(View.GONE);
         findViewById(R.id.btn_no_data).setOnClickListener(this);
 
@@ -105,40 +103,24 @@ public class MyFavorite extends MainBaseActivity implements View.OnClickListener
         Drawable drawable = getResources().getDrawable(R.drawable.item_decoration);
         itemDecoration.setDrawable(drawable);
         rvListview.addItemDecoration(itemDecoration);
-        rvListview.setOnItemClickListener(new RvListView.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
-                if(mData == null || position < 0 || position >= mData.size())
-                    return;
-                Map<String, String> item = mData.get(position);
-                if(item == null){
-                    return;
-                }
-                Map<String, String> itemParameter =  StringManager.getFirstMap(item.get("parameter"));
-                AppCommon.openUrl(MyFavorite.this,itemParameter.get("url"),true);
+        rvListview.setOnItemClickListener((view, holder, position) -> {
+            if(mData == null || position < 0 || position >= mData.size())
+                return;
+            Map<String, String> item = mData.get(position);
+            if(item == null){
+                return;
             }
+            Map<String, String> itemParameter =  StringManager.getFirstMap(item.get("parameter"));
+            AppCommon.openUrl(MyFavorite.this,itemParameter.get("url"),true);
         });
-        rvListview.setOnItemLongClickListener(new RvListView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(View view, RecyclerView.ViewHolder holder, int position) {
-                showBottomDialog(position);
-                return true;
-            }
+        rvListview.setOnItemLongClickListener((view, holder, position) -> {
+            showBottomDialog(position);
+            return true;
         });
         loadManager.setLoading(refreshLayout,
                 rvListview, myFavorite, true,
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        requestData(true);
-                    }
-                },
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        requestData(false);
-                    }
-                });
+                v -> requestData(true),
+                v -> requestData(false));
         loadManager.getSingleLoadMore(rvListview).setBackgroundColor(Color.parseColor("#F2F2F2"));
     }
 
@@ -192,7 +174,7 @@ public class MyFavorite extends MainBaseActivity implements View.OnClickListener
     @Override
     protected void onResume() {
         super.onResume();
-        mMessageTipIcon.setMessage(MessageTipController.getMessageNum());
+        mMessageTipIcon.setMessage(MessageTipController.newInstance().getMessageNum());
     }
 
     @Override
@@ -269,28 +251,27 @@ public class MyFavorite extends MainBaseActivity implements View.OnClickListener
         Map<String, String> itemB = StringManager.getFirstMap(item.get("B"));
         final String typeName = itemB.get("text1");
         BottomDialog dialog = new BottomDialog(this);
-        dialog.addButton("取消收藏", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FavoriteHelper.instance().setFavoriteStatus(MyFavorite.this, code,  typeName, type,
-                        new FavoriteHelper.FavoriteStatusCallback() {
-                            @Override
-                            public void onSuccess(boolean state) {
-                                if(state){
-                                    return;
-                                }
-                                mData.remove(position);
-                                rvListview.notifyItemViewRemove(position);
-                                handlerNoDataLayout();
-                            }
-
-                            @Override
-                            public void onFailed() {
-                            }
-                        });
-            }
-        });
+        dialog.addButton("取消收藏", v -> cannelFav(code, typeName, type, position));
         dialog.show();
+    }
+
+    private void cannelFav(String code, String typeName, String type, int position) {
+        FavoriteHelper.instance().setFavoriteStatus(MyFavorite.this, code,  typeName, type,
+                new FavoriteHelper.FavoriteStatusCallback() {
+                    @Override
+                    public void onSuccess(boolean state) {
+                        if(state){
+                            return;
+                        }
+                        mData.remove(position);
+                        rvListview.notifyItemViewRemove(position);
+                        handlerNoDataLayout();
+                    }
+
+                    @Override
+                    public void onFailed() {
+                    }
+                });
     }
 
     @Override

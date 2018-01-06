@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activityLayout"
     style="@style/layout"
     android:background="@android:color/transparent">
@@ -15,33 +14,33 @@
 
         <include
             android:id="@+id/ll_title"
-            layout="@layout/c_view_bar_title"/>
+            layout="@layout/c_view_bar_title" />
 
         <amodule.main.view.MessageTipIcon
             android:id="@+id/message_tip"
             android:layout_width="@dimen/dp_57"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
     </RelativeLayout>
 
     <android.support.design.widget.CoordinatorLayout
-        android:layout_below="@+id/title_rela_all"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@+id/title_rela_all">
 
         <android.support.design.widget.AppBarLayout
-            app:elevation="0dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:elevation="0dp">
 
             <RelativeLayout
                 android:id="@+id/seek_layout"
-                app:layout_scrollFlags="scroll|enterAlways|snap"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_45"
                 android:layout_below="@+id/title_rela_all"
                 android:background="#F2F2F2"
                 android:paddingLeft="@dimen/dp_10"
-                android:paddingRight="@dimen/dp_10">
+                android:paddingRight="@dimen/dp_10"
+                app:layout_scrollFlags="scroll|enterAlways|snap">
 
                 <RelativeLayout
                     android:id="@+id/seek_but_rela"
@@ -58,7 +57,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginRight="@dimen/dp_6"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/icon_favorite_search_fake"/>
+                        android:src="@drawable/icon_favorite_search_fake" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -68,15 +67,14 @@
                         android:background="@drawable/bg_round_transparent"
                         android:hint="搜索"
                         android:textColor="#999999"
-                        android:textSize="@dimen/sp_14"/>
+                        android:textSize="@dimen/sp_14" />
                 </RelativeLayout>
 
             </RelativeLayout>
 
         </android.support.design.widget.AppBarLayout>
 
-        <cn.srain.cube.views.ptr.PtrClassicFrameLayout
-            xmlns:cube_ptr="http://schemas.android.com/apk/res-auto"
+        <cn.srain.cube.views.ptr.PtrClassicFrameLayout xmlns:cube_ptr="http://schemas.android.com/apk/res-auto"
             android:id="@+id/refresh_list_view_frame"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -93,12 +91,12 @@
                 android:id="@+id/rvListview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"
                 android:background="@android:color/transparent"
                 android:cacheColorHint="@android:color/transparent"
                 android:listSelector="@android:color/transparent"
                 android:paddingLeft="0dp"
-                android:paddingRight="0dp"/>
+                android:paddingRight="0dp"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
         </cn.srain.cube.views.ptr.PtrClassicFrameLayout>
 
@@ -114,7 +112,7 @@
             <ImageView
                 android:layout_width="@dimen/dp_150"
                 android:layout_height="@dimen/dp_150"
-                android:src="@drawable/z_favo_no_data"/>
+                android:src="@drawable/z_favo_no_data" />
 
             <TextView
                 android:id="@+id/no_data_text"
@@ -123,7 +121,7 @@
                 android:layout_marginTop="@dimen/dp_50"
                 android:text="没有收藏内容，快去收藏吧！"
                 android:textSize="@dimen/sp_13"
-                android:visibility="visible"/>
+                android:visibility="visible" />
 
             <Button
                 android:id="@+id/btn_no_data"
@@ -133,26 +131,47 @@
                 android:background="@drawable/btn_round_read_submit"
                 android:text="去收藏"
                 android:textColor="#fff"
-                android:textSize="@dimen/sp_14"/>
+                android:textSize="@dimen/sp_14" />
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/noLogin_layout"
+        <RelativeLayout
+            android:id="@+id/no_login_rela"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
             android:background="@color/common_bg"
-            android:orientation="vertical"
-            android:visibility="gone"
-            tools:visibility="visible">
+            android:visibility="visible">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:text="去登录"
-                android:layout_gravity="center"
-                android:layout_height="wrap_content" />
+            <LinearLayout
+                android:id="@+id/noLogin_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:clickable="true"
+                android:gravity="center"
+                android:onClick="login"
+                android:orientation="vertical"
+                android:visibility="visible">
 
-        </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="@dimen/dp_23"
+                    android:text="登录后可以浏览收藏内容"
+                    android:textColor="#333333"
+                    android:textSize="@dimen/dp_16" />
+
+                <acore.widget.TagTextView
+                    android:layout_width="@dimen/dp_120"
+                    android:layout_height="@dimen/dp_39"
+                    android:gravity="center"
+                    android:text="请登录"
+                    android:textColor="@color/comment_color"
+                    android:textSize="@dimen/dp_14"
+                    app:radius="@dimen/dp_4"
+                    app:sideColor="@color/comment_color"
+                    app:sideWidth="@dimen/dp_0.5" />
+            </LinearLayout>
+        </RelativeLayout>
 
     </android.support.design.widget.CoordinatorLayout>
 

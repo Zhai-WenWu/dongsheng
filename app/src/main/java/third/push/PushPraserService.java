@@ -14,14 +14,12 @@ import com.xiangha.R;
 import java.util.ArrayList;
 import java.util.Map;
 
-import acore.logic.AppCommon;
 import acore.logic.MessageTipController;
 import acore.logic.XHClick;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
 import amodule.main.Main;
-import amodule.user.activity.MyMessage;
 import aplug.feedback.activity.Feedback;
 import third.push.model.NotificationData;
 import third.push.xg.XGLocalPushServer;
@@ -142,11 +140,11 @@ public class PushPraserService extends Service{
 									if (Feedback.handler != null && info.topActivity.getClassName().equals("com.xiangha.Feekback"))
 										Feedback.notifySendMsg(Feedback.MSG_FROM_NOTIFY);
 									else {
-										MessageTipController.autoIncreaseOneFeek();
-										MessageTipController.loadQiyuUnreadCount(new QiYvHelper.NumberCallback() {
+										MessageTipController.newInstance().autoIncreaseOneFeek();
+										MessageTipController.newInstance().loadQiyuUnreadCount(new QiYvHelper.NumberCallback() {
 											@Override
 											public void onNumberReady(int count) {
-												MessageTipController.setMessageCount();
+												MessageTipController.newInstance().setMessageCount();
 											}
 										});
 										new NotificationManager().notificationActivity(context, data);
@@ -169,22 +167,22 @@ public class PushPraserService extends Service{
 									if (Feedback.handler != null && info.topActivity.getClassName().equals("com.xiangha.Feekback"))
 										Feedback.notifySendMsg(Feedback.MSG_FROM_NOTIFY);
 									else {
-										MessageTipController.autoIncreaseOneFeek();
-										MessageTipController.loadQiyuUnreadCount(new QiYvHelper.NumberCallback() {
+										MessageTipController.newInstance().autoIncreaseOneFeek();
+										MessageTipController.newInstance().loadQiyuUnreadCount(new QiYvHelper.NumberCallback() {
 											@Override
 											public void onNumberReady(int count) {
-												MessageTipController.setMessageCount();
+												MessageTipController.newInstance().setMessageCount();
 											}
 										});
 										new NotificationManager().notificationActivity(context, data);
 									}
 								}
 							} else {
-								MessageTipController.autoIncreaseOneFeek();
-								MessageTipController.loadQiyuUnreadCount(new QiYvHelper.NumberCallback() {
+								MessageTipController.newInstance().autoIncreaseOneFeek();
+								MessageTipController.newInstance().loadQiyuUnreadCount(new QiYvHelper.NumberCallback() {
 									@Override
 									public void onNumberReady(int count) {
-										MessageTipController.setMessageCount();
+										MessageTipController.newInstance().setMessageCount();
 									}
 								});
 								new NotificationManager().notificationActivity(context, data);
@@ -192,11 +190,11 @@ public class PushPraserService extends Service{
 							break;
 						// 显示通知，存在消息列表中，使用app不通知
 						case XHClick.NOTIFY_C:
-							MessageTipController.autoIncreaseOneFeek();
-							MessageTipController.loadQiyuUnreadCount(new QiYvHelper.NumberCallback() {
+							MessageTipController.newInstance().autoIncreaseOneFeek();
+							MessageTipController.newInstance().loadQiyuUnreadCount(new QiYvHelper.NumberCallback() {
 								@Override
 								public void onNumberReady(int count) {
-									MessageTipController.setMessageCount();
+									MessageTipController.newInstance().setMessageCount();
 								}
 							});
 							if (context != null && ToolsDevice.isAppInPhone(context, context.getPackageName()) < 2) {

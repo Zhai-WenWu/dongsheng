@@ -2,8 +2,6 @@ package amodule.user.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +22,6 @@ import acore.logic.LoginManager;
 import acore.logic.MessageTipController;
 import acore.logic.XHClick;
 import acore.override.activity.base.BaseAppCompatActivity;
-import acore.override.activity.mian.MainBaseActivity;
 import acore.tools.IObserver;
 import acore.tools.ObserverManager;
 import acore.tools.StringManager;
@@ -32,7 +29,6 @@ import acore.tools.ToolsDevice;
 import acore.widget.DownRefreshList;
 import amodule._common.utility.WidgetUtility;
 import amodule.answer.activity.QAMsgListActivity;
-import amodule.main.Main;
 import amodule.user.activity.login.LoginByAccout;
 import amodule.user.adapter.AdapterMainMsg;
 import aplug.basic.InternetCallback;
@@ -81,7 +77,7 @@ public class MyMessage extends BaseAppCompatActivity implements OnClickListener,
      * 初始化七鱼客服未读消息数
      */
     private void initQiYvNum() {
-        MessageTipController.loadQiyuUnreadCount(new QiYvHelper.NumberCallback() {
+        MessageTipController.newInstance().loadQiyuUnreadCount(new QiYvHelper.NumberCallback() {
             @Override
             public void onNumberReady(int count) {
                 setQiYvNum();
@@ -92,21 +88,21 @@ public class MyMessage extends BaseAppCompatActivity implements OnClickListener,
     /** 设置消息数的显示 */
     private void setQiYvNum() {
         if (mQiYvNum != null) {
-            String qiyuNumValue = String.valueOf(MessageTipController.getQiyvMessage() > 0 ? MessageTipController.getQiyvMessage() : "");
+            String qiyuNumValue = String.valueOf(MessageTipController.newInstance().getQiyvMessage() > 0 ? MessageTipController.newInstance().getQiyvMessage() : "");
             WidgetUtility.setTextToView(mQiYvNum, qiyuNumValue);
         }
     }
 
     private void setFeekbackMsg() {
         if (feekback_msg_num != null) {
-            String feekbackNumValue = MessageTipController.getFeekbackMessage() > 0 ? String.valueOf(MessageTipController.getFeekbackMessage()) : "";
+            String feekbackNumValue = MessageTipController.newInstance().getFeekbackMessage() > 0 ? String.valueOf(MessageTipController.newInstance().getFeekbackMessage()) : "";
             WidgetUtility.setTextToView(feekback_msg_num, feekbackNumValue);
         }
     }
 
     private void setQAMsgNum() {
         if (mMyQANum != null) {
-            String myQANumValue = MessageTipController.getMyQAMessage() > 0 ? String.valueOf(MessageTipController.getMyQAMessage()) : "";
+            String myQANumValue = MessageTipController.newInstance().getMyQAMessage() > 0 ? String.valueOf(MessageTipController.newInstance().getMyQAMessage()) : "";
             WidgetUtility.setTextToView(mMyQANum, myQANumValue);
         }
     }
@@ -138,7 +134,7 @@ public class MyMessage extends BaseAppCompatActivity implements OnClickListener,
                 load(true);
                 setRefresh();
             }
-            MessageTipController.setQuanMessage(0);
+            MessageTipController.newInstance().setQuanMessage(0);
         } else {
             findViewById(R.id.no_login_rela).setVisibility(View.VISIBLE);
             mNoLoginLayout.setVisibility(View.VISIBLE);
@@ -238,7 +234,7 @@ public class MyMessage extends BaseAppCompatActivity implements OnClickListener,
         if (isForward) {
             currentPage = 1;
             everyPage = 0;
-            MessageTipController.setQuanMessage(0);
+            MessageTipController.newInstance().setQuanMessage(0);
             getUrl = StringManager.api_message + "?type=" + (clickFlag ? "all" : "asc") + "&page=" + currentPage;
         } else {
             currentPage++;
@@ -376,7 +372,7 @@ public class MyMessage extends BaseAppCompatActivity implements OnClickListener,
                 break;
             case R.id.my_qa:
                 if (mMyQANum != null && mMyQANum.getVisibility() == View.VISIBLE) {
-                    MessageTipController.setMyQAMessage(0);
+                    MessageTipController.newInstance().setMyQAMessage(0);
                     mMyQANum.setText("");
                     mMyQANum.setVisibility(View.GONE);
                 }
@@ -384,7 +380,7 @@ public class MyMessage extends BaseAppCompatActivity implements OnClickListener,
                 XHClick.mapStat(MyMessage.this, "a_message", "点击我问我答", "");
                 break;
             case R.id.qiyv:
-                MessageTipController.setQiyvMessage(0);
+                MessageTipController.newInstance().setQiyvMessage(0);
                 setQiYvNum();
                 Map<String, String> customMap = new HashMap<>();
                 customMap.put("pageTitle", "消息列表页");

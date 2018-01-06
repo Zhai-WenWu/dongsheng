@@ -372,13 +372,13 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
             }
 
         });
-        view_qa_arbitration.setNewHintVisibility(MessageTipController.hasArbitration ? View.VISIBLE : View.GONE);
-        view_qa_arbitration.init("问答仲裁", "", !MessageTipController.hasArbitration, new LeftAndRightTextView.LeftAndRightTextViewCallback() {
+        view_qa_arbitration.setNewHintVisibility(MessageTipController.newInstance().hasArbitration ? View.VISIBLE : View.GONE);
+        view_qa_arbitration.init("问答仲裁", "", !MessageTipController.newInstance().hasArbitration, new LeftAndRightTextView.LeftAndRightTextViewCallback() {
             @Override
             public void onClick() {
                 view_qa_arbitration.setNewHintVisibility(View.GONE);
                 view_qa_arbitration.setArrowRightVisibility(View.VISIBLE);
-                MessageTipController.hasArbitration = false;
+                MessageTipController.newInstance().hasArbitration = false;
                 openQAArbitration();
             }
         });

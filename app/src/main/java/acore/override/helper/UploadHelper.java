@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import acore.logic.AppCommon;
 import acore.logic.MessageTipController;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
@@ -152,7 +151,7 @@ public abstract class UploadHelper {
      */
 	protected void doUpload(final long uploadTimeCode,final LinkedHashMap<String, String> uploadData) {
 		timeoutTimer(uploadTimeCode,false);
-		MessageTipController.getCommonData(new InternetCallback() {
+		MessageTipController.newInstance().getCommonData(new InternetCallback() {
 			@Override
 			public void loaded(int flag, String url, Object returnObj) {
 				if(flag >= ReqInternet.REQ_OK_STRING){

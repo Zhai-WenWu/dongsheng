@@ -15,8 +15,6 @@ import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;
 import com.tencent.android.tpush.XGPushManager;
 import com.umeng.analytics.MobclickAgent;
-import com.umeng.onlineconfig.OnlineConfigAgent;
-import com.umeng.onlineconfig.OnlineConfigLog;
 import com.xh.manager.DialogManager;
 import com.xh.manager.ViewManager;
 import com.xh.view.HButtonView;
@@ -230,7 +228,7 @@ public class MainInitDataControl {
         long startTime= System.currentTimeMillis();
 
         // 自动登录
-        MessageTipController.getCommonData(null);
+        MessageTipController.newInstance().getCommonData(null);
 
         compatibleData(context);
 

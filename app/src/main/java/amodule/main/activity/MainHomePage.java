@@ -315,7 +315,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
             mNeedRefCurrFm = false;
             refresh();
         }
-        mViewContrloer.setMessage(MessageTipController.getMessageNum());
+        mViewContrloer.setMessage(MessageTipController.newInstance().getMessageNum());
     }
 
     @Override
