@@ -6,12 +6,6 @@
     android:layout_height="match_parent"
     android:background="@color/transparent">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="@color/transparent">
-
         <!-- 这个FrameLayout为TabWidget的内容   id必须写成@android:id/tabcontent的形式 -->
         <acore.widget.XiangHaTabHost
             android:id="@+id/xiangha_tabhost"
@@ -73,10 +67,10 @@
                     android:layout_weight="1"/>
             </LinearLayout>
         </FrameLayout>
-    </RelativeLayout>
     <include
         android:id="@+id/xh_welcome"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
-        layout="@layout/xh_welcome"/>
+        layout="@layout/xh_welcome"
+        android:visibility="gone"/>
 </RelativeLayout>

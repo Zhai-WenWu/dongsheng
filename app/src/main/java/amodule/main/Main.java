@@ -53,7 +53,6 @@ import amodule.main.Tools.WelcomeControls;
 import amodule.main.activity.MainCircle;
 import amodule.main.activity.MainHomePage;
 import amodule.main.activity.MainMyself;
-import amodule.main.view.WelcomeDialog;
 import amodule.user.activity.MyMessage;
 import aplug.shortvideo.ShortVideoInit;
 import third.ad.control.AdControlHomeDish;
@@ -115,7 +114,6 @@ public class Main extends Activity implements OnClickListener, IObserver {
     public static boolean isShowWelcomeDialog = false;//是否welcomedialog在展示，false未展示，true正常展示,static 避免部分手机不进行初始化和回收
     //是否已经进行初始化
     private boolean isInit=false;
-    private WelcomeDialog welcomeDialog;//dialog,显示
     private QiYvHelper.UnreadCountChangeListener mUnreadCountListener;
     private WelcomeControls welcomeControls;
 
@@ -137,12 +135,11 @@ public class Main extends Activity implements OnClickListener, IObserver {
     private void init(){
         Log.i("zhangyujian","数据："+FileManager.loadShared(this,FileManager.app_welcome,VersionOp.getVerName(this)));
         if(TextUtils.isEmpty((String) FileManager.loadShared(this,FileManager.app_welcome,VersionOp.getVerName(this)))) {
-            LogManager.printStartTime("zhangyujian","第一次");
             initUI();
             initData();
             setCurrentTabByIndex(defaultTab);
-            LogManager.printStartTime("zhangyujian","main::测绘师::");
         }
+        WelcomeDialogstate=false;
         mainInitDataControl = new MainInitDataControl();
         welcomeControls= LoginManager.isShowAd()?new WelcomeControls(this,callBack):
                 new WelcomeControls(this,1,callBack);
@@ -327,15 +324,6 @@ public class Main extends Activity implements OnClickListener, IObserver {
                 tabHost.addContent(i + "", new Intent(this, classes[i]));
             }
         }
-        //处理布局margin
-//        int margin = (ToolsDevice.getWindowPx(this).widthPixels - Tools.getDimen(this, R.dimen.dp_5) * 2
-//                - Tools.getDimen(this, R.dimen.dp_70) * 5) / 4 / 2;
-//        int length = linear_item.getChildCount();
-//        for (int i = 0; i < length; i++) {
-//            setTabItemMargins(linear_item, i, margin, margin);
-//        }
-//        setTabItemMargins(linear_item, 0, 0, margin);
-//        setTabItemMargins(linear_item, length - 1, margin, 0);
     }
 
     // 时刻取得导航提醒
@@ -481,6 +469,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
      * @param goBack
      */
     public void doExit(Activity act, boolean goBack) {
+        if(!WelcomeDialogstate)return;
         // 如果是返回键则退出到首页
         AppCommon.clearCache();
         // 退出的弹框
@@ -741,9 +730,6 @@ public class Main extends Activity implements OnClickListener, IObserver {
     @Override
     protected void onDestroy() {
         //activity关闭之前必须关闭dilaog
-        if(welcomeDialog!=null&&welcomeDialog.isShowing()){
-            welcomeDialog.dismiss();
-        }
         super.onDestroy();
         ObserverManager.getInstence().unRegisterObserver(this);
         mUnreadCountListener = null;
