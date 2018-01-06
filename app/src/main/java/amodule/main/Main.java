@@ -20,6 +20,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.annimon.stream.Stream;
+import com.annimon.stream.function.Predicate;
 import com.popdialog.util.GoodCommentManager;
 import com.tencent.stat.StatConfig;
 import com.tencent.stat.StatService;
@@ -38,6 +40,7 @@ import java.util.TimerTask;
 import acore.logic.AllPopDialogHelper;
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
+import acore.logic.MessageTipController;
 import acore.logic.VersionOp;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
@@ -67,8 +70,10 @@ import amodule.main.Tools.MainInitDataControl;
 import amodule.main.activity.MainCircle;
 import amodule.main.activity.MainHomePage;
 import amodule.main.activity.MainMyself;
+import amodule.main.delegate.ISetMessageTip;
+import amodule.main.view.MessageTipIcon;
 import amodule.main.view.WelcomeDialog;
-import amodule.user.activity.MyMessage;
+import amodule.user.activity.MyFavorite;
 import aplug.shortvideo.ShortVideoInit;
 import third.ad.control.AdControlHomeDish;
 import third.ad.tools.AdConfigTools;
@@ -80,18 +85,20 @@ import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilLog;
 
 import static acore.tools.Tools.getApiSurTime;
+import static com.xiangha.R.id.all;
 import static com.xiangha.R.id.iv_itemIsFine;
 
 @SuppressWarnings("deprecation")
-public class Main extends Activity implements OnClickListener, IObserver {
-    public static final String TAG="xianghaTag";
+public class Main extends Activity implements OnClickListener, IObserver, ISetMessageTip {
+    public static final String TAG = "xianghaTag";
 
-    private String[] tabTitle = {"学做菜", "社区", "消息", "我的"};
-    private Class<?>[] classes = new Class<?>[]{MainHomePage.class, MainCircle.class, MyMessage.class, MainMyself.class};
-    private int[] tabImgs = new int[]{R.drawable.tab_index, R.drawable.tab_circle, R.drawable.tab_four, R.drawable.tab_myself};
+    private String[] tabTitle = {"学做菜", "社区", "收藏", "我的"};
+    private Class<?>[] classes = new Class<?>[]{MainHomePage.class, MainCircle.class, MyFavorite.class, MainMyself.class};
+    private int[] tabImgs = new int[]{R.drawable.tab_index, R.drawable.tab_circle, R.drawable.tab_fav, R.drawable.tab_myself};
     public static final int TAB_HOME = 0;
     public static final int TAB_CIRCLE = 1;
-    public static final int TAB_MESSAGE = 2;
+    //    public static final int TAB_MESSAGE = 2;
+    public static final int TAB_FAVORIT = 2;
     public static final int TAB_SELF = 3;
 
     @SuppressLint("StaticFieldLeak")
@@ -104,7 +111,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
     /**
      * 页面关闭层级
      * 把层级>=close_level的层级关闭
-     * */
+     */
     public static int colse_level = 1000;
 
     public Map<String, MainBaseActivity> allTab = new HashMap<>();
@@ -128,7 +135,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
     private int nowTab = 0;//当前选中tab
     public static boolean isShowWelcomeDialog = false;//是否welcomedialog在展示，false未展示，true正常展示,static 避免部分手机不进行初始化和回收
     //是否已经进行初始化
-    private boolean isInit=false;
+    private boolean isInit = false;
     private WelcomeDialog welcomeDialog;//dialog,显示
     private QiYvHelper.UnreadCountChangeListener mUnreadCountListener;
 
@@ -139,30 +146,31 @@ public class Main extends Activity implements OnClickListener, IObserver {
         setContentView(R.layout.xh_main);
         mLocalActivityManager = new LocalActivityManager(this, true);
         mLocalActivityManager.dispatchCreate(savedInstanceState);
-        LogManager.printStartTime("zhangyujian","main::oncreate::start::");
+        LogManager.printStartTime("zhangyujian", "main::oncreate::start::");
         //腾讯统计
         initMTA();
         allMain = this;
         initOther();
         mainInitDataControl = new MainInitDataControl();
         showWelcome();
-        LogManager.printStartTime("zhangyujian","main::oncreate::");
+        LogManager.printStartTime("zhangyujian", "main::oncreate::");
         ClingPresenter.getInstance().onCreate(this, null);
     }
 
     /** 处理一下非明确功能的逻辑 */
-    private void initOther(){
+    private void initOther() {
         String[] times = FileManager.getSharedPreference(XHApplication.in(), FileManager.xmlKey_appKillTime);
         if (times != null && times.length > 1 && !TextUtils.isEmpty(times[1])) {
             Tools.getApiSurTime("killback", Long.parseLong(times[1]), System.currentTimeMillis());
         }
     }
+
     /**
      * 展示welcome
      */
-    private void showWelcome(){
+    private void showWelcome() {
         welcomeDialog = LoginManager.isShowAd() ?
-                new WelcomeDialog(Main.allMain,dialogShowCallBack) : new WelcomeDialog(Main.allMain,1,dialogShowCallBack);
+                new WelcomeDialog(Main.allMain, dialogShowCallBack) : new WelcomeDialog(Main.allMain, 1, dialogShowCallBack);
         welcomeDialog.show();
     }
 
@@ -170,15 +178,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
      * 初始化七鱼未读消息数
      */
     private void initQiYvUnreadCount() {
-        QiYvHelper.getInstance().getUnreadCount(count -> {
-            if (count >= 0) {
-                if (nowTab == TAB_MESSAGE)
-                    AppCommon.quanMessage = 0;
-                AppCommon.qiyvMessage = count;
-                if (count > 0)
-                    Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
-            }
-        });
+        MessageTipController.loadQiyuUnreadCount();
     }
 
     /**
@@ -186,7 +186,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
      */
     private void addQiYvListener() {
         QiYvHelper.getInstance().addOnUrlItemClickListener((context, url) -> {
-            if(TextUtils.isEmpty(url)) return;
+            if (TextUtils.isEmpty(url)) return;
             if (url.contains("m.ds.xiangha.com")
                     && url.contains("product_code=")) {//商品详情链接
                 String[] strs = url.split("\\?");
@@ -202,19 +202,15 @@ public class Main extends Activity implements OnClickListener, IObserver {
         if (mUnreadCountListener == null) {
             mUnreadCountListener = count -> {
                 if (count >= 0) {
-                    if (nowTab == TAB_MESSAGE)
-                        AppCommon.quanMessage = 0;
-                    AppCommon.qiyvMessage = count;
-                    if (count > 0)
-                        Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
+                    MessageTipController.setQiyvMessage(count);
                 }
             };
         }
         QiYvHelper.getInstance().addUnreadCountChangeListener(mUnreadCountListener, true);
     }
 
-    /**腾讯统计*/
-    private void initMTA(){
+    /** 腾讯统计 */
+    private void initMTA() {
         StatConfig.setDebugEnable(false);
         StatConfig.setInstallChannel(this, ChannelUtil.getChannel(this));
         StatConfig.setSendPeriodMinutes(1);//设置发送策略：每一分钟发送一次
@@ -235,7 +231,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
                 openUri();
                 new AllPopDialogHelper(Main.this).start();
                 com.popdialog.util.PushManager.tongjiPush(Main.this, isEnable ->
-                        XHClick.mapStat(XHApplication.in(),"a_push_user",isEnable ? "开启推送" : "关闭推送","")
+                        XHClick.mapStat(XHApplication.in(), "a_push_user", isEnable ? "开启推送" : "关闭推送", "")
                 );
                 isShowWelcomeDialog = false;
 
@@ -245,10 +241,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
                 //处理
                 if (LoginManager.isLogin()) {
                     initQiYvUnreadCount();
-                    if (nowTab == TAB_MESSAGE)
-                        AppCommon.quanMessage = 0;
-                    //防止七鱼回调有问题
-                    Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
+                    MessageTipController.setMessageCount();
                 }
                 addQiYvListener();
 
@@ -335,7 +328,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
                                 .setNegativeText("取消", v -> {
                                     dialogManager.cancel();
                                     uploadArticleData.setUploadType(UploadDishData.UPLOAD_PAUSE);
-                                    sqLite.update(uploadArticleData.getId(),uploadArticleData);
+                                    sqLite.update(uploadArticleData.getId(), uploadArticleData);
                                 })
                                 .setPositiveTextColor(Color.parseColor("#007aff"))
                                 .setPositiveText("确定", v -> {
@@ -344,8 +337,8 @@ public class Main extends Activity implements OnClickListener, IObserver {
                                     intent.putExtra("dataType", dataType);
                                     intent.putExtra("coverPath", uploadArticleData.getImg());
                                     String videoPath = "";
-                                    ArrayList<Map<String,String>> videoArray = uploadArticleData.getVideoArray();
-                                    if(videoArray.size() > 0){
+                                    ArrayList<Map<String, String>> videoArray = uploadArticleData.getVideoArray();
+                                    if (videoArray.size() > 0) {
                                         videoPath = videoArray.get(0).get("video");
                                     }
                                     intent.putExtra("finalVideoPath", videoPath);
@@ -360,7 +353,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
         @Override
         public void dialogOnLayout() {
             Log.i("zhangyujian", "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-            if(!isInit){
+            if (!isInit) {
                 dialogOnCreate();
             }
             AdControlHomeDish.getInstance();
@@ -415,6 +408,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
         //从Welcome方法
         ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_LOGIN);
         ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_LOGOUT);
+        ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_MESSAGE_REFRESH);
     }
 
     /**
@@ -473,13 +467,10 @@ public class Main extends Activity implements OnClickListener, IObserver {
         TimerTask tt = new TimerTask() {
             @Override
             public void run() {
-                handler.post(() -> AppCommon.getCommonData(null));
+                handler.post(() -> MessageTipController.getCommonData(null));
             }
         };
-        timer.schedule(tt, everyReq*1000, everyReq*1000);
-//        tempData();
-//        tempThreadData();
-//        getMainLooper().getThread().setPriority(10);
+        timer.schedule(tt, everyReq * 1000, everyReq * 1000);
     }
 
     @Override
@@ -491,7 +482,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
     @Override
     protected void onResume() {
         super.onResume();
-        LogManager.printStartTime("zhangyujian","main::onResume::");
+        LogManager.printStartTime("zhangyujian", "main::onResume::");
         mainOnResumeState = true;
         mLocalActivityManager.dispatchResume();
         if (colse_level == 0) {
@@ -514,7 +505,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
                 XHClick.mapStat(Main.this, "a_evaluate420", typeStr, timeStr)
         );
         openUri();
-        if(timer==null){
+        if (timer == null) {
             initRunTime();
         }
     }
@@ -532,6 +523,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
             }
         }
     }
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -542,6 +534,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
             e.printStackTrace();
         }
     }
+
     @Override
     protected void onStop() {
         super.onStop();
@@ -549,9 +542,9 @@ public class Main extends Activity implements OnClickListener, IObserver {
             isForeground = false;
             homebackTime = System.currentTimeMillis();
         }
-        if (timer!=null){
+        if (timer != null) {
             timer.cancel();
-            timer=null;
+            timer = null;
         }
     }
 
@@ -576,10 +569,11 @@ public class Main extends Activity implements OnClickListener, IObserver {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         /*try catch 住 super方法，尝试解决 IllegalStateException 异常*/
-        try{
-            outState.putString("currentTab",""+defaultTab);
+        try {
+            outState.putString("currentTab", "" + defaultTab);
             super.onSaveInstanceState(outState);
-        }catch (Exception ignored){}
+        } catch (Exception ignored) {
+        }
     }
 
     @Override
@@ -693,15 +687,9 @@ public class Main extends Activity implements OnClickListener, IObserver {
 //                mainIndex.onResumeFake();
             }
         }
-        if (index == TAB_MESSAGE) {
-            AppCommon.quanMessage = 0;
-            setNewMsgNum(index, AppCommon.qiyvMessage + AppCommon.myQAMessage + AppCommon.feekbackMessage);
-        }
-        //特殊逻辑
-//        changeSendLayout.setVisibility(View.VISIBLE);
-        if(index == 0){
+        if (index == 0) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        }else{
+        } else {
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         }
     }
@@ -754,16 +742,8 @@ public class Main extends Activity implements OnClickListener, IObserver {
                 view.findViewById(R.id.tv_tab_msg_tow_num).setVisibility(View.GONE);
             }
         }
-        dispatchUpdateMsgNum();
     }
 
-    private static void dispatchUpdateMsgNum() {
-        dispatchMsgListNum();
-    }
-
-    private static void dispatchMsgListNum() {
-        MyMessage.notifiMessage(MyMessage.MSG_DISPATCH_ONREFURESH, 0, "");
-    }
     /**
      * 点击下方tab切换,并且加上美食圈点击后进去第一个页面并刷新
      */
@@ -777,14 +757,16 @@ public class Main extends Activity implements OnClickListener, IObserver {
                 } else if (i == TAB_CIRCLE && allTab.containsKey(MainCircle.KEY) && tabHost.getCurrentTab() == i) {
                     //当所在页面正式你要刷新的页面,就直接刷新
                     MainCircle circle = (MainCircle) allTab.get(MainCircle.KEY);
-                    if(circle != null)
+                    if (circle != null)
                         circle.refresh();
                 } else if (i == TAB_SELF && allTab.containsKey(MainMyself.KEY)) {
                     //在onResume方法添加了刷新方法
 //                    MainMyself mainMyself = (MainMyself) allTab.get(MainMyself.KEY);
 //                    mainMyself.scrollToTop();
-                } else if (i == TAB_MESSAGE && allTab.containsKey(MyMessage.KEY) && i == nowTab) {
-
+                } else if (i == TAB_FAVORIT && allTab.containsKey(MyFavorite.KEY) && i == nowTab) {
+                    MyFavorite myFavorite = (MyFavorite) allTab.get(MyFavorite.KEY);
+                    if(myFavorite != null)
+                        myFavorite.onRefresh();
                 }
                 try {
                     setCurrentTabByIndex(i);
@@ -837,7 +819,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
     @Override
     protected void onDestroy() {
         //activity关闭之前必须关闭dilaog
-        if(welcomeDialog!=null&&welcomeDialog.isShowing()){
+        if (welcomeDialog != null && welcomeDialog.isShowing()) {
             welcomeDialog.dismiss();
         }
         super.onDestroy();
@@ -850,43 +832,38 @@ public class Main extends Activity implements OnClickListener, IObserver {
 
     @Override
     public void notify(String name, Object sender, Object data) {
-        if (ObserverManager.NOTIFY_LOGIN.equals(name)) {
-            if (data != null && data instanceof Boolean && (Boolean)data) {
-                addQiYvListener();
-                if (nowTab == TAB_MESSAGE || allTab.containsKey(MyMessage.KEY)) {
-                    MyMessage myMessage = (MyMessage) allTab.get(MyMessage.KEY);
-                    if(myMessage != null){
-                        myMessage.onRefresh();
+        switch (name) {
+            case ObserverManager.NOTIFY_LOGIN:
+                if (data != null && data instanceof Boolean && (Boolean) data) {
+                    addQiYvListener();
+                    QiYvHelper.getInstance().onUserLogin();
+                    MessageTipController.loadQiyuUnreadCount();
+                    MessageTipController.setMessageCount();
+                }
+                break;
+            case ObserverManager.NOTIFY_LOGOUT:
+                if (data != null && data instanceof Boolean) {
+                    if ((Boolean) data) {
+                        QiYvHelper.getInstance().onUserLogout();
                     }
                 }
-                QiYvHelper.getInstance().onUserLogin();
-                QiYvHelper.getInstance().getUnreadCount(new QiYvHelper.NumberCallback() {
-                    @Override
-                    public void onNumberReady(int count) {
-                        if (count >= 0) {
-                            if (nowTab == TAB_MESSAGE)
-                                AppCommon.quanMessage = 0;
-                            AppCommon.qiyvMessage = count;
-                            if (count > 0)
-                                Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
-                        }
-                    }
-                });
-                if (nowTab == TAB_MESSAGE)
-                    AppCommon.quanMessage = 0;
-                //防止七鱼回调不回来
-                Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
-            }
-        } else if (ObserverManager.NOTIFY_LOGOUT.equals(name)) {
-            if (data != null && data instanceof Boolean) {
-                if ((Boolean)data) {
-                    if (nowTab == TAB_MESSAGE || allTab.containsKey(MyMessage.KEY)) {
-                        MyMessage myMessage = (MyMessage) allTab.get(MyMessage.KEY);
-                        myMessage.onRefresh();
-                    }
-                    QiYvHelper.getInstance().onUserLogout();
-                }
-            }
+                break;
+            case ObserverManager.NOTIFY_MESSAGE_REFRESH:
+                setMessageTip(MessageTipController.getMessageNum());
+                break;
+            default:
+                break;
         }
     }
+
+    @Override
+    public void setMessageTip(int tipCournt) {
+        Log.i("tzy", "MainCircle::setMessageTip: " + tipCournt);
+        if (allTab != null) {
+            Stream.of(allTab)
+                    .filter(value -> value.getValue() != null && value.getValue() instanceof ISetMessageTip)
+                    .forEach(value -> ((ISetMessageTip) value.getValue()).setMessageTip(tipCournt));
+        }
+    }
+
 }

@@ -31,6 +31,7 @@ import java.util.Map;
 
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
+import acore.logic.MessageTipController;
 import acore.logic.VersionOp;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
@@ -229,7 +230,7 @@ public class MainInitDataControl {
         long startTime= System.currentTimeMillis();
 
         // 自动登录
-        AppCommon.getCommonData(null);
+        MessageTipController.getCommonData(null);
 
         compatibleData(context);
 

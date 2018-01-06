@@ -8,10 +8,14 @@ import android.text.TextUtils;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
+
+import static acore.tools.ObserverManager.NOTIFY_FAVORITE;
+import static acore.tools.ObserverManager.NOTIFY_UNFAVORITE;
 
 /**
  * Description : 收藏功能辅助类
@@ -118,6 +122,7 @@ public class FavoriteHelper {
                                     Tools.showToast(context,"2".equals(state)?"收藏成功":"取消收藏");
                                 }
                             }
+                            ObserverManager.getInstence().notify("2".equals(state) ? NOTIFY_FAVORITE:NOTIFY_UNFAVORITE,null,map);
                         }else{
                             if(null != callback)
                                 callback.onFailed();

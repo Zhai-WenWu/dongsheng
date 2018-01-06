@@ -20,6 +20,7 @@ import java.util.Map;
 
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
+import acore.logic.MessageTipController;
 import acore.logic.XHApiMonitor;
 import acore.logic.XHClick;
 import acore.logic.load.LoadManager;
@@ -106,7 +107,7 @@ public abstract class InternetCallback extends XHInternetCallBack {
 					} else if (msg.equals("网络不稳定")) {
 						msg = "网络不稳定，请重试";
 						XHClick.mapStat(XHApplication.in(), "a_apiError", msg, theUrl);
-						AppCommon.getCommonData(null);
+						MessageTipController.getCommonData(null);
 						loaded(ReqInternet.REQ_CODE_ERROR, url, msg);
 					} else {
 						loaded(ReqInternet.REQ_CODE_ERROR, url, msg);

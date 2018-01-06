@@ -1,6 +1,5 @@
 package amodule.user.activity;
 
-import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -21,74 +20,83 @@ import java.util.Map;
 
 import acore.logic.AppCommon;
 import acore.logic.FavoriteHelper;
-import acore.override.activity.base.BaseActivity;
+import acore.logic.LoginManager;
+import acore.logic.MessageTipController;
+import acore.override.activity.mian.MainBaseActivity;
+import acore.tools.IObserver;
+import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.widget.rvlistview.RvListView;
 import amodule.article.view.BottomDialog;
 import amodule.main.Main;
-import amodule.main.activity.MainHome;
 import amodule.main.activity.MainHomePage;
+import amodule.main.delegate.ISetMessageTip;
+import amodule.main.view.MessageTipIcon;
+import amodule.user.activity.login.LoginByAccout;
 import amodule.user.adapter.AdapterModuleS0;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
 
-import static amodule.main.Main.TAB_HOME;
+import static acore.tools.ObserverManager.NOTIFY_FAVORITE;
+import static acore.tools.ObserverManager.NOTIFY_LOGIN;
+import static acore.tools.ObserverManager.NOTIFY_LOGOUT;
+import static acore.tools.ObserverManager.NOTIFY_UNFAVORITE;
 
 /**
  * 我的收藏页面改版
  */
-public class MyFavorite extends BaseActivity implements View.OnClickListener {
-
+public class MyFavorite extends MainBaseActivity implements View.OnClickListener,IObserver,ISetMessageTip {
+    public static final String KEY = "MyFavorite";
     private ArrayList<Map<String, String>> mData = new ArrayList<>();
     private PtrClassicFrameLayout refreshLayout;
     private RelativeLayout seekLayout;
-    private LinearLayout noDataLayout;
+    private MessageTipIcon mMessageTipIcon;
+    private LinearLayout noDataLayout,noLoginLayout;
     private RvListView rvListview;
     private AdapterModuleS0 myFavorite;
     private int currentpage = 0, everyPage = 0;//页面号码
-    private int seekLayoutHeight = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initActivity("", 2, 0, 0, R.layout.a_my_favorite);
+        setContentView(R.layout.a_my_favorite);
+        Main.allMain.allTab.put(KEY, this);
         initUi();
         initData();
+        //未登录自动跳转去登录
+        if(!LoginManager.isLogin()){
+            gotoLogin();
+        }
+        ObserverManager.getInstence().registerObserver(this,NOTIFY_LOGIN,NOTIFY_LOGOUT,
+                NOTIFY_FAVORITE,NOTIFY_UNFAVORITE);
     }
 
     private void initUi() {
         TextView title = (TextView) findViewById(R.id.title);
         title.setText("我的收藏");
-        TextView rightText = (TextView) findViewById(R.id.rightText);
-        rightText.setText("浏览历史");
-        rightText.setVisibility(View.VISIBLE);
-        rightText.setTextColor(Color.parseColor("#999999"));
+//        TextView rightText = (TextView) findViewById(R.id.rightText);
+//        rightText.setText("浏览历史");
+//        rightText.setVisibility(View.VISIBLE);
+//        rightText.setTextColor(Color.parseColor("#999999"));
+        mMessageTipIcon = (MessageTipIcon) findViewById(R.id.message_tip);
         refreshLayout = (PtrClassicFrameLayout) findViewById(R.id.refresh_list_view_frame);
         rvListview = (RvListView) findViewById(R.id.rvListview);
         seekLayout = (RelativeLayout) findViewById(R.id.seek_layout);
         noDataLayout = (LinearLayout) findViewById(R.id.noData_layout);
+        noLoginLayout = (LinearLayout) findViewById(R.id.noLogin_layout);
+        noLoginLayout.setVisibility(LoginManager.isLogin() ? View.GONE:View.VISIBLE);
 
         seekLayout.setOnClickListener(this);
-        rightText.setOnClickListener(this);
+        noLoginLayout.setOnClickListener(this);
         findViewById(R.id.title).setOnClickListener(this);
-        findViewById(R.id.back).setOnClickListener(this);
+//        findViewById(R.id.back).setOnClickListener(this);
+        findViewById(R.id.back).setVisibility(View.GONE);
         findViewById(R.id.btn_no_data).setOnClickListener(this);
 
-        seekLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                seekLayoutHeight = seekLayout.getMeasuredHeight();
-            }
-        });
         refreshLayout.getHeader().setBackgroundColor(Color.parseColor("#f2f2f2"));
     }
-
-    private static final int HIDE_THRESHOLD = 20;//滑动隐藏的阈值
-
-    private int mScrolledDistance = 0;//滑动距离
-    private boolean mControlsVisible = true;//控件的显示状态
 
     private void initData() {
         myFavorite = new AdapterModuleS0(this, mData);
@@ -132,18 +140,6 @@ public class MyFavorite extends BaseActivity implements View.OnClickListener {
                     }
                 });
         loadManager.getSingleLoadMore(rvListview).setBackgroundColor(Color.parseColor("#F2F2F2"));
-    }
-
-    private void hideSearchBar() {
-        ObjectAnimator animator = ObjectAnimator.ofFloat(seekLayout, View.TRANSLATION_Y, 0, -seekLayoutHeight);
-        animator.setDuration(500);
-        animator.start();
-    }
-
-    private void showSreachBar() {
-        ObjectAnimator animator = ObjectAnimator.ofFloat(seekLayout, View.TRANSLATION_Y, -seekLayoutHeight, 0);
-        animator.setDuration(500);
-        animator.start();
     }
 
     /**
@@ -196,6 +192,7 @@ public class MyFavorite extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onResume() {
         super.onResume();
+        mMessageTipIcon.setMessage(MessageTipController.getMessageNum());
     }
 
     @Override
@@ -206,6 +203,7 @@ public class MyFavorite extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        ObserverManager.getInstence().unRegisterObserver(this);
     }
 
     @Override
@@ -214,12 +212,12 @@ public class MyFavorite extends BaseActivity implements View.OnClickListener {
             case R.id.title:
                 gotoTop();
                 break;
-            case R.id.back:
-                finish();
+            case R.id.noLogin_layout:
+                gotoLogin();
                 break;
-            case R.id.rightText:
-                startActivity(new Intent(this, BrowseHistory.class));
-                break;
+//            case R.id.rightText:
+//                startActivity(new Intent(this, BrowseHistory.class));
+//                break;
             case R.id.seek_layout:
                 startActivity(new Intent(this, SreachFavoriteActivity.class));
                 break;
@@ -234,6 +232,10 @@ public class MyFavorite extends BaseActivity implements View.OnClickListener {
             default:
                 break;
         }
+    }
+
+    private void gotoLogin() {
+        startActivity(new Intent(this, LoginByAccout.class));
     }
 
     long firstClickTime = 0;
@@ -291,4 +293,71 @@ public class MyFavorite extends BaseActivity implements View.OnClickListener {
         dialog.show();
     }
 
+    @Override
+    public void notify(String name, Object sender, Object data) {
+        switch (name) {
+            case NOTIFY_LOGIN:
+                if (data != null && data instanceof Boolean && (Boolean) data) {
+                    login();
+                    requestData(true);
+                }
+                break;
+            case NOTIFY_LOGOUT:
+                if (data != null && data instanceof Boolean) {
+                    logout();
+                    //清空数据
+                    mData.clear();
+                    myFavorite.notifyDataSetChanged();
+                }
+                break;
+            case NOTIFY_FAVORITE:
+                if(data != null && data instanceof Map){
+                    //TODO 插入数据
+//                    mData.add(0, (Map<String, String>) data);
+//                    myFavorite.notifyDataSetChanged();
+                }
+                break;
+            case NOTIFY_UNFAVORITE:
+                if(data != null && data instanceof Map){
+                    //TODO 移除数据
+//                    Map<String,String> map = StringManager.getFirstMap(((Map)data).get("parameter"));
+//                    for(Map<String,String> value:mData){
+//                        Map<String,String> parameterMap = StringManager.getFirstMap(value.get("parameter"));
+//                        if(map.equals(parameterMap)){
+//                            mData.remove(value);
+//                            break;
+//                        }
+//                    }
+//                    myFavorite.notifyDataSetChanged();
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void onRefresh(){
+        if(LoginManager.isLogin() && refreshLayout != null){
+            refreshLayout.autoRefresh();
+        }
+    }
+
+    private void login(){
+        if(noLoginLayout != null){
+            noLoginLayout.setVisibility(View.GONE);
+        }
+    }
+
+    private void logout(){
+        if(noLoginLayout != null){
+            noLoginLayout.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void setMessageTip(int tipCournt) {
+        if(mMessageTipIcon != null){
+            mMessageTipIcon.setMessage(tipCournt);
+        }
+    }
 }

@@ -22,6 +22,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import acore.logic.AppCommon;
+import acore.logic.MessageTipController;
 import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
@@ -121,11 +122,7 @@ public class Feedback extends BaseActivity implements OnClickListener {
     }
 
     private void init() {
-        AppCommon.feekbackMessage = 0;
-        if (Main.allMain != null && Main.allMain.getCurrentTab() == Main.TAB_MESSAGE)
-            AppCommon.quanMessage = 0;
-        Main.setNewMsgNum(2, AppCommon.qiyvMessage + AppCommon.myQAMessage + AppCommon.quanMessage);
-        MyMessage.notifiMessage(MyMessage.MSG_FEEKBACK_ONREFURESH, 0, null);
+        MessageTipController.setFeekbackMessage(0);
         feebback_reply_content = (EditText) findViewById(R.id.feebback_reply_content);
         EditText keyboradEdit = (EditText) findViewById(R.id.feekback_keyboard_view);
         feekback_list = (DownRefreshList) findViewById(R.id.feebback_reply_list);

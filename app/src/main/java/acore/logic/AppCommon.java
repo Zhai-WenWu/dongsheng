@@ -76,75 +76,12 @@ import static xh.basic.tool.UtilString.getListMapByJson;
 //
 
 public class AppCommon {
-    public static int qiyvMessage = 0;//七鱼新消息条数
-    public static int quanMessage = 0; // 美食圈新消息条数
-    public static int feekbackMessage = 0; // 系统新消息条数
-    public static int myQAMessage = 0;//我的问答新消息条数
+
     public static int buyBurdenNum = 0; // 离线清单条数
     public static int follwersNum = -1; // 关注人数
 
     public static int nextDownDish = -1;
     public static int maxDownDish = 10000;
-
-    private static int fiallNum = 0;
-
-    public static boolean hasArbitration;
-
-    /**
-     * 获取公用数据消息
-     */
-    public static void getCommonData(final InternetCallback callback) {
-        ReqInternet.in().doGet(StringManager.api_commonData + "?m=commonData", new InternetCallback() {
-            @Override
-            public void loaded(int flag, String url, Object returnObj) {
-                if (flag >= ReqInternet.REQ_OK_STRING) {
-                    fiallNum = 0;
-                    String[] alertArr = ((String) returnObj).split("-");
-                    if (alertArr != null && alertArr.length > 2) {
-                        quanMessage = Integer.parseInt(alertArr[1]);
-                        feekbackMessage = Integer.parseInt(alertArr[2]);
-                        if (alertArr.length >= 5) {
-                            myQAMessage = Integer.parseInt(alertArr[3]) + Integer.parseInt(alertArr[4]);
-                            if (alertArr.length >= 6)
-                                hasArbitration = "2".equals(alertArr[5]);
-                        }
-                        try {
-                            // 所有消息数
-                            QiYvHelper.getInstance().getUnreadCount(new QiYvHelper.NumberCallback() {
-                                @Override
-                                public void onNumberReady(int count) {
-                                    if (count >= 0) {
-                                        if (Main.allMain != null && Main.allMain.getCurrentTab() == Main.TAB_MESSAGE) {
-                                            quanMessage = 0;
-                                        }
-                                        qiyvMessage = count;
-                                        if (count > 0)
-                                            Main.setNewMsgNum(2, quanMessage + feekbackMessage + myQAMessage + qiyvMessage);
-                                    }
-                                }
-                            });
-                            if (Main.allMain != null && Main.allMain.getCurrentTab() == Main.TAB_MESSAGE) {
-                                quanMessage = 0;
-                            }
-                            Main.setNewMsgNum(2, quanMessage + feekbackMessage + myQAMessage + qiyvMessage);
-                            // tok值
-                            long tok = Integer.parseInt(alertArr[0]);
-                            int c = (new Random()).nextInt(9) + 1;
-                            LoadManager.tok = c + "" + (tok + 54321) * c;
-                        } catch (Exception e) {
-                            LogManager.reportError("获取新消息", e);
-                        }
-                    }
-                    if (callback != null) callback.loaded(flag, url, "加载成功");
-                } else if (fiallNum < 3) {
-                    fiallNum++;
-                    getCommonData(callback);
-                } else if (callback != null) {
-                    callback.loaded(flag, url, "加载失败");
-                }
-            }
-        });
-    }
 
     /**
      * 获取应用初始信息
@@ -1168,5 +1105,6 @@ public class AppCommon {
         POST_DETAIL,//"美食帖详情皇冠按钮"
         POST_LIST;//"美食帖列表皇冠按钮"
     }
+
 
 }

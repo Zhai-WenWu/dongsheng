@@ -15,6 +15,7 @@ import java.util.Map;
 
 import acore.broadcast.ConnectionChangeReceiver;
 import acore.logic.AppCommon;
+import acore.logic.MessageTipController;
 import acore.logic.SpecialWebControl;
 import acore.logic.XHClick;
 import acore.logic.load.LoadManager;
@@ -27,6 +28,7 @@ import amodule.home.HomeDataControler;
 import amodule.home.HomeViewControler;
 import amodule.main.Main;
 import amodule.main.adapter.HomeAdapter;
+import amodule.main.delegate.ISetMessageTip;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
@@ -40,7 +42,7 @@ import third.ad.control.AdControlParent;
  * E_mail : ztanzeyu@gmail.com
  */
 
-public class MainHomePage extends MainBaseActivity implements IObserver {
+public class MainHomePage extends MainBaseActivity implements IObserver,ISetMessageTip {
     public final static String KEY = "MainIndex";
     public final static String recommedType_statictus = "recom";//推荐类型-用于统计
     public final static String STATICTUS_ID_HOMEPAGE = "a_index580";
@@ -313,6 +315,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
             mNeedRefCurrFm = false;
             refresh();
         }
+        mViewContrloer.setMessage(MessageTipController.getMessageNum());
     }
 
     @Override
@@ -380,4 +383,9 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
         this.startTime = time;
     }
 
+    @Override
+    public void setMessageTip(int tipCournt) {
+        Log.i("tzy", "MainHomePage::setMessageTip: " + tipCournt);
+        mViewContrloer.setMessage(tipCournt);
+    }
 }

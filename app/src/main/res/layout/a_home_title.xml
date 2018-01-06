@@ -5,15 +5,10 @@
     android:layout_height="@dimen/dp_49"
     android:background="@color/common_top_bg">
 
-    <amodule.home.view.HomeActivityIconView
-        android:id="@+id/home_act_btn"
+    <amodule.main.view.MessageTipIcon
+        android:id="@+id/message_tip"
         android:layout_width="@dimen/dp_57"
-        android:layout_height="match_parent"
-        android:paddingBottom="@dimen/dp_8.5"
-        android:paddingLeft="@dimen/dp_10"
-        android:paddingRight="@dimen/dp_10"
-        android:paddingTop="@dimen/dp_8.5"
-        android:scaleType="centerInside"/>
+        android:layout_height="match_parent"/>
 
     <RelativeLayout
         android:id="@+id/home_search_layout"
@@ -21,7 +16,7 @@
         android:layout_height="@dimen/dp_32"
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@+id/home_publish_btn"
-        android:layout_toRightOf="@+id/home_act_btn"
+        android:layout_toRightOf="@+id/message_tip"
         android:background="@drawable/bg_home_search">
 
         <LinearLayout

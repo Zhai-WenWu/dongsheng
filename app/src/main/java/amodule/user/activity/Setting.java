@@ -31,6 +31,7 @@ import java.util.Map;
 
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
+import acore.logic.MessageTipController;
 import acore.logic.VersionOp;
 import acore.logic.XHClick;
 import acore.override.activity.base.BaseLoginActivity;
@@ -371,13 +372,13 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
             }
 
         });
-        view_qa_arbitration.setNewHintVisibility(AppCommon.hasArbitration ? View.VISIBLE : View.GONE);
-        view_qa_arbitration.init("问答仲裁", "", !AppCommon.hasArbitration, new LeftAndRightTextView.LeftAndRightTextViewCallback() {
+        view_qa_arbitration.setNewHintVisibility(MessageTipController.hasArbitration ? View.VISIBLE : View.GONE);
+        view_qa_arbitration.init("问答仲裁", "", !MessageTipController.hasArbitration, new LeftAndRightTextView.LeftAndRightTextViewCallback() {
             @Override
             public void onClick() {
                 view_qa_arbitration.setNewHintVisibility(View.GONE);
                 view_qa_arbitration.setArrowRightVisibility(View.VISIBLE);
-                AppCommon.hasArbitration = false;
+                MessageTipController.hasArbitration = false;
                 openQAArbitration();
             }
         });

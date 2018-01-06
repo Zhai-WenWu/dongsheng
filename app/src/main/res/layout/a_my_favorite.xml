@@ -16,6 +16,11 @@
         <include
             android:id="@+id/ll_title"
             layout="@layout/c_view_bar_title"/>
+
+        <amodule.main.view.MessageTipIcon
+            android:id="@+id/message_tip"
+            android:layout_width="@dimen/dp_57"
+            android:layout_height="match_parent"/>
     </RelativeLayout>
 
     <android.support.design.widget.CoordinatorLayout
@@ -129,6 +134,24 @@
                 android:text="去收藏"
                 android:textColor="#fff"
                 android:textSize="@dimen/sp_14"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/noLogin_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:background="@color/common_bg"
+            android:orientation="vertical"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:text="去登录"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content" />
+
         </LinearLayout>
 
     </android.support.design.widget.CoordinatorLayout>

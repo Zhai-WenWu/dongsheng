@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.xiangha.R;
 
@@ -14,11 +15,13 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import acore.logic.AppCommon;
+import acore.logic.MessageTipController;
 import acore.logic.XHClick;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
 import amodule.main.Main;
+import amodule.user.activity.MyMessage;
 import aplug.feedback.activity.Feedback;
 import third.push.model.NotificationData;
 import third.push.xg.XGLocalPushServer;
@@ -47,6 +50,7 @@ public class PushPraserService extends Service{
 			String title = intent.getStringExtra("title");
 			String text = intent.getStringExtra("text");
 			String custom = intent.getStringExtra("custom");
+			Log.i("tzy", "onStartCommand: " + custom);
 			String channel = intent.getStringExtra("channel");
 			//判断是否是umeng推送
 			String message = null;
@@ -138,23 +142,13 @@ public class PushPraserService extends Service{
 									if (Feedback.handler != null && info.topActivity.getClassName().equals("com.xiangha.Feekback"))
 										Feedback.notifySendMsg(Feedback.MSG_FROM_NOTIFY);
 									else {
-										AppCommon.feekbackMessage++;
-										QiYvHelper.getInstance().getUnreadCount(new QiYvHelper.NumberCallback() {
+										MessageTipController.autoIncreaseOneFeek();
+										MessageTipController.loadQiyuUnreadCount(new QiYvHelper.NumberCallback() {
 											@Override
 											public void onNumberReady(int count) {
-												if (count >= 0) {
-													if (Main.allMain != null && Main.allMain.getCurrentTab() == Main.TAB_MESSAGE)
-														AppCommon.quanMessage = 0;
-													AppCommon.qiyvMessage = count;
-													if (count > 0)
-														Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
-												}
+												MessageTipController.setMessageCount();
 											}
 										});
-										if (Main.allMain != null && Main.allMain.getCurrentTab() == Main.TAB_MESSAGE)
-											AppCommon.quanMessage = 0;
-										//防止七鱼回调不回来
-										Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
 										new NotificationManager().notificationActivity(context, data);
 									}
 								}
@@ -175,70 +169,36 @@ public class PushPraserService extends Service{
 									if (Feedback.handler != null && info.topActivity.getClassName().equals("com.xiangha.Feekback"))
 										Feedback.notifySendMsg(Feedback.MSG_FROM_NOTIFY);
 									else {
-										AppCommon.feekbackMessage++;
-										QiYvHelper.getInstance().getUnreadCount(new QiYvHelper.NumberCallback() {
+										MessageTipController.autoIncreaseOneFeek();
+										MessageTipController.loadQiyuUnreadCount(new QiYvHelper.NumberCallback() {
 											@Override
 											public void onNumberReady(int count) {
-												if (count >= 0) {
-													if (Main.allMain != null && Main.allMain.getCurrentTab() == Main.TAB_MESSAGE)
-														AppCommon.quanMessage = 0;
-													AppCommon.qiyvMessage = count;
-													if (count > 0)
-														Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
-												}
+												MessageTipController.setMessageCount();
 											}
 										});
-										if (Main.allMain != null && Main.allMain.getCurrentTab() == Main.TAB_MESSAGE)
-											AppCommon.quanMessage = 0;
-										//防止七鱼回调不回来
-										Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
 										new NotificationManager().notificationActivity(context, data);
 									}
 								}
 							} else {
-								AppCommon.feekbackMessage++;
-								QiYvHelper.getInstance().getUnreadCount(new QiYvHelper.NumberCallback() {
+								MessageTipController.autoIncreaseOneFeek();
+								MessageTipController.loadQiyuUnreadCount(new QiYvHelper.NumberCallback() {
 									@Override
 									public void onNumberReady(int count) {
-										if (count >= 0) {
-											if (Main.allMain != null && Main.allMain.getCurrentTab() == Main.TAB_MESSAGE)
-												AppCommon.quanMessage = 0;
-											AppCommon.qiyvMessage = count;
-											if (count > 0)
-												Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
-										}
+										MessageTipController.setMessageCount();
 									}
 								});
-								if (Main.allMain != null && Main.allMain.getCurrentTab() == Main.TAB_MESSAGE)
-									AppCommon.quanMessage = 0;
-								//防止七鱼回调不回来
-								Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
 								new NotificationManager().notificationActivity(context, data);
 							}
 							break;
 						// 显示通知，存在消息列表中，使用app不通知
 						case XHClick.NOTIFY_C:
-							if (Main.allMain != null && Main.allMain.getCurrentTab() == Main.TAB_MESSAGE) {
-								AppCommon.quanMessage = 0;
-							} else {
-								AppCommon.quanMessage++;
-							}
-							QiYvHelper.getInstance().getUnreadCount(new QiYvHelper.NumberCallback() {
+							MessageTipController.autoIncreaseOneFeek();
+							MessageTipController.loadQiyuUnreadCount(new QiYvHelper.NumberCallback() {
 								@Override
 								public void onNumberReady(int count) {
-									if (count >= 0) {
-										if (Main.allMain != null && Main.allMain.getCurrentTab() == Main.TAB_MESSAGE)
-											AppCommon.quanMessage = 0;
-										AppCommon.qiyvMessage = count;
-										if (count > 0)
-											Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
-									}
+									MessageTipController.setMessageCount();
 								}
 							});
-							if (Main.allMain != null && Main.allMain.getCurrentTab() == Main.TAB_MESSAGE)
-								AppCommon.quanMessage = 0;
-							//防止七鱼回调不回来
-							Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
 							if (context != null && ToolsDevice.isAppInPhone(context, context.getPackageName()) < 2) {
 								if (data.url.indexOf("subjectInfo.app?") > -1) {
 									// 叠加消息数量

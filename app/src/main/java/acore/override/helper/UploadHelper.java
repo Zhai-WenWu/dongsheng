@@ -14,6 +14,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import acore.logic.AppCommon;
+import acore.logic.MessageTipController;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.override.data.UploadData;
@@ -151,7 +152,7 @@ public abstract class UploadHelper {
      */
 	protected void doUpload(final long uploadTimeCode,final LinkedHashMap<String, String> uploadData) {
 		timeoutTimer(uploadTimeCode,false);
-		AppCommon.getCommonData(new InternetCallback() {
+		MessageTipController.getCommonData(new InternetCallback() {
 			@Override
 			public void loaded(int flag, String url, Object returnObj) {
 				if(flag >= ReqInternet.REQ_OK_STRING){
