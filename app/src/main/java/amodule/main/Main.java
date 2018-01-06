@@ -24,13 +24,8 @@ import android.widget.TextView;
 import com.popdialog.util.GoodCommentManager;
 import com.tencent.stat.StatConfig;
 import com.tencent.stat.StatService;
-import com.xh.manager.DialogManager;
-import com.xh.manager.ViewManager;
-import com.xh.view.HButtonView;
-import com.xh.view.TitleMessageView;
 import com.xiangha.R;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
@@ -128,7 +123,9 @@ public class Main extends Activity implements OnClickListener, IObserver {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Main.this.requestWindowFeature(Window.FEATURE_NO_TITLE); // 声明使用自定义标题
-        setContentView(R.layout.xh_main);
+        LogManager.printStartTime("zhangyujian","main::oncreate::super::");
+        setContentView(R.layout.xh_main);//耗时250毫秒
+        LogManager.printStartTime("zhangyujian","main::oncreate::setContentView::");
         mLocalActivityManager = new LocalActivityManager(this, true);
         mLocalActivityManager.dispatchCreate(savedInstanceState);
         LogManager.printStartTime("zhangyujian","main::oncreate::start::");
@@ -138,9 +135,14 @@ public class Main extends Activity implements OnClickListener, IObserver {
         init();
     }
     private void init(){
-        initUI();
-        initData();
-        setCurrentTabByIndex(defaultTab);
+        Log.i("zhangyujian","数据："+FileManager.loadShared(this,FileManager.app_welcome,VersionOp.getVerName(this)));
+        if(TextUtils.isEmpty((String) FileManager.loadShared(this,FileManager.app_welcome,VersionOp.getVerName(this)))) {
+            LogManager.printStartTime("zhangyujian","第一次");
+            initUI();
+            initData();
+            setCurrentTabByIndex(defaultTab);
+            LogManager.printStartTime("zhangyujian","main::测绘师::");
+        }
         mainInitDataControl = new MainInitDataControl();
         welcomeControls= LoginManager.isShowAd()?new WelcomeControls(this,callBack):
                 new WelcomeControls(this,1,callBack);
@@ -176,9 +178,9 @@ public class Main extends Activity implements OnClickListener, IObserver {
                 }
                 addQiYvListener();
                 if(mainInitDataControl!=null)mainInitDataControl.mainAfterUpload(Main.this);
+                FileManager.saveShared(Main.this,FileManager.app_welcome,VersionOp.getVerName(Main.this),"1");
             }
         }
-
         @Override
         public void welcomeFree() {
             AdControlHomeDish.getInstance();
@@ -653,8 +655,11 @@ public class Main extends Activity implements OnClickListener, IObserver {
 //                    MainMyself mainMyself = (MainMyself) allTab.get(MainMyself.KEY);
 //                    mainMyself.scrollToTop();
                 } else if (i == TAB_MESSAGE && allTab.containsKey(MyMessage.KEY) && i == nowTab) {
-//                    MyMessage myMessage = (MyMessage) allTab.get(MyMessage.KEY);
-//                    myMessage.onRefresh();
+                    MyMessage myMessage = (MyMessage) allTab.get(MyMessage.KEY);
+                    if(myMessage != null){
+                        myMessage.onRefresh();
+                    }
+
                 }
                 try {
                     setCurrentTabByIndex(i);
@@ -689,17 +694,44 @@ public class Main extends Activity implements OnClickListener, IObserver {
     }
 
     @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        LogManager.printStartTime("zhangyujian","onPostResume：：");
+    }
+
+    @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         if (hasFocus && !isInit) {
+            LogManager.printStartTime("zhangyujian","onWindowFocusChanged：1111：：");
             isInit = true;
-            if(welcomeControls!=null)welcomeControls.startShow();
-
+            handlerPostDelay();
         }
         //此处可以进行分级处理:暂时无需要
-        LogManager.printStartTime("zhangyujian", "main::onWindowFocusChanged");
+        LogManager.printStartTime("zhangyujian", "main::onWindowFocusChanged:::");
     }
-
+    private Handler handlerPostInit;
+    private void handlerPostDelay(){
+        if(handlerPostInit==null)handlerPostInit= new Handler(Looper.getMainLooper());
+        handlerPostInit.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if(welcomeControls!=null)welcomeControls.startShow();
+            }
+        },100);
+        LogManager.printStartTime("zhangyujian","onWindowFocusChanged：：：");
+        if( !TextUtils.isEmpty((String) FileManager.loadShared(this,FileManager.app_welcome,VersionOp.getVerName(this)))) {
+            handlerPostInit.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    LogManager.printStartTime("zhangyujian","第一次onWindowFocusChanged：：：");
+                    initUI();
+                    initData();
+                    setCurrentTabByIndex(defaultTab);
+                }
+            }, 1000);
+        }
+    }
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);

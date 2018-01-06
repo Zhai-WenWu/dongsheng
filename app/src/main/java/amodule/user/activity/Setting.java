@@ -475,7 +475,6 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
             public void run() {
                 UtilFile.delDirectoryOrFile(FileManager.getDataDir() + FileManager.file_appData);
                 UtilFile.delDirectoryOrFile(UtilFile.getSDDir() + LoadImage.SAVE_CACHE);
-                AppCommon.deleteIndexData();
                 FullScreenManager.saveWelcomeInfo(Setting.this,null,null);
                 Setting.this.runOnUiThread(new Runnable() {
                     @Override

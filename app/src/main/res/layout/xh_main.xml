@@ -3,19 +3,22 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main_root_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/transparent">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="@color/transparent">
 
         <!-- 这个FrameLayout为TabWidget的内容   id必须写成@android:id/tabcontent的形式 -->
         <acore.widget.XiangHaTabHost
             android:id="@+id/xiangha_tabhost"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="@dimen/dp_50"/>
+            android:layout_marginBottom="@dimen/dp_50"
+            android:background="@color/transparent"/>
         <!-- TabWidget这个组件的ID 必须是@android:id/tabs -->
 
         <View

@@ -25,6 +25,7 @@ import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.PagerSlidingTabStrip;
 import amodule.home.view.HomePushIconView;
+import amodule.main.Main;
 import amodule.main.view.circle.CircleMainFragment;
 import amodule.quan.db.PlateData;
 import aplug.basic.InternetCallback;
@@ -58,6 +59,7 @@ public class MainCircle extends MainBaseActivity implements View.OnClickListener
         //sufureView页面闪烁
         getWindow().setFormat(PixelFormat.TRANSLUCENT);
         setContentView(R.layout.a_circle_home);
+        Main.allMain.allTab.put(KEY, this);//这个Key值不变
 //        initActivity("", 2, 0, 0, R.layout.a_circle_home);
 
         //

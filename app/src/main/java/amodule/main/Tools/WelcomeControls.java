@@ -23,6 +23,7 @@ import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.override.helper.XHActivityManager;
 import acore.tools.FileManager;
+import acore.tools.LogManager;
 import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
 import amodule.main.Main;
@@ -65,11 +66,11 @@ public class WelcomeControls {
         this.mAdTime = adShowTime;
         this.welcomeCallBack = callBack;
         activity.findViewById(R.id.xh_welcome).setVisibility(View.VISIBLE);
-        initWelcome();
-
+        LogManager.printStartTime("zhangyujian","WelcomeControls：1111：：");
     }
 
     public void startShow(){
+        initWelcome();
         startCountDown(false);
         WelcomeAdTools.getInstance().handlerAdData(false, null,false);
     }
@@ -77,6 +78,7 @@ public class WelcomeControls {
      * 初始化view
      */
     private void initWelcome() {
+        LogManager.printStartTime("zhangyujian","WelcomeControls:::initWelcome：1111：：");
         // 初始化
         mADLayout = (RelativeLayout) activity.findViewById(R.id.ad_layout);
         textSkip = (TextView) activity.findViewById(R.id.ad_skip);
