@@ -15,6 +15,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -64,7 +65,6 @@ import third.qiyu.QiYvHelper;
 import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilLog;
 
-import static acore.tools.Tools.getApiSurTime;
 import static com.xiangha.R.id.iv_itemIsFine;
 
 @SuppressWarnings("deprecation")
@@ -117,6 +117,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
     private QiYvHelper.UnreadCountChangeListener mUnreadCountListener;
     private WelcomeControls welcomeControls;
 
+    @SuppressLint("WrongViewCast")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -140,6 +141,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
             setCurrentTabByIndex(defaultTab);
         }
         WelcomeDialogstate=false;
+        isShowWelcomeDialog=true;
         mainInitDataControl = new MainInitDataControl();
         welcomeControls= LoginManager.isShowAd()?new WelcomeControls(this,callBack):
                 new WelcomeControls(this,1,callBack);
@@ -359,7 +361,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
         }
         if (!isForeground) {
             long newHomebackTime = System.currentTimeMillis();
-            getApiSurTime("homeback", homebackTime, newHomebackTime);
+            Tools.getApiSurTime("homeback", homebackTime, newHomebackTime);
         }
         isForeground = true;
         //去我的页面
@@ -377,6 +379,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
         if(timer==null){
             initRunTime();
         }
+        LogManager.printStartTime("zhangyujian","main::onResume:end::");
     }
 
     /**
@@ -686,6 +689,13 @@ public class Main extends Activity implements OnClickListener, IObserver {
     protected void onPostResume() {
         super.onPostResume();
         LogManager.printStartTime("zhangyujian","onPostResume：：");
+    }
+
+
+    @Override
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        LogManager.printStartTime("zhangyujian","onAttachedToWindow：：");
     }
 
     @Override
