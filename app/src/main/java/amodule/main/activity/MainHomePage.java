@@ -4,6 +4,7 @@ import android.content.IntentFilter;
 import android.graphics.PixelFormat;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -205,6 +206,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver {
      * @return 回调
      */
     public InternetCallback getHeaderCallback(boolean isCache) {
+        new Handler().postDelayed(() -> mViewContrloer.refreshComplete(),5*1000);
         return new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
