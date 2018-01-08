@@ -354,45 +354,6 @@ public class JsAppCommon extends JsBase {
         }
     }
 
-    @JavascriptInterface
-    public void initImageShare(final String imageUrl, final String callback) {
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                if (mAct instanceof ShowWeb) {
-                    ((ShowWeb) mAct).shareCallback = callback;
-                }
-                RelativeLayout shareLayout = (RelativeLayout) mAct.findViewById(R.id.shar_layout);
-                if (shareLayout != null) {
-                    shareLayout.setVisibility(View.VISIBLE);
-                    shareLayout.setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            new BarShareImage(mAct, imageUrl).openShareImage();
-                        }
-                    });
-                }
-            }
-        });
-    }
-
-    @JavascriptInterface
-    public void openImageShare(final String imageUrl, final String callback) {
-        initImageShare(imageUrl, callback);
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                RelativeLayout shareLayout = (RelativeLayout) mAct.findViewById(R.id.shar_layout);
-                if (shareLayout != null) {
-                    shareLayout.performClick();
-                } else {
-                    //若为null则直接分享，以免说这是bug
-                    new BarShareImage(mAct, imageUrl).openShareImage();
-                }
-            }
-        });
-    }
-
     /**
      * 设置统计类型
      */
@@ -404,21 +365,6 @@ public class JsAppCommon extends JsBase {
             key = "分享商品";
         }
         if (!TextUtils.isEmpty(key)) XHClick.track(mAct, key);
-    }
-
-    /**
-     * 初始化收藏
-     *
-     * @param code     : 详情的code，例如小知识的code
-     * @param isFavStr ：是否收藏，2 为已收藏
-     * @param clickUrl ：点击收藏按钮请求的url
-     * @param params   ：点击收藏按钮请求的url时的参数
-     * @param eventID  : 点击统计id
-     * @param statKey  ：二级统计名称
-     */
-    @JavascriptInterface
-    public void initFav(final String code, final String isFavStr, final String clickUrl, final String params, final String eventID, final String statKey) {
-        //无效方法
     }
 
     /**
@@ -453,23 +399,6 @@ public class JsAppCommon extends JsBase {
                 sqlite.insertSubject(BrowseHistorySqlite.TB_NOUS_NAME, data);
             }
         }).start();
-    }
-
-    private JSONObject handlerJSONData(int type, Map<String, String> map) {
-        JSONObject jsonObject = new JSONObject();
-        switch (type) {
-            case 1: //小知识
-                try {
-                    jsonObject.put("allClick", map.get("allClick") + "");
-                    jsonObject.put("code", map.get("code") + "");
-                    jsonObject.put("content", map.get("content") + "");
-                    jsonObject.put("title", map.get("title") + "");
-                    jsonObject.put("img", map.get("img") + "");
-                } catch (Exception ignored) {
-                }
-                break;
-        }
-        return jsonObject;
     }
 
     /**
