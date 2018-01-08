@@ -76,10 +76,6 @@ public class MyFavorite extends MainBaseActivity implements View.OnClickListener
     private void initUi() {
         TextView title = (TextView) findViewById(R.id.title);
         title.setText("我的收藏");
-//        TextView rightText = (TextView) findViewById(R.id.rightText);
-//        rightText.setText("浏览历史");
-//        rightText.setVisibility(View.VISIBLE);
-//        rightText.setTextColor(Color.parseColor("#999999"));
         mMessageTipIcon = (MessageTipIcon) findViewById(R.id.message_tip);
         refreshLayout = (PtrClassicFrameLayout) findViewById(R.id.refresh_list_view_frame);
         rvListview = (RvListView) findViewById(R.id.rvListview);
@@ -198,9 +194,6 @@ public class MyFavorite extends MainBaseActivity implements View.OnClickListener
             case R.id.noLogin_layout:
                 gotoLogin();
                 break;
-//            case R.id.rightText:
-//                startActivity(new Intent(this, BrowseHistory.class));
-//                break;
             case R.id.seek_layout:
                 startActivity(new Intent(this, SreachFavoriteActivity.class));
                 break;

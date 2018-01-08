@@ -6,8 +6,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -36,7 +34,6 @@ import aplug.basic.ReqInternet;
 import aplug.feedback.activity.Feedback;
 import third.qiyu.QiYvHelper;
 import xh.basic.internet.UtilInternet;
-import xh.basic.tool.UtilString;
 
 import static acore.tools.ObserverManager.NOTIFY_LOGIN;
 import static acore.tools.ObserverManager.NOTIFY_LOGOUT;
@@ -48,16 +45,15 @@ public class MyMessage extends BaseAppCompatActivity implements OnClickListener,
     private TextView feekback_msg_num, msg_title_sort;
 
     private AdapterMainMsg adapter;
-    private ArrayList<Map<String, String>> listDataMessage;
+    private ArrayList<Map<String, String>> listDataMessage = new ArrayList<>();
 
     private String pageTime = "";
     private int currentPage = 0, everyPage = 0;
-    private boolean clickFlag = true, isCreated = false;
-    private boolean isShowData = true;
+    private boolean clickFlag = true;
 
+    private RelativeLayout noLoginLayout;
     private TextView mMyQANum;
     private TextView mQiYvNum;
-    private LinearLayout mNoLoginLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,32 +73,30 @@ public class MyMessage extends BaseAppCompatActivity implements OnClickListener,
      * 初始化七鱼客服未读消息数
      */
     private void initQiYvNum() {
-        MessageTipController.newInstance().loadQiyuUnreadCount(new QiYvHelper.NumberCallback() {
-            @Override
-            public void onNumberReady(int count) {
-                setQiYvNum();
-            }
-        });
+        MessageTipController.newInstance().loadQiyuUnreadCount(count -> setQiYvNum());
     }
 
     /** 设置消息数的显示 */
     private void setQiYvNum() {
         if (mQiYvNum != null) {
-            String qiyuNumValue = String.valueOf(MessageTipController.newInstance().getQiyvMessage() > 0 ? MessageTipController.newInstance().getQiyvMessage() : "");
+            int qiyuMsg = MessageTipController.newInstance().getQiyvMessage();
+            String qiyuNumValue = qiyuMsg > 0 ? String.valueOf(qiyuMsg) : "";
             WidgetUtility.setTextToView(mQiYvNum, qiyuNumValue);
         }
     }
 
     private void setFeekbackMsg() {
         if (feekback_msg_num != null) {
-            String feekbackNumValue = MessageTipController.newInstance().getFeekbackMessage() > 0 ? String.valueOf(MessageTipController.newInstance().getFeekbackMessage()) : "";
+            int feekbackMsg = MessageTipController.newInstance().getFeekbackMessage();
+            String feekbackNumValue = feekbackMsg > 0 ? String.valueOf(feekbackMsg) : "";
             WidgetUtility.setTextToView(feekback_msg_num, feekbackNumValue);
         }
     }
 
     private void setQAMsgNum() {
         if (mMyQANum != null) {
-            String myQANumValue = MessageTipController.newInstance().getMyQAMessage() > 0 ? String.valueOf(MessageTipController.newInstance().getMyQAMessage()) : "";
+            int qaMsg = MessageTipController.newInstance().getMyQAMessage();
+            String myQANumValue = qaMsg > 0 ? String.valueOf(qaMsg) : "";
             WidgetUtility.setTextToView(mMyQANum, myQANumValue);
         }
     }
@@ -127,31 +121,25 @@ public class MyMessage extends BaseAppCompatActivity implements OnClickListener,
     public void onRefresh() {
         // 标示用户登录啦
         if (LoginManager.isLogin()) {
-            findViewById(R.id.no_login_rela).setVisibility(View.GONE);
-            mNoLoginLayout.setVisibility(View.GONE);
-            findViewById(R.id.tv_noData).setVisibility(View.GONE);
+            noLoginLayout.setVisibility(View.GONE);
             if (ToolsDevice.getNetActiveState(this)) {
-                load(true);
                 setRefresh();
+                refresh();
             }
             MessageTipController.newInstance().setQuanMessage(0);
         } else {
-            findViewById(R.id.no_login_rela).setVisibility(View.VISIBLE);
-            mNoLoginLayout.setVisibility(View.VISIBLE);
-            findViewById(R.id.tv_noData).setVisibility(View.GONE);
-            isShowData = true;
+            noLoginLayout.setVisibility(View.VISIBLE);
         }
+        findViewById(R.id.tv_noData).setVisibility(View.GONE);
     }
 
     public void login(View view) {
-        Intent intent = new Intent(MyMessage.this, LoginByAccout.class);
-        startActivity(intent);
+        startActivity(new Intent(this, LoginByAccout.class));
     }
 
     private void init() {
-
-        mNoLoginLayout = (LinearLayout) findViewById(R.id.tv_login_notify);
-        mNoLoginLayout.setVisibility(LoginManager.isLogin() ? View.GONE : View.VISIBLE);
+        noLoginLayout = (RelativeLayout) findViewById(R.id.no_login_rela);
+        noLoginLayout.setVisibility(LoginManager.isLogin() ? View.GONE : View.VISIBLE);
 
         // title初始化
         TextView title = (TextView) findViewById(R.id.msg_title_tv);
@@ -159,16 +147,40 @@ public class MyMessage extends BaseAppCompatActivity implements OnClickListener,
         msg_title_sort = (TextView) findViewById(R.id.msg_title_sort);
         msg_title_sort.setText("未读");
         msg_title_sort.setVisibility(View.VISIBLE);
-        ImageView img_back = (ImageView) findViewById(R.id.leftImgBtn);
-        TextView tv_back = (TextView) findViewById(R.id.leftText);
-        tv_back.setVisibility(View.INVISIBLE);
-        img_back.setVisibility(View.VISIBLE);
+        findViewById(R.id.leftText).setVisibility(View.INVISIBLE);
+        findViewById(R.id.leftImgBtn).setVisibility(View.VISIBLE);
 
         // 结果显示
         listMessage = (DownRefreshList) findViewById(R.id.lv_message);
         listMessage.setVisibility(View.GONE);
-        listMessage.bigDownText = "下拉刷新";
-        listMessage.bigReleaseText = "松开刷新";
+
+        initHeader();
+
+        title.setOnClickListener(this);
+        msg_title_sort.setOnClickListener(this);
+        noLoginLayout.setOnClickListener(this);
+        findViewById(R.id.no_admin_linear).setOnClickListener(this);
+        findViewById(R.id.back).setOnClickListener(this);
+
+        if (LoginManager.isLogin()) {
+            initQiYvNum();
+        }
+
+        setFeekbackMsg();
+        setQAMsgNum();
+        adapter = new AdapterMainMsg(this, listMessage, listDataMessage, 0, null, null);
+        loadManager.setLoading(listMessage, adapter, true,
+                v -> {
+//                    if (isCreated)
+                        load();
+//                    else {
+//                        isCreated = true;
+//                        refresh();
+//                    }
+                },
+                v -> refresh());
+    }
+    private  void initHeader(){
         RelativeLayout headerView = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.a_common_message_header, null);
         RelativeLayout headerSecretary = (RelativeLayout) headerView.findViewById(R.id.secretary);
         RelativeLayout headerMyQA = (RelativeLayout) headerView.findViewById(R.id.my_qa);
@@ -181,38 +193,6 @@ public class MyMessage extends BaseAppCompatActivity implements OnClickListener,
         headerSecretary.setOnClickListener(this);
         headerMyQA.setOnClickListener(this);
         headerQY.setOnClickListener(this);
-        title.setOnClickListener(this);
-        msg_title_sort.setOnClickListener(this);
-        findViewById(R.id.no_admin_linear).setOnClickListener(this);
-        findViewById(R.id.back).setOnClickListener(this);
-        findViewById(R.id.no_login_rela).setOnClickListener(this);
-
-        if (LoginManager.isLogin()) {
-            initQiYvNum();
-        }
-
-        setFeekbackMsg();
-        setQAMsgNum();
-        listDataMessage = new ArrayList<>();
-        adapter = new AdapterMainMsg(this, listMessage, listDataMessage, 0, null, null);
-        loadManager.setLoading(listMessage, adapter, true,
-                new OnClickListener() {
-                    @Override
-                    public void onClick(View arg0) {
-                        if (isCreated)
-                            load(false);
-                        else {
-                            isCreated = true;
-                            load(true);
-                        }
-                    }
-                },
-                new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        load(true);
-                    }
-                });
     }
 
     /** 刷新view */
@@ -222,32 +202,31 @@ public class MyMessage extends BaseAppCompatActivity implements OnClickListener,
 
     private void startFeekback() {
         XHClick.mapStat(this, "a_message", "点击香哈小秘书", "");
-        Intent intent = new Intent(MyMessage.this, Feedback.class);
-        startActivity(intent);
+        startActivity(new Intent(this, Feedback.class));
     }
 
+    public void refresh(){
+        currentPage = 0;
+        everyPage = 0;
+        pageTime = "";
+        MessageTipController.newInstance().setQuanMessage(0);
+        load();
+    }
 
     /** 加载数据 */
-    private void load(final boolean isForward) {
-        String getUrl = null;
-        isShowData = false;
-        if (isForward) {
-            currentPage = 1;
-            everyPage = 0;
-            MessageTipController.newInstance().setQuanMessage(0);
-            getUrl = StringManager.api_message + "?type=" + (clickFlag ? "all" : "asc") + "&page=" + currentPage;
-        } else {
-            currentPage++;
-            getUrl = StringManager.api_message + "?type=" + (clickFlag ? "all" : "asc") + "&page=" + currentPage + "&pageTime=" + pageTime;
-        }
+    private void load() {
+        currentPage++;
+        String getUrl = StringManager.api_message + "?type=" + (clickFlag ? "all" : "asc") + "&page=" + currentPage;
+        if(!TextUtils.isEmpty(pageTime))
+            getUrl += "&pageTime=" + pageTime;
         loadManager.changeMoreBtn(UtilInternet.REQ_OK_STRING, -1, -1, currentPage, listDataMessage.size() == 0);
         ReqInternet.in().doGet(getUrl, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
                 int loadCount = 0;
                 if (flag >= UtilInternet.REQ_OK_STRING) {
-                    if (isForward) listDataMessage.clear();
-                    ArrayList<Map<String, String>> listReturn = UtilString.getListMapByJson(returnObj);
+                    if (currentPage == 1) listDataMessage.clear();
+                    ArrayList<Map<String, String>> listReturn = StringManager.getListMapByJson(returnObj);
                     for (int i = 0; i < listReturn.size(); i++) {
                         Map<String, String> map = listReturn.get(i);
                         map.put("addTimeShow", map.get("addTimeShow"));
@@ -268,7 +247,7 @@ public class MyMessage extends BaseAppCompatActivity implements OnClickListener,
                                 map.put("img", "hide");
                             String info_url = map.get("url");
                             if (!TextUtils.isEmpty(info_url)) {
-                                Map<String, String> info_map = UtilString.getMapByString(info_url.substring(info_url.indexOf("subjectInfo.php?") + 16),
+                                Map<String, String> info_map = StringManager.getMapByString(info_url.substring(info_url.indexOf("subjectInfo.php?") + 16),
                                         "&", "=");
                                 map.put("subjectCode", info_map.get("code"));
                                 map.put("floorNum", info_map.get("floorNum"));
@@ -310,34 +289,15 @@ public class MyMessage extends BaseAppCompatActivity implements OnClickListener,
                         listDataMessage.add(map);
                     }
                     loadCount = listReturn.size();
-                    if (isForward && loadCount == 0 && LoginManager.isLogin()) {
-                        isShowData = true;
-                        findViewById(R.id.tv_noData).setVisibility(View.VISIBLE);
-                    } else {
-                        isShowData = false;
-                        findViewById(R.id.tv_noData).setVisibility(View.GONE);
-                    }
                     // 标示用户登录啦
-                    if (LoginManager.isLogin()) {
-                        isShowData = false;
-                        findViewById(R.id.no_login_rela).setVisibility(View.GONE);
-                        mNoLoginLayout.setVisibility(View.GONE);
-                        findViewById(R.id.tv_noData).setVisibility(View.GONE);
-                        if (isForward && loadCount == 0 && LoginManager.isLogin()) {
-                            findViewById(R.id.tv_noData).setVisibility(View.VISIBLE);
-                        } else findViewById(R.id.tv_noData).setVisibility(View.GONE);
-                    } else {
-                        findViewById(R.id.no_login_rela).setVisibility(View.VISIBLE);
-                        mNoLoginLayout.setVisibility(View.VISIBLE);
-                        findViewById(R.id.tv_noData).setVisibility(View.GONE);
-                        isShowData = true;
-                    }
-                } else isShowData = true;
+                    noLoginLayout.setVisibility(LoginManager.isLogin() ? View.GONE : View.VISIBLE);
+                    findViewById(R.id.tv_noData).setVisibility(currentPage == 1 && loadCount == 0 && LoginManager.isLogin() ? View.VISIBLE:View.GONE);
+                }
                 listMessage.setVisibility(View.VISIBLE);
                 if (everyPage == 0)
                     everyPage = loadCount;
-                currentPage = loadManager.changeMoreBtn(flag, everyPage, loadCount, currentPage, mNoLoginLayout.getVisibility() != View.VISIBLE && listDataMessage.size() == 0);
-                if (isForward)
+                currentPage = loadManager.changeMoreBtn(flag, everyPage, loadCount, currentPage, noLoginLayout.getVisibility() != View.VISIBLE && listDataMessage.size() == 0);
+                if (currentPage == 1)
                     adapter.notifyDataSetInvalidated();
                 else
                     adapter.notifyDataSetChanged();
@@ -393,10 +353,7 @@ public class MyMessage extends BaseAppCompatActivity implements OnClickListener,
                 AppCommon.scorllToIndex(listMessage,0);
                 break;
             case R.id.msg_title_sort:
-                XHClick.mapStat(MyMessage.this, "a_message", "点击未读按钮", "");
-                clickFlag = !clickFlag;
-                msg_title_sort.setText(clickFlag ? "未读" : "全部");
-                load(true);
+                switchMessageType();
                 break;
             case R.id.no_admin_linear:
                 startFeekback();
@@ -407,5 +364,12 @@ public class MyMessage extends BaseAppCompatActivity implements OnClickListener,
             default:
                 break;
         }
+    }
+
+    private void switchMessageType() {
+        XHClick.mapStat(MyMessage.this, "a_message", "点击未读按钮", "");
+        clickFlag = !clickFlag;
+        msg_title_sort.setText(clickFlag ? "未读" : "全部");
+        refresh();
     }
 }
