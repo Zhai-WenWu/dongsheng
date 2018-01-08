@@ -34,6 +34,8 @@ public class MessageTipController {
 
     private static volatile MessageTipController mInstance = null;
 
+    private long lastRequestTime = -1L;
+
     private MessageTipController() {
     }
 
@@ -48,24 +50,28 @@ public class MessageTipController {
 
     /** 获取公用数据消息 */
     public void getCommonData(final InternetCallback callback) {
-        String url = StringManager.api_commonData + "?m=commonData";
-        ReqInternet.in().doGet(url, new InternetCallback() {
-            @Override
-            public void loaded(int flag, String url, Object returnObj) {
-                if (flag >= ReqInternet.REQ_OK_STRING) {
-                    fiallNum = 0;
-                    handlerMessageData((String) returnObj);
-                    if (callback != null)
-                        callback.loaded(flag, url, "加载成功");
-                } else if (fiallNum < 3) {
-                    fiallNum++;
-                    getCommonData(callback);
-                } else {
-                    if (callback != null)
-                        callback.loaded(flag, url, "加载失败");
+        final long currentTime = System.currentTimeMillis();
+        if(lastRequestTime < 0 || (currentTime - lastRequestTime > 2000 && fiallNum == 0)){
+            lastRequestTime = currentTime;
+            String url = StringManager.api_commonData + "?m=commonData";
+            ReqInternet.in().doGet(url, new InternetCallback() {
+                @Override
+                public void loaded(int flag, String url, Object returnObj) {
+                    if (flag >= ReqInternet.REQ_OK_STRING) {
+                        fiallNum = 0;
+                        handlerMessageData((String) returnObj);
+                        if (callback != null)
+                            callback.loaded(flag, url, "加载成功");
+                    } else if (fiallNum < 3) {
+                        fiallNum++;
+                        getCommonData(callback);
+                    } else {
+                        if (callback != null)
+                            callback.loaded(flag, url, "加载失败");
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     private boolean handlerMessageData(String returnObj) {
