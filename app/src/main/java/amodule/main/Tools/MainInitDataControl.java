@@ -178,9 +178,6 @@ public class MainInitDataControl {
                 //更新热词匹配数据库
                 new MatchWordsDbUtil().checkUpdateMatchWordsDb(act);
 
-                //请求本地推送data
-                new XGLocalPushServer(act).getNousLocalPushData();
-
                 //获取圈子静态数据
                 AppCommon.saveCircleStaticData(act);
 
