@@ -47,7 +47,7 @@ import static acore.tools.ObserverManager.NOTIFY_UNFAVORITE;
 /**
  * 我的收藏页面改版
  */
-public class MyFavorite extends MainBaseActivity implements View.OnClickListener,IObserver,ISetMessageTip {
+public class MyFavorite extends MainBaseActivity implements View.OnClickListener, IObserver, ISetMessageTip {
     public static final String KEY = "MyFavorite";
     private ArrayList<Map<String, String>> mData = new ArrayList<>();
     private PtrClassicFrameLayout refreshLayout;
@@ -66,11 +66,11 @@ public class MyFavorite extends MainBaseActivity implements View.OnClickListener
         initUi();
         initData();
         //未登录自动跳转去登录
-        if(!LoginManager.isLogin()){
+        if (!LoginManager.isLogin()) {
             gotoLogin();
         }
-        ObserverManager.getInstence().registerObserver(this,NOTIFY_LOGIN,NOTIFY_LOGOUT,
-                NOTIFY_FAVORITE,NOTIFY_UNFAVORITE);
+        ObserverManager.getInstence().registerObserver(this, NOTIFY_LOGIN, NOTIFY_LOGOUT,
+                NOTIFY_FAVORITE, NOTIFY_UNFAVORITE);
     }
 
     private void initUi() {
@@ -81,7 +81,7 @@ public class MyFavorite extends MainBaseActivity implements View.OnClickListener
         rvListview = (RvListView) findViewById(R.id.rvListview);
         noDataLayout = (LinearLayout) findViewById(R.id.noData_layout);
         noLoginLayout = (RelativeLayout) findViewById(R.id.no_login_rela);
-        noLoginLayout.setVisibility(LoginManager.isLogin() ? View.GONE:View.VISIBLE);
+        noLoginLayout.setVisibility(LoginManager.isLogin() ? View.GONE : View.VISIBLE);
         noLoginLayout.setOnClickListener(this);
 
         findViewById(R.id.noLogin_layout).setOnClickListener(this);
@@ -101,14 +101,13 @@ public class MyFavorite extends MainBaseActivity implements View.OnClickListener
         itemDecoration.setDrawable(drawable);
         rvListview.addItemDecoration(itemDecoration);
         rvListview.setOnItemClickListener((view, holder, position) -> {
-            if(mData == null || position < 0 || position >= mData.size())
+            if (mData == null || position < 0 || position >= mData.size())
                 return;
             Map<String, String> item = mData.get(position);
-            if(item == null){
+            if (item == null)
                 return;
-            }
-            Map<String, String> itemParameter =  StringManager.getFirstMap(item.get("parameter"));
-            AppCommon.openUrl(MyFavorite.this,itemParameter.get("url"),true);
+            Map<String, String> itemParameter = StringManager.getFirstMap(item.get("parameter"));
+            AppCommon.openUrl(MyFavorite.this, itemParameter.get("url"), true);
         });
         rvListview.setOnItemLongClickListener((view, holder, position) -> {
             showBottomDialog(position);
@@ -149,8 +148,8 @@ public class MyFavorite extends MainBaseActivity implements View.OnClickListener
 //                    everyPage = loadCount;
 //                }
                 //服务端数据有问题
-                everyPage=5;
-                if(isRefresh){
+                everyPage = 5;
+                if (isRefresh) {
                     refreshLayout.refreshComplete();
                 }
                 loadManager.changeMoreBtn(flag, everyPage, loadCount, currentpage, mData.isEmpty());
@@ -160,9 +159,8 @@ public class MyFavorite extends MainBaseActivity implements View.OnClickListener
     }
 
     private void handlerNoDataLayout() {
-        if (mData == null) {
+        if (mData == null)
             return;
-        }
         final boolean dataIsEmpty = mData.isEmpty();
         noDataLayout.setVisibility(dataIsEmpty ? View.VISIBLE : View.GONE);
         rvListview.setVisibility(dataIsEmpty ? View.GONE : View.VISIBLE);
@@ -175,11 +173,6 @@ public class MyFavorite extends MainBaseActivity implements View.OnClickListener
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
         ObserverManager.getInstence().unRegisterObserver(this);
@@ -188,26 +181,24 @@ public class MyFavorite extends MainBaseActivity implements View.OnClickListener
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.title:
-                gotoTop();
-                break;
-            case R.id.noLogin_layout:
-                gotoLogin();
-                break;
-            case R.id.seek_layout:
-                startActivity(new Intent(this, SreachFavoriteActivity.class));
-                break;
+            case R.id.title: gotoTop();break;
+            case R.id.noLogin_layout: gotoLogin();break;
+            case R.id.seek_layout: gotoSearch();break;
             //回到首页第一页
-            case R.id.btn_no_data:
-                if (Main.allMain != null) {
-                    Main.allMain.setCurrentTabByClass(MainHomePage.class);
-                }
-                Main.colse_level = 1;
-                finish();
-                break;
-            default:
-                break;
+            case R.id.btn_no_data: gotoHomePage();break;
+            default:break;
         }
+    }
+
+    private void gotoSearch() {
+        startActivity(new Intent(this, SreachFavoriteActivity.class));
+    }
+
+    private void gotoHomePage() {
+        if (Main.allMain != null)
+            Main.allMain.setCurrentTabByClass(MainHomePage.class);
+        Main.colse_level = 1;
+        finish();
     }
 
     private void gotoLogin() {
@@ -229,13 +220,12 @@ public class MyFavorite extends MainBaseActivity implements View.OnClickListener
     }
 
     private void showBottomDialog(final int position) {
-        if(mData == null || position < 0 || position >= mData.size())
+        if (mData == null || position < 0 || position >= mData.size())
             return;
         Map<String, String> item = mData.get(position);
-        if(item == null){
+        if (item == null)
             return;
-        }
-        Map<String, String> itemParameter =  StringManager.getFirstMap(item.get("parameter"));
+        Map<String, String> itemParameter = StringManager.getFirstMap(item.get("parameter"));
         if (itemParameter.isEmpty()) return;
         final String code = itemParameter.get("code");
         final String type = itemParameter.get("type");
@@ -250,13 +240,12 @@ public class MyFavorite extends MainBaseActivity implements View.OnClickListener
     }
 
     private void cannelFav(String code, String typeName, String type, int position) {
-        FavoriteHelper.instance().setFavoriteStatus(MyFavorite.this, code,  typeName, type,
+        FavoriteHelper.instance().setFavoriteStatus(MyFavorite.this, code, typeName, type,
                 new FavoriteHelper.FavoriteStatusCallback() {
                     @Override
                     public void onSuccess(boolean state) {
-                        if(state){
+                        if (state)
                             return;
-                        }
                         mData.remove(position);
                         rvListview.notifyItemViewRemove(position);
                         handlerNoDataLayout();
@@ -278,7 +267,7 @@ public class MyFavorite extends MainBaseActivity implements View.OnClickListener
                 }
                 break;
             case NOTIFY_LOGOUT:
-                if (data != null && data instanceof Boolean) {
+                if (data != null && data instanceof Boolean && (Boolean) data) {
                     logout();
                     //清空数据
                     mData.clear();
@@ -286,14 +275,14 @@ public class MyFavorite extends MainBaseActivity implements View.OnClickListener
                 }
                 break;
             case NOTIFY_FAVORITE:
-                if(data != null && data instanceof Map){
+                if (data != null && data instanceof Map) {
                     //TODO 插入数据
 //                    mData.add(0, (Map<String, String>) data);
 //                    myFavorite.notifyDataSetChanged();
                 }
                 break;
             case NOTIFY_UNFAVORITE:
-                if(data != null && data instanceof Map){
+                if (data != null && data instanceof Map) {
                     //TODO 移除数据
 //                    Map<String,String> map = StringManager.getFirstMap(((Map)data).get("parameter"));
 //                    for(Map<String,String> value:mData){
@@ -311,27 +300,27 @@ public class MyFavorite extends MainBaseActivity implements View.OnClickListener
         }
     }
 
-    public void onRefresh(){
-        if(LoginManager.isLogin() && refreshLayout != null){
+    public void onRefresh() {
+        if (LoginManager.isLogin() && refreshLayout != null) {
             refreshLayout.autoRefresh();
         }
     }
 
-    private void login(){
-        if(noLoginLayout != null){
+    private void login() {
+        if (noLoginLayout != null) {
             noLoginLayout.setVisibility(View.GONE);
         }
     }
 
-    private void logout(){
-        if(noLoginLayout != null){
+    private void logout() {
+        if (noLoginLayout != null) {
             noLoginLayout.setVisibility(View.VISIBLE);
         }
     }
 
     @Override
     public void setMessageTip(int tipCournt) {
-        if(mMessageTipIcon != null){
+        if (mMessageTipIcon != null) {
             mMessageTipIcon.setMessage(tipCournt);
         }
     }
