@@ -84,7 +84,7 @@ public class MyFavorite extends MainBaseActivity implements View.OnClickListener
         rvListview = (RvListView) findViewById(R.id.rvListview);
         noDataLayout = (LinearLayout) findViewById(R.id.noData_layout);
         noLoginLayout = (LinearLayout) findViewById(R.id.noLogin_layout);
-        noLoginLayout.setVisibility(LoginManager.isLogin() ? View.GONE:View.VISIBLE);
+        findViewById(R.id.no_login_rela).setVisibility(LoginManager.isLogin() ? View.GONE:View.VISIBLE);
         findViewById(R.id.no_login_rela).setOnClickListener(this);
 
         noLoginLayout.setOnClickListener(this);
