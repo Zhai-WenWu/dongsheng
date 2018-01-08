@@ -14,14 +14,14 @@ public class SettingUtils {
 
     public static class NotificationSetting {
 
-
+//        public static void requestApp
 
     }
 
     public static class ApplicationSetting {
 
         public static void openApplicationDetailSettings() {
-            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,getPacageUri());
+            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, getPackageUri());
             XHApplication.in().getApplicationContext().startActivity(intent);
         }
 
@@ -32,7 +32,7 @@ public class SettingUtils {
         XHApplication.in().getApplicationContext().startActivity(intent);
     }
 
-    private static Uri getPacageUri() {
+    private static Uri getPackageUri() {
         return Uri.parse("package:" + XHApplication.in().getPackageName());
     }
 }
