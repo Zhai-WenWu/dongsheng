@@ -68,5 +68,6 @@
     <string name="vip_transfer_this">转移到本账号</string>
     <string name="vip_transfer_xh">转移到香哈账号</string>
     <string name="myself_viptransfer_itemdesc">将权益迁移到账号可在各设备上享受会员</string>
+    <string name="msg_close_tip">您将无法收到香哈为您精选的内容通知以及哈友的互动消息，强烈建议您开启接收消息通知。</string>
 
 </resources>

@@ -263,6 +263,10 @@ public class StringManager extends UtilString {
     //断点上传获取校验token
     public final static String api_getQiniuToken = apiUrl + urlSection.get("other6") + "getQiniuToken";
 
+    //消息通知设置页面
+    public static final String API_GETINFOSWITCHLIST = apiUrl + urlSection.get("home5") + "getInfoSwitchList";
+    public static final String API_SETINFOSWITCH = apiUrl + urlSection.get("home5") + "setInfoSwitch";
+
 
     //登录模块
     public final static String api_customerNickNameCheck = apiUrl + urlSection.get("home5") + "customerNickNameCheck";

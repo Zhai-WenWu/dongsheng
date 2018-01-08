@@ -13,25 +13,25 @@ import com.xiangha.R;
  * Created by xiangha-zhangyujian on 2017/6/14
  */
 
-public class switchView extends RelativeLayout{
+public class SwitchView extends RelativeLayout{
     private  Context context;
     private ImageView iv_switch;
     private OnSwitchChangeListener mListener = null;
     public boolean mSwitchOn = true;//开关默认是开着的
 
-    public switchView(Context context) {
+    public SwitchView(Context context) {
         super(context);
         this.context=context;
         initView();
     }
 
-    public switchView(Context context, AttributeSet attrs) {
+    public SwitchView(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context=context;
         initView();
     }
 
-    public switchView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public SwitchView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.context=context;
         initView();
@@ -44,7 +44,7 @@ public class switchView extends RelativeLayout{
             public void onClick(View v) {
                 if(mListener!=null){
                     mSwitchOn=!mSwitchOn;
-                    mListener.onChange(mSwitchOn);
+                    mListener.onChange(SwitchView.this, mSwitchOn);
                     setViewState();
                 }
             }
@@ -57,7 +57,7 @@ public class switchView extends RelativeLayout{
         mListener = listener;
     }
     public interface OnSwitchChangeListener {
-        public void onChange( boolean state);
+        public void onChange(View v, boolean state);
     }
     public void setState(boolean state){
         mSwitchOn=state;
