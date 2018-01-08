@@ -52,7 +52,8 @@ public class MyFavorite extends MainBaseActivity implements View.OnClickListener
     private ArrayList<Map<String, String>> mData = new ArrayList<>();
     private PtrClassicFrameLayout refreshLayout;
     private MessageTipIcon mMessageTipIcon;
-    private LinearLayout noDataLayout,noLoginLayout;
+    private LinearLayout noDataLayout;
+    private RelativeLayout noLoginLayout;
     private RvListView rvListview;
     private AdapterModuleS0 myFavorite;
     private int currentpage = 0, everyPage = 0;//页面号码
@@ -83,11 +84,11 @@ public class MyFavorite extends MainBaseActivity implements View.OnClickListener
         refreshLayout = (PtrClassicFrameLayout) findViewById(R.id.refresh_list_view_frame);
         rvListview = (RvListView) findViewById(R.id.rvListview);
         noDataLayout = (LinearLayout) findViewById(R.id.noData_layout);
-        noLoginLayout = (LinearLayout) findViewById(R.id.noLogin_layout);
-        findViewById(R.id.no_login_rela).setVisibility(LoginManager.isLogin() ? View.GONE:View.VISIBLE);
-        findViewById(R.id.no_login_rela).setOnClickListener(this);
-
+        noLoginLayout = (RelativeLayout) findViewById(R.id.no_login_rela);
+        noLoginLayout.setVisibility(LoginManager.isLogin() ? View.GONE:View.VISIBLE);
         noLoginLayout.setOnClickListener(this);
+
+        findViewById(R.id.noLogin_layout).setOnClickListener(this);
         findViewById(R.id.seek_layout).setOnClickListener(this);
         findViewById(R.id.title).setOnClickListener(this);
         findViewById(R.id.back).setVisibility(View.GONE);
