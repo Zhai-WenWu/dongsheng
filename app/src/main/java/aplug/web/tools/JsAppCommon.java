@@ -354,6 +354,45 @@ public class JsAppCommon extends JsBase {
         }
     }
 
+    @JavascriptInterface
+    public void initImageShare(final String imageUrl, final String callback) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (mAct instanceof WebActivity) {
+                    ((ShowWeb) mAct).shareCallback = callback;
+                }
+                RelativeLayout shareLayout = (RelativeLayout) mAct.findViewById(R.id.shar_layout);
+                if (shareLayout != null) {
+                    shareLayout.setVisibility(View.VISIBLE);
+                    shareLayout.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            new BarShareImage(mAct, imageUrl).openShareImage();
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    @JavascriptInterface
+    public void openImageShare(final String imageUrl, final String callback) {
+        initImageShare(imageUrl, callback);
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                RelativeLayout shareLayout = (RelativeLayout) mAct.findViewById(R.id.shar_layout);
+                if (shareLayout != null) {
+                    shareLayout.performClick();
+                } else {
+                    //若为null则直接分享，以免说这是bug
+                    new BarShareImage(mAct, imageUrl).openShareImage();
+                }
+            }
+        });
+    }
+
     /**
      * 设置统计类型
      */
