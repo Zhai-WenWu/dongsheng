@@ -282,11 +282,11 @@ public class ShareTools {
 		}
 	});
 
-	public void notifyShareResult(String platform,String success, String jsCallbackStr){
+	public void notifyShareResult(String platform,String success, String jsCallbackParams){
 		Map<String,String> data = new HashMap<>();
 		data.put("platform",platform);
 		data.put("status",success);
-		data.put("callbackStr", jsCallbackStr);
+		data.put("callbackParams", jsCallbackParams);
 		ObserverManager.getInstance().notify(ObserverManager.NOTIFY_SHARE,this,data);
 	}
 
