@@ -264,51 +264,58 @@ public class ShareTools {
 					starEvent("a_share_success", mParent,mFrom);
 					XHClick.statisticsShare(mFrom, mClickUrl, pf[1]);
 					Tools.showToast(mContext, pf[0] + "分享成功");
-					notifyShareResult(pf[0],"2");
+					notifyShareResult(pf[0],"2", pf[2]);
 					break;
 				case SHARE_ERROR:
 					if(("微信".equals(pf[0]) || pf[0].indexOf("微信") > -1) && ToolsDevice.isAppInPhone(mContext, "com.tencent.mm") == 0){
 						Tools.showToast(mContext, "未检测到相关应用");
 					}else
 						Tools.showToast(mContext, pf[0] + "分享失败");
-					notifyShareResult(pf[0],"1");
+					notifyShareResult(pf[0],"1", pf[2]);
 					break;
 				case SHARE_CANCLE:
 					Tools.showToast(mContext, pf[0] + "取消分享");
-					notifyShareResult(pf[0],"1");
+					notifyShareResult(pf[0],"1", pf[2]);
 					break;
 			}
 			return false;
 		}
 	});
 
-	public void notifyShareResult(String platform,String success){
+	public void notifyShareResult(String platform,String success, String jsCallbackStr){
 		Map<String,String> data = new HashMap<>();
 		data.put("platform",platform);
 		data.put("status",success);
+		data.put("callbackStr", jsCallbackStr);
 		ObserverManager.getInstance().notify(ObserverManager.NOTIFY_SHARE,this,data);
 	}
 
 	public String[] getPlatform(String name){
-		String[] pf = new String[2];
+		String[] pf = new String[3];
 		if(ShareTools.QQ_NAME.equals(name)){
 			pf[0] = "QQ";
 			pf[1] = "1";
+			pf[2] = "QQ";
 		}else if(ShareTools.QQ_ZONE.equals(name)){
 			pf[0] = "QQ空间";
 			pf[1] = "2";
+			pf[2] = "QZone";
 		}else if(ShareTools.WEI_XIN.equals(name)){
 			pf[0] = "微信";
 			pf[1] = "3";
+			pf[2] = "Wechat";
 		}else if(ShareTools.WEI_QUAN.equals(name)){
 			pf[0] = "微信朋友圈";
 			pf[1] = "4";
+			pf[2] = "WechatMoments";
 		}else if(ShareTools.SINA_NAME.equals(name)){
 			pf[0] = "新浪";
 			pf[1] = "5";
+			pf[2] = "SinaWeibo";
 		}else if(ShareTools.SHORT_MESSAGE.equals(name)){
 			pf[0] = "短信";
 			pf[1] = "6";
+			pf[2] = "";
 		}
 		return pf;
 	}

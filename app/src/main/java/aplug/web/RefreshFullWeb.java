@@ -70,8 +70,8 @@ public class RefreshFullWeb extends FullScreenWeb implements IObserver {
             case ObserverManager.NOTIFY_SHARE:
                 if (!TextUtils.isEmpty(shareCallback) && data != null) {
                     Map<String, String> dataMap = (Map<String, String>) data;
-                    webview.loadUrl("javascript:" + shareCallback + "(" + TextUtils.equals("2", dataMap.get("status")) + ")");
-                    Log.i("tzy", "javascript:" + shareCallback + "(" + TextUtils.equals("2", dataMap.get("status")) + ")");
+                    webview.loadUrl("javascript:" + shareCallback + "(" + TextUtils.equals("2", dataMap.get("status")) + "," + "\'" + dataMap.get("callbackStr") + "\'" + ")");
+                    Log.i("tzy", "javascript:" + shareCallback + "(" + TextUtils.equals("2", dataMap.get("status")) + "," + "\'" + dataMap.get("callbackStr") + "\'" + ")");
                 }
                 break;
             default:
