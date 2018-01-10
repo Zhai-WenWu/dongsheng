@@ -374,7 +374,7 @@ public class AppCommon {
 //                String urlTemp="amodule.dish.activity.DetailDish".equals(urls[0])?"amodule.dish.activity.DishTestActivity":urls[0];
                 final Class<?> c = Class.forName(urls[0]);
                 if (urls[0].contains("amodule.main.activity.")
-//                        || urls[0].contains("third.mall.MainMall")
+                        || urls[0].contains("amodule.user.activity.MyFavorite")
                         ) {
                     Main.colse_level = 2;
                     if (Main.allMain != null) {

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.widget.Toast;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -11,6 +12,7 @@ import java.util.Map;
 import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
+import acore.tools.ToolsDevice;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 
@@ -102,6 +104,10 @@ public class FavoriteHelper {
      */
     public void setFavoriteStatus(Context context, @NonNull String code, String typeName,@NonNull String type,
                                   @Nullable final FavoriteStatusCallback callback) {
+        if(!ToolsDevice.isNetworkAvailable(context)){
+            Toast.makeText(context, "请检查网络设置", Toast.LENGTH_SHORT).show();
+            return;
+        }
         LinkedHashMap<String, String> params = new LinkedHashMap<>();
         params.put("code", code);
         params.put("type", type);
@@ -122,7 +128,8 @@ public class FavoriteHelper {
                                     Tools.showToast(context,"2".equals(state)?"收藏成功":"取消收藏");
                                 }
                             }
-                            ObserverManager.getInstence().notify("2".equals(state) ? NOTIFY_FAVORITE:NOTIFY_UNFAVORITE,null,map);
+                            Map<String,String> data = StringManager.getFirstMap(map.get("data"));
+                            ObserverManager.getInstence().notify("2".equals(state) ? NOTIFY_FAVORITE:NOTIFY_UNFAVORITE,null,data);
                         }else{
                             if(null != callback)
                                 callback.onFailed();

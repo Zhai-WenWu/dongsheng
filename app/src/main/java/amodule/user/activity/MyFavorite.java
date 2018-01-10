@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -32,6 +31,7 @@ import amodule.main.Main;
 import amodule.main.activity.MainHomePage;
 import amodule.main.delegate.ISetMessageTip;
 import amodule.main.view.MessageTipIcon;
+import amodule.user.activity.SreachFavoriteActivity;
 import amodule.user.activity.login.LoginByAccout;
 import amodule.user.adapter.AdapterModuleS0;
 import aplug.basic.InternetCallback;
@@ -57,6 +57,7 @@ public class MyFavorite extends MainBaseActivity implements View.OnClickListener
     private RvListView rvListview;
     private AdapterModuleS0 myFavorite;
     private int currentpage = 0, everyPage = 0;//页面号码
+    private String pageTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,15 +121,22 @@ public class MyFavorite extends MainBaseActivity implements View.OnClickListener
         loadManager.getSingleLoadMore(rvListview).setBackgroundColor(Color.parseColor("#F2F2F2"));
     }
 
-    /**
-     * 请求数据
-     */
+    /** 请求数据 */
     private void requestData(final boolean isRefresh) {
+        if (!LoginManager.isLogin()) {
+            loadManager.hideProgressBar();
+            return;
+        }
         currentpage = isRefresh ? 1 : ++currentpage;
         everyPage = isRefresh ? 0 : everyPage;
+        if (isRefresh)
+            pageTime = "";
         LinkedHashMap<String, String> params = new LinkedHashMap<>();
         params.put("page", String.valueOf(currentpage));
-        loadManager.changeMoreBtn(ReqInternet.REQ_OK_STRING, -1, -1, currentpage, false);
+        if (!TextUtils.isEmpty(pageTime)) {
+            params.put("pageTime", pageTime);
+        }
+        loadManager.changeMoreBtn(ReqInternet.REQ_OK_STRING, -1, -1, currentpage, mData.isEmpty());
         ReqEncyptInternet.in().doEncypt(StringManager.API_COLLECTIONLIST, params, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object msg) {
@@ -142,6 +150,10 @@ public class MyFavorite extends MainBaseActivity implements View.OnClickListener
                         loadCount = listMaps.size();
                         mData.addAll(listMaps);
                         myFavorite.notifyDataSetChanged();
+                    }
+                    if (maps.containsKey("pageTime") && !TextUtils.isEmpty(maps.get("pageTime"))
+                            && TextUtils.isEmpty(pageTime)) {
+                        pageTime = maps.get("pageTime");
                     }
                 }
 //                if (everyPage == 0) {
@@ -181,12 +193,21 @@ public class MyFavorite extends MainBaseActivity implements View.OnClickListener
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.title: gotoTop();break;
-            case R.id.noLogin_layout: gotoLogin();break;
-            case R.id.seek_layout: gotoSearch();break;
+            case R.id.title:
+                gotoTop();
+                break;
+            case R.id.noLogin_layout:
+                gotoLogin();
+                break;
+            case R.id.seek_layout:
+                gotoSearch();
+                break;
             //回到首页第一页
-            case R.id.btn_no_data: gotoHomePage();break;
-            default:break;
+            case R.id.btn_no_data:
+                gotoHomePage();
+                break;
+            default:
+                break;
         }
     }
 
@@ -235,26 +256,9 @@ public class MyFavorite extends MainBaseActivity implements View.OnClickListener
         Map<String, String> itemB = StringManager.getFirstMap(item.get("B"));
         final String typeName = itemB.get("text1");
         BottomDialog dialog = new BottomDialog(this);
-        dialog.addButton("取消收藏", v -> cannelFav(code, typeName, type, position));
-        dialog.show();
-    }
-
-    private void cannelFav(String code, String typeName, String type, int position) {
-        FavoriteHelper.instance().setFavoriteStatus(MyFavorite.this, code, typeName, type,
-                new FavoriteHelper.FavoriteStatusCallback() {
-                    @Override
-                    public void onSuccess(boolean state) {
-                        if (state)
-                            return;
-                        mData.remove(position);
-                        rvListview.notifyItemViewRemove(position);
-                        handlerNoDataLayout();
-                    }
-
-                    @Override
-                    public void onFailed() {
-                    }
-                });
+        dialog.addButton("取消收藏",
+                v -> FavoriteHelper.instance().setFavoriteStatus(this, code, typeName, type, null)
+        ).show();
     }
 
     @Override
@@ -262,41 +266,49 @@ public class MyFavorite extends MainBaseActivity implements View.OnClickListener
         switch (name) {
             case NOTIFY_LOGIN:
                 if (data != null && data instanceof Boolean && (Boolean) data) {
-                    login();
+                    refreshLoginstatus();
                     requestData(true);
                 }
                 break;
             case NOTIFY_LOGOUT:
                 if (data != null && data instanceof Boolean && (Boolean) data) {
-                    logout();
+                    refreshLoginstatus();
                     //清空数据
                     mData.clear();
                     myFavorite.notifyDataSetChanged();
                 }
                 break;
             case NOTIFY_FAVORITE:
-                if (data != null && data instanceof Map) {
-                    //TODO 插入数据
-//                    mData.add(0, (Map<String, String>) data);
-//                    myFavorite.notifyDataSetChanged();
+                if (LoginManager.isLogin()
+                        && data != null && data instanceof Map) {
+                    mData.add(0, (Map<String, String>) data);
+                    rvListview.notifyItemViewInserted(0);
                 }
                 break;
             case NOTIFY_UNFAVORITE:
-                if (data != null && data instanceof Map) {
-                    //TODO 移除数据
-//                    Map<String,String> map = StringManager.getFirstMap(((Map)data).get("parameter"));
-//                    for(Map<String,String> value:mData){
-//                        Map<String,String> parameterMap = StringManager.getFirstMap(value.get("parameter"));
-//                        if(map.equals(parameterMap)){
-//                            mData.remove(value);
-//                            break;
-//                        }
-//                    }
-//                    myFavorite.notifyDataSetChanged();
+                if (LoginManager.isLogin()
+                        && data != null && data instanceof Map) {
+                    removeData((Map) data);
                 }
                 break;
             default:
                 break;
+        }
+    }
+
+    private void removeData(Map data) {
+        Map<String, String> map = StringManager.getFirstMap(data.get("parameter"));
+        for (Map<String, String> value : mData) {
+            Map<String, String> parameterMap = StringManager.getFirstMap(value.get("parameter"));
+            if (TextUtils.equals(map.toString(), parameterMap.toString())) {
+                int position = mData.indexOf(value);
+                if (position >= 0 && position < mData.size()) {
+                    mData.remove(position);
+                    rvListview.notifyItemViewRemove(position);
+                    handlerNoDataLayout();
+                }
+                break;
+            }
         }
     }
 
@@ -306,16 +318,9 @@ public class MyFavorite extends MainBaseActivity implements View.OnClickListener
         }
     }
 
-    private void login() {
-        if (noLoginLayout != null) {
-            noLoginLayout.setVisibility(View.GONE);
-        }
-    }
-
-    private void logout() {
-        if (noLoginLayout != null) {
-            noLoginLayout.setVisibility(View.VISIBLE);
-        }
+    private void refreshLoginstatus() {
+        if (noLoginLayout != null)
+            noLoginLayout.setVisibility(LoginManager.isLogin() ? View.GONE : View.VISIBLE);
     }
 
     @Override
