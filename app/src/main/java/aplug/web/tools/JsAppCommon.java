@@ -355,7 +355,7 @@ public class JsAppCommon extends JsBase {
     }
 
     @JavascriptInterface
-    public void initImageShare(final String imageUrl, final String callback) {
+    public void initShareImage(final String imageUrl, final String callback) {
         handler.post(new Runnable() {
             @Override
             public void run() {
@@ -377,8 +377,8 @@ public class JsAppCommon extends JsBase {
     }
 
     @JavascriptInterface
-    public void openImageShare(final String imageUrl, final String callback) {
-        initImageShare(imageUrl, callback);
+    public void openShareImage(final String imageUrl, final String callback) {
+        initShareImage(imageUrl, callback);
         handler.post(new Runnable() {
             @Override
             public void run() {
