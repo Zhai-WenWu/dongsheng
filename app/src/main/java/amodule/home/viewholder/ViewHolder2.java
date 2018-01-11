@@ -7,6 +7,7 @@ import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.StrikethroughSpan;
 import android.view.View;
+import android.view.textservice.TextInfo;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -25,18 +26,25 @@ import amodule._common.utility.WidgetUtility;
 public class ViewHolder2 extends XHBaseRvViewHolder {
 
     public View mItemView;
+    private RelativeLayout mImageLayout;
     private ImageView mImageView1;
+    private ImageView mIcon;
+    private View mShadow;
     private TextView mTextView1;
     private TextView mTextView2;
     private TextView mTextView3;
     private LinearLayout mLinearlayout1;
+
     public ViewHolder2(@NonNull View itemView) {
         super(itemView);
         mItemView = itemView;
         if (mItemView == null)
             return;
         mLinearlayout1 = (LinearLayout) mItemView.findViewById(R.id.linearlayout1);
+        mImageLayout = (RelativeLayout) mItemView.findViewById(R.id.imageview_layout);
         mImageView1 = (ImageView) mItemView.findViewById(R.id.imageview1);
+        mShadow = mItemView.findViewById(R.id.shadow);
+        mIcon = (ImageView) mItemView.findViewById(R.id.icon);
         mTextView1 = (TextView) mItemView.findViewById(R.id.textview1);
         mTextView2 = (TextView) mItemView.findViewById(R.id.textview2);
         mTextView3 = (TextView) mItemView.findViewById(R.id.textview3);
@@ -45,7 +53,7 @@ public class ViewHolder2 extends XHBaseRvViewHolder {
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mImageView1.getLayoutParams();
         params.width = wh[0];
         params.height = wh[1];
-        mImageView1.setLayoutParams(params);
+        mImageLayout.setLayoutParams(params);
         mItemView.invalidate();
     }
 
@@ -55,6 +63,10 @@ public class ViewHolder2 extends XHBaseRvViewHolder {
         if (mItemView == null || data == null || data.isEmpty())
             return;
         setViewImage(mImageView1, data.get("img"));
+        mShadow.setVisibility("2".equals(data.get("shadow")) ? View.VISIBLE : View.GONE);
+        //TODO 数据处理逻辑待定
+        String iconValue = data.get("icon");
+        setViewImage(mIcon, iconValue);
         WidgetUtility.setTextToView(mTextView1, data.get("text1"));
         String t2 = data.get("text2");
         String t3 = data.get("text3");
@@ -65,13 +77,13 @@ public class ViewHolder2 extends XHBaseRvViewHolder {
                 return;
         }
         WidgetUtility.setTextToView(mTextView2, t2);
-        if(null != mTextView3){
-            if(!TextUtils.isEmpty(t3)){
+        if (null != mTextView3) {
+            if (!TextUtils.isEmpty(t3)) {
                 Spannable spanStrikethrough = new SpannableString(t3);
                 StrikethroughSpan stSpan = new StrikethroughSpan();  //设置删除线样式
                 spanStrikethrough.setSpan(stSpan, 0, t3.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
                 WidgetUtility.setTextToView(mTextView3, spanStrikethrough);
-            }else{
+            } else {
                 mTextView3.setVisibility(View.GONE);
             }
         }

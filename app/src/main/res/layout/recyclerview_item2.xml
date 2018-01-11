@@ -3,17 +3,37 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/imageview1"
+    <RelativeLayout
+        android:id="@+id/imageview_layout"
         android:layout_width="@dimen/dp_163"
-        android:layout_height="@dimen/dp_163"
-        android:scaleType="centerCrop"/>
+        android:layout_height="@dimen/dp_163">
+
+        <ImageView
+            android:id="@+id/imageview1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"/>
+
+        <View
+            android:id="@+id/shadow"
+            android:background="#16000000"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_centerInParent="true"
+            android:layout_width="@dimen/dp_41"
+            android:layout_height="@dimen/dp_41" />
+
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/textview1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/imageview1"
+        android:layout_below="@id/imageview_layout"
         android:layout_marginTop="@dimen/dp_10"
         android:layout_centerHorizontal="true"
         android:lines="1"

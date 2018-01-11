@@ -21,6 +21,7 @@ public class ViewHolder3 extends XHBaseRvViewHolder {
 
     public View mItemView;
     private ImageView mImageView1;
+    private ImageView mIcon;
     private TextView mTextView1;
     private TextView mTextView2;
     public ViewHolder3(@NonNull View itemView) {
@@ -32,6 +33,7 @@ public class ViewHolder3 extends XHBaseRvViewHolder {
         mItemView.setLayoutParams(new RelativeLayout.LayoutParams(wh[0], wh[1]));
         mItemView.invalidate();
         mImageView1 = (ImageView) mItemView.findViewById(R.id.imageview1);
+        mIcon = (ImageView) mItemView.findViewById(R.id.icon);
         mTextView1 = (TextView) mItemView.findViewById(R.id.textview1);
         mTextView2 = (TextView) mItemView.findViewById(R.id.textview2);
     }
@@ -42,6 +44,9 @@ public class ViewHolder3 extends XHBaseRvViewHolder {
         if (mItemView == null || data == null || data.isEmpty())
             return;
         setViewImage(mImageView1, data.get("img"));
+        //TODO 数据处理逻辑待定
+        String iconValue = data.get("icon");
+        setViewImage(mIcon, iconValue);
         WidgetUtility.setTextToView(mTextView1, data.get("text1"));
         WidgetUtility.setTextToView(mTextView2, data.get("text2"));
     }
