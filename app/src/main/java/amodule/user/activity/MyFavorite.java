@@ -315,6 +315,8 @@ public class MyFavorite extends MainBaseActivity implements View.OnClickListener
     public void onRefresh() {
         if (LoginManager.isLogin() && refreshLayout != null) {
             refreshLayout.autoRefresh();
+            if(rvListview != null)
+                rvListview.scrollToPosition(0);
         }
     }
 
