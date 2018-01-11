@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -129,7 +128,7 @@ public class PublishEvalutionSingleActivity extends MallBaseActivity implements 
                 Map<String,String> data = StringManager.getFirstMap(msg);
                 if(data.containsKey("is_has") && "1".equals(data.get("is_has"))){
                     if(id == -1 && position == -1){
-                        ObserverManager.getInstence().notify(ObserverManager.NOTIFY_COMMENT_SUCCESS,"",orderID);
+                        ObserverManager.getInstance().notify(ObserverManager.NOTIFY_COMMENT_SUCCESS,"",orderID);
                     }
                     status = OrderStateActivity.result_comment_success;
                     startActivityForResult(

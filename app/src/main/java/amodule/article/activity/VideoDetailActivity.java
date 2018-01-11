@@ -198,7 +198,7 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
             handlerScreen.removeCallbacksAndMessages(null);
             handlerScreen=null;
         }
-        ObserverManager.getInstence().unRegisterObserver(mIObserver);
+        ObserverManager.getInstance().unRegisterObserver(mIObserver);
         super.onDestroy();
     }
 
@@ -483,7 +483,7 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
                 requestFavoriteState();
             }
         };
-        ObserverManager.getInstence().registerObserver(mIObserver,ObserverManager.NOTIFY_LOGIN);
+        ObserverManager.getInstance().registerObserver(mIObserver,ObserverManager.NOTIFY_LOGIN);
     }
 
     private void initAD() {

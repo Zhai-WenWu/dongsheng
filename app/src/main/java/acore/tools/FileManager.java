@@ -149,6 +149,7 @@ public class FileManager extends UtilFile{
 	public static final String xmlKey_ds_from_show = "ds_from_show";
 	public static final String dish_caipu_hint = "dish_caipu_hint";
 	public static final String app_welcome = "app_welcome";
+	public static final String app_notification = "app_notification";
 	/**
 	 * 获取字符串数组
 	 */

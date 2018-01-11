@@ -45,7 +45,6 @@ import amodule.upload.bean.UploadPoolData;
 import amodule.upload.callback.UploadListUICallBack;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
-import aplug.basic.ReqInternet;
 import aplug.basic.XHConf;
 import aplug.basic.XHInternetCallBack;
 import aplug.web.tools.WebviewManager;
@@ -460,7 +459,7 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
                             mSQLite.deleteData(mUploadPoolData.getDraftId());
                             if (mFromHome)
                                 startQADetail();
-                            ObserverManager.getInstence().notify(ObserverManager.NOTIFY_UPLOADOVER, null, true);
+                            ObserverManager.getInstance().notify(ObserverManager.NOTIFY_UPLOADOVER, null, true);
                             finish();
                         }
                     } else {
@@ -468,7 +467,7 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
                             mSQLite.deleteData(mUploadPoolData.getDraftId());//删除草稿
                             startQADetail();
                             if (flag)
-                                ObserverManager.getInstence().notify(ObserverManager.NOTIFY_UPLOADOVER, null, true);
+                                ObserverManager.getInstance().notify(ObserverManager.NOTIFY_UPLOADOVER, null, true);
                         } else {
                             startPay();
                         }

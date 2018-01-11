@@ -2,12 +2,10 @@ package acore.override.activity.base;
 
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
-
 
 import java.util.Map;
 
@@ -15,19 +13,19 @@ import acore.override.XHApplication;
 import acore.tools.LogManager;
 import acore.tools.StringManager;
 import amodule.main.Main;
-import aplug.basic.ReqInternet;
 import aplug.basic.XHConf;
 import aplug.basic.XHInternetCallBack;
 import aplug.web.tools.JSAction;
 import aplug.web.tools.WebviewManager;
 import aplug.web.view.XHWebView;
-import third.mall.aplug.MallReqInternet;
 import third.mall.aplug.MallStringManager;
 
-public class WebActivity extends BaseActivity{
+public class WebActivity extends BaseActivity {
 	private static WebActivity mShowWeb;
 	public XHWebView webview = null;
 	public WebviewManager webViewManager = null;
+
+	public String shareCallback = "";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

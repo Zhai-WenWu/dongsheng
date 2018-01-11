@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.annimon.stream.Stream;
+import com.popdialog.db.FullSrceenDB;
 import com.popdialog.util.GoodCommentManager;
 import com.tencent.stat.StatConfig;
 import com.tencent.stat.StatService;
@@ -226,7 +227,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                 }
                 WelcomeDialogstate = true;
                 openUri();
-                new AllPopDialogHelper(Main.this).start();
+//                new AllPopDialogHelper(Main.this).start();
                 com.popdialog.util.PushManager.tongjiPush(Main.this, isEnable ->
                         XHClick.mapStat(XHApplication.in(), "a_push_user", isEnable ? "开启推送" : "关闭推送", "")
                 );
@@ -406,6 +407,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
         ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_LOGIN);
         ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_LOGOUT);
         ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_MESSAGE_REFRESH);
+
     }
 
     /**
@@ -624,6 +626,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                 }
                 // 关闭时发送页面停留时间统计
                 if (act != null) XHClick.finishToSendPath(act);
+                new FullSrceenDB(act).clearExpireAllData();
                 // 关闭页面停留时间统计计时器
                 XHClick.closeHandler();
                 VersionOp.getInstance().onDesotry();
@@ -820,7 +823,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
             welcomeDialog.dismiss();
         }
         super.onDestroy();
-        ObserverManager.getInstence().unRegisterObserver(this);
+        ObserverManager.getInstance().unRegisterObserver(this);
         mUnreadCountListener = null;
         if (!LoginManager.isLogin())
             QiYvHelper.getInstance().destroyQiYvHelper();

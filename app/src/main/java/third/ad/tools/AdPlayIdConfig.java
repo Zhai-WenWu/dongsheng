@@ -123,5 +123,7 @@ public class AdPlayIdConfig {
     public static final String HOME_FLOAT = "sy_fudong";
     public static final String HOME_BANNEER_1 = "sy_banner1";
 
+    public static final String FULL_SRCEEN_ACTIVITY = "activity";
+
 
 }

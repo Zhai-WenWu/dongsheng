@@ -13,6 +13,7 @@ import android.webkit.CookieManager;
 
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;
+import com.popdialog.view.XHADView;
 import com.tencent.android.tpush.XGPushManager;
 import com.umeng.analytics.MobclickAgent;
 import com.xh.manager.DialogManager;
@@ -27,6 +28,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import acore.logic.AllPopDialogHelper;
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.MessageTipController;
@@ -42,6 +44,7 @@ import amodule.dish.db.DishOffData;
 import amodule.dish.db.ShowBuySqlite;
 import amodule.dish.db.UploadDishSqlite;
 import amodule.dish.tools.UploadDishControl;
+import amodule.main.Main;
 import amodule.main.view.home.HomeToutiaoAdControl;
 import amodule.quan.db.SubjectData;
 import amodule.quan.db.SubjectSqlite;
@@ -174,9 +177,6 @@ public class MainInitDataControl {
                 //更新热词匹配数据库
                 new MatchWordsDbUtil().checkUpdateMatchWordsDb(act);
 
-                //请求本地推送data
-                new XGLocalPushServer(act).getNousLocalPushData();
-
                 //获取圈子静态数据
                 AppCommon.saveCircleStaticData(act);
 
@@ -192,6 +192,14 @@ public class MainInitDataControl {
 
         //获取随机推广数据
         AppCommon.saveRandPromotionData(act);
+
+        XHADView.getInstence(act).setCanShowCallback(new XHADView.CanShowCallback() {
+            @Override
+            public boolean canShow() {
+                return Main.allMain != null && Main.allMain.getCurrentTab() == 0;
+            }
+        });
+        new AllPopDialogHelper(act).start();
 
         onMainResumeStatics();
 

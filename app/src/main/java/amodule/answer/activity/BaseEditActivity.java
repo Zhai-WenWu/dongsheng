@@ -469,7 +469,7 @@ public class BaseEditActivity extends BaseActivity {
                             }
                         }
                     } else {
-                        ObserverManager.getInstence().notify(ObserverManager.NOTIFY_UPLOADOVER, null, true);
+                        ObserverManager.getInstance().notify(ObserverManager.NOTIFY_UPLOADOVER, null, true);
                     }
                     finish();
                     break;

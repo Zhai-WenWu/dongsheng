@@ -29,9 +29,6 @@ public class BarShareImage {
     public BarShareImage(Context context, @NonNull String imageUrl){
         this.mContext = context;
         this.imageUrl = imageUrl;
-        if(context instanceof IObserver){
-            ObserverManager.getInstence().registerObserver((IObserver) context,ObserverManager.NOTIFY_SHARE);
-        }
     }
 
     public void openShareImage(){

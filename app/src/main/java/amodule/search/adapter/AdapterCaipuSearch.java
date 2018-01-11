@@ -33,7 +33,6 @@ import acore.override.activity.base.BaseActivity;
 import acore.tools.FileManager;
 import acore.tools.Tools;
 import acore.widget.ImageViewVideo;
-import acore.widget.TagTextView;
 import amodule.dish.activity.DetailDish;
 import amodule.dish.activity.ListDish;
 import amodule.health.activity.DetailIngre;
@@ -270,11 +269,10 @@ public class AdapterCaipuSearch extends BaseAdapter {
             viewHolder.tv_caipu_observed = (TextView) convertView.findViewById(R.id.tv_caipu_observed);
             viewHolder.tv_caipu_collected = (TextView) convertView.findViewById(R.id.tv_caipu_collected);
             viewHolder.tv_caipu_origin = (TextView) convertView.findViewById(R.id.tv_caipu_origin);
-            viewHolder.iv_itemIsSolo = (TagTextView) convertView.findViewById(R.id.iv_itemIsSolo);
             viewHolder.iv_itemIsFine = (TextView) convertView.findViewById(R.id.iv_itemIsFine);
             viewHolder.v_caipu_item_tail = convertView.findViewById(R.id.v_caipu_item_tail);
             viewHolder.v_bottom_line = convertView.findViewById(R.id.v_bottom_line);
-            viewHolder.vip = (ImageView) convertView.findViewById(R.id.vip);
+            viewHolder.vip = (ImageView) convertView.findViewById(R.id.search_vip);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (CaipuViewHolder) convertView.getTag();
@@ -291,7 +289,6 @@ public class AdapterCaipuSearch extends BaseAdapter {
 
         boolean vipShow = "2".equals(caipuMap.get("isVip"));
         viewHolder.vip.setVisibility(vipShow?View.VISIBLE:View.GONE);
-        viewHolder.iv_itemIsSolo.setVisibility(("2").equals(caipuMap.get("exclusive")) && !vipShow?View.VISIBLE:View.GONE);
         viewHolder.iv_itemIsFine.setVisibility(("2").equals(caipuMap.get("isFine"))?View.VISIBLE:View.GONE);
         viewHolder.v_bottom_line.setVisibility(viewHolder.v_caipu_item_tail.getVisibility() == View.VISIBLE?View.GONE:View.VISIBLE);
 
@@ -536,7 +533,6 @@ public class AdapterCaipuSearch extends BaseAdapter {
         TextView tv_caipu_observed;
         TextView tv_caipu_collected;
         TextView tv_caipu_origin;
-        TagTextView iv_itemIsSolo;
         TextView iv_itemIsFine;
         View v_caipu_item_tail;
         View v_bottom_line;

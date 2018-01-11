@@ -1285,13 +1285,6 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:windowSoftInputMode="stateHidden|adjustResize" >
 
-            <intent-filter>
-                <data android:scheme="tencent215798" />
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-
             <!-- 调用新浪原生SDK，需要注册的回调activity -->
             <intent-filter>
                 <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY" />
@@ -1538,6 +1531,19 @@
             android:screenOrientation="portrait"
             android:hardwareAccelerated="true"
             android:theme="@style/common_TransParentTheme"/>
+
+        <!--QQ分享回调Activity注册-->
+        <activity
+            android:name="cn.sharesdk.tencent.qq.ReceiveActivity"
+            android:launchMode="singleTask"
+            android:noHistory="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="tencent215798" />
+            </intent-filter>
+        </activity>
 
         <!--Baidu AD end-->
         <!--全面屏适配-->

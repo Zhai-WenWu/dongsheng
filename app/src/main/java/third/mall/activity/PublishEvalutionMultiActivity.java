@@ -3,7 +3,6 @@ package third.mall.activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -179,7 +178,7 @@ public class PublishEvalutionMultiActivity extends MallBaseActivity {
                             Map<String, String> data = StringManager.getFirstMap(msg);
                             if (data.containsKey("status") && "2".equals(data.get("status"))) {
                                 if(id == -1 && position == -1){
-                                    ObserverManager.getInstence().notify(ObserverManager.NOTIFY_COMMENT_SUCCESS,"",order_id);
+                                    ObserverManager.getInstance().notify(ObserverManager.NOTIFY_COMMENT_SUCCESS,"",order_id);
                                 }
                                 startActivityForResult(
                                         new Intent(PublishEvalutionMultiActivity.this, EvalutionSuccessActivity.class)

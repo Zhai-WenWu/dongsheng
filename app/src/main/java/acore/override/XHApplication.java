@@ -7,19 +7,17 @@ import android.os.Bundle;
 import android.support.multidex.MultiDex;
 import android.text.TextUtils;
 import android.util.Log;
-import android.widget.ProgressBar;
 
 import com.baidu.mobads.AdView;
 import com.baidu.mobads.AppActivity;
 import com.mob.MobApplication;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.analytics.MobclickAgent;
-import com.umeng.onlineconfig.OnlineConfigAgent;
-import com.umeng.onlineconfig.OnlineConfigLog;
 import com.xiangha.R;
 
 import java.util.Map;
 
+import acore.logic.AllPopDialogHelper;
 import acore.logic.AppCommon;
 import acore.override.helper.XHActivityManager;
 import acore.tools.ChannelUtil;
@@ -29,14 +27,9 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import aplug.basic.LoadImage;
-import aplug.basic.ReqEncyptInternet;
-import aplug.basic.ReqInternet;
 import aplug.basic.XHConf;
-import aplug.web.tools.WebviewManager;
 import third.growingio.GrowingIOController;
-import third.mall.aplug.MallReqInternet;
 import third.push.umeng.UMPushServer;
-import third.qiyu.QiYvHelper;
 
 public class XHApplication extends MobApplication {
     /**包名*/
@@ -63,6 +56,8 @@ public class XHApplication extends MobApplication {
         LogManager.printStartTime("zhangyujian","XhApplication::11111.oncreate::");
         boolean isOnce = TextUtils.isEmpty(FileManager.loadShared(this,FileManager.xmlFile_appInfo,"once").toString());
         FileManager.saveShared(this,FileManager.xmlFile_appInfo,"once",String.valueOf(isOnce));
+        //记录开启次数
+        AllPopDialogHelper.updateIntervalCount(this);
         try{
             super.onCreate();
         }catch (Exception e){

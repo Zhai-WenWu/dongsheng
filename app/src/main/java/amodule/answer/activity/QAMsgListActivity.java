@@ -22,7 +22,6 @@ import acore.tools.IObserver;
 import acore.tools.LogManager;
 import acore.tools.ObserverManager;
 import acore.tools.StringManager;
-import aplug.basic.ReqInternet;
 import aplug.basic.XHConf;
 import aplug.basic.XHInternetCallBack;
 import aplug.web.tools.JsAppCommon;
@@ -52,7 +51,7 @@ public class QAMsgListActivity extends BaseFragmentActivity implements IObserver
         initView();
         addListener();
         getTabData();
-        ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_UPLOADOVER);
+        ObserverManager.getInstance().registerObserver(this, ObserverManager.NOTIFY_UPLOADOVER);
     }
 
     private void initView() {
@@ -242,7 +241,7 @@ public class QAMsgListActivity extends BaseFragmentActivity implements IObserver
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ObserverManager.getInstence().unRegisterObserver(this);
+        ObserverManager.getInstance().unRegisterObserver(this);
     }
 
     private boolean mRefreshCurrFragment;

@@ -56,12 +56,12 @@ public class NousInfo extends ApiShowWeb {
 //                requestFavoriteState();
 //            }
 //        };
-//        ObserverManager.getInstence().registerObserver(mIObserver,ObserverManager.NOTIFY_LOGIN);
+//        ObserverManager.getInstance().registerObserver(mIObserver,ObserverManager.NOTIFY_LOGIN);
 //    }
 //
 //    @Override
 //    protected void onDestroy() {
-//        ObserverManager.getInstence().unRegisterObserver(mIObserver);
+//        ObserverManager.getInstance().unRegisterObserver(mIObserver);
 //        super.onDestroy();
 //    }
 

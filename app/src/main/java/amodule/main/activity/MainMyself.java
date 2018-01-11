@@ -114,7 +114,7 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
         initUI();
         XHClick.track(this,"浏览我的页面");
         loadManager.setLoading(v -> getYiYuanBindState());
-        ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_LOGIN, ObserverManager.NOTIFY_YIYUAN_BIND, ObserverManager.NOTIFY_PAYFINISH);
+        ObserverManager.getInstance().registerObserver(this, ObserverManager.NOTIFY_LOGIN, ObserverManager.NOTIFY_YIYUAN_BIND, ObserverManager.NOTIFY_PAYFINISH);
     }
 
     @Override
@@ -147,7 +147,7 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ObserverManager.getInstence().unRegisterObserver(this);
+        ObserverManager.getInstance().unRegisterObserver(this);
     }
 
     private void getYiYuanBindState() {
@@ -408,14 +408,17 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
 
             TextView text = (TextView) itemView.findViewById(R.id.text_myself);
             text.setText(groupNames[i]);
+            if ("invitation".equals(tag)) {
+                TextView hint = (TextView) itemView.findViewById(R.id.text_myself_hint);
+                hint.setText("（获100积分）");
+            }
             parent.addView(itemView);
             if ("qa".equals(tag)) {
                 mQAItemView = itemView;
                 mQAItemView.setVisibility(View.GONE);
             }
-            if (i == groupNames.length - 1) {
-                itemView.findViewById(R.id.my_item_line).setVisibility(View.GONE);
-            }
+            if (i != 0)
+                itemView.findViewById(R.id.my_item_line_top).setVisibility(View.VISIBLE);
         }
     }
 

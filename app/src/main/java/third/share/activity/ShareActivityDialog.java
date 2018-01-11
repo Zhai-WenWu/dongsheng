@@ -46,6 +46,8 @@ public class ShareActivityDialog extends Activity implements View.OnClickListene
 
     private String tongjiId = "a_user";
 
+    private String mShareParams;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -79,6 +81,10 @@ public class ShareActivityDialog extends Activity implements View.OnClickListene
         }
         //举报跳转页面
         reportUrl=getIntent().getStringExtra("reportUrl");
+
+        //分享的配置数据
+        mShareParams = getIntent().getStringExtra("shareParams");
+
         init();
     }
 
@@ -113,7 +119,18 @@ public class ShareActivityDialog extends Activity implements View.OnClickListene
                     }
                 }else{
                     ShareTools barShare = ShareTools.getBarShare(ShareActivityDialog.this);
-                    barShare.showSharePlatform(mTitle,mContent,mType,mImgUrl,mClickUrl,platfrom, mShareFrom ,mParent);
+                    Map<String, String> dataMap = new HashMap<>();
+                    dataMap.put("type", mType);
+                    dataMap.put("title", mTitle);
+                    dataMap.put("clickUrl", mClickUrl);
+                    dataMap.put("content", mContent);
+                    dataMap.put("imgUrl", mImgUrl);
+                    dataMap.put("from", mShareFrom);
+                    dataMap.put("parent", mParent);
+                    dataMap.put("platform", platfrom);
+                    if (!TextUtils.isEmpty(mShareParams))
+                        dataMap.put("shareParams", mShareParams);
+                    barShare.showSharePlatform(dataMap);
                 }
                 ShareActivityDialog.this.finish();
             }

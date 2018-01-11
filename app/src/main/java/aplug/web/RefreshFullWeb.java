@@ -2,6 +2,9 @@ package aplug.web;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
+
+import java.util.Map;
 
 import acore.tools.IObserver;
 import acore.tools.ObserverManager;
@@ -15,13 +18,13 @@ public class RefreshFullWeb extends FullScreenWeb implements IObserver {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ObserverManager.getInstence().registerObserver(this,ObserverManager.NOTIFY_LOGIN, ObserverManager.NOTIFY_UPLOADOVER, ObserverManager.NOTIFY_PAYFINISH);
+        ObserverManager.getInstance().registerObserver(this,ObserverManager.NOTIFY_LOGIN, ObserverManager.NOTIFY_UPLOADOVER, ObserverManager.NOTIFY_PAYFINISH, ObserverManager.NOTIFY_SHARE);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ObserverManager.getInstence().unRegisterObserver(this);
+        ObserverManager.getInstance().unRegisterObserver(this);
     }
 
     @Override
@@ -63,6 +66,13 @@ public class RefreshFullWeb extends FullScreenWeb implements IObserver {
                 break;
             case ObserverManager.NOTIFY_PAYFINISH:
                 resetRefreShstatus(data);
+                break;
+            case ObserverManager.NOTIFY_SHARE:
+                if (!TextUtils.isEmpty(shareCallback) && data != null) {
+                    Map<String, String> dataMap = (Map<String, String>) data;
+                    webview.loadUrl("javascript:" + shareCallback + "(" + TextUtils.equals("2", dataMap.get("status")) + "," + "\'" + dataMap.get("callbackParams") + "\'" + ")");
+                    Log.i("tzy", "javascript:" + shareCallback + "(" + TextUtils.equals("2", dataMap.get("status")) + "," + "\'" + dataMap.get("callbackParams") + "\'" + ")");
+                }
                 break;
             default:
                 break;

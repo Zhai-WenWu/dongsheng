@@ -33,7 +33,7 @@ public class ObserverManager {
         mObservers = new HashMap<>();
     }
 
-    public static ObserverManager getInstence() {
+    public static ObserverManager getInstance() {
         synchronized (ObserverManager.class) {
             if (mObserverManager == null){
                 mObserverManager = new ObserverManager();

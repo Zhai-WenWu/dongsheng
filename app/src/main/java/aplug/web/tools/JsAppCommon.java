@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.popdialog.util.PushManager;
 import com.xiangha.R;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -31,6 +32,7 @@ import acore.logic.VersionOp;
 import acore.logic.XHClick;
 import acore.logic.load.LoadManager;
 import acore.override.XHApplication;
+import acore.override.activity.base.WebActivity;
 import acore.override.helper.XHActivityManager;
 import acore.tools.FileManager;
 import acore.tools.ObserverManager;
@@ -43,7 +45,6 @@ import amodule.answer.activity.QAReportActivity;
 import amodule.dish.activity.DetailDishWeb;
 import amodule.dish.activity.MoreImageShow;
 import amodule.dish.activity.upload.UploadDishActivity;
-import amodule.main.activity.MainMyself;
 import amodule.other.activity.PlayVideo;
 import amodule.quan.activity.upload.UploadSubjectNew;
 import amodule.user.activity.ChooseDish;
@@ -214,39 +215,64 @@ public class JsAppCommon extends JsBase {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                if (mAct instanceof ShowWeb) {
-                    ((ShowWeb) mAct).shareCallback = callback;
-                }
-//				barShare.setShare(BarShare.IMG_TYPE_WEB, am.get("title"), content, am.get("img"), zhishiurl);
-//				if (act.barShare == null) {//由于二级页面也会吊起分享,但是分享内容不同,所以不加判断.防止分享内容改不了
-                if (title != "" && content != "" && img != "" && url != "" && type != "") {
-                    Log.i("zhangyujian", "type::::" + type);
-                    mBarShare = new BarShare(mAct, type, "");
-                    mBarShare.setShare(BarShare.IMG_TYPE_WEB, title, content, img, url);
-                    RelativeLayout shareLayout = (RelativeLayout) mAct.findViewById(R.id.shar_layout);
-                    if (shareLayout != null) {
-                        shareLayout.setVisibility(View.VISIBLE);
-                        shareLayout.setOnClickListener(new OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                setStiaticType(type);
-                                if (mBarShare != null) {
-                                    mBarShare.openShare();
-                                    if (callback != null && callback.length() > 0) {
-                                        ReqInternet.in().doGet(StringManager.apiUrl + callback, new InternetCallback() {
-                                            @Override
-                                            public void loaded(int flag, String url, Object returnObj) {
-                                            }
-                                        });
-                                    }
-                                }
-                            }
-                        });
-                    }
-                }
-//				}
+                initShareBar(title, content, img, url, type, callback, "", "");
             }
         });
+    }
+
+    /**
+     * 初始化分享按钮,并添加分享按钮.
+     * title：        分享标题
+     * content：  分享内容
+     * img：          分享图片
+     * url:	   分享链接地址
+     * type：        分享统计类型
+     * callback:    回调统计
+     * shareType:   分享类型 1：普通分享  2：分享小程序
+     * path:        小程序路径
+     */
+    @JavascriptInterface
+    public void initShare(final String title, final String content, final String img, final String url, final String type, final String callback, final String shareType, final String path) {
+
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                initShareBar(title, content, img, url, type, callback, shareType, path);
+            }
+        });
+    }
+
+    private void initShareBar(final String title, final String content, final String img, final String url, final String type, final String callback, final String shareType, final String path) {
+        if (mAct instanceof WebActivity) {
+            ((ShowWeb) mAct).shareCallback = callback;
+        }
+
+        if (title != "" && content != "" && img != "" && url != "" && type != "") {
+            Log.i("zhangyujian", "type::::" + type);
+            mBarShare = new BarShare(mAct, type, "");
+            mBarShare.setShare(BarShare.IMG_TYPE_WEB, title, content, img, url);
+            mBarShare.setShareProgram(transferData(title, content, img, url, type, shareType, path));
+            RelativeLayout shareLayout = (RelativeLayout) mAct.findViewById(R.id.shar_layout);
+            if (shareLayout != null) {
+                shareLayout.setVisibility(View.VISIBLE);
+                shareLayout.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        setStiaticType(type);
+                        if (mBarShare != null) {
+                            mBarShare.openShare();
+                            if (callback != null && callback.length() > 0) {
+                                ReqInternet.in().doGet(StringManager.apiUrl + callback, new InternetCallback() {
+                                    @Override
+                                    public void loaded(int flag, String url, Object returnObj) {
+                                    }
+                                });
+                            }
+                        }
+                    }
+                });
+            }
+        }
     }
 
     /**
@@ -260,23 +286,80 @@ public class JsAppCommon extends JsBase {
      */
     @JavascriptInterface
     public void openShareNew(final String title, final String content, final String img, final String url, final String type, final String callback) {
-        initShare(title, content, img, url, type, callback);
         handler.post(new Runnable() {
             @Override
             public void run() {
-                if (mBarShare != null) {
-                    mBarShare.openShare();
-                }
+                startShareNew(title, content, img, url, type, callback, "", "");
             }
         });
     }
 
+    /**
+     * 直接打开一个中间显示的分享页面
+     * title：        分享标题
+     * content：  分享内容
+     * img：          分享图片
+     * url:	   分享链接地址
+     * type：        分享类型
+     * callback:    回调统计
+     * shareType:   分享类型 1：普通分享  2：分享小程序
+     * path:        小程序路径
+     */
     @JavascriptInterface
-    public void initImageShare(final String imageUrl, final String callback) {
+    public void openShareNew(final String title, final String content, final String img, final String url, final String type, final String callback, final String shareType, final String path) {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                if (mAct instanceof ShowWeb) {
+                startShareNew(title, content, img, url, type, callback, shareType, path);
+            }
+        });
+    }
+
+    private String transferData(final String title, final String content, final String img, final String url, final String type, final String shareType, final String path) {
+        String retStr = null;
+        JSONObject object = new JSONObject();
+        JSONObject entityObject = new JSONObject();
+        JSONObject confObject = new JSONObject();
+        try {
+            object.put("shareType", transferStr(shareType));
+            entityObject.put("shareType", transferStr(shareType));
+            confObject.put("title", transferStr(title));
+            confObject.put("content", transferStr(content));
+            confObject.put("img", transferStr(img));
+            confObject.put("url", transferStr(url));
+            confObject.put("type", transferStr(type));
+            confObject.put("path", transferStr(path));
+            entityObject.put(shareType, confObject);
+            object.put("shareConfig", entityObject);
+            retStr = object.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return retStr;
+    }
+
+    private String transferStr(String str) {
+        return TextUtils.isEmpty(str) ? "" : str;
+    }
+
+    private void startShareNew(final String title, final String content, final String img, final String url, final String type, final String callback, final String shareType, final String path) {
+        if (mAct instanceof WebActivity && !TextUtils.isEmpty(callback)) {
+            ((WebActivity)mAct).shareCallback = callback;
+        }
+        if (title != "" && content != "" && img != "" && url != "" && type != "") {
+            mBarShare = new BarShare(mAct, type, "");
+            mBarShare.setShare(BarShare.IMG_TYPE_WEB, title, content, img, url);
+            mBarShare.setShareProgram(transferData(title, content, img, url, type, shareType, path));
+            mBarShare.openShare();
+        }
+    }
+
+    @JavascriptInterface
+    public void initShareImage(final String imageUrl, final String callback) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (mAct instanceof WebActivity) {
                     ((ShowWeb) mAct).shareCallback = callback;
                 }
                 RelativeLayout shareLayout = (RelativeLayout) mAct.findViewById(R.id.shar_layout);
@@ -294,8 +377,8 @@ public class JsAppCommon extends JsBase {
     }
 
     @JavascriptInterface
-    public void openImageShare(final String imageUrl, final String callback) {
-        initImageShare(imageUrl, callback);
+    public void openShareImage(final String imageUrl, final String callback) {
+        initShareImage(imageUrl, callback);
         handler.post(new Runnable() {
             @Override
             public void run() {
@@ -321,21 +404,6 @@ public class JsAppCommon extends JsBase {
             key = "分享商品";
         }
         if (!TextUtils.isEmpty(key)) XHClick.track(mAct, key);
-    }
-
-    /**
-     * 初始化收藏
-     *
-     * @param code     : 详情的code，例如小知识的code
-     * @param isFavStr ：是否收藏，2 为已收藏
-     * @param clickUrl ：点击收藏按钮请求的url
-     * @param params   ：点击收藏按钮请求的url时的参数
-     * @param eventID  : 点击统计id
-     * @param statKey  ：二级统计名称
-     */
-    @JavascriptInterface
-    public void initFav(final String code, final String isFavStr, final String clickUrl, final String params, final String eventID, final String statKey) {
-        //无效方法
     }
 
     /**
@@ -370,23 +438,6 @@ public class JsAppCommon extends JsBase {
                 sqlite.insertSubject(BrowseHistorySqlite.TB_NOUS_NAME, data);
             }
         }).start();
-    }
-
-    private JSONObject handlerJSONData(int type, Map<String, String> map) {
-        JSONObject jsonObject = new JSONObject();
-        switch (type) {
-            case 1: //小知识
-                try {
-                    jsonObject.put("allClick", map.get("allClick") + "");
-                    jsonObject.put("code", map.get("code") + "");
-                    jsonObject.put("content", map.get("content") + "");
-                    jsonObject.put("title", map.get("title") + "");
-                    jsonObject.put("img", map.get("img") + "");
-                } catch (Exception ignored) {
-                }
-                break;
-        }
-        return jsonObject;
     }
 
     /**
@@ -968,7 +1019,7 @@ public class JsAppCommon extends JsBase {
                             }, 2000);
                         }
                     }
-                    ObserverManager.getInstence().notify(ObserverManager.NOTIFY_PAYFINISH, null, isOk);
+                    ObserverManager.getInstance().notify(ObserverManager.NOTIFY_PAYFINISH, null, isOk);
                 }
             });
         }

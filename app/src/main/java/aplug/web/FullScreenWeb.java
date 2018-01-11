@@ -2,6 +2,7 @@ package aplug.web;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -61,7 +62,7 @@ public class FullScreenWeb extends WebActivity implements IObserver {
             }
         });
 
-        ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_YIYUAN_BIND);
+        ObserverManager.getInstance().registerObserver(this, ObserverManager.NOTIFY_YIYUAN_BIND, ObserverManager.NOTIFY_SHARE);
     }
 
     /**
@@ -95,7 +96,7 @@ public class FullScreenWeb extends WebActivity implements IObserver {
         }
         super.onDestroy();
 
-        ObserverManager.getInstence().unRegisterObserver(this);
+        ObserverManager.getInstance().unRegisterObserver(this);
     }
 
     @Override
@@ -112,6 +113,13 @@ public class FullScreenWeb extends WebActivity implements IObserver {
     public void notify(String name, Object sender, Object data) {
         if (!TextUtils.isEmpty(name)) {
             switch (name) {
+                case ObserverManager.NOTIFY_SHARE:
+                    if (!TextUtils.isEmpty(shareCallback) && data != null) {
+                        Map<String, String> dataMap = (Map<String, String>) data;
+                        webview.loadUrl("javascript:" + shareCallback + "(" + TextUtils.equals("2", dataMap.get("status")) + "," + "\'" + dataMap.get("callbackParams") + "\'" + ")");
+                        Log.i("tzy", "javascript:" + shareCallback + "(" + TextUtils.equals("2", dataMap.get("status")) + "," + "\'" + dataMap.get("callbackParams") + "\'" + ")");
+                    }
+                    break;
                 case ObserverManager.NOTIFY_YIYUAN_BIND:
                     if (data != null) {
                         if (data instanceof Map) {
