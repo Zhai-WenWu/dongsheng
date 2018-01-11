@@ -26,7 +26,6 @@ public class ViewHolder1 extends XHBaseRvViewHolder {
     public View mItemView;
     private LinearLayout mLinearLayout;
     private ImageView mImageView1;
-    private ImageView mIcon;
     private TextView mTextView1;
     private TextView mTextView2;
     private TextView mTextView3;
@@ -41,7 +40,6 @@ public class ViewHolder1 extends XHBaseRvViewHolder {
         mItemView.invalidate();
         mLinearLayout = (LinearLayout) mItemView.findViewById(R.id.linearlayout1);
         mImageView1 = (ImageView) mItemView.findViewById(R.id.imageview1);
-        mIcon = (ImageView) mItemView.findViewById(R.id.icon);
         mTextView1 = (TextView) mItemView.findViewById(R.id.textview1);
         mTextView2 = (TextView) mItemView.findViewById(R.id.textview2);
         mTextView3 = (TextView) mItemView.findViewById(R.id.textview3);
@@ -71,8 +69,5 @@ public class ViewHolder1 extends XHBaseRvViewHolder {
         String img2 = data.get("img2");
         if (!TextUtils.isEmpty(img2) && !TextUtils.equals(img, img2))
             Glide.with(mItemView.getContext()).load(img2).diskCacheStrategy(DiskCacheStrategy.SOURCE).preload();
-        //TODO 数据处理逻辑待定
-        String iconValue = data.get("icon");
-        setViewImage(mIcon, iconValue);
     }
 }

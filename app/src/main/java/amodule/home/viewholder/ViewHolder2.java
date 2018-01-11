@@ -25,8 +25,9 @@ import amodule._common.utility.WidgetUtility;
 
 public class ViewHolder2 extends XHBaseRvViewHolder {
 
-    public View mItemView;
-    private RelativeLayout mImageLayout;
+    private final String ICONTYPE_VIDEO_PLAY = "1";
+
+    private View mItemView;
     private ImageView mImageView1;
     private ImageView mIcon;
     private View mShadow;
@@ -41,7 +42,7 @@ public class ViewHolder2 extends XHBaseRvViewHolder {
         if (mItemView == null)
             return;
         mLinearlayout1 = (LinearLayout) mItemView.findViewById(R.id.linearlayout1);
-        mImageLayout = (RelativeLayout) mItemView.findViewById(R.id.imageview_layout);
+        RelativeLayout imageLayout = (RelativeLayout) mItemView.findViewById(R.id.imageview_layout);
         mImageView1 = (ImageView) mItemView.findViewById(R.id.imageview1);
         mShadow = mItemView.findViewById(R.id.shadow);
         mIcon = (ImageView) mItemView.findViewById(R.id.icon);
@@ -53,7 +54,7 @@ public class ViewHolder2 extends XHBaseRvViewHolder {
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mImageView1.getLayoutParams();
         params.width = wh[0];
         params.height = wh[1];
-        mImageLayout.setLayoutParams(params);
+        imageLayout.setLayoutParams(params);
         mItemView.invalidate();
     }
 
@@ -63,10 +64,8 @@ public class ViewHolder2 extends XHBaseRvViewHolder {
         if (mItemView == null || data == null || data.isEmpty())
             return;
         setViewImage(mImageView1, data.get("img"));
-        mShadow.setVisibility("2".equals(data.get("shadow")) ? View.VISIBLE : View.GONE);
-        //TODO 数据处理逻辑待定
-        String iconValue = data.get("icon");
-        setViewImage(mIcon, iconValue);
+        //TODO 测试
+        showIcon(data.get("icon"));
         WidgetUtility.setTextToView(mTextView1, data.get("text1"));
         String t2 = data.get("text2");
         String t3 = data.get("text3");
@@ -87,5 +86,27 @@ public class ViewHolder2 extends XHBaseRvViewHolder {
                 mTextView3.setVisibility(View.GONE);
             }
         }
+    }
+
+    private void showIcon(String iconType){
+        hideAllIcon();
+        switch(iconType){
+            case ICONTYPE_VIDEO_PLAY:
+                showVideoPlayIcon();
+                break;
+                default:
+
+                    break;
+        }
+    }
+
+    private void showVideoPlayIcon(){
+        mShadow.setVisibility(View.VISIBLE);
+        mIcon.setVisibility(View.VISIBLE);
+    }
+
+    private void hideAllIcon(){
+        mShadow.setVisibility(View.GONE);
+        mIcon.setVisibility(View.GONE);
     }
 }
