@@ -61,7 +61,7 @@ public class MyMessage extends BaseAppCompatActivity implements OnClickListener,
         initActivity("", 2, 0, 0, R.layout.a_common_message);
         init();
         XHClick.track(this, "浏览消息列表页");
-        ObserverManager.getInstence().registerObserver(this, NOTIFY_LOGIN, NOTIFY_LOGOUT, NOTIFY_MESSAGE_REFRESH);
+        ObserverManager.getInstance().registerObserver(this, NOTIFY_LOGIN, NOTIFY_LOGOUT, NOTIFY_MESSAGE_REFRESH);
     }
 
     @Override
@@ -114,7 +114,7 @@ public class MyMessage extends BaseAppCompatActivity implements OnClickListener,
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ObserverManager.getInstence().unRegisterObserver(this);
+        ObserverManager.getInstance().unRegisterObserver(this);
     }
 
     /** 外面调用的刷新 */

@@ -404,9 +404,9 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
         //从Welcome方法
         ShortVideoInit.init(Main.this);
         //从Welcome方法
-        ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_LOGIN);
-        ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_LOGOUT);
-        ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_MESSAGE_REFRESH);
+        ObserverManager.getInstance().registerObserver(this, ObserverManager.NOTIFY_LOGIN);
+        ObserverManager.getInstance().registerObserver(this, ObserverManager.NOTIFY_LOGOUT);
+        ObserverManager.getInstance().registerObserver(this, ObserverManager.NOTIFY_MESSAGE_REFRESH);
 
     }
 

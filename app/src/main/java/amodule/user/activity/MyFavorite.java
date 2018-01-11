@@ -70,7 +70,7 @@ public class MyFavorite extends MainBaseActivity implements View.OnClickListener
         if (!LoginManager.isLogin()) {
             gotoLogin();
         }
-        ObserverManager.getInstence().registerObserver(this, NOTIFY_LOGIN, NOTIFY_LOGOUT,
+        ObserverManager.getInstance().registerObserver(this, NOTIFY_LOGIN, NOTIFY_LOGOUT,
                 NOTIFY_FAVORITE, NOTIFY_UNFAVORITE);
     }
 
@@ -187,7 +187,7 @@ public class MyFavorite extends MainBaseActivity implements View.OnClickListener
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ObserverManager.getInstence().unRegisterObserver(this);
+        ObserverManager.getInstance().unRegisterObserver(this);
     }
 
     @Override

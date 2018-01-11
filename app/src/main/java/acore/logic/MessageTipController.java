@@ -124,7 +124,7 @@ public class MessageTipController {
     }
 
     public void setMessageCount() {
-        ObserverManager.getInstence().notify(NOTIFY_MESSAGE_REFRESH, null, "");
+        ObserverManager.getInstance().notify(NOTIFY_MESSAGE_REFRESH, null, "");
     }
 
     public void setQiyvMessage(int qiyvMessage) {

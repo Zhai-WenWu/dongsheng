@@ -129,7 +129,7 @@ public class FavoriteHelper {
                                 }
                             }
                             Map<String,String> data = StringManager.getFirstMap(map.get("data"));
-                            ObserverManager.getInstence().notify("2".equals(state) ? NOTIFY_FAVORITE:NOTIFY_UNFAVORITE,null,data);
+                            ObserverManager.getInstance().notify("2".equals(state) ? NOTIFY_FAVORITE:NOTIFY_UNFAVORITE,null,data);
                         }else{
                             if(null != callback)
                                 callback.onFailed();
