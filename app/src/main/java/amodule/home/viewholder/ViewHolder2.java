@@ -64,7 +64,7 @@ public class ViewHolder2 extends XHBaseRvViewHolder {
         if (mItemView == null || data == null || data.isEmpty())
             return;
         setViewImage(mImageView1, data.get("img"));
-        //TODO 测试
+        //TODO 需要测试
         showIcon(data.get("icon"));
         WidgetUtility.setTextToView(mTextView1, data.get("text1"));
         String t2 = data.get("text2");
