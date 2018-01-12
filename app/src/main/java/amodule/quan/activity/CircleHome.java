@@ -22,10 +22,12 @@ import java.util.List;
 import java.util.Map;
 
 import acore.logic.XHClick;
+import acore.notification.controller.NotificationSettingController;
 import acore.override.XHApplication;
 import acore.override.activity.base.BaseAppCompatActivity;
 import acore.override.data.UploadData;
 import acore.override.helper.UploadHelper.UploadCallback;
+import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.PagerSlidingTabStrip;
@@ -310,6 +312,7 @@ public class CircleHome extends BaseAppCompatActivity implements OnClickListener
             }
             // 通知Fragment刷新
             updateFragment(subjectData, false);
+            new NotificationSettingController().showNotification(0, FileManager.push_show_subject,NotificationSettingController.pushSetSubject);
         }
 
 

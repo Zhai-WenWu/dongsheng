@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.xiangha.BuildConfig;
 import com.xiangha.R;
@@ -30,26 +31,46 @@ import acore.tools.ToolsDevice;
 
 public class NotificationSettingController {
 
-    public void showNotificationPermissionSetView(){
-        if(XHActivityManager.getInstance().getCurrentActivity()!=null){
-            Activity activity = XHActivityManager.getInstance().getCurrentActivity();
-//            if(!TextUtils.isEmpty((CharSequence) FileManager.loadShared(activity,FileManager.app_notification, VersionOp.getVerName(activity)))){
-//                return;
-//            }
-            Log.i("xianghaTag","activity：：："+activity.getComponentName().getClassName());
-            if(activity.findViewById(R.id.activityLayout)==null)return;
-            showPermissionSetView(activity, (RelativeLayout) activity.findViewById(R.id.activityLayout));
+    public static final String pushSetMessage="开启通知实时和哈友交流美食，86%的哈友已开启";
+    public static final String pushSetReview="开启通知及时接收哈友的评论消息，86%的哈友已开启";
+    public static final String pushSetFeedBack="开启通知及时接收小秘书回复，更好地解决你的问题";
+    public static final String pushSetSubject="开启通知及时接收哈友的评论消息，86%的哈友已开启";
+    /**
+     * all版本控制只显示一次
+     * @param marginBottom
+     */
+    public void showNotification(int marginBottom,String key,String message){
+        if(XHActivityManager.getInstance().getCurrentActivity()==null)return;
+        if(TextUtils.isEmpty((CharSequence) FileManager.loadShared(XHApplication.in(),FileManager.app_notification, key))){
+            showNotificationPermissionSetView(marginBottom, message);
+            FileManager.saveShared(XHApplication.in(),FileManager.app_notification,key,"2");
         }
     }
-    private void showPermissionSetView(Context context, RelativeLayout rl){
+
+    private void showNotificationPermissionSetView(int marginBottom,String message){
+        if(XHActivityManager.getInstance().getCurrentActivity()!=null){
+            Activity activity = XHActivityManager.getInstance().getCurrentActivity();
+            if(activity.findViewById(R.id.activityLayout)==null)return;
+            showPermissionSetView(activity, (RelativeLayout) activity.findViewById(R.id.activityLayout),marginBottom,message);
+        }
+    }
+    private void showPermissionSetView(Context context, RelativeLayout rl,int marginBottom,String message){
         if(context==null||rl==null)return;
-        View view= LayoutInflater.from(context).inflate(R.layout.view_notification_set,null);
-        RelativeLayout.LayoutParams lp=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, Tools.getDimen(context,R.dimen.dp_39));//两个参数分别是layout_width,layout_height
+        View view=LayoutInflater.from(context).inflate(R.layout.view_notification_set,null);
+        RelativeLayout.LayoutParams lp=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);//两个参数分别是layout_width,layout_height
         lp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+//        lp.setMargins(0,0,0,marginBottom);
         view.setLayoutParams(lp);
+        view.setPadding(0,0,0,marginBottom);
+        if(!TextUtils.isEmpty(message))((TextView)view.findViewById(R.id.show_text)).setText(message);
         view.findViewById(R.id.view_close).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {if(view!=null&&rl!=null)rl.removeView(view);}});
+        view.findViewById(R.id.show_rl).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openNotificationSettings();
+            }});
         rl.addView(view);
         FileManager.saveShared(context,FileManager.app_notification, VersionOp.getVerName(context),"2");
     }

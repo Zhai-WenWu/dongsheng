@@ -150,6 +150,10 @@ public class FileManager extends UtilFile{
 	public static final String dish_caipu_hint = "dish_caipu_hint";
 	public static final String app_welcome = "app_welcome";
 	public static final String app_notification = "app_notification";
+	public static final String push_show_message = "push_show_message";
+	public static final String push_show_reciew = "push_show_reciew";
+	public static final String push_show_feedBack = "push_show_feedBack";
+	public static final String push_show_subject = "push_show_subject";
 	/**
 	 * 获取字符串数组
 	 */

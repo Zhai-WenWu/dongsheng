@@ -2,6 +2,8 @@ package amodule.user.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +21,9 @@ import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.MessageTipController;
 import acore.logic.XHClick;
+import acore.notification.controller.NotificationSettingController;
 import acore.override.activity.base.BaseAppCompatActivity;
+import acore.tools.FileManager;
 import acore.tools.IObserver;
 import acore.tools.ObserverManager;
 import acore.tools.StringManager;
@@ -54,6 +58,7 @@ public class MyMessage extends BaseAppCompatActivity implements OnClickListener,
     private RelativeLayout noLoginLayout;
     private TextView mMyQANum;
     private TextView mQiYvNum;
+    private Handler handller=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +67,13 @@ public class MyMessage extends BaseAppCompatActivity implements OnClickListener,
         init();
         XHClick.track(this, "浏览消息列表页");
         ObserverManager.getInstance().registerObserver(this, NOTIFY_LOGIN, NOTIFY_LOGOUT, NOTIFY_MESSAGE_REFRESH);
+        handller = new Handler(Looper.getMainLooper());
+        handller.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                new NotificationSettingController().showNotification(0, FileManager.push_show_message,NotificationSettingController.pushSetMessage);
+            }
+        },1000*3);
     }
 
     @Override
@@ -115,6 +127,10 @@ public class MyMessage extends BaseAppCompatActivity implements OnClickListener,
     protected void onDestroy() {
         super.onDestroy();
         ObserverManager.getInstance().unRegisterObserver(this);
+        if(handller!=null) {
+            handller.removeCallbacksAndMessages(null);
+            handller=null;
+        }
     }
 
     /** 外面调用的刷新 */

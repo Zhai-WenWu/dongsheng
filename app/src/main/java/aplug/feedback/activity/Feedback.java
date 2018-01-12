@@ -23,7 +23,9 @@ import java.util.Map;
 
 import acore.logic.MessageTipController;
 import acore.logic.XHClick;
+import acore.notification.controller.NotificationSettingController;
 import acore.override.activity.base.BaseActivity;
+import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -344,6 +346,8 @@ public class Feedback extends BaseActivity implements OnClickListener {
                     }
                 }
             });
+            //处理弹框
+            new NotificationSettingController().showNotification(Tools.getDimen(this,R.dimen.dp_44), FileManager.push_show_feedBack,NotificationSettingController.pushSetFeedBack);
         } else
             Tools.showToast(this, "请输入反馈内容");
     }
