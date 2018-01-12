@@ -95,6 +95,7 @@ public class MyMsgInformSetting extends BaseActivity implements View.OnClickList
 			XHClick.mapStat(this, "a_set_push", "去关闭跳转到设置", mNewMsgOpen ? "未关闭" : "关闭成功");
 		}
 		if (mResumeFromClickBtn) {
+			mResumeFromClickBtn = false;
 			XHClick.mapStat(this, "a_set_push", "关闭状态下，点击“设置”去开启", mNewMsgOpen ? "开启成功" : "开启失败");
 		}
 	}
