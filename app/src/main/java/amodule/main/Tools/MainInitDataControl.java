@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.webkit.CookieManager;
@@ -53,7 +54,7 @@ import aplug.basic.XHInternetCallBack;
 import aplug.web.tools.XHTemplateManager;
 import third.ad.tools.AdConfigTools;
 import third.mall.aplug.MallCommon;
-import third.push.xg.XGLocalPushServer;
+import third.push.xg.XGTagManager;
 import third.qiyu.QiYvHelper;
 import xh.basic.tool.UtilFile;
 
@@ -155,6 +156,17 @@ public class MainInitDataControl {
 
     }
 
+    private void setXGTag() {
+        XGTagManager manager = new XGTagManager();
+        if (!LoginManager.isLogin())
+            manager.addXGTag(XGTagManager.APP_NEW);
+        String official = (String) UtilFile.loadShared(XHApplication.in(), FileManager.xg_config, FileManager.xg_config_official);
+        if (TextUtils.isEmpty(official)) {
+            UtilFile.saveShared(XHApplication.in(), FileManager.xg_config, FileManager.xg_config_official, "official");
+            manager.addXGTag(XGTagManager.OFFICIAL);
+        }
+    }
+
     /**
      * main在界面展示后初始化
      * @param act
@@ -200,6 +212,8 @@ public class MainInitDataControl {
             }
         });
         new AllPopDialogHelper(act).start();
+
+        new Thread(() -> setXGTag()).start();
 
         onMainResumeStatics();
 

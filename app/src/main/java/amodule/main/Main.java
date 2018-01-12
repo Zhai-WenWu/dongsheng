@@ -79,6 +79,7 @@ import third.ad.tools.AdConfigTools;
 import third.cling.control.ClingPresenter;
 import third.mall.alipay.MallPayActivity;
 import third.push.xg.XGLocalPushServer;
+import third.push.xg.XGTagManager;
 import third.qiyu.QiYvHelper;
 import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilLog;
@@ -839,12 +840,17 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                     QiYvHelper.getInstance().onUserLogin();
                     MessageTipController.newInstance().loadQiyuUnreadCount();
                     MessageTipController.newInstance().setMessageCount();
+
+                    XGTagManager manager = new XGTagManager();
+                    manager.removeXGTag(XGTagManager.APP_NEW);
                 }
                 break;
             case ObserverManager.NOTIFY_LOGOUT:
                 if (data != null && data instanceof Boolean) {
                     if ((Boolean) data) {
                         QiYvHelper.getInstance().onUserLogout();
+                        XGTagManager manager = new XGTagManager();
+                        manager.addXGTag(XGTagManager.APP_NEW);
                     }
                 }
                 break;

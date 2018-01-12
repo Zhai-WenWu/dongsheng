@@ -22,7 +22,7 @@
                 android:layout_height="@dimen/dp_46"
                 android:layout_marginTop="@dimen/dp_15"
                 android:layout_marginBottom="@dimen/dp_15"
-                layout="@layout/title_switchbtn_item"/>
+                layout="@layout/title_left_right_item"/>
 
             <LinearLayout
                 android:id="@+id/msgInform_ll"
@@ -56,13 +56,7 @@
                     layout="@layout/title_switchbtn_item"/>
 
                 <include
-                    android:id="@+id/msg_dianshang"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp_46"
-                    layout="@layout/title_switchbtn_item"/>
-
-                <include
-                    android:id="@+id/msg_interesting"
+                    android:id="@+id/msg_official"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp_46"
                     layout="@layout/title_switchbtn_item"/>
@@ -80,17 +74,23 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/dp_15"
-                    android:text="@string/msg_close_tip" />
+                    android:layout_marginLeft="@dimen/dp_20"
+                    android:layout_marginRight="@dimen/dp_20"
+                    android:lineSpacingExtra="@dimen/dp_3"
+                    android:text="@string/msg_close_tip"
+                    android:textSize="@dimen/sp_14"
+                    android:textColor="#999999"/>
 
                 <Button
                     android:id="@+id/start_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/dp_138"
+                    android:layout_height="@dimen/dp_44"
+                    android:layout_marginTop="@dimen/dp_73"
                     android:text="去开启"
-                    android:layout_gravity="center_horizontal"
+                    android:textSize="@dimen/sp_16"
+                    android:layout_gravity="center"
                     android:textColor="@color/ysf_white"
-                    android:background="@color/quan_tab_red"
+                    android:background="@drawable/bg_round_corners_f23030"
                     android:tag="start_btn"/>
             </LinearLayout>
 

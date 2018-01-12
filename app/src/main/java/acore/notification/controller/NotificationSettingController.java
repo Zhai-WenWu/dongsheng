@@ -31,10 +31,10 @@ import acore.tools.ToolsDevice;
 
 public class NotificationSettingController {
 
-    public static final String pushSetMessage="开启通知实时和哈友交流美食，86%的哈友已开启";
-    public static final String pushSetReview="开启通知及时接收哈友的评论消息，86%的哈友已开启";
-    public static final String pushSetFeedBack="开启通知及时接收小秘书回复，更好地解决你的问题";
-    public static final String pushSetSubject="开启通知及时接收哈友的评论消息，86%的哈友已开启";
+    public static final String pushSetMessage="开启通知及时和哈友交流美食,86%的哈友已开启";
+    public static final String pushSetReview="开启通知及时接收哈友的评论消息,86%的哈友已开启";
+    public static final String pushSetFeedBack="开启通知及时接收小秘书回复,更好地解决你的问题";
+    public static final String pushSetSubject="开启通知及时接收哈友的评论消息,86%的哈友已开启";
     /**
      * all版本控制只显示一次
      * @param marginBottom

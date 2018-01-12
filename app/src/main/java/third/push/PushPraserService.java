@@ -20,15 +20,23 @@ import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
 import amodule.main.Main;
+import amodule.user.datacontroller.MsgSettingDataController;
 import aplug.feedback.activity.Feedback;
 import third.push.model.NotificationData;
 import third.push.xg.XGLocalPushServer;
-import third.qiyu.QiYvHelper;
 
 /**
  * PackageName : third.push.model
  * Created by MrTrying on 2016/8/16 11:08.
  * E_mail : ztanzeyu@gmail.com
+ *
+ * 消息：
+ * t：
+ * 	XHClick.NOTIFY_A = 1: 显示通知，不存在消息列表中
+ * 	XHClick.NOTIFY_B = 2: 显示通知，存在消息列表中
+ * 	XHClick.NOTIFY_C = 3: 显示通知，存在消息列表中，使用app不通知
+ * 	XHClick.NOTIFY_D = 4: 显示通知，不存在消息列表中，未启动时通知
+ * 	XHClick.NOTIFY_SELF = 5: 自我唤醒
  */
 public class PushPraserService extends Service{
 	public static final String PUSH_ID = "notify_come_count";
@@ -72,6 +80,11 @@ public class PushPraserService extends Service{
 		ArrayList<Map<String, String>> msgt = StringManager.getListMapByJson(extrajson);
 		if (msgt.size() > 0) {
 			Map<String, String> msgMap = msgt.get(0);
+			String type = msgMap.get("type");
+			MsgSettingDataController controller = new MsgSettingDataController();
+			if (!controller.checkOpenByType(type, null))
+				return;
+
 			//用于解决：服务端会两个推送都推，根据pushCode存储本地情况，判断是否已经接受了推送
 			if (FileManager.ifFileModifyByCompletePath(FileManager.getDataDir() + msgMap.get("pushCode"), -1) != null) {
 				return;
@@ -115,6 +128,10 @@ public class PushPraserService extends Service{
 					} else {
 						data.value = strArr[0];
 					}
+				}
+
+				if (msgMap.get("image") != null) {
+					data.setImgUrl(msgMap.get("image"));
 				}
 				//统计
 				if (data.type == XHClick.NOTIFY_SELF || data.type == XHClick.NOTIFY_A) {
