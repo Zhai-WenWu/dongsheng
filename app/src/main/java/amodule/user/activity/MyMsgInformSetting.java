@@ -190,7 +190,7 @@ public class MyMsgInformSetting extends BaseActivity implements View.OnClickList
 		msg_qa.setState(true);
 		View msgInteresting = findViewById(R.id.msg_official);
 		TextView title6 = (TextView) msgInteresting.findViewById(R.id.title);
-		title6.setText("官方提醒消息");
+		title6.setText("你可能感兴趣的内容");
 		msg_official = (SwitchView) msgInteresting.findViewById(R.id.switch_btn);
 		msg_official.setTag(tag_official);
 		msg_official.setState(true);
@@ -366,7 +366,7 @@ public class MyMsgInformSetting extends BaseActivity implements View.OnClickList
 				break;
 			case tag_official:
 				key = "official";
-				staticStr = "点击关闭官方提醒消息";
+				staticStr = "点击关闭你可能感兴趣的内容";
 				if (state)
 					new XGTagManager().addXGTag(XGTagManager.OFFICIAL);
 				else
