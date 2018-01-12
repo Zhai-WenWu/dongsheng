@@ -22,6 +22,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.annimon.stream.Stream;
+import com.popdialog.db.FullSrceenDB;
 import com.popdialog.util.GoodCommentManager;
 import com.tencent.stat.StatConfig;
 import com.tencent.stat.StatService;
@@ -35,6 +37,7 @@ import java.util.TimerTask;
 import acore.logic.AllPopDialogHelper;
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
+import acore.logic.MessageTipController;
 import acore.logic.VersionOp;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
@@ -55,12 +58,16 @@ import amodule.main.activity.MainCircle;
 import amodule.main.activity.MainHomePage;
 import amodule.main.activity.MainMyself;
 import amodule.user.activity.MyMessage;
+import amodule.main.delegate.ISetMessageTip;
+import amodule.main.view.WelcomeDialog;
+import amodule.user.activity.MyFavorite;
 import aplug.shortvideo.ShortVideoInit;
 import third.ad.control.AdControlHomeDish;
 import third.ad.tools.AdConfigTools;
 import third.cling.control.ClingPresenter;
 import third.mall.alipay.MallPayActivity;
 import third.push.xg.XGLocalPushServer;
+import third.push.xg.XGTagManager;
 import third.qiyu.QiYvHelper;
 import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilLog;
@@ -68,15 +75,16 @@ import xh.basic.tool.UtilLog;
 import static com.xiangha.R.id.iv_itemIsFine;
 
 @SuppressWarnings("deprecation")
-public class Main extends Activity implements OnClickListener, IObserver {
-    public static final String TAG="xianghaTag";
+public class Main extends Activity implements OnClickListener, IObserver, ISetMessageTip {
+    public static final String TAG = "xianghaTag";
 
-    private String[] tabTitle = {"学做菜", "社区", "消息", "我的"};
-    private Class<?>[] classes = new Class<?>[]{MainHomePage.class, MainCircle.class, MyMessage.class, MainMyself.class};
-    private int[] tabImgs = new int[]{R.drawable.tab_index, R.drawable.tab_circle, R.drawable.tab_four, R.drawable.tab_myself};
+    private String[] tabTitle = {"学做菜", "社区", "收藏", "我的"};
+    private Class<?>[] classes = new Class<?>[]{MainHomePage.class, MainCircle.class, MyFavorite.class, MainMyself.class};
+    private int[] tabImgs = new int[]{R.drawable.tab_index, R.drawable.tab_circle, R.drawable.tab_fav, R.drawable.tab_myself};
     public static final int TAB_HOME = 0;
     public static final int TAB_CIRCLE = 1;
-    public static final int TAB_MESSAGE = 2;
+    //    public static final int TAB_MESSAGE = 2;
+    public static final int TAB_FAVORIT = 2;
     public static final int TAB_SELF = 3;
 
     @SuppressLint("StaticFieldLeak")
@@ -89,7 +97,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
     /**
      * 页面关闭层级
      * 把层级>=close_level的层级关闭
-     * */
+     */
     public static int colse_level = 1000;
 
     public Map<String, MainBaseActivity> allTab = new HashMap<>();
@@ -127,7 +135,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
         LogManager.printStartTime("zhangyujian","main::oncreate::setContentView::");
         mLocalActivityManager = new LocalActivityManager(this, true);
         mLocalActivityManager.dispatchCreate(savedInstanceState);
-        LogManager.printStartTime("zhangyujian","main::oncreate::start::");
+        LogManager.printStartTime("zhangyujian", "main::oncreate::start::");
         //腾讯统计
         initMTA();
         allMain = this;
@@ -191,68 +199,12 @@ public class Main extends Activity implements OnClickListener, IObserver {
         }
     };
     /** 处理一下非明确功能的逻辑 */
-    private void initOther(){
+    private void initOther() {
         String[] times = FileManager.getSharedPreference(XHApplication.in(), FileManager.xmlKey_appKillTime);
         if (times != null && times.length > 1 && !TextUtils.isEmpty(times[1])) {
             Tools.getApiSurTime("killback", Long.parseLong(times[1]), System.currentTimeMillis());
         }
     }
-
-    /**
-     * 初始化七鱼未读消息数
-     */
-    private void initQiYvUnreadCount() {
-        QiYvHelper.getInstance().getUnreadCount(count -> {
-            if (count >= 0) {
-                if (nowTab == TAB_MESSAGE)
-                    AppCommon.quanMessage = 0;
-                AppCommon.qiyvMessage = count;
-                if (count > 0)
-                    Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
-            }
-        });
-    }
-
-    /**
-     * 设置七鱼未读消息监听
-     */
-    private void addQiYvListener() {
-        QiYvHelper.getInstance().addOnUrlItemClickListener((context, url) -> {
-            if(TextUtils.isEmpty(url)) return;
-            if (url.contains("m.ds.xiangha.com")
-                    && url.contains("product_code=")) {//商品详情链接
-                String[] strs = url.split("\\?");
-                if (strs != null
-                        && strs.length > 1
-                        && !TextUtils.isEmpty(strs[1])) {
-                    AppCommon.openUrl(Main.this, "xhds.product.info.app?" + strs[1], true);
-                }
-            } else {
-                AppCommon.openUrl(Main.this, "xiangha://welcome?showWeb.app?url=" + Uri.encode(url), true);
-            }
-        });
-        if (mUnreadCountListener == null) {
-            mUnreadCountListener = count -> {
-                if (count >= 0) {
-                    if (nowTab == TAB_MESSAGE)
-                        AppCommon.quanMessage = 0;
-                    AppCommon.qiyvMessage = count;
-                    if (count > 0)
-                        Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
-                }
-            };
-        }
-        QiYvHelper.getInstance().addUnreadCountChangeListener(mUnreadCountListener, true);
-    }
-
-    /**腾讯统计*/
-    private void initMTA(){
-        StatConfig.setDebugEnable(false);
-        StatConfig.setInstallChannel(this, ChannelUtil.getChannel(this));
-        StatConfig.setSendPeriodMinutes(1);//设置发送策略：每一分钟发送一次
-        StatService.setContext(this.getApplication());
-    }
-
 
     /**
      * 外部传递参数
@@ -284,8 +236,10 @@ public class Main extends Activity implements OnClickListener, IObserver {
         //从Welcome方法
         ShortVideoInit.init(Main.this);
         //从Welcome方法
-        ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_LOGIN);
-        ObserverManager.getInstence().registerObserver(this, ObserverManager.NOTIFY_LOGOUT);
+        ObserverManager.getInstance().registerObserver(this, ObserverManager.NOTIFY_LOGIN);
+        ObserverManager.getInstance().registerObserver(this, ObserverManager.NOTIFY_LOGOUT);
+        ObserverManager.getInstance().registerObserver(this, ObserverManager.NOTIFY_MESSAGE_REFRESH);
+
     }
 
     /**
@@ -335,13 +289,10 @@ public class Main extends Activity implements OnClickListener, IObserver {
         TimerTask tt = new TimerTask() {
             @Override
             public void run() {
-                handler.post(() -> AppCommon.getCommonData(null));
+                handler.post(() -> MessageTipController.newInstance().getCommonData(null));
             }
         };
-        timer.schedule(tt, everyReq*1000, everyReq*1000);
-//        tempData();
-//        tempThreadData();
-//        getMainLooper().getThread().setPriority(10);
+        timer.schedule(tt, everyReq * 1000, everyReq * 1000);
     }
 
     @Override
@@ -353,7 +304,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
     @Override
     protected void onResume() {
         super.onResume();
-        LogManager.printStartTime("zhangyujian","main::onResume::");
+        LogManager.printStartTime("zhangyujian", "main::onResume::");
         mainOnResumeState = true;
         mLocalActivityManager.dispatchResume();
         if (colse_level == 0) {
@@ -376,7 +327,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
                 XHClick.mapStat(Main.this, "a_evaluate420", typeStr, timeStr)
         );
         openUri();
-        if(timer==null){
+        if (timer == null) {
             initRunTime();
         }
         LogManager.printStartTime("zhangyujian","main::onResume:end::");
@@ -395,6 +346,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
             }
         }
     }
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -405,6 +357,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
             e.printStackTrace();
         }
     }
+
     @Override
     protected void onStop() {
         super.onStop();
@@ -412,9 +365,9 @@ public class Main extends Activity implements OnClickListener, IObserver {
             isForeground = false;
             homebackTime = System.currentTimeMillis();
         }
-        if (timer!=null){
+        if (timer != null) {
             timer.cancel();
-            timer=null;
+            timer = null;
         }
     }
 
@@ -439,10 +392,11 @@ public class Main extends Activity implements OnClickListener, IObserver {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         /*try catch 住 super方法，尝试解决 IllegalStateException 异常*/
-        try{
-            outState.putString("currentTab",""+defaultTab);
+        try {
+            outState.putString("currentTab", "" + defaultTab);
             super.onSaveInstanceState(outState);
-        }catch (Exception ignored){}
+        } catch (Exception ignored) {
+        }
     }
 
     @Override
@@ -497,6 +451,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
                 }
                 // 关闭时发送页面停留时间统计
                 if (act != null) XHClick.finishToSendPath(act);
+                new FullSrceenDB(act).clearExpireAllData();
                 // 关闭页面停留时间统计计时器
                 XHClick.closeHandler();
                 VersionOp.getInstance().onDesotry();
@@ -556,15 +511,9 @@ public class Main extends Activity implements OnClickListener, IObserver {
 //                mainIndex.onResumeFake();
             }
         }
-        if (index == TAB_MESSAGE) {
-            AppCommon.quanMessage = 0;
-            setNewMsgNum(index, AppCommon.qiyvMessage + AppCommon.myQAMessage + AppCommon.feekbackMessage);
-        }
-        //特殊逻辑
-//        changeSendLayout.setVisibility(View.VISIBLE);
-        if(index == 0){
+        if (index == 0) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        }else{
+        } else {
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         }
     }
@@ -617,16 +566,8 @@ public class Main extends Activity implements OnClickListener, IObserver {
                 view.findViewById(R.id.tv_tab_msg_tow_num).setVisibility(View.GONE);
             }
         }
-        dispatchUpdateMsgNum();
     }
 
-    private static void dispatchUpdateMsgNum() {
-        dispatchMsgListNum();
-    }
-
-    private static void dispatchMsgListNum() {
-        MyMessage.notifiMessage(MyMessage.MSG_DISPATCH_ONREFURESH, 0, "");
-    }
     /**
      * 点击下方tab切换,并且加上美食圈点击后进去第一个页面并刷新
      */
@@ -640,18 +581,16 @@ public class Main extends Activity implements OnClickListener, IObserver {
                 } else if (i == TAB_CIRCLE && allTab.containsKey(MainCircle.KEY) && tabHost.getCurrentTab() == i) {
                     //当所在页面正式你要刷新的页面,就直接刷新
                     MainCircle circle = (MainCircle) allTab.get(MainCircle.KEY);
-                    if(circle != null)
+                    if (circle != null)
                         circle.refresh();
                 } else if (i == TAB_SELF && allTab.containsKey(MainMyself.KEY)) {
                     //在onResume方法添加了刷新方法
 //                    MainMyself mainMyself = (MainMyself) allTab.get(MainMyself.KEY);
 //                    mainMyself.scrollToTop();
-                } else if (i == TAB_MESSAGE && allTab.containsKey(MyMessage.KEY) && i == nowTab) {
-                    MyMessage myMessage = (MyMessage) allTab.get(MyMessage.KEY);
-                    if(myMessage != null){
-                        myMessage.onRefresh();
-                    }
-
+                } else if (i == TAB_FAVORIT && allTab.containsKey(MyFavorite.KEY) && i == nowTab) {
+                    MyFavorite myFavorite = (MyFavorite) allTab.get(MyFavorite.KEY);
+                    if(myFavorite != null)
+                        myFavorite.onRefresh();
                 }
                 try {
                     setCurrentTabByIndex(i);
@@ -741,7 +680,7 @@ public class Main extends Activity implements OnClickListener, IObserver {
     protected void onDestroy() {
         //activity关闭之前必须关闭dilaog
         super.onDestroy();
-        ObserverManager.getInstence().unRegisterObserver(this);
+        ObserverManager.getInstance().unRegisterObserver(this);
         mUnreadCountListener = null;
         if (!LoginManager.isLogin())
             QiYvHelper.getInstance().destroyQiYvHelper();
@@ -750,43 +689,43 @@ public class Main extends Activity implements OnClickListener, IObserver {
 
     @Override
     public void notify(String name, Object sender, Object data) {
-        if (ObserverManager.NOTIFY_LOGIN.equals(name)) {
-            if (data != null && data instanceof Boolean && (Boolean)data) {
-                addQiYvListener();
-                if (nowTab == TAB_MESSAGE || allTab.containsKey(MyMessage.KEY)) {
-                    MyMessage myMessage = (MyMessage) allTab.get(MyMessage.KEY);
-                    if(myMessage != null){
-                        myMessage.onRefresh();
+        switch (name) {
+            case ObserverManager.NOTIFY_LOGIN:
+                if (data != null && data instanceof Boolean && (Boolean) data) {
+                    addQiYvListener();
+                    QiYvHelper.getInstance().onUserLogin();
+                    MessageTipController.newInstance().loadQiyuUnreadCount();
+                    MessageTipController.newInstance().setMessageCount();
+
+                    XGTagManager manager = new XGTagManager();
+                    manager.removeXGTag(XGTagManager.APP_NEW);
+                }
+                break;
+            case ObserverManager.NOTIFY_LOGOUT:
+                if (data != null && data instanceof Boolean) {
+                    if ((Boolean) data) {
+                        QiYvHelper.getInstance().onUserLogout();
+                        XGTagManager manager = new XGTagManager();
+                        manager.addXGTag(XGTagManager.APP_NEW);
                     }
                 }
-                QiYvHelper.getInstance().onUserLogin();
-                QiYvHelper.getInstance().getUnreadCount(new QiYvHelper.NumberCallback() {
-                    @Override
-                    public void onNumberReady(int count) {
-                        if (count >= 0) {
-                            if (nowTab == TAB_MESSAGE)
-                                AppCommon.quanMessage = 0;
-                            AppCommon.qiyvMessage = count;
-                            if (count > 0)
-                                Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
-                        }
-                    }
-                });
-                if (nowTab == TAB_MESSAGE)
-                    AppCommon.quanMessage = 0;
-                //防止七鱼回调不回来
-                Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
-            }
-        } else if (ObserverManager.NOTIFY_LOGOUT.equals(name)) {
-            if (data != null && data instanceof Boolean) {
-                if ((Boolean)data) {
-                    if (nowTab == TAB_MESSAGE || allTab.containsKey(MyMessage.KEY)) {
-                        MyMessage myMessage = (MyMessage) allTab.get(MyMessage.KEY);
-                        myMessage.onRefresh();
-                    }
-                    QiYvHelper.getInstance().onUserLogout();
-                }
-            }
+                break;
+            case ObserverManager.NOTIFY_MESSAGE_REFRESH:
+                setMessageTip(MessageTipController.newInstance().getMessageNum());
+                break;
+            default:
+                break;
         }
     }
+
+    @Override
+    public void setMessageTip(int tipCournt) {
+        Log.i("tzy", "MainCircle::setMessageTip: " + tipCournt);
+        if (allTab != null) {
+            Stream.of(allTab)
+                    .filter(value -> value.getValue() != null && value.getValue() instanceof ISetMessageTip)
+                    .forEach(value -> ((ISetMessageTip) value.getValue()).setMessageTip(tipCournt));
+        }
+    }
+
 }

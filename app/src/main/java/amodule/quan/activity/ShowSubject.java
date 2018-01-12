@@ -480,7 +480,7 @@ public class ShowSubject extends BaseAppCompatActivity {
 				requestFavoriteState();
 			}
 		};
-		ObserverManager.getInstence().registerObserver(mIObserver,ObserverManager.NOTIFY_LOGIN);
+		ObserverManager.getInstance().registerObserver(mIObserver,ObserverManager.NOTIFY_LOGIN);
 	}
 
 	/**
@@ -1070,7 +1070,7 @@ public class ShowSubject extends BaseAppCompatActivity {
 		super.onDestroy();
 		handler.removeCallbacksAndMessages(null);
 		UploadSubjectControl.getInstance().setReplyCallback(null);
-		ObserverManager.getInstence().unRegisterObserver(mIObserver);
+		ObserverManager.getInstance().unRegisterObserver(mIObserver);
 	}
 
 	@Override

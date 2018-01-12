@@ -14,6 +14,7 @@ import com.xiangha.R;
 import acore.logic.AppCommon;
 import acore.logic.XHClick;
 import amodule._common.delegate.IStatictusData;
+import amodule.main.view.MessageTipIcon;
 import amodule.search.avtivity.HomeSearch;
 import aplug.web.ShowWeb;
 
@@ -29,8 +30,8 @@ import static amodule.main.activity.MainHomePage.STATICTUS_ID_PULISH;
 
 public class HomeTitleLayout extends RelativeLayout implements View.OnClickListener,IStatictusData {
 
-    HomeActivityIconView mIconView;
     HomePushIconView mPulishView;
+    MessageTipIcon mMessageTipIcon;
 
     OnClickActivityIconListener mOnClickActivityIconListener;
 
@@ -51,10 +52,9 @@ public class HomeTitleLayout extends RelativeLayout implements View.OnClickListe
         LayoutInflater.from(getContext()).inflate(R.layout.a_home_title,this,true);
         mPulishView = (HomePushIconView) findViewById(R.id.home_publish_btn);
         mPulishView.setStatictusID(STATICTUS_ID_PULISH);
-        mIconView = (HomeActivityIconView) findViewById(R.id.home_act_btn);
+        mMessageTipIcon = (MessageTipIcon) findViewById(R.id.message_tip);
 
         mPulishView.setOnClickListener(this);
-        mIconView.setOnClickListener(this);
         findViewById(R.id.home_search_layout).setOnClickListener(this);
 
     }
@@ -63,13 +63,6 @@ public class HomeTitleLayout extends RelativeLayout implements View.OnClickListe
     public void onClick(View v) {
         if(v == null) return;
         switch (v.getId()){
-            case R.id.home_act_btn:
-                //统计
-                XHClick.mapStat(getContext(),id,twoLevel,"左上角广告图标");
-                if(mOnClickActivityIconListener != null && mIconView != null){
-                    mOnClickActivityIconListener.onCLick(mIconView,mIconView.getUrl());
-                }
-                break;
             case R.id.home_publish_btn:
                 //统计
                 XHClick.mapStat(getContext(),id,twoLevel,"发布按钮");
@@ -88,6 +81,12 @@ public class HomeTitleLayout extends RelativeLayout implements View.OnClickListe
     public void setStatictusData(String id, String twoLevel, String threeLevel) {
         this.id = id;
         this.twoLevel = twoLevel;
+    }
+
+    public void setMessage(int messageTipCount){
+        if(mMessageTipIcon != null){
+            mMessageTipIcon.setMessageTip(messageTipCount);
+        }
     }
 
     public interface OnClickActivityIconListener{

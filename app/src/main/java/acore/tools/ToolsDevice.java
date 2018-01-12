@@ -15,6 +15,7 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
+import android.os.Environment;
 import android.provider.Settings.Secure;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
@@ -31,6 +32,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -41,8 +44,10 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import acore.logic.VersionOp;
+import acore.notification.BuildProperties;
 import acore.override.XHApplication;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
@@ -688,5 +693,78 @@ public class ToolsDevice {
     public static boolean isTabletDevice(Context context) {
         return (context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >=
                 Configuration.SCREENLAYOUT_SIZE_LARGE;
+    }
+
+    //MIUI标识
+    public static final String KEY_MIUI_VERSION_CODE = "ro.miui.ui.version.code";
+    public static final String KEY_MIUI_VERSION_NAME = "ro.miui.ui.version.name";
+    public static final String KEY_MIUI_INTERNAL_STORAGE = "ro.miui.internal.storage";
+
+    //EMUI标识
+    public static final String KEY_EMUI_VERSION_CODE = "ro.build.version.emui";
+    public static final String KEY_EMUI_API_LEVEL = "ro.build.hw_emui_api_level";
+    public static final String KEY_EMUI_CONFIG_HW_SYS_VERSION = "ro.confg.hw_systemversion";
+
+    //Flyme标识
+    public static final String KEY_FLYME_ID_FALG_KEY = "ro.build.display.id";
+    public static final String KEY_FLYME_ID_FALG_VALUE_KEYWORD = "Flyme";
+    public static final String KEY_FLYME_ICON_FALG = "persist.sys.use.flyme.icon";
+    public static final String KEY_FLYME_SETUP_FALG = "ro.meizu.setupwizard.flyme";
+    public static final String KEY_FLYME_PUBLISH_FALG = "ro.flyme.published";
+
+    //OPPO标识
+    public static final String KEY_OPPO_OPPOROM = "ro.build.version.opporom";
+
+    //VIVO标识
+    public static final String KEY_VIVO_VERSION = "ro.vivo.os.version";
+
+    public static final String MIUI = "MIUI";
+    public static final String EMUI = "EMUI";
+    public static final String FLYME = "FLYME";
+    public static final String OPPO = "OPPO";
+    public static final String VIVO = "VIVO";
+    public static final String OTHER = "OTHER";
+    /**
+     * @param
+     * @return  ROM类型
+     * @description获取ROM类型: MIUI_ROM, FLYME_ROM, EMUI_ROM, OTHER_ROM
+     */
+
+    public static BuildProperties getBuildProperties() {
+        BuildProperties prop = null;
+        try {
+            prop = BuildProperties.newInstance();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return prop;
+    }
+
+    public static String getRomType(BuildProperties properties) {
+        if (properties == null)
+            return OTHER;
+        if (properties.containsKey(KEY_EMUI_VERSION_CODE) || properties.containsKey(KEY_EMUI_API_LEVEL) || properties.containsKey(KEY_EMUI_CONFIG_HW_SYS_VERSION)) {
+            return EMUI;
+        }
+        if (properties.containsKey(KEY_MIUI_VERSION_CODE) || properties.containsKey(KEY_MIUI_VERSION_NAME) || properties.containsKey(KEY_MIUI_INTERNAL_STORAGE)) {
+            return MIUI;
+        }
+        if (properties.containsKey(KEY_FLYME_ICON_FALG) || properties.containsKey(KEY_FLYME_SETUP_FALG) || properties.containsKey(KEY_FLYME_PUBLISH_FALG)) {
+            return FLYME;
+        }
+        if (properties.containsKey(KEY_OPPO_OPPOROM)) {
+            return OPPO;
+        }
+        if (properties.containsKey(KEY_VIVO_VERSION)) {
+            return VIVO;
+        }
+        if (properties.containsKey(KEY_FLYME_ID_FALG_KEY)) {
+            String romName = properties.getProperty(KEY_FLYME_ID_FALG_KEY);
+            if (!TextUtils.isEmpty(romName) && romName.contains(KEY_FLYME_ID_FALG_VALUE_KEYWORD)) {
+                return FLYME;
+            }
+        }
+        return OTHER;
     }
 }

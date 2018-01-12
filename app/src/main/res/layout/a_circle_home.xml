@@ -28,7 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_toLeftOf="@+id/circle_pulish"
-            android:layout_toRightOf="@+id/marginLeftView"
+            android:layout_toRightOf="@+id/message_tip"
             android:gravity="center_horizontal"
             android:orientation="horizontal">
 
@@ -44,6 +44,11 @@
                 app:pstsTabTextSize="@dimen/sp_16"/>
 
         </LinearLayout>
+
+        <amodule.main.view.MessageTipIcon
+            android:id="@+id/message_tip"
+            android:layout_width="@dimen/dp_57"
+            android:layout_height="match_parent"/>
 
         <amodule.home.view.HomePushIconView
             android:id="@+id/circle_pulish"

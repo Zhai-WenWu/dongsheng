@@ -18,9 +18,8 @@ import com.tencent.android.tpush.XGPushConfig;
 import com.xh.manager.DialogManager;
 import com.xh.manager.ViewManager;
 
-import acore.logic.AppCommon;
 import acore.logic.LoginManager;
-import acore.override.XHApplication;
+import acore.logic.MessageTipController;
 import acore.tools.FileManager;
 import acore.tools.LogManager;
 import acore.tools.Tools;
@@ -91,7 +90,7 @@ public class LoadManager {
 			clicker.onClick(null);
 		} else {
 			// 长时间未使用情况下，重新获取tok
-			AppCommon.getCommonData(new InternetCallback() {
+			MessageTipController.newInstance().getCommonData(new InternetCallback() {
 				@Override
 				public void loaded(int flag, String url, Object returnObj) {
 					LogManager.print("d", "重新获取tok____" + LoadManager.tok);

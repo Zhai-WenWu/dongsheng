@@ -1,13 +1,16 @@
 package acore.logic;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.text.TextUtils;
-import android.util.Log;
 
+import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.Target;
 import com.download.container.DownloadCallBack;
 import com.download.down.DownLoad;
 import com.download.tools.FileUtils;
@@ -15,23 +18,28 @@ import com.popdialog.AllPopDialogControler;
 import com.popdialog.FullSrceenDialogControl;
 import com.popdialog.GoodCommentDialogControl;
 import com.popdialog.GuideDialogControl;
-import com.popdialog.PushDialogControl;
 import com.popdialog.base.BaseDialogControl;
+import com.popdialog.db.FullSrceenModule;
 import com.xiangha.R;
 
 import java.util.Map;
 
+import acore.notification.controller.NotificationSettingController;
 import acore.override.XHApplication;
 import acore.override.helper.XHActivityManager;
 import acore.tools.FileManager;
+import acore.tools.StringManager;
 import acore.tools.Tools;
 import amodule.main.Main;
+import amodule.main.activity.MainHomePage;
+import aplug.basic.InternetCallback;
 import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
 import third.ad.tools.AdConfigTools;
-import third.ad.tools.AdPlayIdConfig;
 
-import static com.popdialog.AllPopDialogControler.TAG;
+import static com.popdialog.AllPopDialogControler.log;
+import static com.tencent.stat.StatTrackLog.log;
+import static third.ad.tools.AdPlayIdConfig.FULL_SRCEEN_ACTIVITY;
 
 /**
  * PackageName : acore.logic
@@ -40,37 +48,68 @@ import static com.popdialog.AllPopDialogControler.TAG;
  */
 
 public class AllPopDialogHelper {
+
+    public static final String INERVAL_XML = "intervalSP";
+    public static final String KEY_INERVAL_COUNT = "interval_count";
+
     /**所有弹框的控制器*/
     AllPopDialogControler allPopDialogControler;
 
     public AllPopDialogHelper(Activity activity) {
+        AllPopDialogControler.DEBUG = false;
         this.allPopDialogControler = new AllPopDialogControler(activity, VersionOp.getVerName(activity),
                 new AllPopDialogControler.OnGetAllDataCallback() {
                     @Override
                     public String getGuideData() {
-                        Log.i(TAG,"AllPopDialogHelper :: getGuideData");
+                        log("AllPopDialogHelper :: getGuideData");
                         return AppCommon.getConfigByLocal("diversion");
                     }
 
                     @Override
-                    public String getFullScreenData() {
-                        Log.i(TAG,"AllPopDialogHelper :: getFullScreenData");
-                        String data = Tools.map2Json(AdConfigTools.getInstance().getAdConfigData(AdPlayIdConfig.FULLSCREEN));
-                        if("true".equals(FileManager.loadShared(activity,FileManager.xmlFile_appInfo,"once").toString())){
-                            data = "";
+                    public void loadFullScreenData(AllPopDialogControler.GetFullScreenDataCallback callback) {
+                        String onceValue = FileManager.loadShared(activity,FileManager.xmlFile_appInfo,"once").toString();
+                        boolean isOnce = TextUtils.isEmpty(onceValue) || "true".equals(onceValue);
+                        if(isOnce){
+                            if(callback != null) callback.loadFullScreenData("");
+                            return;
                         }
-                        return data;
+                        log("AllPopDialogHelper :: getFullScreenData");
+                        if(AdConfigTools.getInstance().isLoadOver){
+                            handlerFullData(callback);
+                        }else{
+                            AdConfigTools.getInstance().getAdConfigInfo(new InternetCallback() {
+                                @Override
+                                public void loaded(int i, String s, Object o) {
+                                    handlerFullData(callback);
+                                }
+                            });
+                        }
+                    }
+
+                    private void handlerFullData(AllPopDialogControler.GetFullScreenDataCallback callback){
+                        String intervalCountValue = FileManager.loadShared(activity,INERVAL_XML,KEY_INERVAL_COUNT).toString();
+                        int intervalCount = TextUtils.isEmpty(intervalCountValue)?0:Integer.parseInt(intervalCountValue);
+                        String data = AdConfigTools.getInstance().getAdConfigData(FULL_SRCEEN_ACTIVITY).get("quanping");
+                        Map<String, String> map =  StringManager.getFirstMap(data);
+                        String intervalValue = map.get("interval");
+                        int interval = TextUtils.isEmpty(intervalValue) ? 0 : Integer.parseInt(intervalValue);
+                        log(intervalCountValue);
+                        data = map.get("list");
+                        log(data);
+                        if(callback != null){
+                            callback.loadFullScreenData(intervalCount > interval?data:"");
+                        }
                     }
 
                     @Override
                     public String getGoodCommentData() {
-                        Log.i(TAG,"AllPopDialogHelper :: getGoodCommentData");
+                        log("AllPopDialogHelper :: getGoodCommentData");
                         return AppCommon.getConfigByLocal("goodComment");
                     }
 
                     @Override
                     public String getPushData() {
-                        Log.i(TAG,"AllPopDialogHelper :: getPushData");
+                        log("AllPopDialogHelper :: getPushData");
                         return AppCommon.getConfigByLocal("pushJson");
                     }
                 });
@@ -83,6 +122,11 @@ public class AllPopDialogHelper {
         allPopDialogControler.setmGetCurrentActiivtyCallback(new AllPopDialogControler.GetCurrentActiivtyCallback() {
             @Override
             public Activity getCurrentActivity() {
+                if(Main.allMain != null
+                        && Main.allMain.allTab != null
+                        && Main.allMain.allTab.get(MainHomePage.KEY) != null){
+                    return Main.allMain.allTab.get(MainHomePage.KEY);
+                }
                 return XHActivityManager.getInstance().getCurrentActivity();
             }
         });
@@ -93,8 +137,8 @@ public class AllPopDialogHelper {
                 if(map == null){
                     return;
                 }
-                Log.i(TAG,"Guide :: onClickSure");
-                Log.i(TAG,"Guide :: map = " + map.toString());
+                log("Guide :: onClickSure");
+                log("Guide :: map = " + map.toString());
                 String url = map.get("url");
                 String type = map.get("type");
                 if ("1".equals(type)) {
@@ -142,8 +186,8 @@ public class AllPopDialogHelper {
                 if(map == null){
                     return;
                 }
-                Log.i(TAG,"Guide :: onClickCannel");
-                Log.i(TAG,"Guide :: map = " + map.toString());
+                log("Guide :: onClickCannel");
+                log("Guide :: map = " + map.toString());
                 XHClick.mapStat(XHApplication.in(), "a_NewDiversion", twoLevel, text);//统计
             }
         });
@@ -152,37 +196,53 @@ public class AllPopDialogHelper {
         allPopDialogControler.setOnFullScreenStatusCallback(new FullSrceenDialogControl.OnFullScreenStatusCallback() {
             @Override
             public void onShow() {
-                Log.i(TAG,"FullScreen :: 展示");
+                log("FullScreen :: 展示");
+                FileManager.saveShared(XHActivityManager.getInstance().getCurrentActivity(),INERVAL_XML,KEY_INERVAL_COUNT,"0");
                 XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), "ad_show_index", "全屏", "xh");//统计
             }
 
             @Override
-            public void onClickImage(Map<String, String> map) {
-                Log.i(TAG,"FullScreen :: 点击图片");
+            public void onClickImage(FullSrceenModule module) {
+                log("FullScreen :: 点击图片");
                 XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), "ad_click_index", "全屏", "xh");//统计
-                AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), map.get("url"), true);
+                AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), module.getUrl(), true);
             }
 
             @Override
             public void onClickClose() {
-                Log.i(TAG,"FullScreen :: 点击关闭");
+                log("FullScreen :: 点击关闭");
                 XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), "a_fullcereen_ad", "手动关闭", "");
             }
         });
         allPopDialogControler.setOnLoadImageCallback(new FullSrceenDialogControl.OnLoadImageCallback() {
             @Override
             public void onLoadImage(String imageUrl, final FullSrceenDialogControl.OnAfterLoadImageCallback callback) {
-                Log.i(TAG,"FullScreen :: 加载图片 :: imageUrl = " + imageUrl);
+                log("FullScreen :: 加载图片 :: imageUrl = " + imageUrl);
                 //加载图片
                 LoadImage.with(XHApplication.in())
                         .load(imageUrl)
                         .setSaveType(LoadImage.SAVE_LONG)
                         .build()
+                        .listener(new RequestListener<GlideUrl, Bitmap>() {
+                            @Override
+                            public boolean onException(Exception e, GlideUrl glideUrl, Target<Bitmap> target, boolean b) {
+                                if (callback != null) {
+                                    log("FullScreen :: 执行回调，显示图片");
+                                    callback.onAfterLoadImage(null);
+                                }
+                                return false;
+                            }
+
+                            @Override
+                            public boolean onResourceReady(Bitmap bitmap, GlideUrl glideUrl, Target<Bitmap> target, boolean b, boolean b1) {
+                                return false;
+                            }
+                        })
                         .into(new SubBitmapTarget() {
                             @Override
                             public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> arg1) {
                                 if (callback != null) {
-                                    Log.i(TAG,"FullScreen :: 执行回调，显示图片");
+                                    log("FullScreen :: 执行回调，显示图片");
                                     callback.onAfterLoadImage(bitmap);
                                 }
                             }
@@ -194,30 +254,36 @@ public class AllPopDialogHelper {
         allPopDialogControler.setOnGoodCommentClickCallback(new GoodCommentDialogControl.OnGoodCommentClickCallback() {
             @Override
             public void onClickSure(String twoLevel, String text) {
-                Log.i(TAG,"GoodComment :: onClickSure");
+                log("GoodComment :: onClickSure");
                 XHClick.mapStat(XHApplication.in(), "a_NewEvaluate", twoLevel, text);
             }
 
             @Override
             public void onClickCannel(String twoLevel, String text) {
-                Log.i(TAG,"GoodComment :: onClickCannel");
+                log("GoodComment :: onClickCannel");
                 XHClick.mapStat(XHApplication.in(), "a_NewEvaluate", twoLevel, text);
                 XHClick.mapStat(XHApplication.in(), "a_evaluate420", "首页弹框关闭", "");
             }
         });
 
         //推送
-        allPopDialogControler.setOnPushDialogStatisticsCallback(new PushDialogControl.OnPushDialogStatisticsCallback() {
+//        allPopDialogControler.setOnPushDialogStatisticsCallback(new PushDialogControl.OnPushDialogStatisticsCallback() {
+//            @Override
+//            public void onSureStatistics() {
+//                log("Push :: onSureStatistics");
+//                XHClick.mapStat(XHApplication.in(), "a_push", "是", "");
+//            }
+//
+//            @Override
+//            public void onCannelStatistics() {
+//                log("Push :: onCannelStatistics");
+//                XHClick.mapStat(XHApplication.in(), "a_push", "否", "");
+//            }
+//        });
+        allPopDialogControler.setOnPushDialogStatisticsCallback(new AllPopDialogControler.PushViewShowCallBack() {
             @Override
-            public void onSureStatistics() {
-                Log.i(TAG,"Push :: onSureStatistics");
-                XHClick.mapStat(XHApplication.in(), "a_push", "是", "");
-            }
-
-            @Override
-            public void onCannelStatistics() {
-                Log.i(TAG,"Push :: onCannelStatistics");
-                XHClick.mapStat(XHApplication.in(), "a_push", "否", "");
+            public void viewShowState(boolean b) {
+                if(b)new NotificationSettingController().showNotification(0, VersionOp.getVerName(XHApplication.in()),"");
             }
         });
     }
@@ -231,10 +297,10 @@ public class AllPopDialogHelper {
                         VersionOp.getInstance().isShow("", new BaseDialogControl.OnPopDialogCallback() {
                             @Override
                             public void onCanShow() {
-                                Log.i(TAG, "VersionUpdata :: onCanShow");
-                                Log.i(TAG,"VersionUpdata :: versionOp.isMustUpdata:" + VersionOp.getInstance().isMustUpdata);
+                                log( "VersionUpdata :: onCanShow");
+                                log("VersionUpdata :: versionOp.isMustUpdata:" + VersionOp.getInstance().isMustUpdata);
                                 if (VersionOp.getInstance().isMustUpdata) {
-                                    Log.i(TAG, "强制升级");
+                                    log( "强制升级");
                                     VersionOp.getInstance().show();
                                 } else {
                                     if (onStartCallback != null) {
@@ -245,26 +311,34 @@ public class AllPopDialogHelper {
 
                             @Override
                             public void onNextShow() {
-                                Log.i(TAG, "去执行导流");
+                                log( "去执行导流");
                                 if (onStartCallback != null) {
                                     onStartCallback.onStart();
                                 }
                             }
                         });
                     }
-                }, new AllPopDialogControler.OnStartFailCallback() {
+                },
+                new AllPopDialogControler.OnStartFailCallback() {
                     @Override
                     public boolean onStartFail() {
                         if (VersionOp.getInstance().isNeedUpdata) {
-                            Log.i(TAG, "普通升级");
+                            log( "普通升级");
                             VersionOp.getInstance().show();
                             return true;
                         }
-                        Log.i(TAG, "不需要升级");
+                        log( "不需要升级");
                         return false;
                     }
                 }
         );
+    }
+
+    public static void updateIntervalCount(Context context){
+        String intervalCountValue = FileManager.loadShared(context,INERVAL_XML,KEY_INERVAL_COUNT).toString();
+        int intervalCount = TextUtils.isEmpty(intervalCountValue)?0:Integer.parseInt(intervalCountValue);
+        intervalCount++;
+        FileManager.saveShared(context,INERVAL_XML,KEY_INERVAL_COUNT,String.valueOf(intervalCount));
     }
 
 }

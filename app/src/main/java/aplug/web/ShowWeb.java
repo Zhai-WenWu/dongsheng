@@ -68,7 +68,6 @@ public class  ShowWeb extends WebActivity implements IObserver {
 	private String code="";//code--首页使用功能
 	private String module_type="";
 	private String userCode = "";
-	public String shareCallback = "";
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -93,7 +92,7 @@ public class  ShowWeb extends WebActivity implements IObserver {
 		});
 		MallCommon common= new MallCommon(this);
 		common.setStatisticStat(url);
-		ObserverManager.getInstence().registerObserver(this,ObserverManager.NOTIFY_LOGIN,ObserverManager.NOTIFY_LOGIN);
+		ObserverManager.getInstance().registerObserver(this,ObserverManager.NOTIFY_LOGIN, ObserverManager.NOTIFY_LOGOUT, ObserverManager.NOTIFY_SHARE);
 //		webview.upWebViewNum();
 	}
 
@@ -384,18 +383,20 @@ public class  ShowWeb extends WebActivity implements IObserver {
         if (startTime > 0 && (nowTime - startTime) > 0 && !TextUtils.isEmpty(data_type) && !TextUtils.isEmpty(module_type)) {
             XHClick.saveStatictisFile("ShowWeb", module_type, data_type, code, "", "stop", String.valueOf((nowTime - startTime) / 1000), "", "", "", "");
         }
-		ObserverManager.getInstence().unRegisterObserver(this);
+		ObserverManager.getInstance().unRegisterObserver(this);
         super.onDestroy();
     }
 
 	@Override
 	public void notify(String name, Object sender, Object data) {
+		if (TextUtils.isEmpty(name))
+			return;
 		switch (name){
 			case ObserverManager.NOTIFY_SHARE:
-				if(!TextUtils.isEmpty(shareCallback) && data != null){
-					Map<String,String> dataMap = (Map<String, String>) data;
-					webview.loadUrl("javascript:"+shareCallback+"(\""+dataMap.get("status")+"\")");
-					Log.i("tzy","javascript:"+shareCallback+"(\""+dataMap.get("status")+"\")");
+				if (!TextUtils.isEmpty(shareCallback) && data != null) {
+					Map<String, String> dataMap = (Map<String, String>) data;
+					webview.loadUrl("javascript:" + shareCallback + "(" + TextUtils.equals("2", dataMap.get("status")) + "," + "\'" + dataMap.get("callbackParams") + "\'" + ")");
+					Log.i("tzy", "javascript:" + shareCallback + "(" + TextUtils.equals("2", dataMap.get("status")) + "," + "\'" + dataMap.get("callbackParams") + "\'" + ")");
 				}
 				break;
 			case ObserverManager.NOTIFY_LOGIN:

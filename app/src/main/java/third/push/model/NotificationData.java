@@ -1,5 +1,7 @@
 package third.push.model;
 
+import android.text.TextUtils;
+
 import com.xiangha.R;
 
 /**
@@ -12,6 +14,7 @@ public class NotificationData {
 	public int type = 0;
 	public String url = "";
 	public String value = "";
+	public String imgUrl = "";
 
 	public int notificationId = 0;
 	public int iconResId = R.drawable.ic_launcher;
@@ -108,5 +111,17 @@ public class NotificationData {
 
 	public void setUmengMessage(String umengMessage) {
 		this.umengMessage = umengMessage;
+	}
+
+	public void setImgUrl(String imgUrl) {
+		this.imgUrl = imgUrl;
+	}
+
+	public String getImgUrl() {
+		return imgUrl;
+	}
+
+	public boolean hasImage() {
+		return !TextUtils.isEmpty(imgUrl) && imgUrl.startsWith("http");
 	}
 }

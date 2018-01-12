@@ -9,14 +9,14 @@
 
     <ImageView
         android:id="@+id/icon"
-        android:layout_width="@dimen/dp_30"
-        android:layout_height="@dimen/dp_25"
+        android:layout_width="@dimen/dp_40"
+        android:layout_height="@dimen/dp_40"
         tools:src="@drawable/ic_launcher"/>
 
     <TextView
         android:id="@+id/text_1"
-        android:paddingTop="@dimen/dp_7"
         android:layout_width="wrap_content"
+        android:paddingTop="@dimen/dp_7"
         android:minWidth="@dimen/dp_55"
         android:maxLines="1"
         android:layout_height="wrap_content"

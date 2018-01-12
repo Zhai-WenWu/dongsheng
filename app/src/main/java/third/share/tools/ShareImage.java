@@ -121,10 +121,23 @@ public class ShareImage {
     };
 
     public void notifyShareResult(String platform,String success){
+        String jsCallbackParams = "";
+        if (QQ_NAME.equals(platform)) {
+            jsCallbackParams = "QQ";
+        } else if (QQ_ZONE.equals(platform)) {
+            jsCallbackParams = "QZone";
+        } else if (WEI_XIN.equals(platform)) {
+            jsCallbackParams = "Wechat";
+        } else if (WEI_QUAN.equals(platform)) {
+            jsCallbackParams = "WechatMoments";
+        } else if (SINA_NAME.equals(platform)) {
+            jsCallbackParams = "SinaWeibo";
+        }
         Map<String,String> data = new HashMap<>();
         data.put("platform",platform);
         data.put("status",success);
-        ObserverManager.getInstence().notify(ObserverManager.NOTIFY_SHARE,this,data);
+        data.put("callbackParams", jsCallbackParams);
+        ObserverManager.getInstance().notify(ObserverManager.NOTIFY_SHARE,this,data);
     }
 
     public Handler shareHandler = new Handler(new Handler.Callback() {

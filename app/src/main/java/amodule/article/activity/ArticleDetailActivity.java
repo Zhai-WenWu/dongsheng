@@ -23,7 +23,6 @@ import com.bumptech.glide.Glide;
 import com.xh.manager.DialogManager;
 import com.xh.manager.ViewManager;
 import com.xh.view.HButtonView;
-import com.xh.view.MessageView;
 import com.xh.view.TitleMessageView;
 import com.xiangha.R;
 
@@ -68,7 +67,6 @@ import aplug.web.view.XHWebView;
 import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
 import third.share.BarShare;
 import third.share.activity.ShareActivityDialog;
-import xh.windowview.XhDialog;
 
 import static amodule.article.adapter.ArticleDetailAdapter.TYPE_KEY;
 import static amodule.article.adapter.ArticleDetailAdapter.Type_comment;
@@ -158,7 +156,7 @@ public class ArticleDetailActivity extends BaseActivity {
         if (startTime > 0 && (nowTime - startTime) > 0 && !TextUtils.isEmpty(data_type) && !TextUtils.isEmpty(module_type)) {
             XHClick.saveStatictisFile("ArticleDetail", module_type, data_type, code, "", "stop", String.valueOf((nowTime - startTime) / 1000), "", "", "", "");
         }
-        ObserverManager.getInstence().unRegisterObserver(mIObserver);
+        ObserverManager.getInstance().unRegisterObserver(mIObserver);
         super.onDestroy();
     }
 
@@ -435,7 +433,7 @@ public class ArticleDetailActivity extends BaseActivity {
                 requestFavoriteState();
             }
         };
-        ObserverManager.getInstence().registerObserver(mIObserver,ObserverManager.NOTIFY_LOGIN);
+        ObserverManager.getInstance().registerObserver(mIObserver,ObserverManager.NOTIFY_LOGIN);
     }
 
     private void initAD() {

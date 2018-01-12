@@ -48,6 +48,7 @@ public class HomeViewControler {
 
     private HomeHeaderControler mHeaderControler;
     private HomeFeedHeaderControler mHomeFeedHeaderControler;
+    private HomeTitleLayout mTitleLayout;
 
     private MainHomePage mActivity;
 
@@ -81,9 +82,9 @@ public class HomeViewControler {
 
         mHomeFeedHeaderControler = new HomeFeedHeaderControler(mActivity);
 
-        HomeTitleLayout titleLayout = (HomeTitleLayout) mActivity.findViewById(R.id.home_title);
-        titleLayout.setStatictusData(MainHomePage.STATICTUS_ID_HOMEPAGE, "顶部topbar", "");
-        titleLayout.postDelayed(() -> {
+        mTitleLayout = (HomeTitleLayout) mActivity.findViewById(R.id.home_title);
+        mTitleLayout.setStatictusData(MainHomePage.STATICTUS_ID_PULISH, "顶部topbar", "");
+        mTitleLayout.postDelayed(() -> {
             mBuoy = new HomeBuoy(mActivity);
             mBuoy.setClickCallback(() -> XHClick.mapStat(mActivity, MainHomePage.STATICTUS_ID_HOMEPAGE, "首页右侧侧边栏浮动图标", ""));
         }, 4000);
@@ -102,7 +103,7 @@ public class HomeViewControler {
         });
 
         //设置活动icon点击
-        titleLayout.setOnClickActivityIconListener((v, url) -> {
+        mTitleLayout.setOnClickActivityIconListener((v, url) -> {
             if (TextUtils.isEmpty(url)) return;
             AppCommon.openUrl(mActivity, url, true);
         });
@@ -297,6 +298,12 @@ public class HomeViewControler {
     public void autoRefresh() {
         if (null != mRefreshLayout)
             mRefreshLayout.autoRefresh();
+    }
+
+    public void setMessage(int messageTipCount){
+        if(mTitleLayout != null){
+            mTitleLayout.setMessage(messageTipCount);
+        }
     }
 
     /*--------------------------------------------- Get&Set ---------------------------------------------*/

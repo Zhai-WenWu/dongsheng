@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="fill_parent"
-              android:layout_height="wrap_content"
-              android:background="#FFFFFF"
-              android:orientation="vertical">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="#FFFFFF"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/rl_caipu"
@@ -19,7 +21,7 @@
             android:layout_alignParentTop="true"
             android:layout_marginRight="@dimen/dp_10"
             android:scaleType="fitXY"
-            android:src="@drawable/i_nopic"/>
+            android:src="@drawable/i_nopic" />
 
         <acore.widget.TagTextView
             xmlns:tagTextView="http://schemas.android.com/apk/res-auto"
@@ -31,11 +33,11 @@
             android:layout_marginTop="@dimen/dp_3"
             android:gravity="center"
             android:text="独家"
-            android:visibility="gone"
             android:textColor="@color/dish_gray_bg_list"
             android:textSize="@dimen/sp_10"
+            android:visibility="gone"
             tagTextView:backgroundColor="@color/dish_yellow_bg_title"
-            tagTextView:radius="@dimen/dp_1"/>
+            tagTextView:radius="@dimen/dp_1" />
 
         <ImageView
             android:id="@+id/vip"
@@ -43,9 +45,21 @@
             android:layout_height="@dimen/dp_16"
             android:layout_marginLeft="@dimen/dp_3"
             android:layout_marginTop="@dimen/dp_3"
-            android:src="@drawable/vip"
             android:scaleType="fitXY"
-            android:visibility="gone"/>
+            android:src="@drawable/vip"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/search_vip"
+            android:layout_width="@dimen/dp_28"
+            android:layout_height="@dimen/dp_16"
+            android:layout_alignRight="@+id/iv_caipuCover"
+            android:layout_marginRight="@dimen/dp_3"
+            android:layout_marginTop="@dimen/dp_3"
+            android:scaleType="fitXY"
+            android:src="@drawable/vip"
+            tools:visibility="visible"
+            android:visibility="gone" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -72,8 +86,7 @@
                     android:maxWidth="@dimen/dp_150"
                     android:textColor="#333333"
                     android:textSize="@dimen/sp_17"
-                    android:textStyle="bold"
-                />
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/iv_itemIsFine"
@@ -90,7 +103,7 @@
                     android:text="精"
                     android:textColor="@color/comment_color"
                     android:textSize="@dimen/sp_11"
-                    android:visibility="visible"/>
+                    android:visibility="visible" />
 
             </RelativeLayout>
 
@@ -103,8 +116,7 @@
                 android:ellipsize="end"
                 android:lines="1"
                 android:textColor="#333333"
-                android:textSize="@dimen/sp_11"
-            />
+                android:textSize="@dimen/sp_11" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -121,9 +133,9 @@
                     android:ellipsize="end"
                     android:gravity="center_vertical"
                     android:lines="1"
-                    android:visibility="gone"
                     android:textColor="#b3b3b3"
-                    android:textSize="@dimen/sp_10"/>
+                    android:textSize="@dimen/sp_10"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/tv_caipu_origin"
@@ -133,7 +145,7 @@
                     android:gravity="center_vertical"
                     android:lines="1"
                     android:textColor="#b3b3b3"
-                    android:textSize="@dimen/sp_10"/>
+                    android:textSize="@dimen/sp_10" />
 
 
             </LinearLayout>
@@ -152,7 +164,7 @@
                     android:gravity="center_vertical"
                     android:lines="1"
                     android:textColor="#333333"
-                    android:textSize="@dimen/sp_11"/>
+                    android:textSize="@dimen/sp_11" />
 
                 <TextView
                     android:id="@+id/tv_caipu_collected"
@@ -163,7 +175,7 @@
                     android:gravity="center_vertical"
                     android:lines="1"
                     android:textColor="#333333"
-                    android:textSize="@dimen/sp_11"/>
+                    android:textSize="@dimen/sp_11" />
             </LinearLayout>
 
 
@@ -175,12 +187,12 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_10"
         android:layout_below="@+id/rl_caipu"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <View
         android:id="@+id/v_bottom_line"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_0.5"
         android:layout_alignParentBottom="true"
-        android:background="#EAE8E0"/>
+        android:background="#EAE8E0" />
 </LinearLayout>

@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 
 import com.xiangha.R;
@@ -17,8 +18,8 @@ import java.util.List;
 import java.util.Map;
 
 import acore.logic.LoginManager;
+import acore.logic.MessageTipController;
 import acore.logic.XHClick;
-import acore.override.XHApplication;
 import acore.override.activity.mian.MainBaseActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -26,6 +27,8 @@ import acore.tools.ToolsDevice;
 import acore.widget.PagerSlidingTabStrip;
 import amodule.home.view.HomePushIconView;
 import amodule.main.Main;
+import amodule.main.delegate.ISetMessageTip;
+import amodule.main.view.MessageTipIcon;
 import amodule.main.view.circle.CircleMainFragment;
 import amodule.quan.db.PlateData;
 import aplug.basic.InternetCallback;
@@ -36,13 +39,15 @@ import aplug.basic.ReqInternet;
  *
  * @author tanzeyu
  */
-public class MainCircle extends MainBaseActivity implements View.OnClickListener {
+public class MainCircle extends MainBaseActivity implements View.OnClickListener,ISetMessageTip {
     public static final String KEY = "MainCircle";
     public static final String STATISTICS_ID = "a_quan_homepage430";
     /** 顶部tab */
     private PagerSlidingTabStrip mTabs;
     /** ViewPager */
     private ViewPager mViewPager;
+
+    private MessageTipIcon mMessageTipIcon;
 
     private HomePushIconView mPushIconView;
 
@@ -74,7 +79,7 @@ public class MainCircle extends MainBaseActivity implements View.OnClickListener
         mTabs = (PagerSlidingTabStrip) findViewById(R.id.circle_tab);
         mViewPager = (ViewPager) findViewById(R.id.circle_viewpager);
         mViewPager.setOffscreenPageLimit(5);
-
+        mMessageTipIcon = (MessageTipIcon) findViewById(R.id.message_tip);
         mPushIconView = (HomePushIconView) findViewById(R.id.circle_pulish);
         //设置监听
 
@@ -264,6 +269,7 @@ public class MainCircle extends MainBaseActivity implements View.OnClickListener
             defaultHasUser = LoginManager.isLogin();
             loadModuleData();
         }
+        mMessageTipIcon.setMessage(MessageTipController.newInstance().getMessageNum());
     }
 
     /** 刷新 */
@@ -285,6 +291,14 @@ public class MainCircle extends MainBaseActivity implements View.OnClickListener
                 break;
             default:
                 break;
+        }
+    }
+
+    @Override
+    public void setMessageTip(int tipCournt) {
+        Log.i("tzy", "MainCircle::setMessageTip: " + tipCournt);
+        if(mMessageTipIcon != null){
+            mMessageTipIcon.setMessage(tipCournt);
         }
     }
 

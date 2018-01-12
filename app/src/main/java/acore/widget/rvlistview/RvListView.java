@@ -122,6 +122,12 @@ public class RvListView extends RecyclerView {
         super.swapAdapter(mAdapter, removeAndRecycleExistingViews);
     }
 
+    public void notifyItemViewInserted(int position){
+        if(null != mAdapter){
+            mAdapter.notifyItemViewInserted(position);
+        }
+    }
+
     public void notifyItemViewRemove(int position){
         if(null != mAdapter){
             mAdapter.notifyItemViewRemove(position);
@@ -520,8 +526,14 @@ public class RvListView extends RecyclerView {
             }
         }
 
+        public void notifyItemViewInserted(int position){
+            if(position >=0 && position <= getItemCount()){
+                notifyItemInserted(position);
+            }
+        }
+
         public void notifyItemViewRemove(int position) {
-            if(position <= getItemCount()){
+            if(position >=0 && position <= getItemCount()){
                 notifyItemRemoved(position);
             }
         }

@@ -4,14 +4,25 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.text.TextUtils;
+
+import com.xiangha.R;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import acore.logic.AppCommon;
 import acore.logic.XHClick;
+import acore.override.XHApplication;
 import acore.tools.FileManager;
 import acore.tools.LogManager;
+import acore.tools.Tools;
 import amodule.main.Main;
 import third.push.broadcast.ClickNotificationBroadcast;
 import third.push.broadcast.DismissNotificationBroadcast;
@@ -69,7 +80,11 @@ public class NotificationManager {
                 || data.type == XHClick.NOTIFY_SELF) {
             XHClick.statisticsPush(context, XHClick.STATE_CREATENOTIFY, Build.VERSION.SDK_INT);
         }
-        showNotify(context, data);
+        boolean headerUp = checkAppForeground();
+        if (data.hasImage())
+            showNotifyWithImg(context, data, headerUp);
+        else
+            showNotify(context, data, headerUp);
 
     }
 
@@ -80,47 +95,26 @@ public class NotificationManager {
      * @param data
      */
 
-    private void showNotify(Context context, NotificationData data) {
+    private void showNotify(Context context, NotificationData data, boolean headerUp) {
         if (data == null) {
             return;
         }
-        android.app.NotificationManager nManger = (android.app.NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        Notification.Builder builder = new Notification.Builder(context)
+        NotificationManagerCompat nManger = NotificationManagerCompat.from(context);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
                 .setAutoCancel(true)
                 .setTicker(data.ticktext)
-                .setContentTitle(data.ticktext)
-                .setContentText(data.ticktext)
+                .setContentTitle(data.title)
+                .setContentText(data.content)
                 .setContentIntent(getContentIntent(context, data))
                 .setSmallIcon(data.iconResId)
                 .setWhen(System.currentTimeMillis());
-        Notification notification = builder.getNotification();
-        //设置dimiss intent
-        if (PushPraserService.TYPE_UMENG.equals(data.channel)
-                && !TextUtils.isEmpty(data.umengMessage)) {
-            LogManager.print("d", "Push_start");
-            PendingIntent dismissPendingIntent = getDismissPendingIntent(context, data);
-            notification.deleteIntent = dismissPendingIntent;
+        if(headerUp) {
+            builder.setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .setFullScreenIntent(getContentIntent(context, data), true);
         }
-
-        String msgSing = (String) FileManager.loadShared(context, FileManager.msgInform, FileManager.informSing);
-        String msgShork = (String) FileManager.loadShared(context, FileManager.msgInform, FileManager.informShork);
-        //控制声音
-        if (msgSing != "" && msgSing.equals("1")) {
-            notification.defaults |= Notification.DEFAULT_SOUND;
-        }
-        //控制震动
-        if (msgShork != "" && msgShork.equals("1")) {
-            notification.defaults |= Notification.DEFAULT_VIBRATE;
-        }
-        notification.flags |= Notification.FLAG_AUTO_CANCEL;
-
+        Notification notification = getNotification(context, builder, data);
         nManger.notify("xiangha", data.notificationId, notification);
-        //统计
-        if (data.type == XHClick.NOTIFY_A
-                || data.type == XHClick.NOTIFY_SELF) {
-            XHClick.statisticsPush(context, XHClick.STATE_SHOW, Build.VERSION.SDK_INT);
-        }
-        XHClick.statisticsNotify(context, data, "show");
+        pushStatics(context, data);
     }
 
     /**
@@ -196,6 +190,77 @@ public class NotificationManager {
                 deleteIntent, PendingIntent.FLAG_CANCEL_CURRENT);
         LogManager.print("d", "Push_getDismissPendingIntent");
         return deletePendingIntent;
+    }
+
+    private boolean checkAppForeground() {
+        return Tools.isAppOnForeground();
+    }
+
+    private void showNotifyWithImg(Context context, NotificationData data, boolean headerUp) {
+        ImageRemoteViews remoteViews = new ImageRemoteViews(XHApplication.in().getPackageName(), R.layout.notification_imgtxt_view_layout);
+        remoteViews.setTextViewText(R.id.title, data.title);
+        remoteViews.setTextViewText(R.id.desc, data.content);
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm");
+        remoteViews.setTextViewText(R.id.time, format.format(new Date(System.currentTimeMillis())));
+        remoteViews.loadImage(data.imgUrl, context, new ImageRemoteViews.Callback() {
+            @Override
+            public void callback(Bitmap bitmap) {
+
+                remoteViews.setImageViewBitmap(R.id.img, bitmap);
+
+                NotificationManagerCompat manger = NotificationManagerCompat.from(context);
+                NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
+//                        .setCustomHeadsUpContentView(remoteViews)
+                        .setAutoCancel(true)
+                        .setColor(Color.TRANSPARENT)
+                        .setContent(remoteViews)
+                        .setTicker(data.ticktext)
+                        .setContentTitle(data.title)
+                        .setContentText(data.content)
+                        .setContentIntent(getContentIntent(context, data))
+                        .setSmallIcon(data.iconResId);
+                if(headerUp) {
+                    builder.setPriority(Notification.PRIORITY_HIGH)
+                            .setFullScreenIntent(getContentIntent(context, data), true);
+                }
+                Notification notification = getNotification(context, builder, data);
+                manger.notify("xiangha", data.notificationId, notification);
+                pushStatics(context, data);
+            }
+        });
+    }
+
+    private Notification getNotification(Context context, NotificationCompat.Builder builder, NotificationData data) {
+        Notification notification = builder.getNotification();
+        //设置dimiss intent
+        if (PushPraserService.TYPE_UMENG.equals(data.channel)
+                && !TextUtils.isEmpty(data.umengMessage)) {
+            LogManager.print("d", "Push_start");
+            PendingIntent dismissPendingIntent = getDismissPendingIntent(context, data);
+            notification.deleteIntent = dismissPendingIntent;
+        }
+
+        String msgSing = (String) FileManager.loadShared(context, FileManager.msgInform, FileManager.informSing);
+        String msgShork = (String) FileManager.loadShared(context, FileManager.msgInform, FileManager.informShork);
+        //控制声音
+        if (msgSing != "" && msgSing.equals("1")) {
+            notification.defaults |= Notification.DEFAULT_SOUND;
+        }
+        //控制震动
+        if (msgShork != "" && msgShork.equals("1")) {
+            notification.defaults |= Notification.DEFAULT_VIBRATE;
+        }
+        notification.flags |= Notification.FLAG_AUTO_CANCEL;
+        return notification;
+    }
+
+    private void pushStatics(Context context, NotificationData data) {
+        //统计
+        if (data.type == XHClick.NOTIFY_A
+                || data.type == XHClick.NOTIFY_SELF) {
+            XHClick.statisticsPush(context, XHClick.STATE_SHOW, Build.VERSION.SDK_INT);
+        }
+        XHClick.statisticsNotify(context, data, "show");
     }
 }
 

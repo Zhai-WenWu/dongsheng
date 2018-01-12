@@ -31,6 +31,7 @@ import java.util.Map;
 
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
+import acore.logic.MessageTipController;
 import acore.logic.VersionOp;
 import acore.logic.XHClick;
 import acore.override.activity.base.BaseLoginActivity;
@@ -40,7 +41,6 @@ import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.main.Main;
 import amodule.other.activity.Comment;
-import amodule.other.activity.InviteFriend;
 import amodule.user.activity.login.AccoutActivity;
 import amodule.user.activity.login.UserSetting;
 import amodule.user.view.LeftAndRightTextView;
@@ -77,7 +77,6 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
     private LeftAndRightTextView view_activity;
     private LeftAndRightTextView view_clear_cace;
     private LeftAndRightTextView view_check_update;
-    private LeftAndRightTextView view_invite;
     private LinearLayout ll_internal_used;
     private LinearLayout ll_sign_out;
     private TextView tv_version;
@@ -133,7 +132,6 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
         }
         view_clear_cace = (LeftAndRightTextView) findViewById(R.id.view_clear_cache);
         view_check_update = (LeftAndRightTextView) findViewById(R.id.view_check_update);
-        view_invite = (LeftAndRightTextView) findViewById(R.id.view_invite);
         view_advise = (LeftAndRightTextView) findViewById(R.id.view_advise);
         view_about = (LeftAndRightTextView) findViewById(R.id.view_about);
         view_change_sever = (LeftAndRightTextView) findViewById(R.id.view_change_sever);
@@ -342,16 +340,6 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
             }
 
         });
-
-        view_invite.init("邀请好友", "", true, true, new LeftAndRightTextView.LeftAndRightTextViewCallback() {
-            @Override
-            public void onClick() {
-
-                XHClick.mapStat(Setting.this, tongjiId, "邀请好友", "");
-                inviteFriend();
-            }
-
-        });
         view_advise.init("给香哈评价", "", true, true, new LeftAndRightTextView.LeftAndRightTextViewCallback() {
             @Override
             public void onClick() {
@@ -384,13 +372,13 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
             }
 
         });
-        view_qa_arbitration.setNewHintVisibility(AppCommon.hasArbitration ? View.VISIBLE : View.GONE);
-        view_qa_arbitration.init("问答仲裁", "", !AppCommon.hasArbitration, new LeftAndRightTextView.LeftAndRightTextViewCallback() {
+        view_qa_arbitration.setNewHintVisibility(MessageTipController.newInstance().hasArbitration ? View.VISIBLE : View.GONE);
+        view_qa_arbitration.init("问答仲裁", "", !MessageTipController.newInstance().hasArbitration, new LeftAndRightTextView.LeftAndRightTextViewCallback() {
             @Override
             public void onClick() {
                 view_qa_arbitration.setNewHintVisibility(View.GONE);
                 view_qa_arbitration.setArrowRightVisibility(View.VISIBLE);
-                AppCommon.hasArbitration = false;
+                MessageTipController.newInstance().hasArbitration = false;
                 openQAArbitration();
             }
         });
@@ -487,11 +475,6 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
 
             }
         }).start();
-    }
-
-    private void inviteFriend() {
-        Intent intentInviteFriend = new Intent(this, InviteFriend.class);
-        startActivity(intentInviteFriend);
     }
 
     private void giveAdvise() {

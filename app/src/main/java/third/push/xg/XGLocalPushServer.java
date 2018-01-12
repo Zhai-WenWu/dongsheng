@@ -46,17 +46,7 @@ public class XGLocalPushServer {
 
         int firstday = 3;
         FileManager.saveShared(mContext, FileManager.xmlFile_localPushTag, FileManager.xmlKey_localZhishi, String.valueOf(0));
-        String localPushData = FileManager.readFile(FileManager.getDataDir() + FileManager.file_nousLocalPushData);
-        //防止没有数据
-        if (TextUtils.isEmpty(localPushData) && localPushData.length() < 10) {
-            localPushData = FileManager.getFromAssets(mContext, FileManager.file_nousLocalPushData);
-        }
-        ArrayList<Map<String, String>> data = StringManager.getListMapByJson(localPushData);
-        if (data.size() > 0) {
-            initNousLocalPush(mContext, firstday + 3, data, FileManager.xmlKey_localCaidan);
-            initDishLocalPush(mContext, firstday, data.size());
-        }
-
+        initDishLocalPush(mContext, firstday, 1);
     }
 
     /**
@@ -79,27 +69,7 @@ public class XGLocalPushServer {
         }
     }
 
-    /**
-     * 初始化知识推送
-     *
-     * @param context
-     * @param startDay
-     * @param data
-     * @param xmlKey
-     */
-    private void initNousLocalPush(Context context, int startDay, ArrayList<Map<String, String>> data, String xmlKey) {
-        for (int i = 0; i < data.size(); i++) {
-            int index = (i + getTagNum(context, xmlKey)) % data.size();
-            String title = data.get(index).get("title");
-            String content = data.get(index).get("content");
-            String url = "nousInfo.app?code=" + data.get(index).get("code");
-            // 设置key,value
-            HashMap<String, String> map = new HashMap<>();
-            map.put("t", XHClick.NOTIFY_SELF + "");
-            map.put("d", url);
-            selfAwakening(context, startDay + i * 6, title, content, map);
-        }
-    }
+
 
     /**
      * 获取本地推送的num
@@ -181,44 +151,9 @@ public class XGLocalPushServer {
         int count = getTagNum(context, type);
         FileManager.saveShared(context, FileManager.xmlFile_localPushTag, type, (++count) + "");
         //如果记录的次数超过本地数据的话，重新初始化
-        String localPushData = FileManager.readFile(FileManager.getDataDir() + FileManager.file_nousLocalPushData);
-        ArrayList<Map<String, String>> data = StringManager.getListMapByJson(localPushData);
-        if (count >= data.size()) {
+        if (count >= 1) {
             initLocalPush();
         }
-    }
-
-    final static int MAX_PAGE = 2;
-    public int page = 1;
-    ArrayList<Map<String, String>> nousData = new ArrayList<>();
-
-    /**
-     * 获取知识的本地推送数据
-     */
-    public void getNousLocalPushData() {
-        if (FileManager.ifFileModifyByCompletePath(FileManager.getDataDir() + FileManager.file_nousLocalPushData, 24 * 60) != null) {
-            return;
-        }
-        if (page > MAX_PAGE) {
-            String json = Tools.list2Json(nousData);
-            FileManager.saveFileToCompletePath(FileManager.getDataDir() + FileManager.file_nousLocalPushData, json, false);
-            return;
-        }
-        String url = StringManager.api_nousList + "?type=new" + "&page=" + page++;
-        ReqInternet.in().doGet(url, new InternetCallback() {
-            @Override
-            public void loaded(int i, String s, Object o) {
-                if (i >= ReqInternet.REQ_OK_STRING) {
-                    ArrayList<Map<String, String>> returnData = StringManager.getListMapByJson(o);
-                    if (returnData.size() > 0) {
-                        Map<String, String> map = returnData.get(0);
-                        returnData = StringManager.getListMapByJson(map.get("nous"));
-                        nousData.addAll(returnData);
-                        getNousLocalPushData();
-                    }
-                }
-            }
-        });
     }
 
 }

@@ -30,6 +30,8 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import amodule.dish.adapter.AdapterDishNew;
 import amodule.dish.db.DataOperate;
+import amodule.dish.share.module.ShareConfDataController;
+import amodule.dish.share.module.listener.DataListener;
 import amodule.dish.view.DishModuleScrollView;
 import amodule.dish.view.manager.DetailDishDataManager;
 import amodule.dish.view.manager.DetailDishViewManager;
@@ -38,6 +40,7 @@ import amodule.user.db.BrowseHistorySqlite;
 import amodule.user.db.HistoryData;
 import aplug.web.tools.WebviewManager;
 import aplug.web.view.XHWebView;
+import xh.basic.internet.UtilInternet;
 
 import static amodule.dish.activity.DetailDishWeb.tongjiId;
 import static java.lang.System.currentTimeMillis;
@@ -69,6 +72,8 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
     private boolean isShowPowerPermission=false;
     private boolean isShowVip = true;
     private boolean isPay=false;
+
+    private ShareConfDataController mShareConfDataController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,7 +117,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         }, 15 * 60 * 1000);
         getWindow().setFormat(PixelFormat.TRANSLUCENT);//sufureView页面闪烁
         XHClick.track(XHApplication.in(), "浏览菜谱详情页");
-        ObserverManager.getInstence().registerObserver(this,ObserverManager.NOTIFY_LOGIN,ObserverManager.NOTIFY_FOLLOW,ObserverManager.NOTIFY_PAYFINISH,ObserverManager.NOTIFY_UPLOADOVER);
+        ObserverManager.getInstance().registerObserver(this,ObserverManager.NOTIFY_LOGIN,ObserverManager.NOTIFY_FOLLOW,ObserverManager.NOTIFY_PAYFINISH,ObserverManager.NOTIFY_UPLOADOVER);
     }
     /**
      * 处理页面Ui
@@ -167,6 +172,25 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
             public void onGifClickPosition(int position) {
             }
         });
+
+        mShareConfDataController = new ShareConfDataController();
+        mShareConfDataController.setOnDataListener(new DataListener() {
+            @Override
+            public void onLoadData() {
+
+            }
+
+            @Override
+            public void onDataReady(int flag, String type, Object object) {
+                if (flag >= UtilInternet.REQ_OK_STRING) {
+                    if (object == null || object.toString().length() == 0)
+                        return;
+                    if (detailDishViewManager != null)
+                        detailDishViewManager.handlerShareData(object.toString());
+                }
+            }
+        });
+        mShareConfDataController.loadData(code);
     }
     private void dishTypeData(String type,ArrayList<Map<String,String>> list,Map<String,String> map){
         switch (type){
@@ -177,7 +201,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
                 detailDishViewManager.handlerHeaderView(list,map);//header
                 customerCode= StringManager.getFirstMap(mapTop.get("customer")).get("customerCode");
                 if (!TextUtils.isEmpty(customerCode)&&LoginManager.userInfo != null && customerCode.equals(LoginManager.userInfo.get("code"))){
-                        state = "";
+                    state = "";
                 }
                 detailDishViewManager.handlerTitle(mapTop,code,isHasVideo,mapTop.get("dishState"),loadManager,state);//title导航
                 if(isShowVip){
@@ -271,7 +295,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
     protected void onDestroy() {
         super.onDestroy();
         //反注册。
-        ObserverManager.getInstence().unRegisterObserver(ObserverManager.NOTIFY_LOGIN,ObserverManager.NOTIFY_FOLLOW,ObserverManager.NOTIFY_PAYFINISH,ObserverManager.NOTIFY_UPLOADOVER);
+        ObserverManager.getInstance().unRegisterObserver(ObserverManager.NOTIFY_LOGIN,ObserverManager.NOTIFY_FOLLOW,ObserverManager.NOTIFY_PAYFINISH,ObserverManager.NOTIFY_UPLOADOVER);
         if(detailDishViewManager!=null)detailDishViewManager.onDestroy();
         long nowTime=System.currentTimeMillis();
         if(startTime>0&&(nowTime-startTime)>0&&!TextUtils.isEmpty(data_type)&&!TextUtils.isEmpty(module_type)){
@@ -421,7 +445,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         }
     }
     private void showCaipuHint(){
-       String hint= (String) FileManager.loadShared(this, FileManager.dish_caipu_hint,FileManager.dish_caipu_hint);
+        String hint= (String) FileManager.loadShared(this, FileManager.dish_caipu_hint,FileManager.dish_caipu_hint);
         if(TextUtils.isEmpty(hint)||!"2".equals(hint)){
             findViewById(R.id.dish_show_rela).setVisibility(View.VISIBLE);
             new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {

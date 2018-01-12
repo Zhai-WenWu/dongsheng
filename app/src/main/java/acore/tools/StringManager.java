@@ -263,6 +263,10 @@ public class StringManager extends UtilString {
     //断点上传获取校验token
     public final static String api_getQiniuToken = apiUrl + urlSection.get("other6") + "getQiniuToken";
 
+    //消息通知设置页面
+    public static final String API_GETINFOSWITCHLIST = apiUrl + urlSection.get("home5") + "getInfoSwitchList";
+    public static final String API_SETINFOSWITCH = apiUrl + urlSection.get("home5") + "setInfoSwitch";
+
 
     //登录模块
     public final static String api_customerNickNameCheck = apiUrl + urlSection.get("home5") + "customerNickNameCheck";
@@ -356,7 +360,7 @@ public class StringManager extends UtilString {
     public final static String API_TEMPLATE_AUTOLOADTEMPLATE = apiUrl + "main7/template/autoloadTemplate";//多模版控制
     public final static String API_TEMPLATE_GETTEMPLATENAME = apiUrl + "main7/template/getTemplateName";//获取单个模版
     //main8
-    public final static String API_COLLECTIONLIST = apiUrl + "main8/favorites/favoritesList";//收藏列表+搜索收藏
+    public final static String API_COLLECTIONLIST = apiUrl + "main8/recommend/favoritesList";//收藏列表+搜索收藏
     public final static String API_GET_FAVORITE_STATUS = apiUrl + "main8/favorites/getFavoritesStatus";//获取收藏状态
     public final static String API_SET_FAVORITE_STATUS = apiUrl + "main8/favorites/setFavorites";//设置收藏状态
 
@@ -364,6 +368,7 @@ public class StringManager extends UtilString {
     public final static String API_GETDISHBURDENBYCODE = apiUrl + "main7/dish/getDishBurdenByCode";//用料信息
     public final static String API_GETBELOWBURDENBANNER = apiUrl + "main7/dish/getBelowBurdenBanner";//用料下方banner
 
+    public final static String API_MAIN8_SHARE_CONF = apiUrl + "main8/Dish/getDishShareByCode";//获取菜谱分享配置
     public final static String API_MAIN8_TOPINFP = apiUrl  + "main8/dish/topInfo";//菜谱详情页顶部
     public final static String API_MAIN8_DISHMAKE = apiUrl  + "main8/dish/getDishMakeByCode";//菜谱详情页做法
     public final static String API_MAIN8_QAINFO = apiUrl + "main8/dish/getQaInfo";//菜谱详情页做法

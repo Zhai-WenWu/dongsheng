@@ -33,11 +33,14 @@ import java.util.Map;
 
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
+import acore.notification.controller.NotificationSettingController;
+import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.quan.activity.FriendQuan;
 import amodule.quan.activity.ShowSubject;
+import amodule.user.activity.Setting;
 import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
@@ -266,6 +269,7 @@ public class BarSubjectReply2 extends RelativeLayout implements OnClickListener{
 						progressBar.setVisibility(View.GONE);
 						btn_reply.setText("发送");
 					}
+					new NotificationSettingController().showNotification(Tools.getDimen(mAct,R.dimen.dp_45), FileManager.push_show_reciew, NotificationSettingController.pushSetReview);
 				}
 
 			});

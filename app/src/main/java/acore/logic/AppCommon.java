@@ -60,75 +60,89 @@ import xh.windowview.BottomDialog;
 import static xh.basic.tool.UtilFile.readFile;
 import static xh.basic.tool.UtilString.getListMapByJson;
 public class AppCommon {
-    public static int qiyvMessage = 0;//七鱼新消息条数
-    public static int quanMessage = 0; // 美食圈新消息条数
-    public static int feekbackMessage = 0; // 系统新消息条数
-    public static int myQAMessage = 0;//我的问答新消息条数
+
     public static int buyBurdenNum = 0; // 离线清单条数
     public static int follwersNum = -1; // 关注人数
 
     public static int nextDownDish = -1;
     public static int maxDownDish = 10000;
 
-    private static int fiallNum = 0;
-
-    public static boolean hasArbitration;
-
     /**
-     * 获取公用数据消息
+     * 获取应用初始信息
+     *
+     * @param act
+     * @param callback ：回调
      */
-    public static void getCommonData(final InternetCallback callback) {
-        ReqInternet.in().doGet(StringManager.api_commonData + "?m=commonData", new InternetCallback() {
-            @Override
-            public void loaded(int flag, String url, Object returnObj) {
-                if (flag >= ReqInternet.REQ_OK_STRING) {
-                    fiallNum = 0;
-                    String[] alertArr = ((String) returnObj).split("-");
-                    if (alertArr != null && alertArr.length > 2) {
-                        quanMessage = Integer.parseInt(alertArr[1]);
-                        feekbackMessage = Integer.parseInt(alertArr[2]);
-                        if (alertArr.length >= 5) {
-                            myQAMessage = Integer.parseInt(alertArr[3]) + Integer.parseInt(alertArr[4]);
-                            if (alertArr.length >= 6)
-                                hasArbitration = "2".equals(alertArr[5]);
+    // 获取应用初始信息
+    public static void getIndexData(final Context act, final InternetCallback callback) {
+        final String indexJson = readFile(FileManager.getDataDir() + FileManager.file_indexData);
+
+        // 是否在n分钟内修改过，且一定包含hotUser项，才可加载局部
+        final boolean isPart = FileManager.ifFileModifyByCompletePath(FileManager.getDataDir() + FileManager.file_indexData, 15) != null;
+        boolean isNetOk = ToolsDevice.getNetActiveState(act);
+        LogManager.print("d", "isPart is:" + isPart);
+        if (!isPart && isNetOk) {
+            // 通过文件时间判断加载哪部分数据
+            // String url = StringManager.api_indexData + "?type=newData";
+            String url = StringManager.api_indexDataNew;
+            // 请求网络信息
+            ReqInternet.in().doGet(url, new InternetCallback() {
+                @Override
+                public void loaded(int flag, String url, final Object returnObj) {
+                    if (flag >= ReqInternet.REQ_OK_STRING) {
+                        ArrayList<Map<String, String>> list = getListMapByJson(returnObj);
+                        final Map<String, String> map = list.get(0);
+                        if (url.contains("&type=part")) {
+                            callback.loaded(flag, "part", map);
+                        } else {
+                            callback.loaded(flag, "newData", map);
+                            FileManager.saveFileToCompletePath(FileManager.getDataDir() + FileManager.file_indexData, (String) returnObj, false);
                         }
-                        try {
-                            // 所有消息数
-                            QiYvHelper.getInstance().getUnreadCount(new QiYvHelper.NumberCallback() {
-                                @Override
-                                public void onNumberReady(int count) {
-                                    if (count >= 0) {
-                                        if (Main.allMain != null && Main.allMain.getCurrentTab() == Main.TAB_MESSAGE) {
-                                            quanMessage = 0;
-                                        }
-                                        qiyvMessage = count;
-                                        if (count > 0)
-                                            Main.setNewMsgNum(2, quanMessage + feekbackMessage + myQAMessage + qiyvMessage);
-                                    }
+                    } else {
+                        if (indexJson.length() > 10) {
+                            ArrayList<Map<String, String>> list = getListMapByJson(indexJson);
+                            if (list.size() == 1) {
+                                Map<String, String> map = getListMapByJson(indexJson).get(0);
+                                if (map.size() > 2) {
+                                    // 加载文件中数据
+                                    callback.loaded(ReqInternet.REQ_OK_STRING, "file", map);
                                 }
-                            });
-                            if (Main.allMain != null && Main.allMain.getCurrentTab() == Main.TAB_MESSAGE) {
-                                quanMessage = 0;
                             }
-                            Main.setNewMsgNum(2, quanMessage + feekbackMessage + myQAMessage + qiyvMessage);
-                            // tok值
-                            long tok = Integer.parseInt(alertArr[0]);
-                            int c = (new Random()).nextInt(9) + 1;
-                            LoadManager.tok = c + "" + (tok + 54321) * c;
-                        } catch (Exception e) {
-                            LogManager.reportError("获取新消息", e);
                         }
+                        callback.loaded(flag, "file", returnObj);
                     }
-                    if (callback != null) callback.loaded(flag, url, "加载成功");
-                } else if (fiallNum < 3) {
-                    fiallNum++;
-                    getCommonData(callback);
-                } else if (callback != null) {
-                    callback.loaded(flag, url, "加载失败");
                 }
+            });
+        } else {
+            if (indexJson.length() > 10) {
+                ArrayList<Map<String, String>> list = getListMapByJson(indexJson);
+                if (list.size() == 1) {
+                    Map<String, String> map = getListMapByJson(indexJson).get(0);
+                    if (map.size() > 2) {
+                        // 加载文件中数据
+                        callback.loaded(ReqInternet.REQ_OK_STRING, "file", map);
+                    } else {
+                        getInterExstoreData(act, callback);
+                    }
+                } else {
+                    getInterExstoreData(act, callback);
+                }
+            } else {
+                getInterExstoreData(act, callback);
             }
-        });
+        }
     }
+
+    private static void getInterExstoreData(Context act, InternetCallback callback) {
+        String fromAssets = UtilFile.getFromAssets(act, FileManager.file_indexData);
+        Map<String, String> mapByJson = getListMapByJson(fromAssets).get(0);
+        callback.loaded(ReqInternet.REQ_OK_STRING, "file", mapByJson);
+    }
+
+    public static void deleteIndexData() {
+        FileManager.delDirectoryOrFile(FileManager.getDataDir() + FileManager.file_indexData);
+    }
+
     public static final String XH_PROTOCOL = "xiangha://welcome?";
     public static void openUrl( String url, Boolean openThis) {
         if(XHActivityManager.getInstance().getCurrentActivity()!=null)
@@ -348,7 +362,7 @@ public class AppCommon {
 //                String urlTemp="amodule.dish.activity.DetailDish".equals(urls[0])?"amodule.dish.activity.DishTestActivity":urls[0];
                 final Class<?> c = Class.forName(urls[0]);
                 if (urls[0].contains("amodule.main.activity.")
-//                        || urls[0].contains("third.mall.MainMall")
+                        || urls[0].contains("amodule.user.activity.MyFavorite")
                         ) {
                     Main.colse_level = 2;
                     if (Main.allMain != null) {
@@ -499,7 +513,7 @@ public class AppCommon {
                                 if (succRun != null)
                                     succRun.run();
                                 //关注监听回调
-                                ObserverManager.getInstence().notify(ObserverManager.NOTIFY_FOLLOW,null,false);
+                                ObserverManager.getInstance().notify(ObserverManager.NOTIFY_FOLLOW,null,false);
                             }
                         }
                     });
@@ -973,5 +987,6 @@ public class AppCommon {
         POST_DETAIL,//"美食帖详情皇冠按钮"
         POST_LIST;//"美食帖列表皇冠按钮"
     }
+
 
 }

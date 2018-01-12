@@ -15,10 +15,9 @@ import android.webkit.CookieManager;
 
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;
+import com.popdialog.view.XHADView;
 import com.tencent.android.tpush.XGPushManager;
 import com.umeng.analytics.MobclickAgent;
-import com.umeng.onlineconfig.OnlineConfigAgent;
-import com.umeng.onlineconfig.OnlineConfigLog;
 import com.xh.manager.DialogManager;
 import com.xh.manager.ViewManager;
 import com.xh.view.HButtonView;
@@ -31,8 +30,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import acore.logic.AllPopDialogHelper;
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
+import acore.logic.MessageTipController;
 import acore.logic.VersionOp;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
@@ -67,7 +68,7 @@ import aplug.basic.XHInternetCallBack;
 import aplug.web.tools.XHTemplateManager;
 import third.ad.tools.AdConfigTools;
 import third.mall.aplug.MallCommon;
-import third.push.xg.XGLocalPushServer;
+import third.push.xg.XGTagManager;
 import third.qiyu.QiYvHelper;
 import xh.basic.tool.UtilFile;
 
@@ -172,7 +173,16 @@ public class MainInitDataControl {
 
     }
 
-
+    private void setXGTag() {
+        XGTagManager manager = new XGTagManager();
+        if (!LoginManager.isLogin())
+            manager.addXGTag(XGTagManager.APP_NEW);
+        String official = (String) UtilFile.loadShared(XHApplication.in(), FileManager.xg_config, FileManager.xg_config_official);
+        if (TextUtils.isEmpty(official)) {
+            UtilFile.saveShared(XHApplication.in(), FileManager.xg_config, FileManager.xg_config_official, "official");
+            manager.addXGTag(XGTagManager.OFFICIAL);
+        }
+    }
     /**
      * main在界面展示后初始化
      * @param act
@@ -195,9 +205,6 @@ public class MainInitDataControl {
                 //更新热词匹配数据库
                 new MatchWordsDbUtil().checkUpdateMatchWordsDb(act);
 
-                //请求本地推送data
-                new XGLocalPushServer(act).getNousLocalPushData();
-
                 //获取圈子静态数据
                 AppCommon.saveCircleStaticData(act);
 
@@ -213,6 +220,16 @@ public class MainInitDataControl {
 
         //获取随机推广数据
         AppCommon.saveRandPromotionData(act);
+
+        XHADView.getInstence(act).setCanShowCallback(new XHADView.CanShowCallback() {
+            @Override
+            public boolean canShow() {
+                return Main.allMain != null && Main.allMain.getCurrentTab() == 0;
+            }
+        });
+        new AllPopDialogHelper(act).start();
+
+        new Thread(() -> setXGTag()).start();
 
         onMainResumeStatics();
 
@@ -249,7 +266,7 @@ public class MainInitDataControl {
         long startTime= System.currentTimeMillis();
 
         // 自动登录
-        AppCommon.getCommonData(null);
+        MessageTipController.newInstance().getCommonData(null);
 
         compatibleData(context);
 

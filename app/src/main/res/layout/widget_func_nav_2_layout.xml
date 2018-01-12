@@ -20,9 +20,8 @@
 
         <ImageView
             android:id="@+id/icon_left_1"
-            android:layout_width="@dimen/dp_52"
-            android:layout_height="@dimen/dp_42"
-            android:layout_marginRight="@dimen/dp_15"
+            android:layout_width="@dimen/dp_86"
+            android:layout_height="@dimen/dp_70"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -74,9 +73,8 @@
 
         <ImageView
             android:id="@+id/icon_right_1"
-            android:layout_width="@dimen/dp_52"
-            android:layout_height="@dimen/dp_42"
-            android:layout_marginRight="@dimen/dp_15"
+            android:layout_width="@dimen/dp_86"
+            android:layout_height="@dimen/dp_70"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"

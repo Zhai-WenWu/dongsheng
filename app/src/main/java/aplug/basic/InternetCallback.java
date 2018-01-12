@@ -4,14 +4,11 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Build;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 
-import com.tencent.android.tpush.XGPushConfig;
-import com.umeng.message.PushAgent;
 import com.xiangha.R;
 
 import java.io.InputStream;
@@ -19,20 +16,16 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import acore.logic.AppCommon;
-import acore.logic.LoginManager;
+import acore.logic.MessageTipController;
 import acore.logic.XHApiMonitor;
 import acore.logic.XHClick;
-import acore.logic.load.LoadManager;
 import acore.override.XHApplication;
 import acore.override.helper.XHActivityManager;
-import acore.tools.FileManager;
 import acore.tools.LogManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.ToastCustom;
-import third.push.xg.XGPushServer;
-import xh.basic.internet.InterCallback;
 import xh.basic.tool.UtilString;
 
 /**
@@ -106,7 +99,7 @@ public abstract class InternetCallback extends XHInternetCallBack {
 					} else if (msg.equals("网络不稳定")) {
 						msg = "网络不稳定，请重试";
 						XHClick.mapStat(XHApplication.in(), "a_apiError", msg, theUrl);
-						AppCommon.getCommonData(null);
+						MessageTipController.newInstance().getCommonData(null);
 						loaded(ReqInternet.REQ_CODE_ERROR, url, msg);
 					} else {
 						loaded(ReqInternet.REQ_CODE_ERROR, url, msg);

@@ -1,318 +1,369 @@
 package amodule.user.activity;
 
 import android.os.Bundle;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
+import android.widget.TextView;
 
 import com.popdialog.util.PushManager;
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.MessageView;
+import com.xh.view.TitleView;
 import com.xiangha.R;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import acore.notification.controller.NotificationSettingController;
+import acore.override.XHApplication;
 import acore.override.activity.base.BaseActivity;
-import acore.tools.FileManager;
 import acore.tools.StringManager;
-import acore.widget.switchView;
+import acore.widget.SwitchView;
+import amodule.user.datacontroller.MsgSettingDataController;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
-import xh.basic.tool.UtilFile;
+import third.push.xg.XGTagManager;
 
 /**
  * 消息通知设置
  * @author luomin
  */
-public class MyMsgInformSetting extends BaseActivity{
-	private switchView msg_newMSG_sb;//接收全部消息通知
-	private switchView msg_nous_sb;//香哈头条推荐
-	private switchView msg_subject_sb;//美食贴通知
-	private switchView msg_jxMenu_sb;//精选菜单通知
-	private switchView msg_jxCaiPu_sb;//精选菜谱通知
-	private switchView msg_quan_zan_sb;//美食圈评论.点赞
-	private switchView msg_informSing_sb;//通知声音
-	private switchView msg_informShork_sb;//通知震动
-	private LinearLayout msgInform_ll;//通知开关所在总布局
-	private RelativeLayout login_hint;//登录提示
-	private View msg_unClick;//遮罩
-	
-	private String newMSG;
-	private String nous;
-	private String quan;
-	private String jxMenu;
-	private String jxDish;
-	private String zan;
+public class MyMsgInformSetting extends BaseActivity implements View.OnClickListener, SwitchView.OnSwitchChangeListener{
+	private View msgNew;//接收全部消息通知
+	private TextView msgNewDesc;
+	private SwitchView msg_comments;//有人给我评论 tag:tag_comments
+	private SwitchView msg_good;//有人给我点赞  tag:tag_good
+	private SwitchView msg_feedback;//香哈小秘书通知  tag:tag_feedback
+	private SwitchView msg_qa;//有问答消息  tag:tag_qa
+	private SwitchView msg_official;//你可能感兴趣的内容  tag:tag_official
 
-	private boolean isOnPause = false;
-	String informSing ,informShork;
+	private LinearLayout msgInform_ll;//消息开关列表的布局
+	private LinearLayout msgTipStart;//提示开启消息的布局
+	private Button start_btn;
+
+	private final String tag_comments = "tag_comments";
+	private final String tag_good = "tag_good";
+	private final String tag_feedback = "tag_feedback";
+	private final String tag_qa = "tag_qa";
+	private final String tag_official = "tag_official";
+
+	private Map<String, String> mData;
+
+	private boolean mNeedCheckStatus;
+	private boolean mNewMsgOpen;
+
+	private MsgSettingDataController mDataController;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		initActivity("通知设置", 2, 0, R.layout.c_view_bar_title, R.layout.a_my_msginform);
 		initView();
-		init();
+		initMsgNewStatus();
 		setListener();
+		initData();
+		getData();
+	}
+
+	private void initData() {
+		mDataController = new MsgSettingDataController();
+		mData = new HashMap<>();
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if(isOnPause){
-			isOnPause = false;
-			doMsgShow();
+		if (mNeedCheckStatus) {
+			mNeedCheckStatus = false;
+			checkStatusChanged();
+		}
+	}
+
+	private void checkStatusChanged() {
+		boolean isEnabled = PushManager.isNotificationEnabled(this);
+		if (mNewMsgOpen == isEnabled) {
+			return;
+		}
+		mNewMsgOpen = isEnabled;
+		setMsgViewStatus(isEnabled);
+
+		setViewStatus(msg_comments, isEnabled);
+		setViewStatus(msg_good, isEnabled);
+		setViewStatus(msg_feedback, isEnabled);
+		setViewStatus(msg_qa, isEnabled);
+		setViewStatus(msg_official, isEnabled);
+
+		setDataMap("comments", isEnabled);
+		setDataMap("good", isEnabled);
+		setDataMap("feedback", isEnabled);
+		setDataMap("qa", isEnabled);
+		setDataMap("official", isEnabled);
+
+		if (isEnabled) {
+			showStartTip(false);
+			showInfoList(true);
+		} else {
+			showInfoList(false);
+			showStartTip(true);
 		}
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		isOnPause = true;
 	}
 
 	@Override
 	public void finish() {
 		super.finish();
-		
-		JSONArray array1 = new JSONArray();
-		JSONObject stoneObject = new JSONObject();
-		String url = StringManager.apiUrl+"home5/setInfoSwitch";  
-		String msgString;
-		try {
-			stoneObject.put("mSwitch", newMSG);
-			stoneObject.put("subject", quan);
-			stoneObject.put("zhishi", nous);
-			stoneObject.put("quan", zan);
-			stoneObject.put("menu", jxMenu);
-			stoneObject.put("caipu", jxDish);
-			array1.put(stoneObject);
-			msgString = "list="+ array1.get(0).toString();
-			ReqInternet.in().doPost(url, msgString, new InternetCallback() {
-				
-				@Override
-				public void loaded(int flag, String url, Object returnObj) {
-				}
-			});
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
 	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		saveMsgSettingData();
+		pushDataToService();
+	}
+
 	/**
 	 * 开关状态改变监听
 	 */
 	private void setListener() {
-		//http://api.huher.com/home5/setInfoSwitch?isc=caipu&ope=2
-		msg_newMSG_sb.setOnChangeListener(new switchView.OnSwitchChangeListener() {
-			
-			@Override
-			public void onChange(final boolean state) {
-				PushManager.requestPermission(MyMsgInformSetting.this);
-			}
-			
-		});
-		msg_subject_sb.setOnChangeListener(new switchView.OnSwitchChangeListener() {
-			
-			@Override
-			public void onChange( final boolean state) {
-				doMSGSetting(state,FileManager.quan);
-				if (state) {
-					quan = "1";
-				}else {
-					quan = "2";
-				}
-			}
-
-		});
-		msg_nous_sb.setOnChangeListener(new switchView.OnSwitchChangeListener() {
-			
-			@Override
-			public void onChange( boolean state) {
-				doMSGSetting(state,FileManager.zhishi);
-				if (state) {
-					nous = "1";
-				}else {
-					nous = "2";
-				}
-			}
-		});
-		msg_quan_zan_sb.setOnChangeListener(new switchView.OnSwitchChangeListener() {
-			
-			@Override
-			public void onChange(boolean state) {
-				doMSGSetting(state,FileManager.zan);
-				if (state) {
-					zan = "1";
-				}else {
-					zan = "2";
-				}
-			}
-		});
-		msg_jxMenu_sb.setOnChangeListener(new switchView.OnSwitchChangeListener() {
-			
-			@Override
-			public void onChange( boolean state) {
-				doMSGSetting(state,FileManager.menu);
-				if (state) {
-					jxMenu = "1";
-				}else {
-					jxMenu = "2";
-				}
-			}
-		});
-		msg_jxCaiPu_sb.setOnChangeListener(new switchView.OnSwitchChangeListener() {
-			
-			@Override
-			public void onChange( boolean state) {
-				doMSGSetting(state,FileManager.caipu);
-				if (state) {
-					jxDish = "1";
-				}else {
-					jxDish = "2";
-				}
-			}
-		});
-		msg_informSing_sb.setOnChangeListener(new switchView.OnSwitchChangeListener() {
-			
-			@Override
-			public void onChange( boolean state) {
-				informSing = state ? "1" : "2";
-				UtilFile.saveShared(getApplicationContext(), FileManager.msgInform, FileManager.informSing, informSing);
-			}
-		});
-		msg_informShork_sb.setOnChangeListener(new switchView.OnSwitchChangeListener() {
-			
-			@Override
-			public void onChange( boolean state) {
-				informShork = state ? "1" : "2";
-				UtilFile.saveShared(getApplicationContext(), FileManager.msgInform, FileManager.informShork, informShork);
-			}
-		});
+		msgNew.setOnClickListener(this);
+		msg_comments.setOnChangeListener(this);
+		msg_good.setOnChangeListener(this);
+		msg_feedback.setOnChangeListener(this);
+		msg_qa.setOnChangeListener(this);
+		msg_official.setOnChangeListener(this);
+		start_btn.setOnClickListener(this);
 	}
 
 	private void initView() {
-		ScrollView scrollView = (ScrollView) findViewById(R.id.msg_inform_scrollview);
-		scrollView.setVisibility(View.VISIBLE);
-		loadManager.hideProgressBar();
-		msg_newMSG_sb = (switchView) findViewById(R.id.msg_newMSG_sb);
-		msg_subject_sb = (switchView) findViewById(R.id.msg_subject_sb);
-		msg_nous_sb = (switchView) findViewById(R.id.msg_nous_sb);
-		msg_jxCaiPu_sb = (switchView) findViewById(R.id.msg_jxCaiPu_sb);
-		msg_jxMenu_sb = (switchView) findViewById(R.id.msg_jxMenu_sb);
-		msg_quan_zan_sb = (switchView) findViewById(R.id.msg_quan_zan_sb);
-		msg_informSing_sb = (switchView) findViewById(R.id.msg_informsing_sb);
-		msg_informShork_sb = (switchView) findViewById(R.id.msg_informshork_sb);
+		msgNew = findViewById(R.id.msg_new);
+		TextView title1 = (TextView) msgNew.findViewById(R.id.title);
+		title1.setText("接收新消息通知");
+		msgNewDesc = (TextView) msgNew.findViewById(R.id.desc);
+		View msgComments = findViewById(R.id.msg_comments);
+		TextView title2 = (TextView) msgComments.findViewById(R.id.title);
+		title2.setText("有人给我评论");
+		msg_comments = (SwitchView) msgComments.findViewById(R.id.switch_btn);
+		msg_comments.setTag(tag_comments);
+		msg_comments.setState(true);
+		View msgGood = findViewById(R.id.msg_good);
+		TextView title3 = (TextView) msgGood.findViewById(R.id.title);
+		title3.setText("有人给我点赞");
+		msg_good = (SwitchView) msgGood.findViewById(R.id.switch_btn);
+		msg_good.setTag(tag_good);
+		msg_good.setState(true);
+		View msgFeedback = findViewById(R.id.msg_feedback);
+		TextView title4 = (TextView) msgFeedback.findViewById(R.id.title);
+		title4.setText("香哈小秘书通知");
+		msg_feedback = (SwitchView) msgFeedback.findViewById(R.id.switch_btn);
+		msg_feedback.setTag(tag_feedback);
+		msg_feedback.setState(true);
+		View msgQa = findViewById(R.id.msg_qa);
+		TextView title5 = (TextView) msgQa.findViewById(R.id.title);
+		title5.setText("有问答消息");
+		msg_qa = (SwitchView) msgQa.findViewById(R.id.switch_btn);
+		msg_qa.setTag(tag_qa);
+		msg_qa.setState(true);
+		View msgInteresting = findViewById(R.id.msg_official);
+		TextView title6 = (TextView) msgInteresting.findViewById(R.id.title);
+		title6.setText("官方提醒消息");
+		msg_official = (SwitchView) msgInteresting.findViewById(R.id.switch_btn);
+		msg_official.setTag(tag_official);
+		msg_official.setState(true);
+		msgInteresting.findViewById(R.id.line).setVisibility(View.GONE);
 		msgInform_ll = (LinearLayout) findViewById(R.id.msgInform_ll);
-		login_hint = (RelativeLayout) findViewById(R.id.login_hint);
-		msg_unClick = findViewById(R.id.msg_unClick);
+		msgTipStart = (LinearLayout) findViewById(R.id.tip_start_layout);
+		start_btn = (Button) findViewById(R.id.start_btn);
 	}
 
-	/**
-	 * 第一次打开消息通知,设置默认开关
-	 */
-	private void init() {
-		Map<String, String> msgMap = new HashMap<>();
-		if (UtilFile.loadShared(getApplicationContext(), FileManager.msgInform, FileManager.quan) == "") {
-			msgMap.put(FileManager.newMSG, "1");
-			msgMap.put(FileManager.quan, "1");
-			msgMap.put(FileManager.zhishi, "1");
-			msgMap.put(FileManager.zan, "1");
-			msgMap.put(FileManager.menu, "1");
-			msgMap.put(FileManager.caipu, "1");
-			msgMap.put(FileManager.informSing, "2");
-			msgMap.put(FileManager.informShork, "2");
-			UtilFile.saveShared(getApplicationContext(), FileManager.msgInform, msgMap);
-		}
-		doMsgShow();
+	private void initMsgNewStatus() {
+		mNewMsgOpen = PushManager.isNotificationEnabled(XHApplication.in());
+		msgNewDesc.setText(mNewMsgOpen ? "已开启" : "已关闭");
 	}
-	
-	/**
-	 * 展示页面
-	 */
-	private void doMsgShow() {
-		newMSG = (String) UtilFile.loadShared(getApplicationContext(), FileManager.msgInform, FileManager.newMSG);
-		boolean isNotifi = PushManager.isNotificationEnabled(this);
-		//Log.i("FRJ","isNotifi:" + isNotifi + ";   newMSG:" + newMSG);
-		//判断总开关是否已关闭
-		if (newMSG.equals("2")) { //2为关闭
-			msgInform_ll.setVisibility(View.GONE);
-			if(isNotifi){
-				doMSGSetting(isNotifi,FileManager.newMSG);
-				newMSG = "1";
-				onChange(isNotifi);
-				msgInform_ll.setVisibility(View.VISIBLE);
+
+	private void saveMsgSettingData() {
+		mDataController.saveAllData(mData);
+	}
+
+	private void getData() {
+		if (!mNewMsgOpen) {
+			setLocalData();
+			onDataReady();
+			return;
+		}
+		if (loadManager != null)
+			loadManager.showProgressBar();
+		ReqInternet.in().doPost(StringManager.API_GETINFOSWITCHLIST, "", new InternetCallback() {
+			@Override
+			public void loaded(int i, String s, Object o) {
+				if (i >= ReqInternet.REQ_OK_STRING) {
+					Map<String, String> data = StringManager.getFirstMap(o);
+					String comments = data.get("comments");
+					setDataMap("comments", TextUtils.isEmpty(comments) || TextUtils.equals(comments, "1"));
+					String good = data.get("good");
+					setDataMap("good", TextUtils.isEmpty(good) || TextUtils.equals(good, "1"));
+					String feedback = data.get("feedback");
+					setDataMap("feedback", TextUtils.isEmpty(feedback) || TextUtils.equals(feedback, "1"));
+					String qa = data.get("qa");
+					setDataMap("qa", TextUtils.isEmpty(qa) || TextUtils.equals(qa, "1"));
+					String official = data.get("official");
+					setDataMap("official", TextUtils.isEmpty(official) || TextUtils.equals(official, "1"));
+				} else {
+					setLocalData();
+				}
+				onDataReady();
 			}
+		});
+	}
+
+	private void onDataReady() {
+		if (loadManager != null)
+			loadManager.hideProgressBar();
+		if (mData == null || mData.isEmpty()) {
+			showStartTip(true);
 		} else {
-			msgInform_ll.setVisibility(View.VISIBLE);
-			if(!isNotifi){
-				doMSGSetting(isNotifi,FileManager.newMSG);
-				newMSG = "2";
-				onChange(isNotifi);
-				msgInform_ll.setVisibility(View.GONE);
-			}
+			setViewStatus(msg_comments, TextUtils.equals("1", mData.get("comments")));
+			setViewStatus(msg_good, TextUtils.equals("1", mData.get("good")));
+			setViewStatus(msg_feedback, TextUtils.equals("1", mData.get("feedback")));
+			setViewStatus(msg_qa, TextUtils.equals("1", mData.get("qa")));
+			setViewStatus(msg_official, TextUtils.equals("1", mData.get("official")));
+			if (mNewMsgOpen)
+				showInfoList(true);
+			else
+				showStartTip(true);
 		}
-		quan = (String) UtilFile.loadShared(getApplicationContext(), FileManager.msgInform, FileManager.quan);
-		nous = (String) UtilFile.loadShared(getApplicationContext(), FileManager.msgInform, FileManager.zhishi);
-		zan = (String) UtilFile.loadShared(getApplicationContext(), FileManager.msgInform, FileManager.zan);
-		jxMenu = (String) UtilFile.loadShared(getApplicationContext(), FileManager.msgInform, FileManager.menu);
-		jxDish = (String) UtilFile.loadShared(getApplicationContext(), FileManager.msgInform, FileManager.caipu);
-		informSing = (String) UtilFile.loadShared(getApplicationContext(), FileManager.msgInform, FileManager.informSing);
-		informShork = (String) UtilFile.loadShared(getApplicationContext(), FileManager.msgInform, FileManager.informShork);
 
-		msg_newMSG_sb.mSwitchOn = newMSG.equals("1");
-		msg_subject_sb.mSwitchOn = quan.equals("1");
-		msg_nous_sb.mSwitchOn = nous.equals("1");
-		msg_quan_zan_sb.mSwitchOn = zan.equals("1");
-		msg_jxMenu_sb.mSwitchOn = jxMenu.equals("1");
-		msg_jxCaiPu_sb.mSwitchOn = jxDish.equals("1");
-		msg_informSing_sb.mSwitchOn = informSing.equals("1");
-		msg_informShork_sb.mSwitchOn = informShork.equals("1");
-
-		msg_newMSG_sb.setViewState();
-		msg_subject_sb.setViewState();
-		msg_nous_sb.setViewState();
-		msg_quan_zan_sb.setViewState();
-		msg_jxMenu_sb.setViewState();
-		msg_jxCaiPu_sb.setViewState();
-		msg_informSing_sb.setViewState();
-		msg_informShork_sb.setViewState();
 	}
 
-	private void onChange(boolean isOpen){
-		String state = isOpen ? "1" : "2";
-		Map<String, String> msgMap = new HashMap<>();
-		msgMap.put(FileManager.newMSG, state);
-		msgMap.put(FileManager.quan, state);
-		msgMap.put(FileManager.zhishi, state);
-		msgMap.put(FileManager.zan, state);
-		msgMap.put(FileManager.menu, state);
-		msgMap.put(FileManager.caipu, state);
-		msgMap.put(FileManager.informSing, informSing);
-		msgMap.put(FileManager.informShork, informShork);
-		UtilFile.saveShared(getApplicationContext(), FileManager.msgInform, msgMap);
+	private void pushDataToService() {
+		ReqInternet.in().doPost(StringManager.API_SETINFOSWITCH, "list=" + combineData(), new InternetCallback() {
+			@Override
+			public void loaded(int i, String s, Object o) {
+
+			}
+		});
 	}
-	
-	/**
-	 * @param state 开关状态  true  false
-	 * @param type  开关的类型,需要改变状态的开关
-	 */
-	private void doMSGSetting(final boolean state, final String type) {
-//		String stateString  = state? "1" : "2";
-		UtilFile.saveShared(getApplicationContext(), FileManager.msgInform, type, state ? "1" : "2");
-//		String url = StringManager.apiUrl + "home5/setInfoSwitch?isc="+type+"&ope="+ stateString;
-//		ReqInternet.doGet(url, new InternetCallback() {
-//			
-//			@Override
-//			public void loaded(int flag, String url, Object returnObj) {
-//				if (flag >= ReqInternet.REQ_OK_STRING) {
-//					
-//				}
-//			}
-//		});
+
+	private String combineData() {
+		String ret = "";
+		if (mData == null || mData.isEmpty())
+			return ret;
+		JSONObject object = new JSONObject();
+		try {
+			object.put("comments", mData.get("comments"));
+			object.put("good", mData.get("good"));
+			object.put("feedback", mData.get("feedback"));
+			object.put("qa", mData.get("qa"));
+			object.put("official", mData.get("official"));
+			ret = object.toString();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return ret;
+	}
+
+	private void showInfoList(boolean show) {
+		msgInform_ll.setVisibility(show ? View.VISIBLE : View.GONE);
+	}
+
+	private void showStartTip(boolean show) {
+		msgTipStart.setVisibility(show ? View.VISIBLE : View.GONE);
+	}
+
+	private void setMsgViewStatus(boolean open) {
+		msgNewDesc.setText(open ? "已开启" : "已关闭");
+	}
+
+	private void setViewStatus(SwitchView view, boolean open) {
+		view.setState(open);
+	}
+
+	private void setDataMap(String key, boolean open) {
+		if (mData == null)
+			return;
+		mData.put(key, open ? "1" : "2");
+	}
+
+	private void setLocalData() {
+		setDataMap("comments", mDataController.checkOpenByKey("comments"));
+		setDataMap("good", mDataController.checkOpenByKey("good"));
+		setDataMap("feedback", mDataController.checkOpenByKey("feedback"));
+		setDataMap("qa", mDataController.checkOpenByKey("qa"));
+		setDataMap("official", mDataController.checkOpenByKey("official"));
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+			case R.id.msg_new:
+				mNeedCheckStatus = true;
+				if (!mNewMsgOpen)
+					startOpenNotify();
+				else
+					showDialog();
+				break;
+			case R.id.start_btn:
+				mNeedCheckStatus = true;
+				startOpenNotify();
+				break;
+		}
+	}
+
+	private void startOpenNotify() {
+		NotificationSettingController.openNotificationSettings();
+	}
+
+	@Override
+	public void onChange(View v, boolean state) {
+		String tag = (String) v.getTag();
+		String key = null;
+		switch (tag) {
+			case tag_comments:
+				key = "comments";
+				break;
+			case tag_good:
+				key = "good";
+				break;
+			case tag_feedback:
+				key = "feedback";
+				break;
+			case tag_qa:
+				key = "qa";
+				break;
+			case tag_official:
+				key = "official";
+				if (state)
+					new XGTagManager().addXGTag(XGTagManager.OFFICIAL);
+				else
+					new XGTagManager().removeXGTag(XGTagManager.OFFICIAL);
+				break;
+		}
+		if (key != null)
+			setDataMap(key, state);
+	}
+
+	private void showDialog() {
+		DialogManager manager = new DialogManager(this);
+		ViewManager viewManager = new ViewManager(manager);
+		manager.createDialog(viewManager.setView(new TitleView(this).setText("确认关闭推送？"))
+		.setView(new MessageView(this).setText("关闭后，您将无法收到香哈为您精选的内容通知以及哈友的互动消息等。"))
+		.setView(new HButtonView(this)
+				.setNegativeText("取消", v -> {
+					manager.cancel();
+				})
+				.setPositiveText("确定", v -> {
+					manager.cancel();
+					startOpenNotify();
+				}))).show();
 	}
 }

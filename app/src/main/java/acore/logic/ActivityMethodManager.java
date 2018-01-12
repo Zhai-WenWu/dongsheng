@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.popdialog.view.XHADView;
 import com.tencent.stat.StatService;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.PushAgent;
@@ -34,10 +33,6 @@ public class ActivityMethodManager {
     private HomeKeyListener mHomeWatcher;
 
     public ActivityMethodManager(Activity mAct) {
-        XHADView adScrollView = XHADView.getInstence(mAct);
-        if (adScrollView != null) {
-            adScrollView.refreshContext(mAct);
-        }
         this.mAct = mAct;
         //用于标记umeng推送记录数据
         PushAgent.getInstance(mAct).onAppStart();
@@ -48,10 +43,6 @@ public class ActivityMethodManager {
     public void onResume(int level) {
         //Log.i("FRJ", "level:" + level);
         //Log.i("FRJ", "colse_level:" + colse_level);
-        XHADView adScrollView = XHADView.getInstence(mAct);
-        if (adScrollView != null) {
-            adScrollView.refreshContext(mAct);
-        }
         MobclickAgent.onResume(mAct);
         StatService.onResume(mAct);//mta腾讯统计
         XHClick.getStartTime(mAct);

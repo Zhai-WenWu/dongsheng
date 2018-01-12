@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.text.TextUtils;
 
 import com.xiangha.R;
 
@@ -26,13 +27,15 @@ public class BarShare {
 	public String appID;
 	private Context mContext;
 	private String mTitle,mType,mClickUrl,mContent,mImgUrl,mFrom,mParent;
+
+	private String mShareParamsStr;
 	
 	public BarShare(Context context,String from,String parent){
 		mContext = context;
 		mFrom = from;
 		mParent = parent;
 		if(context instanceof IObserver){
-			ObserverManager.getInstence().registerObserver((IObserver) context,ObserverManager.NOTIFY_SHARE);
+			ObserverManager.getInstance().registerObserver((IObserver) context,ObserverManager.NOTIFY_SHARE);
 		}
 	}
 	
@@ -68,6 +71,10 @@ public class BarShare {
 			mImgUrl = "" + R.drawable.share_launcher;
 		}
 	}
+
+	public void setShareProgram(String jsonStr) {
+		mShareParamsStr = jsonStr;
+	}
 	
 	public void openShare(){
 		Intent intent = new Intent(mContext,ShareNewActivity.class);
@@ -78,6 +85,9 @@ public class BarShare {
 		intent.putExtra("imgUrl", mImgUrl);
 		intent.putExtra("from", mFrom);
 		intent.putExtra("parent", mParent);
+		if (!TextUtils.isEmpty(mShareParamsStr)) {
+			intent.putExtra("shareParams", mShareParamsStr);
+		}
 		mContext.startActivity(intent);
 	}
 

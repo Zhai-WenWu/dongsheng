@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+   >
+
+        <RelativeLayout
+            android:id="@+id/show_rl"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_39"
+            android:background="#f7fffac1">
+        <TextView
+            android:id="@+id/show_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:textSize="@dimen/dp_14"
+            android:layout_centerInParent="true"
+            android:textColor="@color/comment_color"
+            android:text="开启通知及时获取美食推荐,86%的哈友已开启"/>
+        <ImageView
+            android:id="@+id/view_close"
+            android:layout_width="@dimen/dp_20"
+            android:layout_height="@dimen/dp_20"
+            android:src="@drawable/view_notification_colse"
+            android:paddingTop="@dimen/dp_10"
+            android:paddingRight="@dimen/dp_10"
+            android:layout_alignParentRight="true"
+            />
+        </RelativeLayout>
+
+</RelativeLayout>

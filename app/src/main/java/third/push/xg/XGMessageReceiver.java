@@ -14,20 +14,15 @@ import com.tencent.android.tpush.XGPushTextMessage;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 
 import acore.tools.LogManager;
 import third.push.PushPraserService;
-import third.push.db.NotificationService;
-import third.push.model.XGNotification;
 
 /**
  * 继承信鸽的类，用于接收推送消息
  */
 @SuppressLint({ "NewApi", "SimpleDateFormat" })
 public class XGMessageReceiver extends XGPushBaseReceiver {
-	private Intent intent = new Intent("com.xiangha.activity.UPDATE_LISTVIEW");
 	public static final String LogTag = "TPushReceiver";
 	private boolean isShow = false ;//发布是改成false
 
@@ -62,17 +57,6 @@ public class XGMessageReceiver extends XGPushBaseReceiver {
 		if (context == null || notifiShowedRlt == null) {
 			return;
 		}
-		XGNotification notific = new XGNotification();
-		notific.setMsg_id(notifiShowedRlt.getMsgId());
-		notific.setTitle(notifiShowedRlt.getTitle());
-		notific.setContent(notifiShowedRlt.getContent());
-		// notificationActionType==1为Activity，2为url，3为intent
-		notific.setNotificationActionType(notifiShowedRlt.getNotificationActionType());
-		// Activity,url,intent都可以通过getActivity()获得
-		notific.setActivity(notifiShowedRlt.getActivity());
-		notific.setUpdate_time(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime()));
-		NotificationService.getInstance(context).save(notific);
-		context.sendBroadcast(intent);
 	}
 
 	@Override
@@ -109,8 +93,6 @@ public class XGMessageReceiver extends XGPushBaseReceiver {
 		// APP自主处理的过程。。。
 		
 		// 通知点击完成，删除数据库记录
-		Integer id = (int) message.getMsgId();
-		NotificationService.getInstance(context).delete(id);
 		show(context, text);
 	}
 
