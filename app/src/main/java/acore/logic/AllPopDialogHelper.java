@@ -18,13 +18,13 @@ import com.popdialog.AllPopDialogControler;
 import com.popdialog.FullSrceenDialogControl;
 import com.popdialog.GoodCommentDialogControl;
 import com.popdialog.GuideDialogControl;
-import com.popdialog.PushDialogControl;
 import com.popdialog.base.BaseDialogControl;
 import com.popdialog.db.FullSrceenModule;
 import com.xiangha.R;
 
 import java.util.Map;
 
+import acore.notification.controller.NotificationSettingController;
 import acore.override.XHApplication;
 import acore.override.helper.XHActivityManager;
 import acore.tools.FileManager;
@@ -267,17 +267,23 @@ public class AllPopDialogHelper {
         });
 
         //推送
-        allPopDialogControler.setOnPushDialogStatisticsCallback(new PushDialogControl.OnPushDialogStatisticsCallback() {
+//        allPopDialogControler.setOnPushDialogStatisticsCallback(new PushDialogControl.OnPushDialogStatisticsCallback() {
+//            @Override
+//            public void onSureStatistics() {
+//                log("Push :: onSureStatistics");
+//                XHClick.mapStat(XHApplication.in(), "a_push", "是", "");
+//            }
+//
+//            @Override
+//            public void onCannelStatistics() {
+//                log("Push :: onCannelStatistics");
+//                XHClick.mapStat(XHApplication.in(), "a_push", "否", "");
+//            }
+//        });
+        allPopDialogControler.setOnPushDialogStatisticsCallback(new AllPopDialogControler.PushViewShowCallBack() {
             @Override
-            public void onSureStatistics() {
-                log("Push :: onSureStatistics");
-                XHClick.mapStat(XHApplication.in(), "a_push", "是", "");
-            }
-
-            @Override
-            public void onCannelStatistics() {
-                log("Push :: onCannelStatistics");
-                XHClick.mapStat(XHApplication.in(), "a_push", "否", "");
+            public void viewShowState(boolean b) {
+                if(b)new NotificationSettingController().showNotification(0, VersionOp.getVerName(XHApplication.in()),"");
             }
         });
     }
