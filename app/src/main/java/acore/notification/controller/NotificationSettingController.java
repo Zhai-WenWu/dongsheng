@@ -19,6 +19,7 @@ import com.xiangha.BuildConfig;
 import com.xiangha.R;
 
 import acore.logic.VersionOp;
+import acore.logic.XHClick;
 import acore.notification.BuildProperties;
 import acore.override.XHApplication;
 import acore.override.helper.XHActivityManager;
@@ -42,19 +43,19 @@ public class NotificationSettingController {
     public void showNotification(int marginBottom,String key,String message){
         if(XHActivityManager.getInstance().getCurrentActivity()==null|| PushManager.isNotificationEnabled(XHActivityManager.getInstance().getCurrentActivity()))return;
         if(TextUtils.isEmpty((CharSequence) FileManager.loadShared(XHApplication.in(),FileManager.app_notification, key))){
-            showNotificationPermissionSetView(marginBottom, message);
+            showNotificationPermissionSetView(marginBottom, message,key);
             FileManager.saveShared(XHApplication.in(),FileManager.app_notification,key,"2");
         }
     }
 
-    private void showNotificationPermissionSetView(int marginBottom,String message){
+    private void showNotificationPermissionSetView(int marginBottom,String message,String key){
         if(XHActivityManager.getInstance().getCurrentActivity()!=null){
             Activity activity = XHActivityManager.getInstance().getCurrentActivity();
             if(activity.findViewById(R.id.activityLayout)==null)return;
-            showPermissionSetView(activity, (RelativeLayout) activity.findViewById(R.id.activityLayout),marginBottom,message);
+            showPermissionSetView(activity, (RelativeLayout) activity.findViewById(R.id.activityLayout),marginBottom,message,key);
         }
     }
-    private void showPermissionSetView(Context context, RelativeLayout rl,int marginBottom,String message){
+    private void showPermissionSetView(Context context, RelativeLayout rl,int marginBottom,String message,String key){
         if(context==null||rl==null)return;
         View view=LayoutInflater.from(context).inflate(R.layout.view_notification_set,null);
         RelativeLayout.LayoutParams lp=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);//两个参数分别是layout_width,layout_height
@@ -65,13 +66,18 @@ public class NotificationSettingController {
         if(!TextUtils.isEmpty(message))((TextView)view.findViewById(R.id.show_text)).setText(message);
         view.findViewById(R.id.view_close).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {if(view!=null&&rl!=null)rl.removeView(view);}});
+            public void onClick(View v) {
+                if(view!=null&&rl!=null)rl.removeView(view);
+                if(!TextUtils.isEmpty(key))XHClick.mapStat(context,"a_push_guidelayer",getStatisticKey(key),"点击关闭");
+            }});
         view.findViewById(R.id.show_rl).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openNotificationSettings();
                 if(view!=null&&rl!=null)rl.removeView(view);
+                if(!TextUtils.isEmpty(key))XHClick.mapStat(context,"a_push_guidelayer",getStatisticKey(key),"点击浮条");
             }});
+
         rl.addView(view);
         FileManager.saveShared(context,FileManager.app_notification, VersionOp.getVerName(context),"2");
     }
@@ -189,5 +195,21 @@ public class NotificationSettingController {
 
     private static Uri getPackageUri() {
         return Uri.parse("package:" + XHApplication.in().getPackageName());
+    }
+    public String getStatisticKey(String name){
+        if(name.equals(VersionOp.getVerName(XHApplication.in()))){
+            return "首页浮条点击";
+        }
+        switch (name){
+            case FileManager.push_show_message:
+                return "进行消息页面后浮条点击";
+            case FileManager.push_show_subject:
+                return "成功发帖子后浮条点击";
+            case FileManager.push_show_reciew:
+                return "发送评论成功后浮条点击";
+            case FileManager.push_show_feedBack:
+                return "发送小秘书后浮条点击";
+        }
+        return "";
     }
 }
