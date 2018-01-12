@@ -102,16 +102,13 @@ public class NotificationManager {
         NotificationManagerCompat nManger = NotificationManagerCompat.from(context);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
                 .setAutoCancel(true)
+                .setPriority(Notification.PRIORITY_HIGH)
                 .setTicker(data.ticktext)
                 .setContentTitle(data.title)
                 .setContentText(data.content)
                 .setContentIntent(getContentIntent(context, data))
                 .setSmallIcon(data.iconResId)
                 .setWhen(System.currentTimeMillis());
-        if(headerUp) {
-            builder.setPriority(NotificationCompat.PRIORITY_HIGH)
-                    .setFullScreenIntent(getContentIntent(context, data), true);
-        }
         Notification notification = getNotification(context, builder, data);
         nManger.notify("xiangha", data.notificationId, notification);
         pushStatics(context, data);
@@ -211,6 +208,7 @@ public class NotificationManager {
                 NotificationManagerCompat manger = NotificationManagerCompat.from(context);
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
 //                        .setCustomHeadsUpContentView(remoteViews)
+                        .setPriority(Notification.PRIORITY_HIGH)
                         .setAutoCancel(true)
                         .setColor(Color.TRANSPARENT)
                         .setContent(remoteViews)
@@ -219,10 +217,6 @@ public class NotificationManager {
                         .setContentText(data.content)
                         .setContentIntent(getContentIntent(context, data))
                         .setSmallIcon(data.iconResId);
-                if(headerUp) {
-                    builder.setPriority(Notification.PRIORITY_HIGH)
-                            .setFullScreenIntent(getContentIntent(context, data), true);
-                }
                 Notification notification = getNotification(context, builder, data);
                 manger.notify("xiangha", data.notificationId, notification);
                 pushStatics(context, data);

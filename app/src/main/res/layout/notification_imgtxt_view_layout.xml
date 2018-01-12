@@ -27,7 +27,8 @@
             android:id="@+id/title"
             style="@style/notification_content_title_style"
             android:layout_marginRight="@dimen/dp_3"
-            android:layout_toLeftOf="@+id/time"/>
+            android:layout_toLeftOf="@+id/time"
+            android:layout_alignParentLeft="true"/>
 
         <TextView
             android:id="@+id/time"
