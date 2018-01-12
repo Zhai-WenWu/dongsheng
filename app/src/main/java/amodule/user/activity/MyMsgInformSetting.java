@@ -21,6 +21,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import acore.logic.XHClick;
 import acore.notification.controller.NotificationSettingController;
 import acore.override.XHApplication;
 import acore.override.activity.base.BaseActivity;
@@ -58,6 +59,9 @@ public class MyMsgInformSetting extends BaseActivity implements View.OnClickList
 
 	private boolean mNeedCheckStatus;
 	private boolean mNewMsgOpen;
+	private boolean mResumeFromPermission;
+	private boolean mGotoClosePermission;
+	private boolean mResumeFromClickBtn;
 
 	private MsgSettingDataController mDataController;
 
@@ -83,6 +87,15 @@ public class MyMsgInformSetting extends BaseActivity implements View.OnClickList
 		if (mNeedCheckStatus) {
 			mNeedCheckStatus = false;
 			checkStatusChanged();
+		}
+
+		if (mResumeFromPermission && mGotoClosePermission) {
+			mResumeFromPermission = false;
+			mGotoClosePermission = false;
+			XHClick.mapStat(this, "a_set_push", "去关闭跳转到设置", mNewMsgOpen ? "未关闭" : "关闭成功");
+		}
+		if (mResumeFromClickBtn) {
+			XHClick.mapStat(this, "a_set_push", "关闭状态下，点击“设置”去开启", mNewMsgOpen ? "开启成功" : "开启失败");
 		}
 	}
 
@@ -309,39 +322,50 @@ public class MyMsgInformSetting extends BaseActivity implements View.OnClickList
 				mNeedCheckStatus = true;
 				if (!mNewMsgOpen)
 					startOpenNotify();
-				else
+				else {
 					showDialog();
+					mGotoClosePermission = true;
+					XHClick.mapStat(this, "a_set_push", "开启状态下点击去关闭推送", "");
+				}
 				break;
 			case R.id.start_btn:
 				mNeedCheckStatus = true;
+				mResumeFromClickBtn = true;
 				startOpenNotify();
 				break;
 		}
 	}
 
 	private void startOpenNotify() {
+		mResumeFromPermission = true;
 		NotificationSettingController.openNotificationSettings();
 	}
 
 	@Override
 	public void onChange(View v, boolean state) {
+		String staticStr = "";
 		String tag = (String) v.getTag();
 		String key = null;
 		switch (tag) {
 			case tag_comments:
 				key = "comments";
+				staticStr = "点击关闭有人给我评论";
 				break;
 			case tag_good:
 				key = "good";
+				staticStr = "点击关闭有人给我点赞";
 				break;
 			case tag_feedback:
 				key = "feedback";
+				staticStr = "点击关闭香哈小秘书通知";
 				break;
 			case tag_qa:
 				key = "qa";
+				staticStr = "点击关闭有问答消息";
 				break;
 			case tag_official:
 				key = "official";
+				staticStr = "点击关闭官方提醒消息";
 				if (state)
 					new XGTagManager().addXGTag(XGTagManager.OFFICIAL);
 				else
@@ -350,6 +374,8 @@ public class MyMsgInformSetting extends BaseActivity implements View.OnClickList
 		}
 		if (key != null)
 			setDataMap(key, state);
+		if (!state)
+			XHClick.mapStat(this, "a_set_push", staticStr, "");
 	}
 
 	private void showDialog() {
@@ -360,10 +386,12 @@ public class MyMsgInformSetting extends BaseActivity implements View.OnClickList
 		.setView(new HButtonView(this)
 				.setNegativeText("取消", v -> {
 					manager.cancel();
+					XHClick.mapStat(this, "a_set_push", "确认关闭推送弹框", "取消");
 				})
 				.setPositiveText("确定", v -> {
 					manager.cancel();
 					startOpenNotify();
+					XHClick.mapStat(this, "a_set_push", "确认关闭推送弹框", "去关闭");
 				}))).show();
 	}
 }
