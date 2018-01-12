@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.popdialog.util.PushManager;
 import com.xiangha.BuildConfig;
 import com.xiangha.R;
 
@@ -22,7 +23,6 @@ import acore.notification.BuildProperties;
 import acore.override.XHApplication;
 import acore.override.helper.XHActivityManager;
 import acore.tools.FileManager;
-import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 
 /**
@@ -40,7 +40,7 @@ public class NotificationSettingController {
      * @param marginBottom
      */
     public void showNotification(int marginBottom,String key,String message){
-        if(XHActivityManager.getInstance().getCurrentActivity()==null)return;
+        if(XHActivityManager.getInstance().getCurrentActivity()==null|| PushManager.isNotificationEnabled(XHActivityManager.getInstance().getCurrentActivity()))return;
         if(TextUtils.isEmpty((CharSequence) FileManager.loadShared(XHApplication.in(),FileManager.app_notification, key))){
             showNotificationPermissionSetView(marginBottom, message);
             FileManager.saveShared(XHApplication.in(),FileManager.app_notification,key,"2");
@@ -70,6 +70,7 @@ public class NotificationSettingController {
             @Override
             public void onClick(View v) {
                 openNotificationSettings();
+                if(view!=null&&rl!=null)rl.removeView(view);
             }});
         rl.addView(view);
         FileManager.saveShared(context,FileManager.app_notification, VersionOp.getVerName(context),"2");
