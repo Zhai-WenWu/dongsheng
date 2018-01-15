@@ -154,6 +154,8 @@ public class FileManager extends UtilFile{
 	public static final String push_show_reciew = "push_show_reciew";
 	public static final String push_show_feedBack = "push_show_feedBack";
 	public static final String push_show_subject = "push_show_subject";
+	public static final String push_setting_state = "push_setting_state";
+	public static final String push_setting_message = "push_setting_message";
 	public static final String xg_config = "xg_config";
 	public static final String xg_config_official = "xg_config_official";
 	/**

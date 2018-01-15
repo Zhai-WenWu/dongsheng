@@ -74,7 +74,9 @@ public class NotificationSettingController {
             @Override
             public void onClick(View v) {
                 openNotificationSettings();
+                FileManager.saveShared(XHApplication.in(),FileManager.app_notification,FileManager.push_setting_state,"2");
                 if(view!=null&&rl!=null)rl.removeView(view);
+                FileManager.saveShared(XHApplication.in(),FileManager.app_notification,FileManager.push_setting_message,getStatisticKey(key));
                 if(!TextUtils.isEmpty(key))XHClick.mapStat(context,"a_push_guidelayer",getStatisticKey(key),"点击浮条");
             }});
 

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.popdialog.util.PushManager;
 import com.tencent.stat.StatService;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.PushAgent;
@@ -12,6 +13,8 @@ import com.xiangha.Welcome;
 
 import java.util.Map;
 
+import acore.override.XHApplication;
+import acore.override.helper.XHActivityManager;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -112,7 +115,15 @@ public class ActivityMethodManager {
         else if (colse_level != 6 || level < 4) {
             colse_level = 1000;
         }
-
+        //通知开启后统计
+        if(!TextUtils.isEmpty((CharSequence) FileManager.loadShared(XHApplication.in(),FileManager.app_notification,FileManager.push_setting_state))
+                &&"2".equals(FileManager.loadShared(XHApplication.in(),FileManager.app_notification,FileManager.push_setting_state))){
+            FileManager.saveShared(XHApplication.in(),FileManager.app_notification,FileManager.push_setting_state,"");
+            if(PushManager.isNotificationEnabled(XHActivityManager.getInstance().getCurrentActivity())) {
+                XHClick.mapStat(XHApplication.in(), "a_push_guidelayer",
+                        (String) FileManager.loadShared(XHApplication.in(),FileManager.app_notification,FileManager.push_setting_message), "开启成功");
+            }
+        }
     }
 
     public void onPause() {
