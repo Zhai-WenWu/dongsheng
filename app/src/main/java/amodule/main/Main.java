@@ -23,6 +23,7 @@ import android.widget.TextView;
 import com.annimon.stream.Stream;
 import com.popdialog.db.FullSrceenDB;
 import com.popdialog.util.GoodCommentManager;
+import com.popdialog.util.PushManager;
 import com.tencent.stat.StatConfig;
 import com.tencent.stat.StatService;
 import com.xh.manager.DialogManager;
@@ -37,7 +38,6 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import acore.logic.AllPopDialogHelper;
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.MessageTipController;
@@ -829,6 +829,13 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
         if (!LoginManager.isLogin())
             QiYvHelper.getInstance().destroyQiYvHelper();
         ClingPresenter.getInstance().onDestroy(this);
+
+        String notifyStatistics = (String) UtilFile.loadShared(this, FileManager.notification_permission, "statistics");
+        if (!TextUtils.equals(notifyStatistics, "2")) {
+            UtilFile.saveShared(this, FileManager.notification_permission, "statistics", "2");
+            boolean open = PushManager.isNotificationEnabled(XHApplication.in());
+            XHClick.mapStat(XHApplication.in(), "a_open_push", open ? "开启了系统通知权限" : "未开启系统通知权限", "");
+        }
     }
 
     @Override

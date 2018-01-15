@@ -77,7 +77,7 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp_50"
+                    android:layout_height="@dimen/dp_46"
                     android:layout_marginLeft="@dimen/dp_20"
                     android:layout_marginRight="@dimen/dp_20">
 
@@ -120,7 +120,7 @@
                 <RelativeLayout
                     android:id="@+id/qa_setting"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp_50"
+                    android:layout_height="@dimen/dp_46"
                     android:layout_marginLeft="@dimen/dp_20"
                     android:visibility="gone">
 
@@ -227,7 +227,7 @@
             <LinearLayout
                 android:id="@+id/ll_sign_out"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_50"
+                android:layout_height="@dimen/dp_46"
                 android:layout_marginTop="@dimen/dp_20"
                 android:background="@color/backgroup_color"
                 android:gravity="center"

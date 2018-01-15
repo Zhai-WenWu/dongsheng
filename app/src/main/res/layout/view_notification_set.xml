@@ -11,10 +11,13 @@
             android:background="#f7fffac1">
         <TextView
             android:id="@+id/show_text"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/dp_37"
+            android:layout_marginRight="@dimen/dp_37"
             android:textSize="@dimen/dp_14"
+            android:gravity="center"
             android:layout_centerInParent="true"
             android:textColor="@color/comment_color"
             android:text="开启通知及时获取美食推荐,86%的哈友已开启"/>

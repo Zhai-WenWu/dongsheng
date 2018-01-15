@@ -158,6 +158,7 @@ public class FileManager extends UtilFile{
 	public static final String push_setting_message = "push_setting_message";
 	public static final String xg_config = "xg_config";
 	public static final String xg_config_official = "xg_config_official";
+	public static final String notification_permission = "notification_permission";
 	/**
 	 * 获取字符串数组
 	 */

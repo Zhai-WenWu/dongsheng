@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-import com.popdialog.view.XHADView;
 import com.xiangha.R;
 
 import java.util.Map;
