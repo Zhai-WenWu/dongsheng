@@ -109,8 +109,15 @@ public class NotificationSettingController {
                 case ToolsDevice.VIVO:
                     openVIVONotificationSettings();
                     break;
+                default:
+                    openSettings();
+                    break;
             }
         }
+    }
+
+    public static void openSettings() {
+        XHActivityManager.getInstance().getCurrentActivity().startActivity(new Intent(Settings.ACTION_SETTINGS));
     }
 
     private static void openEMUINotificationSettings() {
@@ -190,7 +197,7 @@ public class NotificationSettingController {
         } else {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
-            intent.setData(Uri.fromParts("package", context.getPackageName(), (String)null));
+            intent.setData(Uri.fromParts("package", context.getPackageName(), null));
         }
         context.startActivity(intent);
     }
