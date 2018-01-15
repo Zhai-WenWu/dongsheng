@@ -36,14 +36,13 @@ import acore.tools.ChannelUtil;
 import acore.tools.FileManager;
 import acore.tools.LogManager;
 import acore.tools.StringManager;
+import acore.tools.Tools;
 import acore.tools.ToolsDevice;
-import amodule.main.Main;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
 import aplug.basic.XHConf;
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
 import third.push.model.NotificationData;
+import third.push.model.NotificationEvent;
 import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilLog;
 import xh.basic.tool.UtilString;
@@ -576,6 +575,7 @@ public class XHClick {
     public static void statisticsNotify(Context context, NotificationData data, String eventAct) {
         if (data == null) {
             onEvent(context, "notify_default", "0_" + eventAct);
+            return;
         }
         switch (data.type) {
             // 显示通知，不存在消息列表中
@@ -602,6 +602,13 @@ public class XHClick {
             default:
                 onEvent(context, "notify_default", data.type + "_" + eventAct);
                 break;
+        }
+        if (Tools.isAppOnForeground()) {
+            if (TextUtils.equals(eventAct, NotificationEvent.EVENT_SHOW)) {
+                XHClick.mapStat(context, "a_push_inapp", "APP内推送-展示量", data.value);
+            } else if (TextUtils.equals(eventAct, NotificationEvent.EVENT_CLICK)) {
+                XHClick.mapStat(context, "a_push_inapp", "APP内推送-点击量", data.value);
+            }
         }
     }
 

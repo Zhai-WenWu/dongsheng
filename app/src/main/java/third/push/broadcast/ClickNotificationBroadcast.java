@@ -2,6 +2,7 @@ package third.push.broadcast;
 
 import acore.logic.XHClick;
 import third.push.model.NotificationData;
+import third.push.model.NotificationEvent;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -28,7 +29,7 @@ public class ClickNotificationBroadcast extends BroadcastReceiver {
         data.value = realIntent.getStringExtra("value");
         data.url = realIntent.getStringExtra("url");
         data.channel = intent.getStringExtra("channel");
-        XHClick.statisticsNotify(context, data, "click");
+        XHClick.statisticsNotify(context, data, NotificationEvent.EVENT_CLICK);
         //umeng统计
         String message = intent.getStringExtra("umengMessage");
         if (!TextUtils.isEmpty(message)) {

@@ -23,6 +23,7 @@ import amodule.main.Main;
 import amodule.user.datacontroller.MsgSettingDataController;
 import aplug.feedback.activity.Feedback;
 import third.push.model.NotificationData;
+import third.push.model.NotificationEvent;
 import third.push.xg.XGLocalPushServer;
 
 /**
@@ -137,7 +138,7 @@ public class PushPraserService extends Service{
 				if (data.type == XHClick.NOTIFY_SELF || data.type == XHClick.NOTIFY_A) {
 					XHClick.statisticsPush(context, XHClick.STATE_RECEIVE, android.os.Build.VERSION.SDK_INT);
 				}
-				XHClick.statisticsNotify(context, data, "come");
+				XHClick.statisticsNotify(context, data, NotificationEvent.EVENT_COME);
 				//接收消息总开关,已开启
 				String newMSG = (String) FileManager.loadShared(context, FileManager.msgInform, FileManager.newMSG);
 				//当t == XHClick.NOTIFY_SELF 时是自我唤醒,必须走.

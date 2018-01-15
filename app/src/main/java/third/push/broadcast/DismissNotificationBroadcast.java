@@ -13,6 +13,7 @@ import org.json.JSONObject;
 
 import acore.logic.XHClick;
 import third.push.model.NotificationData;
+import third.push.model.NotificationEvent;
 
 /**
  * Created by mitic_xue on 16/10/26.
@@ -27,7 +28,7 @@ public class DismissNotificationBroadcast extends BroadcastReceiver {
         data.value = intent.getStringExtra("value");
         data.url = intent.getStringExtra("url");
         data.channel = intent.getStringExtra("channel");
-        XHClick.statisticsNotify(context, data, "dismiss");
+        XHClick.statisticsNotify(context, data, NotificationEvent.EVENT_DISMISS);
         //umeng统计
         String message = intent.getStringExtra("umengMessage");
         if(!TextUtils.isEmpty(message)){

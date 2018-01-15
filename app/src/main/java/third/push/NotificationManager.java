@@ -27,6 +27,7 @@ import amodule.main.Main;
 import third.push.broadcast.ClickNotificationBroadcast;
 import third.push.broadcast.DismissNotificationBroadcast;
 import third.push.model.NotificationData;
+import third.push.model.NotificationEvent;
 
 public class NotificationManager {
 
@@ -254,7 +255,7 @@ public class NotificationManager {
                 || data.type == XHClick.NOTIFY_SELF) {
             XHClick.statisticsPush(context, XHClick.STATE_SHOW, Build.VERSION.SDK_INT);
         }
-        XHClick.statisticsNotify(context, data, "show");
+        XHClick.statisticsNotify(context, data, NotificationEvent.EVENT_SHOW);
     }
 }
 
