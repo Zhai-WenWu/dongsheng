@@ -20,6 +20,7 @@ public class LayoutScroll extends LinearLayout implements OnGestureListener {
     int scrollHeight = 0, flag = 0;
     public GestureDetector det = null;
     public boolean allow = true;
+    private boolean isShow = true;
 
     public LayoutScroll(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -113,11 +114,19 @@ public class LayoutScroll extends LinearLayout implements OnGestureListener {
     }
 
     public void hide() {
-        animatScroll(0, 0, 0, scrollHeight, 1000);
+        if (scroller.isFinished() && allow) {
+            isShow = false;
+            scroller.startScroll(0, 0, 0, scrollHeight, 1000);
+            invalidate();
+        }
     }
 
     public void show() {
-        animatScroll(0, scrollHeight, 0, -scrollHeight, 1000);
+        if (scroller.isFinished() && allow) {
+            isShow = true;
+            scroller.startScroll(0, scrollHeight, 0, -scrollHeight, 1000);
+            invalidate();
+        }
     }
 
     @Override
@@ -149,4 +158,7 @@ public class LayoutScroll extends LinearLayout implements OnGestureListener {
         return false;
     }
 
+    public boolean isShow() {
+        return isShow;
+    }
 }

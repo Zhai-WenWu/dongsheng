@@ -100,10 +100,8 @@ public class MyFavorite extends MainBaseActivity implements View.OnClickListener
         //屏幕高-（topbar高 + 底部导航高）+ 搜索框高
         refreshLayout.post(()->refreshLayout.getLayoutParams().height = ToolsDevice.getWindowPx(this).heightPixels - Tools.getDimen(this,R.dimen.dp_53));
 
-
         noDataLayout = (LinearLayout) findViewById(R.id.noData_layout);
         noLoginLayout = (RelativeLayout) findViewById(R.id.no_login_rela);
-        noLoginLayout.setVisibility(LoginManager.isLogin() ? View.GONE : View.VISIBLE);
         noLoginLayout.setOnClickListener(this);
         mLayoutScroll.init(Tools.getDimen(this,R.dimen.dp_45));
         mLayoutScroll.setTouchView(rvListview);
@@ -112,6 +110,12 @@ public class MyFavorite extends MainBaseActivity implements View.OnClickListener
         mPushIconView.setOnClickListener(this);
 
         findViewById(R.id.noLogin_layout).setOnClickListener(this);
+        findViewById(R.id.noLogin_layout).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
+            }
+        });
         findViewById(R.id.seek_layout).setOnClickListener(this);
         findViewById(R.id.title).setOnClickListener(this);
         findViewById(R.id.back).setVisibility(View.GONE);
@@ -211,6 +215,7 @@ public class MyFavorite extends MainBaseActivity implements View.OnClickListener
     protected void onResume() {
         super.onResume();
         mMessageTipIcon.setMessage(MessageTipController.newInstance().getMessageNum());
+        refreshLoginstatus();
         if(!LoginManager.isLogin() && loadManager != null)
             loadManager.hideProgressBar();
     }
@@ -355,7 +360,9 @@ public class MyFavorite extends MainBaseActivity implements View.OnClickListener
     }
 
     public void onRefresh() {
-        mLayoutScroll.show();
+        if(!mLayoutScroll.isShow()){
+            mLayoutScroll.show();
+        }
         if (LoginManager.isLogin() && refreshLayout != null) {
             refreshLayout.autoRefresh();
             if(rvListview != null)
