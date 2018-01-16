@@ -168,7 +168,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                 }
                 WelcomeDialogstate = true;
                 openUri();
-                new AllPopDialogHelper(Main.this).start();
+//                new AllPopDialogHelper(Main.this).start();
                 com.popdialog.util.PushManager.tongjiPush(Main.this, isEnable ->
                         XHClick.mapStat(XHApplication.in(),"a_push_user",isEnable ? "开启推送" : "关闭推送","")
                 );
@@ -181,7 +181,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                 if (LoginManager.isLogin()) {
                     initQiYvUnreadCount();
                     //防止七鱼回调有问题
-                    Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
+                    MessageTipController.newInstance().setMessageCount();
                 }
                 addQiYvListener();
                 if(mainInitDataControl!=null)mainInitDataControl.mainAfterUpload(Main.this);
@@ -204,6 +204,48 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
         if (times != null && times.length > 1 && !TextUtils.isEmpty(times[1])) {
             Tools.getApiSurTime("killback", Long.parseLong(times[1]), System.currentTimeMillis());
         }
+    }
+    /**
+     * 初始化七鱼未读消息数
+     */
+    private void initQiYvUnreadCount() {
+        MessageTipController.newInstance().loadQiyuUnreadCount();
+    }
+
+    /**
+     * 设置七鱼未读消息监听
+     */
+    private void addQiYvListener() {
+        QiYvHelper.getInstance().addOnUrlItemClickListener((context, url) -> {
+            if (TextUtils.isEmpty(url)) return;
+            if (url.contains("m.ds.xiangha.com")
+                    && url.contains("product_code=")) {//商品详情链接
+                String[] strs = url.split("\\?");
+                if (strs != null
+                        && strs.length > 1
+                        && !TextUtils.isEmpty(strs[1])) {
+                    AppCommon.openUrl(Main.this, "xhds.product.info.app?" + strs[1], true);
+                }
+            } else {
+                AppCommon.openUrl(Main.this, "xiangha://welcome?showWeb.app?url=" + Uri.encode(url), true);
+            }
+        });
+        if (mUnreadCountListener == null) {
+            mUnreadCountListener = count -> {
+                if (count >= 0) {
+                    MessageTipController.newInstance().setQiyvMessage(count);
+                }
+            };
+        }
+        QiYvHelper.getInstance().addUnreadCountChangeListener(mUnreadCountListener, true);
+    }
+
+    /** 腾讯统计 */
+    private void initMTA() {
+        StatConfig.setDebugEnable(false);
+        StatConfig.setInstallChannel(this, ChannelUtil.getChannel(this));
+        StatConfig.setSendPeriodMinutes(1);//设置发送策略：每一分钟发送一次
+        StatService.setContext(this.getApplication());
     }
 
     /**
