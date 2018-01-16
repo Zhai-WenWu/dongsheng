@@ -13,6 +13,9 @@ import android.widget.TextView;
 
 import com.xiangha.R;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * PackageName : amodule.article.view
  * Created by MrTrying on 2017/6/2 11:24.
@@ -22,6 +25,7 @@ public class BottomDialog extends Dialog {
 
     private LinearLayout buttonLayout;
     private TextView cannleButton;
+    private List<View> itemArray = new ArrayList<>();
 
     private View.OnClickListener cannleClick;
 
@@ -66,7 +70,7 @@ public class BottomDialog extends Dialog {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.view_bottom_dialog_button,null);
         TextView textView = (TextView) view.findViewById(R.id.bottom_dialog_bottom);
         textView.setText(buttonText);
-        textView.setOnClickListener(new View.OnClickListener() {
+        view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(onClickListener != null){
@@ -75,8 +79,26 @@ public class BottomDialog extends Dialog {
                 dismiss();
             }
         });
+        itemArray.add(view);
         buttonLayout.addView(view);
         return this;
+    }
+
+    public void setItemClick(int position,final View.OnClickListener onClickListener){
+        if(position < 0 || position >= itemArray.size())
+            return;
+        View view = itemArray.get(position);
+        if(view != null){
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(onClickListener != null){
+                        onClickListener.onClick(v);
+                    }
+                    dismiss();
+                }
+            });
+        }
     }
 
     private void addLineView() {
@@ -84,6 +106,11 @@ public class BottomDialog extends Dialog {
         view.setBackgroundColor(Color.parseColor("#e0e0e0"));
         view.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,1));
         buttonLayout.addView(view);
+    }
+
+    public void cleanAllView(){
+        itemArray.clear();
+        buttonLayout.removeAllViews();
     }
 
 }

@@ -265,6 +265,7 @@ public class MyFavorite extends MainBaseActivity implements View.OnClickListener
         }
     }
 
+    private BottomDialog mBottomDialog;
     private void showBottomDialog(final int position) {
         if (mData == null || position < 0 || position >= mData.size())
             return;
@@ -280,10 +281,17 @@ public class MyFavorite extends MainBaseActivity implements View.OnClickListener
         }
         Map<String, String> itemB = StringManager.getFirstMap(item.get("B"));
         final String typeName = itemB.get("text1");
-        BottomDialog dialog = new BottomDialog(this);
-        dialog.addButton("取消收藏",
-                v -> FavoriteHelper.instance().setFavoriteStatus(this, code, typeName, type, null)
-        ).show();
+        if(mBottomDialog == null){
+            mBottomDialog = new BottomDialog(this);
+            mBottomDialog.addButton("取消收藏",
+                    v -> FavoriteHelper.instance().setFavoriteStatus(this, code, typeName, type, null)
+            );
+        }else{
+            mBottomDialog.setItemClick(0,
+                    v -> FavoriteHelper.instance().setFavoriteStatus(this, code, typeName, type, null)
+            );
+        }
+        mBottomDialog.show();
     }
 
     @Override
