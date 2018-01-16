@@ -196,6 +196,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         switch (type){
             case DetailDishDataManager.DISH_DATA_TOP://topInfo,菜谱的基本信息和用户的基本信息
                 mapTop= list.get(0);
+                code = mapTop.get("dishCode");
                 dishName= mapTop.get("name");
                 isHasVideo = "2".equals(mapTop.get("type"));
                 detailDishViewManager.handlerHeaderView(list,map);//header
