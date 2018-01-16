@@ -28,7 +28,7 @@
             android:layout_alignParentRight="true"
             android:paddingLeft="@dimen/dp_12"
             android:paddingRight="@dimen/dp_20"
-            android:src="@drawable/home_pulish"/>
+            android:src="@drawable/home_pulish" />
     </RelativeLayout>
 
     <android.support.design.widget.CoordinatorLayout
@@ -37,11 +37,12 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/title_rela_all">
 
-        <android.support.design.widget.AppBarLayout
-            android:id="@+id/appbar_layout"
+        <acore.widget.LayoutScroll
+            android:id="@+id/scroll_body"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:elevation="0dp">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:scrollbars="none">
 
             <RelativeLayout
                 android:id="@+id/seek_layout"
@@ -50,8 +51,7 @@
                 android:layout_below="@+id/title_rela_all"
                 android:background="#F2F2F2"
                 android:paddingLeft="@dimen/dp_10"
-                android:paddingRight="@dimen/dp_10"
-                app:layout_scrollFlags="scroll|enterAlways|snap">
+                android:paddingRight="@dimen/dp_10">
 
                 <RelativeLayout
                     android:id="@+id/seek_but_rela"
@@ -83,34 +83,31 @@
 
             </RelativeLayout>
 
-        </android.support.design.widget.AppBarLayout>
-
-        <cn.srain.cube.views.ptr.PtrClassicFrameLayout
-            xmlns:cube_ptr="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/refresh_list_view_frame"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/seek_layout"
-            android:background="#F2F2F2"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            cube_ptr:ptr_duration_to_close="200"
-            cube_ptr:ptr_duration_to_close_header="500"
-            cube_ptr:ptr_pull_to_fresh="false"
-            cube_ptr:ptr_ratio_of_header_height_to_refresh="1"
-            cube_ptr:ptr_resistance="1.7">
-
-            <acore.widget.rvlistview.RvListView
-                android:id="@+id/rvListview"
+            <cn.srain.cube.views.ptr.PtrClassicFrameLayout
+                xmlns:cube_ptr="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/refresh_list_view_frame"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@android:color/transparent"
-                android:cacheColorHint="@android:color/transparent"
-                android:listSelector="@android:color/transparent"
-                android:paddingLeft="0dp"
-                android:paddingRight="0dp"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+                android:background="#F2F2F2"
+                cube_ptr:ptr_duration_to_close="200"
+                cube_ptr:ptr_duration_to_close_header="500"
+                cube_ptr:ptr_pull_to_fresh="false"
+                cube_ptr:ptr_ratio_of_header_height_to_refresh="1"
+                cube_ptr:ptr_resistance="1.7">
 
-        </cn.srain.cube.views.ptr.PtrClassicFrameLayout>
+                <acore.widget.rvlistview.RvListView
+                    android:id="@+id/rvListview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:cacheColorHint="@android:color/transparent"
+                    android:listSelector="@android:color/transparent"
+                    android:paddingLeft="0dp"
+                    android:paddingRight="0dp" />
+
+            </cn.srain.cube.views.ptr.PtrClassicFrameLayout>
+
+        </acore.widget.LayoutScroll>
 
         <LinearLayout
             android:id="@+id/noData_layout"
