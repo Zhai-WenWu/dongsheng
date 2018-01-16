@@ -48,7 +48,6 @@ public class XHApplication extends MobApplication {
         super.attachBaseContext(base);
         MultiDex.install(this);
     }
-
     @Override
     public void onCreate() {
         mAppApplication = this;
@@ -59,7 +58,7 @@ public class XHApplication extends MobApplication {
         //记录开启次数
         AllPopDialogHelper.updateIntervalCount(this);
         try{
-            super.onCreate();
+            super.onCreate();//耗时100毫秒，处理掉
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -78,7 +77,7 @@ public class XHApplication extends MobApplication {
 
     /**
      * 初始化数据
-     * ---250毫秒耗时
+     * ---150毫秒耗时
      */
     private void initData() {
         //设置umeng的appId,和渠道名
@@ -91,7 +90,7 @@ public class XHApplication extends MobApplication {
 
         //初始化config变量
         XHConf.init(this);
-        LoadImage.init(getApplicationContext());
+        LoadImage.init(getApplicationContext());//耗时100毫秒
         LogManager.printStartTime("zhangyujian","XhApplication:1111:initData::");
         //设置百度appid
         Map<String,String> map = StringManager.getFirstMap(AppCommon.getConfigByLocal("baiduappid"));

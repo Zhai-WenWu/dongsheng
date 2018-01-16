@@ -22,8 +22,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/dp_13"
         android:clickable="true"
-        android:gravity="center"
-        android:text="生活圈" />
+        android:gravity="center" />
 
     <ImageView
         android:id="@+id/circle_share"

@@ -1008,15 +1008,15 @@ public class JsAppCommon extends JsBase {
                         if(PAY_TYPE_VIP_OPEN.equals(payType)||PAY_TYPE_VIP_RENEW.equals(payType)){
                             payType="";
                             payVip();//支付类型
-                            mWebView.postDelayed(() -> {
-                                LoginManager.initYiYuanBindState(mAct, new Runnable() {//一元
-                                    @Override
-                                    public void run() {
-                                        LoginManager.setVipStateChanged();
-                                    }
-                                });
-                                if(LoginManager.isLogin())getUserData();//登陆状态下更改用户信息
-                            }, 2000);
+//                            mWebView.postDelayed(() -> {
+//                                LoginManager.initYiYuanBindState(mAct, new Runnable() {//一元
+//                                    @Override
+//                                    public void run() {
+//                                        LoginManager.setVipStateChanged();
+//                                    }
+//                                });
+//                                if(LoginManager.isLogin())getUserData();//登陆状态下更改用户信息
+//                            }, 2000);
                         }
                     }
                     ObserverManager.getInstance().notify(ObserverManager.NOTIFY_PAYFINISH, null, isOk);
@@ -1044,6 +1044,13 @@ public class JsAppCommon extends JsBase {
         ReqEncyptInternet.in().doEncypt(url, "", new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
+                LoginManager.initYiYuanBindState(mAct, new Runnable() {//一元
+                    @Override
+                    public void run() {
+                        LoginManager.setVipStateChanged();
+                    }
+                });
+                if(LoginManager.isLogin())getUserData();//登陆状态下更改用户信息
             }
         });
     }

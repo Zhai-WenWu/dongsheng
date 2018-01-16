@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
@@ -38,12 +39,25 @@ import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.tools.ChannelUtil;
 import acore.tools.FileManager;
+import acore.tools.PageStatisticsUtils;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
+import amodule.answer.activity.AnswerEditActivity;
+import amodule.answer.activity.AskEditActivity;
+import amodule.answer.db.AskAnswerSQLite;
+import amodule.answer.model.AskAnswerModel;
+import amodule.article.activity.ArticleUploadListActivity;
+import amodule.article.activity.edit.EditParentActivity;
+import amodule.article.db.UploadArticleData;
+import amodule.article.db.UploadArticleSQLite;
+import amodule.article.db.UploadParentSQLite;
+import amodule.article.db.UploadVideoSQLite;
 import amodule.dish.activity.upload.UploadDishListActivity;
 import amodule.dish.db.DishOffData;
 import amodule.dish.db.ShowBuySqlite;
+import amodule.dish.db.UploadDishData;
 import amodule.dish.db.UploadDishSqlite;
+import amodule.dish.tools.OffDishToFavoriteControl;
 import amodule.dish.tools.UploadDishControl;
 import amodule.main.Main;
 import amodule.main.view.home.HomeToutiaoAdControl;
@@ -152,6 +166,9 @@ public class MainInitDataControl {
         long endTime=System.currentTimeMillis();
         //七鱼初始化 init方法无需放入主进程中执行，其他的初始化，有必要放在放入主进程
         QiYvHelper.getInstance().initSDK(act);
+
+        OffDishToFavoriteControl.addCollection(act);
+        PageStatisticsUtils.getInstance().getPageInfo(act.getApplicationContext());//初始化电商页面统计
         Log.i("zhangyujian","iniMainAfter::时间:"+(endTime-startTime));
 
     }
@@ -166,7 +183,6 @@ public class MainInitDataControl {
             manager.addXGTag(XGTagManager.OFFICIAL);
         }
     }
-
     /**
      * main在界面展示后初始化
      * @param act
@@ -397,5 +413,165 @@ public class MainInitDataControl {
     private void delayedExcute(@NonNull Runnable runnable){
         if(runnable == null) return;
         new Handler(Looper.getMainLooper()).postDelayed(runnable,delayedTime);
+    }
+
+    public void mainAfterUpload(Activity activity){
+        if (showQAUploading(activity))
+            return;
+        if (showUploading(activity,new UploadArticleSQLite(XHApplication.in().getApplicationContext()), EditParentActivity.DATA_TYPE_ARTICLE, "您的文章还未上传完毕，是否继续上传？"))
+            return;
+        if (showUploading(activity,new UploadVideoSQLite(XHApplication.in().getApplicationContext()), EditParentActivity.DATA_TYPE_VIDEO, "您的视频还未上传完毕，是否继续上传？"))
+            return;
+    }
+
+    private boolean showQAUploading(Activity activity) {
+        boolean show = false;
+        final AskAnswerSQLite sqLite = new AskAnswerSQLite(XHApplication.in().getApplicationContext());
+        final AskAnswerModel model = sqLite.queryFirstData();
+        String msg = "";
+        Intent intent = null;
+        Class tempC = null;
+        if (model != null) {
+            intent = new Intent();
+            intent.putExtra("fromHome", true);
+            intent.putExtra("code", model.getmDishCode());
+            intent.putExtra("qaCode", model.getmQACode());
+            intent.putExtra("authorCode", model.getmAuthorCode());
+            intent.putExtra("qaTitle", model.getmTitle());
+            intent.putExtra("answerCode", model.getmAnswerCode());
+            boolean isAskAgain = false;
+            boolean isAnswerAgain = false;
+            String qaType = model.getmType();
+            if (!TextUtils.isEmpty(qaType)) {
+                switch (qaType) {
+                    case AskAnswerModel.TYPE_ANSWER:
+                        msg = "您有一个回答尚未发布，是否继续？";
+                        tempC = AnswerEditActivity.class;
+                        break;
+                    case AskAnswerModel.TYPE_ANSWER_AGAIN:
+                        msg = "您有一个回答尚未发布，是否继续？";
+                        tempC = AnswerEditActivity.class;
+                        isAnswerAgain = true;
+                        break;
+                    case AskAnswerModel.TYPE_ASK:
+                        msg = "您有一个问题尚未发布，是否继续？";
+                        tempC = AskEditActivity.class;
+                        break;
+                    case AskAnswerModel.TYPE_ASK_AGAIN:
+                        msg = "您有一个问题尚未发布，是否继续？";
+                        tempC = AskEditActivity.class;
+                        isAskAgain = true;
+                        break;
+                }
+            }
+            intent.putExtra("mIsAnswerMore", isAnswerAgain ? "2" : "1");
+            intent.putExtra("isAskMore", isAskAgain ? "2" : "1");
+            if (tempC == null)
+                return show;
+            show = true;
+            intent.setClass(activity, tempC);
+            final Intent finalIntent = intent;
+            final DialogManager dialogManager = new DialogManager(activity);
+            dialogManager.createDialog(new ViewManager(dialogManager)
+                    .setView(new TitleMessageView(activity).setText(msg))
+                    .setView(new HButtonView(activity)
+                            .setNegativeText("否", v -> {
+                                dialogManager.cancel();
+                                new Thread(() -> sqLite.deleteAll()).start();
+                            })
+                            .setPositiveTextColor(Color.parseColor("#007aff"))
+                            .setPositiveText("是", v -> {
+                                dialogManager.cancel();
+                                activity.startActivity(finalIntent);
+                            }))).show();
+        }
+        return show;
+    }
+    private boolean showUploading(Activity activity,final UploadParentSQLite sqLite, final int dataType, String title) {
+        final UploadArticleData uploadArticleData = sqLite.getUploadIngData();
+        if (uploadArticleData != null) {
+            final DialogManager dialogManager = new DialogManager(activity);
+            dialogManager.createDialog(new ViewManager(dialogManager)
+                    .setView(new TitleMessageView(activity).setText(title))
+                    .setView(new HButtonView(activity)
+                            .setNegativeText("取消", v -> {
+                                dialogManager.cancel();
+                                uploadArticleData.setUploadType(UploadDishData.UPLOAD_PAUSE);
+                                sqLite.update(uploadArticleData.getId(),uploadArticleData);
+                            })
+                            .setPositiveTextColor(Color.parseColor("#007aff"))
+                            .setPositiveText("确定", v -> {
+                                Intent intent = new Intent(activity, ArticleUploadListActivity.class);
+                                intent.putExtra("draftId", uploadArticleData.getId());
+                                intent.putExtra("dataType", dataType);
+                                intent.putExtra("coverPath", uploadArticleData.getImg());
+                                String videoPath = "";
+                                ArrayList<Map<String,String>> videoArray = uploadArticleData.getVideoArray();
+                                if(videoArray.size() > 0){
+                                    videoPath = videoArray.get(0).get("video");
+                                }
+                                intent.putExtra("finalVideoPath", videoPath);
+                                dialogManager.cancel();
+                                activity.startActivity(intent);
+                            }))).show();
+            return true;
+        }
+        return false;
+    }
+    public void mainAfterQiYU(){
+        //处理
+        if (LoginManager.isLogin()) {
+            initQiYvUnreadCount();
+            //防止七鱼回调有问题
+            Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
+        }
+        addQiYvListener();
+    }
+    private QiYvHelper.UnreadCountChangeListener mUnreadCountListener;
+    /**
+     * 初始化七鱼未读消息数
+     */
+    private void initQiYvUnreadCount() {
+        QiYvHelper.getInstance().getUnreadCount(count -> {
+            if (count >= 0) {
+                AppCommon.qiyvMessage = count;
+                if (count > 0)
+                    Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
+            }
+        });
+    }
+    /**
+     * 设置七鱼未读消息监听
+     */
+    public void addQiYvListener() {
+        QiYvHelper.getInstance().addOnUrlItemClickListener((context, url) -> {
+            if(TextUtils.isEmpty(url)) return;
+            if (url.contains("m.ds.xiangha.com")
+                    && url.contains("product_code=")) {//商品详情链接
+                String[] strs = url.split("\\?");
+                if (strs != null
+                        && strs.length > 1
+                        && !TextUtils.isEmpty(strs[1])) {
+                    AppCommon.openUrl("xhds.product.info.app?" + strs[1], true);
+                }
+            } else {
+                AppCommon.openUrl("xiangha://welcome?showWeb.app?url=" + Uri.encode(url), true);
+            }
+        });
+        if (mUnreadCountListener == null) {
+            mUnreadCountListener = count -> {
+                if (count >= 0) {
+                    AppCommon.qiyvMessage = count;
+                    if (count > 0)
+                        Main.setNewMsgNum(2, AppCommon.quanMessage + AppCommon.feekbackMessage + AppCommon.myQAMessage + AppCommon.qiyvMessage);
+                }
+            };
+        }
+        QiYvHelper.getInstance().addUnreadCountChangeListener(mUnreadCountListener, true);
+    }
+    public void onDestory(){
+        mUnreadCountListener=null;
+        if (!LoginManager.isLogin())
+            QiYvHelper.getInstance().destroyQiYvHelper();
     }
 }

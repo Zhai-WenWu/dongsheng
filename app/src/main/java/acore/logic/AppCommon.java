@@ -1,10 +1,4 @@
-/*
- * @author Jerry
- * 2013-1-22 下午3:00:33
- * Copyright: Copyright (c) xiangha.com 2011
- */
 package acore.logic;
-
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
@@ -14,15 +8,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.webkit.CookieManager;
-import android.webkit.CookieSyncManager;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 
 import com.download.container.DownloadCallBack;
 import com.download.down.DownLoad;
@@ -52,7 +42,6 @@ import acore.tools.ToolsDevice;
 import amodule.health.activity.HealthTest;
 import amodule.health.activity.MyPhysique;
 import amodule.main.Main;
-import amodule.main.view.CommonBottomView;
 import amodule.quan.db.CircleData;
 import amodule.quan.db.CircleSqlite;
 import amodule.user.activity.login.LoginByAccout;
@@ -62,8 +51,6 @@ import aplug.basic.ReqInternet;
 import aplug.basic.XHConf;
 import aplug.web.FullScreenWeb;
 import aplug.web.ShowWeb;
-import aplug.web.tools.WebviewManager;
-import aplug.web.view.XHWebView;
 import third.ad.scrollerAd.XHAllAdControl;
 import third.qiyu.QiYvHelper;
 import xh.basic.tool.UtilFile;
@@ -72,9 +59,6 @@ import xh.windowview.BottomDialog;
 
 import static xh.basic.tool.UtilFile.readFile;
 import static xh.basic.tool.UtilString.getListMapByJson;
-
-//
-
 public class AppCommon {
 
     public static int buyBurdenNum = 0; // 离线清单条数
@@ -160,6 +144,10 @@ public class AppCommon {
     }
 
     public static final String XH_PROTOCOL = "xiangha://welcome?";
+    public static void openUrl( String url, Boolean openThis) {
+        if(XHActivityManager.getInstance().getCurrentActivity()!=null)
+            openUrl(XHActivityManager.getInstance().getCurrentActivity(),url,openThis);
+    }
     /**
      * 打开url 如果url能打开原生页面就开原生
      * 如果不能就开webview，如果openThis为true,或已打开的webview太多，则直接使用WebView打开Url
@@ -474,7 +462,6 @@ public class AppCommon {
             });
         }
     }
-
     /**
      * 获取appData
      *
@@ -553,7 +540,6 @@ public class AppCommon {
             return true;
         }
     }
-
     /**
      * @param imageView
      */
@@ -587,56 +573,6 @@ public class AppCommon {
             else
                 listView.smoothScrollToPosition(index + lastVisible - firstVisible - 2);
         }
-    }
-
-    /**
-     * 获取惊喜页面的红点是否显示
-     */
-    public static void getActivityState(final Context context) {
-        ReqInternet.in().doGet(StringManager.api_getChangeTime, new InternetCallback() {
-
-            private String noGoTime = "";
-            private String goTime = "";
-
-            @Override
-            public void loaded(int flag, String url, Object returnObj) {
-                View tab3 = null;
-                if (Main.allMain != null) {
-                    tab3 = Main.allMain.getTabView(2);
-                }
-                if (flag >= ReqInternet.REQ_OK_STRING) {
-                    ArrayList<Map<String, String>> listMapByJson = getListMapByJson(returnObj);
-                    if (listMapByJson.size() > 0) {
-                        String string = listMapByJson.get(0).get("subject");
-                        ArrayList<Map<String, String>> listMapByJson2 = getListMapByJson(string);
-                        if (listMapByJson2.size() > 0) {
-                            Map<String, String> map2 = listMapByJson2.get(0);
-                            noGoTime = map2.get("noGoTime");
-                            goTime = map2.get("goTime");
-//							Map<String, String> msgMap = new HashMap<String, String>();
-                            if (tab3 != null) {
-                                if (FileManager.loadShared(context, "Activity_state", "goTime") == "") {
-                                    tab3.findViewById(R.id.activity_tabhost_redhot).setVisibility(View.VISIBLE);
-                                    CommonBottomView.BottomViewBuilder.getInstance().setIconShow(CommonBottomView.BOTTOM_THREE, -1, true);
-                                } else {
-                                    String oldNoGoTime = (String) FileManager.loadShared(context, "Activity_state", "noGoTime");
-                                    String oldGoTime = (String) FileManager.loadShared(context, "Activity_state", "goTime");
-                                    if (!noGoTime.equals(oldNoGoTime) || !goTime.equals(oldGoTime)) {
-                                        tab3.findViewById(R.id.activity_tabhost_redhot).setVisibility(View.VISIBLE);
-                                        CommonBottomView.BottomViewBuilder.getInstance().setIconShow(CommonBottomView.BOTTOM_THREE, -1, true);
-                                    } else {
-                                        tab3.findViewById(R.id.activity_tabhost_redhot).setVisibility(View.GONE);
-                                        CommonBottomView.BottomViewBuilder.getInstance().setIconShow(CommonBottomView.BOTTOM_THREE, -1, false);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                } else if (tab3 != null) {
-                    tab3.findViewById(R.id.activity_tabhost_redhot).setVisibility(View.GONE);
-                }
-            }
-        });
     }
 
     /**
@@ -826,8 +762,6 @@ public class AppCommon {
                         @Override
                         public void run() {
                             FileManager.saveFileToCompletePath(FileManager.getDataDir() + FileManager.file_config, msg.toString(), false);
-
-
                         }
                     }).start();
                 }
@@ -856,55 +790,6 @@ public class AppCommon {
 
     public static Map<String, Integer> createCount = new HashMap<>();
 
-    /**
-     * @param context
-     * @param loadManager
-     * @param rl
-     * @param url
-     */
-    public static void createWeb(Activity context, LoadManager loadManager, RelativeLayout rl, String url,
-                                 @NonNull String type, int maxCount) {
-        try {
-            //添加限制
-            if (createCount == null) {
-                createCount = new HashMap<>();
-            }
-            int currentCount = 0;
-            String key = type + url;
-            if (createCount.containsKey(key)) {
-                currentCount = createCount.get(key);
-            }
-            if (maxCount == -1 || currentCount >= maxCount) {
-                return;
-            }
-            currentCount++;
-            createCount.put(key, currentCount);
-            //请求web
-            String cookieKey = "";
-            String newUrl = url.replace("http://", "");
-            String host = newUrl.substring(newUrl.indexOf("."), newUrl.indexOf("/") > -1 ? newUrl.indexOf("/") : newUrl.length());
-            String[] strArray = host.split(":");
-            if (strArray.length > 1) {
-                host = strArray[0];
-            }
-            WebviewManager webviewManager = new WebviewManager(context, loadManager, false);
-            XHWebView webView = webviewManager.createWebView(0);
-            Map<String, String> header = ReqInternet.in().getHeader(context);
-            String cookieStr = header.containsKey("Cookie") ? header.get("Cookie") : "";
-            String[] cookie = cookieStr.split(";");
-            CookieManager cookieManager = CookieManager.getInstance();
-            for (int i = 0; i < cookie.length; i++) {
-                cookieManager.setCookie(url, cookie[i]);
-            }
-            cookieManager.setCookie(url, "xhWebStat=1");
-            CookieSyncManager.createInstance(context);
-            CookieSyncManager.getInstance().sync();
-            rl.addView(webView, 0, 0);
-            webView.loadUrl(url);
-        } catch (Exception e) {
-
-        }
-    }
 
     public static boolean setVip(final Activity act, ImageView vipView, String data, VipFrom vipFrom) {
         return setVip(act, vipView, data, "", "", vipFrom);
@@ -1018,8 +903,6 @@ public class AppCommon {
             }
         }).setBottomButtonColor("#59bdff").show();
     }
-
-
     /**
      * 保存随机推广
      *
@@ -1074,7 +957,6 @@ public class AppCommon {
                                                 }
                                                 tempWeight += weight;
                                             }
-                                            text = text.length() < 3 ? "" : text;
                                             FileManager.scynSaveFile(FileManager.getDataDir() + FileManager.file_randPromotionConfig, text, false);
                                         }
                                     }

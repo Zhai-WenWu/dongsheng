@@ -2,7 +2,9 @@ package acore.logic.load;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
+import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -44,15 +46,18 @@ public class LoadMoreManager {
 		}
 		//如果为null则创建
 		if(loadMoreBtn == null){
-			loadMoreBtn = new Button(mContext);
+
+			loadMoreBtn = new Button(mContext,null,android.R.attr.borderlessButtonStyle);
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+				loadMoreBtn.setElevation(0);
 			loadMoreBtn.setHeight(mHeightLoadmore);
 			loadMoreBtn.setGravity(Gravity.CENTER);
 			loadMoreBtn.setText("点击加载更多");
 			loadMoreBtn.setTextSize(mTextSize);
 			loadMoreBtn.setTextColor(Color.parseColor("#AEAEAE"));
 			loadMoreBtn.setBackgroundResource(R.drawable.btn_nocolor);
-			int pa = ToolsDevice.dp2px(mContext, 1);
-			loadMoreBtn.setShadowLayer(pa, pa, pa,Color.parseColor("#CEFFFFFF"));
+//			int pa = ToolsDevice.dp2px(mContext, 1);
+//			loadMoreBtn.setShadowLayer(pa, pa, pa,Color.parseColor("#CEFFFFFF"));
 			if(key != null && key instanceof RecyclerView){
 				loadMoreBtn.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,mHeightLoadmore));
 			}
