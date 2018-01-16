@@ -142,12 +142,10 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
         init();
     }
     private void init(){
-        Log.i("zhangyujian","数据："+FileManager.loadShared(this,FileManager.app_welcome,VersionOp.getVerName(this)));
-        if(TextUtils.isEmpty((String) FileManager.loadShared(this,FileManager.app_welcome,VersionOp.getVerName(this)))) {
-            initUI();
-            initData();
-            setCurrentTabByIndex(defaultTab);
-        }
+//        Log.i("zhangyujian","数据："+FileManager.loadShared(this,FileManager.app_welcome,VersionOp.getVerName(this)));
+//        if(TextUtils.isEmpty((String) FileManager.loadShared(this,FileManager.app_welcome,VersionOp.getVerName(this)))) {
+//
+//        }
         WelcomeDialogstate=false;
         isShowWelcomeDialog=true;
         mainInitDataControl = new MainInitDataControl();
@@ -190,6 +188,9 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
         }
         @Override
         public void welcomeFree() {
+            initUI();
+            initData();
+            setCurrentTabByIndex(defaultTab);
             AdControlHomeDish.getInstance();
             initThrid();
             initOther();
@@ -699,18 +700,18 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                 if(welcomeControls!=null)welcomeControls.startShow();
             }
         },100);
-        LogManager.printStartTime("zhangyujian","onWindowFocusChanged：：：");
-        if( !TextUtils.isEmpty((String) FileManager.loadShared(this,FileManager.app_welcome,VersionOp.getVerName(this)))) {
-            handlerPostInit.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    LogManager.printStartTime("zhangyujian","第一次onWindowFocusChanged：：：");
-                    initUI();
-                    initData();
-                    setCurrentTabByIndex(defaultTab);
-                }
-            }, 1000);
-        }
+//        LogManager.printStartTime("zhangyujian","onWindowFocusChanged：：：");
+//        if( !TextUtils.isEmpty((String) FileManager.loadShared(this,FileManager.app_welcome,VersionOp.getVerName(this)))) {
+//            handlerPostInit.postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    LogManager.printStartTime("zhangyujian","第一次onWindowFocusChanged：：：");
+//                    initUI();
+//                    initData();
+//                    setCurrentTabByIndex(defaultTab);
+//                }
+//            }, 1000);
+//        }
     }
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
