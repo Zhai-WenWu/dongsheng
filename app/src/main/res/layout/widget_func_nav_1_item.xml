@@ -16,7 +16,7 @@
     <TextView
         android:id="@+id/text_1"
         android:layout_width="wrap_content"
-        android:paddingTop="@dimen/dp_7"
+        android:paddingTop="@dimen/dp_5"
         android:minWidth="@dimen/dp_55"
         android:maxLines="1"
         android:layout_height="wrap_content"
