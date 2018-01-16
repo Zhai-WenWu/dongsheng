@@ -59,6 +59,7 @@ public class MyMsgInformSetting extends BaseActivity implements View.OnClickList
 
 	private boolean mNeedCheckStatus;
 	private boolean mNewMsgOpen;
+	private boolean mLastNewMsgOpen;
 	private boolean mResumeFromPermission;
 	private boolean mGotoClosePermission;
 	private boolean mResumeFromClickBtn;
@@ -79,6 +80,7 @@ public class MyMsgInformSetting extends BaseActivity implements View.OnClickList
 	private void initData() {
 		mDataController = new MsgSettingDataController();
 		mData = new HashMap<>();
+		mLastNewMsgOpen = mDataController.checkOpenByKey("newMsgOpen");
 	}
 
 	@Override
@@ -114,6 +116,7 @@ public class MyMsgInformSetting extends BaseActivity implements View.OnClickList
 		setViewStatus(msg_qa, isEnabled);
 		setViewStatus(msg_official, isEnabled);
 
+		setDataMap("newMsgOpen", isEnabled);
 		setDataMap("comments", isEnabled);
 		setDataMap("good", isEnabled);
 		setDataMap("feedback", isEnabled);
@@ -211,7 +214,11 @@ public class MyMsgInformSetting extends BaseActivity implements View.OnClickList
 
 	private void getData() {
 		if (!mNewMsgOpen) {
-			setLocalData();
+			setAllDefaultStatus(false);
+			onDataReady();
+			return;
+		} else if (!mLastNewMsgOpen) {
+			setAllDefaultStatus(true);
 			onDataReady();
 			return;
 		}
@@ -220,6 +227,7 @@ public class MyMsgInformSetting extends BaseActivity implements View.OnClickList
 		ReqInternet.in().doPost(StringManager.API_GETINFOSWITCHLIST, "", new InternetCallback() {
 			@Override
 			public void loaded(int i, String s, Object o) {
+				setDataMap("newMsgOpen", mNewMsgOpen);
 				if (i >= ReqInternet.REQ_OK_STRING) {
 					Map<String, String> data = StringManager.getFirstMap(o);
 					String comments = data.get("comments");
@@ -306,6 +314,15 @@ public class MyMsgInformSetting extends BaseActivity implements View.OnClickList
 		if (mData == null)
 			return;
 		mData.put(key, open ? "1" : "2");
+	}
+
+	private void setAllDefaultStatus(boolean open) {
+		setDataMap("newMsgOpen", open);
+		setDataMap("comments", open);
+		setDataMap("good", open);
+		setDataMap("feedback", open);
+		setDataMap("qa", open);
+		setDataMap("official", open);
 	}
 
 	private void setLocalData() {
