@@ -4,15 +4,24 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.text.TextUtils;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.annimon.stream.Stream;
+import com.annimon.stream.function.Consumer;
+import com.annimon.stream.function.Predicate;
 import com.xiangha.R;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -27,6 +36,7 @@ import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.widget.rvlistview.RvListView;
 import amodule.article.view.BottomDialog;
+import amodule.home.view.HomePushIconView;
 import amodule.main.Main;
 import amodule.main.activity.MainHomePage;
 import amodule.main.delegate.ISetMessageTip;
@@ -50,6 +60,9 @@ import static acore.tools.ObserverManager.NOTIFY_UNFAVORITE;
 public class MyFavorite extends MainBaseActivity implements View.OnClickListener, IObserver, ISetMessageTip {
     public static final String KEY = "MyFavorite";
     private ArrayList<Map<String, String>> mData = new ArrayList<>();
+    private CoordinatorLayout mCoordinatorLayout;
+    private AppBarLayout mAppBarLayout;
+    private HomePushIconView mPushIconView;
     private PtrClassicFrameLayout refreshLayout;
     private MessageTipIcon mMessageTipIcon;
     private LinearLayout noDataLayout;
@@ -77,6 +90,8 @@ public class MyFavorite extends MainBaseActivity implements View.OnClickListener
     private void initUi() {
         TextView title = (TextView) findViewById(R.id.title);
         title.setText("我的收藏");
+        mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
+        mAppBarLayout = (AppBarLayout) findViewById(R.id.appbar_layout);
         mMessageTipIcon = (MessageTipIcon) findViewById(R.id.message_tip);
         refreshLayout = (PtrClassicFrameLayout) findViewById(R.id.refresh_list_view_frame);
         rvListview = (RvListView) findViewById(R.id.rvListview);
@@ -84,6 +99,9 @@ public class MyFavorite extends MainBaseActivity implements View.OnClickListener
         noLoginLayout = (RelativeLayout) findViewById(R.id.no_login_rela);
         noLoginLayout.setVisibility(LoginManager.isLogin() ? View.GONE : View.VISIBLE);
         noLoginLayout.setOnClickListener(this);
+
+        mPushIconView = (HomePushIconView) findViewById(R.id.favorite_pulish);
+        mPushIconView.setOnClickListener(this);
 
         findViewById(R.id.noLogin_layout).setOnClickListener(this);
         findViewById(R.id.seek_layout).setOnClickListener(this);
@@ -182,6 +200,8 @@ public class MyFavorite extends MainBaseActivity implements View.OnClickListener
     protected void onResume() {
         super.onResume();
         mMessageTipIcon.setMessage(MessageTipController.newInstance().getMessageNum());
+        if(!LoginManager.isLogin() && loadManager != null)
+            loadManager.hideProgressBar();
     }
 
     @Override
@@ -205,6 +225,11 @@ public class MyFavorite extends MainBaseActivity implements View.OnClickListener
             //回到首页第一页
             case R.id.btn_no_data:
                 gotoHomePage();
+                break;
+            case R.id.favorite_pulish:
+                if(mPushIconView != null){
+                    mPushIconView.showPulishMenu();
+                }
                 break;
             default:
                 break;

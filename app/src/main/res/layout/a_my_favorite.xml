@@ -20,14 +20,25 @@
             android:id="@+id/message_tip"
             android:layout_width="@dimen/dp_57"
             android:layout_height="match_parent" />
+
+        <amodule.home.view.HomePushIconView
+            android:id="@+id/favorite_pulish"
+            android:layout_width="@dimen/dp_52"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:paddingLeft="@dimen/dp_12"
+            android:paddingRight="@dimen/dp_20"
+            android:src="@drawable/home_pulish"/>
     </RelativeLayout>
 
     <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/coordinator_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/title_rela_all">
 
         <android.support.design.widget.AppBarLayout
+            android:id="@+id/appbar_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:elevation="0dp">
