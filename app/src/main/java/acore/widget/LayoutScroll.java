@@ -97,7 +97,7 @@ public class LayoutScroll extends LinearLayout implements OnGestureListener {
 //		Log.d("d","onFling_"+velocityY);
         if (velocityY < 0 && scroller.getCurrY() == 0) {
             hide();
-        } else if (velocityY > 0 && scroller.getCurrY() == minScrollHeight) {
+        } else if (velocityY > 0 && scroller.getCurrY() == scrollHeight) {
             show();
         }
         return false;
@@ -108,7 +108,7 @@ public class LayoutScroll extends LinearLayout implements OnGestureListener {
     public void onLongPress(MotionEvent e) {
         if (scroller.getCurrY() == 0) {
             hide();
-        } else if (scroller.getCurrY() == minScrollHeight) {
+        } else if (scroller.getCurrY() == scrollHeight) {
             show();
         }
 //		Log.d("d","onLongPress"+e.getY());
@@ -140,7 +140,7 @@ public class LayoutScroll extends LinearLayout implements OnGestureListener {
                 if (scroller.getCurrY() == 0) hide();
             } else if (flag <= 0 && distanceY < 0) {
                 flag = -3;
-                if (scroller.getCurrY() == minScrollHeight) show();
+                if (scroller.getCurrY() == scrollHeight) show();
             }
             if (flag < 0 && distanceY > 0) flag++;
             else if (flag > 0 && distanceY < 0) flag--;
