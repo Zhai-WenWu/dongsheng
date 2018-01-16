@@ -7,16 +7,17 @@
         <RelativeLayout
             android:id="@+id/show_rl"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_39"
+            android:layout_height="@dimen/dp_37"
             android:background="#f7fffac1">
         <TextView
             android:id="@+id/show_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/dp_37"
-            android:layout_marginRight="@dimen/dp_37"
-            android:textSize="@dimen/dp_14"
+            android:layout_marginLeft="@dimen/dp_33"
+            android:layout_marginRight="@dimen/dp_33"
+            android:lines="1"
+            android:textSize="@dimen/dp_13"
             android:gravity="center"
             android:layout_centerInParent="true"
             android:textColor="@color/comment_color"
