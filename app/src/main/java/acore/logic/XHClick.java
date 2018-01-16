@@ -598,6 +598,11 @@ public class XHClick {
             // 自我唤醒通知
             case NOTIFY_SELF:
                 onEvent(context, "notifySelf_" + eventAct, data.value + "");
+                if("show".equals(eventAct)){
+                    onEvent(context, "a_push_local" , "本地推送数量");
+                }else if("click".equals(eventAct)){
+                    onEvent(context, "a_push_local",  "本地推送点击量");
+                }
                 break;
             default:
                 onEvent(context, "notify_default", data.type + "_" + eventAct);
