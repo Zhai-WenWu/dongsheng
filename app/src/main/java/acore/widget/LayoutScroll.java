@@ -18,6 +18,7 @@ public class LayoutScroll extends LinearLayout implements OnGestureListener {
 
     public Scroller scroller = null;
     int scrollHeight = 0, flag = 0;
+    private int minScrollHeight = 20;
     public GestureDetector det = null;
     public boolean allow = true;
     private boolean isShow = true;
@@ -96,7 +97,7 @@ public class LayoutScroll extends LinearLayout implements OnGestureListener {
 //		Log.d("d","onFling_"+velocityY);
         if (velocityY < 0 && scroller.getCurrY() == 0) {
             hide();
-        } else if (velocityY > 0 && scroller.getCurrY() == scrollHeight) {
+        } else if (velocityY > 0 && scroller.getCurrY() == minScrollHeight) {
             show();
         }
         return false;
@@ -107,7 +108,7 @@ public class LayoutScroll extends LinearLayout implements OnGestureListener {
     public void onLongPress(MotionEvent e) {
         if (scroller.getCurrY() == 0) {
             hide();
-        } else if (scroller.getCurrY() == scrollHeight) {
+        } else if (scroller.getCurrY() == minScrollHeight) {
             show();
         }
 //		Log.d("d","onLongPress"+e.getY());
@@ -116,7 +117,7 @@ public class LayoutScroll extends LinearLayout implements OnGestureListener {
     public void hide() {
         if (scroller.isFinished() && allow) {
             isShow = false;
-            scroller.startScroll(0, 0, 0, scrollHeight, 1000);
+            scroller.startScroll(0, 0, 0, scrollHeight, 500);
             invalidate();
         }
     }
@@ -124,7 +125,7 @@ public class LayoutScroll extends LinearLayout implements OnGestureListener {
     public void show() {
         if (scroller.isFinished() && allow) {
             isShow = true;
-            scroller.startScroll(0, scrollHeight, 0, -scrollHeight, 1000);
+            scroller.startScroll(0, scrollHeight, 0, -scrollHeight, 500);
             invalidate();
         }
     }
@@ -139,7 +140,7 @@ public class LayoutScroll extends LinearLayout implements OnGestureListener {
                 if (scroller.getCurrY() == 0) hide();
             } else if (flag <= 0 && distanceY < 0) {
                 flag = -3;
-                if (scroller.getCurrY() == scrollHeight) show();
+                if (scroller.getCurrY() == minScrollHeight) show();
             }
             if (flag < 0 && distanceY > 0) flag++;
             else if (flag > 0 && distanceY < 0) flag--;

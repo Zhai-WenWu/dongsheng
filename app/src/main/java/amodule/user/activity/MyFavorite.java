@@ -103,8 +103,9 @@ public class MyFavorite extends MainBaseActivity implements View.OnClickListener
         noDataLayout = (LinearLayout) findViewById(R.id.noData_layout);
         noLoginLayout = (RelativeLayout) findViewById(R.id.no_login_rela);
         noLoginLayout.setOnClickListener(this);
-        mLayoutScroll.init(Tools.getDimen(this,R.dimen.dp_45));
+        mLayoutScroll.init(acore.tools.Tools.getDimen(this,R.dimen.dp_45));
         mLayoutScroll.setTouchView(rvListview);
+        mLayoutScroll.setTouchView(refreshLayout);
 
         mPushIconView = (HomePushIconView) findViewById(R.id.favorite_pulish);
         mPushIconView.setOnClickListener(this);
