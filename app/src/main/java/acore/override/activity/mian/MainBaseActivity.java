@@ -78,6 +78,7 @@ public class MainBaseActivity extends AppCompatActivity {
 	
 	@Override
 	protected void onResume() {
+		Main.mainActivity = this;
 		super.onResume();
 		resumeTime = System.currentTimeMillis();
 		if(XHApplication.in()==null){
