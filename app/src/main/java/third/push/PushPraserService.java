@@ -13,6 +13,7 @@ import com.xiangha.R;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.UUID;
 
 import acore.logic.MessageTipController;
 import acore.logic.XHClick;
@@ -102,16 +103,10 @@ public class PushPraserService extends Service{
 			if(TYPE_UMENG.equals(channel) && !TextUtils.isEmpty(message)){
 				data.setUmengMessage(message);
 			}
-			//获取notifycationid
-			String idStr = FileManager.loadShared(context, FileManager.xmlFile_appInfo, FileManager.xmlKey_notifycationId).toString();
-			if (TextUtils.isEmpty(idStr)) {
-				idStr = "1";
-			}
-			int id = Integer.parseInt(idStr);
-			data.setNotificationId(id++);
-			//保存本次推送id
-			FileManager.saveShared(context, FileManager.xmlFile_appInfo, FileManager.xmlKey_notifycationId, String.valueOf(id));
 
+			UUID uuid = UUID.randomUUID();
+			int notificationId = (int) uuid.getLeastSignificantBits();
+			data.setNotificationId(notificationId);
 			if (msgMap != null) {
 				//处理推送的消息类型
 				if (msgMap.get("t") != null) {
@@ -155,7 +150,7 @@ public class PushPraserService extends Service{
 									ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
 									ActivityManager.RunningTaskInfo info = manager.getRunningTasks(1).get(0);
 									//获取当前activity类名判断是否为com.xiangha.Feekback
-									if (Feedback.handler != null && info.topActivity.getClassName().equals("com.xiangha.Feekback"))
+									if (Feedback.handler != null && info.topActivity.getClassName().equals(Feedback.class.getName()))
 										Feedback.notifySendMsg(Feedback.MSG_FROM_NOTIFY);
 									else {
 										MessageTipController.newInstance().getCommonData(null);
@@ -176,7 +171,7 @@ public class PushPraserService extends Service{
 									ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
 									ActivityManager.RunningTaskInfo info = manager.getRunningTasks(1).get(0);
 									//获取当前activity类名判断是否为com.xiangha.Feekback
-									if (Feedback.handler != null && info.topActivity.getClassName().equals("com.xiangha.Feekback"))
+									if (Feedback.handler != null && info.topActivity.getClassName().equals(Feedback.class.getName()))
 										Feedback.notifySendMsg(Feedback.MSG_FROM_NOTIFY);
 									else {
 										MessageTipController.newInstance().getCommonData(null);

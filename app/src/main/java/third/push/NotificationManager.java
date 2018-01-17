@@ -24,7 +24,6 @@ import acore.tools.FileManager;
 import acore.tools.LogManager;
 import acore.tools.Tools;
 import amodule.main.Main;
-import third.push.broadcast.ClickNotificationBroadcast;
 import third.push.broadcast.DismissNotificationBroadcast;
 import third.push.model.NotificationData;
 import third.push.model.NotificationEvent;
@@ -156,13 +155,13 @@ public class NotificationManager {
         intent.putExtra("from", "notify");
         intent.setAction(Intent.ACTION_VIEW);
         intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK);
-        Intent clickIntent = new Intent(context, ClickNotificationBroadcast.class); // 点击真正的Intent
-        clickIntent.putExtra("realIntent", intent);
         //添加umeng统计数据
         if (!TextUtils.isEmpty(data.umengMessage)) {
-            clickIntent.putExtra("umengMessage", data.umengMessage);
+            intent.putExtra("umengMessage", data.umengMessage);
         }
-        return PendingIntent.getBroadcast(context, 0, clickIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+        //开启点击统计
+        intent.putExtra(XHClick.KEY_NOTIFY_CLICK, 1);
+        return PendingIntent.getActivity(context, data.notificationId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
     }
 
     /**

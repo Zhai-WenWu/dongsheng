@@ -107,7 +107,7 @@ public class ShareTools {
 		else if(types.equals(IMG_TYPE_LOC)){
 			imgPath = img;
 		}
-		if(content.length() < 1){
+		if(TextUtils.isEmpty(content)){
 			content = " ";
 		}
 		if(platform.equals(SINA_NAME)){

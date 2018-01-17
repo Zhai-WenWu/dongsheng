@@ -360,7 +360,8 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
                     setUserImage(myself_iv, listMap.get("img"));
 
                     myself_please_login.setVisibility(View.GONE);
-                    if (listMap.get("isManager").equals("3") || listMap.get("isManager").equals("2") || XHConf.log_isDebug) {
+                    String isManagerStr = listMap.get("isManager");
+                    if (TextUtils.equals(isManagerStr, "3") || TextUtils.equals(isManagerStr, "2") || XHConf.log_isDebug) {
                         goManagerInfo.setVisibility(View.VISIBLE);
                     } else {
                         goManagerInfo.setVisibility(View.GONE);
