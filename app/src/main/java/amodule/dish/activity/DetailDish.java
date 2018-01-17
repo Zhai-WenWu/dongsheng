@@ -40,6 +40,7 @@ import amodule.user.db.BrowseHistorySqlite;
 import amodule.user.db.HistoryData;
 import aplug.web.tools.WebviewManager;
 import aplug.web.view.XHWebView;
+import third.video.VideoPlayerController;
 import xh.basic.internet.UtilInternet;
 
 import static amodule.dish.activity.DetailDishWeb.tongjiId;
@@ -137,6 +138,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
             detailDishViewManager = new DetailDishViewManager(this, listview, state);
             dishInfo= Uri.decode(dishInfo);
             detailDishViewManager.initBeforeData(img,dishInfo);
+            detailDishViewManager.setOnVideoCanPlay(() -> !isOnpause);
             handleVipState();
         }
         listview.setAdapter(adapterDishNew);

@@ -320,6 +320,9 @@ public class VideoPlayerController {
      * 广告点击事件
      */
     public void setOnClick() {
+        if(mOnVideoCanPlayCallback != null && !mOnVideoCanPlayCallback.canPlay()){
+            return;
+        }
         Log.i("tzy","广告点:::"+mHasVideoInfo);
         isAutoPaly = "wifi".equals(ToolsDevice.getNetWorkSimpleType(mContext));
         if (mHasVideoInfo) {
@@ -821,5 +824,13 @@ public class VideoPlayerController {
             mPraentViewGroup.removeView(clingOptionView);
             clingOptionView.hide();
         }
+    }
+
+    private OnVideoCanPlayCallback mOnVideoCanPlayCallback;
+    public void setOnVideoCanPlay(OnVideoCanPlayCallback callback){
+        mOnVideoCanPlayCallback = callback;
+    }
+    public interface OnVideoCanPlayCallback{
+        boolean canPlay();
     }
 }
