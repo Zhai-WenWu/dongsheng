@@ -117,7 +117,7 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,
                 if(null != mStatisticCallback){
                     if(mSubTitleView.getData() != null){
                         Map<String,String> map = StringManager.getFirstMap(mSubTitleView.getData().get("title"));
-                        mStatisticCallback.onStatistic(id,map.get("text1")+"-"+data.get("text1"),"",position);
+                        mStatisticCallback.onStatistic(id,"VIP达人课",map.get("text1")+"-"+data.get("text1"),position);
                     }
                 }
             }
