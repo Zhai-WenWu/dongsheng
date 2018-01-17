@@ -1332,7 +1332,6 @@
         <service android:name="third.push.PushPraserService"/>
         <!-- umeng push -->
         <!-- START 信鸽 -->
-        <receiver android:name="third.push.broadcast.ClickNotificationBroadcast"/>
         <receiver android:name="third.push.broadcast.DismissNotificationBroadcast"/>
 
         <!-- 【必须】 信鸽receiver广播接收 -->
