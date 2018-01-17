@@ -10,12 +10,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.RelativeLayout;
 
 import com.xiangha.R;
 
 import acore.logic.ActivityMethodManager;
+import acore.logic.XHClick;
 import acore.logic.load.LoadManager;
 import acore.override.XHApplication;
 import acore.override.activity.base.BaseActivity;
@@ -35,6 +35,12 @@ public class MainBaseActivity extends AppCompatActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mActMagager = new ActivityMethodManager(this);
+
+		Intent intent = getIntent();
+		int i = intent.getIntExtra(XHClick.KEY_NOTIFY_CLICK, 0);
+		if (i == XHClick.VALUE_NOTIFY_CLICK) {
+			XHClick.statisticsNotifyClick(intent);
+		}
 	}
 	
 	@Override

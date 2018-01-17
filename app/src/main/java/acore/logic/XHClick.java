@@ -1,6 +1,7 @@
 package acore.logic;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
@@ -11,6 +12,8 @@ import android.util.Log;
 import com.tencent.stat.StatService;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.analytics.dplus.UMADplus;
+import com.umeng.message.UTrack;
+import com.umeng.message.entity.UMessage;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -563,6 +566,32 @@ public class XHClick {
 //		Log.d("------统计------",content);
         UtilLog.print(XHConf.log_tag_stat, "d", content);
 //		Tools.showToast(context, content);
+    }
+
+    public static final String KEY_NOTIFY_CLICK = "notify_click";
+    public static final int VALUE_NOTIFY_CLICK = 1;
+    /**
+     * 消息推送点击统计
+     * @param intent
+     */
+    public static void statisticsNotifyClick(Intent intent) {
+        NotificationData data = new NotificationData();
+        data.type = intent.getIntExtra("type", 0);
+        data.value = intent.getStringExtra("value");
+        data.url = intent.getStringExtra("url");
+        data.channel = intent.getStringExtra("channel");
+        Context context = XHApplication.in();
+        statisticsNotify(context, data, NotificationEvent.EVENT_CLICK);
+        String message = intent.getStringExtra("umengMessage");
+        if (!TextUtils.isEmpty(message)) {
+            try {
+                UMessage msg = new UMessage(new JSONObject(message));
+                UTrack.getInstance(context).setClearPrevMessage(true);
+                UTrack.getInstance(context).trackMsgClick(msg);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**

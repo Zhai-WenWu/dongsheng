@@ -77,6 +77,12 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mActMagager = new ActivityMethodManager(this);
+
+        Intent intent = getIntent();
+        int i = intent.getIntExtra(XHClick.KEY_NOTIFY_CLICK, 0);
+        if (i == XHClick.VALUE_NOTIFY_CLICK) {
+            XHClick.statisticsNotifyClick(intent);
+        }
     }
 
     /**
