@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -159,7 +160,7 @@ public class AppCommon {
     public static void openUrl(final Activity act, String url, Boolean openThis) {
         Log.d("tzy","openUrl::url = " + url);
         //url为null直接不处理
-        if (TextUtils.isEmpty(url)) return;
+        if (TextUtils.isEmpty(url) || act == null) return;
         if (!url.startsWith(XH_PROTOCOL) && !url.startsWith("http")
                 && (!url.contains(".app") && !url.contains("circleHome"))
                 ) return;

@@ -61,6 +61,7 @@ import amodule.user.activity.MyMessage;
 import amodule.main.delegate.ISetMessageTip;
 import amodule.main.view.WelcomeDialog;
 import amodule.user.activity.MyFavorite;
+import amodule.user.activity.login.LoginByAccout;
 import aplug.shortvideo.ShortVideoInit;
 import third.ad.control.AdControlHomeDish;
 import third.ad.tools.AdConfigTools;
@@ -371,6 +372,11 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
         if (timer == null) {
             initRunTime();
         }
+        //如果是从收藏去登录，并登录成功，直接切换到收藏页面
+        if(loginIsFromFav && LoginManager.isLogin()){
+            setCurrentTabByClass(MyFavorite.class);
+        }
+        loginIsFromFav = false;
         LogManager.printStartTime("zhangyujian","main::onResume:end::");
     }
 
@@ -611,6 +617,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
         }
     }
 
+    boolean loginIsFromFav = false;
     /**
      * 点击下方tab切换,并且加上美食圈点击后进去第一个页面并刷新
      */
@@ -618,6 +625,15 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
     public void onClick(View v) {
         for (int i = 0; i < tabViews.length; i++) {
             if (v == tabViews[i].findViewById(R.id.tab_layout) && allTab.size() > 0) {
+                loginIsFromFav = false;
+                if(i == 2 && !LoginManager.isLogin()){
+                    if(mainActivity != null)
+                        mainActivity.startActivity(new Intent(this, LoginByAccout.class));
+                    else
+                        startActivity(new Intent(this, LoginByAccout.class));
+                    loginIsFromFav = true;
+                    return;
+                }
                 if (i == TAB_HOME && allTab.containsKey(MainHomePage.KEY) && i == nowTab) {
                     MainHomePage mainIndex = (MainHomePage) allTab.get(MainHomePage.KEY);
                     mainIndex.refresh();

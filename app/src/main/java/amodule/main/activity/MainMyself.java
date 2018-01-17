@@ -119,7 +119,6 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
 
     @Override
     protected void onResume() {
-        Main.mainActivity = this;
         super.onResume();
         mIsOnResuming = true;
         if (LoginManager.isLogin()) {

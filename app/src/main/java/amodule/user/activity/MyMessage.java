@@ -116,6 +116,10 @@ public class MyMessage extends BaseAppCompatActivity implements OnClickListener,
     @Override
     protected void onPause() {
         super.onPause();
+        if(handller!=null) {
+            handller.removeCallbacksAndMessages(null);
+            handller=null;
+        }
     }
 
     @Override
@@ -127,10 +131,6 @@ public class MyMessage extends BaseAppCompatActivity implements OnClickListener,
     protected void onDestroy() {
         super.onDestroy();
         ObserverManager.getInstance().unRegisterObserver(this);
-        if(handller!=null) {
-            handller.removeCallbacksAndMessages(null);
-            handller=null;
-        }
     }
 
     /** 外面调用的刷新 */
