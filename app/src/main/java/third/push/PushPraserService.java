@@ -150,7 +150,7 @@ public class PushPraserService extends Service{
 									ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
 									ActivityManager.RunningTaskInfo info = manager.getRunningTasks(1).get(0);
 									//获取当前activity类名判断是否为com.xiangha.Feekback
-									if (Feedback.handler != null && info.topActivity.getClassName().equals("com.xiangha.Feekback"))
+									if (Feedback.handler != null && info.topActivity.getClassName().equals(Feedback.class.getName()))
 										Feedback.notifySendMsg(Feedback.MSG_FROM_NOTIFY);
 									else {
 										MessageTipController.newInstance().getCommonData(null);
@@ -171,7 +171,7 @@ public class PushPraserService extends Service{
 									ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
 									ActivityManager.RunningTaskInfo info = manager.getRunningTasks(1).get(0);
 									//获取当前activity类名判断是否为com.xiangha.Feekback
-									if (Feedback.handler != null && info.topActivity.getClassName().equals("com.xiangha.Feekback"))
+									if (Feedback.handler != null && info.topActivity.getClassName().equals(Feedback.class.getName()))
 										Feedback.notifySendMsg(Feedback.MSG_FROM_NOTIFY);
 									else {
 										MessageTipController.newInstance().getCommonData(null);
