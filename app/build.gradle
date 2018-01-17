@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 apply plugin: 'walle'
-apply plugin: 'com.growingio.android'
 apply plugin: 'me.tatarka.retrolambda'
 
 repositories {
@@ -35,7 +34,6 @@ dependencies {
     compile 'com.android.support:multidex:1.0.1'
     //    compile 'com.google.code.gson:gson:2.7'
     compile 'com.meituan.android.walle:library:1.0.3'
-    compile 'com.growingio.android:vds-android-agent:1.1.1@aar'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.qiyukf.unicorn:unicorn:3.10.0'
     compile project(':gsyVideoPlayer-java')
@@ -45,16 +43,14 @@ dependencies {
 }
 
 android {
-
     compileSdkVersion 25
     buildToolsVersion '26.0.2'
-
     defaultConfig {
         applicationId "com.xiangha"
         minSdkVersion 14
         targetSdkVersion 21
         versionCode 230
-        versionName "5.9.0"
+        versionName "5.9.0.7"
         // dex突破65535的限制
         multiDexEnabled true
         //GrowingIO

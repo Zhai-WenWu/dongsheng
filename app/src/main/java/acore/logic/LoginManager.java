@@ -41,7 +41,6 @@ import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import aplug.web.tools.JsAppCommon;
 import aplug.web.tools.WebviewManager;
-import third.growingio.GrowingIOController;
 import third.mall.aplug.MallCommon;
 import third.mall.aplug.MallReqInternet;
 import third.mall.aplug.MallStringManager;
@@ -81,7 +80,6 @@ public class LoginManager {
             //			logout(act);
             new XGPushServer(act).initPush();
             //设置GrowingIO用户数据
-            new GrowingIOController().setUserProperties(act,userInfo);
         }else if(length > 0 || length <= 12){
             String params = "type=getData&devCode=" + XGPushServer.getXGToken(act);
             ReqInternet.in().doPost(StringManager.api_getUserInfo, params, new InternetCallback() {
@@ -99,8 +97,6 @@ public class LoginManager {
                 }
             });
         }else if(length == 13){
-            //设置GrowingIO用户数据
-            new GrowingIOController().setUserProperties(act,userInfo);
             //统计
             XHClick.onEvent(act, "login", "自动");
             //设置用户其他
@@ -185,8 +181,6 @@ public class LoginManager {
                     new UMPushServer(mAct).addAlias(userInfo.get("code"));
                     //清除数据
                     userInfo = new HashMap<>();
-                    //设置GrowingIO用户数据
-                    new GrowingIOController().setUserProperties(mAct,userInfo);
                     UtilFile.delShared(mAct, FileManager.xmlFile_userInfo, "");
                     //清空消息数角标
                     MessageTipController.newInstance().setQuanMessage(0);
@@ -299,8 +293,6 @@ public class LoginManager {
 				//储存用户信息
 				UtilFile.saveShared(mAct, FileManager.xmlFile_userInfo, userInfo);
 			}
-			//设置GrowingIO用户数据
-			new GrowingIOController().setUserProperties(mAct,map);
 		}
 	}
     //设置用户其他

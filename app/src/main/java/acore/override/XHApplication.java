@@ -28,7 +28,6 @@ import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import aplug.basic.LoadImage;
 import aplug.basic.XHConf;
-import third.growingio.GrowingIOController;
 import third.push.umeng.UMPushServer;
 
 public class XHApplication extends MobApplication {
@@ -111,33 +110,6 @@ public class XHApplication extends MobApplication {
         }
 
         LogManager.printStartTime("zhangyujian","XhApplication:222:initData::");
-        //GrowingIO初始化
-        new GrowingIOController().init(this);
-        this.registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
-            @Override
-            public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-            }
-            @Override
-            public void onActivityStarted(Activity activity) {
-            }
-            @Override
-            public void onActivityResumed(Activity activity) {
-                //记录当前activity
-                XHActivityManager.getInstance().setCurrentActivity(activity);
-            }
-            @Override
-            public void onActivityPaused(Activity activity) {
-            }
-            @Override
-            public void onActivityStopped(Activity activity) {
-            }
-            @Override
-            public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
-            }
-            @Override
-            public void onActivityDestroyed(Activity activity) {
-            }
-        });
     }
 
     @Override

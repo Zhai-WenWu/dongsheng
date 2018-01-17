@@ -142,10 +142,6 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
         init();
     }
     private void init(){
-//        Log.i("zhangyujian","数据："+FileManager.loadShared(this,FileManager.app_welcome,VersionOp.getVerName(this)));
-//        if(TextUtils.isEmpty((String) FileManager.loadShared(this,FileManager.app_welcome,VersionOp.getVerName(this)))) {
-//
-//        }
         WelcomeDialogstate=false;
         isShowWelcomeDialog=true;
         mainInitDataControl = new MainInitDataControl();
@@ -188,9 +184,11 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
         }
         @Override
         public void welcomeFree() {
+            LogManager.printStartTime("zhangyujian","main::welcomeFree:111:");
             initUI();
             initData();
             setCurrentTabByIndex(defaultTab);
+            LogManager.printStartTime("zhangyujian","main::welcomeFree:2222:");
             AdControlHomeDish.getInstance();
             initThrid();
             initOther();
