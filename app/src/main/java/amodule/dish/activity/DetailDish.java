@@ -74,6 +74,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
     private boolean isPay=false;
 
     private ShareConfDataController mShareConfDataController;
+    private boolean isOnpause= false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -193,6 +194,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         mShareConfDataController.loadData(code);
     }
     private void dishTypeData(String type,ArrayList<Map<String,String>> list,Map<String,String> map){
+        if(isOnpause)return;
         switch (type){
             case DetailDishDataManager.DISH_DATA_TOP://topInfo,菜谱的基本信息和用户的基本信息
                 mapTop= list.get(0);
@@ -274,11 +276,13 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
     @Override
     protected void onResume() {
         super.onResume();
+        isOnpause=false;
         if(detailDishViewManager!=null)detailDishViewManager.onResume();
     }
     @Override
     protected void onPause() {
         super.onPause();
+        isOnpause = true;
         if(detailDishViewManager!=null)detailDishViewManager.onPause();
     }
     @Override
