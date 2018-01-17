@@ -111,12 +111,7 @@ public class MyFavorite extends MainBaseActivity implements View.OnClickListener
         mPushIconView.setOnClickListener(this);
 
         findViewById(R.id.noLogin_layout).setOnClickListener(this);
-        findViewById(R.id.noLogin_layout).setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return true;
-            }
-        });
+        noLoginLayout.setOnTouchListener((v, event) -> true);
         findViewById(R.id.seek_layout).setOnClickListener(this);
         findViewById(R.id.title).setOnClickListener(this);
         findViewById(R.id.back).setVisibility(View.GONE);
