@@ -144,7 +144,7 @@ public class AllPopDialogHelper {
                 if ("1".equals(type)) {
                     try {
                         final DownLoad downLoad = new DownLoad(Main.allMain);
-                        downLoad.setNotifaction("开始下载", map.get("name") + ".apk", "正在下载", R.drawable.ic_launcher, false);
+                        downLoad.setDownLoadTip("开始下载", map.get("name") + ".apk", "正在下载", R.drawable.ic_launcher, false);
                         downLoad.starDownLoad(url, FileManager.getSDCacheDir(), map.get("name"), true, new DownloadCallBack() {
 
                             @Override

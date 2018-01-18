@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.download.down.VersionUpload;
 import com.popdialog.base.BaseDialogControl;
@@ -86,8 +87,11 @@ public class VersionOp extends BaseDialogControl {
 
     @Override
     public void show() {
-        if (isMustUpdata || !misSilentInstall) {
+        if (isMustUpdata){
             Log.i(TAG, "VersionOp :: show() :: starUpdate()");
+            versionUpload.starUpdate(!mShowPro, silentListener);
+        } else if(!misSilentInstall && !versionUpload.isDownloading()) {
+            //不是静默升级 && 后台没有下载
             versionUpload.starUpdate(!mShowPro, silentListener);
         } else {
             Log.i(TAG, "VersionOp :: show() :: silentInstall()");
@@ -182,6 +186,12 @@ public class VersionOp extends BaseDialogControl {
      * @param showPro 是否显示更新进度框
      */
     public void toUpdate(final OnCheckUpdataCallback callback, final boolean showPro) {
+        if(versionUpload != null
+                && versionUpload.isDownloading()
+                && !versionUpload.isSilent()){
+            Toast.makeText(mActivity, "后台下载中", Toast.LENGTH_SHORT).show();
+            return;
+        }
         mShowPro = showPro;
         if (callback != null) {
             callback.onPreUpdate();

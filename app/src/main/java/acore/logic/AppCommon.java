@@ -208,7 +208,7 @@ public class AppCommon {
             String appName = Uri.decode(map_link.get("appname"));
             try {
                 final DownLoad downLoad = new DownLoad(XHApplication.in());
-                downLoad.setNotifaction("开始下载", appName + ".apk", "正在下载", R.drawable.ic_launcher, false);
+                downLoad.setDownLoadTip("开始下载", appName + ".apk", "正在下载", R.drawable.ic_launcher, false);
                 downLoad.starDownLoad(downUrl, FileManager.getSDCacheDir(), appName, true, new DownloadCallBack() {
                     @Override
                     public void starDown() {
