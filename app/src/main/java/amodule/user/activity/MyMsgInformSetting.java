@@ -74,13 +74,26 @@ public class MyMsgInformSetting extends BaseActivity implements View.OnClickList
 		initMsgNewStatus();
 		setListener();
 		initData();
-		getData();
+		boolean newMsgValueNull = mDataController.checkValueNullByKey("newMsgOpen");
+		boolean statusChanged = checkNewMsgOpenStatusChanged();
+		if (!newMsgValueNull && !statusChanged && mNewMsgOpen) {
+			getData();
+		} else {
+			setAllDefaultStatus(mNewMsgOpen);
+			pushDataToService();
+			saveMsgSettingData();
+			onDataReady();
+		}
 	}
 
 	private void initData() {
 		mDataController = new MsgSettingDataController();
 		mData = new HashMap<>();
 		mLastNewMsgOpen = mDataController.checkOpenByKey("newMsgOpen");
+	}
+
+	private boolean checkNewMsgOpenStatusChanged() {
+		return mNewMsgOpen != mLastNewMsgOpen;
 	}
 
 	@Override
@@ -213,15 +226,6 @@ public class MyMsgInformSetting extends BaseActivity implements View.OnClickList
 	}
 
 	private void getData() {
-		if (!mNewMsgOpen) {
-			setAllDefaultStatus(false);
-			onDataReady();
-			return;
-		} else if (!mLastNewMsgOpen) {
-			setAllDefaultStatus(true);
-			onDataReady();
-			return;
-		}
 		if (loadManager != null)
 			loadManager.showProgressBar();
 		ReqInternet.in().doPost(StringManager.API_GETINFOSWITCHLIST, "", new InternetCallback() {

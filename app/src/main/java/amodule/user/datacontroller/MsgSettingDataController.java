@@ -29,6 +29,27 @@ public class MsgSettingDataController {
         UtilFile.saveShared(XHApplication.in(), FileManager.msgInform, key, value);
     }
 
+    public boolean checkValueNullByKey (String key) {
+        boolean ret = true;
+        if (TextUtils.isEmpty(key))
+            return ret;
+        String value = (String) UtilFile.loadShared(XHApplication.in(), FileManager.msgInform, key);
+        if (TextUtils.isEmpty(value))
+            return ret;
+        return !ret;
+    }
+
+    public boolean checkNewMsgOpen(String key) {
+        boolean ret = false;
+        if (TextUtils.isEmpty(key))
+            return ret;
+        String value = (String) UtilFile.loadShared(XHApplication.in(), FileManager.msgInform, key);
+        if (TextUtils.isEmpty(value))
+            return ret;
+        ret = TextUtils.equals(value, "1");
+        return ret;
+    }
+
     public boolean checkOpenByKey(String key) {
         boolean ret = true;
         if (TextUtils.isEmpty(key))
