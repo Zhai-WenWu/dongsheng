@@ -272,7 +272,6 @@ public class DetailDishViewManager {
                 @Override
                 public void getVideoControl(VideoPlayerController mVideoPlayerController, RelativeLayout dishVidioLayouts, View view_oneImage) {
                     dishVidioLayout=dishVidioLayouts;
-                    mVideoPlayerController.setOnVideoCanPlay(mOnVideoCanPlayCallback);
                 }
             });
             dishHeaderViewNew.setData(list, permissionMap);
@@ -603,8 +602,9 @@ public class DetailDishViewManager {
         if(dishHoverViewControl!=null)dishHoverViewControl.hindGoodLayout();
     }
 
-    private VideoPlayerController.OnVideoCanPlayCallback mOnVideoCanPlayCallback;
     public void setOnVideoCanPlay(VideoPlayerController.OnVideoCanPlayCallback callback){
-        mOnVideoCanPlayCallback = callback;
+        if(dishHeaderViewNew != null){
+            dishHeaderViewNew.setOnVideoCanPlay(callback);
+        }
     }
 }
