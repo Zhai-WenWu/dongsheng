@@ -40,7 +40,7 @@ public class XHInternetCallBack extends InterCallback {
      */
     public static void handlerBaseCookie() {
         if(mapCookie.size()>0)mapCookie.clear();
-       String device= ToolsDevice.getDevice(XHApplication.in()) + ToolsDevice.getNetWorkType(XHApplication.in()) + "#"
+       String device= ToolsDevice.getPhoneDevice(XHApplication.in()) + ToolsDevice.getNetWorkType(XHApplication.in()) + "#"
                 + ToolsDevice.getAvailMemory(XHApplication.in()) + "#" + ToolsDevice.getPackageName(XHApplication.in()) + "#"
                 + StringManager.appID + "#" + LoadManager.tok + ";";
         mapCookie.put("device",device);

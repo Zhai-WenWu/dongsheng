@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main_root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/transparent">
+    <ViewStub
+        android:id="@+id/viewstub_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout="@layout/xh_main_tabhost"
+        android:background="@color/transparent">
+    </ViewStub>
+    <include
+        android:id="@+id/xh_welcome"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        layout="@layout/xh_welcome"
+        android:visibility="gone"/>
+</RelativeLayout>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main_root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/transparent">
+
+        <!-- 这个FrameLayout为TabWidget的内容   id必须写成@android:id/tabcontent的形式 -->
+        <acore.widget.XiangHaTabHost
+            android:id="@+id/xiangha_tabhost"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/dp_50"
+            android:background="@color/transparent"/>
+        <!-- TabWidget这个组件的ID 必须是@android:id/tabs -->
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_0.5"
+            android:layout_above="@+id/show_tab"
+            android:background="#F1F1F1"
+            android:visibility="visible"
+            />
+
+        <FrameLayout
+            android:id="@+id/show_tab"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_49"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="bottom"
+            android:background="#F2F2F2">
+
+            <LinearLayout
+                android:id="@+id/linear_item"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:baselineAligned="false"
+                android:orientation="horizontal">
+
+                <include
+                    android:id="@+id/item_icon1"
+                    layout="@layout/c_view_bar_tab"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"/>
+
+                <include
+                    android:id="@+id/item_icon2"
+                    layout="@layout/c_view_bar_tab"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"/>
+
+                <include
+                    android:id="@+id/item_icon3"
+                    layout="@layout/c_view_bar_tab"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"/>
+
+                <include
+                    android:id="@+id/item_icon4"
+                    layout="@layout/c_view_bar_tab"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"/>
+            </LinearLayout>
+        </FrameLayout>
+</RelativeLayout>

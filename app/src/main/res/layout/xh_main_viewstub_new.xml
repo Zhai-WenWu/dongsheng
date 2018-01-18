@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <ViewStub
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/viewstub_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout="@layout/xh_main"
+        android:background="@color/transparent">
+    </ViewStub>
+

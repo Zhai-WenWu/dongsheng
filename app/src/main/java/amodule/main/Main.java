@@ -1,5 +1,4 @@
 package amodule.main;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.LocalActivityManager;
@@ -11,17 +10,17 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
+import android.support.multidex.MultiDex;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewTreeObserver;
+import android.view.ViewStub;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.annimon.stream.Stream;
 import com.popdialog.db.FullSrceenDB;
 import com.popdialog.util.GoodCommentManager;
@@ -30,16 +29,17 @@ import com.tencent.stat.StatConfig;
 import com.tencent.stat.StatService;
 import com.xiangha.R;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.MessageTipController;
 import acore.logic.VersionOp;
 import acore.logic.XHClick;
+import acore.notification.controller.NotificationSettingController;
 import acore.override.XHApplication;
 import acore.override.activity.mian.MainBaseActivity;
 import acore.tools.ChannelUtil;
@@ -57,15 +57,14 @@ import amodule.main.Tools.WelcomeControls;
 import amodule.main.activity.MainCircle;
 import amodule.main.activity.MainHomePage;
 import amodule.main.activity.MainMyself;
-import amodule.user.activity.MyMessage;
 import amodule.main.delegate.ISetMessageTip;
-import amodule.main.view.WelcomeDialog;
 import amodule.user.activity.MyFavorite;
 import amodule.user.activity.login.LoginByAccout;
 import aplug.shortvideo.ShortVideoInit;
 import third.ad.control.AdControlHomeDish;
 import third.ad.tools.AdConfigTools;
 import third.cling.control.ClingPresenter;
+import third.cling.service.ClingUpnpService;
 import third.mall.alipay.MallPayActivity;
 import third.push.xg.XGLocalPushServer;
 import third.push.xg.XGTagManager;
@@ -92,9 +91,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
     public static Main allMain;
     @SuppressLint("StaticFieldLeak")
     public static MainBaseActivity mainActivity;
-
     public static Timer timer;
-    //
     /**
      * 页面关闭层级
      * 把层级>=close_level的层级关闭
@@ -132,7 +129,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
         super.onCreate(savedInstanceState);
         Main.this.requestWindowFeature(Window.FEATURE_NO_TITLE); // 声明使用自定义标题
         LogManager.printStartTime("zhangyujian","main::oncreate::super::");
-        setContentView(R.layout.xh_main);//耗时250毫秒
+        setContentView(R.layout.xh_main_viewstub_new);//耗时250毫秒
         LogManager.printStartTime("zhangyujian","main::oncreate::setContentView::");
         mLocalActivityManager = new LocalActivityManager(this, true);
         mLocalActivityManager.dispatchCreate(savedInstanceState);
@@ -151,6 +148,38 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
         LogManager.printStartTime("zhangyujian","main::oncreate::");
         ClingPresenter.getInstance().onCreate(this, null);
     }
+//    private void handlerstartService() throws Exception {
+//        Class activityThreadClass = null;;
+//        activityThreadClass = Class.forName("android.app.ActivityThread");
+//        Object activityThread = activityThreadClass.getMethod("currentActivityThread").invoke(null);
+//        Field mHField = activityThreadClass.getDeclaredField("mH");
+//        mHField.setAccessible(true);
+//        Handler mH = (Handler) mHField.get(activityThreadClass);
+//
+//        Field mCallBackField = Handler.class.getDeclaredField("mCallback");
+//        mCallBackField.setAccessible(true);
+//
+////修改它的callback为我们的,从而HOOK掉
+//        ActivityThreadHandlerCallback callback = new ActivityThreadHandlerCallback(mH);
+//        mCallBackField.set(mH, callback);
+//    }
+//    private void handleCreateService(CreateServiceData data) {
+//        LoadedApk packageInfo = getPackageInfoNoCheck(data.info.applicationInfo, data.compatInfo);
+//        Service service = null;
+//        try {
+//            java.lang.ClassLoader cl = packageInfo.getClassLoader();
+//            service = (Service) cl.loadClass(data.info.name).newInstance();
+//        } catch (Exception e) {
+//        }
+//
+//        Application app = packageInfo.makeApplication(false, mInstrumentation);
+//        service.attach(context, this, data.info.name, data.token, app, ActivityManagerNative.getDefault());
+//        service.onCreate();
+//        mServices.put(data.token, service);
+//        try {
+//            ActivityManagerNative.getDefault().serviceDoneExecuting(data.token, 0, 0, 0);
+//        } catch (RemoteException e) {
+//        }}
 
     private WelcomeControls.WelcomeCallBack callBack = new WelcomeControls.WelcomeCallBack() {
         @Override
@@ -565,6 +594,9 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
         } else {
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         }
+        if(nowTab!=index){
+            NotificationSettingController.removePermissionSetView();
+        }
     }
 
     public int getCurrentTab() {
@@ -713,6 +745,9 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
         handlerPostInit.postDelayed(new Runnable() {
             @Override
             public void run() {
+                ViewStub mViewStub = (ViewStub) findViewById(R.id.viewstub_layout);
+                mViewStub.inflate();
+                mViewStub.setVisibility(View.VISIBLE);
                 if(welcomeControls!=null)welcomeControls.startShow();
             }
         },100);
