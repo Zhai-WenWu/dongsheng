@@ -78,7 +78,10 @@ public class ShareTools {
 	public void showSharePlatform(String title, String content,String types,
 								  String img, final String clickUrl, String platform,String from,String parent,boolean isShowBeginToast) {
 		starEvent("a_share400", mParent,mFrom);
-		String newClickUrl = clickUrl;
+		String tempClickUrl = clickUrl;
+		if (clickUrl == null)
+			tempClickUrl = "";
+		String newClickUrl = tempClickUrl.trim();
 		mClickUrl = newClickUrl + "";
 		mFrom = from + "";
 		mParent = parent + "";
