@@ -201,10 +201,10 @@ public class ShareTools {
 			shareMap.put("type", map.get("type"));
 			showShareMiniProgram(shareMap);
 		} else {
-			String title = shareMap.get("title");
-			String content = shareMap.get("content");
-			String imgUrl = shareMap.get("img");
-			String clickUrl = shareMap.get("url");
+			String title = map.get("title");
+			String content = map.get("content");
+			String imgUrl = map.get("img");
+			String clickUrl = map.get("url");
 			String type = map.get("type");
 			String from = map.get("from");
 			String parent = map.get("parent");

@@ -236,12 +236,11 @@ public class DishTitleViewControl implements View.OnClickListener {
         intent.putExtra("type", mapData.get("mType"));
         intent.putExtra("shareFrom", "菜谱详情页");
         intent.putExtra("reportUrl", "Feedback.app?feekUrl=http://www.xiangha.com/caipu/" + code + ".html");
-        if (TextUtils.isEmpty(mShareStr)) {
-            intent.putExtra("imgUrl", mapData.get("mImgUrl"));
-            intent.putExtra("clickUrl", mapData.get("mClickUrl"));
-            intent.putExtra("title", mapData.get("mTitle"));
-            intent.putExtra("content", mapData.get("mContent"));
-        } else {
+        intent.putExtra("imgUrl", mapData.get("mImgUrl"));
+        intent.putExtra("clickUrl", mapData.get("mClickUrl"));
+        intent.putExtra("title", mapData.get("mTitle"));
+        intent.putExtra("content", mapData.get("mContent"));
+        if (!TextUtils.isEmpty(mShareStr)) {
             intent.putExtra("shareParams", mShareStr);
         }
         detailDish.startActivity(intent);

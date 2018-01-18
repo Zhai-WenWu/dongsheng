@@ -122,9 +122,9 @@ public class ShareActivityDialog extends Activity implements View.OnClickListene
                     Map<String, String> dataMap = new HashMap<>();
                     dataMap.put("type", mType);
                     dataMap.put("title", mTitle);
-                    dataMap.put("clickUrl", mClickUrl);
+                    dataMap.put("url", mClickUrl);
                     dataMap.put("content", mContent);
-                    dataMap.put("imgUrl", mImgUrl);
+                    dataMap.put("img", mImgUrl);
                     dataMap.put("from", mShareFrom);
                     dataMap.put("parent", mParent);
                     dataMap.put("platform", platfrom);
