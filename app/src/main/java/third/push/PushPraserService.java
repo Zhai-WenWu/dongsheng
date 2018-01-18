@@ -145,7 +145,7 @@ public class PushPraserService extends Service{
 							//判断应用是否开着
 							if (context != null && ToolsDevice.isAppInPhone(context, context.getPackageName()) < 2) {
 								new NotificationManager().notificationActivity(context, data);
-							} else if (data.url.indexOf("dialog.app") > -1) { //判断是否是开启反馈的url
+							} else if (data.url.indexOf("Feedback.app") > -1) { //判断是否是开启反馈的url
 								if (context != null) {
 									ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
 									ActivityManager.RunningTaskInfo info = manager.getRunningTasks(1).get(0);
@@ -166,7 +166,7 @@ public class PushPraserService extends Service{
 							if (context != null && ToolsDevice.isAppInPhone(context, context.getPackageName()) < 2) {
 								data.setStartAvtiviyWhenClick(Main.class);
 								new NotificationManager().notificationActivity(context, data);
-							} else if (data.url.indexOf("dialog.app") > -1) { //判断是否是开启反馈的url
+							} else if (data.url.indexOf("Feedback.app") > -1) { //判断是否是开启反馈的url
 								if (context != null) {
 									ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
 									ActivityManager.RunningTaskInfo info = manager.getRunningTasks(1).get(0);
