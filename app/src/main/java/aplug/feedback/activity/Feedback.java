@@ -347,7 +347,7 @@ public class Feedback extends BaseActivity implements OnClickListener {
                 }
             });
             //处理弹框
-            new NotificationSettingController().showNotification(Tools.getDimen(this,R.dimen.dp_44), FileManager.push_show_feedBack,NotificationSettingController.pushSetFeedBack);
+            NotificationSettingController.showNotification(Tools.getDimen(this,R.dimen.dp_44), FileManager.push_show_feedBack,NotificationSettingController.pushSetFeedBack);
         } else
             Tools.showToast(this, "请输入反馈内容");
     }

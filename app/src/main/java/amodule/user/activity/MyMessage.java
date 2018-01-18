@@ -71,7 +71,7 @@ public class MyMessage extends BaseAppCompatActivity implements OnClickListener,
         handller.postDelayed(new Runnable() {
             @Override
             public void run() {
-                new NotificationSettingController().showNotification(0, FileManager.push_show_message,NotificationSettingController.pushSetMessage);
+                NotificationSettingController.showNotification(0, FileManager.push_show_message,NotificationSettingController.pushSetMessage);
             }
         },1000*3);
     }

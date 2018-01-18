@@ -269,7 +269,7 @@ public class BarSubjectReply2 extends RelativeLayout implements OnClickListener{
 						progressBar.setVisibility(View.GONE);
 						btn_reply.setText("发送");
 					}
-					new NotificationSettingController().showNotification(Tools.getDimen(mAct,R.dimen.dp_45), FileManager.push_show_reciew, NotificationSettingController.pushSetReview);
+					NotificationSettingController.showNotification(Tools.getDimen(mAct,R.dimen.dp_45), FileManager.push_show_reciew, NotificationSettingController.pushSetReview);
 				}
 
 			});

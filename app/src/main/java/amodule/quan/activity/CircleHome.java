@@ -312,7 +312,7 @@ public class CircleHome extends BaseAppCompatActivity implements OnClickListener
             }
             // 通知Fragment刷新
             updateFragment(subjectData, false);
-            new NotificationSettingController().showNotification(0, FileManager.push_show_subject,NotificationSettingController.pushSetSubject);
+            NotificationSettingController.showNotification(0, FileManager.push_show_subject,NotificationSettingController.pushSetSubject);
         }
 
 

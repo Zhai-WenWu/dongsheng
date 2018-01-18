@@ -24,6 +24,7 @@ import com.xiangha.R;
 import acore.logic.ActivityMethodManager;
 import acore.logic.XHClick;
 import acore.logic.load.LoadManager;
+import acore.notification.controller.NotificationSettingController;
 import acore.override.XHApplication;
 import acore.tools.LogManager;
 import acore.tools.PageStatisticsUtils;
@@ -365,6 +366,7 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     @Override
     public void startActivity(Intent intent) {
         super.startActivity(intent);
+        NotificationSettingController.removePermissionSetView();
         // 设置切换动画，从右边进入，左边退出
         overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
     }
@@ -372,6 +374,7 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     @Override
     public void startActivityForResult(Intent intent, int requestCode) {
         super.startActivityForResult(intent, requestCode);
+        NotificationSettingController.removePermissionSetView();
         // 设置切换动画，从右边进入，左边退出
         overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
     }

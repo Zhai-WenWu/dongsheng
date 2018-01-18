@@ -36,11 +36,17 @@ public class NotificationSettingController {
     public static final String pushSetReview="开启通知及时接收哈友的评论消息,86%的哈友已开启";
     public static final String pushSetFeedBack="开启通知及时接收小秘书回复,更好地解决你的问题";
     public static final String pushSetSubject="开启通知及时接收哈友的评论消息,86%的哈友已开启";
+    private static RelativeLayout relativeLayout = null;
+    private static View viewSet=null;
     /**
      * all版本控制只显示一次
      * @param marginBottom
      */
-    public void showNotification(int marginBottom,String key,String message){
+    public static void showNotification(int marginBottom, String key, String message){
+        if(relativeLayout!=null||viewSet!=null){
+            relativeLayout=null;
+            viewSet=null;
+        }
         if(XHActivityManager.getInstance().getCurrentActivity()==null|| PushManager.isNotificationEnabled(XHActivityManager.getInstance().getCurrentActivity()))return;
         if(TextUtils.isEmpty((CharSequence) FileManager.loadShared(XHApplication.in(),FileManager.app_notification, key))){
             showNotificationPermissionSetView(marginBottom, message,key);
@@ -48,14 +54,14 @@ public class NotificationSettingController {
         }
     }
 
-    private void showNotificationPermissionSetView(int marginBottom,String message,String key){
+    private static void showNotificationPermissionSetView(int marginBottom, String message, String key){
         if(XHActivityManager.getInstance().getCurrentActivity()!=null){
             Activity activity = XHActivityManager.getInstance().getCurrentActivity();
             if(activity.findViewById(R.id.activityLayout)==null)return;
             showPermissionSetView(activity, (RelativeLayout) activity.findViewById(R.id.activityLayout),marginBottom,message,key);
         }
     }
-    private void showPermissionSetView(Context context, RelativeLayout rl,int marginBottom,String message,String key){
+    private static void showPermissionSetView(Context context, RelativeLayout rl, int marginBottom, String message, String key){
         if(context==null||rl==null)return;
         View view=LayoutInflater.from(context).inflate(R.layout.view_notification_set,null);
         RelativeLayout.LayoutParams lp=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);//两个参数分别是layout_width,layout_height
@@ -81,7 +87,18 @@ public class NotificationSettingController {
             }});
 
         rl.addView(view);
+        relativeLayout =rl;
+        viewSet=view;
         FileManager.saveShared(context,FileManager.app_notification, VersionOp.getVerName(context),"2");
+    }
+    public static void removePermissionSetView(){
+        Log.i("xianghaTag","removePermissionSetView:");
+        if(relativeLayout!=null&&viewSet!=null){
+            Log.i("xianghaTag","removePermissionSetView:");
+            relativeLayout.removeView(viewSet);
+            relativeLayout=null;
+            viewSet=null;
+        }
     }
 
     public static void openNotificationSettings() {
@@ -205,7 +222,7 @@ public class NotificationSettingController {
     private static Uri getPackageUri() {
         return Uri.parse("package:" + XHApplication.in().getPackageName());
     }
-    public String getStatisticKey(String name){
+    public static String getStatisticKey(String name){
         if(name.equals(VersionOp.getVerName(XHApplication.in()))){
             return "首页浮条点击";
         }

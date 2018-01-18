@@ -283,7 +283,7 @@ public class AllPopDialogHelper {
         allPopDialogControler.setOnPushDialogStatisticsCallback(new AllPopDialogControler.PushViewShowCallBack() {
             @Override
             public void viewShowState(boolean b) {
-                if(b)new NotificationSettingController().showNotification(0, VersionOp.getVerName(XHApplication.in()),"");
+                if(b)NotificationSettingController.showNotification(0, VersionOp.getVerName(XHApplication.in()),"");
             }
         });
     }
