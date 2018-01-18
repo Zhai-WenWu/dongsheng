@@ -325,6 +325,7 @@ public class DishHeaderViewNew extends LinearLayout {
         if (!TextUtils.isEmpty(videoUrl) && videoUrl.startsWith("http")) {
             dishVidioLayout.setPadding(0, distance, 0, 0);
             mVideoPlayerController = new VideoPlayerController(activity, dishVidioLayout, img);
+            mVideoPlayerController.setOnVideoCanPlay(mOnVideoCanPlayCallback);
             mVideoPlayerController.showFullScrren();
             mVideoPlayerController.showClingBtn(mShowClingBtn);
             if(permissionMap != null && permissionMap.containsKey("video")){
@@ -570,6 +571,11 @@ public class DishHeaderViewNew extends LinearLayout {
         if (mVideoPlayerController != null)
             return mVideoPlayerController.videoPlayer.getCurrentState();
         return -1;//状态的初始化
+    }
+
+    private VideoPlayerController.OnVideoCanPlayCallback mOnVideoCanPlayCallback;
+    public void setOnVideoCanPlay(VideoPlayerController.OnVideoCanPlayCallback callback){
+        mOnVideoCanPlayCallback = callback;
     }
 
 }
