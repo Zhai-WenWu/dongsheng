@@ -1,5 +1,6 @@
 package third.push;
 
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Service;
 import android.content.Context;
@@ -17,6 +18,7 @@ import java.util.UUID;
 
 import acore.logic.MessageTipController;
 import acore.logic.XHClick;
+import acore.override.helper.XHActivityManager;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
@@ -145,14 +147,13 @@ public class PushPraserService extends Service{
 							//判断应用是否开着
 							if (context != null && ToolsDevice.isAppInPhone(context, context.getPackageName()) < 2) {
 								new NotificationManager().notificationActivity(context, data);
-							} else if (data.url.indexOf("Feedback.app") > -1) { //判断是否是开启反馈的url
+							} else if ((data.url.indexOf("Feedback.app") > -1||data.url.indexOf("dialog.app") > -1)&&ToolsDevice.isAppInPhone(context, context.getPackageName())== 3) { //判断是否是开启反馈的url
 								if (context != null) {
-									ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-									ActivityManager.RunningTaskInfo info = manager.getRunningTasks(1).get(0);
+									Activity activity = XHActivityManager.getInstance().getCurrentActivity();
 									//获取当前activity类名判断是否为com.xiangha.Feekback
-									if (Feedback.handler != null && info.topActivity.getClassName().equals(Feedback.class.getName()))
-										Feedback.notifySendMsg(Feedback.MSG_FROM_NOTIFY);
-									else {
+									if (activity!=null&&activity instanceof Feedback) {
+										((Feedback) activity).notifySendMsg(Feedback.MSG_FROM_NOTIFY);
+									}else {
 										MessageTipController.newInstance().getCommonData(null);
 										new NotificationManager().notificationActivity(context, data);
 									}
@@ -166,14 +167,13 @@ public class PushPraserService extends Service{
 							if (context != null && ToolsDevice.isAppInPhone(context, context.getPackageName()) < 2) {
 								data.setStartAvtiviyWhenClick(Main.class);
 								new NotificationManager().notificationActivity(context, data);
-							} else if (data.url.indexOf("Feedback.app") > -1) { //判断是否是开启反馈的url
+							} else if ((data.url.indexOf("Feedback.app") > -1||data.url.indexOf("dialog.app") > -1)&&ToolsDevice.isAppInPhone(context, context.getPackageName())== 3) { //判断是否是开启反馈的url
 								if (context != null) {
-									ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-									ActivityManager.RunningTaskInfo info = manager.getRunningTasks(1).get(0);
+									Activity activity = XHActivityManager.getInstance().getCurrentActivity();
 									//获取当前activity类名判断是否为com.xiangha.Feekback
-									if (Feedback.handler != null && info.topActivity.getClassName().equals(Feedback.class.getName()))
-										Feedback.notifySendMsg(Feedback.MSG_FROM_NOTIFY);
-									else {
+									if (activity!=null&&activity instanceof Feedback) {
+										((Feedback) activity).notifySendMsg(Feedback.MSG_FROM_NOTIFY);
+									}else {
 										MessageTipController.newInstance().getCommonData(null);
 										new NotificationManager().notificationActivity(context, data);
 									}
