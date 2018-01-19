@@ -238,7 +238,7 @@ public class HomeSecondListFragment extends Fragment {
         String url= StringManager.API_RECOMMEND;
 
         //更新加载按钮状态
-        mLoadManager.changeMoreBtn(mRv, ReqInternet.REQ_OK_STRING, -1, -1, mLoadOver?2:1, refresh && mIsVisible);
+        mLoadManager.changeMoreBtn(mRv, ReqInternet.REQ_OK_STRING, -1, -1, mLoadOver?2:1, (mListData == null || mListData.isEmpty()) && mIsVisible);
         mLoadOver = true;
         if (refresh)
             mCompelClearData = true;
