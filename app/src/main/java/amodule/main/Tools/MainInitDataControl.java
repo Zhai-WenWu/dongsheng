@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
@@ -68,6 +67,7 @@ import aplug.basic.XHInternetCallBack;
 import aplug.web.tools.XHTemplateManager;
 import third.ad.tools.AdConfigTools;
 import third.mall.aplug.MallCommon;
+import third.push.localpush.LocalPushManager;
 import third.push.xg.XGTagManager;
 import third.qiyu.QiYvHelper;
 import xh.basic.tool.UtilFile;
@@ -169,6 +169,7 @@ public class MainInitDataControl {
 
         OffDishToFavoriteControl.addCollection(act);
         PageStatisticsUtils.getInstance().getPageInfo(act.getApplicationContext());//初始化电商页面统计
+        LocalPushManager.stopLocalPush(act);
         Log.i("zhangyujian","iniMainAfter::时间:"+(endTime-startTime));
 
     }

@@ -494,7 +494,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
 //                        new XGLocalPushServer(act).initLocalPush();
 
                         new LocalPushDataManager(act).initLocalPush();
-                        LocalPushManager.execute(act, System.currentTimeMillis() + 3 * 24 * 60 * 60 * 1000L , null, null);
+                        LocalPushManager.execute(act, System.currentTimeMillis() + 3 * 24 * 60 * 60 * 1000L, null, null);
                     }
                 } catch (Exception e) {
                 }

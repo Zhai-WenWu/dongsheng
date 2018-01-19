@@ -40,20 +40,8 @@ public class LocalPushManager {
         notificationManagerCompat.cancelAll();
     }
 
-    public static void cancelAlarm(Context context, PendingIntent operationClick, PendingIntent operationDismiss) {
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        Intent myIntent = new Intent(context, LocalPushReceiver.class);
-        myIntent.putExtra(TAG_MANAGER, LocalPushReceiver.TAG);
-        if (operationClick != null)
-            myIntent.putExtra(TAG_OPERATION_CLICK, operationClick);
-        if (operationDismiss != null)
-            myIntent.putExtra(TAG_OPERATION_DISMISS, operationDismiss);
-        LocalPushDataManager dataManager = new LocalPushDataManager(context);
-        String requestCodeStr = dataManager.getRequestCode();
-        if (!TextUtils.isEmpty(requestCodeStr)) {
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, Integer.parseInt(requestCodeStr), myIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-            alarmManager.cancel(pendingIntent);
-        }
+    public static void stopLocalPush(Context context) {
+        new LocalPushDataManager(context).setTagNum(FileManager.xmlKey_localZhishi, String.valueOf(MSG_TOTAL_COUNT));
     }
 
     /**
