@@ -9,6 +9,7 @@ import acore.logic.AppCommon;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
+import amodule.main.Main;
 import third.push.model.NotificationData;
 
 /**
@@ -42,6 +43,7 @@ public class LocalPushDataManager {
         notificationData.setContent("今天的晚餐准备好了，快去看看吧~");
         notificationData.setUrl("dishList.app?type=typeRecommend&g1=3");
         notificationData.setNotificationTime(getTriggerMillisByTimes(times));
+        notificationData.setStartAvtiviyWhenClick(Main.class);
         return notificationData;
     }
 
