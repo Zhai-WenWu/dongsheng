@@ -48,7 +48,7 @@ import xh.basic.tool.UtilString;
 public class Feedback extends BaseActivity implements OnClickListener {
     public static final String DEFAULT_CONTENT = "您好，我是香哈小秘书，有什么建议、问题，可以随时给我说哦！活动、获奖通知也将在这里通知。";
     private static final int FEEDBACK_UPLOADIMG = 4000;
-    public static Handler handler = null;
+    public  Handler handler = null;
     private DownRefreshList feekback_list;
     private EditText feebback_reply_content;
 
@@ -352,7 +352,7 @@ public class Feedback extends BaseActivity implements OnClickListener {
             Tools.showToast(this, "请输入反馈内容");
     }
 
-    public static void notifySendMsg(int what) {
+    public void notifySendMsg(int what) {
         Message msg = handler.obtainMessage();
         switch (what) {
             case MSG_IMG_UPLOAD:
