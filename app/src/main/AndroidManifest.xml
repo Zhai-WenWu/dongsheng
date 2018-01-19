@@ -1555,6 +1555,8 @@
             android:exported="false" />
         <!--Cling end-->
 
+        <receiver android:name="third.push.localpush.LocalPushReceiver"/>
+
     </application>
 
 </manifest>

@@ -1,4 +1,5 @@
 package amodule.main;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.LocalActivityManager;
@@ -10,17 +11,16 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
-import android.support.multidex.MultiDex;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewStub;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.annimon.stream.Stream;
 import com.popdialog.db.FullSrceenDB;
 import com.popdialog.util.GoodCommentManager;
@@ -29,11 +29,11 @@ import com.tencent.stat.StatConfig;
 import com.tencent.stat.StatService;
 import com.xiangha.R;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.MessageTipController;
@@ -65,7 +65,8 @@ import third.ad.control.AdControlHomeDish;
 import third.ad.tools.AdConfigTools;
 import third.cling.control.ClingPresenter;
 import third.mall.alipay.MallPayActivity;
-import third.push.xg.XGLocalPushServer;
+import third.push.localpush.LocalPushDataManager;
+import third.push.localpush.LocalPushManager;
 import third.push.xg.XGTagManager;
 import third.qiyu.QiYvHelper;
 import xh.basic.tool.UtilFile;
@@ -489,7 +490,12 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                 UploadDishControl.getInstance().updataAllUploadingDish(getApplicationContext());
                 try {
                     // 开启自我唤醒
-                    if (act != null) new XGLocalPushServer(act).initLocalPush();
+                    if (act != null) {
+//                        new XGLocalPushServer(act).initLocalPush();
+
+                        new LocalPushDataManager(act).initLocalPush();
+                        LocalPushManager.execute(act, System.currentTimeMillis() + 3 * 24 * 60 * 60 * 1000L , null, null);
+                    }
                 } catch (Exception e) {
                 }
                 // 关闭时发送页面停留时间统计

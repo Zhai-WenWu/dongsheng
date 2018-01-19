@@ -21,7 +21,7 @@
             android:gravity="center"
             android:layout_centerInParent="true"
             android:textColor="@color/comment_color"
-            android:text="开启通知及时获取美食推荐,86%的哈友已开启"/>
+            android:text="开启通知及时获取美食推荐,96%的哈友已开启"/>
         <ImageView
             android:id="@+id/view_close"
             android:layout_width="@dimen/dp_20"

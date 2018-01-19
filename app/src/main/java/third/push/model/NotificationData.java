@@ -25,6 +25,16 @@ public class NotificationData {
 	public String umengMessage = "";
 	public Class<?> startAvtiviyWhenClick = null;
 
+	public long notificationTime;
+
+	public long getNotificationTime() {
+		return notificationTime;
+	}
+
+	public void setNotificationTime(long notificationTime) {
+		this.notificationTime = notificationTime;
+	}
+
 	public int getType() {
 		return type;
 	}

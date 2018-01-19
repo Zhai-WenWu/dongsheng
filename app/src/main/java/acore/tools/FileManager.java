@@ -87,6 +87,7 @@ public class FileManager extends UtilFile{
 	public static final String xmlKey_notifycationId = "notifycationId";
 	public static final String xmlKey_startTime = "startTime";
 	public static final String xmlKey_localZhishi = "localZhishi";
+	public static final String xmlKey_localIntentRequestCode = "localIntentRequestCode";
 	public static final String xmlKey_localCaidan = "localCaidan";
 	public static final String xmlKey_confirnCount = "confirnCount";
 	public static final String xmlKey_confirnLastShowTime = "confirnLastShowTime";
