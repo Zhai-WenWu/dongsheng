@@ -106,10 +106,10 @@ public class ReqEncyptInternet extends UtilInternet {
         String sign_yes= ReqEncryptCommon.encrypt(sign_no+"_"+time,ReqEncryptCommon.password);
         String now_parms="";
 
-        Log.i("zhangyujian","sign_no::"+sign_no);
-        Log.i("zhangyujian","sign_yes::"+sign_yes);
-        Log.i("zhangyujian","time::"+time);
-        Log.i("zhangyujian","now_parms::"+now_parms);
+//        Log.i("zhangyujian","sign_no::"+sign_no);
+//        Log.i("zhangyujian","sign_yes::"+sign_yes);
+//        Log.i("zhangyujian","time::"+time);
+//        Log.i("zhangyujian","now_parms::"+now_parms);
         String encryptparams=ReqEncryptCommon.getInstance().getData(now_parms,sign_yes);
         InternetCallback internetCallback= new InternetCallback() {
 
@@ -121,7 +121,7 @@ public class ReqEncyptInternet extends UtilInternet {
 
             @Override
             public void loaded(int flag, String url, Object object) {
-                Log.i("zhangyujian","flag:" + flag + "   object::"+object);
+//                Log.i("zhangyujian","flag:" + flag + "   object::"+object);
                 if(flag==ReqInternet.REQ_CODE_ERROR && object != "" && isNumeric((String) object)){
                     int errorCode= Integer.parseInt((String) object);
                     if(errorCode>4000){//请求签名错误
@@ -185,7 +185,7 @@ public class ReqEncyptInternet extends UtilInternet {
             ReqInternet.in().doPost(url, params, new InternetCallback() {
                 @Override
                 public void loaded(int flag, String url, Object object) {
-                    Log.i("zhangyujian","getLoginApp() falg:" + flag + "  url:" + url + "  object:" + object);
+//                    Log.i("zhangyujian","getLoginApp() falg:" + flag + "  url:" + url + "  object:" + object);
                     isLoginSign=false;
                     if (flag >= ReqInternet.REQ_OK_STRING) {
                         //loginApp的的时间戳。
@@ -206,14 +206,14 @@ public class ReqEncyptInternet extends UtilInternet {
                             handlerEncryptParam();
                             //加盟数据并处理数据
                             int size= listInternet.size();
-                            Log.i("zhangyujian","size:::"+size);
+//                            Log.i("zhangyujian","size:::"+size);
                             for(int i=size-1;i>=0;i--){
                                 Map<String,Object> mapurl=listInternet.get(i);
                                 if(mapurl!=null) {
                                     if(mapurl.get("callback")!=null){
                                         InternetCallback callback = (InternetCallback) mapurl.get("callback");
                                         if(callback!=null) {
-                                            Log.i("zhangyujian","mapurl.get(\"url\"):::"+mapurl.get("url"));
+//                                            Log.i("zhangyujian","mapurl.get(\"url\"):::"+mapurl.get("url"));
                                             setRequest((String)mapurl.get("url"),(LinkedHashMap)mapurl.get("param"),callback);
                                         }
                                     }
@@ -226,14 +226,14 @@ public class ReqEncyptInternet extends UtilInternet {
                     }else{
                         //加盟数据并处理数据
                         int size= listInternet.size();
-                        Log.i("zhangyujian","size:::"+size);
+//                        Log.i("zhangyujian","size:::"+size);
                         for(int i=size-1;i>=0;i--){
                             Map<String,Object> mapurl=listInternet.get(i);
                             if(mapurl!=null) {
                                 if(mapurl.get("callback")!=null){
                                     InternetCallback callback = (InternetCallback) mapurl.get("callback");
                                     if(callback!=null) {
-                                        Log.i("zhangyujian","mapurl.get(\"url\"):::"+mapurl.get("url"));
+//                                        Log.i("zhangyujian","mapurl.get(\"url\"):::"+mapurl.get("url"));
                                         setRequest((String)mapurl.get("url"),(LinkedHashMap)mapurl.get("param"),callback);
                                     }
                                 }
