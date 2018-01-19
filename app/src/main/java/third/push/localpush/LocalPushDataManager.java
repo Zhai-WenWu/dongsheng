@@ -61,6 +61,9 @@ public class LocalPushDataManager {
         long hourMillis = hour * 60 * 60 * 1000;
         long randomMinMillis = randomMin * 60 * 1000;
         ret = dayMillis + hourMillis + randomMinMillis;
+
+        // TODO: 2018/1/19 测试代码，需要删除
+        ret = System.currentTimeMillis() + /*3 * 24 * 60 * 60 * 1000L*/2000;
         return ret;
     }
 
