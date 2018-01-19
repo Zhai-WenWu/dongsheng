@@ -23,6 +23,7 @@ import acore.tools.PageStatisticsUtils;
 import amodule.main.Main;
 import third.ad.AdsShow;
 import third.mall.aplug.MallCommon;
+import third.push.localpush.LocalPushManager;
 
 public class MainBaseActivity extends AppCompatActivity {
 	protected int level = 1;
@@ -41,6 +42,8 @@ public class MainBaseActivity extends AppCompatActivity {
 		if (i == XHClick.VALUE_NOTIFY_CLICK) {
 			XHClick.statisticsNotifyClick(intent);
 		}
+
+		LocalPushManager.stopLocalPush(this);
 	}
 	
 	@Override

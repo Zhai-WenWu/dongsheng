@@ -47,6 +47,7 @@ import amodule.main.Main;
 import amodule.main.view.CommonBottomView;
 import amodule.main.view.CommonBottonControl;
 import third.ad.AdsShow;
+import third.push.localpush.LocalPushManager;
 import third.share.BarShare;
 
 import static acore.tools.Tools.getApiSurTime;
@@ -87,6 +88,8 @@ public class BaseActivity extends AppCompatActivity {
 		if (i == XHClick.VALUE_NOTIFY_CLICK) {
 			XHClick.statisticsNotifyClick(intent);
 		}
+
+		LocalPushManager.stopLocalPush(this);
 	}
 
 

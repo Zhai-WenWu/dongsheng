@@ -169,7 +169,6 @@ public class MainInitDataControl {
 
         OffDishToFavoriteControl.addCollection(act);
         PageStatisticsUtils.getInstance().getPageInfo(act.getApplicationContext());//初始化电商页面统计
-        LocalPushManager.stopLocalPush(act);
         Log.i("zhangyujian","iniMainAfter::时间:"+(endTime-startTime));
 
     }
