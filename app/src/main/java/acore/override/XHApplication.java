@@ -110,7 +110,6 @@ public class XHApplication extends MobApplication {
         }
 
         LogManager.printStartTime("zhangyujian","XhApplication:222:initData::");
-        //GrowingIO初始化
         this.registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
             @Override
             public void onActivityCreated(Activity activity, Bundle savedInstanceState) {

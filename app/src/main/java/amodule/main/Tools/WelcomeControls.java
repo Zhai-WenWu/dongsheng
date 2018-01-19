@@ -66,10 +66,11 @@ public class WelcomeControls {
         this.mAdTime = adShowTime;
         this.welcomeCallBack = callBack;
         LogManager.printStartTime("zhangyujian","WelcomeControls：1111：：");
+        activity.findViewById(R.id.xh_welcome).setVisibility(View.VISIBLE);
     }
 
     public void startShow(){
-        activity.findViewById(R.id.xh_welcome).setVisibility(View.VISIBLE);
+//        activity.findViewById(R.id.xh_welcome).setVisibility(View.VISIBLE);
         initWelcome();
         startCountDown(false);
         WelcomeAdTools.getInstance().handlerAdData(false, null,false);
