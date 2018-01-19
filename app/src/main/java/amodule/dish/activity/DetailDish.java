@@ -179,10 +179,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         mShareConfDataController = new ShareConfDataController();
         mShareConfDataController.setOnDataListener(new DataListener() {
             @Override
-            public void onLoadData() {
-
-            }
-
+            public void onLoadData() {}
             @Override
             public void onDataReady(int flag, String type, Object object) {
                 if (flag >= UtilInternet.REQ_OK_STRING) {
@@ -196,7 +193,6 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         mShareConfDataController.loadData(code);
     }
     private void dishTypeData(String type,ArrayList<Map<String,String>> list,Map<String,String> map){
-        if(isOnpause)return;
         switch (type){
             case DetailDishDataManager.DISH_DATA_TOP://topInfo,菜谱的基本信息和用户的基本信息
                 mapTop= list.get(0);
