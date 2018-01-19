@@ -17,10 +17,10 @@ public class XGTagManager {
     }
 
     public void addXGTag(String tag) {
-        XGPushManager.setTag(XHApplication.in(), tag);
+//        XGPushManager.setTag(XHApplication.in(), tag);
     }
 
     public void removeXGTag(String tag) {
-        XGPushManager.deleteTag(XHApplication.in(), tag);
+//        XGPushManager.deleteTag(XHApplication.in(), tag);
     }
 }
