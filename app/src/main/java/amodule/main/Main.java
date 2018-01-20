@@ -494,7 +494,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
 //                        new XGLocalPushServer(act).initLocalPush();
 
                         new LocalPushDataManager(act).initLocalPush();
-                        LocalPushManager.execute(act, System.currentTimeMillis() + 3 * 24 * 60 * 60 * 1000L , null, null);
+                        LocalPushManager.execute(act, System.currentTimeMillis() + 3 * 24 * 60 * 60 * 1000L, null, null);
                     }
                 } catch (Exception e) {
                 }
@@ -779,7 +779,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
 
     @Override
     public void setMessageTip(int tipCournt) {
-        Log.i("tzy", "MainCircle::setMessageTip: " + tipCournt);
+//        Log.i("tzy", "MainCircle::setMessageTip: " + tipCournt);
         if (allTab != null) {
             Stream.of(allTab)
                     .filter(value -> value.getValue() != null && value.getValue() instanceof ISetMessageTip)

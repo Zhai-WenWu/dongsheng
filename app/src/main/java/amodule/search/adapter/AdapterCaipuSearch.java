@@ -618,13 +618,13 @@ public class AdapterCaipuSearch extends BaseAdapter {
                 adDdata.remove(0);
             adPos = new int[]{2, 8, 15, 23, 32, 42};
         }
-        Log.i("tzy", "generateAdPos: adDdata.size()=" + adDdata.size());
+//        Log.i("tzy", "generateAdPos: adDdata.size()=" + adDdata.size());
         for (int i = 0; i < adDdata.size() && i < adPos.length; i++) {
             if(adDdata.get(i) != null && !adDdata.get(i).isEmpty()){
                 adPosList.add(adPos[i]);
             }
         }
-        Log.i("tzy","adPosList = " + adPosList.toString());
+//        Log.i("tzy","adPosList = " + adPosList.toString());
         int adNumCanInsert = computeAdNumCanInsert(adPosList);
         adPosList = adPosList.subList(0, adNumCanInsert);
         this.adNum = adNumCanInsert;

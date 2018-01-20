@@ -382,7 +382,7 @@ public class DishHeaderViewNew extends LinearLayout {
 
     private void setVipPermision(final Map<String, String> common){
         if(!StringManager.getBooleanByEqualsValue(common,"isShow")){
-            Log.i("tzy","common = " + common.toString());
+//            Log.i("tzy","common = " + common.toString());
             final String url = common.get("url");
             if(TextUtils.isEmpty(url)) return;
             vipView = new VideoDredgeVipView(context);

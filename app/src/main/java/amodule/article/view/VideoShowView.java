@@ -179,8 +179,8 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
                     //保存图片
 //                    oldCoverImageUrl = coverImageUrl;
                     coverImageUrl = FileToolsCammer.getVideoCatchPath() + Tools.getMD5(imgUrl) + ".jpg";
-                    Log.i("tzy","handlerCutImage::coverImageUrl = " + coverImageUrl);
-                    Log.i("tzy","handlerCutImage::oldCoverImageUrl = " + oldCoverImageUrl);
+//                    Log.i("tzy","handlerCutImage::coverImageUrl = " + coverImageUrl);
+//                    Log.i("tzy","handlerCutImage::oldCoverImageUrl = " + oldCoverImageUrl);
                     FileManager.saveImgToCompletePath(newBitmap, coverImageUrl, Bitmap.CompressFormat.JPEG);
                 }
 
@@ -238,13 +238,13 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
                 if(mOnChooseImageListener != null) mOnChooseImageListener.onClick(VideoShowView.this);
                 break;
             case R.id.video_delete_cover_img:
-                Log.i("tzy","coverImageUrl = " + coverImageUrl);
-                Log.i("tzy","oldCoverImageUrl = " + oldCoverImageUrl);
+//                Log.i("tzy","coverImageUrl = " + coverImageUrl);
+//                Log.i("tzy","oldCoverImageUrl = " + oldCoverImageUrl);
                 this.coverImageUrl = oldCoverImageUrl;
                 oldCoverImageUrl = null;
                 findViewById(R.id.video_delete_cover_img).setVisibility(View.GONE);
                 setVideoImage(false,this.coverImageUrl);
-                Log.i("tzy","setVideoImage::coverImageUrl = " + coverImageUrl);
+//                Log.i("tzy","setVideoImage::coverImageUrl = " + coverImageUrl);
                 break;
 
         }
@@ -261,9 +261,9 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
     public void setNewCoverImageUrl(String newCoverImageUrl) {
         this.oldCoverImageUrl = coverImageUrl;
         this.coverImageUrl = newCoverImageUrl;
-        Log.i("tzy","setNewCoverImageUrl::newCoverImageUrl = " + newCoverImageUrl);
-        Log.i("tzy","setNewCoverImageUrl::coverImageUrl = " + coverImageUrl);
-        Log.i("tzy","setNewCoverImageUrl::oldCoverImageUrl = " + oldCoverImageUrl);
+//        Log.i("tzy","setNewCoverImageUrl::newCoverImageUrl = " + newCoverImageUrl);
+//        Log.i("tzy","setNewCoverImageUrl::coverImageUrl = " + coverImageUrl);
+//        Log.i("tzy","setNewCoverImageUrl::oldCoverImageUrl = " + oldCoverImageUrl);
         findViewById(R.id.video_delete_cover_img).setVisibility(View.VISIBLE);
         setVideoImage(true,coverImageUrl);
     }

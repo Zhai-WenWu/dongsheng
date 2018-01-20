@@ -9,6 +9,7 @@ import acore.logic.AppCommon;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
+import amodule.main.Main;
 import third.push.model.NotificationData;
 
 /**
@@ -30,10 +31,10 @@ public class LocalPushDataManager {
         dataMap = StringManager.getFirstMap(apppushtimerangeStr);
         if("1".equals(dataMap.get("open"))){
             //取消本地推送
-            LocalPushManager.cancelAlarm(mContext, null, null);
+            LocalPushManager.stopLocalPush(mContext);
             return;
         }
-        resetTagNum();
+        resetTagNum(FileManager.xmlKey_localZhishi);
     }
 
     public NotificationData getNotificationDataByTimes(int times) {
@@ -42,6 +43,7 @@ public class LocalPushDataManager {
         notificationData.setContent("今天的晚餐准备好了，快去看看吧~");
         notificationData.setUrl("dishList.app?type=typeRecommend&g1=3");
         notificationData.setNotificationTime(getTriggerMillisByTimes(times));
+        notificationData.setStartAvtiviyWhenClick(Main.class);
         return notificationData;
     }
 
@@ -65,9 +67,6 @@ public class LocalPushDataManager {
     }
 
     public void saveLocalPushRecord(String type) {
-
-//        FileManager.xmlKey_localZhishi
-
         int count = getTagNum(type);
         FileManager.saveShared(mContext, FileManager.xmlFile_localPushTag, type, (++count) + "");
         //如果记录的次数超过本地数据的话，重新初始化
@@ -84,8 +83,12 @@ public class LocalPushDataManager {
         return num;
     }
 
-    public void resetTagNum() {
-        FileManager.saveShared(mContext, FileManager.xmlFile_localPushTag, FileManager.xmlKey_localZhishi, String.valueOf(0));
+    public void resetTagNum(String xmlKey) {
+        FileManager.saveShared(mContext, FileManager.xmlFile_localPushTag, xmlKey, String.valueOf(0));
+    }
+
+    public void setTagNum(String xmlKey, String tagNum) {
+        FileManager.saveShared(mContext, FileManager.xmlFile_localPushTag, xmlKey, tagNum);
     }
 
     public NotificationData nextData(String xmlKey, int msgTotalCount) {

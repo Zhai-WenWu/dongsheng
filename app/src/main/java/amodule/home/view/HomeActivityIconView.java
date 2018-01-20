@@ -80,7 +80,7 @@ public class HomeActivityIconView extends AppCompatImageView {
             return;
         }
         Map<String,String> imgsMap = StringManager.getFirstMap(dataMap.get("imgs"));
-        Log.i("tzy","imgsMap = " + imgsMap.toString());
+//        Log.i("tzy","imgsMap = " + imgsMap.toString());
         String imgUrl = imgsMap.get("topbarImg");
         if(TextUtils.isEmpty(imgUrl)){
             return;

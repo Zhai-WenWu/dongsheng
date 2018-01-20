@@ -55,7 +55,7 @@ public class FuncNavView2 extends HomeFuncNavView2 implements IBindMap, IStatict
     protected void initData() {
         super.initData();
         mOriginalPaddingTop = getPaddingTop();
-        Log.i("tzy", "initData: mOriginalPaddingTop = " + mOriginalPaddingTop);
+//        Log.i("tzy", "initData: mOriginalPaddingTop = " + mOriginalPaddingTop);
     }
 
     @Override

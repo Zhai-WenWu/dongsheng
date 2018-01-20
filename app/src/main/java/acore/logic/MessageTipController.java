@@ -1,7 +1,6 @@
 package acore.logic;
 
 import android.text.TextUtils;
-import android.util.Log;
 
 import java.util.Random;
 
@@ -102,17 +101,11 @@ public class MessageTipController {
     }
 
     public int getMessageNum() {
-        Log.i("tzy", "getMessageNum: quan = " + quanMessage);
-        Log.i("tzy", "getMessageNum: feekback = " + feekbackMessage);
-        Log.i("tzy", "getMessageNum: QA = " + myQAMessage);
-        Log.i("tzy", "getMessageNum: qiyu = " + qiyvMessage);
         return quanMessage + feekbackMessage + myQAMessage + qiyvMessage;
     }
 
     public void loadQiyuUnreadCount() {
-        loadQiyuUnreadCount(count -> {
-            setMessageCount();
-        });
+        loadQiyuUnreadCount(count -> setMessageCount());
     }
 
     public void loadQiyuUnreadCount(QiYvHelper.NumberCallback callback) {

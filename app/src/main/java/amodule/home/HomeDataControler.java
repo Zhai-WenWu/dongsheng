@@ -100,7 +100,7 @@ public class HomeDataControler {
         } else {
             params.append(TextUtils.isEmpty(nextUrl) ? "type=" + mHomeModuleBean.getType() : nextUrl);
         }
-        Log.i("tzy", "refresh::" + refresh + "::data:" + params.toString());
+//        Log.i("tzy", "refresh::" + refresh + "::data:" + params.toString());
         //准备请求
         if (callback != null)
             callback.onPrepare();
