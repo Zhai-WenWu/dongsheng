@@ -117,7 +117,7 @@ public class FullScreenWeb extends WebActivity implements IObserver {
                     if (!TextUtils.isEmpty(shareCallback) && data != null) {
                         Map<String, String> dataMap = (Map<String, String>) data;
                         webview.loadUrl("javascript:" + shareCallback + "(" + TextUtils.equals("2", dataMap.get("status")) + "," + "\'" + dataMap.get("callbackParams") + "\'" + ")");
-                        Log.i("tzy", "javascript:" + shareCallback + "(" + TextUtils.equals("2", dataMap.get("status")) + "," + "\'" + dataMap.get("callbackParams") + "\'" + ")");
+//                        Log.i("tzy", "javascript:" + shareCallback + "(" + TextUtils.equals("2", dataMap.get("status")) + "," + "\'" + dataMap.get("callbackParams") + "\'" + ")");
                     }
                     break;
                 case ObserverManager.NOTIFY_YIYUAN_BIND:

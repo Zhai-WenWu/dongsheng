@@ -186,7 +186,7 @@ public class ActivityMethodManager {
             if(!TextUtils.isEmpty(text)){
                 //写如剪切板
                 Tools.inputToClipboard(mAct,text);
-                Log.i("tzy","inputToClipboard :: text = " + text);
+//                Log.i("tzy","inputToClipboard :: text = " + text);
             }
         }
     }

@@ -90,7 +90,7 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
         bgKey = typedArray.getString(R.styleable.BannerView_bgKey);
         typedArray.recycle();
         if(!TextUtils.isEmpty(bgKey)){
-            Log.i("tzy", "BannerView: bgKey = " + bgKey);
+//            Log.i("tzy", "BannerView: bgKey = " + bgKey);
             //同步设置bg图片
             String firstImageUrl = FileManager.loadShared(getContext(), FileManager.xmlFile_appInfo, bgKey).toString();
             setBackImageView(imageView -> ImgManager.loadLongImage(imageView, firstImageUrl));
@@ -104,7 +104,7 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
         imageWidth = ToolsDevice.getWindowPx(context).widthPixels;
         imageHeight = (int) (imageWidth * 320 / 750f);
         int height = imageHeight + paddingBottom;
-        Log.i("tzy", "width = " + ToolsDevice.getWindowPx(context).widthPixels + " , height = " + height);
+//        Log.i("tzy", "width = " + ToolsDevice.getWindowPx(context).widthPixels + " , height = " + height);
         setTargetHeight(height);
         setVisibility(VISIBLE);
         showMinH = Tools.getStatusBarHeight(context) + Tools.getDimen(context, R.dimen.topbar_height) - height;

@@ -779,7 +779,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
 
     @Override
     public void setMessageTip(int tipCournt) {
-        Log.i("tzy", "MainCircle::setMessageTip: " + tipCournt);
+//        Log.i("tzy", "MainCircle::setMessageTip: " + tipCournt);
         if (allTab != null) {
             Stream.of(allTab)
                     .filter(value -> value.getValue() != null && value.getValue() instanceof ISetMessageTip)

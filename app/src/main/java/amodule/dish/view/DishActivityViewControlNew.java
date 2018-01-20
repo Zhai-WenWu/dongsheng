@@ -336,7 +336,7 @@ public class DishActivityViewControlNew {
         needSaveDishInfo.put("img", dishMap.get("img"));
         needSaveDishInfo.put("code", dishMap.get("code"));
         needSaveDishInfo.put("hasVideo", dishMap.get("type"));
-        Log.i("tzy","needSaveDishInfo = " + needSaveDishInfo.toString());
+//        Log.i("tzy","needSaveDishInfo = " + needSaveDishInfo.toString());
         saveHistoryToDB();
     }
 
@@ -347,7 +347,7 @@ public class DishActivityViewControlNew {
         needSaveDishInfo.put("isMakeImg", apiDataMap.get("isMakeImg"));
         needSaveDishInfo.put("isFav", dishTitleViewControl.isNowFav() ? "2" : "1");
 //        dishTitleViewControl.setFavStatus(apiDataMap.get("isFav"));
-        Log.i("tzy","needSaveDishInfo = " + needSaveDishInfo.toString());
+//        Log.i("tzy","needSaveDishInfo = " + needSaveDishInfo.toString());
         saveHistoryToDB();
     }
 
@@ -357,7 +357,7 @@ public class DishActivityViewControlNew {
         needSaveDishInfo.put("allClick",allClick);
         needSaveDishInfo.put("nickName",nickName);
         needSaveDishInfo.put("favorites",favorites);
-        Log.i("tzy","needSaveDishInfo = " + needSaveDishInfo.toString());
+//        Log.i("tzy","needSaveDishInfo = " + needSaveDishInfo.toString());
         if(dishTitleViewControl!=null){
             dishTitleViewControl.setNickName(nickName);
         }

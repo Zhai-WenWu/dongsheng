@@ -237,14 +237,14 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
      * @param refresh，是否刷新
      */
     private void EntryptData(final boolean refresh) {
-        Log.i("tzy_data", "EntryptData::" + refresh);
+//        Log.i("tzy_data", "EntryptData::" + refresh);
         //已经load
         LoadOver = true;
         if (refresh && mDataControler != null) {
             mDataControler.isNeedRefresh(false);
         }
         if (mDataControler != null) {
-            Log.i("tzy", "EntryptData::" + mDataControler.isNeedRefCurrData());
+//            Log.i("tzy", "EntryptData::" + mDataControler.isNeedRefCurrData());
             if (mDataControler.isNeedRefCurrData()) {
                 //需要刷新当前数据
                 mDataControler.setNeedRefCurrData(false);

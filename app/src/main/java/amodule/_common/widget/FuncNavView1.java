@@ -59,7 +59,7 @@ public class FuncNavView1 extends HomeFuncNavView1 implements IBindMap,IStatictu
     protected void initData() {
         super.initData();
         mOriginalPaddingTop = getPaddingTop();
-        Log.i("tzy", "initData: mOriginalPaddingTop = " + mOriginalPaddingTop);
+//        Log.i("tzy", "initData: mOriginalPaddingTop = " + mOriginalPaddingTop);
     }
 
     @Override
