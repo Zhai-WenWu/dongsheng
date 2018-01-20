@@ -63,16 +63,10 @@ public class LocalPushDataManager {
         long hourMillis = hour * 60 * 60 * 1000;
         long randomMinMillis = randomMin * 60 * 1000;
         ret = dayMillis + hourMillis + randomMinMillis;
-
-        // TODO: 2018/1/19 测试代码，需要删除
-        ret = System.currentTimeMillis() + /*3 * 24 * 60 * 60 * 1000L*/2000;
         return ret;
     }
 
     public void saveLocalPushRecord(String type) {
-
-//        FileManager.xmlKey_localZhishi
-
         int count = getTagNum(type);
         FileManager.saveShared(mContext, FileManager.xmlFile_localPushTag, type, (++count) + "");
         //如果记录的次数超过本地数据的话，重新初始化
