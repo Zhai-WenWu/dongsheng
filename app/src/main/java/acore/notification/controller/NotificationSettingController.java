@@ -92,9 +92,7 @@ public class NotificationSettingController {
         FileManager.saveShared(context,FileManager.app_notification, VersionOp.getVerName(context),"2");
     }
     public static void removePermissionSetView(){
-        Log.i("xianghaTag","removePermissionSetView:");
         if(relativeLayout!=null&&viewSet!=null){
-            Log.i("xianghaTag","removePermissionSetView:");
             relativeLayout.removeView(viewSet);
             relativeLayout=null;
             viewSet=null;

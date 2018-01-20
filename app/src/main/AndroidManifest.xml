@@ -1253,6 +1253,11 @@
         <!-- <meta-data -->
         <!-- android:name="UMENG_CHANNEL" -->
         <!-- android:value="${UMENG_CHANNEL_VALUE}"/> -->
+        <meta-data
+            android:name="UMENG_MESSAGE_SECRET"
+            android:value="35d47e62d87d5038bc9f85b9f62a370a">
+        </meta-data>
+
 
 
         <!-- *************************************** END-umeng *************************************** -->

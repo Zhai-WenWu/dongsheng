@@ -10,6 +10,9 @@ import com.umeng.message.UTrack;
 import org.android.agoo.huawei.HuaWeiRegister;
 import org.android.agoo.xiaomi.MiPushRegistar;
 
+import acore.logic.XHClick;
+import acore.override.XHApplication;
+
 /**
  * PackageName : third.push.xm
  * Created by MrTrying on 2016/8/16 14:30.
@@ -29,15 +32,27 @@ public class UMPushServer {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				mPushAgent.setAppkeyAndSecret("545aeac6fd98c565c20004ad","35d47e62d87d5038bc9f85b9f62a370a");
-				mPushAgent.register(callback);
+		PushAgent mPushAgent = PushAgent.getInstance(mContext);
+//注册推送服务，每次调用register方法都会回调该接口
+		mPushAgent.register(new IUmengRegisterCallback() {
 
-				//小米通道
-				MiPushRegistar.register(mContext, "2882303761517138495", "5711713867495");
-				//华为通道
-				HuaWeiRegister.register(mContext);
+			@Override
+			public void onSuccess(String deviceToken) {
+				//注册成功会返回device token
+				Log.i("xianghaTag","deviceToken::"+deviceToken);
+				XHClick.mapStat(XHApplication.in(),"a_push_umstate","onSuccess","");
+			}
+			@Override
+			public void onFailure(String s, String s1) {
+				XHClick.mapStat(XHApplication.in(),"a_push_umstate","onFailure","");
+			}
+		});
+		//小米通道
+		MiPushRegistar.register(mContext, "2882303761517138495", "5711713867495");
+		//华为通道
+		HuaWeiRegister.register(mContext);
+		mPushAgent.setPushIntentServiceClass(UMPushService.class);
 
-				mPushAgent.setPushIntentServiceClass(UMPushService.class);
 			}
 		}).start();
 	}
@@ -52,7 +67,7 @@ public class UMPushServer {
 	}
 
 	public void removeAlias(String account){
-		mPushAgent.removeAlias(account, "xiangha", new UTrack.ICallBack() {
+		mPushAgent.deleteAlias(account, "xiangha", new UTrack.ICallBack() {
 			@Override
 			public void onMessage(boolean b, String s) {
 
