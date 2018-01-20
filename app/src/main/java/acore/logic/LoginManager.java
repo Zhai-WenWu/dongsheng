@@ -92,6 +92,7 @@ public class LoginManager {
                         saveUserInfo(act, returnObj);
                         //设置用户其他
                         setUserOther(act, returnObj);
+                        MessageTipController.newInstance().getCommonData(null);
                     } else
                         logout(act);
                 }
@@ -103,6 +104,7 @@ public class LoginManager {
             setUserOther(act, null);
             //电商
             MallCommon.setDsToken(act);
+            MessageTipController.newInstance().getCommonData(null);
         }
 	}
 
