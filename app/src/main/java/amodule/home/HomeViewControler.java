@@ -93,6 +93,7 @@ public class HomeViewControler {
         initNetworkTip();
         mRefreshLayout = (PtrClassicFrameLayout) mActivity.findViewById(R.id.refresh_list_view_frame);
         mRefreshLayout.disableWhenHorizontalMove(true);
+        mRefreshLayout.setLoadingMinTime(300);
         mRvListView = (RvListView) mActivity.findViewById(R.id.rvListview);
         mRvListView.addHeaderView(mHeaderView);
         mRvListView.addHeaderView(mHomeFeedHeaderControler.getLayout());

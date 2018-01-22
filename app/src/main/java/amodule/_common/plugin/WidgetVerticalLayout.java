@@ -50,6 +50,8 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
 
     int currentID = -1;
 
+    private Map<String, String> data;
+
     private StatisticCallback mStatisticCallback,mTitleStatisticCallback;
 
     public WidgetVerticalLayout(Context context) {
@@ -71,11 +73,11 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
 
     @Override
     public void setData(Map<String, String> data) {
-        initTopLayout();
-        initBootomLayout();
-        if (null == data || data.isEmpty()) {
+        if (null == data || data.isEmpty() || dataEquals(data)) {
             return;
         }
+        this.data = data;
+
         String widgetType = data.get(KEY_WIDGET_TYPE);
         String widgetData = data.get(KEY_WIDGET_DATA);
         Map<String, String> dataMap = StringManager.getFirstMap(widgetData);
@@ -128,12 +130,20 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
         getChildAt(index).setVisibility(GONE);
     }
 
+    private boolean dataEquals(Map<String,String> current){
+        if (data == current) return true;
+        if (data != null && current != null) {
+            return data.equals(current);
+        }
+        return false;
+    }
+
     @Override
     public void updateTopView(List<Map<String, String>> array) {
         if (null == array || array.isEmpty()) {
             return;
         }
-
+        initTopLayout();
         Stream.of(array).forEach(data -> addViewByData(mExtraTop, data, false));
         requestLayout();
         mExtraTop.setVisibility(mExtraTop.getChildCount() > 0 ? VISIBLE : GONE);
@@ -156,6 +166,7 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
         if (null == array || array.isEmpty()) {
             return;
         }
+        initBootomLayout();
         Stream.of(array).forEach(data -> addViewByData(mExtraBottom, data, true));
         requestLayout();
         mExtraBottom.setVisibility(mExtraBottom.getChildCount() > 0 ? VISIBLE : GONE);

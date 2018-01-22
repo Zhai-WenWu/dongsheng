@@ -163,7 +163,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
                     mViewContrloer.getRvListView(),
                     mHomeAdapter,
                     true,
-                    v -> inerRefresh(),
+                    v -> innerRefresh(),
                     v -> {
                         if (HeaderDataLoaded)
                             EntryptData(!LoadOver);
@@ -192,6 +192,9 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
     private void loadRemoteData() {
         startLoadTime = System.currentTimeMillis();
         mDataControler.loadServiceHomeData(getHeaderCallback(false));
+    }
+
+    private void loadTopData() {
         mDataControler.loadServiceTopData(new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
@@ -200,7 +203,6 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
                     mViewContrloer.setTopData(StringManager.getListMapByJson(o));
             }
         });
-
     }
 
     /**
@@ -217,16 +219,24 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
                 loadManager.hideProgressBar();
                 Log.i("tzy", (isCache ? "cacheTime = " : "serviceTime = ") + (System.currentTimeMillis() - startLoadTime) + "ms");
                 HeaderDataLoaded = true;
+                mViewContrloer.refreshComplete();
                 if (i >= ReqEncyptInternet.REQ_OK_STRING) {
-                    if (mViewContrloer != null)
-                        mViewContrloer.setHeaderData(StringManager.getListMapByJson(o), isCache);
+                    new Handler().postDelayed(() -> {
+                        if (mViewContrloer != null)
+                            mViewContrloer.setHeaderData(StringManager.getListMapByJson(o), isCache);
+                    },300);
                     Log.i("tzy", "setHeaderData " + (isCache ? "cacheTime = " : "serviceTime = ") + (System.currentTimeMillis() - startLoadTime) + "ms");
                     if (!isCache && mDataControler != null) {
                         mDataControler.saveCacheHomeData((String) o);
                     }
                 }
+                if (!isCache && mDataControler != null) {
+                    loadTopData();
+                    if(isRefreshingHeader)
+                        new Handler().postDelayed(() -> EntryptData(true),400);
+                }
                 isRefreshingHeader = false;
-                mViewContrloer.refreshComplete();
+
             }
         };
     }
@@ -359,14 +369,13 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
         mViewContrloer.autoRefresh();
     }
 
-    private void inerRefresh() {
+    private void innerRefresh() {
         if (isRefreshingHeader || isRefreshingFeed) {
             return;
         }
         isRefreshingHeader = true;
         isRefreshingFeed = true;
         loadRemoteData();
-        EntryptData(true);
     }
 
     private void onResumeFake() {
