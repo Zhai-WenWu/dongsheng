@@ -208,6 +208,12 @@ public class ShareTools {
 			String content = map.get("content");
 			String imgUrl = map.get("img");
 			String clickUrl = map.get("url");
+			if (!shareMap.isEmpty()) {
+				title = shareMap.get("title");
+				content = shareMap.get("content");
+				imgUrl = shareMap.get("img");
+				clickUrl = shareMap.get("url");
+			}
 			String type = map.get("type");
 			String from = map.get("from");
 			String parent = map.get("parent");
