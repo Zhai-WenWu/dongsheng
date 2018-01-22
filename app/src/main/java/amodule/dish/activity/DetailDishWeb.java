@@ -357,7 +357,7 @@ public class DetailDishWeb extends BaseAppCompatActivity implements IObserver {
     protected void onDestroy() {
         super.onDestroy();
         //反注册。
-        ObserverManager.getInstance().unRegisterObserver(ObserverManager.NOTIFY_LOGIN,ObserverManager.NOTIFY_FOLLOW,ObserverManager.NOTIFY_PAYFINISH);
+        ObserverManager.getInstance().unRegisterObserver(this);
         if(dishActivityViewControl != null){
             dishActivityViewControl.onDestroy();
             dishActivityViewControl=null;
