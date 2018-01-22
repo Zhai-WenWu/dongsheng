@@ -48,15 +48,6 @@ public class MallOrderBaseActivity extends FragmentActivity{
 	}
 
 	@Override
-	public void onBackPressed() {
-		// 程序如果未初始化但却有定时器执行，则停止它。主要用于外部吊起应用时
-		if (Main.allMain == null && Main.timer != null) {
-			Main.stopTimer();
-		}
-		super.onBackPressed();
-	}
-	
-	@Override
 	protected void onResume() {
 		super.onResume();
 		resumeTime = System.currentTimeMillis();

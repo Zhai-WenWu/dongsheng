@@ -32,6 +32,8 @@ import amodule.main.view.CommonBottomView;
 import amodule.main.view.CommonBottonControl;
 import third.share.BarShare;
 
+import static android.content.Intent.FLAG_ACTIVITY_NO_USER_ACTION;
+
 public class BaseFragmentActivity extends FragmentActivity {
 	public RelativeLayout rl;
 	protected int level = 2;
@@ -162,15 +164,6 @@ public class BaseFragmentActivity extends FragmentActivity {
 	}
 
 	@Override
-	public void onBackPressed() {
-		// 程序如果未初始化但却有定时器执行，则停止它。主要用于外部吊起应用时
-		if (Main.allMain == null && Main.timer != null) {
-			Main.stopTimer();
-		}
-		super.onBackPressed();
-	}
-
-	@Override
 	protected void onResume() {
 		super.onResume();
 		resumeTime = System.currentTimeMillis();
@@ -204,7 +197,14 @@ public class BaseFragmentActivity extends FragmentActivity {
 	}
 
 	@Override
+	protected void onUserLeaveHint() {
+		super.onUserLeaveHint();
+		mActMagager.onUserLeaveHint();
+	}
+
+	@Override
 	public void startActivity(Intent intent) {
+		intent.addFlags(FLAG_ACTIVITY_NO_USER_ACTION);
 		super.startActivity(intent);
 		// 设置切换动画，从右边进入，左边退出
 		overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
@@ -213,6 +213,7 @@ public class BaseFragmentActivity extends FragmentActivity {
 	@Override
 	public void startActivityForResult(Intent intent, int requestCode) {
 		try {
+			intent.addFlags(FLAG_ACTIVITY_NO_USER_ACTION);
 			super.startActivityForResult(intent, requestCode);
 		}catch (Exception e){
 			e.printStackTrace();

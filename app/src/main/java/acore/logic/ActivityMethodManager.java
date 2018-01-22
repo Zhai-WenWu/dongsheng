@@ -44,6 +44,9 @@ public class ActivityMethodManager {
     }
 
     public void onResume(int level) {
+        if(Main.allMain != null){
+            Main.allMain.initRunTime();
+        }
         //Log.i("FRJ", "level:" + level);
         //Log.i("FRJ", "colse_level:" + colse_level);
         MobclickAgent.onResume(mAct);
@@ -141,6 +144,13 @@ public class ActivityMethodManager {
     public void onDestroy() {
         //清除还没有请求的接口
         ReqEncyptInternet.in().clearListIntenert();
+    }
+
+    public void onUserLeaveHint(){
+        Log.i("tzy", "onUserLeaveHint: ");
+        if(Main.allMain != null){
+            Main.allMain.stopTimer();
+        }
     }
 
     /**
