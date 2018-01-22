@@ -152,7 +152,7 @@ public class CaipuSearchResultView extends LinearLayout {
 
 
     public void search(String key) {
-
+        SearchResultAdDataProvider.getInstance().getAdData();
         clearSearchResult();
         searchKey = key;
         loadManager.setLoading(refresh_list_view_frame, list_search_result, adapterCaipuSearch,

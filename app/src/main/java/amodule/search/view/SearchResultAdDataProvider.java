@@ -19,8 +19,7 @@ import third.ad.tools.AdPlayIdConfig;
  */
 
 public class SearchResultAdDataProvider {
-
-    private static final String[] AD_IDS = new String[]{
+    public static final String[] AD_IDS = new String[]{
             AdPlayIdConfig.SEARCH_LIST_TOP,
             AdPlayIdConfig.SEARCH_LIST_1,
             AdPlayIdConfig.SEARCH_LIST_2,
@@ -84,7 +83,7 @@ public class SearchResultAdDataProvider {
                         //处理搜索列表顶部广告
                         if (i == 0) {
                             if (list.size() > 0)
-                            topItemHasData.set(list.size() > 0);
+                                topItemHasData.set(list.size() > 0);
                         }
 
                     }

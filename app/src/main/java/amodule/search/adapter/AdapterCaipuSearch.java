@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.animation.GlideAnimation;
+import com.qq.e.ads.nativ.NativeADDataRef;
 import com.xiangha.R;
 
 import org.json.JSONObject;
@@ -23,6 +24,7 @@ import org.json.JSONObject;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -42,7 +44,10 @@ import amodule.search.view.SearchResultAdViewGenerater;
 import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
 import third.ad.scrollerAd.XHAllAdControl;
+import third.ad.scrollerAd.XHScrollerAdParent;
 import xh.basic.tool.UtilImage;
+
+import static amodule.search.view.SearchResultAdDataProvider.AD_IDS;
 
 /**
  * Created by ：airfly on 2016/10/21 19:06.
@@ -58,7 +63,7 @@ public class AdapterCaipuSearch extends BaseAdapter {
     private int shicaiInsertPos;
     private int caidanInsertPos;
     private int zhishiInsertPos;
-    private CopyOnWriteArrayList<Map<String, String>> adDdata = new CopyOnWriteArrayList<>();
+    private volatile CopyOnWriteArrayList<Map<String, String>> adDdata = new CopyOnWriteArrayList<>();
     private CaipuSearchResultCallback callback;
 
     private int imgResource = R.drawable.i_nopic;
@@ -598,15 +603,19 @@ public class AdapterCaipuSearch extends BaseAdapter {
         if ((mListShicaiData == null || mListShicaiData.size() == 0) && topAdHasData.get()) {
             if(adDdata.size() > 0){
                 if(!adDdata.get(0).isEmpty()){
-                    if (isRefresh && adDdata.size()>1)
+                    if (isRefresh && adDdata.size()>1){
+                        handleADDate(1);
                         adDdata.remove(1);
+                    }
                     adPos = new int[]{0, 8, 15, 23, 32, 42};
                 }else{
                     if (topAdHasData.get()) {
                         topAdHasData.set(false);
                     }
-                    if (isRefresh && adDdata.size()>0)
+                    if (isRefresh && adDdata.size()>0){
+                        handleADDate(0);
                         adDdata.remove(0);
+                    }
                     adPos = new int[]{2, 8, 15, 23, 32, 42};
                 }
             }
@@ -614,8 +623,10 @@ public class AdapterCaipuSearch extends BaseAdapter {
             if (topAdHasData.get()) {
                 topAdHasData.set(false);
             }
-            if (isRefresh && adDdata.size()>0)
+            if (isRefresh && adDdata.size()>0){
+                handleADDate(0);
                 adDdata.remove(0);
+            }
             adPos = new int[]{2, 8, 15, 23, 32, 42};
         }
 //        Log.i("tzy", "generateAdPos: adDdata.size()=" + adDdata.size());
@@ -629,6 +640,44 @@ public class AdapterCaipuSearch extends BaseAdapter {
         adPosList = adPosList.subList(0, adNumCanInsert);
         this.adNum = adNumCanInsert;
         return adNumCanInsert;
+    }
+
+    private void handleADDate(int igronedIndex) {
+        if(xhAllAdControl == null
+                || xhAllAdControl.getGdtNativeArray() == null
+                || xhAllAdControl.getGdtNativeArray().isEmpty()
+                || adDdata == null
+                || adDdata.isEmpty()){
+            return;
+        }
+        int count = 0;
+        for (int i = 0; i < AD_IDS.length; i++) {
+            if(i == igronedIndex){
+                continue;
+            }
+            if("gdt".equals(AdTypeData.get(AD_IDS[i]))){
+                if(adDdata.isEmpty()) {
+                    return;
+                }
+                adDdata.set(i,handlerGDTData(i,xhAllAdControl.getGdtNativeArray().get(count)));
+                count++;
+            }
+        }
+    }
+
+    private Map<String,String> handlerGDTData(int origlIndex,NativeADDataRef nativeADDataRef){
+        Map<String, String> map = new HashMap<>();
+        if(nativeADDataRef == null){
+            return map;
+        }
+        map.put("title", nativeADDataRef.getTitle());
+        map.put("desc", nativeADDataRef.getDesc());
+        map.put("iconUrl", nativeADDataRef.getIconUrl());
+        map.put("imgUrl", nativeADDataRef.getImgUrl());
+        map.put("type", XHScrollerAdParent.ADKEY_GDT);
+        map.put("hide", "1");//2隐藏，1显示
+        map.put("index", String.valueOf(origlIndex));//2隐藏，1显示
+        return map;
     }
 
     private int computeAdNumCanInsert(List<Integer> origin) {
@@ -655,13 +704,16 @@ public class AdapterCaipuSearch extends BaseAdapter {
             adDdata.clear();
     }
 
+    private Map<String, String> AdTypeData = new HashMap<>();//获取到数据集合
     private void getAdDataInfo(boolean isRefresh) {
+        xhAllAdControl = SearchResultAdDataProvider.getInstance().getXhAllAdControl();
+        topAdHasData = SearchResultAdDataProvider.getInstance().HasTopAdData();
         if (adDdata.isEmpty() || isRefresh) {
             adDdata.clear();
             adDdata.addAll(SearchResultAdDataProvider.getInstance().getAdDataList());
+            AdTypeData.clear();
+            AdTypeData.putAll(xhAllAdControl.getAdTypeData());
         }
-        xhAllAdControl = SearchResultAdDataProvider.getInstance().getXhAllAdControl();
-        topAdHasData = SearchResultAdDataProvider.getInstance().HasTopAdData();
     }
 
 }

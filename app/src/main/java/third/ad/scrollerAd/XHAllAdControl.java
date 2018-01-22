@@ -36,6 +36,7 @@ public class XHAllAdControl {
     private boolean isShowBaidu = false;//是否存在百度
     private ArrayList<XHOneAdControl> listAdContrls = new ArrayList<>();//子控制类集合
     private Map<String, String> AdData = new HashMap<>();//获取到数据集合
+    private Map<String, String> AdTypeData = new HashMap<>();//获取到数据集合
 
     private XHBackIdsDataCallBack xhBackIdsDataCallBack;//外部回调接口数据
     private Activity act;
@@ -104,6 +105,7 @@ public class XHAllAdControl {
         //根据广告位置id在广告数据 进行筛选通
         if (listIds.size() > 0 && !map.isEmpty()) {
             for (int i = 0, size = listIds.size(); i < size; i++) {
+                AdTypeData.put(listIds.get(i),"");
                 /*获取数据广告位的数据体*/
                 if (map.containsKey(listIds.get(i))) {
                     /*存储数据*/
@@ -118,11 +120,17 @@ public class XHAllAdControl {
                         ArrayList<Map<String, String>> adConfigDataList = new ArrayList<>();
                         Map<String, String> configMap = StringManager.getFirstMap(mapTemp.get("adConfig"));
                         final String[] keys = {"1", "2", "3", "4", "5"};
+                        boolean once = false;
                         for (String key : keys) {
                             if (configMap.containsKey(key)) {
                                 String value = configMap.get(key);
-                                if ("2".equals(StringManager.getFirstMap(value).get("open"))) {
+                                Map<String,String> configTemp = StringManager.getFirstMap(value);
+                                if ("2".equals(configTemp.get("open"))) {
                                     state = true;
+                                    if(!once){
+                                        once=true;
+                                        AdTypeData.put(listIds.get(i),configTemp.containsKey("type") ? configTemp.get("type") : "");
+                                    }
                                 }
                                 handlerAdData(value, adConfigDataList, banner);
                             }
@@ -475,5 +483,17 @@ public class XHAllAdControl {
 
     public void setJudgePicSize(boolean judgePicSize) {
         isJudgePicSize = judgePicSize;
+    }
+
+    public List<NativeADDataRef> getGdtNativeArray() {
+        return gdtNativeArray;
+    }
+
+    public List<NativeResponse> getBaiduNativeArray() {
+        return baiduNativeArray;
+    }
+
+    public Map<String, String> getAdTypeData() {
+        return AdTypeData;
     }
 }
