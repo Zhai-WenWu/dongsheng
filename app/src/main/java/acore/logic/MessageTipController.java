@@ -11,6 +11,7 @@ import acore.tools.StringManager;
 import amodule.main.Main;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
+import aplug.basic.XHInternetCallBack;
 import third.qiyu.QiYvHelper;
 
 import static acore.tools.ObserverManager.NOTIFY_MESSAGE_REFRESH;
@@ -92,6 +93,8 @@ public class MessageTipController {
                 long tok = Integer.parseInt(alertArr[0]);
                 int c = (new Random()).nextInt(9) + 1;
                 LoadManager.tok = c + "" + (tok + 54321) * c;
+                //更新cookie
+                XHInternetCallBack.handlerBaseCookie();
                 return true;
             } catch (Exception e) {
                 LogManager.reportError("获取新消息", e);
