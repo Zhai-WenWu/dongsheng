@@ -231,7 +231,6 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
                 if (!isCache && mDataControler != null) {
                     loadTopData();
                     if(isRefreshingHeader){
-                        mViewContrloer.returnListTop();
                         new Handler().postDelayed(() -> EntryptData(true),400);
                     }
                 }
@@ -376,6 +375,9 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
         }
         isRefreshingHeader = true;
         isRefreshingFeed = true;
+        if(mViewContrloer != null){
+            mViewContrloer.returnListTop();
+        }
         loadRemoteData();
     }
 
@@ -400,7 +402,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
 
     @Override
     public void setMessageTip(int tipCournt) {
-        Log.i("tzy", "MainHomePage::setMessageTip: " + tipCournt);
+//        Log.i("tzy", "MainHomePage::setMessageTip: " + tipCournt);
         mViewContrloer.setMessage(tipCournt);
     }
 }
