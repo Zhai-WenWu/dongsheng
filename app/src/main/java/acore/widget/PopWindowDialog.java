@@ -36,6 +36,8 @@ public class PopWindowDialog {
 	private String[] mSharePlatforms;
 	private String mType,mTitle,mClickUrl,mContent,mImgUrl,mFrom,mParent;
 	private String mHintTitle,mShareHint,mMessage;
+
+	private boolean mShowing;
 	
 	public PopWindowDialog(Context context,String hintTitle,String shareHint,String message){
 		mContext = context;
@@ -139,6 +141,7 @@ public class PopWindowDialog {
 	public void show(String type,String title,String clickUrl,String content,String imgUrl,String from,String parent) {
 		mType = type;mTitle = title;mClickUrl = clickUrl;mContent = content;mImgUrl = imgUrl;mFrom = from;mParent = parent;
 		mWindowManager.addView(mView, mLayoutParams);
+		mShowing = true;
     }
 	
 //	public void show() {
@@ -159,6 +162,7 @@ public class PopWindowDialog {
 				mWindowManager.removeView(mView);
 			mWindowManager = null;
 		}
+		mShowing = false;
 	}
 	
 	/**
@@ -166,7 +170,7 @@ public class PopWindowDialog {
 	 * @return true:显示 fase：不显示
 	 */
 	public boolean isHasShow(){
-		return mWindowManager != null;
+		return mShowing;
 	}
 	
 	public void onPause(){
