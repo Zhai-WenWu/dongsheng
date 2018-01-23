@@ -63,7 +63,7 @@ public class AdapterCaipuSearch extends BaseAdapter {
     private int shicaiInsertPos;
     private int caidanInsertPos;
     private int zhishiInsertPos;
-    private volatile CopyOnWriteArrayList<Map<String, String>> adDdata = new CopyOnWriteArrayList<>();
+    private final CopyOnWriteArrayList<Map<String, String>> adDdata = new CopyOnWriteArrayList<>();
     private CaipuSearchResultCallback callback;
 
     private int imgResource = R.drawable.i_nopic;
@@ -642,25 +642,30 @@ public class AdapterCaipuSearch extends BaseAdapter {
         return adNumCanInsert;
     }
 
-    private void handleADDate(int igronedIndex) {
+    private synchronized void handleADDate(int igronedIndex) {
         if(xhAllAdControl == null
                 || xhAllAdControl.getGdtNativeArray() == null
                 || xhAllAdControl.getGdtNativeArray().isEmpty()
-                || adDdata == null
                 || adDdata.isEmpty()){
             return;
         }
-        int count = 0;
-        for (int i = 0; i < AD_IDS.length; i++) {
-            if(i == igronedIndex){
-                continue;
-            }
-            if("gdt".equals(AdTypeData.get(AD_IDS[i]))){
-                if(adDdata.isEmpty()) {
-                    return;
+        synchronized (adDdata){
+            int count = 0;
+            for (int i = 0; i < AD_IDS.length; i++) {
+                if(i == igronedIndex){
+                    continue;
                 }
-                adDdata.set(i,handlerGDTData(i,xhAllAdControl.getGdtNativeArray().get(count)));
-                count++;
+                if("gdt".equals(AdTypeData.get(AD_IDS[i]))){
+                    if(adDdata.isEmpty() || i >= adDdata.size()) {
+                        return;
+                    }
+                    try{
+                        adDdata.set(i,handlerGDTData(i,xhAllAdControl.getGdtNativeArray().get(count)));
+                        count++;
+                    }catch (IndexOutOfBoundsException igorned){
+                        igorned.printStackTrace();
+                    }
+                }
             }
         }
     }
