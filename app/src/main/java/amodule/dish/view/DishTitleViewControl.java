@@ -20,6 +20,7 @@ import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.logic.load.LoadManager;
 import acore.override.XHApplication;
+import acore.override.helper.XHActivityManager;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -325,7 +326,7 @@ public class DishTitleViewControl implements View.OnClickListener {
                                 boolean isShow = PopWindowDialog.isShowPop(FileManager.xmlKey_shareShowPopDataFavDish, FileManager.xmlKey_shareShowPopNumFavDish);
                                 if (isShow) {
                                     boolean isAutoOff = OffDishToFavoriteControl.getIsAutoOffDish(detailDish.getApplicationContext());
-                                    mFavePopWindowDialog = new PopWindowDialog(XHApplication.in(), "收藏成功", "这道菜已经被多人分享过，分享给好友？",
+                                    mFavePopWindowDialog = new PopWindowDialog(XHActivityManager.getInstance().getCurrentActivity(), "收藏成功", "这道菜已经被多人分享过，分享给好友？",
                                             isAutoOff ? "已离线到本地,可在设置-收藏菜谱关闭。" : null);
                                     if (isHasVideo && mVideoPlayerController != null && mVideoPlayerController.getVideoImageView() != null) {
                                         String title = "【香哈菜谱】看了" + dishInfoMap.get("name") + "的教学视频，我已经学会了，味道超赞！";
