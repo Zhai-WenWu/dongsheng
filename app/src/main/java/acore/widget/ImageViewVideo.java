@@ -18,6 +18,7 @@ import com.xiangha.R;
 
 import java.io.InputStream;
 
+import acore.override.XHApplication;
 import acore.tools.FileManager;
 import acore.tools.ImgManager;
 import acore.tools.Tools;
@@ -40,7 +41,7 @@ public class ImageViewVideo extends ImageView {
 	public ImageViewVideo(Context context) {
 		super(context);
 		mContext = context;
-		playImgWH = Tools.getDimen(mContext, R.dimen.dp_41);
+		playImgWH = Tools.getDimen(XHApplication.in(), R.dimen.dp_41);
 	}
 
 	public ImageViewVideo(Context context, AttributeSet attrs) {
@@ -136,7 +137,7 @@ public class ImageViewVideo extends ImageView {
 			if(mContext==null)return;
 
 			// 如果为ignore,则忽略图片
-			BitmapRequestBuilder<GlideUrl, Bitmap> bitmapRequest = LoadImage.with(mContext)
+			BitmapRequestBuilder<GlideUrl, Bitmap> bitmapRequest = LoadImage.with(XHApplication.in())
 					.load(imgValue)
 					.setSaveType(imgLevel)
 					.setPlaceholderId(imgResource)
@@ -161,7 +162,7 @@ public class ImageViewVideo extends ImageView {
 			if (imgValue.length() < 10)
 				return;
 			setTag(TAG_ID, imgValue);
-			BitmapRequestBuilder<GlideUrl, Bitmap> bitmapRequest = LoadImage.with(mContext).load(imgValue)
+			BitmapRequestBuilder<GlideUrl, Bitmap> bitmapRequest = LoadImage.with(XHApplication.in()).load(imgValue)
 					.setSaveType(imgLevel)
 					.setPlaceholderId(imgResource)
 					.build();

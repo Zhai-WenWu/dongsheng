@@ -429,10 +429,10 @@ public class DishHeaderViewNew extends LinearLayout {
         oneImgUrl=img;
         isLoadImg=true;
         dishvideo_img.setVisibility(View.GONE);
-        int waith = height>0?height:ToolsDevice.getWindowPx(activity).widthPixels *5/6;
+        int waith = height>0?height:ToolsDevice.getWindowPx(XHApplication.in()).widthPixels *5/6;
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT);
         RelativeLayout.LayoutParams params_rela = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,waith);
-        final ImageViewVideo imvv = new ImageViewVideo(activity);
+        final ImageViewVideo imvv = new ImageViewVideo(XHApplication.in());
         imvv.parseItemImg(ImageView.ScaleType.CENTER_CROP, img, false, false, R.drawable.i_nopic, FileManager.save_cache);
         imvv.setLayoutParams(params);
         dishVidioLayout.removeAllViews();
