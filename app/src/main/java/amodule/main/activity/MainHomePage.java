@@ -60,8 +60,6 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
 
     boolean HeaderDataLoaded = false;
 
-    boolean dialogLoadOver = false;
-
     protected long startTime = -1;//开始的时间戳
 
     private ConnectionChangeReceiver mReceiver;
@@ -232,8 +230,10 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
                 }
                 if (!isCache && mDataControler != null) {
                     loadTopData();
-                    if(isRefreshingHeader)
+                    if(isRefreshingHeader){
+                        mViewContrloer.returnListTop();
                         new Handler().postDelayed(() -> EntryptData(true),400);
+                    }
                 }
                 isRefreshingHeader = false;
 
@@ -268,7 +268,6 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
         if (refresh) {//向上翻页
             if (mDataControler != null)
                 mDataControler.refreshADIndex();
-            mViewContrloer.setStatisticShowNum();
         }
         mDataControler.loadServiceFeedData(refresh, new HomeDataControler.OnLoadDataCallback() {
             @Override
@@ -277,7 +276,6 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
                 if (refresh) {
                     XHClick.mapStat(MainHomePage.this, "a_recommend", "刷新效果", "下拉刷新");
                     loadManager.hideProgressBar();
-                    mViewContrloer.returnListTop();
                 }
                 Button loadmore = loadManager.getSingleLoadMore(mViewContrloer.getRvListView());
                 if (null != loadmore) {
@@ -336,6 +334,9 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
     protected void onPause() {
         super.onPause();
         setRecommedStatistic();
+        if(mViewContrloer != null){
+            mViewContrloer.setStatisticShowNum();
+        }
     }
 
     @Override
