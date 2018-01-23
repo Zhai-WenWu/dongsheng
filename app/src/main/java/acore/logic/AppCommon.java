@@ -944,6 +944,8 @@ public class AppCommon {
                                                 totalWeight += Integer.parseInt(dict.get("weight")); //[dict["weight"] intValue];
                                             }
                                             if (totalWeight < 1) {
+                                                //清空之前的数据
+                                                FileManager.scynSaveFile(FileManager.getDataDir() + FileManager.file_randPromotionConfig, text, false);
                                                 return ;
                                             }
                                             java.util.Random r = new java.util.Random();
