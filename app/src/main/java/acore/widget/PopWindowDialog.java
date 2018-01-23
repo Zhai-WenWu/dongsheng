@@ -1,14 +1,12 @@
 package acore.widget;
 
+import android.app.Dialog;
 import android.content.Context;
-import android.graphics.PixelFormat;
-import android.os.Build;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
@@ -27,10 +25,8 @@ import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import third.share.tools.ShareTools;
 
-public class PopWindowDialog {
+public class PopWindowDialog extends Dialog {
 	private Context mContext;
-	private WindowManager mWindowManager;
-	private WindowManager.LayoutParams mLayoutParams;
 	private View mView;
 	private ArrayList<Map<String,String>> mData = new ArrayList<>();
 	private String[] mSharePlatforms;
@@ -38,26 +34,44 @@ public class PopWindowDialog {
 	private String mHintTitle,mShareHint,mMessage;
 
 	private boolean mShowing;
-	
-	public PopWindowDialog(Context context,String hintTitle,String shareHint,String message){
+	private View.OnClickListener onCloseListener;
+
+	public PopWindowDialog(@NonNull Context context,String hintTitle,String shareHint,String message) {
+		this(context, R.style.dialog);
 		mContext = context;
 		mHintTitle = hintTitle;
 		mShareHint= shareHint;
 		mMessage = message;
 		initData();
 		init();
+		addListener();
+	}
+
+	private void addListener() {
+		onCloseListener = new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				closePopWindowDialog();
+			}
+		};
+		mView.setOnClickListener(onCloseListener);
+		mView.findViewById(R.id.d_popwindow_close).setOnClickListener(onCloseListener);
+	}
+
+	public PopWindowDialog(@NonNull Context context, int themeResId) {
+		super(context, themeResId);
+	}
+
+	protected PopWindowDialog(@NonNull Context context, boolean cancelable, @Nullable OnCancelListener cancelListener) {
+		super(context, cancelable, cancelListener);
 	}
 	
 	private void init(){
 		LayoutInflater inflater = LayoutInflater.from(mContext);
-		// Context.getSystemService(Context.WINDOW_SERVICE); 这个Context要用Application的context
-		mWindowManager = (WindowManager) mContext.getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
 		mView = inflater.inflate(R.layout.d_popwindow, null);
 		initShareView();
 		TextView hintTitle = (TextView)mView.findViewById(R.id.d_popwindow_title);
 		TextView message = (TextView)mView.findViewById(R.id.d_popwindow_message);
-//		TextView shareHint = (TextView)mView.findViewById(R.id.d_popwindow_share_hint);
-
 		hintTitle.setText(mHintTitle);
 		if(TextUtils.isEmpty(mMessage)){
 			message.setVisibility(View.GONE);
@@ -65,23 +79,7 @@ public class PopWindowDialog {
 			message.setText(mMessage);
 			message.setVisibility(View.VISIBLE);
 		}
-//		shareHint.setText(mShareHint);
-
-		mView.setOnClickListener(onCloseListener);
-		mView.findViewById(R.id.d_popwindow_close).setOnClickListener(onCloseListener);
-		mLayoutParams = new WindowManager.LayoutParams(WindowManager.LayoutParams.MATCH_PARENT,WindowManager.LayoutParams.MATCH_PARENT);
-//        //设置window的type
-		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N)
-			mLayoutParams.type = WindowManager.LayoutParams.TYPE_PHONE;
-		else
-        	mLayoutParams.type = WindowManager.LayoutParams.TYPE_TOAST;
-        mLayoutParams.format = PixelFormat.RGBA_8888;
-        //设置浮动窗口不可聚焦
-        mLayoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
-        //位置
-        mLayoutParams.gravity = Gravity.CENTER;
-//        layoutParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
-//        layoutParams.height = Tools.getDimen(mContext, R.dimen.dp_100);
+		setContentView(mView);
 	}
 	
 	private void initShareView(){
@@ -140,28 +138,12 @@ public class PopWindowDialog {
 	
 	public void show(String type,String title,String clickUrl,String content,String imgUrl,String from,String parent) {
 		mType = type;mTitle = title;mClickUrl = clickUrl;mContent = content;mImgUrl = imgUrl;mFrom = from;mParent = parent;
-		mWindowManager.addView(mView, mLayoutParams);
+		this.show();
 		mShowing = true;
     }
 	
-//	public void show() {
-//		mWindowManager.addView(mView, mLayoutParams);
-//	}
-	
-	private OnClickListener onCloseListener = new OnClickListener() {
-		
-		@Override
-		public void onClick(View v) {
-			closePopWindowDialog();
-		}
-	};
-	
 	public void closePopWindowDialog(){
-		if(mWindowManager != null){
-			if(mView!=null)
-				mWindowManager.removeView(mView);
-			mWindowManager = null;
-		}
+		this.dismiss();
 		mShowing = false;
 	}
 	
