@@ -17,6 +17,7 @@ import java.util.Map;
 
 import acore.tools.StringManager;
 import amodule._common.delegate.IBindMap;
+import amodule._common.delegate.IResetCallback;
 import amodule._common.delegate.ISaveStatistic;
 import amodule._common.delegate.ISetAdID;
 import amodule._common.delegate.ISetStatisticPage;
@@ -76,6 +77,8 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
     @Override
     public void setData(Map<String, String> data) {
         if (null == data || data.isEmpty() || dataEquals(data)) {
+            resetView();
+            resetExtraLayout();
             return;
         }
         this.data = data;
@@ -89,8 +92,8 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
         if (viewId > NO_FIND_ID) {
             View view = findViewById(viewId);
             if (null != view) {
-                view.setVisibility(VISIBLE);
                 currentID = viewId;
+                view.setVisibility(VISIBLE);
                 if(view instanceof  ISetAdID){
                     ((ISetAdID)view).setAdID(adIDs);
                 }
@@ -128,6 +131,31 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
         }
         updateTopView(StringManager.getListMapByJson(widgetExtraMap.get(KEY_TOP)));
         updateBottom(StringManager.getListMapByJson(widgetExtraMap.get(KEY_BOTTOM)));
+    }
+
+    private void resetView(){
+        if(currentID > 0){
+            excuteReset(findViewById(currentID));
+        }
+    }
+
+    private void resetExtraLayout(){
+        resetExtraLayout(mExtraTop);
+        resetExtraLayout(mExtraBottom);
+    }
+
+    private void resetExtraLayout(LinearLayout layout) {
+        if(layout != null){
+            for(int i = 0 ; i < layout.getChildCount();i++){
+                excuteReset(layout.getChildAt(i));
+            }
+        }
+    }
+
+    private void excuteReset(View view) {
+        if(view != null && view instanceof IResetCallback){
+            ((IResetCallback)view).reset();
+        }
     }
 
     private void hideView() {

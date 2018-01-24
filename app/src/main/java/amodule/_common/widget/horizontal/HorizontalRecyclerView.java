@@ -26,6 +26,7 @@ import acore.widget.rvlistview.RvListView;
 import acore.widget.rvlistview.adapter.RvBaseAdapter;
 import amodule._common.delegate.IBindMap;
 import amodule._common.delegate.IHandlerClickEvent;
+import amodule._common.delegate.IResetCallback;
 import amodule._common.delegate.ISaveStatistic;
 import amodule._common.delegate.ISetStatisticPage;
 import amodule._common.delegate.IStatictusData;
@@ -52,7 +53,7 @@ import static amodule._common.helper.WidgetDataHelper.KEY_STYLE;
  */
 
 public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,ISetStatisticPage,
-        IStatictusData,ISaveStatistic,IHandlerClickEvent,IStatisticCallback,ITitleStaticCallback {
+        IStatictusData,ISaveStatistic,IHandlerClickEvent,IStatisticCallback,ITitleStaticCallback,IResetCallback {
 
     private RvListView mRecyclerView;
     private BaseSubTitleView mSubTitleView;
@@ -263,5 +264,12 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,I
     @Override
     public void setStatisticPage(String page) {
         this.page = page;
+    }
+
+    @Override
+    public void reset() {
+        if(mRecyclerView != null){
+            mRecyclerView.scrollToPosition(0);
+        }
     }
 }
