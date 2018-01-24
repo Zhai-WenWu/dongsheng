@@ -9,18 +9,7 @@
         android:id="@+id/a_dish_detail_new_title"
         layout="@layout/a_dish_detail_bar_title_new"
         android:background="@color/transparent" />
-    <!--<acore.widget.rvlistview.RvListView-->
-        <!--android:id="@+id/rvListview"-->
-        <!--android:layout_below="@+id/a_dish_detail_new_title"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="fill_parent"-->
-        <!--android:background="@color/transparent"-->
-        <!--android:divider="@android:color/transparent"-->
-        <!--android:dividerHeight="0dp"-->
-        <!--android:paddingLeft="0dp"-->
-        <!--android:paddingRight="0dp"-->
-        <!--android:scrollbars="none"-->
-        <!--android:visibility="gone" />-->
+
     <ListView
         android:id="@+id/listview"
         android:layout_below="@+id/a_dish_detail_new_title"

@@ -137,12 +137,21 @@
 
         <RelativeLayout
             android:id="@+id/share_layout"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/dp_40"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/dp_10"
-            android:visibility="visible"
+            android:visibility="gone"
             android:background="@android:color/transparent"
             android:clickable="true" >
+
+            <ImageView
+                android:id="@+id/integral_tip"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dp_18"
+                android:scaleType="centerInside"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/img_integral_tip"
+                android:visibility="gone"/>
 
             <ImageView
                 android:id="@+id/img_share"
@@ -151,15 +160,6 @@
                 android:visibility="visible"
                 android:src="@drawable/z_z_topbar_ico_share" />
 
-            <TextView
-                android:id="@+id/tv_share"
-                style="@style/top_text_button_bottom"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/img_share"
-                android:layout_centerHorizontal="true"
-                android:text="分享"
-                android:visibility="gone" />
         </RelativeLayout>
 
         <RelativeLayout
