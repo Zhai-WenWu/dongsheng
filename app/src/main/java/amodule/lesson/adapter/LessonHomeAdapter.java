@@ -56,6 +56,7 @@ public class LessonHomeAdapter extends RvBaseAdapter<Map<String,String>> {
             final String ID = LoginManager.isVIP() || LoginManager.isTempVip() ? "vip_homepage" : "nonvip_homepage";
             String title = StringManager.getFirstMap(data.get(WidgetDataHelper.KEY_PARAMETER)).get("title");
             final String titleTwoLevel = StringManager.getFirstMap(title).get("text1");
+            view.setStatisticPage("VipHome");
             view.setStatictusData(ID,titleTwoLevel,"");
             view.setStatisticCallback((id, twoLevel, threeLevel, position1) -> {
                 if(!TextUtils.isEmpty(id) && !TextUtils.isEmpty(twoLevel)){

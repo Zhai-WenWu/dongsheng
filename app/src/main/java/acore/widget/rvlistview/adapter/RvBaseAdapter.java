@@ -45,6 +45,8 @@ public abstract class RvBaseAdapter<T> extends RecyclerView.Adapter<RvBaseViewHo
 
     protected List<T> mData;
 
+    protected OnItemShow mOnItemShow;
+
     public RvBaseAdapter(Context context, @Nullable List<T> data) {
         this.mContext = context;
         setData(data);
@@ -53,6 +55,9 @@ public abstract class RvBaseAdapter<T> extends RecyclerView.Adapter<RvBaseViewHo
     @Override
     public void onBindViewHolder(RvBaseViewHolder<T> holder, int position) {
         holder.bindData(position, getItem(position));
+        if(mOnItemShow != null){
+            mOnItemShow.onItemShow(getItem(position),position);
+        }
     }
 
     @Override
@@ -149,5 +154,15 @@ public abstract class RvBaseAdapter<T> extends RecyclerView.Adapter<RvBaseViewHo
 
     public void setData(@NonNull List<T> data) {
         this.mData = null == data ? new ArrayList<T>() : data;
+    }
+
+    public void setOnItemShow(OnItemShow onItemShow) {
+        mOnItemShow = onItemShow;
+    }
+
+   /*------------------------------------------------------- interface -------------------------------------------------------*/
+
+    public interface OnItemShow<T>{
+        void onItemShow(T t,int position);
     }
 }

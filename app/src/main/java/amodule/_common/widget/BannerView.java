@@ -43,6 +43,7 @@ import amodule._common.delegate.IBindMap;
 import amodule._common.delegate.IHandlerClickEvent;
 import amodule._common.delegate.ISaveStatistic;
 import amodule._common.delegate.ISetAdID;
+import amodule._common.delegate.ISetStatisticPage;
 import amodule._common.delegate.IStatictusData;
 import amodule._common.delegate.IStatisticCallback;
 import amodule._common.delegate.StatisticCallback;
@@ -59,7 +60,8 @@ import third.ad.scrollerAd.XHAllAdControl;
  * E_mail : ztanzeyu@gmail.com
  */
 
-public class BannerView extends Banner implements IBindMap, IStatictusData, ISaveStatistic, IHandlerClickEvent,ISetAdID ,IStatisticCallback {
+public class BannerView extends Banner implements IBindMap, IStatictusData, ISaveStatistic, IHandlerClickEvent,ISetAdID
+        ,IStatisticCallback,ISetStatisticPage {
     public static final String KEY_ALREADY_SHOW = "alreadyshow";
     private LayoutInflater mInflater;
     private XHAllAdControl mAdControl;
@@ -175,8 +177,13 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
                 mAdControl.onAdClick(adView, 0, "");
                 return;
             }
-            String url = arrayList.get(position).get("url");
+            Map<String,String> dataTemp = arrayList.get(position);
+            String url = dataTemp.get("url");
             AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), url, true);
+            if(!TextUtils.isEmpty(page)){
+                XHClick.saveStatictisFile(page, "homeBannerScroll", dataTemp.get("type"), "", "",
+                        "click", "", "", "", "", "");
+            }
             statistic(position);
         });
         setPageChangeDuration(5 * 1000);
@@ -394,7 +401,7 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
     }
 
     @Override
-    public void saveStatisticData() {
+    public void saveStatisticData(String page) {
 
     }
 
@@ -476,5 +483,11 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
     @Override
     public void setStatisticCallback(StatisticCallback statisticCallback) {
         mStatisticCallback = statisticCallback;
+    }
+
+    String page = "";
+    @Override
+    public void setStatisticPage(String page) {
+        this.page = page;
     }
 }

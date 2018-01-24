@@ -179,7 +179,7 @@ public class HomeViewControler {
     public void setStatisticShowNum() {
         //头部统计数据存储
         if (mHeaderControler != null) {
-            mHeaderControler.saveStatisticData();
+            mHeaderControler.saveStatisticData("home");
         }
         //列表
         if (scrollDataIndex > 0) {

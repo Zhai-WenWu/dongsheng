@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -18,6 +19,7 @@ import acore.tools.StringManager;
 import amodule._common.delegate.IBindMap;
 import amodule._common.delegate.ISaveStatistic;
 import amodule._common.delegate.ISetAdID;
+import amodule._common.delegate.ISetStatisticPage;
 import amodule._common.delegate.IStatictusData;
 import amodule._common.delegate.IStatisticCallback;
 import amodule._common.delegate.ITitleStaticCallback;
@@ -39,7 +41,7 @@ import static amodule._common.widgetlib.IWidgetLibrary.NO_FIND_ID;
  */
 
 public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, String>>
-        implements IStatictusData, ISaveStatistic,ISetAdID,IStatisticCallback,ITitleStaticCallback {
+        implements IStatictusData, ISaveStatistic,ISetAdID,IStatisticCallback,ITitleStaticCallback,ISetStatisticPage {
 
     public static final int LLM = LinearLayout.LayoutParams.MATCH_PARENT;
     public static final int LLW = LinearLayout.LayoutParams.WRAP_CONTENT;
@@ -100,6 +102,9 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
                 }
                 if (view instanceof IStatictusData) {
                     ((IStatictusData) view).setStatictusData(id, twoLevel, threeLevel);
+                }
+                if(view instanceof ISetStatisticPage){
+                    ((ISetStatisticPage) view).setStatisticPage(page);
                 }
                 if (view instanceof IBindMap && !TextUtils.isEmpty(widgetData)) {
                     ((IBindMap) view).setData(dataMap);
@@ -193,15 +198,34 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
     private void addViewByData(LinearLayout layout, Map<String, String> data, boolean isOrder) {
         String widgetType = data.get(KEY_WIDGET_TYPE);
         String widgetData = data.get(KEY_WIDGET_DATA);
+        if(TextUtils.isEmpty(widgetData)){
+            return;
+        }
         Map<String, String> dataMap = StringManager.getFirstMap(widgetData);
         String style = dataMap.get(KEY_STYLE);
         final int layoutID = AllWeightLibrary.of().findWidgetLayoutID(widgetType, style);
         if (layoutID > NO_FIND_ID) {
             View view = mInflater.inflate(layoutID, null, true);
-            if (null != view && view instanceof IBindMap
-                    && !TextUtils.isEmpty(widgetData)) {
-                ((IBindMap) view).setData(dataMap);
-                layout.addView(view, isOrder ? -1 : 0);
+            if(view != null){
+                if(view instanceof  ISetAdID){
+                    ((ISetAdID)view).setAdID(adIDs);
+                }
+                if(view instanceof IStatisticCallback && mStatisticCallback != null){
+                    ((IStatisticCallback)view).setStatisticCallback(mStatisticCallback);
+                }
+                if(view instanceof ITitleStaticCallback && mTitleStatisticCallback != null){
+                    ((ITitleStaticCallback)view).setTitleStaticCallback((mTitleStatisticCallback));
+                }
+                if (view instanceof IStatictusData) {
+                    ((IStatictusData) view).setStatictusData(id, twoLevel, threeLevel);
+                }
+                if(view instanceof ISetStatisticPage){
+                    ((ISetStatisticPage) view).setStatisticPage(page);
+                }
+                if (view instanceof IBindMap) {
+                    ((IBindMap) view).setData(dataMap);
+                    layout.addView(view, isOrder ? -1 : 0);
+                }
             }
         }
     }
@@ -216,11 +240,25 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
     }
 
     @Override
-    public void saveStatisticData() {
+    public void saveStatisticData(String page) {
         if (currentID > 0) {
             View view = findViewById(currentID);
             if (view != null && view instanceof ISaveStatistic) {
-                ((ISaveStatistic) view).saveStatisticData();
+                ((ISaveStatistic) view).saveStatisticData(page);
+            }
+        }
+        saveExtraStatisticData(page,mExtraTop);
+        saveExtraStatisticData(page,mExtraBottom);
+    }
+
+    private void saveExtraStatisticData(String page, LinearLayout extraLayout) {
+        if(extraLayout != null){
+            for(int i = 0 ; i < extraLayout.getChildCount() ; i++){
+                View child = extraLayout.getChildAt(i);
+                if (child != null && child instanceof ISaveStatistic) {
+                    ((ISaveStatistic) child).saveStatisticData(page);
+//                    Log.i("XHClick", "widget--saveExtraStatisticData: ");
+                }
             }
         }
     }
@@ -239,5 +277,11 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
     @Override
     public void setTitleStaticCallback(StatisticCallback callback) {
         mTitleStatisticCallback = callback;
+    }
+
+    String page = "";
+    @Override
+    public void setStatisticPage(String page) {
+        this.page = page;
     }
 }

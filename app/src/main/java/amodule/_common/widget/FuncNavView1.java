@@ -1,6 +1,7 @@
 package amodule._common.widget;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -114,6 +115,8 @@ public class FuncNavView1 extends HomeFuncNavView1 implements IBindMap,IStatictu
     }
 
     private void statistic(int index,Map<String, String> data) {
+        XHClick.saveStatictisFile("home", "homeSmallNav", data.get("type"), "", "",
+                "click", "", "", "", data.get("text1"), "");
         if(mStatisticCallback != null){
             mStatisticCallback.onStatistic(id,twoLevel,threeLevel,index);
         }else{
@@ -133,7 +136,7 @@ public class FuncNavView1 extends HomeFuncNavView1 implements IBindMap,IStatictu
     }
 
     @Override
-    public void saveStatisticData() {
+    public void saveStatisticData(String page) {
 
     }
 

@@ -939,7 +939,7 @@ public class XHClick {
         try {
             String url = StringManager.API_STATISTIC_S6;
             String baseData = getStatictisParams();
-            LinkedHashMap<String, String> map = new LinkedHashMap<>();
+//            LinkedHashMap<String, String> map = new LinkedHashMap<>();
             if (isResetData && (data == null || data.size() <= 0)) {
                 data = StatictisSQLiteDataBase.getInstance().selectAllData();
                 StatictisSQLiteDataBase.getInstance().deleteAllData();
@@ -951,7 +951,7 @@ public class XHClick {
                 int lenght = data.size();
                 for (int i = 0; i < lenght; i++) {
                     if (!TextUtils.isEmpty(data.get(i))) {
-                        jsonArray.put(MapToJson(UtilString.getMapByString(data.get(i), "&", "=")));
+                        jsonArray.put(MapToJsonEncode(UtilString.getMapByString(data.get(i), "&", "=")));
                     }
                 }
                 jsonObject.put("log_data", jsonArray);
