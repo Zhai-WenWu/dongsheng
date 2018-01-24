@@ -1,8 +1,17 @@
 apply plugin: 'com.android.library'
+apply plugin: 'me.tatarka.retrolambda'
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:appcompat-v7:25.3.1'
+//    compile files('libs/cdi-api-2.0.Beta1.jar')
+    compile files('libs/cdi-api-1.2.jar')
+    compile files('libs/javax.enterprise.deploy.jar')
+    compile files('libs/javax.inject-1.jar')
+    compile files('libs/seamless-http-1.1.1.jar')
+    compile files('libs/seamless-immutable-4.1.1.jar')
+    compile files('libs/seamless-swing-1.1.1.jar')
+    compile files('libs/seamless-util-1.1.0.jar')
+    compile files('libs/seamless-xml-1.1.1.jar')
+    implementation 'com.android.support:appcompat-v7:25.3.1'
     // https://mvnrepository.com/artifact/org.slf4j/slf4j-api
     compile 'org.slf4j:slf4j-api:1.7.25'
     //Cling related-------start
@@ -10,8 +19,8 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     // Cling library
-    compile 'org.fourthline.cling:cling-core:2.1.1'
-    compile 'org.fourthline.cling:cling-support:2.1.1'
+//    compile 'org.fourthline.cling:cling-core:2.1.1'
+//    compile 'org.fourthline.cling:cling-support:2.1.1'
     // Jetty library
     compile('org.eclipse.jetty:jetty-server:8.1.20.v20160902', {
         exclude group: 'org.eclipse.jetty', module: 'jetty-util'
@@ -22,32 +31,38 @@ dependencies {
     compile('org.eclipse.jetty:jetty-client:8.1.20.v20160902', {
         exclude group: 'org.eclipse.jetty', module: 'jetty-util'
     })
+//    compile files ('C:/Program Files/Java/jre1.8.0_20/lib/rt.jar')
     //Cling related-------end
+    compile 'com.android.support:multidex:1.0.1'
 }
 
 android {
-    compileSdkVersion 25
+    compileSdkVersion 26
     buildToolsVersion '26.0.2'
 
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 21
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
-
+        // dex突破65535的限制
+        multiDexEnabled true
     }
-
+    dexOptions {
+        incremental true
+        jumboMode = true
+        javaMaxHeapSize "4g"
+    }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-    }
-
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
+        debug {
+            debuggable true
+            minifyEnabled false
+        }
     }
 
 }

@@ -56,7 +56,9 @@ public class ClingManager implements IClingManager {
     @Override
     public void searchDevices() {
         if (!Utils.isNull(mUpnpService)) {
-            mUpnpService.getControlPoint().search();
+            if(mUpnpService.getControlPoint()!=null) {
+                mUpnpService.getControlPoint().search();
+            }
         }
     }
 
@@ -89,7 +91,7 @@ public class ClingManager implements IClingManager {
         if (Utils.isNull(mUpnpService)) {
             return null;
         }
-        ClingControlPoint.getInstance().setControlPoint(mUpnpService.getControlPoint());
+        if(mUpnpService.getControlPoint()!=null)ClingControlPoint.getInstance().setControlPoint(mUpnpService.getControlPoint());
 
         return ClingControlPoint.getInstance();
     }

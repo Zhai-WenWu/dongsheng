@@ -146,7 +146,9 @@ public class ClingPresenter {
                 });
                 clingUpnpServiceManager.setDeviceManager(manager);
 
-                clingUpnpServiceManager.getRegistry().addListener(mBrowseRegistryListener);
+                if(clingUpnpServiceManager.getRegistry()!=null) {
+                    clingUpnpServiceManager.getRegistry().addListener(mBrowseRegistryListener);
+                }
                 //Search on service created.
                 clingUpnpServiceManager.searchDevices();
 
