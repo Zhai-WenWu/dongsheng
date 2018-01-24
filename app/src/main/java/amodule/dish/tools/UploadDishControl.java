@@ -64,7 +64,15 @@ public class UploadDishControl extends UploadHelper{
 				if(isShow){
 					BaseActivity.mUpDishPopWindowDialog = new PopWindowDialog(XHActivityManager.getInstance().getCurrentActivity(), "菜谱发布成功", "分享给你的朋友们，让他们也看看吧：",null);
 					String clickUrl = StringManager.wwwUrl + "caipu/" + uploadDishData.getCode() + ".html";
-					BaseActivity.mUpDishPopWindowDialog.show(BarShare.IMG_TYPE_LOC, "我做了[" + uploadDishData.getName() + "]，超好吃哦~", clickUrl, "独门秘籍都在这里，你也试试吧！", uploadDishData.getCover(), "菜谱发布成功后", "强化分享");
+					String imgUrl = uploadDishData.getCover();
+					String type = BarShare.IMG_TYPE_RES;
+					if (!TextUtils.isEmpty(imgUrl)) {
+						if (imgUrl.startsWith("http"))
+							type = BarShare.IMG_TYPE_WEB;
+						else
+							type = BarShare.IMG_TYPE_LOC;
+					}
+					BaseActivity.mUpDishPopWindowDialog.show(type, "我做了[" + uploadDishData.getName() + "]，超好吃哦~", clickUrl, "独门秘籍都在这里，你也试试吧！", imgUrl, "菜谱发布成功后", "强化分享");
 				}
 				int id=uploadDishData.getId();
 				if(id>0) uploadDishSqlite.deleteById(id);
