@@ -348,8 +348,8 @@ public class ShareTools {
 		configShare.put("SortId", "1");
 		configShare.put("AppId", "wx2b582fbe26ef8993");
 		configShare.put("AppSecret", "178b4d14294057b0df3d4586621cfe00");
-		configShare.put("UserName", "gh_7482de333db0");
-		configShare.put("Path", TextUtils.isEmpty(confPath) ? path : confPath);
+		configShare.put("userName", "gh_7482de333db0");
+		configShare.put("path", TextUtils.isEmpty(confPath) ? path : confPath);
 		configShare.put("BypassApproval", "false");
 		configShare.put("Enable", "true");
 		ShareSDK.setPlatformDevInfo(Wechat.NAME, configShare);
