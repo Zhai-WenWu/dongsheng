@@ -335,7 +335,7 @@ public class DishTitleViewControl implements View.OnClickListener {
                                 if (isShow) {
                                     boolean isAutoOff = OffDishToFavoriteControl.getIsAutoOffDish(detailDish.getApplicationContext());
                                     mFavePopWindowDialog = new PopWindowDialog(XHActivityManager.getInstance().getCurrentActivity(), "收藏成功", "这道菜已经被多人分享过，分享给好友？",
-                                            isAutoOff ? "已离线到本地,可在设置-收藏菜谱关闭。" : null);
+                                            isAutoOff ? "已离线到本地,可在设置-收藏菜谱关闭。" : null, true);
                                     if (isHasVideo && mVideoPlayerController != null && mVideoPlayerController.getVideoImageView() != null) {
                                         String title = "【香哈菜谱】看了" + dishInfoMap.get("name") + "的教学视频，我已经学会了，味道超赞！";
                                         String clickUrl = StringManager.wwwUrl + "video/caipu/" + code + ".html";
