@@ -14,17 +14,6 @@
         android:layout_centerHorizontal="true"
         android:src="@drawable/logo_qzone"/>
 
-    <ImageView
-        android:id="@+id/integral_tip"
-        android:layout_width="@dimen/dp_39"
-        android:layout_height="wrap_content"
-        android:scaleType="centerInside"
-        android:layout_centerHorizontal="true"
-        android:src="@drawable/img_integral_tip"
-        android:visibility="gone"
-        android:layout_above="@+id/share_name"
-        android:layout_marginBottom="@dimen/dp__2"/>
-
     <TextView
         android:id="@+id/share_name"
         android:layout_width="match_parent"

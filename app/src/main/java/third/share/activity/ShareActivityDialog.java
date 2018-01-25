@@ -28,8 +28,6 @@ import acore.logic.AppCommon;
 import acore.logic.XHClick;
 import acore.tools.ToolsDevice;
 import amodule.quan.activity.QuanReport;
-import third.share.adapter.ShareAdapter;
-import third.share.module.ShareModule;
 import third.share.tools.ShareTools;
 
 import static third.share.tools.ShareTools.mParent;
@@ -39,7 +37,7 @@ import static third.share.tools.ShareTools.mParent;
  */
 public class ShareActivityDialog extends Activity implements View.OnClickListener{
 
-    private ArrayList<ShareModule> mData = new ArrayList<>();
+    private ArrayList<Map<String,String>> mData = new ArrayList<>();
     private String[] mSharePlatforms;
     private String mTitle,mContent,mType,mImgUrl,mClickUrl, mShareFrom,mShareTwoData,reportUrl;
     private Boolean isHasReport;
@@ -49,8 +47,6 @@ public class ShareActivityDialog extends Activity implements View.OnClickListene
     private String tongjiId = "a_user";
 
     private String mShareParams;
-
-    private boolean mShowIntegralTip;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,8 +85,6 @@ public class ShareActivityDialog extends Activity implements View.OnClickListene
         //分享的配置数据
         mShareParams = getIntent().getStringExtra("shareParams");
 
-        mShowIntegralTip = getIntent().getBooleanExtra("showIntegralTip", false);
-
         init();
     }
 
@@ -101,15 +95,16 @@ public class ShareActivityDialog extends Activity implements View.OnClickListene
         findViewById(R.id.a_user_home_share_close).setOnClickListener(this);
 
         GridView mGridView = (GridView)findViewById(R.id.d_popwindow_share_gridview);
-        ShareAdapter adapter = new ShareAdapter();
-        adapter.setData(mData);
+        SimpleAdapter adapter = new SimpleAdapter(this, mData,R.layout.a_user_home_share_item,
+                new String[]{"img","name"},
+                new int[]{R.id.share_logo,R.id.share_name});
         mGridView.setAdapter(adapter);
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String platfrom = mSharePlatforms[position];
-                XHClick.mapStat(ShareActivityDialog.this, tongjiId, mShareTwoData, mData.get(position).getTitle());
+                XHClick.mapStat(ShareActivityDialog.this, tongjiId, mShareTwoData, mData.get(position).get("name"));
                 if("report".equals(platfrom)){ //举报
                     if(TextUtils.isEmpty(reportUrl)) {
                         Intent intent = new Intent(ShareActivityDialog.this, QuanReport.class);
@@ -174,12 +169,10 @@ public class ShareActivityDialog extends Activity implements View.OnClickListene
             mapSize --;
         }
         for(int i = 0; i < mapSize; i ++){
-            String platform = mSharePlatforms[i];
-            ShareModule module = new ShareModule();
-            module.setResId(mLogos[i]);
-            module.setTitle(mNames[i]);
-            module.setIntegralTipShow(mShowIntegralTip && (TextUtils.equals(platform, ShareTools.WEI_XIN) || TextUtils.equals(platform, ShareTools.WEI_QUAN)));
-            mData.add(module);
+            Map<String,String> map = new HashMap<String,String>();
+            map.put("name", mNames[i]);
+            map.put("img", "" + mLogos[i]);
+            mData.add(map);
         }
     }
 
