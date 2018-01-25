@@ -8,8 +8,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.Log;
@@ -24,6 +22,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.xiangha.R;
+
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Timer;
@@ -37,7 +36,6 @@ import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.dish.view.DishADBannerView;
 import amodule.dish.view.DishAboutView;
-import amodule.dish.view.DishAdDataViewNew;
 import amodule.dish.view.DishExplainView;
 import amodule.dish.view.DishHeaderViewNew;
 import amodule.dish.view.DishHoverViewControl;
@@ -95,6 +93,7 @@ public class DetailDishViewManager {
         dishTitleViewControl = new DishTitleViewControl(activity);
         dishTitleViewControl.initView(activity);
         dishTitleViewControl.setstate(state);
+        dishTitleViewControl.setIntegralTipStatus(true);
         initTitle();
         dishHoverViewControl = new DishHoverViewControl(activity);
         dishHoverViewControl.initView();
@@ -167,6 +166,7 @@ public class DetailDishViewManager {
         listView.setVisibility(View.VISIBLE);
         setListViewListener();
     }
+
     /**
      * 处理标题
      */
@@ -548,7 +548,7 @@ public class DetailDishViewManager {
     class MyTimer {
         private Handler handler;
         private Timer timer;
-        private MyTimer.MyTask mTask;
+        private MyTask mTask;
         public MyTimer(Handler handler) {
             this.handler = handler;
             timer = new Timer();
@@ -558,7 +558,7 @@ public class DetailDishViewManager {
                 mTask.cancel();
                 mTask = null;
             }
-            mTask = new MyTimer.MyTask(handler);
+            mTask = new MyTask(handler);
             timer.schedule(mTask, 0, period);
         }
         public void cancel() {

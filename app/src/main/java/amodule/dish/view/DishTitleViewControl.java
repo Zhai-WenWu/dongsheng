@@ -20,6 +20,7 @@ import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.logic.load.LoadManager;
 import acore.override.XHApplication;
+import acore.override.helper.XHActivityManager;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -40,7 +41,7 @@ import xh.windowview.BottomDialog;
  */
 public class DishTitleViewControl implements View.OnClickListener {
     private Context context;
-    private ImageView favImg;
+    private ImageView favImg, integralTip;
     private TextView favText, titleView;
     private Activity detailDish;
     private String state, dishState;
@@ -51,6 +52,7 @@ public class DishTitleViewControl implements View.OnClickListener {
     private String code;
     private boolean isHasVideo;
     private boolean nowFav;
+    private boolean showIntegralTip;
     private PopWindowDialog mFavePopWindowDialog;
     private LoadManager loadManager;
     private String nickName = "";
@@ -75,6 +77,7 @@ public class DishTitleViewControl implements View.OnClickListener {
         detailDish.findViewById(R.id.share_layout).setVisibility(View.VISIBLE);
         detailDish.findViewById(R.id.more_layout).setVisibility(View.GONE);
         favText = (TextView) detailDish.findViewById(R.id.tv_fav);
+        integralTip = (ImageView) detailDish.findViewById(R.id.integral_tip);
         favImg = (ImageView) detailDish.findViewById(R.id.img_fav);
         favImg.setVisibility(View.VISIBLE);
         favImg.setImageResource(R.drawable.z_caipu_xiangqing_topbar_ico_fav);
@@ -146,6 +149,11 @@ public class DishTitleViewControl implements View.OnClickListener {
             favImg.setImageResource(R.drawable.z_caipu_xiangqing_topbar_ico_fav);
             favText.setText("未收藏");
         }
+    }
+
+    public void setIntegralTipStatus(boolean show) {
+        showIntegralTip = show;
+        integralTip.setVisibility(showIntegralTip ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -240,6 +248,7 @@ public class DishTitleViewControl implements View.OnClickListener {
         intent.putExtra("clickUrl", mapData.get("mClickUrl"));
         intent.putExtra("title", mapData.get("mTitle"));
         intent.putExtra("content", mapData.get("mContent"));
+        intent.putExtra("showIntegralTip", showIntegralTip);
         if (!TextUtils.isEmpty(mShareStr)) {
             intent.putExtra("shareParams", mShareStr);
         }
@@ -325,7 +334,7 @@ public class DishTitleViewControl implements View.OnClickListener {
                                 boolean isShow = PopWindowDialog.isShowPop(FileManager.xmlKey_shareShowPopDataFavDish, FileManager.xmlKey_shareShowPopNumFavDish);
                                 if (isShow) {
                                     boolean isAutoOff = OffDishToFavoriteControl.getIsAutoOffDish(detailDish.getApplicationContext());
-                                    mFavePopWindowDialog = new PopWindowDialog(XHApplication.in(), "收藏成功", "这道菜已经被多人分享过，分享给好友？",
+                                    mFavePopWindowDialog = new PopWindowDialog(XHActivityManager.getInstance().getCurrentActivity(), "收藏成功", "这道菜已经被多人分享过，分享给好友？",
                                             isAutoOff ? "已离线到本地,可在设置-收藏菜谱关闭。" : null);
                                     if (isHasVideo && mVideoPlayerController != null && mVideoPlayerController.getVideoImageView() != null) {
                                         String title = "【香哈菜谱】看了" + dishInfoMap.get("name") + "的教学视频，我已经学会了，味道超赞！";
