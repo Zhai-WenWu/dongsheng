@@ -113,25 +113,29 @@ public class AndroidUpnpServiceImpl extends Service {
      */
     @Override
     public void onDestroy() {
-        upnpService.shutdown();
+        if(upnpService!=null) upnpService.shutdown();
         super.onDestroy();
     }
 
     protected class Binder extends android.os.Binder implements AndroidUpnpService {
 
         public UpnpService get() {
+            if(upnpService==null)handleupnpService();
             return upnpService;
         }
 
         public UpnpServiceConfiguration getConfiguration() {
+            if(upnpService==null)handleupnpService();
             return upnpService.getConfiguration();
         }
 
         public Registry getRegistry() {
+            if(upnpService==null)handleupnpService();
             return upnpService.getRegistry();
         }
 
         public ControlPoint getControlPoint() {
+            if(upnpService==null)handleupnpService();
             return upnpService.getControlPoint();
         }
     }
