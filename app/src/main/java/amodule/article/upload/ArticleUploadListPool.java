@@ -442,9 +442,6 @@ public class ArticleUploadListPool extends UploadListPool {
                         Map<String, String> map = makesList.get(i);
                         String imgPath = map.get("path");
                         String imgUrl = map.get("url");
-
-                        Log.e("articleUpload", "文章上传 imgPath: " + imgPath + ",imgUrl:" + imgUrl);
-                        Log.e("articleUpload", "文章上传 imgPath.indexOf(\"http\"): " + imgPath.indexOf("http"));
                         if (imgPath.indexOf("http") != 0 && !Tools.isFileExists(imgPath)) {
                             Toast.makeText(Main.allMain, "获取不到文章图片路径 " + i, Toast.LENGTH_SHORT).show();
                             return null;
