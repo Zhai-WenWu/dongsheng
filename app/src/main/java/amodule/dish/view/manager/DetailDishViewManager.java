@@ -95,6 +95,7 @@ public class DetailDishViewManager {
         dishTitleViewControl = new DishTitleViewControl(activity);
         dishTitleViewControl.initView(activity);
         dishTitleViewControl.setstate(state);
+        dishTitleViewControl.setIntegralTipStatus(true);
         initTitle();
         dishHoverViewControl = new DishHoverViewControl(activity);
         dishHoverViewControl.initView();
@@ -167,6 +168,7 @@ public class DetailDishViewManager {
         listView.setVisibility(View.VISIBLE);
         setListViewListener();
     }
+
     /**
      * 处理标题
      */
