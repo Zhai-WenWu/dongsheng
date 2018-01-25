@@ -78,21 +78,6 @@ public class LogManager extends UtilLog {
 		}
 		return map;
 	}
-	public static void sendWornLog(){
-		final String wornLog=UtilFile.getSDDir() + "warn_log.txt";
-		String content = FileManager.readFile(wornLog);
-		if(content.length()>10){
-			LinkedHashMap<String, String> map = LogManager.getReportLog("loadImg","图片加载过程",Tools.getAssignTime("yyyy-MM-dd HH:mm:ss", 0),content);
-			ReqInternet.in().doPost("http:s//crash.xiangha.com/crash/report2", map , new InternetCallback() {
-				@Override
-				public void loaded(int flag, String url, Object returnObj) {
-					if(flag >= UtilInternet.REQ_OK_STRING) { //成功,回调成功
-						FileManager.delDirectoryOrFile(wornLog);
-					}
-				}
-			});
-		}
-	}
 
 	public static void printStartTime(String tag,String text){
 		if(XHApplication.in() != null && Tools.isDebug(XHApplication.in())){
