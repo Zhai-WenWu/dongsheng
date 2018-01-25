@@ -5,12 +5,14 @@ import android.text.TextUtils;
 
 import java.util.Map;
 
-import acore.logic.AppCommon;
+import acore.logic.ConfigMannager;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import amodule.main.Main;
 import third.push.model.NotificationData;
+
+import static acore.logic.ConfigMannager.KEY_APPPUSHTIMERANGE;
 
 /**
  * Created by sll on 2018/1/19.
@@ -27,7 +29,7 @@ public class LocalPushDataManager {
 
     public void initLocalPush() {
         //获取config
-        String apppushtimerangeStr = AppCommon.getConfigByLocal("apppushtimerange");
+        String apppushtimerangeStr = ConfigMannager.getConfigByLocal(KEY_APPPUSHTIMERANGE);
         dataMap = StringManager.getFirstMap(apppushtimerangeStr);
         if("1".equals(dataMap.get("open"))){
             //取消本地推送

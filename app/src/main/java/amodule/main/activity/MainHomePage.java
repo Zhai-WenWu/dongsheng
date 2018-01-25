@@ -15,10 +15,10 @@ import com.xiangha.R;
 import java.util.Map;
 
 import acore.broadcast.ConnectionChangeReceiver;
-import acore.logic.AppCommon;
 import acore.logic.MessageTipController;
 import acore.logic.SpecialWebControl;
 import acore.logic.XHClick;
+import acore.logic.ConfigMannager;
 import acore.logic.load.LoadManager;
 import acore.override.activity.mian.MainBaseActivity;
 import acore.tools.IObserver;
@@ -34,6 +34,8 @@ import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import third.ad.control.AdControlParent;
+
+import static acore.logic.ConfigMannager.KEY_LOGPOSTTIME;
 
 /**
  * Description :
@@ -59,8 +61,6 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
     volatile boolean LoadOver = false;
 
     boolean HeaderDataLoaded = false;
-
-    boolean dialogLoadOver = false;
 
     protected long startTime = -1;//开始的时间戳
 
@@ -142,7 +142,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
     }
 
     private void initPostTime() {
-        String logPostTime = AppCommon.getConfigByLocal("logPostTime");
+        String logPostTime = ConfigMannager.getConfigByLocal(KEY_LOGPOSTTIME);
         if (!TextUtils.isEmpty(logPostTime)) {
             Map<String, String> map = StringManager.getFirstMap(logPostTime);
             String postTimeValue = map.get("postTime");
@@ -163,7 +163,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
                     mViewContrloer.getRvListView(),
                     mHomeAdapter,
                     true,
-                    v -> inerRefresh(),
+                    v -> innerRefresh(),
                     v -> {
                         if (HeaderDataLoaded)
                             EntryptData(!LoadOver);
@@ -192,6 +192,9 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
     private void loadRemoteData() {
         startLoadTime = System.currentTimeMillis();
         mDataControler.loadServiceHomeData(getHeaderCallback(false));
+    }
+
+    private void loadTopData() {
         mDataControler.loadServiceTopData(new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
@@ -200,7 +203,6 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
                     mViewContrloer.setTopData(StringManager.getListMapByJson(o));
             }
         });
-
     }
 
     /**
@@ -217,16 +219,25 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
                 loadManager.hideProgressBar();
                 Log.i("tzy", (isCache ? "cacheTime = " : "serviceTime = ") + (System.currentTimeMillis() - startLoadTime) + "ms");
                 HeaderDataLoaded = true;
+                mViewContrloer.refreshComplete();
                 if (i >= ReqEncyptInternet.REQ_OK_STRING) {
-                    if (mViewContrloer != null)
-                        mViewContrloer.setHeaderData(StringManager.getListMapByJson(o), isCache);
+                    new Handler().postDelayed(() -> {
+                        if (mViewContrloer != null)
+                            mViewContrloer.setHeaderData(StringManager.getListMapByJson(o), isCache);
+                    },300);
                     Log.i("tzy", "setHeaderData " + (isCache ? "cacheTime = " : "serviceTime = ") + (System.currentTimeMillis() - startLoadTime) + "ms");
                     if (!isCache && mDataControler != null) {
                         mDataControler.saveCacheHomeData((String) o);
                     }
                 }
+                if (!isCache && mDataControler != null) {
+                    loadTopData();
+                    if(isRefreshingHeader){
+                        new Handler().postDelayed(() -> EntryptData(true),400);
+                    }
+                }
                 isRefreshingHeader = false;
-                mViewContrloer.refreshComplete();
+
             }
         };
     }
@@ -258,7 +269,6 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
         if (refresh) {//向上翻页
             if (mDataControler != null)
                 mDataControler.refreshADIndex();
-            mViewContrloer.setStatisticShowNum();
         }
         mDataControler.loadServiceFeedData(refresh, new HomeDataControler.OnLoadDataCallback() {
             @Override
@@ -267,7 +277,6 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
                 if (refresh) {
                     XHClick.mapStat(MainHomePage.this, "a_recommend", "刷新效果", "下拉刷新");
                     loadManager.hideProgressBar();
-                    mViewContrloer.returnListTop();
                 }
                 Button loadmore = loadManager.getSingleLoadMore(mViewContrloer.getRvListView());
                 if (null != loadmore) {
@@ -326,6 +335,9 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
     protected void onPause() {
         super.onPause();
         setRecommedStatistic();
+        if(mViewContrloer != null){
+            mViewContrloer.setStatisticShowNum();
+        }
     }
 
     @Override
@@ -359,14 +371,16 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
         mViewContrloer.autoRefresh();
     }
 
-    private void inerRefresh() {
+    private void innerRefresh() {
         if (isRefreshingHeader || isRefreshingFeed) {
             return;
         }
         isRefreshingHeader = true;
         isRefreshingFeed = true;
+        if(mViewContrloer != null){
+            mViewContrloer.returnListTop();
+        }
         loadRemoteData();
-        EntryptData(true);
     }
 
     private void onResumeFake() {
@@ -390,7 +404,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
 
     @Override
     public void setMessageTip(int tipCournt) {
-        Log.i("tzy", "MainHomePage::setMessageTip: " + tipCournt);
+//        Log.i("tzy", "MainHomePage::setMessageTip: " + tipCournt);
         mViewContrloer.setMessage(tipCournt);
     }
 }

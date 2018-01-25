@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import acore.logic.AppCommon;
+import acore.logic.ConfigMannager;
 import acore.logic.SpecialWebControl;
 import acore.logic.XHClick;
 import acore.override.activity.mian.MainBaseActivity;
@@ -39,6 +39,8 @@ import amodule.search.avtivity.HomeSearch;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
+
+import static acore.logic.ConfigMannager.KEY_LOGPOSTTIME;
 
 /**
  * 新的框架首页
@@ -71,7 +73,7 @@ public class MainHome extends MainBaseActivity implements IObserver {
         initView();
         initData();
         initModuleData();
-        String logPostTime = AppCommon.getConfigByLocal("logPostTime");
+        String logPostTime = ConfigMannager.getConfigByLocal(KEY_LOGPOSTTIME);
         if(!TextUtils.isEmpty(logPostTime)){
             Map<String,String> map=StringManager.getFirstMap(logPostTime);
             if(map!=null&&map.containsKey("postTime")&&!TextUtils.isEmpty(map.get("postTime"))) {

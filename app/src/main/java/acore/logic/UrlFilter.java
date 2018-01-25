@@ -3,9 +3,6 @@ package acore.logic;
 import android.net.Uri;
 import android.text.TextUtils;
 
-import com.annimon.stream.Stream;
-import com.annimon.stream.function.Consumer;
-
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -23,7 +20,7 @@ public class UrlFilter {
 
     public static String filterAdDownloadUrl(String url) {
         if (!TextUtils.isEmpty(url)) {
-            String ruleValue = AppCommon.getConfigByLocal(KEY_AdDownLoad);
+            String ruleValue = ConfigMannager.getConfigByLocal(KEY_AdDownLoad);
             if(TextUtils.isEmpty(ruleValue))
                 return url;
             Map<String, String> ruleMap = StringManager.getFirstMap(ruleValue);

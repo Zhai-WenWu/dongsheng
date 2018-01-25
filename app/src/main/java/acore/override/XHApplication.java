@@ -18,7 +18,7 @@ import com.xiangha.R;
 import java.util.Map;
 
 import acore.logic.AllPopDialogHelper;
-import acore.logic.AppCommon;
+import acore.logic.ConfigMannager;
 import acore.override.helper.XHActivityManager;
 import acore.tools.ChannelUtil;
 import acore.tools.FileManager;
@@ -29,6 +29,8 @@ import acore.tools.ToolsDevice;
 import aplug.basic.LoadImage;
 import aplug.basic.XHConf;
 import third.push.umeng.UMPushServer;
+
+import static acore.logic.ConfigMannager.KEY_BAIDUAPPID;
 
 public class XHApplication extends MobApplication {
     /**包名*/
@@ -92,7 +94,7 @@ public class XHApplication extends MobApplication {
         LoadImage.init(getApplicationContext());//耗时100毫秒
         LogManager.printStartTime("zhangyujian","XhApplication:1111:initData::");
         //设置百度appid
-        Map<String,String> map = StringManager.getFirstMap(AppCommon.getConfigByLocal("baiduappid"));
+        Map<String,String> map = StringManager.getFirstMap(ConfigMannager.getConfigByLocal(KEY_BAIDUAPPID));
         if(map.containsKey("appid") && !TextUtils.isEmpty(map.get("appid"))){
             AdView.setAppSid(this, map.get("appid"));
         }else

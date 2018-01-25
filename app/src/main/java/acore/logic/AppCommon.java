@@ -8,7 +8,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -28,7 +27,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import acore.logic.load.LoadManager;
 import acore.override.XHApplication;
 import acore.override.activity.base.WebActivity;
 import acore.override.activity.mian.MainBaseActivity;
@@ -53,11 +51,11 @@ import aplug.basic.XHConf;
 import aplug.web.FullScreenWeb;
 import aplug.web.ShowWeb;
 import third.ad.scrollerAd.XHAllAdControl;
-import third.qiyu.QiYvHelper;
 import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilString;
 import xh.windowview.BottomDialog;
 
+import static acore.logic.ConfigMannager.KEY_RANDPROMOTIONNEW;
 import static xh.basic.tool.UtilFile.readFile;
 import static xh.basic.tool.UtilString.getListMapByJson;
 public class AppCommon {
@@ -751,44 +749,6 @@ public class AppCommon {
         }
     }
 
-    /**
-     * 保存config
-     */
-    public static void saveConfigData(Context context) {
-        ReqInternet.in().doGet(StringManager.api_getConf, new InternetCallback() {
-            @Override
-            public void loaded(int flag, String url, final Object msg) {
-                if (flag >= ReqInternet.REQ_OK_STRING) {
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            FileManager.saveFileToCompletePath(FileManager.getDataDir() + FileManager.file_config, msg.toString(), false);
-                        }
-                    }).start();
-                }
-            }
-        });
-    }
-
-    /**
-     * 获取config数据
-     *
-     * @param key 若key为空，返回所有config数据
-     * @return
-     */
-    public static String getConfigByLocal(String key) {
-        String data = "";
-        String configData = readFile(FileManager.getDataDir() + FileManager.file_config);
-        if (TextUtils.isEmpty(key)) {
-            return configData;
-        }
-        Map<String, String> map = StringManager.getFirstMap(configData);
-        if (map != null && map.containsKey(key)) {
-            data = map.get(key);
-        }
-        return data;
-    }
-
     public static Map<String, Integer> createCount = new HashMap<>();
 
 
@@ -913,7 +873,7 @@ public class AppCommon {
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
-                Map<String,String> randprotionMap =  StringManager.getFirstMap(getConfigByLocal("randpromotionurlnew"));
+                Map<String,String> randprotionMap =  StringManager.getFirstMap(ConfigMannager.getConfigByLocal(KEY_RANDPROMOTIONNEW));
                 String url = randprotionMap.get("url");
                 final ArrayList<Map<String,String>> replaceArr = StringManager.getListMapByJson(randprotionMap.get("replaceArray"));
                 if(TextUtils.isEmpty(url)){
@@ -944,6 +904,8 @@ public class AppCommon {
                                                 totalWeight += Integer.parseInt(dict.get("weight")); //[dict["weight"] intValue];
                                             }
                                             if (totalWeight < 1) {
+                                                //清空之前的数据
+                                                FileManager.scynSaveFile(FileManager.getDataDir() + FileManager.file_randPromotionConfig, text, false);
                                                 return ;
                                             }
                                             java.util.Random r = new java.util.Random();

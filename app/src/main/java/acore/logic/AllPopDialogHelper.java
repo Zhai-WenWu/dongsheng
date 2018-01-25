@@ -37,8 +37,10 @@ import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
 import third.ad.tools.AdConfigTools;
 
+import static acore.logic.ConfigMannager.KEY_DIVERSION;
+import static acore.logic.ConfigMannager.KEY_GOODCOMMENT;
+import static acore.logic.ConfigMannager.KEY_PUSHJSON;
 import static com.popdialog.AllPopDialogControler.log;
-import static com.tencent.stat.StatTrackLog.log;
 import static third.ad.tools.AdPlayIdConfig.FULL_SRCEEN_ACTIVITY;
 
 /**
@@ -62,7 +64,7 @@ public class AllPopDialogHelper {
                     @Override
                     public String getGuideData() {
                         log("AllPopDialogHelper :: getGuideData");
-                        return AppCommon.getConfigByLocal("diversion");
+                        return ConfigMannager.getConfigByLocal(KEY_DIVERSION);
                     }
 
                     @Override
@@ -104,13 +106,13 @@ public class AllPopDialogHelper {
                     @Override
                     public String getGoodCommentData() {
                         log("AllPopDialogHelper :: getGoodCommentData");
-                        return AppCommon.getConfigByLocal("goodComment");
+                        return ConfigMannager.getConfigByLocal(KEY_GOODCOMMENT);
                     }
 
                     @Override
                     public String getPushData() {
                         log("AllPopDialogHelper :: getPushData");
-                        return AppCommon.getConfigByLocal("pushJson");
+                        return ConfigMannager.getConfigByLocal(KEY_PUSHJSON);
                     }
                 });
         //初始化

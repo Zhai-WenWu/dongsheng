@@ -50,6 +50,7 @@ import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilLog;
 
+import static acore.logic.ConfigMannager.KEY_VIVOAD;
 import static xh.basic.tool.UtilString.getListMapByJson;
 
 public class LoginManager {
@@ -92,6 +93,7 @@ public class LoginManager {
                         saveUserInfo(act, returnObj);
                         //设置用户其他
                         setUserOther(act, returnObj);
+                        MessageTipController.newInstance().getCommonData(null);
                     } else
                         logout(act);
                 }
@@ -103,6 +105,7 @@ public class LoginManager {
             setUserOther(act, null);
             //电商
             MallCommon.setDsToken(act);
+            MessageTipController.newInstance().getCommonData(null);
         }
 	}
 
@@ -385,7 +388,7 @@ public class LoginManager {
     private synchronized static boolean isVIVOShowAd() {
         boolean ret = true;
         if("developer.vivo.com.cn".equals(ChannelUtil.getChannel(XHApplication.in()))) {
-            String showAD = AppCommon.getConfigByLocal("vivoAD");//release 2表示显示发布，显示广告，1不显示广告
+            String showAD = ConfigMannager.getConfigByLocal(KEY_VIVOAD);//release 2表示显示发布，显示广告，1不显示广告
             if (showAD != null && !TextUtils.isEmpty(showAD) && "1".equals(StringManager.getFirstMap(showAD).get("release"))) {
                 ret = false;
             }

@@ -15,10 +15,10 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Map;
 
-import acore.logic.AppCommon;
 import acore.logic.MessageTipController;
 import acore.logic.XHApiMonitor;
 import acore.logic.XHClick;
+import acore.logic.ConfigMannager;
 import acore.override.XHApplication;
 import acore.override.helper.XHActivityManager;
 import acore.tools.LogManager;
@@ -27,6 +27,8 @@ import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.ToastCustom;
 import xh.basic.tool.UtilString;
+
+import static acore.logic.ConfigMannager.KEY_IMAGEACCEPT;
 
 /**
  * 网络请求回调类
@@ -217,7 +219,7 @@ public abstract class InternetCallback extends XHInternetCallBack {
 			encryptparams=encryptparams.replaceAll("\\n","");
 			header.put("xh-parameter", encryptparams);
         }
-		String isAccept= AppCommon.getConfigByLocal("imageAccept");//isWebp 2表示使用，1不
+		String isAccept= ConfigMannager.getConfigByLocal(KEY_IMAGEACCEPT);//isWebp 2表示使用，1不
 		if(!TextUtils.isEmpty(isAccept)){
 			Map<String,String> map=StringManager.getFirstMap(isAccept);
 			if(!TextUtils.isEmpty(map.get("sdk"))&&Integer.parseInt(map.get("sdk"))<= Build.VERSION.SDK_INT){

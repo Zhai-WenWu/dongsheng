@@ -11,8 +11,8 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import acore.logic.AppCommon;
 import acore.logic.LoginManager;
+import acore.logic.ConfigMannager;
 import acore.override.helper.XHActivityManager;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
@@ -61,7 +61,7 @@ public class WelcomeAdTools {
         data = FileManager.readFile(FileManager.getDataDir() + FileManager.file_ad);
         Log.i("tzy","WelcomeAdTools create.");
         //获取参数
-        String splashConfigDataStr = AppCommon.getConfigByLocal(CONFIGKEY);
+        String splashConfigDataStr = ConfigMannager.getConfigByLocal(CONFIGKEY);
         if(TextUtils.isEmpty(splashConfigDataStr)){
             return;
         }
@@ -108,12 +108,12 @@ public class WelcomeAdTools {
         }
         Map<String, String> map = StringManager.getFirstMap(data);
         if (map.containsKey(AdPlayIdConfig.WELCOME)) {
-            ArrayList<Map<String, String>> listTemp = StringManager.getListMapByJson(map.get(AdPlayIdConfig.WELCOME));
-            if (!listTemp.get(0).containsKey("adConfig")) {
+            Map<String,String> mapTemp = StringManager.getFirstMap(map.get(AdPlayIdConfig.WELCOME));
+            if (!mapTemp.containsKey("adConfig")) {
                 return;
             }
-            Map<String, String> configMap = StringManager.getFirstMap(listTemp.get(0).get("adConfig"));
-            String banner = listTemp.get(0).get("banner");
+            Map<String, String> configMap = StringManager.getFirstMap(mapTemp.get("adConfig"));
+            String banner = mapTemp.get("banner");
             final String[] keys = {"1", "2", "3", "4", "5"};
             for (String key : keys) {
                 if (configMap.containsKey(key))
@@ -132,7 +132,8 @@ public class WelcomeAdTools {
         if (map_ad.get("open").equals("2") && XHScrollerAdParent.supportType(map_ad.get("type"))) {
             list_ad.add(map_ad.get("type"));
             //处理banner类型数据
-            if (XHScrollerAdParent.TAG_BANNER.equals(map_ad.get("type"))) {
+            if (XHScrollerAdParent.TAG_BANNER.equals(map_ad.get("type"))
+                    && !TextUtils.isEmpty(banner)) {
                 ad_data.add(banner);
             } else {
                 ad_data.add(map_ad.get("data"));

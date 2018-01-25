@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
@@ -23,6 +22,8 @@ import acore.override.XHApplication;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import aplug.basic.ReqInternet;
+
+import static acore.logic.ConfigMannager.KEY_NAVTOWEBSTAT;
 
 /**
  * PackageName : acore.logic
@@ -62,7 +63,7 @@ public class SpecialWebControl {
      * @param code
      */
     public static void initSpecialWeb(Context context, ViewGroup parent, @NonNull String type, String name, String code) {
-        String configData = AppCommon.getConfigByLocal("navToWebStat");
+        String configData = ConfigMannager.getConfigByLocal(KEY_NAVTOWEBSTAT);
         Map<String, String> data = StringManager.getFirstMap(configData);
         if (data != null && data.containsKey(type)) {
             ArrayList<Map<String, String>> dataArray = StringManager.getListMapByJson(data.get(type));

@@ -28,6 +28,7 @@ import third.ad.tools.WelcomeAdTools;
 import third.mall.aplug.MallCommon;
 import xh.basic.tool.UtilFile;
 
+import static acore.logic.ConfigMannager.KEY_RANDPROMOTION;
 import static amodule.main.Main.colse_level;
 
 public class ActivityMethodManager {
@@ -178,7 +179,7 @@ public class ActivityMethodManager {
         //获取 Acitivty 完整路径名
         String classKey = mAct.getComponentName().getClassName();
         //获取 config 中的 randPromotion 数据
-        Map<String,String> randProConfigMap = StringManager.getFirstMap(AppCommon.getConfigByLocal("randPromotion"));
+        Map<String,String> randProConfigMap = StringManager.getFirstMap(ConfigMannager.getConfigByLocal(KEY_RANDPROMOTION));
         if(randProConfigMap.containsKey(classKey)
                 && "2".equals(randProConfigMap.get(classKey))){
             //数据

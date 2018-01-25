@@ -1,6 +1,5 @@
 package third.mall.aplug;
 
-import android.content.Context;
 import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
@@ -9,22 +8,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import acore.logic.AppCommon;
-import acore.logic.LoginManager;
 import acore.logic.XHApiMonitor;
 import acore.logic.XHClick;
-import acore.logic.load.LoadManager;
+import acore.logic.ConfigMannager;
 import acore.override.XHApplication;
 import acore.tools.FileManager;
 import acore.tools.LogManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
-import acore.tools.ToolsDevice;
 import aplug.basic.XHConf;
 import aplug.basic.XHInternetCallBack;
-import xh.basic.internet.InterCallback;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilFile;
+
+import static acore.logic.ConfigMannager.KEY_IMAGEACCEPT;
 
 /**
  * 电商网络层回调
@@ -109,7 +106,7 @@ public abstract class MallInternetCallback extends XHInternetCallBack {
 	public Map<String, String> getReqHeader(Map<String, String> header, String url, Map<String, String> params) {
 		// 配置cookie
 		header.put("XH-Client-Data",getCookieStr());
-		String isAccept= AppCommon.getConfigByLocal("imageAccept");//1不,sdk版本
+		String isAccept= ConfigMannager.getConfigByLocal(KEY_IMAGEACCEPT);//1不,sdk版本
 		if(!TextUtils.isEmpty(isAccept)){
 			Log.i("xianghaTag","isAccept:::"+isAccept);
 			Map<String,String> map=StringManager.getFirstMap(isAccept);

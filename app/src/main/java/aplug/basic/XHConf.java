@@ -12,7 +12,7 @@ import com.xiangha.R;
 
 import java.util.Map;
 
-import acore.logic.AppCommon;
+import acore.logic.ConfigMannager;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -20,6 +20,8 @@ import acore.tools.ToolsDevice;
 import third.mall.aplug.MallStringManager;
 import xh.basic.BasicConf;
 import xh.basic.tool.UtilFile;
+
+import static acore.logic.ConfigMannager.KEY_NETPROTOCOL;
 
 /**
  * 基础包配置类
@@ -78,7 +80,7 @@ public class XHConf extends BasicConf {
 //			String jsonStr = OnlineConfigAgent.getInstance().getConfigParams(context, "domain2ip");
 //			if(jsonStr.length()>1) net_domain2ipJson=jsonStr;
 //		}
-		String httpData= AppCommon.getConfigByLocal("netProtocol");
+		String httpData= ConfigMannager.getConfigByLocal(KEY_NETPROTOCOL);
 		Log.i("zyj","httpData:::"+httpData);
 		if(!TextUtils.isEmpty(httpData)){
 			Map<String,String> map=StringManager.getFirstMap(httpData);

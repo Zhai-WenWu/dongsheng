@@ -8,8 +8,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.Log;
@@ -29,15 +27,14 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import acore.logic.AppCommon;
 import acore.logic.LoginManager;
+import acore.logic.ConfigMannager;
 import acore.logic.load.LoadManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.dish.view.DishADBannerView;
 import amodule.dish.view.DishAboutView;
-import amodule.dish.view.DishAdDataViewNew;
 import amodule.dish.view.DishExplainView;
 import amodule.dish.view.DishHeaderViewNew;
 import amodule.dish.view.DishHoverViewControl;
@@ -48,6 +45,8 @@ import amodule.dish.view.DishRecommedAndAdView;
 import amodule.dish.view.DishTitleViewControl;
 import amodule.dish.view.DishVipView;
 import third.video.VideoPlayerController;
+
+import static acore.logic.ConfigMannager.KEY_CAIPUVIP;
 
 /**
  * 当前只处理View的拼装
@@ -197,7 +196,7 @@ public class DetailDishViewManager {
     }
     public void initVipView(String type){
         if(isLoadVip)return;isLoadVip=true;
-        String caipuVipConfig = AppCommon.getConfigByLocal("caipuVIP");
+        String caipuVipConfig = ConfigMannager.getConfigByLocal(KEY_CAIPUVIP);
         if(TextUtils.isEmpty(caipuVipConfig)){isLoadVip=false;return;}
         Map<String,String> configMap = StringManager.getFirstMap(caipuVipConfig);
         String key = !TextUtils.isEmpty(type)&&"2".equals(type) ? "caipuVideo" : "caipu";

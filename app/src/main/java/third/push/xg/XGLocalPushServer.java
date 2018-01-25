@@ -9,18 +9,17 @@ import android.util.Log;
 import com.tencent.android.tpush.XGLocalMessage;
 import com.tencent.android.tpush.XGPushManager;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-import acore.logic.AppCommon;
+import acore.logic.ConfigMannager;
 import acore.logic.XHClick;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
-import aplug.basic.InternetCallback;
-import aplug.basic.ReqInternet;
+
+import static acore.logic.ConfigMannager.KEY_APPPUSHTIMERANGE;
 
 @SuppressLint("SimpleDateFormat")
 public class XGLocalPushServer {
@@ -36,7 +35,7 @@ public class XGLocalPushServer {
      */
     public void initLocalPush() {
         //获取config
-        String apppushtimerangeStr = AppCommon.getConfigByLocal("apppushtimerange");
+        String apppushtimerangeStr = ConfigMannager.getConfigByLocal(KEY_APPPUSHTIMERANGE);
         dataMap = StringManager.getFirstMap(apppushtimerangeStr);
         if("1".equals(dataMap.get("open"))){
             //取消本地推送

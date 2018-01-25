@@ -35,6 +35,7 @@ import acore.logic.LoginManager;
 import acore.logic.MessageTipController;
 import acore.logic.VersionOp;
 import acore.logic.XHClick;
+import acore.logic.ConfigMannager;
 import acore.override.XHApplication;
 import acore.tools.ChannelUtil;
 import acore.tools.FileManager;
@@ -126,7 +127,7 @@ public class MainInitDataControl {
             }
         }.start();
         AdConfigTools.getInstance().setRequest(XHApplication.in());
-        AppCommon.saveConfigData(XHApplication.in());
+        ConfigMannager.saveConfigData(XHApplication.in());
         long endTime2=System.currentTimeMillis();
         Log.i("zhangyujian","initWelcomeAfter::时间:"+(endTime2-startTime));
 
