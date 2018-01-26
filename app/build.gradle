@@ -53,9 +53,6 @@ android {
         versionName "6.0.0"
         // dex突破65535的限制
         multiDexEnabled true
-        //GrowingIO
-        resValue("string", "growingio_project_id", "bf5bf872bedc95d3")
-        resValue("string", "growingio_url_scheme", "growing.e3205a1fdf7cb86e")
         ndk {
             //APP的build.gradle设置支持的SO库架构
             moduleName "gsyVideoPlayer-java"
