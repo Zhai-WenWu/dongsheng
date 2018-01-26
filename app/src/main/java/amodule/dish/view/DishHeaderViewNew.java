@@ -28,6 +28,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.Target;
 import com.shuyu.gsyvideoplayer.GSYVideoPlayer;
+import com.shuyu.gsyvideoplayer.video.CleanVideoPlayer;
 import com.xiangha.R;
 
 import java.util.ArrayList;
@@ -49,6 +50,7 @@ import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
 import third.ad.scrollerAd.XHAllAdControl;
 import third.ad.tools.AdPlayIdConfig;
+import third.video.AdVideoController;
 import third.video.VideoPlayerController;
 import xh.basic.tool.UtilImage;
 import xh.basic.tool.UtilString;
@@ -63,7 +65,7 @@ public class DishHeaderViewNew extends LinearLayout {
     private Activity activity;
     //头部的view
     private View videoViewGroup;
-    private RelativeLayout dishVidioLayout;
+    private RelativeLayout dishVidioLayout,ad_type_video;
     private LinearLayout dishvideo_img ;
 
     private VideoPlayerController mVideoPlayerController = null;//视频控制器
@@ -114,6 +116,7 @@ public class DishHeaderViewNew extends LinearLayout {
         dredgeVipLayout = (RelativeLayout) videoViewGroup.findViewById(R.id.video_dredge_vip_layout);
         dishvideo_img = (LinearLayout) videoViewGroup.findViewById(R.id.video_img_layout);
         adLayout = (FrameLayout) videoViewGroup.findViewById(R.id.video_ad_layout);
+        ad_type_video= (RelativeLayout) videoViewGroup.findViewById(R.id.ad_type_video);
         paramsLayout(videoHeight);
         //处理简介
         //头部加载view
@@ -180,7 +183,7 @@ public class DishHeaderViewNew extends LinearLayout {
 //        }
     }
 
-    private void initVideoAd() {
+    private void initAdTypeImg() {
         adLayout.setPadding(0, distance, 0, 0);
 
         ArrayList<String> list = new ArrayList<>();
@@ -202,7 +205,49 @@ public class DishHeaderViewNew extends LinearLayout {
         }, activity, "result_media");
 
     }
-
+    private void initVideoAd(){
+        if(!initAdTypeVideo()){
+            initAdTypeImg();
+        }
+    }
+    private CleanVideoPlayer cleanVideoPlayer;
+    private AdVideoController adVideoController;
+    private boolean initAdTypeVideo(){
+        adVideoController= new AdVideoController(context);
+        Log.i("xianghaTag","initAdTypeVideo:::"+adVideoController.isAvailable()+"::"+(adVideoController.getAdVideoPlayer()!=null));
+        if(adVideoController.isAvailable()&&adVideoController.getAdVideoPlayer()!=null){
+            ad_type_video.addView(cleanVideoPlayer=adVideoController.getAdVideoPlayer());
+            handleTypeVideoCallBack();
+            return true;
+        }else{
+            return false;
+        }
+    }
+    private void handleTypeVideoCallBack(){
+        isAutoPaly=true;
+        if (isAutoPaly && mVideoPlayerController != null && isShowActivity())
+            adVideoController.start();
+        adVideoController.setOnCompleteCallback(new AdVideoController.OnCompleteCallback() {
+            @Override
+            public void onComplete() {
+                Log.i("xianghaTag","setOnCompleteCallback:::");
+                if(ad_type_video!=null)ad_type_video.removeAllViews();
+                if(mVideoPlayerController!=null){
+                    mVideoPlayerController.setOnClick();
+                }
+            }
+        });
+        adVideoController.setOnErrorCallback(new AdVideoController.OnErrorCallback() {
+            @Override
+            public void onError() {
+                Log.i("xianghaTag","setOnErrorCallback:::");
+                if(ad_type_video!=null)ad_type_video.removeAllViews();
+                if(mVideoPlayerController!=null){
+                    mVideoPlayerController.setOnClick();
+                }
+            }
+        });
+    }
     private boolean  isShowActivity(){
         try {
             if ("amodule.dish.activity.DetailDish".equals(XHActivityManager.getInstance().getCurrentActivity().getComponentName().getClassName()))
@@ -358,6 +403,7 @@ public class DishHeaderViewNew extends LinearLayout {
             mVideoPlayerController.setMediaViewCallBack(new VideoPlayerController.MediaViewCallBack() {
                 @Override
                 public void onclick() {
+                    Log.i("xianghaTag","mVideoPlayerController点击");
                     setVideoAdData(mapAd, adLayout);
                 }
             });
@@ -473,6 +519,9 @@ public class DishHeaderViewNew extends LinearLayout {
             mVideoPlayerController.onResume();
             Log.i("xianghaTag","onResume:::header");
         }
+        if(adVideoController!=null) {
+            adVideoController.onResume();
+        }
     }
 
     public void onPause() {
@@ -480,6 +529,9 @@ public class DishHeaderViewNew extends LinearLayout {
         if(mVideoPlayerController != null)
         mVideoPlayerController.onPause();
         Log.i("xianghaTag","onPause:::header");
+        if(adVideoController!=null) {
+            adVideoController.onPause();
+        }
     }
 
     public boolean onBackPressed(){
@@ -555,6 +607,10 @@ public class DishHeaderViewNew extends LinearLayout {
         if(mVideoPlayerController!=null){
             mVideoPlayerController.onDestroy();
             mVideoPlayerController=null;
+        }
+        if(adVideoController!=null) {
+            adVideoController.onDestroy();
+            adVideoController=null;
         }
     }
     public void onReset(){
