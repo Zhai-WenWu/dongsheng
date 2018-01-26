@@ -479,7 +479,6 @@ public class DishHeaderViewNew extends LinearLayout {
         isOnResuming = false;
         if(mVideoPlayerController != null)
         mVideoPlayerController.onPause();
-        Log.i("xianghaTag","onPause:::header");
     }
 
     public boolean onBackPressed(){
