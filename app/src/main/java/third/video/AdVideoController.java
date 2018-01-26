@@ -173,7 +173,7 @@ public class AdVideoController {
     public void start() {
         if (null != mAdVideoPlayer){
 //            mAdVideoPlayer.setUp(mConfigTool.getVideoUrlOrPath());
-            mAdVideoPlayer.setUp("http://pic.ibaotu.com/00/09/45/82W888piCnZb.mp4");
+            mAdVideoPlayer.setUp("http://pic.ibaotu.com/00/12/51/78w888piCCJX.mp4");
             mAdVideoPlayer.startPalyVideo();
         }
     }
