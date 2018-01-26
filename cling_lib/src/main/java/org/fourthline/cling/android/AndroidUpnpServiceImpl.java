@@ -53,19 +53,19 @@ public class AndroidUpnpServiceImpl extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                handleupnpService();
-            }
-        },5*1000);
-//        handleupnpService();
-//        new Thread(new Runnable() {
+//        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
 //            @Override
 //            public void run() {
 //                handleupnpService();
 //            }
-//        }).start();
+//        },5*1000);
+//        handleupnpService();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                handleupnpService();
+            }
+        }).start();
     }
 
     private void handleupnpService(){

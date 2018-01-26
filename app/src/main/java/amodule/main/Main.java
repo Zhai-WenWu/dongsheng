@@ -149,13 +149,6 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
         welcomeControls= LoginManager.isShowAd()?new WelcomeControls(this,callBack):
                 new WelcomeControls(this,1,callBack);
         LogManager.printStartTime("zhangyujian","main::oncreate::");
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                ClingPresenter.getInstance().onCreate(Main.this, null);
-            }
-        },1000*10);
-//        ClingPresenter.getInstance().onCreate(Main.this, null);
     }
 
     private WelcomeControls.WelcomeCallBack callBack = new WelcomeControls.WelcomeCallBack() {
@@ -187,6 +180,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                 addQiYvListener();
                 if(mainInitDataControl!=null)mainInitDataControl.mainAfterUpload(Main.this);
                 FileManager.saveShared(Main.this,FileManager.app_welcome,VersionOp.getVerName(Main.this),"1");
+                ClingPresenter.getInstance().onCreate(Main.this, null);
             }
         }
         @Override
