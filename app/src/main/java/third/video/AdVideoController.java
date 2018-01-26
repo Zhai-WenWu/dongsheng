@@ -18,6 +18,7 @@ import java.util.Map;
 
 import acore.logic.AdVideoConfigTool;
 import acore.logic.AppCommon;
+import acore.logic.LoginManager;
 import acore.override.helper.XHActivityManager;
 import acore.tools.FileManager;
 import acore.widget.TagTextView;
@@ -49,7 +50,9 @@ public class AdVideoController {
     public AdVideoController(@NonNull Context context) {
         this.mContext = context;
         mConfigTool = AdVideoConfigTool.of();
-        isAvailable = mConfigTool.isOpen() && !TextUtils.isEmpty(mConfigTool.getVideoUrlOrPath());
+        isAvailable = LoginManager.isShowAd()
+                && mConfigTool.isOpen()
+                && !TextUtils.isEmpty(mConfigTool.getVideoUrlOrPath());
         if (!isAvailable) {
             return;
         }
