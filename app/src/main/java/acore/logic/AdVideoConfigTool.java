@@ -45,8 +45,6 @@ public class AdVideoConfigTool {
             filePath = getVideoPath(videoUrl);
         }
 
-        //TODO
-        videoUrl = "http://pic.ibaotu.com/00/12/51/78w888piCCJX.mp4";
         final String originalFilePath = getVideoPath(getVideoUrl());
         if (TextUtils.equals(filePath, originalFilePath)) {
             if (!checkVideoExist(filePath)) {
@@ -89,9 +87,8 @@ public class AdVideoConfigTool {
     }
 
     private String getVideoUrl() {
-//        Map<String, String> data = getConfigMap();
-//        return data.get("videoUrl");
-        return "http://pic.ibaotu.com/00/12/51/78w888piCCJX.mp4";
+        Map<String, String> data = getConfigMap();
+        return data.get("videoUrl");
     }
 
     private boolean checkVideoExist(String filePath) {
