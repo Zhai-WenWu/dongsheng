@@ -1,17 +1,17 @@
 package third.video;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
 import com.example.gsyvideoplayer.listener.SampleListener;
-import com.shuyu.gsyvideoplayer.GSYVideoPlayer;
 import com.shuyu.gsyvideoplayer.video.CleanVideoPlayer;
-import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 import com.xiangha.R;
 
 import java.util.Map;
@@ -20,10 +20,8 @@ import acore.logic.AdVideoConfigTool;
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.override.helper.XHActivityManager;
-import acore.tools.FileManager;
 import acore.widget.TagTextView;
 import amodule._common.utility.WidgetUtility;
-import third.cling.ui.ClingOptionView;
 
 import static com.shuyu.gsyvideoplayer.GSYVideoPlayer.CURRENT_STATE_PLAYING;
 
@@ -35,38 +33,51 @@ import static com.shuyu.gsyvideoplayer.GSYVideoPlayer.CURRENT_STATE_PLAYING;
  */
 public class AdVideoController {
 
-
     private Context mContext;
-    private CleanVideoPlayer mAdVideoPlayer;
-    private TextView mCountDownTv;
-    private AdVideoConfigTool mConfigTool;
+
     private View mAdView;
-    private final boolean isAvailable;
-    public boolean isNetworkDisconnect = false;
+    private TextView mCountDownTv;
+    private CleanVideoPlayer mAdVideoPlayer;
+
     private OnCompleteCallback mOnCompleteCallback;
     private OnErrorCallback mOnErrorCallback;
     private CleanVideoPlayer.OnProgressChangedCallback mOnProgressChangedCallback;
+    private CleanVideoPlayer.NetworkNotifyListener mNetworkNotifyListener;
+
+    private AdVideoConfigTool mConfigTool;
+
+    private final boolean isAvailable;
+    private boolean isNetworkDisconnect = false;
+    private boolean isComplete = false;
+    private String currentVideo = "";
+    private long startTime;
 
     public AdVideoController(@NonNull Context context) {
+        startTime = System.currentTimeMillis();
         this.mContext = context;
         mConfigTool = AdVideoConfigTool.of();
         isAvailable = LoginManager.isShowAd()
                 && mConfigTool.isOpen()
                 && !TextUtils.isEmpty(mConfigTool.getVideoUrlOrPath());
         if (!isAvailable) {
+            Log.i("tzy", "AdVideoController: " + (System.currentTimeMillis() - startTime));
             return;
         }
+        //TODO            currentVideo = mConfigTool.getVideoUrlOrPath();
+        currentVideo = "http://pic.ibaotu.com/00/12/51/78w888piCCJX.mp4";
         initVideoPlayer(context);
         createAdView(mConfigTool.getConfigMap());
+        Log.i("tzy", "AdVideoController: " + (System.currentTimeMillis() - startTime));
     }
 
+    @SuppressLint("SetTextI18n")
     private void initVideoPlayer(@NonNull Context context) {
         mAdVideoPlayer = new CleanVideoPlayer(context);
         mAdVideoPlayer.setVideoAllCallBack(new SampleListener() {
             @Override
             public void onPrepared(String url, Object... objects) {
                 super.onPrepared(url, objects);
-                if(mAdView != null){
+                if (mAdView != null) {
                     mAdView.setVisibility(View.VISIBLE);
                 }
             }
@@ -74,6 +85,9 @@ public class AdVideoController {
             @Override
             public void onAutoComplete(String url, Object... objects) {
                 super.onAutoComplete(url, objects);
+                isComplete = true;
+                onPause();
+                onDestroy();
                 //播放完成
                 if (mOnCompleteCallback != null) {
                     mOnCompleteCallback.onComplete();
@@ -92,7 +106,7 @@ public class AdVideoController {
         mAdVideoPlayer.setOnProgressChangedCallback(
                 (progress, secProgress, currentTime, totalTime) -> {
                     //进度监听
-                    if(mCountDownTv != null){
+                    if (mCountDownTv != null) {
                         final int time = (totalTime - currentTime) / 1000;
                         mCountDownTv.setText(String.valueOf(time) + "s");
                     }
@@ -105,24 +119,38 @@ public class AdVideoController {
             @Override
             public void wifiConnected() {
                 isNetworkDisconnect = false;
-                onResume();
+                if (isRemoteUrl()) {
+                    onResume();
+                } else if (mNetworkNotifyListener != null) {
+                    mNetworkNotifyListener.wifiConnected();
+                }
             }
 
             @Override
             public void mobileConnected() {
                 isNetworkDisconnect = false;
-                onResume();
+                if (isRemoteUrl()) {
+                    onResume();
+                } else if (mNetworkNotifyListener != null) {
+                    mNetworkNotifyListener.wifiConnected();
+                }
             }
 
             @Override
             public void nothingConnected() {
-                onPause();
                 isNetworkDisconnect = true;
+                if (isRemoteUrl()) {
+                    onPause();
+                } else if (mNetworkNotifyListener != null) {
+                    mNetworkNotifyListener.wifiConnected();
+                }
             }
         });
+        Log.i("tzy", "initVideoPlayer: " + (System.currentTimeMillis() - startTime));
     }
 
     private void createAdView(Map<String, String> configData) {
+        @SuppressLint("InflateParams")
         View view = LayoutInflater.from(mContext).inflate(R.layout.ad_hint_layout, null);
         view.setVisibility(View.GONE);
         TagTextView vipLead = (TagTextView) view.findViewById(R.id.ad_vip_lead);
@@ -136,6 +164,7 @@ public class AdVideoController {
 
         WidgetUtility.setTextToView(seeDetailView, configData.get("title"));
         setAdLayout(view);
+        Log.i("tzy", "createAdView: " + (System.currentTimeMillis() - startTime));
     }
 
     public void setAdLayout(@NonNull View adView) {
@@ -148,7 +177,7 @@ public class AdVideoController {
     public void sikp() {
         onPause();
         onDestroy();
-        if(mOnCompleteCallback != null){
+        if (mOnCompleteCallback != null) {
             mOnCompleteCallback.onComplete();
         }
     }
@@ -171,16 +200,22 @@ public class AdVideoController {
     }
 
     public void start() {
-        if (null != mAdVideoPlayer){
-//            mAdVideoPlayer.setUp(mConfigTool.getVideoUrlOrPath());
-            mAdVideoPlayer.setUp("http://pic.ibaotu.com/00/12/51/78w888piCCJX.mp4");
+        if (null != mAdVideoPlayer && !TextUtils.isEmpty(currentVideo)) {
+            mAdVideoPlayer.setUp(currentVideo);
             mAdVideoPlayer.startPalyVideo();
+            Log.i("tzy", "start: " + (System.currentTimeMillis() - startTime));
+        }else if (mOnErrorCallback != null) {
+            mOnErrorCallback.onError();
         }
+    }
+
+    private boolean isRemoteUrl() {
+        return !TextUtils.isEmpty(currentVideo) && currentVideo.startsWith("http");
     }
 
     public void onResume() {
         if (null != mAdVideoPlayer
-                && !isNetworkDisconnect
+                && !isComplete
                 ) {
             mAdVideoPlayer.onVideoResume();
         }
@@ -227,5 +262,9 @@ public class AdVideoController {
 
     public void setOnProgressChangedCallback(CleanVideoPlayer.OnProgressChangedCallback onProgressChangedCallback) {
         mOnProgressChangedCallback = onProgressChangedCallback;
+    }
+
+    public void setNetworkNotifyListener(CleanVideoPlayer.NetworkNotifyListener networkNotifyListener) {
+        mNetworkNotifyListener = networkNotifyListener;
     }
 }
