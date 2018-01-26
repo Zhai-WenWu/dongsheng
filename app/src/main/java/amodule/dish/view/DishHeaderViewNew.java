@@ -78,7 +78,7 @@ public class DishHeaderViewNew extends LinearLayout {
     private int distance;
     private boolean isLoadImg=false;
     private boolean mShowClingBtn;
-
+    private String AdType="0";//0--无广告，1--图片广告，2--视频广告。
     public DishHeaderViewNew(Context context) {
         super(context);
         this.context = context;
@@ -198,6 +198,7 @@ public class DishHeaderViewNew extends LinearLayout {
                 if (mapAd != null && mapAd.size() > 0
                         && mVideoPlayerController != null) {
                     mVideoPlayerController.setShowAd(true);
+                    AdType="1";
                 }
                 if (isAutoPaly && mVideoPlayerController != null && isShowActivity())
                     mVideoPlayerController.setOnClick();
@@ -210,13 +211,14 @@ public class DishHeaderViewNew extends LinearLayout {
             initAdTypeImg();
         }
     }
-    private CleanVideoPlayer cleanVideoPlayer;
     private AdVideoController adVideoController;
     private boolean initAdTypeVideo(){
         adVideoController= new AdVideoController(context);
         Log.i("xianghaTag","initAdTypeVideo:::"+adVideoController.isAvailable()+"::"+(adVideoController.getAdVideoPlayer()!=null));
         if(adVideoController.isAvailable()&&adVideoController.getAdVideoPlayer()!=null){
-            ad_type_video.addView(cleanVideoPlayer=adVideoController.getAdVideoPlayer());
+            ad_type_video.addView(adVideoController.getAdVideoPlayer());
+            mVideoPlayerController.setShowAd(true);
+            AdType="2";
             handleTypeVideoCallBack();
             return true;
         }else{
@@ -224,15 +226,18 @@ public class DishHeaderViewNew extends LinearLayout {
         }
     }
     private void handleTypeVideoCallBack(){
-        isAutoPaly=true;
-        if (isAutoPaly && mVideoPlayerController != null && isShowActivity())
+//        isAutoPaly=true;
+        if (isAutoPaly && mVideoPlayerController != null && isShowActivity()) {
+            mVideoPlayerController.setShowAd(true);
             adVideoController.start();
+        }
         adVideoController.setOnCompleteCallback(new AdVideoController.OnCompleteCallback() {
             @Override
             public void onComplete() {
-                Log.i("xianghaTag","setOnCompleteCallback:::");
                 if(ad_type_video!=null)ad_type_video.removeAllViews();
                 if(mVideoPlayerController!=null){
+                    dishvideo_img.setVisibility(View.GONE);
+                    mVideoPlayerController.setShowAd(false);
                     mVideoPlayerController.setOnClick();
                 }
             }
@@ -240,9 +245,10 @@ public class DishHeaderViewNew extends LinearLayout {
         adVideoController.setOnErrorCallback(new AdVideoController.OnErrorCallback() {
             @Override
             public void onError() {
-                Log.i("xianghaTag","setOnErrorCallback:::");
                 if(ad_type_video!=null)ad_type_video.removeAllViews();
                 if(mVideoPlayerController!=null){
+                    dishvideo_img.setVisibility(View.GONE);
+                    mVideoPlayerController.setShowAd(false);
                     mVideoPlayerController.setOnClick();
                 }
             }
@@ -403,8 +409,12 @@ public class DishHeaderViewNew extends LinearLayout {
             mVideoPlayerController.setMediaViewCallBack(new VideoPlayerController.MediaViewCallBack() {
                 @Override
                 public void onclick() {
-                    Log.i("xianghaTag","mVideoPlayerController点击");
-                    setVideoAdData(mapAd, adLayout);
+                    if("1".equals(AdType)&&mapAd!=null){
+                        setVideoAdData(mapAd, adLayout);
+                    }else if("2".equals(AdType)&&adVideoController!=null){
+                        adVideoController.start();
+                    }
+
                 }
             });
 
