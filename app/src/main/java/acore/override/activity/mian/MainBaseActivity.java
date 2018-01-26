@@ -88,7 +88,9 @@ public class MainBaseActivity extends AppCompatActivity {
 				ad.onResumeAd();
 			}
 		}
-		mActMagager.onResume(level);
+		if (mActMagager != null){
+			mActMagager.onResume(level);
+		}
 		if(BaseActivity.mUpDishPopWindowDialog != null && BaseActivity.mUpDishPopWindowDialog.isHasShow()) {
 			BaseActivity.mUpDishPopWindowDialog.onResume();
 		}
@@ -104,7 +106,9 @@ public class MainBaseActivity extends AppCompatActivity {
 				ad.onPauseAd();
 			}
 		}
-		mActMagager.onPause();
+		if (mActMagager != null){
+			mActMagager.onPause();
+		}
 		//用完即回收
 		if(MallCommon.interfaceMall!=null)
 			MallCommon.interfaceMall=null;
@@ -116,7 +120,9 @@ public class MainBaseActivity extends AppCompatActivity {
 	@Override
 	protected void onUserLeaveHint() {
 		super.onUserLeaveHint();
-		mActMagager.onUserLeaveHint();
+		if (mActMagager != null){
+			mActMagager.onUserLeaveHint();
+		}
 	}
 
 	@Override
@@ -136,12 +142,16 @@ public class MainBaseActivity extends AppCompatActivity {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		mActMagager.onDestroy();
+		if (mActMagager != null){
+			mActMagager.onDestroy();
+		}
 	}
 
 	@Override
 	protected void onStop() {
 		super.onStop();
-
+		if (mActMagager != null){
+			mActMagager.onStop();
+		}
 	}
 }

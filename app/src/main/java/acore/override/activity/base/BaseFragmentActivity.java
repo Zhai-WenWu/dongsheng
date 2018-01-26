@@ -174,7 +174,9 @@ public class BaseFragmentActivity extends FragmentActivity {
 			startActivity(i);
 			return;
 		}
-		mActMagager.onResume(level);
+		if (mActMagager != null){
+			mActMagager.onResume(level);
+		}
 		if(mCommonBottomView!=null)
 			CommonBottomView.BottomViewBuilder.getInstance().refresh(mCommonBottomView);
 	}
@@ -183,13 +185,17 @@ public class BaseFragmentActivity extends FragmentActivity {
 	protected void onPause() {
 		super.onPause();
 		PageStatisticsUtils.getInstance().onPausePage(this,resumeTime,System.currentTimeMillis());
-		mActMagager.onPause();
+		if (mActMagager != null){
+			mActMagager.onPause();
+		}
 	}
 	
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		mActMagager.onDestroy();
+		if (mActMagager != null){
+			mActMagager.onDestroy();
+		}
         if(Util.isOnMainThread()) {
             Glide.get(XHApplication.in()).clearMemory();
             LogManager.print("d", "***********Glide is already clearMemory...");
@@ -199,7 +205,9 @@ public class BaseFragmentActivity extends FragmentActivity {
 	@Override
 	protected void onUserLeaveHint() {
 		super.onUserLeaveHint();
-		mActMagager.onUserLeaveHint();
+		if (mActMagager != null){
+			mActMagager.onUserLeaveHint();
+		}
 	}
 
 	@Override

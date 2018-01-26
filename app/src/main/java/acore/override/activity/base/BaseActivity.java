@@ -259,7 +259,9 @@ public class BaseActivity extends AppCompatActivity {
 				ad.onResumeAd();
 			}
 		}
-		mActMagager.onResume(level);
+		if (mActMagager != null){
+			mActMagager.onResume(level);
+		}
 		if(mCommonBottomView!=null)
 			CommonBottomView.BottomViewBuilder.getInstance().refresh(mCommonBottomView);
 
@@ -297,7 +299,9 @@ public class BaseActivity extends AppCompatActivity {
 				ad.onPauseAd();
 			}
 		}
-		mActMagager.onPause();
+		if(mActMagager != null){
+			mActMagager.onPause();
+		}
 		if(mFavePopWindowDialog != null && mFavePopWindowDialog.isHasShow()) {
 			mFavePopWindowDialog.onPause();
 		}
@@ -323,7 +327,9 @@ public class BaseActivity extends AppCompatActivity {
 			isForeground = false;
 			homebackTime = System.currentTimeMillis();
 		}
-		mActMagager.onStop();
+		if(mActMagager != null){
+			mActMagager.onStop();
+		}
 	}
 
 	@Override
@@ -333,13 +339,17 @@ public class BaseActivity extends AppCompatActivity {
 			Glide.get(XHApplication.in()).clearMemory();
 			LogManager.print("d", "***********Glide is already clearMemory...");
 		}
-		mActMagager.onDestroy();
+		if(mActMagager != null){
+			mActMagager.onDestroy();
+		}
 	}
 
 	@Override
 	protected void onUserLeaveHint() {
 		super.onUserLeaveHint();
-		mActMagager.onUserLeaveHint();
+		if (mActMagager != null){
+			mActMagager.onUserLeaveHint();
+		}
 	}
 
 	@Override
