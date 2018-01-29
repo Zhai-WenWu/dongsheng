@@ -40,6 +40,7 @@ public class AdVideoController {
     private CleanVideoPlayer mAdVideoPlayer;
 
     private OnCompleteCallback mOnCompleteCallback;
+    private OnStartCallback monStartCallback;
     private OnErrorCallback mOnErrorCallback;
     private CleanVideoPlayer.OnProgressChangedCallback mOnProgressChangedCallback;
     private CleanVideoPlayer.NetworkNotifyListener mNetworkNotifyListener;
@@ -121,8 +122,9 @@ public class AdVideoController {
                 isNetworkDisconnect = false;
                 if (isRemoteUrl()) {
                     onResume();
-                } else if (mNetworkNotifyListener != null) {
-                    mNetworkNotifyListener.wifiConnected();
+                    if (mNetworkNotifyListener != null) {
+                        mNetworkNotifyListener.wifiConnected();
+                    }
                 }
             }
 
@@ -131,8 +133,9 @@ public class AdVideoController {
                 isNetworkDisconnect = false;
                 if (isRemoteUrl()) {
                     onResume();
-                } else if (mNetworkNotifyListener != null) {
-                    mNetworkNotifyListener.wifiConnected();
+                    if (mNetworkNotifyListener != null) {
+                        mNetworkNotifyListener.mobileConnected();
+                    }
                 }
             }
 
@@ -141,8 +144,9 @@ public class AdVideoController {
                 isNetworkDisconnect = true;
                 if (isRemoteUrl()) {
                     onPause();
-                } else if (mNetworkNotifyListener != null) {
-                    mNetworkNotifyListener.wifiConnected();
+                    if (mNetworkNotifyListener != null) {
+                        mNetworkNotifyListener.nothingConnected();
+                    }
                 }
             }
         });
@@ -203,6 +207,7 @@ public class AdVideoController {
         if (null != mAdVideoPlayer && !TextUtils.isEmpty(currentVideo)) {
             mAdVideoPlayer.setUp(currentVideo);
             mAdVideoPlayer.startPalyVideo();
+            if(monStartCallback!=null )monStartCallback.onStart(isRemoteUrl());
             Log.i("tzy", "start: " + (System.currentTimeMillis() - startTime));
         }else if (mOnErrorCallback != null) {
             mOnErrorCallback.onError();
@@ -251,9 +256,15 @@ public class AdVideoController {
     public interface OnErrorCallback {
         void onError();
     }
+    public interface OnStartCallback {
+        void onStart(boolean isRemoteUrl);
+    }
 
     public void setOnCompleteCallback(OnCompleteCallback onCompleteCallback) {
         mOnCompleteCallback = onCompleteCallback;
+    }
+    public void setOnStartCallback(OnStartCallback onStartCallback) {
+        monStartCallback = onStartCallback;
     }
 
     public void setOnErrorCallback(OnErrorCallback onErrorCallback) {

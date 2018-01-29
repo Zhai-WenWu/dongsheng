@@ -131,6 +131,7 @@ public class DishHeaderViewNew extends LinearLayout {
         dredgeVipLayout.setLayoutParams(params);
         dishvideo_img.setLayoutParams(params);
         adLayout.setLayoutParams(params);
+        ad_type_video.setLayoutParams(params);
     }
     public void setDistance(int distances){
         this.distance = distances;
@@ -228,15 +229,47 @@ public class DishHeaderViewNew extends LinearLayout {
         }
     }
     private void handleTypeVideoCallBack(){
-//        isAutoPaly=true;
         if (isAutoPaly && mVideoPlayerController != null && isShowActivity()) {
             mVideoPlayerController.setShowAd(true);
+            if(!ToolsDevice.getNetActiveState(context)){//无网络
+               return;
+            }
             adVideoController.start();
         }
+        adVideoController.setOnStartCallback(new AdVideoController.OnStartCallback() {
+            @Override
+            public void onStart(boolean isRemoteUrl) {
+                ad_type_video.setVisibility(View.VISIBLE);
+                if(isRemoteUrl){//远程链接
+                    if(ToolsDevice.getNetActiveState(context)) {
+                        int netType = ToolsDevice.getNetWorkSimpleNum(context);
+                        if(netType>1 &&
+                                !"1".equals(FileManager.loadShared(context,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI).toString())){
+                            removeTipView();
+                            if(view_Tip==null){
+                                initNoWIFIView(context);
+                                ad_type_video.addView(view_Tip);
+                            }
+                            adVideoController.onPause();
+                        }
+                    }else{
+                        removeTipView();
+                        if(view_Tip==null){
+                            initNoNetwork(context);
+                            ad_type_video.addView(view_Tip);
+                        }
+                        adVideoController.onPause();
+                    }
+                }
+            }
+        });
         adVideoController.setOnCompleteCallback(new AdVideoController.OnCompleteCallback() {
             @Override
             public void onComplete() {
-                if(ad_type_video!=null)ad_type_video.removeAllViews();
+                if(ad_type_video!=null) {
+                    ad_type_video.removeAllViews();
+                    ad_type_video.setVisibility(View.GONE);
+                }
                 if(mVideoPlayerController!=null){
                     dishvideo_img.setVisibility(View.GONE);
                     mVideoPlayerController.setShowAd(false);
@@ -247,7 +280,10 @@ public class DishHeaderViewNew extends LinearLayout {
         adVideoController.setOnErrorCallback(new AdVideoController.OnErrorCallback() {
             @Override
             public void onError() {
-                if(ad_type_video!=null)ad_type_video.removeAllViews();
+                if(ad_type_video!=null){
+                    ad_type_video.removeAllViews();
+                    ad_type_video.setVisibility(View.GONE);
+                }
                 if(mVideoPlayerController!=null){
                     dishvideo_img.setVisibility(View.GONE);
                     mVideoPlayerController.setShowAd(false);
@@ -281,6 +317,7 @@ public class DishHeaderViewNew extends LinearLayout {
             }
             @Override
             public void nothingConnected() {
+                removeTipView();
                 if(view_Tip == null){
                     initNoNetwork(context);
                     ad_type_video.addView(view_Tip);
@@ -445,6 +482,9 @@ public class DishHeaderViewNew extends LinearLayout {
             mVideoPlayerController.setMediaViewCallBack(new VideoPlayerController.MediaViewCallBack() {
                 @Override
                 public void onclick() {
+                    if(!ToolsDevice.getNetActiveState(context)){//无网络
+                        return;
+                    }
                     if("1".equals(AdType)&&mapAd!=null){
                         setVideoAdData(mapAd, adLayout);
                     }else if("2".equals(AdType)&&adVideoController!=null){
@@ -720,7 +760,7 @@ public class DishHeaderViewNew extends LinearLayout {
         @Override
         public void onClick(View v) {
             removeTipView();
-            adVideoController.start();
+            adVideoController.onResume();
             new Thread(() -> FileManager.saveShared(context,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI,"1")).start();
         }
     };
