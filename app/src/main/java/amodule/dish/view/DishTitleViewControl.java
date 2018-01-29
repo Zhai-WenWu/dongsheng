@@ -41,22 +41,25 @@ import xh.windowview.BottomDialog;
  */
 public class DishTitleViewControl implements View.OnClickListener {
     private Context context;
+    private RelativeLayout mShareWechat;
+    private RelativeLayout mShareComments;
     private ImageView favImg, integralTip;
-    private TextView favText, titleView;
     private Activity detailDish;
     private String state, dishState;
     private Map<String, String> dishInfoMap;//dishInfo数据
     private VideoPlayerController mVideoPlayerController;
     private boolean loading = true;//收藏标示
+    private boolean isAuthor;
+    private boolean editable;
 
     private String code;
+    private String userCode;
     private boolean isHasVideo;
     private boolean nowFav;
     private boolean showIntegralTip;
     private PopWindowDialog mFavePopWindowDialog;
     private LoadManager loadManager;
     private String nickName = "";
-    private RelativeLayout bar_title_1;
 
     private String mShareStr;
 
@@ -67,23 +70,20 @@ public class DishTitleViewControl implements View.OnClickListener {
     public void initView(Activity detailDish) {
         this.detailDish = detailDish;
         //处理标题
-        titleView = (TextView) detailDish.findViewById(R.id.title);
         detailDish.findViewById(R.id.back).setOnClickListener(this);
         detailDish.findViewById(R.id.fav_layout).setOnClickListener(this);
-        detailDish.findViewById(R.id.share_layout).setOnClickListener(this);
         detailDish.findViewById(R.id.more_layout).setOnClickListener(this);
         detailDish.findViewById(R.id.fav_layout).setVisibility(View.VISIBLE);
         detailDish.findViewById(R.id.leftClose).setVisibility(View.GONE);
-        detailDish.findViewById(R.id.share_layout).setVisibility(View.VISIBLE);
-        detailDish.findViewById(R.id.more_layout).setVisibility(View.GONE);
-        favText = (TextView) detailDish.findViewById(R.id.tv_fav);
-        integralTip = (ImageView) detailDish.findViewById(R.id.integral_tip);
+        integralTip = (ImageView) detailDish.findViewById(R.id.comments_tip);
         favImg = (ImageView) detailDish.findViewById(R.id.img_fav);
         favImg.setVisibility(View.VISIBLE);
         favImg.setImageResource(R.drawable.z_caipu_xiangqing_topbar_ico_fav);
-//        detailDish.findViewById(R.id.leftClose).setOnClickListener(this);
-//        detailDish.findViewById(R.id.leftClose).setVisibility(View.VISIBLE);
-        bar_title_1 = (RelativeLayout) detailDish.findViewById(R.id.a_dish_detail_new_title);
+
+        mShareWechat = (RelativeLayout) detailDish.findViewById(R.id.share_wechat);
+        mShareComments = (RelativeLayout) detailDish.findViewById(R.id.share_wechatcomments);
+        mShareWechat.setOnClickListener(this);
+        mShareComments.setOnClickListener(this);
     }
 
     /**
@@ -99,6 +99,14 @@ public class DishTitleViewControl implements View.OnClickListener {
         this.isHasVideo = isHasVideo;
         this.dishState = dishState;
         this.loadManager = loadManager;
+        if (dishInfoMaps == null)
+            return;
+        Map<String, String> customerMap = StringManager.getFirstMap(dishInfoMap.get("customer"));
+        userCode = customerMap.get("customerCode");
+        //登录并是自己的菜谱贴
+        if (LoginManager.isLogin() && !TextUtils.isEmpty(userCode) && userCode.equals(LoginManager.userInfo.get("code"))) {
+            isAuthor = true;
+        }
         requestFavoriteState();
     }
 
@@ -127,28 +135,19 @@ public class DishTitleViewControl implements View.OnClickListener {
         //编辑
         if (state != null) {
             if (isHasVideo && ("6".equals(dishState) || TextUtils.isEmpty(dishState))) { //视频菜谱，并且审核通过了，则不允许编辑
-                detailDish.findViewById(R.id.more_layout).setVisibility(View.GONE);
-                detailDish.findViewById(R.id.share_layout).setVisibility(View.VISIBLE);
+                editable = false;
             } else {
-                detailDish.findViewById(R.id.more_layout).setVisibility(View.VISIBLE);
-                detailDish.findViewById(R.id.share_layout).setVisibility(View.GONE);
+                editable = true;
             }
         } else {
-            detailDish.findViewById(R.id.more_layout).setVisibility(View.GONE);
-            detailDish.findViewById(R.id.share_layout).setVisibility(View.VISIBLE);
+            editable = false;
         }
 
     }
 
     public void setFavStatus(boolean isFav) {
         this.nowFav = isFav;
-        if (isFav) {
-            favImg.setImageResource(R.drawable.z_caipu_xiangqing_topbar_ico_fav_active);
-            favText.setText("已收藏");
-        } else {
-            favImg.setImageResource(R.drawable.z_caipu_xiangqing_topbar_ico_fav);
-            favText.setText("未收藏");
-        }
+        favImg.setImageResource(isFav ? R.drawable.z_caipu_xiangqing_topbar_ico_fav_active : R.drawable.z_caipu_xiangqing_topbar_ico_fav);
     }
 
     public void setIntegralTipStatus(boolean show) {
@@ -159,6 +158,12 @@ public class DishTitleViewControl implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.share_wechat:
+                openShareSingle(ShareTools.WEI_XIN);
+                break;
+            case R.id.share_wechatcomments:
+                openShareSingle(ShareTools.WEI_QUAN);
+                break;
             case R.id.back:
                 XHClick.mapStat(detailDish, DetailDish.tongjiId_detail, "顶部导航栏", "返回点击量");
                 detailDish.finish();
@@ -174,26 +179,27 @@ public class DishTitleViewControl implements View.OnClickListener {
                 XHClick.mapStat(detailDish, DetailDish.tongjiId_detail, "顶部导航栏", "收藏点击量");
                 doFavorite();
                 break;
-            case R.id.share_layout:
-                openShare();
-                break;
             case R.id.more_layout: //查看更多按钮
-                BottomDialog bottomDialog = new BottomDialog(context);
-                bottomDialog.setTopButton("分享", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        XHClick.mapStat(detailDish, DetailDish.tongjiId_detail, "顶部导航栏", "分享点击量");
-                        openShare();
-                    }
-                }).setBottomButton("编辑", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        XHClick.mapStat(detailDish, DetailDish.tongjiId_detail, "顶部导航栏", "二次编辑点击量");
-                        if (isHasVideo) {
-                            Tools.showToast(context, "请用香哈（视频版）编辑");
-                        } else doModify();
-                    }
-                }).show();
+                if (editable) {
+                    BottomDialog bottomDialog = new BottomDialog(context);
+                    bottomDialog.setTopButton("分享", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            XHClick.mapStat(detailDish, DetailDish.tongjiId_detail, "顶部导航栏", "分享点击量");
+                            openShare();
+                        }
+                    }).setBottomButton("编辑", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            XHClick.mapStat(detailDish, DetailDish.tongjiId_detail, "顶部导航栏", "二次编辑点击量");
+                            if (isHasVideo) {
+                                Tools.showToast(context, "请用香哈（视频版）编辑");
+                            } else doModify();
+                        }
+                    }).show();
+                } else {
+                    openShare();
+                }
                 break;
         }
     }
@@ -216,23 +222,25 @@ public class DishTitleViewControl implements View.OnClickListener {
         }
     }
 
+    private void openShareSingle(String platform) {
+        Map<String, String> shareMap = getShareData(isAuthor, true);
+        shareMap.put("platform", platform);
+        shareMap.put("from", "菜谱详情页");
+        if (!TextUtils.isEmpty(mShareStr))
+            shareMap.put("shareParams", mShareStr);
+        ShareTools tools = ShareTools.getBarShare(context);
+        tools.showSharePlatform(shareMap);
+    }
+
     private void openShare() {
         if (detailDish != null)
             XHClick.track(detailDish, "分享菜谱");
         XHClick.mapStat(detailDish, "a_share400", "菜谱", "菜谱详情页");
         XHClick.mapStat(detailDish, DetailDish.tongjiId_detail, "顶部导航栏", "分享点击量");
 
-        boolean isAuthor = false;
-        String userCode = "";
         if (dishInfoMap == null)
             return;
-        Map<String, String> customerMap = StringManager.getFirstMap(dishInfoMap.get("customer"));
-        userCode = customerMap.get("customerCode");
-        //登录并是自己的菜谱贴
-        if (LoginManager.isLogin() && !TextUtils.isEmpty(userCode) && userCode.equals(LoginManager.userInfo.get("code"))) {
-            isAuthor = true;
-        }
-        Map<String, String> mapData = getShareData(isAuthor);
+        Map<String, String> mapData = getShareData(isAuthor, false);
         if (mapData == null)
             return;
 
@@ -255,7 +263,7 @@ public class DishTitleViewControl implements View.OnClickListener {
         detailDish.startActivity(intent);
     }
 
-    public Map<String, String> getShareData(boolean isAuthor) {
+    public Map<String, String> getShareData(boolean isAuthor, boolean shareSingle) {
         if (dishInfoMap == null)
             return null;
         //点击显示数据
@@ -285,21 +293,17 @@ public class DishTitleViewControl implements View.OnClickListener {
             isVideo = "1";
         }
         Map<String, String> map = new HashMap<>();
-        map.put("mType", mType);
-        map.put("mTitle", mTitle);
-        map.put("mClickUrl", mClickUrl);
-        map.put("mContent", mContent);
-        map.put("mImgUrl", mImgUrl);
+        map.put(shareSingle ? "type" : "mType", mType);
+        map.put(shareSingle ? "title" : "mTitle", mTitle);
+        map.put(shareSingle ? "url" : "mClickUrl", mClickUrl);
+        map.put(shareSingle ? "content" : "mContent", mContent);
+        map.put(shareSingle ? "img" : "mImgUrl", mImgUrl);
         map.put("isVideo", isVideo);
         return map;
     }
 
     public void setNickName(String name) {
         this.nickName = name;
-        if (!TextUtils.isEmpty(name)) {
-            titleView.setText(name);
-            titleView.setVisibility(View.VISIBLE);
-        }
     }
 
     /**
@@ -323,7 +327,6 @@ public class DishTitleViewControl implements View.OnClickListener {
                             loading = false;
                             loadManager.dismissProgress();
                             nowFav = state;
-                            favText.setText(nowFav ? "已收藏" : "  收藏  ");
                             favImg.setImageResource(nowFav ? R.drawable.z_caipu_xiangqing_topbar_ico_fav_active : R.drawable.z_caipu_xiangqing_topbar_ico_fav);
 
                             //统计

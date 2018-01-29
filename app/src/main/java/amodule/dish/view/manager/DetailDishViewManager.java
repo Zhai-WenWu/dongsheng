@@ -190,8 +190,6 @@ public class DetailDishViewManager {
             if (dishHeaderViewNew != null&& !TextUtils.isEmpty(img))dishHeaderViewNew.setImg(img,height);
             if(TextUtils.isEmpty(img)&&map.containsKey("img")&&!TextUtils.isEmpty(map.get("img"))&&dishHeaderViewNew!=null)dishHeaderViewNew.setImg(map.get("img"),height);
             dishAboutView.setData(map, mAct,true);
-            Map<String,String> mapTemp = StringManager.getFirstMap(map.get("customer"));
-            if(mapTemp.containsKey("nickName")&&!TextUtils.isEmpty(mapTemp.get("nickName")))handlerTitleName(mapTemp.get("nickName"));
             initVipView(map.containsKey("type")?map.get("type"):"");
         }else if (dishHeaderViewNew != null&& !TextUtils.isEmpty(img))dishHeaderViewNew.setImg(img,0);
     }
@@ -240,11 +238,6 @@ public class DetailDishViewManager {
             dishTitleViewControl.setData(dishInfoMaps,code,isHasVideo,dishState,loadManager);
             dishTitleViewControl.setstate(state);
             dishTitleViewControl.setViewState();
-        }
-    }
-    public void handlerTitleName(String name){
-        if(dishTitleViewControl!=null){
-            dishTitleViewControl.setNickName(name);
         }
     }
 
@@ -297,7 +290,6 @@ public class DetailDishViewManager {
             if(list.get(0).containsKey("customer")){
                 Map<String,String> map = StringManager.getFirstMap(list.get(0).get("customer"));
                 handlerQAUserView(map);
-                if(map.containsKey("nickName")&&!TextUtils.isEmpty(map.get("nickName")))handlerTitleName(map.get("nickName"));
             }
         }
     }

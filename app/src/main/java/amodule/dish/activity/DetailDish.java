@@ -175,22 +175,6 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
             public void onGifClickPosition(int position) {
             }
         });
-
-        mShareConfDataController = new ShareConfDataController();
-        mShareConfDataController.setOnDataListener(new DataListener() {
-            @Override
-            public void onLoadData() {}
-            @Override
-            public void onDataReady(int flag, String type, Object object) {
-                if (flag >= UtilInternet.REQ_OK_STRING) {
-                    if (object == null || object.toString().length() == 0)
-                        return;
-                    if (detailDishViewManager != null)
-                        detailDishViewManager.handlerShareData(object.toString());
-                }
-            }
-        });
-        mShareConfDataController.loadData(code);
     }
     private void dishTypeData(String type,ArrayList<Map<String,String>> list,Map<String,String> map){
         switch (type){
@@ -214,6 +198,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
                 requestWeb(mapTop);
                 saveDishInfo(mapTop);
                 tongjiId_detail=isHasVideo?"a_menu_detail_video":"a_menu_detail_normal";
+                loadShareData();
                 break;
             case DetailDishDataManager.DISH_DATA_INGRE://用料
                 detailDishViewManager.handlerIngreView(list);
@@ -271,6 +256,29 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         }
         adapterDishNew.notifyDataSetChanged();
     }
+
+    private void loadShareData() {
+        if (mShareConfDataController == null) {
+            mShareConfDataController = new ShareConfDataController();
+            mShareConfDataController.setOnDataListener(new DataListener() {
+                @Override
+                public void onLoadData() {
+                }
+
+                @Override
+                public void onDataReady(int flag, String type, Object object) {
+                    if (flag >= UtilInternet.REQ_OK_STRING) {
+                        if (object == null || object.toString().length() == 0)
+                            return;
+                        if (detailDishViewManager != null)
+                            detailDishViewManager.handlerShareData(object.toString());
+                    }
+                }
+            });
+        }
+        mShareConfDataController.loadData(code);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
