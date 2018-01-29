@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -15,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -251,6 +253,40 @@ public class DishHeaderViewNew extends LinearLayout {
                     mVideoPlayerController.setShowAd(false);
                     mVideoPlayerController.setOnClick();
                 }
+            }
+        });
+        adVideoController.setNetworkNotifyListener(new CleanVideoPlayer.NetworkNotifyListener() {
+            @Override
+            public void wifiConnected() {
+                removeTipView();
+                adVideoController.onResume();
+                isNetworkDisconnect = false;
+            }
+            @Override
+            public void mobileConnected() {
+                if(!"1".equals(FileManager.loadShared(context,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI).toString())){
+                    if(!isNetworkDisconnect){
+                        removeTipView();
+                        if(view_Tip==null){
+                            initNoWIFIView(context);
+                            ad_type_video.addView(view_Tip);
+                        }
+                        adVideoController.onPause();
+                    }
+                }else if(adVideoController.getAdVideoPlayer().getCurrentState() == GSYVideoPlayer.CURRENT_STATE_PAUSE){
+                    removeTipView();
+                    adVideoController.onResume();
+                }
+                isNetworkDisconnect = false;
+            }
+            @Override
+            public void nothingConnected() {
+                if(view_Tip == null){
+                    initNoNetwork(context);
+                    ad_type_video.addView(view_Tip);
+                }
+                adVideoController.onPause();
+                isNetworkDisconnect = true;
             }
         });
     }
@@ -642,6 +678,58 @@ public class DishHeaderViewNew extends LinearLayout {
     private VideoPlayerController.OnVideoCanPlayCallback mOnVideoCanPlayCallback;
     public void setOnVideoCanPlay(VideoPlayerController.OnVideoCanPlayCallback callback){
         mOnVideoCanPlayCallback = callback;
+    }
+    protected View view_Tip;
+    public boolean isNetworkDisconnect = false;
+    /**
+     * 初始化
+     * @param context 上下文
+     */
+    @SuppressLint({"SetTextI18n", "InflateParams"})
+    protected void initNoWIFIView(Context context){
+        ViewGroup.LayoutParams layoutParams= new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        view_Tip=LayoutInflater.from(context).inflate(R.layout.tip_layout,null);
+        view_Tip.setLayoutParams(layoutParams);
+        TextView tipMessage= (TextView) view_Tip.findViewById(R.id.tipMessage);
+        tipMessage.setText("现在是非WIFI，看视频要花费流量了");
+        Button btnCloseTip = (Button) view_Tip.findViewById(R.id.btnCloseTip);
+        btnCloseTip.setText("继续播放");
+        view_Tip.findViewById(R.id.tipLayout).setOnClickListener(onClickListener);
+        view_Tip.findViewById(R.id.btnCloseTip).setOnClickListener(onClickListener);
+    }
+
+    protected void initNoNetwork(Context context){
+        ViewGroup.LayoutParams layoutParams= new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        view_Tip=LayoutInflater.from(context).inflate(R.layout.tip_layout,null);
+        view_Tip.setLayoutParams(layoutParams);
+        TextView tipMessage= (TextView) view_Tip.findViewById(R.id.tipMessage);
+        tipMessage.setText("网络未连接，请检查网络设置");
+        Button btnCloseTip = (Button) view_Tip.findViewById(R.id.btnCloseTip);
+        btnCloseTip.setText("去设置");
+        view_Tip.findViewById(R.id.tipLayout).setOnClickListener(disconnectClick);
+        view_Tip.findViewById(R.id.btnCloseTip).setOnClickListener(disconnectClick);
+    }
+    private OnClickListener disconnectClick = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            context.startActivity(new Intent(Settings.ACTION_SETTINGS));
+        }
+    };
+
+    private OnClickListener onClickListener= new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            removeTipView();
+            adVideoController.start();
+            new Thread(() -> FileManager.saveShared(context,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI,"1")).start();
+        }
+    };
+
+    protected void removeTipView(){
+        if(view_Tip!=null){
+            ad_type_video.removeView(view_Tip);
+            view_Tip=null;
+        }
     }
 
 }
