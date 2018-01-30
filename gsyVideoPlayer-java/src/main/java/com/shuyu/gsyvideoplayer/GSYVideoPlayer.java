@@ -314,6 +314,8 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
         this.mTitle = title;
         Log.i("tzy","setUp");
         setStateAndUi(CURRENT_STATE_NORMAL);
+        createNetWorkState();
+        listenerNetWorkState();
         return true;
     }
 
@@ -956,8 +958,7 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
             onVideoReset();
             e.printStackTrace();
         }
-        createNetWorkState();
-        listenerNetWorkState();
+
         mHadPlay = true;
     }
 

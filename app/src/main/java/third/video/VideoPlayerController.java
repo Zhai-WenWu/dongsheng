@@ -259,43 +259,51 @@ public class VideoPlayerController {
             videoPlayer.showClingBtn(show);
     }
 
+    private StandardGSYVideoPlayer.NetworkNotifyListener mNetworkNotifyListener;
     private void setNetworkCallback(){
-        videoPlayer.addListener(new StandardGSYVideoPlayer.NetworkNotifyListener() {
-            @Override
-            public void wifiConnected() {
-                removeTipView();
-                onResume();
-                isNetworkDisconnect = false;
-            }
-
-            @Override
-            public void mobileConnected() {
-                if(!"1".equals(FileManager.loadShared(mContext,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI).toString())){
-                    if(!isNetworkDisconnect){
-                        removeTipView();
-                        if(view_Tip==null){
-                            initView(mContext);
-                            mPraentViewGroup.addView(view_Tip);
-                        }
-                        onPause();
-                    }
-                }else if(videoPlayer.getCurrentState() == GSYVideoPlayer.CURRENT_STATE_PAUSE){
+        if(mNetworkNotifyListener == null){
+            mNetworkNotifyListener=new StandardGSYVideoPlayer.NetworkNotifyListener() {
+                @Override
+                public void wifiConnected() {
+                    Log.i("tzy", "wifiConnected: ");
                     removeTipView();
                     onResume();
+                    isNetworkDisconnect = false;
                 }
-                isNetworkDisconnect = false;
-            }
 
-            @Override
-            public void nothingConnected() {
-                if(view_Tip == null){
-                    initNoNetwork(mContext);
-                    mPraentViewGroup.addView(view_Tip);
+                @Override
+                public void mobileConnected() {
+                    Log.i("tzy", "mobileConnected: ");
+                    if(!"1".equals(FileManager.loadShared(mContext,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI).toString())){
+                        if(!isNetworkDisconnect){
+                            removeTipView();
+                            if(view_Tip==null){
+                                initView(mContext);
+                                mPraentViewGroup.addView(view_Tip);
+                            }
+                            onPause();
+                        }
+                    }else if(videoPlayer.getCurrentState() == GSYVideoPlayer.CURRENT_STATE_PAUSE){
+                        removeTipView();
+                        onResume();
+                    }
+                    isNetworkDisconnect = false;
                 }
-                onPause();
-                isNetworkDisconnect = true;
-            }
-        });
+
+                @Override
+                public void nothingConnected() {
+                    Log.i("tzy", "nothingConnected: ");
+                    if(view_Tip == null){
+                        initNoNetwork(mContext);
+                        mPraentViewGroup.addView(view_Tip);
+                    }
+                    onPause();
+                    isNetworkDisconnect = true;
+                }
+            };
+            videoPlayer.addListener(mNetworkNotifyListener);
+        }
+
     }
 
     /**
@@ -323,9 +331,22 @@ public class VideoPlayerController {
         if(mOnVideoCanPlayCallback != null && !mOnVideoCanPlayCallback.canPlay()){
             return;
         }
+        if(!TextUtils.isEmpty(mVideoUrl) && mVideoUrl.startsWith("http")){
+            Log.i("tzy","mVideoUrl = "+mVideoUrl);
+            setNetworkCallback();
+        }
+        if(!ToolsDevice.isNetworkAvailable(mContext)){
+            removeTipView();
+            if(view_Tip==null){
+                initNoNetwork(mContext);
+                mPraentViewGroup.addView(view_Tip);
+            }
+            return;
+        }
         Log.i("tzy","广告点:::"+mHasVideoInfo);
         isAutoPaly = "wifi".equals(ToolsDevice.getNetWorkSimpleType(mContext));
         if (mHasVideoInfo) {
+            Log.i("tzy","广告点:::isShowAd"+isShowAd);
             if(isShowAd){
                 if(mediaViewCallBack != null)
                     mediaViewCallBack.onclick();

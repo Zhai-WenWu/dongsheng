@@ -44,6 +44,7 @@ public class AdVideoController {
     private OnErrorCallback mOnErrorCallback;
     private CleanVideoPlayer.OnProgressChangedCallback mOnProgressChangedCallback;
     private CleanVideoPlayer.NetworkNotifyListener mNetworkNotifyListener;
+    private CleanVideoPlayer.NetworkNotifyListener mInnerListener;
 
     private AdVideoConfigTool mConfigTool;
 
@@ -115,40 +116,43 @@ public class AdVideoController {
                     }
                 }
         );
-        mAdVideoPlayer.addListener(new CleanVideoPlayer.NetworkNotifyListener() {
-            @Override
-            public void wifiConnected() {
-                isNetworkDisconnect = false;
-                if (isRemoteUrl()) {
-                    onResume();
-                    if (mNetworkNotifyListener != null) {
-                        mNetworkNotifyListener.wifiConnected();
+        if(mInnerListener == null){
+            mInnerListener = new CleanVideoPlayer.NetworkNotifyListener() {
+                @Override
+                public void wifiConnected() {
+                    isNetworkDisconnect = false;
+                    if (isRemoteUrl()) {
+                        onResume();
+                        if (mNetworkNotifyListener != null) {
+                            mNetworkNotifyListener.wifiConnected();
+                        }
                     }
                 }
-            }
 
-            @Override
-            public void mobileConnected() {
-                isNetworkDisconnect = false;
-                if (isRemoteUrl()) {
-                    onResume();
-                    if (mNetworkNotifyListener != null) {
-                        mNetworkNotifyListener.mobileConnected();
+                @Override
+                public void mobileConnected() {
+                    isNetworkDisconnect = false;
+                    if (isRemoteUrl()) {
+                        onResume();
+                        if (mNetworkNotifyListener != null) {
+                            mNetworkNotifyListener.mobileConnected();
+                        }
                     }
                 }
-            }
 
-            @Override
-            public void nothingConnected() {
-                isNetworkDisconnect = true;
-                if (isRemoteUrl()) {
-                    onPause();
-                    if (mNetworkNotifyListener != null) {
-                        mNetworkNotifyListener.nothingConnected();
+                @Override
+                public void nothingConnected() {
+                    isNetworkDisconnect = true;
+                    if (isRemoteUrl()) {
+                        onPause();
+                        if (mNetworkNotifyListener != null) {
+                            mNetworkNotifyListener.nothingConnected();
+                        }
                     }
                 }
-            }
-        });
+            };
+            mAdVideoPlayer.addListener(mInnerListener);
+        }
         Log.i("tzy", "initVideoPlayer: " + (System.currentTimeMillis() - startTime));
     }
 
