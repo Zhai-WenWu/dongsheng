@@ -1,9 +1,7 @@
 package amodule.home.view;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,12 +9,11 @@ import android.widget.RelativeLayout;
 
 import com.xiangha.R;
 
-import acore.logic.AppCommon;
 import acore.logic.XHClick;
 import amodule._common.delegate.IStatictusData;
+import amodule.dish.activity.TimeDish;
 import amodule.main.view.MessageTipIcon;
 import amodule.search.avtivity.HomeSearch;
-import aplug.web.ShowWeb;
 
 import static amodule.main.activity.MainHomePage.STATICTUS_ID_PULISH;
 
@@ -66,7 +63,11 @@ public class HomeTitleLayout extends RelativeLayout implements View.OnClickListe
             case R.id.home_publish_btn:
                 //统计
                 XHClick.mapStat(getContext(),id,twoLevel,"发布按钮");
-                mPulishView.showPulishMenu();
+//                mPulishView.showPulishMenu();
+                getContext().startActivity(new Intent(getContext(), TimeDish.class)
+                        .putExtra("type","typeRecommend")
+                        .putExtra("g1","1")
+                );
                 break;
             case R.id.home_search_layout:
                 //统计

@@ -26,7 +26,7 @@ import static third.ad.tools.AdPlayIdConfig.COMMEND_THREE_MEALS;
 public class DishAdDataControl {
 
     public XHAllAdControl xhAllAdControl;
-    private ArrayList adDataList = new ArrayList();
+    private ArrayList<Map<String, String>> adDataList = new ArrayList<>();
     private ArrayList<Map<String, String>> finalDataLists = new ArrayList<>();
 
     public void getDishAdData(Context context, @NonNull final DishAdDataControlCallback callback) {
@@ -66,6 +66,7 @@ public class DishAdDataControl {
                     map.put("imgUrl", map.get("imgUrl2"));
             }
 
+            dataMap.put("type", map.get("type"));
             dataMap.put("isPromotion", "2");
             dataMap.put("indexOnData", map.get("index"));
             dataMap.put("indexOnShow", (adDataList.size() + 1) + "");
@@ -104,8 +105,8 @@ public class DishAdDataControl {
             public boolean loop(int i, Object object) {
                 if (object != null) {
                     Map<String, String> map = (Map<String, String>) object;
-                    if ("往期推荐".equals(map.get("isToday"))) {
-                        finalDataLists.addAll(adDataList);
+                    if ("往期推荐".equals(map.get("isToday")) && !adDataList.isEmpty()) {
+                        finalDataLists.add(adDataList.get(0));
                     }
                     finalDataLists.add(map);
                 }

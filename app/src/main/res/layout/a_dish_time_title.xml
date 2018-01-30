@@ -11,7 +11,6 @@
         layout="@layout/a_bar_item_back"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"/>
 
@@ -26,7 +25,7 @@
         <acore.widget.PagerSlidingTabStrip
             android:id="@+id/dish_time_title_slide"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/dp_45"
+            android:layout_height="@dimen/topbar_height"
             app:pstsIndicatorColor="#FFFFFE"
             app:pstsIndicatorWidthFollowText="true"
             app:pstsTabBackground="@color/common_top_bg"

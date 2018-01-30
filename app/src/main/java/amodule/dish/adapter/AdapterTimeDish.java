@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.xiangha.R;
@@ -33,6 +34,10 @@ import amodule.user.activity.FriendHome;
 import aplug.basic.SubBitmapTarget;
 import third.ad.scrollerAd.XHAllAdControl;
 import xh.basic.tool.UtilImage;
+
+import static third.ad.scrollerAd.XHScrollerAdParent.ADKEY_BAIDU;
+import static third.ad.scrollerAd.XHScrollerAdParent.ADKEY_GDT;
+import static third.ad.scrollerAd.XHScrollerAdParent.ID_AD_ICON_GDT;
 
 /**
  * Title:AdapterListDish.java Copyright: Copyright (c) 2014~2017
@@ -90,6 +95,10 @@ public class AdapterTimeDish extends AdapterSimple {
             setAdItemListener(view, map);
             setAdItemListener(view.findViewById(R.id.iv_userImg), map);
             setAdItemListener(view.findViewById(R.id.user_name), map);
+            View gdtIcon = view.findViewById(ID_AD_ICON_GDT);
+            if(gdtIcon != null){
+                gdtIcon.setVisibility(ADKEY_GDT.equals(map.get("type"))?View.VISIBLE:View.GONE);
+            }
         } else {
             TextView today = (TextView) view.findViewById(R.id.dish_recom_item_today);
             if (today.getVisibility() == View.VISIBLE) {

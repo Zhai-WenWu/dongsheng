@@ -30,6 +30,15 @@
             android:scaleType="fitCenter"
             android:src="@drawable/i_nopic" />
 
+        <ImageView
+            android:id="@id/icon_ad_gdt"
+            android:src="@drawable/icon_ad_gdt"
+            android:visibility="gone"
+            android:layout_alignBottom="@+id/iv_nousCover_ad"
+            android:layout_alignRight="@+id/iv_nousCover_ad"
+            android:layout_width="@dimen/dp_40"
+            android:layout_height="@dimen/dp_13.5" />
+
         <TextView
             android:id="@+id/tv_nousTitle_ad"
             android:layout_width="wrap_content"

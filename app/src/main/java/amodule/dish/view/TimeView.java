@@ -75,7 +75,7 @@ public class TimeView {
                         , R.id.dish_time_item_allClick, R.id.dish_time_item_allFave, R.id.iv_itemIsFine, R.id.iv_itemIsGood,R.id.ad_hint_imv});
         adapter.imgWidth = ToolsDevice.getWindowPx(mAct).widthPixels - Tools.getDimen(mAct, R.dimen.dp_20);//20=10*2
         adapter.scaleType = ScaleType.CENTER_CROP;
-        adapter.isAnimate = true;
+//        adapter.isAnimate = true;
 
 
         loadManager.setLoading(mListView, adapter, true, new OnClickListener() {

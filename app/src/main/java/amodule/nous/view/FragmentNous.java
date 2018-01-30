@@ -35,6 +35,8 @@ import third.ad.scrollerAd.XHAllAdControl;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilString;
 
+import static third.ad.scrollerAd.XHScrollerAdParent.ADKEY_GDT;
+import static third.ad.scrollerAd.XHScrollerAdParent.ID_AD_ICON_GDT;
 import static third.ad.tools.AdPlayIdConfig.MAIN_HOME_ZHISHI_LIST;
 
 public class FragmentNous {
@@ -73,7 +75,6 @@ public class FragmentNous {
         adArray.clear();
         ArrayList<String> adPosList = new ArrayList<>();
         Collections.addAll(adPosList, MAIN_HOME_ZHISHI_LIST);
-        //TODO
         xhAllAdControl = new XHAllAdControl(adPosList, new XHAllAdControl.XHBackIdsDataCallBack() {
             @Override
             public void callBack(Map<String, String> map) {
@@ -220,6 +221,11 @@ public class FragmentNous {
                         ((TextView)view.findViewById(R.id.tv_ad_tag)).setText("香哈");
                     }else{
                         ((TextView)view.findViewById(R.id.tv_ad_tag)).setText("广告");
+                    }
+
+                    View gdtIcon = view.findViewById(ID_AD_ICON_GDT);
+                    if(gdtIcon != null){
+                        gdtIcon.setVisibility(ADKEY_GDT.equals(map.get("type"))?View.VISIBLE:View.GONE);
                     }
                 }
             }
