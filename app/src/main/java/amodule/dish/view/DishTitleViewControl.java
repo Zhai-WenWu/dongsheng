@@ -160,9 +160,11 @@ public class DishTitleViewControl implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.share_wechat:
                 openShareSingle(ShareTools.WEI_XIN);
+                XHClick.mapStat(detailDish, DetailDish.tongjiId_detail, "顶部导航栏", "微信分享点击");
                 break;
             case R.id.share_wechatcomments:
                 openShareSingle(ShareTools.WEI_QUAN);
+                XHClick.mapStat(detailDish, DetailDish.tongjiId_detail, "顶部导航栏", "朋友圈分享点击");
                 break;
             case R.id.back:
                 XHClick.mapStat(detailDish, DetailDish.tongjiId_detail, "顶部导航栏", "返回点击量");

@@ -307,9 +307,11 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
                 switch (v.getId()) {
                     case R.id.share_wechat:
                         openShareSingle(ShareTools.WEI_XIN);
+                        statistics("微信分享点击", "");
                         break;
                     case R.id.share_wechatcomments:
                         openShareSingle(ShareTools.WEI_QUAN);
+                        statistics("朋友圈分享点击", "");
                         break;
                 }
             }
@@ -668,7 +670,7 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
                     showBottomDialog(isAuthor);
                 } else {
                     openShare();
-                    statistics("分享", "");
+                    statistics("分享按钮点击", "");
                 }
             }
         });
