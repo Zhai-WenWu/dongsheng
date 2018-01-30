@@ -63,11 +63,7 @@ public class HomeTitleLayout extends RelativeLayout implements View.OnClickListe
             case R.id.home_publish_btn:
                 //统计
                 XHClick.mapStat(getContext(),id,twoLevel,"发布按钮");
-//                mPulishView.showPulishMenu();
-                getContext().startActivity(new Intent(getContext(), TimeDish.class)
-                        .putExtra("type","typeRecommend")
-                        .putExtra("g1","1")
-                );
+                mPulishView.showPulishMenu();
                 break;
             case R.id.home_search_layout:
                 //统计

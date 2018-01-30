@@ -64,8 +64,7 @@ public class AdVideoController {
             Log.i("tzy", "AdVideoController: " + (System.currentTimeMillis() - startTime));
             return;
         }
-        //TODO            currentVideo = mConfigTool.getVideoUrlOrPath();
-        currentVideo = "http://pic.ibaotu.com/00/12/51/78w888piCCJX.mp4";
+        currentVideo = mConfigTool.getVideoUrlOrPath();
         initVideoPlayer(context);
         createAdView(mConfigTool.getConfigMap());
         Log.i("tzy", "AdVideoController: " + (System.currentTimeMillis() - startTime));
