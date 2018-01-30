@@ -272,8 +272,8 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
 
     /** 初始化title */
     private void initTitle(View view) {
-        mShareWechat = (RelativeLayout) findViewById(R.id.share_wechat);
-        mShareComments = (RelativeLayout) findViewById(R.id.share_wechatcomments);
+        mShareWechat = (RelativeLayout) view.findViewById(R.id.share_wechat);
+        mShareComments = (RelativeLayout) view.findViewById(R.id.share_wechatcomments);
         rightButton = (ImageView) view.findViewById(R.id.rightImgBtn2);
         rightButtonFav = (ImageView) view.findViewById(R.id.rightImgBtn1);
         rightButtonFav.setVisibility(View.VISIBLE);
