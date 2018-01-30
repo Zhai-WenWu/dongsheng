@@ -266,14 +266,15 @@ public class VideoPlayerController {
                 @Override
                 public void wifiConnected() {
                     Log.i("tzy", "wifiConnected: ");
+                    isNetworkDisconnect = false;
                     removeTipView();
                     onResume();
-                    isNetworkDisconnect = false;
                 }
 
                 @Override
                 public void mobileConnected() {
                     Log.i("tzy", "mobileConnected: ");
+                    isNetworkDisconnect = false;
                     if(!"1".equals(FileManager.loadShared(mContext,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI).toString())){
                         if(!isNetworkDisconnect){
                             removeTipView();
@@ -287,18 +288,19 @@ public class VideoPlayerController {
                         removeTipView();
                         onResume();
                     }
-                    isNetworkDisconnect = false;
+
                 }
 
                 @Override
                 public void nothingConnected() {
                     Log.i("tzy", "nothingConnected: ");
+                    isNetworkDisconnect = true;
                     if(view_Tip == null){
                         initNoNetwork(mContext);
                         mPraentViewGroup.addView(view_Tip);
                     }
                     onPause();
-                    isNetworkDisconnect = true;
+
                 }
             };
             videoPlayer.addListener(mNetworkNotifyListener);
