@@ -8,7 +8,7 @@
 
     <include
         android:id="@+id/ll_back"
-        layout="@layout/a_bar_item_back"
+        layout="@layout/a_bar_item_back2"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
@@ -28,6 +28,7 @@
         style="@style/rightBtn"
         android:clickable="false"
         android:visibility="visible"
+        android:layout_marginLeft="@dimen/dp_4"
         android:src="@drawable/i_ad_more"
         android:layout_toRightOf="@+id/share_title"/>
 
@@ -39,6 +40,7 @@
         android:paddingRight="@dimen/dp_9"
         android:paddingTop="@dimen/dp_12"
         android:paddingBottom="@dimen/dp_9"
+        android:layout_marginRight="@dimen/dp_11"
         android:visibility="visible"
         android:layout_centerVertical="true"/>
 

@@ -4,7 +4,7 @@
     android:layout_width="wrap_content"
     android:layout_height="@dimen/topbar_height"
     android:background="@color/transparent"
-    android:paddingLeft="@dimen/dp_5">
+    android:paddingLeft="@dimen/dp_14">
 
     <RelativeLayout
         android:id="@+id/share_wechat"
@@ -34,7 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_toRightOf="@+id/share_wechat"
-        android:paddingLeft="@dimen/dp_10"
+        android:paddingLeft="@dimen/dp_6"
         android:layout_marginLeft="@dimen/dp_11">
 
         <ImageView

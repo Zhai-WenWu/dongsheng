@@ -18,7 +18,7 @@
         android:layout_below="@+id/title_state_bar"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        layout="@layout/a_bar_item_back" />
+        layout="@layout/a_bar_item_back2" />
 
     <include
         android:id="@+id/share_title"
@@ -89,6 +89,7 @@
             android:paddingRight="@dimen/dp_9"
             android:paddingTop="@dimen/dp_12"
             android:paddingBottom="@dimen/dp_9"
+            android:layout_marginRight="@dimen/dp_11"
             android:visibility="visible"
             android:layout_centerVertical="true"/>
     </RelativeLayout>
