@@ -82,9 +82,7 @@ public class ShareTools {
 			clickUrl ="";
 		clickUrl = clickUrl.replaceAll("\\s+", "");
 		String newClickUrl = clickUrl;
-		mClickUrl = newClickUrl + "";
-		mFrom = from + "";
-		mParent = parent + "";
+		handleStatisticsParams(newClickUrl, from, parent);
 		if (platform == LINK_COPY && !TextUtils.isEmpty(newClickUrl)) {
 			XHClick.onEvent(mContext, "a_share_click", "拷贝");
 			Tools.inputToClipboard(mContext,newClickUrl);
@@ -202,6 +200,7 @@ public class ShareTools {
 		Map<String, String> shareMap = StringManager.getFirstMap(shareConfigMap.get(shareType));
 		if (TextUtils.equals(shareType, "2") && TextUtils.equals(WEI_XIN, map.get("platform"))) {
 			shareMap.put("type", map.get("type"));
+			handleStatisticsParams(shareMap.get("url"), map.get("from"), map.get("parent"));
 			showShareMiniProgram(shareMap);
 		} else {
 			String title = map.get("title");
@@ -220,6 +219,12 @@ public class ShareTools {
 			String platform = map.get("platform");
 			showSharePlatform(title, content, type, imgUrl, clickUrl, platform, from, parent, true);
 		}
+	}
+
+	private void handleStatisticsParams(String clickUrl, String from, String parent) {
+		mClickUrl = clickUrl + "";
+		mFrom = from + "";
+		mParent = parent + "";
 	}
 
 	public String drawableToPath(String dbName){
@@ -343,8 +348,8 @@ public class ShareTools {
 		configShare.put("SortId", "1");
 		configShare.put("AppId", "wx2b582fbe26ef8993");
 		configShare.put("AppSecret", "178b4d14294057b0df3d4586621cfe00");
-		configShare.put("UserName", "gh_7482de333db0");
-		configShare.put("Path", TextUtils.isEmpty(confPath) ? path : confPath);
+		configShare.put("userName", "gh_7482de333db0");
+		configShare.put("path", TextUtils.isEmpty(confPath) ? path : confPath);
 		configShare.put("BypassApproval", "false");
 		configShare.put("Enable", "true");
 		ShareSDK.setPlatformDevInfo(Wechat.NAME, configShare);

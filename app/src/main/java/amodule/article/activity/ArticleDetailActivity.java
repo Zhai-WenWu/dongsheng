@@ -17,7 +17,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.xh.manager.DialogManager;
@@ -67,6 +66,7 @@ import aplug.web.view.XHWebView;
 import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
 import third.share.BarShare;
 import third.share.activity.ShareActivityDialog;
+import third.share.tools.ShareTools;
 
 import static amodule.article.adapter.ArticleDetailAdapter.TYPE_KEY;
 import static amodule.article.adapter.ArticleDetailAdapter.Type_comment;
@@ -81,8 +81,9 @@ public class ArticleDetailActivity extends BaseActivity {
     private LinearLayout linearLayoutOne;
     private LinearLayout linearLayoutTwo;
     private LinearLayout linearLayoutThree;
-    private TextView mTitle;
-    private ImageView rightButton, rightButtonFav;
+    private RelativeLayout mShareWechat;
+    private RelativeLayout mShareComments;
+    private ImageView rightButton, rightButtonFav, integralTip;
     private PtrClassicFrameLayout refreshLayout;
     private ArticleContentBottomView articleContentBottomView;
     private ArticleHeaderView headerView;
@@ -205,18 +206,8 @@ public class ArticleDetailActivity extends BaseActivity {
 
     /** 初始化title */
     private void initTitle() {
-        View leftClose = findViewById(R.id.leftClose);
-        leftClose.setVisibility(View.VISIBLE);
-        leftClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Main.colse_level = 1;
-                ArticleDetailActivity.this.finish();
-            }
-        });
-        mTitle = (TextView) findViewById(R.id.title);
-        int dp85 = Tools.getDimen(this, R.dimen.dp_85);
-        mTitle.setPadding(dp85, 0, dp85, 0);
+        mShareWechat = (RelativeLayout) findViewById(R.id.share_wechat);
+        mShareComments = (RelativeLayout) findViewById(R.id.share_wechatcomments);
         rightButton = (ImageView) findViewById(R.id.rightImgBtn2);
         rightButtonFav = (ImageView) findViewById(R.id.rightImgBtn1);
         rightButtonFav.setVisibility(View.VISIBLE);
@@ -242,6 +233,37 @@ public class ArticleDetailActivity extends BaseActivity {
                     startActivity(new Intent(ArticleDetailActivity.this,LoginByAccout.class));
             }
         });
+
+        View.OnClickListener listener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (v.getId()) {
+                    case R.id.share_wechat:
+                        openShareSingle(ShareTools.WEI_XIN);
+                        statistics("微信分享点击", "");
+                        break;
+                    case R.id.share_wechatcomments:
+                        openShareSingle(ShareTools.WEI_QUAN);
+                        statistics("朋友圈分享点击", "");
+                        break;
+                }
+            }
+        };
+        mShareWechat.setOnClickListener(listener);
+        mShareComments.setOnClickListener(listener);
+    }
+
+    private void openShareSingle(String platform) {
+        Map<String, String> dataMap = new HashMap<>();
+        dataMap.put("type", shareMap.get("imgType"));
+        dataMap.put("title", shareMap.get("title"));
+        dataMap.put("url", shareMap.get("url"));
+        dataMap.put("content", shareMap.get("content"));
+        dataMap.put("img", shareMap.get("img"));
+        dataMap.put("from", "文章详情");
+        dataMap.put("platform", platform);
+        ShareTools tools = ShareTools.getBarShare(this);
+        tools.showSharePlatform(dataMap);
     }
 
     private void handlerFavorite(){
@@ -600,10 +622,6 @@ public class ArticleDetailActivity extends BaseActivity {
         linearLayoutTwo.setVisibility(View.VISIBLE);
 
         customerData = StringManager.getFirstMap(mapArticle.get("customer"));
-        if (!TextUtils.isEmpty(customerData.get("nickName"))) {
-            mTitle.setText(customerData.get("nickName"));
-            mTitle.setVisibility(View.VISIBLE);
-        }
         //获取是否可以编辑
         boolean hasEditPermission = "2".equals(mapArticle.get("isEdit"));
         final String userCode = customerData.get("code");
@@ -613,7 +631,6 @@ public class ArticleDetailActivity extends BaseActivity {
                 && userCode.equals(LoginManager.userInfo.get("code"));
         final boolean canEdit = isAuthor || hasEditPermission;
         //作者 或者 有编辑权限
-        rightButton.setImageResource(canEdit ? R.drawable.i_ad_more : R.drawable.z_z_topbar_ico_share);
         rightButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -621,7 +638,7 @@ public class ArticleDetailActivity extends BaseActivity {
                     showBottomDialog(isAuthor);
                 } else {
                     openShare();
-                    statistics("分享", "");
+                    statistics("分享按钮点击", "");
                 }
             }
         });

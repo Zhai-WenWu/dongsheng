@@ -6,81 +6,41 @@
     android:layout_height="@dimen/topbar_height"
     android:background="@color/common_top_bg">
 
-    <TextView
-        android:id="@+id/title"
-        style="@style/top_title_singleText"
-        android:layout_centerInParent="true"
-        android:gravity="center_horizontal"
-        android:paddingLeft="@dimen/dp_50"
-        android:paddingRight="@dimen/dp_50"
-        />
-
-    <TextView
-        android:id="@+id/title_time"
-        style="@style/singleText"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/dp__1"
-        android:gravity="center_horizontal"
-        android:paddingBottom="@dimen/dp_3.5"
-        android:paddingLeft="@dimen/dp_50"
-        android:paddingRight="@dimen/dp_50"
-        android:textColor="@color/common_top_text"
-        android:textSize="@dimen/sp_7"/>
-
     <include
         android:id="@+id/ll_back"
-        layout="@layout/a_bar_item_back"
+        layout="@layout/a_bar_item_back2"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"/>
 
-    <LinearLayout
+    <include
+        android:id="@+id/share_title"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_toLeftOf="@+id/rightImgBtn2"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/ll_back"
+        android:layout_below="@+id/title_state_bar"
+        layout="@layout/a_share_bar_title"/>
 
-        <TextView
-            android:id="@+id/delete"
-            android:layout_width="@dimen/dp_45"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="删除"
-            android:textColor="@color/common_top_text"
-            android:textSize="@dimen/dp_17"
-            android:visibility="gone"/>
+    <ImageView
+        android:id="@+id/rightImgBtn2"
+        style="@style/rightBtn"
+        android:clickable="false"
+        android:visibility="visible"
+        android:src="@drawable/i_ad_more"
+        android:layout_toRightOf="@+id/share_title"/>
 
-        <TextView
-            android:id="@+id/edit"
-            android:layout_width="@dimen/dp_45"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="编辑"
-            android:textColor="@color/common_top_text"
-            android:textSize="@dimen/dp_17"
-            android:visibility="gone"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+    <ImageView
+        android:id="@+id/rightImgBtn1"
+        style="@style/rightBtn"
         android:layout_alignParentRight="true"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:id="@+id/rightImgBtn1"
-            style="@style/rightBtn"
-            android:visibility="gone"/>
-
-        <ImageView
-            android:id="@+id/rightImgBtn2"
-            style="@style/rightBtn"
-            android:layout_marginRight="@dimen/dp_10"
-            android:src="@drawable/z_z_topbar_ico_share"
-            android:visibility="gone"/>
-
-    </LinearLayout>
+        android:paddingLeft="@dimen/dp_11"
+        android:paddingRight="@dimen/dp_9"
+        android:paddingTop="@dimen/dp_12"
+        android:paddingBottom="@dimen/dp_9"
+        android:layout_marginRight="@dimen/dp_11"
+        android:visibility="visible"
+        android:layout_centerVertical="true"/>
 
 </RelativeLayout>

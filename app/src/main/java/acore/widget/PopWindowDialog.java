@@ -1,61 +1,92 @@
 package acore.widget;
 
+import android.app.Dialog;
 import android.content.Context;
-import android.graphics.PixelFormat;
-import android.os.Build;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.xiangha.R;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import acore.override.XHApplication;
 import acore.tools.FileManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
+import third.share.adapter.ShareAdapter;
+import third.share.module.ShareModule;
 import third.share.tools.ShareTools;
 
-public class PopWindowDialog {
+public class PopWindowDialog extends Dialog {
 	private Context mContext;
-	private WindowManager mWindowManager;
-	private WindowManager.LayoutParams mLayoutParams;
 	private View mView;
-	private ArrayList<Map<String,String>> mData = new ArrayList<>();
+	private ArrayList<ShareModule> mData = new ArrayList<>();
 	private String[] mSharePlatforms;
 	private String mType,mTitle,mClickUrl,mContent,mImgUrl,mFrom,mParent;
 	private String mHintTitle,mShareHint,mMessage;
-	
-	public PopWindowDialog(Context context,String hintTitle,String shareHint,String message){
+
+	private boolean mShowing;
+	private View.OnClickListener onCloseListener;
+
+	private boolean mShowIntegralTip;
+
+	public PopWindowDialog(@NonNull Context context,String hintTitle,String shareHint,String message) {
+		this(context, R.style.dialog);
 		mContext = context;
 		mHintTitle = hintTitle;
 		mShareHint= shareHint;
 		mMessage = message;
+		initDefault();
+	}
+
+	public PopWindowDialog(@NonNull Context context,String hintTitle,String shareHint,String message, boolean showIntegralTip) {
+		this(context, R.style.dialog);
+		mContext = context;
+		mHintTitle = hintTitle;
+		mShareHint= shareHint;
+		mMessage = message;
+		mShowIntegralTip = showIntegralTip;
+		initDefault();
+	}
+
+	private void initDefault() {
 		initData();
 		init();
+		addListener();
 	}
-	
+
+	private void addListener() {
+		onCloseListener = new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				closePopWindowDialog();
+			}
+		};
+		mView.setOnClickListener(onCloseListener);
+		mView.findViewById(R.id.d_popwindow_close).setOnClickListener(onCloseListener);
+	}
+
+	public PopWindowDialog(@NonNull Context context, int themeResId) {
+		super(context, themeResId);
+	}
+
+	protected PopWindowDialog(@NonNull Context context, boolean cancelable, @Nullable OnCancelListener cancelListener) {
+		super(context, cancelable, cancelListener);
+	}
+
 	private void init(){
 		LayoutInflater inflater = LayoutInflater.from(mContext);
-		// Context.getSystemService(Context.WINDOW_SERVICE); 这个Context要用Application的context
-		mWindowManager = (WindowManager) mContext.getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
 		mView = inflater.inflate(R.layout.d_popwindow, null);
 		initShareView();
 		TextView hintTitle = (TextView)mView.findViewById(R.id.d_popwindow_title);
 		TextView message = (TextView)mView.findViewById(R.id.d_popwindow_message);
-//		TextView shareHint = (TextView)mView.findViewById(R.id.d_popwindow_share_hint);
-
 		hintTitle.setText(mHintTitle);
 		if(TextUtils.isEmpty(mMessage)){
 			message.setVisibility(View.GONE);
@@ -63,35 +94,18 @@ public class PopWindowDialog {
 			message.setText(mMessage);
 			message.setVisibility(View.VISIBLE);
 		}
-//		shareHint.setText(mShareHint);
-
-		mView.setOnClickListener(onCloseListener);
-		mView.findViewById(R.id.d_popwindow_close).setOnClickListener(onCloseListener);
-		mLayoutParams = new WindowManager.LayoutParams(WindowManager.LayoutParams.MATCH_PARENT,WindowManager.LayoutParams.MATCH_PARENT);
-//        //设置window的type
-		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N)
-			mLayoutParams.type = WindowManager.LayoutParams.TYPE_PHONE;
-		else
-        	mLayoutParams.type = WindowManager.LayoutParams.TYPE_TOAST;
-        mLayoutParams.format = PixelFormat.RGBA_8888;
-        //设置浮动窗口不可聚焦
-        mLayoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
-        //位置
-        mLayoutParams.gravity = Gravity.CENTER;
-//        layoutParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
-//        layoutParams.height = Tools.getDimen(mContext, R.dimen.dp_100);
+		setContentView(mView);
 	}
-	
+
 	private void initShareView(){
 		GridView mGridView = (GridView)mView.findViewById(R.id.d_popwindow_share_gridview);
-		
-		SimpleAdapter adapter = new SimpleAdapter(mContext, mData,R.layout.d_popwindow_share_item,
-				new String[]{"img","name"},
-				new int[]{R.id.share_logo,R.id.share_name});
+
+		ShareAdapter adapter = new ShareAdapter();
+		adapter.setData(mData);
 		mGridView.setAdapter(adapter);
 		mGridView.setOnItemClickListener(new OnItemClickListener() {
 
-			@Override 
+			@Override
 			public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
 				String platfrom = mSharePlatforms[position];
 				ShareTools barShare = ShareTools.getBarShare(mContext);
@@ -100,7 +114,7 @@ public class PopWindowDialog {
 			}
 		});
 	}
-	
+
 	private void initData(){
 		String[] mNames;
 		int[] mLogos;
@@ -110,7 +124,7 @@ public class PopWindowDialog {
 					R.drawable.logo_qzone,R.drawable.logo_qq,
 					R.drawable.logo_sina_weibo,R.drawable.logo_short_message,
 					R.drawable.logo_copy
-					};
+			};
 			mSharePlatforms = new String[]{
 					ShareTools.QQ_ZONE,ShareTools.QQ_NAME,
 					ShareTools.SINA_NAME,ShareTools.SHORT_MESSAGE,
@@ -121,7 +135,7 @@ public class PopWindowDialog {
 					R.drawable.logo_qzone,R.drawable.logo_qq,
 					R.drawable.logo_sina_weibo,R.drawable.logo_short_message,
 					R.drawable.logo_copy
-					};
+			};
 			mSharePlatforms = new String[]{
 					ShareTools.WEI_XIN,ShareTools.WEI_QUAN,
 					ShareTools.QQ_ZONE,ShareTools.QQ_NAME,
@@ -129,54 +143,42 @@ public class PopWindowDialog {
 					ShareTools.LINK_COPY};
 		}
 		for(int i = 0; i < mNames.length; i ++){
-			Map<String,String> map = new HashMap<String,String>();
-			map.put("name", mNames[i]);
-			map.put("img", "" + mLogos[i]);
-			mData.add(map);
+			String platform = mSharePlatforms[i];
+			ShareModule module = new ShareModule();
+			module.setResId(mLogos[i]);
+			module.setTitle(mNames[i]);
+			module.setIntegralTipShow(mShowIntegralTip && (TextUtils.equals(platform, ShareTools.WEI_XIN) || TextUtils.equals(platform, ShareTools.WEI_QUAN)));
+			mData.add(module);
 		}
 	}
-	
+
 	public void show(String type,String title,String clickUrl,String content,String imgUrl,String from,String parent) {
 		mType = type;mTitle = title;mClickUrl = clickUrl;mContent = content;mImgUrl = imgUrl;mFrom = from;mParent = parent;
-		mWindowManager.addView(mView, mLayoutParams);
-    }
-	
-//	public void show() {
-//		mWindowManager.addView(mView, mLayoutParams);
-//	}
-	
-	private OnClickListener onCloseListener = new OnClickListener() {
-		
-		@Override
-		public void onClick(View v) {
-			closePopWindowDialog();
-		}
-	};
-	
-	public void closePopWindowDialog(){
-		if(mWindowManager != null){
-			if(mView!=null)
-				mWindowManager.removeView(mView);
-			mWindowManager = null;
-		}
+		this.show();
+		mShowing = true;
 	}
-	
+
+	public void closePopWindowDialog(){
+		this.dismiss();
+		mShowing = false;
+	}
+
 	/**
 	 * 获取当前分享Dialog是否还在显示
 	 * @return true:显示 fase：不显示
 	 */
 	public boolean isHasShow(){
-		return mWindowManager != null;
+		return mShowing;
 	}
-	
+
 	public void onPause(){
 		mView.setVisibility(View.GONE);
 	}
-	
+
 	public void onResume(){
 		mView.setVisibility(View.VISIBLE);
 	}
-	
+
 	/**
 	 * 当分享成功或者发布菜谱成功后判断是否已满足每天显示两次，还需不需要显示
 	 * @param dataKey ：用于保存日期的key

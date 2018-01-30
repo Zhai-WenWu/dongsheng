@@ -22,6 +22,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.xiangha.R;
+
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Timer;
@@ -94,6 +95,7 @@ public class DetailDishViewManager {
         dishTitleViewControl = new DishTitleViewControl(activity);
         dishTitleViewControl.initView(activity);
         dishTitleViewControl.setstate(state);
+        dishTitleViewControl.setIntegralTipStatus(true);
         initTitle();
         dishHoverViewControl = new DishHoverViewControl(activity);
         dishHoverViewControl.initView();
@@ -166,6 +168,7 @@ public class DetailDishViewManager {
         listView.setVisibility(View.VISIBLE);
         setListViewListener();
     }
+
     /**
      * 处理标题
      */
@@ -189,8 +192,6 @@ public class DetailDishViewManager {
             if (dishHeaderViewNew != null&& !TextUtils.isEmpty(img))dishHeaderViewNew.setImg(img,height);
             if(TextUtils.isEmpty(img)&&map.containsKey("img")&&!TextUtils.isEmpty(map.get("img"))&&dishHeaderViewNew!=null)dishHeaderViewNew.setImg(map.get("img"),height);
             dishAboutView.setData(map, mAct,true);
-            Map<String,String> mapTemp = StringManager.getFirstMap(map.get("customer"));
-            if(mapTemp.containsKey("nickName")&&!TextUtils.isEmpty(mapTemp.get("nickName")))handlerTitleName(mapTemp.get("nickName"));
             initVipView(map.containsKey("type")?map.get("type"):"");
         }else if (dishHeaderViewNew != null&& !TextUtils.isEmpty(img))dishHeaderViewNew.setImg(img,0);
     }
@@ -239,11 +240,6 @@ public class DetailDishViewManager {
             dishTitleViewControl.setData(dishInfoMaps,code,isHasVideo,dishState,loadManager);
             dishTitleViewControl.setstate(state);
             dishTitleViewControl.setViewState();
-        }
-    }
-    public void handlerTitleName(String name){
-        if(dishTitleViewControl!=null){
-            dishTitleViewControl.setNickName(name);
         }
     }
 
@@ -296,7 +292,6 @@ public class DetailDishViewManager {
             if(list.get(0).containsKey("customer")){
                 Map<String,String> map = StringManager.getFirstMap(list.get(0).get("customer"));
                 handlerQAUserView(map);
-                if(map.containsKey("nickName")&&!TextUtils.isEmpty(map.get("nickName")))handlerTitleName(map.get("nickName"));
             }
         }
     }
@@ -547,7 +542,7 @@ public class DetailDishViewManager {
     class MyTimer {
         private Handler handler;
         private Timer timer;
-        private MyTimer.MyTask mTask;
+        private MyTask mTask;
         public MyTimer(Handler handler) {
             this.handler = handler;
             timer = new Timer();
@@ -557,7 +552,7 @@ public class DetailDishViewManager {
                 mTask.cancel();
                 mTask = null;
             }
-            mTask = new MyTimer.MyTask(handler);
+            mTask = new MyTask(handler);
             timer.schedule(mTask, 0, period);
         }
         public void cancel() {

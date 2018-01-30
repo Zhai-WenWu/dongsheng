@@ -68,6 +68,7 @@ import aplug.web.tools.WebviewManager;
 import aplug.web.view.XHWebView;
 import third.share.BarShare;
 import third.share.activity.ShareActivityDialog;
+import third.share.tools.ShareTools;
 import third.video.VideoPlayerController;
 
 import static amodule.article.activity.ArticleDetailActivity.TYPE_VIDEO;
@@ -84,10 +85,11 @@ import static amodule.article.adapter.ArticleDetailAdapter.Type_recommed;
 
 public class VideoDetailActivity extends BaseAppCompatActivity {
 
-    private TextView mTitle;
-    private ImageView rightButton,rightButtonFav;
+    private ImageView rightButton,rightButtonFav, integralTip;
     private RelativeLayout dredgeVipLayout;
     private RelativeLayout allTitleRelaPort;
+    private RelativeLayout mShareWechat;
+    private RelativeLayout mShareComments;
     private TextView dredgeVipImmediately;
 //    private PtrClassicFrameLayout refreshLayout;
     private ListView listView;
@@ -270,18 +272,8 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
 
     /** 初始化title */
     private void initTitle(View view) {
-        View leftClose = view.findViewById(R.id.leftClose);
-        leftClose.setVisibility(View.VISIBLE);
-        leftClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Main.colse_level = 1;
-                VideoDetailActivity.this.finish();
-            }
-        });
-        mTitle = (TextView) view.findViewById(R.id.title);
-        int dp85 = Tools.getDimen(this,R.dimen.dp_85);
-        mTitle.setPadding(dp85,0,dp85,0);
+        mShareWechat = (RelativeLayout) view.findViewById(R.id.share_wechat);
+        mShareComments = (RelativeLayout) view.findViewById(R.id.share_wechatcomments);
         rightButton = (ImageView) view.findViewById(R.id.rightImgBtn2);
         rightButtonFav = (ImageView) view.findViewById(R.id.rightImgBtn1);
         rightButtonFav.setVisibility(View.VISIBLE);
@@ -308,9 +300,40 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
                     startActivity(new Intent(VideoDetailActivity.this,LoginByAccout.class));
             }
         });
+
+        View.OnClickListener listener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (v.getId()) {
+                    case R.id.share_wechat:
+                        openShareSingle(ShareTools.WEI_XIN);
+                        statistics("微信分享点击", "");
+                        break;
+                    case R.id.share_wechatcomments:
+                        openShareSingle(ShareTools.WEI_QUAN);
+                        statistics("朋友圈分享点击", "");
+                        break;
+                }
+            }
+        };
+        mShareWechat.setOnClickListener(listener);
+        mShareComments.setOnClickListener(listener);
         if(loadFavState){
             rightButtonFav.setImageResource(isFav ? R.drawable.z_caipu_xiangqing_topbar_ico_fav_active : R.drawable.z_caipu_xiangqing_topbar_ico_fav);
         }
+    }
+
+    private void openShareSingle(String platform) {
+        Map<String, String> dataMap = new HashMap<>();
+        dataMap.put("type", shareMap.get("imgType"));
+        dataMap.put("title", shareMap.get("title"));
+        dataMap.put("url", shareMap.get("url"));
+        dataMap.put("content", shareMap.get("content"));
+        dataMap.put("img", shareMap.get("img"));
+        dataMap.put("from", "文章详情");
+        dataMap.put("platform", platform);
+        ShareTools tools = ShareTools.getBarShare(this);
+        tools.showSharePlatform(dataMap);
     }
 
     private void handlerFavorite(){
@@ -636,15 +659,10 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
                 && userCode.equals(LoginManager.userInfo.get("code"));
         mHaederLayout.setData(onlyUser,mapVideo,detailPermissionMap);
 
-        if(!TextUtils.isEmpty(customerData.get("nickName"))){
-            mTitle.setText(customerData.get("nickName"));
-            mTitle.setVisibility(View.VISIBLE);
-        }
         //获取是否可以编辑
         boolean hasEditPermission = "2".equals(mapVideo.get("isEdit"));
         //作者 或者 有编辑权限
         final boolean canEdit = isAuthor || hasEditPermission;
-        rightButton.setImageResource(canEdit ? R.drawable.i_ad_more : R.drawable.z_z_topbar_ico_share);
         rightButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -652,7 +670,7 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
                     showBottomDialog(isAuthor);
                 } else {
                     openShare();
-                    statistics("分享", "");
+                    statistics("分享按钮点击", "");
                 }
             }
         });
