@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -144,6 +145,8 @@ public class ListDish extends BaseActivity {
                         }
                         tempMap.put("img", tempMap.get("imgUrl"));
                         tempMap.put("adPosition", tempMap.get("index"));
+                        tempMap.put("adType", tempMap.get("type"));
+
                         adData.add(tempMap);
 
                     } else {
@@ -393,10 +396,7 @@ public class ListDish extends BaseActivity {
 
                     }
                     loadPage = returnList.size();
-                    if (!type.equals("recommend") && !type.equals("typeRecommend")) {
-                        //插入广告。
-                        returnList = handlerAdData(returnList);
-                    }
+
                     for (int i = 0; i < returnList.size(); i++) {
                         Map<String, String> map = returnList.get(i);
                         if (i == 0) shareImg = returnList.get(i).get("img");
@@ -414,6 +414,10 @@ public class ListDish extends BaseActivity {
                             map.put("hasVideo", "1");
                         }
                         arrayList.add(map);
+                    }
+                    if (!type.equals("recommend") && !type.equals("typeRecommend")) {
+                        //插入广告。
+                        arrayList = handlerAdData(arrayList);
                     }
                     adapter.notifyDataSetChanged();
                 }
@@ -506,11 +510,13 @@ public class ListDish extends BaseActivity {
             int lenght = AD_INSTERT_INDEX.length;
             for (int j = 0; j < lenght; j++) {
                 if (i == AD_INSTERT_INDEX[j]) {//是要插广告的位置
+                    Log.i("tzy", "handlerAdData: ==");
                     //数据无不是广告直接插入广告
                     if (!listData.get(i).containsKey("adStyle") || TextUtils.isEmpty(listData.get(i).get("adStyle"))) {
                         //插入广告
                         if (adData.get(j) != null && adData.get(j).size() > 0) {//数据
                             listData.add(i , adData.get(j));
+                            Log.i("tzy", "handlerAdData: add");
                         }
                     }//不进行如何操作。
                 }

@@ -27,6 +27,9 @@ import acore.tools.ToolsDevice;
 import third.ad.scrollerAd.XHAllAdControl;
 import third.ad.tools.AdPlayIdConfig;
 
+import static third.ad.scrollerAd.XHScrollerAdParent.ADKEY_GDT;
+import static third.ad.scrollerAd.XHScrollerAdParent.ID_AD_ICON_GDT;
+
 /**
  * 处理数据的小贴士下的广告
  */
@@ -149,6 +152,15 @@ public class DishAdDataViewNew extends ItemBaseView {
         setAdHintClick(R.id.ad_big_pic_flag);
         //添加到parent
         addViewToPraent(R.id.ad_big_pic_layout, parentView);
+
+        setIconVisibility(ID_AD_ICON_GDT,ADKEY_GDT.equals(map.get("type")));
+    }
+
+    private void setIconVisibility(int id,boolean isVisibility){
+        View view =  findViewById(id);
+        if(view != null){
+            view.setVisibility(isVisibility ? VISIBLE : GONE);
+        }
     }
 
     /**

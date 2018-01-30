@@ -58,6 +58,8 @@ import xh.basic.tool.UtilImage;
 import xh.basic.tool.UtilString;
 
 import static amodule.dish.activity.DetailDishWeb.tongjiId;
+import static third.ad.scrollerAd.XHScrollerAdParent.ADKEY_GDT;
+import static third.ad.scrollerAd.XHScrollerAdParent.ID_AD_ICON_GDT;
 
 /**
  * Created by Administrator on 2016/9/21.
@@ -351,6 +353,11 @@ public class DishHeaderViewNew extends LinearLayout {
         String imgUrl = null;
         if (map.containsKey("imgUrl")) imgUrl = map.get("imgUrl");
         if (TextUtils.isEmpty(imgUrl)) return;
+
+        View gdtIcon = view.findViewById(ID_AD_ICON_GDT);
+        if(gdtIcon != null){
+            gdtIcon.setVisibility(ADKEY_GDT.equals(map.get("type"))?VISIBLE:GONE);
+        }
 
         view.findViewById(R.id.ad_gdt_video_hint_layout).setOnClickListener(new OnClickListener() {
             @Override

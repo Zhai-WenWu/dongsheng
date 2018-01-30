@@ -29,6 +29,9 @@ import amodule.article.view.RecommendItemView;
 import amodule.article.view.richtext.RichParser;
 import amodule.article.view.richtext.RichURLSpan;
 
+import static third.ad.scrollerAd.XHScrollerAdParent.ADKEY_GDT;
+import static third.ad.scrollerAd.XHScrollerAdParent.ID_AD_ICON_GDT;
+
 /**
  * 文章详情页adapter
  */
@@ -228,6 +231,11 @@ public class ArticleDetailAdapter extends BaseAdapter {
                             mOnADCallback.onClick(view, index, "" + (index + 1));
                         }
                     });
+                    //adtype
+                    View adIcon = view.findViewById(ID_AD_ICON_GDT);
+                    if(adIcon != null){
+                        adIcon.setVisibility(ADKEY_GDT.equals(map.get("adtype"))?View.VISIBLE:View.GONE);
+                    }
                 }
             }
         }

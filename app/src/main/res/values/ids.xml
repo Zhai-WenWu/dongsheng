@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="image_path" type="id"/>
+
+    <item name="icon_ad_gdt" type="id"/>
+    <item name="icon_ad_baidu" type="id"/>
+    <item name="icon_ad_api" type="id"/>
 </resources>

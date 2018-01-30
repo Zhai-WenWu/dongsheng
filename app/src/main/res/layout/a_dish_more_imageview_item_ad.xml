@@ -12,6 +12,15 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"/>
 
+    <ImageView
+        android:id="@id/icon_ad_gdt"
+        android:src="@drawable/icon_ad_gdt"
+        android:layout_alignBottom="@+id/view_ad_img"
+        android:layout_alignRight="@+id/view_ad_img"
+        android:visibility="gone"
+        android:layout_width="@dimen/dp_49"
+        android:layout_height="@dimen/dp_16" />
+
     <RelativeLayout
         android:id="@+id/a_dish_more_img_item_content_parent_rl"
         android:layout_width="match_parent"

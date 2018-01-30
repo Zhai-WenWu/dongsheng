@@ -23,6 +23,15 @@
             android:visibility="gone" />
 
         <ImageView
+            android:id="@id/icon_ad_gdt"
+            android:src="@drawable/icon_ad_gdt"
+            android:layout_alignRight="@+id/img"
+            android:layout_alignBottom="@+id/img"
+            android:visibility="gone"
+            android:layout_width="@dimen/dp_49"
+            android:layout_height="@dimen/dp_16" />
+
+        <ImageView
             android:id="@+id/play_img"
             android:layout_width="@dimen/dp_45"
             android:layout_height="@dimen/dp_45"

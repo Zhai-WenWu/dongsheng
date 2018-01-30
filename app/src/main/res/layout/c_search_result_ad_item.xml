@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="fill_parent"
-                android:background="#FFFFFF"
-                android:layout_height="wrap_content">
+    android:layout_width="fill_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="#FFFFFF"
+    android:layout_height="wrap_content">
 
     <RelativeLayout
         android:id="@+id/rl_ad"
@@ -19,6 +20,16 @@
             android:layout_marginRight="@dimen/dp_10"
             android:scaleType="fitXY"
             android:src="@drawable/i_nopic"/>
+        
+        <ImageView
+            android:id="@id/icon_ad_gdt"
+            android:layout_width="@dimen/dp_40"
+            android:layout_height="@dimen/dp_13.5"
+            tools:visibility="visible"
+            android:visibility="gone"
+            android:layout_alignRight="@+id/iv_adCover"
+            android:layout_alignBottom="@+id/iv_adCover"
+            android:src="@drawable/icon_ad_gdt"/>
 
         <LinearLayout
             android:layout_width="match_parent"

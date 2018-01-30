@@ -73,6 +73,7 @@ public class FragmentNous {
         adArray.clear();
         ArrayList<String> adPosList = new ArrayList<>();
         Collections.addAll(adPosList, MAIN_HOME_ZHISHI_LIST);
+        //TODO
         xhAllAdControl = new XHAllAdControl(adPosList, new XHAllAdControl.XHBackIdsDataCallBack() {
             @Override
             public void callBack(Map<String, String> map) {

@@ -51,6 +51,9 @@ import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
 import third.ad.scrollerAd.XHAllAdControl;
 
+import static third.ad.scrollerAd.XHScrollerAdParent.ADKEY_GDT;
+import static third.ad.scrollerAd.XHScrollerAdParent.ID_AD_ICON_GDT;
+
 /**
  * Description :
  * PackageName : amodule._common.widget
@@ -233,6 +236,10 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
                             AppCommon.setAdHintClick(XHActivityManager.getInstance().getCurrentActivity(), v, mAdControl, 0, "")
                     );
                     icon.setVisibility(VISIBLE);
+                    View gdtIcon = view.findViewById(ID_AD_ICON_GDT);
+                    if(gdtIcon != null){
+                        gdtIcon.setVisibility(ADKEY_GDT.equals(data.get("type"))?VISIBLE:GONE);
+                    }
                 } else {
                     view.findViewById(R.id.ad_layout).setVisibility(GONE);
                 }
@@ -332,6 +339,7 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
             String desc = adDataMap.get("desc");
             String text = TextUtils.equals(title, desc) ? desc : title + " | " + desc;
             adMap.put("title", text);
+            adMap.put("type", adDataMap.get("type"));
             if (!mArrayList.isEmpty()
                     && !adMap.isEmpty()
                     && !mArrayList.contains(adMap)

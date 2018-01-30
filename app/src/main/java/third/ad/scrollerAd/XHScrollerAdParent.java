@@ -4,6 +4,8 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.View;
 
+import com.xiangha.R;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,6 +27,10 @@ public abstract class XHScrollerAdParent {
     public static final String TAG_API = "api";
     public static final String TAG_BANNER = "personal";
     public static final String TAG_BAIDU = "baidu";
+
+    public static final int ID_AD_ICON_GDT = R.id.icon_ad_gdt;
+    public static final int ID_AD_ICON_BAIDU = R.id.icon_ad_baidu;
+    public static final int ID_AD_ICON_API = R.id.icon_ad_api;
 
     public int num;//当前存在的位置--针对的是一个广告位
     public String mAdPlayId = "";//广告位置id

@@ -36,6 +36,8 @@ import third.ad.scrollerAd.XHAllAdControl;
 
 import static amodule.article.adapter.ArticleDetailAdapter.TYPE_KEY;
 import static amodule.article.adapter.ArticleDetailAdapter.Type_recommed;
+import static third.ad.scrollerAd.XHScrollerAdParent.ADKEY_GDT;
+import static third.ad.scrollerAd.XHScrollerAdParent.ID_AD_ICON_GDT;
 import static third.ad.tools.AdPlayIdConfig.ARTICLE_CONTENT_BOTTOM;
 import static third.ad.tools.AdPlayIdConfig.ARTICLE_RECM_1;
 import static third.ad.tools.AdPlayIdConfig.ARTICLE_RECM_2;
@@ -227,6 +229,10 @@ public class ArticleAdContrler {
             layoutParams.setMargins(dp_20, dp_17, dp_20, dp_17);
             adView.setLayoutParams(layoutParams);
         }
+        View view =  adView.findViewById(ID_AD_ICON_GDT);
+        if(view != null){
+            view.setVisibility(ADKEY_GDT.equals(dataMap.get("type")) ? View.VISIBLE : View.GONE);
+        }
         //设置ad点击
         if(adView != null){
             setAdClick(adView);
@@ -303,6 +309,7 @@ public class ArticleAdContrler {
             dataMap.put("customer", new JSONObject().put("nickName", adMap.get("title")).toString());
             dataMap.put("clickAll", Tools.getRandom(200, 5000) + "浏览");
             dataMap.put("commentNumber", "");
+            dataMap.put("adtype", adMap.get("type"));
         } catch (JSONException e) {
             e.printStackTrace();
         }

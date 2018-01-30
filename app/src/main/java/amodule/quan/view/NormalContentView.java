@@ -16,6 +16,9 @@ import acore.tools.StringManager;
 import amodule.quan.tool.NormarlContentData;
 import xh.windowview.BottomDialog;
 
+import static third.ad.scrollerAd.XHScrollerAdParent.ADKEY_GDT;
+import static third.ad.scrollerAd.XHScrollerAdParent.ID_AD_ICON_GDT;
+
 /**
  * 正常贴子内容
  */
@@ -202,6 +205,11 @@ public class NormalContentView extends CircleItemBaseRelativeLayout {
             setShowUpload(false);
         }
         setShowIndex();
+
+        View view = findViewById(ID_AD_ICON_GDT);
+        if(view != null){
+            view.setVisibility(ADKEY_GDT.equals(map.get("adType"))?VISIBLE:GONE);
+        }
     }
 
     /**

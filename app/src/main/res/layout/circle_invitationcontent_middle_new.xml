@@ -46,6 +46,15 @@
         android:scaleType="centerCrop"
         android:src="@drawable/i_nopic" />
 
+    <ImageView
+        android:id="@id/icon_ad_gdt"
+        android:visibility="gone"
+        android:layout_alignRight="@+id/image_one"
+        android:layout_alignBottom="@+id/image_one"
+        android:src="@drawable/icon_ad_gdt"
+        android:layout_width="@dimen/dp_49"
+        android:layout_height="@dimen/dp_16" />
+
     <LinearLayout
         android:id="@+id/ll_imgs"
         android:layout_width="match_parent"

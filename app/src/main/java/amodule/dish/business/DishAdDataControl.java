@@ -34,6 +34,7 @@ public class DishAdDataControl {
         for (String posStr : COMMEND_THREE_MEALS) {
             adPosList.add(posStr);
         }
+        //TODO
         xhAllAdControl = new XHAllAdControl(adPosList, new XHAllAdControl.XHBackIdsDataCallBack() {
             @Override
             public void callBack(Map<String, String> map) {

@@ -24,6 +24,9 @@ import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
 import third.ad.scrollerAd.XHAllAdControl;
 
+import static third.ad.scrollerAd.XHScrollerAdParent.ADKEY_GDT;
+import static third.ad.scrollerAd.XHScrollerAdParent.ID_AD_ICON_GDT;
+
 /**
  * 图片预览单个view
  * Created by XiangHa on 2016/8/16.
@@ -76,9 +79,19 @@ public class ImageMoreAdView extends ImageMoreView implements View.OnClickListen
             }else{
                 mAdHint.setVisibility(View.VISIBLE);
             }
+            setGdtIconVisibility(map);
         }
         mContentParentRl.setOnClickListener(this);
         AppCommon.setAdHintClick(mAct,mAdHint,mXhadControl,0,"");
+    }
+
+    private void setGdtIconVisibility(Map<String,String> data){
+        if(mParentView != null){
+            View gdtIcon = mParentView.findViewById(ID_AD_ICON_GDT);
+            if(gdtIcon != null){
+                gdtIcon.setVisibility(ADKEY_GDT.equals(data.get("type"))?View.VISIBLE:View.GONE);
+            }
+        }
     }
 
     private void setAdView(String title, final String desc, String imageUrl){

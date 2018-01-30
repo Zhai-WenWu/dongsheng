@@ -60,7 +60,6 @@ import amodule.dish.db.UploadDishSqlite;
 import amodule.dish.tools.OffDishToFavoriteControl;
 import amodule.dish.tools.UploadDishControl;
 import amodule.main.Main;
-import amodule.main.view.home.HomeToutiaoAdControl;
 import amodule.quan.db.SubjectData;
 import amodule.quan.db.SubjectSqlite;
 import amodule.search.db.MatchWordsDbUtil;
@@ -122,7 +121,7 @@ public class MainInitDataControl {
                 MobclickAgent.setDebugMode(true);
 
                 //待处理问题。
-                HomeToutiaoAdControl.getInstance().getAdData(activity);
+//                HomeToutiaoAdControl.getInstance().getAdData(activity);
                 ToolsDevice.saveXhIMEI(activity);
             }
         }.start();

@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -21,6 +20,9 @@ import acore.tools.SyntaxTools;
 import acore.widget.ImageViewVideo;
 import third.ad.scrollerAd.XHAllAdControl;
 import third.ad.scrollerAd.XHScrollerAdParent;
+
+import static third.ad.scrollerAd.XHScrollerAdParent.ADKEY_GDT;
+import static third.ad.scrollerAd.XHScrollerAdParent.ID_AD_ICON_GDT;
 
 
 /**
@@ -233,6 +235,10 @@ public class SearchResultAdViewGenerater {
             TextView tv_ad_name = (TextView) adView.findViewById(R.id.tv_ad_name);
             TextView tv_ad_decrip = (TextView) adView.findViewById(R.id.tv_ad_decrip);
             TextView tv_ad_observed = (TextView) adView.findViewById(R.id.tv_ad_observed);
+            ImageView icon_gdt = (ImageView) adView.findViewById(ID_AD_ICON_GDT);
+            if(icon_gdt != null){
+                icon_gdt.setVisibility(ADKEY_GDT.equals(dataMap.get("type"))?View.VISIBLE:View.GONE);
+            }
             setViewImage(cover_img, TextUtils.isEmpty(imageUrl) ? iconUrl : imageUrl);
 
             if (TextUtils.isEmpty(title)) {

@@ -46,6 +46,9 @@ import third.ad.scrollerAd.XHAllAdControl;
 import third.ad.tools.AdPlayIdConfig;
 import third.video.VideoPlayerController;
 
+import static third.ad.scrollerAd.XHScrollerAdParent.ADKEY_GDT;
+import static third.ad.scrollerAd.XHScrollerAdParent.ID_AD_ICON_GDT;
+
 /**
  * PackageName : amodule.article.view
  * Created by MrTrying on 2017/6/20 11:55.
@@ -214,6 +217,11 @@ public class VideoHeaderView extends RelativeLayout {
         String imgUrl = null;
         if (map.containsKey("imgUrl")) imgUrl = map.get("imgUrl");
         if (TextUtils.isEmpty(imgUrl)) return;
+
+        View gdtIcon = view.findViewById(ID_AD_ICON_GDT);
+        if(gdtIcon != null){
+            gdtIcon.setVisibility(ADKEY_GDT.equals(map.get("type"))?VISIBLE:GONE);
+        }
 
         view.findViewById(R.id.ad_gdt_video_hint_layout).setOnClickListener(new OnClickListener() {
             @Override

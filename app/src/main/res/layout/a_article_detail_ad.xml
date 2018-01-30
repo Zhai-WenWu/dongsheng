@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/transparent">
 
     <RelativeLayout
@@ -19,6 +19,16 @@
             android:layout_height="wrap_content"
             android:background="@color/transparent"
             android:visibility="visible"/>
+
+        <ImageView
+            android:id="@id/icon_ad_gdt"
+            android:src="@drawable/icon_ad_gdt"
+            android:layout_alignBottom="@+id/img"
+            android:layout_alignRight="@+id/img"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:layout_width="@dimen/dp_40"
+            android:layout_height="@dimen/dp_13.5" />
 
         <View
             android:id="@+id/layer_view"

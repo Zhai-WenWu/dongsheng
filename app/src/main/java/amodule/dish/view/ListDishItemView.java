@@ -30,6 +30,9 @@ import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
 import xh.basic.tool.UtilImage;
 
+import static third.ad.scrollerAd.XHScrollerAdParent.ADKEY_GDT;
+import static third.ad.scrollerAd.XHScrollerAdParent.ID_AD_ICON_GDT;
+
 /**
  * 菜单列表Item
  * Created by sll on 2017/6/21.
@@ -60,6 +63,8 @@ public class ListDishItemView extends RelativeLayout {
     private RelativeLayout mTopContainer;
     private LinearLayout mUserContainer;
     private View mLayerView;
+    private View adGDTIcon;
+
 
     private boolean mIsAD;
 
@@ -101,6 +106,7 @@ public class ListDishItemView extends RelativeLayout {
         mTopContainer = (RelativeLayout) findViewById(R.id.top_container);
         mUserContainer = (LinearLayout) findViewById(R.id.user_container);
         mLayerView = findViewById(R.id.layer_view);
+        adGDTIcon = findViewById(ID_AD_ICON_GDT);
         addListener();
     }
 
@@ -204,6 +210,9 @@ public class ListDishItemView extends RelativeLayout {
         mIconSearch.setVisibility(mIsAD ? View.GONE : View.VISIBLE);
         mLayerView.setVisibility(mIsAD ? View.VISIBLE : View.GONE);
         mADTag.setVisibility(mIsAD ? View.VISIBLE : View.GONE);
+        if(adGDTIcon != null){
+            adGDTIcon.setVisibility(ADKEY_GDT.equals(mData.get("adType")) ? VISIBLE : GONE);
+        }
 
         if (mTitleTop.getVisibility() == View.VISIBLE || mIconSearch.getVisibility() == View.VISIBLE)
             mTopContainer.setVisibility(View.VISIBLE);

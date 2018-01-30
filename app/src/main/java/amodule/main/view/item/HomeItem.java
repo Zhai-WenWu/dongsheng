@@ -43,6 +43,9 @@ import third.ad.control.AdControlParent;
 import third.ad.scrollerAd.XHScrollerAdParent;
 import third.mall.activity.CommodDetailActivity;
 
+import static third.ad.scrollerAd.XHScrollerAdParent.ADKEY_GDT;
+import static third.ad.scrollerAd.XHScrollerAdParent.ID_AD_ICON_GDT;
+
 /**
  * 首页内容列表的父Item
  * Created by sll on 2017/4/18.
@@ -311,6 +314,7 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
     @Override
     public void setData(Map<String, String> dataMap, int position) {
         super.setData(dataMap, position);
+        isShowGDTIcon(dataMap);
         //设置监听
         if (mTimeTagContainer != null)
             mTimeTagContainer.setOnClickListener(new View.OnClickListener() {
@@ -584,6 +588,14 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
             size[0] = fixedWidth;
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    protected void isShowGDTIcon(Map<String,String> dataMap){
+        View view = findViewById(ID_AD_ICON_GDT);
+        if(view != null){
+            boolean isShow = dataMap!= null&&ADKEY_GDT.equals(dataMap.get("adClass"));
+            view.setVisibility(isShow ? VISIBLE : GONE);
         }
     }
 }

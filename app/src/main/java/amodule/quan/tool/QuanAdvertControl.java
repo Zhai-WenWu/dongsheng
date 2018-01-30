@@ -151,7 +151,7 @@ public class QuanAdvertControl {
      */
     private void setAdList(final String index, final String indexInData, final String title,
                            final String desc, final String iconUrl, String imageUrl,
-                           final String adstyle,String adTag,String controlTag) {
+                           final String adstyle,String adTag,String controlTag,String adType) {
         String url = "";
         if (!TextUtils.isEmpty(imageUrl)) {
             url = imageUrl;
@@ -163,6 +163,7 @@ public class QuanAdvertControl {
         map.put("controlTag",controlTag);
         map.put("title", "");
         map.put("hideAdTag", adTag);
+        map.put("adType", adType);
         map.put("isPromotion", "1");
         map.put("adStyle", adstyle);
         map.put("promotionIndex", String.valueOf(index));
@@ -241,10 +242,10 @@ public class QuanAdvertControl {
                             if (homeAdMap != null && homeAdMap.size() > 0) {
                                 if (XHScrollerAdParent.ADKEY_BANNER.equals(homeAdMap.get("type"))) {
                                     setAdList((i + 1) + "", homeAdMap.get("index"), homeAdMap.get("title"), homeAdMap.get("desc"),
-                                            homeAdMap.get("iconUrl"), homeAdMap.get("imgUrl2"), "ad", homeAdMap.get("adType"),controlTag);
+                                            homeAdMap.get("iconUrl"), homeAdMap.get("imgUrl2"), "ad", homeAdMap.get("adType"),controlTag,homeAdMap.get("type"));
                                 } else {
                                     setAdList((i + 1) + "", homeAdMap.get("index"), homeAdMap.get("title"), homeAdMap.get("desc"),
-                                            homeAdMap.get("iconUrl"), homeAdMap.get("imgUrl"), "ad", homeAdMap.get("adType"),controlTag);
+                                            homeAdMap.get("iconUrl"), homeAdMap.get("imgUrl"), "ad", homeAdMap.get("adType"),controlTag,homeAdMap.get("type"));
                                 }
                             }
                         }
