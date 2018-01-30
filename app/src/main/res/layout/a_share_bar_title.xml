@@ -4,7 +4,7 @@
     android:layout_width="wrap_content"
     android:layout_height="@dimen/topbar_height"
     android:background="@color/transparent"
-    android:paddingLeft="@dimen/dp_14">
+    android:paddingLeft="@dimen/dp_11">
 
     <RelativeLayout
         android:id="@+id/share_wechat"
@@ -15,7 +15,7 @@
             android:id="@+id/wechat_tip"
             android:layout_width="@dimen/dp_32"
             android:layout_height="@dimen/dp_14"
-            android:layout_marginLeft="@dimen/dp_3"
+            android:layout_marginLeft="@dimen/dp_2"
             android:scaleType="centerInside"
             android:src="@drawable/img_integral_tip"
             android:visibility="invisible" />
@@ -35,13 +35,12 @@
         android:layout_height="match_parent"
         android:layout_toRightOf="@+id/share_wechat"
         android:paddingLeft="@dimen/dp_6"
-        android:layout_marginLeft="@dimen/dp_11">
+        android:layout_marginLeft="@dimen/dp_9">
 
         <ImageView
             android:id="@+id/comments_tip"
             android:layout_width="@dimen/dp_32"
             android:layout_height="@dimen/dp_14"
-            android:layout_marginLeft="@dimen/dp_1"
             android:scaleType="centerInside"
             android:src="@drawable/img_integral_tip"
             android:visibility="invisible" />
