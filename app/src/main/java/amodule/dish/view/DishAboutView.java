@@ -158,6 +158,7 @@ public class DishAboutView extends ItemBaseView {
 
         cusImg.setOnClickListener(onClickListener);
         dish_user_name.setOnClickListener(onClickListener);
+        dish_user_time.setOnClickListener(onClickListener);
     }
 
     /**
