@@ -134,6 +134,10 @@ public class CleanVideoPlayer extends FrameLayout implements GSYMediaPlayerListe
         });
 
         mAudioManager = (AudioManager) getActivityContext().getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
+
+        createNetWorkState();
+        listenerNetWorkState();
+
     }
 
     public Context getActivityContext() {
@@ -435,8 +439,8 @@ public class CleanVideoPlayer extends FrameLayout implements GSYMediaPlayerListe
             onVideoReset();
             e.printStackTrace();
         }
-        createNetWorkState();
-        listenerNetWorkState();
+
+
 //        mHadPlay = true;
     }
 
@@ -582,9 +586,15 @@ public class CleanVideoPlayer extends FrameLayout implements GSYMediaPlayerListe
                     && !mGSYVideoManager.getMediaPlayer().isPlaying()) {
                 if (mCurrentPosition > 0 && mGSYVideoManager.getMediaPlayer() != null) {
                     setStateAndUi(CURRENT_STATE_PLAYING);
-                    mGSYVideoManager.getMediaPlayer().seekTo(mCurrentPosition);
-                    Log.i("CleanVideo","mCurrentPosition = " + mCurrentPosition);
                     mGSYVideoManager.getMediaPlayer().start();
+                    postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            mGSYVideoManager.getMediaPlayer().seekTo(mCurrentPosition);
+                        }
+                    } ,200);
+
+                    Log.i("CleanVideo","mCurrentPosition = " + mCurrentPosition);
                 }
             }
         }catch (Exception igored){
