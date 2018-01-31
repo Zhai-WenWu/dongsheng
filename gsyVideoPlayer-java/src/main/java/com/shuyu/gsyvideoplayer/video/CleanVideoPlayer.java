@@ -573,6 +573,7 @@ public class CleanVideoPlayer extends FrameLayout implements GSYMediaPlayerListe
         }catch (Exception e){
             onVideoReset();
             e.printStackTrace();
+            Log.i("CleanVideo","onVideoPause::" + e.getMessage());
         }
     }
 
@@ -586,15 +587,9 @@ public class CleanVideoPlayer extends FrameLayout implements GSYMediaPlayerListe
                     && !mGSYVideoManager.getMediaPlayer().isPlaying()) {
                 if (mCurrentPosition > 0 && mGSYVideoManager.getMediaPlayer() != null) {
                     setStateAndUi(CURRENT_STATE_PLAYING);
-                    mGSYVideoManager.getMediaPlayer().start();
-                    postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            mGSYVideoManager.getMediaPlayer().seekTo(mCurrentPosition);
-                        }
-                    } ,200);
-
+                    mGSYVideoManager.getMediaPlayer().seekTo(mCurrentPosition);
                     Log.i("CleanVideo","mCurrentPosition = " + mCurrentPosition);
+                    mGSYVideoManager.getMediaPlayer().start();
                 }
             }
         }catch (Exception igored){
