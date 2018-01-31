@@ -807,12 +807,14 @@ public class ArticleDetailActivity extends BaseActivity {
         dialog.addButton("分享", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dialog.dismiss();
                 openShare();
                 statistics("更多", "分享");
             }
         }).addButton("编辑", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dialog.dismiss();
                 Intent intent = new Intent(ArticleDetailActivity.this, ArticleEidtActivity.class);
                 intent.putExtra("code", code);
                 startActivity(intent);
@@ -825,6 +827,7 @@ public class ArticleDetailActivity extends BaseActivity {
             dialog.addButton("删除", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    dialog.dismiss();
                     openDeleteDialog();
                 }
             });

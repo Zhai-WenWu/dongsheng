@@ -900,12 +900,14 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
         dialog.addButton("分享", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dialog.dismiss();
                 openShare();
                 statistics("更多", "分享");
             }
         }).addButton("编辑", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dialog.dismiss();
                 Intent intent = new Intent(VideoDetailActivity.this, VideoEditActivity.class);
                 intent.putExtra("code", code);
                 startActivity(intent);
@@ -918,6 +920,7 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
             dialog.addButton("删除", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    dialog.dismiss();
                     openDeleteDialog();
                 }
             });
