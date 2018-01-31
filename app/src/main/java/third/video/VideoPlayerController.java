@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import acore.logic.XHClick;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -67,6 +68,7 @@ public class VideoPlayerController {
     public int autoRetryCount = 0;
     public boolean isPortrait = false;
     public boolean isFullScreenAuto = false;
+    protected String staticId = "";
 
     public StandardGSYVideoPlayer videoPlayer;
     protected OrientationUtils orientationUtils;
@@ -104,12 +106,25 @@ public class VideoPlayerController {
         videoPlayer.getTitleTextView().setVisibility(View.GONE);
         videoPlayer.setShowFullAnimation(false);
         videoPlayer.getFullscreenButton().setOnClickListener(v -> {
+            handlerStatic("全屏按钮");
             if (mFullScreenClickListener != null) {
                 mFullScreenClickListener.onClick(videoPlayer.getFullscreenButton());
                 return;
             }
             //第一个true是否需要隐藏actionbar，第二个true是否需要隐藏statusbar
             videoPlayer.startWindowFullscreen(context, true, true);
+        });
+        videoPlayer.setOnSeekToOverCallback(() -> handlerStatic("拖动进度条"));
+        videoPlayer.setOnClickStartCallback(new GSYVideoPlayer.OnClickStartCallback() {
+            @Override
+            public void onStart() {
+                handlerStatic("播放按钮");
+            }
+
+            @Override
+            public void onPause() {
+                handlerStatic("暂停按钮");
+            }
         });
         videoPlayer.setOnBottomContainerVisibilityChangeCallback(visibility -> {
             if(mOnSeekbarVisibilityListener != null){
@@ -234,6 +249,7 @@ public class VideoPlayerController {
             }
         });
         videoPlayer.setClingClickListener(v -> {
+            handlerStatic("投屏按钮");
             if (mClingClickListener != null) {
                 mClingClickListener.onClick(v);
                 return;
@@ -244,6 +260,12 @@ public class VideoPlayerController {
             }
             mClingControl.showPopup(context);
         });
+    }
+
+    private void handlerStatic(String threeValue) {
+        if(!TextUtils.isEmpty(staticId) && !TextUtils.isEmpty(threeValue)){
+            XHClick.mapStat(mContext,staticId,"视频",threeValue);
+        }
     }
 
     public void setFullScreenClickListener(OnClickListener clickListener) {
@@ -847,6 +869,10 @@ public class VideoPlayerController {
             mPraentViewGroup.removeView(clingOptionView);
             clingOptionView.hide();
         }
+    }
+
+    public void setStaticId(String staticId) {
+        this.staticId = staticId;
     }
 
     private OnVideoCanPlayCallback mOnVideoCanPlayCallback;

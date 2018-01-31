@@ -139,6 +139,8 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
 
     protected OnProgressChangedCallback onProgressChangedCallback = null;//播放进度callback
 
+    protected OnClickStartCallback mOnClickStartCallback;
+
     /**
      * 当前UI
      */
@@ -380,8 +382,10 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
                     return;
                 }
                 startButtonLogic();
+                handlerClickOnStart();
             } else if (mCurrentState == CURRENT_STATE_PLAYING) {
                 try{
+                    handlerClickOnPause();
                     if(mGSYVideoManager.getMediaPlayer() != null)
                         mGSYVideoManager.getMediaPlayer().pause();
                 }catch (Exception e){
@@ -409,6 +413,7 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
                     }
                 }
                 try{
+                    handlerClickOnStart();
                     if(mGSYVideoManager.getMediaPlayer() != null)
                         mGSYVideoManager.getMediaPlayer().start();
                 }catch (Exception e){
@@ -418,6 +423,7 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
                 setStateAndUi(CURRENT_STATE_PLAYING);
             } else if (mCurrentState == CURRENT_STATE_AUTO_COMPLETE) {
                 startButtonLogic();
+                handlerClickOnStart();
             }
         } else if (i == R.id.surface_container && mCurrentState == CURRENT_STATE_ERROR) {
             if (mVideoAllCallBack != null) {
@@ -1544,11 +1550,28 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
         return gsyVideoPlayer;
     }
 
+    private void handlerClickOnStart(){
+        if(mOnClickStartCallback != null){
+            mOnClickStartCallback.onStart();
+        }
+    }
+
+    private void handlerClickOnPause(){
+        if(mOnClickStartCallback != null){
+            mOnClickStartCallback.onPause();
+        }
+    }
+
     /**
      * ------------------------------------------------------------------ 回调部分 ------------------------------------------------------------------
      */
     public interface OnProgressChangedCallback{
         void onProgressChanged(int progress, int secProgress, int currentTime, int totalTime);
+    }
+
+    public interface OnClickStartCallback{
+        void onStart();
+        void onPause();
     }
 
     /**
@@ -1563,5 +1586,7 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
         this.onProgressChangedCallback = onProgressChangedCallback;
     }
 
-
+    public void setOnClickStartCallback(OnClickStartCallback onClickStartCallback) {
+        mOnClickStartCallback = onClickStartCallback;
+    }
 }

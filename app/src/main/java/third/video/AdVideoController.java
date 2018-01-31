@@ -19,7 +19,9 @@ import java.util.Map;
 import acore.logic.AdVideoConfigTool;
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
+import acore.logic.XHClick;
 import acore.override.helper.XHActivityManager;
+import acore.tools.StringManager;
 import acore.widget.TagTextView;
 import amodule._common.utility.WidgetUtility;
 
@@ -45,6 +47,7 @@ public class AdVideoController {
     private CleanVideoPlayer.OnProgressChangedCallback mOnProgressChangedCallback;
     private CleanVideoPlayer.NetworkNotifyListener mNetworkNotifyListener;
     private CleanVideoPlayer.NetworkNotifyListener mInnerListener;
+    private OnSikpCallback mOnSikpCallback;
 
     private AdVideoConfigTool mConfigTool;
 
@@ -53,6 +56,7 @@ public class AdVideoController {
     private boolean isComplete = false;
     private String currentVideo = "";
     private long startTime;
+    private String staticId = "";
 
     public AdVideoController(@NonNull Context context) {
         startTime = System.currentTimeMillis();
@@ -116,7 +120,7 @@ public class AdVideoController {
                     }
                 }
         );
-        if(mInnerListener == null){
+        if (mInnerListener == null) {
             mInnerListener = new CleanVideoPlayer.NetworkNotifyListener() {
                 @Override
                 public void wifiConnected() {
@@ -165,9 +169,22 @@ public class AdVideoController {
         TagTextView seeDetailView = (TagTextView) view.findViewById(R.id.see_detail);
         mCountDownTv = (TextView) view.findViewById(R.id.ad_gdt_video_num);
         //设置去除vip点击
-        AppCommon.setAdHintClick(XHActivityManager.getInstance().getCurrentActivity(), vipLead, null, 0, "");
+        vipLead.setOnClickListener(
+                v -> {
+                    AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(),
+                            StringManager.getVipUrl(true) + "&vipFrom=视频贴片广告会员免广告", true);
+                    if(!TextUtils.isEmpty(staticId)){
+                        XHClick.mapStat(mContext,staticId,"视频广告","会员去广告");
+                    }
+                }
+        );
         skipView.setOnClickListener(v -> sikp());
-        seeDetailView.setOnClickListener(v -> AppCommon.openUrl(configData.get("clickUrl"), false));
+        seeDetailView.setOnClickListener(v -> {
+            AppCommon.openUrl(configData.get("clickUrl"), false);
+            if(!TextUtils.isEmpty(staticId)){
+                XHClick.mapStat(mContext,staticId,"视频广告","查看商品详情");
+            }
+        });
 
         WidgetUtility.setTextToView(seeDetailView, configData.get("title"));
         setAdLayout(view);
@@ -184,8 +201,8 @@ public class AdVideoController {
     public void sikp() {
         onPause();
         onDestroy();
-        if (mOnCompleteCallback != null) {
-            mOnCompleteCallback.onComplete();
+        if (mOnSikpCallback != null) {
+            mOnSikpCallback.onSkip();
         }
     }
 
@@ -210,9 +227,9 @@ public class AdVideoController {
         if (null != mAdVideoPlayer && !TextUtils.isEmpty(currentVideo)) {
             mAdVideoPlayer.setUp(currentVideo);
             mAdVideoPlayer.startPalyVideo();
-            if(monStartCallback!=null )monStartCallback.onStart(isRemoteUrl());
+            if (monStartCallback != null) monStartCallback.onStart(isRemoteUrl());
             Log.i("tzy", "start: " + (System.currentTimeMillis() - startTime));
-        }else if (mOnErrorCallback != null) {
+        } else if (mOnErrorCallback != null) {
             mOnErrorCallback.onError();
         }
     }
@@ -243,8 +260,8 @@ public class AdVideoController {
         }
     }
 
-    public int getVideoCurrentState(){
-        if(mAdVideoPlayer != null){
+    public int getVideoCurrentState() {
+        if (mAdVideoPlayer != null) {
             return mAdVideoPlayer.getCurrentState();
         }
         return -1;
@@ -266,13 +283,19 @@ public class AdVideoController {
     public interface OnErrorCallback {
         void onError();
     }
+
     public interface OnStartCallback {
         void onStart(boolean isRemoteUrl);
+    }
+
+    public interface OnSikpCallback {
+        void onSkip();
     }
 
     public void setOnCompleteCallback(OnCompleteCallback onCompleteCallback) {
         mOnCompleteCallback = onCompleteCallback;
     }
+
     public void setOnStartCallback(OnStartCallback onStartCallback) {
         monStartCallback = onStartCallback;
     }
@@ -287,5 +310,13 @@ public class AdVideoController {
 
     public void setNetworkNotifyListener(CleanVideoPlayer.NetworkNotifyListener networkNotifyListener) {
         mNetworkNotifyListener = networkNotifyListener;
+    }
+
+    public void setOnSikpCallback(OnSikpCallback onSikpCallback) {
+        mOnSikpCallback = onSikpCallback;
+    }
+
+    public void setStaticId(String staticId) {
+        this.staticId = staticId;
     }
 }

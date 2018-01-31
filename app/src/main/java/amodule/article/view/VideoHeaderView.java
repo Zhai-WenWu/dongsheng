@@ -241,6 +241,7 @@ public class VideoHeaderView extends RelativeLayout {
         view.findViewById(R.id.ad_gdt_video_hint_layout).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                XHClick.mapStat(activity,"a_ShortVideoDetail","图文广告","跳过");
                 view.setVisibility(View.GONE);
                 adParentLayout.setVisibility(GONE);
                 mVideoPlayerController.setShowAd(false);
@@ -251,6 +252,7 @@ public class VideoHeaderView extends RelativeLayout {
             @Override
             public void onClick(View v) {
                 AppCommon.openUrl(activity, StringManager.getVipUrl(true) + "&vipFrom=视频贴片广告会员免广告", true);
+                XHClick.mapStat(activity,"a_ShortVideoDetail","图文广告","会员去广告");
             }
         });
 
@@ -328,6 +330,7 @@ public class VideoHeaderView extends RelativeLayout {
                 && videoUrl.startsWith("http")) {
             if(null == mVideoPlayerController){
                 mVideoPlayerController = new VideoPlayerController(activity, dishVidioLayout, img,GSYVideoType.SCREEN_MATCH_WIDTH);
+                mVideoPlayerController.setStaticId("a_ShortVideoDetail");
                 GSYVideoManager.canChange = false;
             }
 
@@ -404,6 +407,7 @@ public class VideoHeaderView extends RelativeLayout {
         adVideoController= new AdVideoController(activity);
         Log.i("xianghaTag","initAdTypeVideo:::"+adVideoController.isAvailable()+"::"+(adVideoController.getAdVideoPlayer()!=null));
         if(adVideoController.isAvailable()&&adVideoController.getAdVideoPlayer()!=null){
+            adVideoController.setStaticId("a_ShortVideoDetail");
             ad_type_video.addView(adVideoController.getAdVideoPlayer());
             mVideoPlayerController.setShowAd(true);
             AdType="2";
@@ -430,32 +434,12 @@ public class VideoHeaderView extends RelativeLayout {
                 ad_type_video.setVisibility(View.VISIBLE);
             }
         });
-        adVideoController.setOnCompleteCallback(new AdVideoController.OnCompleteCallback() {
+        adVideoController.setOnCompleteCallback(this::preparePlayVideo);
+        adVideoController.setOnErrorCallback(this::preparePlayVideo);
+        adVideoController.setOnSikpCallback(new AdVideoController.OnSikpCallback() {
             @Override
-            public void onComplete() {
-                if(ad_type_video!=null) {
-                    ad_type_video.removeAllViews();
-                    ad_type_video.setVisibility(View.GONE);
-                }
-                adParentLayout.setVisibility(GONE);
-                if(mVideoPlayerController!=null){
-                    mVideoPlayerController.setShowAd(false);
-                    mVideoPlayerController.setOnClick();
-                }
-            }
-        });
-        adVideoController.setOnErrorCallback(new AdVideoController.OnErrorCallback() {
-            @Override
-            public void onError() {
-                if(ad_type_video!=null){
-                    ad_type_video.removeAllViews();
-                    ad_type_video.setVisibility(View.GONE);
-                }
-                adParentLayout.setVisibility(GONE);
-                if(mVideoPlayerController!=null){
-                    mVideoPlayerController.setShowAd(false);
-                    mVideoPlayerController.setOnClick();
-                }
+            public void onSkip() {
+                XHClick.mapStat(activity,"a_ShortVideoDetail","图文广告","跳过");
             }
         });
         adVideoController.setNetworkNotifyListener(new CleanVideoPlayer.NetworkNotifyListener() {
@@ -500,6 +484,19 @@ public class VideoHeaderView extends RelativeLayout {
             }
         });
     }
+
+    private void preparePlayVideo() {
+        if(ad_type_video!=null) {
+            ad_type_video.removeAllViews();
+            ad_type_video.setVisibility(View.GONE);
+        }
+        adParentLayout.setVisibility(GONE);
+        if(mVideoPlayerController!=null){
+            mVideoPlayerController.setShowAd(false);
+            mVideoPlayerController.setOnClick();
+        }
+    }
+
     private void handlerVideoState(){
         adParentLayout.setVisibility(VISIBLE);
         ad_type_video.setVisibility(View.VISIBLE);

@@ -221,6 +221,7 @@ public class DishHeaderViewNew extends LinearLayout {
         adVideoController= new AdVideoController(context);
         Log.i("xianghaTag","initAdTypeVideo:::"+adVideoController.isAvailable()+"::"+(adVideoController.getAdVideoPlayer()!=null));
         if(adVideoController.isAvailable()&&adVideoController.getAdVideoPlayer()!=null){
+            adVideoController.setStaticId("a_menu_detail_video");
             ad_type_video.addView(adVideoController.getAdVideoPlayer());
             mVideoPlayerController.setShowAd(true);
             AdType="2";
@@ -239,39 +240,12 @@ public class DishHeaderViewNew extends LinearLayout {
             ad_type_video.setVisibility(View.VISIBLE);
             adVideoController.start();
         }
-        adVideoController.setOnStartCallback(new AdVideoController.OnStartCallback() {
-            @Override
-            public void onStart(boolean isRemoteUrl) {
-                ad_type_video.setVisibility(View.VISIBLE);
-            }
-        });
-        adVideoController.setOnCompleteCallback(new AdVideoController.OnCompleteCallback() {
-            @Override
-            public void onComplete() {
-                if(ad_type_video!=null) {
-                    ad_type_video.removeAllViews();
-                    ad_type_video.setVisibility(View.GONE);
-                }
-                if(mVideoPlayerController!=null){
-                    dishvideo_img.setVisibility(View.GONE);
-                    mVideoPlayerController.setShowAd(false);
-                    mVideoPlayerController.setOnClick();
-                }
-            }
-        });
-        adVideoController.setOnErrorCallback(new AdVideoController.OnErrorCallback() {
-            @Override
-            public void onError() {
-                if(ad_type_video!=null){
-                    ad_type_video.removeAllViews();
-                    ad_type_video.setVisibility(View.GONE);
-                }
-                if(mVideoPlayerController!=null){
-                    dishvideo_img.setVisibility(View.GONE);
-                    mVideoPlayerController.setShowAd(false);
-                    mVideoPlayerController.setOnClick();
-                }
-            }
+        adVideoController.setOnStartCallback(isRemoteUrl -> ad_type_video.setVisibility(View.VISIBLE));
+        adVideoController.setOnCompleteCallback(this::preparePlayVideo);
+        adVideoController.setOnErrorCallback(this::preparePlayVideo);
+        adVideoController.setOnSikpCallback(()->{
+            preparePlayVideo();
+            XHClick.mapStat(activity,"a_menu_detail_video","视频广告","跳过");
         });
         adVideoController.setNetworkNotifyListener(new CleanVideoPlayer.NetworkNotifyListener() {
             @Override
@@ -314,6 +288,19 @@ public class DishHeaderViewNew extends LinearLayout {
             }
         });
     }
+
+    private void preparePlayVideo() {
+        if(ad_type_video!=null) {
+            ad_type_video.removeAllViews();
+            ad_type_video.setVisibility(View.GONE);
+        }
+        if(mVideoPlayerController!=null){
+            dishvideo_img.setVisibility(View.GONE);
+            mVideoPlayerController.setShowAd(false);
+            mVideoPlayerController.setOnClick();
+        }
+    }
+
     private void handlerVideoState(){
         ad_type_video.setVisibility(View.VISIBLE);
         if(ToolsDevice.getNetActiveState(context)) {
@@ -372,6 +359,7 @@ public class DishHeaderViewNew extends LinearLayout {
         view.findViewById(R.id.ad_gdt_video_hint_layout).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                XHClick.mapStat(activity,"a_menu_detail_video","图文广告","跳过");
                 view.setVisibility(View.GONE);
                 if(mVideoPlayerController != null){
                     mVideoPlayerController.setShowAd(false);
@@ -383,6 +371,7 @@ public class DishHeaderViewNew extends LinearLayout {
             @Override
             public void onClick(View v) {
                 AppCommon.openUrl(activity, StringManager.getVipUrl(true) + "&vipFrom=视频贴片广告会员免广告", true);
+                XHClick.mapStat(activity,"a_menu_detail_video","图文广告","会员去广告");
             }
         });
 
@@ -466,6 +455,7 @@ public class DishHeaderViewNew extends LinearLayout {
         if (!TextUtils.isEmpty(videoUrl) && videoUrl.startsWith("http")) {
             dishVidioLayout.setPadding(0, distance, 0, 0);
             mVideoPlayerController = new VideoPlayerController(activity, dishVidioLayout, img);
+            mVideoPlayerController.setStaticId("a_menu_detail_video");
             mVideoPlayerController.setOnVideoCanPlay(mOnVideoCanPlayCallback);
             mVideoPlayerController.showFullScrren();
             mVideoPlayerController.showClingBtn(mShowClingBtn);

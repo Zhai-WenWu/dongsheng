@@ -115,6 +115,8 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
 
     private int mDismissControlTime = 2000;
 
+    private OnSeekToOverCallback mOnSeekToOverCallback;
+
 
     public void setStandardVideoAllCallBack(StandardVideoAllCallBack standardVideoAllCallBack) {
         this.mStandardVideoAllCallBack = standardVideoAllCallBack;
@@ -390,6 +392,9 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
                     cancelDismissControlViewTimer();
                     break;
                 case MotionEvent.ACTION_UP:
+                    if(mOnSeekToOverCallback != null){
+                        mOnSeekToOverCallback.onSeekToOver();
+                    }
                     startDismissControlViewTimer();
                     break;
             }
@@ -1328,6 +1333,10 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
         void onBottomContainerVisibilityChange(int visibility);
     }
 
+    public interface OnSeekToOverCallback{
+        void onSeekToOver();
+    }
+
     private OnBottomContainerVisibilityChangeCallback mOnBottomContainerVisibilityChangeCallback;
 
     public void setOnBottomContainerVisibilityChangeCallback(OnBottomContainerVisibilityChangeCallback onBottomContainerVisibilityChangeCallback) {
@@ -1338,5 +1347,9 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
         if(mOnBottomContainerVisibilityChangeCallback != null){
             mOnBottomContainerVisibilityChangeCallback.onBottomContainerVisibilityChange(visibility);
         }
+    }
+
+    public void setOnSeekToOverCallback(OnSeekToOverCallback onSeekToOverCallback) {
+        mOnSeekToOverCallback = onSeekToOverCallback;
     }
 }
