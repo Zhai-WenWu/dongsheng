@@ -1,15 +1,21 @@
 package amodule.article.view;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -25,6 +31,7 @@ import com.bumptech.glide.request.target.Target;
 
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.utils.GSYVideoType;
+import com.shuyu.gsyvideoplayer.video.CleanVideoPlayer;
 import com.xiangha.R;
 import com.shuyu.gsyvideoplayer.GSYVideoPlayer;
 
@@ -34,6 +41,8 @@ import java.util.Map;
 import acore.logic.AppCommon;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
+import acore.override.helper.XHActivityManager;
+import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -44,6 +53,7 @@ import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
 import third.ad.scrollerAd.XHAllAdControl;
 import third.ad.tools.AdPlayIdConfig;
+import third.video.AdVideoController;
 import third.video.VideoPlayerController;
 
 import static third.ad.scrollerAd.XHScrollerAdParent.ADKEY_GDT;
@@ -63,7 +73,7 @@ public class VideoHeaderView extends RelativeLayout {
     private Activity activity;
     private Context context;
 
-    private RelativeLayout dishVidioLayout,adParentLayout;
+    private RelativeLayout dishVidioLayout,adParentLayout,ad_type_video;
     private FrameLayout adLayout;
 
     private VideoPlayerController mVideoPlayerController = null;//视频控制器
@@ -75,6 +85,8 @@ public class VideoHeaderView extends RelativeLayout {
     private XHAllAdControl xhAllAdControl;
     private int num = 4;
     private String status = "1";
+    protected View view_Tip;
+    public boolean isNetworkDisconnect = false;
 
     public VideoHeaderView(Context context) {
         super(context);
@@ -104,6 +116,7 @@ public class VideoHeaderView extends RelativeLayout {
         setViewSize(16,9);
         dishVidioLayout = (RelativeLayout) findViewById(R.id.video_layout);
         dredgeVipLayout = (RelativeLayout) findViewById(R.id.video_dredge_vip_layout);
+        ad_type_video= (RelativeLayout) findViewById(R.id.ad_type_video);
         adParentLayout = (RelativeLayout) findViewById(R.id.video_ad_layout_parent);
         adParentLayout.setOnClickListener(new OnClickListener() {
             @Override
@@ -165,6 +178,7 @@ public class VideoHeaderView extends RelativeLayout {
             mVideoPlayerController.setPortrait(isPortraitVideo(videoW,videoH));
         } catch (Exception e) {
             Toast.makeText(getContext(), "视频播放失败", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
         }
     }
 
@@ -175,7 +189,7 @@ public class VideoHeaderView extends RelativeLayout {
         return videoW/videoH <= 1/1f;
     }
 
-    private void initVideoAd() {
+    private void initAdTypeImg() {
         adLayout = (FrameLayout) findViewById(R.id.video_ad_layout);
 
         ArrayList<String> list = new ArrayList<>();
@@ -305,8 +319,6 @@ public class VideoHeaderView extends RelativeLayout {
     }
 
     private boolean setSelfVideo(final Map<String, String> selfVideoMap, Map<String, String> permissionMap) {
-        if (STATUS_TRANSCODED.equals(status))
-            initVideoAd();
         GSYVideoType.setShowType(GSYVideoType.SCREEN_MATCH_WIDTH);
         boolean isUrlVaild = false;
         String videoUrl = selfVideoMap.get("url");
@@ -369,7 +381,181 @@ public class VideoHeaderView extends RelativeLayout {
             }
             isUrlVaild = true;
         }
+        if (STATUS_TRANSCODED.equals(status))
+            initVideoAd();
         return isUrlVaild;
+    }
+    private void initVideoAd(){
+        if(!initAdTypeVideo()){
+            initAdTypeImg();
+        }
+    }
+    private AdVideoController adVideoController;
+    private boolean initAdTypeVideo(){
+        adVideoController= new AdVideoController(activity);
+        Log.i("xianghaTag","initAdTypeVideo:::"+adVideoController.isAvailable()+"::"+(adVideoController.getAdVideoPlayer()!=null));
+        if(adVideoController.isAvailable()&&adVideoController.getAdVideoPlayer()!=null){
+            ad_type_video.addView(adVideoController.getAdVideoPlayer());
+            ad_type_video.setVisibility(VISIBLE);
+            adParentLayout.setVisibility(VISIBLE);
+            mVideoPlayerController.setShowAd(true);
+            handleTypeVideoCallBack();
+            return true;
+        }else{
+            return false;
+        }
+    }
+    private void handleTypeVideoCallBack(){
+        if (isAutoPaly && mVideoPlayerController != null && isShowActivity()) {
+            adParentLayout.setVisibility(VISIBLE);
+            mVideoPlayerController.setShowAd(true);
+            if(!ToolsDevice.getNetActiveState(context)){//无网络
+                return;
+            }
+            adVideoController.start();
+        }
+        adVideoController.setOnStartCallback(new AdVideoController.OnStartCallback() {
+            @Override
+            public void onStart(boolean isRemoteUrl) {
+                ad_type_video.setVisibility(View.VISIBLE);
+                if(isRemoteUrl){//远程链接
+                    if(ToolsDevice.getNetActiveState(context)) {
+                        int netType = ToolsDevice.getNetWorkSimpleNum(context);
+                        if(netType>1 &&
+                                !"1".equals(FileManager.loadShared(context,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI).toString())){
+                            removeTipView();
+                            if(view_Tip==null){
+                                initNoWIFIView(context);
+                                ad_type_video.addView(view_Tip);
+                            }
+                            adVideoController.onPause();
+                        }
+                    }else{
+                        removeTipView();
+                        if(view_Tip==null){
+                            initNoNetwork(context);
+                            ad_type_video.addView(view_Tip);
+                        }
+                        adVideoController.onPause();
+                    }
+                }
+            }
+        });
+        adVideoController.setOnCompleteCallback(new AdVideoController.OnCompleteCallback() {
+            @Override
+            public void onComplete() {
+                if(ad_type_video!=null) {
+                    ad_type_video.removeAllViews();
+                    ad_type_video.setVisibility(View.GONE);
+                }
+                adParentLayout.setVisibility(GONE);
+                if(mVideoPlayerController!=null){
+                    mVideoPlayerController.setShowAd(false);
+                    mVideoPlayerController.setOnClick();
+                }
+            }
+        });
+        adVideoController.setOnErrorCallback(new AdVideoController.OnErrorCallback() {
+            @Override
+            public void onError() {
+                if(ad_type_video!=null){
+                    ad_type_video.removeAllViews();
+                    ad_type_video.setVisibility(View.GONE);
+                }
+                adParentLayout.setVisibility(GONE);
+                if(mVideoPlayerController!=null){
+                    mVideoPlayerController.setShowAd(false);
+                    mVideoPlayerController.setOnClick();
+                }
+            }
+        });
+        adVideoController.setNetworkNotifyListener(new CleanVideoPlayer.NetworkNotifyListener() {
+            @Override
+            public void wifiConnected() {
+                removeTipView();
+                adVideoController.onResume();
+                isNetworkDisconnect = false;
+            }
+            @Override
+            public void mobileConnected() {
+                if(!"1".equals(FileManager.loadShared(context,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI).toString())){
+                    if(!isNetworkDisconnect){
+                        removeTipView();
+                        if(view_Tip==null){
+                            initNoWIFIView(context);
+                            ad_type_video.addView(view_Tip);
+                        }
+                        adVideoController.onPause();
+                    }
+                }else if(adVideoController.getAdVideoPlayer().getCurrentState() == GSYVideoPlayer.CURRENT_STATE_PAUSE){
+                    removeTipView();
+                    adVideoController.onResume();
+                }
+                isNetworkDisconnect = false;
+            }
+            @Override
+            public void nothingConnected() {
+                removeTipView();
+                if(view_Tip == null){
+                    initNoNetwork(context);
+                    ad_type_video.addView(view_Tip);
+                }
+                adVideoController.onPause();
+                isNetworkDisconnect = true;
+            }
+        });
+    }
+    @SuppressLint({"SetTextI18n", "InflateParams"})
+    protected void initNoWIFIView(Context context){
+        ViewGroup.LayoutParams layoutParams= new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        view_Tip=LayoutInflater.from(context).inflate(R.layout.tip_layout,null);
+        view_Tip.setLayoutParams(layoutParams);
+        TextView tipMessage= (TextView) view_Tip.findViewById(R.id.tipMessage);
+        tipMessage.setText("现在是非WIFI，看视频要花费流量了");
+        Button btnCloseTip = (Button) view_Tip.findViewById(R.id.btnCloseTip);
+        btnCloseTip.setText("继续播放");
+        view_Tip.findViewById(R.id.tipLayout).setOnClickListener(onClickListener);
+        view_Tip.findViewById(R.id.btnCloseTip).setOnClickListener(onClickListener);
+    }
+
+    protected void initNoNetwork(Context context){
+        ViewGroup.LayoutParams layoutParams= new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        view_Tip=LayoutInflater.from(context).inflate(R.layout.tip_layout,null);
+        view_Tip.setLayoutParams(layoutParams);
+        TextView tipMessage= (TextView) view_Tip.findViewById(R.id.tipMessage);
+        tipMessage.setText("网络未连接，请检查网络设置");
+        Button btnCloseTip = (Button) view_Tip.findViewById(R.id.btnCloseTip);
+        btnCloseTip.setText("去设置");
+        view_Tip.findViewById(R.id.tipLayout).setOnClickListener(disconnectClick);
+        view_Tip.findViewById(R.id.btnCloseTip).setOnClickListener(disconnectClick);
+    }
+    private OnClickListener disconnectClick = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            context.startActivity(new Intent(Settings.ACTION_SETTINGS));
+        }
+    };
+    private OnClickListener onClickListener= new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            removeTipView();
+            adVideoController.onResume();
+            new Thread(() -> FileManager.saveShared(context,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI,"1")).start();
+        }
+    };
+
+    protected void removeTipView(){
+        if(view_Tip!=null){
+            ad_type_video.removeView(view_Tip);
+            view_Tip=null;
+        }
+    }
+    private boolean  isShowActivity(){
+        try {
+            if ("amodule.article.activity.VideoDetailActivity".equals(XHActivityManager.getInstance().getCurrentActivity().getComponentName().getClassName()))
+                return true;
+        }catch (Exception e){return false;}
+        return false;
     }
     boolean isContinue = false;
     boolean isHaspause = false;
