@@ -217,7 +217,7 @@ public class AdVideoController {
         }
     }
 
-    private boolean isRemoteUrl() {
+    public boolean isRemoteUrl() {
         return !TextUtils.isEmpty(currentVideo) && currentVideo.startsWith("http");
     }
 
@@ -241,6 +241,13 @@ public class AdVideoController {
             mAdVideoPlayer.setVideoAllCallBack(null);
             mAdVideoPlayer.release();
         }
+    }
+
+    public int getVideoCurrentState(){
+        if(mAdVideoPlayer != null){
+            return mAdVideoPlayer.getCurrentState();
+        }
+        return -1;
     }
 
     public boolean isAvailable() {

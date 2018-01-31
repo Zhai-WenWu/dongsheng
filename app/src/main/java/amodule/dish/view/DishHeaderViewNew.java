@@ -236,33 +236,13 @@ public class DishHeaderViewNew extends LinearLayout {
             if(!ToolsDevice.getNetActiveState(context)){//无网络
                return;
             }
+            ad_type_video.setVisibility(View.VISIBLE);
             adVideoController.start();
         }
         adVideoController.setOnStartCallback(new AdVideoController.OnStartCallback() {
             @Override
             public void onStart(boolean isRemoteUrl) {
                 ad_type_video.setVisibility(View.VISIBLE);
-                if(isRemoteUrl){//远程链接
-                    if(ToolsDevice.getNetActiveState(context)) {
-                        int netType = ToolsDevice.getNetWorkSimpleNum(context);
-                        if(netType>1 &&
-                                !"1".equals(FileManager.loadShared(context,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI).toString())){
-                            removeTipView();
-                            if(view_Tip==null){
-                                initNoWIFIView(context);
-                                ad_type_video.addView(view_Tip);
-                            }
-                            adVideoController.onPause();
-                        }
-                    }else{
-                        removeTipView();
-                        if(view_Tip==null){
-                            initNoNetwork(context);
-                            ad_type_video.addView(view_Tip);
-                        }
-                        adVideoController.onPause();
-                    }
-                }
             }
         });
         adVideoController.setOnCompleteCallback(new AdVideoController.OnCompleteCallback() {
@@ -328,6 +308,31 @@ public class DishHeaderViewNew extends LinearLayout {
                 isNetworkDisconnect = true;
             }
         });
+    }
+    private void handlerVideoState(){
+        ad_type_video.setVisibility(View.VISIBLE);
+        if(ToolsDevice.getNetActiveState(context)) {
+            int netType = ToolsDevice.getNetWorkSimpleNum(context);
+            if(netType>1 &&
+                    !"1".equals(FileManager.loadShared(context,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI).toString())){
+                adVideoController.onPause();
+                removeTipView();
+                if(view_Tip==null){
+                    initNoWIFIView(context);
+                    ad_type_video.addView(view_Tip);
+                }
+            }else{
+                adVideoController.start();
+            }
+        }else{
+            adVideoController.onPause();
+            removeTipView();
+            if(view_Tip==null){
+                initNoNetwork(context);
+                ad_type_video.addView(view_Tip);
+            }
+
+        }
     }
     private boolean  isShowActivity(){
         try {
@@ -495,7 +500,11 @@ public class DishHeaderViewNew extends LinearLayout {
                     if("1".equals(AdType)&&mapAd!=null){
                         setVideoAdData(mapAd, adLayout);
                     }else if("2".equals(AdType)&&adVideoController!=null){
-                        adVideoController.start();
+                        if(adVideoController.isRemoteUrl()){
+                            handlerVideoState();
+                        }else{
+                            adVideoController.start();
+                        }
                     }
 
                 }

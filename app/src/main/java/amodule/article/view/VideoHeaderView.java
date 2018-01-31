@@ -87,7 +87,7 @@ public class VideoHeaderView extends RelativeLayout {
     private String status = "1";
     protected View view_Tip;
     public boolean isNetworkDisconnect = false;
-
+    private String AdType="0";//0--无广告，1--图片广告，2--视频广告。
     public VideoHeaderView(Context context) {
         super(context);
         inflateView();
@@ -204,6 +204,7 @@ public class VideoHeaderView extends RelativeLayout {
                 if (mapAd != null && mapAd.size() > 0
                         && mVideoPlayerController != null) {
                     mVideoPlayerController.setShowAd(true);
+                    AdType="1";
                 }
                 if (isAutoPaly && mVideoPlayerController != null) {
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -363,7 +364,15 @@ public class VideoHeaderView extends RelativeLayout {
                     post(new Runnable() {
                         @Override
                         public void run() {
-                            setVideoAdData(mapAd, adLayout);
+                            if("1".equals(AdType)&&mapAd!=null){
+                                setVideoAdData(mapAd, adLayout);
+                            }else if("2".equals(AdType)&&adVideoController!=null){
+                                if(adVideoController.isRemoteUrl()){
+                                    handlerVideoState();
+                                }else{
+                                    adVideoController.start();
+                                }
+                            }
                         }
                     });
                 }
@@ -396,9 +405,8 @@ public class VideoHeaderView extends RelativeLayout {
         Log.i("xianghaTag","initAdTypeVideo:::"+adVideoController.isAvailable()+"::"+(adVideoController.getAdVideoPlayer()!=null));
         if(adVideoController.isAvailable()&&adVideoController.getAdVideoPlayer()!=null){
             ad_type_video.addView(adVideoController.getAdVideoPlayer());
-            ad_type_video.setVisibility(VISIBLE);
-            adParentLayout.setVisibility(VISIBLE);
             mVideoPlayerController.setShowAd(true);
+            AdType="2";
             handleTypeVideoCallBack();
             return true;
         }else{
@@ -407,38 +415,19 @@ public class VideoHeaderView extends RelativeLayout {
     }
     private void handleTypeVideoCallBack(){
         if (isAutoPaly && mVideoPlayerController != null && isShowActivity()) {
-            adParentLayout.setVisibility(VISIBLE);
             mVideoPlayerController.setShowAd(true);
             if(!ToolsDevice.getNetActiveState(context)){//无网络
                 return;
             }
+            adParentLayout.setVisibility(VISIBLE);
+            ad_type_video.setVisibility(View.VISIBLE);
             adVideoController.start();
         }
         adVideoController.setOnStartCallback(new AdVideoController.OnStartCallback() {
             @Override
             public void onStart(boolean isRemoteUrl) {
+                adParentLayout.setVisibility(VISIBLE);
                 ad_type_video.setVisibility(View.VISIBLE);
-                if(isRemoteUrl){//远程链接
-                    if(ToolsDevice.getNetActiveState(context)) {
-                        int netType = ToolsDevice.getNetWorkSimpleNum(context);
-                        if(netType>1 &&
-                                !"1".equals(FileManager.loadShared(context,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI).toString())){
-                            removeTipView();
-                            if(view_Tip==null){
-                                initNoWIFIView(context);
-                                ad_type_video.addView(view_Tip);
-                            }
-                            adVideoController.onPause();
-                        }
-                    }else{
-                        removeTipView();
-                        if(view_Tip==null){
-                            initNoNetwork(context);
-                            ad_type_video.addView(view_Tip);
-                        }
-                        adVideoController.onPause();
-                    }
-                }
             }
         });
         adVideoController.setOnCompleteCallback(new AdVideoController.OnCompleteCallback() {
@@ -472,8 +461,14 @@ public class VideoHeaderView extends RelativeLayout {
         adVideoController.setNetworkNotifyListener(new CleanVideoPlayer.NetworkNotifyListener() {
             @Override
             public void wifiConnected() {
+                Log.i("xianghaTag","wifiConnected:::"+adVideoController.getVideoCurrentState());
                 removeTipView();
-                adVideoController.onResume();
+                int state=adVideoController.getVideoCurrentState();
+                if(state<0||state>6) {
+                    adVideoController.start();
+                }else{
+                    adVideoController.onResume();
+                }
                 isNetworkDisconnect = false;
             }
             @Override
@@ -504,6 +499,32 @@ public class VideoHeaderView extends RelativeLayout {
                 isNetworkDisconnect = true;
             }
         });
+    }
+    private void handlerVideoState(){
+        adParentLayout.setVisibility(VISIBLE);
+        ad_type_video.setVisibility(View.VISIBLE);
+        if(ToolsDevice.getNetActiveState(context)) {
+            int netType = ToolsDevice.getNetWorkSimpleNum(context);
+            if(netType>1 &&
+                    !"1".equals(FileManager.loadShared(context,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI).toString())){
+                adVideoController.onPause();
+                removeTipView();
+                if(view_Tip==null){
+                    initNoWIFIView(context);
+                    ad_type_video.addView(view_Tip);
+                }
+            }else{
+                adVideoController.start();
+            }
+        }else{
+            adVideoController.onPause();
+            removeTipView();
+            if(view_Tip==null){
+                initNoNetwork(context);
+                ad_type_video.addView(view_Tip);
+            }
+
+        }
     }
     @SuppressLint({"SetTextI18n", "InflateParams"})
     protected void initNoWIFIView(Context context){
