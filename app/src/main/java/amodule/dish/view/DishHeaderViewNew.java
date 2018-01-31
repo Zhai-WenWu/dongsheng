@@ -277,7 +277,12 @@ public class DishHeaderViewNew extends LinearLayout {
             @Override
             public void wifiConnected() {
                 removeTipView();
-                adVideoController.onResume();
+                int state=adVideoController.getVideoCurrentState();
+                if(state<0||state>6) {
+                    adVideoController.start();
+                }else{
+                    adVideoController.onResume();
+                }
                 isNetworkDisconnect = false;
             }
             @Override
