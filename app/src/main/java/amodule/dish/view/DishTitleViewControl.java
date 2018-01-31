@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.xiangha.R;
 
@@ -24,6 +25,7 @@ import acore.override.helper.XHActivityManager;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
+import acore.tools.ToolsDevice;
 import acore.widget.PopWindowDialog;
 import amodule.dish.activity.DetailDish;
 import amodule.dish.activity.upload.UploadDishActivity;
@@ -312,6 +314,10 @@ public class DishTitleViewControl implements View.OnClickListener {
      * 收藏
      */
     private void doFavorite() {
+        if (context != null && !ToolsDevice.isNetworkAvailable(context)) {
+            Toast.makeText(context, "网络异常，请检查网络", Toast.LENGTH_SHORT).show();
+            return;
+        }
         if (TextUtils.isEmpty(code) || dishInfoMap == null || TextUtils.isEmpty(dishInfoMap.get("name")))
             return;
         if (LoginManager.userInfo.size() > 0) {
