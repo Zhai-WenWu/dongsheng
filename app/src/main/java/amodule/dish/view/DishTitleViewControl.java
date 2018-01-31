@@ -189,12 +189,14 @@ public class DishTitleViewControl implements View.OnClickListener {
                     bottomDialog.setTopButton("分享", new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            bottomDialog.cancel();
                             XHClick.mapStat(detailDish, DetailDish.tongjiId_detail, "顶部导航栏", "分享点击量");
                             openShare();
                         }
                     }).setBottomButton("编辑", new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            bottomDialog.cancel();
                             XHClick.mapStat(detailDish, DetailDish.tongjiId_detail, "顶部导航栏", "二次编辑点击量");
                             if (isHasVideo) {
                                 Tools.showToast(context, "请用香哈（视频版）编辑");
