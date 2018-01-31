@@ -611,12 +611,18 @@ public class VideoHeaderView extends RelativeLayout {
                 && (dredgeVipLayout == null || dredgeVipLayout.getVisibility() == GONE)){
             mVideoPlayerController.onResume();
         }
+        if(adVideoController != null){
+            adVideoController.onResume();
+        }
     }
 
     public void onPause() {
         isOnResuming = false;
         if(mVideoPlayerController != null){
             mVideoPlayerController.onPause();
+        }
+        if(adVideoController != null){
+            adVideoController.onPause();
         }
     }
 
@@ -636,6 +642,9 @@ public class VideoHeaderView extends RelativeLayout {
     public void onDestroy() {
         if(mVideoPlayerController != null){
             mVideoPlayerController.onDestroy();
+        }
+        if(adVideoController != null){
+            adVideoController.onDestroy();
         }
     }
 
