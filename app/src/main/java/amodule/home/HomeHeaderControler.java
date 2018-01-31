@@ -1,6 +1,7 @@
 package amodule.home;
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -13,8 +14,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import acore.logic.XHClick;
 import acore.tools.Tools;
 import amodule._common.delegate.ISaveStatistic;
+import amodule._common.delegate.StatisticCallback;
 import amodule._common.plugin.WidgetVerticalLayout;
 import amodule._common.utility.WidgetUtility;
 import amodule.main.activity.MainHomePage;
@@ -68,7 +71,8 @@ public class HomeHeaderControler implements ISaveStatistic {
         String[] threeLevelArray = {"轮播banner位置", "", "", "精品厨艺位置", "限时抢购位置", "精选菜单位置"};
 //        setVisibility(false);
         final int length = Math.min(array.size(), mLayouts.length);
-        for (int index = 0; index < length; index++) {
+        for (int i = 0; i < length; i++) {
+            final int index = i;
             Map<String, String> map = array.get(index);
             if (isShowCache && "1".equals(map.get("cache"))) {
                 mLayouts[index].setVisibility(View.GONE);
@@ -76,6 +80,13 @@ public class HomeHeaderControler implements ISaveStatistic {
             }
             mLayouts[index].setData(map);
             mLayouts[index].setStatictusData(MainHomePage.STATICTUS_ID_HOMEPAGE, twoLevelArray[index], threeLevelArray[index]);
+            StatisticCallback statisticCallback = (id, twoLevel, threeLevel, position) -> {
+                if(!TextUtils.isEmpty(id)&&!TextUtils.isEmpty(twoLevel)&&!TextUtils.isEmpty(threeLevel)){
+                    XHClick.mapStat(mLayouts[index].getContext(),id,twoLevel,threeLevel);
+                }
+            };
+            mLayouts[index].setStatisticCallback(statisticCallback);
+            mLayouts[index].setTitleStaticCallback(statisticCallback);
             mLayouts[index].setVisibility(View.VISIBLE);
         }
 

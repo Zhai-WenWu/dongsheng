@@ -187,11 +187,23 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
         final int layoutID = AllWeightLibrary.of().findWidgetLayoutID(widgetType, style);
         if (layoutID > NO_FIND_ID) {
             View view = mInflater.inflate(layoutID, null, true);
-            if (null != view && view instanceof IBindMap
-                    && !TextUtils.isEmpty(widgetData)) {
-                ((IBindMap) view).setData(dataMap);
-                layout.addView(view, isOrder ? -1 : 0);
+            if (null != view ){
+                if(view instanceof IStatisticCallback && mStatisticCallback != null){
+                    ((IStatisticCallback)view).setStatisticCallback(mStatisticCallback);
+                }
+                if(view instanceof ITitleStaticCallback && mStatisticCallback != null){
+                    ((ITitleStaticCallback)view).setTitleStaticCallback(mStatisticCallback);
+                }
+                if(view instanceof IStatictusData && mStatisticCallback != null){
+                    ((IStatictusData)view).setStatictusData(id,twoLevel,threeLevel);
+                }
+                if(view instanceof IBindMap
+                        && !TextUtils.isEmpty(widgetData)) {
+                    ((IBindMap) view).setData(dataMap);
+                    layout.addView(view, isOrder ? -1 : 0);
+                }
             }
+
         }
     }
 

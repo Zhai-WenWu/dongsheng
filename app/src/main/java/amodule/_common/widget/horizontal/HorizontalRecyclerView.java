@@ -185,7 +185,10 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,
 
     private void statistic(int position) {
         if(mStatisticCallback != null){
-            mStatisticCallback.onStatistic(id,twoLevel,threeLevel,position);
+            if(mSubTitleView.getData() != null){
+                Map<String,String> map = StringManager.getFirstMap(mSubTitleView.getData().get("title"));
+                mStatisticCallback.onStatistic(id,map.get("text1"),map.get("text1")+"位置"+(position+1),position+1);
+            }
         }else{
             if(!TextUtils.isEmpty(id) && !TextUtils.isEmpty(twoLevel)){
                 if(TextUtils.isEmpty(threeLevel))
