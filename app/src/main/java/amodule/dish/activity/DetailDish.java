@@ -395,6 +395,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
             case ObserverManager.NOTIFY_LOGIN://登陆
                 isShowVip=false;
                 refreshTopInfo();
+                detailDishViewManager.handlerVipStateAd();
                 if(detailDishDataManager!=null&&!isShowPowerPermission)detailDishDataManager.reqAnticData();
                 handleVipState();
             case ObserverManager.NOTIFY_FOLLOW://关注

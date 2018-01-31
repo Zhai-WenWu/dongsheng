@@ -601,4 +601,14 @@ public class DetailDishViewManager {
             dishHeaderViewNew.setOnVideoCanPlay(callback);
         }
     }
+    public void handlerVipStateAd() {
+        if (LoginManager.isVIP()) {
+            if (dishHeaderViewNew != null) {
+                dishHeaderViewNew.initVideoAd();
+            }
+            if (dishExplainView != null) {
+                dishExplainView.setAdData();
+            }
+        }
+    }
 }

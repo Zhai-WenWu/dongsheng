@@ -211,13 +211,16 @@ public class DishHeaderViewNew extends LinearLayout {
         }, activity, "result_media");
 
     }
-    private void initVideoAd(){
+    public void initVideoAd(){
+        mVideoPlayerController.setShowAd(false);
         if(!initAdTypeVideo()){
             initAdTypeImg();
         }
     }
     private AdVideoController adVideoController;
     private boolean initAdTypeVideo(){
+        removeTipView();
+        ad_type_video.setVisibility(View.GONE);
         adVideoController= new AdVideoController(context);
         Log.i("xianghaTag","initAdTypeVideo:::"+adVideoController.isAvailable()+"::"+(adVideoController.getAdVideoPlayer()!=null));
         if(adVideoController.isAvailable()&&adVideoController.getAdVideoPlayer()!=null){
@@ -442,6 +445,7 @@ public class DishHeaderViewNew extends LinearLayout {
     boolean isHaspause = false;
     int limitTime = 0;
     private boolean setSelfVideo(final String title, final String selfVideoJson, final String img, Map<String, String> permissionMap) {
+        Log.i("xianghaTag","setSelfVideo");
         boolean isUrlVaild = false;
         isContinue=false;
         isHaspause=false;
