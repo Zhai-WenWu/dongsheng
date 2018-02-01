@@ -88,6 +88,8 @@ public class ArticleUploadListPool extends UploadListPool {
         super.allStartOrStop(flag);
         if (!isCancel) {
             UploadArticleData uploadArticleData = modifyUploadArticleData(false);
+            if (uploadArticleData == null)
+                return;
             if (flag == UploadListPool.TYPE_START) {
                 if(isSecondEditor()){
                     uploadArticleData.setUploadType(UploadDishData.UPLOAD_ING_BACK);
