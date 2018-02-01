@@ -221,13 +221,14 @@ public class MainInitDataControl {
 
         //获取随机推广数据
         AppCommon.saveRandPromotionData(act);
-
-        XHADView.getInstence(act).setCanShowCallback(new XHADView.CanShowCallback() {
-            @Override
-            public boolean canShow() {
-                return Main.allMain != null && Main.allMain.getCurrentTab() == 0;
-            }
-        });
+        if(act!=null && XHADView.getInstence(act)!=null) {
+            XHADView.getInstence(act).setCanShowCallback(new XHADView.CanShowCallback() {
+                @Override
+                public boolean canShow() {
+                    return Main.allMain != null && Main.allMain.getCurrentTab() == 0;
+                }
+            });
+        }
         new AllPopDialogHelper(act).start();
 
         new Thread(() -> setXGTag()).start();
