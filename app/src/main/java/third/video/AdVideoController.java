@@ -91,8 +91,7 @@ public class AdVideoController {
             public void onAutoComplete(String url, Object... objects) {
                 super.onAutoComplete(url, objects);
                 isComplete = true;
-                onPause();
-                onDestroy();
+                destroy();
                 //播放完成
                 if (mOnCompleteCallback != null) {
                     mOnCompleteCallback.onComplete();
@@ -199,11 +198,15 @@ public class AdVideoController {
     }
 
     public void sikp() {
-        onPause();
-        onDestroy();
+        destroy();
         if (mOnSikpCallback != null) {
             mOnSikpCallback.onSkip();
         }
+    }
+
+    public void destroy() {
+        onPause();
+        onDestroy();
     }
 
     public int getDuration() {

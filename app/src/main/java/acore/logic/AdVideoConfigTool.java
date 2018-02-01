@@ -6,9 +6,11 @@ import android.text.TextUtils;
 import java.io.InputStream;
 import java.util.Map;
 
+import acore.override.XHApplication;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
+import acore.tools.ToolsDevice;
 import aplug.basic.ReqInternet;
 import aplug.basic.XHInternetCallBack;
 
@@ -100,14 +102,16 @@ public class AdVideoConfigTool {
                 || TextUtils.isEmpty(filePath)){
             return;
         }
-        ReqInternet.in().getInputStream(videoUrl, new XHInternetCallBack() {
-            @Override
-            public void loaded(int i, String s, Object o) {
-                if (i >= ReqInternet.REQ_OK_IS
-                        && o != null && o instanceof InputStream) {
-                    new Thread(() -> FileManager.saveFileToCompletePath(filePath, (InputStream) o, false)).start();
+        if("wifi".equals(ToolsDevice.getNetWorkSimpleType(XHApplication.in()))){
+            ReqInternet.in().getInputStream(videoUrl, new XHInternetCallBack() {
+                @Override
+                public void loaded(int i, String s, Object o) {
+                    if (i >= ReqInternet.REQ_OK_IS
+                            && o != null && o instanceof InputStream) {
+//                        new Thread(() -> FileManager.saveFileToCompletePath(filePath, (InputStream) o, false)).start();
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 }
