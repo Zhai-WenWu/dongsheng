@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import acore.logic.XHClick;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -67,6 +68,7 @@ public class VideoPlayerController {
     public int autoRetryCount = 0;
     public boolean isPortrait = false;
     public boolean isFullScreenAuto = false;
+    protected String staticId = "";
 
     public StandardGSYVideoPlayer videoPlayer;
     protected OrientationUtils orientationUtils;
@@ -104,12 +106,25 @@ public class VideoPlayerController {
         videoPlayer.getTitleTextView().setVisibility(View.GONE);
         videoPlayer.setShowFullAnimation(false);
         videoPlayer.getFullscreenButton().setOnClickListener(v -> {
+            handlerStatic("全屏按钮");
             if (mFullScreenClickListener != null) {
                 mFullScreenClickListener.onClick(videoPlayer.getFullscreenButton());
                 return;
             }
             //第一个true是否需要隐藏actionbar，第二个true是否需要隐藏statusbar
             videoPlayer.startWindowFullscreen(context, true, true);
+        });
+        videoPlayer.setOnSeekToOverCallback(() -> handlerStatic("拖动进度条"));
+        videoPlayer.setOnClickStartCallback(new GSYVideoPlayer.OnClickStartCallback() {
+            @Override
+            public void onStart() {
+                handlerStatic("播放按钮");
+            }
+
+            @Override
+            public void onPause() {
+                handlerStatic("暂停按钮");
+            }
         });
         videoPlayer.setOnBottomContainerVisibilityChangeCallback(visibility -> {
             if(mOnSeekbarVisibilityListener != null){
@@ -234,6 +249,7 @@ public class VideoPlayerController {
             }
         });
         videoPlayer.setClingClickListener(v -> {
+            handlerStatic("投屏按钮");
             if (mClingClickListener != null) {
                 mClingClickListener.onClick(v);
                 return;
@@ -244,6 +260,12 @@ public class VideoPlayerController {
             }
             mClingControl.showPopup(context);
         });
+    }
+
+    private void handlerStatic(String threeValue) {
+        if(!TextUtils.isEmpty(staticId) && !TextUtils.isEmpty(threeValue)){
+            XHClick.mapStat(mContext,staticId,"视频",threeValue);
+        }
     }
 
     public void setFullScreenClickListener(OnClickListener clickListener) {
@@ -259,19 +281,22 @@ public class VideoPlayerController {
             videoPlayer.showClingBtn(show);
     }
 
-    StandardGSYVideoPlayer.NetworkNotifyListener mNetworkNotifyListener;
+    private StandardGSYVideoPlayer.NetworkNotifyListener mNetworkNotifyListener;
     private void setNetworkCallback(){
         if(mNetworkNotifyListener == null){
-            mNetworkNotifyListener = new StandardGSYVideoPlayer.NetworkNotifyListener() {
+            mNetworkNotifyListener=new StandardGSYVideoPlayer.NetworkNotifyListener() {
                 @Override
                 public void wifiConnected() {
+                    Log.i("tzy", "wifiConnected: ");
+                    isNetworkDisconnect = false;
                     removeTipView();
                     onResume();
-                    isNetworkDisconnect = false;
                 }
 
                 @Override
                 public void mobileConnected() {
+                    Log.i("tzy", "mobileConnected: ");
+                    isNetworkDisconnect = false;
                     if(!"1".equals(FileManager.loadShared(mContext,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI).toString())){
                         if(!isNetworkDisconnect){
                             removeTipView();
@@ -285,21 +310,24 @@ public class VideoPlayerController {
                         removeTipView();
                         onResume();
                     }
-                    isNetworkDisconnect = false;
+
                 }
 
                 @Override
                 public void nothingConnected() {
+                    Log.i("tzy", "nothingConnected: ");
+                    isNetworkDisconnect = true;
                     if(view_Tip == null){
                         initNoNetwork(mContext);
                         mPraentViewGroup.addView(view_Tip);
                     }
                     onPause();
-                    isNetworkDisconnect = true;
+
                 }
             };
             videoPlayer.addListener(mNetworkNotifyListener);
         }
+
     }
 
     /**
@@ -327,9 +355,22 @@ public class VideoPlayerController {
         if(mOnVideoCanPlayCallback != null && !mOnVideoCanPlayCallback.canPlay()){
             return;
         }
+        if(!TextUtils.isEmpty(mVideoUrl) && mVideoUrl.startsWith("http")){
+            Log.i("tzy","mVideoUrl = "+mVideoUrl);
+            setNetworkCallback();
+        }
+        if(!ToolsDevice.isNetworkAvailable(mContext)){
+            removeTipView();
+            if(view_Tip==null){
+                initNoNetwork(mContext);
+                mPraentViewGroup.addView(view_Tip);
+            }
+            return;
+        }
         Log.i("tzy","广告点:::"+mHasVideoInfo);
         isAutoPaly = "wifi".equals(ToolsDevice.getNetWorkSimpleType(mContext));
         if (mHasVideoInfo) {
+            Log.i("tzy","广告点:::isShowAd"+isShowAd);
             if(isShowAd){
                 if(mediaViewCallBack != null)
                     mediaViewCallBack.onclick();
@@ -831,6 +872,10 @@ public class VideoPlayerController {
             mPraentViewGroup.removeView(clingOptionView);
             clingOptionView.hide();
         }
+    }
+
+    public void setStaticId(String staticId) {
+        this.staticId = staticId;
     }
 
     private OnVideoCanPlayCallback mOnVideoCanPlayCallback;
