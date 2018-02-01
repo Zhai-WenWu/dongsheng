@@ -212,7 +212,9 @@ public class DishHeaderViewNew extends LinearLayout {
 
     }
     public void initVideoAd(){
-        mVideoPlayerController.setShowAd(false);
+        if(mVideoPlayerController != null){
+            mVideoPlayerController.setShowAd(false);
+        }
         if(!initAdTypeVideo()){
             initAdTypeImg();
         }
@@ -229,7 +231,9 @@ public class DishHeaderViewNew extends LinearLayout {
         if(adVideoController.isAvailable()&&adVideoController.getAdVideoPlayer()!=null){
             adVideoController.setStaticId("a_menu_detail_video");
             ad_type_video.addView(adVideoController.getAdVideoPlayer());
-            mVideoPlayerController.setShowAd(true);
+            if(mVideoPlayerController != null){
+                mVideoPlayerController.setShowAd(true);
+            }
             AdType="2";
             handleTypeVideoCallBack();
             return true;
