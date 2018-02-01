@@ -145,7 +145,7 @@ public class ArticleAdContrler {
     public View getBigAdView(Map<String, String> dataMap) {
         if (dataMap == null || dataMap.isEmpty())
             return null;
-        if(XHActivityManager.getInstance().getCurrentActivity().isFinishing()
+        if(XHActivityManager.getInstance().getCurrentActivity() == null || XHActivityManager.getInstance().getCurrentActivity().isFinishing()
                 || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && XHActivityManager.getInstance().getCurrentActivity().isDestroyed()))
             return null;
         View adView = null;
