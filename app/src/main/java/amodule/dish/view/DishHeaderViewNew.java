@@ -778,7 +778,12 @@ public class DishHeaderViewNew extends LinearLayout {
         @Override
         public void onClick(View v) {
             removeTipView();
-            adVideoController.onResume();
+            int state=adVideoController.getVideoCurrentState();
+            if(state<0||state>6){
+                adVideoController.start();
+            }else{
+                adVideoController.onResume();
+            }
             new Thread(() -> FileManager.saveShared(context,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI,"1")).start();
         }
     };
