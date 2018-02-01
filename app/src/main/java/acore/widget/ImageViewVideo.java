@@ -74,6 +74,8 @@ public class ImageViewVideo extends ImageView {
 		if (mIsHasVideo) {
 			InputStream is = getResources().openRawResource(R.drawable.home_item_play);
 			mPlayBitmap = UtilImage.inputStreamTobitmap(is);
+			if (mPlayBitmap == null)
+				return;
 			left = getWidth() / 2 - playImgWH / 2;
 			top = getHeight() / 2 - playImgWH / 2;
 			//对图片的切割显示
