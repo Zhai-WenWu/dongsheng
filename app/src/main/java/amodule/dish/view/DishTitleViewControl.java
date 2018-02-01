@@ -349,28 +349,15 @@ public class DishTitleViewControl implements View.OnClickListener {
                                     boolean isAutoOff = OffDishToFavoriteControl.getIsAutoOffDish(detailDish.getApplicationContext());
                                     mFavePopWindowDialog = new PopWindowDialog(XHActivityManager.getInstance().getCurrentActivity(), "收藏成功", "这道菜已经被多人分享过，分享给好友？",
                                             isAutoOff ? "已离线到本地,可在设置-收藏菜谱关闭。" : null, true);
-                                    if (isHasVideo && mVideoPlayerController != null && mVideoPlayerController.getVideoImageView() != null) {
-                                        String title = "【香哈菜谱】看了" + dishInfoMap.get("name") + "的教学视频，我已经学会了，味道超赞！";
-                                        String clickUrl = StringManager.wwwUrl + "video/caipu/" + code + ".html";
-                                        ;
-                                        String content = "顶级大厨的做菜视频，讲的真是太详细啦！想吃就赶快进来免费学习吧~ " + clickUrl;
-//                                            Bitmap bitmap = mVideoPlayerController.getVideoImageView().getBitmap();
-//                                            String imgUrl = ShareTools.getBarShare(DetailDishWeb.this).saveDrawable(bitmap, FileManager.save_cache + "/share_" + currentTimeMillis() + ".png");
-                                        String type = BarShare.IMG_TYPE_WEB;
-                                        String imgUrl = dishInfoMap.get("img");
-                                        if (imgUrl == null) {
-                                            type = ShareTools.IMG_TYPE_RES;
-                                            imgUrl = "" + R.drawable.share_launcher;
-                                        }
-                                        mFavePopWindowDialog.show(type, title, clickUrl, content, imgUrl, "菜谱收藏成功后", "强化分享");
-                                    } else {
-                                        String type = BarShare.IMG_TYPE_WEB;
-                                        String title = "【香哈菜谱】" + dishInfoMap.get("name") + "的做法";
-                                        String clickUrl = StringManager.wwwUrl + "caipu/" + code + ".html";
-                                        String content = "我又学会了一道" + dishInfoMap.get("name") + "，太棒了，强烈推荐你也用香哈学做菜！";
-                                        String imgUrl = dishInfoMap.get("img");
-                                        mFavePopWindowDialog.show(type, title, clickUrl, content, imgUrl, "菜谱收藏成功后", "强化分享");
-                                    }
+
+                                    Map<String, String> shareMap = getShareData(isAuthor, true);
+                                    if (shareMap == null)
+                                        return;
+                                    shareMap.put("from", "菜谱收藏成功后");
+                                    shareMap.put("parent", "强化分享");
+                                    if (!TextUtils.isEmpty(mShareStr))
+                                        shareMap.put("shareParams", mShareStr);
+                                    mFavePopWindowDialog.show(shareMap);
                                     XHClick.mapStat(XHApplication.in(), "a_share400", "强化分享", "菜谱收藏成功后");
                                 }
                             }
