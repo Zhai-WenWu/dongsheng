@@ -23,6 +23,6 @@
         android:gravity="center"
         android:textColor="#333333"
         android:textSize="@dimen/sp_12"
-        tools:text="VIP名厨课"/>
+        tools:text="VIP会员"/>
 
 </LinearLayout>

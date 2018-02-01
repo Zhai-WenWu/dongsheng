@@ -41,7 +41,7 @@ public class LessonHomeViewController implements View.OnClickListener{
 
     private void initUI() {
         TextView title = (TextView) mActivity.findViewById(R.id.title);
-        title.setText("VIP名厨课");
+        title.setText("VIP会员");
         mActivity.findViewById(R.id.back).setOnClickListener(this);
         //创建headerData控制器
         mHeaderControler = new LessonHomeHeaderControler(mHeaderView);
