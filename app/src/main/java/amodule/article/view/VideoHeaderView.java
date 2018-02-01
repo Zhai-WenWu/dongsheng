@@ -439,6 +439,7 @@ public class VideoHeaderView extends RelativeLayout {
         adVideoController.setOnSikpCallback(new AdVideoController.OnSikpCallback() {
             @Override
             public void onSkip() {
+                preparePlayVideo();
                 XHClick.mapStat(activity,"a_ShortVideoDetail","图文广告","跳过");
             }
         });
