@@ -306,7 +306,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
     protected void onDestroy() {
         super.onDestroy();
         //反注册。
-        ObserverManager.getInstance().unRegisterObserver(ObserverManager.NOTIFY_LOGIN,ObserverManager.NOTIFY_FOLLOW,ObserverManager.NOTIFY_PAYFINISH,ObserverManager.NOTIFY_UPLOADOVER);
+        ObserverManager.getInstance().unRegisterObserver(this);
         if(detailDishViewManager!=null)detailDishViewManager.onDestroy();
         long nowTime=System.currentTimeMillis();
         if(startTime>0&&(nowTime-startTime)>0&&!TextUtils.isEmpty(data_type)&&!TextUtils.isEmpty(module_type)){

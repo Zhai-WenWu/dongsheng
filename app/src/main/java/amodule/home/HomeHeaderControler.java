@@ -78,6 +78,7 @@ public class HomeHeaderControler implements ISaveStatistic {
                 mLayouts[index].setVisibility(View.GONE);
                 continue;
             }
+            mLayouts[index].setStatisticPage("home");
             mLayouts[index].setData(map);
             mLayouts[index].setStatictusData(MainHomePage.STATICTUS_ID_HOMEPAGE, twoLevelArray[index], threeLevelArray[index]);
             StatisticCallback statisticCallback = (id, twoLevel, threeLevel, position) -> {
@@ -111,9 +112,9 @@ public class HomeHeaderControler implements ISaveStatistic {
     }
 
     @Override
-    public void saveStatisticData() {
+    public void saveStatisticData(String page) {
         for (WidgetVerticalLayout layout : mLayouts) {
-            layout.saveStatisticData();
+            layout.saveStatisticData(page);
         }
     }
 

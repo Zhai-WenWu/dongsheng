@@ -93,6 +93,7 @@ public class HomeViewControler {
         initNetworkTip();
         mRefreshLayout = (PtrClassicFrameLayout) mActivity.findViewById(R.id.refresh_list_view_frame);
         mRefreshLayout.disableWhenHorizontalMove(true);
+        mRefreshLayout.setLoadingMinTime(300);
         mRvListView = (RvListView) mActivity.findViewById(R.id.rvListview);
         mRvListView.addHeaderView(mHeaderView);
         mRvListView.addHeaderView(mHomeFeedHeaderControler.getLayout());
@@ -178,7 +179,7 @@ public class HomeViewControler {
     public void setStatisticShowNum() {
         //头部统计数据存储
         if (mHeaderControler != null) {
-            mHeaderControler.saveStatisticData();
+            mHeaderControler.saveStatisticData("home");
         }
         //列表
         if (scrollDataIndex > 0) {

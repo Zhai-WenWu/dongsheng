@@ -66,11 +66,11 @@ public class HomeFuncNavView2 extends LinearLayout {
         int currentHour = Integer.parseInt(currentHourStr);
 //        Log.i("tzy","currentHour = " + currentHour);
         int resId = R.drawable.home_nav_dish_2;
-        if(currentHour <= 10 || currentHour > 23){
+        if (currentHour < 10 || currentHour >= 22) {
             resId = R.drawable.home_nav_dish_1;
-        }else if(currentHour > 10 && currentHour <= 14){
+        } else if (currentHour >= 10 && currentHour < 14) {
             resId = R.drawable.home_nav_dish_2;
-        }else if(currentHour > 14 && currentHour <= 23){
+        } else if (currentHour >= 14 && currentHour < 22) {
             resId = R.drawable.home_nav_dish_3;
         }
         WidgetUtility.setResToImage(getImageView(R.id.icon_left_1),resId);

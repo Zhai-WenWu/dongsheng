@@ -9,5 +9,5 @@ package amodule._common.delegate;
  */
 
 public interface ISaveStatistic {
-    void saveStatisticData();
+    void saveStatisticData(String page);
 }

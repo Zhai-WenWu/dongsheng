@@ -149,11 +149,11 @@ public class HomeSecondListActivity extends BaseAppCompatActivity {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("HH");
                 String currentHourStr = dateFormat.format(System.currentTimeMillis());
                 int currentHour = Integer.parseInt(currentHourStr);
-                if (currentHour <= 10 || currentHour > 23) {
+                if (currentHour < 10 || currentHour >= 22) {
                     selectedPos = 0;
-                } else if (currentHour > 10 && currentHour <= 14) {
+                } else if (currentHour >= 10 && currentHour < 14) {
                     selectedPos = 1;
-                } else if (currentHour > 14 && currentHour <= 23) {
+                } else if (currentHour >= 14 && currentHour < 22) {
                     selectedPos = 2;
                 }
                 break;

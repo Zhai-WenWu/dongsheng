@@ -51,7 +51,6 @@ public class FileManager extends UtilFile{
 	public static final String file_urlRule = "urlRule";
 	public static final String file_allCircle = "allCircle";
 	//我的页面，内置数据
-	public static final String file_myself = "myself";
 	public static final String file_indexModuleAndRecCircle = "indexModuleAndRecCircle";
 	public static final String file_location = "location";
 	public static final String file_ad = "ad";

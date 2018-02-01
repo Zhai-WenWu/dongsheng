@@ -179,6 +179,7 @@ public abstract class UploadHelper {
 										broadIntent.setAction(UploadStateChangeBroadcasterReceiver.ACTION);
 										broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.DATA_TYPE, "0");
 										broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.STATE_KEY, UploadStateChangeBroadcasterReceiver.STATE_SUCCESS);
+										broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.SECONDE_EDIT, TextUtils.isEmpty(uploadData.get("code")) ? "1" : "2");
 										if (Main.allMain != null)
 											Main.allMain.sendBroadcast(broadIntent);
 									}

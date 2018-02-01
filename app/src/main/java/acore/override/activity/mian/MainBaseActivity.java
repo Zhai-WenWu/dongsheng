@@ -24,6 +24,8 @@ import amodule.main.Main;
 import third.ad.AdsShow;
 import third.mall.aplug.MallCommon;
 
+import static android.content.Intent.FLAG_ACTIVITY_NO_USER_ACTION;
+
 public class MainBaseActivity extends AppCompatActivity {
 	protected int level = 1;
 	public RelativeLayout rl;
@@ -64,13 +66,7 @@ public class MainBaseActivity extends AppCompatActivity {
 			BaseActivity.mUpDishPopWindowDialog = null;
 		}else{
 			// 程序如果未初始化但却有定时器执行，则停止它。主要用于外部吊起应用时
-			if (Main.allMain == null && Main.timer != null) {
-				Main.stopTimer();
-			}
 			if (Main.allMain != null ){
-				if(Main.timer != null) {
-					Main.stopTimer();
-				}
 				Main.allMain.doExit(this, true);
 			}
 		}
@@ -92,7 +88,9 @@ public class MainBaseActivity extends AppCompatActivity {
 				ad.onResumeAd();
 			}
 		}
-		mActMagager.onResume(level);
+		if (mActMagager != null){
+			mActMagager.onResume(level);
+		}
 		if(BaseActivity.mUpDishPopWindowDialog != null && BaseActivity.mUpDishPopWindowDialog.isHasShow()) {
 			BaseActivity.mUpDishPopWindowDialog.onResume();
 		}
@@ -108,12 +106,22 @@ public class MainBaseActivity extends AppCompatActivity {
 				ad.onPauseAd();
 			}
 		}
-		mActMagager.onPause();
+		if (mActMagager != null){
+			mActMagager.onPause();
+		}
 		//用完即回收
 		if(MallCommon.interfaceMall!=null)
 			MallCommon.interfaceMall=null;
 		if(BaseActivity.mUpDishPopWindowDialog != null && BaseActivity.mUpDishPopWindowDialog.isHasShow()) {
 			BaseActivity.mUpDishPopWindowDialog.onPause();
+		}
+	}
+
+	@Override
+	protected void onUserLeaveHint() {
+		super.onUserLeaveHint();
+		if (mActMagager != null){
+			mActMagager.onUserLeaveHint();
 		}
 	}
 
@@ -125,6 +133,7 @@ public class MainBaseActivity extends AppCompatActivity {
 
 	@Override
 	public void startActivity(Intent intent) {
+		intent.addFlags(FLAG_ACTIVITY_NO_USER_ACTION);
 		super.startActivity(intent);
 		// 设置切换动画，从右边进入，左边退出
 		overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
@@ -133,12 +142,16 @@ public class MainBaseActivity extends AppCompatActivity {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		mActMagager.onDestroy();
+		if (mActMagager != null){
+			mActMagager.onDestroy();
+		}
 	}
 
 	@Override
 	protected void onStop() {
 		super.onStop();
-
+		if (mActMagager != null){
+			mActMagager.onStop();
+		}
 	}
 }

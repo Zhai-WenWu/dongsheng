@@ -235,16 +235,6 @@
                     android:host="welcome"
                     android:scheme="xiangha"/>
             </intent-filter>
-            <!-- GrowingIO 启动圈选接口 -->
-            <intent-filter>
-                <data android:scheme="growing.e3205a1fdf7cb86e"/>
-
-                <action android:name="android.intent.action.VIEW"/>
-
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-            </intent-filter>
-            <!-- GrowingIO 启动圈选接口 -->
         </activity>
         <!-- 小米账号 -->
         <!-- <activity android:name="com.xiaomi.account.openauth.AuthorizeActivity" /> -->

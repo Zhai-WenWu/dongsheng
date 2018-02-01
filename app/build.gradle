@@ -36,8 +36,8 @@ dependencies {
     compile 'com.meituan.android.walle:library:1.0.3'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.qiyukf.unicorn:unicorn:3.10.0'
-    compile project(':gsyVideoPlayer-java')
     compile project(':cling_lib')
+    compile project(':gsyVideoPlayer-java')
     //Java8的stream API第三方兼容包
     compile 'com.annimon:stream:1.0.3'
 }
@@ -53,9 +53,6 @@ android {
         versionName "6.0.0.3"
         // dex突破65535的限制
         multiDexEnabled true
-        //GrowingIO
-        resValue("string", "growingio_project_id", "bf5bf872bedc95d3")
-        resValue("string", "growingio_url_scheme", "growing.e3205a1fdf7cb86e")
         ndk {
             //APP的build.gradle设置支持的SO库架构
             moduleName "gsyVideoPlayer-java"
@@ -66,7 +63,11 @@ android {
 //        }
     }
 
-
+    dexOptions {
+        incremental true
+        jumboMode = true
+        javaMaxHeapSize "4g"
+    }
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/beans.xml'

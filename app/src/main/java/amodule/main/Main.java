@@ -11,8 +11,10 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.view.KeyEventCompat;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -32,7 +34,6 @@ import com.xiangha.R;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
-import java.util.TimerTask;
 
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
@@ -49,6 +50,7 @@ import acore.tools.LogManager;
 import acore.tools.ObserverManager;
 import acore.tools.PageStatisticsUtils;
 import acore.tools.Tools;
+import acore.tools.ToolsDevice;
 import acore.widget.XiangHaTabHost;
 import amodule.dish.tools.OffDishToFavoriteControl;
 import amodule.dish.tools.UploadDishControl;
@@ -72,6 +74,7 @@ import third.qiyu.QiYvHelper;
 import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilLog;
 
+import static android.content.Intent.FLAG_ACTIVITY_NO_USER_ACTION;
 import static com.xiangha.R.id.iv_itemIsFine;
 
 @SuppressWarnings("deprecation")
@@ -91,7 +94,6 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
     public static Main allMain;
     @SuppressLint("StaticFieldLeak")
     public static MainBaseActivity mainActivity;
-    public static Timer timer;
     /**
      * 页面关闭层级
      * 把层级>=close_level的层级关闭
@@ -122,6 +124,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
     private boolean isInit=false;
     private QiYvHelper.UnreadCountChangeListener mUnreadCountListener;
     private WelcomeControls welcomeControls;
+    public static Timer timer;
 
     @SuppressLint("WrongViewCast")
     @Override
@@ -146,7 +149,6 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
         welcomeControls= LoginManager.isShowAd()?new WelcomeControls(this,callBack):
                 new WelcomeControls(this,1,callBack);
         LogManager.printStartTime("zhangyujian","main::oncreate::");
-        ClingPresenter.getInstance().onCreate(this, null);
     }
 
     private WelcomeControls.WelcomeCallBack callBack = new WelcomeControls.WelcomeCallBack() {
@@ -178,6 +180,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                 addQiYvListener();
                 if(mainInitDataControl!=null)mainInitDataControl.mainAfterUpload(Main.this);
                 FileManager.saveShared(Main.this,FileManager.app_welcome,VersionOp.getVerName(Main.this),"1");
+                ClingPresenter.getInstance().onCreate(Main.this, null);
             }
         }
         @Override
@@ -321,17 +324,38 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
         }
     }
 
+    Handler mTimerHandler = null;
+    Runnable mRunnable = null;
     // 时刻取得导航提醒
-    private void initRunTime() {
-        timer = new Timer();
-        final Handler handler = new Handler();
-        TimerTask tt = new TimerTask() {
-            @Override
-            public void run() {
-                handler.post(() -> MessageTipController.newInstance().getCommonData(null));
+    public void initRunTime() {
+        Log.i("tzy", "initRunTime: ");
+        if(mTimerHandler == null){
+            mTimerHandler = new Handler();
+            execute();
+        }
+    }
+
+    private void execute(){
+        if(mTimerHandler != null){
+            if(mRunnable == null){
+                mRunnable = () -> {
+                    MessageTipController.newInstance().getCommonData(null);
+                    execute();
+                };
+                mTimerHandler.post(mRunnable);
+            }else{
+                mTimerHandler.postDelayed(mRunnable,everyReq * 1000);
             }
-        };
-        timer.schedule(tt, everyReq * 1000, everyReq * 1000);
+        }
+    }
+
+    public void stopTimer() {
+        Log.i("tzy", "stopTimer: ");
+        if (mTimerHandler != null) {
+            mTimerHandler.removeCallbacks(mRunnable);
+            mTimerHandler = null;
+            mRunnable = null;
+        }
     }
 
     @Override
@@ -365,10 +389,8 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
         GoodCommentManager.setStictis(Main.this, (typeStr, timeStr) ->
                 XHClick.mapStat(Main.this, "a_evaluate420", typeStr, timeStr)
         );
+        initRunTime();
         openUri();
-        if (timer == null) {
-            initRunTime();
-        }
         //如果是从收藏去登录，并登录成功，直接切换到收藏页面
         if(loginIsFromFav && LoginManager.isLogin()){
             setCurrentTabByClass(MyFavorite.class);
@@ -403,21 +425,24 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
     }
 
     @Override
+    protected void onUserLeaveHint() {
+        super.onUserLeaveHint();
+        stopTimer();
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
         if (!Tools.isAppOnForeground()) {
             isForeground = false;
             homebackTime = System.currentTimeMillis();
         }
-        if (timer != null) {
-            timer.cancel();
-            timer = null;
-        }
     }
 
     @Override
-    protected void onRestart() {
-        super.onRestart();
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        Log.i("tzy", "onKeyDown: "+event.getKeyCode());
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override
@@ -428,6 +453,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
 
     @Override
     public void startActivity(Intent intent) {
+        intent.addFlags(FLAG_ACTIVITY_NO_USER_ACTION);
         super.startActivity(intent);
         // 设置切换动画，从下边进入，上边退出
         overridePendingTransition(R.anim.in_from_nothing, R.anim.out_to_nothing);
@@ -480,10 +506,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                 Tools.showToast(this, "再点击一次退出应用");
                 new Handler().postDelayed(() -> doExit = 0, 1000 * 5);
             } else {
-                if (timer != null) {
-                    timer.cancel();
-                    timer.purge();
-                }
+                stopTimer();
                 colse_level = 0;
                 //请求广告位
                 AdConfigTools.getInstance().getAdConfigInfo();
@@ -664,13 +687,6 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                 XHClick.mapStat(Main.this, "a_index530", "底部导航栏", "点击" + tabTitle[i]);
                 XHClick.mapStat(Main.this, "a_down420", tabTitle[i] + "", "");
             }
-        }
-    }
-
-    public static void stopTimer() {
-        if (timer != null) {
-            timer.cancel();
-            timer.purge();
         }
     }
 

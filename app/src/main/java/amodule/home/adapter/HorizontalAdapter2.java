@@ -34,7 +34,7 @@ public class HorizontalAdapter2 extends RvBaseAdapter<Map<String, String>> {
     public void onBindViewHolder(RvBaseViewHolder<Map<String, String>> holder, int position) {
         if (mDatas == null || mDatas.isEmpty() || mDatas.size() <= position)
             return;
-        holder.bindData(position, mDatas.get(position));
+        super.onBindViewHolder(holder,position);
     }
 
     @Override

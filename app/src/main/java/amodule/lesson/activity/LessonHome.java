@@ -8,6 +8,7 @@ import android.widget.Button;
 
 import com.xiangha.R;
 
+import acore.logic.XHClick;
 import acore.logic.load.LoadManager;
 import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.IObserver;
@@ -171,6 +172,18 @@ public class LessonHome extends BaseAppCompatActivity implements IObserver {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        setRecommedTime(System.currentTimeMillis());
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        saveStatistic();
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         ObserverManager.getInstance().unRegisterObserver(this);
@@ -185,5 +198,24 @@ public class LessonHome extends BaseAppCompatActivity implements IObserver {
                     break;
             }
         }
+    }
+
+    protected long startTime = -1;//开始的时间戳
+    /** 统计推荐列表使用时间 */
+    private void saveStatistic() {
+        if(mViewController != null){
+            mViewController.saveStatisticData("VipHome");
+        }
+        long nowTime = System.currentTimeMillis();
+        if (startTime > 0) {
+            Log.i("zyj", "stop::" + String.valueOf((nowTime - startTime) / 1000));
+            XHClick.saveStatictisFile("VipHome", "", "", "", "", "stop", String.valueOf((nowTime - startTime) / 1000), "", "", "", "");
+            //置数据
+            setRecommedTime(0);
+        }
+    }
+
+    public void setRecommedTime(long time) {
+        this.startTime = time;
     }
 }

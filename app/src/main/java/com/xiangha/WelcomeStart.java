@@ -9,6 +9,8 @@ import android.support.annotation.Nullable;
 import acore.tools.LogManager;
 import amodule.main.Main;
 
+import static android.content.Intent.FLAG_ACTIVITY_NO_USER_ACTION;
+
 /**
  * welcome 临时停留页面
  */
@@ -24,6 +26,7 @@ public class WelcomeStart extends Activity{
             return;
         }
         Intent intent = new Intent(this,Main.class);
+        intent.addFlags(FLAG_ACTIVITY_NO_USER_ACTION);
         Bundle bundle = this.getIntent().getExtras();
         if (bundle != null) {
             intent.putExtras(bundle);

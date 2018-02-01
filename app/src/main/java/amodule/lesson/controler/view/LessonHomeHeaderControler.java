@@ -9,6 +9,7 @@ import java.util.Map;
 
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
+import amodule._common.delegate.ISaveStatistic;
 import amodule._common.delegate.StatisticCallback;
 import amodule._common.plugin.WidgetVerticalLayout;
 
@@ -18,7 +19,7 @@ import amodule._common.plugin.WidgetVerticalLayout;
  * Created by mrtrying on 2017/12/19 12:48:17.
  * e_mail : ztanzeyu@gmail.com
  */
-public class LessonHomeHeaderControler {
+public class LessonHomeHeaderControler implements ISaveStatistic {
 
     private View mHeader;
 
@@ -52,9 +53,17 @@ public class LessonHomeHeaderControler {
             mLayouts[index].setStatisticCallback(
                     (id, itemTwoLevel, itemThreeLevel, position) -> XHClick.mapStat(mLayouts[i].getContext(), id, itemTwoLevel,  itemThreeLevel + position)
             );
+            mLayouts[index].setStatisticPage("VipHome");
             mLayouts[index].setStatictusData(ID, twoLevelArray[index], threeLevelArray[index]);
             mLayouts[index].setData(map);
             mLayouts[index].setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void saveStatisticData(String page) {
+        for (WidgetVerticalLayout layout : mLayouts) {
+            layout.saveStatisticData(page);
         }
     }
 }

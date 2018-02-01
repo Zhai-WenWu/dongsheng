@@ -45,7 +45,7 @@ public class StringMap extends AbstractMap implements Externalizable
     
     /* ------------------------------------------------------------ */
     protected int _width=__HASH_WIDTH;
-    protected Node _root=new Node();
+    protected Nodes _root=new Nodes();
     protected boolean _ignoreCase=false;
     protected NullEntry _nullEntry=null;
     protected Object _nullValue=null;
@@ -138,10 +138,10 @@ public class StringMap extends AbstractMap implements Externalizable
             return oldValue;
         }
         
-        Node node = _root;
+        Nodes Nodes = _root;
         int ni=-1;
-        Node prev = null;
-        Node parent = null;
+        Nodes prev = null;
+        Nodes parent = null;
 
         // look for best match
     charLoop:
@@ -149,24 +149,24 @@ public class StringMap extends AbstractMap implements Externalizable
         {
             char c=key.charAt(i);
             
-            // Advance node
+            // Advance Nodes
             if (ni==-1)
             {
-                parent=node;
+                parent=Nodes;
                 prev=null;
                 ni=0;
-                node=(node._children==null)?null:node._children[c%_width];
+                Nodes=(Nodes._children==null)?null:Nodes._children[c%_width];
             }
             
-            // Loop through a node chain at the same level
-            while (node!=null) 
+            // Loop through a Nodes chain at the same level
+            while (Nodes!=null) 
             {
-                // If it is a matching node, goto next char
-                if (node._char[ni]==c || _ignoreCase&&node._ochar[ni]==c)
+                // If it is a matching Nodes, goto next char
+                if (Nodes._char[ni]==c || _ignoreCase&&Nodes._ochar[ni]==c)
                 {
                     prev=null;
                     ni++;
-                    if (ni==node._char.length)
+                    if (ni==Nodes._char.length)
                         ni=-1;
                     continue charLoop;
                 }
@@ -176,59 +176,59 @@ public class StringMap extends AbstractMap implements Externalizable
                 if (ni==0)
                 {
                     // look along the chain for a char match
-                    prev=node;
-                    node=node._next;
+                    prev=Nodes;
+                    Nodes=Nodes._next;
                 }
                 else
                 {
-                    // Split the current node!
-                    node.split(this,ni);
+                    // Split the current Nodes!
+                    Nodes.split(this,ni);
                     i--;
                     ni=-1;
                     continue charLoop;
                 }
             }
 
-            // We have run out of nodes, so as this is a put, make one
-            node = new Node(_ignoreCase,key,i);
+            // We have run out of Nodess, so as this is a put, make one
+            Nodes = new Nodes(_ignoreCase,key,i);
 
             if (prev!=null) // add to end of chain
-                prev._next=node;
+                prev._next=Nodes;
             else if (parent!=null) // add new child
             {
                 if (parent._children==null)
-                    parent._children=new Node[_width];
-                parent._children[c%_width]=node;
-                int oi=node._ochar[0]%_width;
-                if (node._ochar!=null && node._char[0]%_width!=oi)
+                    parent._children=new Nodes[_width];
+                parent._children[c%_width]=Nodes;
+                int oi=Nodes._ochar[0]%_width;
+                if (Nodes._ochar!=null && Nodes._char[0]%_width!=oi)
                 {
                     if (parent._children[oi]==null)
-                        parent._children[oi]=node;
+                        parent._children[oi]=Nodes;
                     else
                     {
-                        Node n=parent._children[oi];
+                        Nodes n=parent._children[oi];
                         while(n._next!=null)
                             n=n._next;
-                        n._next=node;
+                        n._next=Nodes;
                     }
                 }
             }
             else // this is the root.
-                _root=node;
+                _root=Nodes;
             break;
         }
         
-        // Do we have a node
-        if (node!=null)
+        // Do we have a Nodes
+        if (Nodes!=null)
         {
             // Split it if we are in the middle
             if(ni>0)
-                node.split(this,ni);
+                Nodes.split(this,ni);
         
-            Object old = node._value;
-            node._key=key;
-            node._value=value;
-            _entrySet.add(node);
+            Object old = Nodes._value;
+            Nodes._key=key;
+            Nodes._value=value;
+            _entrySet.add(Nodes);
             return old;
         }
         return null;
@@ -270,7 +270,7 @@ public class StringMap extends AbstractMap implements Externalizable
         if (key==null)
             return _nullEntry;
         
-        Node node = _root;
+        Nodes Nodes = _root;
         int ni=-1;
 
         // look for best match
@@ -279,38 +279,38 @@ public class StringMap extends AbstractMap implements Externalizable
         {
             char c=key.charAt(offset+i);
 
-            // Advance node
+            // Advance Nodes
             if (ni==-1)
             {
                 ni=0;
-                node=(node._children==null)?null:node._children[c%_width];
+                Nodes=(Nodes._children==null)?null:Nodes._children[c%_width];
             }
             
-            // Look through the node chain
-            while (node!=null) 
+            // Look through the Nodes chain
+            while (Nodes!=null) 
             {
-                // If it is a matching node, goto next char
-                if (node._char[ni]==c || _ignoreCase&&node._ochar[ni]==c)
+                // If it is a matching Nodes, goto next char
+                if (Nodes._char[ni]==c || _ignoreCase&&Nodes._ochar[ni]==c)
                 {
                     ni++;
-                    if (ni==node._char.length)
+                    if (ni==Nodes._char.length)
                         ni=-1;
                     continue charLoop;
                 }
 
-                // No char match, so if mid node then no match at all.
+                // No char match, so if mid Nodes then no match at all.
                 if (ni>0) return null;
 
                 // try next in chain
-                node=node._next;                
+                Nodes=Nodes._next;                
             }
             return null;
         }
         
         if (ni>0) return null;
-        if (node!=null && node._key==null)
+        if (Nodes!=null && Nodes._key==null)
             return null;
-        return node;
+        return Nodes;
     }
     
     /* ------------------------------------------------------------ */
@@ -326,7 +326,7 @@ public class StringMap extends AbstractMap implements Externalizable
         if (key==null)
             return _nullEntry;
         
-        Node node = _root;
+        Nodes Nodes = _root;
         int ni=-1;
 
         // look for best match
@@ -335,38 +335,38 @@ public class StringMap extends AbstractMap implements Externalizable
         {
             char c=key[offset+i];
 
-            // Advance node
+            // Advance Nodes
             if (ni==-1)
             {
                 ni=0;
-                node=(node._children==null)?null:node._children[c%_width];
+                Nodes=(Nodes._children==null)?null:Nodes._children[c%_width];
             }
             
-            // While we have a node to try
-            while (node!=null) 
+            // While we have a Nodes to try
+            while (Nodes!=null) 
             {
-                // If it is a matching node, goto next char
-                if (node._char[ni]==c || _ignoreCase&&node._ochar[ni]==c)
+                // If it is a matching Nodes, goto next char
+                if (Nodes._char[ni]==c || _ignoreCase&&Nodes._ochar[ni]==c)
                 {
                     ni++;
-                    if (ni==node._char.length)
+                    if (ni==Nodes._char.length)
                         ni=-1;
                     continue charLoop;
                 }
 
-                // No char match, so if mid node then no match at all.
+                // No char match, so if mid Nodes then no match at all.
                 if (ni>0) return null;
 
                 // try next in chain
-                node=node._next;                
+                Nodes=Nodes._next;                
             }
             return null;
         }
         
         if (ni>0) return null;
-        if (node!=null && node._key==null)
+        if (Nodes!=null && Nodes._key==null)
             return null;
-        return node;
+        return Nodes;
     }
 
     /* ------------------------------------------------------------ */
@@ -383,7 +383,7 @@ public class StringMap extends AbstractMap implements Externalizable
         if (key==null)
             return _nullEntry;
         
-        Node node = _root;
+        Nodes Nodes = _root;
         int ni=-1;
 
         // look for best match
@@ -392,43 +392,43 @@ public class StringMap extends AbstractMap implements Externalizable
         {
             char c=(char)key[offset+i];
 
-            // Advance node
+            // Advance Nodes
             if (ni==-1)
             {
                 ni=0;
                 
-                Node child = (node._children==null)?null:node._children[c%_width];
+                Nodes child = (Nodes._children==null)?null:Nodes._children[c%_width];
                 
                 if (child==null && i>0)
-                    return node; // This is the best match
-                node=child;           
+                    return Nodes; // This is the best match
+                Nodes=child;           
             }
             
-            // While we have a node to try
-            while (node!=null) 
+            // While we have a Nodes to try
+            while (Nodes!=null) 
             {
-                // If it is a matching node, goto next char
-                if (node._char[ni]==c || _ignoreCase&&node._ochar[ni]==c)
+                // If it is a matching Nodes, goto next char
+                if (Nodes._char[ni]==c || _ignoreCase&&Nodes._ochar[ni]==c)
                 {
                     ni++;
-                    if (ni==node._char.length)
+                    if (ni==Nodes._char.length)
                         ni=-1;
                     continue charLoop;
                 }
 
-                // No char match, so if mid node then no match at all.
+                // No char match, so if mid Nodes then no match at all.
                 if (ni>0) return null;
 
                 // try next in chain
-                node=node._next;                
+                Nodes=Nodes._next;                
             }
             return null;
         }
         
         if (ni>0) return null;
-        if (node!=null && node._key==null)
+        if (Nodes!=null && Nodes._key==null)
             return null;
-        return node;
+        return Nodes;
     }
     
     
@@ -456,7 +456,7 @@ public class StringMap extends AbstractMap implements Externalizable
             return oldValue;
         }
         
-        Node node = _root;
+        Nodes Nodes = _root;
         int ni=-1;
 
         // look for best match
@@ -465,42 +465,42 @@ public class StringMap extends AbstractMap implements Externalizable
         {
             char c=key.charAt(i);
 
-            // Advance node
+            // Advance Nodes
             if (ni==-1)
             {
                 ni=0;
-                node=(node._children==null)?null:node._children[c%_width];
+                Nodes=(Nodes._children==null)?null:Nodes._children[c%_width];
             }
             
-            // While we have a node to try
-            while (node!=null) 
+            // While we have a Nodes to try
+            while (Nodes!=null) 
             {
-                // If it is a matching node, goto next char
-                if (node._char[ni]==c || _ignoreCase&&node._ochar[ni]==c)
+                // If it is a matching Nodes, goto next char
+                if (Nodes._char[ni]==c || _ignoreCase&&Nodes._ochar[ni]==c)
                 {
                     ni++;
-                    if (ni==node._char.length)
+                    if (ni==Nodes._char.length)
                         ni=-1;
                     continue charLoop;
                 }
 
-                // No char match, so if mid node then no match at all.
+                // No char match, so if mid Nodes then no match at all.
                 if (ni>0) return null;
 
                 // try next in chain
-                node=node._next;         
+                Nodes=Nodes._next;         
             }
             return null;
         }
 
         if (ni>0) return null;
-        if (node!=null && node._key==null)
+        if (Nodes!=null && Nodes._key==null)
             return null;
         
-        Object old = node._value;
-        _entrySet.remove(node);
-        node._value=null;
-        node._key=null;
+        Object old = Nodes._value;
+        _entrySet.remove(Nodes);
+        Nodes._value=null;
+        Nodes._key=null;
         
         return old; 
     }
@@ -540,7 +540,7 @@ public class StringMap extends AbstractMap implements Externalizable
     @Override
     public void clear()
     {
-        _root=new Node();
+        _root=new Nodes();
         _nullEntry=null;
         _nullValue=null;
         _entrySet.clear();
@@ -550,18 +550,18 @@ public class StringMap extends AbstractMap implements Externalizable
     /* ------------------------------------------------------------ */
     /* ------------------------------------------------------------ */
     /* ------------------------------------------------------------ */
-    private static class Node implements Entry
+    private static class Nodes implements Entry
     {
         char[] _char;
         char[] _ochar;
-        Node _next;
-        Node[] _children;
+        Nodes _next;
+        Nodes[] _children;
         String _key;
         Object _value;
         
-        Node(){}
+        Nodes(){}
         
-        Node(boolean ignoreCase,String s, int offset)
+        Nodes(boolean ignoreCase,String s, int offset)
         {
             int l=s.length()-offset;
             _char=new char[l];
@@ -582,9 +582,9 @@ public class StringMap extends AbstractMap implements Externalizable
             }
         }
 
-        Node split(StringMap map,int offset)
+        Nodes split(StringMap map,int offset)
         {
-            Node split = new Node();
+            Nodes split = new Nodes();
             int sl=_char.length-offset;
             
             char[] tmp=this._char;
@@ -610,7 +610,7 @@ public class StringMap extends AbstractMap implements Externalizable
                 map._entrySet.add(split);
 
             split._children=this._children;            
-            this._children=new Node[map._width];
+            this._children=new Nodes[map._width];
             this._children[split._char[0]%map._width]=split;
             if (split._ochar!=null && this._children[split._ochar[0]%map._width]!=split)
                 this._children[split._ochar[0]%map._width]=split;

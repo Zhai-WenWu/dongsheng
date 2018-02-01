@@ -37,18 +37,7 @@ public class PopWindowDialog extends Dialog {
 	private boolean mShowing;
 	private View.OnClickListener onCloseListener;
 
-	private boolean mShowIntegralTip;
-
 	public PopWindowDialog(@NonNull Context context,String hintTitle,String shareHint,String message) {
-		this(context, R.style.dialog);
-		mContext = context;
-		mHintTitle = hintTitle;
-		mShareHint= shareHint;
-		mMessage = message;
-		initDefault();
-	}
-
-	public PopWindowDialog(@NonNull Context context,String hintTitle,String shareHint,String message, boolean showIntegralTip) {
 		this(context, R.style.dialog);
 		mContext = context;
 		mHintTitle = hintTitle;
@@ -98,7 +87,6 @@ public class PopWindowDialog extends Dialog {
 		}
 		setContentView(mView);
 	}
-
 	private void initShareView(){
 		GridView mGridView = (GridView)mView.findViewById(R.id.d_popwindow_share_gridview);
 

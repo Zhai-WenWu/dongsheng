@@ -463,6 +463,35 @@ public class ToolsDevice {
     }
 
     /**
+     * 程序是否在前台运行
+     *
+     * @return
+     */
+    public static boolean isAppOnForeground(Context context) {
+        if(context == null){
+            return false;
+        }
+        ActivityManager activityManager = (ActivityManager) context.getApplicationContext()
+                .getSystemService(Context.ACTIVITY_SERVICE);
+        String packageName = context.getApplicationContext().getPackageName();
+        //获取Android设备中所有正在运行的App
+        List<ActivityManager.RunningAppProcessInfo> appProcesses = activityManager
+                .getRunningAppProcesses();
+        if (appProcesses == null)
+            return false;
+
+        for (ActivityManager.RunningAppProcessInfo appProcess : appProcesses) {
+            // The name of the process that this object is associated with.
+            if (appProcess.processName.equals(packageName)
+                    && appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * 为了去重,用此方法得到香哈经过处理过的imei,标示用户
      **/
     public static String getXhIMEI(Context context) {

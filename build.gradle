@@ -4,30 +4,28 @@ buildscript {
     repositories {
         jcenter()
         mavenCentral()
-        maven {
-            url 'http://4thline.org/m2'
-        }
-        google()
+        maven { url 'http://4thline.org/m2' }
+        maven { url 'http://maven.google.com' }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.0.1'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
         classpath 'com.meituan.android.walle:plugin:1.0.3'
-        classpath 'me.tatarka:gradle-retrolambda:3.2.5'
+        classpath 'me.tatarka:gradle-retrolambda:3.7.0'
         classpath 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2'
+        apply plugin: 'java'
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
     }
     configurations.classpath.exclude group: 'com.android.tools.external.lombok'
 }
-
 allprojects {
     repositories {
         jcenter()
         mavenCentral()
-        maven {
-            url 'http://4thline.org/m2'
-        }
-        google()
+        maven { url 'http://4thline.org/m2' }
+        maven { url 'http://maven.google.com' }
     }
 }
 
