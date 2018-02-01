@@ -221,6 +221,9 @@ public class DishHeaderViewNew extends LinearLayout {
     private boolean initAdTypeVideo(){
         removeTipView();
         ad_type_video.setVisibility(View.GONE);
+        if(adVideoController!=null){
+            adVideoController.destroy();
+        }
         adVideoController= new AdVideoController(context);
         Log.i("xianghaTag","initAdTypeVideo:::"+adVideoController.isAvailable()+"::"+(adVideoController.getAdVideoPlayer()!=null));
         if(adVideoController.isAvailable()&&adVideoController.getAdVideoPlayer()!=null){
