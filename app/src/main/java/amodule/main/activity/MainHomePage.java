@@ -404,7 +404,6 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
 
     @Override
     public void setMessageTip(int tipCournt) {
-//        Log.i("tzy", "MainHomePage::setMessageTip: " + tipCournt);
         mViewContrloer.setMessage(tipCournt);
     }
 }

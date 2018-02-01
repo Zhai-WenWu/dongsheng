@@ -1308,10 +1308,11 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
      * if I am playing release me
      */
     public void release() {
-        Log.d("tzy","release");
-        if (isCurrentMediaListener() &&
-                (System.currentTimeMillis() - CLICK_QUIT_FULLSCREEN_TIME) > FULL_SCREEN_NORMAL_DELAY) {
+        try {
+            Log.d("tzy","release");
             releaseAllVideos();
+        }catch (Exception e){
+
         }
         mHadPlay = false;
     }
