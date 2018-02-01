@@ -108,7 +108,7 @@ public class AdVideoConfigTool {
                 public void loaded(int i, String s, Object o) {
                     if (i >= ReqInternet.REQ_OK_IS
                             && o != null && o instanceof InputStream) {
-//                        new Thread(() -> FileManager.saveFileToCompletePath(filePath, (InputStream) o, false)).start();
+                        new Thread(() -> FileManager.saveFileToCompletePath(filePath, (InputStream) o, false)).start();
                     }
                 }
             });
