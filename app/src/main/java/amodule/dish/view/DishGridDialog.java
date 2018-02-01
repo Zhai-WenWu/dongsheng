@@ -81,7 +81,7 @@ public class DishGridDialog extends Dialog {
         contentView = LayoutInflater.from(getContext()).inflate(R.layout.a_dish_grid_dialog, null);
         RelativeLayout rootLayout = new RelativeLayout(getContext());
         rootLayout.setBackgroundColor(Color.parseColor("#88000000"));
-        rootLayout.setOnClickListener(v -> {});
+        rootLayout.setOnClickListener(v -> {dismiss();});
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, (int) (ToolsDevice.getWindowPx(getContext()).heightPixels * 2 / 3f));
         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
         rootLayout.addView(contentView, layoutParams);

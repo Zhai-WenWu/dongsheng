@@ -507,6 +507,9 @@ public abstract class GSYBaseVideoPlayer extends FrameLayout implements GSYMedia
             } catch (Exception e) {
                 e.printStackTrace();
                 mFullPauseBitmap = null;
+            }catch (OutOfMemoryError error){
+                error.printStackTrace();
+                mFullPauseBitmap = null;
             }
         }
     }
@@ -528,6 +531,9 @@ public abstract class GSYBaseVideoPlayer extends FrameLayout implements GSYMedia
                     initCover();
                 } catch (Exception e) {
                     e.printStackTrace();
+                    mFullPauseBitmap = null;
+                }catch (OutOfMemoryError error){
+                    error.printStackTrace();
                     mFullPauseBitmap = null;
                 }
             }

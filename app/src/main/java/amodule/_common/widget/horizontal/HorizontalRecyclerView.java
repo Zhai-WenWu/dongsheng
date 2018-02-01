@@ -192,9 +192,9 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,
         }else{
             if(!TextUtils.isEmpty(id) && !TextUtils.isEmpty(twoLevel)){
                 if(TextUtils.isEmpty(threeLevel))
-                    XHClick.mapStat(getContext(),id,twoLevel + position,"");
+                    XHClick.mapStat(getContext(),id,twoLevel + (position + 1),"");
                 else
-                    XHClick.mapStat(getContext(),id,twoLevel,threeLevel+position);
+                    XHClick.mapStat(getContext(),id,twoLevel,threeLevel+(position + 1));
             }
         }
     }
