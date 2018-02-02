@@ -230,6 +230,8 @@ public class DishTitleViewControl implements View.OnClickListener {
 
     private void openShareSingle(String platform) {
         Map<String, String> shareMap = getShareData(isAuthor, true);
+        if (shareMap == null)
+            return;
         shareMap.put("platform", platform);
         shareMap.put("from", "菜谱详情页");
         if (!TextUtils.isEmpty(mShareStr))
