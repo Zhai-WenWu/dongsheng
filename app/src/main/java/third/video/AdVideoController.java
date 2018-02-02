@@ -14,6 +14,7 @@ import com.example.gsyvideoplayer.listener.SampleListener;
 import com.shuyu.gsyvideoplayer.video.CleanVideoPlayer;
 import com.xiangha.R;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import acore.logic.AdVideoConfigTool;
@@ -301,12 +302,12 @@ public class AdVideoController {
     private int getCurrentPlayCount(){
         int currentPlayCount = 0;
         if(mContext != null){
-            String lastDateValue = FileManager.loadShared(mContext,XML_ADVIDEO,KEY_DATE).toString();
+            String lastDateValue = FileManager.loadShared(mContext,getXMLName(),KEY_DATE).toString();
             String currentDataValue = Tools.getAssignTime("yyyyMMdd",0);
             if(TextUtils.equals(lastDateValue,currentDataValue)){
                 currentPlayCount = loadCurrentPlayCount();
             }else{
-                FileManager.saveShared(mContext,getXMLName(),KEY_COUNT,"0");
+                cleanData(mContext);
             }
         }
         return currentPlayCount;
@@ -321,20 +322,30 @@ public class AdVideoController {
         }
         int currentPlayCount = loadCurrentPlayCount();
         currentPlayCount ++;
-        FileManager.saveShared(mContext,getXMLName(),KEY_COUNT,String.valueOf(currentPlayCount));
         String currentDataValue = Tools.getAssignTime("yyyyMMdd",0);
-        FileManager.saveShared(mContext,getXMLName(),KEY_DATE,currentDataValue);
+        Log.i("isAvailable", "setUpDateAndCount: " + currentDataValue);
+        Map<String,String> map = new HashMap<>();
+        map.put(KEY_COUNT,String.valueOf(currentPlayCount));
+        map.put(KEY_DATE,currentDataValue);
+        FileManager.saveShared(mContext,getXMLName(),map);
+    }
+
+    public static void cleanData(Context context){
+        FileManager.saveShared(context,getXMLName(),KEY_COUNT,"0");
+        String currentDataValue = Tools.getAssignTime("yyyyMMdd",0);
+        FileManager.saveShared(context,getXMLName(),KEY_DATE,currentDataValue);
     }
 
     private int loadCurrentPlayCount() {
         String lastPlayCountValue = FileManager.loadShared(mContext,getXMLName(),KEY_COUNT).toString();
         if(TextUtils.isEmpty(lastPlayCountValue)){
             lastPlayCountValue = "0";
+            FileManager.saveShared(mContext,getXMLName(),KEY_COUNT,lastPlayCountValue);
         }
         return Integer.parseInt(lastPlayCountValue);
     }
 
-    private String getXMLName(){
+    public static String getXMLName(){
         return LoginManager.isVIP() ? XML_ADVIDEO_VIP : XML_ADVIDEO;
     }
 

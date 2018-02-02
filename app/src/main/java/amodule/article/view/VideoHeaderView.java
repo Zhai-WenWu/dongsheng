@@ -241,7 +241,7 @@ public class VideoHeaderView extends RelativeLayout {
         view.findViewById(R.id.ad_gdt_video_hint_layout).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                XHClick.mapStat(activity,"a_menuvideo_ad","图文广告","跳过");
+                XHClick.mapStat(activity,"a_ShortVideoDetail_ad","图文广告","跳过");
                 view.setVisibility(View.GONE);
                 adParentLayout.setVisibility(GONE);
                 mVideoPlayerController.setShowAd(false);
@@ -252,7 +252,7 @@ public class VideoHeaderView extends RelativeLayout {
             @Override
             public void onClick(View v) {
                 AppCommon.openUrl(activity, StringManager.getVipUrl(true) + "&vipFrom=视频贴片广告会员免广告", true);
-                XHClick.mapStat(activity,"a_menuvideo_ad","图文广告","会员去广告");
+                XHClick.mapStat(activity,"a_ShortVideoDetail_ad","图文广告","会员去广告");
             }
         });
 
@@ -407,7 +407,7 @@ public class VideoHeaderView extends RelativeLayout {
         adVideoController= new AdVideoController(activity);
         Log.i("xianghaTag","initAdTypeVideo:::"+adVideoController.isAvailable()+"::"+(adVideoController.getAdVideoPlayer()!=null));
         if(adVideoController.isAvailable()&&adVideoController.getAdVideoPlayer()!=null){
-            adVideoController.setStaticId("a_menuvideo_ad");
+            adVideoController.setStaticId("a_ShortVideoDetail_ad");
             ad_type_video.addView(adVideoController.getAdVideoPlayer());
             mVideoPlayerController.setShowAd(true);
             AdType="2";
@@ -440,7 +440,7 @@ public class VideoHeaderView extends RelativeLayout {
             @Override
             public void onSkip() {
                 preparePlayVideo();
-                XHClick.mapStat(activity,"a_menuvideo_ad","视频广告","跳过");
+                XHClick.mapStat(activity,"a_ShortVideoDetail_ad","视频广告","跳过");
             }
         });
         adVideoController.setNetworkNotifyListener(new CleanVideoPlayer.NetworkNotifyListener() {

@@ -13,6 +13,7 @@ import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import aplug.basic.ReqInternet;
 import aplug.basic.XHInternetCallBack;
+import third.video.AdVideoController;
 
 import static acore.logic.ConfigMannager.KEY_ADVIDEO;
 import static acore.logic.ConfigMannager.KEY_ADVIDEO_TEST;
@@ -57,6 +58,8 @@ public class AdVideoConfigTool {
             }
             return;
         }
+        //清除本地数据
+        AdVideoController.cleanData(XHApplication.in());
         //下载视频文件
         downloadVideo(videoUrl, filePath);
     }
