@@ -21,7 +21,9 @@ import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.helper.XHActivityManager;
+import acore.tools.FileManager;
 import acore.tools.StringManager;
+import acore.tools.Tools;
 import acore.widget.TagTextView;
 import amodule._common.utility.WidgetUtility;
 
@@ -34,6 +36,12 @@ import static com.shuyu.gsyvideoplayer.GSYVideoPlayer.CURRENT_STATE_PLAYING;
  * e_mail : ztanzeyu@gmail.com
  */
 public class AdVideoController {
+
+    private static final String XML_ADVIDEO = "advideo";
+    private static final String XML_ADVIDEO_VIP = "advideovip";
+    private static final String KEY_DATE = "date";
+    private static final String KEY_COUNT = "count";
+
 
     private Context mContext;
 
@@ -51,7 +59,7 @@ public class AdVideoController {
 
     private AdVideoConfigTool mConfigTool;
 
-    private final boolean isAvailable;
+    private boolean isAvailable;
     private boolean isNetworkDisconnect = false;
     private boolean isComplete = false;
     private String currentVideo = "";
@@ -62,9 +70,7 @@ public class AdVideoController {
         startTime = System.currentTimeMillis();
         this.mContext = context;
         mConfigTool = AdVideoConfigTool.of();
-        isAvailable = LoginManager.isShowAd()
-                && mConfigTool.isOpen()
-                && !TextUtils.isEmpty(mConfigTool.getVideoUrlOrPath());
+        setUpIsAvailable();
         if (!isAvailable) {
             Log.i("tzy", "AdVideoController: " + (System.currentTimeMillis() - startTime));
             return;
@@ -73,6 +79,12 @@ public class AdVideoController {
         initVideoPlayer(context);
         createAdView(mConfigTool.getConfigMap());
         Log.i("tzy", "AdVideoController: " + (System.currentTimeMillis() - startTime));
+    }
+
+    public void setUpIsAvailable() {
+        isAvailable = mConfigTool.isOpen()
+                && mConfigTool.getMaxCount() > getCurrentPlayCount()
+                && !TextUtils.isEmpty(mConfigTool.getVideoUrlOrPath());
     }
 
     @SuppressLint("SetTextI18n")
@@ -227,7 +239,16 @@ public class AdVideoController {
     }
 
     public void start() {
+        //更新可用状态
+        setUpIsAvailable();
+        if(!isAvailable){
+            if(mOnSikpCallback != null){
+                mOnSikpCallback.onSkip();
+            }
+            return;
+        }
         if (null != mAdVideoPlayer && !TextUtils.isEmpty(currentVideo)) {
+            setUpDateAndCount();
             mAdVideoPlayer.setUp(currentVideo);
             mAdVideoPlayer.startPalyVideo();
             if (monStartCallback != null) monStartCallback.onStart(isRemoteUrl());
@@ -268,6 +289,50 @@ public class AdVideoController {
             return mAdVideoPlayer.getCurrentState();
         }
         return -1;
+    }
+
+    /**
+     * 获取当点已播放次数，若不是今天返回 0
+     * @return
+     */
+    private int getCurrentPlayCount(){
+        int currentPlayCount = 0;
+        if(mContext != null){
+            String lastDateValue = FileManager.loadShared(mContext,XML_ADVIDEO,KEY_DATE).toString();
+            String currentDataValue = Tools.getAssignTime("yyyyMMdd",0);
+            if(TextUtils.equals(lastDateValue,currentDataValue)){
+                currentPlayCount = loadCurrentPlayCount();
+            }else{
+                FileManager.saveShared(mContext,getXMLName(),KEY_COUNT,"0");
+            }
+        }
+        return currentPlayCount;
+    }
+
+    /**
+     *
+     */
+    private void setUpDateAndCount(){
+        if(mContext == null){
+            return;
+        }
+        int currentPlayCount = loadCurrentPlayCount();
+        currentPlayCount ++;
+        FileManager.saveShared(mContext,getXMLName(),KEY_COUNT,String.valueOf(currentPlayCount));
+        String currentDataValue = Tools.getAssignTime("yyyyMMdd",0);
+        FileManager.saveShared(mContext,getXMLName(),KEY_DATE,currentDataValue);
+    }
+
+    private int loadCurrentPlayCount() {
+        String lastPlayCountValue = FileManager.loadShared(mContext,getXMLName(),KEY_COUNT).toString();
+        if(TextUtils.isEmpty(lastPlayCountValue)){
+            lastPlayCountValue = "0";
+        }
+        return Integer.parseInt(lastPlayCountValue);
+    }
+
+    private String getXMLName(){
+        return LoginManager.isVIP() ? XML_ADVIDEO_VIP : XML_ADVIDEO;
     }
 
     public boolean isAvailable() {

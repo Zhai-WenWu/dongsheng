@@ -23,7 +23,7 @@
             android:text="会员免广告"
             android:textColor="#FFFFFE"
             android:textSize="@dimen/sp_12"
-            android:visibility="visible"
+            android:visibility="gone"
             app:backgroundColor="#B2000000" />
 
         <acore.widget.TagTextView
@@ -55,6 +55,7 @@
             android:id="@+id/ad_line"
             android:layout_width="1px"
             android:layout_height="@dimen/dp_12"
+            android:visibility="gone"
             android:layout_centerVertical="true"
             android:layout_gravity="center_vertical"
             android:layout_toRightOf="@+id/ad_vip_lead"

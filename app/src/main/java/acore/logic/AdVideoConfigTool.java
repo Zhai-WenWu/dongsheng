@@ -15,6 +15,7 @@ import aplug.basic.ReqInternet;
 import aplug.basic.XHInternetCallBack;
 
 import static acore.logic.ConfigMannager.KEY_ADVIDEO;
+import static acore.logic.ConfigMannager.KEY_ADVIDEO_TEST;
 
 /**
  * Description :
@@ -26,20 +27,22 @@ public class AdVideoConfigTool {
 
     private final String configValue;
 
-    private final Map<String,String> configMap;
+    private final Map<String, String> configMap;
 
-    public AdVideoConfigTool(){
-        this.configValue = ConfigMannager.getConfigByLocal(KEY_ADVIDEO);
+    public AdVideoConfigTool() {
+        //切换测试key
+        String key = Tools.isDebug(XHApplication.in()) ? KEY_ADVIDEO_TEST : KEY_ADVIDEO;
+        this.configValue = ConfigMannager.getConfigByLocal(key);
         configMap = StringManager.getFirstMap(configValue);
     }
 
-    public static AdVideoConfigTool of(){
+    public static AdVideoConfigTool of() {
         return new AdVideoConfigTool();
     }
 
     public void updateAdVideoData(String dataValue) {
-         String videoUrl = getVideoUrl();
-         String filePath = getVideoPath(videoUrl);
+        String videoUrl = getVideoUrl();
+        String filePath = getVideoPath(videoUrl);
         if (!TextUtils.isEmpty(dataValue)) {
             Map<String, String> data = StringManager.getFirstMap(dataValue);
             data = StringManager.getFirstMap(data.get(KEY_ADVIDEO));
@@ -58,21 +61,34 @@ public class AdVideoConfigTool {
         downloadVideo(videoUrl, filePath);
     }
 
-    public Map<String,String> getConfigMap(){
-        if(configMap.isEmpty()){
+    public Map<String, String> getConfigMap() {
+        if (configMap.isEmpty()) {
             configMap.putAll(StringManager.getFirstMap(configValue));
         }
         return configMap;
     }
 
-    public boolean isOpen(){
+    public int getMaxCount() {
+        int maxCount = 0;
+        String maxCountValue = getConfigMap().get(getDailyMaxNumKey());
+        if (!TextUtils.isEmpty(maxCountValue)) {
+            maxCount = Integer.parseInt(maxCountValue);
+        }
+        return maxCount;
+    }
+
+    private String getDailyMaxNumKey(){
+        return LoginManager.isVIP() ? "dailyMaxNumVip" : "dailyMaxNum";
+    }
+
+    public boolean isOpen() {
         return !"1".equals(configMap.get("isOpen"));
     }
 
-    public String getVideoUrlOrPath(){
-        Map<String,String> configMap = getConfigMap();
+    public String getVideoUrlOrPath() {
+        Map<String, String> configMap = getConfigMap();
         String url = configMap.get("videoUrl");
-        if (TextUtils.isEmpty(url)){
+        if (TextUtils.isEmpty(url)) {
             return "";
         }
         String path = getVideoPath(url);
@@ -98,11 +114,11 @@ public class AdVideoConfigTool {
     }
 
     private void downloadVideo(String videoUrl, String filePath) {
-        if(TextUtils.isEmpty(videoUrl)
-                || TextUtils.isEmpty(filePath)){
+        if (TextUtils.isEmpty(videoUrl)
+                || TextUtils.isEmpty(filePath)) {
             return;
         }
-        if("wifi".equals(ToolsDevice.getNetWorkSimpleType(XHApplication.in()))){
+        if ("wifi".equals(ToolsDevice.getNetWorkSimpleType(XHApplication.in()))) {
             ReqInternet.in().getInputStream(videoUrl, new XHInternetCallBack() {
                 @Override
                 public void loaded(int i, String s, Object o) {

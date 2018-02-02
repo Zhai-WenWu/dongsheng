@@ -22,6 +22,7 @@ import static xh.basic.tool.UtilFile.readFile;
 public class ConfigMannager {
 
     public static final String KEY_ADVIDEO = "videoAD";
+    public static final String KEY_ADVIDEO_TEST = "videoADTest";
     public static final String KEY_RANDPROMOTION = "randPromotion";
     public static final String KEY_DIVERSION = "diversion";
     public static final String KEY_GOODCOMMENT = "goodComment";
