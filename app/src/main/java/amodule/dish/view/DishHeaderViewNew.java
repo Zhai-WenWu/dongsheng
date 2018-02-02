@@ -229,7 +229,7 @@ public class DishHeaderViewNew extends LinearLayout {
         adVideoController= new AdVideoController(context);
         Log.i("xianghaTag","initAdTypeVideo:::"+adVideoController.isAvailable()+"::"+(adVideoController.getAdVideoPlayer()!=null));
         if(adVideoController.isAvailable()&&adVideoController.getAdVideoPlayer()!=null){
-            adVideoController.setStaticId("a_menu_detail_video");
+            adVideoController.setStaticId("a_menuvideo_ad");
             ad_type_video.addView(adVideoController.getAdVideoPlayer());
             if(mVideoPlayerController != null){
                 mVideoPlayerController.setShowAd(true);
@@ -255,7 +255,7 @@ public class DishHeaderViewNew extends LinearLayout {
         adVideoController.setOnErrorCallback(this::preparePlayVideo);
         adVideoController.setOnSikpCallback(()->{
             preparePlayVideo();
-            XHClick.mapStat(activity,"a_menu_detail_video","视频广告","跳过");
+            XHClick.mapStat(activity,"a_menuvideo_ad","视频广告","跳过");
         });
         adVideoController.setNetworkNotifyListener(new CleanVideoPlayer.NetworkNotifyListener() {
             @Override
@@ -369,7 +369,7 @@ public class DishHeaderViewNew extends LinearLayout {
         view.findViewById(R.id.ad_gdt_video_hint_layout).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                XHClick.mapStat(activity,"a_menu_detail_video","图文广告","跳过");
+                XHClick.mapStat(activity,"a_menuvideo_ad","图文广告","跳过");
                 view.setVisibility(View.GONE);
                 if(mVideoPlayerController != null){
                     mVideoPlayerController.setShowAd(false);
@@ -381,7 +381,7 @@ public class DishHeaderViewNew extends LinearLayout {
             @Override
             public void onClick(View v) {
                 AppCommon.openUrl(activity, StringManager.getVipUrl(true) + "&vipFrom=视频贴片广告会员免广告", true);
-                XHClick.mapStat(activity,"a_menu_detail_video","图文广告","会员去广告");
+                XHClick.mapStat(activity,"a_menuvideo_ad","图文广告","会员去广告");
             }
         });
 

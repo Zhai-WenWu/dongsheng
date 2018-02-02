@@ -249,6 +249,9 @@ public class AdVideoController {
         }
         if (null != mAdVideoPlayer && !TextUtils.isEmpty(currentVideo)) {
             setUpDateAndCount();
+            if(!TextUtils.isEmpty(staticId)){
+                XHClick.mapStat(mContext,staticId,"视频广告","广告播放次数");
+            }
             mAdVideoPlayer.setUp(currentVideo);
             mAdVideoPlayer.startPalyVideo();
             if (monStartCallback != null) monStartCallback.onStart(isRemoteUrl());
