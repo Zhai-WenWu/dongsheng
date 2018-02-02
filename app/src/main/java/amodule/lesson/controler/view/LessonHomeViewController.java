@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import acore.widget.rvlistview.RvListView;
+import amodule._common.plugin.WidgetVerticalLayout;
 import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
 
 /**
@@ -85,6 +86,12 @@ public class LessonHomeViewController implements View.OnClickListener{
                 }
             break;
             default:break;
+        }
+    }
+
+    public void saveStatisticData(String page){
+        if(mHeaderControler != null){
+            mHeaderControler.saveStatisticData(page);
         }
     }
 

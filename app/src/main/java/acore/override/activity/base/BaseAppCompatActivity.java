@@ -41,6 +41,7 @@ import third.ad.AdsShow;
 import third.share.BarShare;
 
 import static acore.tools.Tools.getApiSurTime;
+import static android.content.Intent.FLAG_ACTIVITY_NO_USER_ACTION;
 
 /**
  * PackageName : acore.override.activity.base
@@ -245,7 +246,8 @@ public class BaseAppCompatActivity extends AppCompatActivity {
                 ad.onResumeAd();
             }
         }
-        mActMagager.onResume(level);
+        if(mActMagager != null)
+            mActMagager.onResume(level);
         if (mCommonBottomView != null)
             CommonBottomView.BottomViewBuilder.getInstance().refresh(mCommonBottomView);
 
@@ -284,7 +286,9 @@ public class BaseAppCompatActivity extends AppCompatActivity {
                 ad.onPauseAd();
             }
         }
-        mActMagager.onPause();
+        if (mActMagager != null){
+            mActMagager.onPause();
+        }
         if (mFavePopWindowDialog != null && mFavePopWindowDialog.isHasShow()) {
             mFavePopWindowDialog.onPause();
         }
@@ -310,7 +314,9 @@ public class BaseAppCompatActivity extends AppCompatActivity {
             isForeground = false;
             homebackTime = System.currentTimeMillis();
         }
-        mActMagager.onStop();
+        if (mActMagager != null){
+            mActMagager.onStop();
+        }
     }
 
     @Override
@@ -320,7 +326,17 @@ public class BaseAppCompatActivity extends AppCompatActivity {
             Glide.get(XHApplication.in()).clearMemory();
             LogManager.print("d", "***********Glide is already clearMemory...");
         }
-        mActMagager.onDestroy();
+        if(mActMagager != null){
+            mActMagager.onDestroy();
+        }
+    }
+
+    @Override
+    protected void onUserLeaveHint() {
+        super.onUserLeaveHint();
+        if(mActMagager != null){
+            mActMagager.onUserLeaveHint();
+        }
     }
 
 
@@ -355,16 +371,13 @@ public class BaseAppCompatActivity extends AppCompatActivity {
             isShowPop = true;
         }
         if (!isShowPop) {
-            // 程序如果未初始化但却有定时器执行，则停止它。主要用于外部吊起应用时
-            if (Main.allMain == null && Main.timer != null) {
-                Main.stopTimer();
-            }
             super.onBackPressed();
         }
     }
 
     @Override
     public void startActivity(Intent intent) {
+        intent.addFlags(FLAG_ACTIVITY_NO_USER_ACTION);
         super.startActivity(intent);
         NotificationSettingController.removePermissionSetView();
         // 设置切换动画，从右边进入，左边退出
@@ -373,6 +386,7 @@ public class BaseAppCompatActivity extends AppCompatActivity {
 
     @Override
     public void startActivityForResult(Intent intent, int requestCode) {
+        intent.addFlags(FLAG_ACTIVITY_NO_USER_ACTION);
         super.startActivityForResult(intent, requestCode);
         NotificationSettingController.removePermissionSetView();
         // 设置切换动画，从右边进入，左边退出

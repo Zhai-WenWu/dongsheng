@@ -211,14 +211,6 @@ public class MainMall extends BaseAppCompatActivity implements OnClickListener{
 		}
 	}
 	@Override
-	public void onBackPressed() {
-		// 程序如果未初始化但却有定时器执行，则停止它。主要用于外部吊起应用时
-		if (Main.allMain == null && Main.timer != null) {
-			Main.stopTimer();
-		}
-		super.onBackPressed();
-	}
-	@Override
 	public void finish() {
 		//播放视频是退出需要loadUrl("")，重置web停止播放
 		if(webview != null){

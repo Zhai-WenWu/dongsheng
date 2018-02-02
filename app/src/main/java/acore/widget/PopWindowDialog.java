@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.xiangha.R;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import acore.override.XHApplication;
 import acore.tools.FileManager;
@@ -31,6 +32,7 @@ public class PopWindowDialog extends Dialog {
 	private String[] mSharePlatforms;
 	private String mType,mTitle,mClickUrl,mContent,mImgUrl,mFrom,mParent;
 	private String mHintTitle,mShareHint,mMessage;
+	private Map<String, String> mShareMap;
 
 	private boolean mShowing;
 	private View.OnClickListener onCloseListener;
@@ -109,7 +111,12 @@ public class PopWindowDialog extends Dialog {
 			public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
 				String platfrom = mSharePlatforms[position];
 				ShareTools barShare = ShareTools.getBarShare(mContext);
-				barShare.showSharePlatform(mTitle,mContent,mType,mImgUrl,mClickUrl,platfrom,mFrom,mParent);
+				if (mShareMap != null) {
+					mShareMap.put("platform", platfrom);
+					barShare.showSharePlatform(mShareMap);
+				} else {
+					barShare.showSharePlatform(mTitle, mContent, mType, mImgUrl, mClickUrl, platfrom, mFrom, mParent);
+				}
 				closePopWindowDialog();
 			}
 		});
@@ -154,6 +161,12 @@ public class PopWindowDialog extends Dialog {
 
 	public void show(String type,String title,String clickUrl,String content,String imgUrl,String from,String parent) {
 		mType = type;mTitle = title;mClickUrl = clickUrl;mContent = content;mImgUrl = imgUrl;mFrom = from;mParent = parent;
+		this.show();
+		mShowing = true;
+	}
+
+	public void show(Map<String, String> shareMap) {
+		mShareMap = shareMap;
 		this.show();
 		mShowing = true;
 	}

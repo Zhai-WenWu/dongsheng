@@ -2,6 +2,7 @@ package third.cling.service;
 
 import android.content.Intent;
 import android.os.IBinder;
+import android.util.Log;
 
 import org.fourthline.cling.UpnpServiceConfiguration;
 import org.fourthline.cling.android.AndroidUpnpServiceImpl;
@@ -25,18 +26,20 @@ public class ClingUpnpService extends AndroidUpnpServiceImpl {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        Log.i("xianghaTag","ClingUpnpService:::onCreate");
         //LocalBinder instead of binder
         binder = new LocalBinder();
     }
 
     @Override
     public void onDestroy() {
+        Log.i("xianghaTag","ClingUpnpService:::onBind");
         super.onDestroy();
     }
 
     @Override
     public IBinder onBind(Intent intent) {
+        Log.i("xianghaTag","ClingUpnpService:::onBind");
         return binder;
     }
 
@@ -49,10 +52,12 @@ public class ClingUpnpService extends AndroidUpnpServiceImpl {
     }
 
     public Registry getRegistry() {
+        if(upnpService==null)return null;
         return upnpService.getRegistry();
     }
 
     public ControlPoint getControlPoint() {
+        if(upnpService==null)return null;
         return upnpService.getControlPoint();
     }
 

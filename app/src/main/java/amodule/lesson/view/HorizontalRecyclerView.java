@@ -3,7 +3,10 @@ package amodule.lesson.view;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Rect;
+import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -26,6 +29,7 @@ import acore.widget.rvlistview.adapter.RvBaseAdapter;
 import amodule._common.delegate.IBindMap;
 import amodule._common.delegate.IHandlerClickEvent;
 import amodule._common.delegate.ISaveStatistic;
+import amodule._common.delegate.ISetStatisticPage;
 import amodule._common.delegate.IStatictusData;
 import amodule._common.delegate.StatisticCallback;
 import amodule._common.helper.WidgetDataHelper;
@@ -46,7 +50,7 @@ import static amodule._common.helper.WidgetDataHelper.KEY_PARAMETER;
  * E_mail : ztanzeyu@gmail.com
  */
 
-public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,
+public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,ISetStatisticPage,
         IStatictusData,ISaveStatistic,IHandlerClickEvent {
 
     private RvListView mRecyclerView;
@@ -103,9 +107,23 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,
         mSubTitleView = (BaseSubTitleView) findViewById(R.id.subtitle_view);
         mRecyclerView = (RvListView) findViewById(R.id.recycler_view);
         mRecyclerView.setFocusable(false);
-        final LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-        mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(mRecyclerAdapter);
+        final LinearLayoutManager layoutManager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
+//        layoutManager.setOrientation(OrientationHelper.HORIZONTAL);
+        mRecyclerAdapter.setOnItemShow(new RvBaseAdapter.OnItemShow<Map<String,String>>() {
+            @Override
+            public void onItemShow(Map<String,String> data, int position) {
+                if(!TextUtils.isEmpty(page) && data != null && !data.isEmpty()
+                        && !"2".equals(data.get("isShowStatistic"))){
+                    XHClick.saveStatictisFile(page, getModeType(), data.get("type"), data.get("code"), "", "show", "", "", String.valueOf(position + 1), "", "");
+                    data.put("isShowStatistic","2");
+                }
+                isScrollData = true;
+                if (scrollDataIndex < position + 1) {
+                    scrollDataIndex = position + 1;
+                }
+            }
+        });
         mRecyclerView.setOnItemClickListener((view, holder, position) -> {
             if (holder != null && holder instanceof XHBaseRvViewHolder) {
                 XHBaseRvViewHolder viewHolder = (XHBaseRvViewHolder) holder;
@@ -119,6 +137,9 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,
                         Map<String,String> map = StringManager.getFirstMap(mSubTitleView.getData().get("title"));
                         mStatisticCallback.onStatistic(id,"VIP达人课",map.get("text1")+"-"+data.get("text1"),position);
                     }
+                }
+                if(!TextUtils.isEmpty(page)){
+                    XHClick.saveStatictisFile(page, getModeType(), data.get("type"), data.get("code"), "", "click", "", "", String.valueOf(position + 1), "", "");
                 }
             }
         });
@@ -148,11 +169,6 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,
                 @Override
                 public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                     super.onScrolled(recyclerView, dx, dy);
-                    int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
-                    isScrollData = true;
-                    if (scrollDataIndex < (lastVisibleItemPosition - 1)) {
-                        scrollDataIndex = (lastVisibleItemPosition - 1);
-                    }
                 }
             };
             mRecyclerView.addOnScrollListener(mOnScrollListener);
@@ -187,6 +203,7 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,
         if (mSubTitleView != null) {
             mSubTitleView.setData(parameterMap);
         }
+        moduleType = StringManager.getFirstMap(parameterMap.get("title")).get("text1");
         //设置顶部边距
         String sort = map.get(WidgetDataHelper.KEY_SORT);
         int paddingTop = "1".equals(sort) ? Tools.getDimen(getContext(),R.dimen.dp_10) : 0;
@@ -213,14 +230,30 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,
         }
     }
 
+    private String moduleType = "";
     @Override
-    public void saveStatisticData() {
+    public void saveStatisticData(String page) {
+        //列表
+        if (scrollDataIndex > 0 && !TextUtils.isEmpty(page)) {
+            XHClick.saveStatictisFile(page, getModeType(), "", "", String.valueOf(scrollDataIndex), "list", "", "", "", "", "");
+            scrollDataIndex = -1;
+        }
+    }
 
+    @NonNull
+    private String getModeType() {
+        return moduleType != null ? moduleType : "";
     }
 
     @Override
     public boolean handlerClickEvent(String url, String moduleType, String dataType, int position) {
         return false;
+    }
+
+    String page="";
+    @Override
+    public void setStatisticPage(String page) {
+        this.page = page;
     }
 
     private StatisticCallback mStatisticCallback;

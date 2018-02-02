@@ -11,6 +11,7 @@
         android:id="@+id/cardview"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_113"
+        app:cardPreventCornerOverlap="false"
         app:cardCornerRadius="@dimen/dp_4"
         app:cardElevation="0dp">
 

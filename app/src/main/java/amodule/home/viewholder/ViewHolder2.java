@@ -55,6 +55,7 @@ public class ViewHolder2 extends XHBaseRvViewHolder {
         params.width = wh[0];
         params.height = wh[1];
         imageLayout.setLayoutParams(params);
+        imageLayout.requestLayout();
         mItemView.invalidate();
     }
 
