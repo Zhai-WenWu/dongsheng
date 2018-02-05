@@ -261,11 +261,13 @@ public class DishHeaderViewNew extends LinearLayout {
             @Override
             public void wifiConnected() {
                 removeTipView();
-                int state=adVideoController.getVideoCurrentState();
-                if(state<0||state>6) {
-                    adVideoController.start();
-                }else{
-                    adVideoController.onResume();
+                if(adVideoController != null){
+                    int state=adVideoController.getVideoCurrentState();
+                    if(state<0||state>6) {
+                        adVideoController.start();
+                    }else{
+                        adVideoController.onResume();
+                    }
                 }
                 isNetworkDisconnect = false;
             }
@@ -278,9 +280,11 @@ public class DishHeaderViewNew extends LinearLayout {
                             initNoWIFIView(context);
                             ad_type_video.addView(view_Tip);
                         }
-                        adVideoController.onPause();
+                        if(adVideoController != null){
+                            adVideoController.onPause();
+                        }
                     }
-                }else if(adVideoController.getAdVideoPlayer().getCurrentState() == GSYVideoPlayer.CURRENT_STATE_PAUSE){
+                }else if(adVideoController != null && adVideoController.getAdVideoPlayer().getCurrentState() == GSYVideoPlayer.CURRENT_STATE_PAUSE){
                     removeTipView();
                     adVideoController.onResume();
                 }
@@ -293,7 +297,9 @@ public class DishHeaderViewNew extends LinearLayout {
                     initNoNetwork(context);
                     ad_type_video.addView(view_Tip);
                 }
-                adVideoController.onPause();
+                if(adVideoController != null){
+                    adVideoController.onPause();
+                }
                 isNetworkDisconnect = true;
             }
         });
@@ -317,17 +323,23 @@ public class DishHeaderViewNew extends LinearLayout {
             int netType = ToolsDevice.getNetWorkSimpleNum(context);
             if(netType>1 &&
                     !"1".equals(FileManager.loadShared(context,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI).toString())){
-                adVideoController.onPause();
+                if(adVideoController != null){
+                    adVideoController.onPause();
+                }
                 removeTipView();
                 if(view_Tip==null){
                     initNoWIFIView(context);
                     ad_type_video.addView(view_Tip);
                 }
             }else{
-                adVideoController.start();
+                if(adVideoController != null){
+                    adVideoController.start();
+                }
             }
         }else{
-            adVideoController.onPause();
+            if(adVideoController != null){
+                adVideoController.onPause();
+            }
             removeTipView();
             if(view_Tip==null){
                 initNoNetwork(context);
@@ -782,11 +794,13 @@ public class DishHeaderViewNew extends LinearLayout {
         @Override
         public void onClick(View v) {
             removeTipView();
-            int state=adVideoController.getVideoCurrentState();
-            if(state<0||state>6){
-                adVideoController.start();
-            }else{
-                adVideoController.onResume();
+            if(adVideoController != null){
+                int state=adVideoController.getVideoCurrentState();
+                if(state<0||state>6){
+                    adVideoController.start();
+                }else{
+                    adVideoController.onResume();
+                }
             }
             new Thread(() -> FileManager.saveShared(context,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI,"1")).start();
         }
