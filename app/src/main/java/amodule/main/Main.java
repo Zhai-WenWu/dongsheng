@@ -385,6 +385,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                 && tabViews[classes.length - 1] != null) {
             onClick(tabViews[classes.length - 1].findViewById(R.id.tab_layout));
         }
+
         //去商城页面
 //        if (MallPayActivity.mall_state) {
 //            onClick(tabViews[1].findViewById(R.id.tab_linearLayout));

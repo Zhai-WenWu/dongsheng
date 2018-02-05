@@ -110,6 +110,7 @@ public class PaySuccedActvity extends MallBaseActivity implements OnClickListene
 			MallPayActivity.mall_state=true;
 			Main.colse_level=3;
 			PaySuccedActvity.this.finish();
+			//切换到商城首页
 			startActivity(new Intent(this,MainMall.class));
 			break;
 		case R.id.back_tv:
