@@ -378,12 +378,16 @@ public class XHAllAdControl {
      * @param listIndex 广告在真实数据的位置-----一个数据传""
      */
     public void onAdClick(View view, int index, String listIndex) {
-        XHOneAdControl control = listAdContrls.get(index);
-        if (control == null)
-            return;
-        if (control.getAdViewState())
-            control.setView(view);
-        control.onAdClick(ad_click, twoData + listIndex);
+        if(listAdContrls != null
+                && index >= 0
+                && listAdContrls.size() > index){
+            XHOneAdControl control = listAdContrls.get(index);
+            if (control == null)
+                return;
+            if (control.getAdViewState())
+                control.setView(view);
+            control.onAdClick(ad_click, twoData + listIndex);
+        }
     }
 
     /**
@@ -394,10 +398,14 @@ public class XHAllAdControl {
      * @param listIndex 广告位置---一个数据传""
      */
     public void onAdBind(int index, View view, String listIndex) {
-        XHOneAdControl control = listAdContrls.get(index);
-        if (control == null)
-            return;
-        control.onAdBind(view, ad_show, twoData + listIndex);
+        if(listAdContrls != null
+                && index >= 0
+                && listAdContrls.size() > index){
+            XHOneAdControl control = listAdContrls.get(index);
+            if (control == null)
+                return;
+            control.onAdBind(view, ad_show, twoData + listIndex);
+        }
     }
 
     public interface XHAdControlCallBack {
