@@ -32,8 +32,9 @@ public class AdVideoConfigTool {
 
     public AdVideoConfigTool() {
         //切换测试key
-        String key = Tools.isDebug(XHApplication.in()) ? KEY_ADVIDEO_TEST : KEY_ADVIDEO;
-        this.configValue = ConfigMannager.getConfigByLocal(key);
+//        String key = Tools.isDebug(XHApplication.in()) ? KEY_ADVIDEO_TEST : KEY_ADVIDEO;
+//        this.configValue = ConfigMannager.getConfigByLocal(key);
+        this.configValue = ConfigMannager.getConfigByLocal(KEY_ADVIDEO);
         configMap = StringManager.getFirstMap(configValue);
     }
 
