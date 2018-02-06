@@ -57,6 +57,7 @@ import xh.windowview.BottomDialog;
 
 import static acore.logic.ConfigMannager.KEY_RANDPROMOTIONNEW;
 import static xh.basic.tool.UtilFile.readFile;
+import static xh.basic.tool.UtilFile.readFileBuffer;
 import static xh.basic.tool.UtilString.getListMapByJson;
 public class AppCommon {
 
@@ -471,7 +472,7 @@ public class AppCommon {
     public static String getAppData(Context context, String key) {
         String jsonStr = "";
         final String appDataPath = FileManager.getDataDir() + FileManager.file_appData;
-        String appDataStr = readFile(appDataPath);
+        String appDataStr = readFileBuffer(appDataPath);
         List<Map<String, String>> dataArray = getListMapByJson(appDataStr);
         if (dataArray == null || dataArray.size() == 0) {
             appDataStr = FileManager.getFromAssets(context, FileManager.file_appData);

@@ -100,7 +100,7 @@ public class XHAllAdControl {
     private void getAllAdData() {
         listAdContrls.clear();
         /*服务端返回的广告数据信息*/
-        String data = FileManager.readFile(FileManager.getDataDir() + FileManager.file_ad);
+        String data = FileManager.readFileBuffer(FileManager.getDataDir() + FileManager.file_ad);
         Map<String, String> map = StringManager.getFirstMap(data);
         //根据广告位置id在广告数据 进行筛选通
         if (listIds.size() > 0 && !map.isEmpty()) {
