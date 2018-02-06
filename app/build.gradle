@@ -13,7 +13,7 @@ dependencies {
     compile fileTree(include: '*.jar', dir: 'libsAdBaidu')
     compile fileTree(include: '*.jar', dir: 'libs')
     //百度市场要求加的自动更新sdk
-    //        compile(name: 'BDIntegrationSDK_LibProject-debug', ext: 'aar')
+//            compile(name: 'BDIntegrationSDK_LibProject-debug', ext: 'aar')
     //    compile(name: 'PhotoView-release', ext: 'aar')
     compile(name: 'photoview-release-2.0.0', ext: 'aar')
     compile(name: 'PushSDK-debug', ext: 'aar')
@@ -49,8 +49,8 @@ android {
         applicationId "com.xiangha"
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 230
-        versionName "6.0.0.3"
+        versionCode 245
+        versionName "6.0.5"
         // dex突破65535的限制
         multiDexEnabled true
         ndk {
