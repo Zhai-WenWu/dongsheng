@@ -52,7 +52,9 @@ public class XHAdSqlite extends SQLiteOpenHelper {
 
     private void createAdConfigTable(SQLiteDatabase db) {
         StringBuffer buffer = new StringBuffer();
-        buffer.append("create table if not exists ").append(TABLE_ADCONFIG).append(" (").append("_id").append(" integer primary key autoincrement,")
+        buffer.append("create table if not exists ").append(TABLE_ADCONFIG)
+                .append(" (")
+                .append(AdEntry._ID).append(" integer primary key autoincrement,")
                 .append(AdEntry.COLUMN_ISBAIDU).append(" text,")
                 .append(AdEntry.COLUMN_ISBANNER).append(" text,")
                 .append(AdEntry.COLUMN_ISGDT).append(" text,")
