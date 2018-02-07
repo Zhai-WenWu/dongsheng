@@ -18,6 +18,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import acore.logic.LoginManager;
 import acore.override.XHApplication;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
@@ -494,11 +495,11 @@ public class XHAllAdControl {
     }
 
     public List<NativeADDataRef> getGdtNativeArray() {
-        return gdtNativeArray;
+        return LoginManager.isShowAd() ? gdtNativeArray : new ArrayList<NativeADDataRef>();
     }
 
     public List<NativeResponse> getBaiduNativeArray() {
-        return baiduNativeArray;
+        return LoginManager.isShowAd() ? baiduNativeArray : new ArrayList<NativeResponse>();
     }
 
     public Map<String, String> getAdTypeData() {
