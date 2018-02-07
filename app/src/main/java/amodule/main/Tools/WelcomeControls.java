@@ -1,4 +1,5 @@
 package amodule.main.Tools;
+
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Handler;
@@ -13,10 +14,12 @@ import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.xiangha.R;
+
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
@@ -103,7 +106,7 @@ public class WelcomeControls {
     }
 
     private void initAd() {
-        if (null == FileManager.ifFileModifyByCompletePath(FileManager.getDataDir() + FileManager.file_ad, -1)) {
+        if ("true".equals(FileManager.loadShared(activity,FileManager.xmlFile_appInfo,"once").toString())) {
             mAdTime = 3;
             return;
         }

@@ -64,6 +64,7 @@ import amodule.user.activity.MyFavorite;
 import amodule.user.activity.login.LoginByAccout;
 import aplug.shortvideo.ShortVideoInit;
 import third.ad.control.AdControlHomeDish;
+import third.ad.db.XHAdSqlite;
 import third.ad.tools.AdConfigTools;
 import third.cling.control.ClingPresenter;
 import third.mall.alipay.MallPayActivity;
@@ -513,6 +514,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                 stopTimer();
                 colse_level = 0;
                 //请求广告位
+                XHAdSqlite.newInstance(this).deleteOverdueConfig();
                 AdConfigTools.getInstance().getAdConfigInfo();
                 UploadDishControl.getInstance().updataAllUploadingDish(getApplicationContext());
                 try {
