@@ -10,6 +10,7 @@ import android.text.TextUtils;
 
 import java.util.Map;
 
+import acore.override.XHApplication;
 import acore.tools.StringManager;
 import third.ad.db.bean.AdBean;
 
@@ -42,7 +43,7 @@ public class XHAdSqlite extends SQLiteOpenHelper {
     }
 
     private XHAdSqlite(Context context) {
-        super(context, NAME, null, VERSION);
+        super(context==null ? XHApplication.in() : context, NAME, null, VERSION);
     }
 
     @Override
