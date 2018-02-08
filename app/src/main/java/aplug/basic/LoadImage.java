@@ -6,7 +6,7 @@ import android.content.Context;
 
 public class LoadImage extends UtilLoadImage {
 	public static Context initContext = null;
-	private static LoadImage instance = null;
+	private static volatile LoadImage instance = null;
 
 	private LoadImage(Context context){
 		super(context);
@@ -19,10 +19,12 @@ public class LoadImage extends UtilLoadImage {
 	}
 	
 	public static LoadImage getInstance() {
-		if (instance == null) {
-			instance = new LoadImage(initContext);
+		synchronized (LoadImage.class) {
+			if (instance == null) {
+				instance = new LoadImage(initContext);
+			}
+			return instance;
 		}
-		return instance;
 	}
 	
 	public static Builder with(Activity activity){
