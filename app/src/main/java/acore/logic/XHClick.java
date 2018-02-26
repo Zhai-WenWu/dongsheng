@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -1043,18 +1044,18 @@ public class XHClick {
             String app_time = formatter.format(time);
 //            Log.i("zhangyujian","数据时间::"+app_time+":::"+event);
             String params = "";
-            params += "app_time=" + app_time;
-            params += "&page_title=" + page_title;
-            params += "&mode_type=" + mode_type;
-            params += "&data_type=" + data_type;
-            params += "&item_code=" + item_code;
-            params += "&show_num=" + show_num;
-            params += "&event=" + event;
-            params += "&stop_time=" + stop_time;
-            params += "&uri_name=" + uri_name;
-            params += "&position=" + position;
-            params += "&button_name=" + button_name;
-            params += "&deep=" + deep;
+            params += "app_time=" + checkString(app_time);
+            params += "&page_title=" + checkString(page_title);
+            params += "&mode_type=" + checkString(mode_type);
+            params += "&data_type=" + checkString(data_type);
+            params += "&item_code=" + checkString(item_code);
+            params += "&show_num=" + checkString(show_num);
+            params += "&event=" + checkString(event);
+            params += "&stop_time=" + checkString(stop_time);
+            params += "&uri_name=" + checkString(uri_name);
+            params += "&position=" + checkString(position);
+            params += "&button_name=" + checkString(button_name);
+            params += "&deep=" + checkString(deep);
 //            Log.i("zhangyujian","加载数据：：："+params);
             //默认插入数据
             StatictisSQLiteDataBase.getInstance().insterData(params);
@@ -1075,6 +1076,11 @@ public class XHClick {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @NonNull
+    private static String checkString(String value) {
+        return (value != null && !"null".equals(value)) ? value : "";
     }
 
     /**
@@ -1132,9 +1138,9 @@ public class XHClick {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String app_time = formatter.format(time);
         String params = "";
-        params += "app_time=" + app_time;
-        params += "&page_title=" + page_title;
-        params += "&stop_time=" + stop_time;
+        params += "app_time=" + checkString(app_time);
+        params += "&page_title=" + checkString(page_title);
+        params += "&stop_time=" + checkString(stop_time);
         params += "&event=stop" ;
         StatictisSQLiteDataBase.getInstance().insterPageData(params);
     }
