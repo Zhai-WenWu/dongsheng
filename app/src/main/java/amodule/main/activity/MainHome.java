@@ -69,7 +69,6 @@ public class MainHome extends MainBaseActivity implements IObserver {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.a_home);
         getWindow().setFormat(PixelFormat.TRANSLUCENT);
-        Main.allMain.allTab.put("MainIndex", this);
         initView();
         initData();
         initModuleData();
