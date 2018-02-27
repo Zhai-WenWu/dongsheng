@@ -79,7 +79,7 @@ public class MyFavorite extends MainBaseActivity implements View.OnClickListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.a_my_favorite);
-        Main.allMain.allTab.put(KEY, this);
+        setActivity();
         initUi();
         initData();
         //未登录自动跳转去登录
@@ -88,6 +88,13 @@ public class MyFavorite extends MainBaseActivity implements View.OnClickListener
         }
         ObserverManager.getInstance().registerObserver(this, NOTIFY_LOGIN, NOTIFY_LOGOUT,
                 NOTIFY_FAVORITE, NOTIFY_UNFAVORITE);
+    }
+
+    private void setActivity() {
+        if(Main.allMain != null && Main.allMain.allTab != null
+                && !Main.allMain.allTab.containsKey(KEY)){
+            Main.allMain.allTab.put(KEY, this);//这个Key值不变
+        }
     }
 
     private void initUi() {

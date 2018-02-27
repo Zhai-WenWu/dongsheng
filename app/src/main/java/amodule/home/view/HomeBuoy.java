@@ -1,33 +1,25 @@
 package amodule.home.view;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.model.GlideUrl;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.xiangha.R;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import acore.logic.AppCommon;
-import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
-import acore.tools.ToolsDevice;
-import aplug.basic.LoadImage;
+import third.ad.db.bean.AdBean;
 import third.ad.tools.AdConfigTools;
 import third.ad.tools.AdPlayIdConfig;
 
@@ -55,33 +47,26 @@ public class HomeBuoy {
         // 浮动按钮
         isMove = true;
         isClosed = true;
-        Map<String, String> dataMap = AdConfigTools.getInstance().getAdConfigData(AdPlayIdConfig.HOME_FLOAT);
-        if(dataMap.isEmpty()){
-            return;
-        }
-        handlerData(dataMap);
+        handlerData();
     }
 
     //处理数据
-    private void handlerData(Map<String, String> buoyData){
-        Map<String,String> adConfigMap = StringManager.getFirstMap(buoyData.get("adConfig"));
+    private void handlerData(){
+        AdBean adBean = AdConfigTools.getInstance().getAdConfig(AdPlayIdConfig.HOME_FLOAT);
+        if(adBean == null){
+            return;
+        }
+
+        Map<String,String> adConfigMap = StringManager.getFirstMap(adBean.adConfig);
         final String[] keys = {"1","2","3","4",};
         Map<String,String> bannerMap = new HashMap<>();
         for(String key:keys){
             Map<String,String> tempMap = StringManager.getFirstMap(adConfigMap.get(key));
             if("personal".equals(tempMap.get("type"))
                     && "2".equals(tempMap.get("open"))){
-                bannerMap = StringManager.getFirstMap(buoyData.get("banner"));
+                bannerMap = StringManager.getFirstMap(adBean.banner);
                 break;
             }
-        }
-        //储存数据
-        final String path = FileManager.getDataDir() + AdPlayIdConfig.HOME_FLOAT;
-        String originalData = FileManager.readFile(path).trim();
-        String currentData = Tools.map2Json(buoyData);
-        //如果不一样，重新存储数据
-        if (!currentData.equals(originalData)) {
-            FileManager.saveFileToCompletePath(path, currentData, false);
         }
         //初始化浮标
         initBuoy();

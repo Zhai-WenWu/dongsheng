@@ -108,13 +108,19 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.a_common_myself);
-        if (Main.allMain != null && Main.allMain.allTab != null)
-            Main.allMain.allTab.put(KEY,this);
+        setActivity();
         loadManager.showProgressBar();
         initUI();
         XHClick.track(this,"浏览我的页面");
         loadManager.setLoading(v -> getYiYuanBindState());
         ObserverManager.getInstance().registerObserver(this, ObserverManager.NOTIFY_LOGIN, ObserverManager.NOTIFY_YIYUAN_BIND, ObserverManager.NOTIFY_PAYFINISH);
+    }
+
+    private void setActivity() {
+        if(Main.allMain != null && Main.allMain.allTab != null
+                && !Main.allMain.allTab.containsKey(KEY)){
+            Main.allMain.allTab.put(KEY, this);//这个Key值不变
+        }
     }
 
     @Override

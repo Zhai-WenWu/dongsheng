@@ -1,13 +1,15 @@
 package third.ad;
 
-import android.util.Log;
+import android.text.TextUtils;
 
 import java.util.ArrayList;
 import java.util.Map;
 
-import acore.tools.FileManager;
+import acore.override.XHApplication;
 import acore.tools.StringManager;
 import third.ad.AdParent.AdIsShowListener;
+import third.ad.db.XHAdSqlite;
+import third.ad.db.bean.AdBean;
 
 /**
  * 用于创建广告，因需求：一个位置多个广告，具体显示哪个，按优先级看参数判断
@@ -83,52 +85,24 @@ public class AdsShow {
 	 * @return
      */
 	private AdParent[] sortAds(AdParent[] ads,String adPlayId){
-
+		XHAdSqlite adSqlite = XHAdSqlite.newInstance(XHApplication.in());
+		AdBean adBean = adSqlite.getAdConfig(adPlayId);
+		int lenght = ads.length;
+		if (lenght == 1) {
+			return ads;
+		}
+		if(adBean == null || TextUtils.isEmpty(adBean.adConfig)){
+			return ads;
+		}
 		ArrayList<AdParent> adParents= new ArrayList<>();
-		String data = FileManager.readFile(FileManager.getDataDir() + FileManager.file_ad);
-		ArrayList<Map<String, String>> list = StringManager.getListMapByJson(data);
-		if(list.size()>0) {
-			if (!list.get(0).containsKey(adPlayId)) return new AdParent[]{};
-			int lenght = ads.length;
-			if (lenght == 1) {
-				return ads;
-			}
-			list = StringManager.getListMapByJson(list.get(0).get(adPlayId));
-			if (!list.get(0).containsKey("adConfig")) return ads;
-			list = StringManager.getListMapByJson(list.get(0).get("adConfig"));
-			if (list.get(0).containsKey("1")) {
-				String temp = list.get(0).get("1");
-				adParents = handlerStringData(temp, adParents, ads);
-			}
-			if (list.get(0).containsKey("2")) {
-				String temp = list.get(0).get("2");
-				adParents = handlerStringData(temp, adParents, ads);
-			}
-			if (list.get(0).containsKey("3")) {
-				String temp = list.get(0).get("3");
-				adParents = handlerStringData(temp, adParents, ads);
-			}
-			if (list.get(0).containsKey("4")) {
-				String temp = list.get(0).get("4");
-				adParents = handlerStringData(temp, adParents, ads);
+		Map<String, String> data = StringManager.getFirstMap(adBean.adConfig);
+		final String[] keys = {"1","2","3","4","5"};
+		for(String key:keys){
+			if(data.containsKey(key)){
+				adParents = handlerStringData(data.get(key), adParents, ads);
 			}
 		}
-		//优化代码，未测试
-//        ArrayList<AdParent> adParents = new ArrayList<>();
-//        String data = FileManager.readFile(FileManager.getDataDir() + FileManager.file_ad);
-//        Map<String, String> map = StringManager.getFirstMap(data);
-//        if (!map.containsKey(adPlayId))
-//            return new AdParent[]{};
-//        if (1 == ads.length)
-//            return ads;
-//        map = StringManager.getFirstMap(map.get(adPlayId));
-//        if (!map.containsKey("adConfig"))
-//            return ads;
-//        map = StringManager.getFirstMap(map.get("adConfig"));
-//        String[] keys = {"1", "2", "3", "4"};
-//        for (String key : keys) {
-//            adParents = handlerStringData(map.get(key), adParents, ads);
-//        }
+
 		return  adParents.toArray(new AdParent[adParents.size()]);
 	}
 

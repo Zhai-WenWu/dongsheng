@@ -16,7 +16,6 @@ import com.bumptech.glide.request.target.Target;
 import com.xiangha.R;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 import acore.logic.AppCommon;
@@ -29,8 +28,9 @@ import acore.widget.ImageViewVideo;
 import acore.widget.ScrollLinearListLayout;
 import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
+import third.ad.db.XHAdSqlite;
+import third.ad.db.bean.AdBean;
 import xh.basic.tool.UtilImage;
-import xh.basic.tool.UtilString;
 
 /**
  * banner广告，策略：服务端返回是否显示banner广告，若显示，则banner信息随着返回
@@ -97,30 +97,22 @@ public class BannerAd extends AdParent{
 	@Override
 	public boolean isShowAd(String adPlayId,AdIsShowListener listener) {
 		boolean isShow = true;
-			String data = FileManager.readFile(FileManager.getDataDir() + FileManager.file_ad);
-			ArrayList<Map<String, String>> list = StringManager.getListMapByJson(data);
-			Map<String, String> temp = new HashMap<>();
-			if(list != null && list.size() > 0){
-				temp = list.get(0);
-				list = StringManager.getListMapByJson(temp.get(adPlayId));
-				if(list != null && list.size() > 0){
-					temp = list.get(0);
-				}else{
-					temp = new HashMap<String, String>();
-				}
-			}
-			ArrayList<Map<String, String>> array = UtilString.getListMapByJson(temp.get("banner"));
-			if(array == null || array.size() == 0) {
+
+		XHAdSqlite adSqlite = XHAdSqlite.newInstance(XHApplication.in());
+		AdBean adBean = adSqlite.getAdConfig(adPlayId);
+		if(adBean != null && !TextUtils.isEmpty(adBean.banner)){
+			Map<String,String> map = StringManager.getFirstMap(adBean.banner);
+			//1活动，2广告,美食家只显示活动
+			if(!LoginManager.isShowAd()
+					&& map.containsKey("adType")
+					&& !"1".equals(map.get("adType"))){
 				isShow = false;
-			}else if(!LoginManager.isShowAd()&&array.get(0).containsKey("adType")&&!"1".equals(array.get(0).get("adType"))){//1活动，2广告,美食家只显示活动
-				isShow = false;
-			}else{
-				Map<String, String> map = array.get(0);
+			} else {
 				String imgs = map.get("imgs");
 				if(TextUtils.isEmpty(imgs)){
 					isShow = false;
 				}else{
-					array = UtilString.getListMapByJson(imgs);
+					ArrayList<Map<String, String>> array = StringManager.getListMapByJson(imgs);
 					if(array != null && array.size() > 0) {
 						mImgUrl = array.get(0).get(mImgKey);
 						if(TextUtils.isEmpty(mImgUrl)){
@@ -132,6 +124,9 @@ public class BannerAd extends AdParent{
 					}
 				}
 			}
+		}else{
+			isShow = false;
+		}
 		listener.onIsShowAdCallback(this,isShow);
 		return isShow;
 	}

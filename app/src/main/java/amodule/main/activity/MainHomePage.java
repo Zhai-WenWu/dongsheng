@@ -72,7 +72,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
         mViewContrloer = new HomeViewControler(this);
         setContentView(R.layout.a_home_page);
         getWindow().setFormat(PixelFormat.TRANSLUCENT);
-        Main.allMain.allTab.put(KEY, this);//这个Key值不变
+        setActivity();
         //初始化
         initialize();
         //加载数据
@@ -82,6 +82,13 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
         //注册通知
         ObserverManager.getInstance().registerObserver(this, ObserverManager.NOTIFY_VIPSTATE_CHANGED);
         registerConnectionReceiver();
+    }
+
+    private void setActivity() {
+        if(Main.allMain != null && Main.allMain.allTab != null
+                && !Main.allMain.allTab.containsKey(KEY)){
+            Main.allMain.allTab.put(KEY, this);//这个Key值不变
+        }
     }
 
     //初始化
@@ -318,6 +325,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
     @Override
     protected void onResume() {
         super.onResume();
+        setActivity();
         if (mDataControler != null) {
             mDataControler.isNeedRefresh(false);
         }

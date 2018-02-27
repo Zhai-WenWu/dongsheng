@@ -64,7 +64,7 @@ public class MainCircle extends MainBaseActivity implements View.OnClickListener
         //sufureView页面闪烁
         getWindow().setFormat(PixelFormat.TRANSLUCENT);
         setContentView(R.layout.a_circle_home);
-        Main.allMain.allTab.put(KEY, this);//这个Key值不变
+        setActivity();
 //        initActivity("", 2, 0, 0, R.layout.a_circle_home);
 
         //
@@ -72,6 +72,13 @@ public class MainCircle extends MainBaseActivity implements View.OnClickListener
 
         defaultHasUser = LoginManager.isLogin();
         XHClick.track(MainCircle.this, "浏览美食圈列表页");
+    }
+
+    private void setActivity() {
+        if(Main.allMain != null && Main.allMain.allTab != null
+                && !Main.allMain.allTab.containsKey(KEY)){
+            Main.allMain.allTab.put(KEY, this);//这个Key值不变
+        }
     }
 
     /** 初始化UI */
@@ -265,6 +272,7 @@ public class MainCircle extends MainBaseActivity implements View.OnClickListener
     @Override
     protected void onResume() {
         super.onResume();
+        setActivity();
         if (defaultHasUser != LoginManager.isLogin()) {
             defaultHasUser = LoginManager.isLogin();
             loadModuleData();

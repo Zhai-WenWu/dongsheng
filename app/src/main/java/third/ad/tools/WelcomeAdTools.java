@@ -11,12 +11,14 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import acore.logic.LoginManager;
 import acore.logic.ConfigMannager;
+import acore.logic.LoginManager;
+import acore.override.XHApplication;
 import acore.override.helper.XHActivityManager;
-import acore.tools.FileManager;
 import acore.tools.StringManager;
 import amodule.main.view.WelcomeDialog;
+import third.ad.db.XHAdSqlite;
+import third.ad.db.bean.AdBean;
 import third.ad.scrollerAd.XHScrollerAdParent;
 import xh.basic.tool.UtilString;
 
@@ -54,11 +56,9 @@ public class WelcomeAdTools {
     private XHBannerCallback mXHBannerCallback;
     private BaiduCallback mBaiduCallback;
     private boolean isTwoShow = false;
-    String data;
 
     private WelcomeAdTools() {
         //获取广告数据
-        data = FileManager.readFile(FileManager.getDataDir() + FileManager.file_ad);
         Log.i("tzy","WelcomeAdTools create.");
         //获取参数
         String splashConfigDataStr = ConfigMannager.getConfigByLocal(CONFIGKEY);
@@ -101,30 +101,26 @@ public class WelcomeAdTools {
         ad_data.clear();
         index_ad = 0;
         this.mAdNoDataCallBack = CallBack;
+
         Log.i("tzy","WelcomeAdTools handlerAdData.");
-        if (TextUtils.isEmpty(data)) {
-            if (mAdNoDataCallBack != null) mAdNoDataCallBack.noAdData();
+        XHAdSqlite adSqlite = XHAdSqlite.newInstance(XHApplication.in());
+        AdBean adBean = adSqlite.getAdConfig(AdPlayIdConfig.WELCOME);
+        if(adBean == null || TextUtils.isEmpty(adBean.adConfig)){
+            if (mAdNoDataCallBack != null){
+                mAdNoDataCallBack.noAdData();
+            }
             return;
         }
-        Map<String, String> map = StringManager.getFirstMap(data);
-        if (map.containsKey(AdPlayIdConfig.WELCOME)) {
-            Map<String,String> mapTemp = StringManager.getFirstMap(map.get(AdPlayIdConfig.WELCOME));
-            if (!mapTemp.containsKey("adConfig")) {
-                return;
+        Map<String, String> configMap = StringManager.getFirstMap(adBean.adConfig);
+        final String[] keys = {"1", "2", "3", "4", "5"};
+        for (String key : keys) {
+            if (configMap.containsKey(key)){
+                handlerData(configMap.get(key), list_ad, adBean.banner);
             }
-            Map<String, String> configMap = StringManager.getFirstMap(mapTemp.get("adConfig"));
-            String banner = mapTemp.get("banner");
-            final String[] keys = {"1", "2", "3", "4", "5"};
-            for (String key : keys) {
-                if (configMap.containsKey(key))
-                    handlerData(configMap.get(key), list_ad, banner);
-            }
-            //开启广告
-//            new Handler(Looper.getMainLooper()).post(() -> nextAd(isCache));
-            nextAd(isCache);
-        } else {
-            if (mAdNoDataCallBack != null) mAdNoDataCallBack.noAdData();
         }
+        //开启广告
+//            new Handler(Looper.getMainLooper()).post(() -> nextAd(isCache));
+        nextAd(isCache);
     }
 
     private void handlerData(String temp, ArrayList<String> list_ad, String banner) {

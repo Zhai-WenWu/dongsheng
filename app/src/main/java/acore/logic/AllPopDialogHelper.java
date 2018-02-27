@@ -91,8 +91,10 @@ public class AllPopDialogHelper {
                     private void handlerFullData(AllPopDialogControler.GetFullScreenDataCallback callback){
                         String intervalCountValue = FileManager.loadShared(activity,INERVAL_XML,KEY_INERVAL_COUNT).toString();
                         int intervalCount = TextUtils.isEmpty(intervalCountValue)?0:Integer.parseInt(intervalCountValue);
-                        String data = AdConfigTools.getInstance().getAdConfigData(FULL_SRCEEN_ACTIVITY).get("quanping");
-                        Map<String, String> map =  StringManager.getFirstMap(data);
+                        final String path = FileManager.getDataDir() + FULL_SRCEEN_ACTIVITY + ".xh";
+                        String data = FileManager.readFile(path);
+                        Map<String,String> config = StringManager.getFirstMap(data);
+                        Map<String, String> map =  StringManager.getFirstMap(config.get("quanping"));
                         String intervalValue = map.get("interval");
                         int interval = TextUtils.isEmpty(intervalValue) ? 0 : Integer.parseInt(intervalValue);
                         log(intervalCountValue);
