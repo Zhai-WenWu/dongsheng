@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.popdialog.util.FullScreenManager;
@@ -27,6 +28,10 @@ import aplug.basic.LoadImage;
 import aplug.basic.ReqInternet;
 import aplug.basic.SubBitmapTarget;
 import third.ad.AdParent;
+import third.ad.db.XHAdSqlite;
+import third.ad.db.bean.AdBean;
+
+import static third.ad.tools.AdPlayIdConfig.FULL_SRCEEN_ACTIVITY;
 
 public class AdConfigTools {
     private volatile static AdConfigTools mAdConfigTools;
@@ -61,7 +66,15 @@ public class AdConfigTools {
             @Override
             public void loaded(int flag, String url, final Object returnObj) {
                 if (flag >= ReqInternet.REQ_OK_STRING) {
-                    FileManager.saveFileToCompletePath(FileManager.getDataDir() + FileManager.file_ad, (String) returnObj, false);
+                    //更新广告配置
+                    XHAdSqlite adSqlite = XHAdSqlite.newInstance(XHApplication.in());
+                    adSqlite.updateConfig((String) returnObj);
+                    //更新全屏广告数据
+                    Map<String,String> map = StringManager.getFirstMap(returnObj);
+                    if(map.containsKey(FULL_SRCEEN_ACTIVITY)){
+                        final String path = FileManager.getDataDir() + FULL_SRCEEN_ACTIVITY + ".xh";
+                        FileManager.saveFileToCompletePath(path, map.get(FULL_SRCEEN_ACTIVITY), false);
+                    }
                     isLoadOver = true;
                     if(callback != null){
                         callback.loaded(ReqInternet.REQ_OK_STRING,url,returnObj);
@@ -88,17 +101,22 @@ public class AdConfigTools {
         });
     }
 
-    public String getAdConfigDataString(String adPlayId) {
-        String data = FileManager.readFile(FileManager.getDataDir() + FileManager.file_ad);
-        Map<String, String> map = StringManager.getFirstMap(data);
-        return map.get(adPlayId);
-    }
+//    public String getAdConfigDataString(String adPlayId) {
+//        String data = FileManager.readFile(FileManager.getDataDir() + FileManager.file_ad);
+//        Map<String, String> map = StringManager.getFirstMap(data);
+//        return map.get(adPlayId);
+//    }
 
-    public Map<String, String> getAdConfigData(String adPlayId) {
-        String data = FileManager.readFile(FileManager.getDataDir() + FileManager.file_ad);
-        Map<String, String> map = StringManager.getFirstMap(data);
-        map = StringManager.getFirstMap(map.get(adPlayId));
-        return map;
+//    public Map<String, String> getAdConfigData(String adPlayId) {
+//        String data = FileManager.readFile(FileManager.getDataDir() + FileManager.file_ad);
+//        Map<String, String> map = StringManager.getFirstMap(data);
+//        map = StringManager.getFirstMap(map.get(adPlayId));
+//        return map;
+//    }
+
+    public AdBean getAdConfig(String adPlayId){
+        XHAdSqlite adSqlite = XHAdSqlite.newInstance(XHApplication.in());
+        return adSqlite.getAdConfig(adPlayId);
     }
 
     /**
@@ -123,10 +141,15 @@ public class AdConfigTools {
             if ("2".equals(isGourmet) && !AdParent.ADKEY_BANNER.equals(adKey)) {
                 return false;
             }
-
-            Map<String, String> mData = getAdConfigData(adPlayId);
-            if ("2".equals(mData.get(adKey))) {
-                return true;
+            AdBean adBean = getAdConfig(adPlayId);
+            if(adBean != null){
+                switch (adKey){
+                    case AdParent.ADKEY_GDT:
+                        return "2".equals(adBean.isGdt);
+                    case AdParent.ADKEY_BANNER:
+                        return "2".equals(adBean.isBanner);
+                    default:break;
+                }
             }
         } else if ("level".equals(showAdId)) {
             return true;

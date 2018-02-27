@@ -103,26 +103,23 @@ public class AdVideoController {
             @Override
             public void onAutoComplete(String url, Object... objects) {
                 super.onAutoComplete(url, objects);
-                isComplete = true;
-                destroy();
-                //播放完成
-                if (mOnCompleteCallback != null) {
-                    mOnCompleteCallback.onComplete();
-                }
+                complete();
             }
 
             @Override
             public void onPlayError(String url, Object... objects) {
                 super.onPlayError(url, objects);
                 //错误
-                if (mOnErrorCallback != null) {
-                    mOnErrorCallback.onError();
-                }
+                excuteErrorCallback();
             }
         });
         mAdVideoPlayer.setOnProgressChangedCallback(
                 (progress, secProgress, currentTime, totalTime) -> {
                     //进度监听
+                    if(totalTime < currentTime){
+                        complete();
+                        return;
+                    }
                     if (mCountDownTv != null) {
                         final int time = (totalTime - currentTime) / 1000;
                         mCountDownTv.setText(String.valueOf(time) + "s");
@@ -170,6 +167,25 @@ public class AdVideoController {
             mAdVideoPlayer.addListener(mInnerListener);
         }
         Log.i("tzy", "initVideoPlayer: " + (System.currentTimeMillis() - startTime));
+    }
+
+    private void complete() {
+        isComplete = true;
+        destroy();
+        //播放完成
+        excuteCompleteCallback();
+    }
+
+    private void excuteErrorCallback() {
+        if (mOnErrorCallback != null) {
+            mOnErrorCallback.onError();
+        }
+    }
+
+    private void excuteCompleteCallback() {
+        if (mOnCompleteCallback != null) {
+            mOnCompleteCallback.onComplete();
+        }
     }
 
     private void createAdView(Map<String, String> configData) {
@@ -257,9 +273,7 @@ public class AdVideoController {
             mAdVideoPlayer.startPalyVideo();
             if (monStartCallback != null) monStartCallback.onStart(isRemoteUrl());
             Log.i("tzy", "start: " + (System.currentTimeMillis() - startTime));
-        } else if (mOnErrorCallback != null) {
-            mOnErrorCallback.onError();
-        }
+        } else excuteErrorCallback();
     }
 
     public boolean isRemoteUrl() {

@@ -5,17 +5,14 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatImageView;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.xiangha.R;
 
 import java.util.Map;
 
 import acore.tools.StringManager;
+import third.ad.db.bean.AdBean;
 import third.ad.tools.AdConfigTools;
 import third.ad.tools.AdPlayIdConfig;
 
@@ -59,20 +56,21 @@ public class HomeActivityIconView extends AppCompatImageView {
 
     //获取数据
     private void loadData() {
-        Map<String, String> dataMap = AdConfigTools.getInstance().getAdConfigData(AdPlayIdConfig.HOME_TOPLEFT);
-        if (dataMap.isEmpty()) {
+        AdBean adBean = AdConfigTools.getInstance().getAdConfig(AdPlayIdConfig.HOME_TOPLEFT);
+        if(adBean == null){
             return;
         }
-        Map<String,String> adConfigMap = StringManager.getFirstMap(dataMap.get("adConfig"));
+        Map<String,String> adConfigMap = StringManager.getFirstMap(adBean.adConfig);
         final String[] keys = {"1","2","3","4",};
         for(String key:keys){
             Map<String,String> tempMap = StringManager.getFirstMap(adConfigMap.get(key));
             if("personal".equals(tempMap.get("type"))
                     && "2".equals(tempMap.get("open"))){
-                handlerData(StringManager.getFirstMap(dataMap.get("banner")));
+                handlerData(StringManager.getFirstMap(adBean.banner));
                 break;
             }
         }
+
     }
 
     private void handlerData(Map<String,String> dataMap){

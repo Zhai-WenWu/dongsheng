@@ -160,7 +160,7 @@ public class WelcomeDialog extends Dialog {
     }
 
     private void initAd() {
-        if(null == FileManager.ifFileModifyByCompletePath(FileManager.getDataDir() + FileManager.file_ad,-1)){
+        if("true".equals(FileManager.loadShared(getContext(),FileManager.xmlFile_appInfo,"once").toString())){
             mAdTime = 3;
             return;
         }

@@ -53,7 +53,6 @@ public class FileManager extends UtilFile{
 	//我的页面，内置数据
 	public static final String file_indexModuleAndRecCircle = "indexModuleAndRecCircle";
 	public static final String file_location = "location";
-	public static final String file_ad = "ad";
 	public static final String file_config = "config";
 	//随机推广
 	public static final String file_randPromotionConfig = "randPromotionConfig";

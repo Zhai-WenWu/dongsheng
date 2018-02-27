@@ -91,7 +91,7 @@ public class XHApplication extends MobApplication {
 
         //初始化config变量
         XHConf.init(this);
-        LoadImage.init(getApplicationContext());//耗时100毫秒
+        LoadImage.init(this);
         LogManager.printStartTime("zhangyujian","XhApplication:1111:initData::");
         //设置百度appid
         Map<String,String> map = StringManager.getFirstMap(ConfigMannager.getConfigByLocal(KEY_BAIDUAPPID));

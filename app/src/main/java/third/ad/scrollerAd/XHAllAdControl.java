@@ -22,6 +22,9 @@ import acore.logic.LoginManager;
 import acore.override.XHApplication;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
+import amodule.main.Main;
+import third.ad.db.XHAdSqlite;
+import third.ad.db.bean.AdBean;
 import third.ad.tools.BaiduAdTools;
 import third.ad.tools.GdtAdTools;
 
@@ -32,7 +35,6 @@ import static third.ad.control.AdControlHomeDish.tag_yu;
  */
 public class XHAllAdControl {
     private ArrayList<String> listIds;//存储广告位置id的集合
-    private Map<String, String> mapBase = new HashMap<>();
     private boolean isShowGdt = false;//是否存在广点通
     private boolean isShowBaidu = false;//是否存在百度
     private ArrayList<XHOneAdControl> listAdContrls = new ArrayList<>();//子控制类集合
@@ -82,7 +84,7 @@ public class XHAllAdControl {
         this.isJudgePicSize = isJudgePicSize;
         if (listIds.size() > 0) getCountGdtData = listIds.size();
         getStiaticsData();
-        getAllAdData();
+        getAllAdDataBySqlite();
     }
 
     public XHAllAdControl(@NonNull ArrayList<String> listIds, @NonNull XHBackIdsDataCallBack xhBackIdsDataCallBack,
@@ -92,60 +94,52 @@ public class XHAllAdControl {
 
     public XHAllAdControl(@NonNull ArrayList<String> listIds, @NonNull XHBackIdsDataCallBack xhBackIdsDataCallBack,
                           String StatisticKey, boolean isJudgePicSize) {
-        this(listIds, xhBackIdsDataCallBack, null, StatisticKey, isJudgePicSize);
+        this(listIds, xhBackIdsDataCallBack, Main.allMain, StatisticKey, isJudgePicSize);
     }
 
-    /**
-     * 获取当前要显示的广告
-     */
-    private void getAllAdData() {
+
+    private void getAllAdDataBySqlite(){
         listAdContrls.clear();
-        /*服务端返回的广告数据信息*/
-        String data = FileManager.readFileBuffer(FileManager.getDataDir() + FileManager.file_ad);
-        Map<String, String> map = StringManager.getFirstMap(data);
+        XHAdSqlite adSqlite = XHAdSqlite.newInstance(XHApplication.in());
         //根据广告位置id在广告数据 进行筛选通
-        if (listIds.size() > 0 && !map.isEmpty()) {
+        if (listIds.size() > 0) {
+            Log.i("tzy", "getAllAdDataBySqlite: size = " + listIds.size());
             for (int i = 0, size = listIds.size(); i < size; i++) {
                 AdTypeData.put(listIds.get(i),"");
                 /*获取数据广告位的数据体*/
-                if (map.containsKey(listIds.get(i))) {
-                    /*存储数据*/
-                    mapBase.put(listIds.get(i), map.get(listIds.get(i)));
-                    Map<String, String> mapTemp = StringManager.getFirstMap(map.get(listIds.get(i)));
-//                    ArrayList<Map<String, String>> listTemp = StringManager.getListMapByJson(map.get(listIds.get(i)));
-                    if (mapTemp.containsKey("adConfig")) {
-                        String banner = mapTemp.get("banner");
-
-                        /*广告实体数据集合*/
-                        boolean state = false;//是否打开
-                        ArrayList<Map<String, String>> adConfigDataList = new ArrayList<>();
-                        Map<String, String> configMap = StringManager.getFirstMap(mapTemp.get("adConfig"));
-                        final String[] keys = {"1", "2", "3", "4", "5"};
-                        boolean once = false;
-                        for (String key : keys) {
-                            if (configMap.containsKey(key)) {
-                                String value = configMap.get(key);
-                                Map<String,String> configTemp = StringManager.getFirstMap(value);
-                                if ("2".equals(configTemp.get("open"))) {
-                                    state = true;
-                                    if(!once){
-                                        once=true;
-                                        AdTypeData.put(listIds.get(i),configTemp.containsKey("type") ? configTemp.get("type") : "");
-                                    }
-                                }
-                                handlerAdData(value, adConfigDataList, banner);
+                AdBean adBean = adSqlite.getAdConfig(listIds.get(i));
+                if(adBean == null) {
+                    continue;
+                }
+                String banner = adBean.banner;
+                /*广告实体数据集合*/
+                boolean state = false;//是否打开
+                ArrayList<Map<String, String>> adConfigDataList = new ArrayList<>();
+                Map<String, String> configMap = StringManager.getFirstMap(adBean.adConfig);
+                final String[] keys = {"1", "2", "3", "4", "5"};
+                boolean once = false;
+                for (String key : keys) {
+                    if (configMap.containsKey(key)) {
+                        String value = configMap.get(key);
+                        Map<String,String> configTemp = StringManager.getFirstMap(value);
+                        if ("2".equals(configTemp.get("open"))) {
+                            state = true;
+                            if(!once){
+                                once=true;
+                                AdTypeData.put(listIds.get(i),configTemp.containsKey("type") ? configTemp.get("type") : "");
                             }
                         }
-                        if (!state) {//当前广告位没有打开
-                            count++;
-                            AdData.put(listIds.get(i), "");
-                        }
-                        if (adConfigDataList.size() > 0) {
-                            initAdRequest(adConfigDataList, listIds.get(i), i);
-                        } else {
-                            listAdContrls.add(null);
-                        }
+                        handlerAdData(value, adConfigDataList, banner);
                     }
+                }
+                if (!state) {//当前广告位没有打开
+                    count++;
+                    AdData.put(listIds.get(i), "");
+                }
+                if (adConfigDataList.size() > 0) {
+                    initAdRequest(adConfigDataList, listIds.get(i), i);
+                } else {
+                    listAdContrls.add(null);
                 }
             }
         }
@@ -159,7 +153,6 @@ public class XHAllAdControl {
             startAdRequest();
         }
     }
-
     /**
      * 处理当广告体数据的拆分判断
      *
