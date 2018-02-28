@@ -116,7 +116,7 @@ public class TencenApiAd extends AdParent{
     @Override
     public void onResumeAd() {
 //        onAdShow(mFrom,TONGJI_TX_API);
-        onAdShow(ad_show,twoData,key,key,"0");//更改统计
+        onAdShow(ad_show,twoData,key,key,mAdId);//更改统计
         View view;
         mAdLayout.setVisibility(View.VISIBLE);
         if (mAdLayout.getChildCount() > 0) {
@@ -196,8 +196,8 @@ public class TencenApiAd extends AdParent{
                         public void onClick(View v) {
                             TencenApiAdTools.onClickAd(mAct,clickUrl,tjClickUrl);
                             XHClick.track(mAct,"点击广告");
-                            onAdClick(mFrom,TONGJI_TX_API);
-                            onAdClick(ad_show,twoData,key,key,"0");
+//                            onAdClick(mFrom,TONGJI_TX_API);
+                            onAdClick(ad_show,twoData,key,key,mAdId);
                         }
                     };
                     if(isMain){

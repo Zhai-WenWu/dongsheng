@@ -181,7 +181,6 @@ public class WelcomeDialog extends Dialog {
                         }
                         showSkipContainer();
                         isAdLoadOk = true;
-                        AdConfigTools.getInstance().postTongji(AdPlayIdConfig.WELCOME, "gdt", "", "show", "开屏广告位");
                         XHClick.mapStat(activity, "ad_show_index", "开屏", "sdk_gdt");
                     }
 
@@ -199,7 +198,6 @@ public class WelcomeDialog extends Dialog {
                     public void onAdClick() {
                         Log.i("zhangyujian","onAdClick");
                         closeDialog();
-                        AdConfigTools.getInstance().postTongji(AdPlayIdConfig.WELCOME, "gdt", "", "click", "开屏广告位");
                         XHClick.mapStat(activity, "ad_click_index", "开屏", "sdk_gdt");
                     }
 
@@ -233,7 +231,6 @@ public class WelcomeDialog extends Dialog {
                 }
                 showSkipContainer();
                 isAdLoadOk = true;
-                AdConfigTools.getInstance().postTongji(AdPlayIdConfig.WELCOME, "baidu", "", "show", "开屏广告位");
                 XHClick.mapStat(activity, "ad_show_index", "开屏", "sdk_baidu");
             }
 
@@ -252,7 +249,6 @@ public class WelcomeDialog extends Dialog {
             public void onAdClick() {
 //                Log.i("tzy","onAdClick");
                 closeDialog();
-                AdConfigTools.getInstance().postTongji(AdPlayIdConfig.WELCOME, "baidu", "", "click", "开屏广告位");
                 XHClick.mapStat(activity, "ad_click_index", "开屏", "sdk_baidu");
             }
 

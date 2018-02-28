@@ -273,13 +273,13 @@ public class XHAllAdControl {
                     parent = new XHScrollerTencentApi(act, data, backIds, i);
                     break;
                 case "gdt":
-                    parent = new XHScrollerGdt(backIds, i);
+                    parent = new XHScrollerGdt(data,backIds, i);
                     break;
                 case "personal":
                     parent = new XHScrollerSelf(data, backIds, i, act);
                     break;
                 case "baidu":
-                    parent = new XHScrollerBaidu(backIds, i);
+                    parent = new XHScrollerBaidu(data,backIds, i);
                     ((XHScrollerBaidu) parent).setJudgePicSize(isJudgePicSize);
                     break;
                 default:

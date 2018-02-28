@@ -38,6 +38,7 @@ import third.ad.tools.WelcomeAdTools;
 import xh.basic.tool.UtilImage;
 
 import static android.os.Looper.getMainLooper;
+import static third.ad.scrollerAd.XHScrollerAdParent.ADKEY_GDT;
 
 /**
  * 对于welcome进行管理
@@ -127,7 +128,6 @@ public class WelcomeControls {
                         }
                         showSkipContainer();
                         isAdLoadOk = true;
-                        AdConfigTools.getInstance().postTongji(AdPlayIdConfig.WELCOME, "gdt", "", "show", "开屏广告位");
                         XHClick.mapStat(activity, "ad_show_index", "开屏", "sdk_gdt");
                     }
                     @Override
@@ -141,7 +141,7 @@ public class WelcomeControls {
                     public void onAdClick() {
                         Log.i("zhangyujian", "onAdClick");
                         closeDialog();
-                        AdConfigTools.getInstance().postTongji(AdPlayIdConfig.WELCOME, "gdt", "", "click", "开屏广告位");
+                        AdConfigTools.getInstance().postStatistics("click",AdPlayIdConfig.WELCOME,ADKEY_GDT,"");
                         XHClick.mapStat(activity, "ad_click_index", "开屏", "sdk_gdt");
                     }
                     @Override
@@ -170,7 +170,6 @@ public class WelcomeControls {
                 }
                 showSkipContainer();
                 isAdLoadOk = true;
-                AdConfigTools.getInstance().postTongji(AdPlayIdConfig.WELCOME, "baidu", "", "show", "开屏广告位");
                 XHClick.mapStat(activity, "ad_show_index", "开屏", "sdk_baidu");
             }
             @Override
@@ -182,7 +181,6 @@ public class WelcomeControls {
             @Override
             public void onAdClick() {
                 closeDialog();
-                AdConfigTools.getInstance().postTongji(AdPlayIdConfig.WELCOME, "baidu", "", "click", "开屏广告位");
                 XHClick.mapStat(activity, "ad_click_index", "开屏", "sdk_baidu");
             }
             @Override

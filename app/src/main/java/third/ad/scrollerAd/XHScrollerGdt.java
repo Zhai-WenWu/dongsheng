@@ -7,8 +7,10 @@ import android.view.View;
 import com.qq.e.ads.nativ.NativeADDataRef;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
+import acore.tools.StringManager;
 import third.ad.tools.GdtAdTools;
 
 /**
@@ -17,10 +19,12 @@ import third.ad.tools.GdtAdTools;
 public class XHScrollerGdt extends XHScrollerAdParent {
     private Map<String, String> map_data;
     private NativeADDataRef nativeADDataRef;
-
-    public XHScrollerGdt(String mAdPlayId, int num) {
+    public XHScrollerGdt(String data,String mAdPlayId, int num) {
         super(mAdPlayId, num);
         key = "sdk_gdt";
+        LinkedHashMap<String, String> map_link = StringManager.getMapByString(data, "&", "=");
+        if (map_link.containsKey("adid"))
+            adid = map_link.get("adid");
     }
 
     @Override

@@ -22,6 +22,9 @@ import third.ad.db.bean.AdBean;
 import third.ad.scrollerAd.XHScrollerAdParent;
 import xh.basic.tool.UtilString;
 
+import static third.ad.scrollerAd.XHScrollerAdParent.ADKEY_BAIDU;
+import static third.ad.scrollerAd.XHScrollerAdParent.ADKEY_GDT;
+
 /**
  * PackageName : third.ad.tools
  * Created by MrTrying on 2017/5/10 14:28.
@@ -181,6 +184,7 @@ public class WelcomeAdTools {
                     public void onAdPresent() {
                         Log.i("zhangyujian", "GDT：：onAdPresent");
                         mGdtCallback.onAdPresent();
+                        AdConfigTools.getInstance().postStatistics("show",AdPlayIdConfig.WELCOME,ADKEY_GDT,adid);
                     }
 
                     @Override
@@ -198,6 +202,7 @@ public class WelcomeAdTools {
 
                     @Override
                     public void onAdClick() {
+                        AdConfigTools.getInstance().postStatistics("click",AdPlayIdConfig.WELCOME,ADKEY_GDT,adid);
                         mGdtCallback.onAdClick();
                     }
 
@@ -257,6 +262,7 @@ public class WelcomeAdTools {
                             @Override
                             public void onAdPresent() {
                                 Log.i("zhangyujian","displayBaiduAD::onAdPresent");
+                                AdConfigTools.getInstance().postStatistics("show",AdPlayIdConfig.WELCOME,ADKEY_BAIDU,adid);
                                 mBaiduCallback.onAdPresent();
                             }
 
@@ -275,6 +281,7 @@ public class WelcomeAdTools {
 
                             @Override
                             public void onAdClick() {
+                                AdConfigTools.getInstance().postStatistics("click",AdPlayIdConfig.WELCOME,ADKEY_BAIDU,adid);
                                 mBaiduCallback.onAdClick();
                             }
                         });

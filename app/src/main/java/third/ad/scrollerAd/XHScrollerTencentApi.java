@@ -27,7 +27,6 @@ public class XHScrollerTencentApi extends XHScrollerAdParent {
     //    private Activity activity;
     private String loid;
     private Map<String, String> mapData;
-    private String adid;
 
     public XHScrollerTencentApi(Activity activity, String data, String mAdPlayId, int num) {
         super(mAdPlayId, num);

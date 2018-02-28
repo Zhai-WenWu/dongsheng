@@ -19,8 +19,6 @@ public abstract class AdParent {
 	public static final String ADKEY_BANNER = "isBanner";
 	public static final String ADKEY_TX = "";
 
-	public static final String TONGJI_GDT = "gdt";
-	public static final String TONGJI_JD = "jingdong";
 	public static final String TONGJI_BANNER = "banner";
 	public static final String TONGJI_TX_API = "tencent_api";
 
@@ -56,9 +54,7 @@ public abstract class AdParent {
 	public abstract void onDestroyAd();
 	
 	public void initAdKey(){
-		if(this instanceof GdtAdNew){
-			mAdKey = ADKEY_GDT;
-		}else if(this instanceof BannerAd){
+		if(this instanceof BannerAd){
 			mAdKey = ADKEY_BANNER;
 		}else if(this instanceof TencenApiAd){
 			mAdKey = ADKEY_TX;
@@ -68,32 +64,9 @@ public abstract class AdParent {
 	public void setOnAdClick(AdClickListener listener){
 		mListener = listener;
 	}
-	
-	protected void onAdClick(String from,String channel){
-		postTongji(channel, "0", "click");
-		//umeng的统计
-		AdConfigTools.getInstance().onAdClick(XHApplication.in(),channel, from, "");
-		//自己网站的统计
-		AdConfigTools.getInstance().clickAds(mAdPlayId,channel,"0");
-		if(mListener != null) mListener.onAdClick();
-	}
-	protected void onAdShow(String from,String channel){
-		postTongji(channel, "0", "show");
-		AdConfigTools.getInstance().onAdShow(XHApplication.in(),channel,from,"");
-	}
-	protected void onAdClick(String from,String channel,String bannerId){
-		postTongji(channel, bannerId, "click");
-		AdConfigTools.getInstance().onAdClick(XHApplication.in(),channel,from,"");
-		AdConfigTools.getInstance().clickAds(mAdPlayId,channel,bannerId);
-		if(mListener != null) mListener.onAdClick();
-	}
-	protected void onAdShow(String from,String channel,String bannerId){
-		postTongji(channel, bannerId, "show");
-		AdConfigTools.getInstance().onAdShow(XHApplication.in(),channel,from,"");
-	}
-	
-	private void postTongji(String channel,String bannerId,String event){
-		AdConfigTools.getInstance().postTongji(mAdPlayId, channel, bannerId, event, "普通广告位");
+
+	private void postTongji(String event,String adid){
+		AdConfigTools.getInstance().postStatistics(event,mAdPlayId,mAdKey,adid);
 	}
 
 	/**
@@ -124,7 +97,7 @@ public abstract class AdParent {
 	 */
 	protected void onAdShow(String oneLevel,String twoLevel,String threeLevel,String key,String mId){
 		//自己网站上的统计
-		postTongji(key, mId, "show");
+		postTongji("show",mId);
 		XHClick.mapStat(XHApplication.in(), oneLevel, twoLevel, threeLevel);
 	}
 
@@ -137,11 +110,12 @@ public abstract class AdParent {
      * @param mId
      */
 	protected void onAdClick(String oneLevel,String twoLevel,String threeLevel,String key,String mId){
-		postTongji(key, mId, "click");
+		postTongji("click",mId);
 		//umeng的统计
 		XHClick.mapStat(XHApplication.in(), oneLevel, twoLevel, threeLevel);
 			//其他统计
 		AdConfigTools.getInstance().clickAds(mAdPlayId,key,mId);
+		if(mListener != null) mListener.onAdClick();
 	}
 
 }
