@@ -115,8 +115,7 @@ public class TencenApiAd extends AdParent{
 
     @Override
     public void onResumeAd() {
-//        onAdShow(mFrom,TONGJI_TX_API);
-        onAdShow(ad_show,twoData,key,key,mAdId);//更改统计
+        onAdShow(ad_show,twoData,key,mAdId);//更改统计
         View view;
         mAdLayout.setVisibility(View.VISIBLE);
         if (mAdLayout.getChildCount() > 0) {

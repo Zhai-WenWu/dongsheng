@@ -140,8 +140,7 @@ public class BannerAd extends AdParent{
 	}
 	
 	private void setActivityData(){
-//			onAdShow(mFrom,TONGJI_BANNER , mId);
-			onAdShow(ad_show,twoData,key,key,mId);//更改统计
+			onAdShow(ad_show,twoData,key,mId);//更改统计
 			if(mListener != null) mListener.onShowAd();
 //			String name = mData.get("name");
 //			String content = mData.get("subhead");

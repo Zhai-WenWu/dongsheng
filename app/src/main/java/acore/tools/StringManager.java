@@ -242,7 +242,7 @@ public class StringManager extends UtilString {
 
     //广告统计
 //    public final static String api_monitoring_5 = "https://stat.xiangha.com/s5.gif"; //广告统计
-    public final static String api_monitoring_9 = "http://stat.xiangha.com/s9.gif"; //广告统计
+    public final static String api_monitoring_9 = "https://stat.xiangha.com/s9.gif"; //广告统计
     public final static String api_clickAds = apiUrl + "main6/ads/clickAds"; //广告统计,用于加积分
     public final static String api_myQuanV2 = apiUrl + urlSection.get("quan6") + "myQuanV2";//修改贴子模块
     //菜谱详情页

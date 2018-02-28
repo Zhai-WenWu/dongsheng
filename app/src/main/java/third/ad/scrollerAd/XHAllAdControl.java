@@ -276,7 +276,7 @@ public class XHAllAdControl {
                     parent = new XHScrollerGdt(data,backIds, i);
                     break;
                 case "personal":
-                    parent = new XHScrollerSelf(data, backIds, i, act);
+                    parent = new XHScrollerSelf(data, backIds, i);
                     break;
                 case "baidu":
                     parent = new XHScrollerBaidu(data,backIds, i);

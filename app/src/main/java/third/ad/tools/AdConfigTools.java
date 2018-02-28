@@ -164,10 +164,10 @@ public class AdConfigTools {
 
     /**
      *
-     * @param event
-     * @param gg_position_id
-     * @param gg_business
-     * @param gg_business_id
+     * @param event：行为事件
+     * @param gg_position_id：广告位id
+     * @param gg_business：广告商
+     * @param gg_business_id：广告商id
      */
     public void postStatistics(@NonNull String event, @NonNull String gg_position_id, @NonNull String gg_business, @NonNull String gg_business_id) {
         LinkedHashMap<String, String> params = new LinkedHashMap<>();

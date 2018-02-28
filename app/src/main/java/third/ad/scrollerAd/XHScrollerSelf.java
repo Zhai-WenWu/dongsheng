@@ -1,6 +1,5 @@
 package third.ad.scrollerAd;
 
-import android.app.Activity;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
@@ -21,21 +20,16 @@ import acore.tools.StringManager;
 public class XHScrollerSelf extends XHScrollerAdParent{
     private String data;
     private Map<String, String> map_link;
-//    private Activity activity;
-    public XHScrollerSelf(String data, String mAdPlayId, int num, Activity activity) {
-        super(mAdPlayId, num);
-        this.data= data;
-//        this.activity=activity;
-        map_link = StringManager.getFirstMap(data);
-        key="xh";
 
-    }
    public XHScrollerSelf(String data, String mAdPlayId, int num) {
         super(mAdPlayId, num);
         this.data= data;
-        map_link = StringManager.getFirstMap(data);
         key="xh";
-
+        map_link = StringManager.getFirstMap(data);
+       if(map_link.containsKey("id")){
+           adid = map_link.get("id");
+       }
+       Log.i("tongji", "XHScrollerSelf: " + map_link.toString());
     }
 
     @Override
