@@ -96,6 +96,7 @@ public class BannerAd extends AdParent{
 	
 	@Override
 	public boolean isShowAd(String adPlayId,AdIsShowListener listener) {
+		super.isShowAd(adPlayId,listener);
 		boolean isShow = true;
 
 		XHAdSqlite adSqlite = XHAdSqlite.newInstance(XHApplication.in());
@@ -127,7 +128,9 @@ public class BannerAd extends AdParent{
 		}else{
 			isShow = false;
 		}
-		listener.onIsShowAdCallback(this,isShow);
+		if(listener != null){
+			listener.onIsShowAdCallback(this,isShow);
+		}
 		return isShow;
 	}
 
