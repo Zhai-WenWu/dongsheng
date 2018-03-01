@@ -54,12 +54,12 @@ public abstract class AdOptionParent {
     public void newRunableGetAdData(final Context context, final String statisticKey, final String controlTag, final String controlState) {
         this.statisticKey = statisticKey;
         this.controlTag = controlTag;
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
                 getAdData(context, statisticKey, controlTag, controlState);
-            }
-        }).start();
+//            }
+//        }).start();
     }
 
     public void getAdData(final Context context, String statisticKey) {
