@@ -116,7 +116,7 @@ public class FuncNavView2 extends HomeFuncNavView2 implements IBindMap, IStatict
         XHClick.saveStatictisFile("home", "homeBigNav", rightMap.get("type"), "", "",
                 "click", "", "", "", rightMap.get("text1"), "");
         if(mStatisticCallback != null){
-            mStatisticCallback.onStatistic(id,twoLevel,threeLevel,index);
+            mStatisticCallback.onStatistic(id,twoLevel,rightMap.get("text1"),index);
         }else{
             if (!TextUtils.isEmpty(id) && !TextUtils.isEmpty(twoLevel)) {
                 XHClick.mapStat(getContext(), id, twoLevel, rightMap.get("text1"));
