@@ -1,6 +1,7 @@
 package aplug.imageselector;
 
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -223,6 +224,9 @@ public class ImageSelectorActivity extends BaseFragmentActivity implements OnCli
 			public void onScrollStateChanged(AbsListView absListView, int state) {
 				//根据滑动状态设置图片的加载状态
 				if (state == SCROLL_STATE_IDLE || state == SCROLL_STATE_TOUCH_SCROLL) {
+					if (ImageSelectorActivity.this == null || ImageSelectorActivity.this.isFinishing() || (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN && ImageSelectorActivity.this.isDestroyed())) {
+						return;
+					}
 					Glide.with(ImageSelectorActivity.this).resumeRequests();
 				} else {
 					Glide.with(ImageSelectorActivity.this).pauseRequests();
