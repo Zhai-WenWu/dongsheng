@@ -41,6 +41,7 @@ public class HomeBuoy {
     private Animation open;// 打开动画
     private ImageView imageButton;
     private OnClickCallback mClickCallback;
+    private Map<String,String> bannerMap;
 
     public HomeBuoy(Activity act) {
         this.mAct = act;
@@ -59,7 +60,7 @@ public class HomeBuoy {
 
         Map<String,String> adConfigMap = StringManager.getFirstMap(adBean.adConfig);
         final String[] keys = {"1","2","3","4",};
-        Map<String,String> bannerMap = new HashMap<>();
+        bannerMap = new HashMap<>();
         for(String key:keys){
             Map<String,String> tempMap = StringManager.getFirstMap(adConfigMap.get(key));
             if("personal".equals(tempMap.get("type"))
@@ -148,6 +149,7 @@ public class HomeBuoy {
             if (isMove) {
                 AppCommon.openUrl(mAct, floatUrl, true);
 //                    executeCloseAnim();
+                AdConfigTools.getInstance().postStatistics("click",AdPlayIdConfig.HOME_FLOAT,"xh",bannerMap != null ? bannerMap.get("id"):"");
                 if (mClickCallback != null) {
                     mClickCallback.onClick();
                 }
@@ -172,6 +174,7 @@ public class HomeBuoy {
         imageButton.setVisibility(View.VISIBLE);
 
         Glide.with(mAct).load(imgUrl).into(imageButton);
+        AdConfigTools.getInstance().postStatistics("show",AdPlayIdConfig.HOME_FLOAT,"xh",bannerMap != null ? bannerMap.get("id"):"");
     }
 
     public void executeOpenAnim() {
