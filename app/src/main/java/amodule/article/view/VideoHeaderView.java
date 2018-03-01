@@ -465,9 +465,10 @@ public class VideoHeaderView extends RelativeLayout {
                             initNoWIFIView(context);
                             ad_type_video.addView(view_Tip);
                         }
-                        adVideoController.onPause();
+                        if (adVideoController != null)
+                            adVideoController.onPause();
                     }
-                }else if(adVideoController.getAdVideoPlayer().getCurrentState() == GSYVideoPlayer.CURRENT_STATE_PAUSE){
+                }else if(adVideoController != null && adVideoController.getAdVideoPlayer() != null && adVideoController.getAdVideoPlayer().getCurrentState() == GSYVideoPlayer.CURRENT_STATE_PAUSE){
                     removeTipView();
                     adVideoController.onResume();
                 }

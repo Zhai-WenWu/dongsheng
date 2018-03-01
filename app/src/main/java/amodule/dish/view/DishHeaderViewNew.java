@@ -284,7 +284,7 @@ public class DishHeaderViewNew extends LinearLayout {
                             adVideoController.onPause();
                         }
                     }
-                }else if(adVideoController != null && adVideoController.getAdVideoPlayer().getCurrentState() == GSYVideoPlayer.CURRENT_STATE_PAUSE){
+                }else if(adVideoController != null && adVideoController.getAdVideoPlayer() != null && adVideoController.getAdVideoPlayer().getCurrentState() == GSYVideoPlayer.CURRENT_STATE_PAUSE){
                     removeTipView();
                     adVideoController.onResume();
                 }
