@@ -786,7 +786,9 @@ public class DishHeaderViewNew extends LinearLayout {
     private OnClickListener disconnectClick = new OnClickListener() {
         @Override
         public void onClick(View v) {
-            context.startActivity(new Intent(Settings.ACTION_SETTINGS));
+            Intent intent = new Intent(Settings.ACTION_SETTINGS);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
         }
     };
 

@@ -41,11 +41,11 @@ public class NetworkUtils {
      * @param context 上下文
      */
     public static void openWirelessSettings(Context context) {
-        if (android.os.Build.VERSION.SDK_INT > 10) {
-            context.startActivity(new Intent(android.provider.Settings.ACTION_SETTINGS));
-        } else {
-            context.startActivity(new Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS));
-        }
+        if (context == null)
+            return;
+        Intent intent = new Intent(android.os.Build.VERSION.SDK_INT > 10 ? android.provider.Settings.ACTION_SETTINGS : android.provider.Settings.ACTION_WIRELESS_SETTINGS);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
     }
 
     /**
