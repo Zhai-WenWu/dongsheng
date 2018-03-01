@@ -110,9 +110,9 @@ public class XHAdSqlite extends SQLiteOpenHelper {
             if(TextUtils.isEmpty(values.getAsString(AdEntry.COLUMN_ADID))){
                 return;
             }
-            final String whereClause = AdEntry.COLUMN_ADID;
+            final String whereClause = AdEntry.COLUMN_ADID  + "=?";
             final String[] whereArgs = new String[]{values.getAsString(AdEntry.COLUMN_ADID)};
-            Cursor cursor = database.rawQuery("select * from " + tableName + " where " + whereClause + "=?",whereArgs);
+            Cursor cursor = database.rawQuery("select * from " + tableName + " where " + whereClause,whereArgs);
             if (cursor.moveToFirst()){
                 database.update(tableName,values,whereClause,whereArgs);
             }else{
