@@ -96,19 +96,6 @@ public class AdConfigTools {
         });
     }
 
-//    public String getAdConfigDataString(String adPlayId) {
-//        String data = FileManager.readFile(FileManager.getDataDir() + FileManager.file_ad);
-//        Map<String, String> map = StringManager.getFirstMap(data);
-//        return map.get(adPlayId);
-//    }
-
-//    public Map<String, String> getAdConfigData(String adPlayId) {
-//        String data = FileManager.readFile(FileManager.getDataDir() + FileManager.file_ad);
-//        Map<String, String> map = StringManager.getFirstMap(data);
-//        map = StringManager.getFirstMap(map.get(adPlayId));
-//        return map;
-//    }
-
     public AdBean getAdConfig(String adPlayId) {
         XHAdSqlite adSqlite = XHAdSqlite.newInstance(XHApplication.in());
         return adSqlite.getAdConfig(adPlayId);
@@ -195,8 +182,13 @@ public class AdConfigTools {
         JSONObject jsonObject = MapToJsonEncode(map);
         LinkedHashMap<String, String> params = new LinkedHashMap<>();
         params.put("log_json", jsonObject.toString());
-        Log.i("tongji", "postStatistics: params=" + params.toString());
-        ReqInternet.in().doPost(StringManager.api_monitoring_9, params, new InternetCallback() {
+        Log.i("tzy", "postStatistics: params=" + params.toString());
+        requestStatistics(StringManager.api_monitoring_9,params);
+        requestStatistics(StringManager.api_adsNumber,params);
+    }
+
+    private void requestStatistics(String url, LinkedHashMap<String, String> params) {
+        ReqInternet.in().doPost(url, params, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
             }
@@ -254,7 +246,6 @@ public class AdConfigTools {
         ReqInternet.in().doPost(StringManager.api_clickAds, map, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
-
             }
         });
     }
