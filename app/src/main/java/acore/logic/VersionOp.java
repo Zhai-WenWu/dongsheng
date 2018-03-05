@@ -147,7 +147,12 @@ public class VersionOp extends BaseDialogControl {
                                         isNeedUpdata = misSilentInstall;
                                     }
                                     versionUpload = new VersionUpload(XHActivityManager.getInstance().getCurrentActivity(), content, R.drawable.ic_launcher, nowNum, newNum,
-                                            isMustUpdata, isPlay, hintNum, appNum, updateUrl, path, apkName, vsUpListener);
+                                            isMustUpdata, isPlay, hintNum, appNum, updateUrl, path, apkName, vsUpListener) {
+                                        @Override
+                                        public Activity getCurrentActivity() {
+                                            return XHActivityManager.getInstance().getCurrentActivity();
+                                        }
+                                    };
                                     if (!misSilentInstall){
                                         isNeedUpdata = versionUpload.isUpdata(!mShowPro);
                                     }
