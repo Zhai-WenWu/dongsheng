@@ -167,7 +167,7 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Bitmap newBitmap = bitmap;
+                Bitmap newBitmap = Bitmap.createBitmap(bitmap);
                 if(!videoUrl.startsWith("http") && !imgUrl.startsWith("http")){
                     //需要裁剪，按照视频尺寸裁剪
                     Bitmap bitmap = ToolsCammer.getFrameAtTime(videoUrl);
