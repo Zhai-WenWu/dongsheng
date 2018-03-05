@@ -44,6 +44,7 @@
 
         <include
             android:id="@+id/video_ad_layout"
+            android:visibility="gone"
             layout="@layout/ad_gdt_video"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_240"
@@ -52,9 +53,9 @@
         <RelativeLayout
             android:id="@+id/ad_type_video"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/transparent"
-            android:visibility="gone"></RelativeLayout>
+            android:layout_height="@dimen/dp_240"
+            android:layout_centerVertical="true"
+            android:visibility="gone"/>
     </RelativeLayout>
 
 </RelativeLayout>

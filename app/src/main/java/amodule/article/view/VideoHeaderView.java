@@ -117,6 +117,9 @@ public class VideoHeaderView extends RelativeLayout {
         dishVidioLayout = (RelativeLayout) findViewById(R.id.video_layout);
         dredgeVipLayout = (RelativeLayout) findViewById(R.id.video_dredge_vip_layout);
         ad_type_video= (RelativeLayout) findViewById(R.id.ad_type_video);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, (int) (ToolsDevice.getWindowPx(activity).widthPixels * 9 / 16f));
+        layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+        ad_type_video.setLayoutParams(layoutParams);
         adParentLayout = (RelativeLayout) findViewById(R.id.video_ad_layout_parent);
         adParentLayout.setOnClickListener(new OnClickListener() {
             @Override
@@ -227,6 +230,7 @@ public class VideoHeaderView extends RelativeLayout {
      */
     private void setVideoAdData(final Map<String, String> map, final View view) {
         xhAllAdControl.onAdBind(0, view, "");
+        adLayout.setVisibility(VISIBLE);
         final TextView mNum = (TextView) view.findViewById(R.id.ad_gdt_video_num);
         final ImageView mImageView = (ImageView) view.findViewById(R.id.ad_video_img);
         String imgUrl = null;
