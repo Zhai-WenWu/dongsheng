@@ -465,9 +465,10 @@ public class VideoHeaderView extends RelativeLayout {
                             initNoWIFIView(context);
                             ad_type_video.addView(view_Tip);
                         }
-                        adVideoController.onPause();
+                        if (adVideoController != null)
+                            adVideoController.onPause();
                     }
-                }else if(adVideoController.getAdVideoPlayer().getCurrentState() == GSYVideoPlayer.CURRENT_STATE_PAUSE){
+                }else if(adVideoController != null && adVideoController.getAdVideoPlayer() != null && adVideoController.getAdVideoPlayer().getCurrentState() == GSYVideoPlayer.CURRENT_STATE_PAUSE){
                     removeTipView();
                     adVideoController.onResume();
                 }
@@ -551,7 +552,9 @@ public class VideoHeaderView extends RelativeLayout {
     private OnClickListener disconnectClick = new OnClickListener() {
         @Override
         public void onClick(View v) {
-            context.startActivity(new Intent(Settings.ACTION_SETTINGS));
+            Intent intent = new Intent(Settings.ACTION_SETTINGS);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
         }
     };
     private OnClickListener onClickListener= new OnClickListener() {

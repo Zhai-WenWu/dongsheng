@@ -132,7 +132,9 @@ public class NotificationSettingController {
     }
 
     public static void openSettings() {
-        XHActivityManager.getInstance().getCurrentActivity().startActivity(new Intent(Settings.ACTION_SETTINGS));
+        Intent intent = new Intent(Settings.ACTION_SETTINGS);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        XHActivityManager.getInstance().getCurrentActivity().startActivity(intent);
     }
 
     private static void openEMUINotificationSettings() {

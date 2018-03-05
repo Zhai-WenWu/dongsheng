@@ -159,7 +159,9 @@ public class VideoImageView extends RelativeLayout{
         tipLayout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                getContext().startActivity(new Intent(Settings.ACTION_SETTINGS));
+                Intent intent = new Intent(Settings.ACTION_SETTINGS);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                getContext().startActivity(intent);
             }
         });
     }

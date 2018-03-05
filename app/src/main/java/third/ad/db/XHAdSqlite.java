@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
+import java.util.Iterator;
 import java.util.Map;
 
 import acore.override.XHApplication;
@@ -79,7 +80,9 @@ public class XHAdSqlite extends SQLiteOpenHelper {
             database = getWritableDatabase();
             ContentValues values = null;
             Map<String,String> map = StringManager.getFirstMap(jsonValue);
-            for(Map.Entry<String,String> entry:map.entrySet()){
+            Iterator<Map.Entry<String, String>> entries = map.entrySet().iterator();
+            while (entries.hasNext()) {
+                Map.Entry<String, String> entry = entries.next();
                 if(!FULL_SRCEEN_ACTIVITY.equals(entry.getKey())){
                     values = new ContentValues();
                     values.put(AdEntry.COLUMN_ADID,entry.getKey());

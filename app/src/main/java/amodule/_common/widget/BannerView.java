@@ -200,7 +200,7 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
 
     private void statistic(int position) {
         if(mStatisticCallback != null){
-            mStatisticCallback.onStatistic(id,twoLevel,threeLevel,position);
+            mStatisticCallback.onStatistic(id,twoLevel,threeLevel+(position + 1),position);
         }else{
             if (!TextUtils.isEmpty(id) && !TextUtils.isEmpty(twoLevel)) {
                 if(TextUtils.isEmpty(threeLevel))

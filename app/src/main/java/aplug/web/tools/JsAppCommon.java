@@ -911,7 +911,7 @@ public class JsAppCommon extends JsBase {
 
     private void onAcceptCallback(final boolean res, final Object data) {
         if (mAct != null && mWebView != null) {
-            mWebView.post(new Runnable() {
+            handler.post(new Runnable() {
                 @Override
                 public void run() {
                     mWebView.loadUrl("Javascript:onAcceptCallback(" + res + "," + data + ")");
@@ -992,7 +992,7 @@ public class JsAppCommon extends JsBase {
     public void onPayCallback(final boolean isOk, final Object data) {
 //		Log.i("xianghaTag","onPayCallback() isOk:" + isOk + "  data: " + data);
         if (mAct != null && mWebView != null) {
-            mWebView.post(new Runnable() {
+            handler.post(new Runnable() {
                 @Override
                 public void run() {
 //					StringManager.getListMapByJson(data);
