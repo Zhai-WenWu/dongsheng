@@ -183,7 +183,7 @@ public class AdConfigTools {
         LinkedHashMap<String, String> params = new LinkedHashMap<>();
         params.put("log_json", jsonObject.toString());
         Log.i("tzy", "postStatistics: params=" + params.toString());
-        requestStatistics(StringManager.api_monitoring_9,params);
+//        requestStatistics(StringManager.api_monitoring_9,params);
         requestStatistics(StringManager.api_adsNumber,params);
     }
 
