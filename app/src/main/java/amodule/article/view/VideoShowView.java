@@ -163,43 +163,27 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
                 });
     }
 
-    public void handlerCutImage(final Bitmap bitmap, final String imgUrl){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Bitmap newBitmap = Bitmap.createBitmap(bitmap);
-                if(!videoUrl.startsWith("http") && !imgUrl.startsWith("http")){
-                    //需要裁剪，按照视频尺寸裁剪
-                    Bitmap bitmap = ToolsCammer.getFrameAtTime(videoUrl);
-                    if(bitmap == null && !TextUtils.isEmpty(coverImageUrl)){
-                        bitmap = BitmapFactory.decodeFile(coverImageUrl);
-                    }
-                    newBitmap = ImgManager.centerScaleBitmap(bitmap,newBitmap);
-
-                    //保存图片
-//                    oldCoverImageUrl = coverImageUrl;
-                    coverImageUrl = FileToolsCammer.getVideoCatchPath() + Tools.getMD5(imgUrl) + ".jpg";
-//                    Log.i("tzy","handlerCutImage::coverImageUrl = " + coverImageUrl);
-//                    Log.i("tzy","handlerCutImage::oldCoverImageUrl = " + oldCoverImageUrl);
-                    if (newBitmap.isRecycled())
-                        return;
-                    FileManager.saveImgToCompletePath(newBitmap, coverImageUrl, Bitmap.CompressFormat.JPEG);
-                }
-
-                final Bitmap finalBitmap = newBitmap;
-                coverImage.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (isWrapContent) {
-                            int newWaith = ToolsDevice.getWindowPx(getContext()).widthPixels - (int) getContext().getResources().getDimension(R.dimen.dp_20) * 2;
-                            UtilImage.setImgViewByWH(coverImage, finalBitmap, newWaith, 0, false);
-                        }else {
-                            setImageToCoverImage(finalBitmap);
-                        }
-                    }
-                });
+    public void handlerCutImage(final Bitmap bm, final String imgUrl){
+        Bitmap newBitmap = null;
+        if(!videoUrl.startsWith("http") && !imgUrl.startsWith("http")){
+            Bitmap bitmap = ToolsCammer.getFrameAtTime(videoUrl);
+            if(bitmap == null && !TextUtils.isEmpty(coverImageUrl)){
+                bitmap = BitmapFactory.decodeFile(coverImageUrl);
             }
-        }).start();
+            //需要裁剪，按照视频尺寸裁剪
+            newBitmap = ImgManager.centerScaleBitmap(bitmap,bm);
+        }
+        if (newBitmap == null || newBitmap.isRecycled())
+            return;
+        //保存图片
+        coverImageUrl = FileToolsCammer.getVideoCatchPath() + Tools.getMD5(imgUrl) + ".jpg";
+        FileManager.saveImgToCompletePath(newBitmap, coverImageUrl, Bitmap.CompressFormat.JPEG);
+        if (isWrapContent) {
+            int newWidth = ToolsDevice.getWindowPx(getContext()).widthPixels - (int) getContext().getResources().getDimension(R.dimen.dp_20) * 2;
+            UtilImage.setImgViewByWH(coverImage, newBitmap, newWidth, 0, false);
+        }else {
+            setImageToCoverImage(newBitmap);
+        }
     }
 
     private void setImageToCoverImage(Bitmap bitmap){
@@ -324,4 +308,5 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
     public void setSecondEdit(boolean secondEdit) {
         isSecondEdit = secondEdit;
     }
+
 }
