@@ -36,6 +36,7 @@ public class LoginByAccout extends ThirdLoginBaseActivity implements View.OnClic
     private NextStepView btn_next_step;
     private PhoneNumInputView phone_info;
     private SpeechaIdentifyInputView speechaIdentifyInputView;
+    private LinearLayout topLayout,bottomLayout;
     private TextView tv_lostsercet;
     private TextView tv_help;
     private ImageView imageMailbox;
@@ -71,6 +72,15 @@ public class LoginByAccout extends ThirdLoginBaseActivity implements View.OnClic
         speechaIdentifyInputView = (SpeechaIdentifyInputView) findViewById(R.id.login_speeach_identify);
         login_identify = (IdentifyInputView) findViewById(R.id.login_identify);
         btn_next_step = (NextStepView) findViewById(R.id.btn_next_step);
+        topLayout = (LinearLayout) findViewById(R.id.top_layout);
+        bottomLayout = (LinearLayout) findViewById(R.id.bottom_layout);
+        bottomLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                int minHeight = ToolsDevice.getWindowPx(LoginByAccout.this).heightPixels - Tools.getTargetHeight(bottomLayout);
+                topLayout.setMinimumHeight(minHeight);
+            }
+        });
 
         findViewById(R.id.tv_lostsercet).setOnClickListener(this);
         findViewById(R.id.tv_help).setOnClickListener(this);
