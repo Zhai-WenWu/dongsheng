@@ -362,7 +362,8 @@
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/AppMainTheme"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan"
+            android:hardwareAccelerated="true"/>
         <activity
             android:name="amodule.dish.activity.TimeDish"
             android:configChanges="orientation|keyboardHidden"
@@ -723,7 +724,8 @@
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/AppMainTheme"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustResize"
+            android:hardwareAccelerated="true"/>
         <!-- global search end -->
 
         <!--lesson-->
