@@ -235,7 +235,7 @@ public class ImgManager extends UtilImage {
      * @return 裁剪后的图片
      */
     public static Bitmap scaleBitmap(Bitmap coverBitmap,float widht,float height){
-        if(coverBitmap == null){
+        if(coverBitmap == null || coverBitmap.isRecycled()){
             return null;
         }
 

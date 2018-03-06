@@ -181,6 +181,8 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
                     coverImageUrl = FileToolsCammer.getVideoCatchPath() + Tools.getMD5(imgUrl) + ".jpg";
 //                    Log.i("tzy","handlerCutImage::coverImageUrl = " + coverImageUrl);
 //                    Log.i("tzy","handlerCutImage::oldCoverImageUrl = " + oldCoverImageUrl);
+                    if (newBitmap.isRecycled())
+                        return;
                     FileManager.saveImgToCompletePath(newBitmap, coverImageUrl, Bitmap.CompressFormat.JPEG);
                 }
 
