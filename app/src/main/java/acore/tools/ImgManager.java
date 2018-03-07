@@ -28,28 +28,6 @@ import com.xiangha.R;
 
 public class ImgManager extends UtilImage {
 
-    // 获取圆角矩形背景图
-    public static Drawable getRoundBackground(Context context, String color) {
-        float dimenH = 22;
-        float dimenW = 80;
-        if (!context.getResources().getString(R.dimen.dp_22).equals("22.0dip")) {
-            dimenH = (float) 35.3;
-            dimenW = 128;
-        }
-        int height = ToolsDevice.dp2px(context, dimenH), width = ToolsDevice.dp2px(
-                context, dimenW), round = ToolsDevice.dp2px(context, 3);
-        // 新建一个新的输出图片
-        Bitmap output = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(output);
-        // 新建一个矩形
-        RectF outerRect = new RectF(0, 0, width, height);
-        // 产生一个红色的圆角矩形 或者任何有色颜色，不能是透明！
-        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paint.setColor(Color.parseColor(color));
-        canvas.drawRoundRect(outerRect, round, round, paint);
-        return new BitmapDrawable(context.getResources(), output);
-    }
-
     /**
      * 判断图片是否长宽成比
      *
@@ -197,25 +175,6 @@ public class ImgManager extends UtilImage {
             return null;
         }
         return scaleBitmap(coverBitmap,bitmap.getWidth(),bitmap.getHeight());
-//        //宽高比
-////		double imgWhB = bitmap.getWidth() * 1.0 / bitmap.getHeight();
-//
-//		final int imageWidth = coverBitmap.getWidth();
-//		final int imageHieght = coverBitmap.getHeight();
-//
-//		if(imgWhB > 0 &&  imageHieght * imgWhB != imageWidth) {
-//			int newImgW = imageWidth;
-//			int newImgH = (int) (imageWidth / imgWhB);
-//			if (newImgH > imageHieght) {
-//				newImgH = imageHieght;
-//				newImgW = (int) (imageHieght * imgWhB);
-//				return Bitmap.createBitmap(coverBitmap, (imageWidth - newImgW) / 2, 0, newImgW, newImgH);
-//			} else {
-//				return Bitmap.createBitmap(coverBitmap, 0, (imageHieght - newImgH) / 2, newImgW, newImgH);
-//			}
-//		}
-//
-//		return coverBitmap;
     }
 
     /**
