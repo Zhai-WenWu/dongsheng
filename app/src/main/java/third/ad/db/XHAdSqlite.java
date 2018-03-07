@@ -75,34 +75,36 @@ public class XHAdSqlite extends SQLiteOpenHelper {
     }
 
     public void updateConfig(String jsonValue){
-        SQLiteDatabase database = null;
-        try{
-            database = getWritableDatabase();
-            ContentValues values = null;
-            Map<String,String> map = StringManager.getFirstMap(jsonValue);
-            Iterator<Map.Entry<String, String>> entries = map.entrySet().iterator();
-            while (entries.hasNext()) {
-                Map.Entry<String, String> entry = entries.next();
-                if(!FULL_SRCEEN_ACTIVITY.equals(entry.getKey())){
-                    values = new ContentValues();
-                    values.put(AdEntry.COLUMN_ADID,entry.getKey());
-                    Map<String,String> configData = StringManager.getFirstMap(entry.getValue());
-                    values.put(AdEntry.COLUMN_ISBAIDU,configData.get(AdEntry.COLUMN_ISBAIDU));
-                    values.put(AdEntry.COLUMN_ISBANNER,configData.get(AdEntry.COLUMN_ISBANNER));
-                    values.put(AdEntry.COLUMN_ISGDT,configData.get(AdEntry.COLUMN_ISGDT));
-                    values.put(AdEntry.COLUMN_ISJD,configData.get(AdEntry.COLUMN_ISJD));
-                    values.put(AdEntry.COLUMN_BANNER,configData.get(AdEntry.COLUMN_BANNER));
-                    values.put(AdEntry.COLUMN_ADCONFIG,configData.get(AdEntry.COLUMN_ADCONFIG));
-                    values.put(AdEntry.COLUMN_UPDATETIME,System.currentTimeMillis());
-                    update(database, TABLE_ADCONFIG,values);
-                }else{
+        synchronized (XHAdSqlite.class){
+            SQLiteDatabase database = null;
+            try{
+                database = getWritableDatabase();
+                ContentValues values = null;
+                Map<String,String> map = StringManager.getFirstMap(jsonValue);
+                Iterator<Map.Entry<String, String>> entries = map.entrySet().iterator();
+                while (entries.hasNext()) {
+                    Map.Entry<String, String> entry = entries.next();
+                    if(!FULL_SRCEEN_ACTIVITY.equals(entry.getKey())){
+                        values = new ContentValues();
+                        values.put(AdEntry.COLUMN_ADID,entry.getKey());
+                        Map<String,String> configData = StringManager.getFirstMap(entry.getValue());
+                        values.put(AdEntry.COLUMN_ISBAIDU,configData.get(AdEntry.COLUMN_ISBAIDU));
+                        values.put(AdEntry.COLUMN_ISBANNER,configData.get(AdEntry.COLUMN_ISBANNER));
+                        values.put(AdEntry.COLUMN_ISGDT,configData.get(AdEntry.COLUMN_ISGDT));
+                        values.put(AdEntry.COLUMN_ISJD,configData.get(AdEntry.COLUMN_ISJD));
+                        values.put(AdEntry.COLUMN_BANNER,configData.get(AdEntry.COLUMN_BANNER));
+                        values.put(AdEntry.COLUMN_ADCONFIG,configData.get(AdEntry.COLUMN_ADCONFIG));
+                        values.put(AdEntry.COLUMN_UPDATETIME,System.currentTimeMillis());
+                        update(database, TABLE_ADCONFIG,values);
+                    }else{
 
+                    }
                 }
+            }catch (Exception e){
+                e.printStackTrace();
+            }finally {
+                closeDatabase(database);
             }
-        }catch (Exception e){
-            e.printStackTrace();
-        }finally {
-            closeDatabase(database);
         }
     }
 
@@ -126,7 +128,9 @@ public class XHAdSqlite extends SQLiteOpenHelper {
     }
 
     public AdBean getAdConfig(String adid){
-        return getAdByADId(TABLE_ADCONFIG,adid);
+        synchronized (XHAdSqlite.class){
+            return getAdByADId(TABLE_ADCONFIG,adid);
+        }
     }
 
     @Nullable
@@ -166,15 +170,17 @@ public class XHAdSqlite extends SQLiteOpenHelper {
     }
 
     public void deleteOverdueConfig(){
-        SQLiteDatabase database = null;
-        try{
-            database = getWritableDatabase();
-            final long OverdueTime = System.currentTimeMillis() - (24*60*60*1000L);
-            database.execSQL("delete from tb_ad_config where updateTime<="+OverdueTime+";");
-        }catch (Exception e){
-            e.printStackTrace();
-        }finally {
-            closeDatabase(database);
+        synchronized (XHAdSqlite.class){
+            SQLiteDatabase database = null;
+            try{
+                database = getWritableDatabase();
+                final long OverdueTime = System.currentTimeMillis() - (24*60*60*1000L);
+                database.execSQL("delete from tb_ad_config where updateTime<="+OverdueTime+";");
+            }catch (Exception e){
+                e.printStackTrace();
+            }finally {
+                closeDatabase(database);
+            }
         }
     }
 
