@@ -14,7 +14,8 @@
         android:cacheColorHint="@android:color/transparent"
         android:listSelector="@android:color/transparent"
         android:paddingLeft="0dp"
-        android:paddingRight="0dp"/>
+        android:paddingRight="0dp"
+        android:layerType="software"/>
 
     <RelativeLayout
         android:id="@+id/return_top_rela"

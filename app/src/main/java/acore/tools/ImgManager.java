@@ -193,7 +193,7 @@ public class ImgManager extends UtilImage {
      * @return 根据原图尺寸居中裁剪选图
      */
     public static Bitmap centerScaleBitmap(Bitmap bitmap, Bitmap coverBitmap) {
-        if (null == bitmap || coverBitmap == null) {
+        if (null == bitmap) {
             return null;
         }
         return scaleBitmap(coverBitmap,bitmap.getWidth(),bitmap.getHeight());
