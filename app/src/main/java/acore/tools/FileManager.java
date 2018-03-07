@@ -333,7 +333,7 @@ public class FileManager extends UtilFile{
 		long size = 0;
 		try {
 			if(file.isDirectory()){
-					size = getFolderSize(file);
+				size = getFolderSize(file);
 			}else{
 				size += getFileSize(file);
 			}
@@ -361,6 +361,7 @@ public class FileManager extends UtilFile{
 		if(file != null && file.exists()){
 			FileInputStream fis = new FileInputStream(file);
 			size = fis.available();
+			fis.close();
 		}
 		return size;
 	}

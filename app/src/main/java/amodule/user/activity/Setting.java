@@ -161,6 +161,7 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
         if (AppCommon.isVip(LoginManager.userInfo.get("vip"))) {
             getIsAuto();
         }
+        setCacheSize();
     }
 
     @Override
@@ -308,7 +309,7 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
             }
         });
 
-        view_clear_cace.init("清理缓存", getCacheSize(), false, new LeftAndRightTextView.LeftAndRightTextViewCallback() {
+        view_clear_cace.init("清理缓存", "", false, new LeftAndRightTextView.LeftAndRightTextViewCallback() {
             @Override
             public void onClick() {
                 XHClick.mapStat(Setting.this, tongjiId, "清理缓存", "");
@@ -393,12 +394,14 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
         });
     }
 
-    private String getCacheSize() {
-        long fileSize = FileManager.getFileOrFolerSize(FileManager.getDataDir() + FileManager.file_indexData);
-        fileSize += FileManager.getFileOrFolerSize(FileManager.getDataDir() + FileManager.file_appData);
-        fileSize += FileManager.getFileOrFolerSize(UtilFile.getSDDir() + LoadImage.SAVE_CACHE);
-        cacheSize = fileSize;
-        return FileManager.FormetFileSize(cacheSize,SIZETYPE_MB);
+    private void setCacheSize() {
+        new Thread(() -> {
+            long fileSize = FileManager.getFileOrFolerSize(FileManager.getDataDir() + FileManager.file_indexData);
+            fileSize += FileManager.getFileOrFolerSize(FileManager.getDataDir() + FileManager.file_appData);
+            fileSize += FileManager.getFileOrFolerSize(UtilFile.getSDDir() + LoadImage.SAVE_CACHE);
+            cacheSize = fileSize;
+            Setting.this.runOnUiThread(() -> view_clear_cace.setRightText(FileManager.FormetFileSize(cacheSize,SIZETYPE_MB)));
+        }).start();
     }
 
     @Override
