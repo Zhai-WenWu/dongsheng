@@ -53,6 +53,8 @@ import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilString;
 
+import static acore.tools.FileManager.SIZETYPE_MB;
+
 /**
  * Created by ：fei_teng on 2017/2/21 20:32.
  */
@@ -392,19 +394,11 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
     }
 
     private String getCacheSize() {
-
-        long fileSize = UtilFile.getFileSize(FileManager.getDataDir() + FileManager.file_indexData);
-        fileSize += UtilFile.getFileSize(FileManager.getDataDir() + FileManager.file_appData);
-        fileSize += UtilFile.getFileSize(UtilFile.getSDDir() + LoadImage.SAVE_CACHE);
+        long fileSize = FileManager.getFileOrFolerSize(FileManager.getDataDir() + FileManager.file_indexData);
+        fileSize += FileManager.getFileOrFolerSize(FileManager.getDataDir() + FileManager.file_appData);
+        fileSize += FileManager.getFileOrFolerSize(UtilFile.getSDDir() + LoadImage.SAVE_CACHE);
         cacheSize = fileSize;
-        String cacheStr;
-        if (fileSize > 0 && fileSize < 1024 * 1024 / 100f) {
-            cacheStr = "0.01";
-        } else {
-            DecimalFormat decimalFormat = new DecimalFormat("0.00");
-            cacheStr = decimalFormat.format(((int) (fileSize / 1024 / 1024f * 100)) / 100f);
-        }
-        return cacheStr + "MB";
+        return FileManager.FormetFileSize(cacheSize,SIZETYPE_MB);
     }
 
     @Override

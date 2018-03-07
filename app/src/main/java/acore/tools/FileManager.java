@@ -12,11 +12,12 @@ import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -385,5 +386,137 @@ public class FileManager extends UtilFile{
 		editor.putString(key, value);
 		editor.apply();
 	}
+
+	public static final int SIZETYPE_B = 1;//获取文件大小单位为B的double值
+	public static final int SIZETYPE_KB = 2;//获取文件大小单位为KB的double值
+	public static final int SIZETYPE_MB = 3;//获取文件大小单位为MB的double值
+	public static final int SIZETYPE_GB = 4;//获取文件大小单位为GB的double值
+
+	public static long getFileOrFolerSize(String filePath){
+		if(TextUtils.isEmpty(filePath)) return 0;
+		File file = new File(filePath);
+		long size = 0;
+		try {
+			if(file.isDirectory()){
+				size = getFolderSize(file);
+			}else{
+				size += getFileSize(file);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return size;
+	}
+
+	public static String getFileOrFolerSize(String filePath,int sizeType){
+		if(TextUtils.isEmpty(filePath)) return "";
+		File file = new File(filePath);
+		long size = 0;
+		try {
+			if(file.isDirectory()){
+					size = getFolderSize(file);
+			}else{
+				size += getFileSize(file);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return FormetFileSize(size,sizeType);
+	}
+
+	public static String getAutoFileOrFilesSize(String filePath){
+		return getFileOrFolerSize(filePath,0);
+	}
+
+	public static long getFileSize2(String filePath) throws IOException {
+
+		if(TextUtils.isEmpty(filePath)){
+			return 0;
+		}
+		File file = new File(filePath);
+		return getFileSize(file);
+	}
+
+	public static long getFileSize(File file) throws IOException {
+		long size = 0;
+		if(file != null && file.exists()){
+			FileInputStream fis = new FileInputStream(file);
+			size = fis.available();
+		}
+		return size;
+	}
+
+	public static long getFolderSize(File file) throws IOException {
+		long size = 0;
+		if(file != null){
+			if(file.exists() && file.isDirectory()){
+				File[] fileList = file.listFiles();
+				for (File childFile:fileList){
+					if(childFile.isDirectory()){
+						size += getFolderSize(childFile);
+					}else{
+						size += getFileSize(childFile);
+					}
+				}
+			}
+		}
+		return size;
+	}
+
+	/**
+	 * 转换文件大小,指定转换的类型
+	 *
+	 * @param fileS
+	 * @param sizeType
+	 * @return
+	 */
+	public static String FormetFileSize(long fileS, int sizeType) {
+		DecimalFormat df = new DecimalFormat("#.00");
+		String fileSizeString = "0B";
+		switch (sizeType) {
+			case SIZETYPE_B:
+				fileSizeString = Double.valueOf(df.format((double) fileS)) + "B";
+				break;
+			case SIZETYPE_KB:
+				fileSizeString = Double.valueOf(df.format((double) fileS / 1024)) + "KB";
+				break;
+			case SIZETYPE_MB:
+				fileSizeString = Double.valueOf(df.format((double) fileS / 1048576)) + "MB";
+				break;
+			case SIZETYPE_GB:
+				fileSizeString = Double.valueOf(df.format((double) fileS / 1073741824)) + "GB";
+				break;
+			default:
+				fileSizeString = FormetFileSize(fileS);
+				break;
+		}
+		return fileSizeString;
+	}
+
+	/**
+	 * 转换文件大小
+	 *
+	 * @param fileS
+	 * @return
+	 */
+	public static String FormetFileSize(long fileS) {
+		DecimalFormat df = new DecimalFormat("#.00");
+		String fileSizeString = "";
+		String wrongSize = "0B";
+		if (fileS == 0) {
+			return wrongSize;
+		}
+		if (fileS < 1024) {
+			fileSizeString = df.format((double) fileS) + "B";
+		} else if (fileS < 1048576) {
+			fileSizeString = df.format((double) fileS / 1024) + "KB";
+		} else if (fileS < 1073741824) {
+			fileSizeString = df.format((double) fileS / 1048576) + "MB";
+		} else {
+			fileSizeString = df.format((double) fileS / 1073741824) + "GB";
+		}
+		return fileSizeString;
+	}
+
 
 }
