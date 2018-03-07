@@ -294,12 +294,14 @@ public class Welcome extends BaseActivity {
             isInit = true;
             startCountDown(false);
             //
-//            new Thread(new Runnable() {
-//                @Override
-//                public void run() {
-                    WelcomeAdTools.getInstance().handlerAdData(false, null,true);
-//                }
-//            }).start();
+            WelcomeAdTools.getInstance().handlerAdData(false, new WelcomeAdTools.AdNoDataCallBack() {
+                @Override
+                public void noAdData() {
+                    if(LoginManager.isShowAd()){
+                        XHClick.mapStat(Welcome.this,"ad_no_show","开屏","");
+                    }
+                }
+            }, true);
         }
     }
     /**

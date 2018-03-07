@@ -76,7 +76,14 @@ public class WelcomeControls {
 //        activity.findViewById(R.id.xh_welcome).setVisibility(View.VISIBLE);
         initWelcome();
         startCountDown(false);
-        WelcomeAdTools.getInstance().handlerAdData(false, null,false);
+        WelcomeAdTools.getInstance().handlerAdData(false, new WelcomeAdTools.AdNoDataCallBack() {
+            @Override
+            public void noAdData() {
+                if(LoginManager.isShowAd()){
+                    XHClick.mapStat(activity,"ad_no_show","开屏","");
+                }
+            }
+        }, false);
     }
     /**
      * 初始化view

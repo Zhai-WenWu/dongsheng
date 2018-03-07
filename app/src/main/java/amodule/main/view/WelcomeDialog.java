@@ -456,12 +456,14 @@ public class WelcomeDialog extends Dialog {
             startCountDown(false);
             LogManager.printStartTime("zhangyujian","dialog::onWindowFocusChanged333::");
             //
-//            new Thread(new Runnable() {
-//                @Override
-//                public void run() {
-                    WelcomeAdTools.getInstance().handlerAdData(false, null,isTwoShow);
-//                }
-//            }).start();
+            WelcomeAdTools.getInstance().handlerAdData(false, new WelcomeAdTools.AdNoDataCallBack() {
+                @Override
+                public void noAdData() {
+                    if(LoginManager.isShowAd()){
+                        XHClick.mapStat(activity,"ad_no_show","开屏","");
+                    }
+                }
+            }, isTwoShow);
 
             LogManager.printStartTime("zhangyujian","dialog::onWindowFocusChanged::");
         }
