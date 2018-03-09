@@ -414,6 +414,8 @@ public class BaseLoginActivity extends BaseActivity {
                 try {
                     Throwable throwable = (Throwable) data;
                     throwable.printStackTrace();
+                    //上报mob smsSDK异常
+                    CrashReport.postCatchedException(throwable);
                     JSONObject object = new JSONObject(throwable.getMessage());
                     String des = object.optString("detail");//错误描述
                     int status = object.optInt("status");//错误代码
