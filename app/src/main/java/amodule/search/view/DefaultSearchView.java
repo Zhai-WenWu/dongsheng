@@ -301,8 +301,12 @@ public class DefaultSearchView extends LinearLayout implements View.OnClickListe
 
     }
 
+    boolean adLoadOver = false;
     private void initAd(boolean hasHistory) {
-
+        if(adLoadOver){
+            return;
+        }
+        adLoadOver = true;
 //        RelativeLayout gdtLayout;
         RelativeLayout tencentLayout;
 

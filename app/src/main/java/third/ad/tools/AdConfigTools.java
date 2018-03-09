@@ -1,18 +1,16 @@
 package third.ad.tools;
 
 import android.content.Context;
-import android.graphics.Bitmap;
+import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.util.Log;
 
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.popdialog.util.FullScreenManager;
-
-import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -21,12 +19,9 @@ import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
-import acore.tools.ToolsDevice;
-import amodule.main.Main;
+import acore.tools.Tools;
 import aplug.basic.InternetCallback;
-import aplug.basic.LoadImage;
 import aplug.basic.ReqInternet;
-import aplug.basic.SubBitmapTarget;
 import third.ad.AdParent;
 import third.ad.db.XHAdSqlite;
 import third.ad.db.bean.AdBean;
@@ -60,7 +55,7 @@ public class AdConfigTools {
         getAdConfigInfo(null);
     }
 
-    public void getAdConfigInfo(InternetCallback callback){
+    public void getAdConfigInfo(InternetCallback callback) {
         // 请求网络信息
         ReqInternet.in().doGet(StringManager.api_adData, new InternetCallback() {
             @Override
@@ -70,14 +65,14 @@ public class AdConfigTools {
                     XHAdSqlite adSqlite = XHAdSqlite.newInstance(XHApplication.in());
                     adSqlite.updateConfig((String) returnObj);
                     //更新全屏广告数据
-                    Map<String,String> map = StringManager.getFirstMap(returnObj);
-                    if(map.containsKey(FULL_SRCEEN_ACTIVITY)){
+                    Map<String, String> map = StringManager.getFirstMap(returnObj);
+                    if (map.containsKey(FULL_SRCEEN_ACTIVITY)) {
                         final String path = FileManager.getDataDir() + FULL_SRCEEN_ACTIVITY + ".xh";
                         FileManager.saveFileToCompletePath(path, map.get(FULL_SRCEEN_ACTIVITY), false);
                     }
                     isLoadOver = true;
-                    if(callback != null){
-                        callback.loaded(ReqInternet.REQ_OK_STRING,url,returnObj);
+                    if (callback != null) {
+                        callback.loaded(ReqInternet.REQ_OK_STRING, url, returnObj);
                     }
                 }
             }
@@ -101,20 +96,7 @@ public class AdConfigTools {
         });
     }
 
-//    public String getAdConfigDataString(String adPlayId) {
-//        String data = FileManager.readFile(FileManager.getDataDir() + FileManager.file_ad);
-//        Map<String, String> map = StringManager.getFirstMap(data);
-//        return map.get(adPlayId);
-//    }
-
-//    public Map<String, String> getAdConfigData(String adPlayId) {
-//        String data = FileManager.readFile(FileManager.getDataDir() + FileManager.file_ad);
-//        Map<String, String> map = StringManager.getFirstMap(data);
-//        map = StringManager.getFirstMap(map.get(adPlayId));
-//        return map;
-//    }
-
-    public AdBean getAdConfig(String adPlayId){
+    public AdBean getAdConfig(String adPlayId) {
         XHAdSqlite adSqlite = XHAdSqlite.newInstance(XHApplication.in());
         return adSqlite.getAdConfig(adPlayId);
     }
@@ -142,13 +124,14 @@ public class AdConfigTools {
                 return false;
             }
             AdBean adBean = getAdConfig(adPlayId);
-            if(adBean != null){
-                switch (adKey){
+            if (adBean != null) {
+                switch (adKey) {
                     case AdParent.ADKEY_GDT:
                         return "2".equals(adBean.isGdt);
                     case AdParent.ADKEY_BANNER:
                         return "2".equals(adBean.isBanner);
-                    default:break;
+                    default:
+                        break;
                 }
             }
         } else if ("level".equals(showAdId)) {
@@ -172,57 +155,63 @@ public class AdConfigTools {
     }
 
     /**
-     * 普通广告位统计
      *
-     * @param adPlayId ： 广告位id
-     * @param channel  ：渠道 baidu、jingdong、banner
-     * @param bannerId ：bannerId
-     * @param event    事件  click：点击   show：展现
-     * @param adType   广告类型  普通广告位，开屏广告位
+     * @param event：行为事件
+     * @param gg_position_id：广告位id
+     * @param gg_business：广告商
+     * @param gg_business_id：广告商id
      */
-    public void postTongji(String adPlayId, String channel, String bannerId, String event, String adType) {
-        StringBuffer urlBuffer = new StringBuffer(StringManager.api_monitoring_5)
-                .append("?").append("adType=").append(adType)
-                .append("&").append("id=").append(adPlayId)
-                .append("&").append("channel=").append(channel)
-                .append("&").append("bannerId=").append(bannerId)
-                .append("&").append("event=").append(event);
-        ReqInternet.in().doGet(urlBuffer.toString(), new InternetCallback() {
+    public void postStatistics(@NonNull String event, @NonNull String gg_position_id, @NonNull String gg_business, @NonNull String gg_business_id) {
+        LinkedHashMap<String, String> map = new LinkedHashMap<>();
+        //时间
+        map.put("app_time", Tools.getAssignTime("yyyy-MM-dd HH:mm:ss", 0));
+        //行为事件
+        map.put("event", event);
+        //广告位id
+        if (!TextUtils.isEmpty(gg_position_id)) {
+            map.put("gg_position_id", gg_position_id);
+        }
+        //广告商
+        if (!TextUtils.isEmpty(gg_business)) {
+            map.put("gg_business", gg_business);
+        }
+        //广告商id
+        if (!TextUtils.isEmpty(gg_business_id)) {
+            map.put("gg_business_id", gg_business_id);
+        }
+        JSONObject jsonObject = MapToJsonEncode(map);
+        LinkedHashMap<String, String> params = new LinkedHashMap<>();
+        params.put("log_json", jsonObject.toString());
+        Log.i("tzy", "postStatistics: params=" + params.toString());
+//        requestStatistics(StringManager.api_monitoring_9,params);
+        requestStatistics(StringManager.api_adsNumber,params);
+    }
+
+    private void requestStatistics(String url, LinkedHashMap<String, String> params) {
+        ReqInternet.in().doPost(url, params, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
             }
         });
     }
 
-    /**
-     * 美食圈列表广告统计
-     *
-     * @param context
-     * @param map
-     * @param onClickSite 点击的位置 overall：整体、user：用户、time：时间、quanName：圈子名称、content：评论、like：赞
-     */
-    public void postTongjiQuan(Context context, Map<String, String> map, String onClickSite, String event) {
-        String url = StringManager.api_monitoring_5;
-        if (TextUtils.isEmpty(onClickSite)) onClickSite = "overall";
-        else if ("用户头像".equals(onClickSite)) {
-            onClickSite = "user";
-        } else if ("用户昵称".equals(onClickSite)) {
-            onClickSite = "user";
-        } else if ("贴子内容".equals(onClickSite)) {
-            onClickSite = "overall";
-        } else if ("评论".equals(onClickSite)) {
-            onClickSite = "content";
-        } else {
-            onClickSite = "overall";
-        }
+    public static JSONObject MapToJsonEncode(Map<String, String> maps) {
 
-        ReqInternet.in().doGet(url + "?adType=圈子广告位" + "&adid=" + map.get("showAdid") + "&cid=" + map.get("showCid") +
-                "&mid=" + map.get("showMid") + "site=" + map.get("showSite") + "&event=" + event + "&clickSite=" + onClickSite, new InternetCallback() {
-            @Override
-            public void loaded(int flag, String url, Object msg) {
+        JSONObject jsonObject = new JSONObject();
+        if (maps == null || maps.size() <= 0) return jsonObject;
+
+        Iterator<Map.Entry<String, String>> enty = maps.entrySet().iterator();
+        try {
+            while (enty.hasNext()) {
+                Map.Entry<String, String> entry = enty.next();
+                jsonObject.put(entry.getKey(), Uri.encode(entry.getValue()));
             }
-        });
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
     }
+
 
     /**
      * 广告位 点击
@@ -257,7 +246,6 @@ public class AdConfigTools {
         ReqInternet.in().doPost(StringManager.api_clickAds, map, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
-
             }
         });
     }

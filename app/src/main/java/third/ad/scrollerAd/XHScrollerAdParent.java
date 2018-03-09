@@ -34,6 +34,7 @@ public abstract class XHScrollerAdParent {
 
     public int num;//当前存在的位置--针对的是一个广告位
     public String mAdPlayId = "";//广告位置id
+    protected String adid = "";
     public int index;//当前存在的位置---针对于广集合的位置
     public View view;
     public String key = "";
@@ -77,6 +78,10 @@ public abstract class XHScrollerAdParent {
         this.view = view;
     }
 
+    public View getShowView(){
+        return view;
+    }
+
     //释放view，避免内存泄漏
     public void realseView() {
         this.view = null;
@@ -98,7 +103,7 @@ public abstract class XHScrollerAdParent {
     }
 
     protected void onAdClick(String oneLevel, String twoLevel, String threeLevel) {
-        postTongji(key, "0", "click");
+        postTongji("click");
         //umeng的统计
         XHClick.mapStat(XHApplication.in(), oneLevel, twoLevel, threeLevel);
         //自己网站的统计
@@ -119,13 +124,23 @@ public abstract class XHScrollerAdParent {
      */
     protected void onAdShow(String oneLevel, String twoLevel, String threeLevel) {
         //自己网站上的统计
-        postTongji(key, "0", "show");
+        postTongji("show");
         XHClick.mapStat(XHApplication.in(), oneLevel, twoLevel, threeLevel);
     }
 
 
-    private void postTongji(String channel, String bannerId, String event) {
-        AdConfigTools.getInstance().postTongji("", channel, bannerId, event, "普通广告位");
+    private void postTongji(String event) {
+        AdConfigTools.getInstance().postStatistics(event,mAdPlayId,key,adid);
+    }
+
+    public String getRealKey(String origalKey){
+        switch (origalKey){
+            case ADKEY_API:return TAG_API;
+            case ADKEY_BAIDU: return TAG_BAIDU;
+            case ADKEY_BANNER: return TAG_BANNER;
+            case ADKEY_GDT:return TAG_GDT;
+            default:return "";
+        }
     }
 
     /**

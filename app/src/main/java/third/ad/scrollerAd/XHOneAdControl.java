@@ -1,5 +1,6 @@
 package third.ad.scrollerAd;
 
+import android.app.Activity;
 import android.util.Log;
 import android.view.View;
 
@@ -72,8 +73,15 @@ public class XHOneAdControl {
      */
     public void onAdClick(String oneLevel, String twoLevel) {
         Log.i("tzy", "onAdClick::::" + index_ad);
-        if (index_ad > -1 && index_ad < listAdParent.size())
+        if (index_ad > -1 && index_ad < listAdParent.size()
+                && listAdParent.get(index_ad) != null){
+            View view = listAdParent.get(index_ad).getShowView();
+            if(view != null && view.getContext() instanceof Activity){
+                //TODO
+                Log.i("tongji", "onAdClick: id = " + backId + ";page = " + view.getContext().getClass().getSimpleName());
+            }
             listAdParent.get(index_ad).onThirdClick(oneLevel, twoLevel);
+        }
     }
 
     /**
@@ -82,8 +90,14 @@ public class XHOneAdControl {
     public void onAdBind(View view, String oneLevel, String twoLevel) {
         Log.i("tzy", "onAdBind::::" + index_ad + "::::" + view == null ? "view为null" : "正常");
         if (index_ad > -1 && index_ad < listAdParent.size()) {
-            if (view != null)
+            if (view != null){
                 listAdParent.get(index_ad).setShowView(view);
+                if(view.getContext() instanceof Activity){
+                    //TODO
+                    Log.i("tongji", "onAdBind: id = " + backId + ";page = " + view.getContext().getClass().getSimpleName());
+                }
+            }
+
             listAdParent.get(index_ad).onResumeAd(oneLevel, twoLevel);
         }
     }

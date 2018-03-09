@@ -96,6 +96,7 @@ public class BannerAd extends AdParent{
 	
 	@Override
 	public boolean isShowAd(String adPlayId,AdIsShowListener listener) {
+		super.isShowAd(adPlayId,listener);
 		boolean isShow = true;
 
 		XHAdSqlite adSqlite = XHAdSqlite.newInstance(XHApplication.in());
@@ -127,7 +128,9 @@ public class BannerAd extends AdParent{
 		}else{
 			isShow = false;
 		}
-		listener.onIsShowAdCallback(this,isShow);
+		if(listener != null){
+			listener.onIsShowAdCallback(this,isShow);
+		}
 		return isShow;
 	}
 
@@ -140,8 +143,7 @@ public class BannerAd extends AdParent{
 	}
 	
 	private void setActivityData(){
-//			onAdShow(mFrom,TONGJI_BANNER , mId);
-			onAdShow(ad_show,twoData,key,key,mId);//更改统计
+			onAdShow(ad_show,twoData,key,mId);//更改统计
 			if(mListener != null) mListener.onShowAd();
 //			String name = mData.get("name");
 //			String content = mData.get("subhead");

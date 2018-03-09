@@ -7,8 +7,10 @@ import android.util.Log;
 import com.baidu.mobad.feeds.NativeResponse;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
+import acore.tools.StringManager;
 import third.ad.tools.BaiduAdTools;
 
 /**
@@ -21,9 +23,13 @@ public class XHScrollerBaidu extends XHScrollerAdParent {
     private Map<String,String> map_data;
     private NativeResponse nativeResponse;
     private boolean isJudgePicSize = false;
-    public XHScrollerBaidu(String mAdPlayId, int num) {
+
+    public XHScrollerBaidu(String data,String mAdPlayId, int num) {
         super(mAdPlayId, num);
         key = "sdk_baidu";
+        LinkedHashMap<String, String> map_link = StringManager.getMapByString(data, "&", "=");
+        if (map_link.containsKey("adid"))
+            adid = map_link.get("adid");
     }
 
     @Override

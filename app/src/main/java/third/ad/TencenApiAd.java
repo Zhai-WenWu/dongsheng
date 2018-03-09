@@ -72,22 +72,21 @@ public class TencenApiAd extends AdParent{
         mAdLayout = adLayout;
         mResouceId = resouceId;
         mListener = listener;
-        handler = new Handler(){
+        handler = new Handler(new Handler.Callback() {
             @Override
-            public void handleMessage(Message msg) {
-                super.handleMessage(msg);
-                if(msg.what == 1){
-                    mAdIsShowListener.onIsShowAdCallback(TencenApiAd.this,true);
-                }else{
-                    mAdIsShowListener.onIsShowAdCallback(TencenApiAd.this,false);
+            public boolean handleMessage(Message msg) {
+                if(mAdIsShowListener != null){
+                    mAdIsShowListener.onIsShowAdCallback(TencenApiAd.this,msg.what == 1);
                 }
+                return false;
             }
-        };
+        });
         getStiaticsData();
     }
 
     @Override
     public boolean isShowAd(String adPlayId, final AdIsShowListener listener) {
+        super.isShowAd(adPlayId,listener);
         boolean isShow = LoginManager.isShowAd();//无效创建，到这个位置一定是展示的，在数据层已经进行区分
         mAdIsShowListener = listener;
         ///判断数据是否正常
@@ -115,8 +114,7 @@ public class TencenApiAd extends AdParent{
 
     @Override
     public void onResumeAd() {
-//        onAdShow(mFrom,TONGJI_TX_API);
-        onAdShow(ad_show,twoData,key,key,"0");//更改统计
+        onAdShow(ad_show,twoData,key,mAdId);//更改统计
         View view;
         mAdLayout.setVisibility(View.VISIBLE);
         if (mAdLayout.getChildCount() > 0) {
@@ -196,8 +194,8 @@ public class TencenApiAd extends AdParent{
                         public void onClick(View v) {
                             TencenApiAdTools.onClickAd(mAct,clickUrl,tjClickUrl);
                             XHClick.track(mAct,"点击广告");
-                            onAdClick(mFrom,TONGJI_TX_API);
-                            onAdClick(ad_show,twoData,key,key,"0");
+//                            onAdClick(mFrom,TONGJI_TX_API);
+                            onAdClick(ad_show,twoData,key,key,mAdId);
                         }
                     };
                     if(isMain){

@@ -214,10 +214,9 @@ public class AdapterMainCircle extends RvBaseAdapter<Map<String, String>> {
                     @Override
                     public void onStatictis(String onClickSite) {
                         if (data.containsKey("showMid") && data.containsKey("showCid")) {
-                            if (showIndex.equals("home"))
-                                HomeAdvertControl.getInstance().advertStatisticRequest(view.getContext(), data, onClickSite);
-                            else
-                                AdConfigTools.getInstance().postTongjiQuan(view.getContext(), data, onClickSite, "click");
+                            if (showIndex.equals("home")){
+//                                AdConfigTools.getInstance().postTongjiQuan(view.getContext(), data, onClickSite, "click");
+                            }
                         }
                     }
                 });

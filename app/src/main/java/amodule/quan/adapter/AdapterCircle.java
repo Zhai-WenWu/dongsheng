@@ -211,10 +211,9 @@ public class AdapterCircle extends AdapterSimple {
                     @Override
                     public void onStatictis(String onClickSite) {
                         if (map.containsKey("showMid") && map.containsKey("showCid")) {
-                            if (showIndex.equals("home"))
-                                HomeAdvertControl.getInstance().advertStatisticRequest(view.getContext(), map, onClickSite);
-                            else
-                                AdConfigTools.getInstance().postTongjiQuan(view.getContext(), map, onClickSite, "click");
+                            if (!showIndex.equals("home")){
+//                                AdConfigTools.getInstance().postTongjiQuan(view.getContext(), map, onClickSite, "click");
+                            }
                         }
                     }
                 });

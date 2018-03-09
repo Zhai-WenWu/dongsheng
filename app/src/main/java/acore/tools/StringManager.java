@@ -241,7 +241,8 @@ public class StringManager extends UtilString {
 
 
     //广告统计
-    public final static String api_monitoring_5 = "https://stat.xiangha.com/s5.gif"; //广告统计
+//    public final static String api_monitoring_5 = "https://stat.xiangha.com/s5.gif"; //广告统计
+//    public final static String api_monitoring_9 = "https://stat.xiangha.com/s9.gif"; //广告统计
     public final static String api_clickAds = apiUrl + "main6/ads/clickAds"; //广告统计,用于加积分
     public final static String api_myQuanV2 = apiUrl + urlSection.get("quan6") + "myQuanV2";//修改贴子模块
     //菜谱详情页
@@ -256,6 +257,7 @@ public class StringManager extends UtilString {
     public final static String api_authorInfo = apiUrl + "main7/dish/authorInfo";
     public final static String api_basicInfo = apiUrl + "main7/dish/basicInfo";
     public final static String api_getVideoList = apiUrl + "main7/school/getVideoList";
+    public final static String api_adsNumber = apiUrl + "main7/open/adsNumber";
 
     public final static String api_getConf = apiUrl + urlSection.get("other6") + "getConf";
     public final static String api_subjectOverHead = apiUrl + urlSection.get("user6") + "subjectOverHeadLast";//用户美食贴置顶

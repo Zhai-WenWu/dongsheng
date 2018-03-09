@@ -115,7 +115,6 @@ public class Welcome extends BaseActivity {
                         }
                         showSkipContainer();
                         isAdLoadOk = true;
-                        AdConfigTools.getInstance().postTongji(AdPlayIdConfig.WELCOME, "gdt", "", "show", "开屏广告位");
                         XHClick.mapStat(Welcome.this, "ad_show_index", "开屏", "sdk_gdt");
                         Log.i("zhangyujian","开屏展示");
                     }
@@ -135,7 +134,6 @@ public class Welcome extends BaseActivity {
                     public void onAdClick() {
                         Log.i("zhangyujian","onAdClick");
                         closeActivity();
-                        AdConfigTools.getInstance().postTongji(AdPlayIdConfig.WELCOME, "gdt", "", "click", "开屏广告位");
                         XHClick.mapStat(Welcome.this, "ad_click_index", "开屏", "sdk_gdt");
                         Log.i("zhangyujian","开屏点击");
                     }
