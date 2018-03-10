@@ -30,11 +30,10 @@ import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.xiangha.R;
 
-
-
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,9 +54,8 @@ import aplug.basic.LoadImage;
 import aplug.basic.ReqInternet;
 import aplug.basic.SubBitmapTarget;
 import aplug.feedback.activity.Feedback;
-import third.ad.AdParent;
-import third.ad.AdsShow;
 import third.ad.BannerAd;
+import third.ad.scrollerAd.XHAllAdControl;
 import third.ad.tools.AdPlayIdConfig;
 import third.share.BarShare;
 import xh.basic.internet.UtilInternet;
@@ -95,7 +93,6 @@ public class DetailIngre extends BaseActivity {
 	
 	private int statusBarHeight = 0;
 	private RelativeLayout adTipLayout;
-	private AdsShow adBurden;
 	private boolean isShow=false;
 	
 	@Override
@@ -156,11 +153,13 @@ public class DetailIngre extends BaseActivity {
 			int screenHeight = ToolsDevice.getWindowPx(getApplicationContext()).heightPixels;
 			@Override
 			public void onScrollChanged(int l, int t, int oldl, int oldt) {
-				if (adTipLayout == null || adBurden == null)
+				if (adTipLayout == null || bannerAdBurden == null)
 					return;
 				int[] location = new int[2];
 				adTipLayout.getLocationOnScreen(location);
-				adBurden.isOnScreen(location[1] > statusBarHeight && location[1] < screenHeight);
+				if(location[1] > statusBarHeight && location[1] < screenHeight){
+					xhAllAdControl.onAdBind(0,adTipLayout,"");
+				}
 			}
 		});
 		contentViews[0] = ll_info;
@@ -184,15 +183,18 @@ public class DetailIngre extends BaseActivity {
 		scrollLayout.setTouchView(scrollView_info);
 	}
 
-	/**
-	 * 当前不再使用广告
-	 */
+	BannerAd bannerAdBurden;
+	XHAllAdControl xhAllAdControl;
+	/** 当前不再使用广告 */
 	private void initAd(){
 		adTipLayout = (RelativeLayout)ll_info.findViewById(R.id.ingre_detial_ad_layout);
-		BannerAd bannerAdBurden = new BannerAd(this,"other_restain", adTipLayout);
-		AdParent[] adsParent = {bannerAdBurden};
-		adBurden = new AdsShow(adsParent,AdPlayIdConfig.DETAIL_INGRE);
-		mAds = new AdsShow[]{adBurden};
+		xhAllAdControl = new XHAllAdControl((ArrayList<String>) Arrays.asList(AdPlayIdConfig.DETAIL_INGRE), new XHAllAdControl.XHBackIdsDataCallBack() {
+			@Override
+			public void callBack(Map<String, String> map) {
+				bannerAdBurden = new BannerAd(DetailIngre.this,"other_health", adTipLayout);
+//				bannerAdBurden.onShowAd(map);
+			}
+		},this,"other_restain");
 	}
 
 	@Override

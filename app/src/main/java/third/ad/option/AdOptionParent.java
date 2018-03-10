@@ -219,39 +219,7 @@ public abstract class AdOptionParent {
                             JSONArray styleData = new JSONArray();
                             //腾讯api广告不用根据上一个item样式变;101:表示返回的是一张小图、202:一个大图、301:3张小图
                             try {
-                                if (XHScrollerAdParent.ADKEY_API.equals(adMap.get("adClass"))) {
-                                    //Log.i("FRJ", "stype:" + adMap.get("stype"));
-                                    if ("101".equals(adMap.get("stype"))) {
-                                        adMap.put("style", "2");
-                                        JSONObject styleObject = new JSONObject();
-                                        styleObject.put("url", adMap.get("img"));
-                                        styleObject.put("type", "1");
-                                        styleData.put(styleObject);
-                                    } else if ("202".equals(adMap.get("stype"))) {
-                                        adMap.put("style", "1");
-                                        JSONObject styleObject = new JSONObject();
-                                        styleObject.put("url", adMap.get("img"));
-                                        styleObject.put("type", "1");
-                                        styleData.put(styleObject);
-                                    } else if ("301".equals(adMap.get("stype"))) {
-                                        adMap.put("style", "3");
-                                        String imgsUrl = adMap.get("imgs");
-                                        ArrayList<Map<String, String>> imgsMap = StringManager.getListMapByJson(imgsUrl);
-                                        if (imgsMap != null && imgsMap.size() > 0) {
-                                            for (Map<String, String> imgMap : imgsMap) {
-                                                if (imgMap != null && imgMap.get("") != null) {
-                                                    String imgUrl = imgMap.get("");
-                                                    JSONObject styleObject = new JSONObject();
-                                                    styleObject.put("url", imgUrl);
-                                                    styleObject.put("type", "1");
-                                                    styleData.put(styleObject);
-                                                }
-                                            }
-                                        }
-                                    } else {
-                                        adMap.put("style", "4");
-                                    }
-                                } else if (statisticKey.equals("index_listgood")
+                                if (statisticKey.equals("index_listgood")
                                         && XHScrollerAdParent.ADKEY_BAIDU.equals(adMap.get("adClass"))
                                         && "1".equals(adMap.get("isBigPic"))) {
                                     JSONObject styleObject = new JSONObject();

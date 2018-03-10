@@ -14,6 +14,7 @@ import com.xiangha.R;
 import junit.framework.Assert;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,16 +31,12 @@ import aplug.basic.InternetCallback;
 import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
 import cn.srain.cube.views.ptr.PtrDefaultHandler;
 import cn.srain.cube.views.ptr.PtrFrameLayout;
-import third.ad.AdParent;
-import third.ad.AdsShow;
 import third.ad.BannerAd;
-import third.ad.TencenApiAd;
+import third.ad.scrollerAd.XHAllAdControl;
 import third.ad.tools.AdPlayIdConfig;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilString;
-
-import static third.ad.tools.TencenApiAdTools.TX_ID_SEARCH_DIFAULT;
 
 /**
  * Created by ：airfly on 2016/10/14 11:31.
@@ -301,39 +298,15 @@ public class DefaultSearchView extends LinearLayout implements View.OnClickListe
 
     }
 
-    boolean adLoadOver = false;
     private void initAd(boolean hasHistory) {
-        if(adLoadOver){
-            return;
-        }
-        adLoadOver = true;
-//        RelativeLayout gdtLayout;
-        RelativeLayout tencentLayout;
-
-//        广点通banner广告
-//        gdtLayout = (RelativeLayout) findViewById(
-//                hasHistory ? R.id.rl_search_ad_gdt_has_history : R.id.rl_search_ad_gdt_no_history);
-//        GdtAdNew gdtTipAd = new GdtAdNew(mActivity, "搜索默认页搜索下方", gdtLayout, 0,
-//                GdtAdTools.ID_BAR_SEARCH, GdtAdNew.CREATE_AD_BANNER);
-
-        //腾讯广告
-         tencentLayout = (RelativeLayout) findViewById(hasHistory ? R.id.rl_search_ad_tencet_has_history : R.id.rl_search_ad_tencent_no_history);
-        final TencenApiAd tencentApiAd = new TencenApiAd(mActivity, "search_default", TX_ID_SEARCH_DIFAULT,"1",
-                tencentLayout, R.layout.ad_banner_view_second,
-                new AdParent.AdListener() {
-                    @Override
-                    public void onAdCreate() {
-                        super.onAdCreate();
-
-                    }
-                });
-        tencentApiAd.style = TencenApiAd.styleBanner;
-
         RelativeLayout advert_rela_banner = (RelativeLayout) findViewById(hasHistory ? R.id.rl_search_ad_gdt_has_history : R.id.rl_search_ad_gdt_no_history);
-        BannerAd bannerAdBurden = new BannerAd(mActivity,"search_default", advert_rela_banner);
+        XHAllAdControl xhAllAdControl = new XHAllAdControl((ArrayList<String>) Arrays.asList(AdPlayIdConfig.SEARCH_DEFAULT), new XHAllAdControl.XHBackIdsDataCallBack() {
+            @Override
+            public void callBack(Map<String, String> map) {
+                BannerAd bannerAdBurden = new BannerAd(mActivity,"search_default", advert_rela_banner);
+//                bannerAdBurden.onShowAd(map);
+            }
+        },mActivity,"search_default");
 
-        AdParent[] adsTipParent = {tencentApiAd,bannerAdBurden};
-        AdsShow adTip = new AdsShow(adsTipParent, AdPlayIdConfig.SEARCH_DEFAULT);
-        adTip.onResumeAd();
     }
 }

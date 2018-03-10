@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.xiangha.R;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 
 import acore.logic.SetDataView;
@@ -30,9 +31,8 @@ import acore.widget.ScrollviewDish.onScrollViewChange;
 import amodule.dish.activity.ListDish;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
-import third.ad.AdParent;
-import third.ad.AdsShow;
 import third.ad.BannerAd;
+import third.ad.scrollerAd.XHAllAdControl;
 import third.ad.tools.AdPlayIdConfig;
 import third.share.BarShare;
 import xh.basic.internet.UtilInternet;
@@ -59,7 +59,6 @@ public class DetailHealth extends BaseActivity {
 	private String tongjiId = "a_Health";
 	
 	private int statusBarHeight = 0;
-	private AdsShow adTip;
 	private RelativeLayout adTipLayout;
 
 	@Override
@@ -111,30 +110,30 @@ public class DetailHealth extends BaseActivity {
 			int screenHeight = ToolsDevice.getWindowPx(getApplicationContext()).heightPixels;
 			@Override
 			public void onScrollChanged(int l, int t, int oldl, int oldt) {
-				if (adTipLayout == null || adTip == null)
+				if (adTipLayout == null || bannerAdBurden == null)
 					return;
 				int[] location = new int[2];
 				adTipLayout.getLocationOnScreen(location);
-				adTip.isOnScreen(location[1] > statusBarHeight && location[1] < screenHeight);
+				if(location[1] > statusBarHeight && location[1] < screenHeight){
+					xhAllAdControl.onAdBind(0,adTipLayout,"");
+				}
 			}
 		});
 	}
 
-	/**
-	 * 当前不再使用广告
-	 */
+	BannerAd bannerAdBurden;
+	XHAllAdControl xhAllAdControl;
+	/** 当前不再使用广告 */
 	private void initAd(){
 		adTipLayout = (RelativeLayout) findViewById(R.id.health_detail_ad_jichi_layout);
-//		//广点通banner广告
-//		RelativeLayout bannerLayout = (RelativeLayout)findViewById(R.id.health_detail_ad_jichi_layout_gdt);
-//		GdtAdNew gdtAd = new GdtAdNew(this,"", bannerLayout,0, GdtAdTools.ID_HEALTH,GdtAdNew.CREATE_AD_BANNER);
-//		gdtAd.isNeedOnScreen = true;
-		//只显示自己banner
-		BannerAd bannerAdBurden = new BannerAd(this,"other_health", adTipLayout);
+		xhAllAdControl = new XHAllAdControl((ArrayList<String>) Arrays.asList(AdPlayIdConfig.DETAIL_HEALTH), new XHAllAdControl.XHBackIdsDataCallBack() {
+			@Override
+			public void callBack(Map<String, String> map) {
+				bannerAdBurden = new BannerAd(DetailHealth.this,"other_health", adTipLayout);
+//				bannerAdBurden.onShowAd(map);
+			}
+		},this,"other_health");
 
-		AdParent[] adsTipParent = {bannerAdBurden};
-		adTip = new AdsShow(adsTipParent, AdPlayIdConfig.DETAIL_HEALTH);
-		mAds = new AdsShow[]{adTip};
 	}
 	
 	private void initBarView() {

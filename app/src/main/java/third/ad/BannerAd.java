@@ -2,7 +2,6 @@ package third.ad;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -19,37 +18,31 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import acore.logic.AppCommon;
-import acore.logic.LoginManager;
 import acore.override.XHApplication;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
 import acore.widget.ImageViewVideo;
-import acore.widget.ScrollLinearListLayout;
 import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
-import third.ad.db.XHAdSqlite;
-import third.ad.db.bean.AdBean;
 import xh.basic.tool.UtilImage;
 
 /**
  * banner广告，策略：服务端返回是否显示banner广告，若显示，则banner信息随着返回
  * @author FangRuijiao
  */
-public class BannerAd extends AdParent{
+public class BannerAd{
 	private Activity mAct;
 	private RelativeLayout mLayoutParent;
-	private ImageViewVideo mImgViewSingle/*,mImgView,mCurrentImgView*/;
-//	private TextView mTitleView,mContentView;
+	private ImageViewVideo mImgViewSingle;
+	private String mClickUrl;
 	/** banner广告数据 */
-	private String mImgUrl,mClickUrl,mId;
 	/** banner广告无需刷新，次标记标识是否已经加载过 */
 	private boolean mIsHasShow = false;
 	private OnBannerListener mListener;
 	
 	private String mImgKey = "appImg";
-	private boolean mIsMain = false;
-	
+
 	//页面来源
 	private String mFrom;
 
@@ -70,10 +63,6 @@ public class BannerAd extends AdParent{
 		this.StatisticKey=from;
 		mLayoutParent = layoutParent;
 		mImgViewSingle = (ImageViewVideo)mLayoutParent.findViewById(R.id.ad_banner_item_iv_single);
-		getStiaticsData();
-//		mImgView = (ImageViewVideo)mLayoutParent.findViewById(R.id.ad_banner_item_iv);
-//		mTitleView = (TextView)mLayoutParent.findViewById(R.id.ad_banner_item_title);
-//		mContentView = (TextView)mLayoutParent.findViewById(R.id.ad_banner_item_content);
 	}
 	public BannerAd(Activity act,String from,RelativeLayout layoutParent,boolean isMain){
 		mAct = act;
@@ -81,8 +70,6 @@ public class BannerAd extends AdParent{
 		this.StatisticKey=from;
 		mLayoutParent = layoutParent;
 		mImgViewSingle = (ImageViewVideo)mLayoutParent.findViewById(R.id.ad_banner_item_iv_single);
-		mIsMain = isMain;
-		getStiaticsData();
 	}
 	public BannerAd(Activity act,String from,RelativeLayout layoutParent,OnBannerListener listener){
 		mAct = act;
@@ -91,76 +78,19 @@ public class BannerAd extends AdParent{
 		mLayoutParent = layoutParent;
 		mImgViewSingle = (ImageViewVideo)mLayoutParent.findViewById(R.id.ad_banner_item_iv_single);
 		mListener = listener;
-		getStiaticsData();
-	}
-	
-	@Override
-	public boolean isShowAd(String adPlayId,AdIsShowListener listener) {
-		super.isShowAd(adPlayId,listener);
-		boolean isShow = true;
-
-		XHAdSqlite adSqlite = XHAdSqlite.newInstance(XHApplication.in());
-		AdBean adBean = adSqlite.getAdConfig(adPlayId);
-		if(adBean != null && !TextUtils.isEmpty(adBean.banner)){
-			Map<String,String> map = StringManager.getFirstMap(adBean.banner);
-			//1活动，2广告,美食家只显示活动
-			if(!LoginManager.isShowAd()
-					&& map.containsKey("adType")
-					&& !"1".equals(map.get("adType"))){
-				isShow = false;
-			} else {
-				String imgs = map.get("imgs");
-				if(TextUtils.isEmpty(imgs)){
-					isShow = false;
-				}else{
-					ArrayList<Map<String, String>> array = StringManager.getListMapByJson(imgs);
-					if(array != null && array.size() > 0) {
-						mImgUrl = array.get(0).get(mImgKey);
-						if(TextUtils.isEmpty(mImgUrl)){
-							isShow = false;
-						}else{
-							mId = map.get("id");
-							mClickUrl = map.get("url");
-						}
-					}
-				}
-			}
-		}else{
-			isShow = false;
-		}
-		if(listener != null){
-			listener.onIsShowAdCallback(this,isShow);
-		}
-		return isShow;
 	}
 
-	@Override
-	public void onResumeAd() {
+	public void onShowAd(Map<String,String> map) {
 		if(!mIsHasShow){
 			mIsHasShow = true;
-			setActivityData();
+			setActivityData(map);
 		}
 	}
 	
-	private void setActivityData(){
-			onAdShow(ad_show,twoData,key,mId);//更改统计
+	private void setActivityData(Map<String,String> map){
 			if(mListener != null) mListener.onShowAd();
-//			String name = mData.get("name");
-//			String content = mData.get("subhead");
-//			//Log.i("FRJ","name:" + name + ";content:" + content);
-//			nameAndContentAllIsNull = true;
-//			mCurrentImgView = mImgView;
-//			if(!TextUtils.isEmpty(name)){
-//				mTitleView.setText(name);
-//				mTitleView.setVisibility(View.VISIBLE);
-//				nameAndContentAllIsNull = false;
-//			}
-//			if(!TextUtils.isEmpty(content)){
-//				mContentView.setText(content);
-//				mContentView.setVisibility(View.VISIBLE);
-//				nameAndContentAllIsNull = false;
-//			}
-//			if(nameAndContentAllIsNull) mCurrentImgView = mImgViewSingle;
+			String mImgUrl = map.get("");
+			mClickUrl = map.get("url");
 			//设置活动图
 			BitmapRequestBuilder<GlideUrl, Bitmap> bitmapRequest = LoadImage.with(XHApplication.in())
 				.load(mImgUrl)
@@ -193,54 +123,22 @@ public class BannerAd extends AdParent{
 							mListener.onImgShow(imgHeight);
 					}
 				});
-			if(mIsMain){
-				mLayoutParent.setOnClickListener(ScrollLinearListLayout.getOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						onAdClick();
-					}
-				}));
-			}else{
 				mLayoutParent.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
 						onAdClick();
 					}
 				});
-			}
 	}
 
 	public void onAdClick(){
 //		onAdClick(mFrom,TONGJI_BANNER, mId);
-		onAdClick(ad_click,twoData,key,key,mId);
 		AppCommon.openUrl(mAct, mClickUrl, true);
 	}
 	
 	public interface OnBannerListener{
 		public void onShowAd();
 		public void onImgShow(int imgH);
-	}
-
-	@Override
-	public void onPsuseAd() {
-
-	}
-	@Override
-	public void onDestroyAd() {
-
-	}
-	/**
-	 * 获取广告统计层级数据
-	 */
-	private void getStiaticsData(){
-		String msg= FileManager.getFromAssets(mAct, "adStatistics");
-		ArrayList<Map<String,String>> listmap = StringManager.getListMapByJson(msg);
-		if(listmap.get(0).containsKey(StatisticKey)){
-			ArrayList<Map<String,String>> stiaticsList= StringManager.getListMapByJson(listmap.get(0).get(StatisticKey));
-			ad_show = stiaticsList.get(0).get("show");
-			ad_click = stiaticsList.get(0).get("click");
-			twoData =stiaticsList.get(0).get("twoData");
-		}
 	}
 
 }

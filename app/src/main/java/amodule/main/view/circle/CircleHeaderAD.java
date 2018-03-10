@@ -10,11 +10,13 @@ import android.widget.RelativeLayout;
 
 import com.xiangha.R;
 
-import acore.logic.XHClick;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Map;
+
 import acore.tools.Tools;
-import third.ad.AdParent;
-import third.ad.AdsShow;
 import third.ad.BannerAd;
+import third.ad.scrollerAd.XHAllAdControl;
 import third.ad.tools.AdPlayIdConfig;
 
 /**
@@ -40,21 +42,15 @@ public class CircleHeaderAD extends LinearLayout {
 	}
 
 	//生活圈首页顶部
-	public AdsShow[] init(Activity activity){
+	public void init(Activity activity){
 		RelativeLayout advert_rela_banner = (RelativeLayout) findViewById(R.id.circle_ad_banner_layout);
-		BannerAd bannerAdBurden = new BannerAd(activity,"community_top", advert_rela_banner);
-		AdParent[] adsBurdenParent = { bannerAdBurden};
-		for (AdParent adParent:adsBurdenParent){
-			adParent.setOnAdClick(new AdParent.AdClickListener() {
-				@Override
-				public void onAdClick() {
-					XHClick.mapStat(getContext(),stiaticID,"banner位","");
-				}
-			});
-		}
-		AdsShow adBurden = new AdsShow(adsBurdenParent, AdPlayIdConfig.MAIN_CIRCLE_TITLE);
-		AdsShow[] mAds = new AdsShow[]{adBurden};
-		return mAds;
+		XHAllAdControl xhAllAdControl = new XHAllAdControl((ArrayList<String>) Arrays.asList(AdPlayIdConfig.MAIN_CIRCLE_TITLE), new XHAllAdControl.XHBackIdsDataCallBack() {
+			@Override
+			public void callBack(Map<String, String> map) {
+				BannerAd bannerAdBurden = new BannerAd(activity,"", advert_rela_banner);
+//				bannerAdBurden.onShowAd(map);
+			}
+		},activity,"community_top");
 	}
 
 	@Override

@@ -111,7 +111,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
     private int doExit = 0;
     private int defaultTab = 0;
     private String url = null;
-    private final int everyReq = 4 * 60;
+    private final int everyReq = 5 * 60;
 
     private boolean WelcomeDialogstate = false;//false表示当前无显示,true已经显示
     private boolean mainOnResumeState = false;//false 无焦点，true 获取焦点
@@ -341,6 +341,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
             if(mRunnable == null){
                 mRunnable = () -> {
                     MessageTipController.newInstance().getCommonData(null);
+                    //TODO 更新广告数据
                     execute();
                 };
                 mTimerHandler.post(mRunnable);

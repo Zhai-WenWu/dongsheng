@@ -35,10 +35,8 @@ import acore.widget.PopWindowDialog;
 import acore.widget.UploadFailPopWindowDialog;
 import acore.widget.UploadNetChangeWindowDialog;
 import acore.widget.UploadSuccessPopWindowDialog;
-import amodule.main.Main;
 import amodule.main.view.CommonBottomView;
 import amodule.main.view.CommonBottonControl;
-import third.ad.AdsShow;
 import third.share.BarShare;
 
 import static acore.tools.Tools.getApiSurTime;
@@ -60,7 +58,6 @@ public class BaseAppCompatActivity extends AppCompatActivity {
 
     private BaseActivity.OnKeyBoardListener mOnKeyBoardListener;
 
-    public AdsShow[] mAds;
     public CommonBottomView mCommonBottomView;
     public String className;
     public CommonBottonControl control;
@@ -242,11 +239,6 @@ public class BaseAppCompatActivity extends AppCompatActivity {
         }
         isForeground = true;
 
-        if (mAds != null) {
-            for (AdsShow ad : mAds) {
-                ad.onResumeAd();
-            }
-        }
         if(mActMagager != null)
             mActMagager.onResume(level);
         if (mCommonBottomView != null)
@@ -282,11 +274,6 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         PageStatisticsUtils.getInstance().onPausePage(this,resumeTime,System.currentTimeMillis());
-        if (mAds != null) {
-            for (AdsShow ad : mAds) {
-                ad.onPauseAd();
-            }
-        }
         if (mActMagager != null){
             mActMagager.onPause();
         }

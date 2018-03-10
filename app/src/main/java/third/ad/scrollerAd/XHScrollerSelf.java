@@ -53,6 +53,7 @@ public class XHScrollerSelf extends XHScrollerAdParent{
 
     @Override
     public void getAdDataWithBackAdId(@NonNull final XHAdDataCallBack xhAdDataCallBack) {
+        //TODO 自由广告获取数据
         if(!isShow()){//判断是否显示---不显示
             xhAdDataCallBack.onFail(XHScrollerAdParent.ADKEY_BANNER);
             return;

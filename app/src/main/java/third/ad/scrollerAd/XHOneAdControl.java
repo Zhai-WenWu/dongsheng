@@ -1,6 +1,5 @@
 package third.ad.scrollerAd;
 
-import android.app.Activity;
 import android.util.Log;
 import android.view.View;
 
@@ -18,8 +17,13 @@ public class XHOneAdControl {
     private int index_controls;//当前的广告存在的位置---针对于全部广告位集合
     private int index_ad = -1;//当前广告类的进行的位置\
     private XHAllAdControl.XHAdControlCallBack xhAdControlCallBack;
+    private boolean isDisplayed = false;
 
     public XHOneAdControl(ArrayList<XHScrollerAdParent> listAdParent, String backId, int Num) {
+        resetData(listAdParent, backId, Num);
+    }
+
+    public void resetData(ArrayList<XHScrollerAdParent> listAdParent, String backId, int Num) {
         this.listAdParent = listAdParent;
         this.backId = backId;
         this.index_controls = Num;
@@ -73,15 +77,8 @@ public class XHOneAdControl {
      */
     public void onAdClick(String oneLevel, String twoLevel) {
         Log.i("tzy", "onAdClick::::" + index_ad);
-        if (index_ad > -1 && index_ad < listAdParent.size()
-                && listAdParent.get(index_ad) != null){
-            View view = listAdParent.get(index_ad).getShowView();
-            if(view != null && view.getContext() instanceof Activity){
-                //TODO
-                Log.i("tongji", "onAdClick: id = " + backId + ";page = " + view.getContext().getClass().getSimpleName());
-            }
+        if (index_ad > -1 && index_ad < listAdParent.size())
             listAdParent.get(index_ad).onThirdClick(oneLevel, twoLevel);
-        }
     }
 
     /**
@@ -90,15 +87,12 @@ public class XHOneAdControl {
     public void onAdBind(View view, String oneLevel, String twoLevel) {
         Log.i("tzy", "onAdBind::::" + index_ad + "::::" + view == null ? "view为null" : "正常");
         if (index_ad > -1 && index_ad < listAdParent.size()) {
-            if (view != null){
-                listAdParent.get(index_ad).setShowView(view);
-                if(view.getContext() instanceof Activity){
-                    //TODO
-                    Log.i("tongji", "onAdBind: id = " + backId + ";page = " + view.getContext().getClass().getSimpleName());
-                }
+            if(!isDisplayed){
+                isDisplayed = true;
+                if (view != null)
+                    listAdParent.get(index_ad).setShowView(view);
+                listAdParent.get(index_ad).onResumeAd(oneLevel, twoLevel);
             }
-
-            listAdParent.get(index_ad).onResumeAd(oneLevel, twoLevel);
         }
     }
 

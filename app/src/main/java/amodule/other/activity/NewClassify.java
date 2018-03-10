@@ -30,6 +30,7 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.xiangha.R;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,6 +42,7 @@ import acore.override.adapter.AdapterSimple;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
+import amodule.health.activity.DetailHealth;
 import amodule.health.activity.HealthTest;
 import amodule.health.activity.MyPhysique;
 import amodule.search.avtivity.HomeSearch;
@@ -49,9 +51,8 @@ import aplug.basic.InternetCallback;
 import aplug.basic.LoadImage;
 import aplug.basic.ReqInternet;
 import aplug.basic.SubBitmapTarget;
-import third.ad.AdParent;
-import third.ad.AdsShow;
 import third.ad.BannerAd;
+import third.ad.scrollerAd.XHAllAdControl;
 import third.ad.tools.AdPlayIdConfig;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilString;
@@ -415,13 +416,15 @@ public class NewClassify extends BaseActivity {
 //		RelativeLayout bannerLayout = (RelativeLayout) findViewById(R.id.classify_ad_banner_bd_layout);
 //		GdtAdNew gdtAd = new GdtAdNew(this,"", bannerLayout, 0, GdtAdTools.ID_NEW_CLASS, GdtAdNew.CREATE_AD_BANNER);
 		RelativeLayout layoutParent = (RelativeLayout) findViewById(R.id.classify_ad_banner_layout);
-		BannerAd bannerAd = new BannerAd(this,statistics, layoutParent);
-		bannerAd.marginLeft = ToolsDevice.dp2px(this,60);
-		bannerAd.marginRight = ToolsDevice.dp2px(this,60);
-		AdParent[] ads1 = { bannerAd};
-		String adPlayId = "caipu".equals(type)?AdPlayIdConfig.Dish_CLASSIFY:AdPlayIdConfig.HEALTH_ClASSIFY;
-		AdsShow ad1 = new AdsShow(ads1, adPlayId);
-		mAds = new AdsShow[]{ad1};
+		XHAllAdControl xhAllAdControl = new XHAllAdControl((ArrayList<String>) Arrays.asList("caipu".equals(type)?AdPlayIdConfig.Dish_CLASSIFY:AdPlayIdConfig.HEALTH_ClASSIFY), new XHAllAdControl.XHBackIdsDataCallBack() {
+			@Override
+			public void callBack(Map<String, String> map) {
+				BannerAd bannerAd = new BannerAd(NewClassify.this,statistics, layoutParent);
+				bannerAd.marginLeft = ToolsDevice.dp2px(NewClassify.this,60);
+				bannerAd.marginRight = ToolsDevice.dp2px(NewClassify.this,60);
+//				bannerAdBurden.onShowAd(map);
+			}
+		},this,"");
 	}
 
 	//设置活动相关

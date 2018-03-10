@@ -22,7 +22,6 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
-import third.ad.AdParent;
 import third.ad.db.XHAdSqlite;
 import third.ad.db.bean.AdBean;
 
@@ -101,39 +100,15 @@ public class AdConfigTools {
         return adSqlite.getAdConfig(adPlayId);
     }
 
-    /**
-     * 通过搜菜谱，输入指定指令显示对应广告
-     *
-     * @param ad
-     */
-    public void changeAd(String ad) {
-        if ("gdt".equals(ad)) {
-            showAdId = AdParent.ADKEY_GDT;
-        } else if ("banner".equals(ad)) {
-            showAdId = AdParent.ADKEY_BANNER;
-        } else if ("cancel".equals(ad)) {
-            showAdId = "cancel";
-        }
-    }
-
     public boolean isShowAd(String adPlayId, String adKey) {
         if ("cancel".equals(showAdId)) {
             String isGourmet = LoginManager.userInfo.get("isGourmet");
             //是美食家，但不是banner广告则返回不显示广告
-            if ("2".equals(isGourmet) && !AdParent.ADKEY_BANNER.equals(adKey)) {
+            if ("2".equals(isGourmet)) {
                 return false;
             }
             AdBean adBean = getAdConfig(adPlayId);
-            if (adBean != null) {
-                switch (adKey) {
-                    case AdParent.ADKEY_GDT:
-                        return "2".equals(adBean.isGdt);
-                    case AdParent.ADKEY_BANNER:
-                        return "2".equals(adBean.isBanner);
-                    default:
-                        break;
-                }
-            }
+
         } else if ("level".equals(showAdId)) {
             return true;
         } else {
@@ -144,18 +119,15 @@ public class AdConfigTools {
 
     public void onAdShow(Context context, String channel, String twoLevel, String threeLevel) {
         if (TextUtils.isEmpty(twoLevel)) return;
-        if (AdParent.TONGJI_TX_API.equals(channel))
-            XHClick.mapStat(context, "ad_show", twoLevel, threeLevel);
+        XHClick.mapStat(context, "ad_show", twoLevel, threeLevel);
     }
 
     public void onAdClick(Context context, String channel, String twoLevel, String threeLevel) {
         if (TextUtils.isEmpty(twoLevel)) return;
-        if (AdParent.TONGJI_TX_API.equals(channel))
-            XHClick.mapStat(context, "ad_click", twoLevel, threeLevel);
+        XHClick.mapStat(context, "ad_click", twoLevel, threeLevel);
     }
 
     /**
-     *
      * @param event：行为事件
      * @param gg_position_id：广告位id
      * @param gg_business：广告商
@@ -184,7 +156,7 @@ public class AdConfigTools {
         params.put("log_json", jsonObject.toString());
         Log.i("tzy", "postStatistics: params=" + params.toString());
 //        requestStatistics(StringManager.api_monitoring_9,params);
-        requestStatistics(StringManager.api_adsNumber,params);
+        requestStatistics(StringManager.api_adsNumber, params);
     }
 
     private void requestStatistics(String url, LinkedHashMap<String, String> params) {

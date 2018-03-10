@@ -4,15 +4,14 @@ import android.widget.RelativeLayout;
 
 import com.xiangha.R;
 
+import java.util.ArrayList;
+import java.util.Map;
+
 import acore.override.activity.base.BaseAppCompatActivity;
 import amodule.quan.view.BarSubjectFloorOwnerNew;
-import third.ad.AdParent;
-import third.ad.AdsShow;
 import third.ad.BannerAd;
-import third.ad.TencenApiAd;
+import third.ad.scrollerAd.XHAllAdControl;
 import third.ad.tools.AdPlayIdConfig;
-
-import static third.ad.tools.TencenApiAdTools.TX_ID_QUAN_DETAIL;
 
 /**
  * PackageName : amodule.quan.tool
@@ -38,24 +37,17 @@ public class SubjectFloorAdvertControl {
 
 
         //腾讯banner广告
-        RelativeLayout ad_layout = (RelativeLayout) floorView.findViewById(R.id.a_subject_detail_ad_banner_tencent_layout);
-        TencenApiAd tencentApiAd = new TencenApiAd(mAct,"community_detail", TX_ID_QUAN_DETAIL,"1",
-                ad_layout, R.layout.ad_banner_view_second,
-                new AdParent.AdListener() {
-                    @Override
-                    public void onAdCreate() {
-                        super.onAdCreate();
-                    }
-                });
-        tencentApiAd.style = TencenApiAd.styleBanner;
-
-
         RelativeLayout layoutParent = (RelativeLayout) floorView.findViewById(R.id.a_subject_detail_ad);
-        BannerAd bannerAd = new BannerAd(mAct,"community_detail", layoutParent);
+        ArrayList<String> ads = new ArrayList<>();
+        ads.add(AdPlayIdConfig.DETAIL_SUBJECT_FLOOR_BOTTOM);
+        XHAllAdControl xhAllAdControl = new XHAllAdControl(ads, new XHAllAdControl.XHBackIdsDataCallBack() {
+            @Override
+            public void callBack(Map<String, String> map) {
+                BannerAd bannerAd = new BannerAd(mAct,"community_detail", layoutParent);
+//                bannerAd.onShowAd(map);
+            }
+        },mAct,"community_detail");
 
-        AdParent[] adsBottom = {tencentApiAd, bannerAd};
-        AdsShow adBottom = new AdsShow(adsBottom, AdPlayIdConfig.DETAIL_SUBJECT_FLOOR_BOTTOM);
-        mAct.mAds = new AdsShow[]{adBottom};
     }
 
 }

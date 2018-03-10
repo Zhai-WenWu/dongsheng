@@ -269,9 +269,6 @@ public class XHAllAdControl {
             XHScrollerAdParent parent = null;
             //判断当前类型
             switch (key) {
-                case "api":
-                    parent = new XHScrollerTencentApi(act, data, backIds, i);
-                    break;
                 case "gdt":
                     parent = new XHScrollerGdt(data,backIds, i);
                     break;

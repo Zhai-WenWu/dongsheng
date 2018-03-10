@@ -21,7 +21,6 @@ import acore.override.XHApplication;
 import acore.override.activity.base.BaseActivity;
 import acore.tools.PageStatisticsUtils;
 import amodule.main.Main;
-import third.ad.AdsShow;
 import third.mall.aplug.MallCommon;
 
 import static android.content.Intent.FLAG_ACTIVITY_NO_USER_ACTION;
@@ -31,7 +30,6 @@ public class MainBaseActivity extends AppCompatActivity {
 	public RelativeLayout rl;
 	public LoadManager loadManager;
 	private ActivityMethodManager mActMagager;
-	public AdsShow[] mAds;
 	private long resumeTime;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -83,11 +81,6 @@ public class MainBaseActivity extends AppCompatActivity {
 			startActivity(i); 
 			return;
 		}
-		if(mAds != null){
-			for(AdsShow ad : mAds){
-				ad.onResumeAd();
-			}
-		}
 		if (mActMagager != null){
 			mActMagager.onResume(level);
 		}
@@ -101,11 +94,6 @@ public class MainBaseActivity extends AppCompatActivity {
 	protected void onPause() {
 		super.onPause();
 		PageStatisticsUtils.getInstance().onPausePage(this,resumeTime,System.currentTimeMillis());
-		if(mAds != null){
-			for(AdsShow ad : mAds){
-				ad.onPauseAd();
-			}
-		}
 		if (mActMagager != null){
 			mActMagager.onPause();
 		}

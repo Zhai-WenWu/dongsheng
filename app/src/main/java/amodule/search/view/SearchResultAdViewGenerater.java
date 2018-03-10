@@ -48,8 +48,6 @@ public class SearchResultAdViewGenerater {
 
         if (XHScrollerAdParent.ADKEY_BANNER.equals(type)) {
             view = createSelfAdView(mActivity, dataMap);
-        } else if (XHScrollerAdParent.ADKEY_API.equals(type)) {
-            view = createTencentAdView(mActivity, dataMap);
         } else {
             view = createOtherAdView(mActivity, dataMap);
         }
@@ -72,63 +70,6 @@ public class SearchResultAdViewGenerater {
         setAdView(view, dataMap);
         return view;
     }
-
-
-    private static RelativeLayout createTencentAdView(Activity mActivity, Map<String, String> dataMap) {
-        RelativeLayout view = null;
-
-        if ("101".equals(dataMap.get("stype"))) {
-            view = (RelativeLayout) LayoutInflater.from(mActivity)
-                    .inflate(R.layout.c_search_result_ad_top1, null);
-            dataMap.put("imgUrl", dataMap.get("imgUrl"));
-            setAdView(view, dataMap);
-        } else if ("202".equals(dataMap.get("stype"))) {
-            view = (RelativeLayout) LayoutInflater.from(mActivity)
-                    .inflate(R.layout.c_search_result_ad_top2, null);
-            ImageViewVideo iv_adCover = (ImageViewVideo) view.findViewById(R.id.iv_adCover);
-            setAdTextInfo(view, dataMap.get("title"), dataMap.get("desc"));
-            view.findViewById(R.id.ad_hint).setVisibility(View.VISIBLE);
-            setViewImage(iv_adCover, dataMap.get("imgUrl"));
-        } else if ("301".equals(dataMap.get("stype"))) {
-            final ArrayList<String> tempList = new ArrayList<>();
-            if (!TextUtils.isEmpty(dataMap.get("imgs"))) {
-                ArrayList<Map<String, String>> imgList = StringManager.getListMapByJson(dataMap.get("imgs"));
-                SyntaxTools.loop(imgList, new SyntaxTools.LooperCallBack() {
-                    @Override
-                    public boolean loop(int i, Object object) {
-                        Map<String, String> imgMap = (Map<String, String>) object;
-                        String imgUrl = imgMap.get("");
-                        if (!TextUtils.isEmpty(imgUrl) && imgUrl.startsWith("http")) {
-                            tempList.add(imgUrl);
-                        }
-                        return false;
-                    }
-                });
-            }
-
-            if (tempList.size() == 3) {
-                view = (RelativeLayout) LayoutInflater.from(mActivity)
-                        .inflate(R.layout.c_search_result_ad_top3, null);
-                ImageViewVideo iv_ad1 = (ImageViewVideo) view.findViewById(R.id.iv_ad1);
-                ImageViewVideo iv_ad2 = (ImageViewVideo) view.findViewById(R.id.iv_ad2);
-                ImageViewVideo iv_ad3 = (ImageViewVideo) view.findViewById(R.id.iv_ad3);
-
-                setViewImage(iv_ad1, tempList.get(0));
-                setViewImage(iv_ad2, tempList.get(1));
-                setViewImage(iv_ad3, tempList.get(2));
-
-                setAdTextInfo(view, dataMap.get("title"), dataMap.get("desc"));
-                view.findViewById(R.id.ad_hint).setVisibility(View.VISIBLE);
-            } else if (tempList.size() > 0) {
-                view = (RelativeLayout) LayoutInflater.from(mActivity)
-                        .inflate(R.layout.c_search_result_ad_top1, null);
-                dataMap.put("imgUrl", tempList.get(0));
-                setAdView(view, dataMap);
-            }
-        }
-        return view;
-    }
-
 
     private static RelativeLayout createSelfAdView(Activity mActivity, Map<String, String> dataMap) {
 
