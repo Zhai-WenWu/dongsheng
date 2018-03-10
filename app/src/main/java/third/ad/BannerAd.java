@@ -14,131 +14,124 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.Target;
 import com.xiangha.R;
 
-import java.util.ArrayList;
 import java.util.Map;
 
-import acore.logic.AppCommon;
 import acore.override.XHApplication;
-import acore.tools.FileManager;
-import acore.tools.StringManager;
+import acore.tools.ImgManager;
 import acore.tools.ToolsDevice;
 import acore.widget.ImageViewVideo;
 import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
-import xh.basic.tool.UtilImage;
+import third.ad.scrollerAd.XHAllAdControl;
 
 /**
  * banner广告，策略：服务端返回是否显示banner广告，若显示，则banner信息随着返回
+ *
  * @author FangRuijiao
  */
-public class BannerAd{
-	private Activity mAct;
-	private RelativeLayout mLayoutParent;
-	private ImageViewVideo mImgViewSingle;
-	private String mClickUrl;
-	/** banner广告数据 */
-	/** banner广告无需刷新，次标记标识是否已经加载过 */
-	private boolean mIsHasShow = false;
-	private OnBannerListener mListener;
-	
-	private String mImgKey = "appImg";
+public class BannerAd {
+    private Activity mAct;
+    private ImageView mAdImage;
+    /** banner广告无需刷新，次标记标识是否已经加载过 */
+    private boolean mIsHasShow = false;
+    private OnBannerListener mListener;
 
-	//页面来源
-	private String mFrom;
+    public int marginLeft = 0, marginRight = 0;
+    private XHAllAdControl mXHAllAdControl;
 
-	public int marginLeft = 0,marginRight = 0;
-	private String StatisticKey;
-	private String ad_show;//展示一级统计
-	private String ad_click;//点击一级统一
-	private String twoData;//二级统计
-	private String key="xh";
-	
-	/**
-	 * @param act
-	 * @param layoutParent
-	 */
-	public BannerAd(Activity act,String from,RelativeLayout layoutParent){
-		mAct = act;
-		mFrom = from;
-		this.StatisticKey=from;
-		mLayoutParent = layoutParent;
-		mImgViewSingle = (ImageViewVideo)mLayoutParent.findViewById(R.id.ad_banner_item_iv_single);
-	}
-	public BannerAd(Activity act,String from,RelativeLayout layoutParent,boolean isMain){
-		mAct = act;
-		mFrom = from;
-		this.StatisticKey=from;
-		mLayoutParent = layoutParent;
-		mImgViewSingle = (ImageViewVideo)mLayoutParent.findViewById(R.id.ad_banner_item_iv_single);
-	}
-	public BannerAd(Activity act,String from,RelativeLayout layoutParent,OnBannerListener listener){
-		mAct = act;
-		mFrom = from;
-		this.StatisticKey=from;
-		mLayoutParent = layoutParent;
-		mImgViewSingle = (ImageViewVideo)mLayoutParent.findViewById(R.id.ad_banner_item_iv_single);
-		mListener = listener;
-	}
+    /**
+     * @param act
+     * @param adControl
+     * @param imageView
+     */
+    public BannerAd(Activity act, XHAllAdControl adControl, ImageView imageView) {
+        mAct = act;
+        mXHAllAdControl = adControl;
+        mAdImage = imageView;
+//		mImgViewSingle = (ImageViewVideo)mLayoutParent.findViewById(R.id.ad_banner_item_iv_single);
+    }
 
-	public void onShowAd(Map<String,String> map) {
-		if(!mIsHasShow){
-			mIsHasShow = true;
-			setActivityData(map);
-		}
-	}
-	
-	private void setActivityData(Map<String,String> map){
-			if(mListener != null) mListener.onShowAd();
-			String mImgUrl = map.get("");
-			mClickUrl = map.get("url");
-			//设置活动图
-			BitmapRequestBuilder<GlideUrl, Bitmap> bitmapRequest = LoadImage.with(XHApplication.in())
-				.load(mImgUrl)
-				.setRequestListener(new RequestListener<GlideUrl, Bitmap>() {
-					@Override
-					public boolean onResourceReady(Bitmap arg0, GlideUrl arg1, Target<Bitmap> arg2, boolean arg3, boolean arg4) {
-						return false;
-					}
+    public BannerAd(Activity act, XHAllAdControl adControl, ImageView imageView, OnBannerListener listener) {
+        mAct = act;
+        mXHAllAdControl = adControl;
+        mAdImage = imageView;
+//		mImgViewSingle = (ImageViewVideo)mLayoutParent.findViewById(R.id.ad_banner_item_iv_single);
+        mListener = listener;
+    }
 
-					@Override
-					public boolean onException(Exception arg0, GlideUrl arg1, Target<Bitmap> arg2, boolean arg3) {
-						mImgViewSingle.setVisibility(View.GONE);
-						return false;
-					}
-				})
-				.build();
-			if(bitmapRequest != null)
-				bitmapRequest.into(new SubBitmapTarget() {
-					@Override
-					public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> arg1) {
-						int imgViewWidth = mImgViewSingle.getWidth() > 0 ? mImgViewSingle.getWidth() : ToolsDevice.getWindowPx(mAct).widthPixels - marginLeft - marginRight;
-//								//Log.i("FRJ","imgViewWidth:" + imgViewWidth);
-						int imgHeight = imgViewWidth * bitmap.getHeight() / bitmap.getWidth();
-						mImgViewSingle.setScaleType(ImageView.ScaleType.FIT_XY);
-						UtilImage.setImgViewByWH(mImgViewSingle, bitmap, imgViewWidth, imgHeight, true);
+    public void onShowAd(Map<String, String> map) {
+        if (!mIsHasShow) {
+            mIsHasShow = true;
+            setActivityData(map);
+        }
+    }
 
-						mImgViewSingle.setVisibility(View.VISIBLE);
-						mLayoutParent.setVisibility(View.VISIBLE);
-						if(mListener != null)
-							mListener.onImgShow(imgHeight);
-					}
-				});
-				mLayoutParent.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						onAdClick();
-					}
-				});
-	}
+    private void setActivityData(Map<String, String> map) {
+        if (mAdImage == null) {
+            return;
+        }
 
-	public void onAdClick(){
-//		onAdClick(mFrom,TONGJI_BANNER, mId);
-		AppCommon.openUrl(mAct, mClickUrl, true);
-	}
-	
-	public interface OnBannerListener{
-		public void onShowAd();
-		public void onImgShow(int imgH);
-	}
+        String mImgUrl = map.get("imgUrl");
+        //设置活动图
+        BitmapRequestBuilder<GlideUrl, Bitmap> bitmapRequest = LoadImage.with(XHApplication.in())
+                .load(mImgUrl)
+                .setRequestListener(new RequestListener<GlideUrl, Bitmap>() {
+                    @Override
+                    public boolean onResourceReady(Bitmap arg0, GlideUrl arg1, Target<Bitmap> arg2, boolean arg3, boolean arg4) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onException(Exception arg0, GlideUrl arg1, Target<Bitmap> arg2, boolean arg3) {
+                        mAdImage.setVisibility(View.GONE);
+                        return false;
+                    }
+                })
+                .build();
+        if (bitmapRequest != null){
+            bitmapRequest.into(new SubBitmapTarget() {
+                @Override
+                public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> arg1) {
+                    int imgViewWidth = mAdImage.getWidth() > 0 ?
+                            mAdImage.getWidth() : ToolsDevice.getWindowPx(mAct).widthPixels - marginLeft - marginRight;
+                    int imgHeight = imgViewWidth * bitmap.getHeight() / bitmap.getWidth();
+                    mAdImage.setScaleType(ImageView.ScaleType.FIT_XY);
+                    ImgManager.setImgViewByWH(mAdImage, bitmap, imgViewWidth, imgHeight, true);
+
+                    mAdImage.setVisibility(View.VISIBLE);
+                    mAdImage.setVisibility(View.VISIBLE);
+                    if (mListener != null)
+                        mListener.onImgShow(imgHeight);
+                    adShow();
+                }
+            });
+            mAdImage.setOnClickListener(v -> onAdClick());
+        }
+    }
+
+    private void adShow(){
+        if (mListener != null) {
+            mListener.onShowAd();
+        }
+    }
+
+    private void adClick(){
+        if (mListener != null) {
+            mListener.onClickAd();
+        }
+    }
+
+    public void onAdClick() {
+        mXHAllAdControl.onAdClick(0, "");
+        adClick();
+    }
+
+    public interface OnBannerListener {
+        void onShowAd();
+
+        void onClickAd();
+
+        void onImgShow(int imgH);
+    }
 
 }

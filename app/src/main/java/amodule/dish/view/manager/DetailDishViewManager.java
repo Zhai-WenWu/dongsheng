@@ -325,15 +325,6 @@ public class DetailDishViewManager {
         }else dishIngreDataShow.setVisibility(View.GONE);
     }
     /**
-     * 处理广告信息
-     */
-    public void handlerBannerView(ArrayList<Map<String, String>> list) {
-        if(dishADBannerView!=null&& list!=null && list.size()>0&&!TextUtils.isEmpty(list.get(0).get("img"))){
-            dishADBannerView.setVisibility(View.VISIBLE);
-            dishADBannerView.setData(list.get(0));
-        }
-    }
-    /**
      * 处理小技巧view
      */
     public void handlerSkillView(ArrayList<Map<String, String>> list,String dishCode,String courseCode,String chapterCode,DishModuleScrollView.onDishModuleClickCallBack callback) {

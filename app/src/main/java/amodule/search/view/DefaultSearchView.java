@@ -5,6 +5,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
@@ -24,6 +25,7 @@ import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;
 import acore.override.adapter.AdapterSimple;
 import acore.tools.FileManager;
+import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
 import amodule.search.data.SearchConstant;
 import amodule.search.data.SearchDataImp;
@@ -37,6 +39,8 @@ import third.ad.tools.AdPlayIdConfig;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilString;
+
+import static third.ad.tools.AdPlayIdConfig.SEARCH_DEFAULT;
 
 /**
  * Created by ：airfly on 2016/10/14 11:31.
@@ -89,8 +93,8 @@ public class DefaultSearchView extends LinearLayout implements View.OnClickListe
 
         search_header_list_view_frame = (PtrClassicFrameLayout) findViewById(R.id.search_header_list_view_frame);
         search_header_list_view_frame.setKeepHeaderWhenRefresh(false);
-        if(search_header_list_view_frame.getHeader() != null
-                && search_header_list_view_frame.getHeader().findViewById(R.id.framelayout_refresh) != null){
+        if (search_header_list_view_frame.getHeader() != null
+                && search_header_list_view_frame.getHeader().findViewById(R.id.framelayout_refresh) != null) {
             search_header_list_view_frame.getHeader().findViewById(R.id.framelayout_refresh).setVisibility(INVISIBLE);
         }
         rl_no_history = (LinearLayout) findViewById(R.id.rl_no_history);
@@ -276,7 +280,7 @@ public class DefaultSearchView extends LinearLayout implements View.OnClickListe
             case R.id.search_his_clean_img:
                 FileManager.delDirectoryOrFile(UtilFile.getDataDir() + FileManager.file_searchHis);
                 XHClick.mapStat(mActivity, "a_search_default", "搜索历史", "清除历史");
-                Log.i("tzy","清除历史");
+                Log.i("tzy", "清除历史");
                 listSearchHistory.clear();
                 refresh();
                 callback.disableEditFocus(false);
@@ -298,15 +302,18 @@ public class DefaultSearchView extends LinearLayout implements View.OnClickListe
 
     }
 
+    XHAllAdControl xhAllAdControl;
+
     private void initAd(boolean hasHistory) {
         RelativeLayout advert_rela_banner = (RelativeLayout) findViewById(hasHistory ? R.id.rl_search_ad_gdt_has_history : R.id.rl_search_ad_gdt_no_history);
-        XHAllAdControl xhAllAdControl = new XHAllAdControl((ArrayList<String>) Arrays.asList(AdPlayIdConfig.SEARCH_DEFAULT), new XHAllAdControl.XHBackIdsDataCallBack() {
-            @Override
-            public void callBack(Map<String, String> map) {
-                BannerAd bannerAdBurden = new BannerAd(mActivity,"search_default", advert_rela_banner);
-//                bannerAdBurden.onShowAd(map);
-            }
-        },mActivity,"search_default");
-
+        ImageView imageView = (ImageView) advert_rela_banner.findViewById(R.id.ad_banner_item_iv_single);
+        ArrayList<String> list = new ArrayList<>();
+        list.add(SEARCH_DEFAULT);
+        xhAllAdControl = new XHAllAdControl(list, map -> {
+            BannerAd bannerAdBurden = new BannerAd(mActivity, xhAllAdControl, imageView);
+            map = StringManager.getFirstMap(map.get(SEARCH_DEFAULT));
+            bannerAdBurden.onShowAd(map);
+            xhAllAdControl.onAdBind(0, imageView, "");
+        }, mActivity, "search_default");
     }
 }

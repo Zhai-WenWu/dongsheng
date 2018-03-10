@@ -97,7 +97,7 @@ public class AdapterQuanShowSubject extends AdapterSimple {
 		View view = super.getView(position, convertView, parent);
 		// 数据集合
 		final Map<String, String> floorMap = floorData.get(position);
-		final Map<String, String> user = UtilString.getListMapByJson(floorMap.get("customer")).get(0);
+		final Map<String, String> user = StringManager.getFirstMap(floorMap.get("customer"));
 		// 楼层显示
 		TextView tv_sub_user_name = (TextView) view.findViewById(R.id.tv_sub_user_name);
 		this.setViewText(tv_sub_user_name, user.get("nickName"));

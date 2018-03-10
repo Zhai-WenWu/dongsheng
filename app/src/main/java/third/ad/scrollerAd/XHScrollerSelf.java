@@ -29,7 +29,7 @@ public class XHScrollerSelf extends XHScrollerAdParent{
        if(map_link.containsKey("id")){
            adid = map_link.get("id");
        }
-       Log.i("tongji", "XHScrollerSelf: " + map_link.toString());
+//       Log.i("tongji", "XHScrollerSelf: " + map_link.toString());
     }
 
     @Override

@@ -53,10 +53,8 @@
 				 	    layout="@layout/ad_banner_view"
 				 	    android:layout_width="match_parent"
 	                    android:layout_height="wrap_content"
-	                    android:layout_marginTop="@dimen/dp_10"
 		                android:paddingLeft="@dimen/dp_5.5"
-	                    android:paddingRight="@dimen/dp_5.5"
-	                    android:visibility="gone"/>
+	                    android:paddingRight="@dimen/dp_5.5"/>
 
 					<RelativeLayout
 						android:id="@+id/classify_ad_bd_layout"

@@ -9,9 +9,11 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -72,6 +74,7 @@ public class ClassifyHealthFragment extends Fragment {
     private LinearLayout mRightContentLayout;
     private ImageView mActivityImg;
     private TextView mSearchHint;
+    private ImageView mImageView;
 
     private BaseFragmentActivity mActivity;
 
@@ -79,7 +82,7 @@ public class ClassifyHealthFragment extends Fragment {
 
     private String mNameTitle = "", mType = "caipu", mTitle = "分类", mCoverStr = "";
     private String mEventId = "a_menu_table";
-    private String mStatistics="";
+    private String mStatistics = "";
     private int mIndex = 0;
 
     private Handler mHandler = null;
@@ -110,7 +113,7 @@ public class ClassifyHealthFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                XHClick.track(v.getContext(), "点击"+mTitle+"页的搜索框");
+                XHClick.track(v.getContext(), "点击" + mTitle + "页的搜索框");
                 XHClick.mapStat(mActivity, mEventId, "搜索", "");
                 Intent intent = new Intent(mActivity, HomeSearch.class);
                 intent.putExtra(SearchConstant.SEARCH_TYPE, SearchConstant.SEARCH_CAIPU);
@@ -326,26 +329,45 @@ public class ClassifyHealthFragment extends Fragment {
         super.onResume();
     }
 
+    public void onAdShow() {
+        if(xhAllAdControl != null && mImageView != null){
+            int[] location = new int[2];
+            mImageView.getLocationOnScreen(location);
+            if(location[0] >= 0 && location[0] <= ToolsDevice.getWindowPx(getContext()).widthPixels
+                    && location[1] >= 0 && location[1] <= ToolsDevice.getWindowPx(getContext()).heightPixels){
+                xhAllAdControl.onAdBind(0, mImageView, "");
+            }
+        }
+    }
+
+    XHAllAdControl xhAllAdControl;
+
     /**
      * 初始化广告
      */
     private void initAd() {
-        RelativeLayout layoutParent = (RelativeLayout) mRootView.findViewById(R.id.classify_ad_banner_layout);
+        mImageView = (ImageView) mRootView.findViewById(R.id.ad_banner_item_iv_single);
+        ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) mImageView.getLayoutParams();
+        layoutParams.setMargins(0,Tools.getDimen(getContext(),R.dimen.dp_10),0,0);
         String adPlayId = AdPlayIdConfig.HEALTH_ClASSIFY;
         if (mType.equals("caipu")) {
             adPlayId = AdPlayIdConfig.Dish_CLASSIFY;
         }
         ArrayList<String> ads = new ArrayList<>();
         ads.add(adPlayId);
-        XHAllAdControl xhAllAdControl = new XHAllAdControl(ads, new XHAllAdControl.XHBackIdsDataCallBack() {
-            @Override
-            public void callBack(Map<String, String> map) {
-                BannerAd bannerAd = new BannerAd(mActivity, mStatistics, layoutParent);
-                bannerAd.marginLeft = ToolsDevice.dp2px(mActivity,60);
-                bannerAd.marginRight = ToolsDevice.dp2px(mActivity,60);
-//                bannerAd.onShowAd(map);
-            }
-        },getActivity(),"");
+        final String finalAdPlayId = adPlayId;
+        xhAllAdControl = new XHAllAdControl(ads,
+                map -> {
+                    if (map.containsKey(finalAdPlayId)) {
+                        BannerAd bannerAd = new BannerAd(mActivity, xhAllAdControl, mImageView);
+                        bannerAd.marginLeft = ToolsDevice.dp2px(mActivity, 60);
+                        bannerAd.marginRight = ToolsDevice.dp2px(mActivity, 60);
+                        map = StringManager.getFirstMap(map.get(finalAdPlayId));
+                        bannerAd.onShowAd(map);
+                        onAdShow();
+                    }
+                },
+                getActivity(), "");
     }
 
     /**
@@ -395,7 +417,7 @@ public class ClassifyHealthFragment extends Fragment {
                             view.findViewById(R.id.line_left).setVisibility(View.GONE);
                             view.findViewById(R.id.line_right).setVisibility(View.GONE);
                         } else {
-                            String color = Tools.getColorStr(mActivity,R.color.comment_color);
+                            String color = Tools.getColorStr(mActivity, R.color.comment_color);
                             tv.setTextColor(Color.parseColor(color));
                             view.setBackgroundColor(Color.parseColor("#FFFFFF"));
                             view.findViewById(R.id.line_left).setVisibility(View.VISIBLE);

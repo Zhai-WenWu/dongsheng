@@ -41,13 +41,11 @@
                 android:layout_height="wrap_content"
 		 	    android:layout_marginRight="@dimen/dp_10.5"
 		 	    android:layout_marginLeft="@dimen/dp_10.5"
-                android:layout_marginTop="@dimen/dp_15"
-                android:visibility="gone"/>
+                android:layout_marginTop="@dimen/dp_15"/>
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="@dimen/dp_15" >
+                android:layout_height="wrap_content" >
 
                 <RelativeLayout
                     android:id="@+id/hot_search_title"

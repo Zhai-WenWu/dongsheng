@@ -1,7 +1,9 @@
 package amodule.other.activity;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -14,6 +16,7 @@ import com.xiangha.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import acore.logic.XHClick;
@@ -82,6 +85,7 @@ public class ClassifyHealthActivity extends BaseFragmentActivity {
             }
         });
         ClassifyHealthPagerAdapter adapter = new ClassifyHealthPagerAdapter(getSupportFragmentManager());
+        mViewPager.setOffscreenPageLimit(1);
         mViewPager.setAdapter(adapter);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -91,6 +95,16 @@ public class ClassifyHealthActivity extends BaseFragmentActivity {
 
             @Override
             public void onPageSelected(int position) {
+                @SuppressLint("RestrictedApi") List<Fragment> list = getSupportFragmentManager().getFragments();
+                for(Fragment fragment:list){
+                    if(fragment != null && fragment instanceof ClassifyHealthFragment){
+                        Bundle bundle = fragment.getArguments();
+                        if(String.valueOf(position).equals(bundle.getString("index",""))){
+                            new Handler().postDelayed(((ClassifyHealthFragment) fragment)::onAdShow,200);
+                            break;
+                        }
+                    }
+                }
                 XHClick.mapStat(ClassifyHealthActivity.this, STATISTICS_ID, "顶部tab切换", mDatas.get(position).get("title"));
             }
 
@@ -150,6 +164,7 @@ public class ClassifyHealthActivity extends BaseFragmentActivity {
             ClassifyHealthFragment fragment = new ClassifyHealthFragment();
             Map<String, String> map = mDatas.get(position);
             Bundle bundle = new Bundle();
+            bundle.putString("index", String.valueOf(position));
             bundle.putString("title", map.get("title"));
             bundle.putString("type", map.get("type"));
             bundle.putString("coverStr", map.get("coverStr"));
