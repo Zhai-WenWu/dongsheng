@@ -451,17 +451,6 @@ public class XHAllAdControl {
         }
     }
 
-
-    //退出activity时，释放view
-    public void releaseView() {
-        if (listAdContrls != null && listAdContrls.size() > 0) {
-            for (int i = 0; i < listAdContrls.size(); i++) {
-                if (listAdContrls.get(i) != null)
-                    listAdContrls.get(i).releaseView();
-            }
-        }
-    }
-
     /**
      * 是否需要刷新
      *

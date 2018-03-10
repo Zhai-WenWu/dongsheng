@@ -3,8 +3,6 @@ package third.ad.scrollerAd;
 import android.util.Log;
 import android.view.View;
 
-import com.annimon.stream.Stream;
-
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -13,13 +11,13 @@ import java.util.Map;
  */
 public class XHOneAdControl {
     private ArrayList<XHScrollerAdParent> listAdParent;//当前全部的广告实体类
-    private String backId;//当前广告位置id
+    private String backId;//当前广告位id
     private int index_controls;//当前的广告存在的位置---针对于全部广告位集合
     private int index_ad = -1;//当前广告类的进行的位置\
     private XHAllAdControl.XHAdControlCallBack xhAdControlCallBack;
     private boolean isDisplayed = false;
 
-    public XHOneAdControl(ArrayList<XHScrollerAdParent> listAdParent, String backId, int Num) {
+    XHOneAdControl(ArrayList<XHScrollerAdParent> listAdParent, String backId, int Num) {
         resetData(listAdParent, backId, Num);
     }
 
@@ -85,7 +83,7 @@ public class XHOneAdControl {
      * 广告曝光
      */
     public void onAdBind(View view, String oneLevel, String twoLevel) {
-        Log.i("tzy", "onAdBind::::" + index_ad + "::::" + view == null ? "view为null" : "正常");
+        Log.i("tzy", "onAdBind::::" + index_ad + "::::" + (view == null ? "view为null" : "正常"));
         if (index_ad > -1 && index_ad < listAdParent.size()) {
             if(!isDisplayed){
                 isDisplayed = true;
@@ -99,18 +97,19 @@ public class XHOneAdControl {
     /**
      * 获取当前view的状态
      *
-     * @return
+     * @return 当前view的状态
      */
-    public boolean getAdViewState() {
-        if (index_ad > -1 && index_ad < listAdParent.size())
+    boolean getAdViewState() {
+        if (index_ad > -1 && index_ad < listAdParent.size()){
             return listAdParent.get(index_ad).getViewState();
+        }
         return true;
     }
 
     /**
      * 设置view状态
      *
-     * @param view
+     * @param view 广告view
      */
     public void setView(View view) {
         if (index_ad > -1 && index_ad < listAdParent.size() && view != null) {
@@ -118,12 +117,4 @@ public class XHOneAdControl {
         }
     }
 
-    //退出activity时，释放view
-    public void releaseView() {
-        if (listAdParent != null) {
-            Stream.of(listAdParent)
-                    .filter(adParent -> null != adParent)
-                    .forEach(XHScrollerAdParent::realseView);
-        }
-    }
 }

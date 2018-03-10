@@ -3,23 +3,19 @@ package third.ad;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
 import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.Target;
-import com.xiangha.R;
 
 import java.util.Map;
 
 import acore.override.XHApplication;
 import acore.tools.ImgManager;
 import acore.tools.ToolsDevice;
-import acore.widget.ImageViewVideo;
 import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
 import third.ad.scrollerAd.XHAllAdControl;

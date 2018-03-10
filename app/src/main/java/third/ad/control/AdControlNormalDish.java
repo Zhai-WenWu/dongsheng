@@ -14,8 +14,6 @@ import third.ad.option.AdOptionHomeDish;
 import third.ad.option.AdOptionParent;
 import third.ad.tools.AdPlayIdConfig;
 
-import static third.ad.control.AdControlHomeDish.tag_yu;
-
 /**
  *  feed流页面的，广告特殊逻辑，分为三部分
  * 1、第一次进入两个数据---提高加载速度

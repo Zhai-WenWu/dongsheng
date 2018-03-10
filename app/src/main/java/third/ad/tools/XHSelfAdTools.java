@@ -1,13 +1,5 @@
 package third.ad.tools;
 
-import android.app.Activity;
-import android.view.ViewGroup;
-
-import com.baidu.mobad.feeds.NativeErrorCode;
-import com.baidu.mobad.feeds.NativeResponse;
-import com.baidu.mobads.SplashAd;
-import com.baidu.mobads.SplashAdListener;
-
 import java.util.ArrayList;
 import java.util.List;
 

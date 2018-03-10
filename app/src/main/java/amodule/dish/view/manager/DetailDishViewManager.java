@@ -451,6 +451,14 @@ public class DetailDishViewManager {
                 if(layoutFooter!=null){
                     onSrollView();
                 }
+                if(dishADBannerView != null && dishADBannerView.getVisibility() == View.VISIBLE){
+                    int[] location = new int[2];
+                    dishADBannerView.getLocationOnScreen(location);
+                    if ((location[1] > Tools.getStatusBarHeight(mAct)
+                            && location[1] < Tools.getScreenHeight() - ToolsDevice.dp2px(mAct, 57))) {
+                        dishADBannerView.onAdShow();
+                    }
+                }
             }
         });
         listView.setOnTouchListener(new View.OnTouchListener() {

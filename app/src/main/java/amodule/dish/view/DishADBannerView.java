@@ -69,4 +69,10 @@ public class DishADBannerView extends ItemBaseView {
 
         },XHActivityManager.getInstance().getCurrentActivity(),"");
     }
+
+    public void onAdShow(){
+        if(xhAllAdControl != null){
+            xhAllAdControl.onAdBind(0,img_banner,"");
+        }
+    }
 }
