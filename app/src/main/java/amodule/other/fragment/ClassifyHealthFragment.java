@@ -9,11 +9,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -83,6 +82,7 @@ public class ClassifyHealthFragment extends Fragment {
     private String mNameTitle = "", mType = "caipu", mTitle = "分类", mCoverStr = "";
     private String mEventId = "a_menu_table";
     private String mStatistics = "";
+    private String mXhIndex="",mSelectIndex="";
     private int mIndex = 0;
 
     private Handler mHandler = null;
@@ -146,6 +146,8 @@ public class ClassifyHealthFragment extends Fragment {
             mCoverStr = mBundle.getString("coverStr");
             mEventId = mBundle.getString("eventId");
             mStatistics = mBundle.getString("statistics");
+            mXhIndex = mBundle.getString("xhindex");
+            mSelectIndex = mBundle.getString("mSelectedPos");
         }
 
         mHandler = new Handler(new Handler.Callback() {
@@ -364,7 +366,9 @@ public class ClassifyHealthFragment extends Fragment {
                         bannerAd.marginRight = ToolsDevice.dp2px(mActivity, 60);
                         map = StringManager.getFirstMap(map.get(finalAdPlayId));
                         bannerAd.onShowAd(map);
-                        onAdShow();
+                        if(TextUtils.equals(mXhIndex,mSelectIndex)){
+                            onAdShow();
+                        }
                     }
                 },
                 getActivity(), "");
