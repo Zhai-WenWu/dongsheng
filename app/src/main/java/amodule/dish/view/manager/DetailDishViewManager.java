@@ -28,8 +28,8 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import acore.logic.LoginManager;
 import acore.logic.ConfigMannager;
+import acore.logic.LoginManager;
 import acore.logic.load.LoadManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;

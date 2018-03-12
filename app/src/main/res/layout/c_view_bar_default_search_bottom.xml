@@ -129,6 +129,8 @@
                     <include
                         android:id="@+id/rl_search_ad_gdt_has_history"
                         layout="@layout/ad_banner_view"
+                        android:layout_marginLeft="@dimen/dp_15"
+                        android:layout_marginRight="@dimen/dp_15"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
 

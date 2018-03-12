@@ -9,14 +9,12 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.xiangha.R;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Map;
 
 import acore.logic.SetDataView;
@@ -33,13 +31,11 @@ import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
 import third.ad.BannerAd;
 import third.ad.scrollerAd.XHAllAdControl;
-import third.ad.tools.AdPlayIdConfig;
 import third.share.BarShare;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilString;
 
-import static third.ad.tools.AdPlayIdConfig.DETAIL_HEALTH;
-import static third.ad.tools.AdPlayIdConfig.SEARCH_DEFAULT;
+import static third.ad.tools.AdPlayIdConfig.Dish_CLASSIFY;
 
 /**
  * Title:DetailHealth.java Copyright: Copyright (c) 2014~2017
@@ -59,7 +55,7 @@ public class DetailHealth extends BaseActivity {
 
     private String name = "", code = "", datatype = "";
     private int ico_id;
-    private boolean moreFlag = true;
+    private boolean moreFlag = true,isLoadOver = false;
 
     private String tongjiId = "a_Health";
 
@@ -133,11 +129,28 @@ public class DetailHealth extends BaseActivity {
     private void initAd() {
         imageView = (ImageView) findViewById(R.id.ad_banner_item_iv_single);
         ArrayList<String> list = new ArrayList<>();
-        list.add(DETAIL_HEALTH);
+//        list.add(DETAIL_HEALTH);
+        list.add(Dish_CLASSIFY);
         xhAllAdControl = new XHAllAdControl(list, map -> {
-            if (map.containsKey(DETAIL_HEALTH)) {
+            if (map.containsKey(Dish_CLASSIFY)) {
                 bannerAdBurden = new BannerAd(DetailHealth.this, xhAllAdControl, imageView);
-                map = StringManager.getFirstMap(map.get(DETAIL_HEALTH));
+                bannerAdBurden.setOnBannerListener(new BannerAd.OnBannerListener() {
+                    @Override
+                    public void onShowAd() {
+                        imageView.setVisibility(isLoadOver?View.VISIBLE:View.GONE);
+                    }
+
+                    @Override
+                    public void onClickAd() {
+
+                    }
+
+                    @Override
+                    public void onImgShow(int imgH) {
+
+                    }
+                });
+                map = StringManager.getFirstMap(map.get(Dish_CLASSIFY));
                 bannerAdBurden.onShowAd(map);
             }
         }, this, "other_health");
@@ -221,6 +234,8 @@ public class DetailHealth extends BaseActivity {
                             setTableData(jichiInfo, layout_jichi, "忌吃食材点击");
                         }
                     }
+                    isLoadOver = true;
+                    imageView.setVisibility(View.VISIBLE);
                 }
                 loadManager.hideProgressBar();
             }

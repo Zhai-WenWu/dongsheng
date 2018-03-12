@@ -2,7 +2,6 @@ package amodule.dish.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.ImageView;
 
 import com.xiangha.R;
@@ -47,7 +46,8 @@ public class DishADBannerView extends ItemBaseView {
         list.add(DISH_YONGLIAO);
         xhAllAdControl = new XHAllAdControl(list, map -> {
             if(map.containsKey(DISH_YONGLIAO)){
-                BannerAd bannerAd = new BannerAd(XHActivityManager.getInstance().getCurrentActivity(), xhAllAdControl, img_banner, new BannerAd.OnBannerListener() {
+                BannerAd bannerAd = new BannerAd(XHActivityManager.getInstance().getCurrentActivity(), xhAllAdControl, img_banner);
+                bannerAd.setOnBannerListener(new BannerAd.OnBannerListener() {
                     @Override
                     public void onShowAd() {
                         setVisibility(VISIBLE);
@@ -66,7 +66,6 @@ public class DishADBannerView extends ItemBaseView {
                 map = StringManager.getFirstMap(map.get(DISH_YONGLIAO));
                 bannerAd.onShowAd(map);
             }
-
         },XHActivityManager.getInstance().getCurrentActivity(),"");
     }
 

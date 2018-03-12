@@ -36,23 +36,14 @@ public class BannerAd {
     private XHAllAdControl mXHAllAdControl;
 
     /**
-     * @param act
-     * @param adControl
-     * @param imageView
+     * @param act 上下文
+     * @param adControl 广告控制
+     * @param imageView 显示图片额imageview
      */
     public BannerAd(Activity act, XHAllAdControl adControl, ImageView imageView) {
         mAct = act;
         mXHAllAdControl = adControl;
         mAdImage = imageView;
-//		mImgViewSingle = (ImageViewVideo)mLayoutParent.findViewById(R.id.ad_banner_item_iv_single);
-    }
-
-    public BannerAd(Activity act, XHAllAdControl adControl, ImageView imageView, OnBannerListener listener) {
-        mAct = act;
-        mXHAllAdControl = adControl;
-        mAdImage = imageView;
-//		mImgViewSingle = (ImageViewVideo)mLayoutParent.findViewById(R.id.ad_banner_item_iv_single);
-        mListener = listener;
     }
 
     public void onShowAd(Map<String, String> map) {
@@ -120,6 +111,10 @@ public class BannerAd {
     public void onAdClick() {
         mXHAllAdControl.onAdClick(0, "");
         adClick();
+    }
+
+    public void setOnBannerListener(OnBannerListener listener){
+        mListener = listener;
     }
 
     public interface OnBannerListener {

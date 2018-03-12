@@ -1,19 +1,18 @@
 package amodule.quan.tool;
 
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
 import com.xiangha.R;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.StringManager;
+import acore.tools.Tools;
+import acore.tools.ToolsDevice;
 import amodule.quan.view.BarSubjectFloorOwnerNew;
 import third.ad.BannerAd;
 import third.ad.scrollerAd.XHAllAdControl;
-import third.ad.tools.AdPlayIdConfig;
 
 import static third.ad.tools.AdPlayIdConfig.DETAIL_SUBJECT_FLOOR_BOTTOM;
 
@@ -34,10 +33,11 @@ public class SubjectFloorAdvertControl {
     }
 
     XHAllAdControl xhAllAdControl;
+    ImageView imageView;
 
     /** 初始化广告 */
     public void initAd() {
-        ImageView imageView = (ImageView) floorView.findViewById(R.id.ad_banner_item_iv_single);
+        imageView = (ImageView) floorView.findViewById(R.id.ad_banner_item_iv_single);
         ArrayList<String> ads = new ArrayList<>();
         ads.add(DETAIL_SUBJECT_FLOOR_BOTTOM);
         xhAllAdControl = new XHAllAdControl(ads,
@@ -45,10 +45,19 @@ public class SubjectFloorAdvertControl {
                     BannerAd bannerAd = new BannerAd(mAct, xhAllAdControl, imageView);
                     map = StringManager.getFirstMap(map.get(DETAIL_SUBJECT_FLOOR_BOTTOM));
                     bannerAd.onShowAd(map);
-                    xhAllAdControl.onAdBind(0, imageView, "");
                 },
                 mAct, "community_detail");
+    }
 
+    public void onAdShow(){
+        if(imageView != null && xhAllAdControl !=null){
+            int[] location = new int[2];
+            imageView.getLocationOnScreen(location);
+            if ((location[1] > Tools.getStatusBarHeight(mAct)
+                    && location[1] < Tools.getScreenHeight() - ToolsDevice.dp2px(mAct, 57))) {
+                xhAllAdControl.onAdBind(0, imageView, "");
+            }
+        }
     }
 
 }

@@ -142,9 +142,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/layout_detail_jichi"
-                android:layout_marginBottom="@dimen/dp_15"
-                android:paddingLeft="@dimen/dp_15"
-                android:paddingRight="@dimen/dp_15"/>
+                android:layout_marginBottom="@dimen/dp_15"/>
             <RelativeLayout
                 android:id="@+id/health_detail_ad_jichi_layout_gdt"
                 android:layout_width="match_parent"

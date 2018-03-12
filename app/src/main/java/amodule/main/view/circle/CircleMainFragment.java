@@ -187,6 +187,7 @@ public class CircleMainFragment extends Fragment {
             RelativeLayout headerLayout = new RelativeLayout(getContext());
             CircleHeaderAD mCircleHeaderAD = new CircleHeaderAD(mActivity);
             mCircleHeaderAD.setStiaticID(mPlateData.getStiaticID());
+            mCircleHeaderAD.init(mActivity);
             headerLayout.addView(mCircleHeaderAD);
             mListView.addHeaderView(headerLayout);
             headerCount++;

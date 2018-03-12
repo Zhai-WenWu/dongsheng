@@ -213,7 +213,7 @@ public class DefaultSearchView extends LinearLayout implements View.OnClickListe
                     callback.toSearch(searchKey, searchType);
                 }
             });
-            initAd(false);
+            initAd();
         } else {
             ll_has_his.setVisibility(View.VISIBLE);
             rl_no_history.setVisibility(View.GONE);
@@ -236,10 +236,9 @@ public class DefaultSearchView extends LinearLayout implements View.OnClickListe
                     callback.toSearch(searchKey, searchType);
                 }
             }});
-            initAd(true);
+            initAd();
             View view = LayoutInflater.from(mActivity).inflate(R.layout.a_hot_tag_start_item, null);
             ll_hottag.addView(view, 0);
-
         }
     }
 
@@ -303,17 +302,26 @@ public class DefaultSearchView extends LinearLayout implements View.OnClickListe
     }
 
     XHAllAdControl xhAllAdControl;
+    boolean isLoad = false;
 
-    private void initAd(boolean hasHistory) {
-        RelativeLayout advert_rela_banner = (RelativeLayout) findViewById(hasHistory ? R.id.rl_search_ad_gdt_has_history : R.id.rl_search_ad_gdt_no_history);
-        ImageView imageView = (ImageView) advert_rela_banner.findViewById(R.id.ad_banner_item_iv_single);
+    private void initAd() {
+        if(isLoad){
+            return;
+        }
+        isLoad = true;
+        RelativeLayout adBannerHasHis = (RelativeLayout) findViewById(R.id.rl_search_ad_gdt_has_history);
+        RelativeLayout adBannerNoHis = (RelativeLayout) findViewById(R.id.rl_search_ad_gdt_no_history);
+        ImageView imageViewHasHis = (ImageView) adBannerHasHis.findViewById(R.id.ad_banner_item_iv_single);
+        ImageView imageViewNoHis = (ImageView) adBannerNoHis.findViewById(R.id.ad_banner_item_iv_single);
         ArrayList<String> list = new ArrayList<>();
         list.add(SEARCH_DEFAULT);
         xhAllAdControl = new XHAllAdControl(list, map -> {
-            BannerAd bannerAdBurden = new BannerAd(mActivity, xhAllAdControl, imageView);
+            BannerAd bannerAdBurden = new BannerAd(mActivity, xhAllAdControl, imageViewHasHis);
             map = StringManager.getFirstMap(map.get(SEARCH_DEFAULT));
             bannerAdBurden.onShowAd(map);
-            xhAllAdControl.onAdBind(0, imageView, "");
+            bannerAdBurden = new BannerAd(mActivity, xhAllAdControl, imageViewNoHis);
+            bannerAdBurden.onShowAd(map);
+            xhAllAdControl.onAdBind(0, imageViewHasHis, "");
         }, mActivity, "search_default");
     }
 }
