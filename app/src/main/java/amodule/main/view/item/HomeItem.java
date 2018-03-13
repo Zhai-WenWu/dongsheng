@@ -577,7 +577,7 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
         if (mDataMap == null
                 || (!"1".equals(mDataMap.get("style")) && !"6".equals(mDataMap.get("style"))))
             return;
-        Map<String, String> mapSize = XHScrollerAdParent.getAdImageSize(mDataMap.get("adClass"), mDataMap.get("stype"), "1");
+        Map<String, String> mapSize = XHScrollerAdParent.getAdImageSize(mDataMap.get("adClass"), "1");
         if (mapSize == null || mapSize.isEmpty())
             return;
         try {

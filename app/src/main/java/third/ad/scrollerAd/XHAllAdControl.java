@@ -25,8 +25,10 @@ import acore.tools.StringManager;
 import amodule.main.Main;
 import third.ad.db.XHAdSqlite;
 import third.ad.db.bean.AdBean;
+import third.ad.db.bean.XHSelfNativeData;
 import third.ad.tools.BaiduAdTools;
 import third.ad.tools.GdtAdTools;
+import third.ad.tools.XHSelfAdTools;
 
 import static third.ad.control.AdControlHomeDish.tag_yu;
 
@@ -47,8 +49,11 @@ public class XHAllAdControl {
     private int count = 0;//返回的数据的个数
     private List<NativeADDataRef> gdtNativeArray = new ArrayList<>();
     private List<NativeResponse> baiduNativeArray = new ArrayList<>();
+    private List<XHSelfNativeData> xhNativeArray = new ArrayList<>();
+
     private String GDT_ID = "";//广点
     private String BAIDU_ID = "";//广点
+    private List<String> XH_IDS = new ArrayList<>();
     private int gdt_index = 0;//取广告位的数据位置 GDT
     private int baidu_index = 0;//取广告位的数据位置 Baidu
     private String StatisticKey;
@@ -65,6 +70,7 @@ public class XHAllAdControl {
     private boolean isJudgePicSize = false;
     private boolean isLoadOverGdt = false;
     private boolean isLoadOverBaidu = false;
+    private boolean isLoadOverXH = false;
 
     /**
      * 初始化
@@ -97,41 +103,50 @@ public class XHAllAdControl {
         this(listIds, xhBackIdsDataCallBack, Main.allMain, StatisticKey, isJudgePicSize);
     }
 
-
-    private void getAllAdDataBySqlite(){
+    private void getAllAdDataBySqlite() {
         listAdContrls.clear();
         XHAdSqlite adSqlite = XHAdSqlite.newInstance(XHApplication.in());
         //根据广告位置id在广告数据 进行筛选通
         if (listIds.size() > 0) {
-            Log.i("tzy", "getAllAdDataBySqlite: size = " + listIds.size());
+//            Log.i("tzy", "getAllAdDataBySqlite: size = " + listIds.size());
             for (int i = 0, size = listIds.size(); i < size; i++) {
-                AdTypeData.put(listIds.get(i),"");
+                AdTypeData.put(listIds.get(i), "");
                 /*获取数据广告位的数据体*/
                 AdBean adBean = adSqlite.getAdConfig(listIds.get(i));
-                if(adBean == null) {
+                if (adBean == null) {
                     continue;
                 }
-                String banner = adBean.banner;
                 /*广告实体数据集合*/
                 boolean state = false;//是否打开
-                ArrayList<Map<String, String>> adConfigDataList = new ArrayList<>();
-                Map<String, String> configMap = StringManager.getFirstMap(adBean.adConfig);
-                final String[] keys = {"1", "2", "3", "4", "5"};
+                ArrayList<Map<String, String>> adConfigDataList = StringManager.getListMapByJson(adBean.adConfig);
                 boolean once = false;
-                for (String key : keys) {
-                    if (configMap.containsKey(key)) {
-                        String value = configMap.get(key);
-                        Map<String,String> configTemp = StringManager.getFirstMap(value);
-                        if ("2".equals(configTemp.get("open"))) {
-                            state = true;
-                            if(!once){
-                                once=true;
-                                AdTypeData.put(listIds.get(i),configTemp.containsKey("type") ? configTemp.get("type") : "");
-                            }
+                for (Map<String, String> adTypeConfig : adConfigDataList) {
+                    if ("2".equals(adTypeConfig.get("open"))) {
+                        state = true;
+                        if (!once) {
+                            once = true;
+                            String adType = adTypeConfig.containsKey("type") ? adTypeConfig.get("type") : "";
+                            AdTypeData.put(listIds.get(i), adType);
                         }
-                        handlerAdData(value, adConfigDataList, banner);
                     }
+                    judge(adTypeConfig);
                 }
+//                final String[] keys = {"1", "2", "3", "4", "5"};
+//                boolean once = false;
+//                for (String key : keys) {
+//                    if (configMap.containsKey(key)) {
+//                        String value = configMap.get(key);
+//                        Map<String, String> configTemp = StringManager.getFirstMap(value);
+//                        if ("2".equals(configTemp.get("open"))) {
+//                            state = true;
+//                            if (!once) {
+//                                once = true;
+//                                AdTypeData.put(listIds.get(i), configTemp.containsKey("type") ? configTemp.get("type") : "");
+//                            }
+//                        }
+//                        handlerAdData(value, adConfigDataList, banner);
+//                    }
+//                }
                 if (!state) {//当前广告位没有打开
                     count++;
                     AdData.put(listIds.get(i), "");
@@ -146,31 +161,26 @@ public class XHAllAdControl {
         isLoadOverGdt = !isShowGdt;
         isLoadOverBaidu = !isShowBaidu;
         //是否存在广点通
-        if ((isShowGdt && !TextUtils.isEmpty(GDT_ID))
-                || (isShowBaidu && !TextUtils.isEmpty(BAIDU_ID))) {
-            getAllData();
-        } else {
-            startAdRequest();
-        }
+        getAllData();
     }
+
     /**
      * 处理当广告体数据的拆分判断
      *
      * @param adData    广告体
      * @param arrayList 存储广告体的集合
-     * @param data      banner 的广告数据
      */
-    private void handlerAdData(String adData, ArrayList<Map<String, String>> arrayList, String data) {
-        Map<String, String> map_ad = StringManager.getFirstMap(adData);
-        if ("2".equals(map_ad.get("open"))
-                && XHScrollerAdParent.supportType(map_ad.get("type"))) {
-            /*banner广告数据存储到广告体*/
-            if ("personal".equals(map_ad.get("type")))
-                map_ad.put("data", data);
-            arrayList.add(map_ad);
-        }
-        judge(map_ad);
-    }
+//    private void handlerAdData(String adData, ArrayList<Map<String, String>> arrayList, String data) {
+//        Map<String, String> map_ad = StringManager.getFirstMap(adData);
+//        if ("2".equals(map_ad.get("open"))
+//                && XHScrollerAdParent.supportType(map_ad.get("type"))) {
+//            /*banner广告数据存储到广告体*/
+//            if ("personal".equals(map_ad.get("type")))
+//                map_ad.put("data", data);
+//            arrayList.add(map_ad);
+//        }
+//        judge(map_ad);
+//    }
 
     /**
      * 判断是否是 gdt 或者 baidu 数据
@@ -178,37 +188,72 @@ public class XHAllAdControl {
      * @param map_temp 数据体
      */
     private void judge(Map<String, String> map_temp) {
-        if ("gdt".equals(map_temp.get("type"))
-                && "2".equals(map_temp.get("open"))) {
-            if (!isShowGdt || TextUtils.isEmpty(GDT_ID)) {
-                String data = map_temp.get("data");
-                LinkedHashMap<String, String> map_link = StringManager.getMapByString(data, "&", "=");
-                if (map_link.containsKey("adid"))
-                    GDT_ID = map_link.get("adid");
+        String typeValue = map_temp.get("type");
+        String isOpenValue = map_temp.get("open");
+        if ("2".equals(isOpenValue)) {
+            switch (typeValue) {
+                case "personal":
+                    String data = map_temp.get("data");
+                    LinkedHashMap<String, String> personalMap = StringManager.getMapByString(data, "&", "=");
+                    String adidValue = personalMap.get("adid");
+                    XH_IDS.add(adidValue != null ? adidValue : "");
+                    break;
+                case "gdt":
+                    if (!isShowGdt || TextUtils.isEmpty(GDT_ID)) {
+                        String gdtData = map_temp.get("data");
+                        LinkedHashMap<String, String> map_link = StringManager.getMapByString(gdtData, "&", "=");
+                        if (map_link.containsKey("adid"))
+                            GDT_ID = map_link.get("adid");
+                    }
+                    isShowGdt = true;
+                    break;
+                case "baidu":
+                    if (!isShowBaidu || TextUtils.isEmpty(BAIDU_ID)) {
+                        String baiduData = map_temp.get("data");
+                        LinkedHashMap<String, String> map_link = StringManager.getMapByString(baiduData, "&", "=");
+                        if (map_link.containsKey("adid")) {
+                            BAIDU_ID = map_link.get("adid");
+                        }
+                    }
+                    isShowBaidu = true;
+                    break;
+                default:
+                    break;
             }
-            isShowGdt = true;
-        } else if ("baidu".equals(map_temp.get("type"))
-                && "2".equals(map_temp.get("open"))) {
-            if (!isShowBaidu || TextUtils.isEmpty(BAIDU_ID)) {
-                String data = map_temp.get("data");
-                LinkedHashMap<String, String> map_link = StringManager.getMapByString(data, "&", "=");
-                if (map_link.containsKey("adid"))
-                    BAIDU_ID = map_link.get("adid");
-            }
-            isShowBaidu = true;
         }
     }
 
     private void getAllData() {
+        getAllXhData();
         getAllGdtData();
         getAllBaiduData();
     }
 
-    /**
-     * GDT广告获取
-     */
+    private void getAllXhData() {
+        if (isLoadOverXH) {
+            return;
+        }
+        XHSelfAdTools.getInstance().loadNativeData(new XHSelfAdTools.XHSelfCallback() {
+            @Override
+            public void onNativeLoad(List<XHSelfNativeData> list) {
+                isLoadOverXH = true;
+                xhNativeArray = list;
+                handlerAdData();
+            }
+
+            @Override
+            public void onNativeFail() {
+                isLoadOverXH = true;
+                handlerAdData();
+            }
+        });
+    }
+
+    /** GDT广告获取 */
     private void getAllGdtData() {
-        if (isLoadOverGdt) return;
+        if (isLoadOverGdt) {
+            return;
+        }
         GdtAdTools.newInstance().loadNativeAD(XHApplication.in(), GDT_ID, getCountGdtData,
                 new GdtAdTools.GdtNativeCallback() {
 
@@ -216,16 +261,13 @@ public class XHAllAdControl {
                     public void onNativeLoad(List<NativeADDataRef> data) {
                         isLoadOverGdt = true;
                         gdtNativeArray = data;
-//                        int num = gdtNativeArray.size();
-                        if (isLoadOverGdt && isLoadOverBaidu)
-                            startAdRequest();
+                        handlerAdData();
                     }
 
                     @Override
                     public void onNativeFail(NativeADDataRef nativeADDataRef, String msg) {
                         isLoadOverGdt = true;
-                        if (isLoadOverGdt && isLoadOverBaidu)
-                            startAdRequest();
+                        handlerAdData();
                     }
 
                     @Override
@@ -234,24 +276,31 @@ public class XHAllAdControl {
                 });
     }
 
+    /** Baidu广告获取 */
     private void getAllBaiduData() {
-        if (isLoadOverBaidu) return;
+        if (isLoadOverBaidu) {
+            return;
+        }
         BaiduAdTools.newInstance().loadNativeAD(XHApplication.in(), BAIDU_ID, new BaiduAdTools.BaiduNativeCallbck() {
             @Override
             public void onNativeLoad(List<NativeResponse> list) {
                 isLoadOverBaidu = true;
                 baiduNativeArray = list;
-                if (isLoadOverGdt && isLoadOverBaidu)
-                    startAdRequest();
+                handlerAdData();
             }
 
             @Override
             public void onNativeFail(NativeErrorCode nativeErrorCode) {
                 isLoadOverBaidu = true;
-                if (isLoadOverGdt && isLoadOverBaidu)
-                    startAdRequest();
+                handlerAdData();
             }
         });
+    }
+
+    private void handlerAdData() {
+        if (isLoadOverGdt && isLoadOverBaidu && isLoadOverXH) {
+            startAdRequest();
+        }
     }
 
     /**
@@ -270,13 +319,13 @@ public class XHAllAdControl {
             //判断当前类型
             switch (key) {
                 case "gdt":
-                    parent = new XHScrollerGdt(data,backIds, i);
+                    parent = new XHScrollerGdt(data, backIds, i);
                     break;
                 case "personal":
                     parent = new XHScrollerSelf(data, backIds, i);
                     break;
                 case "baidu":
-                    parent = new XHScrollerBaidu(data,backIds, i);
+                    parent = new XHScrollerBaidu(data, backIds, i);
                     ((XHScrollerBaidu) parent).setJudgePicSize(isJudgePicSize);
                     break;
                 default:
@@ -346,6 +395,14 @@ public class XHAllAdControl {
                         }
                         return null;
                     }
+
+                    @Override
+                    public XHSelfNativeData onXHNativeData(int position) {
+                        if (xhNativeArray != null && position < xhNativeArray.size()) {
+                            return xhNativeArray.get(position);
+                        }
+                        return null;
+                    }
                 });
             }
         }
@@ -369,9 +426,9 @@ public class XHAllAdControl {
      * @param listIndex 广告在真实数据的位置-----一个数据传""
      */
     public void onAdClick(View view, int index, String listIndex) {
-        if(listAdContrls != null
+        if (listAdContrls != null
                 && index >= 0
-                && listAdContrls.size() > index){
+                && listAdContrls.size() > index) {
             XHOneAdControl control = listAdContrls.get(index);
             if (control == null)
                 return;
@@ -389,9 +446,9 @@ public class XHAllAdControl {
      * @param listIndex 广告位置---一个数据传""
      */
     public void onAdBind(int index, View view, String listIndex) {
-        if(listAdContrls != null
+        if (listAdContrls != null
                 && index >= 0
-                && listAdContrls.size() > index){
+                && listAdContrls.size() > index) {
             XHOneAdControl control = listAdContrls.get(index);
             if (control == null)
                 return;
@@ -401,12 +458,9 @@ public class XHAllAdControl {
 
     public interface XHAdControlCallBack {
         public void onSuccess(String type, Map<String, String> map, int num);
-
         public void onFail(String type, int num);
-
-        //        public Object onGdtData();
+        XHSelfNativeData onXHNativeData(int position);
         public NativeADDataRef onGdtNativeData();
-
         public NativeResponse onBaiduNativeData();
     }
 
@@ -416,7 +470,6 @@ public class XHAllAdControl {
 
     /**
      * @param map 数据
-     *
      * @return @return json对象
      */
     private JSONObject mapToJson(Map<String, String> map) {

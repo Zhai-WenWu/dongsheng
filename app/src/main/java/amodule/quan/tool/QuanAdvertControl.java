@@ -21,7 +21,6 @@ import acore.tools.SyntaxTools;
 import amodule.quan.adapter.AdapterCircle;
 import third.ad.scrollerAd.XHAllAdControl;
 import third.ad.scrollerAd.XHScrollerAdParent;
-import third.ad.tools.AdConfigTools;
 import third.ad.tools.AdPlayIdConfig;
 
 import static third.ad.control.AdControlNormalDish.tag_yu;
@@ -40,7 +39,7 @@ public class QuanAdvertControl {
             AdPlayIdConfig.SUBJECT_LIST_4,
             AdPlayIdConfig.SUBJECT_LIST_5,
             AdPlayIdConfig.SUBJECT_LIST_6};
-    private ArrayList<Map<String, String>> mAdList = new ArrayList<Map<String, String>>();
+    private ArrayList<Map<String, String>> mAdList = new ArrayList<>();
     private ArrayList<Integer> ad_list = new ArrayList<Integer>();
     private DataCallBack callBack;
     private Map<String,XHAllAdControl> mapAd= new HashMap<>();//存储广告集合
@@ -64,29 +63,6 @@ public class QuanAdvertControl {
      * @return
      */
     public ArrayList<Map<String, String>> getAdvertAndQuanData(ArrayList<Map<String, String>> old_list, String cid, String mid, int beforeNum) {
-        if (AdConfigTools.getInstance().list.size() > 0) {
-            ArrayList<Map<String, String>> temp = new ArrayList<Map<String, String>>();
-            for (int i = 0, size = AdConfigTools.getInstance().list.size(); i < size; i++) {
-                Map<String, String> map = AdConfigTools.getInstance().list.get(i);
-                map.put("dataType", String.valueOf(AdapterCircle.DATATYPE_SUBJECT));
-                if (!map.containsKey("style")) {
-                    map.put("style", String.valueOf(AdapterCircle.STYLE_NORMAL));
-                }
-                if (cid.equals(map.get("showCid")) && mid.equals(map.get("showMid"))) {
-                    temp.add(map);
-                }
-                if (!map.containsKey("imgs")) map.put("imgs", map.get("img"));
-            }
-            if (temp.size() > 0) {
-                for (int i = 0, size = temp.size(); i < size; i++) {
-                    int index = Integer.parseInt(temp.get(i).get("showSite"));
-                    index -= 1;
-                    if (index >= beforeNum && index <= old_list.size()) {
-                        old_list.add(index, temp.get(i));
-                    }
-                }
-            }
-        }
         String isGourmet = LoginManager.userInfo.get("isGourmet");
         //是美食家
         if (!TextUtils.isEmpty(isGourmet) && Integer.parseInt(isGourmet) == 2) {

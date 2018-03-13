@@ -37,8 +37,6 @@ import acore.tools.ToolsDevice;
 import amodule.main.Main;
 import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
-import third.ad.tools.AdConfigTools;
-import third.ad.tools.AdPlayIdConfig;
 import third.ad.tools.WelcomeAdTools;
 import xh.basic.tool.UtilImage;
 

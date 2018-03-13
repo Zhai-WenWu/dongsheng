@@ -689,22 +689,21 @@ public class CircleMainFragment extends Fragment {
      * 刷新广告数据
      */
     public void refreshAdData() {
-//        if(quanAdvertControl==null)return;
-//        boolean state= quanAdvertControl.isNeedRefresh();
-//        if(state){
-//            //删除集合中的广告，
-//            int size= mListData.size();
-//            ArrayList<Map<String,String>> listTemp = new ArrayList<>();
-//            for(int i=0;i<size;i++){
-//                if(mListData.get(i).containsKey("isPromotion")&&"1".equals(mListData.get(i).get("isPromotion"))){
-//                    listTemp.add(mListData.get(i));
-//                }
-//            }
-//            Log.i(tag_yu,"删除广告");
-//            if(listTemp.size()>0){
-//                mListData.removeAll(listTemp);
-//            }
-//        }
+        if(quanAdvertControl==null)return;
+        boolean state= quanAdvertControl.isNeedRefresh();
+        if(state){
+            //删除集合中的广告，
+            int size= mListData.size();
+            ArrayList<Map<String,String>> listTemp = new ArrayList<>();
+            for(int i=0;i<size;i++){
+                if(mListData.get(i).containsKey("isPromotion")&&"1".equals(mListData.get(i).get("isPromotion"))){
+                    listTemp.add(mListData.get(i));
+                }
+            }
+            if(listTemp.size()>0){
+                mListData.removeAll(listTemp);
+            }
+        }
 
     }
 

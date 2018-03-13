@@ -57,30 +57,30 @@ public class HomeBuoy {
         if(adBean == null){
             return;
         }
-
-        Map<String,String> adConfigMap = StringManager.getFirstMap(adBean.adConfig);
-        final String[] keys = {"1","2","3","4",};
-        bannerMap = new HashMap<>();
-        for(String key:keys){
-            Map<String,String> tempMap = StringManager.getFirstMap(adConfigMap.get(key));
-            if("personal".equals(tempMap.get("type"))
-                    && "2".equals(tempMap.get("open"))){
-                bannerMap = StringManager.getFirstMap(adBean.banner);
-                break;
-            }
-        }
-        //初始化浮标
-        initBuoy();
-        //初始化动画
-        initAnimation();
-        //初始化hanlder
-        initHandler();
-        //绑定点击
-        bindClick(bannerMap.get("url"));
-        //设置图片
-        setBuoyImage(StringManager.getFirstMap(bannerMap.get("imgs")).get("rightFloatImg"));
-        //显示
-        setFloatMenuData();
+        //TODO
+//        Map<String,String> adConfigMap = StringManager.getFirstMap(adBean.adConfig);
+//        final String[] keys = {"1","2","3","4",};
+//        bannerMap = new HashMap<>();
+//        for(String key:keys){
+//            Map<String,String> tempMap = StringManager.getFirstMap(adConfigMap.get(key));
+//            if("personal".equals(tempMap.get("type"))
+//                    && "2".equals(tempMap.get("open"))){
+//                bannerMap = StringManager.getFirstMap(adBean.banner);
+//                break;
+//            }
+//        }
+//        //初始化浮标
+//        initBuoy();
+//        //初始化动画
+//        initAnimation();
+//        //初始化hanlder
+//        initHandler();
+//        //绑定点击
+//        bindClick(bannerMap.get("url"));
+//        //设置图片
+//        setBuoyImage(StringManager.getFirstMap(bannerMap.get("imgs")).get("rightFloatImg"));
+//        //显示
+//        setFloatMenuData();
     }
 
     public void setFloatMenuData() {

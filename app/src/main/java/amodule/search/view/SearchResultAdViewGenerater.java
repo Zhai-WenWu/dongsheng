@@ -10,13 +10,10 @@ import android.widget.TextView;
 
 import com.xiangha.R;
 
-import java.util.ArrayList;
 import java.util.Map;
 
 import acore.logic.AppCommon;
 import acore.tools.FileManager;
-import acore.tools.StringManager;
-import acore.tools.SyntaxTools;
 import acore.widget.ImageViewVideo;
 import third.ad.scrollerAd.XHAllAdControl;
 import third.ad.scrollerAd.XHScrollerAdParent;
@@ -40,18 +37,7 @@ public class SearchResultAdViewGenerater {
      */
     public static RelativeLayout generateTopAdView(Activity mActivity, XHAllAdControl adControl,
                                                    Map<String, String> dataMap) {
-        RelativeLayout view;
-        String type = dataMap.get("type");
-
-//        type = XHScrollerAdParent.ADKEY_API;
-//        dataMap.put("stype","301");
-
-        if (XHScrollerAdParent.ADKEY_BANNER.equals(type)) {
-            view = createSelfAdView(mActivity, dataMap);
-        } else {
-            view = createOtherAdView(mActivity, dataMap);
-        }
-
+        RelativeLayout view = createOtherAdView(mActivity, dataMap);
         if (view != null) {
             View adHint = view.findViewById(R.id.ad_hint);
             AppCommon.setAdHintClick(mActivity,adHint,adControl,Integer.valueOf(dataMap.get("index")),"0","a_searesult_adver","顶部广告");
@@ -63,26 +49,12 @@ public class SearchResultAdViewGenerater {
 
 
     private static RelativeLayout createOtherAdView(Activity mActivity, Map<String, String> dataMap) {
-        RelativeLayout view = null;
-        view = (RelativeLayout) LayoutInflater.from(mActivity)
+        RelativeLayout view = (RelativeLayout) LayoutInflater.from(mActivity)
                 .inflate(R.layout.c_search_result_ad_top1, null);
         dataMap.put("imgUrl", dataMap.get("imgUrl"));
         setAdView(view, dataMap);
         return view;
     }
-
-    private static RelativeLayout createSelfAdView(Activity mActivity, Map<String, String> dataMap) {
-
-        RelativeLayout view = null;
-        if (dataMap.get("appSearchImg").startsWith("http")) {
-            view = (RelativeLayout) LayoutInflater.from(mActivity)
-                    .inflate(R.layout.c_search_result_ad_top1, null);
-            dataMap.put("imgUrl", dataMap.get("appSearchImg"));
-            setAdView(view, dataMap);
-        }
-        return view;
-    }
-
 
     /**
      * 搜索结果页，列表广告
@@ -94,10 +66,6 @@ public class SearchResultAdViewGenerater {
      */
     public static View generateListAdView(Activity mActivity, final XHAllAdControl xhAllAdControl,
                                           Map<String, String> adData, int adIndex) {
-
-        if(XHScrollerAdParent.ADKEY_BANNER.equals(adData.get("type"))){
-            adData.put("imgUrl",adData.get("appSearchImg"));
-        }
         RelativeLayout view = (RelativeLayout) LayoutInflater.from(mActivity)
                 .inflate(R.layout.c_search_result_ad_item, null);
 

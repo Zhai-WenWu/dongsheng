@@ -37,8 +37,6 @@ public class AdConfigTools {
     private AdConfigTools() {
     }
 
-    public ArrayList<Map<String, String>> list = new ArrayList<>();//服务端广告集合
-
     public static AdConfigTools getInstance() {
         if (mAdConfigTools == null) {
             synchronized (AdConfigTools.class) {
@@ -55,14 +53,11 @@ public class AdConfigTools {
     }
 
     public void getAdConfigInfo(InternetCallback callback) {
-        // 请求网络信息
-        ReqInternet.in().doGet(StringManager.api_adData, new InternetCallback() {
+        //使用老接口更新全屏广告数据
+        ReqInternet.in().doGet(StringManager.api_adData_old, new InternetCallback() {
             @Override
-            public void loaded(int flag, String url, final Object returnObj) {
+            public void loaded(int flag, String url, Object returnObj) {
                 if (flag >= ReqInternet.REQ_OK_STRING) {
-                    //更新广告配置
-                    XHAdSqlite adSqlite = XHAdSqlite.newInstance(XHApplication.in());
-                    adSqlite.updateConfig((String) returnObj);
                     //更新全屏广告数据
                     Map<String, String> map = StringManager.getFirstMap(returnObj);
                     if (map.containsKey(FULL_SRCEEN_ACTIVITY)) {
@@ -76,20 +71,14 @@ public class AdConfigTools {
                 }
             }
         });
-    }
-
-    /**
-     * 请求美食圈列表广告
-     *
-     * @param context
-     */
-    public void setRequest(Context context) {
-        String url = StringManager.api_getQuanList;
-        ReqInternet.in().doGet(url, new InternetCallback() {
+        // 请求网络信息
+        ReqInternet.in().doGet(StringManager.api_adData, new InternetCallback() {
             @Override
-            public void loaded(int flag, String url, Object msg) {
+            public void loaded(int flag, String url, final Object returnObj) {
                 if (flag >= ReqInternet.REQ_OK_STRING) {
-                    list = StringManager.getListMapByJson(msg);
+                    //更新广告配置
+                    XHAdSqlite adSqlite = XHAdSqlite.newInstance(XHApplication.in());
+                    adSqlite.updateConfig((String) returnObj);
                 }
             }
         });

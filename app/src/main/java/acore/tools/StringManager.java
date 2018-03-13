@@ -73,6 +73,7 @@ public class StringManager extends UtilString {
     //用户发贴发菜谱用户日志
     public final static String api_uploadUserLog = "https://crash.xiangha.com/crash/report2";
     //获取广告信息
+    public final static String api_adData_old = apiUrl + "main6/ads/getBasicList";
     public final static String api_adData = apiUrl + "main7/open/getAdConfig";
     public final static String api_indexDataNew = apiUrl + urlSection.get("main6") + "baseData";
     public final static String api_appData = apiUrl + urlSection.get("home5") + "getAppData";
@@ -219,7 +220,6 @@ public class StringManager extends UtilString {
     public final static String api_getSubjectListByClassify = apiUrl + urlSection.get("quan5") + "getSubjectListByClassify";//详细列表
     public final static String api_changeSubjectClassify = apiUrl + urlSection.get("quan5") + "changeSubjectClassify";//修改贴子模块
     public final static String api_addJingHua = apiUrl + urlSection.get("quan5") + "addJingHua";//加精
-    public final static String api_getQuanList = apiUrl + "main6/ads/getQuanList";
 
     //乐视获取videoUrl的接口
     public static final String api_getVideoUrl = "http://api.letvcloud.com/getplayurl.php";
@@ -385,6 +385,8 @@ public class StringManager extends UtilString {
     public final static String API_SCHOOL_COURSELIST = apiUrl + "main8/school/courseList";//会员首页列表
     public final static String API_SCHOOL_CHAPTERLIST = apiUrl + "main8/school/chapterList";//会员首页列表
     public final static String API_SCHOOL_VIPBUTTON = apiUrl + "main8/school/getVipButtonStatus";//获取会员的button状态
+
+    public final static String API_AD_GETADDATA = apiUrl + "main7/open/getAdData";//获取广告数据
 
     //替换url
     public final static String replaceUrl(String url) {

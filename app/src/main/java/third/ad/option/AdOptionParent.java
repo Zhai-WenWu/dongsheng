@@ -121,9 +121,7 @@ public abstract class AdOptionParent {
                                     if (adMap.containsKey("appSearchImg")) {
                                         newMap.put("appSearchImg", adMap.get("appSearchImg"));
                                     }
-                                    newMap.put("imgs", adMap.get("imgs")); //api广告图片集合
                                     newMap.put("adType", adMap.get("adType")); //自由广告时，1：活动 2:广告
-                                    newMap.put("stype", adMap.get("stype")); //腾讯api广告的样式类型
                                     newMap.put("indexOnData", adMap.get("index")); //数据角标位
                                     newMap.put("index", String.valueOf(i + 1)); //在数据源中的位置
                                     newMap.put("adstyle", "ad");
@@ -231,7 +229,6 @@ public abstract class AdOptionParent {
                                     int aboveIndex = index - 1; //广告要跟上一个样式保持一致
                                     if (aboveIndex < 0) aboveIndex = index;
                                     Map<String, String> aboveMap = old_list.get(aboveIndex);
-//                                    ArrayList<Map<String, String>> arrayList = StringManager.getListMapByJson(aboveMap.get("imgs"));
                                     String type = aboveMap.get("style");
                                     if (TextUtils.isEmpty(type)) {//如果上一个样式的字段不存在则默认右图样式
                                         JSONObject styleObject = new JSONObject();
@@ -247,10 +244,10 @@ public abstract class AdOptionParent {
                                         } else {
                                             ImgKey = "appSearchImg";
                                         }
-                                        Log.i("wyl", "ImgKey::**********************************" + ImgKey);
+                                        Log.i("tzy", "ImgKey::**********************************" + ImgKey);
                                         if (adMap.containsKey(ImgKey) && !TextUtils.isEmpty(adMap.get(ImgKey))) {
                                             adImg = adMap.get(ImgKey);
-                                            Log.i("wyl", "ImgKey::****************2******************" + adImg);
+                                            Log.i("tzy", "ImgKey::****************2******************" + adImg);
                                             adMap.put("img", adImg);
                                         }
                                         ArrayList<Map<String, String>> imgsMap = StringManager.getListMapByJson(adMap.get("imgs"));
@@ -356,7 +353,7 @@ public abstract class AdOptionParent {
 
     public void onAdClick(Map<String, String> map) {
         Log("onAdClick() imgs:" + map.get("imgs"));
-        Log("onAdClick() indexOnData:" + map.get("indexOnData") + "   index:" + map.get("index") + "  adClass:" + map.get("adClass") + "   stype:" + map.get("stype") + "   type:" + map.get("type"));
+        Log("onAdClick() indexOnData:" + map.get("indexOnData") + "   index:" + map.get("index") + "  adClass:" + map.get("adClass") + "   type:" + map.get("type"));
         if (map != null)
             xhAllAdControl.onAdClick(Integer.parseInt(map.get("indexOnData")), map.get("index"));
     }

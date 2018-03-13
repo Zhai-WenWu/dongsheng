@@ -125,7 +125,6 @@ public class MainInitDataControl {
                 ToolsDevice.saveXhIMEI(activity);
             }
         }.start();
-        AdConfigTools.getInstance().setRequest(XHApplication.in());
         ConfigMannager.saveConfigData(XHApplication.in());
         long endTime2=System.currentTimeMillis();
         Log.i("zhangyujian","initWelcomeAfter::时间:"+(endTime2-startTime));

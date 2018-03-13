@@ -190,10 +190,9 @@ public abstract class XHScrollerAdParent {
      * 获取当前广告尺寸
      *
      * @param type---广告类型
-     * @param loid---腾讯API的loid
      * @param viewTag           ----外部要显示的图片样式 1-大图，2-小图
      */
-    public static Map<String, String> getAdImageSize(String type, String loid, String viewTag) {
+    public static Map<String, String> getAdImageSize(String type, String viewTag) {
         if (TextUtils.isEmpty(type) || TextUtils.isEmpty(viewTag)) return null;
         Map<String, String> map = new HashMap<>();
         if (ADKEY_GDT.equals(type)) {//广点通

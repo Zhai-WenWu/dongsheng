@@ -76,10 +76,6 @@ public class DishAdDataViewNew extends ItemBaseView {
                 DishAdDataViewNew.this.setVisibility(View.VISIBLE);
                 if (adDataMap.containsKey("type")) {
                     switch (adDataMap.get("type")) {
-                        case AdPlayIdConfig.ADTYPE_API:
-                            DishAdDataViewNew.this.setVisibility(View.VISIBLE);
-                            setApiADData(adDataMap, parentView);
-                            break;
                         case AdPlayIdConfig.ADTYPE_GDT:
                         case AdPlayIdConfig.ADTYPE_BAIDU:
                         case AdPlayIdConfig.ADTYPE_BANNER:
@@ -93,33 +89,6 @@ public class DishAdDataViewNew extends ItemBaseView {
                 }else DishAdDataViewNew.this.setVisibility(View.GONE);
             }
         }, activity, "result_tip");
-    }
-
-    /**
-     * 处理Tencent广告数据
-     *
-     * @param map        广告数据
-     * @param parentView 父容器
-     */
-    private void setApiADData(Map<String, String> map, ViewGroup parentView) {
-        if (map.containsKey("stype")) {
-            switch (map.get("stype")) {
-                //一张大图
-                case "202":
-                    setBigPicADData(map, parentView);
-                    break;
-                //一张小图
-                case "101":
-                    setSmallPicADData(map, parentView);
-                    break;
-                //三张大图
-                case "301":
-                    setThreePicADData(map, parentView);
-                    break;
-                default:
-                    break;
-            }
-        }
     }
 
     /**
@@ -187,45 +156,6 @@ public class DishAdDataViewNew extends ItemBaseView {
         exposureAdData();
         //添加到parent
         addViewToPraent(R.id.ad_small_pic_layout, parentView);
-    }
-
-    /**
-     * 设置三小图
-     *
-     * @param adDataMap  广告数据
-     * @param parentView 父容器
-     */
-    private void setThreePicADData(Map<String, String> adDataMap, ViewGroup parentView) {
-        imgWidth = (int) ((ToolsDevice.getWindowPx(getContext()).widthPixels - Tools.getDimen(getContext(), R.dimen.dp_61)) / 3f);
-        imgHeight = imgWidth * 2 / 3;
-        final List<Map<String, String>> imgsArray = StringManager.getListMapByJson(adDataMap.get("imgs"));
-        Log.i("xianghaTag", "imgsArray : " + imgsArray.toString());
-        int[] ids = {R.id.ad_three_pic_1, R.id.ad_three_pic_2, R.id.ad_three_pic_3};
-        if (imgsArray.size() >= ids.length) {
-            for (int i = 0; i < ids.length; i++) {
-                final int index = i;
-                final ImageView imageView = (ImageView) findViewById(ids[index]);
-                new Handler(Looper.getMainLooper())
-                        .post(new Runnable() {
-                            @Override
-                            public void run() {
-                                setViewImage(imageView, imgsArray.get(index).get(""));
-                            }
-                        });
-            }
-        }
-
-        //设置文字
-        TextView text = (TextView) findViewById(R.id.ad_three_pic_desc);
-        text.setText(handlerAdText(adDataMap));
-
-        //广告小标
-        setAdHintClick(R.id.ad_three_pic_flag);
-        //曝光数据
-        exposureAdData();
-        //添加到parent
-        Log.i("xianghaTag", "id = " + R.id.ad_three_pic_layout);
-        addViewToPraent(R.id.ad_three_pic_layout, parentView);
     }
 
     /**

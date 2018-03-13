@@ -114,11 +114,12 @@ public class WelcomeAdTools {
             }
             return;
         }
+        //TODO
         Map<String, String> configMap = StringManager.getFirstMap(adBean.adConfig);
         final String[] keys = {"1", "2", "3", "4", "5"};
         for (String key : keys) {
             if (configMap.containsKey(key)){
-                handlerData(configMap.get(key), list_ad, adBean.banner);
+                handlerData(configMap.get(key), list_ad, "");
             }
         }
         //开启广告

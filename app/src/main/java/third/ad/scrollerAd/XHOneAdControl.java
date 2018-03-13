@@ -6,6 +6,8 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.Map;
 
+import third.ad.tools.XHSelfAdTools;
+
 /**
  * 广告单条管理类
  */
@@ -49,6 +51,9 @@ public class XHOneAdControl {
             }
             if (adParentTemp instanceof XHScrollerBaidu) {
                 ((XHScrollerBaidu) adParentTemp).setNativeResponse(xhAdControlCallBack.onBaiduNativeData());
+            }
+            if(adParentTemp instanceof XHScrollerSelf){
+                ((XHScrollerSelf) adParentTemp).setNativeData(xhAdControlCallBack.onXHNativeData(index_controls));
             }
             adParentTemp.setIndexControl(index_controls);
             adParentTemp.getAdDataWithBackAdId(new XHScrollerAdParent.XHAdDataCallBack() {

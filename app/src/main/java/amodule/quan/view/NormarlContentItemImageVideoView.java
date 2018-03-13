@@ -297,7 +297,7 @@ public class NormarlContentItemImageVideoView extends NormarlContentItemView {
                         if (v.getId() == R.id.iv_userImg || v.getId() == R.id.auther_userImg) {
                             v.setScaleType(ImageView.ScaleType.CENTER_CROP);
                             v.setImageBitmap(UtilImage.toRoundCorner(v.getResources(),bitmap,1,500));
-                        } else if (map.get("isPromotion") != null && map.get("isPromotion").equals("1") && UtilString.getListMapByJson(map.get("imgs")).size()==1) {
+                        } else if (map.get("isPromotion") != null && map.get("isPromotion").equals("1") && StringManager.getListMapByJson(map.get("imgs")).size()==1) {
                             v.setScaleType(ImageView.ScaleType.CENTER_CROP);
                             int waith = context.getWindowManager().getDefaultDisplay().getWidth();
                             int dp_30 = Tools.getDimen(context, R.dimen.dp_30);
