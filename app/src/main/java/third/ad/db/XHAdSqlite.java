@@ -8,12 +8,14 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 
 import acore.override.XHApplication;
 import acore.tools.StringManager;
 import third.ad.db.bean.AdBean;
+import third.ad.tools.AdPlayIdConfig;
 
 import static third.ad.db.bean.AdBean.AdEntry;
 import static third.ad.tools.AdPlayIdConfig.FULL_SRCEEN_ACTIVITY;
@@ -25,10 +27,11 @@ import static third.ad.tools.AdPlayIdConfig.FULL_SRCEEN_ACTIVITY;
  * e_mail : ztanzeyu@gmail.com
  */
 public class XHAdSqlite extends SQLiteOpenHelper {
-    public static final int VERSION = 2;
+    public static final int VERSION = 1;
     public static final String NAME = "ad.db";
 
-    public static final String TABLE_ADCONFIG = "tb_ad_config";
+    public static final String TABLE_ADCONFIG = "tb_ad_config2";
+    public static final String TABLE_ADCONFIG_OLD = "tb_ad_config";
 
     private volatile static XHAdSqlite mInstance = null;
 
@@ -67,37 +70,6 @@ public class XHAdSqlite extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        switch (oldVersion) {
-            case 1:
-                db.beginTransaction();
-                StringBuffer temp = new StringBuffer(TABLE_ADCONFIG).append("_temp");
-                StringBuffer sb = new StringBuffer("ALTER TABLE ");
-                String alertSql = sb.append(TABLE_ADCONFIG).append(" RENAME TO ").append(temp).toString();
-                db.execSQL(alertSql);
-                createAdConfigTable(db);
-                StringBuffer space = new StringBuffer(" ");
-                StringBuffer f = new StringBuffer(",");
-                sb = new StringBuffer("INSERT INTO ");
-                String insertSql = sb.append(TABLE_ADCONFIG).append(space).append("(")
-                        .append(AdEntry._ID)
-                        .append(f).append(space).append(AdEntry.COLUMN_ADID)
-                        .append(f).append(space).append(AdEntry.COLUMN_ADCONFIG)
-                        .append(f).append(space).append(AdEntry.COLUMN_UPDATETIME).append(")")
-                        .append(" SELECT ")
-                        .append(AdEntry._ID)
-                        .append(f).append(space).append(AdEntry.COLUMN_ADID)
-                        .append(f).append(space).append(AdEntry.COLUMN_ADCONFIG)
-                        .append(f).append(space).append(AdEntry.COLUMN_UPDATETIME)
-                        .append(" FROM ").append(temp).append(space).toString();
-                db.execSQL(insertSql);
-                sb = new StringBuffer("DROP TABLE IF EXITS ");
-                String dropSql = sb.append(temp).toString();
-                db.execSQL(dropSql);
-                db.endTransaction();
-                break;
-            default:
-                break;
-        }
     }
 
     public void updateConfig(String jsonValue){
@@ -106,21 +78,23 @@ public class XHAdSqlite extends SQLiteOpenHelper {
             try{
                 database = getWritableDatabase();
                 ContentValues values = null;
-                Map<String,String> map = StringManager.getFirstMap(jsonValue);
-                Iterator<Map.Entry<String, String>> entries = map.entrySet().iterator();
-                while (entries.hasNext()) {
-                    Map.Entry<String, String> entry = entries.next();
-                    if(!FULL_SRCEEN_ACTIVITY.equals(entry.getKey())){
+                ArrayList<Map<String, String>> arr = StringManager.getListMapByJson(jsonValue);
+                for (Map<String, String> map : arr) {
+                    String data = map.get("");
+                    Map<String, String> dataMap = StringManager.getFirstMap(data);
+                    String adPos = dataMap.get("adPosition");
+                    if(!FULL_SRCEEN_ACTIVITY.equals(adPos)){
                         values = new ContentValues();
-                        values.put(AdEntry.COLUMN_ADID,entry.getKey());
-                        Map<String,String> configData = StringManager.getFirstMap(entry.getValue());
-                        values.put(AdEntry.COLUMN_ADINDEX_INLIST,configData.get(AdEntry.COLUMN_ADINDEX_INLIST));
-                        values.put(AdEntry.COLUMN_ADCONFIG,configData.get(AdEntry.COLUMN_ADCONFIG));
+                        values.put(AdEntry.COLUMN_ADID,adPos);
+                        values.put(AdEntry.COLUMN_ADINDEX_INLIST,dataMap.get("index"));
+                        values.put(AdEntry.COLUMN_ADCONFIG,dataMap.get
+                                ("adConfig"));
                         values.put(AdEntry.COLUMN_UPDATETIME,System.currentTimeMillis());
                         update(database, TABLE_ADCONFIG,values);
                     }else{
 
                     }
+
                 }
             }catch (Exception e){
                 e.printStackTrace();
@@ -152,6 +126,12 @@ public class XHAdSqlite extends SQLiteOpenHelper {
     public AdBean getAdConfig(String adid){
         synchronized (XHAdSqlite.class){
             return getAdByADId(TABLE_ADCONFIG,adid);
+        }
+    }
+
+    public AdBean getOldAdConfig(String adid) {
+        synchronized (XHAdSqlite.class){
+            return getAdByADId(TABLE_ADCONFIG_OLD, adid);
         }
     }
 
