@@ -14,6 +14,7 @@ import java.util.Map;
 import acore.override.XHApplication;
 import acore.tools.StringManager;
 import third.ad.db.bean.AdBean;
+import third.ad.tools.AdPlayIdConfig;
 
 import static third.ad.db.bean.AdBean.AdEntry;
 import static third.ad.tools.AdPlayIdConfig.FULL_SRCEEN_ACTIVITY;
@@ -58,7 +59,6 @@ public class XHAdSqlite extends SQLiteOpenHelper {
         buffer.append("create table if not exists ").append(TABLE_ADCONFIG)
                 .append(" (")
                 .append(AdEntry._ID).append(" integer primary key autoincrement,")
-                .append(AdEntry.COLUMN_ADINDEX_INLIST).append(" integer,")
                 .append(AdEntry.COLUMN_ADID).append(" text,")
                 .append(AdEntry.COLUMN_ADCONFIG).append(" text,")
                 .append(AdEntry.COLUMN_UPDATETIME).append(" long")
@@ -68,13 +68,28 @@ public class XHAdSqlite extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        switch (oldVersion) {
-            case 1:
-                db.beginTransaction();
-                createAdConfigTable(db);
-                db.endTransaction();
-                break;
+        db.beginTransaction();
+        try {
+            switch (oldVersion) {
+                case 1:
+                    upgradeVer2(db);
+                    break;
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
         }
+    }
+
+    private void upgradeVer2(SQLiteDatabase db) {
+        createAdConfigTable(db);
+        db.execSQL("insert into " + TABLE_ADCONFIG + "(" + AdEntry._ID  + ", " + AdEntry
+                .COLUMN_ADID + ", " + AdEntry.COLUMN_ADCONFIG + ", " + AdEntry.COLUMN_UPDATETIME
+                        + ")" + " select " + AdEntry._ID + ", " + AdEntry.COLUMN_ADID + ", " +
+                        AdEntry.COLUMN_ADCONFIG + ", " + AdEntry.COLUMN_UPDATETIME + " from " +
+                        TABLE_ADCONFIG_OLD + " where " + AdEntry.COLUMN_ADID + " = " + "'" +
+                        AdPlayIdConfig.WELCOME + "'");
+        db.execSQL("drop table if exists " + TABLE_ADCONFIG_OLD);
     }
 
     public void updateConfig(String jsonValue){
@@ -84,14 +99,11 @@ public class XHAdSqlite extends SQLiteOpenHelper {
                 database = getWritableDatabase();
                 ContentValues values = null;
                 ArrayList<Map<String, String>> arr = StringManager.getListMapByJson(jsonValue);
-                for (Map<String, String> map : arr) {
-                    String data = map.get("");
-                    Map<String, String> dataMap = StringManager.getFirstMap(data);
+                for (Map<String, String> dataMap : arr) {
                     String adPos = dataMap.get("adPosition");
                     if(!FULL_SRCEEN_ACTIVITY.equals(adPos)){
                         values = new ContentValues();
                         values.put(AdEntry.COLUMN_ADID,adPos);
-                        values.put(AdEntry.COLUMN_ADINDEX_INLIST,dataMap.get("index"));
                         values.put(AdEntry.COLUMN_ADCONFIG,dataMap.get
                                 ("adConfig"));
                         values.put(AdEntry.COLUMN_UPDATETIME,System.currentTimeMillis());
@@ -129,22 +141,32 @@ public class XHAdSqlite extends SQLiteOpenHelper {
     }
 
     public AdBean getAdConfig(String adid){
-        return getCompatAdConfig(adid);
-    }
-
-    private AdBean getCompatAdConfig(String adid){
         synchronized (XHAdSqlite.class){
-            AdBean adBean = getAdByADId(TABLE_ADCONFIG,adid);
-            if(adBean == null){
-                adBean = getOldAdConfig(adid);
-            }
-            return adBean;
+            return getAdByADId(TABLE_ADCONFIG,adid);
         }
     }
 
-    private AdBean getOldAdConfig(String adid) {
-        synchronized (XHAdSqlite.class){
-            return getAdByADId(TABLE_ADCONFIG_OLD, adid);
+    public ArrayList<AdBean> getAdConfigs(ArrayList<String> adids) {
+        synchronized (XHAdSqlite.class) {
+            if (adids == null || adids.isEmpty())
+                return null;
+            ArrayList<AdBean> arr = null;
+            SQLiteDatabase db = null;
+            Cursor cursor = null;
+            try {
+                db = getReadableDatabase();
+                arr = new ArrayList<>();
+                for (String adid : adids) {
+                    cursor = db.rawQuery("select * from " + TABLE_ADCONFIG + " where " + AdEntry
+                            .COLUMN_ADID + "=?" , new String[]{adid});
+                    if (cursor.moveToFirst())
+                        arr.add(cursorToBean(cursor));
+                }
+            } finally {
+                closeCursor(cursor);
+                closeDatabase(db);
+            }
+            return arr;
         }
     }
 
@@ -174,7 +196,6 @@ public class XHAdSqlite extends SQLiteOpenHelper {
     private AdBean cursorToBean(Cursor cursor) {
         AdBean adBean = new AdBean();
         adBean._id = cursor.getInt(cursor.getColumnIndexOrThrow(AdEntry._ID));
-        adBean.index = cursor.getInt(cursor.getColumnIndexOrThrow(AdEntry.COLUMN_ADINDEX_INLIST));
         adBean.updateTime = cursor.getInt(cursor.getColumnIndexOrThrow(AdEntry.COLUMN_UPDATETIME));
         adBean.adId = cursor.getString(cursor.getColumnIndexOrThrow(AdEntry.COLUMN_ADID));
         adBean.adConfig = cursor.getString(cursor.getColumnIndexOrThrow(AdEntry.COLUMN_ADCONFIG));
