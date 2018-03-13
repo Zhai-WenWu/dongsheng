@@ -54,7 +54,6 @@ public class FragmentNous {
     public boolean LoadOver = false;
     private String url;
     private int currentPage = 0, everyPage = 0;
-    private int adCount = 0;
     private List<Integer> mAds = new ArrayList<>();
     private XHAllAdControl xhAllAdControl;
     private ArrayList<Map<String, String>> adArray = new ArrayList<>();
@@ -62,12 +61,16 @@ public class FragmentNous {
     public FragmentNous(BaseActivity act, String url, String name) {
         this.mAct = act;
         this.url = url;
-        mAds.add(2);
-        mAds.add(8);
-        mAds.add(16);
-        mAds.add(23);
-        mAds.add(33);
-        mAds.add(43);
+        mAds.add(3);
+        mAds.add(10);
+        mAds.add(19);
+        mAds.add(27);
+        mAds.add(38);
+        mAds.add(49);
+        mAds.add(59);
+        mAds.add(69);
+        mAds.add(79);
+        mAds.add(89);
     }
 
 
@@ -85,11 +88,12 @@ public class FragmentNous {
                             ArrayList<Map<String, String>> adList = StringManager.getListMapByJson(adStr);
                             if (adList != null && adList.size() > 0) {
                                 Map<String, String> adDataMap = adList.get(0);
+                                int index = adPosList.indexOf(adKey);
+                                adDataMap.put("indexInList",String.valueOf(mAds.get(index) - (index + 1)));
                                 adArray.add(adDataMap);
                             }
                         }
                     }
-                    adCount = adArray.size();
                     SyntaxTools.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -105,16 +109,18 @@ public class FragmentNous {
      * 刷新数据
      */
     private void setDataNous() {
-        for (int i = 0; i < adCount; i++) {
-            if (i == mAds.size() - 1) {
-                mAds.add(mAds.get(i) + 9);
+        for(int i=0;i<adArray.size();i++){
+            Map<String,String> map = adArray.get(i);
+            if(TextUtils.isEmpty(map.get("indexInList"))){
+                int index = Integer.parseInt(map.get("indexInList"));
+                if (listDataNous.size() > index) {
+                    Map<String, String> twiceMap = listDataNous.get(index);
+                    twiceMap.put("indexInAD","" + i);
+                    twiceMap.put("ad", "show");
+                }
             }
-            if (listDataNous.size() > mAds.get(i)) {
-                Map<String, String> twiceMap = listDataNous.get(mAds.get(i));
-                twiceMap.put("ad", "show");
-            }
-            adapter.notifyDataSetChanged();
         }
+        adapter.notifyDataSetChanged();
     }
 
     public FragmentNous() {
@@ -154,14 +160,7 @@ public class FragmentNous {
                     view.findViewById(R.id.ad_layout).setVisibility(View.GONE);
                 } else if (adArray.size() != 0) {
                     final RelativeLayout adLayout = (RelativeLayout) view.findViewById(R.id.ad_layout);
-                    int adIndex = -1;
-                    for (int i = 0; i < mAds.size(); i++) {
-                        if (position == mAds.get(i)) {
-                            adIndex = i;
-                            break;
-                        }
-                    }
-
+                    int adIndex = TextUtils.isEmpty(map.get("indexInAD")) ? Integer.parseInt(map.get("indexInAD")) : -1;
                     if (adIndex > -1 && adArray != null && adIndex < adArray.size()) {
                         final Map<String, String> map2 = adArray.get(adIndex);
                         if (map2 != null && map2.size() > 0) {
@@ -317,14 +316,7 @@ public class FragmentNous {
                         map2.put("ad", "hide");
                         listDataNous.add(map2);
                     }
-                    if (adCount > 0) {
-                        for (int i = 0; i < mAds.size(); i++) {
-                            if (listDataNous.size() > mAds.get(i) && adCount > i) {
-                                Map<String, String> twiceMap = listDataNous.get(mAds.get(i));
-                                twiceMap.put("ad", "show");
-                            }
-                        }
-                    }
+                    setDataNous();
                     handler.sendEmptyMessage(MSG_NOUS_OK);
                     adapter.notifyDataSetChanged();
                     // 如果是重新加载的,选中第一个tab.
