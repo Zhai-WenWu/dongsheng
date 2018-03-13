@@ -57,7 +57,7 @@ public class XHAdSqlite extends SQLiteOpenHelper {
         buffer.append("create table if not exists ").append(TABLE_ADCONFIG)
                 .append(" (")
                 .append(AdEntry._ID).append(" integer primary key autoincrement,")
-                .append(AdEntry.COLUMN_ADINDEX).append(" integer,")
+                .append(AdEntry.COLUMN_ADINDEX_INLIST).append(" integer,")
                 .append(AdEntry.COLUMN_ADID).append(" text,")
                 .append(AdEntry.COLUMN_ADCONFIG).append(" text,")
                 .append(AdEntry.COLUMN_UPDATETIME).append(" long")
@@ -114,7 +114,7 @@ public class XHAdSqlite extends SQLiteOpenHelper {
                         values = new ContentValues();
                         values.put(AdEntry.COLUMN_ADID,entry.getKey());
                         Map<String,String> configData = StringManager.getFirstMap(entry.getValue());
-                        values.put(AdEntry.COLUMN_ADINDEX,configData.get(AdEntry.COLUMN_ADINDEX));
+                        values.put(AdEntry.COLUMN_ADINDEX_INLIST,configData.get(AdEntry.COLUMN_ADINDEX_INLIST));
                         values.put(AdEntry.COLUMN_ADCONFIG,configData.get(AdEntry.COLUMN_ADCONFIG));
                         values.put(AdEntry.COLUMN_UPDATETIME,System.currentTimeMillis());
                         update(database, TABLE_ADCONFIG,values);
@@ -181,7 +181,7 @@ public class XHAdSqlite extends SQLiteOpenHelper {
     private AdBean cursorToBean(Cursor cursor) {
         AdBean adBean = new AdBean();
         adBean._id = cursor.getInt(cursor.getColumnIndexOrThrow(AdEntry._ID));
-        adBean.index = cursor.getInt(cursor.getColumnIndexOrThrow(AdEntry.COLUMN_ADINDEX));
+        adBean.index = cursor.getInt(cursor.getColumnIndexOrThrow(AdEntry.COLUMN_ADINDEX_INLIST));
         adBean.updateTime = cursor.getInt(cursor.getColumnIndexOrThrow(AdEntry.COLUMN_UPDATETIME));
         adBean.adId = cursor.getString(cursor.getColumnIndexOrThrow(AdEntry.COLUMN_ADID));
         adBean.adConfig = cursor.getString(cursor.getColumnIndexOrThrow(AdEntry.COLUMN_ADCONFIG));

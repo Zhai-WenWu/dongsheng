@@ -16,7 +16,7 @@ public class AdBean {
     public long updateTime;
 
     public abstract static class AdEntry implements BaseColumns {
-        public static final String COLUMN_ADINDEX = "index";
+        public static final String COLUMN_ADINDEX_INLIST = "indexInList";
         public static final String COLUMN_ADID = "adId";
         public static final String COLUMN_ADCONFIG = "adConfig";
         public static final String COLUMN_UPDATETIME = "updateTime";
