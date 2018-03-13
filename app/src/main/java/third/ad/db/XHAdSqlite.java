@@ -9,13 +9,11 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Map;
 
 import acore.override.XHApplication;
 import acore.tools.StringManager;
 import third.ad.db.bean.AdBean;
-import third.ad.tools.AdPlayIdConfig;
 
 import static third.ad.db.bean.AdBean.AdEntry;
 import static third.ad.tools.AdPlayIdConfig.FULL_SRCEEN_ACTIVITY;
@@ -27,7 +25,7 @@ import static third.ad.tools.AdPlayIdConfig.FULL_SRCEEN_ACTIVITY;
  * e_mail : ztanzeyu@gmail.com
  */
 public class XHAdSqlite extends SQLiteOpenHelper {
-    public static final int VERSION = 1;
+    public static final int VERSION = 2;
     public static final String NAME = "ad.db";
 
     public static final String TABLE_ADCONFIG = "tb_ad_config2";
@@ -70,6 +68,13 @@ public class XHAdSqlite extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        switch (oldVersion) {
+            case 1:
+                db.beginTransaction();
+                createAdConfigTable(db);
+                db.endTransaction();
+                break;
+        }
     }
 
     public void updateConfig(String jsonValue){
@@ -124,12 +129,20 @@ public class XHAdSqlite extends SQLiteOpenHelper {
     }
 
     public AdBean getAdConfig(String adid){
+        return getCompatAdConfig(adid);
+    }
+
+    private AdBean getCompatAdConfig(String adid){
         synchronized (XHAdSqlite.class){
-            return getAdByADId(TABLE_ADCONFIG,adid);
+            AdBean adBean = getAdByADId(TABLE_ADCONFIG,adid);
+            if(adBean == null){
+                adBean = getOldAdConfig(adid);
+            }
+            return adBean;
         }
     }
 
-    public AdBean getOldAdConfig(String adid) {
+    private AdBean getOldAdConfig(String adid) {
         synchronized (XHAdSqlite.class){
             return getAdByADId(TABLE_ADCONFIG_OLD, adid);
         }
