@@ -25,7 +25,7 @@ import static third.ad.tools.AdPlayIdConfig.FULL_SRCEEN_ACTIVITY;
  * e_mail : ztanzeyu@gmail.com
  */
 public class XHAdSqlite extends SQLiteOpenHelper {
-    public static final int VERSION = 1;
+    public static final int VERSION = 2;
     public static final String NAME = "ad.db";
 
     public static final String TABLE_ADCONFIG = "tb_ad_config";
@@ -57,12 +57,8 @@ public class XHAdSqlite extends SQLiteOpenHelper {
         buffer.append("create table if not exists ").append(TABLE_ADCONFIG)
                 .append(" (")
                 .append(AdEntry._ID).append(" integer primary key autoincrement,")
-                .append(AdEntry.COLUMN_ISBAIDU).append(" text,")
-                .append(AdEntry.COLUMN_ISBANNER).append(" text,")
-                .append(AdEntry.COLUMN_ISGDT).append(" text,")
-                .append(AdEntry.COLUMN_ISJD).append(" text,")
+                .append(AdEntry.COLUMN_ADINDEX).append(" integer,")
                 .append(AdEntry.COLUMN_ADID).append(" text,")
-                .append(AdEntry.COLUMN_BANNER).append(" text,")
                 .append(AdEntry.COLUMN_ADCONFIG).append(" text,")
                 .append(AdEntry.COLUMN_UPDATETIME).append(" long")
                 .append(")");
@@ -71,7 +67,37 @@ public class XHAdSqlite extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        switch (oldVersion) {
+            case 1:
+                db.beginTransaction();
+                StringBuffer temp = new StringBuffer(TABLE_ADCONFIG).append("_temp");
+                StringBuffer sb = new StringBuffer("ALTER TABLE ");
+                String alertSql = sb.append(TABLE_ADCONFIG).append(" RENAME TO ").append(temp).toString();
+                db.execSQL(alertSql);
+                createAdConfigTable(db);
+                StringBuffer space = new StringBuffer(" ");
+                StringBuffer f = new StringBuffer(",");
+                sb = new StringBuffer("INSERT INTO ");
+                String insertSql = sb.append(TABLE_ADCONFIG).append(space).append("(")
+                        .append(AdEntry._ID)
+                        .append(f).append(space).append(AdEntry.COLUMN_ADID)
+                        .append(f).append(space).append(AdEntry.COLUMN_ADCONFIG)
+                        .append(f).append(space).append(AdEntry.COLUMN_UPDATETIME).append(")")
+                        .append(" SELECT ")
+                        .append(AdEntry._ID)
+                        .append(f).append(space).append(AdEntry.COLUMN_ADID)
+                        .append(f).append(space).append(AdEntry.COLUMN_ADCONFIG)
+                        .append(f).append(space).append(AdEntry.COLUMN_UPDATETIME)
+                        .append(" FROM ").append(temp).append(space).toString();
+                db.execSQL(insertSql);
+                sb = new StringBuffer("DROP TABLE IF EXITS ");
+                String dropSql = sb.append(temp).toString();
+                db.execSQL(dropSql);
+                db.endTransaction();
+                break;
+            default:
+                break;
+        }
     }
 
     public void updateConfig(String jsonValue){
@@ -88,11 +114,7 @@ public class XHAdSqlite extends SQLiteOpenHelper {
                         values = new ContentValues();
                         values.put(AdEntry.COLUMN_ADID,entry.getKey());
                         Map<String,String> configData = StringManager.getFirstMap(entry.getValue());
-                        values.put(AdEntry.COLUMN_ISBAIDU,configData.get(AdEntry.COLUMN_ISBAIDU));
-                        values.put(AdEntry.COLUMN_ISBANNER,configData.get(AdEntry.COLUMN_ISBANNER));
-                        values.put(AdEntry.COLUMN_ISGDT,configData.get(AdEntry.COLUMN_ISGDT));
-                        values.put(AdEntry.COLUMN_ISJD,configData.get(AdEntry.COLUMN_ISJD));
-                        values.put(AdEntry.COLUMN_BANNER,configData.get(AdEntry.COLUMN_BANNER));
+                        values.put(AdEntry.COLUMN_ADINDEX,configData.get(AdEntry.COLUMN_ADINDEX));
                         values.put(AdEntry.COLUMN_ADCONFIG,configData.get(AdEntry.COLUMN_ADCONFIG));
                         values.put(AdEntry.COLUMN_UPDATETIME,System.currentTimeMillis());
                         update(database, TABLE_ADCONFIG,values);
@@ -159,13 +181,10 @@ public class XHAdSqlite extends SQLiteOpenHelper {
     private AdBean cursorToBean(Cursor cursor) {
         AdBean adBean = new AdBean();
         adBean._id = cursor.getInt(cursor.getColumnIndexOrThrow(AdEntry._ID));
-        adBean.isBaidu = cursor.getString(cursor.getColumnIndexOrThrow(AdEntry.COLUMN_ISBAIDU));
-        adBean.isBanner = cursor.getString(cursor.getColumnIndexOrThrow(AdEntry.COLUMN_ISBANNER));
-        adBean.isGdt = cursor.getString(cursor.getColumnIndexOrThrow(AdEntry.COLUMN_ISGDT));
-        adBean.isJD = cursor.getString(cursor.getColumnIndexOrThrow(AdEntry.COLUMN_ISJD));
+        adBean.index = cursor.getInt(cursor.getColumnIndexOrThrow(AdEntry.COLUMN_ADINDEX));
+        adBean.updateTime = cursor.getInt(cursor.getColumnIndexOrThrow(AdEntry.COLUMN_UPDATETIME));
         adBean.adId = cursor.getString(cursor.getColumnIndexOrThrow(AdEntry.COLUMN_ADID));
         adBean.adConfig = cursor.getString(cursor.getColumnIndexOrThrow(AdEntry.COLUMN_ADCONFIG));
-        adBean.banner = cursor.getString(cursor.getColumnIndexOrThrow(AdEntry.COLUMN_BANNER));
         return adBean;
     }
 
@@ -175,7 +194,8 @@ public class XHAdSqlite extends SQLiteOpenHelper {
             try{
                 database = getWritableDatabase();
                 final long OverdueTime = System.currentTimeMillis() - (24*60*60*1000L);
-                database.execSQL("delete from tb_ad_config where updateTime<="+OverdueTime+";");
+                database.execSQL("delete from tb_ad_config where " + AdEntry.COLUMN_UPDATETIME +
+                        "<="+OverdueTime+";");
             }catch (Exception e){
                 e.printStackTrace();
             }finally {

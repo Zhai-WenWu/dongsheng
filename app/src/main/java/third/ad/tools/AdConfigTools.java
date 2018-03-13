@@ -108,7 +108,16 @@ public class AdConfigTools {
                 return false;
             }
             AdBean adBean = getAdConfig(adPlayId);
-
+            String conf = adBean.adConfig;
+            if (!TextUtils.isEmpty(conf)) {
+                ArrayList<Map<String, String>> arr = StringManager.getListMapByJson(conf);
+                for(Map<String, String> map : arr) {
+                    if (TextUtils.equals(map.get("type"), adKey) && TextUtils.equals("2", map
+                            .get("open"))) {
+                        return true;
+                    }
+                }
+            }
         } else if ("level".equals(showAdId)) {
             return true;
         } else {
