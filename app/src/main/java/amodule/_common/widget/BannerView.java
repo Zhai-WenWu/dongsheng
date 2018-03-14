@@ -72,7 +72,7 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
     private int showMinH, showMaxH;
 
     private View adView = null;
-    private Map<String, String> adMap = new HashMap<>();
+    private ArrayList<Map<String, String>> mAdMaps = new ArrayList<>();
     public static final int TAG_ID = R.string.tag;
     int imageHeight = 0, imageWidth = 0;
     boolean bgLoadOver = false;
@@ -145,12 +145,8 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
             map.put("title", "");
         });
         //添加广告数据
-        if (!arrayList.isEmpty()
-                && !adMap.isEmpty()
-                && !arrayList.contains(adMap)
-                && LoginManager.isShowAd()) {
-            arrayList.add(adMap);
-        }
+        if (LoginManager.isShowAd() && !mAdMaps.isEmpty())
+            arrayList.addAll(mAdMaps);
         //判断数据是否改变
         if (mArrayList.equals(arrayList)) {
             return;
@@ -270,10 +266,9 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
             public void onPageSelected(int position) {
                 int[] location = new int[2];
                 getLocationInWindow(location);
+                Map<String, String> adMap = isAdByPos(position);
                 if (location[1] > showMinH && location[1] < showMaxH
-                        && mArrayList.contains(adMap)
-                        && mArrayList.indexOf(adMap) == position
-                        && !adMap.isEmpty()
+                        && adMap != null
                         && !adMap.containsKey(KEY_ALREADY_SHOW)) {
                     adMap.put(KEY_ALREADY_SHOW, "2");
                     mAdControl.onAdBind(0, adView, "");
@@ -281,6 +276,16 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
             }
         };
         addOnPageChangeListener(pageChangeListener);
+    }
+
+    private Map<String, String> isAdByPos(int position) {
+        Map<String, String> ret = null;
+        if (mArrayList == null || mArrayList.isEmpty() || mArrayList.size() - 1 < position)
+            return ret;
+        ret = mArrayList.get(position);
+        if (TextUtils.equals("2", ret.get("isAd")))
+            return ret;
+        return null;
     }
 
     private void loadBgImage(final String imageUrl, ImageView imageView) {
@@ -337,9 +342,10 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
     protected void sendAdMessage(String adStr) {
         Map<String, String> adDataMap = StringManager.getFirstMap(adStr);
         post(() -> {
-            String imageUrl = adDataMap.get("imgUrl");
+            String imgs = adDataMap.get("imgs");
+            String imageUrl = StringManager.getFirstMap(imgs).get("big");
             if (TextUtils.isEmpty(imageUrl)) return;
-            adMap = new HashMap<>();
+            Map<String, String> adMap = new HashMap<>();
             adMap.put("isAd", "2");
             adMap.put("img", imageUrl);
             String title = adDataMap.get("title");
@@ -352,6 +358,7 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
                     && !mArrayList.contains(adMap)
                     && LoginManager.isShowAd()) {
                 mArrayList.add(adMap);
+                mAdMaps.add(adMap);
                 notifyDataHasChanged();
             }
         });
@@ -369,7 +376,7 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
         weightArray = new int[arrayList.size()];
         for (int index = 0; index < weightArray.length; index++) {
             Map<String, String> map = arrayList.get(index);
-            if (map.equals(adMap)) {
+            if (TextUtils.equals("2", map.get("isAd"))) {
                 weightArray[index] = 0;
                 continue;
             }
@@ -459,27 +466,6 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
         }
         return super.dispatchTouchEvent(ev);
     }
-
-//    private void loadAdImage(String imgUrl, ImageView imageView) {
-//        Glide.with(getContext())
-//                .load(imgUrl)
-//                .asBitmap()
-//                .dontAnimate()
-//                .dontTransform()
-//                .into(new SubBitmapTarget() {
-//                    @Override
-//                    public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
-//                        float width = bitmap.getWidth();
-//                        float height = bitmap.getHeight();
-//                        float scaleWidth = width;
-//                        float scaleHeight = scaleWidth / imageWidth * height;
-//                        int offsetY = (int) (height - Math.abs(height - scaleHeight));
-//                        Bitmap resultBitmap = Bitmap.createBitmap(bitmap, 0, offsetY, (int) scaleWidth, ((int) height - offsetY));
-//                        imageView.setImageBitmap(resultBitmap);
-//                    }
-//                });
-//    }
-
 
     @Override
     public void setAdID(List<String> adIDs) {
