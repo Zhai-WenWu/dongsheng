@@ -4,7 +4,6 @@ import android.text.TextUtils;
 
 import com.annimon.stream.Stream;
 import com.annimon.stream.function.Consumer;
-import com.annimon.stream.function.Function;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,15 +41,21 @@ public class XHSelfAdTools {
     }
 
 
-    public void loadNativeData(final XHSelfCallback callback) {
-        ReqInternet.in().doGet(API_AD_GETADDATA, new InternetCallback() {
+    public void loadNativeData(List<String> ads,final XHSelfCallback callback) {
+        if(ads == null || ads.isEmpty()){
+            return;
+        }
+        StringBuffer params = new StringBuffer(API_AD_GETADDATA);
+        params.append("?ids=");
+        Stream.of(ads).forEach(value -> params.append(value).append(","));
+        params.replace(params.length()-1,params.length(),"");
+        ReqInternet.in().doGet(params.toString(), new InternetCallback() {
             @Override
-            public void loaded(int i, String s, Object o) {
-                if (i > ReqInternet.REQ_OK_STRING) {
+            public void loaded(int flag, String s, Object o) {
+                if (flag >= ReqInternet.REQ_OK_STRING) {
                     List<XHSelfNativeData> list = new ArrayList<>();
                     List<Map<String, String>> data = StringManager.getListMapByJson(o);
                     for (Map<String, String> map : data) {
-                        map = StringManager.getFirstMap(map.get("data"));
                         if (!map.isEmpty()) {
                             XHSelfNativeData nativeData = new XHSelfNativeData();
                             nativeData.setId(map.get("id"));
@@ -81,8 +86,8 @@ public class XHSelfAdTools {
     }
 
     public interface XHSelfCallback {
-        public void onNativeLoad(List<XHSelfNativeData> list);
+        void onNativeLoad(List<XHSelfNativeData> list);
 
-        public void onNativeFail();
+        void onNativeFail();
     }
 }

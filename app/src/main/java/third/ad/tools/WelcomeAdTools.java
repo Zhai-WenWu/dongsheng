@@ -7,8 +7,12 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.annimon.stream.Stream;
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import acore.logic.ConfigMannager;
@@ -19,11 +23,14 @@ import acore.tools.StringManager;
 import amodule.main.view.WelcomeDialog;
 import third.ad.db.XHAdSqlite;
 import third.ad.db.bean.AdBean;
-import third.ad.scrollerAd.XHScrollerAdParent;
+import third.ad.db.bean.XHSelfNativeData;
 import xh.basic.tool.UtilString;
 
 import static third.ad.scrollerAd.XHScrollerAdParent.ADKEY_BAIDU;
 import static third.ad.scrollerAd.XHScrollerAdParent.ADKEY_GDT;
+import static third.ad.scrollerAd.XHScrollerAdParent.TAG_BAIDU;
+import static third.ad.scrollerAd.XHScrollerAdParent.TAG_BANNER;
+import static third.ad.scrollerAd.XHScrollerAdParent.TAG_GDT;
 
 /**
  * PackageName : third.ad.tools
@@ -50,8 +57,7 @@ public class WelcomeAdTools {
     private int shownum = 0;
 
     //广告处理
-    private ArrayList<String> list_ad = new ArrayList<>();//存储广告类型的集合
-    private ArrayList<String> ad_data = new ArrayList<>();//存储对应数据的集合
+    private ArrayList<Map<String, String>> mAdData = new ArrayList<>();
     private int index_ad = 0;
     /** 广点通回调 */
     private GdtCallback mGdtCallback;
@@ -62,10 +68,10 @@ public class WelcomeAdTools {
 
     private WelcomeAdTools() {
         //获取广告数据
-        Log.i("tzy","WelcomeAdTools create.");
+        Log.i("tzy", "WelcomeAdTools create.");
         //获取参数
         String splashConfigDataStr = ConfigMannager.getConfigByLocal(CONFIGKEY);
-        if(TextUtils.isEmpty(splashConfigDataStr)){
+        if (TextUtils.isEmpty(splashConfigDataStr)) {
             return;
         }
         Map<String, String> data = StringManager.getFirstMap(splashConfigDataStr);
@@ -100,74 +106,69 @@ public class WelcomeAdTools {
      */
     public void handlerAdData(final boolean isCache, AdNoDataCallBack CallBack, boolean isTwoShow) {
         this.isTwoShow = isTwoShow;
-        list_ad.clear();
-        ad_data.clear();
+//        list_ad.clear();
+//        ad_data.clear();
+        mAdData.clear();
         index_ad = 0;
         this.mAdNoDataCallBack = CallBack;
 
-        Log.i("tzy","WelcomeAdTools handlerAdData.");
+        Log.i("tzy", "WelcomeAdTools handlerAdData.");
         XHAdSqlite adSqlite = XHAdSqlite.newInstance(XHApplication.in());
         AdBean adBean = adSqlite.getAdConfig(AdPlayIdConfig.WELCOME);
-        if(adBean == null || TextUtils.isEmpty(adBean.adConfig)){
-            if (mAdNoDataCallBack != null){
+        if (adBean == null || TextUtils.isEmpty(adBean.adConfig)) {
+            if (mAdNoDataCallBack != null) {
                 mAdNoDataCallBack.noAdData();
             }
             return;
         }
         //TODO
-        Map<String, String> configMap = StringManager.getFirstMap(adBean.adConfig);
-        final String[] keys = {"1", "2", "3", "4", "5"};
-        for (String key : keys) {
-            if (configMap.containsKey(key)){
-                handlerData(configMap.get(key), list_ad, "");
-            }
-        }
+        List<Map<String, String>> configArray = StringManager.getListMapByJson(adBean.adConfig);
+        Stream.of(configArray)
+                .filter(value -> "2".equals(value.get("open")))
+                .forEach(value -> mAdData.add(value));
         //开启广告
 //            new Handler(Looper.getMainLooper()).post(() -> nextAd(isCache));
         nextAd(isCache);
-    }
-
-    private void handlerData(String temp, ArrayList<String> list_ad, String banner) {
-        Map<String, String> map_ad = StringManager.getFirstMap(temp);
-        if (map_ad.get("open").equals("2") && XHScrollerAdParent.supportType(map_ad.get("type"))) {
-            list_ad.add(map_ad.get("type"));
-            //处理banner类型数据
-            if (XHScrollerAdParent.TAG_BANNER.equals(map_ad.get("type"))
-                    && !TextUtils.isEmpty(banner)) {
-                ad_data.add(banner);
-            } else {
-                ad_data.add(map_ad.get("data"));
-            }
-        }
     }
 
     /**
      * 下一个广告数据
      */
     private void nextAd(boolean isCache) {
-        Log.i("tzy","WelcomeAdTools nextAd.");
-        if (list_ad.size() > index_ad) {
-            if (XHScrollerAdParent.TAG_GDT.equals(list_ad.get(index_ad))) {//gdt
-                if (index_ad == 0 && isCache) {
-                    return;
-                }
-                if (LoginManager.isShowAd())
-                    displayGdtAD();
-            } else if (XHScrollerAdParent.TAG_BANNER.equals(list_ad.get(index_ad))) {//xh
-                if (LoginManager.isShowAd())
-                    getXHBanner();
-            }else if(XHScrollerAdParent.TAG_BAIDU.equals(list_ad.get(index_ad))){
-                if (LoginManager.isShowAd())
-                    displayBaiduAD();
+        Log.i("tzy", "WelcomeAdTools nextAd.");
+        if (index_ad == 0 && isCache) {
+            return;
+        }
+        if (mAdData.size() > index_ad) {
+            String type = mAdData.get(index_ad).get("type");
+            switch (type) {
+                case TAG_GDT:
+                    if (LoginManager.isShowAd()) {
+                        displayGdtAD();
+                    }
+                    break;
+                case TAG_BANNER:
+                    if (LoginManager.isShowAd()) {
+                        getXHBanner();
+                    }
+                    break;
+                case TAG_BAIDU:
+                    if (LoginManager.isShowAd()) {
+                        displayBaiduAD();
+                    }
+                    break;
+                default:
+                    break;
             }
         } else {
-            if (mAdNoDataCallBack != null) mAdNoDataCallBack.noAdData();
+            if (mAdNoDataCallBack != null)
+                mAdNoDataCallBack.noAdData();
         }
     }
 
     //展示AD
     private void displayGdtAD() {
-        String adid = isTwoShow ? "2090116985265199" : analysData(ad_data.get(index_ad));
+        String adid = isTwoShow ? "2090116985265199" : analysData(mAdData.get(index_ad).get("data"));
         if (TextUtils.isEmpty(adid) || null == mGdtCallback) {
             index_ad++;
             nextAd(false);
@@ -185,7 +186,7 @@ public class WelcomeAdTools {
                     public void onAdPresent() {
                         Log.i("zhangyujian", "GDT：：onAdPresent");
                         mGdtCallback.onAdPresent();
-                        AdConfigTools.getInstance().postStatistics("show",AdPlayIdConfig.WELCOME,ADKEY_GDT,adid);
+                        AdConfigTools.getInstance().postStatistics("show", AdPlayIdConfig.WELCOME, ADKEY_GDT, adid);
                     }
 
                     @Override
@@ -203,7 +204,7 @@ public class WelcomeAdTools {
 
                     @Override
                     public void onAdClick() {
-                        AdConfigTools.getInstance().postStatistics("click",AdPlayIdConfig.WELCOME,ADKEY_GDT,adid);
+                        AdConfigTools.getInstance().postStatistics("click", AdPlayIdConfig.WELCOME, ADKEY_GDT, adid);
                         mGdtCallback.onAdClick();
                     }
 
@@ -218,52 +219,59 @@ public class WelcomeAdTools {
      * 处理xh自有的广告
      */
     private void getXHBanner() {
-        if (TextUtils.isEmpty(ad_data.get(index_ad))) {
+        String adid = analysData(mAdData.get(index_ad).get("data"));
+        if (TextUtils.isEmpty(adid)) {
             index_ad++;
             nextAd(false);
             return;
         }
-        Map<String, String> dataMap = StringManager.getFirstMap(ad_data.get(index_ad));//banner数据
-        String url = "";
-        if (dataMap != null && !TextUtils.isEmpty(dataMap.get("imgs"))) {
-            Map<String, String> mapImgs = StringManager.getFirstMap(dataMap.get("imgs"));
-            if (mapImgs != null && !TextUtils.isEmpty(mapImgs.get("indexImg1"))) {
-                url = mapImgs.get("indexImg1");
-            } else {
+        XHSelfAdTools.getInstance().loadNativeData(Collections.singletonList(adid), new XHSelfAdTools.XHSelfCallback() {
+            @Override
+            public void onNativeLoad(List<XHSelfNativeData> list) {
+                if (list == null || list.isEmpty()) {
+                    index_ad++;
+                    nextAd(false);
+                    return;
+                }
+                XHSelfNativeData nativeData = list.get(0);
+                String imageUrl = nativeData.getBigImage();
+                String landingURL = nativeData.getUrl();
+                if (!TextUtils.isEmpty(imageUrl)) {
+                    if (null != mXHBannerCallback) {
+                        mXHBannerCallback.onAdLoadSucceeded(imageUrl, landingURL);
+                    }
+                } else {
+                    index_ad++;
+                    nextAd(false);
+                }
+            }
+
+            @Override
+            public void onNativeFail() {
                 index_ad++;
                 nextAd(false);
-                return;
             }
-        } else {
-            index_ad++;
-            nextAd(false);
-            return;
-        }
-        final String landingURL = dataMap.get("url");
-        if (null != mXHBannerCallback) {
-            mXHBannerCallback.onAdLoadSucceeded(url, landingURL);
-        }
+        });
+
     }
 
     private void displayBaiduAD() {
-        final String adid = analysData(ad_data.get(index_ad));
+        final String adid = analysData(mAdData.get(index_ad).get("data"));
         if (TextUtils.isEmpty(adid) || null == mBaiduCallback) {
             index_ad++;
             nextAd(false);
             return;
         }
-        Log.i("tzy","displayBaiduAD");
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                BaiduAdTools.newInstance().showSplashAD(XHActivityManager.getInstance().getCurrentActivity(),
+        Log.i("tzy", "displayBaiduAD");
+        new Handler(Looper.getMainLooper()).post(
+                () -> BaiduAdTools.newInstance().showSplashAD(XHActivityManager.getInstance().getCurrentActivity(),
                         mBaiduCallback.getADLayout(),
                         adid,
                         new BaiduAdTools.BaiduSplashAdCallback() {
                             @Override
                             public void onAdPresent() {
-                                Log.i("zhangyujian","displayBaiduAD::onAdPresent");
-                                AdConfigTools.getInstance().postStatistics("show",AdPlayIdConfig.WELCOME,ADKEY_BAIDU,adid);
+                                Log.i("zhangyujian", "displayBaiduAD::onAdPresent");
+                                AdConfigTools.getInstance().postStatistics("show", AdPlayIdConfig.WELCOME, ADKEY_BAIDU, adid);
                                 mBaiduCallback.onAdPresent();
                             }
 
@@ -274,7 +282,7 @@ public class WelcomeAdTools {
 
                             @Override
                             public void onAdFailed(String s) {
-                                Log.i("zhangyujian","displayBaiduAD::onAdFailed");
+                                Log.i("zhangyujian", "displayBaiduAD::onAdFailed");
                                 index_ad++;
                                 nextAd(false);
                                 mBaiduCallback.onAdFailed(s);
@@ -282,12 +290,10 @@ public class WelcomeAdTools {
 
                             @Override
                             public void onAdClick() {
-                                AdConfigTools.getInstance().postStatistics("click",AdPlayIdConfig.WELCOME,ADKEY_BAIDU,adid);
+                                AdConfigTools.getInstance().postStatistics("click", AdPlayIdConfig.WELCOME, ADKEY_BAIDU, adid);
                                 mBaiduCallback.onAdClick();
                             }
-                        });
-            }
-        });
+                        }));
     }
 
     private String analysData(String data) {
@@ -299,37 +305,36 @@ public class WelcomeAdTools {
     }
 
     public interface GdtCallback {
-        public void onAdPresent();
+        void onAdPresent();
 
-        public void onAdFailed(String reason);
+        void onAdFailed(String reason);
 
-        public void onAdDismissed();
+        void onAdDismissed();
 
-        public void onAdClick();
+        void onAdClick();
 
-        public void onADTick(long millisUntilFinished);
+        void onADTick(long millisUntilFinished);
 
-        public ViewGroup getADLayout();
+        ViewGroup getADLayout();
 
-        public View getTextSikp();
+        View getTextSikp();
     }
 
 
     public interface XHBannerCallback {
-        public void onAdLoadSucceeded(String url, String loadingUrl);
-
+        void onAdLoadSucceeded(String url, String loadingUrl);
     }
 
     public interface BaiduCallback {
-        public void onAdPresent();
+        void onAdPresent();
 
-        public void onAdDismissed();
+        void onAdDismissed();
 
-        public void onAdFailed(String s);
+        void onAdFailed(String s);
 
-        public void onAdClick();
+        void onAdClick();
 
-        public ViewGroup getADLayout();
+        ViewGroup getADLayout();
     }
 
     public void setmGdtCallback(GdtCallback mGdtCallback) {
@@ -366,7 +371,7 @@ public class WelcomeAdTools {
 
     public interface AdNoDataCallBack {
         /*** 没有广告数据*/
-        public void noAdData();
+        void noAdData();
     }
 
     private AdNoDataCallBack mAdNoDataCallBack;

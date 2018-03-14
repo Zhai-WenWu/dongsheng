@@ -1,7 +1,6 @@
 package amodule.home;
 
 import android.annotation.SuppressLint;
-import android.content.ComponentName;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,7 +9,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.annimon.stream.Stream;
 import com.xiangha.R;
@@ -21,7 +19,6 @@ import java.util.Map;
 import acore.logic.AppCommon;
 import acore.logic.XHClick;
 import acore.tools.StringManager;
-import acore.tools.ToolsDevice;
 import acore.widget.rvlistview.RvListView;
 import amodule._common.helper.WidgetDataHelper;
 import amodule._common.utility.WidgetUtility;

@@ -11,7 +11,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
-import android.support.v4.view.KeyEventCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -50,7 +49,6 @@ import acore.tools.LogManager;
 import acore.tools.ObserverManager;
 import acore.tools.PageStatisticsUtils;
 import acore.tools.Tools;
-import acore.tools.ToolsDevice;
 import acore.widget.XiangHaTabHost;
 import amodule.dish.tools.OffDishToFavoriteControl;
 import amodule.dish.tools.UploadDishControl;
@@ -222,9 +220,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
             if (url.contains("m.ds.xiangha.com")
                     && url.contains("product_code=")) {//商品详情链接
                 String[] strs = url.split("\\?");
-                if (strs != null
-                        && strs.length > 1
-                        && !TextUtils.isEmpty(strs[1])) {
+                if (strs.length > 1 && !TextUtils.isEmpty(strs[1])) {
                     AppCommon.openUrl(Main.this, "xhds.product.info.app?" + strs[1], true);
                 }
             } else {
@@ -496,10 +492,10 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
     }
 
     /**
-     * 准备退出 goBack为true代表只退到首页
+     * 准备退出
      *
-     * @param act
-     * @param goBack
+     * @param act 上下文
+     * @param goBack 为true代表只退到首页
      */
     public void doExit(Activity act, boolean goBack) {
         if(!WelcomeDialogstate)return;

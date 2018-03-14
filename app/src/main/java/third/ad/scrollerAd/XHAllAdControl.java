@@ -31,6 +31,7 @@ import third.ad.tools.GdtAdTools;
 import third.ad.tools.XHSelfAdTools;
 
 import static third.ad.control.AdControlHomeDish.tag_yu;
+import static third.ad.scrollerAd.XHScrollerAdParent.TAG_BANNER;
 
 /**
  * 广告主控制类
@@ -113,48 +114,32 @@ public class XHAllAdControl {
                 AdTypeData.put(listIds.get(i), "");
                 /*获取数据广告位的数据体*/
                 AdBean adBean = adSqlite.getAdConfig(listIds.get(i));
-                if (adBean == null) {
-                    continue;
-                }
+                if (adBean != null) {
+
                 /*广告实体数据集合*/
-                boolean state = false;//是否打开
-                ArrayList<Map<String, String>> adConfigDataList = StringManager.getListMapByJson(adBean.adConfig);
-                boolean once = false;
-                for (Map<String, String> adTypeConfig : adConfigDataList) {
-                    if ("2".equals(adTypeConfig.get("open"))) {
-                        state = true;
-                        if (!once) {
-                            once = true;
-                            String adType = adTypeConfig.containsKey("type") ? adTypeConfig.get("type") : "";
-                            AdTypeData.put(listIds.get(i), adType);
+                    boolean state = false;//是否打开
+                    ArrayList<Map<String, String>> adConfigDataList = StringManager.getListMapByJson(adBean.adConfig);
+                    boolean once = false;
+                    for (Map<String, String> adTypeConfig : adConfigDataList) {
+                        if ("2".equals(adTypeConfig.get("open"))) {
+                            state = true;
+                            if (!once) {
+                                once = true;
+                                String adType = adTypeConfig.containsKey("type") ? adTypeConfig.get("type") : "";
+                                AdTypeData.put(listIds.get(i), adType);
+                            }
+                            judge(adTypeConfig);
                         }
                     }
-                    judge(adTypeConfig);
-                }
-//                final String[] keys = {"1", "2", "3", "4", "5"};
-//                boolean once = false;
-//                for (String key : keys) {
-//                    if (configMap.containsKey(key)) {
-//                        String value = configMap.get(key);
-//                        Map<String, String> configTemp = StringManager.getFirstMap(value);
-//                        if ("2".equals(configTemp.get("open"))) {
-//                            state = true;
-//                            if (!once) {
-//                                once = true;
-//                                AdTypeData.put(listIds.get(i), configTemp.containsKey("type") ? configTemp.get("type") : "");
-//                            }
-//                        }
-//                        handlerAdData(value, adConfigDataList, banner);
-//                    }
-//                }
-                if (!state) {//当前广告位没有打开
-                    count++;
-                    AdData.put(listIds.get(i), "");
-                }
-                if (adConfigDataList.size() > 0) {
-                    initAdRequest(adConfigDataList, listIds.get(i), i);
-                } else {
-                    listAdContrls.add(null);
+                    if (!state) {//当前广告位没有打开
+                        count++;
+                        AdData.put(listIds.get(i), "");
+                    }
+                    if (adConfigDataList.size() > 0) {
+                        initAdRequest(adConfigDataList, listIds.get(i), i);
+                    } else {
+                        listAdContrls.add(null);
+                    }
                 }
             }
         }
@@ -163,24 +148,6 @@ public class XHAllAdControl {
         //是否存在广点通
         getAllData();
     }
-
-    /**
-     * 处理当广告体数据的拆分判断
-     *
-     * @param adData    广告体
-     * @param arrayList 存储广告体的集合
-     */
-//    private void handlerAdData(String adData, ArrayList<Map<String, String>> arrayList, String data) {
-//        Map<String, String> map_ad = StringManager.getFirstMap(adData);
-//        if ("2".equals(map_ad.get("open"))
-//                && XHScrollerAdParent.supportType(map_ad.get("type"))) {
-//            /*banner广告数据存储到广告体*/
-//            if ("personal".equals(map_ad.get("type")))
-//                map_ad.put("data", data);
-//            arrayList.add(map_ad);
-//        }
-//        judge(map_ad);
-//    }
 
     /**
      * 判断是否是 gdt 或者 baidu 数据
@@ -192,7 +159,7 @@ public class XHAllAdControl {
         String isOpenValue = map_temp.get("open");
         if ("2".equals(isOpenValue)) {
             switch (typeValue) {
-                case "personal":
+                case TAG_BANNER:
                     String data = map_temp.get("data");
                     LinkedHashMap<String, String> personalMap = StringManager.getMapByString(data, "&", "=");
                     String adidValue = personalMap.get("adid");
@@ -233,7 +200,7 @@ public class XHAllAdControl {
         if (isLoadOverXH) {
             return;
         }
-        XHSelfAdTools.getInstance().loadNativeData(new XHSelfAdTools.XHSelfCallback() {
+        XHSelfAdTools.getInstance().loadNativeData(XH_IDS, new XHSelfAdTools.XHSelfCallback() {
             @Override
             public void onNativeLoad(List<XHSelfNativeData> list) {
                 isLoadOverXH = true;
@@ -321,7 +288,7 @@ public class XHAllAdControl {
                 case "gdt":
                     parent = new XHScrollerGdt(data, backIds, i);
                     break;
-                case "personal":
+                case TAG_BANNER:
                     parent = new XHScrollerSelf(data, backIds, i);
                     break;
                 case "baidu":
@@ -357,7 +324,7 @@ public class XHAllAdControl {
 
                         AdData.put(listIds.get(num), mapToJson(map).toString());
                         //展示数据集合
-                        if (count >= listIds.size()) {
+                        if (count >= listAdContrls.size()) {
                             xhBackIdsDataCallBack.callBack(AdData);
                         }
                     }
@@ -367,7 +334,7 @@ public class XHAllAdControl {
                         count++;
                         AdData.put(listIds.get(num), "");
                         //展示数据集合
-                        if (count >= listIds.size()) {
+                        if (count >= listAdContrls.size()) {
                             try {
                                 xhBackIdsDataCallBack.callBack(AdData);
                             } catch (Exception e) {
@@ -458,9 +425,13 @@ public class XHAllAdControl {
 
     public interface XHAdControlCallBack {
         public void onSuccess(String type, Map<String, String> map, int num);
+
         public void onFail(String type, int num);
+
         XHSelfNativeData onXHNativeData(int position);
+
         public NativeADDataRef onGdtNativeData();
+
         public NativeResponse onBaiduNativeData();
     }
 
