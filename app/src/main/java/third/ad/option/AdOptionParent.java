@@ -21,6 +21,7 @@ import third.ad.scrollerAd.XHAllAdControl;
 import third.ad.scrollerAd.XHScrollerAdParent;
 
 import static third.ad.control.AdControlHomeDish.tag_yu;
+import static third.ad.scrollerAd.XHScrollerSelf.IMG_KEY;
 
 /**
  * 广告控制类---广告真正去请求广告类，
@@ -115,11 +116,11 @@ public abstract class AdOptionParent {
                                     if (adMap.containsKey("appImg")) {
                                         newMap.put("appImg", adMap.get("appImg"));
                                     }
-                                    if (adMap.containsKey("appHomeImg")) {
-                                        newMap.put("appHomeImg", adMap.get("appHomeImg"));
+                                    if (adMap.containsKey("imgUrl")) {
+                                        newMap.put("imgUrl", adMap.get("imgUrl"));
                                     }
-                                    if (adMap.containsKey("appSearchImg")) {
-                                        newMap.put("appSearchImg", adMap.get("appSearchImg"));
+                                    if (adMap.containsKey(IMG_KEY)) {
+                                        newMap.put(IMG_KEY, adMap.get(IMG_KEY));
                                     }
                                     newMap.put("adType", adMap.get("adType")); //自由广告时，1：活动 2:广告
                                     newMap.put("indexOnData", adMap.get("index")); //数据角标位
@@ -240,9 +241,9 @@ public abstract class AdOptionParent {
                                         //对图片根据类型进行选择
                                         String ImgKey = "";
                                         if (!TextUtils.isEmpty(type) && ("1".equals(type) || "5".equals(type) || "6".equals(type))) {
-                                            ImgKey = "appHomeImg";
+                                            ImgKey = "imgUrl";
                                         } else {
-                                            ImgKey = "appSearchImg";
+                                            ImgKey = IMG_KEY;
                                         }
                                         Log.i("tzy", "ImgKey::**********************************" + ImgKey);
                                         if (adMap.containsKey(ImgKey) && !TextUtils.isEmpty(adMap.get(ImgKey))) {

@@ -68,9 +68,6 @@ public class XHScrollerSelf extends XHScrollerAdParent{
         map.put("imgUrl", mNativeData.getBigImage());
         map.put(IMG_KEY, mNativeData.getLittleImage());
         map.put("iconUrl", mNativeData.getLittleImage());
-        //TODO
-        map.put("appSearchImg", mNativeData.getLittleImage());
-        map.put("appHomeImg", mNativeData.getLittleImage());
         map.put("type",XHScrollerAdParent.ADKEY_BANNER);
         map.put("hide", "1");//2隐藏，1显示
         xhAdDataCallBack.onSuccees(XHScrollerAdParent.ADKEY_BANNER, map);
