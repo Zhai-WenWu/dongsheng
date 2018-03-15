@@ -39,6 +39,12 @@ public class CircleItemBaseRelativeLayout extends RelativeLayout {
 	}
 
 	public void setViewImage(final ImageView v, String value) {
+		if(value == null){
+			if(v != null){
+				v.setVisibility(GONE);
+			}
+			return;
+		}
 		v.setVisibility(View.VISIBLE);
 		// 异步请求网络图片
 		if (value.indexOf("http") == 0) {

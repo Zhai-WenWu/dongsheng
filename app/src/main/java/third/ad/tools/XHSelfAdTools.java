@@ -54,24 +54,31 @@ public class XHSelfAdTools {
             public void loaded(int flag, String s, Object o) {
                 if (flag >= ReqInternet.REQ_OK_STRING) {
                     List<XHSelfNativeData> list = new ArrayList<>();
-                    List<Map<String, String>> data = StringManager.getListMapByJson(o);
-                    for (Map<String, String> map : data) {
-                        if (!map.isEmpty()) {
-                            XHSelfNativeData nativeData = new XHSelfNativeData();
-                            nativeData.setId(map.get("id"));
-                            nativeData.setTitle(map.get("title"));
-                            nativeData.setDesc(map.get("desc"));
-                            String showNumValue = map.get("showNum");
-                            int showNum = TextUtils.isEmpty(showNumValue)?0:Integer.parseInt(showNumValue);
-                            nativeData.setShowNum(showNum);
-                            nativeData.setUrl(map.get("andUrl"));
-                            nativeData.setType(map.get("adType"));
-                            nativeData.setUpdateTime(map.get("updateTime"));
-                            Map<String,String> bigImageMap = StringManager.getFirstMap(map.get("big"));
-                            nativeData.setBigImage(bigImageMap.get(""));
-                            Map<String,String> littleImageMap = StringManager.getFirstMap(map.get("little"));
-                            nativeData.setLittleImage(littleImageMap.get(""));
-                            list.add(nativeData);
+                    Map<String, String> data = StringManager.getFirstMap(o);
+                    for (String key : ads) {
+                        if(data.containsKey(key)){
+                            Map<String,String> map = StringManager.getFirstMap(data.get(key));
+                            if (!map.isEmpty() && !TextUtils.isEmpty(map.get("id"))) {
+                                XHSelfNativeData nativeData = new XHSelfNativeData();
+                                nativeData.setId(map.get("id"));
+                                nativeData.setTitle(map.get("title"));
+                                nativeData.setDesc(map.get("desc"));
+                                String showNumValue = map.get("showNum");
+                                int showNum = TextUtils.isEmpty(showNumValue)?0:Integer.parseInt(showNumValue);
+                                nativeData.setShowNum(showNum);
+                                nativeData.setUrl(map.get("andUrl"));
+                                nativeData.setType(map.get("adType"));
+                                nativeData.setUpdateTime(map.get("updateTime"));
+                                Map<String,String> bigImageMap = StringManager.getFirstMap(map.get("big"));
+                                nativeData.setBigImage(bigImageMap.get(""));
+                                Map<String,String> littleImageMap = StringManager.getFirstMap(map.get("little"));
+                                nativeData.setLittleImage(littleImageMap.get(""));
+                                list.add(nativeData);
+                            }else{
+                                list.add(null);
+                            }
+                        }else{
+                            list.add(null);
                         }
                     }
                     if (callback != null) {

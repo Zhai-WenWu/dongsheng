@@ -62,10 +62,8 @@ public class XHAdAutoRefresh {
                     autoRefreshSelfAD();
                     execute();
                 };
-                mTimerHandler.post(mRunnable);
-            }else{
-                mTimerHandler.postDelayed(mRunnable,intervalTime);
             }
+            mTimerHandler.postDelayed(mRunnable,intervalTime);
         }
     }
 

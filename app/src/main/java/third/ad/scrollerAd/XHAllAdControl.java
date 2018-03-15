@@ -2,6 +2,7 @@ package third.ad.scrollerAd;
 
 import android.app.Activity;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -127,6 +128,7 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
 
     public void getAllAdDataBySqlite() {
         listAdContrls.clear();
+        XH_IDS.clear();
         XHAdSqlite adSqlite = XHAdSqlite.newInstance(XHApplication.in());
         //根据广告位置id在广告数据 进行筛选通
         if (listIds.size() > 0) {
@@ -393,6 +395,7 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
                     }
 
                     @Override
+                    @Nullable
                     public XHSelfNativeData onXHNativeData(int position) {
                         if (xhNativeArray != null && position < xhNativeArray.size()) {
                             return xhNativeArray.get(position);

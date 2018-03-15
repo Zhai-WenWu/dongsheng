@@ -52,6 +52,7 @@ public class XHScrollerSelf extends XHScrollerAdParent{
     @Override
     public void getAdDataWithBackAdId(@NonNull final XHAdDataCallBack xhAdDataCallBack) {
         if(!isShow() || mNativeData == null){//判断是否显示---不显示
+            Log.i("tzy", "XHSelfNative : mNativeData == null ? " + (mNativeData == null) );
             xhAdDataCallBack.onFail(XHScrollerAdParent.ADKEY_BANNER);
             return;
         }
