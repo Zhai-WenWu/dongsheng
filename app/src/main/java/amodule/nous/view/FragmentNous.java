@@ -77,7 +77,8 @@ public class FragmentNous {
         Collections.addAll(adPosList, MAIN_HOME_ZHISHI_LIST);
         xhAllAdControl = new XHAllAdControl(adPosList, new XHAllAdControl.XHBackIdsDataCallBack() {
             @Override
-            public void callBack(Map<String, String> map) {
+            public void callBack(boolean isRefresh,Map<String, String> map) {
+                adArray.clear();
                 if (map != null && map.size() > 0) {
                     for (String adKey : MAIN_HOME_ZHISHI_LIST) {
                         String adStr = map.get(adKey);
@@ -99,6 +100,7 @@ public class FragmentNous {
                 }
             }
         }, mAct, "other_top_list");
+        xhAllAdControl.registerRefreshCallback();
     }
 
     /**

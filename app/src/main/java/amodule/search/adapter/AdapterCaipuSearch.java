@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +22,8 @@ import org.json.JSONObject;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -49,13 +50,10 @@ import xh.basic.tool.UtilImage;
 
 import static amodule.search.view.SearchResultAdDataProvider.AD_IDS;
 
-/**
- * Created by ：airfly on 2016/10/21 19:06.
- */
-
 public class AdapterCaipuSearch extends BaseAdapter {
 
     private final BaseActivity mActivity;
+    private SearchResultAdDataProvider mSearchResultAdDataProvider;
     private CopyOnWriteArrayList<Map<String, String>> mListCaipuData = new CopyOnWriteArrayList<>();
     private CopyOnWriteArrayList<Map<String, String>> mListShicaiData = new CopyOnWriteArrayList<>();
     private CopyOnWriteArrayList<Map<String, String>> mListCaidanData = new CopyOnWriteArrayList<>();
@@ -87,6 +85,30 @@ public class AdapterCaipuSearch extends BaseAdapter {
         this.mParent = mParent;
         this.callback = callback;
         listPosUsed = new InsertPosList();
+        if(mSearchResultAdDataProvider == null){
+            mSearchResultAdDataProvider = new SearchResultAdDataProvider();
+        }
+        mSearchResultAdDataProvider.getAdData();
+        mSearchResultAdDataProvider.setAutoRefreshCallback(new SearchResultAdDataProvider.OnAutoRefreshCallback() {
+            @Override
+            public void autoRefresh() {
+                CopyOnWriteArrayList<Map<String, String>> listCaipuData = new CopyOnWriteArrayList<>();
+                listCaipuData.addAll(mListCaipuData);
+                CopyOnWriteArrayList<Map<String, String>> listShicaiData = new CopyOnWriteArrayList<>();
+                listCaipuData.addAll(mListShicaiData);
+                CopyOnWriteArrayList<Map<String, String>> listCaidanData = new CopyOnWriteArrayList<>();
+                listCaipuData.addAll(mListCaidanData);
+                CopyOnWriteArrayList<Map<String, String>> listZhishiData = new CopyOnWriteArrayList<>();
+                listCaipuData.addAll(mListZhishiData);
+                refresh(true, listCaipuData,listShicaiData,listCaidanData,listZhishiData);
+            }
+        });
+    }
+
+    public void refreshAdData(){
+        if(mSearchResultAdDataProvider != null){
+            mSearchResultAdDataProvider.getAdData();
+        }
     }
 
     /**
@@ -711,11 +733,14 @@ public class AdapterCaipuSearch extends BaseAdapter {
 
     private Map<String, String> AdTypeData = new HashMap<>();//获取到数据集合
     private void getAdDataInfo(boolean isRefresh) {
-        xhAllAdControl = SearchResultAdDataProvider.getInstance().getXhAllAdControl();
-        topAdHasData = SearchResultAdDataProvider.getInstance().HasTopAdData();
+        if(mSearchResultAdDataProvider == null){
+            mSearchResultAdDataProvider = new SearchResultAdDataProvider();
+        }
+        xhAllAdControl = mSearchResultAdDataProvider.getXhAllAdControl();
+        topAdHasData = mSearchResultAdDataProvider.HasTopAdData();
         if (adDdata.isEmpty() || isRefresh) {
             adDdata.clear();
-            adDdata.addAll(SearchResultAdDataProvider.getInstance().getAdDataList());
+            adDdata.addAll(mSearchResultAdDataProvider.getAdDataList());
             AdTypeData.clear();
             AdTypeData.putAll(xhAllAdControl.getAdTypeData());
         }

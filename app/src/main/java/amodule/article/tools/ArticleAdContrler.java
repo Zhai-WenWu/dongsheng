@@ -91,7 +91,9 @@ public class ArticleAdContrler {
     public void initADData() {
         //请求广告数据
         xhAllAdControlBootom = requestAdData(new String[]{ARTICLE_CONTENT_BOTTOM}, "wz_wz");
+        xhAllAdControlBootom.registerRefreshCallback();
         xhAllAdControlList = requestAdData(new String[]{ARTICLE_RECM_1, ARTICLE_RECM_2}, "wz_list");
+        xhAllAdControlList.registerRefreshCallback();
     }
 
     protected XHAllAdControl requestAdData(final String[] ads, String id) {
@@ -100,7 +102,7 @@ public class ArticleAdContrler {
             adData.add(str);
         return new XHAllAdControl(adData, new XHAllAdControl.XHBackIdsDataCallBack() {
             @Override
-            public void callBack(Map<String, String> map) {
+            public void callBack(boolean isRefresh,Map<String, String> map) {
                 for (String key : ads) {
                     String adStr = map.get(key);
                     switch (key) {

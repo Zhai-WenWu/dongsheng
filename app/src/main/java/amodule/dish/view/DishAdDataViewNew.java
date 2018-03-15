@@ -68,7 +68,7 @@ public class DishAdDataViewNew extends ItemBaseView {
         list.add(AdPlayIdConfig.DISH_TIESHI);
         xhAllAdControl = new XHAllAdControl(list, new XHAllAdControl.XHBackIdsDataCallBack() {
             @Override
-            public void callBack(Map<String, String> map) {
+            public void callBack(boolean isRefresh,Map<String, String> map) {
                 //对数据进行处理
                 String data = map.get(AdPlayIdConfig.DISH_TIESHI);
                 Log.i("xianghaTag", AdPlayIdConfig.DISH_TIESHI + " : " + data);
@@ -89,6 +89,7 @@ public class DishAdDataViewNew extends ItemBaseView {
                 }else DishAdDataViewNew.this.setVisibility(View.GONE);
             }
         }, activity, "result_tip");
+        xhAllAdControl.registerRefreshCallback();
     }
 
     /**

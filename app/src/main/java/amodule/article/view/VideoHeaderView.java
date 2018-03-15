@@ -201,7 +201,10 @@ public class VideoHeaderView extends RelativeLayout {
 
         xhAllAdControl = new XHAllAdControl(list, new XHAllAdControl.XHBackIdsDataCallBack() {
             @Override
-            public void callBack(Map<String, String> maps) {
+            public void callBack(boolean isRefresh,Map<String, String> maps) {
+                if(isRefresh){
+                    return;
+                }
                 String temp = maps.get(AdPlayIdConfig.ARTICLE_TIEPIAN);
                 mapAd = StringManager.getFirstMap(temp);
                 if (mapAd != null && mapAd.size() > 0
@@ -219,7 +222,7 @@ public class VideoHeaderView extends RelativeLayout {
                 }
             }
         }, activity, "wz_tiepian");
-
+        xhAllAdControl.registerRefreshCallback();
     }
 
     /**

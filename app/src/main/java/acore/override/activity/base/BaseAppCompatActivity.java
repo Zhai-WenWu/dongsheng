@@ -401,4 +401,8 @@ public class BaseAppCompatActivity extends AppCompatActivity {
 
         public void hint();
     }
+
+    public ActivityMethodManager getActMagager() {
+        return mActMagager;
+    }
 }

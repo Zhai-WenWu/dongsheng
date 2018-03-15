@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+import acore.logic.ActivityMethodManager;
 import acore.logic.LoginManager;
 import acore.tools.StringManager;
 import acore.tools.SyntaxTools;
@@ -31,7 +32,7 @@ import static third.ad.control.AdControlNormalDish.tag_yu;
  *----------无限加载使用最简单的方式，直接保存当前的数据和对象，并对广告对象进行分别打tag，并管理
  * @author yujian
  */
-public class QuanAdvertControl {
+public class QuanAdvertControl implements ActivityMethodManager.IAutoRefresh{
     public static final String[] AD_IDS = new String[]{
             AdPlayIdConfig.SUBJECT_LIST_1,
             AdPlayIdConfig.SUBJECT_LIST_2,
@@ -207,7 +208,7 @@ public class QuanAdvertControl {
         XHAllAdControl xhAllAdControl = new XHAllAdControl(adPosList, new XHAllAdControl.XHBackIdsDataCallBack() {
 
             @Override
-            public void callBack(Map<String, String> map) {
+            public void callBack(boolean isRefresh,Map<String, String> map) {
 
                 if (map != null && map.size() > 0) {
                     for (int i = 0; i < AD_IDS.length; i++) {
@@ -243,6 +244,11 @@ public class QuanAdvertControl {
     }
     private void logtzy(String tag, String info) {
         Log.i(tag, info);
+    }
+
+    @Override
+    public void autoRefreshSelfAD() {
+
     }
 
     public interface DataCallBack {

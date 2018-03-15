@@ -85,7 +85,7 @@ public abstract class AdOptionParent {
         }
         xhAllAdControl = new XHAllAdControl(adPosList, new XHAllAdControl.XHBackIdsDataCallBack() {
             @Override
-            public void callBack(Map<String, String> map) {
+            public void callBack(boolean isRefresh,Map<String, String> map) {
                 if (map != null && map.size() > 0) {
 
                     Log("getAdData size:" + map.size());

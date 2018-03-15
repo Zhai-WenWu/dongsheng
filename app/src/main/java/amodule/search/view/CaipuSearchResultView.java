@@ -152,14 +152,14 @@ public class CaipuSearchResultView extends LinearLayout {
 
 
     public void search(String key) {
-        SearchResultAdDataProvider.getInstance().getAdData();
+        adapterCaipuSearch.refreshAdData();
         clearSearchResult();
         searchKey = key;
         loadManager.setLoading(refresh_list_view_frame, list_search_result, adapterCaipuSearch,
                 true, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        SearchResultAdDataProvider.getInstance().getAdData();
+                        adapterCaipuSearch.refreshAdData();
 
                         clearSearchResult();
                         isRefreash.set(true);

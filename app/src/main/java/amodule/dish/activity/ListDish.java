@@ -72,10 +72,10 @@ public class ListDish extends BaseActivity {
     private ArrayList<String> adIds;
     private XHAllAdControl xhAllAdControl;
     private static final Integer[] AD_INSTERT_INDEX = new Integer[]{3, 9, 16, 24, 32, 40, 48, 56, 64, 72};//插入广告的位置。
-    private ArrayList<Map<String, String>> adData;
+    private ArrayList<Map<String, String>> adData = new ArrayList<>();
     private ListView listView;
-    private Map<String,String> permissionMap = new HashMap<>();
-    private Map<String,String> detailPermissionMap = new HashMap<>();
+    private Map<String, String> permissionMap = new HashMap<>();
+    private Map<String, String> detailPermissionMap = new HashMap<>();
     private boolean hasPermission = true;
     private boolean contiunRefresh = true;
     String classifyName;
@@ -101,19 +101,20 @@ public class ListDish extends BaseActivity {
         initAdData();
         initBarView();
         registerObserver();
-        WebviewManager manager = new WebviewManager(this,loadManager,true);
+        WebviewManager manager = new WebviewManager(this, loadManager, true);
         xhWebView = manager.createWebView(R.id.XHWebview);
     }
 
     private IObserver mIObserver;
-    private void registerObserver(){
+
+    private void registerObserver() {
         mIObserver = new IObserver() {
             @Override
             public void notify(String name, Object sender, Object data) {
                 requestFavoriteState();
             }
         };
-        ObserverManager.getInstance().registerObserver(mIObserver,ObserverManager.NOTIFY_LOGIN);
+        ObserverManager.getInstance().registerObserver(mIObserver, ObserverManager.NOTIFY_LOGIN);
     }
 
     /**
@@ -122,15 +123,15 @@ public class ListDish extends BaseActivity {
     private void initAdData() {
         String[] ids = AdPlayIdConfig.MAIN_HOME_WEEK_GOOD_LIST;
         adIds = new ArrayList<>();
-        adData = new ArrayList<>();//广告数据集合
         for (String id : ids) adIds.add(id);
 
         String statisticKey = "jz_list";
         xhAllAdControl = new XHAllAdControl(adIds, new XHAllAdControl.XHBackIdsDataCallBack() {
             @Override
-            public void callBack(Map<String, String> map) {
+            public void callBack(boolean isRefresh,Map<String, String> map) {
                 //处理广告数据
                 int size = adIds.size();
+                adData.clear();
                 for (int i = 0; i < size; i++) {
                     if (map.containsKey(adIds.get(i)) && !TextUtils.isEmpty(map.get(adIds.get(i)))) {
                         String object = map.get(adIds.get(i));
@@ -139,7 +140,7 @@ public class ListDish extends BaseActivity {
                         tempMap.put("adStyle", "1");
                         tempMap.put("name", tempMap.get("desc"));
                         try {
-                            tempMap.put("customer", new JSONObject().put("nickName",tempMap.get("title")).toString());
+                            tempMap.put("customer", new JSONObject().put("nickName", tempMap.get("title")).toString());
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -152,9 +153,13 @@ public class ListDish extends BaseActivity {
                     } else {
                         adData.add(new HashMap<String, String>());
                     }
+                    if(isRefresh){
+                        arrayList = handlerAdData(isRefresh,arrayList);
+                    }
                 }
             }
-        }, statisticKey,true);
+        }, this, statisticKey, true);
+        xhAllAdControl.registerRefreshCallback();
         adapter.setXHAllControl(xhAllAdControl);
         loadManager.setLoading(listView, adapter, true, new OnClickListener() {
             @Override
@@ -167,7 +172,7 @@ public class ListDish extends BaseActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        if(!hasPermission){
+        if (!hasPermission) {
             currentPage = 0;
             hasPermission = true;
             detailPermissionMap.clear();
@@ -205,7 +210,7 @@ public class ListDish extends BaseActivity {
         }
         arrayList = new ArrayList<>();
         // 绑定列表数据
-        adapter = new ListDishAdapter(this,arrayList);
+        adapter = new ListDishAdapter(this, arrayList);
 
         listView.setOnItemClickListener(new OnItemClickListener() {
 
@@ -215,16 +220,16 @@ public class ListDish extends BaseActivity {
                 if (!type.equals("recommend") && !type.equals("typeRecommend"))
                     position--;
                 if (position > -1 && position < arrayList.size()) {
-                    if(arrayList.get(position).containsKey("adStyle")&&"1".equals(arrayList.get(position).get("adStyle"))){
-                        if(xhAllAdControl!=null){
-                            int adPosition= Integer.parseInt(arrayList.get(position).get("adPosition"));
-                            xhAllAdControl.onAdClick(adPosition,String.valueOf(adPosition+1));
+                    if (arrayList.get(position).containsKey("adStyle") && "1".equals(arrayList.get(position).get("adStyle"))) {
+                        if (xhAllAdControl != null) {
+                            int adPosition = Integer.parseInt(arrayList.get(position).get("adPosition"));
+                            xhAllAdControl.onAdClick(adPosition, String.valueOf(adPosition + 1));
                         }
-                    }else{
+                    } else {
                         intent.putExtra("code", arrayList.get(position).get("code"));
                         intent.putExtra("img", arrayList.get(position).get("img"));
                         intent.putExtra("name", arrayList.get(position).get("name"));
-                        intent.putExtra("dishInfo",getDishInfo(arrayList.get(position)));
+                        intent.putExtra("dishInfo", getDishInfo(arrayList.get(position)));
                         startActivity(intent);
                     }
                 }
@@ -232,25 +237,25 @@ public class ListDish extends BaseActivity {
         });
     }
 
-    private String getDishInfo(Map<String,String> data) {
-        try{
+    private String getDishInfo(Map<String, String> data) {
+        try {
             JSONObject dishInfoJson = new JSONObject();
-            dishInfoJson.put("code",data.get("code"));
-            dishInfoJson.put("name",data.get("name"));
-            dishInfoJson.put("img",data.get("img"));
-            dishInfoJson.put("type",TextUtils.equals(data.get("hasVideo"), "2") ? "2" : "1");
-            dishInfoJson.put("allClick",data.get("allClick").replace("浏览",""));
-            dishInfoJson.put("favorites",data.get("favorites").replace("收藏",""));
-            dishInfoJson.put("info",data.get("info"));
+            dishInfoJson.put("code", data.get("code"));
+            dishInfoJson.put("name", data.get("name"));
+            dishInfoJson.put("img", data.get("img"));
+            dishInfoJson.put("type", TextUtils.equals(data.get("hasVideo"), "2") ? "2" : "1");
+            dishInfoJson.put("allClick", data.get("allClick").replace("浏览", ""));
+            dishInfoJson.put("favorites", data.get("favorites").replace("收藏", ""));
+            dishInfoJson.put("info", data.get("info"));
             JSONObject customerJson = new JSONObject();
-            Map<String,String> userInfo = StringManager.getFirstMap(data.get("customer"));
-            customerJson.put("customerCode",userInfo.get("code"));
-            customerJson.put("nickName",userInfo.get("nickName"));
-            customerJson.put("info","");
-            customerJson.put("img",userInfo.get("img"));
-            dishInfoJson.put("customer",customerJson);
+            Map<String, String> userInfo = StringManager.getFirstMap(data.get("customer"));
+            customerJson.put("customerCode", userInfo.get("code"));
+            customerJson.put("nickName", userInfo.get("nickName"));
+            customerJson.put("info", "");
+            customerJson.put("img", userInfo.get("img"));
+            dishInfoJson.put("customer", customerJson);
             return Uri.encode(dishInfoJson.toString());
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return "";
         }
@@ -258,6 +263,7 @@ public class ListDish extends BaseActivity {
 
     boolean isFav = false;
     ImageView img_fav;
+
     private void initBarView() {
         // titleBar初始化
         ImageView img_share = (ImageView) findViewById(R.id.rightImgBtn2);
@@ -275,22 +281,22 @@ public class ListDish extends BaseActivity {
         img_fav.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(LoginManager.isLogin()){
+                if (LoginManager.isLogin()) {
                     handlerFavorite();
-                }else
+                } else
                     startActivity(new Intent(ListDish.this, LoginByAccout.class));
             }
         });
     }
 
     private void handlerFavorite() {
-        statistics(isFav?"取消收藏":"收藏","");
+        statistics(isFav ? "取消收藏" : "收藏", "");
         FavoriteHelper.instance().setFavoriteStatus(this, g1, classifyName, FavoriteHelper.TYPE_MUNE,
                 new FavoriteHelper.FavoriteStatusCallback() {
                     @Override
                     public void onSuccess(boolean state) {
                         isFav = state;
-                        img_fav.setImageResource(isFav?R.drawable.z_caipu_xiangqing_topbar_ico_fav_active:R.drawable.z_caipu_xiangqing_topbar_ico_fav);
+                        img_fav.setImageResource(isFav ? R.drawable.z_caipu_xiangqing_topbar_ico_fav_active : R.drawable.z_caipu_xiangqing_topbar_ico_fav);
                     }
 
                     @Override
@@ -301,7 +307,7 @@ public class ListDish extends BaseActivity {
 
     @SuppressLint("NewApi")
     public void loadData() {
-        if(currentPage == 0 && !type.equals("recommend")){
+        if (currentPage == 0 && !type.equals("recommend")) {
             requestFavoriteState();
         }
         currentPage++;
@@ -318,22 +324,22 @@ public class ListDish extends BaseActivity {
             @Override
             public void getPower(int flag, String url, Object obj) {
                 //权限检测
-                if(permissionMap.isEmpty()
-                        && !TextUtils.isEmpty((String)obj) && !"[]".equals(obj)
-                        && currentPage == 1){
-                    if(TextUtils.isEmpty(lastPermission)){
+                if (permissionMap.isEmpty()
+                        && !TextUtils.isEmpty((String) obj) && !"[]".equals(obj)
+                        && currentPage == 1) {
+                    if (TextUtils.isEmpty(lastPermission)) {
                         lastPermission = (String) obj;
-                    }else{
-                        if(lastPermission.equals(obj.toString())){
+                    } else {
+                        if (lastPermission.equals(obj.toString())) {
                             contiunRefresh = false;
                             return;
                         }
                     }
                     permissionMap = StringManager.getFirstMap(obj);
-                    if(permissionMap.containsKey("page")){
-                        Map<String,String> pagePermission = StringManager.getFirstMap(permissionMap.get("page"));
+                    if (permissionMap.containsKey("page")) {
+                        Map<String, String> pagePermission = StringManager.getFirstMap(permissionMap.get("page"));
                         hasPermission = analyzePagePermissionData(pagePermission);
-                        if(!hasPermission) return;
+                        if (!hasPermission) return;
                     }
 
                 }
@@ -342,7 +348,7 @@ public class ListDish extends BaseActivity {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
                 if (flag >= UtilInternet.REQ_OK_STRING) {
-                    if(!hasPermission || !contiunRefresh) return;
+                    if (!hasPermission || !contiunRefresh) return;
 
                     ArrayList<Map<String, String>> returnList = UtilString.getListMapByJson(returnObj);
                     if (!type.equals("recommend") && !type.equals("typeRecommend")) {
@@ -417,7 +423,7 @@ public class ListDish extends BaseActivity {
                     }
                     if (!type.equals("recommend") && !type.equals("typeRecommend")) {
                         //插入广告。
-                        arrayList = handlerAdData(arrayList);
+                        arrayList = handlerAdData(false,arrayList);
                     }
                     adapter.notifyDataSetChanged();
                 }
@@ -441,7 +447,7 @@ public class ListDish extends BaseActivity {
                     @Override
                     public void onSuccess(boolean state) {
                         isFav = state;
-                        img_fav.setImageResource(isFav?R.drawable.z_caipu_xiangqing_topbar_ico_fav_active:R.drawable.z_caipu_xiangqing_topbar_ico_fav);
+                        img_fav.setImageResource(isFav ? R.drawable.z_caipu_xiangqing_topbar_ico_fav_active : R.drawable.z_caipu_xiangqing_topbar_ico_fav);
                     }
 
                     @Override
@@ -452,12 +458,12 @@ public class ListDish extends BaseActivity {
     }
 
     /**
-     *
      * @param pagePermission
+     *
      * @return
      */
-    public boolean analyzePagePermissionData(Map<String,String> pagePermission){
-        if(pagePermission.containsKey("url") && !TextUtils.isEmpty(pagePermission.get("url"))){
+    public boolean analyzePagePermissionData(Map<String, String> pagePermission) {
+        if (pagePermission.containsKey("url") && !TextUtils.isEmpty(pagePermission.get("url"))) {
             String url = pagePermission.get("url");
             xhWebView.loadUrl(url);
             xhWebView.setVisibility(View.VISIBLE);
@@ -500,10 +506,11 @@ public class ListDish extends BaseActivity {
      * 拼装广告数据
      *
      * @param listData
+     *
      * @return
      */
-    private ArrayList<Map<String, String>> handlerAdData(ArrayList<Map<String, String>> listData) {
-        if (adData == null || adData.size() <= 0) {
+    private ArrayList<Map<String, String>> handlerAdData(boolean isRefresh,ArrayList<Map<String, String>> listData) {
+        if (adData == null || adData.isEmpty()) {
             return listData;
         }
         for (int i = 0; i < listData.size(); i++) {
@@ -512,11 +519,18 @@ public class ListDish extends BaseActivity {
                 if (i == AD_INSTERT_INDEX[j]) {//是要插广告的位置
                     Log.i("tzy", "handlerAdData: ==");
                     //数据无不是广告直接插入广告
-                    if (!listData.get(i).containsKey("adStyle") || TextUtils.isEmpty(listData.get(i).get("adStyle"))) {
+                    if (!listData.get(i).containsKey("adStyle")
+                            || TextUtils.isEmpty(listData.get(i).get("adStyle"))) {
                         //插入广告
                         if (adData.get(j) != null && adData.get(j).size() > 0) {//数据
-                            listData.add(i , adData.get(j));
+                            listData.add(i, adData.get(j));
                             Log.i("tzy", "handlerAdData: add");
+                        }
+                    }else if(isRefresh){
+                        //插入广告
+                        if (adData.get(j) != null && adData.get(j).size() > 0) {//数据
+                            listData.set(i, adData.get(j));
+                            Log.i("tzy", "handlerAdData: set");
                         }
                     }//不进行如何操作。
                 }

@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.Random;
 
 import acore.tools.StringManager;
-import acore.tools.SyntaxTools;
 import third.ad.scrollerAd.XHAllAdControl;
 import third.ad.scrollerAd.XHScrollerAdParent;
 
@@ -30,13 +29,14 @@ public class DishAdDataControl {
     private ArrayList<Map<String, String>> finalDataLists = new ArrayList<>();
 
     public void getDishAdData(Context context, @NonNull final DishAdDataControlCallback callback) {
+        finalDataLists.clear();
         ArrayList<String> adPosList = new ArrayList<>();
         for (String posStr : COMMEND_THREE_MEALS) {
             adPosList.add(posStr);
         }
         xhAllAdControl = new XHAllAdControl(adPosList, new XHAllAdControl.XHBackIdsDataCallBack() {
             @Override
-            public void callBack(Map<String, String> map) {
+            public void callBack(boolean isRefresh,Map<String, String> map) {
                 if (map != null && map.size() > 0) {
                     adDataList.clear();
                     for (String adKey : COMMEND_THREE_MEALS) {
@@ -48,10 +48,11 @@ public class DishAdDataControl {
                             }
                         }
                     }
-                    callback.onGetDataComplete();
+                    callback.onGetDataComplete(isRefresh);
                 }
             }
         }, (Activity) context, "other_threeMeals_list");
+        xhAllAdControl.registerRefreshCallback();
     }
 
 
@@ -97,27 +98,25 @@ public class DishAdDataControl {
     }
 
 
-    public void addAdDataToList(
-            @NonNull ArrayList<Map<String, String>> arrayList) {
-        SyntaxTools.loop(arrayList, new SyntaxTools.LooperCallBack() {
-            @Override
-            public boolean loop(int i, Object object) {
-                if (object != null) {
-                    Map<String, String> map = (Map<String, String>) object;
-                    if ("往期推荐".equals(map.get("isToday")) && !adDataList.isEmpty()) {
-                        finalDataLists.add(adDataList.get(0));
-                    }
-                    finalDataLists.add(map);
-                }
-                return false;
+    public void addAdDataToList(boolean isRefresh,@NonNull ArrayList<Map<String, String>> arrayList) {
+        for(int i = 0;i<arrayList.size();i++){
+            Map<String, String> map = arrayList.get(i);
+            if("往期推荐".equals(map.get("isToday")) && !adDataList.isEmpty()){
+                Map<String,String> adMap = adDataList.get(0);
+                adMap.put("isAdItem","2");
+                finalDataLists.add(adMap);
+            }else if(isRefresh && "2".equals(map.get("isAdItem"))){
+                map = adDataList.get(0);
+                map.put("isAdItem","2");
             }
-        });
+            finalDataLists.add(map);
+        }
         arrayList.clear();
         arrayList.addAll(finalDataLists);
     }
 
     public interface DishAdDataControlCallback {
-        void onGetDataComplete();
+        void onGetDataComplete(boolean isRefresh);
     }
 }
 

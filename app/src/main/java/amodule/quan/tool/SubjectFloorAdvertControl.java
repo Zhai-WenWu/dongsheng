@@ -41,12 +41,12 @@ public class SubjectFloorAdvertControl {
         ArrayList<String> ads = new ArrayList<>();
         ads.add(DETAIL_SUBJECT_FLOOR_BOTTOM);
         xhAllAdControl = new XHAllAdControl(ads,
-                map -> {
+                (isRefresh, map)  -> {
                     BannerAd bannerAd = new BannerAd(mAct, xhAllAdControl, imageView);
                     map = StringManager.getFirstMap(map.get(DETAIL_SUBJECT_FLOOR_BOTTOM));
                     bannerAd.onShowAd(map);
-                },
-                mAct, "community_detail");
+                }, mAct, "community_detail");
+        xhAllAdControl.registerRefreshCallback();
     }
 
     public void onAdShow(){

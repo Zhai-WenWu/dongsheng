@@ -114,7 +114,7 @@ public class MoreImageShow extends BaseActivity{
         }
         xhAllAdControl = new XHAllAdControl(adPosList, new XHAllAdControl.XHBackIdsDataCallBack() {
             @Override
-            public void callBack(Map<String, String> map) {
+            public void callBack(boolean isRefresh,Map<String, String> map) {
                 if (map != null && map.size() > 0) {
                     for (String adKey : AD_IDS) {
                         String adStr = map.get(adKey);
@@ -130,6 +130,7 @@ public class MoreImageShow extends BaseActivity{
                 }
             }
         },MoreImageShow.this, "result_step");
+        xhAllAdControl.registerRefreshCallback();
     }
 
 

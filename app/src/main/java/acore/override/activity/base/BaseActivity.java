@@ -403,4 +403,7 @@ public class BaseActivity extends AppCompatActivity {
 		public void hint();
 	}
 
+	public ActivityMethodManager getActMagager() {
+		return mActMagager;
+	}
 }

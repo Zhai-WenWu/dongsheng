@@ -197,7 +197,10 @@ public class DishHeaderViewNew extends LinearLayout {
 
         xhAllAdControl = new XHAllAdControl(list, new XHAllAdControl.XHBackIdsDataCallBack() {
             @Override
-            public void callBack(Map<String, String> maps) {
+            public void callBack(boolean isRefresh,Map<String, String> maps) {
+                if(isRefresh){
+                    return;
+                }
                 String temp = maps.get(AdPlayIdConfig.DISH_MEDIA);
                 mapAd = StringManager.getFirstMap(temp);
                 if (mapAd != null && mapAd.size() > 0
@@ -209,6 +212,7 @@ public class DishHeaderViewNew extends LinearLayout {
                     mVideoPlayerController.setOnClick();
             }
         }, activity, "result_media");
+        xhAllAdControl.registerRefreshCallback();
 
     }
     public void initVideoAd(){

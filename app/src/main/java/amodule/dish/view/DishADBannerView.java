@@ -44,7 +44,7 @@ public class DishADBannerView extends ItemBaseView {
         imgWidth=Tools.getPhoneWidth()-Tools.getDimen(context,R.dimen.dp_40);
         ArrayList<String> list = new ArrayList<>();
         list.add(DISH_YONGLIAO);
-        xhAllAdControl = new XHAllAdControl(list, map -> {
+        xhAllAdControl = new XHAllAdControl(list, (isRefresh, map) -> {
             if(map.containsKey(DISH_YONGLIAO)){
                 BannerAd bannerAd = new BannerAd(XHActivityManager.getInstance().getCurrentActivity(), xhAllAdControl, img_banner);
                 bannerAd.setOnBannerListener(new BannerAd.OnBannerListener() {
@@ -67,6 +67,7 @@ public class DishADBannerView extends ItemBaseView {
                 bannerAd.onShowAd(map);
             }
         },XHActivityManager.getInstance().getCurrentActivity(),"");
+        xhAllAdControl.registerRefreshCallback();
     }
 
     public void onAdShow(){

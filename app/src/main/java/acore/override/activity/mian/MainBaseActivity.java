@@ -142,4 +142,8 @@ public class MainBaseActivity extends AppCompatActivity {
 			mActMagager.onStop();
 		}
 	}
+
+	public ActivityMethodManager getActMagager() {
+		return mActMagager;
+	}
 }

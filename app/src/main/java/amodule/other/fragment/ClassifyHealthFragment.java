@@ -359,7 +359,7 @@ public class ClassifyHealthFragment extends Fragment {
         ads.add(adPlayId);
         final String finalAdPlayId = adPlayId;
         xhAllAdControl = new XHAllAdControl(ads,
-                map -> {
+                (isRefresh,map) -> {
                     if (map.containsKey(finalAdPlayId)) {
                         BannerAd bannerAd = new BannerAd(mActivity, xhAllAdControl, mImageView);
                         bannerAd.marginLeft = ToolsDevice.dp2px(mActivity, 60);
@@ -370,8 +370,8 @@ public class ClassifyHealthFragment extends Fragment {
                             onAdShow();
                         }
                     }
-                },
-                getActivity(), "");
+                }, getActivity(), "");
+        xhAllAdControl.registerRefreshCallback();
     }
 
     /**

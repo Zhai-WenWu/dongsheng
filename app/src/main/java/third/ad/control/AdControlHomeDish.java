@@ -292,5 +292,4 @@ public class AdControlHomeDish extends AdControlParent{
     public void setAdLoadNumberCallBack(AdOptionParent.AdLoadNumberCallBack adLoadNumberCallBack){
         this.adLoadNumberCallBack=adLoadNumberCallBack;
     }
-
 }

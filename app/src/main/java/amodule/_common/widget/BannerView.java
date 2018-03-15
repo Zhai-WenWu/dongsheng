@@ -329,13 +329,14 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
     public void initAdData() {
         if (mAdControl == null && ToolsDevice.isNetworkAvailable(getContext())) {
             mAdControl = new XHAllAdControl(mAdIDArray,
-                    (final Map<String, String> map) ->
+                    (boolean isRefresh,final Map<String, String> map) ->
                             Stream.of(mAdIDArray).forEach(key -> {
                                 String adStr = map.get(key);
                                 sendAdMessage(adStr);
                             }),
                     XHActivityManager.getInstance().getCurrentActivity(),
                     "sy_banner");
+            mAdControl.registerRefreshCallback();
         }
     }
 

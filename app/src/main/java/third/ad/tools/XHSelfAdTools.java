@@ -64,12 +64,13 @@ public class XHSelfAdTools {
                             String showNumValue = map.get("showNum");
                             int showNum = TextUtils.isEmpty(showNumValue)?0:Integer.parseInt(showNumValue);
                             nativeData.setShowNum(showNum);
-                            nativeData.setUrl(map.get("url"));
-                            nativeData.setType(map.get("type"));
+                            nativeData.setUrl(map.get("andUrl"));
+                            nativeData.setType(map.get("adType"));
                             nativeData.setUpdateTime(map.get("updateTime"));
-                            Map<String,String> imgsMap = StringManager.getFirstMap(map.get("imgs"));
-                            nativeData.setBigImage(imgsMap.get("big"));
-                            nativeData.setLittleImage(imgsMap.get("little"));
+                            Map<String,String> bigImageMap = StringManager.getFirstMap(map.get("big"));
+                            nativeData.setBigImage(bigImageMap.get(""));
+                            Map<String,String> littleImageMap = StringManager.getFirstMap(map.get("little"));
+                            nativeData.setLittleImage(littleImageMap.get(""));
                             list.add(nativeData);
                         }
                     }

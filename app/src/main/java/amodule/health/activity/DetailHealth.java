@@ -131,7 +131,7 @@ public class DetailHealth extends BaseActivity {
         ArrayList<String> list = new ArrayList<>();
 //        list.add(DETAIL_HEALTH);
         list.add(Dish_CLASSIFY);
-        xhAllAdControl = new XHAllAdControl(list, map -> {
+        xhAllAdControl = new XHAllAdControl(list, (isRefresh,map) -> {
             if (map.containsKey(Dish_CLASSIFY)) {
                 bannerAdBurden = new BannerAd(DetailHealth.this, xhAllAdControl, imageView);
                 bannerAdBurden.setOnBannerListener(new BannerAd.OnBannerListener() {
@@ -154,6 +154,7 @@ public class DetailHealth extends BaseActivity {
                 bannerAdBurden.onShowAd(map);
             }
         }, this, "other_health");
+        xhAllAdControl.registerRefreshCallback();
     }
 
     private void initBarView() {

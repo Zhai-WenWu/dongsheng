@@ -10,6 +10,7 @@ import android.util.Log;
 
 import com.baidu.mobads.AdView;
 import com.baidu.mobads.AppActivity;
+import com.facebook.stetho.Stetho;
 import com.mob.MobApplication;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.analytics.MobclickAgent;
@@ -51,6 +52,7 @@ public class XHApplication extends MobApplication {
     }
     @Override
     public void onCreate() {
+        Stetho.initializeWithDefaults(this);
         mAppApplication = this;
         startTime = System.currentTimeMillis();
         LogManager.printStartTime("zhangyujian","XhApplication::11111.oncreate::");

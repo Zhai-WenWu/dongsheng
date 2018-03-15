@@ -235,4 +235,8 @@ public class BaseFragmentActivity extends FragmentActivity {
 		super.finish();
 		overridePendingTransition(R.anim.in_from_left, R.anim.out_to_right);
 	}
+
+	public ActivityMethodManager getActMagager() {
+		return mActMagager;
+	}
 }

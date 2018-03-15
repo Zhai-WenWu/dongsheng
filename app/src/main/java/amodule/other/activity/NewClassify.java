@@ -417,7 +417,7 @@ public class NewClassify extends BaseActivity {
         final String adid = "caipu".equals(type) ? AdPlayIdConfig.Dish_CLASSIFY : AdPlayIdConfig.HEALTH_ClASSIFY;
         ArrayList<String> list = new ArrayList<>();
         list.add(adid);
-        xhAllAdControl = new XHAllAdControl(list, map -> {
+        xhAllAdControl = new XHAllAdControl(list, (isRefresh,map) -> {
             if (map.containsKey(adid)) {
                 BannerAd bannerAd = new BannerAd(NewClassify.this, xhAllAdControl, imageView);
                 bannerAd.marginLeft = ToolsDevice.dp2px(NewClassify.this, 60);
@@ -427,6 +427,7 @@ public class NewClassify extends BaseActivity {
                 xhAllAdControl.onAdBind(0, imageView, "");
             }
         }, this, "");
+        xhAllAdControl.registerRefreshCallback();
     }
 
     //设置活动相关

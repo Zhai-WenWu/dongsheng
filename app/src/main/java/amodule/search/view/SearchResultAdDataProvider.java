@@ -1,5 +1,6 @@
 package amodule.search.view;
 
+import android.app.Activity;
 import android.text.TextUtils;
 
 import java.util.ArrayList;
@@ -8,15 +9,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import acore.override.helper.XHActivityManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import third.ad.scrollerAd.XHAllAdControl;
-import third.ad.scrollerAd.XHScrollerAdParent;
 import third.ad.tools.AdPlayIdConfig;
-
-/**
- * Created by ：fei_teng on 2017/3/28 17:29.
- */
 
 public class SearchResultAdDataProvider {
     public static final String[] AD_IDS = new String[]{
@@ -32,71 +29,69 @@ public class SearchResultAdDataProvider {
     private XHAllAdControl xhAllAdControl;
     private ArrayList<Map<String, String>> list = new ArrayList<>();
 
-    private SearchResultAdDataProvider() {
-    }
-
-    private static SearchResultAdDataProvider instance;
     private AtomicBoolean topItemHasData = new AtomicBoolean(false);
 
-    public static SearchResultAdDataProvider getInstance() {
+    private OnAutoRefreshCallback mAutoRefreshCallback;
 
-        if (instance == null) {
-            synchronized (SearchResultAdDataProvider.class) {
-                if (instance == null) {
-                    instance = new SearchResultAdDataProvider();
-                }
-            }
-        }
-        return instance;
-    }
-
-
-    public void getAdData(){
+    public void getAdData() {
 
         final ArrayList<String> adPosList = new ArrayList<>();
         Collections.addAll(adPosList, AD_IDS);
 
-        xhAllAdControl = new XHAllAdControl(adPosList, new XHAllAdControl.XHBackIdsDataCallBack() {
-            @Override
-            public void callBack(Map<String, String> map) {
-                list.clear();
-                if (map != null && map.size() > 0) {
-                    for (int i = 0;i<adPosList.size();i++) {
-                        String adStr = map.get(adPosList.get(i));
-                        if (!TextUtils.isEmpty(adStr)) {
-                            ArrayList<Map<String, String>> adList = StringManager.getListMapByJson(adStr);
-                            if (adList != null && adList.size() > 0) {
-                                Map<String, String> adDataMap = adList.get(0);
-                                adDataMap.put("allClick", String.valueOf(Tools.getRandom(4000,10000)));
+        if (xhAllAdControl == null) {
+            xhAllAdControl = new XHAllAdControl(adPosList, new XHAllAdControl.XHBackIdsDataCallBack() {
+                @Override
+                public void callBack(boolean isRefresh, Map<String, String> map) {
+                    list.clear();
+                    if (map != null && map.size() > 0) {
+                        for (int i = 0; i < adPosList.size(); i++) {
+                            String adStr = map.get(adPosList.get(i));
+                            if (!TextUtils.isEmpty(adStr)) {
+                                ArrayList<Map<String, String>> adList = StringManager.getListMapByJson(adStr);
+                                if (adList != null && adList.size() > 0) {
+                                    Map<String, String> adDataMap = adList.get(0);
+                                    adDataMap.put("allClick", String.valueOf(Tools.getRandom(4000, 10000)));
+                                    list.add(adDataMap);
+                                }
+                            } else {
+                                Map<String, String> adDataMap = new HashMap<>();
                                 list.add(adDataMap);
                             }
-                        }else{
-                            Map<String, String> adDataMap = new HashMap<>();
-                            list.add(adDataMap);
-                        }
 
-                        //处理搜索列表顶部广告
-                        if (i == 0) {
-                            if (list.size() > 0)
+                            //处理搜索列表顶部广告
+                            if (i == 0 && list.size() > 0) {
                                 topItemHasData.set(list.size() > 0);
+                            }
                         }
-
+                    }
+                    if(isRefresh && mAutoRefreshCallback != null){
+                        mAutoRefreshCallback.autoRefresh();
                     }
                 }
-            }
-        }, "search_list",false);
+            }, XHActivityManager.getInstance().getCurrentActivity(), "search_list", false);
+            xhAllAdControl.registerRefreshCallback();
+        } else {
+            xhAllAdControl.getAllAdDataBySqlite();
+        }
     }
 
-    public ArrayList<Map<String,String>> getAdDataList(){
+    public ArrayList<Map<String, String>> getAdDataList() {
         return list;
     }
 
-    public XHAllAdControl getXhAllAdControl(){
+    public XHAllAdControl getXhAllAdControl() {
         return xhAllAdControl;
     }
 
-    public AtomicBoolean HasTopAdData(){
+    public AtomicBoolean HasTopAdData() {
         return topItemHasData;
     }
 
+    public interface OnAutoRefreshCallback{
+        void autoRefresh();
+    }
+
+    public void setAutoRefreshCallback(OnAutoRefreshCallback autoRefreshCallback) {
+        mAutoRefreshCallback = autoRefreshCallback;
+    }
 }

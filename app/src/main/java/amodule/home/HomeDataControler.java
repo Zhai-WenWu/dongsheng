@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import acore.logic.ActivityMethodManager;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import amodule.main.activity.MainHomePage;
@@ -20,6 +21,7 @@ import amodule.main.bean.HomeModuleBean;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
+import third.ad.XHAdAutoRefresh;
 import third.ad.control.AdControlHomeDish;
 
 import static third.ad.control.AdControlHomeDish.tag_yu;
@@ -32,7 +34,7 @@ import static third.ad.control.AdControlHomeDish.tag_yu;
  * E_mail : ztanzeyu@gmail.com
  */
 
-public class HomeDataControler {
+public class HomeDataControler implements ActivityMethodManager.IAutoRefresh{
 
     private String CACHE_PATH = "";
     private final String SP_KEY_BACKURL = "backUrl";
@@ -55,11 +57,26 @@ public class HomeDataControler {
     //广告控制器
     private AdControlHomeDish mAdControl;
 
+    private long lastSelfAdTime;
+
     public HomeDataControler(MainHomePage activity) {
         this.mActivity = activity;
         mHomeModuleBean = new HomeModuleControler().getHomeModuleByType(activity, null);
         CACHE_PATH = FileManager.getSDCacheDir() + "homeDataCache";
         mAdControl = AdControlHomeDish.getInstance().getTwoLoadAdData();
+        registerRefreshCallback();
+    }
+
+    //注册刷新回调
+    private void registerRefreshCallback() {
+        if(mActivity == null){
+            return;
+        }
+        lastSelfAdTime = System.currentTimeMillis();
+        ActivityMethodManager activityMethodManager = mActivity.getActMagager();
+        if(activityMethodManager != null){
+            activityMethodManager.registerADController(this);
+        }
     }
 
     //读取缓存数据
@@ -307,6 +324,13 @@ public class HomeDataControler {
 
     public void setEntryptDataCallback(EntryptDataCallback entryptDataCallback) {
         this.mEntryptDataCallback = entryptDataCallback;
+    }
+
+    @Override
+    public void autoRefreshSelfAD() {
+        if(System.currentTimeMillis() - lastSelfAdTime >= XHAdAutoRefresh.intervalTime){
+            isNeedRefresh(true);
+        }
     }
 
     /*--------------------------------------------- Interface ---------------------------------------------*/
