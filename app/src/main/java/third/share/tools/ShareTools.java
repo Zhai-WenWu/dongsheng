@@ -142,26 +142,17 @@ public class ShareTools {
 			@Override
 			public void onError(Platform plf, int arg1, Throwable arg2) {
 				arg2.printStackTrace();
-				Message msg = new Message();
-				msg.what = SHARE_ERROR;
-				msg.obj = plf.getName();
-				shareHandler.sendMessage(msg);
+				handleCallback(Option.SHARE.getType(), SHARE_ERROR, plf);
 			}
 
 			@Override
 			public void onComplete(Platform plf, int arg1,HashMap<String, Object> arg2) {
-				Message msg = new Message();
-				msg.what = SHARE_OK;
-				msg.obj = plf.getName();
-				shareHandler.sendMessage(msg);
+				handleCallback(Option.SHARE.getType(), SHARE_OK, plf);
 			}
 
 			@Override
 			public void onCancel(Platform plf, int arg1) {
-				Message msg = new Message();
-				msg.what = SHARE_CANCLE;
-				msg.obj = plf.getName();
-				shareHandler.sendMessage(msg);
+				handleCallback(Option.SHARE.getType(), SHARE_CANCLE, plf);
 			}
 		});
 
@@ -271,37 +262,64 @@ public class ShareTools {
 		@Override
 		public boolean handleMessage(Message msg) {
 			int flag = msg.what;
+			int arg1 = msg.arg1;
 			String pla = msg.obj.toString();
 			String[] pf = getPlatform(pla);
 			switch(flag){
 				case SHARE_OK:
-					starEvent("a_share_success", mParent,mFrom);
-					XHClick.statisticsShare(mFrom, mClickUrl, pf[1]);
-					Tools.showToast(mContext, pf[0] + "分享成功");
-					notifyShareResult(pf[0],"2", pf[2]);
+					if (arg1 == Option.SHARE.getType()) {
+						starEvent("a_share_success", mParent, mFrom);
+						XHClick.statisticsShare(mFrom, mClickUrl, pf[1]);
+						Tools.showToast(mContext, pf[0] + "分享成功");
+						notifyMsgResult(Option.SHARE, pf[0], "2", pf[2]);
+					} else if (arg1 == Option.AUTHORIZE.getType()) {
+						Tools.showToast(mContext, pf[0] + "授权成功");
+						notifyMsgResult(Option.AUTHORIZE, pf[0], "2", pf[2]);
+					}
 					break;
 				case SHARE_ERROR:
-					if(("微信".equals(pf[0]) || pf[0].indexOf("微信") > -1) && ToolsDevice.isAppInPhone(mContext, "com.tencent.mm") == 0){
-						Tools.showToast(mContext, "未检测到相关应用");
-					}else
-						Tools.showToast(mContext, pf[0] + "分享失败");
-					notifyShareResult(pf[0],"1", pf[2]);
+					if (arg1 == Option.SHARE.getType()) {
+						if(("微信".equals(pf[0]) || pf[0].indexOf("微信") > -1) && ToolsDevice.isAppInPhone(mContext, "com.tencent.mm") == 0){
+							Tools.showToast(mContext, "未检测到相关应用");
+						}else
+							Tools.showToast(mContext, pf[0] + "分享失败");
+						notifyMsgResult(Option.SHARE, pf[0],"1", pf[2]);
+					} else if (arg1 == Option.AUTHORIZE.getType()) {
+						Tools.showToast(mContext, pf[0] + "授权失败");
+						notifyMsgResult(Option.AUTHORIZE, pf[0],"1", pf[2]);
+					}
+
 					break;
 				case SHARE_CANCLE:
-					Tools.showToast(mContext, pf[0] + "取消分享");
-					notifyShareResult(pf[0],"1", pf[2]);
+					if (arg1 == Option.SHARE.getType()) {
+						Tools.showToast(mContext, pf[0] + "取消分享");
+						notifyMsgResult(Option.SHARE, pf[0],"1", pf[2]);
+					} else if (arg1 == Option.AUTHORIZE.getType()) {
+						Tools.showToast(mContext, pf[0] + "授权分享");
+						notifyMsgResult(Option.AUTHORIZE, pf[0],"1", pf[2]);
+					}
 					break;
 			}
 			return false;
 		}
 	});
 
-	public void notifyShareResult(String platform,String success, String jsCallbackParams){
+	public void notifyMsgResult(Option option, String platform, String success, String
+			jsCallbackParams){
 		Map<String,String> data = new HashMap<>();
 		data.put("platform",platform);
 		data.put("status",success);
 		data.put("callbackParams", jsCallbackParams);
-		ObserverManager.getInstance().notify(ObserverManager.NOTIFY_SHARE,this,data);
+		String name = "";
+		switch (option) {
+			case SHARE:
+				name = ObserverManager.NOTIFY_SHARE;
+				break;
+			case AUTHORIZE:
+				name = ObserverManager.NOTIFY_AUTHORIZE_THIRD;
+				break;
+		}
+		ObserverManager.getInstance().notify(name,this,data);
 	}
 
 	public String[] getPlatform(String name){
@@ -385,30 +403,73 @@ public class ShareTools {
 		platform.setPlatformActionListener(new PlatformActionListener() {
 			@Override
 			public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
-				Message msg = new Message();
-				msg.what = SHARE_OK;
-				msg.obj = platform.getName();
-				shareHandler.sendMessage(msg);
+				handleCallback(Option.SHARE.getType(), SHARE_OK, platform);
 			}
 
 			@Override
 			public void onError(Platform platform, int i, Throwable throwable) {
 				throwable.printStackTrace();
-				Message msg = new Message();
-				msg.what = SHARE_ERROR;
-				msg.obj = platform.getName();
-				shareHandler.sendMessage(msg);
+				handleCallback(Option.SHARE.getType(), SHARE_ERROR, platform);
 			}
 
 			@Override
 			public void onCancel(Platform platform, int i) {
-				Message msg = new Message();
-				msg.what = SHARE_CANCLE;
-				msg.obj = platform.getName();
-				shareHandler.sendMessage(msg);
+				handleCallback(Option.SHARE.getType(), SHARE_CANCLE, platform);
 			}
 		});
 		platform.share(shareParams);
+	}
+
+	public void requestAuthorize(String platform) {
+		Platform pf = ShareSDK.getPlatform(platform);
+		pf.SSOSetting(false);
+		pf.setPlatformActionListener(new PlatformActionListener() {
+			@Override
+			public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
+				handleCallback(Option.AUTHORIZE.getType(), SHARE_OK, platform);
+			}
+
+			@Override
+			public void onError(Platform platform, int i, Throwable throwable) {
+				handleCallback(Option.AUTHORIZE.getType(), SHARE_ERROR, platform);
+			}
+
+			@Override
+			public void onCancel(Platform platform, int i) {
+				handleCallback(Option.AUTHORIZE.getType(), SHARE_CANCLE, platform);
+			}
+		});
+		pf.authorize();
+		pf.showUser(null);
+	}
+
+	private void handleCallback(int optionType, int callbackType, Platform platform) {
+		Message msg = new Message();
+		msg.what = callbackType;
+		msg.obj = platform.getName();
+		msg.arg1 = optionType;
+		shareHandler.sendMessage(msg);
+	}
+
+	public enum  Option {
+		SHARE(0, "分享"),
+		AUTHORIZE(1, "授权");
+
+		private int mType;
+		private String mDesc;
+		private Option(int type, String desc) {
+			this.mType = type;
+			this.mDesc = desc;
+		}
+
+		public int getType() {
+			return this.mType;
+		}
+
+		public String getDesc() {
+			return this.mDesc;
+		}
+
 	}
 
 }

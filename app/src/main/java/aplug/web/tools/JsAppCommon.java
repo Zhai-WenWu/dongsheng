@@ -71,6 +71,7 @@ import third.mall.wx.WxPay;
 import third.push.xg.XGPushServer;
 import third.share.BarShare;
 import third.share.BarShareImage;
+import third.share.tools.ShareTools;
 import xh.basic.tool.UtilFile;
 
 import static amodule.dish.activity.upload.UploadDishActivity.DISH_TYPE_KEY;
@@ -359,7 +360,7 @@ public class JsAppCommon extends JsBase {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                if (mAct instanceof WebActivity) {
+                if (mAct instanceof WebActivity && !TextUtils.isEmpty(callback)) {
                     ((ShowWeb) mAct).shareCallback = callback;
                 }
                 RelativeLayout shareLayout = (RelativeLayout) mAct.findViewById(R.id.shar_layout);
@@ -1318,6 +1319,66 @@ public class JsAppCommon extends JsBase {
     public void inputToClipboard(String content){
         if(null == mAct || TextUtils.isEmpty(content)) return;
         handler.post(()->Tools.inputToClipboard(mAct,content));
+    }
+
+    /**
+     *
+     * @param title
+     * @param content
+     * @param img
+     * @param url
+     * @param type
+     * @param callback
+     * @param shareType
+     * @param path
+     * @param platformType 平台对应类型 Wechat->微信好友 WechatMoments->朋友圈 QQ->腾讯qq QZone->qq空间
+     *                     SinaWeibo->新浪微博
+     */
+    @JavascriptInterface
+    public void openShareByType(final String title, final String content, final String img, final
+    String url, final String type, final String callback, final String shareType, final String
+            path, final String platformType) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (mAct instanceof WebActivity && !TextUtils.isEmpty(callback)) {
+                    ((WebActivity)mAct).shareCallback = callback;
+                }
+                ShareTools st = ShareTools.getBarShare(mAct);
+                Map<String, String> shareMap = new HashMap<>();
+                shareMap.put("type", BarShare.IMG_TYPE_WEB);
+                shareMap.put("title", title);
+                shareMap.put("url", url);
+                shareMap.put("content", content);
+                shareMap.put("img", img);
+                shareMap.put("from", type);
+                shareMap.put("parent", "");
+                shareMap.put("platform", platformType);
+                String sp = transferData(title, content, img, url, type, shareType, path);
+                if (!TextUtils.isEmpty(sp))
+                    shareMap.put("shareParams", sp);
+                st.showSharePlatform(shareMap);
+            }
+        });
+    }
+
+    /**
+     *
+     * @param platformType platformType：平台对应类型 Wechat->微信好友 WechatMoments->朋友圈 QQ->腾讯qq
+     *                     QZone->qq空间 SinaWeibo->新浪微博
+     * @param callback 回调统计
+     */
+    @JavascriptInterface
+    public void getAuthorize(final String platformType, final String callback) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (mAct instanceof WebActivity && !TextUtils.isEmpty(callback))
+                    ((WebActivity)mAct).shareCallback = callback;
+                ShareTools st = ShareTools.getBarShare(mAct);
+                st.requestAuthorize(platformType);
+            }
+        });
     }
 
 }
