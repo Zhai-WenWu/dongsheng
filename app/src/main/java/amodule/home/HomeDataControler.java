@@ -346,8 +346,9 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
 
     @Override
     public void autoRefreshSelfAD() {
-        if(System.currentTimeMillis() - lastSelfAdTime >= XHAdAutoRefresh.intervalTime){
-            isNeedRefresh(true);
+        if(System.currentTimeMillis() - lastSelfAdTime >= XHAdAutoRefresh.intervalTime
+                && mAdControl != null){
+            mAdControl.autoRefreshSelfAD();
         }
     }
 

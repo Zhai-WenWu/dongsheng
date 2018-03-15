@@ -285,6 +285,7 @@ public class CircleFragment extends Fragment {
             LoadOver = true;
         }
         quanAdvertControl= new QuanAdvertControl(mActivity);
+        mActivity.getActMagager().registerADController(quanAdvertControl);
         quanAdvertControl.getAdData(mActivity);
         quanAdvertControl.setCallBack(new QuanAdvertControl.DataCallBack() {
             @Override
@@ -592,5 +593,11 @@ public class CircleFragment extends Fragment {
     public void onPause() {
         super.onPause();
         stopVideo();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mActivity.getActMagager().unregisterADController(quanAdvertControl);
     }
 }

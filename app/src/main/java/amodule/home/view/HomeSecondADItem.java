@@ -5,13 +5,11 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.xiangha.R;
-
 import java.util.Map;
 
 import acore.tools.StringManager;
 import amodule.home.delegate.IDataSetDelegate;
-import amodule.main.activity.MainHome;
+import amodule.main.activity.MainHomePage;
 import amodule.main.view.item.HomeRecipeItem;
 
 /**
@@ -63,7 +61,7 @@ public class HomeSecondADItem extends HomeRecipeItem implements IDataSetDelegate
         }
         mContainer.setLayoutParams(containerParams);
         String title = mDataMap.get("content");
-        if (MainHome.recommedType.equals(type)) {
+        if (MainHomePage.recommedType.equals(type)) {
             mTitleTop.setText(title);
             mTitleTop.setVisibility(!TextUtils.isEmpty(title) ? View.VISIBLE : View.GONE);
         } else {

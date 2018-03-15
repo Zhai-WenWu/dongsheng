@@ -538,6 +538,7 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
     public void autoRefreshSelfAD(){
         final long noeTime = System.currentTimeMillis();
         if(noeTime - lastSelfAdTime >= XHAdAutoRefresh.intervalTime){
+            lastSelfAdTime = System.currentTimeMillis();
             refreshSelfAd();
         }
     }

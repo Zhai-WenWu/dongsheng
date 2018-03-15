@@ -16,7 +16,7 @@ import java.util.Map;
 import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
 import amodule.home.delegate.IDataSetDelegate;
-import amodule.main.activity.MainHome;
+import amodule.main.activity.MainHomePage;
 
 /**
  * 大图样式
@@ -128,7 +128,7 @@ public class HomeRecipeItem extends HomeItem {
         String type = null;
         if (mModuleBean != null)
             type = mModuleBean.getType();
-        containerParams.topMargin = getResources().getDimensionPixelSize(MainHome.recommedType.equals(type) ? R.dimen.dp_6 : R.dimen.dp_15);
+        containerParams.topMargin = getResources().getDimensionPixelSize(MainHomePage.recommedType.equals(type) ? R.dimen.dp_6 : R.dimen.dp_15);
         if (!TextUtils.isEmpty(type)) {
             switch (type) {
                 case "day":
@@ -173,7 +173,7 @@ public class HomeRecipeItem extends HomeItem {
         mContainer.setLayoutParams(containerParams);
         mPlayImg.setVisibility(mIsVideo ? View.VISIBLE : View.GONE);
         String title = mIsAd ? mDataMap.get("content") : mDataMap.get("name");
-        if (MainHome.recommedType.equals(type)) {
+        if (MainHomePage.recommedType.equals(type)) {
             mTitleTop.setText(title);
             mTitleTop.setVisibility(!TextUtils.isEmpty(title) ? View.VISIBLE : View.GONE);
         } else {

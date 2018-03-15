@@ -21,7 +21,7 @@ import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import amodule.main.Main;
-import amodule.main.activity.MainHome;
+import amodule.main.activity.MainHomePage;
 import amodule.other.listener.HomeKeyListener;
 import amodule.other.listener.HomeKeyListener.OnHomePressedListener;
 import aplug.basic.ReqEncyptInternet;
@@ -113,7 +113,7 @@ public class ActivityMethodManager {
         if (colse_level <= level) {
             if (level == 1 && colse_level != 0) {
                 if (Main.allMain != null) {
-                    Main.allMain.setCurrentTabByClass(MainHome.class);
+                    Main.allMain.setCurrentTabByClass(MainHomePage.class);
                 }
                 colse_level = 1000;
             } else {
@@ -214,6 +214,13 @@ public class ActivityMethodManager {
                 && mAdControls != null
                 && !mAdControls.contains(control)){
             mAdControls.add(control);
+        }
+    }
+
+    public void unregisterADController(IAutoRefresh control){
+        if(control != null
+                && mAdControls != null){
+            mAdControls.remove(control);
         }
     }
 

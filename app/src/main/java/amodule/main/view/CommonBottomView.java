@@ -18,7 +18,7 @@ import acore.logic.XHClick;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.main.Main;
-import amodule.main.activity.MainHome;
+import amodule.main.activity.MainHomePage;
 import amodule.main.activity.MainMyself;
 import amodule.user.activity.MyMessage;
 import third.mall.MainMall;
@@ -208,7 +208,7 @@ public class CommonBottomView extends RelativeLayout {
 		if (type.equals(BOTTOM_HOME)) {
 			XHClick.mapStat(context, "a_down420", tabTitle[0] + "", "");
 			if(Main.allMain!=null)
-				Main.allMain.setCurrentTabByClass(MainHome.class);
+				Main.allMain.setCurrentTabByClass(MainHomePage.class);
 		} else if (type.equals(BOTTOM_TWO)) {
 			XHClick.mapStat(context, "a_down420", tabTitle[1] + "", "");
 			if(Main.allMain!=null)

@@ -25,7 +25,6 @@ import amodule._common.helper.WidgetDataHelper;
 import amodule._common.utility.WidgetUtility;
 import amodule.home.view.HomeBuoy;
 import amodule.home.view.HomeTitleLayout;
-import amodule.main.activity.MainHome;
 import amodule.main.activity.MainHomePage;
 import amodule.main.view.item.HomeItem;
 import aplug.web.ShowWeb;
@@ -182,7 +181,7 @@ public class HomeViewControler implements ISetAdController {
         }
         //列表
         if (scrollDataIndex > 0) {
-            XHClick.saveStatictisFile("home", MainHome.recommedType_statictus, "", "", String.valueOf(scrollDataIndex), "list", "", "", "", "", "");
+            XHClick.saveStatictisFile("home", MainHomePage.recommedType_statictus, "", "", String.valueOf(scrollDataIndex), "list", "", "", "", "", "");
             scrollDataIndex = -1;
         }
     }

@@ -3,13 +3,11 @@ package amodule._common.widget.horizontal;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Rect;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -39,7 +37,6 @@ import amodule.home.adapter.HorizontalAdapter1;
 import amodule.home.adapter.HorizontalAdapter2;
 import amodule.home.adapter.HorizontalAdapter3;
 import amodule.home.viewholder.XHBaseRvViewHolder;
-import amodule.main.activity.MainHome;
 
 import static amodule._common.helper.WidgetDataHelper.KEY_PARAMETER;
 import static amodule._common.helper.WidgetDataHelper.KEY_STYLE;

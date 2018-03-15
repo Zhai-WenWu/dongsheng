@@ -12,7 +12,7 @@ import java.util.Map;
 import acore.tools.StringManager;
 import amodule._common.utility.WidgetUtility;
 import amodule.home.delegate.IDataSetDelegate;
-import amodule.main.activity.MainHome;
+import amodule.main.activity.MainHomePage;
 import amodule.main.view.item.HomeRecipeItem;
 
 /**
@@ -67,7 +67,7 @@ public class HomeSecondRecipeItem extends HomeRecipeItem implements IDataSetDele
         mPlayImg.setVisibility(mIsVideo ? View.VISIBLE : View.GONE);
         String title = mDataMap.get("name");
         String type = mModuleBean == null ? null : mModuleBean.getType();
-        if (MainHome.recommedType.equals(type)) {
+        if (MainHomePage.recommedType.equals(type)) {
             mTitleTop.setText(title);
             mTitleTop.setVisibility(!TextUtils.isEmpty(title) ? View.VISIBLE : View.GONE);
         } else {

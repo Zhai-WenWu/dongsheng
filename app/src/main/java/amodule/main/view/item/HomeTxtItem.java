@@ -13,7 +13,7 @@ import com.xiangha.R;
 import java.util.Map;
 
 import acore.tools.StringManager;
-import amodule.main.activity.MainHome;
+import amodule.main.activity.MainHomePage;
 import amodule.main.adapter.HomeAdapter;
 
 /**
@@ -83,7 +83,7 @@ public class HomeTxtItem extends HomeItem {
             if (!TextUtils.isEmpty(imgUrl))
                 imgCount = 1;
             mImgs.setVisibility(View.VISIBLE);
-            if (mModuleBean != null && MainHome.recommedType.equals(mModuleBean.getType()) && !mIsAd && mVIP != null && "2".equals(mDataMap.get("isVip")))
+            if (mModuleBean != null && MainHomePage.recommedType.equals(mModuleBean.getType()) && !mIsAd && mVIP != null && "2".equals(mDataMap.get("isVip")))
                 mVIP.setVisibility(View.VISIBLE);
             loadImage(imgUrl, mImg);
         } else {

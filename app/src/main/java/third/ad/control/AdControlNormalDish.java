@@ -5,10 +5,13 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
+import com.annimon.stream.Stream;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import acore.logic.ActivityMethodManager;
 import acore.override.helper.XHActivityManager;
 import third.ad.option.AdOptionHomeDish;
 import third.ad.option.AdOptionParent;
@@ -22,7 +25,7 @@ import third.ad.tools.AdPlayIdConfig;
  * 刷新策略：
  * 1、以第一个广告的加载时间为标准，一个过期全部过期。
  */
-public class AdControlNormalDish extends AdControlParent{
+public class AdControlNormalDish extends AdControlParent implements ActivityMethodManager.IAutoRefresh{
     public static String tag_yu="zyj";
     public static String Control_up="up";
     public static String Control_down="down";
@@ -263,5 +266,20 @@ public class AdControlNormalDish extends AdControlParent{
     public AdOptionParent.AdLoadNumberCallBack adLoadNumberCallBack;
     public void setAdLoadNumberCallBack(AdOptionParent.AdLoadNumberCallBack adLoadNumberCallBack){
         this.adLoadNumberCallBack=adLoadNumberCallBack;
+    }
+
+    @Override
+    public void autoRefreshSelfAD() {
+        Stream.of(downAdControlMap)
+                .forEach(value -> {
+                    AdOptionHomeDish optionHomeDish = value.getValue();
+                    optionHomeDish.autoRefreshSelfAD();
+                });
+
+        Stream.of(adControlMap)
+                .forEach(value -> {
+                    AdOptionHomeDish optionHomeDish = value.getValue();
+                    optionHomeDish.autoRefreshSelfAD();
+                });
     }
 }

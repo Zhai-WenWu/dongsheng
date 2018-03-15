@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import acore.logic.ActivityMethodManager;
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.tools.StringManager;
@@ -27,7 +28,7 @@ import static third.ad.scrollerAd.XHScrollerSelf.IMG_KEY;
  * 广告控制类---广告真正去请求广告类，
  * 1、广告插入的真正节点，开始位：4。间隔6，7，8，依次递增，最大为间隔8数据提
  */
-public abstract class AdOptionParent {
+public abstract class AdOptionParent implements ActivityMethodManager.IAutoRefresh{
     private int limitNum = 0;//分界节点
     private final String[] AD_IDS;//广告ID的集合。
 
@@ -157,6 +158,12 @@ public abstract class AdOptionParent {
         cunrrentIndex = 0;
     }
 
+    @Override
+    public void autoRefreshSelfAD() {
+        if(xhAllAdControl != null){
+            xhAllAdControl.autoRefreshSelfAD();
+        }
+    }
 
     /**
      * 对列表数据就是广告数据。

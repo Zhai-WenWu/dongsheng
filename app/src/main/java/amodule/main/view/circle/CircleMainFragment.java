@@ -148,6 +148,7 @@ public class CircleMainFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         unregistnetworkListener();
+        mActivity.getActMagager().unregisterADController(quanAdvertControl);
     }
 
     @Nullable
@@ -328,6 +329,7 @@ public class CircleMainFragment extends Fragment {
             LoadOver = true;
         }
         quanAdvertControl = new QuanAdvertControl(mActivity);
+        mActivity.getActMagager().registerADController(quanAdvertControl);
 //        quanAdvertControl.getGdtData(mActivity);
 //        quanAdvertControl.getTencentApiAd(mActivity);
         quanAdvertControl.setCallBack(() -> {
