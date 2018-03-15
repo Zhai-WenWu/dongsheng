@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -15,11 +14,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.annimon.stream.Stream;
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.Target;
 import com.xiangha.R;
 
@@ -29,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 
 import acore.logic.AppCommon;
-import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.helper.XHActivityManager;
 import acore.tools.FileManager;
@@ -42,6 +37,7 @@ import acore.widget.banner.BannerAdapter;
 import amodule._common.delegate.IBindMap;
 import amodule._common.delegate.IHandlerClickEvent;
 import amodule._common.delegate.ISaveStatistic;
+import amodule._common.delegate.ISetAdController;
 import amodule._common.delegate.ISetAdID;
 import amodule._common.delegate.ISetStatisticPage;
 import amodule._common.delegate.IStatictusData;
@@ -49,7 +45,6 @@ import amodule._common.delegate.IStatisticCallback;
 import amodule._common.delegate.StatisticCallback;
 import amodule._common.helper.WidgetDataHelper;
 import aplug.basic.LoadImage;
-import aplug.basic.SubBitmapTarget;
 import third.ad.scrollerAd.XHAllAdControl;
 
 import static third.ad.scrollerAd.XHScrollerAdParent.ADKEY_GDT;
@@ -64,15 +59,13 @@ import static third.ad.scrollerAd.XHScrollerAdParent.ID_AD_ICON_GDT;
  */
 
 public class BannerView extends Banner implements IBindMap, IStatictusData, ISaveStatistic, IHandlerClickEvent,ISetAdID
-        ,IStatisticCallback,ISetStatisticPage {
+        ,IStatisticCallback,ISetStatisticPage, ISetAdController {
     public static final String KEY_ALREADY_SHOW = "alreadyshow";
     private LayoutInflater mInflater;
-    private XHAllAdControl mAdControl;
     private ArrayList<String> mAdIDArray = new ArrayList<>();
     private int showMinH, showMaxH;
-
-    private View adView = null;
-    private ArrayList<Map<String, String>> mAdMaps = new ArrayList<>();
+    private XHAllAdControl mAdControl;
+    private Map<Integer, View> mAdViews = new HashMap<>();
     public static final int TAG_ID = R.string.tag;
     int imageHeight = 0, imageWidth = 0;
     boolean bgLoadOver = false;
@@ -100,6 +93,13 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
             String firstImageUrl = FileManager.loadShared(getContext(), FileManager.xmlFile_appInfo, bgKey).toString();
             setBackImageView(imageView -> ImgManager.loadLongImage(imageView, firstImageUrl));
         }
+
+        setDefault();
+    }
+
+    private void setDefault() {
+        setPageChangeListener();
+        setPageChangeDuration(5 * 1000);
     }
 
     private void setViewSize(Context context) {
@@ -128,32 +128,46 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
 
     @Override
     public void setData(Map<String, String> data) {
-        initAdData();
-        if (null == data || data.isEmpty()) {
-            setVisibility(GONE);
+        if (data == null || data.isEmpty()) {
+            mArrayList.clear();
+            setVisibility(View.GONE);
             return;
         }
+        //设置adapter
+        setAdapter();
+        setOnBannerItemClickListener(position -> {
+            if (position < 0 || position >= mArrayList.size()) return;
+            Map<String, String> dataMapTemp = mArrayList.get(position);
+            if (dataMapTemp.containsKey("adPosId")) {
+                if (mAdControl != null)
+                    mAdControl.onAdClick(mAdViews.get(position), 0, "");
+                return;
+            }
+            String url = dataMapTemp.get("url");
+            AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), url, true);
+            if(!TextUtils.isEmpty(page)){
+                XHClick.saveStatictisFile(page, "homeBannerScroll", dataMapTemp.get("type"), "", "",
+                        "click", "", "", "", "", "");
+            }
+            statistic(position);
+        });
+
+        String sort = data.get(WidgetDataHelper.KEY_SORT);
+        int paddingTop = (!TextUtils.isEmpty(sort) && !"1".equals(sort)) ? Tools.getDimen(getContext(),R.dimen.dp_10)  : 0;
+        setPadding(getPaddingLeft(),paddingTop,getPaddingRight(),getPaddingBottom());
+        setTargetHeight(imageHeight + paddingTop + getPaddingBottom());
+
         Map<String, String> dataMap = StringManager.getFirstMap(data.get(WidgetDataHelper.KEY_DATA));
         ArrayList<Map<String, String>> arrayList = StringManager.getListMapByJson(dataMap.get(WidgetDataHelper.KEY_LIST));
-        if (arrayList.isEmpty()) {
-            setVisibility(GONE);
-            return;
-        }
-        //处理通用数据
-        Stream.of(arrayList).forEach(map -> {
-            map.put("isAd", "1");
-            map.put("title", "");
-        });
-        //添加广告数据
-        if (LoginManager.isShowAd() && !mAdMaps.isEmpty())
-            arrayList.addAll(mAdMaps);
-        //判断数据是否改变
-        if (mArrayList.equals(arrayList)) {
+
+        if (arrayList.equals(mArrayList)) {
             return;
         }
         //重新添加数据
         mArrayList.clear();
         mArrayList.addAll(arrayList);
+        notifyDataHasChanged();
+        setRandomItem(arrayList);
         final String firstImageUrl = mArrayList.get(0).get("img");
         if(!TextUtils.isEmpty(bgKey)){
             FileManager.scynSaveSharePreference(getContext(), FileManager.xmlFile_appInfo, bgKey, firstImageUrl);
@@ -165,32 +179,6 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
             bgLoadOver = true;
 //            setBackImageView(imageView -> loadBgImage(firstImageUrl, imageView));
         }
-        //设置adapter
-        setAdapter();
-        notifyDataHasChanged();
-        setPageChangeListener();
-        setOnBannerItemClickListener(position -> {
-            if (position < 0 || position >= mArrayList.size()) return;
-            Map<String, String> dataMapTemp = mArrayList.get(position);
-            if ("2".equals(dataMapTemp.get("isAd"))) {
-                mAdControl.onAdClick(adView, 0, "");
-                return;
-            }
-            Map<String,String> dataTemp = arrayList.get(position);
-            String url = dataTemp.get("url");
-            AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), url, true);
-            if(!TextUtils.isEmpty(page)){
-                XHClick.saveStatictisFile(page, "homeBannerScroll", dataTemp.get("type"), "", "",
-                        "click", "", "", "", "", "");
-            }
-            statistic(position);
-        });
-        setPageChangeDuration(5 * 1000);
-        setRandomItem(arrayList);
-        String sort = data.get(WidgetDataHelper.KEY_SORT);
-        int paddingTop = (!TextUtils.isEmpty(sort) && !"1".equals(sort)) ? Tools.getDimen(getContext(),R.dimen.dp_10)  : 0;
-        setPadding(getPaddingLeft(),paddingTop,getPaddingRight(),getPaddingBottom());
-        setTargetHeight(imageHeight + paddingTop + getPaddingBottom());
         setVisibility(VISIBLE);
     }
 
@@ -209,6 +197,7 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
 
     //创建数据适配器
     private void setAdapter() {
+        mAdViews.clear();
         BannerAdapter<Map<String, String>> bannerAdapter = new BannerAdapter<Map<String, String>>(mArrayList) {
             @Override
             protected void bindTips(TextView tv, Map<String, String> stringStringMap) {
@@ -218,7 +207,8 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
             public void bindView(View view, Map<String, String> data) {
                 ImageView imageView = (ImageView) view.findViewById(R.id.image);
                 Object tagValue = imageView.getTag(TAG_ID);
-                if (tagValue != null && tagValue.equals(data.get("img"))) {
+                String img = data.get("img");
+                if (tagValue != null && tagValue.equals(img)) {
                     return;
                 }
                 RelativeLayout adlayout = (RelativeLayout) view.findViewById(R.id.ad_layout);
@@ -228,12 +218,15 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
                         mPointContainerLl.getMeasuredWidth() + Tools.getDimen(getContext(), R.dimen.dp_16),
                         adlayout.getPaddingBottom()
                 );
-                imageView.setTag(TAG_ID, data.get("img"));
-                loadImage(data.get("img"), imageView);
-                if ("2".equals(data.get("isAd"))) {
-                    adView = view;
+                imageView.setTag(TAG_ID, img);
+                loadImage(img, imageView);
+                if (data.containsKey("adPosId")) {
+                    mAdViews.put(mArrayList.indexOf(data), view);
+                    String title = data.get("title");
+                    String desc = data.get("desc");
+                    String text = TextUtils.equals(title, desc) ? desc : title + " | " + desc;
                     TextView textView = (TextView) view.findViewById(R.id.title);
-                    textView.setText(TextUtils.isEmpty(data.get("title")) ? "" : data.get("title"));
+                    textView.setText(TextUtils.isEmpty(text) ? "" : text);
                     ImageView icon = (ImageView) view.findViewById(R.id.ad_icon);
                     icon.setOnClickListener(v ->
                             AppCommon.setAdHintClick(XHActivityManager.getInstance().getCurrentActivity(), v, mAdControl, 0, "")
@@ -271,7 +264,8 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
                         && adMap != null
                         && !adMap.containsKey(KEY_ALREADY_SHOW)) {
                     adMap.put(KEY_ALREADY_SHOW, "2");
-                    mAdControl.onAdBind(0, adView, "");
+                    if (mAdControl != null)
+                        mAdControl.onAdBind(0, mAdViews.get(position), "");
                 }
             }
         };
@@ -283,7 +277,7 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
         if (mArrayList == null || mArrayList.isEmpty() || mArrayList.size() - 1 < position)
             return ret;
         ret = mArrayList.get(position);
-        if (TextUtils.equals("2", ret.get("isAd")))
+        if (ret.containsKey("adPosId"))
             return ret;
         return null;
     }
@@ -324,45 +318,6 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
                 .dontAnimate()
                 .dontTransform()
                 .into(imageView);
-    }
-
-    public void initAdData() {
-        if (mAdControl == null && ToolsDevice.isNetworkAvailable(getContext())) {
-            mAdControl = new XHAllAdControl(mAdIDArray,
-                    (boolean isRefresh,final Map<String, String> map) ->
-                            Stream.of(mAdIDArray).forEach(key -> {
-                                String adStr = map.get(key);
-                                sendAdMessage(adStr);
-                            }),
-                    XHActivityManager.getInstance().getCurrentActivity(),
-                    "sy_banner");
-            mAdControl.registerRefreshCallback();
-        }
-    }
-
-    protected void sendAdMessage(String adStr) {
-        Map<String, String> adDataMap = StringManager.getFirstMap(adStr);
-        post(() -> {
-            String imgs = adDataMap.get("imgs");
-            String imageUrl = StringManager.getFirstMap(imgs).get("big");
-            if (TextUtils.isEmpty(imageUrl)) return;
-            Map<String, String> adMap = new HashMap<>();
-            adMap.put("isAd", "2");
-            adMap.put("img", imageUrl);
-            String title = adDataMap.get("title");
-            String desc = adDataMap.get("desc");
-            String text = TextUtils.equals(title, desc) ? desc : title + " | " + desc;
-            adMap.put("title", text);
-            adMap.put("type", adDataMap.get("type"));
-            if (!mArrayList.isEmpty()
-                    && !adMap.isEmpty()
-                    && !mArrayList.contains(adMap)
-                    && LoginManager.isShowAd()) {
-                mArrayList.add(adMap);
-                mAdMaps.add(adMap);
-                notifyDataHasChanged();
-            }
-        });
     }
 
     int weightSum = 0;
@@ -484,5 +439,10 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
     @Override
     public void setStatisticPage(String page) {
         this.page = page;
+    }
+
+    @Override
+    public void setAdController(XHAllAdControl controller) {
+        mAdControl = controller;
     }
 }

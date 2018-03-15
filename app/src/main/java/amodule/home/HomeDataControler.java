@@ -1,5 +1,6 @@
 package amodule.home;
 
+import android.app.Activity;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
@@ -14,8 +15,11 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import acore.logic.ActivityMethodManager;
+import acore.override.helper.XHActivityManager;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
+import acore.tools.ToolsDevice;
+import amodule._common.delegate.ILoadAdData;
 import amodule.main.activity.MainHomePage;
 import amodule.main.bean.HomeModuleBean;
 import aplug.basic.InternetCallback;
@@ -23,6 +27,7 @@ import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import third.ad.XHAdAutoRefresh;
 import third.ad.control.AdControlHomeDish;
+import third.ad.scrollerAd.XHAllAdControl;
 
 import static third.ad.control.AdControlHomeDish.tag_yu;
 
@@ -34,7 +39,9 @@ import static third.ad.control.AdControlHomeDish.tag_yu;
  * E_mail : ztanzeyu@gmail.com
  */
 
-public class HomeDataControler implements ActivityMethodManager.IAutoRefresh{
+public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, ILoadAdData{
+
+    private XHAllAdControl mViewAdControl;
 
     private String CACHE_PATH = "";
     private final String SP_KEY_BACKURL = "backUrl";
@@ -327,6 +334,17 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh{
     }
 
     @Override
+    public void loadAdData(@NonNull ArrayList<String> listIds, @NonNull XHAllAdControl.XHBackIdsDataCallBack xhBackIdsDataCallBack, @NonNull Activity act, String StatisticKey) {
+        if (ToolsDevice.isNetworkAvailable(act)) {
+            mViewAdControl = new XHAllAdControl(listIds, (isRefresh, map) ->
+            {xhBackIdsDataCallBack.callBack(isRefresh, map);},
+                    XHActivityManager.getInstance().getCurrentActivity(),
+                    StatisticKey);
+
+        }
+    }
+
+    @Override
     public void autoRefreshSelfAD() {
         if(System.currentTimeMillis() - lastSelfAdTime >= XHAdAutoRefresh.intervalTime){
             isNeedRefresh(true);
@@ -355,6 +373,10 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh{
 
     public interface EntryptDataCallback {
         void onEntryptData(boolean refersh);
+    }
+
+    public XHAllAdControl getAllAdController() {
+        return mViewAdControl;
     }
 
 }

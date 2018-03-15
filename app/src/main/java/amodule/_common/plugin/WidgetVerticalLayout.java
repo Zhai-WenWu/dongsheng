@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -19,6 +18,7 @@ import acore.tools.StringManager;
 import amodule._common.delegate.IBindMap;
 import amodule._common.delegate.IResetCallback;
 import amodule._common.delegate.ISaveStatistic;
+import amodule._common.delegate.ISetAdController;
 import amodule._common.delegate.ISetAdID;
 import amodule._common.delegate.ISetStatisticPage;
 import amodule._common.delegate.IStatictusData;
@@ -26,6 +26,7 @@ import amodule._common.delegate.IStatisticCallback;
 import amodule._common.delegate.ITitleStaticCallback;
 import amodule._common.delegate.StatisticCallback;
 import amodule._common.widgetlib.AllWeightLibrary;
+import third.ad.scrollerAd.XHAllAdControl;
 
 import static amodule._common.helper.WidgetDataHelper.KEY_BOTTOM;
 import static amodule._common.helper.WidgetDataHelper.KEY_STYLE;
@@ -42,7 +43,8 @@ import static amodule._common.widgetlib.IWidgetLibrary.NO_FIND_ID;
  */
 
 public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, String>>
-        implements IStatictusData, ISaveStatistic,ISetAdID,IStatisticCallback,ITitleStaticCallback,ISetStatisticPage {
+        implements IStatictusData, ISaveStatistic,ISetAdID,IStatisticCallback,
+        ITitleStaticCallback,ISetStatisticPage, ISetAdController {
 
     public static final int LLM = LinearLayout.LayoutParams.MATCH_PARENT;
     public static final int LLW = LinearLayout.LayoutParams.WRAP_CONTENT;
@@ -54,6 +56,8 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
     int currentID = -1;
 
     private Map<String, String> data;
+
+    private XHAllAdControl mXHAllAdControl;
 
     private StatisticCallback mStatisticCallback,mTitleStatisticCallback;
 
@@ -108,6 +112,9 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
                 }
                 if(view instanceof ISetStatisticPage){
                     ((ISetStatisticPage) view).setStatisticPage(page);
+                }
+                if (view instanceof ISetAdController) {
+                    ((ISetAdController)view).setAdController(mXHAllAdControl);
                 }
                 if (view instanceof IBindMap && !TextUtils.isEmpty(widgetData)) {
                     ((IBindMap) view).setData(dataMap);
@@ -307,5 +314,10 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
     @Override
     public void setStatisticPage(String page) {
         this.page = page;
+    }
+
+    @Override
+    public void setAdController(XHAllAdControl controller) {
+        mXHAllAdControl = controller;
     }
 }

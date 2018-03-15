@@ -12,13 +12,14 @@ import android.widget.Button;
 
 import com.xiangha.R;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 import acore.broadcast.ConnectionChangeReceiver;
+import acore.logic.ConfigMannager;
 import acore.logic.MessageTipController;
 import acore.logic.SpecialWebControl;
 import acore.logic.XHClick;
-import acore.logic.ConfigMannager;
 import acore.logic.load.LoadManager;
 import acore.override.activity.mian.MainBaseActivity;
 import acore.tools.IObserver;
@@ -34,6 +35,7 @@ import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import third.ad.control.AdControlParent;
+import third.ad.tools.AdPlayIdConfig;
 
 import static acore.logic.ConfigMannager.KEY_LOGPOSTTIME;
 
@@ -199,6 +201,17 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
     private void loadRemoteData() {
         startLoadTime = System.currentTimeMillis();
         mDataControler.loadServiceHomeData(getHeaderCallback(false));
+
+        loadAdData();
+    }
+
+    private void loadAdData() {
+        ArrayList<String> arr = new ArrayList<>();
+        arr.add(AdPlayIdConfig.HOME_BANNEER_1);
+        mDataControler.loadAdData(arr, (isRefresh, map) -> {
+            mViewContrloer.setAdController(mDataControler.getAllAdController());
+            mViewContrloer.setAdData(map, arr);},
+                this, "sy_banner");
     }
 
     private void loadTopData() {

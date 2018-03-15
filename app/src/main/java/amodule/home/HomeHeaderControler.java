@@ -1,26 +1,32 @@
 package amodule.home;
 
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.xiangha.R;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import acore.logic.XHClick;
-import acore.tools.Tools;
+import acore.tools.StringManager;
 import amodule._common.delegate.ISaveStatistic;
+import amodule._common.delegate.ISetAdController;
 import amodule._common.delegate.StatisticCallback;
 import amodule._common.plugin.WidgetVerticalLayout;
 import amodule._common.utility.WidgetUtility;
 import amodule.main.activity.MainHomePage;
+import third.ad.scrollerAd.XHAllAdControl;
+
 import static third.ad.tools.AdPlayIdConfig.HOME_BANNEER_1;
 /**
  * Description :
@@ -30,7 +36,7 @@ import static third.ad.tools.AdPlayIdConfig.HOME_BANNEER_1;
  * E_mail : ztanzeyu@gmail.com
  */
 
-public class HomeHeaderControler implements ISaveStatistic {
+public class HomeHeaderControler implements ISaveStatistic, ISetAdController {
 
     private View mHeaderView, mFeedHeaderView,mLine;
 
@@ -42,8 +48,15 @@ public class HomeHeaderControler implements ISaveStatistic {
 
     private View.OnLayoutChangeListener onLayoutChangeListener;
 
+    private XHAllAdControl mAdController;
+
+    private List<Map<String, String>> mDatas;
+
     private boolean hasFeedData = false;
     private boolean hasHeaderData = false;
+    private boolean mSettingAdData = false;
+    private boolean mSetttingRemoteData = false;
+    private boolean mIsShowCache = false;
 
     HomeHeaderControler(View header) {
         this.mHeaderView = header;
@@ -66,19 +79,89 @@ public class HomeHeaderControler implements ISaveStatistic {
     }
 
     public void setData(List<Map<String, String>> array, boolean isShowCache) {
-        if (null == array || array.isEmpty()) return;
+        mDatas = array;
+        mIsShowCache = isShowCache;
+        mSetttingRemoteData = !isShowCache;
+        handleData();
+    }
+
+    public void setVisibility(boolean isShow) {
+        for (WidgetVerticalLayout itemLayout : mLayouts) {
+            itemLayout.setVisibility(isShow ? View.VISIBLE : View.GONE);
+        }
+    }
+
+    @Override
+    public void saveStatisticData(String page) {
+        for (WidgetVerticalLayout layout : mLayouts) {
+            layout.saveStatisticData(page);
+        }
+    }
+
+    void setFeedheaderVisibility(boolean hasFeedData) {
+        this.hasFeedData = hasFeedData;
+        mFeedHeaderView.setVisibility((hasFeedData && hasHeaderData) ? View.VISIBLE : View.GONE);
+    }
+
+    void setFeedTitleText(String text) {
+        WidgetUtility.setTextToView(mFeedTitle, text);
+    }
+
+    private List<String> mAdIDs;
+    public void setAdID(List<String> adIDs) {
+        mAdIDs = adIDs;
+    }
+
+    private Map<String,String> mAdData;
+    public void setAdData(Map<String,String> adData) {
+        mAdData = adData;
+        mSettingAdData = true;
+        handleData();
+    }
+
+    private void handleData() {
+        if (mIsShowCache) {
+            setViewData(mIsShowCache);
+            mIsShowCache = false;
+            return;
+        }
+        if (mSetttingRemoteData && mSettingAdData) {
+            if (mDatas != null && !mDatas.isEmpty()) {
+                Map<String, String> map = mDatas.get(0);
+                if (TextUtils.equals("1", map.get("widgetType"))) {
+                    handleBannerData(map);
+                } else if (mAdData != null && !mAdData.isEmpty()) {
+                    Map<String, String> adMap = combineBannerAdMap(mAdData);
+                    mDatas.add(0, adMap);
+                }
+            } else if (mAdData != null && !mAdData.isEmpty()){
+                mDatas = new ArrayList<>();
+                Map<String, String> adMap = combineBannerAdMap(mAdData);
+                mDatas.add(adMap);
+            }
+
+            setViewData(mIsShowCache);
+            mSetttingRemoteData = false;
+            mSettingAdData = false;
+            mIsShowCache = false;
+        }
+    }
+
+    private void setViewData(boolean isShowCache) {
+        if (null == mDatas || mDatas.isEmpty()) return;
         String[] twoLevelArray = {"轮播banner", "功能入口", "功能入口", "精品厨艺", "限时抢购", "精选菜单"};
         String[] threeLevelArray = {"轮播banner位置", "", "", "精品厨艺位置", "限时抢购位置", "精选菜单位置"};
 //        setVisibility(false);
-        final int length = Math.min(array.size(), mLayouts.length);
+        final int length = Math.min(mDatas.size(), mLayouts.length);
         for (int i = 0; i < length; i++) {
             final int index = i;
-            Map<String, String> map = array.get(index);
+            Map<String, String> map = mDatas.get(index);
             if (isShowCache && "1".equals(map.get("cache"))) {
                 mLayouts[index].setVisibility(View.GONE);
                 continue;
             }
             mLayouts[index].setStatisticPage("home");
+            mLayouts[index].setAdController(mAdController);
             mLayouts[index].setData(map);
             mLayouts[index].setStatictusData(MainHomePage.STATICTUS_ID_HOMEPAGE, twoLevelArray[index], threeLevelArray[index]);
             StatisticCallback statisticCallback = (id, twoLevel, threeLevel, position) -> {
@@ -105,26 +188,98 @@ public class HomeHeaderControler implements ISaveStatistic {
         }
     }
 
-    public void setVisibility(boolean isShow) {
-        for (WidgetVerticalLayout itemLayout : mLayouts) {
-            itemLayout.setVisibility(isShow ? View.VISIBLE : View.GONE);
+    private Map<String, String> handleBannerData(Map<String, String> map) {
+        if (mAdData == null || mAdData.isEmpty())
+            return map;
+        String widgetDataValue = map.get("widgetData");
+        Map<String, String> wdMap = StringManager.getFirstMap(widgetDataValue);
+        String dataValue = wdMap.get("data");
+        Map<String, String> listMap = StringManager.getFirstMap
+                (dataValue);
+        ArrayList<Map<String, String>> listValue = StringManager.getListMapByJson(listMap.get
+                ("list"));
+
+        for (String key : mAdData.keySet()) {
+            Map<String, String> adMap = new HashMap<>();
+            adMap.put("adPosId", key);
+            Map<String, String> m = StringManager.getFirstMap(mAdData.get(key));
+            adMap.put("img", m.get("imgUrl"));
+            adMap.put("hide", m.get("hide"));
+            adMap.put("iconUrl", m.get("iconUrl"));
+            adMap.put("title", m.get("title"));
+            adMap.put("desc", m.get("desc"));
+            adMap.put("index", m.get("index"));
+            adMap.put("type", m.get("type"));
+            adMap.put("adType", m.get("adType"));
+            listValue.add(adMap);
         }
+        JSONArray jsonArray = new JSONArray();
+        for (Map<String, String> lv : listValue) {
+            JSONObject object = map2JSON(lv);
+            jsonArray.put(object);
+        }
+        listMap.put("list", jsonArray.toString());
+        wdMap.put("data", map2JSON(listMap).toString());
+        map.put("widgetData", map2JSON(wdMap).toString());
+        return map;
+    }
+
+    private JSONObject map2JSON(Map<String, String> map) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            for (String key : map.keySet()) {
+                jsonObject.put(key, map.get(key));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
+    }
+
+    private Map<String, String> combineBannerAdMap(Map<String, String> adMap) {
+        JSONObject obj = new JSONObject();
+        JSONObject extraObj = new JSONObject();
+        JSONObject dataObj = new JSONObject();
+        JSONObject dataListObj = new JSONObject();
+        JSONObject parameterObj = new JSONObject();
+
+        JSONArray dataArr = new JSONArray();
+        JSONArray extraArr_top = new JSONArray();
+        JSONArray extraArr_bottom = new JSONArray();
+        JSONArray dataListArr = new JSONArray();
+
+        try {
+            dataListObj.put("img", "");
+            dataListObj.put("url", "");
+            dataListObj.put("weight", "");
+            dataListObj.put("code", "");
+            dataListObj.put("type", "");
+            dataListObj.put("adData", StringManager.getJsonByMap(adMap));
+            dataListArr.put(dataListObj);
+
+            dataObj.put("style", "1");
+            dataObj.put("data", dataListArr);
+            dataObj.put("appFixed", "2");
+            dataObj.put("sort", "1");
+            dataArr.put(dataObj);
+
+            extraObj.put("top", extraArr_top);
+            extraObj.put("bottom", extraArr_bottom);
+
+            parameterObj.put("scalar", "");
+            obj.put("widgetExtra", extraObj);
+            obj.put("widgetData", dataArr);
+            obj.put("widgetParameter", parameterObj);
+            obj.put("widgetType", "1");
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return StringManager.getFirstMap(obj);
     }
 
     @Override
-    public void saveStatisticData(String page) {
-        for (WidgetVerticalLayout layout : mLayouts) {
-            layout.saveStatisticData(page);
-        }
+    public void setAdController(XHAllAdControl controller) {
+        mAdController = controller;
     }
-
-    void setFeedheaderVisibility(boolean hasFeedData) {
-        this.hasFeedData = hasFeedData;
-        mFeedHeaderView.setVisibility((hasFeedData && hasHeaderData) ? View.VISIBLE : View.GONE);
-    }
-
-    void setFeedTitleText(String text) {
-        WidgetUtility.setTextToView(mFeedTitle, text);
-    }
-
 }

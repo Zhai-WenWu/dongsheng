@@ -20,6 +20,7 @@ import acore.logic.AppCommon;
 import acore.logic.XHClick;
 import acore.tools.StringManager;
 import acore.widget.rvlistview.RvListView;
+import amodule._common.delegate.ISetAdController;
 import amodule._common.helper.WidgetDataHelper;
 import amodule._common.utility.WidgetUtility;
 import amodule.home.view.HomeBuoy;
@@ -29,6 +30,7 @@ import amodule.main.activity.MainHomePage;
 import amodule.main.view.item.HomeItem;
 import aplug.web.ShowWeb;
 import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
+import third.ad.scrollerAd.XHAllAdControl;
 import third.umeng.OnlineConfigControler;
 
 /**
@@ -39,7 +41,7 @@ import third.umeng.OnlineConfigControler;
  * E_mail : ztanzeyu@gmail.com
  */
 
-public class HomeViewControler {
+public class HomeViewControler implements ISetAdController {
 
     static String MODULETOPTYPE = "moduleTopType";//置顶数据的类型
 
@@ -312,5 +314,15 @@ public class HomeViewControler {
 
     public PtrClassicFrameLayout getRefreshLayout() {
         return mRefreshLayout;
+    }
+
+    @Override
+    public void setAdController(XHAllAdControl controller) {
+        mHeaderControler.setAdController(controller);
+    }
+
+    public void setAdData(Map<String, String> map, List<String> adIDs) {
+        mHeaderControler.setAdID(adIDs);
+        mHeaderControler.setAdData(map);
     }
 }
