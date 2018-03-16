@@ -131,7 +131,7 @@ public class XHOneAdControl {
     private XHScrollerAdParent.ExecuteStatisticCallback mCallback = new XHScrollerAdParent.ExecuteStatisticCallback() {
         @Override
         public void execute() {
-            isDisplayed = true;
+            displayed();
         }
     };
 
