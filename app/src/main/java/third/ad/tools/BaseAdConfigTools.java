@@ -6,6 +6,9 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.annimon.stream.Stream;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -30,33 +33,37 @@ public class BaseAdConfigTools {
 
     private Handler mStatisticHandler;
     private Runnable mStatisticRun;
-    private ArrayList<LinkedHashMap<String, String>> mShowCacheParams;
-    private long mIntervalTime;
-    private int mCacheSize;
+    private ArrayList<JSONObject> mShowCacheParams;
+    private long mIntervalTime = 5 * 1000;
+    private int mCacheSize = 5;
 
-    protected BaseAdConfigTools() {
+    BaseAdConfigTools() {
         init();
     }
 
     private void init() {
         mStatisticHandler = new Handler();
         mShowCacheParams = new ArrayList<>();
-        mStatisticRun = new Runnable() {
-            @Override
-            public void run() {
-                if (mShowCacheParams == null)
-                    return;
-                Iterator<LinkedHashMap<String, String>> iterator = mShowCacheParams.iterator();
-                while (iterator.hasNext()) {
-                    LinkedHashMap<String, String> param = iterator.next();
-                    requestStatistics(StringManager.api_adsNumber, param);
-                    iterator.remove();
-                }
-                startStatistics();
-            }
+        mStatisticRun = () -> {
+            if (mShowCacheParams == null)
+                return;
+            requestShowStatistics();
+            startStatistics();
         };
     }
 
+    private void requestShowStatistics() {
+        if(mShowCacheParams != null && !mShowCacheParams.isEmpty()){
+            JSONArray jsonArray = new JSONArray();
+            LinkedHashMap<String,String> params = new LinkedHashMap<>();
+            Stream.of(mShowCacheParams)
+                    .filter(value -> value != null && value.length() > 0)
+                    .forEach(jsonArray::put);
+            params.put("log_json",jsonArray.toString());
+            mShowCacheParams.clear();
+            requestStatistics(StringManager.api_adsNumber, params);
+        }
+    }
 
     private void requestStatistics(String url, LinkedHashMap<String, String> params) {
         ReqInternet.in().doPost(url, params, new InternetCallback() {
@@ -92,21 +99,21 @@ public class BaseAdConfigTools {
         }
         JSONObject jsonObject = MapToJsonEncode(map);
         LinkedHashMap<String, String> params = new LinkedHashMap<>();
-        params.put("log_json", jsonObject.toString());
+
         Log.i("tongji", "postStatistics: params=" + params.toString());
 //        requestStatistics(StringManager.api_monitoring_9,params);
-        mShowCacheParams.add(params);
         switch (event) {
             case "click":
-                startStatistics(0);
+                params.put("log_json", new JSONArray().put(jsonObject).toString());
+                requestStatistics(StringManager.api_adsNumber, params);
                 break;
             case "show":
+                mShowCacheParams.add(jsonObject);
                 if (checkSendSta()) {
                     startStatistics(0);
                 }
                 break;
         }
-
     }
 
     private boolean checkSendSta() {
@@ -114,10 +121,9 @@ public class BaseAdConfigTools {
     }
 
     public static JSONObject MapToJsonEncode(Map<String, String> maps) {
-
         JSONObject jsonObject = new JSONObject();
-        if (maps == null || maps.size() <= 0) return jsonObject;
-
+        if (maps == null || maps.size() <= 0)
+            return jsonObject;
         Iterator<Map.Entry<String, String>> enty = maps.entrySet().iterator();
         try {
             while (enty.hasNext()) {
