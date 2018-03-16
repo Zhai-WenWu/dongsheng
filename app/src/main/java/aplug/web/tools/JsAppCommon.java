@@ -72,6 +72,7 @@ import third.push.xg.XGPushServer;
 import third.share.BarShare;
 import third.share.BarShareImage;
 import third.share.tools.ShareTools;
+import third.thirdTools.ThirdHelper;
 import xh.basic.tool.UtilFile;
 
 import static amodule.dish.activity.upload.UploadDishActivity.DISH_TYPE_KEY;
@@ -1377,6 +1378,21 @@ public class JsAppCommon extends JsBase {
                     ((WebActivity)mAct).shareCallback = callback;
                 ShareTools st = ShareTools.getBarShare(mAct);
                 st.requestAuthorize(platformType);
+            }
+        });
+    }
+
+    /**
+     *
+     * @param platformType 平台对应类型 Wechat->微信好友 WechatMoments->朋友圈 QQ->腾讯qq
+     *                     QZone->qq空间 SinaWeibo->新浪微博
+     */
+    @JavascriptInterface
+    public void openOtherApp(final String platformType) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                ThirdHelper.openThirdApp(platformType);
             }
         });
     }
