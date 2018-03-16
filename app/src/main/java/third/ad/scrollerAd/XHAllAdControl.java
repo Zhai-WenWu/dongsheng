@@ -349,8 +349,13 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
                 listAdContrls.get(i).setAdDataCallBack(new XHAdControlCallBack() {
                     @Override
                     public void onSuccess(String type, Map<String, String> map, int num) {
-                        if (map != null)
+                        if(listAdContrls.get(count) != null){
+                            listAdContrls.get(count).resetDispaly();
+                        }
+                        //TODO 此处重置OneController
+                        if (map != null){
                             map.put("index", String.valueOf(num));
+                        }
                         count++;
 
                         AdData.put(listIds.get(num), mapToJson(map).toString());
@@ -362,6 +367,10 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
 
                     @Override
                     public void onFail(String type, int num) {
+                        if(listAdContrls.get(count) != null){
+                            listAdContrls.get(count).resetDispaly();
+                        }
+                        //TODO 此处重置OneController
                         count++;
                         AdData.put(listIds.get(num), "");
                         //展示数据集合

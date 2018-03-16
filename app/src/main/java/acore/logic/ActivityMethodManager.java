@@ -234,7 +234,6 @@ public class ActivityMethodManager {
         Stream.of(mAdControls)
                 .filter(value -> null != value)
                 .forEach(IAutoRefresh::autoRefreshSelfAD);
-        Log.i("tzy", "autoRefreshSelfAD: -----------------------------------");
     }
 
     public interface IAutoRefresh{
