@@ -60,6 +60,7 @@ public class XHOneAdControl {
                 @Override
                 public void onSuccees(String type, Map<String, String> map) {
                     index_ad = index;
+                    listAdParent.get(index_ad).setExecuteStatisticCallback(mCallback);
                     xhAdControlCallBack.onSuccess(type, map, index_controls);
                 }
 
@@ -89,13 +90,10 @@ public class XHOneAdControl {
      */
     public void onAdBind(View view, String oneLevel, String twoLevel) {
         Log.i("tzy", "onAdBind::::" + index_ad + "::::" + (view == null ? "view为null" : "正常"));
-        if (index_ad > -1 && index_ad < listAdParent.size()) {
-            if(!isDisplayed){
-                isDisplayed = true;
-                if (view != null)
-                    listAdParent.get(index_ad).setShowView(view);
-                listAdParent.get(index_ad).onResumeAd(oneLevel, twoLevel);
-            }
+        if (index_ad > -1 && index_ad < listAdParent.size() && !isDisplayed) {
+            if (view != null)
+                listAdParent.get(index_ad).setShowView(view);
+            listAdParent.get(index_ad).onResumeAd(oneLevel, twoLevel);
         }
     }
 
@@ -121,5 +119,12 @@ public class XHOneAdControl {
             listAdParent.get(index_ad).setShowView(view);
         }
     }
+
+    private XHScrollerAdParent.ExecuteStatisticCallback mCallback = new XHScrollerAdParent.ExecuteStatisticCallback() {
+        @Override
+        public void execute() {
+            isDisplayed = true;
+        }
+    };
 
 }

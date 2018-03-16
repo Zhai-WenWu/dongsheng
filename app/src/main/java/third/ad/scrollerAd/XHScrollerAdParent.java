@@ -37,6 +37,8 @@ public abstract class XHScrollerAdParent {
     public String key = "";
     private boolean isQuanList = false;
 
+    private ExecuteStatisticCallback mExecuteStatisticCallback;
+
     public XHScrollerAdParent(String mAdPlayId, int num) {
         this.mAdPlayId = mAdPlayId;
         this.num = num;
@@ -121,7 +123,10 @@ public abstract class XHScrollerAdParent {
      */
     protected void onAdShow(String oneLevel, String twoLevel, String threeLevel) {
         //自己网站上的统计
+
         postTongji("show");
+        if (mExecuteStatisticCallback != null)
+            mExecuteStatisticCallback.execute();
         XHClick.mapStat(XHApplication.in(), oneLevel, twoLevel, threeLevel);
     }
 
@@ -210,5 +215,13 @@ public abstract class XHScrollerAdParent {
             return map;
         }
         return null;
+    }
+
+    public interface ExecuteStatisticCallback {
+        void execute();
+    }
+
+    public void setExecuteStatisticCallback (ExecuteStatisticCallback callback) {
+        mExecuteStatisticCallback = callback;
     }
 }
