@@ -158,7 +158,7 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
                         count++;
                         AdData.put(listIds.get(i), "");
                     }
-                    if (adConfigDataList.size() > 0) {
+                    if (state && adConfigDataList.size() > 0) {
                         initAdRequest(adConfigDataList, listIds.get(i), i);
                     } else {
                         listAdContrls.add(null);
@@ -349,10 +349,9 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
                 listAdContrls.get(i).setAdDataCallBack(new XHAdControlCallBack() {
                     @Override
                     public void onSuccess(String type, Map<String, String> map, int num) {
-                        if(listAdContrls.get(count) != null){
+                        if(count < listAdContrls.size() &&listAdContrls.get(count) != null){
                             listAdContrls.get(count).resetDispaly();
                         }
-                        //TODO 此处重置OneController
                         if (map != null){
                             map.put("index", String.valueOf(num));
                         }
@@ -367,10 +366,9 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
 
                     @Override
                     public void onFail(String type, int num) {
-                        if(listAdContrls.get(count) != null){
+                        if(count < listAdContrls.size() && listAdContrls.get(count) != null){
                             listAdContrls.get(count).resetDispaly();
                         }
-                        //TODO 此处重置OneController
                         count++;
                         AdData.put(listIds.get(num), "");
                         //展示数据集合
