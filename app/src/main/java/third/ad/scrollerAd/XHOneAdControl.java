@@ -29,6 +29,14 @@ public class XHOneAdControl {
         this.index_controls = Num;
     }
 
+    public void resetDispaly(){
+        isDisplayed = false;
+    }
+
+    public void displayed(){
+        isDisplayed = true;
+    }
+
     /**
      * 设置广告数据回调
      *
