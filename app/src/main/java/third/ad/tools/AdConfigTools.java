@@ -1,16 +1,9 @@
 package third.ad.tools;
 
 import android.content.Context;
-import android.net.Uri;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Log;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -19,7 +12,6 @@ import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
-import acore.tools.Tools;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
 import third.ad.db.XHAdSqlite;
@@ -27,7 +19,7 @@ import third.ad.db.bean.AdBean;
 
 import static third.ad.tools.AdPlayIdConfig.FULL_SRCEEN_ACTIVITY;
 
-public class AdConfigTools {
+public class AdConfigTools extends BaseAdConfigTools {
     private volatile static AdConfigTools mAdConfigTools;
 
     private String showAdId = "cancel";
@@ -126,64 +118,6 @@ public class AdConfigTools {
     }
 
     /**
-     * @param event：行为事件
-     * @param gg_position_id：广告位id
-     * @param gg_business：广告商
-     * @param gg_business_id：广告商id
-     */
-    public void postStatistics(@NonNull String event, @NonNull String gg_position_id, @NonNull String gg_business, @NonNull String gg_business_id) {
-        LinkedHashMap<String, String> map = new LinkedHashMap<>();
-        //时间
-        map.put("app_time", Tools.getAssignTime("yyyy-MM-dd HH:mm:ss", 0));
-        //行为事件
-        map.put("event", event);
-        //广告位id
-        if (!TextUtils.isEmpty(gg_position_id)) {
-            map.put("gg_position_id", gg_position_id);
-        }
-        //广告商
-        if (!TextUtils.isEmpty(gg_business)) {
-            map.put("gg_business", gg_business);
-        }
-        //广告商id
-        if (!TextUtils.isEmpty(gg_business_id)) {
-            map.put("gg_business_id", gg_business_id);
-        }
-        JSONObject jsonObject = MapToJsonEncode(map);
-        LinkedHashMap<String, String> params = new LinkedHashMap<>();
-        params.put("log_json", jsonObject.toString());
-        Log.i("tongji", "postStatistics: params=" + params.toString());
-//        requestStatistics(StringManager.api_monitoring_9,params);
-        requestStatistics(StringManager.api_adsNumber, params);
-    }
-
-    private void requestStatistics(String url, LinkedHashMap<String, String> params) {
-        ReqInternet.in().doPost(url, params, new InternetCallback() {
-            @Override
-            public void loaded(int flag, String url, Object returnObj) {
-            }
-        });
-    }
-
-    public static JSONObject MapToJsonEncode(Map<String, String> maps) {
-
-        JSONObject jsonObject = new JSONObject();
-        if (maps == null || maps.size() <= 0) return jsonObject;
-
-        Iterator<Map.Entry<String, String>> enty = maps.entrySet().iterator();
-        try {
-            while (enty.hasNext()) {
-                Map.Entry<String, String> entry = enty.next();
-                jsonObject.put(entry.getKey(), Uri.encode(entry.getValue()));
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return jsonObject;
-    }
-
-
-    /**
      * 广告位 点击
      *
      * @param id       广告位id
@@ -219,4 +153,5 @@ public class AdConfigTools {
             }
         });
     }
+
 }
