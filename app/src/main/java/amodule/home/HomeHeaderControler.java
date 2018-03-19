@@ -203,6 +203,9 @@ public class HomeHeaderControler implements ISaveStatistic, ISetAdController {
             Map<String, String> adMap = new HashMap<>();
             adMap.put("adPosId", key);
             Map<String, String> m = StringManager.getFirstMap(mAdData.get(key));
+            if(!"xh".equals(m.get("type"))){
+                continue;
+            }
             adMap.put("img", m.get("imgUrl"));
             adMap.put("hide", m.get("hide"));
             adMap.put("iconUrl", m.get("iconUrl"));

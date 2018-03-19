@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.load.model.GlideUrl;
@@ -47,9 +46,6 @@ import amodule._common.delegate.StatisticCallback;
 import amodule._common.helper.WidgetDataHelper;
 import aplug.basic.LoadImage;
 import third.ad.scrollerAd.XHAllAdControl;
-
-import static third.ad.scrollerAd.XHScrollerAdParent.ADKEY_GDT;
-import static third.ad.scrollerAd.XHScrollerAdParent.ID_AD_ICON_GDT;
 
 /**
  * Description :
@@ -215,36 +211,8 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
                 if (tagValue != null && tagValue.equals(img)) {
                     return;
                 }
-                RelativeLayout adlayout = (RelativeLayout) view.findViewById(R.id.ad_layout);
-                adlayout.setPadding(
-                        adlayout.getPaddingLeft(),
-                        adlayout.getPaddingTop(),
-                        mPointContainerLl.getMeasuredWidth() + Tools.getDimen(getContext(), R.dimen.dp_16),
-                        adlayout.getPaddingBottom()
-                );
                 imageView.setTag(TAG_ID, img);
                 loadImage(img, imageView);
-                if (data.containsKey("adPosId")) {
-                    mAdViews.put(mArrayList.indexOf(data), view);
-                    String title = data.get("title");
-                    String desc = data.get("desc");
-                    String text = TextUtils.equals(title, desc) ? desc : title + " | " + desc;
-                    TextView textView = (TextView) view.findViewById(R.id.title);
-                    textView.setText(TextUtils.isEmpty(text) ? "" : text);
-                    if (!TextUtils.equals("1", data.get("adType"))) {
-                        ImageView icon = (ImageView) view.findViewById(R.id.ad_icon);
-                        icon.setOnClickListener(v ->
-                                AppCommon.setAdHintClick(XHActivityManager.getInstance().getCurrentActivity(), v, mAdControl, 0, "")
-                        );
-                        icon.setVisibility(VISIBLE);
-                    }
-                    View gdtIcon = view.findViewById(ID_AD_ICON_GDT);
-                    if(gdtIcon != null){
-                        gdtIcon.setVisibility(ADKEY_GDT.equals(data.get("type"))?VISIBLE:GONE);
-                    }
-                } else {
-                    view.findViewById(R.id.ad_layout).setVisibility(GONE);
-                }
             }
 
             @SuppressLint("InflateParams")
