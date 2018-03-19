@@ -24,7 +24,6 @@ import amodule.main.view.WelcomeDialog;
 import third.ad.db.XHAdSqlite;
 import third.ad.db.bean.AdBean;
 import third.ad.db.bean.XHSelfNativeData;
-import xh.basic.tool.UtilString;
 
 import static third.ad.scrollerAd.XHScrollerAdParent.ADKEY_BAIDU;
 import static third.ad.scrollerAd.XHScrollerAdParent.ADKEY_GDT;
@@ -293,8 +292,8 @@ public class WelcomeAdTools {
     }
 
     private String analysData(String data) {
-        LinkedHashMap<String, String> map_link = UtilString.getMapByString(data, "&", "=");
-        String adid = "";
+        LinkedHashMap<String, String> map_link = StringManager.getMapByString(data, "&", "=");
+        String adid = data;
         if (map_link.containsKey("adid"))
             adid = map_link.get("adid");
         return adid;

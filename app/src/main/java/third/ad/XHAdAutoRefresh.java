@@ -31,9 +31,9 @@ public class XHAdAutoRefresh {
         return sInstance;
     }
 
-    Handler mTimerHandler;
-    Runnable mRunnable;
-    ActivityMethodManager mManager;
+    private Handler mTimerHandler;
+    private Runnable mRunnable;
+    private ActivityMethodManager mManager;
 
     // 时刻取得导航提醒
     public void startTimer(ActivityMethodManager activityMethodManager) {

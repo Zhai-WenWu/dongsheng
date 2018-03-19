@@ -184,8 +184,6 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
             switch (typeValue) {
                 case TAG_BANNER:
                     String data = map_temp.get("data");
-//                    LinkedHashMap<String, String> personalMap = StringManager.getMapByString(data, "&", "=");
-//                    String adidValue = personalMap.get("adid");
                     XH_IDS.add(data != null ? data : "");
                     break;
                 case "gdt":

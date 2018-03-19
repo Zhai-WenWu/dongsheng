@@ -8,13 +8,11 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.override.helper.XHActivityManager;
-import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import third.ad.db.bean.XHSelfNativeData;
@@ -30,10 +28,7 @@ public class XHScrollerSelf extends XHScrollerAdParent {
     public XHScrollerSelf(String data, String mAdPlayId, int num) {
         super(mAdPlayId, num);
         key = "xh";
-        LinkedHashMap<String, String> map_link = StringManager.getMapByString(data, "&", "=");
-        if (map_link.containsKey("adid")) {
-            adid = map_link.get("adid");
-        }
+        adid = data;
     }
 
     @Override

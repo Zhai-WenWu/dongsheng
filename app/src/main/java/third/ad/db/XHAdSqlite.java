@@ -27,7 +27,7 @@ import static third.ad.tools.AdPlayIdConfig.FULL_SRCEEN_ACTIVITY;
  */
 public class XHAdSqlite extends SQLiteOpenHelper {
     public static final int VERSION = 2;
-    public static final String NAME = "ad.db";
+    private static final String NAME = "ad.db";
 
     public static final String TABLE_ADCONFIG = "tb_ad_config2";
     public static final String TABLE_ADCONFIG_OLD = "tb_ad_config";

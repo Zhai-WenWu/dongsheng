@@ -112,7 +112,7 @@ public class HomeBuoy {
 
     private String analysData(String data) {
         LinkedHashMap<String, String> map_link = UtilString.getMapByString(data, "&", "=");
-        String adid = "";
+        String adid = data;
         if (map_link.containsKey("adid"))
             adid = map_link.get("adid");
         return adid;
