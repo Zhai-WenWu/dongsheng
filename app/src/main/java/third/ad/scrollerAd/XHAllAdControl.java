@@ -107,21 +107,21 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
 
     //注册刷新回调
     public void registerRefreshCallback() {
-        if(act == null){
+        if (act == null) {
             return;
         }
         lastSelfAdTime = System.currentTimeMillis();
         ActivityMethodManager activityMethodManager = null;
-        if(act instanceof BaseActivity){
-            activityMethodManager = ((BaseActivity)act).getActMagager();
-        }else if(act instanceof BaseAppCompatActivity){
-            activityMethodManager = ((BaseAppCompatActivity)act).getActMagager();
-        }else if(act instanceof BaseFragmentActivity){
-            activityMethodManager = ((BaseFragmentActivity)act).getActMagager();
-        }else if(act instanceof MainBaseActivity){
-            activityMethodManager = ((MainBaseActivity)act).getActMagager();
+        if (act instanceof BaseActivity) {
+            activityMethodManager = ((BaseActivity) act).getActMagager();
+        } else if (act instanceof BaseAppCompatActivity) {
+            activityMethodManager = ((BaseAppCompatActivity) act).getActMagager();
+        } else if (act instanceof BaseFragmentActivity) {
+            activityMethodManager = ((BaseFragmentActivity) act).getActMagager();
+        } else if (act instanceof MainBaseActivity) {
+            activityMethodManager = ((MainBaseActivity) act).getActMagager();
         }
-        if(activityMethodManager != null){
+        if (activityMethodManager != null) {
             activityMethodManager.registerADController(this);
         }
     }
@@ -138,13 +138,13 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
                 /*获取数据广告位的数据体*/
                 AdBean adBean = adSqlite.getAdConfig(listIds.get(i));
                 if (adBean != null) {
-
-                /*广告实体数据集合*/
+                    /*广告实体数据集合*/
                     boolean state = false;//是否打开
                     ArrayList<Map<String, String>> adConfigDataList = StringManager.getListMapByJson(adBean.adConfig);
                     boolean once = false;
                     for (Map<String, String> adTypeConfig : adConfigDataList) {
-                        if ("2".equals(adTypeConfig.get("open"))) {
+                        if ("2".equals(adTypeConfig.get("open"))
+                                && !TextUtils.isEmpty(adTypeConfig.get("data"))) {
                             state = true;
                             if (!once) {
                                 once = true;
@@ -225,13 +225,13 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
             @Override
             public void onNativeLoad(List<XHSelfNativeData> list) {
                 isLoadOverXH = true;
-                if(isRefresh){
-                    if(xhNativeArray != null && !xhNativeArray.isEmpty()
-                            && list != null && !xhNativeArray.equals(list)){
+                if (isRefresh) {
+                    if (xhNativeArray != null && !xhNativeArray.isEmpty()
+                            && list != null && !xhNativeArray.equals(list)) {
                         xhNativeArray = list;
                         handlerAdData(isRefresh);
                     }
-                } else{
+                } else {
                     xhNativeArray = list;
                     handlerAdData(isRefresh);
                 }
@@ -347,10 +347,10 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
                 listAdContrls.get(i).setAdDataCallBack(new XHAdControlCallBack() {
                     @Override
                     public void onSuccess(String type, Map<String, String> map, int num) {
-                        if(count < listAdContrls.size() &&listAdContrls.get(count) != null){
+                        if (count < listAdContrls.size() && listAdContrls.get(count) != null) {
                             listAdContrls.get(count).resetDispaly();
                         }
-                        if (map != null){
+                        if (map != null) {
                             map.put("index", String.valueOf(num));
                         }
                         count++;
@@ -358,13 +358,13 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
                         AdData.put(listIds.get(num), mapToJson(map).toString());
                         //展示数据集合
                         if (count >= listAdContrls.size()) {
-                            xhBackIdsDataCallBack.callBack(isRefresh,AdData);
+                            xhBackIdsDataCallBack.callBack(isRefresh, AdData);
                         }
                     }
 
                     @Override
                     public void onFail(String type, int num) {
-                        if(count < listAdContrls.size() && listAdContrls.get(count) != null){
+                        if (count < listAdContrls.size() && listAdContrls.get(count) != null) {
                             listAdContrls.get(count).resetDispaly();
                         }
                         count++;
@@ -372,7 +372,7 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
                         //展示数据集合
                         if (count >= listAdContrls.size()) {
                             try {
-                                xhBackIdsDataCallBack.callBack(isRefresh,AdData);
+                                xhBackIdsDataCallBack.callBack(isRefresh, AdData);
                             } catch (Exception e) {
                                 Log.e("tzy", "Exception : " + e.getMessage());
                             }
@@ -473,11 +473,12 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
     }
 
     public interface XHBackIdsDataCallBack {
-        public void callBack(boolean isRefresh,Map<String, String> map);
+        public void callBack(boolean isRefresh, Map<String, String> map);
     }
 
     /**
      * @param map 数据
+     *
      * @return @return json对象
      */
     private JSONObject mapToJson(Map<String, String> map) {
@@ -526,23 +527,23 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
         return false;
     }
 
-    public void refreshAllAd(){
+    public void refreshAllAd() {
         isLoadOverXH = false;
         isLoadOverBaidu = !isShowBaidu;
         isLoadOverGdt = !isShowGdt;
         getAllData(true);
     }
 
-    public void refreshSelfAd(){
+    public void refreshSelfAd() {
         Log.i("tzy", "refreshSelfAd: " + this.toString());
         isLoadOverXH = false;
         getAllXhData(true);
     }
 
     @Override
-    public void autoRefreshSelfAD(){
+    public void autoRefreshSelfAD() {
         final long noeTime = System.currentTimeMillis();
-        if(noeTime - lastSelfAdTime >= XHAdAutoRefresh.intervalTime){
+        if (noeTime - lastSelfAdTime >= XHAdAutoRefresh.intervalTime) {
             lastSelfAdTime = System.currentTimeMillis();
             refreshSelfAd();
         }
