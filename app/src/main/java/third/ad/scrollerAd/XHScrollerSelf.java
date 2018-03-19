@@ -119,7 +119,7 @@ public class XHScrollerSelf extends XHScrollerAdParent {
 
     public void setNativeData(XHSelfNativeData nativeData) {
         mNativeData = nativeData;
-        if("1".equals(mNativeData.getDbType())){
+        if(mNativeData != null && "1".equals(mNativeData.getDbType())){
             mNativeData.setUrl("download.app?url=" + Uri.encode(mNativeData.getUrl()) + "&appname=" + Tools.getMD5(mNativeData.getUrl()));
         }
     }
