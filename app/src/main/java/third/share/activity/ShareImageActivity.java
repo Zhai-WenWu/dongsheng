@@ -75,17 +75,17 @@ public class ShareImageActivity extends Activity{
                     R.drawable.logo_qq_new,R.drawable.logo_space_new,
                     R.drawable.logo_sina_new,R.drawable.logo_message_new};
             mSharePlatforms = new String[]{
-                    ShareImage.QQ_NAME,ShareImage.QQ_ZONE,
-                    ShareImage.SINA_NAME,ShareImage.SHORT_MESSAGE};
+                    ShareTools.QQ_NAME,ShareTools.QQ_ZONE,
+                    ShareTools.SINA_NAME,ShareTools.SHORT_MESSAGE};
         }else{
             mNames = new String[]{"微信好友","微信朋友圈","QQ好友","QQ空间","新浪微博","短信"};
             mLogos = new int[]{R.drawable.logo_weixin_new,R.drawable.logo_friends_new,
                     R.drawable.logo_qq_new,R.drawable.logo_space_new,
                     R.drawable.logo_sina_new,R.drawable.logo_message_new};
             mSharePlatforms = new String[]{
-                    ShareImage.WEI_XIN,ShareImage.WEI_QUAN,
-                    ShareImage.QQ_NAME,ShareImage.QQ_ZONE,
-                    ShareTools.SINA_NAME,ShareImage.SHORT_MESSAGE};
+                    ShareTools.WEI_XIN,ShareTools.WEI_QUAN,
+                    ShareTools.QQ_NAME,ShareTools.QQ_ZONE,
+                    ShareTools.SINA_NAME,ShareTools.SHORT_MESSAGE};
         }
 
         for(int i = 0; i < mNames.length; i ++){

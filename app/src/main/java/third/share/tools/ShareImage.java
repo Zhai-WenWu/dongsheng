@@ -9,9 +9,11 @@
 package third.share.tools;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import java.io.File;
 import java.util.HashMap;
@@ -23,12 +25,16 @@ import acore.tools.ToolsDevice;
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.framework.ShareSDK;
-import cn.sharesdk.sina.weibo.SinaWeibo;
-import cn.sharesdk.system.text.ShortMessage;
-import cn.sharesdk.tencent.qq.QQ;
-import cn.sharesdk.tencent.qzone.QZone;
-import cn.sharesdk.wechat.friends.Wechat;
-import cn.sharesdk.wechat.moments.WechatMoments;
+
+import static third.share.tools.ShareTools.CANCEL;
+import static third.share.tools.ShareTools.ERROR;
+import static third.share.tools.ShareTools.OK;
+import static third.share.tools.ShareTools.QQ_NAME;
+import static third.share.tools.ShareTools.QQ_ZONE;
+import static third.share.tools.ShareTools.SHORT_MESSAGE;
+import static third.share.tools.ShareTools.SINA_NAME;
+import static third.share.tools.ShareTools.WEI_QUAN;
+import static third.share.tools.ShareTools.WEI_XIN;
 
 /**
  * PackageName : third.share
@@ -37,18 +43,14 @@ import cn.sharesdk.wechat.moments.WechatMoments;
  */
 
 public class ShareImage {
-    private final int SHARE_OK = 1;
-    private final int SHARE_ERROR = 2;
-    private final int SHARE_CANCLE = 3;
-
-    public static final String QQ_ZONE = QZone.NAME;
-    public static final String QQ_NAME = QQ.NAME;
-    public static final String WEI_XIN = Wechat.NAME;
-    public static final String WEI_QUAN = WechatMoments.NAME;
-    public static final String SINA_NAME = SinaWeibo.NAME;
-    public static final String SHORT_MESSAGE = ShortMessage.NAME;
 
     Context mContext;
+
+    private ShareTools.ActionListener mActionListener;
+
+    public void setActionListener(ShareTools.ActionListener actionListener) {
+        mActionListener = actionListener;
+    }
 
     public ShareImage(Context context) {
         this.mContext = context;
@@ -94,45 +96,49 @@ public class ShareImage {
     PlatformActionListener paListener = new PlatformActionListener() {
         @Override
         public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
-            sendMessage(platform.getName(),SHARE_OK);
-            notifyShareResult(platform.getName(),"2");
+            if (mActionListener != null)
+                mActionListener.onComplete(ShareTools.Option.SHARE.getType(), OK, platform, null);
+            else
+                handleCallback(ShareTools.Option.SHARE.getType(), OK, platform, null);
         }
 
         @Override
         public void onError(Platform platform, int arg1, Throwable arg2) {
-            notifyShareResult(platform.getName(),"1");
-            sendMessage(platform.getName(),SHARE_ERROR);
-            arg2.printStackTrace();
+            if (mActionListener != null)
+                mActionListener.onError(ShareTools.Option.SHARE.getType(), ERROR, platform, null);
+            else
+                handleCallback(ShareTools.Option.SHARE.getType(), ERROR, platform, null);
 
         }
 
         @Override
         public void onCancel(Platform platform, int arg1) {
-            notifyShareResult(platform.getName(),"1");
-            sendMessage(platform.getName(),SHARE_CANCLE);
-        }
-
-        private void sendMessage(String name,int status){
-            Message msg = shareHandler.obtainMessage();
-            msg.what = status;
-            msg.obj = name;
-            shareHandler.sendMessage(msg);
+            if (mActionListener != null)
+                mActionListener.onCancel(ShareTools.Option.SHARE.getType(), CANCEL, platform, null);
+            else
+                handleCallback(ShareTools.Option.SHARE.getType(), CANCEL, platform, null);
         }
     };
 
-    public void notifyShareResult(String platform,String success){
-        String jsCallbackParams = "";
+    private String getDefJsCallbackParams(String platform) {
+        String ret = "";
+        if (TextUtils.isEmpty(platform))
+            return ret;
         if (QQ_NAME.equals(platform)) {
-            jsCallbackParams = "QQ";
+            ret = "QQ";
         } else if (QQ_ZONE.equals(platform)) {
-            jsCallbackParams = "QZone";
+            ret = "QZone";
         } else if (WEI_XIN.equals(platform)) {
-            jsCallbackParams = "Wechat";
+            ret = "Wechat";
         } else if (WEI_QUAN.equals(platform)) {
-            jsCallbackParams = "WechatMoments";
+            ret = "WechatMoments";
         } else if (SINA_NAME.equals(platform)) {
-            jsCallbackParams = "SinaWeibo";
+            ret = "SinaWeibo";
         }
+        return ret;
+    }
+
+    private void notifyShareResult(String platform,String success, String jsCallbackParams){
         Map<String,String> data = new HashMap<>();
         data.put("platform",platform);
         data.put("status",success);
@@ -140,31 +146,40 @@ public class ShareImage {
         ObserverManager.getInstance().notify(ObserverManager.NOTIFY_SHARE,this,data);
     }
 
-    public Handler shareHandler = new Handler(new Handler.Callback() {
+    private Handler shareHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
             int flag = msg.what;
             String pla = msg.obj.toString();
             String[] pf = getPlatformParam(pla);
             switch (flag) {
-                case SHARE_OK:
+                case OK:
                     Tools.showToast(mContext, pf[0] + "分享成功");
+                    String jsCallbackParams = null;
+                    Bundle bundle = msg.getData();
+                    if (bundle != null) {
+                        jsCallbackParams = bundle.getString("bundle");
+                    }
+                    notifyShareResult(pla, "2", TextUtils.isEmpty(jsCallbackParams) ?
+                            getDefJsCallbackParams(pla) : jsCallbackParams);
                     break;
-                case SHARE_ERROR:
+                case ERROR:
                     if (("微信".equals(pf[0]) || pf[0].contains("微信")) && ToolsDevice.isAppInPhone(mContext, "com.tencent.mm") == 0) {
                         Tools.showToast(mContext, "未检测到相关应用");
                     } else
                         Tools.showToast(mContext, pf[0] + "分享失败");
+                    notifyShareResult(pla, "1", getDefJsCallbackParams(pla));
                     break;
-                case SHARE_CANCLE:
+                case CANCEL:
                     Tools.showToast(mContext, pf[0] + "取消分享");
+                    notifyShareResult(pla, "1", getDefJsCallbackParams(pla));
                     break;
             }
             return false;
         }
     });
 
-    public String[] getPlatformParam(String name) {
+    private String[] getPlatformParam(String name) {
         if (QQ_NAME.equals(name)) {
             return new String[]{"QQ","1"};
         } else if (QQ_ZONE.equals(name)) {
@@ -179,6 +194,25 @@ public class ShareImage {
             return new String[]{"短信","6"};
         }
         return new String[]{"",""};
+    }
+
+    private void handleCallback(int optionType, int callbackType, Platform platform, String
+            jsonStr) {
+        Message msg = shareHandler.obtainMessage();
+        msg.what = callbackType;
+        msg.obj = platform.getName();
+        msg.arg1 = optionType;
+        if (!TextUtils.isEmpty(jsonStr)) {
+            Bundle bundle = new Bundle();
+            bundle.putString("bundle", jsonStr);
+            msg.setData(bundle);
+        }
+        shareHandler.sendMessage(msg);
+    }
+
+    public void notifyCallback(int optionType, int callbackType, Platform platform, String
+            jsonStr) {
+        handleCallback(optionType, callbackType, platform, jsonStr);
     }
 
 }

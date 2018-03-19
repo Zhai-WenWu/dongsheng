@@ -26,6 +26,9 @@ import android.widget.Toast;
 
 import com.xiangha.R;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -78,7 +81,14 @@ public class ShareTools {
 	}
 
 	public void showSharePlatform(String title, String content,String types,
-								  String img, String clickUrl, String platform,String from,String parent,boolean isShowBeginToast) {
+								  String img, String clickUrl, String platform,String from,String
+										  parent,boolean isShowBeginToast) {
+		showSharePlatform(title, content, types, img, clickUrl, platform, from, parent,
+				isShowBeginToast, null);
+	}
+
+	private void showSharePlatform(String title, String content,String types,
+								  String img, String clickUrl, String platform,String from,String parent,boolean isShowBeginToast, ActionListener listener) {
 		starEvent("a_share400", mParent,mFrom);
 		if (TextUtils.isEmpty(clickUrl))
 			clickUrl ="";
@@ -144,17 +154,26 @@ public class ShareTools {
 			@Override
 			public void onError(Platform plf, int arg1, Throwable arg2) {
 				arg2.printStackTrace();
-				handleCallback(Option.SHARE.getType(), ERROR, plf, null);
+				if (listener != null)
+					listener.onError(Option.SHARE.getType(), ERROR, plf, null);
+				else
+					handleCallback(Option.SHARE.getType(), ERROR, plf, null);
 			}
 
 			@Override
 			public void onComplete(Platform plf, int arg1,HashMap<String, Object> arg2) {
-				handleCallback(Option.SHARE.getType(), OK, plf, null);
+				if (listener != null)
+					listener.onComplete(Option.SHARE.getType(), OK, plf, null);
+				else
+					handleCallback(Option.SHARE.getType(), OK, plf, null);
 			}
 
 			@Override
 			public void onCancel(Platform plf, int arg1) {
-				handleCallback(Option.SHARE.getType(), CANCLE, plf, null);
+				if (listener != null)
+					listener.onCancel(Option.SHARE.getType(), CANCEL, plf, null);
+				else
+					handleCallback(Option.SHARE.getType(), CANCEL, plf, null);
 			}
 		});
 
@@ -182,7 +201,7 @@ public class ShareTools {
 		showSharePlatform(title, content, types, img, clickUrl, platform, from,parent,true);
 	}
 
-	public void showSharePlatform(Map<String, String> map) {
+	public void showSharePlatform(Map<String, String> map, ActionListener listener) {
 		if (map == null || map.isEmpty())
 			return;
 		String shareParams = map.get("shareParams");
@@ -194,7 +213,7 @@ public class ShareTools {
 		if (TextUtils.equals(shareType, "2") && TextUtils.equals(WEI_XIN, map.get("platform"))) {
 			shareMap.put("type", map.get("type"));
 			handleStatisticsParams(shareMap.get("url"), map.get("from"), map.get("parent"));
-			showShareMiniProgram(shareMap);
+			showShareMiniProgram(shareMap, listener);
 		} else {
 			String title = map.get("title");
 			String content = map.get("content");
@@ -210,8 +229,13 @@ public class ShareTools {
 			String from = map.get("from");
 			String parent = map.get("parent");
 			String platform = map.get("platform");
-			showSharePlatform(title, content, type, imgUrl, clickUrl, platform, from, parent, true);
+			showSharePlatform(title, content, type, imgUrl, clickUrl, platform, from, parent,
+					true, listener);
 		}
+	}
+
+	public void showSharePlatform(Map<String, String> map) {
+		showSharePlatform(map, null);
 	}
 
 	private void handleStatisticsParams(String clickUrl, String from, String parent) {
@@ -260,7 +284,7 @@ public class ShareTools {
 		return mContext;
 	}
 
-	public Handler shareHandler = new Handler(new Callback() {
+	private Handler shareHandler = new Handler(new Callback() {
 		@Override
 		public boolean handleMessage(Message msg) {
 			int flag = msg.what;
@@ -273,11 +297,17 @@ public class ShareTools {
 						starEvent("a_share_success", mParent, mFrom);
 						XHClick.statisticsShare(mFrom, mClickUrl, pf[1]);
 						Tools.showToast(mContext, pf[0] + "分享成功");
-						notifyMsgResult(Option.SHARE, pf[0], "2", pf[2]);
+						String jsCallbackParams = null;
+						Bundle bundle = msg.getData();
+						if (bundle != null) {
+							jsCallbackParams = bundle.getString("bundle");
+						}
+						notifyMsgResult(Option.SHARE, pf[0], "2", TextUtils.isEmpty
+								(jsCallbackParams) ? pf[2] : jsCallbackParams);
 					} else if (arg1 == Option.AUTHORIZE.getType()) {
 						Tools.showToast(mContext, pf[0] + "授权成功");
 						notifyMsgResult(Option.AUTHORIZE, pf[0], "2", msg.getData()
-								.getSerializable("bundle").toString());
+								.getString("bundle").toString());
 					}
 					break;
 				case ERROR:
@@ -293,7 +323,7 @@ public class ShareTools {
 					}
 
 					break;
-				case CANCLE:
+				case CANCEL:
 					if (arg1 == Option.SHARE.getType()) {
 						Tools.showToast(mContext, pf[0] + "取消分享");
 						notifyMsgResult(Option.SHARE, pf[0],"1", pf[2]);
@@ -307,7 +337,7 @@ public class ShareTools {
 		}
 	});
 
-	public void notifyMsgResult(Option option, String platform, String success, String
+	private void notifyMsgResult(Option option, String platform, String success, String
 			jsCallbackParams){
 		Map<String,String> data = new HashMap<>();
 		data.put("platform",platform);
@@ -355,11 +385,11 @@ public class ShareTools {
 		return pf;
 	}
 
-	private final int OK = 1;
-	private final int ERROR = 2;
-	private final int CANCLE = 3;
+	public static final int OK = 1;
+	public static final int ERROR = 2;
+	public static final int CANCEL = 3;
 
-	private void showShareMiniProgram(Map<String, String> map) {
+	private void showShareMiniProgram(Map<String, String> map, ActionListener listener) {
 		if (map == null || map.isEmpty())
 			return;
 		String path = "pages/index/index.html";
@@ -406,18 +436,27 @@ public class ShareTools {
 		platform.setPlatformActionListener(new PlatformActionListener() {
 			@Override
 			public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
-				handleCallback(Option.SHARE.getType(), OK, platform, null);
+				if (listener != null)
+					listener.onComplete(Option.SHARE.getType(), OK, platform, null);
+				else
+					handleCallback(Option.SHARE.getType(), OK, platform, null);
 			}
 
 			@Override
 			public void onError(Platform platform, int i, Throwable throwable) {
 				throwable.printStackTrace();
-				handleCallback(Option.SHARE.getType(), ERROR, platform, null);
+				if (listener != null)
+					listener.onError(Option.SHARE.getType(), ERROR, platform, null);
+				else
+					handleCallback(Option.SHARE.getType(), ERROR, platform, null);
 			}
 
 			@Override
 			public void onCancel(Platform platform, int i) {
-				handleCallback(Option.SHARE.getType(), CANCLE, platform, null);
+				if (listener != null)
+					listener.onCancel(Option.SHARE.getType(), CANCEL, platform, null);
+				else
+					handleCallback(Option.SHARE.getType(), CANCEL, platform, null);
 			}
 		});
 		platform.share(shareParams);
@@ -430,12 +469,17 @@ public class ShareTools {
 		pf.setPlatformActionListener(new PlatformActionListener() {
 			@Override
 			public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
-
-				Log.e("SLL", "onComplete111  map = " + hashMap);
-				// TODO: 2018/3/16 将map转换成json字符串
-				// {country=CN, unionid=oSWj_t4gdJ-r9z4s-YtFhpVv_w6k, province=Beijing, city=Haidian, openid=oQN19jlYJ2NUsh3XCDuwVhX6W2y8, sex=1, nickname=夜未央  №  黎明, headimgurl=http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJR3ibjnKyS1IKdhs56ExP54nWVzZjLSIbs02mdwh0HDxHjuIWSKhDZ7d8zKjDB759S7JgJRM7p4ibA/132, language=zh_CN, privilege=[]}
-				if (hashMap != null && !hashMap.isEmpty())
-					handleCallback(Option.AUTHORIZE.getType(), OK, platform, hashMap);
+				if (hashMap != null && !hashMap.isEmpty()) {
+					JSONObject obj = new JSONObject();
+					try {
+						for (String key : hashMap.keySet()) {
+                            obj.put(key, hashMap.get(key));
+                        }
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+					handleCallback(Option.AUTHORIZE.getType(), OK, platform, obj.toString());
+				}
 			}
 
 			@Override
@@ -445,24 +489,36 @@ public class ShareTools {
 
 			@Override
 			public void onCancel(Platform platform, int i) {
-				handleCallback(Option.AUTHORIZE.getType(), CANCLE, platform, null);
+				handleCallback(Option.AUTHORIZE.getType(), CANCEL, platform, null);
 			}
 		});
 		pf.authorize();
 		pf.showUser(null);
 	}
 
-	private void handleCallback(int optionType, int callbackType, Platform platform, HashMap<String, Object> map) {
+	public void notifyCallback(int optionType, int callbackType, Platform platform, String
+			jsonStr) {
+		handleCallback(optionType, callbackType, platform, jsonStr);
+	}
+
+	private void handleCallback(int optionType, int callbackType, Platform platform, String
+			jsonStr) {
 		Message msg = new Message();
 		msg.what = callbackType;
 		msg.obj = platform.getName();
 		msg.arg1 = optionType;
-		if (map != null && !map.isEmpty()) {
+		if (!TextUtils.isEmpty(jsonStr)) {
 			Bundle bundle = new Bundle();
-			bundle.putSerializable("bundle", map);
+			bundle.putString("bundle", jsonStr);
 			msg.setData(bundle);
 		}
 		shareHandler.sendMessage(msg);
+	}
+
+	public interface ActionListener {
+		void onComplete(int optionType, int callbackType, Platform platform, String jsonStr);
+		void onError(int optionType, int callbackType, Platform platform, String jsonStr);
+		void onCancel(int optionType, int callbackType, Platform platform, String jsonStr);
 	}
 
 	public enum  Option {
