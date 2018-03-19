@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -205,6 +206,9 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
 
             @Override
             public void bindView(View view, Map<String, String> data) {
+
+                Log.e("SLL", "data = " + data);
+
                 ImageView imageView = (ImageView) view.findViewById(R.id.image);
                 Object tagValue = imageView.getTag(TAG_ID);
                 String img = data.get("img");
@@ -227,11 +231,13 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
                     String text = TextUtils.equals(title, desc) ? desc : title + " | " + desc;
                     TextView textView = (TextView) view.findViewById(R.id.title);
                     textView.setText(TextUtils.isEmpty(text) ? "" : text);
-                    ImageView icon = (ImageView) view.findViewById(R.id.ad_icon);
-                    icon.setOnClickListener(v ->
-                            AppCommon.setAdHintClick(XHActivityManager.getInstance().getCurrentActivity(), v, mAdControl, 0, "")
-                    );
-                    icon.setVisibility(VISIBLE);
+                    if (!TextUtils.equals("1", data.get("adType"))) {
+                        ImageView icon = (ImageView) view.findViewById(R.id.ad_icon);
+                        icon.setOnClickListener(v ->
+                                AppCommon.setAdHintClick(XHActivityManager.getInstance().getCurrentActivity(), v, mAdControl, 0, "")
+                        );
+                        icon.setVisibility(VISIBLE);
+                    }
                     View gdtIcon = view.findViewById(ID_AD_ICON_GDT);
                     if(gdtIcon != null){
                         gdtIcon.setVisibility(ADKEY_GDT.equals(data.get("type"))?VISIBLE:GONE);

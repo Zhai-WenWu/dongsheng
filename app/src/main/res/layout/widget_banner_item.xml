@@ -55,7 +55,8 @@
                 android:layout_height="@dimen/dp_15"
                 android:layout_centerVertical="true"
                 android:layout_alignRight="@+id/title"
-                android:src="@drawable/banner_ad_icon"/>
+                android:src="@drawable/banner_ad_icon"
+                android:visibility="gone"/>
 
         </RelativeLayout>
 
