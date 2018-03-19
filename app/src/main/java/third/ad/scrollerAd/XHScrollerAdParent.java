@@ -131,7 +131,7 @@ public abstract class XHScrollerAdParent {
     }
 
 
-    private void postTongji(String event) {
+    protected void postTongji(String event) {
         AdConfigTools.getInstance().postStatistics(event,mAdPlayId,key,adid);
     }
 

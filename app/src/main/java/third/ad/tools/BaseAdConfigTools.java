@@ -104,6 +104,7 @@ public class BaseAdConfigTools {
 //        requestStatistics(StringManager.api_monitoring_9,params);
         switch (event) {
             case "click":
+            case "download":
                 params.put("log_json", new JSONArray().put(jsonObject).toString());
                 requestStatistics(StringManager.api_adsNumber, params);
                 break;

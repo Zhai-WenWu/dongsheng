@@ -24,6 +24,7 @@ public class XHSelfNativeData {
     private int showNum;
     private String url;
     private String adType;//1-自有活动，2-自有广告
+    private String dbType;//1-下载类型，2-落地页
     private String updateTime;
     private HashMap<String, String> imgs = new HashMap<>();
 
@@ -89,6 +90,14 @@ public class XHSelfNativeData {
 
     public void setAdType(String type) {
         this.adType = type;
+    }
+
+    public String getDbType() {
+        return dbType;
+    }
+
+    public void setDbType(String dbType) {
+        this.dbType = dbType;
     }
 
     public String getUpdateTime() {

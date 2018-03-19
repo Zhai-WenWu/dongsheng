@@ -69,6 +69,7 @@ public class XHSelfAdTools {
                                 nativeData.setShowNum(showNum);
                                 nativeData.setUrl(map.get("andUrl"));
                                 nativeData.setAdType(map.get("adType"));
+                                nativeData.setDbType(map.get("dbType"));
                                 nativeData.setLogoImage(map.get("logoImg"));
                                 nativeData.setUpdateTime(map.get("updateTime"));
                                 Map<String,String> bigImageMap = StringManager.getFirstMap(map.get("big"));

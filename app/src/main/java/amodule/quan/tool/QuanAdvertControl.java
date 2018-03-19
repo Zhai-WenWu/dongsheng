@@ -21,7 +21,6 @@ import acore.tools.StringManager;
 import acore.tools.SyntaxTools;
 import amodule.quan.adapter.AdapterCircle;
 import third.ad.scrollerAd.XHAllAdControl;
-import third.ad.scrollerAd.XHScrollerAdParent;
 import third.ad.tools.AdPlayIdConfig;
 
 import static third.ad.control.AdControlNormalDish.tag_yu;
@@ -217,13 +216,9 @@ public class QuanAdvertControl implements ActivityMethodManager.IAutoRefresh{
                         if(homeList!=null&&homeList.size()>0) {
                             Map<String, String> homeAdMap = homeList.get(0);
                             if (homeAdMap != null && homeAdMap.size() > 0) {
-                                if (XHScrollerAdParent.ADKEY_BANNER.equals(homeAdMap.get("type"))) {
-                                    setAdList((i + 1) + "", homeAdMap.get("index"), homeAdMap.get("title"), homeAdMap.get("desc"),
-                                            homeAdMap.get("iconUrl"), homeAdMap.get("imgUrl2"), "ad", homeAdMap.get("adType"),controlTag,homeAdMap.get("type"));
-                                } else {
-                                    setAdList((i + 1) + "", homeAdMap.get("index"), homeAdMap.get("title"), homeAdMap.get("desc"),
-                                            homeAdMap.get("iconUrl"), homeAdMap.get("imgUrl"), "ad", homeAdMap.get("adType"),controlTag,homeAdMap.get("type"));
-                                }
+                                setAdList((i + 1) + "", homeAdMap.get("index"), homeAdMap.get("title"), homeAdMap.get("desc"),
+                                        homeAdMap.get("iconUrl"), homeAdMap.get("imgUrl"),
+                                        "ad", homeAdMap.get("adType"),controlTag,homeAdMap.get("type"));
                             }
                         }
                     }

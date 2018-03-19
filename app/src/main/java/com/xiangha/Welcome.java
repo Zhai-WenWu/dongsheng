@@ -31,10 +31,13 @@ import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
 import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
+import third.ad.db.bean.XHSelfNativeData;
 import third.ad.tools.AdConfigTools;
 import third.ad.tools.AdPlayIdConfig;
 import third.ad.tools.WelcomeAdTools;
 import xh.basic.tool.UtilImage;
+
+import static third.ad.scrollerAd.XHScrollerSelf.showSureDownload;
 
 public class Welcome extends BaseActivity {
     private TextView textSkip, textLead;
@@ -156,7 +159,12 @@ public class Welcome extends BaseActivity {
         WelcomeAdTools.getInstance().setmXHBannerCallback(
                 new WelcomeAdTools.XHBannerCallback() {
                     @Override
-                    public void onAdLoadSucceeded(final String url, final String loadingUrl) {
+                    public void onAdLoadSucceeded(XHSelfNativeData nativeData) {
+                        if(nativeData == null){
+                            return;
+                        }
+                        String url = nativeData.getBigImage();
+                        String loadingUrl = nativeData.getUrl();
                         //处理view
                         mADLayout.setVisibility(View.GONE);
                         mADLayout.removeAllViews();
@@ -202,7 +210,12 @@ public class Welcome extends BaseActivity {
                                     handler.post(new Runnable() {
                                         @Override
                                         public void run() {
-                                            AppCommon.openUrl(Welcome.this, loadingUrl, true);
+                                            if("1".equals(nativeData.getDbType())){
+                                                showSureDownload(nativeData, AdPlayIdConfig.HOME_FLOAT,"xh",nativeData.getId());
+                                            }else{
+                                                AppCommon.openUrl(Welcome.this, loadingUrl, true);
+                                                AdConfigTools.getInstance().postStatistics("click", AdPlayIdConfig.HOME_FLOAT, "xh", nativeData.getId());
+                                            }
                                         }
                                     });
                                 }
