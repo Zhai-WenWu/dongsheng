@@ -32,6 +32,7 @@ import third.ad.tools.XHSelfAdTools;
 import xh.basic.tool.UtilString;
 
 import static third.ad.scrollerAd.XHScrollerAdParent.TAG_BANNER;
+import static third.ad.scrollerAd.XHScrollerSelf.showSureDownload;
 
 /**
  * Description :
@@ -181,9 +182,14 @@ public class HomeBuoy {
         }
         imageButton.setOnClickListener(v -> {
             if (isMove) {
-                AppCommon.openUrl(mAct, floatUrl, true);
-//                    executeCloseAnim();
-                AdConfigTools.getInstance().postStatistics("click", AdPlayIdConfig.HOME_FLOAT, "xh", mNativeData != null ? mNativeData.getId() : "");
+                if(mNativeData != null){
+                    if("1".equals(mNativeData.getDbType())){
+                        showSureDownload(mNativeData,AdPlayIdConfig.HOME_FLOAT,"xh",mNativeData != null ? mNativeData.getId() : "");
+                    }else{
+                        AppCommon.openUrl(mAct, floatUrl, true);
+                        AdConfigTools.getInstance().postStatistics("click", AdPlayIdConfig.HOME_FLOAT, "xh", mNativeData != null ? mNativeData.getId() : "");
+                    }
+                }
                 if (mClickCallback != null) {
                     mClickCallback.onClick();
                 }

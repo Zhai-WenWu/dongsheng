@@ -232,11 +232,9 @@ public class WelcomeAdTools {
                     return;
                 }
                 XHSelfNativeData nativeData = list.get(0);
-                String imageUrl = nativeData.getBigImage();
-                String landingURL = nativeData.getUrl();
-                if (!TextUtils.isEmpty(imageUrl)) {
+                if (nativeData != null && !TextUtils.isEmpty(nativeData.getBigImage())) {
                     if (null != mXHBannerCallback) {
-                        mXHBannerCallback.onAdLoadSucceeded(imageUrl, landingURL);
+                        mXHBannerCallback.onAdLoadSucceeded(nativeData);
                     }
                 } else {
                     index_ad++;
@@ -320,7 +318,7 @@ public class WelcomeAdTools {
 
 
     public interface XHBannerCallback {
-        void onAdLoadSucceeded(String url, String loadingUrl);
+        void onAdLoadSucceeded(XHSelfNativeData nativeData);
     }
 
     public interface BaiduCallback {

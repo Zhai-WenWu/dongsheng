@@ -37,10 +37,14 @@ import acore.tools.ToolsDevice;
 import amodule.main.Main;
 import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
+import third.ad.db.bean.XHSelfNativeData;
+import third.ad.tools.AdConfigTools;
+import third.ad.tools.AdPlayIdConfig;
 import third.ad.tools.WelcomeAdTools;
 import xh.basic.tool.UtilImage;
 
 import static android.os.Looper.getMainLooper;
+import static third.ad.scrollerAd.XHScrollerSelf.showSureDownload;
 
 /**
  * 欢迎页弹框
@@ -259,7 +263,12 @@ public class WelcomeDialog extends Dialog {
         WelcomeAdTools.getInstance().setmXHBannerCallback(
                 new WelcomeAdTools.XHBannerCallback() {
                     @Override
-                    public void onAdLoadSucceeded(final String url, final String loadingUrl) {
+                    public void onAdLoadSucceeded(XHSelfNativeData nativeData) {
+                        if(nativeData == null){
+                            return;
+                        }
+                        String url = nativeData.getBigImage();
+                        String loadingUrl = nativeData.getUrl();
                         //处理view
                         mADLayout.setVisibility(View.GONE);
                         mADLayout.removeAllViews();
@@ -305,13 +314,19 @@ public class WelcomeDialog extends Dialog {
                                     handler.post(new Runnable() {
                                         @Override
                                         public void run() {
-                                            AppCommon.openUrl(activity, loadingUrl, true);
+                                            if("1".equals(nativeData.getDbType())){
+                                                showSureDownload(nativeData, AdPlayIdConfig.HOME_FLOAT,"xh",nativeData.getId());
+                                            }else{
+                                                AppCommon.openUrl(activity, loadingUrl, true);
+                                                AdConfigTools.getInstance().postStatistics("click", AdPlayIdConfig.HOME_FLOAT, "xh", nativeData.getId());
+                                            }
                                         }
                                     });
                                 }
                             }
                         });
                     }
+
                 });
 
     }

@@ -32,6 +32,8 @@ import acore.tools.ToolsDevice;
 import amodule.main.Main;
 import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
+import third.ad.db.bean.XHSelfNativeData;
+import third.ad.scrollerAd.XHScrollerSelf;
 import third.ad.tools.AdConfigTools;
 import third.ad.tools.AdPlayIdConfig;
 import third.ad.tools.WelcomeAdTools;
@@ -39,6 +41,7 @@ import xh.basic.tool.UtilImage;
 
 import static android.os.Looper.getMainLooper;
 import static third.ad.scrollerAd.XHScrollerAdParent.ADKEY_GDT;
+import static third.ad.tools.AdPlayIdConfig.WELCOME;
 
 /**
  * 对于welcome进行管理
@@ -148,7 +151,6 @@ public class WelcomeControls {
                     public void onAdClick() {
                         Log.i("zhangyujian", "onAdClick");
                         closeDialog();
-                        AdConfigTools.getInstance().postStatistics("click",AdPlayIdConfig.WELCOME,ADKEY_GDT,"");
                         XHClick.mapStat(activity, "ad_click_index", "开屏", "sdk_gdt");
                     }
                     @Override
@@ -199,7 +201,12 @@ public class WelcomeControls {
         WelcomeAdTools.getInstance().setmXHBannerCallback(
                 new WelcomeAdTools.XHBannerCallback() {
                     @Override
-                    public void onAdLoadSucceeded(final String url, final String loadingUrl) {
+                    public void onAdLoadSucceeded(XHSelfNativeData nativeData) {
+                        if(nativeData == null){
+                            return;
+                        }
+                        String url = nativeData.getBigImage();
+                        String loadingUrl = nativeData.getUrl();
                         //处理view
                         mADLayout.setVisibility(View.GONE);
                         mADLayout.removeAllViews();
@@ -237,15 +244,11 @@ public class WelcomeControls {
                                 //友盟统计
                                 XHClick.track(activity, "点击启动页广告");
                                 XHClick.mapStat(activity, "ad_click_index", "开屏", "xh");
-
-                                if (!TextUtils.isEmpty(loadingUrl)) {
-                                    Handler handler = new Handler(getMainLooper());
-                                    handler.post(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            AppCommon.openUrl(activity, loadingUrl, true);
-                                        }
-                                    });
+                                if("1".equals(nativeData.getDbType())){
+                                    XHScrollerSelf.showSureDownload(nativeData,WELCOME,"xh",nativeData.getId());
+                                }else {
+                                    AppCommon.openUrl(activity, loadingUrl, true);
+                                    AdConfigTools.getInstance().postStatistics("click", AdPlayIdConfig.HOME_FLOAT, "xh", nativeData != null ? nativeData.getId() : "");
                                 }
                             }
                         });
