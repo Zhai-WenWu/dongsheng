@@ -39,9 +39,11 @@ import amodule._common.delegate.IHandlerClickEvent;
 import amodule._common.delegate.ISaveStatistic;
 import amodule._common.delegate.ISetAdController;
 import amodule._common.delegate.ISetAdID;
+import amodule._common.delegate.ISetShowIndex;
 import amodule._common.delegate.ISetStatisticPage;
 import amodule._common.delegate.IStatictusData;
 import amodule._common.delegate.IStatisticCallback;
+import amodule._common.delegate.IUpdatePadding;
 import amodule._common.delegate.StatisticCallback;
 import amodule._common.helper.WidgetDataHelper;
 import aplug.basic.LoadImage;
@@ -56,7 +58,7 @@ import third.ad.scrollerAd.XHAllAdControl;
  */
 
 public class BannerView extends Banner implements IBindMap, IStatictusData, ISaveStatistic, IHandlerClickEvent,ISetAdID
-        ,IStatisticCallback,ISetStatisticPage, ISetAdController {
+        ,IStatisticCallback,ISetStatisticPage, ISetAdController, ISetShowIndex, IUpdatePadding {
     public static final String KEY_ALREADY_SHOW = "alreadyshow";
     private LayoutInflater mInflater;
     private ArrayList<String> mAdIDArray = new ArrayList<>();
@@ -68,6 +70,7 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
     boolean bgLoadOver = false;
     private String bgKey = "";
     private StatisticCallback mStatisticCallback;
+    private int mShowIndex = -1;
 
     public BannerView(Context context) {
         this(context, null);
@@ -101,7 +104,7 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
 
     private void setViewSize(Context context) {
         int paddingBottom = getResources().getDimensionPixelSize(R.dimen.dp_10);
-        setPadding(0, 0, 0, paddingBottom);
+        updatePadding(0, 0, 0, paddingBottom);
         mInflater = LayoutInflater.from(context);
         imageWidth = ToolsDevice.getWindowPx(context).widthPixels;
         imageHeight = (int) (imageWidth * 320 / 750f);
@@ -149,9 +152,10 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
             statistic(position);
         });
 
-        String sort = data.get(WidgetDataHelper.KEY_SORT);
-        int paddingTop = (!TextUtils.isEmpty(sort) && !"1".equals(sort)) ? Tools.getDimen(getContext(),R.dimen.dp_10)  : 0;
-        setPadding(getPaddingLeft(),paddingTop,getPaddingRight(),getPaddingBottom());
+        int paddingTop = (mShowIndex != -1 && mShowIndex != 0) ? Tools.getDimen(getContext(),R.dimen
+                .dp_10)
+                : 0;
+        updatePadding(getPaddingLeft(),paddingTop,getPaddingRight(),getPaddingBottom());
         setTargetHeight(imageHeight + paddingTop + getPaddingBottom());
 
         Map<String, String> dataMap = StringManager.getFirstMap(data.get(WidgetDataHelper.KEY_DATA));
@@ -418,5 +422,15 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
     @Override
     public void setAdController(XHAllAdControl controller) {
         mAdControl = controller;
+    }
+
+    @Override
+    public void setShowIndex(int showIndex) {
+        mShowIndex = showIndex;
+    }
+
+    @Override
+    public void updatePadding(int l, int t, int r, int b) {
+        setPadding(l, t, r, b);
     }
 }

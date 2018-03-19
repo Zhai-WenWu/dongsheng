@@ -20,6 +20,7 @@ import amodule._common.delegate.IResetCallback;
 import amodule._common.delegate.ISaveStatistic;
 import amodule._common.delegate.ISetAdController;
 import amodule._common.delegate.ISetAdID;
+import amodule._common.delegate.ISetShowIndex;
 import amodule._common.delegate.ISetStatisticPage;
 import amodule._common.delegate.IStatictusData;
 import amodule._common.delegate.IStatisticCallback;
@@ -44,7 +45,7 @@ import static amodule._common.widgetlib.IWidgetLibrary.NO_FIND_ID;
 
 public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, String>>
         implements IStatictusData, ISaveStatistic,ISetAdID,IStatisticCallback,
-        ITitleStaticCallback,ISetStatisticPage, ISetAdController {
+        ITitleStaticCallback,ISetStatisticPage, ISetAdController, ISetShowIndex {
 
     public static final int LLM = LinearLayout.LayoutParams.MATCH_PARENT;
     public static final int LLW = LinearLayout.LayoutParams.WRAP_CONTENT;
@@ -60,6 +61,8 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
     private XHAllAdControl mXHAllAdControl;
 
     private StatisticCallback mStatisticCallback,mTitleStatisticCallback;
+
+    private int mShowIndex = -1;
 
     public WidgetVerticalLayout(Context context) {
         super(context);
@@ -105,7 +108,7 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
                     ((IStatisticCallback)view).setStatisticCallback(mStatisticCallback);
                 }
                 if(view instanceof ITitleStaticCallback && mTitleStatisticCallback != null){
-                    ((ITitleStaticCallback)view).setTitleStaticCallback((mTitleStatisticCallback));
+                    ((ITitleStaticCallback) view).setTitleStaticCallback((mTitleStatisticCallback));
                 }
                 if (view instanceof IStatictusData) {
                     ((IStatictusData) view).setStatictusData(id, twoLevel, threeLevel);
@@ -115,6 +118,9 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
                 }
                 if (view instanceof ISetAdController) {
                     ((ISetAdController)view).setAdController(mXHAllAdControl);
+                }
+                if (view instanceof ISetShowIndex) {
+                    ((ISetShowIndex) view).setShowIndex(mShowIndex);
                 }
                 if (view instanceof IBindMap && !TextUtils.isEmpty(widgetData)) {
                     ((IBindMap) view).setData(dataMap);
@@ -319,5 +325,10 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
     @Override
     public void setAdController(XHAllAdControl controller) {
         mXHAllAdControl = controller;
+    }
+
+    @Override
+    public void setShowIndex(int showIndex) {
+        mShowIndex = showIndex;
     }
 }

@@ -26,10 +26,12 @@ import amodule._common.delegate.IBindMap;
 import amodule._common.delegate.IHandlerClickEvent;
 import amodule._common.delegate.IResetCallback;
 import amodule._common.delegate.ISaveStatistic;
+import amodule._common.delegate.ISetShowIndex;
 import amodule._common.delegate.ISetStatisticPage;
 import amodule._common.delegate.IStatictusData;
 import amodule._common.delegate.IStatisticCallback;
 import amodule._common.delegate.ITitleStaticCallback;
+import amodule._common.delegate.IUpdatePadding;
 import amodule._common.delegate.StatisticCallback;
 import amodule._common.helper.WidgetDataHelper;
 import amodule._common.widget.baseview.BaseSubTitleView;
@@ -50,12 +52,15 @@ import static amodule._common.helper.WidgetDataHelper.KEY_STYLE;
  */
 
 public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,ISetStatisticPage,
-        IStatictusData,ISaveStatistic,IHandlerClickEvent,IStatisticCallback,ITitleStaticCallback,IResetCallback {
+        IStatictusData,ISaveStatistic,IHandlerClickEvent,IStatisticCallback,ITitleStaticCallback,
+        IResetCallback, ISetShowIndex, IUpdatePadding {
 
     private RvListView mRecyclerView;
     private BaseSubTitleView mSubTitleView;
     private RvBaseAdapter mRecyclerAdapter;
     private StatisticCallback mStatisticCallback,mTitleStatisticCallback;
+
+    private int mShowIndex = -1;
     public HorizontalRecyclerView(Context context) {
         this(context,null);
     }
@@ -101,9 +106,8 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,I
             return;
         }
         //设置顶部边距
-        String sort = map.get(WidgetDataHelper.KEY_SORT);
-        int paddingTop = "1".equals(sort) ? Tools.getDimen(getContext(),R.dimen.dp_10) : 0;
-        setPadding(getPaddingLeft(),paddingTop,getPaddingRight(),getPaddingBottom());
+        int paddingTop = mShowIndex == 0 ? Tools.getDimen(getContext(),R.dimen.dp_10) : 0;
+        updatePadding(getPaddingLeft(),paddingTop,getPaddingRight(),getPaddingBottom());
 
         if (isResetData)
             return;
@@ -271,5 +275,15 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,I
         if(mRecyclerView != null){
             mRecyclerView.scrollToPosition(0);
         }
+    }
+
+    @Override
+    public void setShowIndex(int showIndex) {
+        mShowIndex = showIndex;
+    }
+
+    @Override
+    public void updatePadding(int l, int t, int r, int b) {
+        setPadding(l, t, r, b);
     }
 }

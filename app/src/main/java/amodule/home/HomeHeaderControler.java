@@ -27,6 +27,8 @@ import amodule._common.utility.WidgetUtility;
 import amodule.main.activity.MainHomePage;
 import third.ad.scrollerAd.XHAllAdControl;
 
+import static amodule._common.helper.WidgetDataHelper.KEY_SORT;
+import static amodule._common.helper.WidgetDataHelper.KEY_WIDGET_DATA;
 import static third.ad.tools.AdPlayIdConfig.HOME_BANNEER_1;
 /**
  * Description :
@@ -153,12 +155,18 @@ public class HomeHeaderControler implements ISaveStatistic, ISetAdController {
         String[] threeLevelArray = {"轮播banner位置", "", "", "精品厨艺位置", "限时抢购位置", "精选菜单位置"};
 //        setVisibility(false);
         final int length = Math.min(mDatas.size(), mLayouts.length);
-        for (int i = 0; i < length; i++) {
+        for (int i = 0, x = 0; i < length; i++) {
             final int index = i;
             Map<String, String> map = mDatas.get(index);
             if (isShowCache && "1".equals(map.get("cache"))) {
                 mLayouts[index].setVisibility(View.GONE);
                 continue;
+            }
+            String widgetData = map.get(KEY_WIDGET_DATA);
+            Map<String, String> dataMap = StringManager.getFirstMap(widgetData);
+            if (dataMap.containsKey(KEY_SORT)) {
+                mLayouts[index].setShowIndex(x);
+                x ++;
             }
             mLayouts[index].setStatisticPage("home");
             mLayouts[index].setAdController(mAdController);
@@ -193,6 +201,7 @@ public class HomeHeaderControler implements ISaveStatistic, ISetAdController {
             return map;
         String widgetDataValue = map.get("widgetData");
         Map<String, String> wdMap = StringManager.getFirstMap(widgetDataValue);
+        wdMap.put("sort", "1");
         String dataValue = wdMap.get("data");
         Map<String, String> listMap = StringManager.getFirstMap
                 (dataValue);

@@ -26,8 +26,10 @@ import acore.widget.rvlistview.adapter.RvBaseAdapter;
 import amodule._common.delegate.IBindMap;
 import amodule._common.delegate.IHandlerClickEvent;
 import amodule._common.delegate.ISaveStatistic;
+import amodule._common.delegate.ISetShowIndex;
 import amodule._common.delegate.ISetStatisticPage;
 import amodule._common.delegate.IStatictusData;
+import amodule._common.delegate.IUpdatePadding;
 import amodule._common.delegate.StatisticCallback;
 import amodule._common.helper.WidgetDataHelper;
 import amodule._common.widget.baseview.BaseSubTitleView;
@@ -47,13 +49,14 @@ import static amodule._common.helper.WidgetDataHelper.KEY_PARAMETER;
  */
 
 public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,ISetStatisticPage,
-        IStatictusData,ISaveStatistic,IHandlerClickEvent {
+        IStatictusData,ISaveStatistic,IHandlerClickEvent, ISetShowIndex, IUpdatePadding {
 
     private RvListView mRecyclerView;
     private List<Map<String,String>> mData = new ArrayList<>();
     private BaseSubTitleView mSubTitleView;
     private RvBaseAdapter<Map<String, String>> mRecyclerAdapter;
     private int style = 1;
+    private int mShowIndex = -1;
     public HorizontalRecyclerView(Context context,int style) {
         super(context);
         this.style = style;
@@ -201,9 +204,8 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,I
         }
         moduleType = StringManager.getFirstMap(parameterMap.get("title")).get("text1");
         //设置顶部边距
-        String sort = map.get(WidgetDataHelper.KEY_SORT);
-        int paddingTop = "1".equals(sort) ? Tools.getDimen(getContext(),R.dimen.dp_10) : 0;
-        setPadding(getPaddingLeft(),paddingTop,getPaddingRight(),getPaddingBottom());
+        int paddingTop = mShowIndex == 0 ? Tools.getDimen(getContext(),R.dimen.dp_10) : 0;
+        updatePadding(getPaddingLeft(),paddingTop,getPaddingRight(),getPaddingBottom());
         setVisibility(VISIBLE);
     }
 
@@ -256,5 +258,15 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,I
 
     public void setStatisticCallback(StatisticCallback statisticCallback) {
         mStatisticCallback = statisticCallback;
+    }
+
+    @Override
+    public void setShowIndex(int showIndex) {
+        mShowIndex = showIndex;
+    }
+
+    @Override
+    public void updatePadding(int l, int t, int r, int b) {
+        setPadding(l, t, r, b);
     }
 }
