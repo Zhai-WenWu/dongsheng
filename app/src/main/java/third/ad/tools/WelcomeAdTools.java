@@ -121,13 +121,11 @@ public class WelcomeAdTools {
             }
             return;
         }
-        //TODO
         List<Map<String, String>> configArray = StringManager.getListMapByJson(adBean.adConfig);
         Stream.of(configArray)
                 .filter(value -> "2".equals(value.get("open")))
                 .forEach(value -> mAdData.add(value));
         //开启广告
-//            new Handler(Looper.getMainLooper()).post(() -> nextAd(isCache));
         nextAd(isCache);
     }
 

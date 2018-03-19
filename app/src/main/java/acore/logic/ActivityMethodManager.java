@@ -52,6 +52,7 @@ public class ActivityMethodManager {
         if(Main.allMain != null){
             Main.allMain.initRunTime();
         }
+        //广告刷新定时器开始
         XHAdAutoRefresh.getInstance().startTimer(this);
         //Log.i("FRJ", "level:" + level);
         //Log.i("FRJ", "colse_level:" + colse_level);
@@ -136,6 +137,7 @@ public class ActivityMethodManager {
     }
 
     public void onPause() {
+        //广告刷新定时器停止
         XHAdAutoRefresh.getInstance().stopTimer();
         MobclickAgent.onPause(mAct);
         StatService.onPause(mAct);//mta腾讯统计

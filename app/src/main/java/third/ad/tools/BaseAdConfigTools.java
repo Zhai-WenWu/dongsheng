@@ -120,7 +120,7 @@ public class BaseAdConfigTools {
         return mShowCacheParams != null && mShowCacheParams.size() >= mCacheSize;
     }
 
-    public static JSONObject MapToJsonEncode(Map<String, String> maps) {
+    private static JSONObject MapToJsonEncode(Map<String, String> maps) {
         JSONObject jsonObject = new JSONObject();
         if (maps == null || maps.size() <= 0)
             return jsonObject;

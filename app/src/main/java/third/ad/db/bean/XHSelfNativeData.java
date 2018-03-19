@@ -14,13 +14,16 @@ public class XHSelfNativeData {
 
     public static final String IMG_TYPE_BIG = "big";
     public static final String IMG_TYPE_LITTLE = "little";
+    public static final String IMG_TYPE_LOGO = "logoImg";
 
     private String id;
+    private String positionId;
     private String title;
     private String desc;
+    private String brandName;
     private int showNum;
     private String url;
-    private String type;//1-自有活动，2-自有广告
+    private String adType;//1-自有活动，2-自有广告
     private String updateTime;
     private HashMap<String, String> imgs = new HashMap<>();
 
@@ -30,6 +33,14 @@ public class XHSelfNativeData {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getPositionId() {
+        return positionId;
+    }
+
+    public void setPositionId(String positionId) {
+        this.positionId = positionId;
     }
 
     public String getTitle() {
@@ -48,6 +59,14 @@ public class XHSelfNativeData {
         this.desc = desc;
     }
 
+    public String getBrandName() {
+        return brandName;
+    }
+
+    public void setBrandName(String brandName) {
+        this.brandName = brandName;
+    }
+
     public int getShowNum() {
         return showNum;
     }
@@ -64,12 +83,12 @@ public class XHSelfNativeData {
         this.url = url;
     }
 
-    public String getType() {
-        return type;
+    public String getAdType() {
+        return adType;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setAdType(String type) {
+        this.adType = type;
     }
 
     public String getUpdateTime() {
@@ -96,11 +115,21 @@ public class XHSelfNativeData {
         }
     }
 
+    public void setLogoImage(String imageUrl) {
+        if (imgs != null && !TextUtils.isEmpty(imageUrl)) {
+            imgs.put(IMG_TYPE_LOGO, imageUrl);
+        }
+    }
+
     public String getBigImage() {
         return imgs != null ? imgs.get(IMG_TYPE_BIG) : "";
     }
 
     public String getLittleImage() {
         return imgs != null ? imgs.get(IMG_TYPE_LITTLE) : "";
+    }
+
+    public String getLogoImage(){
+        return imgs != null ? imgs.get(IMG_TYPE_LOGO) : "";
     }
 }

@@ -60,7 +60,6 @@ public class HomeActivityIconView extends AppCompatImageView {
         if(adBean == null){
             return;
         }
-        //TODO
 //        Map<String,String> adConfigMap = StringManager.getFirstMap(adBean.adConfig);
 //        final String[] keys = {"1","2","3","4",};
 //        for(String key:keys){

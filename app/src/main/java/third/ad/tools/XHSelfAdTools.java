@@ -3,7 +3,6 @@ package third.ad.tools;
 import android.text.TextUtils;
 
 import com.annimon.stream.Stream;
-import com.annimon.stream.function.Consumer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,13 +60,16 @@ public class XHSelfAdTools {
                             if (!map.isEmpty() && !TextUtils.isEmpty(map.get("id"))) {
                                 XHSelfNativeData nativeData = new XHSelfNativeData();
                                 nativeData.setId(map.get("id"));
+                                nativeData.setPositionId(map.get("position_id"));
                                 nativeData.setTitle(map.get("title"));
                                 nativeData.setDesc(map.get("desc"));
+                                nativeData.setBrandName(map.get("brandName"));
                                 String showNumValue = map.get("showNum");
                                 int showNum = TextUtils.isEmpty(showNumValue)?0:Integer.parseInt(showNumValue);
                                 nativeData.setShowNum(showNum);
                                 nativeData.setUrl(map.get("andUrl"));
-                                nativeData.setType(map.get("adType"));
+                                nativeData.setAdType(map.get("adType"));
+                                nativeData.setLogoImage(map.get("logoImg"));
                                 nativeData.setUpdateTime(map.get("updateTime"));
                                 Map<String,String> bigImageMap = StringManager.getFirstMap(map.get("big"));
                                 nativeData.setBigImage(bigImageMap.get(""));

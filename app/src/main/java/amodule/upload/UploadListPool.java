@@ -145,7 +145,7 @@ public class UploadListPool {
         List<UploadItemData> itemDatas = uploadPoolData.getUploadItemDataList(pos);
         UploadItemData itemData = itemDatas.get(index);
         Log.i("articleUpload","startOrStop() pos:" + pos + "   path:" + itemData.getPath());
-        Log.i("articleUpload","startOrStop() operation:" + operation + "   itemData.getType():" + itemData.getType());
+        Log.i("articleUpload","startOrStop() operation:" + operation + "   itemData.getAdType():" + itemData.getType());
         if (operation == TYPE_START) {
             if (itemData.getType() == UploadItemData.TYPE_LAST_TEXT) {
                 uploadLast();

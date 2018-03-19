@@ -57,18 +57,18 @@ public class XHScrollerSelf extends XHScrollerAdParent{
             return;
         }
         if(!LoginManager.isShowAd()){//特权不能去除活动广告
-            if("2".equals(mNativeData.getType())){
+            if("2".equals(mNativeData.getAdType())){
                 xhAdDataCallBack.onFail(XHScrollerAdParent.ADKEY_BANNER);
                 return;
             }
         }
         final Map<String,String> map = new HashMap<>();
-        map.put("title", mNativeData.getTitle());
+        map.put("title", mNativeData.getBrandName());
         map.put("desc", mNativeData.getDesc());
-        map.put("adType", mNativeData.getType());
+        map.put("adType", mNativeData.getAdType());
         map.put("imgUrl", mNativeData.getBigImage());
         map.put(IMG_KEY, mNativeData.getLittleImage());
-        map.put("iconUrl", mNativeData.getLittleImage());
+        map.put("iconUrl", mNativeData.getLogoImage());
         map.put("type",XHScrollerAdParent.ADKEY_BANNER);
         map.put("hide", "1");//2隐藏，1显示
         xhAdDataCallBack.onSuccees(XHScrollerAdParent.ADKEY_BANNER, map);
