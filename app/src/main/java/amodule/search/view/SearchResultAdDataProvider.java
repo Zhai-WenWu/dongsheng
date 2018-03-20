@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import acore.override.activity.base.BaseActivity;
 import acore.override.helper.XHActivityManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -25,6 +26,12 @@ public class SearchResultAdDataProvider {
             AdPlayIdConfig.SEARCH_LIST_5,
             AdPlayIdConfig.SEARCH_LIST_6,
     };
+
+    BaseActivity mActivity;
+
+    public SearchResultAdDataProvider(BaseActivity activity){
+        mActivity = activity;
+    }
 
     private XHAllAdControl xhAllAdControl;
     private ArrayList<Map<String, String>> list = new ArrayList<>();
@@ -68,7 +75,7 @@ public class SearchResultAdDataProvider {
                         mAutoRefreshCallback.autoRefresh();
                     }
                 }
-            }, XHActivityManager.getInstance().getCurrentActivity(), "search_list", false);
+            }, mActivity, "search_list", false);
             xhAllAdControl.registerRefreshCallback();
         } else {
             xhAllAdControl.getAllAdDataBySqlite();
