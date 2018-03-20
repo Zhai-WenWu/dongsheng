@@ -49,7 +49,9 @@ public class XHSelfAdTools {
         }
         StringBuffer params = new StringBuffer(API_AD_GETADDATA);
         params.append("?ids=");
-        Stream.of(ads).forEach(value -> params.append(value).append(","));
+        Stream.of(ads)
+                .filter(value -> !TextUtils.isEmpty(value))
+                .forEach(value -> params.append(value).append(","));
         params.replace(params.length()-1,params.length(),"");
         ReqInternet.in().doGet(params.toString(), new InternetCallback() {
             @Override
