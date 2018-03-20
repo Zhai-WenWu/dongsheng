@@ -243,7 +243,9 @@ public class QuanAdvertControl implements ActivityMethodManager.IAutoRefresh{
 
     @Override
     public void autoRefreshSelfAD() {
-
+        for(Map.Entry<String,XHAllAdControl> entry:mapAd.entrySet()){
+            entry.getValue().autoRefreshSelfAD();
+        }
     }
 
     public interface DataCallBack {

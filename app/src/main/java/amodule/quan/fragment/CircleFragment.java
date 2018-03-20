@@ -176,6 +176,11 @@ public class CircleFragment extends Fragment {
             CircleHome circleHome = (CircleHome) mActivity;
             updateCircleHeader(circleHome.mSubjectDataArray);
         }
+        if(mActivity != null
+                && mActivity.getActMagager() != null
+                && quanAdvertControl != null){
+            mActivity.getActMagager().registerADController(quanAdvertControl);
+        }
     }
 
     /**
@@ -285,7 +290,6 @@ public class CircleFragment extends Fragment {
             LoadOver = true;
         }
         quanAdvertControl= new QuanAdvertControl(mActivity);
-        mActivity.getActMagager().registerADController(quanAdvertControl);
         quanAdvertControl.getAdData(mActivity);
         quanAdvertControl.setCallBack(new QuanAdvertControl.DataCallBack() {
             @Override

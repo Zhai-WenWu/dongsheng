@@ -207,6 +207,11 @@ public class CircleMainFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        if(mActivity != null
+                && mActivity.getActMagager() != null
+                && quanAdvertControl != null){
+            mActivity.getActMagager().registerADController(quanAdvertControl);
+        }
     }
 
     @Override
@@ -329,7 +334,6 @@ public class CircleMainFragment extends Fragment {
             LoadOver = true;
         }
         quanAdvertControl = new QuanAdvertControl(mActivity);
-        mActivity.getActMagager().registerADController(quanAdvertControl);
 //        quanAdvertControl.getGdtData(mActivity);
 //        quanAdvertControl.getTencentApiAd(mActivity);
         quanAdvertControl.setCallBack(() -> {
