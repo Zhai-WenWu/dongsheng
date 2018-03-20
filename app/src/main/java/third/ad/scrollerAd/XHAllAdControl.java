@@ -61,8 +61,8 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
     private String GDT_ID = "";//广点
     private String BAIDU_ID = "";//广点
     private List<String> XH_IDS = new ArrayList<>();
-    private int gdt_index = 0;//取广告位的数据位置 GDT
-    private int baidu_index = 0;//取广告位的数据位置 Baidu
+    private int gdt_index = -1;//取广告位的数据位置 GDT
+    private int baidu_index = -1;//取广告位的数据位置 Baidu
     private String StatisticKey;
     private String ad_show;//展示一级统计
     private String ad_click;//点击一级统一
@@ -392,9 +392,9 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
 
                     @Override
                     public NativeADDataRef onGdtNativeData() {
-                        if (gdtNativeArray != null && gdtNativeArray.size() > gdt_index) {
-                            NativeADDataRef temp = gdtNativeArray.get(gdt_index);
+                        if (gdtNativeArray != null && gdtNativeArray.size() > 0 && gdtNativeArray.size() > gdt_index) {
                             ++gdt_index;
+                            NativeADDataRef temp = gdtNativeArray.get(gdt_index);
                             return temp;
                         }
                         return null;
@@ -402,9 +402,9 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
 
                     @Override
                     public NativeResponse onBaiduNativeData() {
-                        if (baiduNativeArray != null && baiduNativeArray.size() > baidu_index) {
-                            NativeResponse temp = baiduNativeArray.get(baidu_index);
+                        if (baiduNativeArray != null && baiduNativeArray.size() > 0 && baiduNativeArray.size() > baidu_index) {
                             ++baidu_index;
+                            NativeResponse temp = baiduNativeArray.get(baidu_index);
                             return temp;
                         }
                         return null;
@@ -548,6 +548,8 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
     public void refreshSelfAd() {
         Log.i("tzy", "refreshSelfAd: " + this.toString());
         isLoadOverXH = false;
+        gdt_index = -1;
+        baidu_index = -1;
         getAllXhData(true);
     }
 
