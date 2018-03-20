@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -211,9 +210,6 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
 
             @Override
             public void bindView(View view, Map<String, String> data) {
-
-                Log.e("SLL", "data = " + data);
-
                 ImageView imageView = (ImageView) view.findViewById(R.id.image);
                 Object tagValue = imageView.getTag(TAG_ID);
                 String img = data.get("img");
