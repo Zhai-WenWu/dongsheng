@@ -347,6 +347,11 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
         int size = listAdContrls.size();
         if (size > 0)
             oneAdTime = System.currentTimeMillis();//第一时间。
+        if (size <= 0) {
+            if (xhBackIdsDataCallBack != null)
+                xhBackIdsDataCallBack.callBack(isRefresh, AdData);
+            return;
+        }
         for (int i = 0; i < size; i++) {
             if (listAdContrls.get(i) != null) {
                 listAdContrls.get(i).setAdDataCallBack(new XHAdControlCallBack() {

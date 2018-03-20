@@ -42,6 +42,9 @@ public class XHSelfAdTools {
 
     public void loadNativeData(List<String> ads,final XHSelfCallback callback) {
         if(ads == null || ads.isEmpty()){
+            if (callback != null) {
+                callback.onNativeFail();
+            }
             return;
         }
         StringBuffer params = new StringBuffer(API_AD_GETADDATA);
