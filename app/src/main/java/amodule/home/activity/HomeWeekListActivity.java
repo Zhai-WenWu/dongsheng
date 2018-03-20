@@ -73,6 +73,11 @@ public class HomeWeekListActivity extends BaseAppCompatActivity {
     private void initData() {
         mModuleBean = new HomeModuleControler().getHomeModuleByType(this,"dish");
         mAdControl = getAdControl();
+        mAdControl.setRefreshCallback(() -> {
+            mListData = mAdControl.getAutoRefreshAdData(mListData);
+            if (mHomeAdapter != null)
+                mHomeAdapter.notifyItemRangeChanged(0,mHomeAdapter.getItemCount());
+        });
         mActMagager.registerADController(mAdControl);
     }
 

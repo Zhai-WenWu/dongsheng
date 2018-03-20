@@ -88,7 +88,7 @@ public abstract class AdOptionParent implements ActivityMethodManager.IAutoRefre
             @Override
             public void callBack(boolean isRefresh,Map<String, String> map) {
                 if (map != null && map.size() > 0) {
-
+                    adArray.clear();
                     Log("getAdData size:" + map.size());
                     for (int i = 0; i < AD_IDS.length; i++) {
                         String homeAdStr = map.get(AD_IDS[i]);
@@ -142,8 +142,13 @@ public abstract class AdOptionParent implements ActivityMethodManager.IAutoRefre
                         }
 
                     }
-                    if (adDataCallBack != null)
+                    if(isRefresh){
+                        if(mRefreshCallback != null){
+                            mRefreshCallback.refreshSelfAD();
+                        }
+                    }else if (adDataCallBack != null){
                         adDataCallBack.adDataBack(TextUtils.isEmpty(controlTag) ? -1 : Integer.parseInt(controlTag), map.size());
+                    }
                 }
             }
         }, (Activity) context, statisticKey,
@@ -218,84 +223,17 @@ public abstract class AdOptionParent implements ActivityMethodManager.IAutoRefre
                     Map<String, String> dataMap = old_list.get(index);
                     String adstyle = isBack ? old_list.get(index - 1).get("adstyle") : dataMap.get("adstyle");
                     //判断此广告位是否添加广告，如果此广告位已添加广告，则不添加
-                    if (!"ad".equals(adstyle)) {
-                        adMap = adArray.get(cunrrentIndex);
-                        boolean dataIsOk = getDataIsOk(adMap);
-                        if (dataIsOk) {
-                            JSONArray styleData = new JSONArray();
-                            //腾讯api广告不用根据上一个item样式变;101:表示返回的是一张小图、202:一个大图、301:3张小图
-                            try {
-                                if (statisticKey.equals("index_listgood")
-                                        && XHScrollerAdParent.ADKEY_BAIDU.equals(adMap.get("adClass"))
-                                        && "1".equals(adMap.get("isBigPic"))) {
-                                    JSONObject styleObject = new JSONObject();
-                                    styleObject.put("url", adMap.get("img"));
-                                    styleObject.put("type", "2");
-                                    styleData.put(styleObject);
-                                    adMap.put("style", "2");
-                                } else {
-                                    int aboveIndex = index - 1; //广告要跟上一个样式保持一致
-                                    if (aboveIndex < 0) aboveIndex = index;
-                                    Map<String, String> aboveMap = old_list.get(aboveIndex);
-                                    String type = aboveMap.get("style");
-                                    if (TextUtils.isEmpty(type)) {//如果上一个样式的字段不存在则默认右图样式
-                                        JSONObject styleObject = new JSONObject();
-                                        styleObject.put("url", adMap.get("img"));
-                                        styleObject.put("type", "1");
-                                        styleData.put(styleObject);
-                                    } else {
-                                        String adImg = adMap.get("img");
-                                        //对图片根据类型进行选择
-                                        String ImgKey = "";
-                                        if (!TextUtils.isEmpty(type) && ("1".equals(type) || "5".equals(type) || "6".equals(type))) {
-                                            ImgKey = "imgUrl";
-                                        } else {
-                                            ImgKey = IMG_KEY;
-                                        }
-                                        Log.i("tzy", "ImgKey::**********************************" + ImgKey);
-                                        if (adMap.containsKey(ImgKey) && !TextUtils.isEmpty(adMap.get(ImgKey))) {
-                                            adImg = adMap.get(ImgKey);
-                                            Log.i("tzy", "ImgKey::****************2******************" + adImg);
-                                            adMap.put("img", adImg);
-                                        }
-                                        ArrayList<Map<String, String>> imgsMap = StringManager.getListMapByJson(adMap.get("imgs"));
-                                        if (imgsMap != null && imgsMap.size() > 0) {
-                                            for (Map<String, String> imgMap : imgsMap) {
-                                                if (imgMap != null && imgMap.get("") != null) {
-                                                    JSONObject styleObject = new JSONObject();
-                                                    styleObject.put("url", imgMap.get(""));
-                                                    styleObject.put("type", "1");
-                                                    styleData.put(styleObject);
-                                                }
-                                            }
-                                        } else {
-                                            JSONObject styleObject = new JSONObject();
-                                            styleObject.put("url", adImg);
-                                            styleObject.put("type", "1");
-                                            styleData.put(styleObject);
-                                        }
-                                        switch (type) {
-                                            case "1"://大图
-                                            case "5"://蒙版
-                                            case "6"://任意图
-                                                adMap.put("style", TextUtils.isEmpty(adImg) && (imgsMap == null || imgsMap.isEmpty()) ? "4" : "1");
-                                                break;
-//                                            case "2"://右图
-//                                            case "3"://三图
-//                                            case "4"://无图
-                                            default://除大图样式外，其余默认右图，如果没有图片则无图。
-                                                adMap.put("style", TextUtils.isEmpty(adImg) && (imgsMap == null || imgsMap.isEmpty()) ? "4" : "2");
-                                                break;
-                                        }
-                                    }
-                                }
-                            } catch (JSONException e) {
-
-                            }
-                            adMap.put("styleData", styleData.toString());
-                            Log("ad controlTag:" + adMap.get("controlTag") + "    ad name:" + adMap.get("name") + "   style:" + adMap.get("style"));
+                    adMap = adArray.get(cunrrentIndex);
+                    boolean dataIsOk = getDataIsOk(adMap);
+                    if (dataIsOk) {
+                        handlerAdMap(old_list, adMap, index);
+                        Log("ad controlTag:" + adMap.get("controlTag") + "    ad name:" + adMap.get("name") + "   style:" + adMap.get("style"));
+                        if (!"ad".equals(adstyle)) {
                             if (!TextUtils.isEmpty(adMap.get("style")))
                                 old_list.add(index, adMap);
+                        }else{
+                            if (!TextUtils.isEmpty(adMap.get("style")))
+                                old_list.set(index, adMap);
                         }
                     }
                 } else {
@@ -312,6 +250,80 @@ public abstract class AdOptionParent implements ActivityMethodManager.IAutoRefre
         }
 
         return old_list;
+    }
+
+    private void handlerAdMap(ArrayList<Map<String, String>> old_list, Map<String, String> adMap, int index) {
+        JSONArray styleData = new JSONArray();
+        //腾讯api广告不用根据上一个item样式变;101:表示返回的是一张小图、202:一个大图、301:3张小图
+        try {
+            if (statisticKey.equals("index_listgood")
+                    && XHScrollerAdParent.ADKEY_BAIDU.equals(adMap.get("adClass"))
+                    && "1".equals(adMap.get("isBigPic"))) {
+                JSONObject styleObject = new JSONObject();
+                styleObject.put("url", adMap.get("img"));
+                styleObject.put("type", "2");
+                styleData.put(styleObject);
+                adMap.put("style", "2");
+            } else {
+                int aboveIndex = index - 1; //广告要跟上一个样式保持一致
+                if (aboveIndex < 0) aboveIndex = index;
+                Map<String, String> aboveMap = old_list.get(aboveIndex);
+                String type = aboveMap.get("style");
+                if (TextUtils.isEmpty(type)) {//如果上一个样式的字段不存在则默认右图样式
+                    JSONObject styleObject = new JSONObject();
+                    styleObject.put("url", adMap.get("img"));
+                    styleObject.put("type", "1");
+                    styleData.put(styleObject);
+                } else {
+                    String adImg = adMap.get("img");
+                    //对图片根据类型进行选择
+                    String ImgKey = "";
+                    if (!TextUtils.isEmpty(type) && ("1".equals(type) || "5".equals(type) || "6".equals(type))) {
+                        ImgKey = "imgUrl";
+                    } else {
+                        ImgKey = IMG_KEY;
+                    }
+                    Log.i("tzy", "ImgKey::**********************************" + ImgKey);
+                    if (adMap.containsKey(ImgKey) && !TextUtils.isEmpty(adMap.get(ImgKey))) {
+                        adImg = adMap.get(ImgKey);
+                        Log.i("tzy", "ImgKey::****************2******************" + adImg);
+                        adMap.put("img", adImg);
+                    }
+                    ArrayList<Map<String, String>> imgsMap = StringManager.getListMapByJson(adMap.get("imgs"));
+                    if (imgsMap != null && imgsMap.size() > 0) {
+                        for (Map<String, String> imgMap : imgsMap) {
+                            if (imgMap != null && imgMap.get("") != null) {
+                                JSONObject styleObject = new JSONObject();
+                                styleObject.put("url", imgMap.get(""));
+                                styleObject.put("type", "1");
+                                styleData.put(styleObject);
+                            }
+                        }
+                    } else {
+                        JSONObject styleObject = new JSONObject();
+                        styleObject.put("url", adImg);
+                        styleObject.put("type", "1");
+                        styleData.put(styleObject);
+                    }
+                    switch (type) {
+                        case "1"://大图
+                        case "5"://蒙版
+                        case "6"://任意图
+                            adMap.put("style", TextUtils.isEmpty(adImg) && (imgsMap == null || imgsMap.isEmpty()) ? "4" : "1");
+                            break;
+//                                            case "2"://右图
+//                                            case "3"://三图
+//                                            case "4"://无图
+                        default://除大图样式外，其余默认右图，如果没有图片则无图。
+                            adMap.put("style", TextUtils.isEmpty(adImg) && (imgsMap == null || imgsMap.isEmpty()) ? "4" : "2");
+                            break;
+                    }
+                }
+            }
+        } catch (JSONException e) {
+
+        }
+        adMap.put("styleData", styleData.toString());
     }
 
     /**
@@ -408,10 +420,16 @@ public abstract class AdOptionParent implements ActivityMethodManager.IAutoRefre
         return false;
     }
 
+    private ActivityMethodManager.IAutoRefreshCallback mRefreshCallback;
+
     private AdDataCallBack adDataCallBack;
 
     public void setAdDataCallBack(AdDataCallBack adDataCallBack) {
         this.adDataCallBack = adDataCallBack;
+    }
+
+    public void setRefreshCallback(ActivityMethodManager.IAutoRefreshCallback refreshCallback) {
+        mRefreshCallback = refreshCallback;
     }
 
     /**

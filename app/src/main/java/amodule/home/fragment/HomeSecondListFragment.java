@@ -96,6 +96,11 @@ public class HomeSecondListFragment extends Fragment {
             mPosition = getArguments().getInt(KEY_POSITION);
         }
         mAdControl = getAdControl();
+        mAdControl.setRefreshCallback(() -> {
+            mListData = mAdControl.getAutoRefreshAdData(mListData);
+            if (mHomeAdapter != null)
+                mHomeAdapter.notifyItemRangeChanged(0,mHomeAdapter.getItemCount());
+        });
         mActivity.getActMagager().registerADController(mAdControl);
     }
 

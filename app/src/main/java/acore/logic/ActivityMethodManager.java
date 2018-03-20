@@ -242,4 +242,8 @@ public class ActivityMethodManager {
         void autoRefreshSelfAD();
     }
 
+    public interface IAutoRefreshCallback{
+        void refreshSelfAD();
+    }
+
 }

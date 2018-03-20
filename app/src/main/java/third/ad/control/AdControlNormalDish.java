@@ -62,6 +62,34 @@ public class AdControlNormalDish extends AdControlParent implements ActivityMeth
         Log.i(tag_yu,"首页加载数据");
     }
 
+    public ArrayList<Map<String, String>> getAutoRefreshAdData(ArrayList<Map<String, String>> old_list) {
+        final AdOptionHomeDish adOptionHomeDish = getCurrentControl(false);
+        if(adOptionHomeDish == null){
+            return old_list;
+        }else{
+            Log.i(tag_yu,"getLimitNum()::"+getLimitNum());
+            adOptionHomeDish.setLimitNum(getLimitNum());
+            if(downCurrentControlTag>1)
+                adOptionHomeDish.setStartIndex(getIndexAd((downCurrentControlTag-1)*10));
+            adOptionHomeDish.setAdLoadNumberCallBack(new AdOptionParent.AdLoadNumberCallBack() {
+                @Override
+                public void loadNumberCallBack(int Number) {
+                    Log.i(tag_yu,"*********Number****************:::"+Number+":::::tag::"+adOptionHomeDish.getControlTag());
+                    String tag=adOptionHomeDish.getControlTag();
+                    if(!TextUtils.isEmpty(tag)) {
+                        int tagIndex= Integer.parseInt(tag);
+                        if (adLoadNumberCallBack != null&&downAdState.containsKey(String.valueOf(tagIndex+1))) {
+                            adLoadNumberCallBack.loadNumberCallBack(Number);
+                        }
+                        downAd.put(String.valueOf(tagIndex),String.valueOf(Number));
+                    }
+                }
+            });
+            old_list = adOptionHomeDish.getNewAdData(old_list,false);
+        }
+        return old_list;
+    }
+
     /**
      * 加载g广告数据
      * @param old_list ：原数据体
@@ -273,12 +301,14 @@ public class AdControlNormalDish extends AdControlParent implements ActivityMeth
         Stream.of(downAdControlMap)
                 .forEach(value -> {
                     AdOptionHomeDish optionHomeDish = value.getValue();
+                    optionHomeDish.setRefreshCallback(this::autoRefreshCallback);
                     optionHomeDish.autoRefreshSelfAD();
                 });
 
         Stream.of(adControlMap)
                 .forEach(value -> {
                     AdOptionHomeDish optionHomeDish = value.getValue();
+                    optionHomeDish.setRefreshCallback(this::autoRefreshCallback);
                     optionHomeDish.autoRefreshSelfAD();
                 });
     }

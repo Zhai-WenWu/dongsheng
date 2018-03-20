@@ -84,6 +84,11 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
         if(activityMethodManager != null){
             activityMethodManager.registerADController(this);
         }
+        mAdControl.setRefreshCallback(() -> {
+            mData = mAdControl.getAutoRefreshAdData(mData);
+            if (mNotifyDataSetChangedCallback != null)
+                mNotifyDataSetChangedCallback.notifyDataSetChanged();
+        });
     }
 
     //读取缓存数据
@@ -346,8 +351,7 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
 
     @Override
     public void autoRefreshSelfAD() {
-        if(System.currentTimeMillis() - lastSelfAdTime >= XHAdAutoRefresh.intervalTime
-                && mAdControl != null){
+        if(mAdControl != null){
             mAdControl.autoRefreshSelfAD();
         }
     }
