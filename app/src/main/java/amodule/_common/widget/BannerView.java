@@ -161,6 +161,11 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
         Map<String, String> dataMap = StringManager.getFirstMap(data.get(WidgetDataHelper.KEY_DATA));
         ArrayList<Map<String, String>> arrayList = StringManager.getListMapByJson(dataMap.get(WidgetDataHelper.KEY_LIST));
 
+        if (arrayList.isEmpty()) {
+            setVisibility(View.GONE);
+            mArrayList.clear();
+            return;
+        }
         if (arrayList.equals(mArrayList)) {
             return;
         }
