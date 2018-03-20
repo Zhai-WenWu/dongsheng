@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import acore.logic.AppCommon;
+import acore.logic.LoginManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import third.ad.db.bean.AdBean;
@@ -87,18 +88,21 @@ public class HomeBuoy {
                 }
                 mNativeData = list.get(0);
                 if(mNativeData != null){
-                    //初始化浮标
-                    initBuoy();
-                    //初始化动画
-                    initAnimation();
-                    //初始化hanlder
-                    initHandler();
-                    //绑定点击
-                    bindClick(mNativeData.getUrl());
-                    //设置图片
-                    setBuoyImage(mNativeData.getLittleImage());
-                    //显示
-                    setFloatMenuData();
+                    if("1".equals(mNativeData.getAdType())
+                            || LoginManager.isShowAd()){
+                        //初始化浮标
+                        initBuoy();
+                        //初始化动画
+                        initAnimation();
+                        //初始化hanlder
+                        initHandler();
+                        //绑定点击
+                        bindClick(mNativeData.getUrl());
+                        //设置图片
+                        setBuoyImage(mNativeData.getLittleImage());
+                        //显示
+                        setFloatMenuData();
+                    }
                 }
             }
 

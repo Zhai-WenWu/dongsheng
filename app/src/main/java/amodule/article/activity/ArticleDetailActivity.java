@@ -460,7 +460,7 @@ public class ArticleDetailActivity extends BaseActivity {
 
     private void initAD() {
         //请求广告数据
-        mArticleAdContrler = new ArticleAdContrler();
+        mArticleAdContrler = new ArticleAdContrler(this);
         mArticleAdContrler.initADData();
         mArticleAdContrler.setOnBigAdCallback(new ArticleAdContrler.OnBigAdCallback() {
             @Override

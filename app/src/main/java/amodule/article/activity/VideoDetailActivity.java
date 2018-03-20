@@ -510,7 +510,7 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
     }
 
     private void initAD() {
-        mVideoAdContorler = new VideoAdContorler();
+        mVideoAdContorler = new VideoAdContorler(this);
         mVideoAdContorler.initADData();
         mVideoAdContorler.setOnBigAdCallback(new VideoAdContorler.OnBigAdCallback() {
             @Override

@@ -1,5 +1,6 @@
 package amodule.article.tools;
 
+import android.app.Activity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
@@ -30,6 +31,10 @@ public class VideoAdContorler extends ArticleAdContrler {
     //广告跟随相关推荐的数据位置
     public final int ARTICLE_BOTTOM = 101;
     public final int ARTICLE_RECOMMEND = 0;
+
+    public VideoAdContorler(Activity activity) {
+        super(activity);
+    }
 
     @Override
     public void initADData() {

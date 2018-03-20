@@ -20,6 +20,8 @@ import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
 import third.ad.scrollerAd.XHAllAdControl;
 
+import static third.ad.scrollerAd.XHScrollerAdParent.ADKEY_BANNER;
+
 /**
  * banner广告，策略：服务端返回是否显示banner广告，若显示，则banner信息随着返回
  *
@@ -54,7 +56,8 @@ public class BannerAd {
     }
 
     private void setActivityData(Map<String, String> map) {
-        if (mAdImage == null) {
+        if (mAdImage == null
+                && ADKEY_BANNER.equals(map.get("type"))) {
             return;
         }
 

@@ -228,7 +228,7 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
                 if (isRefresh) {
                     if (xhNativeArray != null && !xhNativeArray.isEmpty()
                             && list != null
-//                            && !xhNativeArray.equals(list)
+                            && !xhNativeArray.equals(list)
                             ) {
                         Log.i("tzy", "onNativeLoad: ");
                         xhNativeArray.clear();

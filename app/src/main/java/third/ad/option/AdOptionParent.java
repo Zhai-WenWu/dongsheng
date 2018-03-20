@@ -230,11 +230,15 @@ public abstract class AdOptionParent implements ActivityMethodManager.IAutoRefre
                         handlerAdMap(old_list, adMap, index);
                         Log("ad controlTag:" + adMap.get("controlTag") + "    ad name:" + adMap.get("name") + "   style:" + adMap.get("style"));
                         if (!"ad".equals(adstyle)) {
-                            if (!TextUtils.isEmpty(adMap.get("style")))
+                            if (!TextUtils.isEmpty(adMap.get("style"))){
                                 old_list.add(index, adMap);
+                            }
                         }else{
-                            if (!TextUtils.isEmpty(adMap.get("style")))
+                            if (!TextUtils.isEmpty(adMap.get("style"))){
                                 old_list.set(index, adMap);
+                            }else{
+                                old_list.remove(index);
+                            }
                         }
                     }
                 } else {

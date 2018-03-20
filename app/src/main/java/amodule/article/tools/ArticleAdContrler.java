@@ -1,5 +1,6 @@
 package amodule.article.tools;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Handler;
@@ -74,6 +75,10 @@ public class ArticleAdContrler {
             }
         }
     };
+    protected Activity mActivity;
+    public ArticleAdContrler(Activity activity){
+        mActivity = activity;
+    }
 
     protected void handlerArticleRecData(int index, Object obj) {
         if (obj != null) {
@@ -118,7 +123,7 @@ public class ArticleAdContrler {
                     }
                 }
             }
-        }, XHActivityManager.getInstance().getCurrentActivity(), id);
+        }, mActivity, id);
     }
 
     protected void sendAdMessage(String adStr, int type) {
@@ -237,12 +242,12 @@ public class ArticleAdContrler {
         }
         //设置ad点击
         if(adView != null){
-            setAdClick(adView);
+            setAdClick(adView,dataMap);
         }
         return adView;
     }
 
-    public void setAdClick(final View adView){
+    public void setAdClick(final View adView, Map<String, String> dataMap){
         adView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -250,14 +255,11 @@ public class ArticleAdContrler {
             }
         });
         final View adTag = adView.findViewById(R.id.ad_tag);
-        if(adTag != null){
+        if(adTag != null
+                && dataMap != null
+                && !"1".equals(dataMap.get("adType"))){
             adTag.setVisibility(View.VISIBLE);
-            adTag.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    AppCommon.setAdHintClick(XHActivityManager.getInstance().getCurrentActivity(), adTag, xhAllAdControlBootom, 0, "0");
-                }
-            });
+            adTag.setOnClickListener(v -> AppCommon.setAdHintClick(XHActivityManager.getInstance().getCurrentActivity(), adTag, xhAllAdControlBootom, 0, "0"));
         }
     }
 
@@ -311,7 +313,8 @@ public class ArticleAdContrler {
             dataMap.put("customer", new JSONObject().put("nickName", adMap.get("title")).toString());
             dataMap.put("clickAll", Tools.getRandom(200, 5000) + "浏览");
             dataMap.put("commentNumber", "");
-            dataMap.put("adtype", adMap.get("type"));
+            dataMap.put("adtype", adMap.get("adType"));
+            dataMap.put("ad", adMap.get("type"));
         } catch (JSONException e) {
             e.printStackTrace();
         }

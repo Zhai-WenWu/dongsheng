@@ -87,7 +87,7 @@ public class RecommendItemView extends ItemBaseView {
             Map<String,String> styleDataMap = StringManager.getFirstMap(map.get("styleData"));
             videoIcon.setVisibility("2".equals(styleDataMap.get("type")) ? VISIBLE:GONE);
         }else videoIcon.setVisibility(GONE);
-        adIcon.setVisibility("2".equals(map.get("isAd")) ? VISIBLE : GONE);
+        adIcon.setVisibility((!"1".equals(map.get("adType")) && "2".equals(map.get("isAd"))) ? VISIBLE : GONE);
         if (map.containsKey("customer")) {
             Map<String, String> customer = StringManager.getFirstMap(map.get("customer"));
             setViewText(recCustomerName, customer, "nickName");
