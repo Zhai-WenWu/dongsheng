@@ -141,4 +141,43 @@ public class XHSelfNativeData {
     public String getLogoImage(){
         return imgs != null ? imgs.get(IMG_TYPE_LOGO) : "";
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        XHSelfNativeData that = (XHSelfNativeData) o;
+
+        if (showNum != that.showNum) return false;
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (positionId != null ? !positionId.equals(that.positionId) : that.positionId != null)
+            return false;
+        if (title != null ? !title.equals(that.title) : that.title != null) return false;
+        if (desc != null ? !desc.equals(that.desc) : that.desc != null) return false;
+        if (brandName != null ? !brandName.equals(that.brandName) : that.brandName != null)
+            return false;
+        if (url != null ? !url.equals(that.url) : that.url != null) return false;
+        if (adType != null ? !adType.equals(that.adType) : that.adType != null) return false;
+        if (dbType != null ? !dbType.equals(that.dbType) : that.dbType != null) return false;
+        if (updateTime != null ? !updateTime.equals(that.updateTime) : that.updateTime != null)
+            return false;
+        return imgs != null ? imgs.equals(that.imgs) : that.imgs == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (positionId != null ? positionId.hashCode() : 0);
+        result = 31 * result + (title != null ? title.hashCode() : 0);
+        result = 31 * result + (desc != null ? desc.hashCode() : 0);
+        result = 31 * result + (brandName != null ? brandName.hashCode() : 0);
+        result = 31 * result + showNum;
+        result = 31 * result + (url != null ? url.hashCode() : 0);
+        result = 31 * result + (adType != null ? adType.hashCode() : 0);
+        result = 31 * result + (dbType != null ? dbType.hashCode() : 0);
+        result = 31 * result + (updateTime != null ? updateTime.hashCode() : 0);
+        result = 31 * result + (imgs != null ? imgs.hashCode() : 0);
+        return result;
+    }
 }

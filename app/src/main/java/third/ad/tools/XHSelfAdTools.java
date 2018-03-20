@@ -52,7 +52,7 @@ public class XHSelfAdTools {
             @Override
             public void loaded(int flag, String s, Object o) {
                 if (flag >= ReqInternet.REQ_OK_STRING) {
-                    List<XHSelfNativeData> list = new ArrayList<>();
+                    ArrayList<XHSelfNativeData> list = new ArrayList<>();
                     Map<String, String> data = StringManager.getFirstMap(o);
                     for (String key : ads) {
                         if(data.containsKey(key)){
@@ -97,7 +97,7 @@ public class XHSelfAdTools {
     }
 
     public interface XHSelfCallback {
-        void onNativeLoad(List<XHSelfNativeData> list);
+        void onNativeLoad(ArrayList<XHSelfNativeData> list);
 
         void onNativeFail();
     }

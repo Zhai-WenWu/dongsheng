@@ -224,7 +224,7 @@ public class WelcomeAdTools {
         }
         XHSelfAdTools.getInstance().loadNativeData(Collections.singletonList(adid), new XHSelfAdTools.XHSelfCallback() {
             @Override
-            public void onNativeLoad(List<XHSelfNativeData> list) {
+            public void onNativeLoad(ArrayList<XHSelfNativeData> list) {
                 if (list == null || list.isEmpty()) {
                     index_ad++;
                     nextAd(false);

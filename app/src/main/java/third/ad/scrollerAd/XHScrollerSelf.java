@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.util.Log;
 
 import java.util.HashMap;
@@ -115,7 +116,8 @@ public class XHScrollerSelf extends XHScrollerAdParent {
     public void setNativeData(XHSelfNativeData nativeData) {
         mNativeData = nativeData;
         if(mNativeData != null && "1".equals(mNativeData.getDbType())){
-            mNativeData.setUrl("download.app?url=" + Uri.encode(mNativeData.getUrl()) + "&appname=" + Tools.getMD5(mNativeData.getUrl()));
+            String appname = TextUtils.isEmpty(mNativeData.getBrandName()) ? Tools.getMD5(mNativeData.getUrl()) : mNativeData.getBrandName();
+            mNativeData.setUrl("download.app?url=" + Uri.encode(mNativeData.getUrl()) + "&appname=" + appname);
         }
     }
 }

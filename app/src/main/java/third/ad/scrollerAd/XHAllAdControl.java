@@ -56,7 +56,7 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
     private int count = 0;//返回的数据的个数
     private List<NativeADDataRef> gdtNativeArray = new ArrayList<>();
     private List<NativeResponse> baiduNativeArray = new ArrayList<>();
-    private List<XHSelfNativeData> xhNativeArray = new ArrayList<>();
+    private ArrayList<XHSelfNativeData> xhNativeArray = new ArrayList<>();
 
     private String GDT_ID = "";//广点
     private String BAIDU_ID = "";//广点
@@ -223,12 +223,16 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
         }
         XHSelfAdTools.getInstance().loadNativeData(XH_IDS, new XHSelfAdTools.XHSelfCallback() {
             @Override
-            public void onNativeLoad(List<XHSelfNativeData> list) {
+            public void onNativeLoad(ArrayList<XHSelfNativeData> list) {
                 isLoadOverXH = true;
                 if (isRefresh) {
                     if (xhNativeArray != null && !xhNativeArray.isEmpty()
-                            && list != null && !xhNativeArray.equals(list)) {
-                        xhNativeArray = list;
+                            && list != null
+//                            && !xhNativeArray.equals(list)
+                            ) {
+                        Log.i("tzy", "onNativeLoad: ");
+                        xhNativeArray.clear();
+                        xhNativeArray.addAll(list);
                         handlerAdData(isRefresh);
                     }
                 } else {
@@ -295,6 +299,7 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
 
     private void handlerAdData(boolean isRefresh) {
         if (isLoadOverGdt && isLoadOverBaidu && isLoadOverXH) {
+            Log.i("tzy", "handlerAdData: ");
             startAdRequest(isRefresh);
         }
     }
@@ -358,6 +363,7 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
                         AdData.put(listIds.get(num), mapToJson(map).toString());
                         //展示数据集合
                         if (count >= listAdContrls.size()) {
+                            Log.i("tzy", "onSuccess: ");
                             xhBackIdsDataCallBack.callBack(isRefresh, AdData);
                         }
                     }
