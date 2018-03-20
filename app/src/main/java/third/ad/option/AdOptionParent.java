@@ -181,7 +181,7 @@ public abstract class AdOptionParent implements ActivityMethodManager.IAutoRefre
     public ArrayList<Map<String, String>> getNewAdData(ArrayList<Map<String, String>> old_list, boolean isBack) {
         Log("getNewAdData");
         //显示广告
-        return LoginManager.isShowAd() ? getBdData(old_list, isBack) : old_list;
+        return getBdData(old_list, isBack);
 
     }
 
@@ -193,7 +193,8 @@ public abstract class AdOptionParent implements ActivityMethodManager.IAutoRefre
      *
      * @return
      */
-    protected ArrayList<Map<String, String>> getBdData(ArrayList<Map<String, String>> old_list, boolean isBack) {
+    protected ArrayList<Map<String, String>>  getBdData(ArrayList<Map<String, String>> old_list,
+                                                        boolean isBack) {
         Log("getBdData adArray.size():" + adArray.size());
         ArrayList<Map<String, String>> tempList = new ArrayList<>();
         Log.i(tag_yu, "getLimitNum::" + getLimitNum());
