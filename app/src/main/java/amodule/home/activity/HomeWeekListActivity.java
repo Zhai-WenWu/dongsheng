@@ -75,8 +75,9 @@ public class HomeWeekListActivity extends BaseAppCompatActivity {
         mAdControl = getAdControl();
         mAdControl.setRefreshCallback(() -> {
             mListData = mAdControl.getAutoRefreshAdData(mListData);
-            if (mHomeAdapter != null)
-                mHomeAdapter.notifyItemRangeChanged(0,mHomeAdapter.getItemCount());
+            if (mHomeAdapter != null){
+                mHomeAdapter.notifyDataSetChanged();
+            }
         });
         mActMagager.registerADController(mAdControl);
     }

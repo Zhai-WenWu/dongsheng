@@ -98,8 +98,9 @@ public class HomeSecondListFragment extends Fragment {
         mAdControl = getAdControl();
         mAdControl.setRefreshCallback(() -> {
             mListData = mAdControl.getAutoRefreshAdData(mListData);
-            if (mHomeAdapter != null)
-                mHomeAdapter.notifyItemRangeChanged(0,mHomeAdapter.getItemCount());
+            if (mHomeAdapter != null){
+                mHomeAdapter.notifyDataSetChanged();
+            }
         });
         mActivity.getActMagager().registerADController(mAdControl);
     }

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -342,7 +343,7 @@ public class CircleMainFragment extends Fragment {
                 mListData = quanAdvertControl.getAdvertAndQuanData(mListData, mPlateData.getCid(), mPlateData.getMid(), index_size);
                 //Log.i("FRJ","广告数据回来刷新adapter:::集合大小："+mListData.size());
 //                mAdapter.notifyDataSetChanged();
-                mAdapter.notifyItemRangeChanged(0,mListData.size());
+                safeNotifyItemRangeChanged();
                 index_size = mListData.size();
             }
         });
@@ -356,6 +357,17 @@ public class CircleMainFragment extends Fragment {
             if (parentView == null)
                 return;
             setVideoLayout(parentView, position);
+        });
+    }
+
+    private void safeNotifyItemRangeChanged() {
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                if(mAdapter != null){
+                    mAdapter.notifyDataSetChanged();
+                }
+            }
         });
     }
 
@@ -526,11 +538,11 @@ public class CircleMainFragment extends Fragment {
                 //不为null则刷新，为null则尝试从listview.getAdapter()获取adapter并刷新数据
                 if (mAdapter != null) {
 //                    mAdapter.notifyDataSetChanged();
-                    mAdapter.notifyItemRangeChanged(0,mListData.size());
+                    safeNotifyItemRangeChanged();
                 } else if (mListView != null && mListView.getAdapter() != null) {
                     mAdapter = (AdapterMainCircle) mListView.getAdapter();
 //                    mAdapter.notifyDataSetChanged();
-                    mAdapter.notifyItemRangeChanged(0,mListData.size());
+                    safeNotifyItemRangeChanged();
                 }
                 mCurrentPage = mLoadManager.changeMoreBtn(mListView, flag, LoadManager.FOOTTIME_PAGE, loadCount, mCurrentPage, isRefresh);
                 //判断是否刷新
@@ -600,7 +612,7 @@ public class CircleMainFragment extends Fragment {
                             handlerCutomersData(recCustomerArray);
                             mAdapter.setmRecCutomerArray(recCustomerArray);
 //                            mAdapter.notifyDataSetChanged();
-                            mAdapter.notifyItemRangeChanged(0,mListData.size());
+                            safeNotifyItemRangeChanged();
                         }
                     }
                 });

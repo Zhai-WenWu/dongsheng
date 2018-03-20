@@ -86,8 +86,7 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
         }
         mAdControl.setRefreshCallback(() -> {
             mData = mAdControl.getAutoRefreshAdData(mData);
-            if (mNotifyDataSetChangedCallback != null)
-                mNotifyDataSetChangedCallback.notifyDataSetChanged();
+            safeNotifySetChanged();
         });
     }
 
@@ -188,8 +187,7 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
                                     }
                                 }
                                 //提示刷新UI
-                                if (mNotifyDataSetChangedCallback != null)
-                                    mNotifyDataSetChangedCallback.notifyDataSetChanged();
+                                safeNotifySetChanged();
                                 //自动请求下一页数据
                                 if (mData.size() <= 4) {//推荐列表：低于等5的数据自动请求数据
                                     Log.i("zhangyujian", "自动下次请求:::" + mData.size());
@@ -203,8 +201,7 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
                                         mData.get(i).put("refreshTime", "");
                                     }
                                     //提示刷新UI
-                                    if (mNotifyDataSetChangedCallback != null)
-                                        mNotifyDataSetChangedCallback.notifyDataSetChanged();
+                                    safeNotifySetChanged();
                                 } else {//无数据时---请求下一页数据
                                     if (dataMap.containsKey(SP_KEY_NEXTURL)
                                             && isNextUrl) {
@@ -226,6 +223,13 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
                             callback.onAfter(refresh, flag, loadCount);
                     }
                 });
+    }
+
+    private void safeNotifySetChanged() {
+        new Handler(Looper.getMainLooper()).post(() -> {
+            if (mNotifyDataSetChangedCallback != null)
+                mNotifyDataSetChangedCallback.notifyDataSetChanged();
+        });
     }
 
     /**
@@ -262,9 +266,7 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
             if (listTemp.size() > 0) {
                 mData.removeAll(listTemp);
             }
-            if (mNotifyDataSetChangedCallback != null) {
-                mNotifyDataSetChangedCallback.notifyDataSetChanged();
-            }
+            safeNotifySetChanged();
         }
     }
 
@@ -272,8 +274,7 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
     private void handlerMainThreadUIAD() {
         new Handler(Looper.getMainLooper()).post(() -> {
             mData = mAdControl.getNewAdData(mData, false);
-            if (mNotifyDataSetChangedCallback != null)
-                mNotifyDataSetChangedCallback.notifyDataSetChanged();
+            safeNotifySetChanged();
         });
     }
 
@@ -281,8 +282,7 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
         if (mData == null)
             return;
         mData.clear();
-        if (mNotifyDataSetChangedCallback != null)
-            mNotifyDataSetChangedCallback.notifyDataSetChanged();
+        safeNotifySetChanged();
     }
 
     //刷新广告index
