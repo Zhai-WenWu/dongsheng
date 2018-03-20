@@ -153,8 +153,11 @@ public class ListDish extends BaseActivity {
                     } else {
                         adData.add(new HashMap<String, String>());
                     }
-                    if(isRefresh){
-                        arrayList = handlerAdData(isRefresh,arrayList);
+                }
+                if(isRefresh){
+                    arrayList = handlerAdData(isRefresh,arrayList);
+                    if(adapter != null){
+                        adapter.notifyDataSetChanged();
                     }
                 }
             }
