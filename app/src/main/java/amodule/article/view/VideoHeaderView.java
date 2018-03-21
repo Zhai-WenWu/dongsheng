@@ -262,6 +262,10 @@ public class VideoHeaderView extends RelativeLayout {
                 XHClick.mapStat(activity,"a_ShortVideoDetail_ad","图文广告","会员去广告");
             }
         });
+        if("1".equals(mapAd.get("adType"))){
+            view.findViewById(R.id.ad_vip_lead).setVisibility(GONE);
+            view.findViewById(R.id.ad_line).setVisibility(GONE);
+        }
 
         mImageView.setOnClickListener(new OnClickListener() {
             @Override

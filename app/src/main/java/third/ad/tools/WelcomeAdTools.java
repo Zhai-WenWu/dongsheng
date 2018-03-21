@@ -142,16 +142,20 @@ public class WelcomeAdTools {
                 case TAG_GDT:
                     if (LoginManager.isShowAd()) {
                         displayGdtAD();
+                    }else{
+                        index_ad++;
+                        nextAd(isCache);
                     }
                     break;
                 case TAG_BANNER:
-                    if (LoginManager.isShowAd()) {
-                        getXHBanner();
-                    }
+                    getXHBanner();
                     break;
                 case TAG_BAIDU:
                     if (LoginManager.isShowAd()) {
                         displayBaiduAD();
+                    }else{
+                        index_ad++;
+                        nextAd(isCache);
                     }
                     break;
                 default:
@@ -231,7 +235,9 @@ public class WelcomeAdTools {
                     return;
                 }
                 XHSelfNativeData nativeData = list.get(0);
-                if (nativeData != null && !TextUtils.isEmpty(nativeData.getBigImage())) {
+                if (nativeData != null
+                        && !TextUtils.isEmpty(nativeData.getBigImage())
+                        && ("1".equals(nativeData.getAdType()) || LoginManager.isShowAd())) {
                     if (null != mXHBannerCallback) {
                         mXHBannerCallback.onAdLoadSucceeded(nativeData);
                     }

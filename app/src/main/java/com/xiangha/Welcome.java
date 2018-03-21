@@ -26,7 +26,6 @@ import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.override.activity.base.BaseActivity;
-import acore.tools.ChannelUtil;
 import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
 import aplug.basic.LoadImage;
@@ -37,6 +36,7 @@ import third.ad.tools.AdPlayIdConfig;
 import third.ad.tools.WelcomeAdTools;
 import xh.basic.tool.UtilImage;
 
+import static amodule.main.Tools.WelcomeControls.DEFAULT_TIME;
 import static third.ad.scrollerAd.XHScrollerSelf.showSureDownload;
 
 public class Welcome extends BaseActivity {
@@ -51,7 +51,8 @@ public class Welcome extends BaseActivity {
     private RelativeLayout mADLayout;
 
     private String tongjiId = "a_ad";
-    private boolean isclose=false;
+    private boolean isclose = false;
+    private boolean canShowVipLead = true;
 
     @SuppressLint("HandlerLeak")
     @Override
@@ -65,7 +66,7 @@ public class Welcome extends BaseActivity {
         super.onCreate(savedInstanceState);
         //初始化
         setContentView(R.layout.xh_welcome);
-        XHClick.mapStat(this, "kaiping_two", "开屏","");
+        XHClick.mapStat(this, "kaiping_two", "开屏", "");
         init();
     }
 
@@ -76,6 +77,7 @@ public class Welcome extends BaseActivity {
         initWelcome();
         XHClick.track(XHApplication.in(), "启动app");
     }
+
     /**
      * 初始化view
      */
@@ -87,7 +89,7 @@ public class Welcome extends BaseActivity {
         textLead.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                isAdLeadClick=true;
+                isAdLeadClick = true;
                 closeActivity();
             }
         });
@@ -107,19 +109,19 @@ public class Welcome extends BaseActivity {
                     @Override
                     public void onAdPresent() {
                         mADLayout.setVisibility(View.GONE);
-                        Log.i("zhangyujian","GdtCallback");
-                        if(mAdTime>5){
+                        Log.i("zhangyujian", "GdtCallback");
+                        if (mAdTime > 5) {
                             endCountDown();
-                            mAdTime=5;
+                            mAdTime = 5;
                             startCountDown(false);
-                        }else if(mAdTime<3){
+                        } else if (mAdTime < 3) {
                             closeActivity();
                             return;
                         }
                         showSkipContainer();
                         isAdLoadOk = true;
                         XHClick.mapStat(Welcome.this, "ad_show_index", "开屏", "sdk_gdt");
-                        Log.i("zhangyujian","开屏展示");
+                        Log.i("zhangyujian", "开屏展示");
                     }
 
                     @Override
@@ -128,17 +130,17 @@ public class Welcome extends BaseActivity {
 
                     @Override
                     public void onAdDismissed() {
-                        Log.i("zhangyujian","onAdDismissed");
-                        Log.i("zhangyujian","onAdDismissed::;"+isclose);
+                        Log.i("zhangyujian", "onAdDismissed");
+                        Log.i("zhangyujian", "onAdDismissed::;" + isclose);
                         closeActivity();
                     }
 
                     @Override
                     public void onAdClick() {
-                        Log.i("zhangyujian","onAdClick");
+                        Log.i("zhangyujian", "onAdClick");
                         closeActivity();
                         XHClick.mapStat(Welcome.this, "ad_click_index", "开屏", "sdk_gdt");
-                        Log.i("zhangyujian","开屏点击");
+                        Log.i("zhangyujian", "开屏点击");
                     }
 
                     @Override
@@ -160,9 +162,10 @@ public class Welcome extends BaseActivity {
                 new WelcomeAdTools.XHBannerCallback() {
                     @Override
                     public void onAdLoadSucceeded(XHSelfNativeData nativeData) {
-                        if(nativeData == null){
+                        if (nativeData == null) {
                             return;
                         }
+                        canShowVipLead = !"1".equals(nativeData.getAdType());
                         String url = nativeData.getBigImage();
                         String loadingUrl = nativeData.getUrl();
                         //处理view
@@ -182,11 +185,14 @@ public class Welcome extends BaseActivity {
                                 @Override
                                 public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> arg1) {
                                     if (bitmap != null) {
-                                        if(mAdTime>5){
+                                        if (!canShowVipLead) {
+                                            mAdTime = DEFAULT_TIME;
+                                        }
+                                        if (mAdTime > 5) {
                                             endCountDown();
-                                            mAdTime=5;
+                                            mAdTime = 5;
                                             startCountDown(false);
-                                        }else if(mAdTime<3){
+                                        } else if (mAdTime < 3) {
                                             closeActivity();
                                             return;
                                         }
@@ -210,9 +216,9 @@ public class Welcome extends BaseActivity {
                                     handler.post(new Runnable() {
                                         @Override
                                         public void run() {
-                                            if("1".equals(nativeData.getDbType())){
-                                                showSureDownload(nativeData, AdPlayIdConfig.HOME_FLOAT,"xh",nativeData.getId());
-                                            }else{
+                                            if ("1".equals(nativeData.getDbType())) {
+                                                showSureDownload(nativeData, AdPlayIdConfig.HOME_FLOAT, "xh", nativeData.getId());
+                                            } else {
                                                 AppCommon.openUrl(Welcome.this, loadingUrl, true);
                                                 AdConfigTools.getInstance().postStatistics("click", AdPlayIdConfig.HOME_FLOAT, "xh", nativeData.getId());
                                             }
@@ -239,10 +245,10 @@ public class Welcome extends BaseActivity {
         super.onPause();
     }
 
-    private void showSkipContainer(){
-        findViewById(R.id.line_1).setVisibility(View.VISIBLE);
+    private void showSkipContainer() {
         findViewById(R.id.ad_linear).setVisibility(View.VISIBLE);
-        textLead.setVisibility(View.VISIBLE);
+        findViewById(R.id.line_1).setVisibility(canShowVipLead ? View.VISIBLE : View.GONE);
+        textLead.setVisibility(canShowVipLead ? View.VISIBLE : View.GONE);
         textSkip.setVisibility(View.VISIBLE);
         mADLayout.setVisibility(View.VISIBLE);
         AlphaAnimation alphaAnimation = new AlphaAnimation(0.0f, 1.0f);
@@ -258,8 +264,8 @@ public class Welcome extends BaseActivity {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-
-                textLead.setVisibility(View.VISIBLE);
+                findViewById(R.id.line_1).setVisibility(canShowVipLead ? View.VISIBLE : View.GONE);
+                textLead.setVisibility(canShowVipLead ? View.VISIBLE : View.GONE);
                 textSkip.setVisibility(View.VISIBLE);
                 mADLayout.setVisibility(View.VISIBLE);
             }
@@ -270,15 +276,16 @@ public class Welcome extends BaseActivity {
             }
         });
     }
+
     private Runnable mCountDownRun = new Runnable() {
         @Override
         public void run() {
             endCountDown();
-            if (mAdTime <= 0||(mAdTime<=2&&!isAdLoadOk&& LoginManager.isShowAd())) {
+            if (mAdTime <= 0 || (mAdTime <= 2 && !isAdLoadOk && LoginManager.isShowAd())) {
                 closeActivity();
                 return;
             }
-            Log.i("zhangyujian","mAdTime:::"+mAdTime);
+            Log.i("zhangyujian", "mAdTime:::" + mAdTime);
             mAdTime--;
             startCountDown(true);
         }
@@ -308,20 +315,21 @@ public class Welcome extends BaseActivity {
             WelcomeAdTools.getInstance().handlerAdData(false, new WelcomeAdTools.AdNoDataCallBack() {
                 @Override
                 public void noAdData() {
-                    if(LoginManager.isShowAd()){
-                        XHClick.mapStat(Welcome.this,"ad_no_show","开屏","");
+                    if (LoginManager.isShowAd()) {
+                        XHClick.mapStat(Welcome.this, "ad_no_show", "开屏", "");
                     }
                 }
             }, true);
         }
     }
+
     /**
      * 关闭dialog
      */
     public void closeActivity() {
-        Log.i("zhangyujian","isclose:::"+isclose);
-        if(!isclose) {
-            isclose=true;
+        Log.i("zhangyujian", "isclose:::" + isclose);
+        if (!isclose) {
+            isclose = true;
             if (mMainHandler != null) {
                 mMainHandler.removeCallbacksAndMessages(null);
                 mMainHandler = null;
@@ -329,7 +337,9 @@ public class Welcome extends BaseActivity {
             if (isAdLeadClick) {
                 try {
                     AppCommon.openUrl(Welcome.this, StringManager.getVipUrl(false) + "&vipFrom=开屏广告会员免广告", true);
-                } catch (Exception e) {};
+                } catch (Exception e) {
+                }
+                ;
             }
             this.finish();
 //            isclose=false;

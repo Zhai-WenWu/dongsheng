@@ -230,7 +230,6 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
                             && list != null
                             && !xhNativeArray.equals(list)
                             ) {
-                        Log.i("tzy", "onNativeLoad: ");
                         xhNativeArray.clear();
                         xhNativeArray.addAll(list);
                         handlerAdData(isRefresh);
@@ -299,7 +298,6 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
 
     private void handlerAdData(boolean isRefresh) {
         if (isLoadOverGdt && isLoadOverBaidu && isLoadOverXH) {
-            Log.i("tzy", "handlerAdData: ");
             startAdRequest(isRefresh);
         }
     }
@@ -368,7 +366,6 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
                         AdData.put(listIds.get(num), mapToJson(map).toString());
                         //展示数据集合
                         if (count >= listAdContrls.size()) {
-                            Log.i("tzy", "onSuccess: ");
                             xhBackIdsDataCallBack.callBack(isRefresh, AdData);
                         }
                     }
@@ -544,7 +541,6 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
     }
 
     public void refreshSelfAd() {
-        Log.i("tzy", "refreshSelfAd: " + this.toString());
         isLoadOverXH = false;
         gdt_index = -1;
         baidu_index = -1;

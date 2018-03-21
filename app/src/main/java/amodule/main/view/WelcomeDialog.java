@@ -55,12 +55,12 @@ public class WelcomeDialog extends Dialog {
     protected View view;
     protected int height;
 
-    private TextView textSkip,textLead;
+    private TextView textSkip, textLead;
     private RelativeLayout mADLayout;
-//    private WelcomeRelativeLayout welcomeRelativeLayout;
+    //    private WelcomeRelativeLayout welcomeRelativeLayout;
     private boolean isAdLoadOk = false;
     private Handler mMainHandler = null;
-    private boolean isAdComplete=true;
+    private boolean isAdComplete = true;
     private boolean isAdLeadClick = false;
 //    private WelcomeRelativeLayout welcomeRelativeLayout;
 
@@ -68,40 +68,48 @@ public class WelcomeDialog extends Dialog {
     private final long mAdIntervalTime = 1000;
     private boolean isOnGlobalLayout = false;//是否渲染完成;
     private boolean isInit = false;//是否加载过
+    private boolean canShowVipLead = true;
     private int num = 0;//绘制被调用的次数
-    private boolean isTwoShow=false;
+    private boolean isTwoShow = false;
 
     public WelcomeDialog(@NonNull Activity act) {
-        this(act, DEFAULT_TIME,null);
+        this(act, DEFAULT_TIME, null);
     }
+
     public WelcomeDialog(@NonNull Activity act, int adTime) {
-        this(act, adTime,null);
+        this(act, adTime, null);
     }
-    public WelcomeDialog(@NonNull Activity act, int adTime,boolean isTwoShow) {
-        this(act, adTime,null);
-        this.isTwoShow= isTwoShow;
+
+    public WelcomeDialog(@NonNull Activity act, int adTime, boolean isTwoShow) {
+        this(act, adTime, null);
+        this.isTwoShow = isTwoShow;
     }
-    public WelcomeDialog(@NonNull Activity act, DialogShowCallBack callBack) {this(act, DEFAULT_TIME,callBack);}
+
+    public WelcomeDialog(@NonNull Activity act, DialogShowCallBack callBack) {
+        this(act, DEFAULT_TIME, callBack);
+    }
+
     /**
      * 初始化dialog
+     *
      * @param act
      * @param adShowTime
      * @param callBack
      */
-    public WelcomeDialog(@NonNull Activity act, int adShowTime,DialogShowCallBack callBack) {
+    public WelcomeDialog(@NonNull Activity act, int adShowTime, DialogShowCallBack callBack) {
         super(act, R.style.welcomeDialog);
-        String app_welocme= (String) FileManager.loadShared(act,FileManager.app_welcome,FileManager.app_welcome);
-        if(TextUtils.isEmpty(app_welocme) || !"2".equals(app_welocme)){
-            adShowTime=3;
-            FileManager.saveShared(act,FileManager.app_welcome,FileManager.app_welcome,"2");
+        String app_welocme = (String) FileManager.loadShared(act, FileManager.app_welcome, FileManager.app_welcome);
+        if (TextUtils.isEmpty(app_welocme) || !"2".equals(app_welocme)) {
+            adShowTime = 3;
+            FileManager.saveShared(act, FileManager.app_welcome, FileManager.app_welcome, "2");
         }
-        Main.isShowWelcomeDialog=true;//至当前dialog状态
-        long endTime=System.currentTimeMillis();
-        Log.i("zhangyujian","dialog::start::"+(endTime-XHApplication.in().startTime)+"::::"+adShowTime);
+        Main.isShowWelcomeDialog = true;//至当前dialog状态
+        long endTime = System.currentTimeMillis();
+        Log.i("zhangyujian", "dialog::start::" + (endTime - XHApplication.in().startTime) + "::::" + adShowTime);
 
         this.activity = act;
         this.mAdTime = adShowTime;
-        this.dialogShowCallBack=callBack;
+        this.dialogShowCallBack = callBack;
         Window window = this.getWindow();
         window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
         this.view = this.getLayoutInflater().inflate(R.layout.xh_welcome, null);
@@ -112,21 +120,22 @@ public class WelcomeDialog extends Dialog {
         this.view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                Log.i("zhangyujian","num:::::::::::::::::::::::"+num);
+                Log.i("zhangyujian", "num:::::::::::::::::::::::" + num);
                 layoutCallBack();
                 ++num;
             }
         });
-        if(dialogShowCallBack!=null)dialogShowCallBack.dialogOnCreate();
-        LogManager.printStartTime("zhangyujian","dialog::oncreate::");
+        if (dialogShowCallBack != null) dialogShowCallBack.dialogOnCreate();
+        LogManager.printStartTime("zhangyujian", "dialog::oncreate::");
     }
 
-    private void layoutCallBack(){
-        if (!isOnGlobalLayout &&mAdTime<=5 &&((!isAdLoadOk && num>=2)||(isAdLoadOk &&num >= 4))) {
+    private void layoutCallBack() {
+        if (!isOnGlobalLayout && mAdTime <= 5 && ((!isAdLoadOk && num >= 2) || (isAdLoadOk && num >= 4))) {
             isOnGlobalLayout = true;
             if (dialogShowCallBack != null) dialogShowCallBack.dialogOnLayout();
         }
     }
+
     /**
      * 初始化view
      */
@@ -146,15 +155,15 @@ public class WelcomeDialog extends Dialog {
         textLead.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("zhangyujian","展示点击：textLeadtextLead：");
-                isAdLeadClick=true;
+                Log.i("zhangyujian", "展示点击：textLeadtextLead：");
+                isAdLeadClick = true;
                 closeDialog();
             }
         });
         textSkip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("zhangyujian","展示点击：：跳过");
+                Log.i("zhangyujian", "展示点击：：跳过");
                 closeDialog();
             }
         });
@@ -162,7 +171,7 @@ public class WelcomeDialog extends Dialog {
     }
 
     private void initAd() {
-        if("true".equals(FileManager.loadShared(getContext(),FileManager.xmlFile_appInfo,"once").toString())){
+        if ("true".equals(FileManager.loadShared(getContext(), FileManager.xmlFile_appInfo, "once").toString())) {
             mAdTime = 3;
             return;
         }
@@ -172,12 +181,12 @@ public class WelcomeDialog extends Dialog {
                     @Override
                     public void onAdPresent() {
                         mADLayout.setVisibility(View.GONE);
-                        Log.i("zhangyujian","GdtCallback");
-                        if(mAdTime>5){
+                        Log.i("zhangyujian", "GdtCallback");
+                        if (mAdTime > 5) {
                             endCountDown();
-                            mAdTime=5;
+                            mAdTime = 5;
                             startCountDown(false);
-                        }else if(mAdTime<3){
+                        } else if (mAdTime < 3) {
                             closeDialog();
                             return;
                         }
@@ -192,13 +201,13 @@ public class WelcomeDialog extends Dialog {
 
                     @Override
                     public void onAdDismissed() {
-                        Log.i("zhangyujian","onAdDismissed");
+                        Log.i("zhangyujian", "onAdDismissed");
                         closeDialog();
                     }
 
                     @Override
                     public void onAdClick() {
-                        Log.i("zhangyujian","onAdClick");
+                        Log.i("zhangyujian", "onAdClick");
                         closeDialog();
                         XHClick.mapStat(activity, "ad_click_index", "开屏", "sdk_gdt");
                     }
@@ -222,12 +231,12 @@ public class WelcomeDialog extends Dialog {
             @Override
             public void onAdPresent() {
                 mADLayout.setVisibility(View.GONE);
-                Log.i("zhangyujian","BaiduCallback");
-                if(mAdTime>5){
+                Log.i("zhangyujian", "BaiduCallback");
+                if (mAdTime > 5) {
                     endCountDown();
-                    mAdTime=5;
+                    mAdTime = 5;
                     startCountDown(false);
-                }else if(mAdTime<3){
+                } else if (mAdTime < 3) {
                     closeDialog();
                     return;
                 }
@@ -264,9 +273,10 @@ public class WelcomeDialog extends Dialog {
                 new WelcomeAdTools.XHBannerCallback() {
                     @Override
                     public void onAdLoadSucceeded(XHSelfNativeData nativeData) {
-                        if(nativeData == null){
+                        if (nativeData == null) {
                             return;
                         }
+                        canShowVipLead = !"1".equals(nativeData.getAdType());
                         String url = nativeData.getBigImage();
                         String loadingUrl = nativeData.getUrl();
                         //处理view
@@ -286,11 +296,14 @@ public class WelcomeDialog extends Dialog {
                                 @Override
                                 public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> arg1) {
                                     if (bitmap != null) {
-                                        if(mAdTime>5){
+                                        if (!canShowVipLead) {
+                                            mAdTime = DEFAULT_TIME;
+                                        }
+                                        if (mAdTime > 5) {
                                             endCountDown();
-                                            mAdTime=5;
+                                            mAdTime = 5;
                                             startCountDown(false);
-                                        }else if(mAdTime<3){
+                                        } else if (mAdTime < 3) {
                                             closeDialog();
                                             return;
                                         }
@@ -314,9 +327,9 @@ public class WelcomeDialog extends Dialog {
                                     handler.post(new Runnable() {
                                         @Override
                                         public void run() {
-                                            if("1".equals(nativeData.getDbType())){
-                                                showSureDownload(nativeData, AdPlayIdConfig.HOME_FLOAT,"xh",nativeData.getId());
-                                            }else{
+                                            if ("1".equals(nativeData.getDbType())) {
+                                                showSureDownload(nativeData, AdPlayIdConfig.HOME_FLOAT, "xh", nativeData.getId());
+                                            } else {
                                                 AppCommon.openUrl(activity, loadingUrl, true);
                                                 AdConfigTools.getInstance().postStatistics("click", AdPlayIdConfig.HOME_FLOAT, "xh", nativeData.getId());
                                             }
@@ -330,10 +343,11 @@ public class WelcomeDialog extends Dialog {
                 });
 
     }
-    private void showSkipContainer(){
-        view.findViewById(R.id.line_1).setVisibility(View.VISIBLE);
+
+    private void showSkipContainer() {
         view.findViewById(R.id.ad_linear).setVisibility(View.VISIBLE);
-        textLead.setVisibility(View.VISIBLE);
+        view.findViewById(R.id.line_1).setVisibility(canShowVipLead ? View.VISIBLE : View.GONE);
+        textLead.setVisibility(canShowVipLead ? View.VISIBLE : View.GONE);
         textSkip.setVisibility(View.VISIBLE);
         mADLayout.setVisibility(View.VISIBLE);
         AlphaAnimation alphaAnimation = new AlphaAnimation(0.0f, 1.0f);
@@ -349,10 +363,10 @@ public class WelcomeDialog extends Dialog {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                textLead.setVisibility(View.VISIBLE);
+                view.findViewById(R.id.line_1).setVisibility(canShowVipLead ? View.VISIBLE : View.GONE);
+                textLead.setVisibility(canShowVipLead ? View.VISIBLE : View.GONE);
                 textSkip.setVisibility(View.VISIBLE);
                 mADLayout.setVisibility(View.VISIBLE);
-                view.findViewById(R.id.line_1).setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -366,13 +380,13 @@ public class WelcomeDialog extends Dialog {
         @Override
         public void run() {
             endCountDown();
-            Log.i("xianghaTag","mAdTime::"+mAdTime+"::isAdLoadOk:"+isAdLoadOk+":::"+LoginManager.isShowAd());
-            if (mAdTime <= 0||(mAdTime<=2&&!isAdLoadOk&& LoginManager.isShowAd())) {
+            Log.i("xianghaTag", "mAdTime::" + mAdTime + "::isAdLoadOk:" + isAdLoadOk + ":::" + LoginManager.isShowAd());
+            if (mAdTime <= 0 || (mAdTime <= 2 && !isAdLoadOk && LoginManager.isShowAd())) {
                 closeDialog();
                 return;
             }
             layoutCallBack();
-            Log.i("zhangyujian","mAdTime:::"+mAdTime);
+            Log.i("zhangyujian", "mAdTime:::" + mAdTime);
             mAdTime--;
             startCountDown(true);
         }
@@ -403,17 +417,17 @@ public class WelcomeDialog extends Dialog {
      * 关闭dialog
      */
     public void closeDialog() {
-        if(!isOnGlobalLayout&&dialogShowCallBack!=null){
+        if (!isOnGlobalLayout && dialogShowCallBack != null) {
             dialogShowCallBack.dialogOnLayout();
         }
-        if(mMainHandler!=null) {
+        if (mMainHandler != null) {
             mMainHandler.removeCallbacksAndMessages(null);
-            mMainHandler=null;
+            mMainHandler = null;
         }
-        Main.isShowWelcomeDialog=false;//至当前dialog状态
-        Log.i("zhangyujian","closeDialog");
+        Main.isShowWelcomeDialog = false;//至当前dialog状态
+        Log.i("zhangyujian", "closeDialog");
         WelcomeDialog.this.dismiss();
-        if(isAdLeadClick) {
+        if (isAdLeadClick) {
             AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), StringManager.getVipUrl(false) + "&vipFrom=开屏广告会员免广告", true);
         }
         activity.overridePendingTransition(R.anim.in_from_nothing, R.anim.out_to_nothing);
@@ -439,6 +453,7 @@ public class WelcomeDialog extends Dialog {
          * dialog渲染完成
          */
         public void dialogOnLayout();
+
         /**
          * dialog oncreate方法执行
          */
@@ -460,21 +475,21 @@ public class WelcomeDialog extends Dialog {
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         if (hasFocus && !isInit) {
-            LogManager.printStartTime("zhangyujian","dialog::onWindowFocusChanged222::");
+            LogManager.printStartTime("zhangyujian", "dialog::onWindowFocusChanged222::");
             isInit = true;
             startCountDown(false);
-            LogManager.printStartTime("zhangyujian","dialog::onWindowFocusChanged333::");
+            LogManager.printStartTime("zhangyujian", "dialog::onWindowFocusChanged333::");
             //
             WelcomeAdTools.getInstance().handlerAdData(false, new WelcomeAdTools.AdNoDataCallBack() {
                 @Override
                 public void noAdData() {
-                    if(LoginManager.isShowAd()){
-                        XHClick.mapStat(activity,"ad_no_show","开屏","");
+                    if (LoginManager.isShowAd()) {
+                        XHClick.mapStat(activity, "ad_no_show", "开屏", "");
                     }
                 }
             }, isTwoShow);
 
-            LogManager.printStartTime("zhangyujian","dialog::onWindowFocusChanged::");
+            LogManager.printStartTime("zhangyujian", "dialog::onWindowFocusChanged::");
         }
     }
 
