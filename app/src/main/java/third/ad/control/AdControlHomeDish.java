@@ -45,8 +45,8 @@ public class AdControlHomeDish extends AdControlParent implements ActivityMethod
     private int adControlNum = -1;
     private int nextAdNum = 0;
     //向下加载的tag
-    private int downCurrentControlTag=-1;
-    private int downadControlNum = 1;
+    private int downCurrentControlTag=0;
+    private int downadControlNum = 0;
     private int downNextAdNum = 0;
     private Map<String,String> downAdState=new HashMap<>();//存储广告请求当前状态
     private Map<String,String> downAd=new HashMap<>();//是否要请求下一个数据块。
@@ -54,12 +54,13 @@ public class AdControlHomeDish extends AdControlParent implements ActivityMethod
     private AdControlHomeDish(){
         adControlMap = new HashMap<>();
         downAdControlMap= new HashMap<>();
-        AdOptionHomeDish downLoadAdControl0 = new AdOptionHomeDish(AdPlayIdConfig.MAIN_HOME_RECOMENT_LIST_0);
-        downLoadAdControl0.newRunableGetAdData(XHActivityManager.getInstance().getCurrentActivity(),statisticKey,"0",Control_down);
-        downAdControlMap.put(0,downLoadAdControl0);
+//        AdOptionHomeDish downLoadAdControl0 = new AdOptionHomeDish(AdPlayIdConfig.MAIN_HOME_RECOMENT_LIST_0);
+//        downLoadAdControl0.newRunableGetAdData(XHActivityManager.getInstance().getCurrentActivity(),statisticKey,"0",Control_down);
+//        downAdControlMap.put(0,downLoadAdControl0);
 //        AdOptionHomeDish downLoadAdControl1 = new AdOptionHomeDish(AdPlayIdConfig.MAIN_HOME_RECOMENT_LIST);
 //        downLoadAdControl1.newRunableGetAdData(XHActivityManager.getInstance().getCurrentActivity(),statisticKey,"1",Control_down);
 //        downAdControlMap.put(1,downLoadAdControl1);
+
 
         Log.i(tag_yu,"首页加载数据");
     }
@@ -76,8 +77,8 @@ public class AdControlHomeDish extends AdControlParent implements ActivityMethod
      */
     public AdControlHomeDish getTwoLoadAdData(){
         AdOptionHomeDish downLoadAdControl1 = new AdOptionHomeDish(AdPlayIdConfig.MAIN_HOME_RECOMENT_LIST);
-        downLoadAdControl1.newRunableGetAdData(XHActivityManager.getInstance().getCurrentActivity(),statisticKey,"1",Control_down);
-        downAdControlMap.put(1,downLoadAdControl1);
+        downLoadAdControl1.newRunableGetAdData(XHActivityManager.getInstance().getCurrentActivity(),statisticKey,"0",Control_down);
+        downAdControlMap.put(0,downLoadAdControl1);
 
         AdOptionHomeDish adControlParent = new AdOptionHomeDish(AdPlayIdConfig.MAIN_HOME_RECOMENT_LIST);
         adControlParent.newRunableGetAdData(XHActivityManager.getInstance().getCurrentActivity(),statisticKey,String.valueOf(++adControlNum),Control_up);
@@ -288,19 +289,19 @@ public class AdControlHomeDish extends AdControlParent implements ActivityMethod
         downCurrentControlTag=-1;
         downadControlNum = 1;
         downNextAdNum = 0;
-        AdOptionHomeDish downLoadAdControl0 = new AdOptionHomeDish(AdPlayIdConfig.MAIN_HOME_RECOMENT_LIST_0);
-        downLoadAdControl0.getAdData(XHActivityManager.getInstance().getCurrentActivity(),statisticKey,"0",Control_down);
-        downAdControlMap.put(0,downLoadAdControl0);
-        downLoadAdControl0.setAdDataCallBack(new AdOptionParent.AdDataCallBack() {
-            @Override
-            public void adDataBack(int tag, int nums) {
-                Log.i(tag_yu,"刷新数据::tag：：："+tag+"：：："+nums);
-            }
-        });
+//        AdOptionHomeDish downLoadAdControl0 = new AdOptionHomeDish(AdPlayIdConfig.MAIN_HOME_RECOMENT_LIST_0);
+//        downLoadAdControl0.getAdData(XHActivityManager.getInstance().getCurrentActivity(),statisticKey,"0",Control_down);
+//        downAdControlMap.put(0,downLoadAdControl0);
+//        downLoadAdControl0.setAdDataCallBack(new AdOptionParent.AdDataCallBack() {
+//            @Override
+//            public void adDataBack(int tag, int nums) {
+//                Log.i(tag_yu,"刷新数据::tag：：："+tag+"：：："+nums);
+//            }
+//        });
 
         AdOptionHomeDish downLoadAdControl1 = new AdOptionHomeDish(AdPlayIdConfig.MAIN_HOME_RECOMENT_LIST);
-        downLoadAdControl1.getAdData(XHActivityManager.getInstance().getCurrentActivity(),statisticKey,"1",Control_down);
-        downAdControlMap.put(1,downLoadAdControl1);
+        downLoadAdControl1.getAdData(XHActivityManager.getInstance().getCurrentActivity(),statisticKey,"0",Control_down);
+        downAdControlMap.put(0,downLoadAdControl1);
         downLoadAdControl1.setAdDataCallBack(new AdOptionParent.AdDataCallBack() {
             @Override
             public void adDataBack(int tag, int nums) {

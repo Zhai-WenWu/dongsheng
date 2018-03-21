@@ -110,6 +110,8 @@ public class BaseAdConfigTools {
                 break;
             case "show":
                 mShowCacheParams.add(jsonObject);
+                if (mShowCacheParams.size() == 1)
+                    startStatistics();
                 if (checkSendSta()) {
                     startStatistics(0);
                 }
@@ -138,11 +140,13 @@ public class BaseAdConfigTools {
     }
 
     public void setIntervalTime(long intervalTime) {
-        mIntervalTime = intervalTime;
+        if (intervalTime > 0)
+            mIntervalTime = intervalTime;
     }
 
     public void setCacheSize(int cacheSize) {
-        mCacheSize = cacheSize;
+        if (cacheSize != 0)
+            mCacheSize = cacheSize;
     }
 
     protected void startStatistics(long intervalTime) {
