@@ -2,6 +2,7 @@ package third.ad;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -56,8 +57,9 @@ public class BannerAd {
     }
 
     private void setActivityData(Map<String, String> map) {
+        Log.i("tzy", "setActivityData: " + map.toString());
         if (mAdImage == null
-                && ADKEY_BANNER.equals(map.get("type"))) {
+                || ADKEY_BANNER.equals(map.get("type"))) {
             return;
         }
 
