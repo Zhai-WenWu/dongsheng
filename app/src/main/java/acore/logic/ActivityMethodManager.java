@@ -48,6 +48,10 @@ public class ActivityMethodManager {
         randPromotion();
     }
 
+    public void onRestart(){
+        XHAdAutoRefresh.getInstance().restartTimer(this);
+    }
+
     public void onResume(int level) {
         if(Main.allMain != null){
             Main.allMain.initRunTime();

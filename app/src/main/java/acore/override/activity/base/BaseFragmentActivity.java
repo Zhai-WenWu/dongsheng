@@ -164,6 +164,14 @@ public class BaseFragmentActivity extends FragmentActivity {
 	}
 
 	@Override
+	protected void onRestart() {
+		super.onRestart();
+		if (mActMagager != null){
+			mActMagager.onRestart();
+		}
+	}
+
+	@Override
 	protected void onResume() {
 		super.onResume();
 		resumeTime = System.currentTimeMillis();

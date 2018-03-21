@@ -69,6 +69,14 @@ public class MainBaseActivity extends AppCompatActivity {
 			}
 		}
 	}
+
+	@Override
+	protected void onRestart() {
+		super.onRestart();
+		if (mActMagager != null){
+			mActMagager.onRestart();
+		}
+	}
 	
 	@Override
 	protected void onResume() {

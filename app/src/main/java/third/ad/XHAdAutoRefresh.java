@@ -41,14 +41,21 @@ public class XHAdAutoRefresh {
         this.mManager = activityMethodManager;
         if(mTimerHandler == null){
             mTimerHandler = new Handler(Looper.getMainLooper());
-            execute();
         }
+        execute();
+    }
+
+    public void restartTimer(ActivityMethodManager activityMethodManager) {
+        this.mManager = activityMethodManager;
+        if(mTimerHandler == null){
+            mTimerHandler = new Handler(Looper.getMainLooper());
+        }
+        reexecute();
     }
 
     public void stopTimer() {
         if (mTimerHandler != null) {
             mTimerHandler.removeCallbacks(mRunnable);
-            mTimerHandler = null;
             mRunnable = null;
         }
         mManager = null;
@@ -56,14 +63,25 @@ public class XHAdAutoRefresh {
 
     private void execute(){
         if(mTimerHandler != null){
-            if(mRunnable == null){
-                mRunnable = () -> {
-                    //更新广告数据
-                    autoRefreshSelfAD();
-                    execute();
-                };
-            }
+            initRunnable();
             mTimerHandler.postDelayed(mRunnable,intervalTime);
+        }
+    }
+
+    private void reexecute(){
+        if(mTimerHandler != null){
+            initRunnable();
+            mTimerHandler.post(mRunnable);
+        }
+    }
+
+    private void initRunnable() {
+        if(mRunnable == null){
+            mRunnable = () -> {
+                //更新广告数据
+                autoRefreshSelfAD();
+                execute();
+            };
         }
     }
 

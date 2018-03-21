@@ -48,6 +48,14 @@ public class MallOrderBaseActivity extends FragmentActivity{
 	}
 
 	@Override
+	protected void onRestart() {
+		super.onRestart();
+		if (mActMagager != null){
+			mActMagager.onRestart();
+		}
+	}
+
+	@Override
 	protected void onResume() {
 		super.onResume();
 		resumeTime = System.currentTimeMillis();
@@ -57,7 +65,9 @@ public class MallOrderBaseActivity extends FragmentActivity{
 			startActivity(i); 
 			return;
 		}
-		mActMagager.onResume(level);
+		if(mActMagager != null){
+			mActMagager.onResume(level);
+		}
 	}
 	
 	
