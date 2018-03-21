@@ -139,6 +139,7 @@
                 android:id="@+id/bottom_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
                 android:orientation="vertical"
                 android:paddingBottom="@dimen/dp_20"
                 android:paddingTop="@dimen/dp_20">

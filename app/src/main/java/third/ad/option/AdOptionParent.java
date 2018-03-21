@@ -213,6 +213,15 @@ public abstract class AdOptionParent implements ActivityMethodManager.IAutoRefre
             if (!isBack) { //向上加载时添加广告数据
                 cunrrentIndex = 0;
             }
+            //先移除广告
+            for(int i = 0;i<old_list.size();i++){
+                Map<String, String> dataMap = old_list.get(i);
+                if ("ad".equals(dataMap.get("adstyle"))) {
+                    old_list.remove(dataMap);
+                    i--;
+                }
+            }
+            //添加广告
             int showIndex = 0;
             for (int idIndex = 0, size = adArray.size(); cunrrentIndex < size; cunrrentIndex++, idIndex++) {
                 //获取当前要插入对角标位
@@ -232,14 +241,6 @@ public abstract class AdOptionParent implements ActivityMethodManager.IAutoRefre
                         if (!"ad".equals(adstyle)) {
                             if (!TextUtils.isEmpty(adMap.get("style"))){
                                 old_list.add(index, adMap);
-                            }
-                        }else{
-                            if (!TextUtils.isEmpty(adMap.get("style"))){
-                                if(!adMap.equals(old_list.get(index))){
-                                    old_list.set(index, adMap);
-                                }
-                            }else{
-                                old_list.remove(index);
                             }
                         }
                     }
@@ -290,10 +291,10 @@ public abstract class AdOptionParent implements ActivityMethodManager.IAutoRefre
                     } else {
                         ImgKey = IMG_KEY;
                     }
-                    Log.i("tzy", "ImgKey::**********************************" + ImgKey);
+//                    Log.i("tzy", "ImgKey::**********************************" + ImgKey);
                     if (adMap.containsKey(ImgKey) && !TextUtils.isEmpty(adMap.get(ImgKey))) {
                         adImg = adMap.get(ImgKey);
-                        Log.i("tzy", "ImgKey::****************2******************" + adImg);
+//                        Log.i("tzy", "ImgKey::****************2******************" + adImg);
                         adMap.put("img", adImg);
                     }
                     ArrayList<Map<String, String>> imgsMap = StringManager.getListMapByJson(adMap.get("imgs"));

@@ -21,6 +21,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -108,12 +109,7 @@ public class ListDish extends BaseActivity {
     private IObserver mIObserver;
 
     private void registerObserver() {
-        mIObserver = new IObserver() {
-            @Override
-            public void notify(String name, Object sender, Object data) {
-                requestFavoriteState();
-            }
-        };
+        mIObserver = (name, sender, data) -> requestFavoriteState();
         ObserverManager.getInstance().registerObserver(mIObserver, ObserverManager.NOTIFY_LOGIN);
     }
 
@@ -123,12 +119,12 @@ public class ListDish extends BaseActivity {
     private void initAdData() {
         String[] ids = AdPlayIdConfig.MAIN_HOME_WEEK_GOOD_LIST;
         adIds = new ArrayList<>();
-        for (String id : ids) adIds.add(id);
+        Collections.addAll(adIds, ids);
 
         String statisticKey = "jz_list";
         xhAllAdControl = new XHAllAdControl(adIds, new XHAllAdControl.XHBackIdsDataCallBack() {
             @Override
-            public void callBack(boolean isRefresh,Map<String, String> map) {
+            public void callBack(boolean isRefresh, Map<String, String> map) {
                 //处理广告数据
                 int size = adIds.size();
                 adData.clear();
@@ -152,12 +148,12 @@ public class ListDish extends BaseActivity {
                         adData.add(tempMap);
 
                     } else {
-                        adData.add(new HashMap<String, String>());
+                        adData.add(new HashMap<>());
                     }
                 }
-                if(isRefresh){
-                    arrayList = handlerAdData(isRefresh,arrayList);
-                    if(adapter != null){
+                if (isRefresh) {
+                    arrayList = handlerAdData(isRefresh, arrayList);
+                    if (adapter != null) {
                         adapter.notifyDataSetChanged();
                     }
                 }
@@ -427,7 +423,7 @@ public class ListDish extends BaseActivity {
                     }
                     if (!type.equals("recommend") && !type.equals("typeRecommend")) {
                         //插入广告。
-                        arrayList = handlerAdData(false,arrayList);
+                        arrayList = handlerAdData(false, arrayList);
                     }
                     adapter.notifyDataSetChanged();
                 }
@@ -513,9 +509,17 @@ public class ListDish extends BaseActivity {
      *
      * @return
      */
-    private ArrayList<Map<String, String>> handlerAdData(boolean isRefresh,ArrayList<Map<String, String>> listData) {
+    private ArrayList<Map<String, String>> handlerAdData(boolean isRefresh, ArrayList<Map<String, String>> listData) {
         if (adData == null || adData.isEmpty()) {
             return listData;
+        }
+        for (int i = 0; i < listData.size(); i++) {
+            Map<String, String> dataMap = listData.get(i);
+            if (dataMap.containsKey("adStyle")
+                    && !TextUtils.isEmpty(dataMap.get("adStyle"))) {
+                listData.remove(dataMap);
+                i--;
+            }
         }
         for (int i = 0; i < listData.size(); i++) {
             int lenght = AD_INSTERT_INDEX.length;
@@ -529,12 +533,6 @@ public class ListDish extends BaseActivity {
                         if (adData.get(j) != null && adData.get(j).size() > 0) {//数据
                             listData.add(i, adData.get(j));
                             Log.i("tzy", "handlerAdData: add");
-                        }
-                    }else if(isRefresh){
-                        //插入广告
-                        if (adData.get(j) != null && adData.get(j).size() > 0) {//数据
-                            listData.set(i, adData.get(j));
-                            Log.i("tzy", "handlerAdData: set");
                         }
                     }//不进行如何操作。
                 }

@@ -27,11 +27,12 @@ import static third.ad.control.AdControlNormalDish.tag_yu;
 
 /**
  * 美食圈数据控制
+ * <p>
+ * ----------无限加载使用最简单的方式，直接保存当前的数据和对象，并对广告对象进行分别打tag，并管理
  *
- *----------无限加载使用最简单的方式，直接保存当前的数据和对象，并对广告对象进行分别打tag，并管理
  * @author yujian
  */
-public class QuanAdvertControl implements ActivityMethodManager.IAutoRefresh{
+public class QuanAdvertControl implements ActivityMethodManager.IAutoRefresh {
     public static final String[] AD_IDS = new String[]{
             AdPlayIdConfig.SUBJECT_LIST_1,
             AdPlayIdConfig.SUBJECT_LIST_2,
@@ -42,15 +43,16 @@ public class QuanAdvertControl implements ActivityMethodManager.IAutoRefresh{
     private ArrayList<Map<String, String>> mAdList = new ArrayList<>();
     private ArrayList<Integer> ad_list = new ArrayList<Integer>();
     private DataCallBack callBack;
-    private Map<String,XHAllAdControl> mapAd= new HashMap<>();//存储广告集合
-    private int nowIndex=0;//当前使用对广告位置，
+    private Map<String, XHAllAdControl> mapAd = new HashMap<>();//存储广告集合
+    private int nowIndex = 0;//当前使用对广告位置，
     private Context context;
+
     public void setCallBack(DataCallBack callBacks) {
         this.callBack = callBacks;
     }
 
-    public QuanAdvertControl(Context context){
-        this.context= context;
+    public QuanAdvertControl(Context context) {
+        this.context = context;
     }
 
     /**
@@ -60,6 +62,7 @@ public class QuanAdvertControl implements ActivityMethodManager.IAutoRefresh{
      * @param cid       圈子id
      * @param mid       模块id
      * @param beforeNum 已经加入过的广告集合的数量
+     *
      * @return
      */
     public ArrayList<Map<String, String>> getAdvertAndQuanData(ArrayList<Map<String, String>> old_list, String cid, String mid, int beforeNum) {
@@ -68,7 +71,7 @@ public class QuanAdvertControl implements ActivityMethodManager.IAutoRefresh{
         if (!TextUtils.isEmpty(isGourmet) && Integer.parseInt(isGourmet) == 2) {
             return old_list;
         }
-        Log.i(tag_yu,"old_list.size::"+old_list.size()+"::cid:::"+cid+":mid::"+mid+"::beforeNum:"+beforeNum);
+        Log.i(tag_yu, "old_list.size::" + old_list.size() + "::cid:::" + cid + ":mid::" + mid + "::beforeNum:" + beforeNum);
         return getBdData(old_list, cid, mid, beforeNum);
     }
 
@@ -82,6 +85,7 @@ public class QuanAdvertControl implements ActivityMethodManager.IAutoRefresh{
             ad_list.add(4);
         }
         if (mAdList.size() > 0) {
+            //转移所有的广告数据到temp集合中
             ArrayList<Map<String, String>> temp = new ArrayList<>();
             for (int i = 0, size = mAdList.size(); i < size; i++) {
                 Map<String, String> map = mAdList.get(i);
@@ -91,27 +95,39 @@ public class QuanAdvertControl implements ActivityMethodManager.IAutoRefresh{
                     temp.add(map);
                 }
             }
+            for (int i = 0; i < old_list.size(); i++) {
+                Map<String, String> dataMap = old_list.get(i);
+                if ("2".equals(dataMap.get("isAd"))) {
+                    old_list.remove(i);
+                    i--;
+                }
+            }
             logtzy(tag_yu, "temp size:" + temp.size());
             if (temp.size() > 0) {
+                //遍历temp
                 for (int i = 0, size = temp.size(); i < size; i++) {
+                    //获取对应广告的position
                     int index = ad_list.get(i);
                     logtzy(tag_yu, "index:" + index);
+                    //如果i触发广告的边界了，按规律向后添加广告的position
                     if (i == ad_list.size() - 1) {
+                        //计算广告位
                         ad_list.add(ad_list.get(i) + 10 + ad_list.size() - 1);
                     }
                     if (index >= beforeNum && index <= old_list.size()) {
-                        nowIndex=i;
+                        nowIndex = i;
                         old_list.add(index, temp.get(i));
-                        if(nowIndex<6&&nowIndex==4){
-                            getAdData(context,"1");
-                        }else if(nowIndex%6==4){
-                            int num= nowIndex/6;
-                            getAdData(context,String.valueOf(num+1));
-                        }
+                    }
+                    if (nowIndex < 6 && nowIndex == 4) {
+                        getAdData(context, "1");
+                    } else if (nowIndex % 6 == 4) {
+                        int num = nowIndex / 6;
+                        getAdData(context, String.valueOf(num + 1));
                     }
                 }
             }
         }
+        Log.i("tzy", "getBdData: " + ad_list.toString());
         return old_list;
     }
 
@@ -127,7 +143,7 @@ public class QuanAdvertControl implements ActivityMethodManager.IAutoRefresh{
      */
     private void setAdList(final String index, final String indexInData, final String title,
                            final String desc, final String iconUrl, String imageUrl,
-                           final String adstyle,String adTag,String controlTag,String adType) {
+                           final String adstyle, String adTag, String controlTag, String adType) {
         String url = "";
         if (!TextUtils.isEmpty(imageUrl)) {
             url = imageUrl;
@@ -136,7 +152,8 @@ public class QuanAdvertControl implements ActivityMethodManager.IAutoRefresh{
         }
         final String imgUrl = url;
         Map<String, String> map = new HashMap<>();
-        map.put("controlTag",controlTag);
+        map.put("controlTag", controlTag);
+        map.put("isAd", "2");
         map.put("title", "");
         map.put("hideAdTag", adTag);
         map.put("adType", adType);
@@ -179,23 +196,42 @@ public class QuanAdvertControl implements ActivityMethodManager.IAutoRefresh{
             e.printStackTrace();
         }
 
+        //遍历找到相同位置
+        if (replaceCurrentData(index, controlTag, map)) {
+            return;
+        }
+
         mAdList.add(map);
 
+    }
+
+    private boolean replaceCurrentData(String index, String controlTag, Map<String, String> map) {
+        for (int i = 0, size = mAdList.size(); i < size; i++) {
+            Map<String, String> oriMap = mAdList.get(i);
+            if (TextUtils.equals(controlTag, oriMap.get("controlTag"))
+                    && TextUtils.equals(index, oriMap.get("promotionIndex"))) {
+                mAdList.set(i, map);
+                return true;
+            }
+        }
+        return false;
     }
 
 
     /**
      * 获取数据---第一次。
+     *
      * @param context
      */
     public void getAdData(final Context context) {
         mAdList.clear();
         mapAd.clear();
-        getAdData(context,"0");
+        getAdData(context, "0");
     }
 
     /**
      * 获取数据---第一次。
+     *
      * @param context
      */
     public void getAdData(final Context context, final String controlTag) {
@@ -205,24 +241,24 @@ public class QuanAdvertControl implements ActivityMethodManager.IAutoRefresh{
             adPosList.add(posStr);
         }
         XHAllAdControl xhAllAdControl = new XHAllAdControl(adPosList, new XHAllAdControl.XHBackIdsDataCallBack() {
+            final String currentControlTag = controlTag;
 
             @Override
-            public void callBack(boolean isRefresh,Map<String, String> map) {
-
+            public void callBack(boolean isRefresh, Map<String, String> map) {
                 if (map != null && map.size() > 0) {
                     for (int i = 0; i < AD_IDS.length; i++) {
                         String homeAdStr = map.get(AD_IDS[i]);
-                        ArrayList<Map<String, String>> homeList = StringManager.getListMapByJson(homeAdStr);
-                        if(homeList!=null&&homeList.size()>0) {
-                            Map<String, String> homeAdMap = homeList.get(0);
-                            if (homeAdMap != null && homeAdMap.size() > 0) {
-                                setAdList((i + 1) + "", homeAdMap.get("index"), homeAdMap.get("title"), homeAdMap.get("desc"),
-                                        homeAdMap.get("iconUrl"), homeAdMap.get("imgUrl"),
-                                        "ad", homeAdMap.get("adType"),controlTag,homeAdMap.get("type"));
-                            }
+                        Map<String, String> homeAdMap = StringManager.getFirstMap(homeAdStr);
+                        Log.i("tzy", "callBack: " + homeAdMap.toString());
+                        if (homeAdMap.isEmpty()) {
+                            setFakeAdList(i);
+                        } else {
+                            setAdList((i + 1) + "", homeAdMap.get("index"), homeAdMap.get("title"), homeAdMap.get("desc"),
+                                    homeAdMap.get("iconUrl"), homeAdMap.get("imgUrl"),
+                                    "ad", homeAdMap.get("adType"), currentControlTag, homeAdMap.get("type"));
                         }
                     }
-                    if(mAdList.size()>0){
+                    if (mAdList.size() > 0) {
                         SyntaxTools.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -231,20 +267,42 @@ public class QuanAdvertControl implements ActivityMethodManager.IAutoRefresh{
                         });
                     }
                 }
+                if (isRefresh) {
+                    autoRefreshNext(Integer.parseInt(currentControlTag));
+                }
             }
-        }, (Activity) context, "community_list",true);
+
+            private void setFakeAdList(int i) {
+                final String index = String.valueOf(i + 1);
+                Map<String, String> tempMap = new HashMap<>();
+                tempMap.put("controlTag", currentControlTag);
+                tempMap.put("promotionIndex", index);
+                tempMap.put("isAd", "2");
+                //遍历找到相同位置
+                if (!replaceCurrentData(index, currentControlTag, tempMap)) {
+                    mAdList.add(tempMap);
+                }
+            }
+        }, (Activity) context, "community_list", true);
         //需要判断百度图片大小
         xhAllAdControl.setJudgePicSize(true);
-        mapAd.put(controlTag,xhAllAdControl);
+        mapAd.put(controlTag, xhAllAdControl);
     }
+
     private void logtzy(String tag, String info) {
         Log.i(tag, info);
     }
 
     @Override
     public void autoRefreshSelfAD() {
-        for(Map.Entry<String,XHAllAdControl> entry:mapAd.entrySet()){
-            entry.getValue().autoRefreshSelfAD();
+        autoRefreshNext(-1);
+    }
+
+    private void autoRefreshNext(int index) {
+        index++;
+        XHAllAdControl control = mapAd.get(String.valueOf(index));
+        if (control != null) {
+            control.autoRefreshSelfAD();
         }
     }
 
@@ -254,43 +312,48 @@ public class QuanAdvertControl implements ActivityMethodManager.IAutoRefresh{
 
     /**
      * 广告的展示
+     *
      * @param controlTag
      * @param indexInData
      * @param view
      * @param promotionIndex
      */
-    public void onAdBind(String controlTag,int indexInData,View view,String promotionIndex){
-        if(!TextUtils.isEmpty(controlTag) && mapAd.get(controlTag) != null)
-            mapAd.get(controlTag).onAdBind(indexInData,view,promotionIndex);
+    public void onAdBind(String controlTag, int indexInData, View view, String promotionIndex) {
+        if (!TextUtils.isEmpty(controlTag) && mapAd.get(controlTag) != null)
+            mapAd.get(controlTag).onAdBind(indexInData, view, promotionIndex);
     }
 
     /**
      * 广告的点击
+     *
      * @param controlTag
      * @param view
      * @param indexInData
      * @param promotionIndex
      */
-    public void onAdClick(String controlTag,View view,int indexInData,String promotionIndex){
-        if(!TextUtils.isEmpty(controlTag) && mapAd.get(controlTag) != null)
-            mapAd.get(controlTag).onAdClick(view,indexInData,promotionIndex);
+    public void onAdClick(String controlTag, View view, int indexInData, String promotionIndex) {
+        if (!TextUtils.isEmpty(controlTag) && mapAd.get(controlTag) != null)
+            mapAd.get(controlTag).onAdClick(view, indexInData, promotionIndex);
     }
 
     /**
      * 获取xhallcontrol对象
+     *
      * @param controlTag
+     *
      * @return
      */
-    public XHAllAdControl getXhAllAdControl(String controlTag){
+    public XHAllAdControl getXhAllAdControl(String controlTag) {
         return mapAd.get(controlTag);
     }
 
     /**
      * 判断是否要刷新
+     *
      * @return
      */
-    public boolean isNeedRefresh(){
-        if(mapAd.size()>0){
+    public boolean isNeedRefresh() {
+        if (mapAd.size() > 0) {
             return mapAd.get("0").isNeedRefersh();
         }
         return false;
@@ -299,7 +362,7 @@ public class QuanAdvertControl implements ActivityMethodManager.IAutoRefresh{
     /**
      * 刷新
      */
-    public void refreshData(){
+    public void refreshData() {
         getAdData(context);
     }
 }

@@ -230,6 +230,7 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
                             && list != null
                             && !xhNativeArray.equals(list)
                             ) {
+                        count=0;
                         xhNativeArray.clear();
                         xhNativeArray.addAll(list);
                         handlerAdData(isRefresh);
@@ -355,7 +356,10 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
                 listAdContrls.get(i).setAdDataCallBack(new XHAdControlCallBack() {
                     @Override
                     public void onSuccess(String type, Map<String, String> map, int num) {
-                        if (count < listAdContrls.size() && listAdContrls.get(count) != null) {
+                        if (count < listAdContrls.size()
+                                && listAdContrls.get(count) != null
+                                && !TextUtils.equals(mapToJson(map).toString(),AdData.get(listIds.get(num)))) {
+
                             listAdContrls.get(count).resetDispaly();
                         }
                         if (map != null) {

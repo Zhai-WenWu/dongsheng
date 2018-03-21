@@ -310,10 +310,8 @@ public class CircleMainFragment extends Fragment {
                                     currentPlayPosition = mLinearLayoutManager.getPosition(itemView);
                                     Log.i("zhangyujian", "自动数据的位置:::" + ((NormalContentView) itemView).getPositionNow());
                                     setVideoLayout(itemView, ((NormalContentView) itemView).getPositionNow());
-//                                            mAdapter.setCurrentPlayPosition(currentPlayPosition - mListView.getHeaderViewsCount());
                                 } else {
                                     count++;
-//                                            ((NormalContentView)itemView).stopVideoView();
                                 }
                             }
                         }
@@ -335,17 +333,12 @@ public class CircleMainFragment extends Fragment {
             LoadOver = true;
         }
         quanAdvertControl = new QuanAdvertControl(mActivity);
-//        quanAdvertControl.getGdtData(mActivity);
-//        quanAdvertControl.getTencentApiAd(mActivity);
         quanAdvertControl.setCallBack(() -> {
-            if (isLoadAd) {
                 index_size = 0;
                 mListData = quanAdvertControl.getAdvertAndQuanData(mListData, mPlateData.getCid(), mPlateData.getMid(), index_size);
                 //Log.i("FRJ","广告数据回来刷新adapter:::集合大小："+mListData.size());
-//                mAdapter.notifyDataSetChanged();
                 safeNotifyItemRangeChanged();
                 index_size = mListData.size();
-            }
         });
         quanAdvertControl.getAdData(mActivity);
         mAdapter.setQuanAdvertControl(quanAdvertControl);
@@ -361,12 +354,9 @@ public class CircleMainFragment extends Fragment {
     }
 
     private void safeNotifyItemRangeChanged() {
-        new Handler().post(new Runnable() {
-            @Override
-            public void run() {
-                if(mAdapter != null){
-                    mAdapter.notifyDataSetChanged();
-                }
+        new Handler().post(() -> {
+            if(mAdapter != null){
+                mAdapter.notifyDataSetChanged();
             }
         });
     }
