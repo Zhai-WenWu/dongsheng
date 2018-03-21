@@ -273,7 +273,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
         //已经load
         LoadOver = true;
         if (refresh && mDataControler != null) {
-            mDataControler.isNeedRefresh(false);
+            mDataControler.isNeedRefresh(true);
         }
         if (mDataControler != null) {
 //            Log.i("tzy", "EntryptData::" + mDataControler.isNeedRefCurrData());
