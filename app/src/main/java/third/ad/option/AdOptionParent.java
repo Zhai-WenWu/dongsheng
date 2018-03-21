@@ -235,7 +235,9 @@ public abstract class AdOptionParent implements ActivityMethodManager.IAutoRefre
                             }
                         }else{
                             if (!TextUtils.isEmpty(adMap.get("style"))){
-                                old_list.set(index, adMap);
+                                if(!adMap.equals(old_list.get(index))){
+                                    old_list.set(index, adMap);
+                                }
                             }else{
                                 old_list.remove(index);
                             }
