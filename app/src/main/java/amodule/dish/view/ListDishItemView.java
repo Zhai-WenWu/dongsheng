@@ -209,9 +209,9 @@ public class ListDishItemView extends RelativeLayout {
         mIsAD = "1".equals(mData.get("adStyle"));
         mIconSearch.setVisibility(mIsAD ? View.GONE : View.VISIBLE);
         mLayerView.setVisibility(mIsAD ? View.VISIBLE : View.GONE);
-        mADTag.setVisibility(mIsAD ? View.VISIBLE : View.GONE);
+        mADTag.setVisibility(mIsAD && !"1".equals(mData.get("adType")) ? View.VISIBLE : View.GONE);
         if(adGDTIcon != null){
-            adGDTIcon.setVisibility(ADKEY_GDT.equals(mData.get("adType")) ? VISIBLE : GONE);
+            adGDTIcon.setVisibility(ADKEY_GDT.equals(mData.get("type")) ? VISIBLE : GONE);
         }
 
         if (mTitleTop.getVisibility() == View.VISIBLE || mIconSearch.getVisibility() == View.VISIBLE)

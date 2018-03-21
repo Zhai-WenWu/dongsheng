@@ -146,7 +146,8 @@ public class ListDish extends BaseActivity {
                         }
                         tempMap.put("img", tempMap.get("imgUrl"));
                         tempMap.put("adPosition", tempMap.get("index"));
-                        tempMap.put("adType", tempMap.get("type"));
+                        tempMap.put("type", tempMap.get("type"));
+                        tempMap.put("adType", tempMap.get("adType"));
 
                         adData.add(tempMap);
 

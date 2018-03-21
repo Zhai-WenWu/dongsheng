@@ -85,12 +85,6 @@ public class DishAdDataControl {
             int v = random.nextInt(4000) + 6000;
             dataMap.put("allClick", v + "浏览");
             dataMap.put("isAd","ico" + R.drawable.i_ad_hint);
-//            if("1".equals(map.get("adType"))){
-//                dataMap.put("favorites", "香哈");
-//            }else{
-//                dataMap.put("favorites", "广告");
-//            }
-
             adDataList.add(dataMap);
         }
         return;
