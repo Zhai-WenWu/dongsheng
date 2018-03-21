@@ -59,7 +59,7 @@ public class BannerAd {
     private void setActivityData(Map<String, String> map) {
         Log.i("tzy", "setActivityData: " + map.toString());
         if (mAdImage == null
-                || ADKEY_BANNER.equals(map.get("type"))) {
+                || !ADKEY_BANNER.equals(map.get("type"))) {
             return;
         }
 

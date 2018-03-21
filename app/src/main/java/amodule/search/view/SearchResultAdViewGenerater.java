@@ -2,6 +2,7 @@ package amodule.search.view;
 
 import android.app.Activity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -134,6 +135,7 @@ public class SearchResultAdViewGenerater {
      * @param dataMap
      */
     private static void setAdView(View adView, Map<String, String> dataMap) {
+        Log.i("tzy", "setAdView: "+dataMap.toString());
         String title = dataMap.get("title");
         String desc = dataMap.get("desc");
         String iconUrl = dataMap.get("iconUrl");
@@ -145,6 +147,10 @@ public class SearchResultAdViewGenerater {
             TextView tv_ad_decrip = (TextView) adView.findViewById(R.id.tv_ad_decrip);
             TextView tv_ad_observed = (TextView) adView.findViewById(R.id.tv_ad_observed);
             ImageView icon_gdt = (ImageView) adView.findViewById(ID_AD_ICON_GDT);
+            View view = adView.findViewById(R.id.tv_ad_tag);
+            if(view != null){
+                view.setVisibility("1".equals(dataMap.get("adType"))?View.GONE:View.VISIBLE);
+            }
             if(icon_gdt != null){
                 icon_gdt.setVisibility(ADKEY_GDT.equals(dataMap.get("type"))?View.VISIBLE:View.GONE);
             }
