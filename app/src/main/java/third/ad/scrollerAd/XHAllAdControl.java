@@ -389,7 +389,8 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
 
                     @Override
                     public NativeADDataRef onGdtNativeData() {
-                        if (gdtNativeArray != null && gdtNativeArray.size() > 0 && gdtNativeArray.size() > gdt_index) {
+                        if (gdtNativeArray != null && gdtNativeArray.size() > 0 && gdtNativeArray
+                                .size() > gdt_index + 1) {
                             NativeADDataRef temp = gdtNativeArray.get(++gdt_index);
                             return temp;
                         }
@@ -398,7 +399,8 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
 
                     @Override
                     public NativeResponse onBaiduNativeData() {
-                        if (baiduNativeArray != null && baiduNativeArray.size() > 0 && baiduNativeArray.size() > baidu_index) {
+                        if (baiduNativeArray != null && baiduNativeArray.size() > 0 &&
+                                baiduNativeArray.size() > baidu_index + 1) {
                             NativeResponse temp = baiduNativeArray.get(++baidu_index);
                             return temp;
                         }
