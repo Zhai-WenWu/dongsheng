@@ -119,7 +119,7 @@ public class DishAdDataViewNew extends ItemBaseView {
         //曝光数据
         exposureAdData();
         //广告小标
-        setAdHintClick(R.id.ad_big_pic_flag);
+        setAdHintClick(R.id.ad_big_pic_flag, !"1".equals(map.get("adType")));
         //添加到parent
         addViewToPraent(R.id.ad_big_pic_layout, parentView);
 
@@ -189,9 +189,11 @@ public class DishAdDataViewNew extends ItemBaseView {
      *
      * @param id 广告小标id
      */
-    private void setAdHintClick(int id) {
+    private void setAdHintClick(int id, boolean show) {
         View view = findViewById(id);
-        view.setVisibility(View.VISIBLE);
+        view.setVisibility(show ? View.VISIBLE : View.GONE);
+        if (!show)
+            return;
         view.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
