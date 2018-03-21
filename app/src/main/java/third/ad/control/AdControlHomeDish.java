@@ -327,19 +327,27 @@ public class AdControlHomeDish extends AdControlParent implements ActivityMethod
 
     @Override
     public void autoRefreshSelfAD() {
-        Stream.of(downAdControlMap)
-                .forEach(value -> {
-                    AdOptionHomeDish optionHomeDish = value.getValue();
-                    optionHomeDish.setRefreshCallback(this::autoRefreshCallback);
-                    optionHomeDish.autoRefreshSelfAD();
-                });
+        refreshSelfAd(0,downAdControlMap);
+    }
 
-        Stream.of(adControlMap)
-                .forEach(value -> {
-                    AdOptionHomeDish optionHomeDish = value.getValue();
-                    optionHomeDish.setRefreshCallback(this::autoRefreshCallback);
-                    optionHomeDish.autoRefreshSelfAD();
-                });
+    private synchronized void refreshSelfAd(final int index,Map<Integer,AdOptionHomeDish> adControlMap) {
+        if(adControlMap != null
+                && !adControlMap.isEmpty()
+                && index < adControlMap.size()){
+            AdOptionHomeDish adOptionHomeDish = adControlMap.get(index);
+            adOptionHomeDish.setRefreshCallback(new ActivityMethodManager.IAutoRefreshCallback() {
+                @Override
+                public void refreshSelfAD() {
+                    //刷新
+                    autoRefreshCallback();
+                    //执行下一个刷新
+                    int nextIndex = index;
+                    nextIndex++;
+                    refreshSelfAd(nextIndex,adControlMap);
+                }
+            });
+            adOptionHomeDish.autoRefreshSelfAD();
+        }
     }
 
 }
