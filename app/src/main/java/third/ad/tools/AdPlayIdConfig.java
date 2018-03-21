@@ -45,7 +45,7 @@ public class AdPlayIdConfig {
             "tt_liebiao5", "tt_liebiao6", "tt_liebiao7", "tt_liebiao8", "tt_liebiao9", "tt_liebiao10"};
 
     /** 首页推荐列表 */
-    public static final String[] MAIN_HOME_RECOMENT_LIST_0 = new String[]{"sy_jiazuo1", "sy_jiazuo2"};
+//    public static final String[] MAIN_HOME_RECOMENT_LIST_0 = new String[]{"sy_jiazuo1", "sy_jiazuo2"};
     public static final String[] MAIN_HOME_RECOMENT_LIST = new String[]{"sy_jiazuo1", "sy_jiazuo2", "sy_jiazuo3", "sy_jiazuo4",
             "sy_jiazuo5", "sy_jiazuo6", "sy_jiazuo7", "sy_jiazuo8", "sy_jiazuo9", "sy_jiazuo10"};
 
