@@ -41,7 +41,7 @@ public class QuanAdvertControl implements ActivityMethodManager.IAutoRefresh {
             AdPlayIdConfig.SUBJECT_LIST_5,
             AdPlayIdConfig.SUBJECT_LIST_6};
     private ArrayList<Map<String, String>> mAdList = new ArrayList<>();
-    private ArrayList<Integer> ad_list = new ArrayList<Integer>();
+    private ArrayList<Integer> ad_list = new ArrayList<>();
     private DataCallBack callBack;
     private Map<String, XHAllAdControl> mapAd = new HashMap<>();//存储广告集合
     private int nowIndex = 0;//当前使用对广告位置，
@@ -95,6 +95,7 @@ public class QuanAdvertControl implements ActivityMethodManager.IAutoRefresh {
                     temp.add(map);
                 }
             }
+
             for (int i = 0; i < old_list.size(); i++) {
                 Map<String, String> dataMap = old_list.get(i);
                 if ("2".equals(dataMap.get("isAd"))) {
@@ -108,7 +109,7 @@ public class QuanAdvertControl implements ActivityMethodManager.IAutoRefresh {
                 for (int i = 0, size = temp.size(); i < size; i++) {
                     //获取对应广告的position
                     int index = ad_list.get(i);
-                    logtzy(tag_yu, "index:" + index);
+                    logtzy("tzy", "index:" + index);
                     //如果i触发广告的边界了，按规律向后添加广告的position
                     if (i == ad_list.size() - 1) {
                         //计算广告位
@@ -194,12 +195,13 @@ public class QuanAdvertControl implements ActivityMethodManager.IAutoRefresh {
             map.put("customer", customerArray.toString());
         } catch (JSONException e) {
             e.printStackTrace();
+            Log.i("tzy", "setAdList: " + e.getMessage());
         }
 
         //遍历找到相同位置
-        if (replaceCurrentData(index, controlTag, map)) {
-            return;
-        }
+//        if (replaceCurrentData(index, controlTag, map)) {
+//            return;
+//        }
 
         mAdList.add(map);
 
@@ -279,9 +281,9 @@ public class QuanAdvertControl implements ActivityMethodManager.IAutoRefresh {
                 tempMap.put("promotionIndex", index);
                 tempMap.put("isAd", "2");
                 //遍历找到相同位置
-                if (!replaceCurrentData(index, currentControlTag, tempMap)) {
+//                if (!replaceCurrentData(index, currentControlTag, tempMap)) {
                     mAdList.add(tempMap);
-                }
+//                }
             }
         }, (Activity) context, "community_list", true);
         //需要判断百度图片大小
@@ -295,6 +297,7 @@ public class QuanAdvertControl implements ActivityMethodManager.IAutoRefresh {
 
     @Override
     public void autoRefreshSelfAD() {
+        nowIndex = 0;
         autoRefreshNext(-1);
     }
 

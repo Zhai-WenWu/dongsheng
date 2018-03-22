@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import acore.logic.AppCommon;
@@ -55,6 +54,7 @@ public class HomeBuoy {
     private OnClickCallback mClickCallback;
     private Map<String, String> configMap = new HashMap<>();
     private XHSelfNativeData mNativeData;
+    private boolean isAdded = false;
 
     public HomeBuoy(Activity act) {
         this.mAct = act;
@@ -77,19 +77,19 @@ public class HomeBuoy {
                         && configMap.isEmpty()
                 ).forEach(value -> configMap.putAll(value));
         String adid = analysData(configMap.get("data"));
-        if(TextUtils.isEmpty(adid)){
+        if (TextUtils.isEmpty(adid)) {
             return;
         }
         XHSelfAdTools.getInstance().loadNativeData(Collections.singletonList(adid), new XHSelfAdTools.XHSelfCallback() {
             @Override
             public void onNativeLoad(ArrayList<XHSelfNativeData> list) {
-                if(list == null || list.isEmpty()){
+                if (list == null || list.isEmpty()) {
                     return;
                 }
                 mNativeData = list.get(0);
-                if(mNativeData != null){
-                    if("1".equals(mNativeData.getAdType())
-                            || LoginManager.isShowAd()){
+                if (mNativeData != null) {
+                    if ("1".equals(mNativeData.getAdType())
+                            || LoginManager.isShowAd()) {
                         //初始化浮标
                         initBuoy();
                         //初始化动画
@@ -144,7 +144,10 @@ public class HomeBuoy {
         if (rootLayout == null) {
             return;
         }
-        rootLayout.addView(imageButton, params);
+        if(!isAdded){
+            isAdded = true;
+            rootLayout.addView(imageButton, params);
+        }
         hide();//初始化完成后hide浮标
     }
 
@@ -186,12 +189,12 @@ public class HomeBuoy {
         }
         imageButton.setOnClickListener(v -> {
             if (isMove) {
-                if(mNativeData != null){
-                    if("1".equals(mNativeData.getDbType())){
-                        showSureDownload(mNativeData,AdPlayIdConfig.HOME_FLOAT,"xh",mNativeData != null ? mNativeData.getId() : "");
-                    }else{
+                if (mNativeData != null) {
+                    if ("1".equals(mNativeData.getDbType())) {
+                        showSureDownload(mNativeData, AdPlayIdConfig.HOME_FLOAT, mNativeData.getPositionId(), "xh", mNativeData.getId());
+                    } else {
                         AppCommon.openUrl(mAct, floatUrl, true);
-                        AdConfigTools.getInstance().postStatistics("click", AdPlayIdConfig.HOME_FLOAT, "xh", mNativeData != null ? mNativeData.getId() : "");
+                        AdConfigTools.getInstance().postStatistics("click", AdPlayIdConfig.HOME_FLOAT, mNativeData.getPositionId(), "xh", mNativeData.getId());
                     }
                 }
                 if (mClickCallback != null) {
@@ -218,7 +221,7 @@ public class HomeBuoy {
         imageButton.setVisibility(View.VISIBLE);
 
         Glide.with(mAct).load(imgUrl).into(imageButton);
-        AdConfigTools.getInstance().postStatistics("show", AdPlayIdConfig.HOME_FLOAT, "xh", mNativeData != null ? mNativeData.getId() : "");
+        AdConfigTools.getInstance().postStatistics("show", AdPlayIdConfig.HOME_FLOAT, mNativeData.getPositionId(),"xh", mNativeData.getId());
     }
 
     public void executeOpenAnim() {
@@ -251,6 +254,10 @@ public class HomeBuoy {
         if (imageButton != null) {
             imageButton.setVisibility(View.GONE);
         }
+    }
+
+    public void resetData(){
+        handlerData();
     }
 
     public void setMove(boolean isMove) {

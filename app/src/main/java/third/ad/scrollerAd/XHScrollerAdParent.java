@@ -132,7 +132,7 @@ public abstract class XHScrollerAdParent {
 
 
     protected void postTongji(String event) {
-        AdConfigTools.getInstance().postStatistics(event,mAdPlayId,key,adid);
+        AdConfigTools.getInstance().postStatistics(event,mAdPlayId,adid,key,"");
     }
 
     public String getRealKey(String origalKey){

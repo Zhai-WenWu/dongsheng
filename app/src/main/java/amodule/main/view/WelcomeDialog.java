@@ -329,10 +329,10 @@ public class WelcomeDialog extends Dialog {
                                         @Override
                                         public void run() {
                                             if ("1".equals(nativeData.getDbType())) {
-                                                showSureDownload(nativeData, AdPlayIdConfig.HOME_FLOAT, "xh", nativeData.getId());
+                                                showSureDownload(nativeData, AdPlayIdConfig.HOME_FLOAT, nativeData.getPositionId(),"xh", nativeData.getId());
                                             } else {
                                                 AppCommon.openUrl(activity, loadingUrl, true);
-                                                AdConfigTools.getInstance().postStatistics("click", AdPlayIdConfig.HOME_FLOAT, "xh", nativeData.getId());
+                                                AdConfigTools.getInstance().postStatistics("click", AdPlayIdConfig.HOME_FLOAT, nativeData.getPositionId(),"xh", nativeData.getId());
                                             }
                                         }
                                     });

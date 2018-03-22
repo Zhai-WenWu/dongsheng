@@ -45,10 +45,10 @@ public class XHScrollerSelf extends XHScrollerAdParent {
 
     @Override
     public void onThirdClick(String oneLevel, String twoLevel) {
-        if(null != mNativeData){
-            if("1".equals(mNativeData.getDbType())){
-                showSureDownload(mNativeData,mAdPlayId,key,adid);
-            }else{
+        if (null != mNativeData) {
+            if ("1".equals(mNativeData.getDbType())) {
+                showSureDownload(mNativeData, mAdPlayId, adid, key, mNativeData.getId());
+            } else {
                 onAdClick(oneLevel, twoLevel, key);
                 handlerAdClick();
             }
@@ -56,22 +56,28 @@ public class XHScrollerSelf extends XHScrollerAdParent {
         Log.i("zhangyujian", "广告点击:::" + XHScrollerAdParent.ADKEY_BANNER + ":::位置::" + twoLevel);
     }
 
+    @Override
+    protected void postTongji(String event) {
+        if (mNativeData != null && !TextUtils.isEmpty(mNativeData.getId())) {
+            AdConfigTools.getInstance().postStatistics(event, mAdPlayId, adid, key, mNativeData.getId());
+        }
+    }
+
     /**
-     *
      * @param nativeData
      * @param adPlayId
      * @param key
      * @param adid
      */
-    public static void showSureDownload(XHSelfNativeData nativeData,String adPlayId,String key,String adid) {
+    public static void showSureDownload(XHSelfNativeData nativeData, String adPlayId, String key, String adid, String id) {
         String message = ToolsDevice.getNetWorkSimpleType(XHActivityManager.getInstance().getCurrentActivity());
         Activity activity = XHActivityManager.getInstance().getCurrentActivity();
-        if(activity != null && (!activity.isFinishing() || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && !activity.isDestroyed()))){
+        if (activity != null && (!activity.isFinishing() || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && !activity.isDestroyed()))) {
             AlertDialog.Builder builder = new AlertDialog.Builder(XHActivityManager.getInstance().getCurrentActivity());
             builder.setTitle("温馨提示")
                     .setMessage("当前为" + message + "网络，开始下载应用？")
                     .setPositiveButton("确认", (dialog, which) -> {
-                        AdConfigTools.getInstance().postStatistics("download",adPlayId,key,adid);
+                        AdConfigTools.getInstance().postStatistics("download", adPlayId, adid, key, id);
                         if (nativeData != null) {
                             AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), nativeData.getUrl(), true);
                         }
@@ -114,7 +120,7 @@ public class XHScrollerSelf extends XHScrollerAdParent {
 
     public void setNativeData(XHSelfNativeData nativeData) {
         mNativeData = nativeData;
-        if(mNativeData != null && "1".equals(mNativeData.getDbType())){
+        if (mNativeData != null && "1".equals(mNativeData.getDbType())) {
             String appname = TextUtils.isEmpty(mNativeData.getBrandName()) ? Tools.getMD5(mNativeData.getUrl()) : mNativeData.getBrandName();
             mNativeData.setUrl("download.app?url=" + Uri.encode(mNativeData.getUrl()) + "&appname=" + appname);
         }

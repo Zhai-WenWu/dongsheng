@@ -187,7 +187,7 @@ public class WelcomeAdTools {
                     public void onAdPresent() {
                         Log.i("zhangyujian", "GDT：：onAdPresent");
                         mGdtCallback.onAdPresent();
-                        AdConfigTools.getInstance().postStatistics("show", AdPlayIdConfig.WELCOME, ADKEY_GDT, adid);
+                        AdConfigTools.getInstance().postStatistics("show", AdPlayIdConfig.WELCOME, adid,ADKEY_GDT,"");
                     }
 
                     @Override
@@ -205,7 +205,7 @@ public class WelcomeAdTools {
 
                     @Override
                     public void onAdClick() {
-                        AdConfigTools.getInstance().postStatistics("click", AdPlayIdConfig.WELCOME, ADKEY_GDT, adid);
+                        AdConfigTools.getInstance().postStatistics("click", AdPlayIdConfig.WELCOME, adid,ADKEY_GDT, "");
                         mGdtCallback.onAdClick();
                     }
 
@@ -272,7 +272,7 @@ public class WelcomeAdTools {
                             @Override
                             public void onAdPresent() {
                                 Log.i("zhangyujian", "displayBaiduAD::onAdPresent");
-                                AdConfigTools.getInstance().postStatistics("show", AdPlayIdConfig.WELCOME, ADKEY_BAIDU, adid);
+                                AdConfigTools.getInstance().postStatistics("show", AdPlayIdConfig.WELCOME, adid,ADKEY_BAIDU,"");
                                 mBaiduCallback.onAdPresent();
                             }
 
@@ -291,7 +291,7 @@ public class WelcomeAdTools {
 
                             @Override
                             public void onAdClick() {
-                                AdConfigTools.getInstance().postStatistics("click", AdPlayIdConfig.WELCOME, ADKEY_BAIDU, adid);
+                                AdConfigTools.getInstance().postStatistics("click", AdPlayIdConfig.WELCOME, adid,ADKEY_BAIDU,"");
                                 mBaiduCallback.onAdClick();
                             }
                         }));

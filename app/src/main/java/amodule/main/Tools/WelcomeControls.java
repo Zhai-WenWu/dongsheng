@@ -268,10 +268,10 @@ public class WelcomeControls {
                                 XHClick.track(activity, "点击启动页广告");
                                 XHClick.mapStat(activity, "ad_click_index", "开屏", "xh");
                                 if ("1".equals(nativeData.getDbType())) {
-                                    XHScrollerSelf.showSureDownload(nativeData, WELCOME, "xh", nativeData.getId());
+                                    XHScrollerSelf.showSureDownload(nativeData, WELCOME, nativeData.getPositionId(),"xh", nativeData.getId());
                                 } else {
                                     AppCommon.openUrl(activity, loadingUrl, true);
-                                    AdConfigTools.getInstance().postStatistics("click", AdPlayIdConfig.HOME_FLOAT, "xh", nativeData != null ? nativeData.getId() : "");
+                                    AdConfigTools.getInstance().postStatistics("click", AdPlayIdConfig.HOME_FLOAT, nativeData.getPositionId(),"xh", nativeData.getId());
                                 }
                             }
                         });
