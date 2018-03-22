@@ -50,6 +50,7 @@ public class SpecialOrder {
                 return true;
             case SET_AD_REFRESH_INTERVAL_TIME:
                 XHAdAutoRefresh.intervalTime = 5 * 3 * 1000;
+                Tools.showToast(context, "自有广告刷新间隔为15s\n重启App后重置");
                 return true;
             default:
                 return order.startsWith(ORDER_PREFIX);
