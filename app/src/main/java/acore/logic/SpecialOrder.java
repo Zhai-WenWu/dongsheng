@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import acore.tools.FileManager;
 import acore.tools.Tools;
 import amodule.dish.activity.MenuDish;
+import third.ad.XHAdAutoRefresh;
 
 /**
  * Description : 特殊指令处理类
@@ -20,29 +21,35 @@ public class SpecialOrder {
     private static final String ORDER_PREFIX = "//";
     private static final String GrowingIOOrder = "//growingioopen";
     private static final String START_MENU = "//startmenu";
+    private static final String SET_AD_REFRESH_INTERVAL_TIME = "//setadrefreshtime";
 
-    public static SpecialOrder of(){
+    public static SpecialOrder of() {
         return new SpecialOrder();
     }
 
     /**
      * 执行指令
+     *
      * @param order 指令
+     *
      * @return 是否为有效指令
      */
-    public boolean handlerOrder(Context context, String order){
-        if (null == context || TextUtils.isEmpty(order)){
+    public boolean handlerOrder(Context context, String order) {
+        if (null == context || TextUtils.isEmpty(order)) {
             return false;
         }
-        switch(order){
+        switch (order) {
             case GrowingIOOrder:
                 String isInputOrder = FileManager.loadShared(context, FileManager.file_appData, FileManager.xmlKey_growingioopen).toString();
                 boolean isOpen = "true".equals(isInputOrder);
-                FileManager.saveShared(context, FileManager.file_appData, FileManager.xmlKey_growingioopen,  isOpen ? "false" : "true");
-                Tools.showToast(context,isOpen?"GrowingIO随即模式":"GrowingIO强制开启模式");
+                FileManager.saveShared(context, FileManager.file_appData, FileManager.xmlKey_growingioopen, isOpen ? "false" : "true");
+                Tools.showToast(context, isOpen ? "GrowingIO随即模式" : "GrowingIO强制开启模式");
                 return true;
             case START_MENU:
                 context.startActivity(new Intent(context, MenuDish.class));
+                return true;
+            case SET_AD_REFRESH_INTERVAL_TIME:
+                XHAdAutoRefresh.intervalTime = 5 * 3 * 1000;
                 return true;
             default:
                 return order.startsWith(ORDER_PREFIX);
