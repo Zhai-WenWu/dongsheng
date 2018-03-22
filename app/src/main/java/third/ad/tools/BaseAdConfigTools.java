@@ -139,9 +139,13 @@ public class BaseAdConfigTools {
         return jsonObject;
     }
 
+    /**
+     * 设置间隔时间
+     * @param intervalTime 单位是s
+     */
     public void setIntervalTime(long intervalTime) {
         if (intervalTime > 0)
-            mIntervalTime = intervalTime;
+            mIntervalTime = intervalTime * 1000;
     }
 
     public void setCacheSize(int cacheSize) {
