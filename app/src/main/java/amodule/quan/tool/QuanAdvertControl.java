@@ -113,7 +113,6 @@ public class QuanAdvertControl implements ActivityMethodManager.IAutoRefresh {
                 for (int i = 0, size = temp.size(); i < size; i++) {
                     //获取对应广告的position
                     int index = ad_list.get(i);
-                    logtzy("tzy", "index:" + index);
                     //如果i触发广告的边界了，按规律向后添加广告的position
                     if (i == ad_list.size() - 1) {
                         //计算广告位
@@ -132,7 +131,6 @@ public class QuanAdvertControl implements ActivityMethodManager.IAutoRefresh {
                 }
             }
         }
-        Log.i("tzy", "getBdData: " + ad_list.toString());
         return old_list;
     }
 
@@ -239,7 +237,6 @@ public class QuanAdvertControl implements ActivityMethodManager.IAutoRefresh {
                     for (int i = 0; i < AD_IDS.length; i++) {
                         String homeAdStr = map.get(AD_IDS[i]);
                         Map<String, String> homeAdMap = StringManager.getFirstMap(homeAdStr);
-                        Log.i("tzy", "callBack: " + homeAdMap.toString());
                         if (homeAdMap.isEmpty()) {
                             setFakeAdList(i);
                         } else {
