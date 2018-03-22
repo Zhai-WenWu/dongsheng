@@ -160,9 +160,7 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
                                 final String resetValue = dataMap.get("reset");
                                 if (compelClearData || (refresh && "2".equals(resetValue))) {
                                     mData.clear();
-                                    if(mNotifyDataSetChangedCallback != null){
-                                        mNotifyDataSetChangedCallback.notifyDataSetChanged();
-                                    }
+                                    safeNotifySetChanged();
                                     Log.i("zyj", "刷新数据：清集合");
                                     isNeedRefresh(true);
                                     //强制刷新，重置数据
