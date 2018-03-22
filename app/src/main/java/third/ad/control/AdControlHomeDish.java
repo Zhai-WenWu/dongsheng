@@ -186,7 +186,7 @@ public class AdControlHomeDish extends AdControlParent implements ActivityMethod
                 }
                 if (currentControlTag < adControlMap.size()) {
                     adOptionHomeDish = adControlMap.get(currentControlTag);
-                    if (!adOptionHomeDish.getIsHasNewData()) {
+                    if (adOptionHomeDish != null && !adOptionHomeDish.getIsHasNewData()) {
                         currentControlTag++;
                         Log.i(tag_yu, "up这个控制类没有了数据，切换下一个currentControlTag :" + currentControlTag);
                         adOptionHomeDish = getCurrentControl(isBack);
@@ -201,7 +201,7 @@ public class AdControlHomeDish extends AdControlParent implements ActivityMethod
                 }
                 if(downCurrentControlTag<downAdControlMap.size()){
                     adOptionHomeDish = downAdControlMap.get(downCurrentControlTag);
-                    if (!adOptionHomeDish.getIsHasNewData()) {
+                    if (adOptionHomeDish != null && !adOptionHomeDish.getIsHasNewData()) {
                         downCurrentControlTag++;
                         Log.i(tag_yu, "down *******************************这个控制类没有了数据，切换下一个currentControlTag :" + downCurrentControlTag);
                         adOptionHomeDish = getCurrentControl(isBack);
@@ -336,18 +336,20 @@ public class AdControlHomeDish extends AdControlParent implements ActivityMethod
                 && !adControlMap.isEmpty()
                 && index < adControlMap.size()){
             AdOptionHomeDish adOptionHomeDish = adControlMap.get(index);
-            adOptionHomeDish.setRefreshCallback(new ActivityMethodManager.IAutoRefreshCallback() {
-                @Override
-                public void refreshSelfAD() {
-                    //刷新
-                    autoRefreshCallback();
-                    //执行下一个刷新
-                    int nextIndex = index;
-                    nextIndex++;
-                    refreshSelfAd(nextIndex,adControlMap);
-                }
-            });
-            adOptionHomeDish.autoRefreshSelfAD();
+            if(adOptionHomeDish != null){
+                adOptionHomeDish.setRefreshCallback(new ActivityMethodManager.IAutoRefreshCallback() {
+                    @Override
+                    public void refreshSelfAD() {
+                        //刷新
+                        autoRefreshCallback();
+                        //执行下一个刷新
+                        int nextIndex = index;
+                        nextIndex++;
+                        refreshSelfAd(nextIndex,adControlMap);
+                    }
+                });
+                adOptionHomeDish.autoRefreshSelfAD();
+            }
         }
     }
 

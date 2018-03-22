@@ -160,6 +160,9 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
                                 final String resetValue = dataMap.get("reset");
                                 if (compelClearData || (refresh && "2".equals(resetValue))) {
                                     mData.clear();
+                                    if(mNotifyDataSetChangedCallback != null){
+                                        mNotifyDataSetChangedCallback.notifyDataSetChanged();
+                                    }
                                     Log.i("zyj", "刷新数据：清集合");
                                     isNeedRefresh(true);
                                     //强制刷新，重置数据
@@ -226,10 +229,8 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
     }
 
     private void safeNotifySetChanged() {
-        new Handler(Looper.getMainLooper()).post(() -> {
             if (mNotifyDataSetChangedCallback != null)
                 mNotifyDataSetChangedCallback.notifyDataSetChanged();
-        });
     }
 
     /**
@@ -261,7 +262,7 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
             ArrayList<Map<String, String>> listTemp = new ArrayList<>();
             Stream.of(mData)
                     .filter(map -> map.containsKey("adstyle") && "ad".equals(map.get("adstyle")))
-                    .forEach(map -> listTemp.add(map));
+                    .forEach(listTemp::add);
             Log.i(tag_yu, "删除广告");
             if (listTemp.size() > 0) {
                 mData.removeAll(listTemp);
@@ -282,7 +283,8 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
         if (mData == null)
             return;
         mData.clear();
-        safeNotifySetChanged();
+        if (mNotifyDataSetChangedCallback != null)
+            mNotifyDataSetChangedCallback.notifyDataSetChanged();
     }
 
     //刷新广告index
@@ -300,6 +302,10 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
 
     public ArrayList<Map<String, String>> getData() {
         return mData;
+    }
+
+    public int getDataSize(){
+        return mData != null ? mData.size() : 0;
     }
 
     public void setData(ArrayList<Map<String, String>> data) {

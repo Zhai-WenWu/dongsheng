@@ -93,6 +93,7 @@ public class HomeViewControler implements ISetAdController {
         mRefreshLayout.disableWhenHorizontalMove(true);
         mRefreshLayout.setLoadingMinTime(300);
         mRvListView = (RvListView) mActivity.findViewById(R.id.rvListview);
+        mRvListView.closeDefaultAnimator();
         mRvListView.addHeaderView(mHeaderView);
         mRvListView.addHeaderView(mHomeFeedHeaderControler.getLayout());
         mRvListView.setOnItemClickListener((view, holder, position) -> {

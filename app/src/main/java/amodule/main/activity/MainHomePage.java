@@ -98,6 +98,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
     private void initialize() {
         //初始化 UI 控制
         mViewContrloer.onCreate();
+        mViewContrloer.getRvListView().setOnTouchListener((v, event) -> isRefreshingFeed);
         //初始化数据控制
         mDataControler = new HomeDataControler(this);
         mDataControler.setInsertADCallback((listDatas, isBack) -> {
@@ -113,7 +114,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
             if (mHomeAdapter != null
                     && mViewContrloer.getRvListView() != null
                     && !mViewContrloer.getRvListView().isComputingLayout())
-                mHomeAdapter.notifyDataSetChanged();
+                mHomeAdapter.notifyItemRangeChanged(0,mDataControler.getDataSize());
         });
         mDataControler.setEntryptDataCallback(this::EntryptData);
         //初始化adapter
@@ -283,7 +284,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
                 mDataControler.setBackUrl("");
                 mDataControler.clearData();
                 if (mHomeAdapter != null)
-                    mHomeAdapter.notifyDataSetChanged();
+                    mHomeAdapter.notifyItemRangeChanged(0,mDataControler.getDataSize());
             }
         }
 
