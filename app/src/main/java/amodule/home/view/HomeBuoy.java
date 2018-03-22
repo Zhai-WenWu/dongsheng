@@ -102,7 +102,11 @@ public class HomeBuoy {
                         setBuoyImage(mNativeData.getLittleImage());
                         //显示
                         setFloatMenuData();
+                    }else{
+                        hide();
                     }
+                }else{
+                    hide();
                 }
             }
 
