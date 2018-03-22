@@ -149,20 +149,8 @@ public class XHSelfNativeData {
 
         XHSelfNativeData that = (XHSelfNativeData) o;
 
-        if (showNum != that.showNum) return false;
         if (id != null ? !id.equals(that.id) : that.id != null) return false;
-        if (positionId != null ? !positionId.equals(that.positionId) : that.positionId != null)
-            return false;
-        if (title != null ? !title.equals(that.title) : that.title != null) return false;
-        if (desc != null ? !desc.equals(that.desc) : that.desc != null) return false;
-        if (brandName != null ? !brandName.equals(that.brandName) : that.brandName != null)
-            return false;
-        if (url != null ? !url.equals(that.url) : that.url != null) return false;
-        if (adType != null ? !adType.equals(that.adType) : that.adType != null) return false;
-        if (dbType != null ? !dbType.equals(that.dbType) : that.dbType != null) return false;
-        if (updateTime != null ? !updateTime.equals(that.updateTime) : that.updateTime != null)
-            return false;
-        return imgs != null ? imgs.equals(that.imgs) : that.imgs == null;
+        return updateTime != null ? updateTime.equals(that.updateTime) : that.updateTime == null;
     }
 
     @Override
