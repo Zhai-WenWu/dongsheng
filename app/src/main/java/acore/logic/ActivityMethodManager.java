@@ -39,6 +39,7 @@ public class ActivityMethodManager {
     //监听home键的
     private HomeKeyListener mHomeWatcher;
     private ArrayList<IAutoRefresh> mAdControls = new ArrayList<>();
+    private long lastOnResumeTime,intervalOnResumeTime;
 
     public ActivityMethodManager(Activity mAct) {
         this.mAct = mAct;
@@ -49,15 +50,19 @@ public class ActivityMethodManager {
     }
 
     public void onRestart(){
-        XHAdAutoRefresh.getInstance().restartTimer(this);
     }
 
     public void onResume(int level) {
         if(Main.allMain != null){
             Main.allMain.initRunTime();
         }
+        if(lastOnResumeTime == 0){
+            lastOnResumeTime = System.currentTimeMillis();
+        }else{
+            intervalOnResumeTime = System.currentTimeMillis() - lastOnResumeTime;
+        }
         //广告刷新定时器开始
-        XHAdAutoRefresh.getInstance().startTimer(this);
+        XHAdAutoRefresh.getInstance().startTimer(this,intervalOnResumeTime);
         //Log.i("FRJ", "level:" + level);
         //Log.i("FRJ", "colse_level:" + colse_level);
         MobclickAgent.onResume(mAct);

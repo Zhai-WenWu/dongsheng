@@ -2,6 +2,7 @@ package third.ad;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import acore.logic.ActivityMethodManager;
 
@@ -37,20 +38,18 @@ public class XHAdAutoRefresh {
     private ActivityMethodManager mManager;
 
     // 时刻取得导航提醒
-    public void startTimer(ActivityMethodManager activityMethodManager) {
+    public void startTimer(ActivityMethodManager activityMethodManager,long intervalOnResumeTime) {
         this.mManager = activityMethodManager;
         if(mTimerHandler == null){
             mTimerHandler = new Handler(Looper.getMainLooper());
         }
         execute();
-    }
-
-    public void restartTimer(ActivityMethodManager activityMethodManager) {
-        this.mManager = activityMethodManager;
-        if(mTimerHandler == null){
-            mTimerHandler = new Handler(Looper.getMainLooper());
+        if(intervalOnResumeTime > 0
+                && mTimerHandler != null
+                && mRunnable != null){
+            Log.i("tzy", "startTimer: " + intervalOnResumeTime + "ms");
+            mTimerHandler.postDelayed(mRunnable,intervalOnResumeTime);
         }
-        reexecute();
     }
 
     public void stopTimer() {
@@ -65,13 +64,6 @@ public class XHAdAutoRefresh {
         if(mTimerHandler != null){
             initRunnable();
             mTimerHandler.postDelayed(mRunnable,intervalTime);
-        }
-    }
-
-    private void reexecute(){
-        if(mTimerHandler != null){
-            initRunnable();
-            mTimerHandler.post(mRunnable);
         }
     }
 

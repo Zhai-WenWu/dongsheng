@@ -283,10 +283,10 @@ public class WelcomeDialog extends Dialog {
                         mADLayout.setVisibility(View.GONE);
                         mADLayout.removeAllViews();
                         isAdLoadOk = true;
-                        View view = LayoutInflater.from(activity).inflate(R.layout.view_ad_inmobi, null);
+                        View view = LayoutInflater.from(activity).inflate(R.layout.view_ad_inmobi, null,true);
                         final ImageView imageView = (ImageView) view.findViewById(R.id.image);
                         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                        mADLayout.addView(view);
+                        mADLayout.addView(view,RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.MATCH_PARENT);
 
                         BitmapRequestBuilder<GlideUrl, Bitmap> bitmapRequest = LoadImage.with(XHApplication.in())
                                 .load(url)
@@ -308,7 +308,8 @@ public class WelcomeDialog extends Dialog {
                                             return;
                                         }
                                         showSkipContainer();
-                                        UtilImage.setImgViewByWH(imageView, bitmap, ToolsDevice.getWindowPx(activity).widthPixels, 0, false);
+                                        imageView.setImageBitmap(bitmap);
+//                                        UtilImage.setImgViewByWH(imageView, bitmap, ToolsDevice.getWindowPx(activity).widthPixels, 0, false);
                                         XHClick.mapStat(activity, "ad_show_index", "开屏", "xh");
                                     }
                                 }

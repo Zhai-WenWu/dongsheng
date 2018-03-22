@@ -172,10 +172,10 @@ public class Welcome extends BaseActivity {
                         mADLayout.setVisibility(View.GONE);
                         mADLayout.removeAllViews();
                         isAdLoadOk = true;
-                        View view = LayoutInflater.from(Welcome.this).inflate(R.layout.view_ad_inmobi, null);
+                        View view = LayoutInflater.from(Welcome.this).inflate(R.layout.view_ad_inmobi, null,true);
                         final ImageView imageView = (ImageView) view.findViewById(R.id.image);
                         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                        mADLayout.addView(view);
+                        mADLayout.addView(view,RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.MATCH_PARENT);
 
                         BitmapRequestBuilder<GlideUrl, Bitmap> bitmapRequest = LoadImage.with(XHApplication.in())
                                 .load(url)
@@ -197,7 +197,8 @@ public class Welcome extends BaseActivity {
                                             return;
                                         }
                                         showSkipContainer();
-                                        UtilImage.setImgViewByWH(imageView, bitmap, ToolsDevice.getWindowPx(Welcome.this).widthPixels, 0, false);
+                                        imageView.setImageBitmap(bitmap);
+//                                        UtilImage.setImgViewByWH(imageView, bitmap, ToolsDevice.getWindowPx(Welcome.this).widthPixels, 0, false);
                                         XHClick.mapStat(Welcome.this, "ad_show_index", "开屏", "xh");
                                     }
                                 }
