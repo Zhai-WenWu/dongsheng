@@ -2,9 +2,14 @@ package third.ad;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.text.TextUtils;
 import android.util.Log;
 
+import java.util.Map;
+
 import acore.logic.ActivityMethodManager;
+import acore.logic.ConfigMannager;
+import acore.tools.StringManager;
 
 /**
  * Description :
@@ -27,6 +32,13 @@ public class XHAdAutoRefresh {
             synchronized (XHAdAutoRefresh.class) {
                 if (null == sInstance) {
                     sInstance = new XHAdAutoRefresh();
+                    Map<String, String> params = StringManager.getFirstMap(ConfigMannager.getConfigByLocal(ConfigMannager.KEY_NEW_AD_CONFIG));
+                    String str = params.get("refreshTime");
+                    if (!TextUtils.isEmpty(str)) {
+                        int time = Integer.parseInt(str);
+                        if (time > 0)
+                            intervalTime = time * 1000;
+                    }
                 }
             }
         }
@@ -45,10 +57,10 @@ public class XHAdAutoRefresh {
         }
         execute();
         if(intervalOnResumeTime > 0
-                && mTimerHandler != null
-                && mRunnable != null){
+                && intervalOnResumeTime < intervalTime
+                && mTimerHandler != null){
             Log.i("tzy", "startTimer: " + intervalOnResumeTime + "ms");
-            mTimerHandler.postDelayed(mRunnable,intervalOnResumeTime);
+            mTimerHandler.postDelayed(postSingle(),intervalOnResumeTime);
         }
     }
 
@@ -65,6 +77,17 @@ public class XHAdAutoRefresh {
             initRunnable();
             mTimerHandler.postDelayed(mRunnable,intervalTime);
         }
+    }
+
+    private Runnable postSingle() {
+        return new Runnable() {
+
+            @Override
+            public void run() {
+                //更新广告数据
+                autoRefreshSelfAD();
+            }
+        };
     }
 
     private void initRunnable() {
