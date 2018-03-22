@@ -16,7 +16,6 @@ import com.xiangha.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import acore.logic.AppCommon;
@@ -100,13 +99,13 @@ public class DishAdDataViewNew extends ItemBaseView {
      */
     private void setBigPicADData(final Map<String, String> map, ViewGroup parentView) {
         //设置图片
-        final ImageView bigImage = (ImageView) findViewById(R.id.ad_big_pic);
-        imgWidth = ToolsDevice.getWindowPx(getContext()).widthPixels - Tools.getDimen(getContext(), R.dimen.dp_20);
-        imgHeight = imgWidth / 2;
         new Handler(Looper.getMainLooper())
                 .post(new Runnable() {
                     @Override
                     public void run() {
+                        ImageView bigImage = (ImageView) findViewById(R.id.ad_big_pic);
+                        imgWidth = ToolsDevice.getWindowPx(getContext()).widthPixels - Tools.getDimen(getContext(), R.dimen.dp_40);
+                        imgHeight = imgWidth / 2;
                         setViewImage(bigImage, map.get("imgUrl"));
                     }
                 });
