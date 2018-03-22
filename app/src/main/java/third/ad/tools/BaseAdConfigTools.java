@@ -34,7 +34,7 @@ public class BaseAdConfigTools {
     private Handler mStatisticHandler;
     private Runnable mStatisticRun;
     private ArrayList<JSONObject> mShowCacheParams;
-    private long mIntervalTime = 5 * 1000;
+    private long mIntervalTime = 30 * 1000;
     private int mCacheSize = 5;
 
     BaseAdConfigTools() {
