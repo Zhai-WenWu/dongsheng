@@ -11,6 +11,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -96,11 +97,14 @@ public class QuanAdvertControl implements ActivityMethodManager.IAutoRefresh {
                 }
             }
 
-            for (int i = 0; i < old_list.size(); i++) {
-                Map<String, String> dataMap = old_list.get(i);
-                if ("2".equals(dataMap.get("isAd"))) {
-                    old_list.remove(i);
-                    i--;
+            if(beforeNum == 0){
+                nowIndex = 0;
+                for (int i = 0; i < old_list.size(); i++) {
+                    Map<String, String> dataMap = old_list.get(i);
+                    if ("2".equals(dataMap.get("isAd"))) {
+                        old_list.remove(i);
+                        i--;
+                    }
                 }
             }
             logtzy(tag_yu, "temp size:" + temp.size());
@@ -207,19 +211,6 @@ public class QuanAdvertControl implements ActivityMethodManager.IAutoRefresh {
 
     }
 
-    private boolean replaceCurrentData(String index, String controlTag, Map<String, String> map) {
-        for (int i = 0, size = mAdList.size(); i < size; i++) {
-            Map<String, String> oriMap = mAdList.get(i);
-            if (TextUtils.equals(controlTag, oriMap.get("controlTag"))
-                    && TextUtils.equals(index, oriMap.get("promotionIndex"))) {
-                mAdList.set(i, map);
-                return true;
-            }
-        }
-        return false;
-    }
-
-
     /**
      * 获取数据---第一次。
      *
@@ -238,10 +229,7 @@ public class QuanAdvertControl implements ActivityMethodManager.IAutoRefresh {
      */
     public void getAdData(final Context context, final String controlTag) {
         ArrayList<String> adPosList = new ArrayList<>();
-
-        for (String posStr : AD_IDS) {
-            adPosList.add(posStr);
-        }
+        Collections.addAll(adPosList, AD_IDS);
         XHAllAdControl xhAllAdControl = new XHAllAdControl(adPosList, new XHAllAdControl.XHBackIdsDataCallBack() {
             final String currentControlTag = controlTag;
 
@@ -297,7 +285,6 @@ public class QuanAdvertControl implements ActivityMethodManager.IAutoRefresh {
 
     @Override
     public void autoRefreshSelfAD() {
-        nowIndex = 0;
         autoRefreshNext(-1);
     }
 
