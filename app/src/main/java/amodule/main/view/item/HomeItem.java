@@ -373,6 +373,10 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
                 }
             }
         }
+        mIsAd = TextUtils.equals("ad", mDataMap.get("adstyle"));
+        if(mUserName != null){
+            mUserName.setFilters(new InputFilter[] { new InputFilter.LengthFilter(mIsAd ? 10 : 5) });
+        }
         //用户信息
         if (mDataMap.containsKey("customer")) {
             String customer = mDataMap.get("customer");
@@ -402,9 +406,8 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
                 }
             }
         }
-        mIsAd = TextUtils.equals("ad", mDataMap.get("adstyle"));
         if (mIsAd) {
-            mUserName.setFilters(new InputFilter[] { new InputFilter.LengthFilter(10) });
+            Log.i("tzy", "initData: mIsAd = " + mIsAd);
             if (mAdControlParent != null && !mDataMap.containsKey("isADShow")) {
                 mAdControlParent.onAdShow(mDataMap, this);
                 mDataMap.put("isADShow", "1");
