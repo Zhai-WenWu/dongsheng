@@ -102,11 +102,13 @@ public class HomeBuoy {
                         setBuoyImage(mNativeData.getLittleImage());
                         //显示
                         setFloatMenuData();
-                    }else{
+                    } else {
                         hide();
+                        removeFromRoot();
                     }
-                }else{
+                } else {
                     hide();
+                    removeFromRoot();
                 }
             }
 
@@ -144,15 +146,33 @@ public class HomeBuoy {
         params.setMargins(params.leftMargin, params.topMargin, Tools.getDimen(mAct, R.dimen.dp_11), Tools.getDimen(mAct, R.dimen.dp_34));
         params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+
+        addToRoot(params);
+        hide();//初始化完成后hide浮标
+    }
+
+    private void addToRoot(RelativeLayout.LayoutParams params) {
         RelativeLayout rootLayout = (RelativeLayout) mAct.findViewById(R.id.activityLayout);
         if (rootLayout == null) {
             return;
         }
-        if(!isAdded){
+        if (!isAdded
+                && imageButton != null) {
             isAdded = true;
             rootLayout.addView(imageButton, params);
         }
-        hide();//初始化完成后hide浮标
+    }
+
+    private void removeFromRoot() {
+        RelativeLayout rootLayout = (RelativeLayout) mAct.findViewById(R.id.activityLayout);
+        if (rootLayout == null) {
+            return;
+        }
+        if (isAdded
+                && imageButton != null) {
+            isAdded = false;
+            rootLayout.removeView(imageButton);
+        }
     }
 
     private void initAnimation() {
@@ -225,7 +245,7 @@ public class HomeBuoy {
         imageButton.setVisibility(View.VISIBLE);
 
         Glide.with(mAct).load(imgUrl).into(imageButton);
-        AdConfigTools.getInstance().postStatistics("show", AdPlayIdConfig.HOME_FLOAT, mNativeData.getPositionId(),"xh", mNativeData.getId());
+        AdConfigTools.getInstance().postStatistics("show", AdPlayIdConfig.HOME_FLOAT, mNativeData.getPositionId(), "xh", mNativeData.getId());
     }
 
     public void executeOpenAnim() {
@@ -260,7 +280,7 @@ public class HomeBuoy {
         }
     }
 
-    public void resetData(){
+    public void resetData() {
         handlerData();
     }
 
