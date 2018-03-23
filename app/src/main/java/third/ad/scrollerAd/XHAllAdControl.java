@@ -37,6 +37,7 @@ import third.ad.tools.GdtAdTools;
 import third.ad.tools.XHSelfAdTools;
 
 import static third.ad.control.AdControlHomeDish.tag_yu;
+import static third.ad.scrollerAd.XHScrollerAdParent.ADKEY_BANNER;
 import static third.ad.scrollerAd.XHScrollerAdParent.TAG_BANNER;
 
 /**
@@ -356,12 +357,7 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
                 listAdContrls.get(i).setAdDataCallBack(new XHAdControlCallBack() {
                     @Override
                     public void onSuccess(String type, Map<String, String> map, int num) {
-                        if (count < listAdContrls.size()
-                                && listAdContrls.get(count) != null
-                                && !TextUtils.equals(mapToJson(map).toString(),AdData.get(listIds.get(num)))) {
-
-                            listAdContrls.get(count).resetDispaly();
-                        }
+                        resetAdContrlDisplay(map, num);
                         if (map != null) {
                             map.put("index", String.valueOf(num));
                         }
@@ -422,6 +418,57 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
                 });
             }
         }
+    }
+
+    /**
+     * 重置广告展示标记
+     *
+     * @param map
+     * @param num
+     */
+    private void resetAdContrlDisplay(Map<String, String> map, int num) {
+        if (AdData != null && !AdData.isEmpty()
+                && listIds != null && listIds.size() > num
+                && num > -1) {
+            Map<String, String> originalMap = null;
+            String adDataValue = AdData.get(listIds.get(num));
+            if (!TextUtils.isEmpty(adDataValue)) {
+                originalMap = StringManager.getFirstMap(adDataValue);
+            }
+            if (count < listAdContrls.size()
+                    && listAdContrls.get(count) != null
+                    && !isDataEqual(map, originalMap)) {
+//                Log.i("tzy", "resetAdContrlDisplay: ");
+                listAdContrls.get(count).resetDispaly();
+            }
+        }
+    }
+
+    /**
+     * 判断广告数据是否变更
+     *
+     * @param newMap
+     * @param originalMap
+     *
+     * @return
+     */
+    private boolean isDataEqual(Map<String, String> newMap, Map<String, String> originalMap) {
+//        Log.i("tzy", "isDataEqual: 111");
+        if (newMap != null && originalMap != null) {
+//            Log.i("tzy", "isDataEqual: 222");
+            if (ADKEY_BANNER.equals(newMap.get("type"))
+                    && ADKEY_BANNER.equals(originalMap.get("type"))) {
+//                Log.i("tzy", "isDataEqual: 333" + (TextUtils.equals(newMap.get("id"), originalMap.get("id"))
+//                        && TextUtils.equals(newMap.get("updateTime"), originalMap.get("updateTime"))));
+                return TextUtils.equals(newMap.get("id"), originalMap.get("id"))
+                        && TextUtils.equals(newMap.get("updateTime"), originalMap.get("updateTime"));
+            } else {
+//                Log.i("tzy", "isDataEqual: 444" + (newMap.equals(originalMap)));
+                return newMap.equals(originalMap);
+            }
+        }
+//        Log.i("tzy", "isDataEqual: 555" + (newMap == null && originalMap == null));
+        return newMap == null && originalMap == null;
     }
 
     /**

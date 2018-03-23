@@ -21,7 +21,6 @@ public class XHAdAutoRefresh {
 
     private static volatile XHAdAutoRefresh sInstance = null;
 
-    //TODO
     public static long intervalTime = 5 * 60 * 1000;
 
     private XHAdAutoRefresh() {

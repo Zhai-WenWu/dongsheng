@@ -107,6 +107,10 @@ public class XHScrollerSelf extends XHScrollerAdParent {
             }
         }
         final Map<String, String> map = new HashMap<>();
+        //新增字段，用于判断自由广告是否刷新
+        map.put("id",mNativeData.getId());
+        map.put("updateTime",mNativeData.getUpdateTime());
+        //原始数据
         map.put("title", mNativeData.getBrandName());
         map.put("desc", mNativeData.getDesc());
         map.put("adType", mNativeData.getAdType());
