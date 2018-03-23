@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.text.InputFilter;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -403,6 +404,7 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
         }
         mIsAd = TextUtils.equals("ad", mDataMap.get("adstyle"));
         if (mIsAd) {
+            mUserName.setFilters(new InputFilter[] { new InputFilter.LengthFilter(10) });
             if (mAdControlParent != null && !mDataMap.containsKey("isADShow")) {
                 mAdControlParent.onAdShow(mDataMap, this);
                 mDataMap.put("isADShow", "1");
@@ -426,8 +428,10 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
     protected void resetView() {
         if (mTimeTagContainer != null)
             mTimeTagContainer.setVisibility(View.GONE);
-        if (mUserName != null)
+        if (mUserName != null){
             mUserName.setVisibility(View.GONE);
+            mUserName.setFilters(new InputFilter[] { new InputFilter.LengthFilter(5) });
+        }
         if (mUserGourmet != null)
             mUserGourmet.setVisibility(View.GONE);
         if (mNameGourmet != null)
