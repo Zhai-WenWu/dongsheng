@@ -24,6 +24,7 @@ public class AdConfigTools extends BaseAdConfigTools {
     public boolean isLoadOver = false;
 
     private AdConfigTools() {
+        super();
     }
 
     public static AdConfigTools getInstance() {
@@ -31,23 +32,27 @@ public class AdConfigTools extends BaseAdConfigTools {
             synchronized (AdConfigTools.class) {
                 if (mAdConfigTools == null) {
                     mAdConfigTools = new AdConfigTools();
-                    Map<String, String> params = StringManager.getFirstMap(ConfigMannager.getConfigByLocal(ConfigMannager.KEY_NEW_AD_CONFIG));
-                    String timeStr = params.get("postTime");
-                    if (!TextUtils.isEmpty(timeStr)) {
-                        int time = Integer.parseInt(timeStr);
-                        if (time > 0)
-                            mAdConfigTools.setIntervalTime(time);
-                    }
-                    String countStr = params.get("postCount");
-                    if (!TextUtils.isEmpty(countStr)) {
-                        int count = Integer.parseInt(countStr);
-                        if (count > 0)
-                            mAdConfigTools.setCacheSize(count);
-                    }
+                    mAdConfigTools.initParams();
                 }
             }
         }
         return mAdConfigTools;
+    }
+
+    private void initParams() {
+        Map<String, String> params = StringManager.getFirstMap(ConfigMannager.getConfigByLocal(ConfigMannager.KEY_NEW_AD_CONFIG));
+        String timeStr = params.get("postTime");
+        if (!TextUtils.isEmpty(timeStr)) {
+            int time = Integer.parseInt(timeStr);
+            if (time > 0)
+                mAdConfigTools.setIntervalTime(time);
+        }
+        String countStr = params.get("postCount");
+        if (!TextUtils.isEmpty(countStr)) {
+            int count = Integer.parseInt(countStr);
+            if (count > 0)
+                mAdConfigTools.setCacheSize(count);
+        }
     }
 
     public void getAdConfigInfo() {
@@ -91,25 +96,25 @@ public class AdConfigTools extends BaseAdConfigTools {
         return adSqlite.getAdConfig(adPlayId);
     }
 
-    public boolean isShowAd(String adPlayId, String adKey) {
-        String isGourmet = LoginManager.userInfo.get("isGourmet");
-        //是美食家，但不是banner广告则返回不显示广告
-        if ("2".equals(isGourmet)) {
-            return false;
-        }
-        AdBean adBean = getAdConfig(adPlayId);
-        String conf = adBean.adConfig;
-        if (!TextUtils.isEmpty(conf)) {
-            ArrayList<Map<String, String>> arr = StringManager.getListMapByJson(conf);
-            for(Map<String, String> map : arr) {
-                if (TextUtils.equals(map.get("type"), adKey)
-                        && TextUtils.equals("2", map.get("open"))) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
+//    public boolean isShowAd(String adPlayId, String adKey) {
+//        String isGourmet = LoginManager.userInfo.get("isGourmet");
+//        //是美食家，但不是banner广告则返回不显示广告
+//        if ("2".equals(isGourmet)) {
+//            return false;
+//        }
+//        AdBean adBean = getAdConfig(adPlayId);
+//        String conf = adBean.adConfig;
+//        if (!TextUtils.isEmpty(conf)) {
+//            ArrayList<Map<String, String>> arr = StringManager.getListMapByJson(conf);
+//            for(Map<String, String> map : arr) {
+//                if (TextUtils.equals(map.get("type"), adKey)
+//                        && TextUtils.equals("2", map.get("open"))) {
+//                    return true;
+//                }
+//            }
+//        }
+//        return false;
+//    }
 
     /**
      * 广告位 点击
