@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
+import org.json.JSONArray;
+
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -83,13 +85,31 @@ public class XHAdSqlite extends SQLiteOpenHelper {
 
     private void upgradeVer2(SQLiteDatabase db) {
         createAdConfigTable(db);
-        db.execSQL("insert into " + TABLE_ADCONFIG + "(" + AdEntry._ID  + ", " + AdEntry
-                .COLUMN_ADID + ", " + AdEntry.COLUMN_ADCONFIG + ", " + AdEntry.COLUMN_UPDATETIME
-                        + ")" + " select " + AdEntry._ID + ", " + AdEntry.COLUMN_ADID + ", " +
-                        AdEntry.COLUMN_ADCONFIG + ", " + AdEntry.COLUMN_UPDATETIME + " from " +
-                        TABLE_ADCONFIG_OLD + " where " + AdEntry.COLUMN_ADID + " = " + "'" +
-                        AdPlayIdConfig.WELCOME + "'");
-        db.execSQL("drop table if exists " + TABLE_ADCONFIG_OLD);
+        Cursor cursor = db.rawQuery("select * from " + TABLE_ADCONFIG_OLD + " where " + AdEntry.COLUMN_ADCONFIG + " = ? limit 1", new String[]{AdPlayIdConfig.WELCOME});
+        if (cursor != null && cursor.moveToFirst()) {
+            String confStr = cursor.getString(cursor.getColumnIndexOrThrow(AdPlayIdConfig.WELCOME));
+            if (!TextUtils.isEmpty(confStr)) {
+                JSONArray arr = new JSONArray();
+                ArrayList<Map<String, String>> confMaps = StringManager.getListMapByJson(confStr);
+                for (int i = 0; i < confMaps.size(); i ++) {
+                    String conf = confMaps.get(i).get(String.valueOf(i + 1));
+                    if (!TextUtils.isEmpty(conf)) {
+                        arr.put(conf);
+                    }
+                }
+                int id = cursor.getInt(cursor.getColumnIndexOrThrow(AdEntry._ID));
+                String adId = cursor.getString(cursor.getColumnIndexOrThrow(AdEntry.COLUMN_ADID));
+                long updateTime = cursor.getLong(cursor.getColumnIndexOrThrow(AdEntry.COLUMN_UPDATETIME));
+                if (arr.length() > 0) {
+                    db.execSQL("insert into " + TABLE_ADCONFIG + "(" + AdEntry._ID  + ", " + AdEntry
+                            .COLUMN_ADID + ", " + AdEntry.COLUMN_ADCONFIG + ", " + AdEntry.COLUMN_UPDATETIME
+                            + ")" + " values(" + id + ", " + adId + ", " +
+                            arr.toString() + ", " + updateTime + ")");
+                }
+            }
+        }
+
+//        db.execSQL("drop table if exists " + TABLE_ADCONFIG_OLD);
     }
 
     public void updateConfig(String jsonValue){
