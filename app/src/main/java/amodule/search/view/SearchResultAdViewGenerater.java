@@ -158,11 +158,11 @@ public class SearchResultAdViewGenerater {
             setViewImage(cover_img, TextUtils.isEmpty(imageUrl) ? iconUrl : imageUrl);
 
             if (TextUtils.isEmpty(title)) {
+                setViewText(tv_ad_name, desc);
                 setViewText(tv_ad_decrip, desc);
-                setViewText(tv_ad_name, desc);
             } else {
-                setViewText(tv_ad_decrip, title);
-                setViewText(tv_ad_name, desc);
+                setViewText(tv_ad_name, title);
+                setViewText(tv_ad_decrip, desc);
             }
 
             if(TextUtils.isEmpty(allClick))
