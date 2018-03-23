@@ -78,6 +78,8 @@ public class XHAdSqlite extends SQLiteOpenHelper {
                     break;
             }
             db.setTransactionSuccessful();
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             db.endTransaction();
         }
@@ -87,7 +89,7 @@ public class XHAdSqlite extends SQLiteOpenHelper {
         createAdConfigTable(db);
         Cursor cursor = db.rawQuery("select * from " + TABLE_ADCONFIG_OLD + " where " + AdEntry.COLUMN_ADID + " = ? limit 1", new String[]{AdPlayIdConfig.WELCOME});
         if (cursor != null && cursor.moveToFirst()) {
-            String confStr = cursor.getString(cursor.getColumnIndexOrThrow(AdPlayIdConfig.WELCOME));
+            String confStr = cursor.getString(cursor.getColumnIndexOrThrow(AdEntry.COLUMN_ADCONFIG));
             if (!TextUtils.isEmpty(confStr)) {
                 JSONArray arr = new JSONArray();
                 ArrayList<Map<String, String>> confMaps = StringManager.getListMapByJson(confStr);
@@ -103,13 +105,13 @@ public class XHAdSqlite extends SQLiteOpenHelper {
                 if (arr.length() > 0) {
                     db.execSQL("insert into " + TABLE_ADCONFIG + "(" + AdEntry._ID  + ", " + AdEntry
                             .COLUMN_ADID + ", " + AdEntry.COLUMN_ADCONFIG + ", " + AdEntry.COLUMN_UPDATETIME
-                            + ")" + " values(" + id + ", " + adId + ", " +
-                            arr.toString() + ", " + updateTime + ")");
+                            + ")" + " values(" + id + ", '" + adId + "', '" +
+                            arr.toString() + "', " + updateTime + ")");
                 }
             }
         }
 
-//        db.execSQL("drop table if exists " + TABLE_ADCONFIG_OLD);
+        db.execSQL("drop table if exists " + TABLE_ADCONFIG_OLD);
     }
 
     public void updateConfig(String jsonValue){
