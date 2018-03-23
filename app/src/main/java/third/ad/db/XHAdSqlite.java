@@ -9,6 +9,8 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -96,7 +98,12 @@ public class XHAdSqlite extends SQLiteOpenHelper {
                 for (int i = 0; i < confMaps.size(); i ++) {
                     String conf = confMaps.get(String.valueOf(i + 1));
                     if (!TextUtils.isEmpty(conf)) {
-                        arr.put(conf);
+                        try {
+                            JSONObject obj = new JSONObject(conf);
+                            arr.put(obj);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
                 int id = cursor.getInt(cursor.getColumnIndexOrThrow(AdEntry._ID));

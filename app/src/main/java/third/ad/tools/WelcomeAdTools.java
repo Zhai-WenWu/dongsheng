@@ -121,9 +121,17 @@ public class WelcomeAdTools {
             return;
         }
         List<Map<String, String>> configArray = StringManager.getListMapByJson(adBean.adConfig);
+
+        Log.i("SLL", "handlerAdData: configArr = " + configArray.toString());
+
         Stream.of(configArray)
                 .filter(value -> "2".equals(value.get("open")))
                 .forEach(value -> mAdData.add(value));
+
+
+        Log.i("SLL", "handlerAdData: mAdData = " + mAdData.toString());
+
+
         //开启广告
         nextAd(isCache);
     }
