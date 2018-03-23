@@ -194,7 +194,7 @@ public class ArticleAdContrler {
             adView.setLayoutParams(layoutParams);
         } else {
             adView = LayoutInflater.from(XHActivityManager.getInstance().getCurrentActivity()).inflate(R.layout.a_article_detail_ad, null);
-            TextView titleTv = (TextView) adView.findViewById(R.id.title);
+            TextView titleTv = (TextView) adView.findViewById(R.id.ad_title);
             TextView nameTv = (TextView) adView.findViewById(R.id.user_name);
             RelativeLayout container = (RelativeLayout) adView.findViewById(R.id.container);
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) container.getLayoutParams();
