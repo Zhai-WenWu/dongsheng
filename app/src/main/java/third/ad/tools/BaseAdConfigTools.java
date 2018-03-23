@@ -36,6 +36,7 @@ public class BaseAdConfigTools {
     private ArrayList<JSONObject> mShowCacheParams;
     private long mIntervalTime = 30 * 1000;
     private int mCacheSize = 5;
+    private boolean isStart = false;
 
     BaseAdConfigTools() {
         init();
@@ -116,8 +117,10 @@ public class BaseAdConfigTools {
                 break;
             case "show":
                 mShowCacheParams.add(jsonObject);
-                if (mShowCacheParams.size() == 1)
+                if (!isStart){
+                    isStart = true;
                     startStatistics();
+                }
                 if (checkSendSta()) {
                     startStatistics(0);
                 }
