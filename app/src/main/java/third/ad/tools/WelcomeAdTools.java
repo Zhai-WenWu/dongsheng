@@ -9,6 +9,10 @@ import android.view.ViewGroup;
 
 import com.annimon.stream.Stream;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -19,6 +23,7 @@ import acore.logic.ConfigMannager;
 import acore.logic.LoginManager;
 import acore.override.XHApplication;
 import acore.override.helper.XHActivityManager;
+import acore.tools.FileManager;
 import acore.tools.StringManager;
 import amodule.main.view.WelcomeDialog;
 import third.ad.db.XHAdSqlite;
@@ -30,6 +35,7 @@ import static third.ad.scrollerAd.XHScrollerAdParent.ADKEY_GDT;
 import static third.ad.scrollerAd.XHScrollerAdParent.TAG_BAIDU;
 import static third.ad.scrollerAd.XHScrollerAdParent.TAG_BANNER;
 import static third.ad.scrollerAd.XHScrollerAdParent.TAG_GDT;
+import static third.ad.tools.AdPlayIdConfig.WELCOME;
 
 /**
  * PackageName : third.ad.tools
@@ -42,25 +48,41 @@ public class WelcomeAdTools {
     private static volatile WelcomeAdTools mInstance = null;
 
     private static final String CONFIGKEY = "splashconfig";
-    /** 表示开启 */
+    /**
+     * 表示开启
+     */
     private static final int OPEN = 2;
-    /** 切换最短时间 */
+    /**
+     * 切换最短时间
+     */
     private int splashmins = 60;
-    /** 切换最长时间 */
+    /**
+     * 切换最长时间
+     */
     private int splashmaxs = 5 * 60;
-    /** 是否二次开启 */
+    /**
+     * 是否二次开启
+     */
     private int open = OPEN;
-    /** 开启时间 */
+    /**
+     * 开启时间
+     */
     private int duretimes = WelcomeDialog.DEFAULT_TIME;
-    /** 展示次数，0表示无限次 */
+    /**
+     * 展示次数，0表示无限次
+     */
     private int shownum = 0;
 
     //广告处理
     private ArrayList<Map<String, String>> mAdData = new ArrayList<>();
     private int index_ad = 0;
-    /** 广点通回调 */
+    /**
+     * 广点通回调
+     */
     private GdtCallback mGdtCallback;
-    /** 自有AD回调 */
+    /**
+     * 自有AD回调
+     */
     private XHBannerCallback mXHBannerCallback;
     private BaiduCallback mBaiduCallback;
     private boolean isTwoShow = false;
@@ -113,7 +135,27 @@ public class WelcomeAdTools {
 
         Log.i("tzy", "WelcomeAdTools handlerAdData.");
         XHAdSqlite adSqlite = XHAdSqlite.newInstance(XHApplication.in());
-        AdBean adBean = adSqlite.getAdConfig(AdPlayIdConfig.WELCOME);
+        AdBean adBean = adSqlite.getAdConfig(WELCOME);
+        if (adBean == null) {
+            String splashConfigValue = FileManager.readFile(FileManager.getDataDir() + "ad");
+            Map<String, String> splashConfig = StringManager.getFirstMap(splashConfigValue);
+            splashConfig = StringManager.getFirstMap(splashConfig.get(WELCOME));
+            splashConfig = StringManager.getFirstMap(splashConfig.get("adConfig"));
+            JSONArray jsonArray = new JSONArray();
+            for (int i = 0; i < splashConfig.size(); i++) {
+                String config = splashConfig.get(String.valueOf(i + 1));
+                try {
+                    JSONObject jsonObject = new JSONObject(config);
+                    jsonArray.put(jsonObject);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            if(jsonArray.length() > 0){
+                adBean = new AdBean();
+                adBean.adConfig = jsonArray.toString();
+            }
+        }
         if (adBean == null || TextUtils.isEmpty(adBean.adConfig)) {
             if (mAdNoDataCallBack != null) {
                 mAdNoDataCallBack.noAdData();
@@ -121,17 +163,9 @@ public class WelcomeAdTools {
             return;
         }
         List<Map<String, String>> configArray = StringManager.getListMapByJson(adBean.adConfig);
-
-        Log.i("SLL", "handlerAdData: configArr = " + configArray.toString());
-
         Stream.of(configArray)
                 .filter(value -> "2".equals(value.get("open")))
                 .forEach(value -> mAdData.add(value));
-
-
-        Log.i("SLL", "handlerAdData: mAdData = " + mAdData.toString());
-
-
         //开启广告
         nextAd(isCache);
     }
@@ -150,7 +184,7 @@ public class WelcomeAdTools {
                 case TAG_GDT:
                     if (LoginManager.isShowAd()) {
                         displayGdtAD();
-                    }else{
+                    } else {
                         index_ad++;
                         nextAd(isCache);
                     }
@@ -161,7 +195,7 @@ public class WelcomeAdTools {
                 case TAG_BAIDU:
                     if (LoginManager.isShowAd()) {
                         displayBaiduAD();
-                    }else{
+                    } else {
                         index_ad++;
                         nextAd(isCache);
                     }
@@ -195,7 +229,7 @@ public class WelcomeAdTools {
                     public void onAdPresent() {
                         Log.i("zhangyujian", "GDT：：onAdPresent");
                         mGdtCallback.onAdPresent();
-                        AdConfigTools.getInstance().postStatistics("show", AdPlayIdConfig.WELCOME, adid,ADKEY_GDT,"");
+                        AdConfigTools.getInstance().postStatistics("show", WELCOME, adid, ADKEY_GDT, "");
                     }
 
                     @Override
@@ -213,7 +247,7 @@ public class WelcomeAdTools {
 
                     @Override
                     public void onAdClick() {
-                        AdConfigTools.getInstance().postStatistics("click", AdPlayIdConfig.WELCOME, adid,ADKEY_GDT, "");
+                        AdConfigTools.getInstance().postStatistics("click", WELCOME, adid, ADKEY_GDT, "");
                         mGdtCallback.onAdClick();
                     }
 
@@ -280,7 +314,7 @@ public class WelcomeAdTools {
                             @Override
                             public void onAdPresent() {
                                 Log.i("zhangyujian", "displayBaiduAD::onAdPresent");
-                                AdConfigTools.getInstance().postStatistics("show", AdPlayIdConfig.WELCOME, adid,ADKEY_BAIDU,"");
+                                AdConfigTools.getInstance().postStatistics("show", WELCOME, adid, ADKEY_BAIDU, "");
                                 mBaiduCallback.onAdPresent();
                             }
 
@@ -299,7 +333,7 @@ public class WelcomeAdTools {
 
                             @Override
                             public void onAdClick() {
-                                AdConfigTools.getInstance().postStatistics("click", AdPlayIdConfig.WELCOME, adid,ADKEY_BAIDU,"");
+                                AdConfigTools.getInstance().postStatistics("click", WELCOME, adid, ADKEY_BAIDU, "");
                                 mBaiduCallback.onAdClick();
                             }
                         }));
