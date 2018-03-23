@@ -85,7 +85,7 @@ public class XHAdSqlite extends SQLiteOpenHelper {
 
     private void upgradeVer2(SQLiteDatabase db) {
         createAdConfigTable(db);
-        Cursor cursor = db.rawQuery("select * from " + TABLE_ADCONFIG_OLD + " where " + AdEntry.COLUMN_ADCONFIG + " = ? limit 1", new String[]{AdPlayIdConfig.WELCOME});
+        Cursor cursor = db.rawQuery("select * from " + TABLE_ADCONFIG_OLD + " where " + AdEntry.COLUMN_ADID + " = ? limit 1", new String[]{AdPlayIdConfig.WELCOME});
         if (cursor != null && cursor.moveToFirst()) {
             String confStr = cursor.getString(cursor.getColumnIndexOrThrow(AdPlayIdConfig.WELCOME));
             if (!TextUtils.isEmpty(confStr)) {
