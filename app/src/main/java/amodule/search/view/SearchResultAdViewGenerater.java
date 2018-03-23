@@ -43,6 +43,7 @@ public class SearchResultAdViewGenerater {
             View adHint = view.findViewById(R.id.ad_hint);
             AppCommon.setAdHintClick(mActivity,adHint,adControl,Integer.valueOf(dataMap.get("index")),"0","a_searesult_adver","顶部广告");
             setViewListener(adControl, view, dataMap, "0");
+            adHint.setVisibility("1".equals(dataMap.get("adType")) ? View.GONE : View.VISIBLE);
             view.setVisibility(View.VISIBLE);
         }
         return view;
