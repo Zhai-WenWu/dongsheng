@@ -92,9 +92,9 @@ public class XHAdSqlite extends SQLiteOpenHelper {
             String confStr = cursor.getString(cursor.getColumnIndexOrThrow(AdEntry.COLUMN_ADCONFIG));
             if (!TextUtils.isEmpty(confStr)) {
                 JSONArray arr = new JSONArray();
-                ArrayList<Map<String, String>> confMaps = StringManager.getListMapByJson(confStr);
+                Map<String, String> confMaps = StringManager.getFirstMap(confStr);
                 for (int i = 0; i < confMaps.size(); i ++) {
-                    String conf = confMaps.get(i).get(String.valueOf(i + 1));
+                    String conf = confMaps.get(String.valueOf(i + 1));
                     if (!TextUtils.isEmpty(conf)) {
                         arr.put(conf);
                     }
