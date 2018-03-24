@@ -2,7 +2,6 @@ package aplug.web;
 
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 
 import java.util.Map;
 
@@ -18,7 +17,9 @@ public class RefreshFullWeb extends FullScreenWeb implements IObserver {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ObserverManager.getInstance().registerObserver(this,ObserverManager.NOTIFY_LOGIN, ObserverManager.NOTIFY_UPLOADOVER, ObserverManager.NOTIFY_PAYFINISH, ObserverManager.NOTIFY_SHARE);
+        ObserverManager.getInstance().registerObserver(this,ObserverManager.NOTIFY_LOGIN,
+                ObserverManager.NOTIFY_UPLOADOVER, ObserverManager.NOTIFY_PAYFINISH,
+                ObserverManager.NOTIFY_SHARE, ObserverManager.NOTIFY_AUTHORIZE_THIRD);
     }
 
     @Override
@@ -68,11 +69,8 @@ public class RefreshFullWeb extends FullScreenWeb implements IObserver {
                 resetRefreShstatus(data);
                 break;
             case ObserverManager.NOTIFY_SHARE:
-                if (!TextUtils.isEmpty(shareCallback) && data != null) {
-                    Map<String, String> dataMap = (Map<String, String>) data;
-                    webview.loadUrl("javascript:" + shareCallback + "(" + TextUtils.equals("2", dataMap.get("status")) + "," + "\'" + dataMap.get("callbackParams") + "\'" + ")");
-                    Log.i("tzy", "javascript:" + shareCallback + "(" + TextUtils.equals("2", dataMap.get("status")) + "," + "\'" + dataMap.get("callbackParams") + "\'" + ")");
-                }
+            case ObserverManager.NOTIFY_AUTHORIZE_THIRD:
+                handleWebCallback((Map<String, String>) data);
                 break;
             default:
                 break;

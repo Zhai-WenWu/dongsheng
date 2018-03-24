@@ -62,7 +62,8 @@ public class FullScreenWeb extends WebActivity implements IObserver {
             }
         });
 
-        ObserverManager.getInstance().registerObserver(this, ObserverManager.NOTIFY_YIYUAN_BIND, ObserverManager.NOTIFY_SHARE);
+        ObserverManager.getInstance().registerObserver(this, ObserverManager.NOTIFY_YIYUAN_BIND,
+                ObserverManager.NOTIFY_SHARE, ObserverManager.NOTIFY_AUTHORIZE_THIRD);
     }
 
     /**
@@ -114,11 +115,8 @@ public class FullScreenWeb extends WebActivity implements IObserver {
         if (!TextUtils.isEmpty(name)) {
             switch (name) {
                 case ObserverManager.NOTIFY_SHARE:
-                    if (!TextUtils.isEmpty(shareCallback) && data != null) {
-                        Map<String, String> dataMap = (Map<String, String>) data;
-                        webview.loadUrl("javascript:" + shareCallback + "(" + TextUtils.equals("2", dataMap.get("status")) + "," + "\'" + dataMap.get("callbackParams") + "\'" + ")");
-//                        Log.i("tzy", "javascript:" + shareCallback + "(" + TextUtils.equals("2", dataMap.get("status")) + "," + "\'" + dataMap.get("callbackParams") + "\'" + ")");
-                    }
+                case ObserverManager.NOTIFY_AUTHORIZE_THIRD:
+                    handleWebCallback((Map<String, String>) data);
                     break;
                 case ObserverManager.NOTIFY_YIYUAN_BIND:
                     if (data != null) {

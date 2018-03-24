@@ -2,6 +2,7 @@ package acore.override.activity.base;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.CookieManager;
@@ -12,7 +13,6 @@ import java.util.Map;
 import acore.override.XHApplication;
 import acore.tools.LogManager;
 import acore.tools.StringManager;
-import amodule.main.Main;
 import aplug.basic.XHConf;
 import aplug.basic.XHInternetCallBack;
 import aplug.web.tools.JSAction;
@@ -172,6 +172,13 @@ public class WebActivity extends BaseActivity {
 			CookieSyncManager.createInstance(XHApplication.in().getApplicationContext());
 			CookieSyncManager.getInstance().sync();
 			LogManager.print(XHConf.log_tag_net,"d", "设置webview的cookie："+mapCookie.toString());
+		}
+	}
+
+	protected void handleWebCallback(Map<String, String> data) {
+		if (!TextUtils.isEmpty(shareCallback) && data != null) {
+			webview.loadUrl("javascript:" + shareCallback + "(" + TextUtils.equals("2", data.get("status")) + "," + "\'" + data.get("callbackParams") + "\'" + ")");
+			Log.i("tzy", "javascript:" + shareCallback + "(" + TextUtils.equals("2", data.get("status")) + "," + "\'" + data.get("callbackParams") + "\'" + ")");
 		}
 	}
 }

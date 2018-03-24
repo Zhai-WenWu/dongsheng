@@ -58,6 +58,7 @@ import aplug.basic.XHInternetCallBack;
 import aplug.imageselector.ImgWallActivity;
 import aplug.web.ShowWeb;
 import aplug.web.view.XHWebView;
+import cn.sharesdk.framework.Platform;
 import third.mall.activity.EvalutionListActivity;
 import third.mall.activity.ShoppingActivity;
 import third.mall.alipay.MallAlipay;
@@ -71,6 +72,8 @@ import third.mall.wx.WxPay;
 import third.push.xg.XGPushServer;
 import third.share.BarShare;
 import third.share.BarShareImage;
+import third.share.tools.ShareImage;
+import third.share.tools.ShareTools;
 import xh.basic.tool.UtilFile;
 
 import static amodule.dish.activity.upload.UploadDishActivity.DISH_TYPE_KEY;
@@ -359,7 +362,7 @@ public class JsAppCommon extends JsBase {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                if (mAct instanceof WebActivity) {
+                if (mAct instanceof WebActivity && !TextUtils.isEmpty(callback)) {
                     ((ShowWeb) mAct).shareCallback = callback;
                 }
                 RelativeLayout shareLayout = (RelativeLayout) mAct.findViewById(R.id.shar_layout);
@@ -1318,6 +1321,147 @@ public class JsAppCommon extends JsBase {
     public void inputToClipboard(String content){
         if(null == mAct || TextUtils.isEmpty(content)) return;
         handler.post(()->Tools.inputToClipboard(mAct,content));
+    }
+
+    /**
+     *
+     * @param title
+     * @param content
+     * @param img
+     * @param url
+     * @param type
+     * @param callback
+     * @param shareType
+     * @param path
+     * @param platformType 平台对应类型 Wechat->微信好友 WechatMoments->朋友圈 QQ->腾讯qq QZone->qq空间
+     *                     SinaWeibo->新浪微博
+     */
+    @JavascriptInterface
+    public void openShareByType(final String title, final String content, final String img, final
+    String url, final String type, final String callback, final String shareType, final String
+            path, final String platformType, final String apiUrl, final String params) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (mAct instanceof WebActivity && !TextUtils.isEmpty(callback)) {
+                    ((WebActivity)mAct).shareCallback = callback;
+                }
+                if (TextUtils.isEmpty(url) && !TextUtils.isEmpty(img)) {
+                    handleShareImage(platformType, img, apiUrl, params);
+                    return;
+                }
+                handleShareOther(title, url, content, img, type, platformType, shareType, path, apiUrl, params);
+            }
+        });
+    }
+
+    private void handleShareOther(String title, String url, String content, String img, String type, String platformType, String shareType, String path, String apiUrl, String params) {
+        ShareTools st = ShareTools.getBarShare(mAct);
+        Map<String, String> shareMap = new HashMap<>();
+        shareMap.put("type", BarShare.IMG_TYPE_WEB);
+        shareMap.put("title", title);
+        shareMap.put("url", url);
+        shareMap.put("content", content);
+        shareMap.put("img", img);
+        shareMap.put("from", type);
+        shareMap.put("parent", "");
+        shareMap.put("platform", platformType);
+        String sp = transferData(title, content, img, url, type, shareType, path);
+        if (!TextUtils.isEmpty(sp))
+            shareMap.put("shareParams", sp);
+
+        ShareTools.ActionListener actionListener = new ShareTools.ActionListener() {
+            @Override
+            public void onComplete(int optionType, int callbackType, Platform platform, String jsonStr) {
+                if (!TextUtils.isEmpty(apiUrl)) {
+                    String url = StringManager.apiUrl + apiUrl;
+                    String p = params + "&userCode=" + LoginManager.userInfo.get("code");
+                    ReqEncyptInternet.in().doEncypt(url, p, new InternetCallback() {
+                        @Override
+                        public void loaded(int i, String s, Object o) {
+                            if (o != null)
+                                st.notifyCallback(optionType, callbackType, platform, o.toString());
+                        }
+                    });
+                } else {
+                    st.notifyCallback(optionType, callbackType, platform, jsonStr);
+                }
+            }
+
+            @Override
+            public void onError(int optionType, int callbackType, Platform platform, String jsonStr) {
+                st.notifyCallback(optionType, callbackType, platform, jsonStr);
+            }
+
+            @Override
+            public void onCancel(int optionType, int callbackType, Platform platform, String jsonStr) {
+                st.notifyCallback(optionType, callbackType, platform, jsonStr);
+            }
+        };
+
+        st.showSharePlatform(shareMap, actionListener);
+    }
+
+    private void handleShareImage(String platformType, String img, String apiUrl, String params) {
+        ShareImage si = new ShareImage(mAct);
+        si.setActionListener(new ShareTools.ActionListener() {
+            @Override
+            public void onComplete(int optionType, int callbackType, Platform platform, String jsonStr) {
+                if (!TextUtils.isEmpty(apiUrl)) {
+                    String url = StringManager.apiUrl + apiUrl;
+                    String p = params + "&userCode=" + LoginManager.userInfo.get("code");
+                    ReqEncyptInternet.in().doEncypt(url, p, new InternetCallback() {
+                        @Override
+                        public void loaded(int i, String s, Object o) {
+                            if (o != null)
+                                si.notifyCallback(optionType, callbackType, platform, o.toString());
+                        }
+                    });
+                } else {
+                    si.notifyCallback(optionType, callbackType, platform, jsonStr);
+                }
+            }
+
+            @Override
+            public void onError(int optionType, int callbackType, Platform platform, String jsonStr) {
+                si.notifyCallback(optionType, callbackType, platform, jsonStr);
+            }
+
+            @Override
+            public void onCancel(int optionType, int callbackType, Platform platform, String jsonStr) {
+                si.notifyCallback(optionType, callbackType, platform, jsonStr);
+            }
+        });
+        si.share(platformType, img);
+    }
+
+    /**
+     *
+     * @param platformType platformType：平台对应类型 Wechat->微信好友 WechatMoments->朋友圈 QQ->腾讯qq
+     *                     QZone->qq空间 SinaWeibo->新浪微博
+     * @param callback 回调统计
+     */
+    @JavascriptInterface
+    public void getAuthorize(final String platformType, final String callback) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (mAct instanceof WebActivity && !TextUtils.isEmpty(callback))
+                    ((WebActivity)mAct).shareCallback = callback;
+                ShareTools st = ShareTools.getBarShare(mAct);
+                st.requestAuthorize(platformType);
+            }
+        });
+    }
+
+    /**
+     * 用于js获取是否开启通知权限
+     * @param callback 用于iOS的回调（iOS不能直接返回参数）
+     * @return
+     */
+    @JavascriptInterface
+    public String getPushStatus(String callback) {
+        return PushManager.isNotificationEnabled(XHApplication.in()) ? "2" : "1";
     }
 
 }

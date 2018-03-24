@@ -249,4 +249,12 @@ public class AdConfigTools {
             }
         });
     }
+
+    private Runnable mStatisticsRun = new Runnable() {
+        @Override
+        public void run() {
+//            requestStatistics(StringManager.api_adsNumber, );
+        }
+    };
+
 }

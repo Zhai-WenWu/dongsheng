@@ -16,13 +16,18 @@ package third.share.tools;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Handler.Callback;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.xiangha.R;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.InputStream;
@@ -76,7 +81,14 @@ public class ShareTools {
 	}
 
 	public void showSharePlatform(String title, String content,String types,
-								  String img, String clickUrl, String platform,String from,String parent,boolean isShowBeginToast) {
+								  String img, String clickUrl, String platform,String from,String
+										  parent,boolean isShowBeginToast) {
+		showSharePlatform(title, content, types, img, clickUrl, platform, from, parent,
+				isShowBeginToast, null);
+	}
+
+	private void showSharePlatform(String title, String content,String types,
+								  String img, String clickUrl, String platform,String from,String parent,boolean isShowBeginToast, ActionListener listener) {
 		starEvent("a_share400", mParent,mFrom);
 		if (TextUtils.isEmpty(clickUrl))
 			clickUrl ="";
@@ -142,26 +154,26 @@ public class ShareTools {
 			@Override
 			public void onError(Platform plf, int arg1, Throwable arg2) {
 				arg2.printStackTrace();
-				Message msg = new Message();
-				msg.what = SHARE_ERROR;
-				msg.obj = plf.getName();
-				shareHandler.sendMessage(msg);
+				if (listener != null)
+					listener.onError(Option.SHARE.getType(), ERROR, plf, null);
+				else
+					handleCallback(Option.SHARE.getType(), ERROR, plf, null);
 			}
 
 			@Override
 			public void onComplete(Platform plf, int arg1,HashMap<String, Object> arg2) {
-				Message msg = new Message();
-				msg.what = SHARE_OK;
-				msg.obj = plf.getName();
-				shareHandler.sendMessage(msg);
+				if (listener != null)
+					listener.onComplete(Option.SHARE.getType(), OK, plf, null);
+				else
+					handleCallback(Option.SHARE.getType(), OK, plf, null);
 			}
 
 			@Override
 			public void onCancel(Platform plf, int arg1) {
-				Message msg = new Message();
-				msg.what = SHARE_CANCLE;
-				msg.obj = plf.getName();
-				shareHandler.sendMessage(msg);
+				if (listener != null)
+					listener.onCancel(Option.SHARE.getType(), CANCEL, plf, null);
+				else
+					handleCallback(Option.SHARE.getType(), CANCEL, plf, null);
 			}
 		});
 
@@ -189,7 +201,7 @@ public class ShareTools {
 		showSharePlatform(title, content, types, img, clickUrl, platform, from,parent,true);
 	}
 
-	public void showSharePlatform(Map<String, String> map) {
+	public void showSharePlatform(Map<String, String> map, ActionListener listener) {
 		if (map == null || map.isEmpty())
 			return;
 		String shareParams = map.get("shareParams");
@@ -201,7 +213,7 @@ public class ShareTools {
 		if (TextUtils.equals(shareType, "2") && TextUtils.equals(WEI_XIN, map.get("platform"))) {
 			shareMap.put("type", map.get("type"));
 			handleStatisticsParams(shareMap.get("url"), map.get("from"), map.get("parent"));
-			showShareMiniProgram(shareMap);
+			showShareMiniProgram(shareMap, listener);
 		} else {
 			String title = map.get("title");
 			String content = map.get("content");
@@ -217,8 +229,13 @@ public class ShareTools {
 			String from = map.get("from");
 			String parent = map.get("parent");
 			String platform = map.get("platform");
-			showSharePlatform(title, content, type, imgUrl, clickUrl, platform, from, parent, true);
+			showSharePlatform(title, content, type, imgUrl, clickUrl, platform, from, parent,
+					true, listener);
 		}
+	}
+
+	public void showSharePlatform(Map<String, String> map) {
+		showSharePlatform(map, null);
 	}
 
 	private void handleStatisticsParams(String clickUrl, String from, String parent) {
@@ -267,41 +284,75 @@ public class ShareTools {
 		return mContext;
 	}
 
-	public Handler shareHandler = new Handler(new Callback() {
+	private Handler shareHandler = new Handler(new Callback() {
 		@Override
 		public boolean handleMessage(Message msg) {
 			int flag = msg.what;
+			int arg1 = msg.arg1;
 			String pla = msg.obj.toString();
 			String[] pf = getPlatform(pla);
 			switch(flag){
-				case SHARE_OK:
-					starEvent("a_share_success", mParent,mFrom);
-					XHClick.statisticsShare(mFrom, mClickUrl, pf[1]);
-					Tools.showToast(mContext, pf[0] + "分享成功");
-					notifyShareResult(pf[0],"2", pf[2]);
+				case OK:
+					if (arg1 == Option.SHARE.getType()) {
+						starEvent("a_share_success", mParent, mFrom);
+						XHClick.statisticsShare(mFrom, mClickUrl, pf[1]);
+						Tools.showToast(mContext, pf[0] + "分享成功");
+						String jsCallbackParams = null;
+						Bundle bundle = msg.getData();
+						if (bundle != null) {
+							jsCallbackParams = bundle.getString("bundle");
+						}
+						notifyMsgResult(Option.SHARE, pf[0], "2", TextUtils.isEmpty
+								(jsCallbackParams) ? pf[2] : jsCallbackParams);
+					} else if (arg1 == Option.AUTHORIZE.getType()) {
+						Tools.showToast(mContext, pf[0] + "授权成功");
+						notifyMsgResult(Option.AUTHORIZE, pf[0], "2", msg.getData()
+								.getString("bundle").toString());
+					}
 					break;
-				case SHARE_ERROR:
-					if(("微信".equals(pf[0]) || pf[0].indexOf("微信") > -1) && ToolsDevice.isAppInPhone(mContext, "com.tencent.mm") == 0){
-						Tools.showToast(mContext, "未检测到相关应用");
-					}else
-						Tools.showToast(mContext, pf[0] + "分享失败");
-					notifyShareResult(pf[0],"1", pf[2]);
+				case ERROR:
+					if (arg1 == Option.SHARE.getType()) {
+						if(("微信".equals(pf[0]) || pf[0].indexOf("微信") > -1) && ToolsDevice.isAppInPhone(mContext, "com.tencent.mm") == 0){
+							Tools.showToast(mContext, "未检测到相关应用");
+						}else
+							Tools.showToast(mContext, pf[0] + "分享失败");
+						notifyMsgResult(Option.SHARE, pf[0],"1", pf[2]);
+					} else if (arg1 == Option.AUTHORIZE.getType()) {
+						Tools.showToast(mContext, pf[0] + "授权失败");
+						notifyMsgResult(Option.AUTHORIZE, pf[0],"1", pf[2]);
+					}
+
 					break;
-				case SHARE_CANCLE:
-					Tools.showToast(mContext, pf[0] + "取消分享");
-					notifyShareResult(pf[0],"1", pf[2]);
+				case CANCEL:
+					if (arg1 == Option.SHARE.getType()) {
+						Tools.showToast(mContext, pf[0] + "取消分享");
+						notifyMsgResult(Option.SHARE, pf[0],"1", pf[2]);
+					} else if (arg1 == Option.AUTHORIZE.getType()) {
+						Tools.showToast(mContext, pf[0] + "授权分享");
+						notifyMsgResult(Option.AUTHORIZE, pf[0],"1", pf[2]);
+					}
 					break;
 			}
 			return false;
 		}
 	});
 
-	public void notifyShareResult(String platform,String success, String jsCallbackParams){
+	private void notifyMsgResult(Option option, String platform, String success, String
+			jsCallbackParams){
 		Map<String,String> data = new HashMap<>();
 		data.put("platform",platform);
 		data.put("status",success);
 		data.put("callbackParams", jsCallbackParams);
-		ObserverManager.getInstance().notify(ObserverManager.NOTIFY_SHARE,this,data);
+		String name = "";
+		switch (option) {
+			case SHARE:
+				name = ObserverManager.NOTIFY_SHARE;
+				break;
+			case AUTHORIZE:
+				name = ObserverManager.NOTIFY_AUTHORIZE_THIRD;
+				break;
+		}
+		ObserverManager.getInstance().notify(name,this,data);
 	}
 
 	public String[] getPlatform(String name){
@@ -334,11 +385,11 @@ public class ShareTools {
 		return pf;
 	}
 
-	private final int SHARE_OK = 1;
-	private final int SHARE_ERROR = 2;
-	private final int SHARE_CANCLE = 3;
+	public static final int OK = 1;
+	public static final int ERROR = 2;
+	public static final int CANCEL = 3;
 
-	private void showShareMiniProgram(Map<String, String> map) {
+	private void showShareMiniProgram(Map<String, String> map, ActionListener listener) {
 		if (map == null || map.isEmpty())
 			return;
 		String path = "pages/index/index.html";
@@ -385,30 +436,110 @@ public class ShareTools {
 		platform.setPlatformActionListener(new PlatformActionListener() {
 			@Override
 			public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
-				Message msg = new Message();
-				msg.what = SHARE_OK;
-				msg.obj = platform.getName();
-				shareHandler.sendMessage(msg);
+				if (listener != null)
+					listener.onComplete(Option.SHARE.getType(), OK, platform, null);
+				else
+					handleCallback(Option.SHARE.getType(), OK, platform, null);
 			}
 
 			@Override
 			public void onError(Platform platform, int i, Throwable throwable) {
 				throwable.printStackTrace();
-				Message msg = new Message();
-				msg.what = SHARE_ERROR;
-				msg.obj = platform.getName();
-				shareHandler.sendMessage(msg);
+				if (listener != null)
+					listener.onError(Option.SHARE.getType(), ERROR, platform, null);
+				else
+					handleCallback(Option.SHARE.getType(), ERROR, platform, null);
 			}
 
 			@Override
 			public void onCancel(Platform platform, int i) {
-				Message msg = new Message();
-				msg.what = SHARE_CANCLE;
-				msg.obj = platform.getName();
-				shareHandler.sendMessage(msg);
+				if (listener != null)
+					listener.onCancel(Option.SHARE.getType(), CANCEL, platform, null);
+				else
+					handleCallback(Option.SHARE.getType(), CANCEL, platform, null);
 			}
 		});
 		platform.share(shareParams);
+	}
+
+	public void requestAuthorize(String platform) {
+		Platform pf = ShareSDK.getPlatform(platform);
+		pf.SSOSetting(false);
+		Log.e("SLL", "onComplete111");
+		pf.setPlatformActionListener(new PlatformActionListener() {
+			@Override
+			public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
+				if (hashMap != null && !hashMap.isEmpty()) {
+					JSONObject obj = new JSONObject();
+					try {
+						for (String key : hashMap.keySet()) {
+                            obj.put(key, hashMap.get(key));
+                        }
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+					handleCallback(Option.AUTHORIZE.getType(), OK, platform, obj.toString());
+				}
+			}
+
+			@Override
+			public void onError(Platform platform, int i, Throwable throwable) {
+				handleCallback(Option.AUTHORIZE.getType(), ERROR, platform, null);
+			}
+
+			@Override
+			public void onCancel(Platform platform, int i) {
+				handleCallback(Option.AUTHORIZE.getType(), CANCEL, platform, null);
+			}
+		});
+		pf.authorize();
+		pf.showUser(null);
+	}
+
+	public void notifyCallback(int optionType, int callbackType, Platform platform, String
+			jsonStr) {
+		handleCallback(optionType, callbackType, platform, jsonStr);
+	}
+
+	private void handleCallback(int optionType, int callbackType, Platform platform, String
+			jsonStr) {
+		Message msg = new Message();
+		msg.what = callbackType;
+		msg.obj = platform.getName();
+		msg.arg1 = optionType;
+		if (!TextUtils.isEmpty(jsonStr)) {
+			Bundle bundle = new Bundle();
+			bundle.putString("bundle", jsonStr);
+			msg.setData(bundle);
+		}
+		shareHandler.sendMessage(msg);
+	}
+
+	public interface ActionListener {
+		void onComplete(int optionType, int callbackType, Platform platform, String jsonStr);
+		void onError(int optionType, int callbackType, Platform platform, String jsonStr);
+		void onCancel(int optionType, int callbackType, Platform platform, String jsonStr);
+	}
+
+	public enum  Option {
+		SHARE(0, "分享"),
+		AUTHORIZE(1, "授权");
+
+		private int mType;
+		private String mDesc;
+		Option(int type, String desc) {
+			this.mType = type;
+			this.mDesc = desc;
+		}
+
+		public int getType() {
+			return this.mType;
+		}
+
+		public String getDesc() {
+			return this.mDesc;
+		}
+
 	}
 
 }

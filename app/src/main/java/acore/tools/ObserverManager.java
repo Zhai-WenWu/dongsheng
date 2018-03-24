@@ -22,6 +22,7 @@ public class ObserverManager {
     public static final String NOTIFY_FOLLOW = "notify_follow";
     public static final String NOTIFY_PAYFINISH = "notify_payfinish";
     public static final String NOTIFY_SHARE = "notify_share";
+    public static final String NOTIFY_AUTHORIZE_THIRD = "notify_authorize_third";
     public static final String NOTIFY_COMMENT_SUCCESS = "notify_comment_success";
     public static final String NOTIFY_YIYUAN_BIND = "notify_yiyuan_bind";
     public static final String NOTIFY_VIPSTATE_CHANGED = "notify_vipstate_changed";
