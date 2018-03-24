@@ -141,12 +141,14 @@ public class SearchResultAdViewGenerater {
         String desc = dataMap.get("desc");
         String iconUrl = dataMap.get("iconUrl");
         String imageUrl = dataMap.get("imgUrl");
-        String allClick = dataMap.get("allClick");
+//        String allClick = dataMap.get("allClick");
         if (adView != null) {
             ImageViewVideo cover_img = (ImageViewVideo) adView.findViewById(R.id.iv_adCover);
             TextView tv_ad_name = (TextView) adView.findViewById(R.id.tv_ad_name);
             TextView tv_ad_decrip = (TextView) adView.findViewById(R.id.tv_ad_decrip);
             TextView tv_ad_observed = (TextView) adView.findViewById(R.id.tv_ad_observed);
+            //暂时不显示，后期开放广告真实浏览数
+            tv_ad_observed.setVisibility(View.GONE);
             ImageView icon_gdt = (ImageView) adView.findViewById(ID_AD_ICON_GDT);
             View view = adView.findViewById(R.id.tv_ad_tag);
             if(view != null){
@@ -158,16 +160,16 @@ public class SearchResultAdViewGenerater {
             setViewImage(cover_img, TextUtils.isEmpty(imageUrl) ? iconUrl : imageUrl);
 
             if (TextUtils.isEmpty(title)) {
+                setViewText(tv_ad_decrip, desc);
                 setViewText(tv_ad_name, desc);
-                setViewText(tv_ad_decrip, desc);
             } else {
-                setViewText(tv_ad_name, title);
-                setViewText(tv_ad_decrip, desc);
+                setViewText(tv_ad_name, desc);
+                setViewText(tv_ad_decrip, title);
             }
 
-            if(TextUtils.isEmpty(allClick))
-                allClick = "5189";
-            setViewText(tv_ad_observed, allClick + "浏览");
+//            if(TextUtils.isEmpty(allClick))
+//                allClick = "5189";
+//            setViewText(tv_ad_observed, allClick + "浏览");
         }
     }
 

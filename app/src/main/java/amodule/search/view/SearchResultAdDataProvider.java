@@ -1,6 +1,5 @@
 package amodule.search.view;
 
-import android.app.Activity;
 import android.text.TextUtils;
 
 import java.util.ArrayList;
@@ -10,7 +9,6 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import acore.override.activity.base.BaseActivity;
-import acore.override.helper.XHActivityManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import third.ad.scrollerAd.XHAllAdControl;
@@ -57,7 +55,7 @@ public class SearchResultAdDataProvider {
                                 ArrayList<Map<String, String>> adList = StringManager.getListMapByJson(adStr);
                                 if (adList != null && adList.size() > 0) {
                                     Map<String, String> adDataMap = adList.get(0);
-                                    adDataMap.put("allClick", String.valueOf(Tools.getRandom(4000, 10000)));
+//                                    adDataMap.put("allClick", String.valueOf(Tools.getRandom(4000, 10000)));
                                     list.add(adDataMap);
                                 }
                             } else {
