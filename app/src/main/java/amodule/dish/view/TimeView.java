@@ -39,7 +39,7 @@ public class TimeView {
     private AdapterTimeDish adapter;
     private int currentPage = 0, everyPage = 0, loadPage = 0;
     private String type;
-    public boolean isToday = false;
+    private boolean isToday = false;
     private String g1;
     private ShareImg shareImag;
     private ListView mListView;
@@ -180,8 +180,8 @@ public class TimeView {
                         public void run() {
                             adDataControl.getDishAdData(mAct, new DishAdDataControl.DishAdDataControlCallback() {
                                 @Override
-                                public void onGetDataComplete() {
-                                    adDataControl.addAdDataToList(arrayList);
+                                public void onGetDataComplete(boolean isRefresh) {
+                                    adDataControl.addAdDataToList(isRefresh,arrayList);
                                     SyntaxTools.runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {

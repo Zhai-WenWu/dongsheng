@@ -1,5 +1,6 @@
 package amodule.article.tools;
 
+import android.app.Activity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
@@ -31,11 +32,17 @@ public class VideoAdContorler extends ArticleAdContrler {
     public final int ARTICLE_BOTTOM = 101;
     public final int ARTICLE_RECOMMEND = 0;
 
+    public VideoAdContorler(Activity activity) {
+        super(activity);
+    }
+
     @Override
     public void initADData() {
         //请求广告数据
         xhAllAdControlBootom = requestAdData(new String[]{ARTICLE_CONTENT_BOTTOM}, "wz_wz");
+        xhAllAdControlBootom.registerRefreshCallback();
         xhAllAdControlList = requestAdData(new String[]{ARTICLE_RECM_1}, "wz_list");
+        xhAllAdControlList.registerRefreshCallback();
     }
 
     @Override
@@ -45,7 +52,7 @@ public class VideoAdContorler extends ArticleAdContrler {
             adData.add(str);
         return new XHAllAdControl(adData, new XHAllAdControl.XHBackIdsDataCallBack() {
             @Override
-            public void callBack(Map<String, String> map) {
+            public void callBack(boolean isRefresh,Map<String, String> map) {
                 for (String key : ads) {
                     String adStr = map.get(key);
                     switch (key) {

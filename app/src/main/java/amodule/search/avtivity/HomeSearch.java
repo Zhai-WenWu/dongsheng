@@ -16,12 +16,6 @@ import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.search.data.SearchConstant;
 import amodule.search.view.GlobalSearchView;
-import amodule.search.view.SearchResultAdDataProvider;
-
-
-/**
- * Created by ：airfly on 2016/10/10 15:15.
- */
 
 public class HomeSearch extends BaseActivity {
 
@@ -39,7 +33,7 @@ public class HomeSearch extends BaseActivity {
         initActivity("", 2, 0, 0, R.layout.a_search_global);
         initData();
         initView();
-        SearchResultAdDataProvider.getInstance().getAdData();
+//        SearchResultAdDataProvider.getInstance().getAdData();
         Log.i("tzy","onCreate :: time = " + (System.currentTimeMillis() - startTime) + "ms.");
     }
 

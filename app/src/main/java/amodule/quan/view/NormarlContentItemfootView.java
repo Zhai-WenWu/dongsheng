@@ -74,7 +74,7 @@ public class NormarlContentItemfootView extends NormarlContentItemView{
             view.findViewById(R.id.distance_layout).setVisibility(View.GONE);
             view.findViewById(R.id.im_distance).setVisibility(View.GONE);
 
-            if("1".equals("hideAdTag")){
+            if("ad".equals(map.get("adStyle")) && "1".equals(map.get("hideAdTag"))){
                 view.findViewById(R.id.ad_tag).setVisibility(View.INVISIBLE);
             }else{
                 view.findViewById(R.id.ad_tag).setVisibility(View.VISIBLE);

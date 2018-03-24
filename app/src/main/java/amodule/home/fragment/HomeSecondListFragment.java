@@ -30,9 +30,7 @@ import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
-import third.ad.control.AdControlHomeDish;
 import third.ad.control.AdControlNormalDish;
-import third.ad.control.AdControlParent;
 import third.ad.option.AdOptionParent;
 import third.ad.tools.AdPlayIdConfig;
 
@@ -62,7 +60,7 @@ public class HomeSecondListFragment extends Fragment {
     /** 是否显示 */
     private boolean mIsVisible;
 
-    private AdControlParent mAdControl;
+    private AdControlNormalDish mAdControl;
     private HomeSecondListActivity mActivity;
     private PtrClassicFrameLayout mPtrFrameLayout;
     private RvListView mRv;
@@ -98,6 +96,19 @@ public class HomeSecondListFragment extends Fragment {
             mPosition = getArguments().getInt(KEY_POSITION);
         }
         mAdControl = getAdControl();
+        mAdControl.setRefreshCallback(() -> {
+            mListData = mAdControl.getAutoRefreshAdData(mListData);
+            if (mHomeAdapter != null){
+                mHomeAdapter.notifyDataSetChanged();
+            }
+        });
+        mActivity.getActMagager().registerADController(mAdControl);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mActivity.getActMagager().unregisterADController(mAdControl);
     }
 
     @Override
@@ -310,7 +321,7 @@ public class HomeSecondListFragment extends Fragment {
         }
     }
 
-    public AdControlParent getAdControl(){
+    public AdControlNormalDish getAdControl(){
         String type = mModuleBean.getType(); //当前页的type
         //Log.i("FRJ","type:" + type);
         if(TextUtils.isEmpty(type)){
@@ -358,22 +369,12 @@ public class HomeSecondListFragment extends Fragment {
                 }
             });
             mAdControl.refreshData();
-            if(mAdControl instanceof AdControlHomeDish){//推荐首页
-                ((AdControlHomeDish)mAdControl).setAdLoadNumberCallBack(new AdOptionParent.AdLoadNumberCallBack() {
-                    @Override
-                    public void loadNumberCallBack(int Number) {
-                        if(Number>7){
-                            handlerMainThreadUIAD();
-                        }
-                    }
-                });
-            }else if(mAdControl instanceof  AdControlNormalDish){//其他标准列表结构
-                ((AdControlNormalDish)mAdControl).setAdLoadNumberCallBack(Number -> {
-                    if(Number>7){
-                        handlerMainThreadUIAD();
-                    }
-                });
-            }
+            mAdControl.setAdLoadNumberCallBack(Number -> {
+                if(Number>7){
+                    handlerMainThreadUIAD();
+                }
+            });
+
 
             //去掉全部的广告位置
             int size= mListData.size();

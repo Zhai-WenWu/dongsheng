@@ -56,6 +56,7 @@ public class BarSubjectFloorOwnerNew extends RelativeLayout implements OnClickLi
     private SubjectHeaderVideoLayout videoLayout;
     /**更多button的layout*/
     private SubjectHeaderMore headerMore;
+    private SubjectFloorAdvertControl mFloorAdvertControl;
     /**统计id*/
     public static String tongjiId = "a_post_detail_normal";
     private boolean isHasVideo = false;
@@ -81,7 +82,8 @@ public class BarSubjectFloorOwnerNew extends RelativeLayout implements OnClickLi
 
         headerTitle.setTitleOnClick(this);
         //初始化广告
-        new SubjectFloorAdvertControl(mAct, this, tongjiId).initAd();
+        mFloorAdvertControl = new SubjectFloorAdvertControl(mAct, this, tongjiId);
+        mFloorAdvertControl.initAd();
     }
 
     /**
@@ -385,7 +387,13 @@ public class BarSubjectFloorOwnerNew extends RelativeLayout implements OnClickLi
      * view滚动时调用
      */
     public void viewScroll(){
-        if(isHasVideo) videoLayout.viewScroll();
+        if(isHasVideo){
+            videoLayout.viewScroll();
+        }
+        if(mFloorAdvertControl != null){
+            mFloorAdvertControl.onAdShow();
+        }
+
     }
 
 

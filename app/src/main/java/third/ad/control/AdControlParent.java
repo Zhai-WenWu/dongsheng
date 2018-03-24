@@ -7,6 +7,7 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.Map;
 
+import acore.logic.ActivityMethodManager;
 import acore.override.helper.XHActivityManager;
 import third.ad.option.AdOptionParent;
 
@@ -109,5 +110,17 @@ public class AdControlParent {
         }
 
         return endIndex;
+    }
+
+    protected ActivityMethodManager.IAutoRefreshCallback mRefreshCallback;
+
+    protected void autoRefreshCallback(){
+        if(mRefreshCallback != null){
+            mRefreshCallback.refreshSelfAD();
+        }
+    }
+
+    public void setRefreshCallback(ActivityMethodManager.IAutoRefreshCallback refreshCallback) {
+        mRefreshCallback = refreshCallback;
     }
 }

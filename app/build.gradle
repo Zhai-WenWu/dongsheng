@@ -36,8 +36,8 @@ dependencies {
     compile 'com.meituan.android.walle:library:1.0.3'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.qiyukf.unicorn:unicorn:3.10.0'
-    compile project(':cling_lib')
-    compile project(':gsyVideoPlayer-java')
+    implementation project(':cling_lib')
+    implementation project(':gsyVideoPlayer-java')
     //Java8的stream API第三方兼容包
     compile 'com.annimon:stream:1.0.3'
 }
@@ -49,8 +49,8 @@ android {
         applicationId "com.xiangha"
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 249
-        versionName "6.0.9.1"
+        versionCode 250
+        versionName "6.1.0.1"
         // dex突破65535的限制
         multiDexEnabled true
         ndk {

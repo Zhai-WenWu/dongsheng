@@ -25,8 +25,10 @@ import acore.tools.Tools;
 import amodule._common.delegate.IBindMap;
 import amodule._common.delegate.IHandlerClickEvent;
 import amodule._common.delegate.ISaveStatistic;
+import amodule._common.delegate.ISetShowIndex;
 import amodule._common.delegate.IStatictusData;
 import amodule._common.delegate.IStatisticCallback;
+import amodule._common.delegate.IUpdatePadding;
 import amodule._common.delegate.StatisticCallback;
 import amodule._common.helper.WidgetDataHelper;
 import amodule._common.utility.WidgetUtility;
@@ -40,10 +42,12 @@ import amodule.home.view.HomeFuncNavView1;
  * E_mail : ztanzeyu@gmail.com
  */
 
-public class FuncNavView1 extends HomeFuncNavView1 implements IBindMap,IStatictusData,ISaveStatistic,IHandlerClickEvent,IStatisticCallback {
+public class FuncNavView1 extends HomeFuncNavView1 implements IBindMap,IStatictusData,
+        ISaveStatistic,IHandlerClickEvent,IStatisticCallback, ISetShowIndex, IUpdatePadding {
 
-    private int mOriginalPaddingTop = 0;
     private StatisticCallback mStatisticCallback;
+
+    private int mShowIndex = -1;
     public FuncNavView1(Context context) {
         super(context);
     }
@@ -59,8 +63,6 @@ public class FuncNavView1 extends HomeFuncNavView1 implements IBindMap,IStatictu
     @Override
     protected void initData() {
         super.initData();
-        mOriginalPaddingTop = getPaddingTop();
-//        Log.i("tzy", "initData: mOriginalPaddingTop = " + mOriginalPaddingTop);
     }
 
     @Override
@@ -78,8 +80,7 @@ public class FuncNavView1 extends HomeFuncNavView1 implements IBindMap,IStatictu
             return;
         }
         //设置顶部边距
-        String sort = data.get(WidgetDataHelper.KEY_SORT);
-        int paddingTop = "1".equals(sort) ? Tools.getDimen(getContext(),R.dimen.dp_10)  : 0;
+        int paddingTop = mShowIndex == 0 ? Tools.getDimen(getContext(),R.dimen.dp_10)  : 0;
         setPadding(getPaddingLeft(),paddingTop,getPaddingRight(),getPaddingBottom());
         setDataToView(arrayList);
     }
@@ -148,5 +149,15 @@ public class FuncNavView1 extends HomeFuncNavView1 implements IBindMap,IStatictu
     @Override
     public void setStatisticCallback(StatisticCallback statisticCallback) {
         mStatisticCallback = statisticCallback;
+    }
+
+    @Override
+    public void setShowIndex(int showIndex) {
+        mShowIndex = showIndex;
+    }
+
+    @Override
+    public void updatePadding(int l, int t, int r, int b) {
+        setPadding(l, t, r, b);
     }
 }

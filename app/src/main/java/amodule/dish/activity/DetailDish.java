@@ -204,9 +204,9 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
                 detailDishViewManager.handlerIngreView(list);
                 savaJsAdata(list);
                 break;
-            case DetailDishDataManager.DISH_DATA_BANNER://banner
-                detailDishViewManager.handlerBannerView(list);
-                break;
+//            case DetailDishDataManager.DISH_DATA_BANNER://banner
+//                detailDishViewManager.handlerBannerView(list);
+//                break;
             case DetailDishDataManager.DISH_DATA_STEP://步骤
                 if(list!=null&&list.size()>0&&!TextUtils.isEmpty(list.get(0).get("list"))){
                     maplist.clear();

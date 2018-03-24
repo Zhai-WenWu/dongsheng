@@ -5,16 +5,17 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
+import com.annimon.stream.Stream;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import acore.logic.ActivityMethodManager;
 import acore.override.helper.XHActivityManager;
 import third.ad.option.AdOptionHomeDish;
 import third.ad.option.AdOptionParent;
 import third.ad.tools.AdPlayIdConfig;
-
-import static third.ad.control.AdControlHomeDish.tag_yu;
 
 /**
  *  feed流页面的，广告特殊逻辑，分为三部分
@@ -24,7 +25,7 @@ import static third.ad.control.AdControlHomeDish.tag_yu;
  * 刷新策略：
  * 1、以第一个广告的加载时间为标准，一个过期全部过期。
  */
-public class AdControlNormalDish extends AdControlParent{
+public class AdControlNormalDish extends AdControlParent implements ActivityMethodManager.IAutoRefresh{
     public static String tag_yu="zyj";
     public static String Control_up="up";
     public static String Control_down="down";
@@ -59,6 +60,34 @@ public class AdControlNormalDish extends AdControlParent{
         adControlMap.put(adControlNum,adControlParent);
 
         Log.i(tag_yu,"首页加载数据");
+    }
+
+    public ArrayList<Map<String, String>> getAutoRefreshAdData(ArrayList<Map<String, String>> old_list) {
+        final AdOptionHomeDish adOptionHomeDish = getCurrentControl(false);
+        if(adOptionHomeDish == null){
+            return old_list;
+        }else{
+            Log.i(tag_yu,"getLimitNum()::"+getLimitNum());
+            adOptionHomeDish.setLimitNum(getLimitNum());
+            if(downCurrentControlTag>1)
+                adOptionHomeDish.setStartIndex(getIndexAd((downCurrentControlTag-1)*10));
+            adOptionHomeDish.setAdLoadNumberCallBack(new AdOptionParent.AdLoadNumberCallBack() {
+                @Override
+                public void loadNumberCallBack(int Number) {
+                    Log.i(tag_yu,"*********Number****************:::"+Number+":::::tag::"+adOptionHomeDish.getControlTag());
+                    String tag=adOptionHomeDish.getControlTag();
+                    if(!TextUtils.isEmpty(tag)) {
+                        int tagIndex= Integer.parseInt(tag);
+                        if (adLoadNumberCallBack != null&&downAdState.containsKey(String.valueOf(tagIndex+1))) {
+                            adLoadNumberCallBack.loadNumberCallBack(Number);
+                        }
+                        downAd.put(String.valueOf(tagIndex),String.valueOf(Number));
+                    }
+                }
+            });
+            old_list = adOptionHomeDish.getNewAdData(old_list,false);
+        }
+        return old_list;
     }
 
     /**
@@ -265,5 +294,22 @@ public class AdControlNormalDish extends AdControlParent{
     public AdOptionParent.AdLoadNumberCallBack adLoadNumberCallBack;
     public void setAdLoadNumberCallBack(AdOptionParent.AdLoadNumberCallBack adLoadNumberCallBack){
         this.adLoadNumberCallBack=adLoadNumberCallBack;
+    }
+
+    @Override
+    public void autoRefreshSelfAD() {
+        Stream.of(downAdControlMap)
+                .forEach(value -> {
+                    AdOptionHomeDish optionHomeDish = value.getValue();
+                    optionHomeDish.setRefreshCallback(this::autoRefreshCallback);
+                    optionHomeDish.autoRefreshSelfAD();
+                });
+
+        Stream.of(adControlMap)
+                .forEach(value -> {
+                    AdOptionHomeDish optionHomeDish = value.getValue();
+                    optionHomeDish.setRefreshCallback(this::autoRefreshCallback);
+                    optionHomeDish.autoRefreshSelfAD();
+                });
     }
 }

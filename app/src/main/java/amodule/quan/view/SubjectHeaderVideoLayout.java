@@ -237,7 +237,10 @@ public class SubjectHeaderVideoLayout extends RelativeLayout {
         list.add(key);
         xhAllAdControl = new XHAllAdControl(list, new XHAllAdControl.XHBackIdsDataCallBack() {
             @Override
-            public void callBack(Map<String, String> map) {
+            public void callBack(boolean isRefresh,Map<String, String> map) {
+                if(isRefresh){
+                    return;
+                }
                 String temp= map.get(key);
                 if(!TextUtils.isEmpty(temp)) {
                     mapAd = StringManager.getFirstMap(temp);
@@ -256,6 +259,7 @@ public class SubjectHeaderVideoLayout extends RelativeLayout {
 
             }
         },mAct,"community_media");
+        xhAllAdControl.registerRefreshCallback();
     }
 
     /**

@@ -164,6 +164,14 @@ public class BaseFragmentActivity extends FragmentActivity {
 	}
 
 	@Override
+	protected void onRestart() {
+		super.onRestart();
+		if (mActMagager != null){
+			mActMagager.onRestart();
+		}
+	}
+
+	@Override
 	protected void onResume() {
 		super.onResume();
 		resumeTime = System.currentTimeMillis();
@@ -234,5 +242,9 @@ public class BaseFragmentActivity extends FragmentActivity {
 	public void finish() {
 		super.finish();
 		overridePendingTransition(R.anim.in_from_left, R.anim.out_to_right);
+	}
+
+	public ActivityMethodManager getActMagager() {
+		return mActMagager;
 	}
 }

@@ -9,7 +9,7 @@
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/title"
+        android:layout_below="@+id/ad_title"
         android:layout_marginBottom="@dimen/dp_7"
         android:background="@color/transparent">
 
@@ -26,7 +26,6 @@
             android:layout_alignBottom="@+id/img"
             android:layout_alignRight="@+id/img"
             android:visibility="gone"
-            tools:visibility="visible"
             android:layout_width="@dimen/dp_40"
             android:layout_height="@dimen/dp_13.5" />
 
@@ -42,7 +41,7 @@
     </RelativeLayout>
 
     <TextView
-        android:id="@+id/title"
+        android:id="@+id/ad_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -60,7 +59,7 @@
         android:layout_marginRight="@dimen/dp_4"
         android:scaleType="centerInside"
         android:src="@drawable/home_item_adicon"
-        android:visibility="visible"
+        android:visibility="gone"
         android:layout_below="@+id/container"/>
 
     <TextView

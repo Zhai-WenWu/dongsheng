@@ -48,12 +48,6 @@ public class XHScrollerBaidu extends XHScrollerAdParent {
 
     @Override
     public void onThirdClick(String oneLevel, String twoLevel) {
-        if(null == nativeResponse){
-            Log.i("tzy","nativeResponseObject为null");
-        }
-        if(view==null){
-            Log.i("tzy","view为null");
-        }
         if(null != nativeResponse && null != view){
             Log.i("tzy","广告点击:::"+XHScrollerAdParent.ADKEY_BAIDU+":::位置:"+twoLevel);
             nativeResponse.handleClick(view);
@@ -73,11 +67,6 @@ public class XHScrollerBaidu extends XHScrollerAdParent {
         BaiduAdTools.newInstance().getNativeData(nativeResponse, new BaiduAdTools.OnHandlerDataCallback() {
             @Override
             public void onHandlerData(String title, String desc, String iconUrl, String imageUrl,boolean isBigPic) {
-//                Log.d("tzy", "XHScrollerBaidu :: title = " + title);
-//                Log.d("tzy", "XHScrollerBaidu :: desc = " + desc);
-//                Log.d("tzy", "XHScrollerBaidu :: iconUrl = " + iconUrl);
-//                Log.d("tzy", "XHScrollerBaidu :: imageUrl = " + imageUrl);
-//                Log.d("tzy", "XHScrollerBaidu :: isBigPic = " + isBigPic);
                 if(!TextUtils.isEmpty(title)
                         && !TextUtils.isEmpty(desc)
                         && (!TextUtils.isEmpty(imageUrl) || !TextUtils.isEmpty(iconUrl))

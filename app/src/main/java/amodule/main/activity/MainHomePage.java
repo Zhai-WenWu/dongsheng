@@ -12,13 +12,14 @@ import android.widget.Button;
 
 import com.xiangha.R;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 import acore.broadcast.ConnectionChangeReceiver;
+import acore.logic.ConfigMannager;
 import acore.logic.MessageTipController;
 import acore.logic.SpecialWebControl;
 import acore.logic.XHClick;
-import acore.logic.ConfigMannager;
 import acore.logic.load.LoadManager;
 import acore.override.activity.mian.MainBaseActivity;
 import acore.tools.IObserver;
@@ -34,6 +35,7 @@ import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import third.ad.control.AdControlParent;
+import third.ad.tools.AdPlayIdConfig;
 
 import static acore.logic.ConfigMannager.KEY_LOGPOSTTIME;
 
@@ -47,6 +49,7 @@ import static acore.logic.ConfigMannager.KEY_LOGPOSTTIME;
 
 public class MainHomePage extends MainBaseActivity implements IObserver,ISetMessageTip {
     public final static String KEY = "MainIndex";
+    public final static String recommedType = "recomv1";//推荐类型
     public final static String recommedType_statictus = "recom";//推荐类型-用于统计
     public final static String STATICTUS_ID_HOMEPAGE = "a_index580";
     public final static String STATICTUS_ID_PULISH = "a_post_button580";
@@ -95,6 +98,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
     private void initialize() {
         //初始化 UI 控制
         mViewContrloer.onCreate();
+        mViewContrloer.getRvListView().setOnTouchListener((v, event) -> isRefreshingFeed);
         //初始化数据控制
         mDataControler = new HomeDataControler(this);
         mDataControler.setInsertADCallback((listDatas, isBack) -> {
@@ -110,7 +114,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
             if (mHomeAdapter != null
                     && mViewContrloer.getRvListView() != null
                     && !mViewContrloer.getRvListView().isComputingLayout())
-                mHomeAdapter.notifyDataSetChanged();
+                mHomeAdapter.notifyItemRangeChanged(0,mDataControler.getDataSize());
         });
         mDataControler.setEntryptDataCallback(this::EntryptData);
         //初始化adapter
@@ -199,6 +203,17 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
     private void loadRemoteData() {
         startLoadTime = System.currentTimeMillis();
         mDataControler.loadServiceHomeData(getHeaderCallback(false));
+
+        loadAdData();
+    }
+
+    private void loadAdData() {
+        ArrayList<String> arr = new ArrayList<>();
+        arr.add(AdPlayIdConfig.HOME_BANNEER_1);
+        mDataControler.loadAdData(arr, (isRefresh, map) -> {
+            mViewContrloer.setAdController(mDataControler.getAllAdController());
+            mViewContrloer.setAdData(map, arr);},
+                this, "sy_banner");
     }
 
     private void loadTopData() {
@@ -259,7 +274,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
         //已经load
         LoadOver = true;
         if (refresh && mDataControler != null) {
-            mDataControler.isNeedRefresh(false);
+            mDataControler.isNeedRefresh(true);
         }
         if (mDataControler != null) {
 //            Log.i("tzy", "EntryptData::" + mDataControler.isNeedRefCurrData());
@@ -269,7 +284,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
                 mDataControler.setBackUrl("");
                 mDataControler.clearData();
                 if (mHomeAdapter != null)
-                    mHomeAdapter.notifyDataSetChanged();
+                    mHomeAdapter.notifyItemRangeChanged(0,mDataControler.getDataSize());
             }
         }
 

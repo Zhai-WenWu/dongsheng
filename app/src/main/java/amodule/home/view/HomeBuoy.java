@@ -10,18 +10,29 @@ import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.annimon.stream.Stream;
 import com.bumptech.glide.Glide;
 import com.xiangha.R;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import acore.logic.AppCommon;
+import acore.logic.LoginManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import third.ad.db.bean.AdBean;
+import third.ad.db.bean.XHSelfNativeData;
 import third.ad.tools.AdConfigTools;
 import third.ad.tools.AdPlayIdConfig;
+import third.ad.tools.XHSelfAdTools;
+import xh.basic.tool.UtilString;
+
+import static third.ad.scrollerAd.XHScrollerAdParent.TAG_BANNER;
+import static third.ad.scrollerAd.XHScrollerSelf.showSureDownload;
 
 /**
  * Description :
@@ -41,7 +52,9 @@ public class HomeBuoy {
     private Animation open;// 打开动画
     private ImageView imageButton;
     private OnClickCallback mClickCallback;
-    private Map<String,String> bannerMap;
+    private Map<String, String> configMap = new HashMap<>();
+    private XHSelfNativeData mNativeData;
+    private boolean isAdded = false;
 
     public HomeBuoy(Activity act) {
         this.mAct = act;
@@ -52,39 +65,71 @@ public class HomeBuoy {
     }
 
     //处理数据
-    private void handlerData(){
+    private void handlerData() {
         AdBean adBean = AdConfigTools.getInstance().getAdConfig(AdPlayIdConfig.HOME_FLOAT);
-        if(adBean == null){
+        if (adBean == null) {
             return;
         }
-
-        Map<String,String> adConfigMap = StringManager.getFirstMap(adBean.adConfig);
-        final String[] keys = {"1","2","3","4",};
-        bannerMap = new HashMap<>();
-        for(String key:keys){
-            Map<String,String> tempMap = StringManager.getFirstMap(adConfigMap.get(key));
-            if("personal".equals(tempMap.get("type"))
-                    && "2".equals(tempMap.get("open"))){
-                bannerMap = StringManager.getFirstMap(adBean.banner);
-                break;
-            }
+        ArrayList<Map<String, String>> configArray = StringManager.getListMapByJson(adBean.adConfig);
+        Stream.of(configArray)
+                .filter(value -> "2".equals(value.get("open"))
+                        && TAG_BANNER.equals(value.get("type"))
+                        && configMap.isEmpty()
+                ).forEach(value -> configMap.putAll(value));
+        String adid = analysData(configMap.get("data"));
+        if (TextUtils.isEmpty(adid)) {
+            return;
         }
-        //初始化浮标
-        initBuoy();
-        //初始化动画
-        initAnimation();
-        //初始化hanlder
-        initHandler();
-        //绑定点击
-        bindClick(bannerMap.get("url"));
-        //设置图片
-        setBuoyImage(StringManager.getFirstMap(bannerMap.get("imgs")).get("rightFloatImg"));
-        //显示
-        setFloatMenuData();
+        XHSelfAdTools.getInstance().loadNativeData(Collections.singletonList(adid), new XHSelfAdTools.XHSelfCallback() {
+            @Override
+            public void onNativeLoad(ArrayList<XHSelfNativeData> list) {
+                if (list == null || list.isEmpty()) {
+                    return;
+                }
+                mNativeData = list.get(0);
+                if (mNativeData != null) {
+                    if ("1".equals(mNativeData.getAdType())
+                            || LoginManager.isShowAd()) {
+                        //初始化浮标
+                        initBuoy();
+                        //初始化动画
+                        initAnimation();
+                        //初始化hanlder
+                        initHandler();
+                        //绑定点击
+                        bindClick(mNativeData.getUrl());
+                        //设置图片
+                        setBuoyImage(mNativeData.getLittleImage());
+                        //显示
+                        setFloatMenuData();
+                    } else {
+                        hide();
+                        removeFromRoot();
+                    }
+                } else {
+                    hide();
+                    removeFromRoot();
+                }
+            }
+
+            @Override
+            public void onNativeFail() {
+
+            }
+        });
+
+    }
+
+    private String analysData(String data) {
+        LinkedHashMap<String, String> map_link = UtilString.getMapByString(data, "&", "=");
+        String adid = data;
+        if (map_link.containsKey("adid"))
+            adid = map_link.get("adid");
+        return adid;
     }
 
     public void setFloatMenuData() {
-        if(null == imageButton) return;
+        if (null == imageButton) return;
         show();
         if (isClosed) {
             imageButton.startAnimation(isMove ? open : close);
@@ -98,15 +143,36 @@ public class HomeBuoy {
         imageButton = new ImageView(mAct);
         int width = Tools.getDimen(mAct, R.dimen.dp_45);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(width, width);
-        params.setMargins(params.leftMargin, params.topMargin, Tools.getDimen(mAct,R.dimen.dp_11), Tools.getDimen(mAct,R.dimen.dp_34));
+        params.setMargins(params.leftMargin, params.topMargin, Tools.getDimen(mAct, R.dimen.dp_11), Tools.getDimen(mAct, R.dimen.dp_34));
         params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+
+        addToRoot(params);
+        hide();//初始化完成后hide浮标
+    }
+
+    private void addToRoot(RelativeLayout.LayoutParams params) {
         RelativeLayout rootLayout = (RelativeLayout) mAct.findViewById(R.id.activityLayout);
         if (rootLayout == null) {
             return;
         }
-        rootLayout.addView(imageButton, params);
-        hide();//初始化完成后hide浮标
+        if (!isAdded
+                && imageButton != null) {
+            isAdded = true;
+            rootLayout.addView(imageButton, params);
+        }
+    }
+
+    private void removeFromRoot() {
+        RelativeLayout rootLayout = (RelativeLayout) mAct.findViewById(R.id.activityLayout);
+        if (rootLayout == null) {
+            return;
+        }
+        if (isAdded
+                && imageButton != null) {
+            isAdded = false;
+            rootLayout.removeView(imageButton);
+        }
     }
 
     private void initAnimation() {
@@ -122,8 +188,8 @@ public class HomeBuoy {
         open.setDuration(300);
     }
 
-    public final int CLOSE = 1;
-    public final int OPEN = 2;
+    private final int CLOSE = 1;
+    private final int OPEN = 2;
 
     private void initHandler() {
         mainFloatHandler = new Handler(Looper.getMainLooper(), msg -> {
@@ -147,9 +213,14 @@ public class HomeBuoy {
         }
         imageButton.setOnClickListener(v -> {
             if (isMove) {
-                AppCommon.openUrl(mAct, floatUrl, true);
-//                    executeCloseAnim();
-                AdConfigTools.getInstance().postStatistics("click",AdPlayIdConfig.HOME_FLOAT,"xh",bannerMap != null ? bannerMap.get("id"):"");
+                if (mNativeData != null) {
+                    if ("1".equals(mNativeData.getDbType())) {
+                        showSureDownload(mNativeData, AdPlayIdConfig.HOME_FLOAT, mNativeData.getPositionId(), "xh", mNativeData.getId());
+                    } else {
+                        AppCommon.openUrl(mAct, floatUrl, true);
+                        AdConfigTools.getInstance().postStatistics("click", AdPlayIdConfig.HOME_FLOAT, mNativeData.getPositionId(), "xh", mNativeData.getId());
+                    }
+                }
                 if (mClickCallback != null) {
                     mClickCallback.onClick();
                 }
@@ -166,7 +237,7 @@ public class HomeBuoy {
      */
     private void setBuoyImage(String imgUrl) {
         if (imageButton == null) return;
-        if(TextUtils.isEmpty(imgUrl)){
+        if (TextUtils.isEmpty(imgUrl)) {
             imageButton.setVisibility(View.GONE);
             return;
         }
@@ -174,7 +245,7 @@ public class HomeBuoy {
         imageButton.setVisibility(View.VISIBLE);
 
         Glide.with(mAct).load(imgUrl).into(imageButton);
-        AdConfigTools.getInstance().postStatistics("show",AdPlayIdConfig.HOME_FLOAT,"xh",bannerMap != null ? bannerMap.get("id"):"");
+        AdConfigTools.getInstance().postStatistics("show", AdPlayIdConfig.HOME_FLOAT, mNativeData.getPositionId(), "xh", mNativeData.getId());
     }
 
     public void executeOpenAnim() {
@@ -207,6 +278,10 @@ public class HomeBuoy {
         if (imageButton != null) {
             imageButton.setVisibility(View.GONE);
         }
+    }
+
+    public void resetData() {
+        handlerData();
     }
 
     public void setMove(boolean isMove) {

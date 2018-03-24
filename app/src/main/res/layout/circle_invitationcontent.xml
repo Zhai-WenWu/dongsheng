@@ -148,6 +148,7 @@
                         android:id="@+id/ad_tag"
                         layout="@layout/ad_hint_view"
                         style="@style/adHint"
+                        android:visibility="gone"
                         android:layout_marginRight="@dimen/dp_15"
                         />
 

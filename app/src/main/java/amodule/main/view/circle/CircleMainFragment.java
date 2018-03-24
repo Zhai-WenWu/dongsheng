@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,7 +31,6 @@ import java.util.Map;
 import acore.broadcast.ConnectionChangeReceiver;
 import acore.logic.AppCommon;
 import acore.logic.load.LoadManager;
-import acore.override.activity.base.BaseAppCompatActivity;
 import acore.override.activity.mian.MainBaseActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -45,7 +45,6 @@ import amodule.quan.view.VideoImageView;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
 import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
-import third.ad.AdsShow;
 
 import static com.xiangha.R.id.return_top;
 
@@ -105,7 +104,6 @@ public class CircleMainFragment extends Fragment {
     String mStartTime = "";
     private String noDataNotice_1 = "", noDataNotice_2 = "", noDataUrl = "";
     private int index_size = 0;
-    public AdsShow[] mAds;
 
     private ConnectionChangeReceiver connectionChangeReceiver;
     private boolean isAutoPaly = false;
@@ -151,6 +149,7 @@ public class CircleMainFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         unregistnetworkListener();
+        mActivity.getActMagager().unregisterADController(quanAdvertControl);
     }
 
     @Nullable
@@ -161,6 +160,7 @@ public class CircleMainFragment extends Fragment {
         mCircleHeaderView.setStiaticID(mPlateData.getStiaticID());
         refreshLayout = (PtrClassicFrameLayout) mView.findViewById(R.id.refresh_list_view_frame);
         mListView = (RvListView) mView.findViewById(R.id.rvListview);
+        mListView.getItemAnimator().setChangeDuration(0);
         returnTop = (ImageView) mView.findViewById(return_top);
         returnTop.setOnClickListener(v -> {
             returnTop.clearAnimation();
@@ -189,8 +189,8 @@ public class CircleMainFragment extends Fragment {
             RelativeLayout headerLayout = new RelativeLayout(getContext());
             CircleHeaderAD mCircleHeaderAD = new CircleHeaderAD(mActivity);
             mCircleHeaderAD.setStiaticID(mPlateData.getStiaticID());
+            mCircleHeaderAD.init(mActivity);
             headerLayout.addView(mCircleHeaderAD);
-            mAds = mCircleHeaderAD.init(mActivity);
             mListView.addHeaderView(headerLayout);
             headerCount++;
         }
@@ -208,21 +208,16 @@ public class CircleMainFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (mAds != null) {
-            for (AdsShow ad : mAds) {
-                ad.onResumeAd();
-            }
+        if(mActivity != null
+                && mActivity.getActMagager() != null
+                && quanAdvertControl != null){
+            mActivity.getActMagager().registerADController(quanAdvertControl);
         }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        if (mAds != null) {
-            for (AdsShow ad : mAds) {
-                ad.onPauseAd();
-            }
-        }
         stopVideo();
     }
 
@@ -315,10 +310,8 @@ public class CircleMainFragment extends Fragment {
                                     currentPlayPosition = mLinearLayoutManager.getPosition(itemView);
                                     Log.i("zhangyujian", "自动数据的位置:::" + ((NormalContentView) itemView).getPositionNow());
                                     setVideoLayout(itemView, ((NormalContentView) itemView).getPositionNow());
-//                                            mAdapter.setCurrentPlayPosition(currentPlayPosition - mListView.getHeaderViewsCount());
                                 } else {
                                     count++;
-//                                            ((NormalContentView)itemView).stopVideoView();
                                 }
                             }
                         }
@@ -340,16 +333,12 @@ public class CircleMainFragment extends Fragment {
             LoadOver = true;
         }
         quanAdvertControl = new QuanAdvertControl(mActivity);
-//        quanAdvertControl.getGdtData(mActivity);
-//        quanAdvertControl.getTencentApiAd(mActivity);
         quanAdvertControl.setCallBack(() -> {
-            if (isLoadAd) {
                 index_size = 0;
                 mListData = quanAdvertControl.getAdvertAndQuanData(mListData, mPlateData.getCid(), mPlateData.getMid(), index_size);
                 //Log.i("FRJ","广告数据回来刷新adapter:::集合大小："+mListData.size());
-                mAdapter.notifyDataSetChanged();
+                safeNotifyItemRangeChanged();
                 index_size = mListData.size();
-            }
         });
         quanAdvertControl.getAdData(mActivity);
         mAdapter.setQuanAdvertControl(quanAdvertControl);
@@ -361,6 +350,14 @@ public class CircleMainFragment extends Fragment {
             if (parentView == null)
                 return;
             setVideoLayout(parentView, position);
+        });
+    }
+
+    private void safeNotifyItemRangeChanged() {
+        new Handler().post(() -> {
+            if(mAdapter != null){
+                mAdapter.notifyDataSetChanged();
+            }
         });
     }
 
@@ -530,10 +527,12 @@ public class CircleMainFragment extends Fragment {
                 //添加此判断，是因为此处有adapter的 NullPointerException
                 //不为null则刷新，为null则尝试从listview.getAdapter()获取adapter并刷新数据
                 if (mAdapter != null) {
-                    mAdapter.notifyDataSetChanged();
+//                    mAdapter.notifyDataSetChanged();
+                    safeNotifyItemRangeChanged();
                 } else if (mListView != null && mListView.getAdapter() != null) {
                     mAdapter = (AdapterMainCircle) mListView.getAdapter();
-                    mAdapter.notifyDataSetChanged();
+//                    mAdapter.notifyDataSetChanged();
+                    safeNotifyItemRangeChanged();
                 }
                 mCurrentPage = mLoadManager.changeMoreBtn(mListView, flag, LoadManager.FOOTTIME_PAGE, loadCount, mCurrentPage, isRefresh);
                 //判断是否刷新
@@ -602,7 +601,8 @@ public class CircleMainFragment extends Fragment {
                             recCustomerArray = StringManager.getListMapByJson(msg);
                             handlerCutomersData(recCustomerArray);
                             mAdapter.setmRecCutomerArray(recCustomerArray);
-                            mAdapter.notifyDataSetChanged();
+//                            mAdapter.notifyDataSetChanged();
+                            safeNotifyItemRangeChanged();
                         }
                     }
                 });
@@ -697,22 +697,21 @@ public class CircleMainFragment extends Fragment {
      * 刷新广告数据
      */
     public void refreshAdData() {
-//        if(quanAdvertControl==null)return;
-//        boolean state= quanAdvertControl.isNeedRefresh();
-//        if(state){
-//            //删除集合中的广告，
-//            int size= mListData.size();
-//            ArrayList<Map<String,String>> listTemp = new ArrayList<>();
-//            for(int i=0;i<size;i++){
-//                if(mListData.get(i).containsKey("isPromotion")&&"1".equals(mListData.get(i).get("isPromotion"))){
-//                    listTemp.add(mListData.get(i));
-//                }
-//            }
-//            Log.i(tag_yu,"删除广告");
-//            if(listTemp.size()>0){
-//                mListData.removeAll(listTemp);
-//            }
-//        }
+        if(quanAdvertControl==null)return;
+        boolean state= quanAdvertControl.isNeedRefresh();
+        if(state){
+            //删除集合中的广告，
+            int size= mListData.size();
+            ArrayList<Map<String,String>> listTemp = new ArrayList<>();
+            for(int i=0;i<size;i++){
+                if(mListData.get(i).containsKey("isPromotion")&&"1".equals(mListData.get(i).get("isPromotion"))){
+                    listTemp.add(mListData.get(i));
+                }
+            }
+            if(listTemp.size()>0){
+                mListData.removeAll(listTemp);
+            }
+        }
 
     }
 

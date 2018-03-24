@@ -133,7 +133,7 @@ public class ADDishContorl {
         }
         xhAllAdControl = new XHAllAdControl(adPosList, new XHAllAdControl.XHBackIdsDataCallBack() {
             @Override
-            public void callBack(Map<String, String> map) {
+            public void callBack(boolean isRefresh,Map<String, String> map) {
                 if (map != null && map.size() > 0) {
                     for (String adKey : AD_IDS) {
                         String adStr = map.get(adKey);
@@ -159,6 +159,7 @@ public class ADDishContorl {
                 }
             }
         }, (Activity) context, "result_works",true);
+        xhAllAdControl.registerRefreshCallback();
         //需要判断百度图片大小
         xhAllAdControl.setJudgePicSize(true);
     }

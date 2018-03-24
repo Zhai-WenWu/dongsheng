@@ -2,19 +2,22 @@ package amodule.dish.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.ImageView;
 
 import com.xiangha.R;
 
-import java.util.Map;
+import java.util.ArrayList;
 
-import acore.logic.AppCommon;
 import acore.logic.XHClick;
 import acore.override.helper.XHActivityManager;
 import acore.override.view.ItemBaseView;
+import acore.tools.StringManager;
 import acore.tools.Tools;
 import amodule.dish.activity.DetailDish;
+import third.ad.BannerAd;
+import third.ad.scrollerAd.XHAllAdControl;
+
+import static third.ad.tools.AdPlayIdConfig.DISH_YONGLIAO;
 
 /**
  * 用料上方广告处理——————api
@@ -22,6 +25,7 @@ import amodule.dish.activity.DetailDish;
 
 public class DishADBannerView extends ItemBaseView {
     private ImageView img_banner;
+    private XHAllAdControl xhAllAdControl;
     public DishADBannerView(Context context) {
         super(context,  R.layout.view_dish_ad);
     }
@@ -35,18 +39,40 @@ public class DishADBannerView extends ItemBaseView {
     }
     @Override
     public void init() {
-        super.init();img_banner= (ImageView) findViewById(R.id.img_banner);
-    }
-    public void setData(final Map<String,String> map){
-//        map.put("img","http://s1.cdn.xiangha.com/caipu/201609/0518/052119348809.jpg/NjQwX3J3MTcwN19jXzEtM18w");
+        super.init();
+        img_banner= (ImageView) findViewById(R.id.img_banner);
         imgWidth=Tools.getPhoneWidth()-Tools.getDimen(context,R.dimen.dp_40);
-        setViewImage(img_banner,map.get("img"));
-        img_banner.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), DetailDish.tongjiId_detail, "用料上方banner位", "banner位点击量");
-                AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(),map.get("appUrl"),true);
+        ArrayList<String> list = new ArrayList<>();
+        list.add(DISH_YONGLIAO);
+        xhAllAdControl = new XHAllAdControl(list, (isRefresh, map) -> {
+            if(map.containsKey(DISH_YONGLIAO)){
+                BannerAd bannerAd = new BannerAd(XHActivityManager.getInstance().getCurrentActivity(), xhAllAdControl, img_banner);
+                bannerAd.setOnBannerListener(new BannerAd.OnBannerListener() {
+                    @Override
+                    public void onShowAd() {
+                        setVisibility(VISIBLE);
+                    }
+
+                    @Override
+                    public void onClickAd() {
+                        XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), DetailDish.tongjiId_detail, "用料上方banner位", "banner位点击量");
+                    }
+
+                    @Override
+                    public void onImgShow(int imgH) {
+
+                    }
+                });
+                map = StringManager.getFirstMap(map.get(DISH_YONGLIAO));
+                bannerAd.onShowAd(map);
             }
-        });
+        },XHActivityManager.getInstance().getCurrentActivity(),"");
+        xhAllAdControl.registerRefreshCallback();
+    }
+
+    public void onAdShow(){
+        if(xhAllAdControl != null){
+            xhAllAdControl.onAdBind(0,img_banner,"");
+        }
     }
 }

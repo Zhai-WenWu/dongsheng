@@ -201,7 +201,10 @@ public class VideoHeaderView extends RelativeLayout {
 
         xhAllAdControl = new XHAllAdControl(list, new XHAllAdControl.XHBackIdsDataCallBack() {
             @Override
-            public void callBack(Map<String, String> maps) {
+            public void callBack(boolean isRefresh,Map<String, String> maps) {
+                if(isRefresh){
+                    return;
+                }
                 String temp = maps.get(AdPlayIdConfig.ARTICLE_TIEPIAN);
                 mapAd = StringManager.getFirstMap(temp);
                 if (mapAd != null && mapAd.size() > 0
@@ -219,7 +222,7 @@ public class VideoHeaderView extends RelativeLayout {
                 }
             }
         }, activity, "wz_tiepian");
-
+        xhAllAdControl.registerRefreshCallback();
     }
 
     /**
@@ -259,6 +262,10 @@ public class VideoHeaderView extends RelativeLayout {
                 XHClick.mapStat(activity,"a_ShortVideoDetail_ad","图文广告","会员去广告");
             }
         });
+        if("1".equals(mapAd.get("adType"))){
+            view.findViewById(R.id.ad_vip_lead).setVisibility(GONE);
+            view.findViewById(R.id.ad_line).setVisibility(GONE);
+        }
 
         mImageView.setOnClickListener(new OnClickListener() {
             @Override

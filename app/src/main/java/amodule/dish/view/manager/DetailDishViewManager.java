@@ -28,8 +28,8 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import acore.logic.LoginManager;
 import acore.logic.ConfigMannager;
+import acore.logic.LoginManager;
 import acore.logic.load.LoadManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -325,15 +325,6 @@ public class DetailDishViewManager {
         }else dishIngreDataShow.setVisibility(View.GONE);
     }
     /**
-     * 处理广告信息
-     */
-    public void handlerBannerView(ArrayList<Map<String, String>> list) {
-        if(dishADBannerView!=null&& list!=null && list.size()>0&&!TextUtils.isEmpty(list.get(0).get("img"))){
-            dishADBannerView.setVisibility(View.VISIBLE);
-            dishADBannerView.setData(list.get(0));
-        }
-    }
-    /**
      * 处理小技巧view
      */
     public void handlerSkillView(ArrayList<Map<String, String>> list,String dishCode,String courseCode,String chapterCode,DishModuleScrollView.onDishModuleClickCallBack callback) {
@@ -459,6 +450,14 @@ public class DetailDishViewManager {
                 firstItemIndex=firstVisibleItem;
                 if(layoutFooter!=null){
                     onSrollView();
+                }
+                if(dishADBannerView != null && dishADBannerView.getVisibility() == View.VISIBLE){
+                    int[] location = new int[2];
+                    dishADBannerView.getLocationOnScreen(location);
+                    if ((location[1] > Tools.getStatusBarHeight(mAct)
+                            && location[1] < Tools.getScreenHeight() - ToolsDevice.dp2px(mAct, 57))) {
+                        dishADBannerView.onAdShow();
+                    }
                 }
             }
         });

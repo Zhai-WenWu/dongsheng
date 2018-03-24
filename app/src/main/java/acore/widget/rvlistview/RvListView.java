@@ -21,13 +21,15 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import java.util.List;
+
+import acore.widget.rvlistview.layoutmanager.LinearLayoutManagerWrapper;
 
 
 /**
@@ -104,7 +106,7 @@ public class RvListView extends RecyclerView {
     public void setAdapter(Adapter adapter) {
         if(getLayoutManager() == null){
             //默认使用LinearLayoutManager，并且处置布局
-            setLayoutManager(new LinearLayoutManager(getContext()));
+            setLayoutManager(new LinearLayoutManagerWrapper(getContext()));
         }
         mAdapter = new RvHeaderAndFooterViewAdapter(adapter);
         super.setAdapter(mAdapter);
@@ -635,5 +637,16 @@ public class RvListView extends RecyclerView {
      */
     public void setEmptyHandler(EmptyHandler emptyHandler) {
         this.mEmptyHandler = null == emptyHandler ? DefaultEmptyHandler : emptyHandler;
+    }
+
+    /**
+     * 关闭默认局部刷新动画
+     */
+    public void closeDefaultAnimator() {
+        this.getItemAnimator().setAddDuration(0);
+        this.getItemAnimator().setChangeDuration(0);
+        this.getItemAnimator().setMoveDuration(0);
+        this.getItemAnimator().setRemoveDuration(0);
+        ((SimpleItemAnimator) this.getItemAnimator()).setSupportsChangeAnimations(false);
     }
 }

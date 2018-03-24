@@ -77,7 +77,8 @@ public class FragmentNous {
         Collections.addAll(adPosList, MAIN_HOME_ZHISHI_LIST);
         xhAllAdControl = new XHAllAdControl(adPosList, new XHAllAdControl.XHBackIdsDataCallBack() {
             @Override
-            public void callBack(Map<String, String> map) {
+            public void callBack(boolean isRefresh,Map<String, String> map) {
+                adArray.clear();
                 if (map != null && map.size() > 0) {
                     for (String adKey : MAIN_HOME_ZHISHI_LIST) {
                         String adStr = map.get(adKey);
@@ -99,6 +100,7 @@ public class FragmentNous {
                 }
             }
         }, mAct, "other_top_list");
+        xhAllAdControl.registerRefreshCallback();
     }
 
     /**
@@ -216,13 +218,8 @@ public class FragmentNous {
                     Random random = new Random();
                     int v = random.nextInt(5000 - 3000) + 3000;
                     setViewText(textAllClick, v + "浏览");
-
-                    if("1".equals(map.get("adType"))){
-                        ((TextView)view.findViewById(R.id.tv_ad_tag)).setText("香哈");
-                    }else{
-                        ((TextView)view.findViewById(R.id.tv_ad_tag)).setText("广告");
-                    }
-
+                    ((TextView)view.findViewById(R.id.tv_ad_tag)).setText("1".equals(map.get
+                            ("adType")) ? "香哈" : "广告");
                     View gdtIcon = view.findViewById(ID_AD_ICON_GDT);
                     if(gdtIcon != null){
                         gdtIcon.setVisibility(ADKEY_GDT.equals(map.get("type"))?View.VISIBLE:View.GONE);

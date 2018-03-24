@@ -274,14 +274,6 @@
             android:windowSoftInputMode="adjustPan"/>
 
         <activity
-            android:name="amodule.main.activity.MainHome"
-            android:configChanges="orientation|keyboardHidden"
-            android:keepScreenOn="true"
-            android:hardwareAccelerated="true"
-            android:screenOrientation="portrait"
-            android:theme="@style/titleTheme"
-            android:windowSoftInputMode="adjustPan"/>
-        <activity
             android:name="amodule.main.activity.MainHomePage"
                   android:configChanges="orientation|keyboardHidden"
                   android:keepScreenOn="true"

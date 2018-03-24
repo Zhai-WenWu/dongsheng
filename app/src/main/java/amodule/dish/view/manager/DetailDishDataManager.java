@@ -21,7 +21,7 @@ import xh.basic.internet.UtilInternet;
 public class DetailDishDataManager {
     public final static String DISH_DATA_TOP = "dish_top";//topInfo数据类型
     public final static String DISH_DATA_INGRE = "dish_ingre";//用料
-    public final static String DISH_DATA_BANNER = "dish_banner";//banner
+//    public final static String DISH_DATA_BANNER = "dish_banner";//banner
     public final static String DISH_DATA_STEP = "dish_step";//步骤
     public final static String DISH_DATA_TIE = "dish_tie";//用户信息
     public final static String DISH_DATA_QA = "dish_qa";//问答
@@ -79,7 +79,7 @@ public class DetailDishDataManager {
     public void reqOne() {
         reqPublicData();
         reqIngre();
-        reqBanner();
+//        reqBanner();
         reqAnticData();
         reqTwo();
     }
@@ -162,15 +162,15 @@ public class DetailDishDataManager {
     /**
      * 请求banner数据
      */
-    private void reqBanner() {
-        String params = "code=" + dishCode;
-        ReqEncyptInternet.in().doEncypt(StringManager.API_GETBELOWBURDENBANNER, params, new InternetCallback() {
-            @Override
-            public void loaded(int flag, String url, Object object) {
-                handleDataSuccess(flag,DISH_DATA_BANNER,object);
-            }
-        });
-    }
+//    private void reqBanner() {
+//        String params = "code=" + dishCode;
+//        ReqEncyptInternet.in().doEncypt(StringManager.API_GETBELOWBURDENBANNER, params, new InternetCallback() {
+//            @Override
+//            public void loaded(int flag, String url, Object object) {
+//                handleDataSuccess(flag,DISH_DATA_BANNER,object);
+//            }
+//        });
+//    }
 
     /**
      * 请求步骤数据

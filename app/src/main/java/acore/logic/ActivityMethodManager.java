@@ -5,12 +5,14 @@ import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.annimon.stream.Stream;
 import com.popdialog.util.PushManager;
 import com.tencent.stat.StatService;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.PushAgent;
 import com.xiangha.Welcome;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 import acore.override.XHApplication;
@@ -19,10 +21,11 @@ import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import amodule.main.Main;
-import amodule.main.activity.MainHome;
+import amodule.main.activity.MainHomePage;
 import amodule.other.listener.HomeKeyListener;
 import amodule.other.listener.HomeKeyListener.OnHomePressedListener;
 import aplug.basic.ReqEncyptInternet;
+import third.ad.XHAdAutoRefresh;
 import third.ad.tools.AdConfigTools;
 import third.ad.tools.WelcomeAdTools;
 import third.mall.aplug.MallCommon;
@@ -35,6 +38,8 @@ public class ActivityMethodManager {
     private Activity mAct;
     //监听home键的
     private HomeKeyListener mHomeWatcher;
+    private ArrayList<IAutoRefresh> mAdControls = new ArrayList<>();
+    private long lastOnResumeTime,intervalOnResumeTime;
 
     public ActivityMethodManager(Activity mAct) {
         this.mAct = mAct;
@@ -44,10 +49,20 @@ public class ActivityMethodManager {
         randPromotion();
     }
 
+    public void onRestart(){
+    }
+
     public void onResume(int level) {
         if(Main.allMain != null){
             Main.allMain.initRunTime();
         }
+        if(lastOnResumeTime == 0){
+            lastOnResumeTime = System.currentTimeMillis();
+        }else{
+            intervalOnResumeTime = System.currentTimeMillis() - lastOnResumeTime;
+        }
+        //广告刷新定时器开始
+        XHAdAutoRefresh.getInstance().startTimer(this,intervalOnResumeTime);
         //Log.i("FRJ", "level:" + level);
         //Log.i("FRJ", "colse_level:" + colse_level);
         MobclickAgent.onResume(mAct);
@@ -108,7 +123,7 @@ public class ActivityMethodManager {
         if (colse_level <= level) {
             if (level == 1 && colse_level != 0) {
                 if (Main.allMain != null) {
-                    Main.allMain.setCurrentTabByClass(MainHome.class);
+                    Main.allMain.setCurrentTabByClass(MainHomePage.class);
                 }
                 colse_level = 1000;
             } else {
@@ -131,6 +146,8 @@ public class ActivityMethodManager {
     }
 
     public void onPause() {
+        //广告刷新定时器停止
+        XHAdAutoRefresh.getInstance().stopTimer();
         MobclickAgent.onPause(mAct);
         StatService.onPause(mAct);//mta腾讯统计
         XHClick.getStopTime(mAct);
@@ -145,6 +162,7 @@ public class ActivityMethodManager {
     public void onDestroy() {
         //清除还没有请求的接口
         ReqEncyptInternet.in().clearListIntenert();
+        unregisterAllAdController();
     }
 
     public void onUserLeaveHint(){
@@ -202,11 +220,39 @@ public class ActivityMethodManager {
         }
     }
 
-    /** 网络方法上传单图 */
-    public static final int UPLOAD_SINGLE = 1;
-    /** 发菜谱上传图片 */
-    public static final int UPLOAD_DISH = 2;
-    /** 美食圈上传图片 */
-    public static final int UPLOAD_QUAN = 3;
+    public void registerADController(IAutoRefresh control){
+        if(control != null
+                && mAdControls != null
+                && !mAdControls.contains(control)){
+            mAdControls.add(control);
+        }
+    }
+
+    public void unregisterADController(IAutoRefresh control){
+        if(control != null
+                && mAdControls != null){
+            mAdControls.remove(control);
+        }
+    }
+
+    public void unregisterAllAdController(){
+        if(mAdControls != null){
+            mAdControls.clear();
+        }
+    }
+
+    public void autoRefreshSelfAD(){
+        Stream.of(mAdControls)
+                .filter(value -> null != value)
+                .forEach(IAutoRefresh::autoRefreshSelfAD);
+    }
+
+    public interface IAutoRefresh{
+        void autoRefreshSelfAD();
+    }
+
+    public interface IAutoRefreshCallback{
+        void refreshSelfAD();
+    }
 
 }

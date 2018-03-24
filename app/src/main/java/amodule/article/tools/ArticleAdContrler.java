@@ -1,5 +1,6 @@
 package amodule.article.tools;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Handler;
@@ -74,6 +75,10 @@ public class ArticleAdContrler {
             }
         }
     };
+    protected Activity mActivity;
+    public ArticleAdContrler(Activity activity){
+        mActivity = activity;
+    }
 
     protected void handlerArticleRecData(int index, Object obj) {
         if (obj != null) {
@@ -91,7 +96,9 @@ public class ArticleAdContrler {
     public void initADData() {
         //请求广告数据
         xhAllAdControlBootom = requestAdData(new String[]{ARTICLE_CONTENT_BOTTOM}, "wz_wz");
+        xhAllAdControlBootom.registerRefreshCallback();
         xhAllAdControlList = requestAdData(new String[]{ARTICLE_RECM_1, ARTICLE_RECM_2}, "wz_list");
+        xhAllAdControlList.registerRefreshCallback();
     }
 
     protected XHAllAdControl requestAdData(final String[] ads, String id) {
@@ -100,7 +107,7 @@ public class ArticleAdContrler {
             adData.add(str);
         return new XHAllAdControl(adData, new XHAllAdControl.XHBackIdsDataCallBack() {
             @Override
-            public void callBack(Map<String, String> map) {
+            public void callBack(boolean isRefresh, Map<String, String> map) {
                 for (String key : ads) {
                     String adStr = map.get(key);
                     switch (key) {
@@ -116,7 +123,7 @@ public class ArticleAdContrler {
                     }
                 }
             }
-        }, XHActivityManager.getInstance().getCurrentActivity(), id);
+        }, mActivity, id);
     }
 
     protected void sendAdMessage(String adStr, int type) {
@@ -145,7 +152,7 @@ public class ArticleAdContrler {
     public View getBigAdView(Map<String, String> dataMap) {
         if (dataMap == null || dataMap.isEmpty())
             return null;
-        if(XHActivityManager.getInstance().getCurrentActivity() == null || XHActivityManager.getInstance().getCurrentActivity().isFinishing()
+        if (XHActivityManager.getInstance().getCurrentActivity() == null || XHActivityManager.getInstance().getCurrentActivity().isFinishing()
                 || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && XHActivityManager.getInstance().getCurrentActivity().isDestroyed()))
             return null;
         View adView = null;
@@ -170,7 +177,7 @@ public class ArticleAdContrler {
                 nameTextView.setText(title);
             }
             if (browseTextView != null) {
-                browseTextView.setText(String.valueOf(Tools.getRandom(200,6000)));
+                browseTextView.setText(String.valueOf(Tools.getRandom(200, 6000)));
             }
             String imageUrl = dataMap.get("imgUrl");
             if (imageView != null && !TextUtils.isEmpty(imageUrl)) {
@@ -187,7 +194,7 @@ public class ArticleAdContrler {
             adView.setLayoutParams(layoutParams);
         } else {
             adView = LayoutInflater.from(XHActivityManager.getInstance().getCurrentActivity()).inflate(R.layout.a_article_detail_ad, null);
-            TextView titleTv = (TextView) adView.findViewById(R.id.title);
+            TextView titleTv = (TextView) adView.findViewById(R.id.ad_title);
             TextView nameTv = (TextView) adView.findViewById(R.id.user_name);
             RelativeLayout container = (RelativeLayout) adView.findViewById(R.id.container);
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) container.getLayoutParams();
@@ -229,18 +236,18 @@ public class ArticleAdContrler {
             layoutParams.setMargins(dp_20, dp_17, dp_20, dp_17);
             adView.setLayoutParams(layoutParams);
         }
-        View view =  adView.findViewById(ID_AD_ICON_GDT);
-        if(view != null){
+        View view = adView.findViewById(ID_AD_ICON_GDT);
+        if (view != null) {
             view.setVisibility(ADKEY_GDT.equals(dataMap.get("type")) ? View.VISIBLE : View.GONE);
         }
         //设置ad点击
-        if(adView != null){
-            setAdClick(adView);
+        if (adView != null) {
+            setAdClick(adView, dataMap);
         }
         return adView;
     }
 
-    public void setAdClick(final View adView){
+    public void setAdClick(final View adView, Map<String, String> dataMap) {
         adView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -248,21 +255,18 @@ public class ArticleAdContrler {
             }
         });
         final View adTag = adView.findViewById(R.id.ad_tag);
-        if(adTag != null){
+        if (adTag != null
+                && dataMap != null
+                && !"1".equals(dataMap.get("adType"))) {
             adTag.setVisibility(View.VISIBLE);
-            adTag.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    AppCommon.setAdHintClick(XHActivityManager.getInstance().getCurrentActivity(), adTag, xhAllAdControlBootom, 0, "0");
-                }
-            });
+            adTag.setOnClickListener(v -> AppCommon.setAdHintClick(XHActivityManager.getInstance().getCurrentActivity(), adTag, xhAllAdControlBootom, 0, "0"));
         }
     }
 
     /**
      * @param allDataListMap 所有数据
      */
-    public void handlerAdData(List<Map<String, String>> allDataListMap) {
+    public synchronized void handlerAdData(List<Map<String, String>> allDataListMap) {
 
         if (adRcomDataArray != null && !adRcomDataArray.isEmpty()
                 && allDataListMap != null && !allDataListMap.isEmpty()) {
@@ -275,22 +279,25 @@ public class ArticleAdContrler {
                 //遍历原始数据体插入数据
                 for (int oriDataIndex = 0, recIndex = 0, allDataSize = allDataListMap.size(); oriDataIndex < allDataSize; oriDataIndex++) {
                     Map<String, String> oriData = allDataListMap.get(oriDataIndex);
-                    if (String.valueOf(Type_recommed).equals(oriData.get(TYPE_KEY))
-                            && "1".equals(oriData.get("isAd"))) {
-                        int adFollowPosiont = Integer.parseInt(adMap.get("adFollowPosition"));
-                        int adInsertPosition = oriDataIndex + 1;
-                        if (adFollowPosiont == recIndex) {
-                            if (allDataListMap.size() > adInsertPosition) {
-                                allDataListMap.add(adInsertPosition, adMap);
-                                adInsteredArray.put(adIndex, true);
-                                break;
-                            } else if (allDataListMap.size() == adInsertPosition) {
-                                allDataListMap.add(adMap);
-                                adInsteredArray.put(adIndex, true);
-                                break;
+                    if (String.valueOf(Type_recommed).equals(oriData.get(TYPE_KEY))) {
+                        if ("1".equals(oriData.get("isAd"))) {
+                            int adFollowPosiont = Integer.parseInt(adMap.get("adFollowPosition"));
+                            int adInsertPosition = oriDataIndex + 1;
+                            if (adFollowPosiont == recIndex) {
+                                if (allDataListMap.size() > adInsertPosition
+                                        && "1".equals(allDataListMap.get(adInsertPosition).get("isAd"))) {
+                                    allDataListMap.add(adInsertPosition, adMap);
+                                    adInsteredArray.put(adIndex, true);
+                                    break;
+                                } else if (allDataListMap.size() == adInsertPosition
+                                        && "1".equals(allDataListMap.get(allDataListMap.size() - 1).get("isAd"))) {
+                                    allDataListMap.add(adMap);
+                                    adInsteredArray.put(adIndex, true);
+                                    break;
+                                }
                             }
+                            recIndex++;
                         }
-                        recIndex++;
                     }
                 }
             }
@@ -307,9 +314,10 @@ public class ArticleAdContrler {
             dataMap.put("title", adMap.get("desc"));//adMap.get("title") + " | " +
             dataMap.put("img", adMap.get("imgUrl"));
             dataMap.put("customer", new JSONObject().put("nickName", adMap.get("title")).toString());
-            dataMap.put("clickAll", Tools.getRandom(200, 5000) + "浏览");
+//            dataMap.put("clickAll", Tools.getRandom(200, 5000) + "浏览");
             dataMap.put("commentNumber", "");
-            dataMap.put("adtype", adMap.get("type"));
+            dataMap.put("adType", adMap.get("adType"));
+            dataMap.put("ad", adMap.get("type"));
         } catch (JSONException e) {
             e.printStackTrace();
         }

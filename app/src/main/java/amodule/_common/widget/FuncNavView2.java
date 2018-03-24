@@ -22,8 +22,10 @@ import acore.tools.Tools;
 import amodule._common.delegate.IBindMap;
 import amodule._common.delegate.IHandlerClickEvent;
 import amodule._common.delegate.ISaveStatistic;
+import amodule._common.delegate.ISetShowIndex;
 import amodule._common.delegate.IStatictusData;
 import amodule._common.delegate.IStatisticCallback;
+import amodule._common.delegate.IUpdatePadding;
 import amodule._common.delegate.StatisticCallback;
 import amodule._common.helper.WidgetDataHelper;
 import amodule._common.utility.WidgetUtility;
@@ -37,9 +39,11 @@ import amodule.home.view.HomeFuncNavView2;
  * E_mail : ztanzeyu@gmail.com
  */
 
-public class FuncNavView2 extends HomeFuncNavView2 implements IBindMap, IStatictusData,ISaveStatistic,IHandlerClickEvent,IStatisticCallback {
-    private int mOriginalPaddingTop = 0;
+public class FuncNavView2 extends HomeFuncNavView2 implements IBindMap, IStatictusData,
+        ISaveStatistic,IHandlerClickEvent,IStatisticCallback, ISetShowIndex, IUpdatePadding {
     private StatisticCallback mStatisticCallback;
+
+    private int mShowIndex = -1;
     public FuncNavView2(Context context) {
         super(context);
     }
@@ -55,8 +59,6 @@ public class FuncNavView2 extends HomeFuncNavView2 implements IBindMap, IStatict
     @Override
     protected void initData() {
         super.initData();
-        mOriginalPaddingTop = getPaddingTop();
-//        Log.i("tzy", "initData: mOriginalPaddingTop = " + mOriginalPaddingTop);
     }
 
     @Override
@@ -74,9 +76,8 @@ public class FuncNavView2 extends HomeFuncNavView2 implements IBindMap, IStatict
             return;
         }
         //设置顶部边距
-        String sort = data.get(WidgetDataHelper.KEY_SORT);
-        int paddingTop = "1".equals(sort) ? Tools.getDimen(getContext(),R.dimen.dp_10)  : 0;
-        setPadding(getPaddingLeft(),paddingTop,getPaddingRight(),getPaddingBottom());
+        int paddingTop = mShowIndex == 0 ? Tools.getDimen(getContext(),R.dimen.dp_10)  : 0;
+        updatePadding(getPaddingLeft(),paddingTop,getPaddingRight(),getPaddingBottom());
         //设置左侧数据
         final Map<String, String> leftMap = arrayList.get(0);
         WidgetUtility.setTextToView(getTextView(R.id.text_left_1), leftMap.get("text1"));
@@ -146,5 +147,15 @@ public class FuncNavView2 extends HomeFuncNavView2 implements IBindMap, IStatict
     @Override
     public void setStatisticCallback(StatisticCallback statisticCallback) {
         mStatisticCallback = statisticCallback;
+    }
+
+    @Override
+    public void setShowIndex(int showIndex) {
+        mShowIndex = showIndex;
+    }
+
+    @Override
+    public void updatePadding(int l, int t, int r, int b) {
+        setPadding(l, t, r, b);
     }
 }

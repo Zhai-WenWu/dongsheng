@@ -1,7 +1,6 @@
 package amodule.home;
 
 import android.annotation.SuppressLint;
-import android.content.ComponentName;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,7 +9,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.annimon.stream.Stream;
 import com.xiangha.R;
@@ -21,17 +19,17 @@ import java.util.Map;
 import acore.logic.AppCommon;
 import acore.logic.XHClick;
 import acore.tools.StringManager;
-import acore.tools.ToolsDevice;
 import acore.widget.rvlistview.RvListView;
+import amodule._common.delegate.ISetAdController;
 import amodule._common.helper.WidgetDataHelper;
 import amodule._common.utility.WidgetUtility;
 import amodule.home.view.HomeBuoy;
 import amodule.home.view.HomeTitleLayout;
-import amodule.main.activity.MainHome;
 import amodule.main.activity.MainHomePage;
 import amodule.main.view.item.HomeItem;
 import aplug.web.ShowWeb;
 import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
+import third.ad.scrollerAd.XHAllAdControl;
 import third.umeng.OnlineConfigControler;
 
 /**
@@ -42,7 +40,7 @@ import third.umeng.OnlineConfigControler;
  * E_mail : ztanzeyu@gmail.com
  */
 
-public class HomeViewControler {
+public class HomeViewControler implements ISetAdController {
 
     static String MODULETOPTYPE = "moduleTopType";//置顶数据的类型
 
@@ -95,6 +93,7 @@ public class HomeViewControler {
         mRefreshLayout.disableWhenHorizontalMove(true);
         mRefreshLayout.setLoadingMinTime(300);
         mRvListView = (RvListView) mActivity.findViewById(R.id.rvListview);
+        mRvListView.closeDefaultAnimator();
         mRvListView.addHeaderView(mHeaderView);
         mRvListView.addHeaderView(mHomeFeedHeaderControler.getLayout());
         mRvListView.setOnItemClickListener((view, holder, position) -> {
@@ -183,7 +182,7 @@ public class HomeViewControler {
         }
         //列表
         if (scrollDataIndex > 0) {
-            XHClick.saveStatictisFile("home", MainHome.recommedType_statictus, "", "", String.valueOf(scrollDataIndex), "list", "", "", "", "", "");
+            XHClick.saveStatictisFile("home", MainHomePage.recommedType_statictus, "", "", String.valueOf(scrollDataIndex), "list", "", "", "", "", "");
             scrollDataIndex = -1;
         }
     }
@@ -299,6 +298,9 @@ public class HomeViewControler {
     public void autoRefresh() {
         if (null != mRefreshLayout)
             mRefreshLayout.autoRefresh();
+        if(mBuoy != null){
+            mBuoy.resetData();
+        }
     }
 
     public void setMessage(int messageTipCount){
@@ -315,5 +317,15 @@ public class HomeViewControler {
 
     public PtrClassicFrameLayout getRefreshLayout() {
         return mRefreshLayout;
+    }
+
+    @Override
+    public void setAdController(XHAllAdControl controller) {
+        mHeaderControler.setAdController(controller);
+    }
+
+    public void setAdData(Map<String, String> map, List<String> adIDs) {
+        mHeaderControler.setAdID(adIDs);
+        mHeaderControler.setAdData(map);
     }
 }

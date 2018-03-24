@@ -5,10 +5,14 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
+import com.annimon.stream.Stream;
+import com.annimon.stream.function.Consumer;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import acore.logic.ActivityMethodManager;
 import acore.override.helper.XHActivityManager;
 import third.ad.option.AdOptionHomeDish;
 import third.ad.option.AdOptionParent;
@@ -22,7 +26,7 @@ import third.ad.tools.AdPlayIdConfig;
  * 刷新策略：
  * 1、以第一个广告的加载时间为标准，一个过期全部过期。
  */
-public class AdControlHomeDish extends AdControlParent{
+public class AdControlHomeDish extends AdControlParent implements ActivityMethodManager.IAutoRefresh{
     public static String tag_yu="zyj";
     private static volatile AdControlHomeDish mAdControlHomeDishUnload;
     public static String Control_up="up";
@@ -41,8 +45,8 @@ public class AdControlHomeDish extends AdControlParent{
     private int adControlNum = -1;
     private int nextAdNum = 0;
     //向下加载的tag
-    private int downCurrentControlTag=-1;
-    private int downadControlNum = 1;
+    private int downCurrentControlTag=0;
+    private int downadControlNum = 0;
     private int downNextAdNum = 0;
     private Map<String,String> downAdState=new HashMap<>();//存储广告请求当前状态
     private Map<String,String> downAd=new HashMap<>();//是否要请求下一个数据块。
@@ -50,12 +54,13 @@ public class AdControlHomeDish extends AdControlParent{
     private AdControlHomeDish(){
         adControlMap = new HashMap<>();
         downAdControlMap= new HashMap<>();
-        AdOptionHomeDish downLoadAdControl0 = new AdOptionHomeDish(AdPlayIdConfig.MAIN_HOME_RECOMENT_LIST_0);
-        downLoadAdControl0.newRunableGetAdData(XHActivityManager.getInstance().getCurrentActivity(),statisticKey,"0",Control_down);
-        downAdControlMap.put(0,downLoadAdControl0);
+//        AdOptionHomeDish downLoadAdControl0 = new AdOptionHomeDish(AdPlayIdConfig.MAIN_HOME_RECOMENT_LIST_0);
+//        downLoadAdControl0.newRunableGetAdData(XHActivityManager.getInstance().getCurrentActivity(),statisticKey,"0",Control_down);
+//        downAdControlMap.put(0,downLoadAdControl0);
 //        AdOptionHomeDish downLoadAdControl1 = new AdOptionHomeDish(AdPlayIdConfig.MAIN_HOME_RECOMENT_LIST);
 //        downLoadAdControl1.newRunableGetAdData(XHActivityManager.getInstance().getCurrentActivity(),statisticKey,"1",Control_down);
 //        downAdControlMap.put(1,downLoadAdControl1);
+
 
         Log.i(tag_yu,"首页加载数据");
     }
@@ -72,13 +77,41 @@ public class AdControlHomeDish extends AdControlParent{
      */
     public AdControlHomeDish getTwoLoadAdData(){
         AdOptionHomeDish downLoadAdControl1 = new AdOptionHomeDish(AdPlayIdConfig.MAIN_HOME_RECOMENT_LIST);
-        downLoadAdControl1.newRunableGetAdData(XHActivityManager.getInstance().getCurrentActivity(),statisticKey,"1",Control_down);
-        downAdControlMap.put(1,downLoadAdControl1);
+        downLoadAdControl1.newRunableGetAdData(XHActivityManager.getInstance().getCurrentActivity(),statisticKey,"0",Control_down);
+        downAdControlMap.put(0,downLoadAdControl1);
 
         AdOptionHomeDish adControlParent = new AdOptionHomeDish(AdPlayIdConfig.MAIN_HOME_RECOMENT_LIST);
         adControlParent.newRunableGetAdData(XHActivityManager.getInstance().getCurrentActivity(),statisticKey,String.valueOf(++adControlNum),Control_up);
         adControlMap.put(adControlNum,adControlParent);
         return mAdControlHomeDishUnload;
+    }
+
+    public ArrayList<Map<String, String>> getAutoRefreshAdData(ArrayList<Map<String, String>> old_list) {
+        final AdOptionHomeDish adOptionHomeDish = getCurrentControl(false);
+        if(adOptionHomeDish == null){
+            return old_list;
+        }else{
+            Log.i(tag_yu,"getLimitNum()::"+getLimitNum());
+            adOptionHomeDish.setLimitNum(getLimitNum());
+            if(downCurrentControlTag>1)
+                adOptionHomeDish.setStartIndex(getIndexAd((downCurrentControlTag-1)*10));
+            adOptionHomeDish.setAdLoadNumberCallBack(new AdOptionParent.AdLoadNumberCallBack() {
+                @Override
+                public void loadNumberCallBack(int Number) {
+                    Log.i(tag_yu,"*********Number****************:::"+Number+":::::tag::"+adOptionHomeDish.getControlTag());
+                    String tag=adOptionHomeDish.getControlTag();
+                    if(!TextUtils.isEmpty(tag)) {
+                        int tagIndex= Integer.parseInt(tag);
+                        if (adLoadNumberCallBack != null&&downAdState.containsKey(String.valueOf(tagIndex+1))) {
+                            adLoadNumberCallBack.loadNumberCallBack(Number);
+                        }
+                        downAd.put(String.valueOf(tagIndex),String.valueOf(Number));
+                    }
+                }
+            });
+            old_list = adOptionHomeDish.getNewAdData(old_list,false);
+        }
+        return old_list;
     }
     /**
      * 加载g广告数据
@@ -153,7 +186,7 @@ public class AdControlHomeDish extends AdControlParent{
                 }
                 if (currentControlTag < adControlMap.size()) {
                     adOptionHomeDish = adControlMap.get(currentControlTag);
-                    if (!adOptionHomeDish.getIsHasNewData()) {
+                    if (adOptionHomeDish != null && !adOptionHomeDish.getIsHasNewData()) {
                         currentControlTag++;
                         Log.i(tag_yu, "up这个控制类没有了数据，切换下一个currentControlTag :" + currentControlTag);
                         adOptionHomeDish = getCurrentControl(isBack);
@@ -168,7 +201,7 @@ public class AdControlHomeDish extends AdControlParent{
                 }
                 if(downCurrentControlTag<downAdControlMap.size()){
                     adOptionHomeDish = downAdControlMap.get(downCurrentControlTag);
-                    if (!adOptionHomeDish.getIsHasNewData()) {
+                    if (adOptionHomeDish != null && !adOptionHomeDish.getIsHasNewData()) {
                         downCurrentControlTag++;
                         Log.i(tag_yu, "down *******************************这个控制类没有了数据，切换下一个currentControlTag :" + downCurrentControlTag);
                         adOptionHomeDish = getCurrentControl(isBack);
@@ -256,19 +289,19 @@ public class AdControlHomeDish extends AdControlParent{
         downCurrentControlTag=-1;
         downadControlNum = 1;
         downNextAdNum = 0;
-        AdOptionHomeDish downLoadAdControl0 = new AdOptionHomeDish(AdPlayIdConfig.MAIN_HOME_RECOMENT_LIST_0);
-        downLoadAdControl0.getAdData(XHActivityManager.getInstance().getCurrentActivity(),statisticKey,"0",Control_down);
-        downAdControlMap.put(0,downLoadAdControl0);
-        downLoadAdControl0.setAdDataCallBack(new AdOptionParent.AdDataCallBack() {
-            @Override
-            public void adDataBack(int tag, int nums) {
-                Log.i(tag_yu,"刷新数据::tag：：："+tag+"：：："+nums);
-            }
-        });
+//        AdOptionHomeDish downLoadAdControl0 = new AdOptionHomeDish(AdPlayIdConfig.MAIN_HOME_RECOMENT_LIST_0);
+//        downLoadAdControl0.getAdData(XHActivityManager.getInstance().getCurrentActivity(),statisticKey,"0",Control_down);
+//        downAdControlMap.put(0,downLoadAdControl0);
+//        downLoadAdControl0.setAdDataCallBack(new AdOptionParent.AdDataCallBack() {
+//            @Override
+//            public void adDataBack(int tag, int nums) {
+//                Log.i(tag_yu,"刷新数据::tag：：："+tag+"：：："+nums);
+//            }
+//        });
 
         AdOptionHomeDish downLoadAdControl1 = new AdOptionHomeDish(AdPlayIdConfig.MAIN_HOME_RECOMENT_LIST);
-        downLoadAdControl1.getAdData(XHActivityManager.getInstance().getCurrentActivity(),statisticKey,"1",Control_down);
-        downAdControlMap.put(1,downLoadAdControl1);
+        downLoadAdControl1.getAdData(XHActivityManager.getInstance().getCurrentActivity(),statisticKey,"0",Control_down);
+        downAdControlMap.put(0,downLoadAdControl1);
         downLoadAdControl1.setAdDataCallBack(new AdOptionParent.AdDataCallBack() {
             @Override
             public void adDataBack(int tag, int nums) {
@@ -291,6 +324,33 @@ public class AdControlHomeDish extends AdControlParent{
     public AdOptionParent.AdLoadNumberCallBack adLoadNumberCallBack;
     public void setAdLoadNumberCallBack(AdOptionParent.AdLoadNumberCallBack adLoadNumberCallBack){
         this.adLoadNumberCallBack=adLoadNumberCallBack;
+    }
+
+    @Override
+    public void autoRefreshSelfAD() {
+        refreshSelfAd(0,downAdControlMap);
+    }
+
+    private synchronized void refreshSelfAd(final int index,Map<Integer,AdOptionHomeDish> adControlMap) {
+        if(adControlMap != null
+                && !adControlMap.isEmpty()
+                && index < adControlMap.size()){
+            AdOptionHomeDish adOptionHomeDish = adControlMap.get(index);
+            if(adOptionHomeDish != null){
+                adOptionHomeDish.setRefreshCallback(new ActivityMethodManager.IAutoRefreshCallback() {
+                    @Override
+                    public void refreshSelfAD() {
+                        //刷新
+                        autoRefreshCallback();
+                        //执行下一个刷新
+                        int nextIndex = index;
+                        nextIndex++;
+                        refreshSelfAd(nextIndex,adControlMap);
+                    }
+                });
+                adOptionHomeDish.autoRefreshSelfAD();
+            }
+        }
     }
 
 }

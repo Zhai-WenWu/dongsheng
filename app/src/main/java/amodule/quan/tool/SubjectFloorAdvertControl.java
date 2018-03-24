@@ -1,18 +1,20 @@
 package amodule.quan.tool;
 
-import android.widget.RelativeLayout;
+import android.widget.ImageView;
 
 import com.xiangha.R;
 
-import acore.override.activity.base.BaseAppCompatActivity;
-import amodule.quan.view.BarSubjectFloorOwnerNew;
-import third.ad.AdParent;
-import third.ad.AdsShow;
-import third.ad.BannerAd;
-import third.ad.TencenApiAd;
-import third.ad.tools.AdPlayIdConfig;
+import java.util.ArrayList;
 
-import static third.ad.tools.TencenApiAdTools.TX_ID_QUAN_DETAIL;
+import acore.override.activity.base.BaseAppCompatActivity;
+import acore.tools.StringManager;
+import acore.tools.Tools;
+import acore.tools.ToolsDevice;
+import amodule.quan.view.BarSubjectFloorOwnerNew;
+import third.ad.BannerAd;
+import third.ad.scrollerAd.XHAllAdControl;
+
+import static third.ad.tools.AdPlayIdConfig.DETAIL_SUBJECT_FLOOR_BOTTOM;
 
 /**
  * PackageName : amodule.quan.tool
@@ -22,40 +24,40 @@ import static third.ad.tools.TencenApiAdTools.TX_ID_QUAN_DETAIL;
 public class SubjectFloorAdvertControl {
     private BaseAppCompatActivity mAct;
     private BarSubjectFloorOwnerNew floorView;
-    private String tongjiId ="";
+    private String tongjiId = "";
 
-    public SubjectFloorAdvertControl(BaseAppCompatActivity mAct,BarSubjectFloorOwnerNew floorView,String tongjiId){
+    public SubjectFloorAdvertControl(BaseAppCompatActivity mAct, BarSubjectFloorOwnerNew floorView, String tongjiId) {
         this.mAct = mAct;
         this.floorView = floorView;
         this.tongjiId = tongjiId;
     }
 
-    /**初始化广告*/
+    XHAllAdControl xhAllAdControl;
+    ImageView imageView;
+
+    /** 初始化广告 */
     public void initAd() {
-//        //广点通banner广告
-//        RelativeLayout bannerLayout = (RelativeLayout) floorView.findViewById(R.id.a_subject_detail_ad_banner_bd_layout);
-//        GdtAdNew gdtAd = new GdtAdNew(mAct,"美食圈美食贴详情", bannerLayout, 0, GdtAdTools.ID_QUAN_BANNER, GdtAdNew.CREATE_AD_BANNER);
+        imageView = (ImageView) floorView.findViewById(R.id.ad_banner_item_iv_single);
+        ArrayList<String> ads = new ArrayList<>();
+        ads.add(DETAIL_SUBJECT_FLOOR_BOTTOM);
+        xhAllAdControl = new XHAllAdControl(ads,
+                (isRefresh, map)  -> {
+                    BannerAd bannerAd = new BannerAd(mAct, xhAllAdControl, imageView);
+                    map = StringManager.getFirstMap(map.get(DETAIL_SUBJECT_FLOOR_BOTTOM));
+                    bannerAd.onShowAd(map);
+                }, mAct, "community_detail");
+        xhAllAdControl.registerRefreshCallback();
+    }
 
-
-        //腾讯banner广告
-        RelativeLayout ad_layout = (RelativeLayout) floorView.findViewById(R.id.a_subject_detail_ad_banner_tencent_layout);
-        TencenApiAd tencentApiAd = new TencenApiAd(mAct,"community_detail", TX_ID_QUAN_DETAIL,"1",
-                ad_layout, R.layout.ad_banner_view_second,
-                new AdParent.AdListener() {
-                    @Override
-                    public void onAdCreate() {
-                        super.onAdCreate();
-                    }
-                });
-        tencentApiAd.style = TencenApiAd.styleBanner;
-
-
-        RelativeLayout layoutParent = (RelativeLayout) floorView.findViewById(R.id.a_subject_detail_ad);
-        BannerAd bannerAd = new BannerAd(mAct,"community_detail", layoutParent);
-
-        AdParent[] adsBottom = {tencentApiAd, bannerAd};
-        AdsShow adBottom = new AdsShow(adsBottom, AdPlayIdConfig.DETAIL_SUBJECT_FLOOR_BOTTOM);
-        mAct.mAds = new AdsShow[]{adBottom};
+    public void onAdShow(){
+        if(imageView != null && xhAllAdControl !=null){
+            int[] location = new int[2];
+            imageView.getLocationOnScreen(location);
+            if ((location[1] > Tools.getStatusBarHeight(mAct)
+                    && location[1] < Tools.getScreenHeight() - ToolsDevice.dp2px(mAct, 57))) {
+                xhAllAdControl.onAdBind(0, imageView, "");
+            }
+        }
     }
 
 }

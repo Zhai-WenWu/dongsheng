@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.text.InputFilter;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -32,10 +33,9 @@ import acore.logic.XHClick;
 import acore.override.helper.XHActivityManager;
 import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
-import amodule.main.activity.MainHome;
+import amodule.main.activity.MainHomePage;
 import amodule.main.adapter.HomeAdapter;
 import amodule.main.bean.HomeModuleBean;
-import amodule.main.view.home.HomeFragment;
 import aplug.basic.SubBitmapTarget;
 import aplug.web.FullScreenWeb;
 import aplug.web.ShowWeb;
@@ -52,6 +52,8 @@ import static third.ad.scrollerAd.XHScrollerAdParent.ID_AD_ICON_GDT;
  */
 
 public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickListener {
+
+    public static String MODULETOPTYPE="moduleTopType";//置顶数据的类型
 
     //用户信息和置顶view
     private ImageView mTopTag;
@@ -240,7 +242,7 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
      */
     private boolean handleClickEvent(View view) {
         if (!TextUtils.isEmpty(mTransferUrl)) {
-            if (mModuleBean != null && MainHome.recommedType.equals(mModuleBean.getType())) {//保证推荐模块类型
+            if (mModuleBean != null && MainHomePage.recommedType.equals(mModuleBean.getType())) {//保证推荐模块类型
                 if (!mTransferUrl.contains("data_type=") && !mTransferUrl.contains("module_type=")) {
                     if (!mTransferUrl.startsWith("http")) {
                         if (mTransferUrl.contains("?"))
@@ -322,7 +324,7 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
                 public void onClick(View v) {
                     if (mRefreshCallBack != null)
                         mRefreshCallBack.viewOnClick(true);
-                    if (mModuleBean != null && MainHome.recommedType.equals(mModuleBean.getType()))
+                    if (mModuleBean != null && MainHomePage.recommedType.equals(mModuleBean.getType()))
                         XHClick.mapStat(getContext(), "a_recommend", "刷新效果", "点击【点击刷新】按钮");
                 }
             });
@@ -332,7 +334,7 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
             initData();
             //统计---只展示一次，isShow 2已经显示
             if (mModuleBean != null
-                    && MainHome.recommedType.equals(mModuleBean.getType())
+                    && MainHomePage.recommedType.equals(mModuleBean.getType())
                     && !TextUtils.isEmpty(mDataMap.get("code"))
                     && (!mDataMap.containsKey("isShowStatistic") || "1".equals(mDataMap.get("isShowStatistic")))) {//保证推荐模块类型
                 Log.i("zhangyujian", "展示曝光数据::" + mDataMap.get("name") + "::::" + mDataMap.get("type") + "::position:::" + position);
@@ -371,6 +373,10 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
                 }
             }
         }
+        mIsAd = TextUtils.equals("ad", mDataMap.get("adstyle"));
+        if(mUserName != null){
+            mUserName.setFilters(new InputFilter[] { new InputFilter.LengthFilter(mIsAd ? 10 : 5) });
+        }
         //用户信息
         if (mDataMap.containsKey("customer")) {
             String customer = mDataMap.get("customer");
@@ -400,8 +406,8 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
                 }
             }
         }
-        mIsAd = TextUtils.equals("ad", mDataMap.get("adstyle"));
         if (mIsAd) {
+            Log.i("tzy", "initData: mIsAd = " + mIsAd);
             if (mAdControlParent != null && !mDataMap.containsKey("isADShow")) {
                 mAdControlParent.onAdShow(mDataMap, this);
                 mDataMap.put("isADShow", "1");
@@ -425,8 +431,10 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
     protected void resetView() {
         if (mTimeTagContainer != null)
             mTimeTagContainer.setVisibility(View.GONE);
-        if (mUserName != null)
+        if (mUserName != null){
             mUserName.setVisibility(View.GONE);
+            mUserName.setFilters(new InputFilter[] { new InputFilter.LengthFilter(5) });
+        }
         if (mUserGourmet != null)
             mUserGourmet.setVisibility(View.GONE);
         if (mNameGourmet != null)
@@ -468,7 +476,7 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
                 String eventId = "";
                 String twoLevel = "";
                 switch (type) {
-                    case MainHome.recommedType:
+                    case MainHomePage.recommedType:
                         eventId = "a_recommend";
                         twoLevel = "点击列表内容";
                         break;
@@ -518,7 +526,7 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
             if (!TextUtils.isEmpty(type)) {
                 String eventId = "";
                 switch (type) {
-                    case MainHome.recommedType:
+                    case MainHomePage.recommedType:
                         eventId = "a_recommend_adv";
                         break;
                     case "video":
@@ -546,7 +554,7 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
      * @return view类型
      */
     public String getModleViewType() {
-        return isTopTypeView() ? "top" : MainHome.recommedType_statictus;
+        return isTopTypeView() ? "top" : MainHomePage.recommedType_statictus;
     }
 
     /**
@@ -555,7 +563,7 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
      * @return true 是置顶数据 ：false不是
      */
     public boolean isTopTypeView() {
-        return !TextUtils.isEmpty(viewType) && HomeFragment.MODULETOPTYPE.equals(viewType);
+        return !TextUtils.isEmpty(viewType) && MODULETOPTYPE.equals(viewType);
     }
 
     /**
@@ -577,7 +585,7 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
         if (mDataMap == null
                 || (!"1".equals(mDataMap.get("style")) && !"6".equals(mDataMap.get("style"))))
             return;
-        Map<String, String> mapSize = XHScrollerAdParent.getAdImageSize(mDataMap.get("adClass"), mDataMap.get("stype"), "1");
+        Map<String, String> mapSize = XHScrollerAdParent.getAdImageSize(mDataMap.get("adClass"), "1");
         if (mapSize == null || mapSize.isEmpty())
             return;
         try {

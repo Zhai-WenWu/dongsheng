@@ -134,7 +134,7 @@ public class GdtAdTools {
                 new NativeAD.NativeAdListener() {
                     @Override
                     public void onADLoaded(List<NativeADDataRef> list) {
-//                        Log.i("tzy", "GDT NactiveAD loaded");
+                        Log.i("tzy", "GDT NactiveAD loaded");
                         if (null != callback) {
                             callback.onNativeLoad(list);
                         }
@@ -142,7 +142,7 @@ public class GdtAdTools {
 
                     @Override
                     public void onNoAD(int i) {
-//                        Log.i("tzy", "GDT NactiveAD onNoAD");
+                        Log.i("tzy", "GDT NactiveAD onNoAD");
                         if (null != callback) {
                             callback.onNativeFail(null, "onNoAD:code = " + i);
                         }
@@ -158,7 +158,7 @@ public class GdtAdTools {
 
                     @Override
                     public void onADError(NativeADDataRef nativeADDataRef, int i) {
-//                        Log.i("tzy", "GDT NactiveAD onADError");
+                        Log.i("tzy", "GDT NactiveAD onADError");
                         if (null != callback) {
                             callback.onNativeFail(nativeADDataRef, "adError:code = " + i);
                         }
@@ -175,18 +175,6 @@ public class GdtAdTools {
      * @param callback
      */
     public void getNativeData(View view, final NativeADDataRef nativeADDataRef, final AddAdView callback) {
-        getNativeData(view, nativeADDataRef, callback, false);
-    }
-
-    /**
-     * 信息流广告 内容获取
-     * @param view
-     * @param nativeADDataRef
-     * @param callback
-     * @param isMain
-     */
-    public void getNativeData(View view, final NativeADDataRef nativeADDataRef,
-                              final AddAdView callback, boolean isMain) {
         if(nativeADDataRef == null){
             return;
         }
@@ -202,11 +190,7 @@ public class GdtAdTools {
                     callback.onClick();
                 }
             };
-            if (isMain) {
-                view.setOnClickListener(ScrollLinearListLayout.getOnClickListener(clickListener));
-            } else {
-                view.setOnClickListener(clickListener);
-            }
+            view.setOnClickListener(clickListener);
             nativeADDataRef.onExposured(view);
         }
         callback.addAdView(title, desc, iconUrl, imageUrl, null);

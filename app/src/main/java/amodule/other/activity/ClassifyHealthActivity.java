@@ -1,7 +1,9 @@
 package amodule.other.activity;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -14,6 +16,7 @@ import com.xiangha.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import acore.logic.XHClick;
@@ -82,6 +85,7 @@ public class ClassifyHealthActivity extends BaseFragmentActivity {
             }
         });
         ClassifyHealthPagerAdapter adapter = new ClassifyHealthPagerAdapter(getSupportFragmentManager());
+        mViewPager.setOffscreenPageLimit(1);
         mViewPager.setAdapter(adapter);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -91,6 +95,7 @@ public class ClassifyHealthActivity extends BaseFragmentActivity {
 
             @Override
             public void onPageSelected(int position) {
+                staticsAdShow(position);
                 XHClick.mapStat(ClassifyHealthActivity.this, STATISTICS_ID, "顶部tab切换", mDatas.get(position).get("title"));
             }
 
@@ -110,18 +115,25 @@ public class ClassifyHealthActivity extends BaseFragmentActivity {
         }
     }
 
+    private void staticsAdShow(int position) {
+        @SuppressLint("RestrictedApi") List<Fragment> list = getSupportFragmentManager().getFragments();
+        if(list != null){
+            for(Fragment fragment:list){
+                if(fragment != null && fragment instanceof ClassifyHealthFragment){
+                    Bundle bundle = fragment.getArguments();
+                    if(String.valueOf(position).equals(bundle.getString("xhindex"))){
+                        new Handler().postDelayed(((ClassifyHealthFragment) fragment)::onAdShow,200);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
     /**
      * 初始化状态栏
      */
     private void initStatusBar() {
-//        if (Tools.isShowTitle()) {
-//            int topbarHeight = Tools.getDimen(this, R.dimen.topbar_height);
-//            int height = topbarHeight + Tools.getStatusBarHeight(this);
-//            RelativeLayout bar_title = (RelativeLayout) findViewById(R.id.bar_title);
-//            RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height);
-//            bar_title.setLayoutParams(layout);
-//            bar_title.setPadding(0, Tools.getStatusBarHeight(this), 0, 0);
-//        }
         findViewById(R.id.bar_title).setBackgroundColor(getResources().getColor(R.color.common_top_bg));
         String colors = Tools.getColorStr(this, R.color.common_top_bg);
         Tools.setStatusBarColor(this, Color.parseColor(colors));
@@ -150,6 +162,8 @@ public class ClassifyHealthActivity extends BaseFragmentActivity {
             ClassifyHealthFragment fragment = new ClassifyHealthFragment();
             Map<String, String> map = mDatas.get(position);
             Bundle bundle = new Bundle();
+            bundle.putString("xhindex", String.valueOf(position));
+            bundle.putString("mSelectedPos", String.valueOf(mSelectedPos));
             bundle.putString("title", map.get("title"));
             bundle.putString("type", map.get("type"));
             bundle.putString("coverStr", map.get("coverStr"));

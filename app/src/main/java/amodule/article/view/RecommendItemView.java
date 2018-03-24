@@ -3,6 +3,7 @@ package amodule.article.view;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.text.InputFilter;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
@@ -87,7 +88,11 @@ public class RecommendItemView extends ItemBaseView {
             Map<String,String> styleDataMap = StringManager.getFirstMap(map.get("styleData"));
             videoIcon.setVisibility("2".equals(styleDataMap.get("type")) ? VISIBLE:GONE);
         }else videoIcon.setVisibility(GONE);
-        adIcon.setVisibility("2".equals(map.get("isAd")) ? VISIBLE : GONE);
+        boolean isAD = "2".equals(map.get("isAd"));
+        adIcon.setVisibility((!"1".equals(map.get("adType")) && isAD) ? VISIBLE : GONE);
+        if(recCustomerName != null){
+            recCustomerName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(isAD ? 10 : 5)});
+        }
         if (map.containsKey("customer")) {
             Map<String, String> customer = StringManager.getFirstMap(map.get("customer"));
             setViewText(recCustomerName, customer, "nickName");

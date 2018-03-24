@@ -176,6 +176,11 @@ public class CircleFragment extends Fragment {
             CircleHome circleHome = (CircleHome) mActivity;
             updateCircleHeader(circleHome.mSubjectDataArray);
         }
+        if(mActivity != null
+                && mActivity.getActMagager() != null
+                && quanAdvertControl != null){
+            mActivity.getActMagager().registerADController(quanAdvertControl);
+        }
     }
 
     /**
@@ -289,14 +294,11 @@ public class CircleFragment extends Fragment {
         quanAdvertControl.setCallBack(new QuanAdvertControl.DataCallBack() {
             @Override
             public void dataBack() {
-                if(isLoadAd){
-                    index_size=0;
-                    if (mPlateData != null)
-                        mListData =quanAdvertControl.getAdvertAndQuanData(mListData, mPlateData.getCid(), mPlateData.getMid(), index_size);
-                    mAdapter.notifyDataSetChanged();
-                    index_size=mListData.size();
-                }else{
-                }
+                index_size=0;
+                if (mPlateData != null)
+                    mListData =quanAdvertControl.getAdvertAndQuanData(mListData, mPlateData.getCid(), mPlateData.getMid(), index_size);
+                mAdapter.notifyDataSetChanged();
+                index_size=mListData.size();
             }
         });
         mAdapter.setQuanAdvertControl(quanAdvertControl);
@@ -592,5 +594,11 @@ public class CircleFragment extends Fragment {
     public void onPause() {
         super.onPause();
         stopVideo();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mActivity.getActMagager().unregisterADController(quanAdvertControl);
     }
 }

@@ -1,5 +1,6 @@
 package amodule.home;
 
+import android.app.Activity;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
@@ -13,14 +14,20 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import acore.logic.ActivityMethodManager;
+import acore.override.helper.XHActivityManager;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
+import acore.tools.ToolsDevice;
+import amodule._common.delegate.ILoadAdData;
 import amodule.main.activity.MainHomePage;
 import amodule.main.bean.HomeModuleBean;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
+import third.ad.XHAdAutoRefresh;
 import third.ad.control.AdControlHomeDish;
+import third.ad.scrollerAd.XHAllAdControl;
 
 import static third.ad.control.AdControlHomeDish.tag_yu;
 
@@ -32,7 +39,9 @@ import static third.ad.control.AdControlHomeDish.tag_yu;
  * E_mail : ztanzeyu@gmail.com
  */
 
-public class HomeDataControler {
+public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, ILoadAdData{
+
+    private XHAllAdControl mViewAdControl;
 
     private String CACHE_PATH = "";
     private final String SP_KEY_BACKURL = "backUrl";
@@ -55,11 +64,30 @@ public class HomeDataControler {
     //广告控制器
     private AdControlHomeDish mAdControl;
 
+    private long lastSelfAdTime;
+
     public HomeDataControler(MainHomePage activity) {
         this.mActivity = activity;
         mHomeModuleBean = new HomeModuleControler().getHomeModuleByType(activity, null);
         CACHE_PATH = FileManager.getSDCacheDir() + "homeDataCache";
         mAdControl = AdControlHomeDish.getInstance().getTwoLoadAdData();
+        registerRefreshCallback();
+    }
+
+    //注册刷新回调
+    private void registerRefreshCallback() {
+        if(mActivity == null){
+            return;
+        }
+        lastSelfAdTime = System.currentTimeMillis();
+        ActivityMethodManager activityMethodManager = mActivity.getActMagager();
+        if(activityMethodManager != null){
+            activityMethodManager.registerADController(this);
+        }
+        mAdControl.setRefreshCallback(() -> {
+            mData = mAdControl.getAutoRefreshAdData(mData);
+            safeNotifySetChanged();
+        });
     }
 
     //读取缓存数据
@@ -132,6 +160,7 @@ public class HomeDataControler {
                                 final String resetValue = dataMap.get("reset");
                                 if (compelClearData || (refresh && "2".equals(resetValue))) {
                                     mData.clear();
+                                    safeNotifySetChanged();
                                     Log.i("zyj", "刷新数据：清集合");
                                     isNeedRefresh(true);
                                     //强制刷新，重置数据
@@ -159,8 +188,7 @@ public class HomeDataControler {
                                     }
                                 }
                                 //提示刷新UI
-                                if (mNotifyDataSetChangedCallback != null)
-                                    mNotifyDataSetChangedCallback.notifyDataSetChanged();
+                                safeNotifySetChanged();
                                 //自动请求下一页数据
                                 if (mData.size() <= 4) {//推荐列表：低于等5的数据自动请求数据
                                     Log.i("zhangyujian", "自动下次请求:::" + mData.size());
@@ -174,8 +202,7 @@ public class HomeDataControler {
                                         mData.get(i).put("refreshTime", "");
                                     }
                                     //提示刷新UI
-                                    if (mNotifyDataSetChangedCallback != null)
-                                        mNotifyDataSetChangedCallback.notifyDataSetChanged();
+                                    safeNotifySetChanged();
                                 } else {//无数据时---请求下一页数据
                                     if (dataMap.containsKey(SP_KEY_NEXTURL)
                                             && isNextUrl) {
@@ -197,6 +224,11 @@ public class HomeDataControler {
                             callback.onAfter(refresh, flag, loadCount);
                     }
                 });
+    }
+
+    private void safeNotifySetChanged() {
+            if (mNotifyDataSetChangedCallback != null)
+                mNotifyDataSetChangedCallback.notifyDataSetChanged();
     }
 
     /**
@@ -228,14 +260,12 @@ public class HomeDataControler {
             ArrayList<Map<String, String>> listTemp = new ArrayList<>();
             Stream.of(mData)
                     .filter(map -> map.containsKey("adstyle") && "ad".equals(map.get("adstyle")))
-                    .forEach(map -> listTemp.add(map));
+                    .forEach(listTemp::add);
             Log.i(tag_yu, "删除广告");
             if (listTemp.size() > 0) {
                 mData.removeAll(listTemp);
             }
-            if (mNotifyDataSetChangedCallback != null) {
-                mNotifyDataSetChangedCallback.notifyDataSetChanged();
-            }
+            safeNotifySetChanged();
         }
     }
 
@@ -243,8 +273,7 @@ public class HomeDataControler {
     private void handlerMainThreadUIAD() {
         new Handler(Looper.getMainLooper()).post(() -> {
             mData = mAdControl.getNewAdData(mData, false);
-            if (mNotifyDataSetChangedCallback != null)
-                mNotifyDataSetChangedCallback.notifyDataSetChanged();
+            safeNotifySetChanged();
         });
     }
 
@@ -271,6 +300,10 @@ public class HomeDataControler {
 
     public ArrayList<Map<String, String>> getData() {
         return mData;
+    }
+
+    public int getDataSize(){
+        return mData != null ? mData.size() : 0;
     }
 
     public void setData(ArrayList<Map<String, String>> data) {
@@ -309,6 +342,24 @@ public class HomeDataControler {
         this.mEntryptDataCallback = entryptDataCallback;
     }
 
+    @Override
+    public void loadAdData(@NonNull ArrayList<String> listIds, @NonNull XHAllAdControl.XHBackIdsDataCallBack xhBackIdsDataCallBack, @NonNull Activity act, String StatisticKey) {
+        if (ToolsDevice.isNetworkAvailable(act)) {
+            mViewAdControl = new XHAllAdControl(listIds, (isRefresh, map) ->
+            {xhBackIdsDataCallBack.callBack(isRefresh, map);},
+                    XHActivityManager.getInstance().getCurrentActivity(),
+                    StatisticKey);
+
+        }
+    }
+
+    @Override
+    public void autoRefreshSelfAD() {
+        if(mAdControl != null){
+            mAdControl.autoRefreshSelfAD();
+        }
+    }
+
     /*--------------------------------------------- Interface ---------------------------------------------*/
 
     public interface OnLoadDataCallback {
@@ -331,6 +382,10 @@ public class HomeDataControler {
 
     public interface EntryptDataCallback {
         void onEntryptData(boolean refersh);
+    }
+
+    public XHAllAdControl getAllAdController() {
+        return mViewAdControl;
     }
 
 }

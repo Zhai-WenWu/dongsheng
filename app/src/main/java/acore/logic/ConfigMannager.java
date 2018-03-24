@@ -36,6 +36,7 @@ public class ConfigMannager {
     public static final String KEY_IMAGEACCEPT= "imageAccept";
     public static final String KEY_NETPROTOCOL= "netProtocol";
     public static final String KEY_APPPUSHTIMERANGE= "apppushtimerange";
+    public static final String KEY_NEW_AD_CONFIG = "newAdConfig";
 
     /**
      * 保存config

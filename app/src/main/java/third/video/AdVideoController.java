@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,6 +22,7 @@ import acore.logic.AdVideoConfigTool;
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
+import acore.override.XHApplication;
 import acore.override.helper.XHActivityManager;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
@@ -315,14 +317,12 @@ public class AdVideoController {
      */
     private int getCurrentPlayCount(){
         int currentPlayCount = 0;
-        if(mContext != null){
-            String lastDateValue = FileManager.loadShared(mContext,getXMLName(),KEY_DATE).toString();
-            String currentDataValue = Tools.getAssignTime("yyyyMMdd",0);
-            if(TextUtils.equals(lastDateValue,currentDataValue)){
-                currentPlayCount = loadCurrentPlayCount();
-            }else{
-                cleanData(mContext);
-            }
+        String lastDateValue = FileManager.loadShared(XHApplication.in(),getXMLName(),KEY_DATE).toString();
+        String currentDataValue = Tools.getAssignTime("yyyyMMdd",0);
+        if(TextUtils.equals(lastDateValue,currentDataValue)){
+            currentPlayCount = loadCurrentPlayCount();
+        }else{
+            cleanData(XHApplication.in());
         }
         return currentPlayCount;
     }
@@ -331,9 +331,6 @@ public class AdVideoController {
      *
      */
     private void setUpDateAndCount(){
-        if(mContext == null){
-            return;
-        }
         int currentPlayCount = loadCurrentPlayCount();
         currentPlayCount ++;
         String currentDataValue = Tools.getAssignTime("yyyyMMdd",0);
@@ -341,7 +338,7 @@ public class AdVideoController {
         Map<String,String> map = new HashMap<>();
         map.put(KEY_COUNT,String.valueOf(currentPlayCount));
         map.put(KEY_DATE,currentDataValue);
-        FileManager.saveShared(mContext,getXMLName(),map);
+        FileManager.saveShared(XHApplication.in(),getXMLName(),map);
     }
 
     public static void cleanData(Context context){

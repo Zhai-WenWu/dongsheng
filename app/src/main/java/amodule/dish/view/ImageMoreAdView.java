@@ -74,11 +74,7 @@ public class ImageMoreAdView extends ImageMoreView implements View.OnClickListen
         if("ad".equals(mAdPlayKey)){
             Map<String,String> map = (Map<String, String>) mData.get(0);
             setAdView(map.get("title"), map.get("desc"), map.get("imgUrl"));
-            if("1".equals(map.get("adType"))){
-                mAdHint.setVisibility(View.INVISIBLE);
-            }else{
-                mAdHint.setVisibility(View.VISIBLE);
-            }
+            mAdHint.setVisibility("1".equals(map.get("adType")) ? View.INVISIBLE : View.VISIBLE);
             setGdtIconVisibility(map);
         }
         mContentParentRl.setOnClickListener(this);

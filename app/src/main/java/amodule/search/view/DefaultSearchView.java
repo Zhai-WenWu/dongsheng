@@ -5,6 +5,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
@@ -14,6 +15,7 @@ import com.xiangha.R;
 import junit.framework.Assert;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +25,7 @@ import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;
 import acore.override.adapter.AdapterSimple;
 import acore.tools.FileManager;
+import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
 import amodule.search.data.SearchConstant;
 import amodule.search.data.SearchDataImp;
@@ -30,16 +33,14 @@ import aplug.basic.InternetCallback;
 import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
 import cn.srain.cube.views.ptr.PtrDefaultHandler;
 import cn.srain.cube.views.ptr.PtrFrameLayout;
-import third.ad.AdParent;
-import third.ad.AdsShow;
 import third.ad.BannerAd;
-import third.ad.TencenApiAd;
+import third.ad.scrollerAd.XHAllAdControl;
 import third.ad.tools.AdPlayIdConfig;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilString;
 
-import static third.ad.tools.TencenApiAdTools.TX_ID_SEARCH_DIFAULT;
+import static third.ad.tools.AdPlayIdConfig.SEARCH_DEFAULT;
 
 /**
  * Created by ：airfly on 2016/10/14 11:31.
@@ -92,8 +93,8 @@ public class DefaultSearchView extends LinearLayout implements View.OnClickListe
 
         search_header_list_view_frame = (PtrClassicFrameLayout) findViewById(R.id.search_header_list_view_frame);
         search_header_list_view_frame.setKeepHeaderWhenRefresh(false);
-        if(search_header_list_view_frame.getHeader() != null
-                && search_header_list_view_frame.getHeader().findViewById(R.id.framelayout_refresh) != null){
+        if (search_header_list_view_frame.getHeader() != null
+                && search_header_list_view_frame.getHeader().findViewById(R.id.framelayout_refresh) != null) {
             search_header_list_view_frame.getHeader().findViewById(R.id.framelayout_refresh).setVisibility(INVISIBLE);
         }
         rl_no_history = (LinearLayout) findViewById(R.id.rl_no_history);
@@ -212,7 +213,7 @@ public class DefaultSearchView extends LinearLayout implements View.OnClickListe
                     callback.toSearch(searchKey, searchType);
                 }
             });
-            initAd(false);
+            initAd();
         } else {
             ll_has_his.setVisibility(View.VISIBLE);
             rl_no_history.setVisibility(View.GONE);
@@ -235,10 +236,9 @@ public class DefaultSearchView extends LinearLayout implements View.OnClickListe
                     callback.toSearch(searchKey, searchType);
                 }
             }});
-            initAd(true);
+            initAd();
             View view = LayoutInflater.from(mActivity).inflate(R.layout.a_hot_tag_start_item, null);
             ll_hottag.addView(view, 0);
-
         }
     }
 
@@ -279,7 +279,7 @@ public class DefaultSearchView extends LinearLayout implements View.OnClickListe
             case R.id.search_his_clean_img:
                 FileManager.delDirectoryOrFile(UtilFile.getDataDir() + FileManager.file_searchHis);
                 XHClick.mapStat(mActivity, "a_search_default", "搜索历史", "清除历史");
-                Log.i("tzy","清除历史");
+                Log.i("tzy", "清除历史");
                 listSearchHistory.clear();
                 refresh();
                 callback.disableEditFocus(false);
@@ -301,39 +301,32 @@ public class DefaultSearchView extends LinearLayout implements View.OnClickListe
 
     }
 
-    boolean adLoadOver = false;
-    private void initAd(boolean hasHistory) {
-        if(adLoadOver){
+    XHAllAdControl xhAllAdControl;
+    boolean isLoad = false;
+
+    private void initAd() {
+        if(isLoad){
             return;
         }
-        adLoadOver = true;
-//        RelativeLayout gdtLayout;
-        RelativeLayout tencentLayout;
-
-//        广点通banner广告
-//        gdtLayout = (RelativeLayout) findViewById(
-//                hasHistory ? R.id.rl_search_ad_gdt_has_history : R.id.rl_search_ad_gdt_no_history);
-//        GdtAdNew gdtTipAd = new GdtAdNew(mActivity, "搜索默认页搜索下方", gdtLayout, 0,
-//                GdtAdTools.ID_BAR_SEARCH, GdtAdNew.CREATE_AD_BANNER);
-
-        //腾讯广告
-         tencentLayout = (RelativeLayout) findViewById(hasHistory ? R.id.rl_search_ad_tencet_has_history : R.id.rl_search_ad_tencent_no_history);
-        final TencenApiAd tencentApiAd = new TencenApiAd(mActivity, "search_default", TX_ID_SEARCH_DIFAULT,"1",
-                tencentLayout, R.layout.ad_banner_view_second,
-                new AdParent.AdListener() {
-                    @Override
-                    public void onAdCreate() {
-                        super.onAdCreate();
-
-                    }
-                });
-        tencentApiAd.style = TencenApiAd.styleBanner;
-
-        RelativeLayout advert_rela_banner = (RelativeLayout) findViewById(hasHistory ? R.id.rl_search_ad_gdt_has_history : R.id.rl_search_ad_gdt_no_history);
-        BannerAd bannerAdBurden = new BannerAd(mActivity,"search_default", advert_rela_banner);
-
-        AdParent[] adsTipParent = {tencentApiAd,bannerAdBurden};
-        AdsShow adTip = new AdsShow(adsTipParent, AdPlayIdConfig.SEARCH_DEFAULT);
-        adTip.onResumeAd();
+        isLoad = true;
+        RelativeLayout adBannerHasHis = (RelativeLayout) findViewById(R.id.rl_search_ad_gdt_has_history);
+        RelativeLayout adBannerNoHis = (RelativeLayout) findViewById(R.id.rl_search_ad_gdt_no_history);
+        ImageView imageViewHasHis = (ImageView) adBannerHasHis.findViewById(R.id.ad_banner_item_iv_single);
+        ImageView imageViewNoHis = (ImageView) adBannerNoHis.findViewById(R.id.ad_banner_item_iv_single);
+        ArrayList<String> list = new ArrayList<>();
+        list.add(SEARCH_DEFAULT);
+        xhAllAdControl = new XHAllAdControl(list, mActivity, "search_default");
+        xhAllAdControl.start((isRefresh, map) -> {
+            if (xhAllAdControl == null) {
+                return;
+            }
+            BannerAd bannerAdBurden = new BannerAd(mActivity, xhAllAdControl, imageViewHasHis);
+            map = StringManager.getFirstMap(map.get(SEARCH_DEFAULT));
+            bannerAdBurden.onShowAd(map);
+            bannerAdBurden = new BannerAd(mActivity, xhAllAdControl, imageViewNoHis);
+            bannerAdBurden.onShowAd(map);
+            xhAllAdControl.onAdBind(0, imageViewHasHis, "");
+        });
+        xhAllAdControl.registerRefreshCallback();
     }
 }

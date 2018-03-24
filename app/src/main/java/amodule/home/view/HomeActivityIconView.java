@@ -60,16 +60,16 @@ public class HomeActivityIconView extends AppCompatImageView {
         if(adBean == null){
             return;
         }
-        Map<String,String> adConfigMap = StringManager.getFirstMap(adBean.adConfig);
-        final String[] keys = {"1","2","3","4",};
-        for(String key:keys){
-            Map<String,String> tempMap = StringManager.getFirstMap(adConfigMap.get(key));
-            if("personal".equals(tempMap.get("type"))
-                    && "2".equals(tempMap.get("open"))){
-                handlerData(StringManager.getFirstMap(adBean.banner));
-                break;
-            }
-        }
+//        Map<String,String> adConfigMap = StringManager.getFirstMap(adBean.adConfig);
+//        final String[] keys = {"1","2","3","4",};
+//        for(String key:keys){
+//            Map<String,String> tempMap = StringManager.getFirstMap(adConfigMap.get(key));
+//            if(TAG_BANNER.equals(tempMap.get("type"))
+//                    && "2".equals(tempMap.get("open"))){
+//                handlerData(StringManager.getFirstMap(adBean.banner));
+//                break;
+//            }
+//        }
 
     }
 

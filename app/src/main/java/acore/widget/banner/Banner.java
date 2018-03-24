@@ -2,7 +2,6 @@ package acore.widget.banner;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -646,9 +645,10 @@ public class Banner extends RelativeLayout {
      * 通知数据已经放生改变
      */
     public void notifyDataHasChanged() {
+        if (mViewPager.getAdapter() == null)
+            return;
         mItemArrays.clear();
         initPoints();
-
         mViewPager.getAdapter().notifyDataSetChanged();
         mViewPager.setCurrentItem(0, false);
         if (mData.size() > 1){

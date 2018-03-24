@@ -1,7 +1,9 @@
 package third.ad.scrollerAd;
 
-import android.os.Handler;
-import android.os.Looper;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.net.Uri;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
@@ -12,30 +14,28 @@ import java.util.Map;
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.override.helper.XHActivityManager;
-import acore.tools.StringManager;
+import acore.tools.Tools;
+import acore.tools.ToolsDevice;
+import third.ad.db.bean.XHSelfNativeData;
+import third.ad.tools.AdConfigTools;
 
 /**
  * 自有广告
  */
-public class XHScrollerSelf extends XHScrollerAdParent{
-    private String data;
-    private Map<String, String> map_link;
+public class XHScrollerSelf extends XHScrollerAdParent {
+    public static final String IMG_KEY = "littleImage";
+    private XHSelfNativeData mNativeData = null;
 
-   public XHScrollerSelf(String data, String mAdPlayId, int num) {
+    public XHScrollerSelf(String data, String mAdPlayId, int num) {
         super(mAdPlayId, num);
-        this.data= data;
-        key="xh";
-        map_link = StringManager.getFirstMap(data);
-       if(map_link.containsKey("id")){
-           adid = map_link.get("id");
-       }
-       Log.i("tongji", "XHScrollerSelf: " + map_link.toString());
+        key = "xh";
+        adid = data;
     }
 
     @Override
-    public void onResumeAd(String oneLevel,String twoLevel) {
-        onAdShow(oneLevel,twoLevel,key);
-        Log.i("zhangyujian","广告展示:::"+XHScrollerAdParent.ADKEY_BANNER+":::位置::"+twoLevel);
+    public void onResumeAd(String oneLevel, String twoLevel) {
+        onAdShow(oneLevel, twoLevel, key);
+        Log.i("zhangyujian", "广告展示:::" + XHScrollerAdParent.ADKEY_BANNER + ":::位置::" + twoLevel);
     }
 
     @Override
@@ -44,64 +44,89 @@ public class XHScrollerSelf extends XHScrollerAdParent{
     }
 
     @Override
-    public void onThirdClick(String oneLevel,String twoLevel) {
-        onAdClick(oneLevel,twoLevel,key);
-//        AppCommon.openUrl(activity,map_link.get("url"),true);
-        AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(),map_link.get("url"),true);
-        Log.i("zhangyujian","广告点击:::"+XHScrollerAdParent.ADKEY_BANNER+":::位置::"+twoLevel);
+    public void onThirdClick(String oneLevel, String twoLevel) {
+        if (null != mNativeData) {
+            if ("1".equals(mNativeData.getDbType())) {
+                showSureDownload(mNativeData, mAdPlayId, adid, key, mNativeData.getId());
+            } else {
+                onAdClick(oneLevel, twoLevel, key);
+                handlerAdClick();
+            }
+        }
+        Log.i("zhangyujian", "广告点击:::" + XHScrollerAdParent.ADKEY_BANNER + ":::位置::" + twoLevel);
+    }
+
+    @Override
+    protected void postTongji(String event) {
+        if (mNativeData != null && !TextUtils.isEmpty(mNativeData.getId())) {
+            AdConfigTools.getInstance().postStatistics(event, mAdPlayId, adid, key, mNativeData.getId());
+        }
+    }
+
+    /**
+     * @param nativeData
+     * @param adPlayId
+     * @param key
+     * @param adid
+     */
+    public static void showSureDownload(XHSelfNativeData nativeData, String adPlayId, String key, String adid, String id) {
+        String message = ToolsDevice.getNetWorkSimpleType(XHActivityManager.getInstance().getCurrentActivity());
+        Activity activity = XHActivityManager.getInstance().getCurrentActivity();
+        if (activity != null && (!activity.isFinishing() || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && !activity.isDestroyed()))) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(XHActivityManager.getInstance().getCurrentActivity());
+            builder.setTitle("温馨提示")
+                    .setMessage("当前为" + message + "网络，开始下载应用？")
+                    .setPositiveButton("确认", (dialog, which) -> {
+                        AdConfigTools.getInstance().postStatistics("download", adPlayId, adid, key, id);
+                        if (nativeData != null) {
+                            AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), nativeData.getUrl(), true);
+                        }
+                        Log.i("zhangyujian", "广告确认下载:::" + XHScrollerAdParent.ADKEY_BANNER + ":::位置::");
+                    })
+                    .setNegativeButton("取消", (dialog, which) -> dialog.dismiss());
+            builder.show();
+        }
+    }
+
+    private void handlerAdClick() {
+        if (mNativeData != null) {
+            AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), mNativeData.getUrl(), true);
+        }
     }
 
     @Override
     public void getAdDataWithBackAdId(@NonNull final XHAdDataCallBack xhAdDataCallBack) {
-        if(!isShow()){//判断是否显示---不显示
+        if (!isShow() || mNativeData == null) {//判断是否显示---不显示
             xhAdDataCallBack.onFail(XHScrollerAdParent.ADKEY_BANNER);
             return;
         }
-        if(!LoginManager.isShowAd()){//特权不能去除活动广告
-            if(map_link.containsKey("adType")&&!"1".equals(map_link.get("adType"))){//1为活动，2广告
+        if (!LoginManager.isShowAd()) {//特权不能去除活动广告
+            if ("2".equals(mNativeData.getAdType())) {
                 xhAdDataCallBack.onFail(XHScrollerAdParent.ADKEY_BANNER);
                 return;
             }
         }
-        new Thread(() -> {
-            if(map_link!=null&&!TextUtils.isEmpty(map_link.get("name"))) {
-                map_link.put("type",XHScrollerAdParent.ADKEY_BANNER);
-                final Map<String,String> map = new HashMap<>();
-                map.put("title", map_link.get("name"));
-                map.put("desc",  map_link.get("subhead"));
-                map.put("adType",map_link.get("adType"));
-                String imgUrl= "";
-                String imgUrl2= "";
-                String imgUrl3= "";
-                if(map_link.containsKey("imgs")){
-                    Map<String,String> temp = StringManager.getFirstMap(map_link.get("imgs"));
-                    imgUrl= temp.get("appImg");
-                    imgUrl2= temp.get("appHomeImg");
-                    imgUrl3= temp.get("appSearchImg");
-                }
-                if(!TextUtils.isEmpty(map_link.get("name"))){//不缺少数据才是成功的状态
-                    map.put("appImg", imgUrl);
-                    //自动选择图片---默认样式首页大图
-                    if(!TextUtils.isEmpty(imgUrl2))
-                        map.put("imgUrl", imgUrl2);
-                    else if(!TextUtils.isEmpty(imgUrl3))
-                        map.put("imgUrl", imgUrl3);
-                    else
-                        map.put("imgUrl", imgUrl);
+        final Map<String, String> map = new HashMap<>();
+        //新增字段，用于判断自由广告是否刷新
+        map.put("id",mNativeData.getId());
+        map.put("updateTime",mNativeData.getUpdateTime());
+        //原始数据
+        map.put("title", mNativeData.getBrandName());
+        map.put("desc", mNativeData.getDesc());
+        map.put("adType", mNativeData.getAdType());
+        map.put("imgUrl", mNativeData.getBigImage());
+        map.put(IMG_KEY, mNativeData.getLittleImage());
+        map.put("iconUrl", mNativeData.getLogoImage());
+        map.put("type", XHScrollerAdParent.ADKEY_BANNER);
+        map.put("hide", "1");//2隐藏，1显示
+        xhAdDataCallBack.onSuccees(XHScrollerAdParent.ADKEY_BANNER, map);
+    }
 
-                    map.put("appHomeImg", imgUrl2);
-                    map.put("appSearchImg", imgUrl3);
-                    map.put("iconUrl", imgUrl);
-                    map.put("type",XHScrollerAdParent.ADKEY_BANNER);
-                    //主线程中处理
-                    new Handler(Looper.getMainLooper()).post(() -> xhAdDataCallBack.onSuccees(XHScrollerAdParent.ADKEY_BANNER, map));
-                }else {
-                    new Handler(Looper.getMainLooper()).post(() -> xhAdDataCallBack.onFail(XHScrollerAdParent.ADKEY_BANNER));
-                }
-            }else {
-                new Handler(Looper.getMainLooper()).post(() -> xhAdDataCallBack.onFail(XHScrollerAdParent.ADKEY_BANNER));
-            }
-        }).start();
-
+    public void setNativeData(XHSelfNativeData nativeData) {
+        mNativeData = nativeData;
+        if (mNativeData != null && "1".equals(mNativeData.getDbType())) {
+            String appname = TextUtils.isEmpty(mNativeData.getBrandName()) ? Tools.getMD5(mNativeData.getUrl()) : mNativeData.getBrandName();
+            mNativeData.setUrl("download.app?url=" + Uri.encode(mNativeData.getUrl()) + "&appname=" + appname);
+        }
     }
 }

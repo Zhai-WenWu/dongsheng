@@ -2,6 +2,7 @@ package amodule.search.view;
 
 import android.app.Activity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -10,13 +11,10 @@ import android.widget.TextView;
 
 import com.xiangha.R;
 
-import java.util.ArrayList;
 import java.util.Map;
 
 import acore.logic.AppCommon;
 import acore.tools.FileManager;
-import acore.tools.StringManager;
-import acore.tools.SyntaxTools;
 import acore.widget.ImageViewVideo;
 import third.ad.scrollerAd.XHAllAdControl;
 import third.ad.scrollerAd.XHScrollerAdParent;
@@ -40,24 +38,12 @@ public class SearchResultAdViewGenerater {
      */
     public static RelativeLayout generateTopAdView(Activity mActivity, XHAllAdControl adControl,
                                                    Map<String, String> dataMap) {
-        RelativeLayout view;
-        String type = dataMap.get("type");
-
-//        type = XHScrollerAdParent.ADKEY_API;
-//        dataMap.put("stype","301");
-
-        if (XHScrollerAdParent.ADKEY_BANNER.equals(type)) {
-            view = createSelfAdView(mActivity, dataMap);
-        } else if (XHScrollerAdParent.ADKEY_API.equals(type)) {
-            view = createTencentAdView(mActivity, dataMap);
-        } else {
-            view = createOtherAdView(mActivity, dataMap);
-        }
-
+        RelativeLayout view = createOtherAdView(mActivity, dataMap);
         if (view != null) {
             View adHint = view.findViewById(R.id.ad_hint);
             AppCommon.setAdHintClick(mActivity,adHint,adControl,Integer.valueOf(dataMap.get("index")),"0","a_searesult_adver","顶部广告");
             setViewListener(adControl, view, dataMap, "0");
+            adHint.setVisibility("1".equals(dataMap.get("adType")) ? View.GONE : View.VISIBLE);
             view.setVisibility(View.VISIBLE);
         }
         return view;
@@ -65,83 +51,12 @@ public class SearchResultAdViewGenerater {
 
 
     private static RelativeLayout createOtherAdView(Activity mActivity, Map<String, String> dataMap) {
-        RelativeLayout view = null;
-        view = (RelativeLayout) LayoutInflater.from(mActivity)
+        RelativeLayout view = (RelativeLayout) LayoutInflater.from(mActivity)
                 .inflate(R.layout.c_search_result_ad_top1, null);
         dataMap.put("imgUrl", dataMap.get("imgUrl"));
         setAdView(view, dataMap);
         return view;
     }
-
-
-    private static RelativeLayout createTencentAdView(Activity mActivity, Map<String, String> dataMap) {
-        RelativeLayout view = null;
-
-        if ("101".equals(dataMap.get("stype"))) {
-            view = (RelativeLayout) LayoutInflater.from(mActivity)
-                    .inflate(R.layout.c_search_result_ad_top1, null);
-            dataMap.put("imgUrl", dataMap.get("imgUrl"));
-            setAdView(view, dataMap);
-        } else if ("202".equals(dataMap.get("stype"))) {
-            view = (RelativeLayout) LayoutInflater.from(mActivity)
-                    .inflate(R.layout.c_search_result_ad_top2, null);
-            ImageViewVideo iv_adCover = (ImageViewVideo) view.findViewById(R.id.iv_adCover);
-            setAdTextInfo(view, dataMap.get("title"), dataMap.get("desc"));
-            view.findViewById(R.id.ad_hint).setVisibility(View.VISIBLE);
-            setViewImage(iv_adCover, dataMap.get("imgUrl"));
-        } else if ("301".equals(dataMap.get("stype"))) {
-            final ArrayList<String> tempList = new ArrayList<>();
-            if (!TextUtils.isEmpty(dataMap.get("imgs"))) {
-                ArrayList<Map<String, String>> imgList = StringManager.getListMapByJson(dataMap.get("imgs"));
-                SyntaxTools.loop(imgList, new SyntaxTools.LooperCallBack() {
-                    @Override
-                    public boolean loop(int i, Object object) {
-                        Map<String, String> imgMap = (Map<String, String>) object;
-                        String imgUrl = imgMap.get("");
-                        if (!TextUtils.isEmpty(imgUrl) && imgUrl.startsWith("http")) {
-                            tempList.add(imgUrl);
-                        }
-                        return false;
-                    }
-                });
-            }
-
-            if (tempList.size() == 3) {
-                view = (RelativeLayout) LayoutInflater.from(mActivity)
-                        .inflate(R.layout.c_search_result_ad_top3, null);
-                ImageViewVideo iv_ad1 = (ImageViewVideo) view.findViewById(R.id.iv_ad1);
-                ImageViewVideo iv_ad2 = (ImageViewVideo) view.findViewById(R.id.iv_ad2);
-                ImageViewVideo iv_ad3 = (ImageViewVideo) view.findViewById(R.id.iv_ad3);
-
-                setViewImage(iv_ad1, tempList.get(0));
-                setViewImage(iv_ad2, tempList.get(1));
-                setViewImage(iv_ad3, tempList.get(2));
-
-                setAdTextInfo(view, dataMap.get("title"), dataMap.get("desc"));
-                view.findViewById(R.id.ad_hint).setVisibility(View.VISIBLE);
-            } else if (tempList.size() > 0) {
-                view = (RelativeLayout) LayoutInflater.from(mActivity)
-                        .inflate(R.layout.c_search_result_ad_top1, null);
-                dataMap.put("imgUrl", tempList.get(0));
-                setAdView(view, dataMap);
-            }
-        }
-        return view;
-    }
-
-
-    private static RelativeLayout createSelfAdView(Activity mActivity, Map<String, String> dataMap) {
-
-        RelativeLayout view = null;
-        if (dataMap.get("appSearchImg").startsWith("http")) {
-            view = (RelativeLayout) LayoutInflater.from(mActivity)
-                    .inflate(R.layout.c_search_result_ad_top1, null);
-            dataMap.put("imgUrl", dataMap.get("appSearchImg"));
-            setAdView(view, dataMap);
-        }
-        return view;
-    }
-
 
     /**
      * 搜索结果页，列表广告
@@ -153,10 +68,6 @@ public class SearchResultAdViewGenerater {
      */
     public static View generateListAdView(Activity mActivity, final XHAllAdControl xhAllAdControl,
                                           Map<String, String> adData, int adIndex) {
-
-        if(XHScrollerAdParent.ADKEY_BANNER.equals(adData.get("type"))){
-            adData.put("imgUrl",adData.get("appSearchImg"));
-        }
         RelativeLayout view = (RelativeLayout) LayoutInflater.from(mActivity)
                 .inflate(R.layout.c_search_result_ad_item, null);
 
@@ -225,33 +136,40 @@ public class SearchResultAdViewGenerater {
      * @param dataMap
      */
     private static void setAdView(View adView, Map<String, String> dataMap) {
+        Log.i("tzy", "setAdView: "+dataMap.toString());
         String title = dataMap.get("title");
         String desc = dataMap.get("desc");
         String iconUrl = dataMap.get("iconUrl");
         String imageUrl = dataMap.get("imgUrl");
-        String allClick = dataMap.get("allClick");
+//        String allClick = dataMap.get("allClick");
         if (adView != null) {
             ImageViewVideo cover_img = (ImageViewVideo) adView.findViewById(R.id.iv_adCover);
             TextView tv_ad_name = (TextView) adView.findViewById(R.id.tv_ad_name);
             TextView tv_ad_decrip = (TextView) adView.findViewById(R.id.tv_ad_decrip);
             TextView tv_ad_observed = (TextView) adView.findViewById(R.id.tv_ad_observed);
+            //暂时不显示，后期开放广告真实浏览数
+            tv_ad_observed.setVisibility(View.GONE);
             ImageView icon_gdt = (ImageView) adView.findViewById(ID_AD_ICON_GDT);
+            View view = adView.findViewById(R.id.tv_ad_tag);
+            if(view != null){
+                view.setVisibility("1".equals(dataMap.get("adType"))?View.GONE:View.VISIBLE);
+            }
             if(icon_gdt != null){
                 icon_gdt.setVisibility(ADKEY_GDT.equals(dataMap.get("type"))?View.VISIBLE:View.GONE);
             }
             setViewImage(cover_img, TextUtils.isEmpty(imageUrl) ? iconUrl : imageUrl);
 
             if (TextUtils.isEmpty(title)) {
+                setViewText(tv_ad_decrip, desc);
                 setViewText(tv_ad_name, desc);
-                setViewText(tv_ad_decrip, desc);
             } else {
-                setViewText(tv_ad_name, title);
-                setViewText(tv_ad_decrip, desc);
+                setViewText(tv_ad_name, desc);
+                setViewText(tv_ad_decrip, title);
             }
 
-            if(TextUtils.isEmpty(allClick))
-                allClick = "5189";
-            setViewText(tv_ad_observed, allClick + "浏览");
+//            if(TextUtils.isEmpty(allClick))
+//                allClick = "5189";
+//            setViewText(tv_ad_observed, allClick + "浏览");
         }
     }
 

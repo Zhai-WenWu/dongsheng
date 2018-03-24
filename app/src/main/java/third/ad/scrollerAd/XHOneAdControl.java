@@ -1,28 +1,40 @@
 package third.ad.scrollerAd;
 
-import android.app.Activity;
 import android.util.Log;
 import android.view.View;
 
-import com.annimon.stream.Stream;
-
 import java.util.ArrayList;
 import java.util.Map;
+
+import third.ad.tools.XHSelfAdTools;
 
 /**
  * 广告单条管理类
  */
 public class XHOneAdControl {
     private ArrayList<XHScrollerAdParent> listAdParent;//当前全部的广告实体类
-    private String backId;//当前广告位置id
+    private String backId;//当前广告位id
     private int index_controls;//当前的广告存在的位置---针对于全部广告位集合
     private int index_ad = -1;//当前广告类的进行的位置\
     private XHAllAdControl.XHAdControlCallBack xhAdControlCallBack;
+    private boolean isDisplayed = false;
 
-    public XHOneAdControl(ArrayList<XHScrollerAdParent> listAdParent, String backId, int Num) {
+    XHOneAdControl(ArrayList<XHScrollerAdParent> listAdParent, String backId, int Num) {
+        resetData(listAdParent, backId, Num);
+    }
+
+    public void resetData(ArrayList<XHScrollerAdParent> listAdParent, String backId, int Num) {
         this.listAdParent = listAdParent;
         this.backId = backId;
         this.index_controls = Num;
+    }
+
+    public void resetDispaly(){
+        isDisplayed = false;
+    }
+
+    public void displayed(){
+        isDisplayed = true;
     }
 
     /**
@@ -48,11 +60,15 @@ public class XHOneAdControl {
             if (adParentTemp instanceof XHScrollerBaidu) {
                 ((XHScrollerBaidu) adParentTemp).setNativeResponse(xhAdControlCallBack.onBaiduNativeData());
             }
+            if(adParentTemp instanceof XHScrollerSelf){
+                ((XHScrollerSelf) adParentTemp).setNativeData(xhAdControlCallBack.onXHNativeData(index_controls));
+            }
             adParentTemp.setIndexControl(index_controls);
             adParentTemp.getAdDataWithBackAdId(new XHScrollerAdParent.XHAdDataCallBack() {
                 @Override
                 public void onSuccees(String type, Map<String, String> map) {
                     index_ad = index;
+                    listAdParent.get(index_ad).setExecuteStatisticCallback(mCallback);
                     xhAdControlCallBack.onSuccess(type, map, index_controls);
                 }
 
@@ -73,31 +89,18 @@ public class XHOneAdControl {
      */
     public void onAdClick(String oneLevel, String twoLevel) {
         Log.i("tzy", "onAdClick::::" + index_ad);
-        if (index_ad > -1 && index_ad < listAdParent.size()
-                && listAdParent.get(index_ad) != null){
-            View view = listAdParent.get(index_ad).getShowView();
-            if(view != null && view.getContext() instanceof Activity){
-                //TODO
-                Log.i("tongji", "onAdClick: id = " + backId + ";page = " + view.getContext().getClass().getSimpleName());
-            }
+        if (index_ad > -1 && index_ad < listAdParent.size())
             listAdParent.get(index_ad).onThirdClick(oneLevel, twoLevel);
-        }
     }
 
     /**
      * 广告曝光
      */
     public void onAdBind(View view, String oneLevel, String twoLevel) {
-        Log.i("tzy", "onAdBind::::" + index_ad + "::::" + view == null ? "view为null" : "正常");
-        if (index_ad > -1 && index_ad < listAdParent.size()) {
-            if (view != null){
+        Log.i("tzy", "onAdBind::::" + index_ad + "::::" + (view == null ? "view为null" : "正常"));
+        if (index_ad > -1 && index_ad < listAdParent.size() && !isDisplayed) {
+            if (view != null)
                 listAdParent.get(index_ad).setShowView(view);
-                if(view.getContext() instanceof Activity){
-                    //TODO
-                    Log.i("tongji", "onAdBind: id = " + backId + ";page = " + view.getContext().getClass().getSimpleName());
-                }
-            }
-
             listAdParent.get(index_ad).onResumeAd(oneLevel, twoLevel);
         }
     }
@@ -105,18 +108,19 @@ public class XHOneAdControl {
     /**
      * 获取当前view的状态
      *
-     * @return
+     * @return 当前view的状态
      */
-    public boolean getAdViewState() {
-        if (index_ad > -1 && index_ad < listAdParent.size())
+    boolean getAdViewState() {
+        if (index_ad > -1 && index_ad < listAdParent.size()){
             return listAdParent.get(index_ad).getViewState();
+        }
         return true;
     }
 
     /**
      * 设置view状态
      *
-     * @param view
+     * @param view 广告view
      */
     public void setView(View view) {
         if (index_ad > -1 && index_ad < listAdParent.size() && view != null) {
@@ -124,12 +128,11 @@ public class XHOneAdControl {
         }
     }
 
-    //退出activity时，释放view
-    public void releaseView() {
-        if (listAdParent != null) {
-            Stream.of(listAdParent)
-                    .filter(adParent -> null != adParent)
-                    .forEach(XHScrollerAdParent::realseView);
+    private XHScrollerAdParent.ExecuteStatisticCallback mCallback = new XHScrollerAdParent.ExecuteStatisticCallback() {
+        @Override
+        public void execute() {
+            displayed();
         }
-    }
+    };
+
 }

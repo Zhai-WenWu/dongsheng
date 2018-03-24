@@ -20,17 +20,14 @@ import third.ad.tools.AdConfigTools;
 public abstract class XHScrollerAdParent {
     public static final String ADKEY_GDT = "sdk_gdt";
     public static final String ADKEY_BAIDU = "sdk_baidu";
-    public static final String ADKEY_API = "api_tfp";
     public static final String ADKEY_BANNER = "xh";
 
     public static final String TAG_GDT = "gdt";
-    public static final String TAG_API = "api";
     public static final String TAG_BANNER = "personal";
     public static final String TAG_BAIDU = "baidu";
 
     public static final int ID_AD_ICON_GDT = R.id.icon_ad_gdt;
     public static final int ID_AD_ICON_BAIDU = R.id.icon_ad_baidu;
-    public static final int ID_AD_ICON_API = R.id.icon_ad_api;
 
     public int num;//当前存在的位置--针对的是一个广告位
     public String mAdPlayId = "";//广告位置id
@@ -39,6 +36,8 @@ public abstract class XHScrollerAdParent {
     public View view;
     public String key = "";
     private boolean isQuanList = false;
+
+    private ExecuteStatisticCallback mExecuteStatisticCallback;
 
     public XHScrollerAdParent(String mAdPlayId, int num) {
         this.mAdPlayId = mAdPlayId;
@@ -124,18 +123,20 @@ public abstract class XHScrollerAdParent {
      */
     protected void onAdShow(String oneLevel, String twoLevel, String threeLevel) {
         //自己网站上的统计
+
         postTongji("show");
+        if (mExecuteStatisticCallback != null)
+            mExecuteStatisticCallback.execute();
         XHClick.mapStat(XHApplication.in(), oneLevel, twoLevel, threeLevel);
     }
 
 
-    private void postTongji(String event) {
-        AdConfigTools.getInstance().postStatistics(event,mAdPlayId,key,adid);
+    protected void postTongji(String event) {
+        AdConfigTools.getInstance().postStatistics(event,mAdPlayId,adid,key,"");
     }
 
     public String getRealKey(String origalKey){
         switch (origalKey){
-            case ADKEY_API:return TAG_API;
             case ADKEY_BAIDU: return TAG_BAIDU;
             case ADKEY_BANNER: return TAG_BANNER;
             case ADKEY_GDT:return TAG_GDT;
@@ -182,7 +183,6 @@ public abstract class XHScrollerAdParent {
         if (!TextUtils.isEmpty(type)
                 && (XHScrollerAdParent.TAG_GDT.equals(type)
                     || XHScrollerAdParent.TAG_BANNER.equals(type)
-                    || XHScrollerAdParent.TAG_API.equals(type)
                     || XHScrollerAdParent.TAG_BAIDU.equals(type)
                     )
                 ) {
@@ -195,31 +195,14 @@ public abstract class XHScrollerAdParent {
      * 获取当前广告尺寸
      *
      * @param type---广告类型
-     * @param loid---腾讯API的loid
      * @param viewTag           ----外部要显示的图片样式 1-大图，2-小图
      */
-    public static Map<String, String> getAdImageSize(String type, String loid, String viewTag) {
+    public static Map<String, String> getAdImageSize(String type, String viewTag) {
         if (TextUtils.isEmpty(type) || TextUtils.isEmpty(viewTag)) return null;
         Map<String, String> map = new HashMap<>();
         if (ADKEY_GDT.equals(type)) {//广点通
             map.put("width", "1280");
             map.put("height", "720");
-            return map;
-
-        } else if (ADKEY_API.equals(type)) {//腾讯API
-            if ("1".equals(viewTag)) {
-                if (!TextUtils.isEmpty(loid) && loid.equals("201")) {
-                    map.put("width", "640");
-                    map.put("height", "246");
-                } else {
-                    map.put("width", "640");
-                    map.put("height", "330");
-                }
-
-            } else if ("2".equals(viewTag)) {
-                map.put("width", "230");
-                map.put("height", "152");
-            }
             return map;
         } else if (ADKEY_BANNER.equals(type)) {//xh自己的广告
             if ("1".equals(viewTag)) {
@@ -232,5 +215,13 @@ public abstract class XHScrollerAdParent {
             return map;
         }
         return null;
+    }
+
+    public interface ExecuteStatisticCallback {
+        void execute();
+    }
+
+    public void setExecuteStatisticCallback (ExecuteStatisticCallback callback) {
+        mExecuteStatisticCallback = callback;
     }
 }

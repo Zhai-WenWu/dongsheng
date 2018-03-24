@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,9 +49,8 @@ import aplug.basic.InternetCallback;
 import aplug.basic.LoadImage;
 import aplug.basic.ReqInternet;
 import aplug.basic.SubBitmapTarget;
-import third.ad.AdParent;
-import third.ad.AdsShow;
 import third.ad.BannerAd;
+import third.ad.scrollerAd.XHAllAdControl;
 import third.ad.tools.AdPlayIdConfig;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilString;
@@ -66,7 +66,6 @@ public class ClassifyHealthFragment extends Fragment {
     private ArrayList<Map<String, String>> mLeftListData = null;
     private ArrayList<ArrayList<Map<String, String>>> mRightScrollData = null;
     private ArrayList<Map<String, String>> mAllData;
-    public AdsShow[] mAds;
 
     private View mRootView;
     private ListView mLeftListView;
@@ -74,6 +73,7 @@ public class ClassifyHealthFragment extends Fragment {
     private LinearLayout mRightContentLayout;
     private ImageView mActivityImg;
     private TextView mSearchHint;
+    private ImageView mImageView;
 
     private BaseFragmentActivity mActivity;
 
@@ -81,7 +81,8 @@ public class ClassifyHealthFragment extends Fragment {
 
     private String mNameTitle = "", mType = "caipu", mTitle = "分类", mCoverStr = "";
     private String mEventId = "a_menu_table";
-    private String mStatistics="";
+    private String mStatistics = "";
+    private String mXhIndex="",mSelectIndex="";
     private int mIndex = 0;
 
     private Handler mHandler = null;
@@ -112,7 +113,7 @@ public class ClassifyHealthFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                XHClick.track(v.getContext(), "点击"+mTitle+"页的搜索框");
+                XHClick.track(v.getContext(), "点击" + mTitle + "页的搜索框");
                 XHClick.mapStat(mActivity, mEventId, "搜索", "");
                 Intent intent = new Intent(mActivity, HomeSearch.class);
                 intent.putExtra(SearchConstant.SEARCH_TYPE, SearchConstant.SEARCH_CAIPU);
@@ -145,6 +146,8 @@ public class ClassifyHealthFragment extends Fragment {
             mCoverStr = mBundle.getString("coverStr");
             mEventId = mBundle.getString("eventId");
             mStatistics = mBundle.getString("statistics");
+            mXhIndex = mBundle.getString("xhindex");
+            mSelectIndex = mBundle.getString("mSelectedPos");
         }
 
         mHandler = new Handler(new Handler.Callback() {
@@ -326,91 +329,49 @@ public class ClassifyHealthFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if(mAds != null){
-            for(AdsShow ad : mAds){
-                ad.onResumeAd();
+    }
+
+    public void onAdShow() {
+        if(xhAllAdControl != null && mImageView != null){
+            int[] location = new int[2];
+            mImageView.getLocationOnScreen(location);
+            if(location[0] >= 0 && location[0] <= ToolsDevice.getWindowPx(getContext()).widthPixels
+                    && location[1] >= 0 && location[1] <= ToolsDevice.getWindowPx(getContext()).heightPixels){
+                xhAllAdControl.onAdBind(0, mImageView, "");
             }
         }
     }
+
+    XHAllAdControl xhAllAdControl;
 
     /**
      * 初始化广告
      */
     private void initAd() {
-//		RelativeLayout adTipLayout = (RelativeLayout) findViewById(R.id.classify_ad_bd_layout);
-//		int[] adsWhat = {BaiduAdCreate.CREATE_AD_SHADE, BaiduAdCreate.CREATE_AD_RANDOM, BaiduAdCreate.CREATE_AD_RANDOM};
-//		int[] resouceId = {R.layout.ad_baidu_view_shade, R.layout.ad_baidu_view_img_btn_green, R.layout.ad_baidu_view_img_btn_yellow};
-//		BaiduAdCreate baiduAdTools = new BaiduAdCreate(this,"", adTipLayout, BaiduAD.ID_CLASSIFY,
-//				adsWhat, resouceId, new BaiduAdCreate.AdListener() {
-//			@Override
-//			public void onAdOver(View adView, Bitmap msg, int tag) {
-//				super.onAdOver(adView, msg, tag);
-//				if (adView.findViewById(R.id.view_ad_content_layout) != null) {
-//					int imgH = 280, imgW = 1160;
-//					int windW = ToolsDevice.getWindowPx(NewClassify.this).widthPixels - ToolsDevice.dp2px(NewClassify.this, 116);
-//					int viewH = windW * imgH / imgW;
-//					int viewW = windW;
-//					int contentW = viewW;
-//					switch (tag) {
-//						case BaiduAdCreate.INIT_VIEW_SHADE: //图为全屏
-//							viewW = windW;
-//							break;
-//						case BaiduAdCreate.INIT_VIEW_RANDOM: //图比为3：2
-//							viewW = viewH / 2 * 3;
-//							contentW -= viewW;
-//							break;
-//					}
-//					RelativeLayout contentLayout = (RelativeLayout) adView.findViewById(R.id.view_ad_content_layout);
-//					RelativeLayout.LayoutParams params2 = (RelativeLayout.LayoutParams) contentLayout.getLayoutParams();
-//					params2.width = contentW;
-//					params2.height = viewH;
-//					contentLayout.setLayoutParams(params2);
-//					ImageView imageView = (ImageView) adView.findViewById(R.id.view_ad_img);
-//					TextView title = (TextView) adView.findViewById(R.id.view_ad_text);
-//					TextView ad = (TextView) adView.findViewById(R.id.view_ad);
-//					TextView btn = (TextView) adView.findViewById(R.id.view_ad_btn);
-//					btn.setTextSize(Tools.getDimenSp(NewClassify.this, R.dimen.sp_11));
-//					RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) btn.getLayoutParams();
-//					int dp10 = Tools.getDimen(NewClassify.this, R.dimen.dp_10);
-//					int dp1 = Tools.getDimen(NewClassify.this, R.dimen.dp_1);
-//					if (adView.findViewById(R.id.view_ad_icon) != null) {
-//						ImageView imageIcon = (ImageView) adView.findViewById(R.id.view_ad_icon);
-//						RelativeLayout.LayoutParams adIconParams = (RelativeLayout.LayoutParams) imageIcon.getLayoutParams();
-//						adIconParams.width = Tools.getDimen(NewClassify.this, R.dimen.dp_11);
-//						adIconParams.height = Tools.getDimen(NewClassify.this, R.dimen.dp_11);
-//						adIconParams.setMargins(dp1 * 2, 0, 0, dp1 * 2);
-//						btn.setPadding(dp10, dp1, dp1, dp1);
-//						params.setMargins(0, Tools.getDimen(NewClassify.this, R.dimen.dp_1), 0, 0);
-//					} else {
-//						btn.setPadding(dp10, dp1, dp10, dp1);
-//						params.setMargins(0, Tools.getDimen(NewClassify.this, R.dimen.dp_5), 0, 0);
-//					}
-//
-//					UtilImage.setImgViewByWH(imageView, msg, viewW, viewH, true);
-//					title.setTextSize(Tools.getDimenSp(NewClassify.this, R.dimen.sp_14));
-//					ad.setTextSize(Tools.getDimenSp(NewClassify.this, R.dimen.sp_6));
-//					RelativeLayout.LayoutParams adParams = (RelativeLayout.LayoutParams) ad.getLayoutParams();
-//					adParams.width = Tools.getDimen(NewClassify.this, R.dimen.dp_18);
-//					adParams.height = Tools.getDimen(NewClassify.this, R.dimen.dp_8);
-//					adParams.setMargins(0, 0, 0, 0);
-//					adView.setVisibility(View.VISIBLE);
-//				}
-//			}
-//		});
-        //广点通banner广告
-//		RelativeLayout bannerLayout = (RelativeLayout) findViewById(R.id.classify_ad_banner_bd_layout);
-//		GdtAdNew gdtAd = new GdtAdNew(this,"", bannerLayout, 0, GdtAdTools.ID_NEW_CLASS, GdtAdNew.CREATE_AD_BANNER);
-        RelativeLayout layoutParent = (RelativeLayout) mRootView.findViewById(R.id.classify_ad_banner_layout);
-        BannerAd bannerAd = new BannerAd(mActivity, mStatistics, layoutParent);
-        bannerAd.marginLeft = ToolsDevice.dp2px(mActivity,60);
-        bannerAd.marginRight = ToolsDevice.dp2px(mActivity,60);
-        AdParent[] ads1 = {bannerAd};
+        mImageView = (ImageView) mRootView.findViewById(R.id.ad_banner_item_iv_single);
+        ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) mImageView.getLayoutParams();
+        layoutParams.setMargins(0,Tools.getDimen(getContext(),R.dimen.dp_10),0,0);
         String adPlayId = AdPlayIdConfig.HEALTH_ClASSIFY;
         if (mType.equals("caipu")) {
             adPlayId = AdPlayIdConfig.Dish_CLASSIFY;
         }
-        AdsShow ad1 = new AdsShow(ads1, adPlayId);
-        mAds = new AdsShow[]{ad1};
+        ArrayList<String> ads = new ArrayList<>();
+        ads.add(adPlayId);
+        final String finalAdPlayId = adPlayId;
+        xhAllAdControl = new XHAllAdControl(ads,
+                (isRefresh,map) -> {
+                    if (map.containsKey(finalAdPlayId)) {
+                        BannerAd bannerAd = new BannerAd(mActivity, xhAllAdControl, mImageView);
+                        bannerAd.marginLeft = ToolsDevice.dp2px(mActivity, 60);
+                        bannerAd.marginRight = ToolsDevice.dp2px(mActivity, 60);
+                        map = StringManager.getFirstMap(map.get(finalAdPlayId));
+                        bannerAd.onShowAd(map);
+                        if(TextUtils.equals(mXhIndex,mSelectIndex)){
+                            onAdShow();
+                        }
+                    }
+                }, getActivity(), "");
+        xhAllAdControl.registerRefreshCallback();
     }
 
     /**
@@ -460,7 +421,7 @@ public class ClassifyHealthFragment extends Fragment {
                             view.findViewById(R.id.line_left).setVisibility(View.GONE);
                             view.findViewById(R.id.line_right).setVisibility(View.GONE);
                         } else {
-                            String color = Tools.getColorStr(mActivity,R.color.comment_color);
+                            String color = Tools.getColorStr(mActivity, R.color.comment_color);
                             tv.setTextColor(Color.parseColor(color));
                             view.setBackgroundColor(Color.parseColor("#FFFFFF"));
                             view.findViewById(R.id.line_left).setVisibility(View.VISIBLE);
@@ -536,11 +497,6 @@ public class ClassifyHealthFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        if(mAds != null){
-            for(AdsShow ad : mAds){
-                ad.onPauseAd();
-            }
-        }
     }
 
     @Override
