@@ -94,7 +94,7 @@
         SortId="2"
         AppId="wx2b582fbe26ef8993"
         AppSecret="178b4d14294057b0df3d4586621cfe00"
-        BypassApproval="false"
+        BypassApproval="true"
         Enable="true" />
         
 	<WechatFavorite

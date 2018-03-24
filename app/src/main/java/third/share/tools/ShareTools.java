@@ -139,15 +139,21 @@ public class ShareTools {
 		// oks.setNotification(R.drawable.ic_launcher,
 		// getString(R.string.app_name));
 		// title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间使用
-		oks.setTitle(title);
-		oks.setTitleUrl(newClickUrl);
+		if (!TextUtils.isEmpty(title))
+			oks.setTitle(title);
+		if (!TextUtils.isEmpty(newClickUrl))
+			oks.setTitleUrl(newClickUrl);
 		// text是分享文本，所有平台都需要这个字段
-		oks.setText(content);
+		if (!TextUtils.isEmpty(content))
+			oks.setText(content);
 		// imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
-		oks.setImagePath(imgPath); // 确保SDcard下面存在此张图片
-		oks.setImageUrl(imgUrl);
+		if (!TextUtils.isEmpty(imgPath))
+			oks.setImagePath(imgPath); // 确保SDcard下面存在此张图片
+		if (!TextUtils.isEmpty(imgUrl))
+			oks.setImageUrl(imgUrl);
 		// url仅在微信（包括好友和朋友圈）中使用
-		oks.setUrl(newClickUrl);
+		if (!TextUtils.isEmpty(newClickUrl))
+			oks.setUrl(newClickUrl);
 
 		oks.setCallback(new PlatformActionListener() {
 

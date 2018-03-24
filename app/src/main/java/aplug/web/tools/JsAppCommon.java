@@ -1346,7 +1346,7 @@ public class JsAppCommon extends JsBase {
                 if (mAct instanceof WebActivity && !TextUtils.isEmpty(callback)) {
                     ((WebActivity)mAct).shareCallback = callback;
                 }
-                if (TextUtils.isEmpty(url) && !TextUtils.isEmpty(img)) {
+                if (TextUtils.isEmpty(url) && TextUtils.isEmpty(title) && TextUtils.isEmpty(content) && !TextUtils.isEmpty(img)) {
                     handleShareImage(platformType, img, apiUrl, params);
                     return;
                 }
