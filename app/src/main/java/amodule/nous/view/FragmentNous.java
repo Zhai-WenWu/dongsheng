@@ -215,9 +215,9 @@ public class FragmentNous {
                     TextView textName = (TextView) view.findViewById(R.id.tv_nousTitle_ad);
                     TextView textAllClick = (TextView) view.findViewById(R.id.tv_allClick_ad);
                     setViewText(textName, map.get("title") + "，" + map.get("desc"));
-                    Random random = new Random();
-                    int v = random.nextInt(5000 - 3000) + 3000;
-                    setViewText(textAllClick, v + "浏览");
+//                    Random random = new Random();
+//                    int v = random.nextInt(5000 - 3000) + 3000;
+//                    setViewText(textAllClick, v + "浏览");
                     ((TextView)view.findViewById(R.id.tv_ad_tag)).setText("1".equals(map.get
                             ("adType")) ? "香哈" : "广告");
                     View gdtIcon = view.findViewById(ID_AD_ICON_GDT);
