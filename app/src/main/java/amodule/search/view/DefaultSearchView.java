@@ -315,7 +315,8 @@ public class DefaultSearchView extends LinearLayout implements View.OnClickListe
         ImageView imageViewNoHis = (ImageView) adBannerNoHis.findViewById(R.id.ad_banner_item_iv_single);
         ArrayList<String> list = new ArrayList<>();
         list.add(SEARCH_DEFAULT);
-        xhAllAdControl = new XHAllAdControl(list, (isRefresh,map) -> {
+        xhAllAdControl = new XHAllAdControl(list, mActivity, "search_default");
+        xhAllAdControl.start((isRefresh, map) -> {
             if (xhAllAdControl == null) {
                 return;
             }
@@ -325,7 +326,7 @@ public class DefaultSearchView extends LinearLayout implements View.OnClickListe
             bannerAdBurden = new BannerAd(mActivity, xhAllAdControl, imageViewNoHis);
             bannerAdBurden.onShowAd(map);
             xhAllAdControl.onAdBind(0, imageViewHasHis, "");
-        }, mActivity, "search_default");
+        });
         xhAllAdControl.registerRefreshCallback();
     }
 }

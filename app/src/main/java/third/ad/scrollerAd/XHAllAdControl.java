@@ -80,6 +80,24 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
     private boolean isLoadOverBaidu = false;
     private boolean isLoadOverXH = false;
 
+
+    public XHAllAdControl(@NonNull ArrayList<String> listIds, @NonNull Activity act, String StatisticKey) {
+        this(listIds, act, StatisticKey, false);
+    }
+
+    public XHAllAdControl(@NonNull ArrayList<String> listIds, @NonNull Activity act, String StatisticKey, boolean isJudgePicSize) {
+        this.listIds = listIds;
+        this.act = act;
+        this.StatisticKey = StatisticKey;
+        this.isJudgePicSize = isJudgePicSize;
+        if (listIds.size() > 0) getCountGdtData = listIds.size();
+    }
+
+    public void start(XHBackIdsDataCallBack callback) {
+        this.xhBackIdsDataCallBack = callback;
+        loadData();
+    }
+
     public XHAllAdControl(@NonNull ArrayList<String> listIds, @NonNull XHBackIdsDataCallBack xhBackIdsDataCallBack,
                           @NonNull Activity act, String StatisticKey) {
         this(listIds, xhBackIdsDataCallBack, act, StatisticKey, false);
@@ -102,6 +120,10 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
         this.StatisticKey = StatisticKey;
         this.isJudgePicSize = isJudgePicSize;
         if (listIds.size() > 0) getCountGdtData = listIds.size();
+        loadData();
+    }
+
+    private void loadData() {
         getStiaticsData();
         getAllAdDataBySqlite();
     }
