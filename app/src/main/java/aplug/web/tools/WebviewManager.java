@@ -3,10 +3,12 @@ package aplug.web.tools;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Build;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
@@ -18,7 +20,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-
+import com.annimon.stream.Stream;
 import com.xh.manager.DialogManager;
 import com.xh.manager.ViewManager;
 import com.xh.view.HButtonView;
@@ -47,7 +49,7 @@ import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilString;
 
 @SuppressLint({"JavascriptInterface", "SetJavaScriptEnabled"})
-public class  WebviewManager {
+public class WebviewManager {
     public static final String ERROR_HTML_URL = "file:///android_asset/error.html";
     private Activity act;
     private LoadManager loadManager;
@@ -75,23 +77,24 @@ public class  WebviewManager {
     }
 
     public XHWebView createWebView(int id) {
-        return createWebView(id,true);
+        return createWebView(id, true);
     }
-    public XHWebView createWebView(int id,boolean isCookieSync){
+
+    public XHWebView createWebView(int id, boolean isCookieSync) {
         if (act == null) {
             return null;
         }
         XHWebView webview = null;
         if (id > 0) {
             webview = (XHWebView) act.findViewById(id);
-            if(null == webview){
+            if (null == webview) {
                 throw new RuntimeException("Id : " + id + " , not found this id.");
             }
-        }else{
+        } else {
             webview = new XHWebView(act);
         }
 
-        if(isCookieSync) {
+        if (isCookieSync) {
             CookieManager cookieManager = CookieManager.getInstance();
             cookieManager.setAcceptCookie(true);
             cookieManager.removeSessionCookie();//移除无过期时间的cookie
@@ -103,7 +106,7 @@ public class  WebviewManager {
         //设置WebViewClient
         setWebViewClient(webview);
         //设置WebChromeClient
-        setWebChromeClient(webview,loadManager);
+        setWebChromeClient(webview, loadManager);
         mWwebArray.add(webview);
         return webview;
     }
@@ -243,7 +246,7 @@ public class  WebviewManager {
                                 AppCommon.openUrl(act, newUrl, true);
                             }
                         });
-                        if(!TextUtils.equals(newUrl,url))
+                        if (!TextUtils.equals(newUrl, url))
                             loadManager.hideProgressBar();
                     } else {
                         AppCommon.openUrl(act, newUrl, true);
@@ -276,7 +279,7 @@ public class  WebviewManager {
             public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
                 Tools.showToast(view.getContext(), message);
                 result.cancel();
-                if(loadManager != null)loadManager.hideProgressBar();
+                if (loadManager != null) loadManager.hideProgressBar();
                 return true;
             }
 
@@ -317,40 +320,46 @@ public class  WebviewManager {
         });
     }
 
-    public static void syncXHCookie(){
-        Map<String,String> header = ReqInternet.in().getHeader(XHApplication.in());
-        String cookieStr=header.containsKey("Cookie")?header.get("Cookie"):"";
-        String[] cookie = cookieStr.split(";");
-        CookieManager cookieManager = CookieManager.getInstance();
-        for (int i = 0; i < cookie.length; i++) {
-            cookieManager.setCookie(StringManager.domain, cookie[i]);
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            cookieManager.flush();
-        }else{
-            CookieSyncManager.createInstance(XHApplication.in());
-            CookieSyncManager.getInstance().sync();
-        }
-        LogManager.print("tzy","d", "设置webview的cookie："+cookieStr);
-    }
-
-    public static void syncDSCookie(){
-        Map<String,String> header= MallReqInternet.in().getHeader(XHApplication.in());
-        String cookieKey_mall= MallStringManager.mall_web_apiUrl.replace(MallStringManager.appWebTitle, "");
-        String cookieStr=header.containsKey("Cookie")?header.get("Cookie"):"";
-        String[] cookie = cookieStr.split(";");
+    public static void syncXHCookie() {
+        Map<String, String> header = ReqInternet.in().getHeader(XHApplication.in());
+        Log.i("tzy", "syncXHCookie: header = " + header);
+        String cookieStr = Uri.decode(header.containsKey("XH-Client-Data") ? header.get("XH-Client-Data") : "");
+        Map<String, String> cookieMap = StringManager.getFirstMap(cookieStr);
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.setAcceptCookie(true);
-        for (int i = 0; i < cookie.length; i++) {
-            cookieManager.setCookie(cookieKey_mall, cookie[i]);
-        }
+        Stream.of(cookieMap)
+                .forEach(value -> {
+                    String cookieValue = value.getKey() + "=" + value.getValue();
+                    cookieManager.setCookie(StringManager.domain, cookieValue);
+                });
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             cookieManager.flush();
-        }else{
+        } else {
             CookieSyncManager.createInstance(XHApplication.in());
             CookieSyncManager.getInstance().sync();
         }
-        LogManager.print(XHConf.log_tag_net,"d", "设置webview的cookie："+cookieStr);
+        LogManager.print("tzy", "d", "设置webview的cookie：" + cookieStr);
+    }
+
+    public static void syncDSCookie() {
+        Map<String, String> header = MallReqInternet.in().getHeader(XHApplication.in());
+        String cookieKey_mall = MallStringManager.mall_web_apiUrl.replace(MallStringManager.appWebTitle, "");
+        String cookieStr = Uri.decode(header.containsKey("XH-Client-Data") ? header.get("XH-Client-Data") : "");
+        Map<String, String> cookieMap = StringManager.getFirstMap(cookieStr);
+        CookieManager cookieManager = CookieManager.getInstance();
+        cookieManager.setAcceptCookie(true);
+        Stream.of(cookieMap)
+                .forEach(value -> {
+                    String cookieValue = value.getKey() + "=" + value.getValue();
+                    cookieManager.setCookie(cookieKey_mall, cookieValue);
+                });
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            cookieManager.flush();
+        } else {
+            CookieSyncManager.createInstance(XHApplication.in());
+            CookieSyncManager.getInstance().sync();
+        }
+        LogManager.print(XHConf.log_tag_net, "d", "设置webview的cookie：" + cookieStr);
     }
 
     private OnWebviewLoadFinish onWebviewLoadFinish;

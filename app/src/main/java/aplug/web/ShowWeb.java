@@ -416,7 +416,7 @@ public class  ShowWeb extends WebActivity implements IObserver {
 				WebviewManager.syncXHCookie();
 				WebviewManager.syncDSCookie();
 			}catch (Exception e){
-
+				e.printStackTrace();
 			}
 			if(webview != null) {
 				webview.reload();
