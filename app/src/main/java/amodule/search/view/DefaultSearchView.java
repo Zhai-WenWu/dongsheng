@@ -316,6 +316,9 @@ public class DefaultSearchView extends LinearLayout implements View.OnClickListe
         ArrayList<String> list = new ArrayList<>();
         list.add(SEARCH_DEFAULT);
         xhAllAdControl = new XHAllAdControl(list, (isRefresh,map) -> {
+            if (xhAllAdControl == null) {
+                return;
+            }
             BannerAd bannerAdBurden = new BannerAd(mActivity, xhAllAdControl, imageViewHasHis);
             map = StringManager.getFirstMap(map.get(SEARCH_DEFAULT));
             bannerAdBurden.onShowAd(map);

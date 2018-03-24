@@ -53,6 +53,9 @@ public class CircleHeaderAD extends LinearLayout {
         ArrayList<String> list = new ArrayList<>();
         list.add(MAIN_CIRCLE_TITLE);
         xhAllAdControl = new XHAllAdControl(list, (isRefresh,map) -> {
+            if (xhAllAdControl == null) {
+                return;
+            }
             if (map.containsKey(MAIN_CIRCLE_TITLE)) {
                 BannerAd bannerAdBurden = new BannerAd(activity, xhAllAdControl, adImageView);
                 map = StringManager.getFirstMap(map.get(MAIN_CIRCLE_TITLE));

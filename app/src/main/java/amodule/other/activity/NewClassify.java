@@ -418,6 +418,9 @@ public class NewClassify extends BaseActivity {
         ArrayList<String> list = new ArrayList<>();
         list.add(adid);
         xhAllAdControl = new XHAllAdControl(list, (isRefresh,map) -> {
+            if (xhAllAdControl == null) {
+                return;
+            }
             if (map.containsKey(adid)) {
                 BannerAd bannerAd = new BannerAd(NewClassify.this, xhAllAdControl, imageView);
                 bannerAd.marginLeft = ToolsDevice.dp2px(NewClassify.this, 60);
