@@ -286,8 +286,8 @@ public class AdControlHomeDish extends AdControlParent implements ActivityMethod
         adControlNum = -1;
         nextAdNum = 0;
         //向下加载的tag
-        downCurrentControlTag=-1;
-        downadControlNum = 1;
+        downCurrentControlTag=0;
+        downadControlNum = 0;
         downNextAdNum = 0;
 //        AdOptionHomeDish downLoadAdControl0 = new AdOptionHomeDish(AdPlayIdConfig.MAIN_HOME_RECOMENT_LIST_0);
 //        downLoadAdControl0.getAdData(XHActivityManager.getInstance().getCurrentActivity(),statisticKey,"0",Control_down);
