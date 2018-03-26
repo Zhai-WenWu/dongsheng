@@ -163,6 +163,7 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
                 if (adBean != null) {
                     /*广告实体数据集合*/
                     boolean state = false;//是否打开
+                    ArrayList<Map<String, String>> adConfigList = new ArrayList<>();
                     ArrayList<Map<String, String>> adConfigDataList = StringManager.getListMapByJson(adBean.adConfig);
                     boolean once = false;
                     for (Map<String, String> adTypeConfig : adConfigDataList) {
@@ -174,6 +175,7 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
                                 String adType = adTypeConfig.containsKey("type") ? adTypeConfig.get("type") : "";
                                 AdTypeData.put(listIds.get(i), adType);
                             }
+                            adConfigList.add(adTypeConfig);
                             judge(adTypeConfig);
                         }
                     }
@@ -181,8 +183,8 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
                         count++;
                         AdData.put(listIds.get(i), "");
                     }
-                    if (state && adConfigDataList.size() > 0) {
-                        initAdRequest(adConfigDataList, listIds.get(i), i);
+                    if (state && adConfigList.size() > 0) {
+                        initAdRequest(adConfigList, listIds.get(i), i);
                     } else {
                         listAdContrls.add(null);
                     }
@@ -201,6 +203,7 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
      * @param map_temp 数据体
      */
     private void judge(Map<String, String> map_temp) {
+        Log.i("tzy", "judge: " + map_temp.toString());
         String typeValue = map_temp.get("type");
         String isOpenValue = map_temp.get("open");
         if ("2".equals(isOpenValue)) {
