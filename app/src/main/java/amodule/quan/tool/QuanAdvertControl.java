@@ -2,6 +2,7 @@ package amodule.quan.tool;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -132,14 +133,14 @@ public class QuanAdvertControl implements ActivityMethodManager.IAutoRefresh {
                         nowIndex = i;
                         old_list.add(index, temp.get(i));
                         //不是0，则不是第一次，可以进入判断
-//                        if(!isRefresh){
-//                            if (nowIndex < 6 && nowIndex == 4) {
-//                                getAdData(context, "1");
-//                            } else if (nowIndex % 6 == 4) {
-//                                int num = nowIndex / 6;
-//                                getAdData(context, String.valueOf(num + 1));
-//                            }
-//                        }
+                        if(!isRefresh){
+                            if (nowIndex < 6 && nowIndex == 4) {
+                                getAdData(context, "1",false);
+                            } else if (nowIndex % 6 == 4) {
+                                int num = nowIndex / 6;
+                                getAdData(context, String.valueOf(num + 1),false);
+                            }
+                        }
                     }
                     Log.i("tzy", "getBdData: isRefresh" + isRefresh);
                 }
@@ -231,7 +232,7 @@ public class QuanAdvertControl implements ActivityMethodManager.IAutoRefresh {
     public void getAdData(final Context context) {
         mAdList.clear();
         mapAd.clear();
-        getAdData(context, "0");
+        getAdData(context, "0",true);
     }
 
     /**
@@ -239,7 +240,15 @@ public class QuanAdvertControl implements ActivityMethodManager.IAutoRefresh {
      *
      * @param context
      */
-    public void getAdData(final Context context, final String controlTag) {
+    public void getAdData(final Context context, final String controlTag,boolean isRefresh) {
+        if(isRefresh || (mapAd != null && !mapAd.containsKey(controlTag))){
+            XHAllAdControl xhAllAdControl = newXHAllControl((Activity) context, controlTag);
+            mapAd.put(controlTag, xhAllAdControl);
+        }
+    }
+
+    @NonNull
+    private XHAllAdControl newXHAllControl(Activity context, String controlTag) {
         ArrayList<String> adPosList = new ArrayList<>();
         Collections.addAll(adPosList, AD_IDS);
         XHAllAdControl xhAllAdControl = new XHAllAdControl(adPosList, new XHAllAdControl.XHBackIdsDataCallBack() {
@@ -284,10 +293,10 @@ public class QuanAdvertControl implements ActivityMethodManager.IAutoRefresh {
                     mAdList.add(tempMap);
 //                }
             }
-        }, (Activity) context, "community_list", true);
+        }, context, "community_list", true);
         //需要判断百度图片大小
         xhAllAdControl.setJudgePicSize(true);
-        mapAd.put(controlTag, xhAllAdControl);
+        return xhAllAdControl;
     }
 
     private void logtzy(String tag, String info) {
