@@ -76,9 +76,10 @@ public class BaseAdConfigTools {
 
     /**
      * @param event：行为事件
-     * @param gg_position_id：广告商id or 自由广告position_id
      * @param gg_position_code：广告位id
+     * @param gg_position_id：adPositionId
      * @param gg_business：广告商
+     *
      * @param gg_business_id：自由广告id（只有自有才有该字段）
      */
     public void postStatistics(@NonNull String event, @NonNull String gg_position_code,@NonNull String gg_position_id,

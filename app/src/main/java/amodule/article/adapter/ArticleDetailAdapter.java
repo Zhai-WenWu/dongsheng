@@ -234,7 +234,7 @@ public class ArticleDetailAdapter extends BaseAdapter {
                     //adtype
                     View adIcon = view.findViewById(ID_AD_ICON_GDT);
                     if(adIcon != null){
-                        adIcon.setVisibility(ADKEY_GDT.equals(map.get("adtype"))?View.VISIBLE:View.GONE);
+                        adIcon.setVisibility(ADKEY_GDT.equals(map.get("ad"))?View.VISIBLE:View.GONE);
                     }
                 }
             }

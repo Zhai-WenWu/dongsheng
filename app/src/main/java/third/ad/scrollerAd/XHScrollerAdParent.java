@@ -32,6 +32,7 @@ public abstract class XHScrollerAdParent {
     public int num;//当前存在的位置--针对的是一个广告位
     public String mAdPlayId = "";//广告位置id
     protected String adid = "";
+    protected String adPositionId = "";
     public int index;//当前存在的位置---针对于广集合的位置
     public View view;
     public String key = "";
@@ -39,8 +40,9 @@ public abstract class XHScrollerAdParent {
 
     private ExecuteStatisticCallback mExecuteStatisticCallback;
 
-    public XHScrollerAdParent(String mAdPlayId, int num) {
+    public XHScrollerAdParent(String mAdPlayId,String adPositionId, int num) {
         this.mAdPlayId = mAdPlayId;
+        this.adPositionId = adPositionId;
         this.num = num;
     }
 
@@ -132,7 +134,7 @@ public abstract class XHScrollerAdParent {
 
 
     protected void postTongji(String event) {
-        AdConfigTools.getInstance().postStatistics(event,mAdPlayId,adid,key,"");
+        AdConfigTools.getInstance().postStatistics(event,mAdPlayId,adPositionId,key,"");
     }
 
     public String getRealKey(String origalKey){

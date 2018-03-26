@@ -11,11 +11,13 @@ import android.provider.BaseColumns;
 public class AdBean {
     public int _id;
     public String adId;
+    public String adPositionId;
     public String adConfig;
     public long updateTime;
 
     public abstract static class AdEntry implements BaseColumns {
         public static final String COLUMN_ADID = "adId";
+        public static final String COLUMN_ADPOSITIONID = "adPositionId";
         public static final String COLUMN_ADCONFIG = "adConfig";
         public static final String COLUMN_UPDATETIME = "updateTime";
     }

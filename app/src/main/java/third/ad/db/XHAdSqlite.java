@@ -64,6 +64,7 @@ public class XHAdSqlite extends SQLiteOpenHelper {
                 .append(" (")
                 .append(AdEntry._ID).append(" integer primary key autoincrement,")
                 .append(AdEntry.COLUMN_ADID).append(" text,")
+                .append(AdEntry.COLUMN_ADPOSITIONID).append(" text,")
                 .append(AdEntry.COLUMN_ADCONFIG).append(" text,")
                 .append(AdEntry.COLUMN_UPDATETIME).append(" long")
                 .append(")");
@@ -111,9 +112,9 @@ public class XHAdSqlite extends SQLiteOpenHelper {
                 long updateTime = cursor.getLong(cursor.getColumnIndexOrThrow(AdEntry.COLUMN_UPDATETIME));
                 if (arr.length() > 0) {
                     db.execSQL("insert into " + TABLE_ADCONFIG + "(" + AdEntry._ID  + ", " + AdEntry
-                            .COLUMN_ADID + ", " + AdEntry.COLUMN_ADCONFIG + ", " + AdEntry.COLUMN_UPDATETIME
+                            .COLUMN_ADID + ", " + AdEntry.COLUMN_ADCONFIG + ", " +AdEntry.COLUMN_ADPOSITIONID + ", " + AdEntry.COLUMN_UPDATETIME
                             + ")" + " values(" + id + ", '" + adId + "', '" +
-                            arr.toString() + "', " + updateTime + ")");
+                            arr.toString() + "', '' , " + updateTime + ")");
                 }
             }
         }
@@ -133,8 +134,8 @@ public class XHAdSqlite extends SQLiteOpenHelper {
                     if(!FULL_SRCEEN_ACTIVITY.equals(adPos)){
                         values = new ContentValues();
                         values.put(AdEntry.COLUMN_ADID,adPos);
-                        values.put(AdEntry.COLUMN_ADCONFIG,dataMap.get
-                                ("adConfig"));
+                        values.put(AdEntry.COLUMN_ADCONFIG,dataMap.get("adConfig"));
+                        values.put(AdEntry.COLUMN_ADPOSITIONID,dataMap.get("adPositionId"));
                         values.put(AdEntry.COLUMN_UPDATETIME,System.currentTimeMillis());
                         update(database, TABLE_ADCONFIG,values);
                     }else{
@@ -227,6 +228,7 @@ public class XHAdSqlite extends SQLiteOpenHelper {
         adBean._id = cursor.getInt(cursor.getColumnIndexOrThrow(AdEntry._ID));
         adBean.updateTime = cursor.getInt(cursor.getColumnIndexOrThrow(AdEntry.COLUMN_UPDATETIME));
         adBean.adId = cursor.getString(cursor.getColumnIndexOrThrow(AdEntry.COLUMN_ADID));
+        adBean.adPositionId =  cursor.getString(cursor.getColumnIndexOrThrow(AdEntry.COLUMN_ADPOSITIONID));
         adBean.adConfig = cursor.getString(cursor.getColumnIndexOrThrow(AdEntry.COLUMN_ADCONFIG));
         return adBean;
     }

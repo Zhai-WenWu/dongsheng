@@ -19,8 +19,8 @@ import third.ad.tools.GdtAdTools;
 public class XHScrollerGdt extends XHScrollerAdParent {
     private Map<String, String> map_data;
     private NativeADDataRef nativeADDataRef;
-    public XHScrollerGdt(String data,String mAdPlayId, int num) {
-        super(mAdPlayId, num);
+    public XHScrollerGdt(String data,String mAdPlayId,String adPositionId, int num) {
+        super(mAdPlayId,adPositionId, num);
         key = "sdk_gdt";
         LinkedHashMap<String, String> map_link = StringManager.getMapByString(data, "&", "=");
         if (map_link.containsKey("adid"))

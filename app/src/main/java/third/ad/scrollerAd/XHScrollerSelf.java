@@ -26,8 +26,8 @@ public class XHScrollerSelf extends XHScrollerAdParent {
     public static final String IMG_KEY = "littleImage";
     private XHSelfNativeData mNativeData = null;
 
-    public XHScrollerSelf(String data, String mAdPlayId, int num) {
-        super(mAdPlayId, num);
+    public XHScrollerSelf(String data, String mAdPlayId,String adPositionId, int num) {
+        super(mAdPlayId,adPositionId,num);
         key = "xh";
         adid = data;
     }

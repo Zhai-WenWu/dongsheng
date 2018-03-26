@@ -24,8 +24,8 @@ public class XHScrollerBaidu extends XHScrollerAdParent {
     private NativeResponse nativeResponse;
     private boolean isJudgePicSize = false;
 
-    public XHScrollerBaidu(String data,String mAdPlayId, int num) {
-        super(mAdPlayId, num);
+    public XHScrollerBaidu(String data,String mAdPlayId,String adPositionId, int num) {
+        super(mAdPlayId,adPositionId, num);
         key = "sdk_baidu";
         LinkedHashMap<String, String> map_link = StringManager.getMapByString(data, "&", "=");
         if (map_link.containsKey("adid"))

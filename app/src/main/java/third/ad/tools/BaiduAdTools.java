@@ -2,6 +2,7 @@ package third.ad.tools;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.ViewGroup;
 
 import com.baidu.mobad.feeds.BaiduNative;
@@ -75,12 +76,14 @@ public class BaiduAdTools {
         BaiduNative baiduNative = new BaiduNative(context, adid, new BaiduNative.BaiduNativeNetworkListener() {
             @Override
             public void onNativeLoad(List<NativeResponse> list) {
+                Log.i("tzy", "onNativeLoad: ");
                 if(null != callback)
                     callback.onNativeLoad(list);
             }
 
             @Override
             public void onNativeFail(NativeErrorCode nativeErrorCode) {
+                Log.i("tzy", "onNativeFail: " + nativeErrorCode);
                 if(null != callback)
                     callback.onNativeFail(nativeErrorCode);
             }

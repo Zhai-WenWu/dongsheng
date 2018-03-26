@@ -184,7 +184,7 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
                         AdData.put(listIds.get(i), "");
                     }
                     if (state && adConfigList.size() > 0) {
-                        initAdRequest(adConfigList, listIds.get(i), i);
+                        initAdRequest(adConfigList, listIds.get(i),adBean.adPositionId, i);
                     } else {
                         listAdContrls.add(null);
                     }
@@ -333,7 +333,7 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
      *
      * @param arrayList 广告实体类的数据
      */
-    private void initAdRequest(@NonNull ArrayList<Map<String, String>> arrayList, String backIds, int num) {
+    private void initAdRequest(@NonNull ArrayList<Map<String, String>> arrayList, String backIds,String adPositionId, int num) {
         ArrayList<XHScrollerAdParent> adParentArrayList = new ArrayList<>();
         final int length = arrayList.size();
         for (int i = 0; i < length; i++) {
@@ -344,13 +344,13 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
             //判断当前类型
             switch (key) {
                 case "gdt":
-                    parent = new XHScrollerGdt(data, backIds, i);
+                    parent = new XHScrollerGdt(data, backIds,adPositionId, i);
                     break;
                 case TAG_BANNER:
-                    parent = new XHScrollerSelf(data, backIds, i);
+                    parent = new XHScrollerSelf(data, backIds,adPositionId, i);
                     break;
                 case "baidu":
-                    parent = new XHScrollerBaidu(data, backIds, i);
+                    parent = new XHScrollerBaidu(data, backIds,adPositionId, i);
                     ((XHScrollerBaidu) parent).setJudgePicSize(isJudgePicSize);
                     break;
                 default:

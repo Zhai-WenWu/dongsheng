@@ -76,6 +76,7 @@ public class WelcomeAdTools {
     //广告处理
     private ArrayList<Map<String, String>> mAdData = new ArrayList<>();
     private int index_ad = 0;
+    private String adPositionId = "";
     /**
      * 广点通回调
      */
@@ -162,6 +163,7 @@ public class WelcomeAdTools {
             }
             return;
         }
+        adPositionId = adBean.adPositionId;
         List<Map<String, String>> configArray = StringManager.getListMapByJson(adBean.adConfig);
         Stream.of(configArray)
                 .filter(value -> "2".equals(value.get("open")))
@@ -229,7 +231,7 @@ public class WelcomeAdTools {
                     public void onAdPresent() {
                         Log.i("zhangyujian", "GDT：：onAdPresent");
                         mGdtCallback.onAdPresent();
-                        AdConfigTools.getInstance().postStatistics("show", WELCOME, adid, ADKEY_GDT, "");
+                        AdConfigTools.getInstance().postStatistics("show", WELCOME, adPositionId, ADKEY_GDT, "");
                     }
 
                     @Override
@@ -247,7 +249,7 @@ public class WelcomeAdTools {
 
                     @Override
                     public void onAdClick() {
-                        AdConfigTools.getInstance().postStatistics("click", WELCOME, adid, ADKEY_GDT, "");
+                        AdConfigTools.getInstance().postStatistics("click", WELCOME, adPositionId, ADKEY_GDT, "");
                         mGdtCallback.onAdClick();
                     }
 
@@ -314,7 +316,7 @@ public class WelcomeAdTools {
                             @Override
                             public void onAdPresent() {
                                 Log.i("zhangyujian", "displayBaiduAD::onAdPresent");
-                                AdConfigTools.getInstance().postStatistics("show", WELCOME, adid, ADKEY_BAIDU, "");
+                                AdConfigTools.getInstance().postStatistics("show", WELCOME, adPositionId, ADKEY_BAIDU, "");
                                 mBaiduCallback.onAdPresent();
                             }
 
@@ -333,7 +335,7 @@ public class WelcomeAdTools {
 
                             @Override
                             public void onAdClick() {
-                                AdConfigTools.getInstance().postStatistics("click", WELCOME, adid, ADKEY_BAIDU, "");
+                                AdConfigTools.getInstance().postStatistics("click", WELCOME, adPositionId, ADKEY_BAIDU, "");
                                 mBaiduCallback.onAdClick();
                             }
                         }));
