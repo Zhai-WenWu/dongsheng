@@ -73,11 +73,21 @@ public class QuanAdvertControl implements ActivityMethodManager.IAutoRefresh {
             return old_list;
         }
         Log.i(tag_yu, "old_list.size::" + old_list.size() + "::cid:::" + cid + ":mid::" + mid + "::beforeNum:" + beforeNum);
-        return getBdData(old_list, cid, mid, beforeNum);
+        return getAdvertAndQuanData(false,old_list, cid, mid, beforeNum);
+    }
+
+    public ArrayList<Map<String, String>> getAdvertAndQuanData(boolean isRefresh,ArrayList<Map<String, String>> old_list, String cid, String mid, int beforeNum) {
+        String isGourmet = LoginManager.userInfo.get("isGourmet");
+        //是美食家
+        if (!TextUtils.isEmpty(isGourmet) && Integer.parseInt(isGourmet) == 2) {
+            return old_list;
+        }
+        Log.i(tag_yu, "old_list.size::" + old_list.size() + "::cid:::" + cid + ":mid::" + mid + "::beforeNum:" + beforeNum);
+        return getBdData(isRefresh,old_list, cid, mid, beforeNum);
     }
 
 
-    private ArrayList<Map<String, String>> getBdData(ArrayList<Map<String, String>> old_list, String cid, String mid, int beforeNum) {
+    private ArrayList<Map<String, String>> getBdData(boolean isRefresh,ArrayList<Map<String, String>> old_list, String cid, String mid, int beforeNum) {
         logtzy(tag_yu, "showCid::" + cid + "::showMid::" + mid + ":::广告集合大小：：" + mAdList.size());
         if ("17".equals(mid)) {//活跃榜不显示广告
             return old_list;
@@ -97,7 +107,7 @@ public class QuanAdvertControl implements ActivityMethodManager.IAutoRefresh {
                 }
             }
 
-            if(beforeNum == 0){
+            if(isRefresh){
                 nowIndex = 0;
                 for (int i = 0; i < old_list.size(); i++) {
                     Map<String, String> dataMap = old_list.get(i);
@@ -121,13 +131,17 @@ public class QuanAdvertControl implements ActivityMethodManager.IAutoRefresh {
                     if (index >= beforeNum && index <= old_list.size()) {
                         nowIndex = i;
                         old_list.add(index, temp.get(i));
+                        //不是0，则不是第一次，可以进入判断
+//                        if(!isRefresh){
+//                            if (nowIndex < 6 && nowIndex == 4) {
+//                                getAdData(context, "1");
+//                            } else if (nowIndex % 6 == 4) {
+//                                int num = nowIndex / 6;
+//                                getAdData(context, String.valueOf(num + 1));
+//                            }
+//                        }
                     }
-                    if (nowIndex < 6 && nowIndex == 4) {
-                        getAdData(context, "1");
-                    } else if (nowIndex % 6 == 4) {
-                        int num = nowIndex / 6;
-                        getAdData(context, String.valueOf(num + 1));
-                    }
+                    Log.i("tzy", "getBdData: isRefresh" + isRefresh);
                 }
             }
         }
@@ -249,7 +263,7 @@ public class QuanAdvertControl implements ActivityMethodManager.IAutoRefresh {
                         SyntaxTools.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                callBack.dataBack();
+                                callBack.dataBack(isRefresh);
                             }
                         });
                     }
@@ -294,7 +308,7 @@ public class QuanAdvertControl implements ActivityMethodManager.IAutoRefresh {
     }
 
     public interface DataCallBack {
-        void dataBack();
+        void dataBack(boolean isRefresh);
     }
 
     /**

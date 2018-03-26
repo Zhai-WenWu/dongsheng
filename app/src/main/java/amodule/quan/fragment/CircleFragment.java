@@ -293,10 +293,10 @@ public class CircleFragment extends Fragment {
         quanAdvertControl.getAdData(mActivity);
         quanAdvertControl.setCallBack(new QuanAdvertControl.DataCallBack() {
             @Override
-            public void dataBack() {
+            public void dataBack(boolean isRefresh) {
                 index_size=0;
                 if (mPlateData != null)
-                    mListData =quanAdvertControl.getAdvertAndQuanData(mListData, mPlateData.getCid(), mPlateData.getMid(), index_size);
+                    mListData =quanAdvertControl.getAdvertAndQuanData(isRefresh,mListData, mPlateData.getCid(), mPlateData.getMid(), index_size);
                 mAdapter.notifyDataSetChanged();
                 index_size=mListData.size();
             }

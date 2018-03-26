@@ -333,9 +333,9 @@ public class CircleMainFragment extends Fragment {
             LoadOver = true;
         }
         quanAdvertControl = new QuanAdvertControl(mActivity);
-        quanAdvertControl.setCallBack(() -> {
+        quanAdvertControl.setCallBack(isRefresh -> {
                 index_size = 0;
-                mListData = quanAdvertControl.getAdvertAndQuanData(mListData, mPlateData.getCid(), mPlateData.getMid(), index_size);
+                mListData = quanAdvertControl.getAdvertAndQuanData(isRefresh,mListData, mPlateData.getCid(), mPlateData.getMid(), index_size);
                 //Log.i("FRJ","广告数据回来刷新adapter:::集合大小："+mListData.size());
                 safeNotifyItemRangeChanged();
                 index_size = mListData.size();
