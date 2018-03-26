@@ -13,6 +13,7 @@ import android.widget.Button;
 import com.xiangha.R;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Map;
 
 import acore.broadcast.ConnectionChangeReceiver;
@@ -209,7 +210,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
 
     private void loadAdData() {
         ArrayList<String> arr = new ArrayList<>();
-        arr.add(AdPlayIdConfig.HOME_BANNEER_1);
+        Collections.addAll(arr,AdPlayIdConfig.HOME_BANNEER_LIST);
         mDataControler.loadAdData(arr, (isRefresh, map) -> {
             mViewContrloer.setAdController(mDataControler.getAllAdController());
             mViewContrloer.setAdData(map, arr);},

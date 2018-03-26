@@ -97,7 +97,8 @@ public class AdPlayIdConfig {
 
     public static final String HOME_TOPLEFT = "sy_tubiao";
     public static final String HOME_FLOAT = "sy_fudong";
-    public static final String HOME_BANNEER_1 = "sy_banner1";
+//    public static final String HOME_BANNEER_1 = "sy_banner1";
+    public static final String[] HOME_BANNEER_LIST = {"sy_banner1","sy_banner2","sy_banner3","sy_banner4","sy_banner5"};
 
     public static final String FULL_SRCEEN_ACTIVITY = "activity";
 

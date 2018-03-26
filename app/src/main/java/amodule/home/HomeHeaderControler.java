@@ -29,7 +29,8 @@ import third.ad.scrollerAd.XHAllAdControl;
 
 import static amodule._common.helper.WidgetDataHelper.KEY_SORT;
 import static amodule._common.helper.WidgetDataHelper.KEY_WIDGET_DATA;
-import static third.ad.tools.AdPlayIdConfig.HOME_BANNEER_1;
+import static third.ad.tools.AdPlayIdConfig.HOME_BANNEER_LIST;
+
 /**
  * Description :
  * PackageName : amodule.home
@@ -64,7 +65,7 @@ public class HomeHeaderControler implements ISaveStatistic, ISetAdController {
         this.mHeaderView = header;
         //banner
         mLayouts[0] = (WidgetVerticalLayout) header.findViewById(R.id.banner_widget);
-        mLayouts[0].setAdID(Arrays.asList(HOME_BANNEER_1));
+        mLayouts[0].setAdID(Arrays.asList(HOME_BANNEER_LIST));
         //功能导航 4按钮
         mLayouts[1] = (WidgetVerticalLayout) header.findViewById(R.id.funcnav1_widget);
         //功能导航 2按钮
