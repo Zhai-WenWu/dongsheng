@@ -203,7 +203,6 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
      * @param map_temp 数据体
      */
     private void judge(Map<String, String> map_temp) {
-        Log.i("tzy", "judge: " + map_temp.toString());
         String typeValue = map_temp.get("type");
         String isOpenValue = map_temp.get("open");
         if ("2".equals(isOpenValue)) {

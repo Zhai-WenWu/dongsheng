@@ -11,12 +11,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 import acore.logic.ActivityMethodManager;
 import acore.logic.AppCommon;
-import acore.logic.LoginManager;
 import acore.tools.StringManager;
 import third.ad.scrollerAd.XHAllAdControl;
 import third.ad.scrollerAd.XHScrollerAdParent;
@@ -81,9 +81,7 @@ public abstract class AdOptionParent implements ActivityMethodManager.IAutoRefre
         this.controlTag = controlTag;
         adArray.clear();
         ArrayList<String> adPosList = new ArrayList<>();
-        for (String posStr : AD_IDS) {
-            adPosList.add(posStr);
-        }
+        adPosList.addAll(Arrays.asList(AD_IDS));
         xhAllAdControl = new XHAllAdControl(adPosList, new XHAllAdControl.XHBackIdsDataCallBack() {
             @Override
             public void callBack(boolean isRefresh,Map<String, String> map) {
@@ -210,16 +208,16 @@ public abstract class AdOptionParent implements ActivityMethodManager.IAutoRefre
         }
         if (adArray.size() > 0) {
             Map<String, String> adMap;
-            if (!isBack) { //向上加载时添加广告数据
-                cunrrentIndex = 0;
-            }
             //先移除广告
-            for(int i = 0;i<old_list.size();i++){
+            for(int i = startIndex ; i < old_list.size() && i < cunrrentIndex ; i++){
                 Map<String, String> dataMap = old_list.get(i);
                 if ("ad".equals(dataMap.get("adstyle"))) {
                     old_list.remove(dataMap);
                     i--;
                 }
+            }
+            if(!isBack){
+                cunrrentIndex = 0;
             }
             //添加广告
             int showIndex = 0;
