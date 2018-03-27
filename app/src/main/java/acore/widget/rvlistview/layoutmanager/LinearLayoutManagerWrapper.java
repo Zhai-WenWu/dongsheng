@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.view.View;
 
 /**
  * Description :
@@ -14,6 +15,8 @@ import android.util.AttributeSet;
  */
 
 public class LinearLayoutManagerWrapper extends LinearLayoutManager {
+
+    private boolean isCareshed = false;
     public LinearLayoutManagerWrapper(Context context) {
         super(context);
     }
@@ -31,7 +34,22 @@ public class LinearLayoutManagerWrapper extends LinearLayoutManager {
         try{
             super.onLayoutChildren(recycler, state);
         }catch (Exception igroned){
+            isCareshed = true;
             igroned.printStackTrace();
         }
+    }
+
+    @Override
+    public void measureChildWithMargins(View child, int widthUsed, int heightUsed) {
+        try{
+            super.measureChildWithMargins(child, widthUsed, heightUsed);
+        }catch (Exception igorned){
+            isCareshed = true;
+            igorned.printStackTrace();
+        }
+    }
+
+    public boolean isCareshed() {
+        return isCareshed;
     }
 }

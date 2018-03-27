@@ -60,6 +60,8 @@ public class RvListView extends RecyclerView {
     private OnItemClickListener mOnItemClickListener;
 
     private OnItemLongClickListener mOnItemLongClickListener;
+
+    private LinearLayoutManagerWrapper mLayoutManagerWrapper;
     /**Default implement for check can show EmptyView*/
     public final EmptyHandler DefaultEmptyHandler = new EmptyHandler() {
         @Override
@@ -105,8 +107,9 @@ public class RvListView extends RecyclerView {
     @Override
     public void setAdapter(Adapter adapter) {
         if(getLayoutManager() == null){
+            mLayoutManagerWrapper = new LinearLayoutManagerWrapper(getContext());
             //默认使用LinearLayoutManager，并且处置布局
-            setLayoutManager(new LinearLayoutManagerWrapper(getContext()));
+            setLayoutManager(mLayoutManagerWrapper);
         }
         mAdapter = new RvHeaderAndFooterViewAdapter(adapter);
         super.setAdapter(mAdapter);
@@ -648,5 +651,9 @@ public class RvListView extends RecyclerView {
         this.getItemAnimator().setMoveDuration(0);
         this.getItemAnimator().setRemoveDuration(0);
         ((SimpleItemAnimator) this.getItemAnimator()).setSupportsChangeAnimations(false);
+    }
+
+    public boolean isCareshed(){
+        return mLayoutManagerWrapper != null && mLayoutManagerWrapper.isCareshed();
     }
 }
