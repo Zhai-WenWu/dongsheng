@@ -15,6 +15,7 @@ import com.qq.e.ads.nativ.NativeAD;
 import com.qq.e.ads.nativ.NativeADDataRef;
 import com.qq.e.ads.splash.SplashAD;
 import com.qq.e.ads.splash.SplashADListener;
+import com.qq.e.comm.util.AdError;
 
 import java.util.List;
 
@@ -57,9 +58,9 @@ public class GdtAdTools {
                     }
 
                     @Override
-                    public void onNoAD(int i) {
-                        if (null != gdtListener) {
-                            gdtListener.onAdFailed("onNoAD " + String.valueOf(i));
+                    public void onNoAD(AdError adError) {
+                        if (null != gdtListener && adError != null) {
+                            gdtListener.onAdFailed("onNoAD " + adError.getErrorMsg());
                         }
                     }
 
@@ -95,31 +96,31 @@ public class GdtAdTools {
      * @param refreshTime 广告轮播时间，为0或30~120之间的数字，单位为s,0标识不自动轮播
      * @param listener
      */
-    public void showBannerAD(Activity act, RelativeLayout parent, int refreshTime, String adid,
-                             final onBannerAdListener listener) {
-        BannerView bannerView = new BannerView(act, ADSize.BANNER, APPID, adid);
-        bannerView.setRefresh(refreshTime);
-        bannerView.setADListener(new AbstractBannerADListener() {
-            @Override
-            public void onADClicked() {
-                super.onADClicked();
-                if (null != listener) {
-                    listener.onClick();
-                }
-            }
-
-            @Override
-            public void onNoAD(int arg0) {
-            }
-
-            @Override
-            public void onADReceiv() {
-            }
-        });
-        parent.addView(bannerView);
-        // 发起广告请求，收到广告数据后会展示数据
-        bannerView.loadAD();
-    }
+//    public void showBannerAD(Activity act, RelativeLayout parent, int refreshTime, String adid,
+//                             final onBannerAdListener listener) {
+//        BannerView bannerView = new BannerView(act, ADSize.BANNER, APPID, adid);
+//        bannerView.setRefresh(refreshTime);
+//        bannerView.setADListener(new AbstractBannerADListener() {
+//            @Override
+//            public void onADClicked() {
+//                super.onADClicked();
+//                if (null != listener) {
+//                    listener.onClick();
+//                }
+//            }
+//
+//            @Override
+//            public void onNoAD(int arg0) {
+//            }
+//
+//            @Override
+//            public void onADReceiv() {
+//            }
+//        });
+//        parent.addView(bannerView);
+//        // 发起广告请求，收到广告数据后会展示数据
+//        bannerView.loadAD();
+//    }
 
     /**
      * 信息流广告获取
@@ -141,10 +142,10 @@ public class GdtAdTools {
                     }
 
                     @Override
-                    public void onNoAD(int i) {
+                    public void onNoAD(AdError adError) {
                         Log.i("tzy", "GDT NactiveAD onNoAD");
-                        if (null != callback) {
-                            callback.onNativeFail(null, "onNoAD:code = " + i);
+                        if (null != callback && adError !=null) {
+                            callback.onNativeFail(null, "onNoAD:code = " + adError.getErrorMsg());
                         }
                     }
 
@@ -157,10 +158,10 @@ public class GdtAdTools {
                     }
 
                     @Override
-                    public void onADError(NativeADDataRef nativeADDataRef, int i) {
+                    public void onADError(NativeADDataRef nativeADDataRef, AdError adError) {
                         Log.i("tzy", "GDT NactiveAD onADError");
-                        if (null != callback) {
-                            callback.onNativeFail(nativeADDataRef, "adError:code = " + i);
+                        if (null != callback && adError != null) {
+                            callback.onNativeFail(nativeADDataRef, "adError:code = " + adError.getErrorCode());
                         }
                     }
                 });
