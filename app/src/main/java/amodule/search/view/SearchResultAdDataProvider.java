@@ -73,7 +73,7 @@ public class SearchResultAdDataProvider {
                         }
                     }
                 }
-                if(isRefresh && mAutoRefreshCallback != null){
+                if(mAutoRefreshCallback != null){
                     mAutoRefreshCallback.autoRefresh();
                 }
             }
