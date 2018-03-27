@@ -131,7 +131,7 @@ public class QuanAdvertControl implements ActivityMethodManager.IAutoRefresh {
                     }
                     if (index >= beforeNum && index <= old_list.size()
                             && temp.get(i) != null
-                            && !TextUtils.isEmpty(temp.get(i).get("dateType"))
+                            && !TextUtils.isEmpty(temp.get(i).get("dataType"))
                             && !TextUtils.isEmpty(temp.get(i).get("style"))) {
                         nowIndex = i;
                         old_list.add(index, temp.get(i));
@@ -145,7 +145,7 @@ public class QuanAdvertControl implements ActivityMethodManager.IAutoRefresh {
 //                            }
 //                        }
                     }
-                    Log.i("tzy", "getBdData: isRefresh" + isRefresh);
+//                    Log.i("tzy", "getBdData: isRefresh" + isRefresh);
                 }
             }
         }
