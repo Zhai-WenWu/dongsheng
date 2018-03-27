@@ -129,18 +129,21 @@ public class QuanAdvertControl implements ActivityMethodManager.IAutoRefresh {
                         //计算广告位
                         ad_list.add(ad_list.get(i) + 10 + ad_list.size() - 1);
                     }
-                    if (index >= beforeNum && index <= old_list.size()) {
+                    if (index >= beforeNum && index <= old_list.size()
+                            && temp.get(i) != null
+                            && !TextUtils.isEmpty(temp.get(i).get("dateType"))
+                            && !TextUtils.isEmpty(temp.get(i).get("style"))) {
                         nowIndex = i;
                         old_list.add(index, temp.get(i));
                         //不是0，则不是第一次，可以进入判断
-                        if(!isRefresh){
-                            if (nowIndex < 6 && nowIndex == 4) {
-                                getAdData(context, "1",false);
-                            } else if (nowIndex % 6 == 4) {
-                                int num = nowIndex / 6;
-                                getAdData(context, String.valueOf(num + 1),false);
-                            }
-                        }
+//                        if(!isRefresh){
+//                            if (nowIndex < 6 && nowIndex == 4) {
+//                                getAdData(context, "1",false);
+//                            } else if (nowIndex % 6 == 4) {
+//                                int num = nowIndex / 6;
+//                                getAdData(context, String.valueOf(num + 1),false);
+//                            }
+//                        }
                     }
                     Log.i("tzy", "getBdData: isRefresh" + isRefresh);
                 }
@@ -191,9 +194,9 @@ public class QuanAdvertControl implements ActivityMethodManager.IAutoRefresh {
         map.put("code", "1");
         map.put("showSite", String.valueOf(index));
         map.put("dataType", String.valueOf(AdapterCircle.DATATYPE_SUBJECT));
-        if (!map.containsKey("style")) {
+//        if (!map.containsKey("style")) {
             map.put("style", String.valueOf(AdapterCircle.STYLE_NORMAL));
-        }
+//        }
         JSONArray array = new JSONArray();
         array.put(imgUrl);
         map.put("imgs", array.toString());

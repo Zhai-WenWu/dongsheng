@@ -103,7 +103,11 @@ public class AdapterCircle extends AdapterSimple {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         Map<String, String> map = mData.get(position);
-        int dataType = Integer.valueOf(map.get("dataType"));
+        String dataTypeValue = map.get("dataType");
+        if(TextUtils.isEmpty(dataTypeValue)){
+            return new View(mContext);
+        }
+        int dataType = Integer.valueOf(dataTypeValue);
         //判断数据类型是否是user数据列表
         if (DATATYPE_USER == dataType) {
             UserViewHolder holder = null;
