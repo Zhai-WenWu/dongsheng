@@ -314,6 +314,11 @@ public class WelcomeControls {
      * 关闭dialog
      */
     public void closeDialog() {
+        if(!Main.isShowWelcomeDialog){
+            return;
+        }
+        Log.i("tzy", "closeDialog: ");
+        Main.isShowWelcomeDialog = false;//至当前dialog状态
         if (!isExectueFree && welcomeCallBack != null) {
             welcomeCallBack.welcomeFree();
         }
@@ -321,7 +326,6 @@ public class WelcomeControls {
             mMainHandler.removeCallbacksAndMessages(null);
             mMainHandler = null;
         }
-        Main.isShowWelcomeDialog = false;//至当前dialog状态
         Log.i("zhangyujian", "closeDialog");
         if (isAdLeadClick) {
             AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), StringManager.getVipUrl(false) + "&vipFrom=开屏广告会员免广告", true);
