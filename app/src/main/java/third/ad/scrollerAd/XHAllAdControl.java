@@ -150,8 +150,7 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
     }
 
     public void getAllAdDataBySqlite() {
-        listAdContrls.clear();
-        XH_IDS.clear();
+        resetData();
         XHAdSqlite adSqlite = XHAdSqlite.newInstance(XHApplication.in());
         //根据广告位置id在广告数据 进行筛选通
         if (listIds.size() > 0) {
@@ -195,6 +194,14 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
         isLoadOverBaidu = !isShowBaidu;
         //是否存在广点通
         getAllData(false);
+    }
+
+    private void resetData() {
+        isLoadOverGdt = false;
+        isLoadOverBaidu = false;
+        isLoadOverXH = false;
+        listAdContrls.clear();
+        XH_IDS.clear();
     }
 
     /**

@@ -43,41 +43,42 @@ public class SearchResultAdDataProvider {
         final ArrayList<String> adPosList = new ArrayList<>();
         Collections.addAll(adPosList, AD_IDS);
 
-        if (xhAllAdControl == null) {
-            xhAllAdControl = new XHAllAdControl(adPosList, new XHAllAdControl.XHBackIdsDataCallBack() {
-                @Override
-                public void callBack(boolean isRefresh, Map<String, String> map) {
-                    list.clear();
-                    if (map != null && map.size() > 0) {
-                        for (int i = 0; i < adPosList.size(); i++) {
-                            String adStr = map.get(adPosList.get(i));
-                            if (!TextUtils.isEmpty(adStr)) {
-                                ArrayList<Map<String, String>> adList = StringManager.getListMapByJson(adStr);
-                                if (adList != null && adList.size() > 0) {
-                                    Map<String, String> adDataMap = adList.get(0);
+        if(xhAllAdControl != null){
+            if(mActivity != null && mActivity.getActMagager() != null){
+                mActivity.getActMagager().unregisterADController(xhAllAdControl);
+            }
+        }
+        xhAllAdControl = new XHAllAdControl(adPosList, new XHAllAdControl.XHBackIdsDataCallBack() {
+            @Override
+            public void callBack(boolean isRefresh, Map<String, String> map) {
+                list.clear();
+                if (map != null && map.size() > 0) {
+                    for (int i = 0; i < adPosList.size(); i++) {
+                        String adStr = map.get(adPosList.get(i));
+                        if (!TextUtils.isEmpty(adStr)) {
+                            ArrayList<Map<String, String>> adList = StringManager.getListMapByJson(adStr);
+                            if (adList != null && adList.size() > 0) {
+                                Map<String, String> adDataMap = adList.get(0);
 //                                    adDataMap.put("allClick", String.valueOf(Tools.getRandom(4000, 10000)));
-                                    list.add(adDataMap);
-                                }
-                            } else {
-                                Map<String, String> adDataMap = new HashMap<>();
                                 list.add(adDataMap);
                             }
+                        } else {
+                            Map<String, String> adDataMap = new HashMap<>();
+                            list.add(adDataMap);
+                        }
 
-                            //处理搜索列表顶部广告
-                            if (i == 0 && list.size() > 0) {
-                                topItemHasData.set(list.size() > 0);
-                            }
+                        //处理搜索列表顶部广告
+                        if (i == 0 && list.size() > 0) {
+                            topItemHasData.set(list.size() > 0);
                         }
                     }
-                    if(isRefresh && mAutoRefreshCallback != null){
-                        mAutoRefreshCallback.autoRefresh();
-                    }
                 }
-            }, mActivity, "search_list", false);
-            xhAllAdControl.registerRefreshCallback();
-        } else {
-            xhAllAdControl.getAllAdDataBySqlite();
-        }
+                if(isRefresh && mAutoRefreshCallback != null){
+                    mAutoRefreshCallback.autoRefresh();
+                }
+            }
+        }, mActivity, "search_list", false);
+        xhAllAdControl.registerRefreshCallback();
     }
 
     public ArrayList<Map<String, String>> getAdDataList() {
