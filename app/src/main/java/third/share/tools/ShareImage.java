@@ -25,6 +25,7 @@ import acore.tools.ToolsDevice;
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.framework.ShareSDK;
+import cn.sharesdk.wechat.moments.WechatMoments;
 
 import static third.share.tools.ShareTools.CANCEL;
 import static third.share.tools.ShareTools.ERROR;
@@ -70,6 +71,16 @@ public class ShareImage {
             sp.setShareType(Platform.SHARE_IMAGE);
         }
 
+        if (WEI_QUAN.equals(type)) {
+            HashMap<String, Object> configShare = new HashMap<>();
+            configShare.put("Id", "5");
+            configShare.put("SortId", "2");
+            configShare.put("AppId", "wx2b582fbe26ef8993");
+            configShare.put("AppSecret", "178b4d14294057b0df3d4586621cfe00");
+            configShare.put("BypassApproval", "false");
+            configShare.put("Enable", "true");
+            ShareSDK.setPlatformDevInfo(WechatMoments.NAME, configShare);
+        }
         Platform platform = getPlatform(type);
         if (platform == null)
             return;
