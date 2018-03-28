@@ -371,6 +371,8 @@ public class FileManager extends UtilFile{
 		if(file != null){
 			if(file.exists() && file.isDirectory()){
 				File[] fileList = file.listFiles();
+				if (fileList == null)
+					return size;
 				for (File childFile:fileList){
 					if(childFile.isDirectory()){
 						size += getFolderSize(childFile);
