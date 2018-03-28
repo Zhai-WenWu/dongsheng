@@ -23,6 +23,7 @@ import acore.tools.Tools;
  */
 public class DishVipView extends ItemBaseView {
     private TextView text_vip;
+    private OnClickViewCallback mOnClickViewCallback;
 
     public DishVipView(Context context) {
         super(context, R.layout.view_dish_vip);
@@ -63,6 +64,8 @@ public class DishVipView extends ItemBaseView {
             @Override
             public void onClick(View v) {
                 AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), maps.get("url"), false);
+                //执行点击callback
+                handleClickViewCallback();
             }
         });
     }
@@ -77,5 +80,19 @@ public class DishVipView extends ItemBaseView {
             }
         }
         return colorValue;
+    }
+
+    public void handleClickViewCallback(){
+        if(null != mOnClickViewCallback){
+            mOnClickViewCallback.onClickView();
+        }
+    }
+
+    public void setOnClickViewCallback(OnClickViewCallback onClickViewCallback) {
+        mOnClickViewCallback = onClickViewCallback;
+    }
+
+    public interface OnClickViewCallback{
+        void onClickView();
     }
 }

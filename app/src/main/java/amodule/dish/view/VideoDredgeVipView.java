@@ -24,6 +24,7 @@ import amodule.user.activity.login.LoginByAccout;
 public class VideoDredgeVipView extends RelativeLayout {
     private TextView tipMessage,dredgeVip;
     private LinearLayout logingLayout;
+    private OnClickLoginCallback mOnClickLoginCallback;
     public VideoDredgeVipView(Context context) {
         super(context);
         initView();
@@ -72,9 +73,24 @@ public class VideoDredgeVipView extends RelativeLayout {
                 @Override
                 public void onClick(View v) {
                     getContext().startActivity(new Intent(getContext(), LoginByAccout.class));
+                    handleClickLoginCallback();
                 }
             });
         }
+    }
+
+    public void handleClickLoginCallback(){
+        if(null != mOnClickLoginCallback){
+            mOnClickLoginCallback.onClickLogin();
+        }
+    }
+
+    public void setOnClickLoginCallback(OnClickLoginCallback clickLoginCallback){
+        this.mOnClickLoginCallback = clickLoginCallback;
+    }
+
+    public interface OnClickLoginCallback{
+        void onClickLogin();
     }
 
 }

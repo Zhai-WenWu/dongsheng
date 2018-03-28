@@ -76,6 +76,8 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
 
     private ShareConfDataController mShareConfDataController;
     private boolean isOnpause= false;
+    public static final String STATICIS_ID_VIDEO = "a_menu_detail_video";
+    public static final String STATICIS_ID_NORMAL = "a_menu_detail_normal";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -197,7 +199,8 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
                 detailDishViewManager.handlerIsSchool(mapTop.get("isSchool"));//处理用料和小技巧顺序
                 requestWeb(mapTop);
                 saveDishInfo(mapTop);
-                tongjiId_detail=isHasVideo?"a_menu_detail_video":"a_menu_detail_normal";
+
+                tongjiId_detail=isHasVideo? STATICIS_ID_VIDEO : STATICIS_ID_NORMAL;
                 loadShareData();
                 break;
             case DetailDishDataManager.DISH_DATA_INGRE://用料

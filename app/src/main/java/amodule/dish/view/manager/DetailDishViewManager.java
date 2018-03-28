@@ -30,10 +30,12 @@ import java.util.TimerTask;
 
 import acore.logic.ConfigMannager;
 import acore.logic.LoginManager;
+import acore.logic.XHClick;
 import acore.logic.load.LoadManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
+import amodule.dish.activity.DetailDish;
 import amodule.dish.view.DishADBannerView;
 import amodule.dish.view.DishAboutView;
 import amodule.dish.view.DishExplainView;
@@ -48,6 +50,7 @@ import amodule.dish.view.DishVipView;
 import third.video.VideoPlayerController;
 
 import static acore.logic.ConfigMannager.KEY_CAIPUVIP;
+import static amodule.dish.activity.DetailDish.STATICIS_ID_VIDEO;
 
 /**
  * 当前只处理View的拼装
@@ -310,6 +313,11 @@ public class DetailDishViewManager {
         if(dishVipView != null){
             if(relation.containsKey("isShow")&&"2".equals(relation.get("isShow"))) {
                 dishVipView.setVisibility(View.VISIBLE);
+                dishVipView.setOnClickViewCallback(() -> {
+                    String twoLevelValue = isHasVideo ? "视频" : "顶部导航栏";
+                    String threeLevelValue = isHasVideo ? "视频下方会员开通按钮" : "头图下方会员开通按钮";
+                    XHClick.mapStat(mAct, DetailDish.tongjiId_detail, twoLevelValue, threeLevelValue);
+                });
                 dishVipView.setData(relation);
                 Log.i("xianghaTag","VIP::::handlerVipView:::title:::"+relation.get("title"));
             }else dishVipView.setVisibility(View.GONE);

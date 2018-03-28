@@ -57,6 +57,7 @@ import third.video.VideoPlayerController;
 import xh.basic.tool.UtilImage;
 import xh.basic.tool.UtilString;
 
+import static amodule.dish.activity.DetailDish.STATICIS_ID_VIDEO;
 import static amodule.dish.activity.DetailDishWeb.tongjiId;
 import static third.ad.scrollerAd.XHScrollerAdParent.ADKEY_GDT;
 import static third.ad.scrollerAd.XHScrollerAdParent.ID_AD_ICON_GDT;
@@ -480,7 +481,7 @@ public class DishHeaderViewNew extends LinearLayout {
             dredgeVipLayout.removeAllViews();
             dredgeVipLayout.setVisibility(View.GONE);
         }
-        tongjiId = "a_menu_detail_video";
+        tongjiId = STATICIS_ID_VIDEO;
         Map<String, String> selfVideoMap = UtilString.getListMapByJson(selfVideoJson).get(0);
         String videoUrl = selfVideoMap.get("url");
         if (!TextUtils.isEmpty(videoUrl) && videoUrl.startsWith("http")) {
@@ -567,8 +568,10 @@ public class DishHeaderViewNew extends LinearLayout {
                 if(!TextUtils.isEmpty(url)){
                     String currentUrl = url + "&vipFrom=" +Uri.encode(LoginManager.isLogin() ? "视频菜谱会员按钮（登录后）" : "视频菜谱会员按钮（登录前）");
                     AppCommon.openUrl(activity,currentUrl,true);
+                    XHClick.mapStat(activity,tongjiId,"视频","视频里开通会员按钮");
                 }
             });
+            vipView.setOnClickLoginCallback(() -> XHClick.mapStat(activity,tongjiId,"视频","视频里点击登录按钮"));
             dredgeVipLayout.setPadding(0, distance, 0, 0);
             if(mVideoPlayerController != null){
                 mVideoPlayerController.hideFullScreen();
