@@ -123,7 +123,7 @@ public class BaseAdConfigTools {
                     startStatistics();
                 }
                 if (checkSendSta()) {
-                    startStatistics(0);
+                    startStatisticsNow();
                 }
                 break;
         }
@@ -172,6 +172,10 @@ public class BaseAdConfigTools {
 
     public void startStatistics() {
         startStatistics(mIntervalTime);
+    }
+
+    public void startStatisticsNow() {
+        startStatistics(0);
     }
 
     public void stopStatistics() {
