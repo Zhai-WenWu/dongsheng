@@ -1,4 +1,4 @@
-package amodule.lesson.view;
+package amodule.vip;
 
 import android.content.Context;
 import android.graphics.Color;
