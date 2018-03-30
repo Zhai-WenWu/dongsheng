@@ -35,7 +35,7 @@ import static amodule._common.widgetlib.IWidgetLibrary.NO_FIND_ID;
 
 public class BaseExtraLinearLayout extends LinearLayout implements IStatisticCallback, IStatictusData, ISaveStatistic {
 
-    private List<Map<String, String>> mDatas;
+    protected List<Map<String, String>> mDatas;
 
     private StatisticCallback mStatisticCallback;
     private String mId, mTwoLevel, mThreeLevel;
@@ -83,7 +83,12 @@ public class BaseExtraLinearLayout extends LinearLayout implements IStatisticCal
         if (getChildCount() > 0) {
             removeAllViews();
         }
-        Stream.of(array).forEach(data -> addViewByData(data, isOrder));
+        if (shouldParentHandleView())
+            bindView(array, isOrder);
+    }
+
+    private void bindView(List<Map<String, String>> array, boolean isOrder) {
+        Stream.of(array).forEach(data -> updateModuleView(data, isOrder));
         requestLayout();
         setVisibility(getChildCount() > 0 ? VISIBLE : GONE);
     }
@@ -100,7 +105,7 @@ public class BaseExtraLinearLayout extends LinearLayout implements IStatisticCal
      * @param isOrder 是否按顺序添加
      */
 
-    private void addViewByData(Map<String, String> data, boolean isOrder) {
+    protected void updateModuleView(Map<String, String> data, boolean isOrder) {
         String widgetType = data.get(KEY_WIDGET_TYPE);
         String widgetData = data.get(KEY_WIDGET_DATA);
         if(TextUtils.isEmpty(widgetData)){
@@ -121,8 +126,7 @@ public class BaseExtraLinearLayout extends LinearLayout implements IStatisticCal
                 if(view instanceof IStatictusData && mStatisticCallback != null){
                     ((IStatictusData)view).setStatictusData(mId,mTwoLevel,mThreeLevel);
                 }
-                if(view instanceof IBindMap
-                        && !TextUtils.isEmpty(widgetData)) {
+                if(view instanceof IBindMap && !TextUtils.isEmpty(widgetData)) {
                     ((IBindMap) view).setData(dataMap);
                     BaseExtraLinearLayout.this.addView(view, isOrder ? -1 : 0);
                 }
@@ -146,5 +150,9 @@ public class BaseExtraLinearLayout extends LinearLayout implements IStatisticCal
                 ((ISaveStatistic) child).saveStatisticData(page);
             }
         }
+    }
+
+    protected boolean shouldParentHandleView() {
+        return true;
     }
 }
