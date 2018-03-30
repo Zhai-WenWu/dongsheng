@@ -5,7 +5,7 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 
 /**
- * Description : //TODO
+ * Description :
  * PackageName : amodule.vip.view
  * Created by tanze on 2018/3/30 11:01.
  * e_mail : ztanzeyu@gmail.com

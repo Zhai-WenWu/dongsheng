@@ -1,7 +1,7 @@
-package amodule._common.delegate;
+package amodule.lesson.delegate;
 
 /**
- * Description : //TODO
+ * Description :
  * PackageName : amodule._common.delegate
  * Created by tanze on 2018/3/30 10:55.
  * e_mail : ztanzeyu@gmail.com

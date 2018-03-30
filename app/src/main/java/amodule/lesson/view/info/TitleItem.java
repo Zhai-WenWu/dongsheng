@@ -10,7 +10,7 @@ import java.util.Map;
 import amodule._common.delegate.IBindMap;
 
 /**
- * Description : //TODO
+ * Description :
  * PackageName : amodule.lesson.view.info
  * Created by tanze on 2018/3/30 11:06.
  * e_mail : ztanzeyu@gmail.com

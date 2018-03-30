@@ -10,10 +10,10 @@ import java.util.List;
 import java.util.Map;
 
 import amodule._common.delegate.IBindMap;
-import amodule._common.delegate.IShowNextItem;
+import amodule.lesson.delegate.IShowNextItem;
 
 /**
- * Description : //TODO
+ * Description :
  * PackageName : amodule.vip.view
  * Created by tanze on 2018/3/30 10:37.
  * e_mail : ztanzeyu@gmail.com
