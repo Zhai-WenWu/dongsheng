@@ -57,13 +57,13 @@ public class DelayLoadExtraLayout extends BaseExtraLinearLayout {
     }
 
     private boolean hasNextData() {
-        if (mDatas == null || mDatas.isEmpty())
+        if (datas == null || datas.isEmpty())
             return false;
-        for (int i = 0; i < mNextShowCount && i < mDatas.size(); i++) {
-            Map<String,String> map = mDatas.remove(0);
-            updateModuleView(map,true);
+        for (int i = 0; i < mNextShowCount && i < datas.size(); i++) {
+            Map<String,String> map = datas.remove(0);
+            updateModuleView(map,isOrder);
         }
-        return !mDatas.isEmpty();
+        return !datas.isEmpty();
     }
 
     @Override

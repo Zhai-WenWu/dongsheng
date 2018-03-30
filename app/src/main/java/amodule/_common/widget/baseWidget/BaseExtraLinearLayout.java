@@ -35,7 +35,8 @@ import static amodule._common.widgetlib.IWidgetLibrary.NO_FIND_ID;
 
 public class BaseExtraLinearLayout extends LinearLayout implements IStatisticCallback, IStatictusData, ISaveStatistic {
 
-    protected List<Map<String, String>> mDatas;
+    protected List<Map<String, String>> datas;
+    protected boolean isOrder;
 
     private StatisticCallback mStatisticCallback;
     private String mId, mTwoLevel, mThreeLevel;
@@ -76,8 +77,9 @@ public class BaseExtraLinearLayout extends LinearLayout implements IStatisticCal
     }
 
     public void setData(List<Map<String, String>> array, boolean isOrder) {
-        mDatas = array;
-        if (null == mDatas || mDatas.isEmpty()) {
+        datas = array;
+        this.isOrder = isOrder;
+        if (null == datas || datas.isEmpty()) {
             return;
         }
         if (getChildCount() > 0) {
