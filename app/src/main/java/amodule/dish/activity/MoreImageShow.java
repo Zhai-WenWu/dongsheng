@@ -32,7 +32,7 @@ import third.ad.tools.AdPlayIdConfig;
  * Created by XiangHa on 2016/8/10.
  */
 public class MoreImageShow extends BaseActivity{
-    public static final String[] AD_IDS = new String[]{AdPlayIdConfig.DISH_TIESHI};
+    public static final String[] AD_IDS = new String[]{AdPlayIdConfig.DETAIL_DISH_MAKE};
     private MoreImageViewPager viewPager;
     private ArrayList<ImageMoreView> classContainter = new ArrayList<>();
     private List<Map<String,String>> mList = new ArrayList<>();
