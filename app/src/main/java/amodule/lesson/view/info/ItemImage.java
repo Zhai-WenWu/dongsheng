@@ -12,19 +12,19 @@ import amodule._common.delegate.IBindMap;
 /**
  * Description :
  * PackageName : amodule.lesson.view.info
- * Created by tanze on 2018/3/30 11:06.
+ * Created by tanze on 2018/3/30 11:05.
  * e_mail : ztanzeyu@gmail.com
  */
-public class TitleItem extends LinearLayout implements IBindMap{
-    public TitleItem(Context context) {
+public class ItemImage extends LinearLayout implements IBindMap {
+    public ItemImage(Context context) {
         super(context);
     }
 
-    public TitleItem(Context context, @Nullable AttributeSet attrs) {
+    public ItemImage(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public TitleItem(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public ItemImage(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 

@@ -26,14 +26,21 @@ public class LessonInfoDataMananger {
 
     private LessonInfoAdapter mAdapter;
     private List<Map<String,String>> mData = new ArrayList<>();
+    private OnLoadedDataCallback mOnLoadedDataCallback;
 
     public LessonInfoDataMananger(BaseAppCompatActivity activity) {
         mActivity = activity;
+        mAdapter = new LessonInfoAdapter(activity,mData);
     }
 
 
     /**加载数据*/
     public void loadData(){
+        loadTopInfo();
+        loadVipButtonData();
+    }
+
+    private void loadTopInfo() {
 
     }
 
@@ -56,10 +63,21 @@ public class LessonInfoDataMananger {
 
     public void refresh(){}
 
+    public LessonInfoAdapter getAdapter() {
+        return mAdapter;
+    }
+
+    public void handlerLoadedDataCallback(String dataType, String data){
+        if(mOnLoadedDataCallback != null){
+            mOnLoadedDataCallback.onLoadedData(dataType,data);
+        }
+    }
 
     public interface OnLoadedDataCallback{
         void onLoadedData(String dataType,String data);
     }
 
-
+    public void setOnLoadedDataCallback(OnLoadedDataCallback onLoadedDataCallback) {
+        mOnLoadedDataCallback = onLoadedDataCallback;
+    }
 }

@@ -16,15 +16,20 @@ import amodule._common.delegate.IBindMap;
  */
 public class LessonInfoHeader extends RelativeLayout implements IBindMap{
     public LessonInfoHeader(Context context) {
-        super(context);
+        this(context,null);
     }
 
     public LessonInfoHeader(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs,0);
     }
 
     public LessonInfoHeader(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        initialize();
+    }
+
+    private void initialize() {
+
     }
 
     @Override

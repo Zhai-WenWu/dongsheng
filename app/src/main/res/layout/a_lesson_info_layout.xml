@@ -1,10 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activityLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="amodule.lesson.activity.LessonInfo">
 
-</android.support.constraint.ConstraintLayout>
+    <acore.widget.rvlistview.RvListView
+        android:id="@+id/rvListview"
+        android:layout_above="@+id/vip_button"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+    
+    <RelativeLayout
+        android:id="@+id/top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/topbar_height">
+
+        <include
+            android:id="@+id/back_ll"
+            layout="@layout/a_bar_item_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true" />
+
+    </RelativeLayout>
+
+    <amodule.vip.VIPButton
+        android:id="@+id/vip_button"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_49"/>
+
+</RelativeLayout>

@@ -12,6 +12,7 @@ import com.xiangha.R;
 
 import acore.logic.MessageTipController;
 import amodule._common.utility.WidgetUtility;
+import amodule.lesson.activity.LessonInfo;
 import amodule.main.delegate.ISetMessageTip;
 import amodule.user.activity.MyMessage;
 
@@ -67,8 +68,10 @@ public class MessageTipIcon extends RelativeLayout implements ISetMessageTip ,Vi
 
     @Override
     public void onClick(View v) {
-        getContext().startActivity(new Intent(getContext(), MyMessage.class));
-        MessageTipController.newInstance().setQuanMessage(0);
-        setMessage(MessageTipController.newInstance().getMessageNum());
+        //TODO
+        LessonInfo.startActivity(getContext());
+//        getContext().startActivity(new Intent(getContext(), MyMessage.class));
+//        MessageTipController.newInstance().setQuanMessage(0);
+//        setMessage(MessageTipController.newInstance().getMessageNum());
     }
 }
