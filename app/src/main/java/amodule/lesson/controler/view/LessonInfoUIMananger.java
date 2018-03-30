@@ -115,7 +115,7 @@ public class LessonInfoUIMananger {
     }
 
     private void updateTopbarBg(int dy) {
-        int colorRes = (dy <= 200) ? R.color.transparent : R.color.common_top_bg;
+        int colorRes = (dy <= mInfoHeader.getImageHeight()/2) ? R.color.transparent : R.color.common_top_bg;
         mTopbar.setBackgroundResource(colorRes);
     }
 
