@@ -1,10 +1,12 @@
 package amodule.home;
 
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.annimon.stream.Stream;
 import com.xiangha.R;
 
 import org.json.JSONArray;
@@ -85,7 +87,7 @@ public class HomeHeaderControler implements ISaveStatistic, ISetAdController {
         mDatas = array;
         mIsShowCache = isShowCache;
         mSetttingRemoteData = !isShowCache;
-        handleData();
+        handleData(false);
     }
 
     public void setVisibility(boolean isShow) {
@@ -116,13 +118,13 @@ public class HomeHeaderControler implements ISaveStatistic, ISetAdController {
     }
 
     private Map<String,String> mAdData;
-    public void setAdData(Map<String,String> adData) {
+    public void setAdData(boolean isRefresh, Map<String, String> adData) {
         mAdData = adData;
         mSettingAdData = true;
-        handleData();
+        handleData(isRefresh);
     }
 
-    private void handleData() {
+    private void handleData(boolean isRefresh) {
         if (mIsShowCache) {
             setViewData(mIsShowCache);
             mIsShowCache = false;
@@ -132,26 +134,34 @@ public class HomeHeaderControler implements ISaveStatistic, ISetAdController {
             if (mDatas != null && !mDatas.isEmpty()) {
                 Map<String, String> map = mDatas.get(0);
                 if (TextUtils.equals("1", map.get("widgetType"))) {
-                    handleBannerData(map);
+                    Log.i("tzy", "handleData: 111");
+                    handleBannerData(isRefresh,map);
                 } else if (mAdData != null && !mAdData.isEmpty()) {
+                    Log.i("tzy", "handleData: 222");
                     Map<String, String> adMap = combineBannerAdMap(mAdData);
                     mDatas.add(0, adMap);
                 }
             } else if (mAdData != null && !mAdData.isEmpty()){
+                Log.i("tzy", "handleData: 333");
                 mDatas = new ArrayList<>();
                 Map<String, String> adMap = combineBannerAdMap(mAdData);
                 mDatas.add(adMap);
             }
 
             setViewData(mIsShowCache);
-            mSetttingRemoteData = false;
-            mSettingAdData = false;
+//            mSetttingRemoteData = false;
+//            mSettingAdData = false;
             mIsShowCache = false;
         }
     }
 
     private void setViewData(boolean isShowCache) {
-        if (null == mDatas || mDatas.isEmpty()) return;
+        if (null == mDatas || mDatas.isEmpty()){
+            Stream.of(mLayouts)
+                    .filter(value -> value != null)
+                    .forEach(value -> value.setVisibility(View.GONE));
+            return;
+        }
         String[] twoLevelArray = {"轮播banner", "功能入口", "功能入口", "精品厨艺", "限时抢购", "精选菜单"};
         String[] threeLevelArray = {"轮播banner位置", "", "", "精品厨艺位置", "限时抢购位置", "精选菜单位置"};
 //        setVisibility(false);
@@ -197,9 +207,10 @@ public class HomeHeaderControler implements ISaveStatistic, ISetAdController {
         }
     }
 
-    private Map<String, String> handleBannerData(Map<String, String> map) {
-        if (mAdData == null || mAdData.isEmpty())
+    private Map<String, String> handleBannerData(boolean isRefresh, Map<String, String> map) {
+        if (mAdData == null)
             return map;
+        Log.i("tzy", "handleBannerData: ");
         String widgetDataValue = map.get("widgetData");
         Map<String, String> wdMap = StringManager.getFirstMap(widgetDataValue);
         wdMap.put("sort", "1");
@@ -250,6 +261,7 @@ public class HomeHeaderControler implements ISaveStatistic, ISetAdController {
     }
 
     private Map<String, String> combineBannerAdMap(Map<String, String> adMap) {
+        Log.i("tzy", "combineBannerAdMap: ");
         JSONObject obj = new JSONObject();
         JSONObject extraObj = new JSONObject();
         JSONObject dataObj = new JSONObject();

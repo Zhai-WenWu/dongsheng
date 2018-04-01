@@ -25,7 +25,6 @@ import amodule.main.bean.HomeModuleBean;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
-import third.ad.XHAdAutoRefresh;
 import third.ad.control.AdControlHomeDish;
 import third.ad.scrollerAd.XHAllAdControl;
 
@@ -357,6 +356,9 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
     public void autoRefreshSelfAD() {
         if(mAdControl != null){
             mAdControl.autoRefreshSelfAD();
+        }
+        if(mViewAdControl != null){
+            mViewAdControl.autoRefreshSelfAD();
         }
     }
 

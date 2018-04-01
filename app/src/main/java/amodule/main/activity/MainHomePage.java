@@ -213,7 +213,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
         Collections.addAll(arr,AdPlayIdConfig.HOME_BANNEER_LIST);
         mDataControler.loadAdData(arr, (isRefresh, map) -> {
             mViewContrloer.setAdController(mDataControler.getAllAdController());
-            mViewContrloer.setAdData(map, arr);},
+            mViewContrloer.setAdData(isRefresh,map, arr);},
                 this, "sy_banner");
     }
 

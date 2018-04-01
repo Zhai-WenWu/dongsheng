@@ -324,8 +324,8 @@ public class HomeViewControler implements ISetAdController {
         mHeaderControler.setAdController(controller);
     }
 
-    public void setAdData(Map<String, String> map, List<String> adIDs) {
+    public void setAdData(boolean isRefresh, Map<String, String> map, List<String> adIDs) {
         mHeaderControler.setAdID(adIDs);
-        mHeaderControler.setAdData(map);
+        mHeaderControler.setAdData(isRefresh,map);
     }
 }
