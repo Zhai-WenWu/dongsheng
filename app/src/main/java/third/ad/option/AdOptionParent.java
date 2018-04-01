@@ -131,7 +131,15 @@ public abstract class AdOptionParent implements ActivityMethodManager.IAutoRefre
                                     newMap.put("timeTag", String.valueOf(System.currentTimeMillis()));
                                     adArray.add(newMap);
                                     Log("adArray.add  ad——ids:" + AD_IDS[i]);
+                                } else {
+                                    Log("---------------广告位没有数据----------");
+                                    newMap = new HashMap<>();
+                                    adArray.add(newMap);
                                 }
+                            } else {
+                                Log("---------------广告位没有数据----------");
+                                Map<String, String> newMap = new HashMap<>();
+                                adArray.add(newMap);
                             }
                         } else {
                             Log("---------------广告位没有数据----------");
@@ -140,11 +148,12 @@ public abstract class AdOptionParent implements ActivityMethodManager.IAutoRefre
                         }
 
                     }
-                    if(isRefresh){
-                        if(mRefreshCallback != null){
+                    if (isRefresh) {
+                        if (mRefreshCallback != null) {
                             mRefreshCallback.refreshSelfAD();
                         }
-                    }else if (adDataCallBack != null){
+                    }
+                    if (adDataCallBack != null) {
                         adDataCallBack.adDataBack(TextUtils.isEmpty(controlTag) ? -1 : Integer.parseInt(controlTag), map.size());
                     }
                 }
@@ -191,8 +200,8 @@ public abstract class AdOptionParent implements ActivityMethodManager.IAutoRefre
      *
      * @return
      */
-    protected ArrayList<Map<String, String>>  getBdData(ArrayList<Map<String, String>> old_list,
-                                                        boolean isBack) {
+    protected ArrayList<Map<String, String>> getBdData(ArrayList<Map<String, String>> old_list,
+                                                       boolean isBack) {
         Log("getBdData adArray.size():" + adArray.size());
         ArrayList<Map<String, String>> tempList = new ArrayList<>();
         Log.i(tag_yu, "getLimitNum::" + getLimitNum());
@@ -206,17 +215,24 @@ public abstract class AdOptionParent implements ActivityMethodManager.IAutoRefre
             }
             Log.i(tag_yu, "节点数据为::" + old_list.get(0).get("name"));
         }
+        //先移除广告
+        final int currentAdPosition = getIndexAd(AD_IDS.length - 1);
+        for (int i = startIndex;
+             i < old_list.size()
+                     && i <= currentAdPosition
+//                     && old_list.size() > currentAdPosition
+                ;
+             i++) {
+            Map<String, String> dataMap = old_list.get(i);
+            if ("ad".equals(dataMap.get("adstyle"))) {
+                Log.i("tzy", "getBdData: remove");
+                old_list.remove(dataMap);
+                i--;
+            }
+        }
         if (adArray.size() > 0) {
             Map<String, String> adMap;
-            //先移除广告
-            for(int i = startIndex ; i < old_list.size() && i < cunrrentIndex ; i++){
-                Map<String, String> dataMap = old_list.get(i);
-                if ("ad".equals(dataMap.get("adstyle"))) {
-                    old_list.remove(dataMap);
-                    i--;
-                }
-            }
-            if(!isBack){
+            if (!isBack) {
                 cunrrentIndex = 0;
             }
             //添加广告

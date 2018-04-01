@@ -58,8 +58,10 @@ public class BannerAd {
 
     private void setActivityData(Map<String, String> map) {
 //        Log.i("tzy", "setActivityData: " + map.toString());
-        if (mAdImage == null
-                || !ADKEY_BANNER.equals(map.get("type"))) {
+        if (!ADKEY_BANNER.equals(map.get("type"))) {
+             if(mAdImage != null){
+                mAdImage.setVisibility(View.GONE);
+             }
             return;
         }
 
@@ -90,7 +92,6 @@ public class BannerAd {
                     mAdImage.setScaleType(ImageView.ScaleType.FIT_XY);
                     ImgManager.setImgViewByWH(mAdImage, bitmap, imgViewWidth, imgHeight, true);
 
-                    mAdImage.setVisibility(View.VISIBLE);
                     mAdImage.setVisibility(View.VISIBLE);
                     if (mListener != null)
                         mListener.onImgShow(imgHeight);
