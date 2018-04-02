@@ -499,8 +499,10 @@ public class ArticleDetailActivity extends BaseActivity {
      * @param onlyUser 是否只刷新用户数据
      */
     private void refreshData(boolean onlyUser) {
-        if (!onlyUser)
+        if (!onlyUser){
             resetData();
+            mArticleAdContrler.initADData();
+        }
         requestArticleData(onlyUser);
     }
 
