@@ -175,7 +175,11 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
                     mViewContrloer.getRvListView(),
                     mHomeAdapter,
                     true,
-                    v -> innerRefresh(),
+                    v -> {
+                        innerRefresh();
+                        if (mViewContrloer != null)
+                            mViewContrloer.refreshBuoy();
+                    },
                     v -> {
                         if (HeaderDataLoaded)
                             EntryptData(!LoadOver);

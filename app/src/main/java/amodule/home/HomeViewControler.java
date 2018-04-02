@@ -298,6 +298,9 @@ public class HomeViewControler implements ISetAdController {
     public void autoRefresh() {
         if (null != mRefreshLayout)
             mRefreshLayout.autoRefresh();
+    }
+
+    public void refreshBuoy() {
         if(mBuoy != null){
             mBuoy.resetData();
         }
