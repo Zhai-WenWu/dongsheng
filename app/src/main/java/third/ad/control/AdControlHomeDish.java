@@ -93,8 +93,8 @@ public class AdControlHomeDish extends AdControlParent implements ActivityMethod
         }else{
             Log.i(tag_yu,"getLimitNum()::"+getLimitNum());
             adOptionHomeDish.setLimitNum(getLimitNum());
-            if(downCurrentControlTag>1)
-                adOptionHomeDish.setStartIndex(getIndexAd((downCurrentControlTag-1)*10));
+            if(downCurrentControlTag>0)
+                adOptionHomeDish.setStartIndex(getIndexAd(downCurrentControlTag*10));
             adOptionHomeDish.setAdLoadNumberCallBack(new AdOptionParent.AdLoadNumberCallBack() {
                 @Override
                 public void loadNumberCallBack(int Number) {
@@ -130,8 +130,8 @@ public class AdControlHomeDish extends AdControlParent implements ActivityMethod
             if(getLimitNum()>0&&!isBack)
                 adOptionHomeDish.setLimitNum(getLimitNum());
            if(!isBack) {
-               if(downCurrentControlTag>1)
-                adOptionHomeDish.setStartIndex(getIndexAd((downCurrentControlTag-1)*10));
+               if(downCurrentControlTag>0)
+                adOptionHomeDish.setStartIndex(getIndexAd(downCurrentControlTag*10));
            }
             adOptionHomeDish.setAdLoadNumberCallBack(new AdOptionParent.AdLoadNumberCallBack() {
                 @Override

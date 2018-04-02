@@ -69,8 +69,8 @@ public class AdControlNormalDish extends AdControlParent implements ActivityMeth
         }else{
             Log.i(tag_yu,"getLimitNum()::"+getLimitNum());
             adOptionHomeDish.setLimitNum(getLimitNum());
-            if(downCurrentControlTag>1)
-                adOptionHomeDish.setStartIndex(getIndexAd((downCurrentControlTag-1)*10));
+            if(downCurrentControlTag>0)
+                adOptionHomeDish.setStartIndex(getIndexAd(downCurrentControlTag*10));
             adOptionHomeDish.setAdLoadNumberCallBack(new AdOptionParent.AdLoadNumberCallBack() {
                 @Override
                 public void loadNumberCallBack(int Number) {
