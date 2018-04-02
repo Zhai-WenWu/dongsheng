@@ -216,7 +216,8 @@ public abstract class AdOptionParent implements ActivityMethodManager.IAutoRefre
             Log.i(tag_yu, "节点数据为::" + old_list.get(0).get("name"));
         }
         //先移除广告
-        final int currentAdPosition = getIndexAd(AD_IDS.length - 1);
+        int adPositionIndex = TextUtils.isEmpty(controlTag) ? 0 : Integer.parseInt(controlTag);
+        final int currentAdPosition = getIndexAd(adPositionIndex + AD_IDS.length - 1);
         for (int i = startIndex;
              i < old_list.size()
                      && i <= currentAdPosition
