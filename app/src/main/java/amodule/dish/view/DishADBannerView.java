@@ -1,5 +1,6 @@
 package amodule.dish.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.ImageView;
@@ -44,6 +45,12 @@ public class DishADBannerView extends ItemBaseView {
         imgWidth=Tools.getPhoneWidth()-Tools.getDimen(context,R.dimen.dp_40);
         ArrayList<String> list = new ArrayList<>();
         list.add(DISH_YONGLIAO);
+        Activity activity = null;
+        if (getContext() instanceof Activity) {
+            activity = (Activity) getContext();
+        } else {
+            activity = XHActivityManager.getInstance().getCurrentActivity();
+        }
         xhAllAdControl = new XHAllAdControl(list, (isRefresh, map) -> {
             if(map.containsKey(DISH_YONGLIAO)){
                 BannerAd bannerAd = new BannerAd(XHActivityManager.getInstance().getCurrentActivity(), xhAllAdControl, img_banner);
@@ -66,7 +73,7 @@ public class DishADBannerView extends ItemBaseView {
                 map = StringManager.getFirstMap(map.get(DISH_YONGLIAO));
                 bannerAd.onShowAd(map);
             }
-        },XHActivityManager.getInstance().getCurrentActivity(),"");
+        },activity,"");
         xhAllAdControl.registerRefreshCallback();
     }
 
