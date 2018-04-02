@@ -83,6 +83,9 @@ public class ArticleAdContrler {
     protected void handlerArticleRecData(int index, Object obj) {
         if (obj != null) {
             Map<String, String> data = (Map<String, String>) obj;
+            if(data.isEmpty()){
+                return;
+            }
             data.put("adFollowPosition", String.valueOf(adPositionInList[index]));
             if (adInsteredArray.get(index) == null) {
                 adRcomDataArray.add(data);
@@ -128,7 +131,7 @@ public class ArticleAdContrler {
 
     protected void sendAdMessage(String adStr, int type) {
         Map<String, String> adDataMap = StringManager.getFirstMap(adStr);
-        if (adDataMap != null && adDataMap.size() > 0) {
+        if (adDataMap != null) {
             Message message = adHandler.obtainMessage();
             message.obj = adDataMap;
             message.what = type;

@@ -485,9 +485,9 @@ public class ArticleDetailActivity extends BaseActivity {
     public void showAd(Map<String, String> adDataMap) {
         if (articleContentBottomView == null
                 || isFinishing()
-                || adView != null
-                || !webviewLoadOver)
+                || !webviewLoadOver){
             return;
+        }
         adView = mArticleAdContrler.getBigAdView(adDataMap);
         articleContentBottomView.addViewToAdLayout(adView);
         detailAdapter.notifyDataSetChanged();
