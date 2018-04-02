@@ -104,7 +104,7 @@ public class MoreImageShow extends BaseActivity{
             getAdData();
     }
 
-
+    private ImageMoreAdView mImageMoreAdView;
 
     private void getAdData(){
 
@@ -122,9 +122,21 @@ public class MoreImageShow extends BaseActivity{
                         if (!TextUtils.isEmpty(adStr)) {
                             ArrayList<Map<String, String>> adList = StringManager.getListMapByJson(adStr);
                             if (adList != null && adList.size() > 0) {
-                                classContainter.add(new ImageMoreAdView(xhAllAdControl,MoreImageShow.this,adList,AdPlayIdConfig.DETAIL_DISH_MAKE,"ad"));
+                                if(mImageMoreAdView == null){
+                                    mImageMoreAdView = new ImageMoreAdView(xhAllAdControl,MoreImageShow.this,adList,AdPlayIdConfig.DETAIL_DISH_MAKE,"ad");
+                                    classContainter.add(mImageMoreAdView);
+                                }else{
+                                    classContainter.remove(mImageMoreAdView);
+                                    mImageMoreAdView = new ImageMoreAdView(xhAllAdControl,MoreImageShow.this,adList,AdPlayIdConfig.DETAIL_DISH_MAKE,"ad");
+                                    classContainter.add(mImageMoreAdView);
+                                }
                                 myAdapter.notifyDataSetChanged();
                             }
+                        }else if(mImageMoreAdView != null){
+                            viewPager.setCurrentItem(classContainter.size() - 2);
+                            classContainter.remove(mImageMoreAdView);
+                            myAdapter.notifyDataSetChanged();
+                            mImageMoreAdView = null;
                         }
                     }
                 }
@@ -163,7 +175,7 @@ public class MoreImageShow extends BaseActivity{
 
         @Override
         public int getItemPosition(Object object) {
-            return super.getItemPosition(object);
+            return POSITION_NONE;
         }
 
 
