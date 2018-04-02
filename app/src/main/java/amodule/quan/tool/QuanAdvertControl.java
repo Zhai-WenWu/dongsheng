@@ -262,6 +262,7 @@ public class QuanAdvertControl implements ActivityMethodManager.IAutoRefresh {
             @Override
             public void callBack(boolean isRefresh, Map<String, String> map) {
                 if (map != null && map.size() > 0) {
+                    mAdList.clear();
                     for (int i = 0; i < AD_IDS.length; i++) {
                         String homeAdStr = map.get(AD_IDS[i]);
                         Map<String, String> homeAdMap = StringManager.getFirstMap(homeAdStr);
