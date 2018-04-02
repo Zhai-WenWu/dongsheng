@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 
 import com.annimon.stream.Stream;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -177,9 +178,30 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
     }
 
     private boolean dataEquals(Map<String,String> current){
-        if (data == current) return true;
         if (data != null && current != null) {
-            return data.equals(current);
+            Map<String, String> m = (Map<String, String>) current;
+            if (m.size() != data.size())
+                return false;
+            try {
+                Iterator<Map.Entry<String, String>> i = data.entrySet().iterator();
+                while (i.hasNext()) {
+                    Map.Entry<String, String> e = i.next();
+                    String key = e.getKey();
+                    String value = e.getValue();
+                    if (value == null) {
+                        if (!(m.get(key)==null && m.containsKey(key)))
+                            return false;
+                    } else {
+                        if (!value.equals(m.get(key)))
+                            return false;
+                    }
+                }
+            } catch (ClassCastException unused) {
+                return false;
+            } catch (NullPointerException unused) {
+                return false;
+            }
+            return true;
         }
         return false;
     }

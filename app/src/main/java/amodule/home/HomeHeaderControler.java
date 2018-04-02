@@ -14,6 +14,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -116,10 +117,34 @@ public class HomeHeaderControler implements ISaveStatistic, ISetAdController {
     }
 
     private Map<String,String> mAdData;
-    public void setAdData(Map<String,String> adData) {
+    public void setAdData(Map<String,String> adData, boolean refresh) {
         mAdData = adData;
         mSettingAdData = true;
-        handleData();
+        if (!refresh)
+            handleData();
+        else
+            handleBannerAdDataRefresh();
+    }
+
+    private void handleBannerAdDataRefresh() {
+        startHandleData(true);
+        setViewData(mIsShowCache);
+    }
+
+    private void startHandleData(boolean adRefresh) {
+        if (mDatas != null && !mDatas.isEmpty()) {
+            Map<String, String> map = mDatas.get(0);
+            if (TextUtils.equals("1", map.get("widgetType"))) {
+                mDatas.set(0, handleBannerData(map, adRefresh));
+            } else if (mAdData != null && !mAdData.isEmpty()) {
+                Map<String, String> adMap = combineBannerAdMap(mAdData);
+                mDatas.add(0, adMap);
+            }
+        } else if (mAdData != null && !mAdData.isEmpty()){
+            mDatas = new ArrayList<>();
+            Map<String, String> adMap = combineBannerAdMap(mAdData);
+            mDatas.add(adMap);
+        }
     }
 
     private void handleData() {
@@ -129,20 +154,7 @@ public class HomeHeaderControler implements ISaveStatistic, ISetAdController {
             return;
         }
         if (mSetttingRemoteData && mSettingAdData) {
-            if (mDatas != null && !mDatas.isEmpty()) {
-                Map<String, String> map = mDatas.get(0);
-                if (TextUtils.equals("1", map.get("widgetType"))) {
-                    handleBannerData(map);
-                } else if (mAdData != null && !mAdData.isEmpty()) {
-                    Map<String, String> adMap = combineBannerAdMap(mAdData);
-                    mDatas.add(0, adMap);
-                }
-            } else if (mAdData != null && !mAdData.isEmpty()){
-                mDatas = new ArrayList<>();
-                Map<String, String> adMap = combineBannerAdMap(mAdData);
-                mDatas.add(adMap);
-            }
-
+            startHandleData(false);
             setViewData(mIsShowCache);
             mSetttingRemoteData = false;
             mSettingAdData = false;
@@ -151,14 +163,17 @@ public class HomeHeaderControler implements ISaveStatistic, ISetAdController {
     }
 
     private void setViewData(boolean isShowCache) {
-        if (null == mDatas || mDatas.isEmpty()) return;
+        if (null == mDatas || mDatas.isEmpty()) {
+            setVisibility(false);
+            return;
+        }
         String[] twoLevelArray = {"轮播banner", "功能入口", "功能入口", "精品厨艺", "限时抢购", "精选菜单"};
         String[] threeLevelArray = {"轮播banner位置", "", "", "精品厨艺位置", "限时抢购位置", "精选菜单位置"};
-//        setVisibility(false);
         final int length = Math.min(mDatas.size(), mLayouts.length);
         for (int i = 0, x = 0; i < length; i++) {
             final int index = i;
             Map<String, String> map = mDatas.get(index);
+
             if (isShowCache && "1".equals(map.get("cache"))) {
                 mLayouts[index].setVisibility(View.GONE);
                 continue;
@@ -182,7 +197,6 @@ public class HomeHeaderControler implements ISaveStatistic, ISetAdController {
             mLayouts[index].setTitleStaticCallback(statisticCallback);
             mLayouts[index].setVisibility(View.VISIBLE);
         }
-
         if(onLayoutChangeListener == null){
             onLayoutChangeListener = (v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
                 hasHeaderData = mHeaderView.getHeight() > mFeedHeaderView.getHeight();
@@ -197,10 +211,12 @@ public class HomeHeaderControler implements ISaveStatistic, ISetAdController {
         }
     }
 
-    private Map<String, String> handleBannerData(Map<String, String> map) {
+    private Map<String, String> handleBannerData(Map<String, String> map, boolean refresh) {
+        Map<String, String> retMap = new HashMap<>();
         if (mAdData == null || mAdData.isEmpty())
-            return map;
-        String widgetDataValue = map.get("widgetData");
+            return retMap;
+        retMap.putAll(map);
+        String widgetDataValue = retMap.get("widgetData");
         Map<String, String> wdMap = StringManager.getFirstMap(widgetDataValue);
         wdMap.put("sort", "1");
         String dataValue = wdMap.get("data");
@@ -208,11 +224,34 @@ public class HomeHeaderControler implements ISaveStatistic, ISetAdController {
                 (dataValue);
         ArrayList<Map<String, String>> listValue = StringManager.getListMapByJson(listMap.get
                 ("list"));
+        if (refresh) {
+            Iterator<Map<String, String>> listIterator = listValue.iterator();
+            while (listIterator.hasNext()) {
+                Map<String, String> valueMap = listIterator.next();
+                if (valueMap != null && !valueMap.isEmpty() && (valueMap.containsKey("adType") || TextUtils.equals("xh", valueMap.get("adType")))) {
+                    listIterator.remove();
+                }
+            }
+        }
+        addAdMapToList(listValue, mAdData);
+        JSONArray jsonArray = new JSONArray();
+        for (Map<String, String> lv : listValue) {
+            JSONObject object = map2JSON(lv);
+            jsonArray.put(object);
+        }
+        listMap.put("list", jsonArray.toString());
+        wdMap.put("data", map2JSON(listMap).toString());
+        retMap.put("widgetData", map2JSON(wdMap).toString());
+        return retMap;
+    }
 
-        for (String key : mAdData.keySet()) {
+    private ArrayList<Map<String, String>> addAdMapToList(ArrayList<Map<String, String>> targetList, Map<String, String> originalMap) {
+        if (originalMap == null || originalMap.isEmpty())
+            return targetList;
+        for (String key : originalMap.keySet()) {
             Map<String, String> adMap = new HashMap<>();
             adMap.put("adPosId", key);
-            Map<String, String> m = StringManager.getFirstMap(mAdData.get(key));
+            Map<String, String> m = StringManager.getFirstMap(originalMap.get(key));
             if(!"xh".equals(m.get("type"))){
                 continue;
             }
@@ -224,17 +263,9 @@ public class HomeHeaderControler implements ISaveStatistic, ISetAdController {
             adMap.put("index", m.get("index"));
             adMap.put("type", m.get("type"));
             adMap.put("adType", m.get("adType"));
-            listValue.add(adMap);
+            targetList.add(adMap);
         }
-        JSONArray jsonArray = new JSONArray();
-        for (Map<String, String> lv : listValue) {
-            JSONObject object = map2JSON(lv);
-            jsonArray.put(object);
-        }
-        listMap.put("list", jsonArray.toString());
-        wdMap.put("data", map2JSON(listMap).toString());
-        map.put("widgetData", map2JSON(wdMap).toString());
-        return map;
+        return targetList;
     }
 
     private JSONObject map2JSON(Map<String, String> map) {
