@@ -208,6 +208,9 @@ public class CircleMainFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+    }
+
+    private void registerAdController() {
         if(mActivity != null
                 && mActivity.getActMagager() != null
                 && quanAdvertControl != null){
@@ -333,6 +336,7 @@ public class CircleMainFragment extends Fragment {
             LoadOver = true;
         }
         quanAdvertControl = new QuanAdvertControl(mActivity);
+        registerAdController();
         quanAdvertControl.setCallBack(isRefresh -> {
                 index_size = 0;
                 mListData = quanAdvertControl.getAdvertAndQuanData(isRefresh,mListData, mPlateData.getCid(), mPlateData.getMid(), index_size);

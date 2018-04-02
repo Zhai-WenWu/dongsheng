@@ -96,6 +96,18 @@ public class QuanAdvertControl implements ActivityMethodManager.IAutoRefresh {
         if (ad_list.size() == 0) {
             ad_list.add(4);
         }
+
+        if(isRefresh){
+            nowIndex = 0;
+            for (int i = 0; i < old_list.size(); i++) {
+                Map<String, String> dataMap = old_list.get(i);
+                if ("2".equals(dataMap.get("isAd"))) {
+                    old_list.remove(i);
+                    i--;
+                }
+            }
+        }
+
         if (mAdList.size() > 0) {
             //转移所有的广告数据到temp集合中
             ArrayList<Map<String, String>> temp = new ArrayList<>();
@@ -108,16 +120,6 @@ public class QuanAdvertControl implements ActivityMethodManager.IAutoRefresh {
                 }
             }
 
-            if(isRefresh){
-                nowIndex = 0;
-                for (int i = 0; i < old_list.size(); i++) {
-                    Map<String, String> dataMap = old_list.get(i);
-                    if ("2".equals(dataMap.get("isAd"))) {
-                        old_list.remove(i);
-                        i--;
-                    }
-                }
-            }
             logtzy(tag_yu, "temp size:" + temp.size());
             if (temp.size() > 0) {
                 //遍历temp
