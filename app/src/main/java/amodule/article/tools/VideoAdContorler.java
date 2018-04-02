@@ -53,7 +53,11 @@ public class VideoAdContorler extends ArticleAdContrler {
         return new XHAllAdControl(adData, new XHAllAdControl.XHBackIdsDataCallBack() {
             @Override
             public void callBack(boolean isRefresh,Map<String, String> map) {
-                for (String key : ads) {
+                if(isRefresh && "wz_list".equals(id)){
+                    adRcomDataArray.clear();
+                    adInsteredArray.clear();
+                }
+                 for (String key : ads) {
                     String adStr = map.get(key);
                     switch (key) {
                         case ARTICLE_CONTENT_BOTTOM:
@@ -65,7 +69,20 @@ public class VideoAdContorler extends ArticleAdContrler {
                     }
                 }
             }
-        }, XHActivityManager.getInstance().getCurrentActivity(), id);
+        }, mActivity, id);
+    }
+
+    @Override
+    protected void handlerArticleRecData(int index, Object obj) {
+        if (obj != null) {
+            Map<String, String> data = (Map<String, String>) obj;
+            if (adInsteredArray.get(index) == null) {
+                adRcomDataArray.add(data);
+            }
+            adInsteredArray.append(index, false);
+            if (onListAdCallback != null)
+                onListAdCallback.onListAdData(data);
+        }
     }
 
     /**
@@ -75,6 +92,12 @@ public class VideoAdContorler extends ArticleAdContrler {
     public void handlerAdData(List<Map<String, String>> allDataListMap) {
         if (adRcomDataArray != null && !adRcomDataArray.isEmpty()
                 && allDataListMap != null) {
+            for(int i = 0;i<allDataListMap.size();i++){
+                if("2".equals(allDataListMap.get(i).get("isAd"))){
+                    allDataListMap.remove(i);
+                    i--;
+                }
+            }
             //循环ad数据
             for (int adIndex = 0, adLength = adRcomDataArray.size(); adIndex < adLength; adIndex++) {
                 //验证是否已经插入
@@ -86,7 +109,8 @@ public class VideoAdContorler extends ArticleAdContrler {
                 for (int oriDataIndex = 0, allDataSize = allDataListMap.size(); oriDataIndex < allDataSize; oriDataIndex++) {
                     Map<String, String> oriData = allDataListMap.get(oriDataIndex);
                     if (String.valueOf(Type_recommed).equals(oriData.get(TYPE_KEY))
-                            && "1".equals(oriData.get("isAd"))) {
+                            && "1".equals(oriData.get("isAd"))
+                            && !adMap.isEmpty()) {
                         allDataListMap.add(0, adMap);
                         adInsteredArray.put(adIndex, true);
                         break;

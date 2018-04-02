@@ -53,6 +53,7 @@ import acore.tools.ToolsDevice;
 import amodule.article.activity.edit.VideoEditActivity;
 import amodule.article.adapter.ArticleDetailAdapter;
 import amodule.article.adapter.VideoDetailAdapter;
+import amodule.article.tools.ArticleAdContrler;
 import amodule.article.tools.VideoAdContorler;
 import amodule.article.view.BottomDialog;
 import amodule.article.view.CommentBar;
@@ -125,6 +126,7 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
     private String module_type = "";
     private Long startTime;//统计使用的时间
     public boolean isPortrait = false;
+    private boolean isRelateDataOk = false;
     int statusBarH = 0;
     private Handler handlerScreen;
     @Override
@@ -515,10 +517,27 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
         mVideoAdContorler.setOnBigAdCallback(new VideoAdContorler.OnBigAdCallback() {
             @Override
             public void onBigAdData(Map<String, String> adDataMap) {
-                if(adDataMap == null || adDataMap.isEmpty())
+                if(adDataMap == null || adDataMap.isEmpty()){
+                    for(int i=0;i<allDataListMap.size();i++){
+                        if(String.valueOf(Type_bigAd).equals(allDataListMap.get(i).get(TYPE_KEY))){
+                            allDataListMap.remove(i);
+                            i--;
+                        }
+                        detailAdapter.notifyDataSetChanged();
+                    }
                     return;
+                }
                 VideoDetailActivity.this.adDataMap = adDataMap;
                 addADMapToData();
+            }
+        });
+        mVideoAdContorler.setOnListAdCallback(new ArticleAdContrler.OnListAdCallback() {
+            @Override
+            public void onListAdData(Map<String, String> adDataMap) {
+                if (isRelateDataOk) {
+                    mVideoAdContorler.handlerAdData(allDataListMap);
+                    detailAdapter.notifyDataSetChanged();
+                }
             }
         });
     }
@@ -779,6 +798,7 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
                         handlerStyleData(map, styleDataList);
                     }
                     analysRelateData(listMap);
+                    isRelateDataOk = true;
                     mVideoAdContorler.handlerAdData(allDataListMap);
                     addADMapToData();
                     detailAdapter.notifyDataSetChanged();
