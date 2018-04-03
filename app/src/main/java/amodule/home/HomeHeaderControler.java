@@ -173,8 +173,7 @@ public class HomeHeaderControler implements ISaveStatistic, ISetAdController {
         for (int i = 0, x = 0; i < length; i++) {
             final int index = i;
             Map<String, String> map = mDatas.get(index);
-
-            if (isShowCache && "1".equals(map.get("cache"))) {
+            if (map == null || map.isEmpty() || (isShowCache && "1".equals(map.get("cache")))) {
                 mLayouts[index].setVisibility(View.GONE);
                 continue;
             }
