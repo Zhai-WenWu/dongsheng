@@ -41,6 +41,16 @@
             android:layout_height="wrap_content"
             android:tag="B4"
             android:layout="@layout/module_b4_more"/>
+        <ViewStub
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:tag="B5"
+            android:layout="@layout/module_b5_left"/>
+        <ViewStub
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:tag="B6"
+            android:layout="@layout/module_b6_left"/>
     </RelativeLayout>
     <RelativeLayout
         android:id="@+id/rela_part_3"

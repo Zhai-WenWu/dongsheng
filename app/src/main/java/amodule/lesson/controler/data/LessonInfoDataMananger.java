@@ -6,6 +6,7 @@ import java.util.Map;
 
 import acore.override.activity.base.BaseAppCompatActivity;
 import amodule.lesson.adapter.LessonInfoAdapter;
+import amodule.lesson.view.info.ItemImage;
 
 /**
  * Description :
@@ -31,6 +32,12 @@ public class LessonInfoDataMananger {
     public LessonInfoDataMananger(BaseAppCompatActivity activity) {
         mActivity = activity;
         mAdapter = new LessonInfoAdapter(activity,mData);
+        mAdapter.setMoreCallbcak(new ItemImage.OnClickMoreCallbcak() {
+            @Override
+            public void onClickMore() {
+
+            }
+        });
     }
 
 

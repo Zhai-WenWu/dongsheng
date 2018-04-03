@@ -3,11 +3,20 @@ package amodule.lesson.view.info;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.xiangha.R;
+
+import java.util.List;
 import java.util.Map;
 
+import acore.tools.StringManager;
+import amodule._common.delegate.IBindExtraArrayMap;
 import amodule._common.delegate.IBindMap;
+import amodule._common.utility.WidgetUtility;
+import amodule._common.widget.baseWidget.BaseExtraLinearLayout;
 
 /**
  * Description :
@@ -15,21 +24,38 @@ import amodule._common.delegate.IBindMap;
  * Created by tanze on 2018/3/30 11:06.
  * e_mail : ztanzeyu@gmail.com
  */
-public class ItemTitle extends LinearLayout implements IBindMap{
+public class ItemTitle extends LinearLayout implements IBindMap,IBindExtraArrayMap {
+    private BaseExtraLinearLayout mExtraLinearLayout;
+    private TextView mTitle;
     public ItemTitle(Context context) {
-        super(context);
+        this(context,null);
     }
 
     public ItemTitle(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs,0);
     }
 
     public ItemTitle(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        initializeUI();
+    }
+
+    private void initializeUI() {
+        LayoutInflater.from(getContext()).inflate(R.layout.item_lesson_title,this);
+        mExtraLinearLayout = (BaseExtraLinearLayout) findViewById(R.id.top_extra_layout);
+        mTitle = (TextView) findViewById(R.id.title);
     }
 
     @Override
-    public void setData(Map<String, String> stringStringMap) {
+    public void setData(Map<String, String> data) {
+        WidgetUtility.setTextToView(mTitle,data.get("text1"));
+        setExtraData(StringManager.getListMapByJson(data.get("top")));
+    }
 
+    @Override
+    public void setExtraData(List<Map<String, String>> array) {
+        if(mExtraLinearLayout != null ){
+            mExtraLinearLayout.setData(array,true);
+        }
     }
 }

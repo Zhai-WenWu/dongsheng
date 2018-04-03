@@ -13,7 +13,7 @@ dependencies {
     compile files('libs/seamless-xml-1.1.1.jar')
     implementation 'com.android.support:appcompat-v7:25.3.1'
     // https://mvnrepository.com/artifact/org.slf4j/slf4j-api
-    compile 'org.slf4j:slf4j-api:1.7.25'
+    implementation 'org.slf4j:slf4j-api:1.7.25'
     //Cling related-------start
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
@@ -22,18 +22,18 @@ dependencies {
 //    compile 'org.fourthline.cling:cling-core:2.1.1'
 //    compile 'org.fourthline.cling:cling-support:2.1.1'
     // Jetty library
-    compile('org.eclipse.jetty:jetty-server:8.1.20.v20160902', {
+    implementation('org.eclipse.jetty:jetty-server:8.1.20.v20160902', {
         exclude group: 'org.eclipse.jetty', module: 'jetty-util'
     })
-    compile('org.eclipse.jetty:jetty-servlet:8.1.20.v20160902', {
+    implementation('org.eclipse.jetty:jetty-servlet:8.1.20.v20160902', {
         exclude group: 'org.eclipse.jetty', module: 'jetty-util'
     })
-    compile('org.eclipse.jetty:jetty-client:8.1.20.v20160902', {
+    implementation('org.eclipse.jetty:jetty-client:8.1.20.v20160902', {
         exclude group: 'org.eclipse.jetty', module: 'jetty-util'
     })
 //    compile files ('C:/Program Files/Java/jre1.8.0_20/lib/rt.jar')
     //Cling related-------end
-    compile 'com.android.support:multidex:1.0.1'
+    implementation 'com.android.support:multidex:1.0.1'
 }
 
 android {
