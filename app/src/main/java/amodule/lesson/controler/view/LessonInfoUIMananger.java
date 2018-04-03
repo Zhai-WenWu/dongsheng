@@ -1,6 +1,5 @@
 package amodule.lesson.controler.view;
 
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.widget.RelativeLayout;
 
@@ -11,7 +10,7 @@ import java.util.Map;
 import acore.override.activity.base.BaseAppCompatActivity;
 import acore.widget.rvlistview.RvListView;
 import amodule.lesson.view.info.HaFriendCommentView;
-import amodule.lesson.view.info.LessonConentView;
+import amodule.lesson.view.info.LessonModuleView;
 import amodule.lesson.view.info.LessonGuessYouLikeView;
 import amodule.lesson.view.info.LessonInfoHeader;
 
@@ -31,7 +30,7 @@ public class LessonInfoUIMananger {
     private RvListView mRvListView;
     private LessonInfoHeader mInfoHeader;
     private HaFriendCommentView mHaFriendCommentView;
-    private LessonConentView mConentView;
+    private LessonModuleView mConentView;
     private LessonGuessYouLikeView mGuessYouLikeView;
 
     private RecyclerView.OnScrollListener mOnScrollListener;
@@ -48,7 +47,7 @@ public class LessonInfoUIMananger {
         mRvListView = (RvListView) mActivity.findViewById(R.id.rvListview);
         mInfoHeader = new LessonInfoHeader(mActivity);
         mHaFriendCommentView = new HaFriendCommentView(mActivity);
-        mConentView = new LessonConentView(mActivity);
+        mConentView = new LessonModuleView(mActivity);
         mGuessYouLikeView = new LessonGuessYouLikeView(mActivity);
 
         mRvListView.addHeaderView(mInfoHeader);

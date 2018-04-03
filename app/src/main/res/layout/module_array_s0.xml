@@ -1,62 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/module_linear_s0"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/transparent">
+    android:background="@color/transparent"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/rela_part_1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/transparent">
+
         <ViewStub
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:tag="A1"
-            android:layout="@layout/module_a1_user"/>
+            android:layout="@layout/module_a1_user"
+            android:tag="A1"/>
+
+        <ViewStub
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout="@layout/module_a2_user"
+            android:tag="A2"/>
     </RelativeLayout>
+
     <RelativeLayout
         android:id="@+id/rela_part_2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/transparent">
+
         <ViewStub
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:tag="B1"
-            android:layout="@layout/module_b1_big"/>
+            android:layout="@layout/module_b1_big"
+            android:tag="B1"/>
+
         <ViewStub
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:tag="B2"
-            android:layout="@layout/module_b2_mask"/>
+            android:layout="@layout/module_b2_mask"
+            android:tag="B2"/>
+
         <ViewStub
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:tag="B3"
-            android:layout="@layout/module_b3_right"/>
+            android:layout="@layout/module_b3_right"
+            android:tag="B3"/>
+
         <ViewStub
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:tag="B4"
-            android:layout="@layout/module_b4_more"/>
+            android:layout="@layout/module_b4_more"
+            android:tag="B4"/>
+
         <ViewStub
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:tag="B5"
-            android:layout="@layout/module_b5_left"/>
+            android:layout="@layout/module_b5_left"
+            android:tag="B5"/>
+
         <ViewStub
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:tag="B6"
-            android:layout="@layout/module_b6_left"/>
+            android:layout="@layout/module_b6_left"
+            android:tag="B6"/>
     </RelativeLayout>
+
     <RelativeLayout
         android:id="@+id/rela_part_3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/transparent"></RelativeLayout>
+        android:background="@color/transparent">
+
+    </RelativeLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_20"

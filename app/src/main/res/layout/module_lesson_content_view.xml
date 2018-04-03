@@ -12,7 +12,21 @@
         android:id="@+id/image"
         android:layout_width="@dimen/dp_55"
         android:layout_height="@dimen/dp_65"
-        android:background="@drawable/i_nopic"/>
+        android:src="@drawable/lesson_desc_icon"/>
+
+    <TextView
+        android:id="@+id/text3"
+        android:layout_width="wrap_content"
+        android:maxLines="1"
+        android:layout_alignBottom="@+id/image"
+        android:layout_alignLeft="@+id/image"
+        android:layout_alignRight="@+id/image"
+        tools:text="第一讲"
+        android:padding="@dimen/dp_2.5"
+        android:textSize="@dimen/sp_12"
+        android:gravity="center"
+        android:textColor="#E7640D"
+        android:layout_height="wrap_content"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -22,7 +36,7 @@
         android:layout_marginLeft="@dimen/dp_10"
         android:layout_height="wrap_content">
 
-        <acore.widget.TagTextView
+        <acore.widget.TextViewShow
             android:id="@+id/text1"
             android:layout_marginTop="@dimen/dp__2"
             android:textColor="@color/common_text"

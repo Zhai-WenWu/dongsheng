@@ -42,20 +42,16 @@ public class BaseExtraLinearLayout extends LinearLayout implements IStatisticCal
     private String mId, mTwoLevel, mThreeLevel;
 
     public BaseExtraLinearLayout(Context context) {
-        super(context);
+        this(context,null);
     }
 
     public BaseExtraLinearLayout(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs,0);
     }
 
     public BaseExtraLinearLayout(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-    }
-
-    @TargetApi(21)
-    public BaseExtraLinearLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
+        setOrientation(VERTICAL);
     }
 
     public void resetExtraLayout(){

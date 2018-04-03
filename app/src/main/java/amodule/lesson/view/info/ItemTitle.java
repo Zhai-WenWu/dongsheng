@@ -46,6 +46,10 @@ public class ItemTitle extends LinearLayout implements IBindMap,IBindExtraArrayM
         mTitle = (TextView) findViewById(R.id.title);
     }
 
+    public void setTitle(String title){
+        WidgetUtility.setTextToView(mTitle,title);
+    }
+
     @Override
     public void setData(Map<String, String> data) {
         WidgetUtility.setTextToView(mTitle,data.get("text1"));

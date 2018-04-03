@@ -21,7 +21,7 @@ public class AdapterModuleS0 extends RvBaseAdapter<Map<String, String>> {
     }
     @Override
     public RvBaseViewHolder<Map<String, String>> onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ModuleS0ViewHolder(new ModuleItemS0View(mContext));
+        return new ModuleS0ViewHolder(new  ModuleItemS0View(mContext));
     }
 //    @Override
 //    public void onBindViewHolder(RvBaseViewHolder holder, int position) {

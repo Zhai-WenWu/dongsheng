@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 tools:text="课程标题"
                 android:textSize="@dimen/sp_19"
-                android:textColor="#FFFFF"
+                android:textColor="#FFFFFF"
                 app:layout_constraintBottom_toBottomOf="@+id/background"/>
 
             <TextView

@@ -50,6 +50,7 @@ public class ModuleItemS0View extends RelativeLayout{
         part_1= (RelativeLayout) findViewById(R.id.rela_part_2);
         part_2= (RelativeLayout) findViewById(R.id.rela_part_3);
         part_0.getChildAt(0).setTag("A1");
+        part_0.getChildAt(1).setTag("A2");
         part_1.getChildAt(0).setTag("B1");
         part_1.getChildAt(1).setTag("B2");
         part_1.getChildAt(2).setTag("B3");

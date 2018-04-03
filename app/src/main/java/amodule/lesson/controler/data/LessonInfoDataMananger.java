@@ -34,7 +34,7 @@ public class LessonInfoDataMananger {
         mAdapter = new LessonInfoAdapter(activity,mData);
         mAdapter.setMoreCallbcak(new ItemImage.OnClickMoreCallbcak() {
             @Override
-            public void onClickMore() {
+            public void onClickMore(String type) {
 
             }
         });
