@@ -211,9 +211,10 @@ public class HomeHeaderControler implements ISaveStatistic, ISetAdController {
     }
 
     private Map<String, String> handleBannerData(Map<String, String> map, boolean refresh) {
+        if (mAdData == null || mAdData.isEmpty()) {
+            return map;
+        }
         Map<String, String> retMap = new HashMap<>();
-        if (mAdData == null || mAdData.isEmpty())
-            return retMap;
         retMap.putAll(map);
         String widgetDataValue = retMap.get("widgetData");
         Map<String, String> wdMap = StringManager.getFirstMap(widgetDataValue);
