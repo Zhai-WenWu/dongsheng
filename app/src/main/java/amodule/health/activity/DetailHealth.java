@@ -130,27 +130,28 @@ public class DetailHealth extends BaseActivity {
         imageView = (ImageView) findViewById(R.id.ad_banner_item_iv_single);
         ArrayList<String> list = new ArrayList<>();
         list.add(DETAIL_HEALTH);
+        bannerAdBurden = new BannerAd(DetailHealth.this, xhAllAdControl, imageView);
+        bannerAdBurden.setOnBannerListener(new BannerAd.OnBannerListener() {
+            @Override
+            public void onShowAd() {
+                imageView.setVisibility(isLoadOver?View.VISIBLE:View.GONE);
+            }
+
+            @Override
+            public void onClickAd() {
+
+            }
+
+            @Override
+            public void onImgShow(int imgH) {
+
+            }
+        });
         xhAllAdControl = new XHAllAdControl(list, (isRefresh,map) -> {
             if (map.containsKey(DETAIL_HEALTH)) {
-                bannerAdBurden = new BannerAd(DetailHealth.this, xhAllAdControl, imageView);
-                bannerAdBurden.setOnBannerListener(new BannerAd.OnBannerListener() {
-                    @Override
-                    public void onShowAd() {
-                        imageView.setVisibility(isLoadOver?View.VISIBLE:View.GONE);
-                    }
-
-                    @Override
-                    public void onClickAd() {
-
-                    }
-
-                    @Override
-                    public void onImgShow(int imgH) {
-
-                    }
-                });
                 map = StringManager.getFirstMap(map.get(DETAIL_HEALTH));
-                bannerAdBurden.onShowAd(map);
+                if (bannerAdBurden != null)
+                    bannerAdBurden.onShowAd(map);
             }
         }, this, "other_health");
         xhAllAdControl.registerRefreshCallback();
