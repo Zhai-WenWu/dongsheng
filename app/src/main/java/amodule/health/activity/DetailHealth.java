@@ -36,7 +36,6 @@ import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilString;
 
 import static third.ad.tools.AdPlayIdConfig.DETAIL_HEALTH;
-import static third.ad.tools.AdPlayIdConfig.Dish_CLASSIFY;
 
 /**
  * Title:DetailHealth.java Copyright: Copyright (c) 2014~2017
@@ -132,7 +131,7 @@ public class DetailHealth extends BaseActivity {
         ArrayList<String> list = new ArrayList<>();
         list.add(DETAIL_HEALTH);
         xhAllAdControl = new XHAllAdControl(list, (isRefresh,map) -> {
-            if (map.containsKey(Dish_CLASSIFY)) {
+            if (map.containsKey(DETAIL_HEALTH)) {
                 bannerAdBurden = new BannerAd(DetailHealth.this, xhAllAdControl, imageView);
                 bannerAdBurden.setOnBannerListener(new BannerAd.OnBannerListener() {
                     @Override
@@ -150,7 +149,7 @@ public class DetailHealth extends BaseActivity {
 
                     }
                 });
-                map = StringManager.getFirstMap(map.get(Dish_CLASSIFY));
+                map = StringManager.getFirstMap(map.get(DETAIL_HEALTH));
                 bannerAdBurden.onShowAd(map);
             }
         }, this, "other_health");
