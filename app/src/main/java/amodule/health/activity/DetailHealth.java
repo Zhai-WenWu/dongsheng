@@ -35,6 +35,7 @@ import third.share.BarShare;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilString;
 
+import static third.ad.tools.AdPlayIdConfig.DETAIL_HEALTH;
 import static third.ad.tools.AdPlayIdConfig.Dish_CLASSIFY;
 
 /**
@@ -129,8 +130,7 @@ public class DetailHealth extends BaseActivity {
     private void initAd() {
         imageView = (ImageView) findViewById(R.id.ad_banner_item_iv_single);
         ArrayList<String> list = new ArrayList<>();
-//        list.add(DETAIL_HEALTH);
-        list.add(Dish_CLASSIFY);
+        list.add(DETAIL_HEALTH);
         xhAllAdControl = new XHAllAdControl(list, (isRefresh,map) -> {
             if (map.containsKey(Dish_CLASSIFY)) {
                 bannerAdBurden = new BannerAd(DetailHealth.this, xhAllAdControl, imageView);
