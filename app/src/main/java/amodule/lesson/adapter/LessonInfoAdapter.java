@@ -3,6 +3,7 @@ package amodule.lesson.adapter;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -32,20 +33,25 @@ public class LessonInfoAdapter extends RvBaseAdapter<Map<String, String>> {
 
     private ItemImage.OnClickMoreCallbcak mMoreCallbcak;
 
+    private LayoutInflater mLayoutInflater;
+
     private int mImageWidth = 0;
 
     public LessonInfoAdapter(Context context, @Nullable List<Map<String, String>> data) {
         super(context, data);
         mImageWidth = ToolsDevice.getWindowPx(context).widthPixels - Tools.getDimen(context, R.dimen.dp_40);
+        mLayoutInflater = LayoutInflater.from(context);
     }
 
     @Override
     public RvBaseViewHolder<Map<String, String>> onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
             case VIEW_TYPE_TITLE:
-                return new TitleViewHolder(new ItemTitle(mContext));
+                ItemTitle itemTitle = (ItemTitle) mLayoutInflater.inflate(R.layout.item_lesson_title_layout,parent,false);
+                return new TitleViewHolder(itemTitle);
             case VIEW_TYPE_IMAGE:
-                return new ImageViewHolder(new ItemImage(mContext));
+                ItemImage itemImage = (ItemImage) mLayoutInflater.inflate(R.layout.item_lesson_image_layout,parent,false);
+                return new ImageViewHolder(itemImage);
             default:
                 return new DefaultViewHolder(new View(mContext));
         }
@@ -74,6 +80,7 @@ public class LessonInfoAdapter extends RvBaseAdapter<Map<String, String>> {
         public TitleViewHolder(@NonNull ItemTitle title) {
             super(title);
             this.mTitle = title;
+//            mTitle.showTopPadding();
         }
 
         @Override

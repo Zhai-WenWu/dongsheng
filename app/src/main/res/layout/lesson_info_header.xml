@@ -20,6 +20,9 @@
             android:layout_height="match_parent"/>
 
         <LinearLayout
+            android:id="@+id/description_layout"
+            android:visibility="gone"
+            tools:visibility="visible"
             android:orientation="vertical"
             android:paddingLeft="@dimen/dp_20"
             android:paddingRight="@dimen/dp_20"

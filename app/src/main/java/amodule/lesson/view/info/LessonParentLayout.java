@@ -31,7 +31,7 @@ public abstract class LessonParentLayout extends LinearLayout implements IBindMa
 
     protected DelayLoadExtraLayout mTopExtraLayout, mBottomExtraLayout;
     protected LinearLayout mContentLayout;
-    protected List<Map<String,String>> mDatas = new ArrayList<>();
+    protected List<Map<String, String>> mDatas = new ArrayList<>();
 
     public LessonParentLayout(Context context) {
         this(context, null);
@@ -63,7 +63,6 @@ public abstract class LessonParentLayout extends LinearLayout implements IBindMa
             mBottomExtraLayout.setDelayLoadData(true);
             addView(mBottomExtraLayout);
         }
-        setPadding(0,0,0, Tools.getDimen(getContext(), R.dimen.dp_5));
     }
 
     protected void initializeUI() {
@@ -85,15 +84,18 @@ public abstract class LessonParentLayout extends LinearLayout implements IBindMa
 
     @Override
     public void setData(Map<String, String> data) {
-//        Map<String, String> widgetDataMap = StringManager.getFirstMap(data.get(KEY_WIDGET_DATA));
-//        mDatas = StringManager.getListMapByJson(widgetDataMap.get("list"));
-        mDatas = StringManager.getListMapByJson(data.get(KEY_WIDGET_DATA));
+        Map<String, String> widgetDataMap = StringManager.getFirstMap(data.get(KEY_WIDGET_DATA));
+        mDatas = StringManager.getListMapByJson(widgetDataMap.get("list"));
+        if (mContentLayout.getChildCount() > 0) {
+            mContentLayout.removeAllViews();
+        }
+//        mDatas = StringManager.getListMapByJson(data.get(KEY_WIDGET_DATA));
 
         Map<String, String> widgetExtraDataMap = StringManager.getFirstMap(data.get(KEY_WIDGET_EXTRA));
         setTopExtraData(widgetExtraDataMap);
         setBottomExtraData(widgetExtraDataMap);
         //TODO
-        showNextItem();
+//        showNextItem();
     }
 
     protected void setTopExtraData(Map<String, String> data) {
@@ -106,6 +108,14 @@ public abstract class LessonParentLayout extends LinearLayout implements IBindMa
         if (mBottomExtraLayout != null) {
             mBottomExtraLayout.setData(StringManager.getListMapByJson(data.get("bottom")), true);
         }
+    }
+
+    public void showPadding(boolean isShow) {
+        setPadding(0, 0, 0, isShow ? Tools.getDimen(getContext(), R.dimen.dp_5) : 0);
+    }
+
+    public boolean hasChildView() {
+        return mContentLayout != null && mContentLayout.getChildCount() > 0;
     }
 
     @Override

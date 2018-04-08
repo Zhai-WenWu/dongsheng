@@ -64,6 +64,7 @@ public class ModuleUserCommentView extends ModuleBaseView{
             userUrl = mapUser.containsKey("url")&& !TextUtils.isEmpty(mapUser.get("url")) ? mapUser.get("url") : "";
         }
         //TODO 评分
+        mRatingBar.setRating(5);
         setListener();
     }
 

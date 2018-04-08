@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.xiangha.R;
@@ -35,7 +36,8 @@ public class ItemImage extends LinearLayout implements IBindMap, IBindExtraArray
 
     private BaseExtraLinearLayout mBottomExtraLayout;
     private ImageView mImageView;
-    private RelativeLayout mMoreLayout;
+    private TextView mMoreText;
+    private LinearLayout mMoreLayout;
 
     private OnClickMoreCallbcak mClickMoreCallbcak;
 
@@ -60,15 +62,32 @@ public class ItemImage extends LinearLayout implements IBindMap, IBindExtraArray
         LayoutInflater.from(getContext()).inflate(R.layout.item_lesson_image, this);
         mBottomExtraLayout = (BaseExtraLinearLayout) findViewById(R.id.bottom_extra_layout);
         mImageView = (ImageView) findViewById(R.id.image);
-        mMoreLayout = (RelativeLayout) findViewById(R.id.more_layout);
+        mMoreText = (TextView) findViewById(R.id.more_text);
+        mMoreLayout = (LinearLayout) findViewById(R.id.more_layout);
         //设置
         mMoreLayout.setOnClickListener(v -> handleMoreClick(mType));
     }
 
     @Override
     public void setData(Map<String, String> data) {
+
         showImage(data.get("img"));
+        showMoreLayout(data);
         setExtraData(StringManager.getListMapByJson(data.get("bottom")));
+        findViewById(R.id.bottom_line).setVisibility(data.containsKey("bottom")?VISIBLE:GONE);
+    }
+
+    private void showMoreLayout(Map<String, String> data) {
+        if (data != null
+                && data.containsKey("end")
+                && !TextUtils.isEmpty(data.get("text2"))) {
+            mType = data.get("end");
+            mMoreText.setText(data.get("text2"));
+            mMoreLayout.setVisibility(VISIBLE);
+        } else {
+            mMoreLayout.setVisibility(GONE);
+        }
+
     }
 
     private void showImage(String imageUrl) {
@@ -103,7 +122,7 @@ public class ItemImage extends LinearLayout implements IBindMap, IBindExtraArray
         mImageWidth = imageWidth;
     }
 
-    public void setType(String type){
+    public void setType(String type) {
         mType = type;
     }
 

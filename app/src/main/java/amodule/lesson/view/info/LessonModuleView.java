@@ -48,6 +48,7 @@ public class LessonModuleView extends LessonParentLayout {
         Log.i("tzy", "setData: " + mTitleText);
 //        mDatas = StringManager.getListMapByJson(widgetDataMap.get("data"));
         super.setData(data);
+        showPadding(hasChildView());
     }
 
     @Override

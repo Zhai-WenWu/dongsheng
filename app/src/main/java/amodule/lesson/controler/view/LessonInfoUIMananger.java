@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -16,12 +17,17 @@ import com.xiangha.R;
 
 import java.util.Map;
 
+import acore.logic.AppCommon;
 import acore.override.activity.base.BaseAppCompatActivity;
+import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.rvlistview.RvListView;
+import amodule._common.utility.WidgetUtility;
 import amodule.lesson.view.info.LessonInfoHeader;
 import amodule.lesson.view.info.LessonModuleView;
+import amodule.vip.VIPButton;
+import amodule.vip.VipDataController;
 
 import static android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
 
@@ -41,6 +47,7 @@ public class LessonInfoUIMananger {
     private LessonModuleView mHaFriendCommentView;
     private LessonModuleView mConentView;
     private LessonModuleView mGuessYouLikeView;
+    private VIPButton mVIPButton;
 
     private RecyclerView.OnScrollListener mOnScrollListener;
 
@@ -66,6 +73,7 @@ public class LessonInfoUIMananger {
         mHaFriendCommentView.setUseDefaultBottomPadding(true);
         mConentView = new LessonModuleView(mActivity);
         mGuessYouLikeView = new LessonModuleView(mActivity);
+        mVIPButton = (VIPButton) mActivity.findViewById(R.id.vip_button);
 
         mRvListView.addHeaderView(mInfoHeader);
         mRvListView.addFooterView(mHaFriendCommentView);
@@ -78,7 +86,7 @@ public class LessonInfoUIMananger {
 
     protected void initTitle() {
         mTopbar = (RelativeLayout) mActivity.findViewById(R.id.top_bar);
-        if(Tools.isShowTitle()){
+        if (Tools.isShowTitle()) {
             Window window = mActivity.getWindow();
             //设置Window为全透明
             window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -104,11 +112,11 @@ public class LessonInfoUIMananger {
 
     public void setHeaderData(Map<String, String> headerData) {
         mInfoHeader.setData(headerData);
+        showNextItem();
     }
 
     public void setHaFriendCommentData(Map<String, String> data) {
         mHaFriendCommentView.setData(data);
-//        showNextItem();
     }
 
     public void setLessonContentData(Map<String, String> data) {
@@ -117,6 +125,31 @@ public class LessonInfoUIMananger {
 
     public void setGuessYouLikeData(Map<String, String> data) {
         mGuessYouLikeView.setData(data);
+    }
+
+    public void setVipButton(Map<String, String> data) {
+        if (data == null || data.isEmpty() || mVIPButton == null) {
+            return;
+        }
+        boolean isShow = "2".equals(data.get("vipButtonIsShow"));
+        if (!isShow) {
+            mVIPButton.setVisibility(View.GONE);
+            return;
+        }
+        Map<String, String> vipButtonConfig = StringManager.getFirstMap(data.get("vipButton"));
+        String titleValue = vipButtonConfig.get("title");
+        String colorValue = vipButtonConfig.get("color");
+        String bgColorValue = vipButtonConfig.get("bgColor");
+        String url = vipButtonConfig.get("url");
+        if (TextUtils.isEmpty(titleValue)
+                || TextUtils.isEmpty(colorValue)
+                || TextUtils.isEmpty(bgColorValue)) {
+            return;
+        }
+        WidgetUtility.setTextToView(mVIPButton, titleValue);
+        mVIPButton.setTextColor(Color.parseColor(colorValue));
+        mVIPButton.setBackgroundColor(Color.parseColor(bgColorValue));
+        mVIPButton.setOnClickListener(v -> AppCommon.openUrl(mActivity, url, true));
     }
 
     /** 设置滑动监听 */
@@ -133,14 +166,13 @@ public class LessonInfoUIMananger {
                     currentState = newState;
                     RecyclerView.Adapter adapter = mRvListView.getAdapter();
                     final LinearLayoutManager layoutManager = (LinearLayoutManager) mRvListView.getLayoutManager();
-                    if(layoutManager != null && adapter != null){
+                    if (layoutManager != null && adapter != null) {
                         int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
                         if (newState == RecyclerView.SCROLL_STATE_IDLE
                                 && lastVisibleItemPosition + 1 >= adapter.getItemCount() - 4) {
                             if (alowLoad) {
                                 alowLoad = false;
                                 if (currentState == SCROLL_STATE_IDLE
-                                        && mRvListView.canScrollVertically(-1)
                                         && hasNextItem) {
                                     hasNextItem = showNextItem();
                                 }
@@ -163,13 +195,19 @@ public class LessonInfoUIMananger {
     }
 
     private boolean showNextItem() {
-        return mHaFriendCommentView.showNextItem()
+        hasNextItem = mHaFriendCommentView.showNextItem()
                 || mConentView.showNextItem()
                 || mGuessYouLikeView.showNextItem();
+        if (mRvListView != null
+                && !mRvListView.canScrollVertically(1)) {
+            new Handler().postDelayed(this::showNextItem, 200);
+        }
+        return hasNextItem;
     }
 
     private void updateTopbarBg(int dy) {
-        int colorRes = (dy <= mInfoHeader.getImageHeight()/2 - mTopBarHeight) ? R.color.transparent : R.color.common_top_bg;
+        boolean isShow = dy <= mInfoHeader.getImageHeight() / 2 - mTopBarHeight;
+        int colorRes = isShow ? R.color.transparent : R.color.common_top_bg;
         mTopbar.setBackgroundResource(colorRes);
     }
 
@@ -181,5 +219,9 @@ public class LessonInfoUIMananger {
 
     public RvListView getRvListView() {
         return mRvListView;
+    }
+
+    public void refresh() {
+
     }
 }

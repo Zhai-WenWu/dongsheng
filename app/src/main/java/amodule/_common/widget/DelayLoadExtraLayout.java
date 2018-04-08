@@ -31,7 +31,6 @@ public class DelayLoadExtraLayout extends BaseExtraLinearLayout {
 
     @Override
     public void setData(List<Map<String, String>> array, boolean isOrder) {
-        // TODO: 2018/3/30 处理其他数据
         super.setData(array, isOrder);
     }
 
@@ -55,7 +54,8 @@ public class DelayLoadExtraLayout extends BaseExtraLinearLayout {
     private boolean hasNextData() {
         if (datas == null || datas.isEmpty())
             return false;
-        for (int i = 0; i < mNextShowCount && i < datas.size(); i++) {
+//        for (int i = 0; i < mNextShowCount && i < datas.size(); i++) {
+        for (;datas.isEmpty();) {
             Map<String,String> map = datas.remove(0);
             updateModuleView(map,isOrder);
         }

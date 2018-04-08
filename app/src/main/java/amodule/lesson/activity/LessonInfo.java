@@ -2,14 +2,12 @@ package amodule.lesson.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.xiangha.R;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import acore.logic.LoginManager;
@@ -17,16 +15,22 @@ import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.IObserver;
 import acore.tools.ObserverManager;
 import acore.tools.StringManager;
-import acore.tools.Tools;
 import amodule.lesson.controler.data.LessonInfoDataMananger;
 import amodule.lesson.controler.view.LessonInfoUIMananger;
 import amodule.main.Main;
 
 import static acore.tools.ObserverManager.NOTIFY_VIPSTATE_CHANGED;
+import static amodule.lesson.controler.data.LessonInfoDataMananger.DATA_TYPE_COMMENT;
+import static amodule.lesson.controler.data.LessonInfoDataMananger.DATA_TYPE_GUESS_LIKE;
+import static amodule.lesson.controler.data.LessonInfoDataMananger.DATA_TYPE_LESSON_CONTENT;
+import static amodule.lesson.controler.data.LessonInfoDataMananger.DATA_TYPE_LESSON_INFO;
+import static amodule.lesson.controler.data.LessonInfoDataMananger.DATA_TYPE_VIP_BUTTON;
 
 public class LessonInfo extends BaseAppCompatActivity implements IObserver {
 
     public static final String TAG = "tzy";
+    public static final String EXTRA_INFO_JSON = "extraInfo";
+
 
     private LessonInfoUIMananger mUIMananger;
     private LessonInfoDataMananger mDataMananger;
@@ -34,8 +38,8 @@ public class LessonInfo extends BaseAppCompatActivity implements IObserver {
     private boolean isOpenVip = false;
 
     //TODO test
-    public static void startActivity(@NonNull Context context){
-        context.startActivity(new Intent(context,LessonInfo.class));
+    public static void startActivity(@NonNull Context context,String extraInfo){
+        context.startActivity(new Intent(context,LessonInfo.class).putExtra(EXTRA_INFO_JSON,extraInfo));
     }
 
 
@@ -65,8 +69,7 @@ public class LessonInfo extends BaseAppCompatActivity implements IObserver {
     /** 处理外带数据 */
     private void setPreData() {
         Intent intent = getIntent();
-        Map<String, String> preData = new HashMap<>();
-        //TODO 处理数据
+        Map<String, String> preData = StringManager.getFirstMap(intent.getStringExtra(EXTRA_INFO_JSON));
         mUIMananger.setHeaderData(preData);
     }
 
@@ -80,7 +83,6 @@ public class LessonInfo extends BaseAppCompatActivity implements IObserver {
                 false,
                 v -> loadData()
         );
-        //TODO
         mDataMananger.notifyDataSetChanged();
 
     }
@@ -94,18 +96,21 @@ public class LessonInfo extends BaseAppCompatActivity implements IObserver {
         mDataMananger.setOnLoadedDataCallback((dataType, dataValue) -> {
             final Map<String, String> data = StringManager.getFirstMap(dataValue);
             switch (dataType) {
-                case LessonInfoDataMananger.DATA_TYPE_LESSON_INFO:
+                case DATA_TYPE_LESSON_INFO:
                     mUIMananger.setHeaderData(data);
                     loadManager.hideProgressBar();
                     break;
-                case LessonInfoDataMananger.DATA_TYPE_COMMENT:
+                case DATA_TYPE_COMMENT:
                     mUIMananger.setHaFriendCommentData(data);
                     break;
-                case LessonInfoDataMananger.DATA_TYPE_LESSON_CONTENT:
+                case DATA_TYPE_LESSON_CONTENT:
                     mUIMananger.setLessonContentData(data);
                     break;
-                case LessonInfoDataMananger.DATA_TYPE_GUESS_LIKE:
+                case DATA_TYPE_GUESS_LIKE:
                     mUIMananger.setGuessYouLikeData(data);
+                    break;
+                case DATA_TYPE_VIP_BUTTON:
+                    mUIMananger.setVipButton(data);
                     break;
                 default:
                     break;
@@ -122,6 +127,7 @@ public class LessonInfo extends BaseAppCompatActivity implements IObserver {
     /***/
     private void refresh() {
         mDataMananger.refresh();
+        mUIMananger.refresh();
     }
 
     @Override

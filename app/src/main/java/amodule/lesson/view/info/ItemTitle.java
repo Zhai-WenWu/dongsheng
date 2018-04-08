@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import acore.tools.StringManager;
+import acore.tools.ToolsDevice;
 import amodule._common.delegate.IBindExtraArrayMap;
 import amodule._common.delegate.IBindMap;
 import amodule._common.utility.WidgetUtility;
@@ -44,6 +45,7 @@ public class ItemTitle extends LinearLayout implements IBindMap,IBindExtraArrayM
         LayoutInflater.from(getContext()).inflate(R.layout.item_lesson_title,this);
         mExtraLinearLayout = (BaseExtraLinearLayout) findViewById(R.id.top_extra_layout);
         mTitle = (TextView) findViewById(R.id.item_title);
+        mTitle.setLayoutParams(new LinearLayout.LayoutParams(ToolsDevice.getWindowPx(getContext()).widthPixels, LayoutParams.WRAP_CONTENT));
     }
 
     public void setTitle(String title){
@@ -61,5 +63,9 @@ public class ItemTitle extends LinearLayout implements IBindMap,IBindExtraArrayM
         if(mExtraLinearLayout != null ){
             mExtraLinearLayout.setData(array,true);
         }
+    }
+
+    public void showTopPadding(){
+        findViewById(R.id.extra_padding_top).setVisibility(VISIBLE);
     }
 }

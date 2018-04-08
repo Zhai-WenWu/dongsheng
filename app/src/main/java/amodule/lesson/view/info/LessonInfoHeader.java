@@ -105,6 +105,8 @@ public class LessonInfoHeader extends RelativeLayout implements IBindMap {
         showImage(data.get("img"));
         WidgetUtility.setTextToView(mTitle,data.get("name"));
         WidgetUtility.setTextToView(mDescription,data.get("desc"));
+        boolean isShowDescriptionLayout = mTitle.getVisibility() == VISIBLE || mDescription.getVisibility() == VISIBLE;
+        findViewById(R.id.description_layout).setVisibility(isShowDescriptionLayout?VISIBLE:GONE);
 
         showScore(StringManager.getFirstMap(data.get("score")));
 

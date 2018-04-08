@@ -8,15 +8,21 @@ import com.annimon.stream.Stream;
 import com.annimon.stream.function.Consumer;
 import com.annimon.stream.function.Predicate;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import acore.logic.LoginManager;
 import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.StringManager;
 import amodule.lesson.adapter.LessonInfoAdapter;
 import amodule.lesson.view.info.ItemImage;
+import amodule.vip.VipDataController;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
 import aplug.basic.XHInternetCallBack;
@@ -48,6 +54,8 @@ public class LessonInfoDataMananger {
 
     public static final String DATA_TYPE_VIP_BUTTON = "vipButton";
 
+    private VipDataController mVipDataController;
+
     private final BaseAppCompatActivity mActivity;
 
     private LessonInfoAdapter mAdapter;
@@ -64,6 +72,7 @@ public class LessonInfoDataMananger {
                 if (TextUtils.isEmpty(type)) {
                     return;
                 }
+                Log.i(TAG, "onClickMore: " + type);
                 List<Map<String, String>> imgs = mImgsArray.get(type);
                 if (imgs == null || imgs.isEmpty()) {
                     return;
@@ -73,8 +82,9 @@ public class LessonInfoDataMananger {
                     if (data.containsKey("end")
                             && type.equals(data.get("end"))) {
                         mData.remove(i);
-                        mData.addAll((i + 1), imgs);
+                        mData.addAll(i, imgs);
                         notifyDataSetChanged();
+                        mImgsArray.remove(type);
                         return;
                     }
                 }
@@ -84,6 +94,9 @@ public class LessonInfoDataMananger {
 
     /** 刷新 */
     public void refresh() {
+        mData.clear();
+        notifyDataSetChanged();
+        mImgsArray.clear();
         loadData();
     }
 
@@ -109,10 +122,16 @@ public class LessonInfoDataMananger {
     }
 
     private void loadLessonIntroductionData() {
+        if(LoginManager.isVIP()){
+            return;
+        }
         handlerRequest(DATA_TYPE_LESSON_INTROCTION);
     }
 
     private void loadHaFriendCommentData() {
+        if(LoginManager.isVIP()){
+            return;
+        }
         handlerRequest(DATA_TYPE_COMMENT);
     }
 
@@ -171,6 +190,7 @@ public class LessonInfoDataMananger {
             case DATA_TYPE_LESSON_INFO:
                 //特殊处理
                 loadOtherData();
+                Log.d(TAG, "handInnerLoadedDataCallback: " + data);
                 handlerLoadedDataCallback(dataType, data);
                 break;
             case DATA_TYPE_LESSON_INTROCTION:
@@ -187,8 +207,9 @@ public class LessonInfoDataMananger {
         if (TextUtils.isEmpty(data)) {
             return;
         }
-        Map<String, String> map = StringManager.getFirstMap(data);
-        List<Map<String, String>> moduleDatas = StringManager.getListMapByJson(map.get("list"));
+
+        List<Map<String, String>> moduleDatas = StringManager.getListMapByJson(data);
+
         for (int i = 0; i < moduleDatas.size(); i++) {
             final String type = String.valueOf(i);
             Map<String, String> moduleData = moduleDatas.get(i);
@@ -199,13 +220,14 @@ public class LessonInfoDataMananger {
             //添加title
             mData.add(handlerTitleData(type, widgetData.get("text1"), extraData.get("top")));
             //添加第一张图片
-            mData.add(handlerImageData(type, widgetData.get("defaultImg"), widgetData.get("text2"), extraData.get("bottom")));
+            String text2 = widgetData.get("text2");
+            mData.add(handlerImageData(type, widgetData.get("defaultImg"), text2, extraData.get("bottom")));
             //暂存
-            List<Map<String, String>> imgs = StringManager.getListMapByJson(widgetData.get(""));
+            List<Map<String, String>> imgs = StringManager.getListMapByJson(widgetData.get("imgs"));
             List<Map<String, String>> imageArray = new ArrayList<>();
             Stream.of(imgs)
                     .filter(value -> !TextUtils.isEmpty(value.get("")))
-                    .forEach(value -> imageArray.add(handlerImageData("", value.get(""), "", "")));
+                    .forEach(value -> imageArray.add(handlerImageData(value.get(""))));
             if (!imageArray.isEmpty() && TextUtils.isEmpty(extraData.get("bottom"))) {
                 imageArray.get(imageArray.size() - 1).put("bottom", extraData.get("bottom"));
             }
@@ -228,6 +250,10 @@ public class LessonInfoDataMananger {
         return data;
     }
 
+    private Map<String, String> handlerImageData(String imgUrl) {
+        return handlerImageData("",imgUrl,"","");
+    }
+
     private Map<String, String> handlerImageData(String type, String imgUrl, @Nullable String text2, String extraData) {
         Map<String, String> data = new HashMap<>();
         data.put(KEY_VIEW_TYPE, String.valueOf(VIEW_TYPE_IMAGE));
@@ -236,7 +262,7 @@ public class LessonInfoDataMananger {
             data.put("end", type);
         }
         if (!TextUtils.isEmpty(text2)) {
-            data.put("text2", imgUrl);
+            data.put("text2", text2);
         }
         if (!TextUtils.isEmpty(extraData)) {
             data.put("bottom", extraData);

@@ -10,10 +10,7 @@ import com.xiangha.R;
 
 import java.util.Map;
 
-import acore.tools.Tools;
-import acore.widget.TagTextView;
 import acore.widget.TextViewShow;
-import acore.widget.multifunction.JinghuaStyleBuilder;
 import acore.widget.multifunction.VipStyleBuilder;
 import acore.widget.multifunction.view.MultifunctionTextView;
 import amodule._common.utility.WidgetUtility;
@@ -71,13 +68,13 @@ public class ModuleLessonContentView extends ModuleBaseView {
         VipStyleBuilder vipStyleBuilder =  null;
         switch (map.get("iconVip")){
             case "1":
-                vipStyleBuilder = new VipStyleBuilder(getContext(), "试看", R.drawable.bg_round4_45c300);
+                vipStyleBuilder = new VipStyleBuilder(getContext(), "试看", R.drawable.bg_round2_45c300);
                 break;
             case "2":
-                vipStyleBuilder = new VipStyleBuilder(getContext(), "VIP", R.drawable.bg_round4_ebb45e);
+                vipStyleBuilder = new VipStyleBuilder(getContext(), "VIP", R.drawable.bg_round2_ebb45e);
                 break;
             case "3":
-                vipStyleBuilder = new VipStyleBuilder(getContext(), "上新", R.drawable.bg_round4_ff533c);
+                vipStyleBuilder = new VipStyleBuilder(getContext(), "上新", R.drawable.bg_round2_ef322e_2);
                 break;
                 default:break;
         }

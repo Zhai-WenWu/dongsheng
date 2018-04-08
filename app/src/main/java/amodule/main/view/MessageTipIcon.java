@@ -22,9 +22,9 @@ import amodule.user.activity.MyMessage;
  * Created by mrtrying on 2018/1/5 11:18:36.
  * e_mail : ztanzeyu@gmail.com
  */
-public class MessageTipIcon extends RelativeLayout implements ISetMessageTip ,View.OnClickListener{
+public class MessageTipIcon extends RelativeLayout implements ISetMessageTip, View.OnClickListener {
 
-    private TextView tipLessTen,tipMore;
+    private TextView tipLessTen, tipMore;
 
     public MessageTipIcon(Context context) {
         super(context);
@@ -42,23 +42,23 @@ public class MessageTipIcon extends RelativeLayout implements ISetMessageTip ,Vi
     }
 
     private void initialize() {
-        LayoutInflater.from(getContext()).inflate(R.layout.message_tip_icon_layout,this);
+        LayoutInflater.from(getContext()).inflate(R.layout.message_tip_icon_layout, this);
         tipLessTen = (TextView) findViewById(R.id.tv_tab_msg_num);
         tipMore = (TextView) findViewById(R.id.tv_tab_msg_tow_num);
 
         setOnClickListener(this);
     }
 
-    public void setMessage(int messgeTip){
+    public void setMessage(int messgeTip) {
         String lessTenValue = messgeTip > 0 && messgeTip < 10 ? String.valueOf(messgeTip) : "";
-        String moreValue ="";
-        if(messgeTip >= 10 && messgeTip < 100){
+        String moreValue = "";
+        if (messgeTip >= 10 && messgeTip < 100) {
             moreValue = String.valueOf(messgeTip);
-        }else if(messgeTip >= 100){
+        } else if (messgeTip >= 100) {
             moreValue = "99+";
         }
-        WidgetUtility.setTextToView(tipLessTen,lessTenValue);
-        WidgetUtility.setTextToView(tipMore,moreValue);
+        WidgetUtility.setTextToView(tipLessTen, lessTenValue);
+        WidgetUtility.setTextToView(tipMore, moreValue);
     }
 
     @Override
@@ -69,7 +69,7 @@ public class MessageTipIcon extends RelativeLayout implements ISetMessageTip ,Vi
     @Override
     public void onClick(View v) {
         //TODO
-        LessonInfo.startActivity(getContext());
+        LessonInfo.startActivity(getContext(), "{\"code\":\"70\",\"name\":\"达人精品课:宝宝辅食\",\"desc\":\"\",\"img\":\"http:\\/\\/s3.cdn.xiangha.com\\/admin\\/20180328\\/5abbb6126d11f73449.jpg\\/NjQweDA\",\"score\":{\"text1\":\"\",\"text2\":\"哈友评分\"},\"lessonDesc\":{\"text1\":\"7\",\"text2\":\"节课\"},\"updateDesc\":{\"text1\":\"每周三\",\"text2\":\"更新\"},\"learnedDesc\":{\"text1\":\"916.1万\",\"text2\":\"人已完成学习\"}}");
 //        getContext().startActivity(new Intent(getContext(), MyMessage.class));
 //        MessageTipController.newInstance().setQuanMessage(0);
 //        setMessage(MessageTipController.newInstance().getMessageNum());
