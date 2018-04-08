@@ -43,7 +43,7 @@ public class ItemTitle extends LinearLayout implements IBindMap,IBindExtraArrayM
     private void initializeUI() {
         LayoutInflater.from(getContext()).inflate(R.layout.item_lesson_title,this);
         mExtraLinearLayout = (BaseExtraLinearLayout) findViewById(R.id.top_extra_layout);
-        mTitle = (TextView) findViewById(R.id.title);
+        mTitle = (TextView) findViewById(R.id.item_title);
     }
 
     public void setTitle(String title){

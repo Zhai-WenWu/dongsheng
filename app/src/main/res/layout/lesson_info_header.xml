@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="#FFFFFF"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -26,6 +27,7 @@
             android:paddingBottom="@dimen/dp_5"
             android:layout_alignParentBottom="true"
             android:layout_width="match_parent"
+            android:background="@drawable/lesson_black_shadow"
             android:layout_height="@dimen/dp_75">
 
             <TextView
@@ -78,7 +80,7 @@
                 android:id="@+id/score_suffix"
                 android:paddingBottom="@dimen/dp_5"
                 tools:text="哈有评价"
-                android:textSize="@dimen/dp_13"
+                android:textSize="@dimen/sp_13"
                 android:textColor="@color/common_tint_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
@@ -112,7 +114,7 @@
                 android:id="@+id/lesson_num_suffix"
                 android:paddingBottom="@dimen/dp_5"
                 tools:text="节课"
-                android:textSize="@dimen/dp_13"
+                android:textSize="@dimen/sp_13"
                 android:textColor="@color/common_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
@@ -146,7 +148,7 @@
                 android:id="@+id/update_time_suffix"
                 android:paddingBottom="@dimen/dp_5"
                 tools:text="更新"
-                android:textSize="@dimen/dp_13"
+                android:textSize="@dimen/sp_13"
                 android:textColor="@color/common_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
@@ -176,7 +178,8 @@
                 android:id="@+id/learned_user"
                 android:orientation="horizontal"
                 android:layout_toLeftOf="@+id/learned_desc"
-                android:layout_width="wrap_content"
+                android:gravity="left|center_vertical"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
 
             <TextView

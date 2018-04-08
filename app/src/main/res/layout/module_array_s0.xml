@@ -78,6 +78,7 @@
     </RelativeLayout>
 
     <View
+        android:id="@+id/line"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_20"
         android:background="#fffffe"/>

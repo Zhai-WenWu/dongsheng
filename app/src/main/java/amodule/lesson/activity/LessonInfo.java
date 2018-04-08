@@ -2,9 +2,10 @@ package amodule.lesson.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.view.View;
+import android.util.Log;
 
 import com.xiangha.R;
 
@@ -16,6 +17,7 @@ import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.IObserver;
 import acore.tools.ObserverManager;
 import acore.tools.StringManager;
+import acore.tools.Tools;
 import amodule.lesson.controler.data.LessonInfoDataMananger;
 import amodule.lesson.controler.view.LessonInfoUIMananger;
 import amodule.main.Main;
@@ -23,6 +25,8 @@ import amodule.main.Main;
 import static acore.tools.ObserverManager.NOTIFY_VIPSTATE_CHANGED;
 
 public class LessonInfo extends BaseAppCompatActivity implements IObserver {
+
+    public static final String TAG = "tzy";
 
     private LessonInfoUIMananger mUIMananger;
     private LessonInfoDataMananger mDataMananger;
@@ -76,6 +80,9 @@ public class LessonInfo extends BaseAppCompatActivity implements IObserver {
                 false,
                 v -> loadData()
         );
+        //TODO
+        mDataMananger.notifyDataSetChanged();
+
     }
 
     private void initializeUI() {
@@ -108,12 +115,13 @@ public class LessonInfo extends BaseAppCompatActivity implements IObserver {
 
     /** 加载数据 */
     private void loadData() {
+        Log.d(TAG, "loadData: ");
         mDataMananger.loadData();
     }
 
     /***/
     private void refresh() {
-        loadData();
+        mDataMananger.refresh();
     }
 
     @Override
@@ -132,6 +140,7 @@ public class LessonInfo extends BaseAppCompatActivity implements IObserver {
         if (isOpenVip) {
             Main.colse_level = 7;
         }
+        Log.d("tzy", "onBackPressed: ");
         super.onBackPressed();
     }
 }

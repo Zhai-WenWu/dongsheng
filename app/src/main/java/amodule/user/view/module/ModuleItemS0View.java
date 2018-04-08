@@ -2,6 +2,7 @@ package amodule.user.view.module;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,38 +18,46 @@ import acore.tools.StringManager;
 /**
  * Created by Administrator on 2017/11/1.
  */
-public class ModuleItemS0View extends RelativeLayout{
+public class ModuleItemS0View extends RelativeLayout {
     public Context mContext;
-    private RelativeLayout part_0,part_1,part_2;
-    private String statisticId="";
+    private RelativeLayout part_0, part_1, part_2;
+    private View mLine;
+    private String statisticId = "";
     private OnClickListener mClickListener;
     private OnLongClickListener mLongClickListener;
+    private boolean isUseDefaultBottomPadding = true;
+
     public ModuleItemS0View(Context context) {
         super(context);
-        mContext= context;
+        mContext = context;
         initLayout(R.layout.module_array_s0);
     }
+
     public ModuleItemS0View(Context context, AttributeSet attrs) {
         super(context, attrs);
-        mContext= context;
+        mContext = context;
         initLayout(R.layout.module_array_s0);
     }
+
     public ModuleItemS0View(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        mContext= context;
+        mContext = context;
         initLayout(R.layout.module_array_s0);
     }
+
     /**
      * layoutId 进行处理。子View不进行处理
+     *
      * @param layoutId
      */
-    private void initLayout(int layoutId){
-        Log.i("xianghaTag","initLayout");
-        View view = LayoutInflater.from(mContext).inflate(layoutId,null,true);
+    private void initLayout(int layoutId) {
+        Log.i("xianghaTag", "initLayout");
+        View view = LayoutInflater.from(mContext).inflate(layoutId, null, true);
         addView(view);
-        part_0= (RelativeLayout) findViewById(R.id.rela_part_1);
-        part_1= (RelativeLayout) findViewById(R.id.rela_part_2);
-        part_2= (RelativeLayout) findViewById(R.id.rela_part_3);
+        mLine = findViewById(R.id.line);
+        part_0 = (RelativeLayout) findViewById(R.id.rela_part_1);
+        part_1 = (RelativeLayout) findViewById(R.id.rela_part_2);
+        part_2 = (RelativeLayout) findViewById(R.id.rela_part_3);
         part_0.getChildAt(0).setTag("A1");
         part_0.getChildAt(1).setTag("A2");
         part_1.getChildAt(0).setTag("B1");
@@ -58,42 +67,48 @@ public class ModuleItemS0View extends RelativeLayout{
         part_1.getChildAt(4).setTag("B5");
         part_1.getChildAt(5).setTag("B6");
     }
+
     /**
      * 设置数据
+     *
      * @param map 数据必须是map（必须调用）
      */
-    public void initData(Map<String,String> map){
+    public void initData(Map<String, String> map) {
 
         //已知布局中有三个数据
-        Map<String,String> mapA= StringManager.getFirstMap(map.get("A"));
-        Map<String,String> mapB= StringManager.getFirstMap(map.get("B"));
+        Map<String, String> mapA = StringManager.getFirstMap(map.get("A"));
+        Map<String, String> mapB = StringManager.getFirstMap(map.get("B"));
 
-        handlerViewShow(part_0,mapA);
-        handlerViewShow(part_1,mapB);
+        handlerViewShow(part_0, mapA);
+        handlerViewShow(part_1, mapB);
+
+        mLine.setVisibility(isUseDefaultBottomPadding ? VISIBLE : GONE);
     }
-    private void handlerViewShow(RelativeLayout part,Map<String,String> map){
-        int part_0_size=part.getChildCount();
-        Log.i("xianghaTag","part_0_size::"+part_0_size);
-        for(int i=0;i<part_0_size;i++){
-            View viewStub= part.getChildAt(i);
-            if(viewStub==null){
-                Log.i("xianghaTag","viewStub:::"+i);
+
+    private void handlerViewShow(RelativeLayout part, Map<String, String> map) {
+        int part_0_size = part.getChildCount();
+        Log.i("xianghaTag", "part_0_size::" + part_0_size);
+        for (int i = 0; i < part_0_size; i++) {
+            View viewStub = part.getChildAt(i);
+            if (viewStub == null) {
+                Log.i("xianghaTag", "viewStub:::" + i);
             }
-            if( viewStub!=null&&map.get("style").equals(viewStub.getTag()) ){
+            if (viewStub != null && TextUtils.equals(map.get("style"), (CharSequence) viewStub.getTag())) {
                 viewStub.setVisibility(View.VISIBLE);
                 viewStub.invalidate();
-                ModuleBaseView  baseView= (ModuleBaseView) findViewWithTag(viewStub.getTag());
+                ModuleBaseView baseView = (ModuleBaseView) findViewWithTag(viewStub.getTag());
                 baseView.setStatisticId(getStatisticId());
                 baseView.initData(map);
-                if(mClickListener != null){
+                if (mClickListener != null) {
                     baseView.setOnClickListener(mClickListener);
                 }
-                if(mLongClickListener != null){
+                if (mLongClickListener != null) {
                     baseView.setOnLongClickListener(mLongClickListener);
                 }
-            }else viewStub.setVisibility(GONE);
+            } else viewStub.setVisibility(GONE);
         }
     }
+
     public String getStatisticId() {
         return statisticId;
     }
@@ -106,7 +121,7 @@ public class ModuleItemS0View extends RelativeLayout{
     public void setOnLongClickListener(@Nullable OnLongClickListener l) {
         super.setOnLongClickListener(l);
         this.mLongClickListener = l;
-        for(int index = 0 , length = getChildCount( ) ; index < length ; index++){
+        for (int index = 0, length = getChildCount(); index < length; index++) {
             View view = getChildAt(index);
             view.setOnLongClickListener(l);
         }
@@ -116,9 +131,17 @@ public class ModuleItemS0View extends RelativeLayout{
     public void setOnClickListener(@Nullable OnClickListener l) {
         super.setOnClickListener(l);
         this.mClickListener = l;
-        for(int index = 0 , length = getChildCount( ) ; index < length ; index++){
+        for (int index = 0, length = getChildCount(); index < length; index++) {
             View view = getChildAt(index);
             view.setOnClickListener(l);
         }
+    }
+
+    public boolean isUseDefaultBottomPadding() {
+        return isUseDefaultBottomPadding;
+    }
+
+    public void setUseDefaultBottomPadding(boolean useDefaultBottomPadding) {
+        isUseDefaultBottomPadding = useDefaultBottomPadding;
     }
 }

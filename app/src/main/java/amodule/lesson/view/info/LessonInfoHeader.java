@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,11 +66,11 @@ public class LessonInfoHeader extends RelativeLayout implements IBindMap {
 
     private void initializeUI() {
         mInflater = LayoutInflater.from(getContext());
-        mInflater.inflate(R.layout.lesson_info_header, this, false);
+        mInflater.inflate(R.layout.lesson_info_header, this);
         RelativeLayout imageLayout = (RelativeLayout) findViewById(R.id.image_layout);
         //设置图片高度
         imageHeight = (int) (ToolsDevice.getWindowPx(getContext()).widthPixels * 500 / 750f);
-        imageLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, imageHeight));
+        imageLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, imageHeight));
         mBackImageView = (ImageView) findViewById(R.id.background);
         mTitle = (TextView) findViewById(R.id.title);
         mDescription = (TextView) findViewById(R.id.description);
@@ -92,11 +93,12 @@ public class LessonInfoHeader extends RelativeLayout implements IBindMap {
 
         mLearnedUserLayout = (LinearLayout) findViewById(R.id.learned_user);
         mLearnedDescText = (TextView) findViewById(R.id.learned_desc);
-
+        setVisibility(VISIBLE);
     }
 
     @Override
     public void setData(Map<String, String> data) {
+        Log.d("tzy", "setData: " + data);
         if(data == null || data.isEmpty()){
             return;
         }
@@ -128,21 +130,21 @@ public class LessonInfoHeader extends RelativeLayout implements IBindMap {
     private void showScore(Map<String, String> data) {
         WidgetUtility.setTextToView(mScoreText,data.get("text1"));
         WidgetUtility.setTextToView(mScoreSuffixText,data.get("text2"));
-        boolean isShow = mScoreText.getVisibility() == VISIBLE && mScoreSuffixText.getVisibility() == VISIBLE;
+        boolean isShow = mScoreText.getVisibility() == VISIBLE || mScoreSuffixText.getVisibility() == VISIBLE;
         mScoreLayout.setVisibility(isShow?VISIBLE:GONE);
     }
 
     private void showLessonDesc(Map<String, String> data) {
         WidgetUtility.setTextToView(mLessonNumText,data.get("text1"));
         WidgetUtility.setTextToView(mLessonNumSuffixText,data.get("text2"));
-        boolean isShow = mLessonNumText.getVisibility() == VISIBLE && mLessonNumSuffixText.getVisibility() == VISIBLE;
+        boolean isShow = mLessonNumText.getVisibility() == VISIBLE || mLessonNumSuffixText.getVisibility() == VISIBLE;
         mLessonNumLayout.setVisibility(isShow?VISIBLE:GONE);
     }
 
     private void showUpdateDesc(Map<String, String> data) {
         WidgetUtility.setTextToView(mUpdateText,data.get("text1"));
         WidgetUtility.setTextToView(mUpdateSuffixText,data.get("text2"));
-        boolean isShow = mUpdateText.getVisibility() == VISIBLE && mUpdateSuffixText.getVisibility() == VISIBLE;
+        boolean isShow = mUpdateText.getVisibility() == VISIBLE || mUpdateSuffixText.getVisibility() == VISIBLE;
         mUpdateLayout.setVisibility(isShow?VISIBLE:GONE);
     }
 
@@ -156,14 +158,17 @@ public class LessonInfoHeader extends RelativeLayout implements IBindMap {
             findViewById(R.id.learned_layout).setVisibility(GONE);
             return;
         }
+        if(mLearnedUserLayout != null && mLearnedUserLayout.getChildCount() > 0){
+            mLearnedUserLayout.removeAllViews();
+        }
         int maxWidth = ToolsDevice.getWindowPx(getContext()).widthPixels - Tools.getDimen(getContext(), R.dimen.dp_40)
                 - Tools.getMeasureWidth(mLearnedDescText);
         final int maxLength = maxWidth / Tools.getDimen(getContext(), R.dimen.dp_30);
         for (int index = 0; index < array.size() && index < maxLength; index++) {
             Map<String, String> value = array.get(index);
-            ImageView imageView = createImageView(value.get(""));
-            if (imageView != null) {
-                mLearnedUserLayout.addView(imageView);
+            View view = createView(value.get("img"));
+            if (view != null) {
+                mLearnedUserLayout.addView(view);
             }
         }
         if(mLearnedUserLayout.getChildCount() > 0){
@@ -172,16 +177,20 @@ public class LessonInfoHeader extends RelativeLayout implements IBindMap {
     }
 
     @Nullable
-    private ImageView createImageView(@NonNull String imgUrl) {
+    private View createView(@NonNull String imgUrl) {
         if (TextUtils.isEmpty(imgUrl))
             return null;
         @SuppressLint("InflateParams")
-        ImageView image = (ImageView) mInflater.inflate(R.layout.item_learned_user, null, true);
+        View view = mInflater.inflate(R.layout.item_learned_user, null, true);
+        ImageView image = (ImageView) view.findViewById(R.id.user_img);
         LoadImage.with(getContext())
                 .load(imgUrl)
+                .setPlaceholderId(R.drawable.z_me_head)
+                .setErrorId(R.drawable.z_me_head)
+                .setImageRound(500)
                 .build()
                 .into(image);
-        return image;
+        return view;
     }
 
     private String getStringValue(Map<String,String> data){

@@ -5,6 +5,7 @@
     android:paddingLeft="@dimen/dp_20"
     android:paddingRight="@dimen/dp_20"
     android:paddingBottom="@dimen/dp_20"
+    android:background="#FFFFFF"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 

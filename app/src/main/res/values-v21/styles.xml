@@ -27,4 +27,11 @@
         <item name="android:textSize">@dimen/sp_16</item>
         <item name="colorAccent">#325ef3</item>
     </style>
+
+    <style name="lessonTheme" parent="@style/titleTheme">
+        <item name="android:fitsSystemWindows">false</item>
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
+
+
 </resources>

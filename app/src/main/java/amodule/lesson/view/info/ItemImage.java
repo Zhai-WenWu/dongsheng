@@ -67,7 +67,7 @@ public class ItemImage extends LinearLayout implements IBindMap, IBindExtraArray
 
     @Override
     public void setData(Map<String, String> data) {
-
+        showImage(data.get("img"));
         setExtraData(StringManager.getListMapByJson(data.get("bottom")));
     }
 

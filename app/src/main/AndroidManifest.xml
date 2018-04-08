@@ -738,6 +738,13 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppMainTheme"
             android:windowSoftInputMode="adjustResize"/>
+        <activity
+            android:name="amodule.lesson.activity.LessonInfo"
+            android:configChanges="orientation|keyboardHidden"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/lessonTheme"
+            android:windowSoftInputMode="adjustResize"/>
         <!-- lesson end -->
 
 
@@ -1555,8 +1562,6 @@
 
         <receiver android:name="third.push.localpush.LocalPushReceiver"/>
 
-        <activity android:name="amodule.lesson.activity.LessonInfo">
-        </activity>
     </application>
 
 </manifest>

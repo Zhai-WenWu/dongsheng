@@ -3,6 +3,7 @@ package amodule.lesson.view.info;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,7 +24,7 @@ import static amodule._common.helper.WidgetDataHelper.KEY_WIDGET_DATA;
 public class LessonModuleView extends LessonParentLayout {
 
     String mTitleText = "";
-    List<Map<String,String>> mDatas = new ArrayList<>();
+    //    List<Map<String,String>> mDatas = new ArrayList<>();
     boolean isOnce = true;
 
     public LessonModuleView(Context context) {
@@ -41,27 +42,30 @@ public class LessonModuleView extends LessonParentLayout {
     @Override
     public void setData(Map<String, String> data) {
         isOnce = true;
-        Map<String,String> widgetDataMap = StringManager.getFirstMap(data.get(KEY_WIDGET_DATA));
+        Map<String, String> widgetDataMap = StringManager.getFirstMap(data.get(KEY_WIDGET_DATA));
         mTitleText = widgetDataMap.get("text1");
-        mDatas = StringManager.getListMapByJson(widgetDataMap.get("data"));
+        mTitleText = data.get("text1");
+        Log.i("tzy", "setData: " + mTitleText);
+//        mDatas = StringManager.getListMapByJson(widgetDataMap.get("data"));
         super.setData(data);
     }
 
     @Override
     protected boolean showInnerNextItem() {
-        if(isOnce){
+        if (isOnce) {
             isOnce = false;
             ItemTitle title = new ItemTitle(getContext());
             title.setTitle(mTitleText);
             addView(title);
         }
-        for(int i=0;i<2;i++){
-            if(mDatas.isEmpty()){
+        for (; !mDatas.isEmpty();) {
+            if (mDatas.isEmpty()) {
                 return false;
             }
-            Map<String,String> data = mDatas.remove(0);
-            if(data != null){
+            Map<String, String> data = mDatas.remove(0);
+            if (data != null) {
                 ModuleItemS0View moduleItemS0View = new ModuleItemS0View(getContext());
+                moduleItemS0View.setUseDefaultBottomPadding(false);
                 moduleItemS0View.initData(data);
                 addView(moduleItemS0View);
             }

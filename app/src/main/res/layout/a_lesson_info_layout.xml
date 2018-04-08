@@ -5,36 +5,35 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activityLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="amodule.lesson.activity.LessonInfo">
+    android:layout_height="match_parent">
 
     <acore.widget.rvlistview.RvListView
         android:id="@+id/rvListview"
-        android:layout_above="@+id/vip_button"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-    
+        android:layout_height="match_parent"
+        android:layout_above="@+id/vip_button"/>
+
     <RelativeLayout
         android:id="@+id/top_bar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/topbar_height">
+        android:layout_height="@dimen/topbar_height"
+        android:background="@color/common_top_bg">
 
         <include
             android:id="@+id/back_ll"
             layout="@layout/a_bar_item_back"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true" />
+            android:layout_alignParentLeft="true"/>
 
     </RelativeLayout>
 
     <amodule.vip.VIPButton
         android:id="@+id/vip_button"
-        android:visibility="gone"
-        tools:visibility="visible"
-        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_49"/>
+        android:layout_height="@dimen/dp_49"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone"
+        tools:visibility="visible"/>
 
 </RelativeLayout>

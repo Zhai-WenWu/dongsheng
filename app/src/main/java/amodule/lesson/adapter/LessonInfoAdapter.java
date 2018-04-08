@@ -47,7 +47,7 @@ public class LessonInfoAdapter extends RvBaseAdapter<Map<String, String>> {
             case VIEW_TYPE_IMAGE:
                 return new ImageViewHolder(new ItemImage(mContext));
             default:
-                return null;
+                return new DefaultViewHolder(new View(mContext));
         }
     }
 
@@ -97,6 +97,19 @@ public class LessonInfoAdapter extends RvBaseAdapter<Map<String, String>> {
             if(mMoreCallbcak != null){
                 mImage.setClickMoreCallbcak(mMoreCallbcak);
             }
+        }
+    }
+
+    /**默认*/
+    class DefaultViewHolder extends RvBaseViewHolder<Map<String, String>>{
+
+        public DefaultViewHolder(@NonNull View itemView) {
+            super(itemView);
+        }
+
+        @Override
+        public void bindData(int position, @Nullable Map<String, String> data) {
+            //do nothing
         }
     }
 }

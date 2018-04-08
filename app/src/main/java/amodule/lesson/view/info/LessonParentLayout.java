@@ -6,9 +6,14 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.xiangha.R;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import acore.tools.StringManager;
+import acore.tools.Tools;
 import amodule._common.delegate.IBindMap;
 import amodule._common.widget.DelayLoadExtraLayout;
 import amodule.lesson.delegate.IShowNextItem;
@@ -26,6 +31,7 @@ public abstract class LessonParentLayout extends LinearLayout implements IBindMa
 
     protected DelayLoadExtraLayout mTopExtraLayout, mBottomExtraLayout;
     protected LinearLayout mContentLayout;
+    protected List<Map<String,String>> mDatas = new ArrayList<>();
 
     public LessonParentLayout(Context context) {
         this(context, null);
@@ -44,16 +50,20 @@ public abstract class LessonParentLayout extends LinearLayout implements IBindMa
     private void innerInitialize() {
         if (mTopExtraLayout == null) {
             mTopExtraLayout = new DelayLoadExtraLayout(getContext());
+            mTopExtraLayout.setDelayLoadData(true);
             addView(mTopExtraLayout);
         }
         if (mContentLayout == null) {
             mContentLayout = new LinearLayout(getContext());
+            mContentLayout.setOrientation(VERTICAL);
             addView(mContentLayout);
         }
         if (mBottomExtraLayout == null) {
             mBottomExtraLayout = new DelayLoadExtraLayout(getContext());
+            mBottomExtraLayout.setDelayLoadData(true);
             addView(mBottomExtraLayout);
         }
+        setPadding(0,0,0, Tools.getDimen(getContext(), R.dimen.dp_5));
     }
 
     protected void initializeUI() {
@@ -75,10 +85,12 @@ public abstract class LessonParentLayout extends LinearLayout implements IBindMa
 
     @Override
     public void setData(Map<String, String> data) {
-
+        mDatas = StringManager.getListMapByJson(data.get(KEY_WIDGET_DATA));
         Map<String, String> widgetDataMap = StringManager.getFirstMap(data.get(KEY_WIDGET_EXTRA));
         setTopExtraData(widgetDataMap);
         setBottomExtraData(widgetDataMap);
+        //TODO
+        showNextItem();
     }
 
     protected void setTopExtraData(Map<String, String> data) {

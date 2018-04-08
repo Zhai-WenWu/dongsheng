@@ -69,7 +69,7 @@ public class ModuleLessonContentView extends ModuleBaseView {
 
     private void showTagTextView(Map<String, String> map) {
         VipStyleBuilder vipStyleBuilder =  null;
-        switch (map.get("vipIcon")){
+        switch (map.get("iconVip")){
             case "1":
                 vipStyleBuilder = new VipStyleBuilder(getContext(), "试看", R.drawable.bg_round4_ff533c);
                 break;
