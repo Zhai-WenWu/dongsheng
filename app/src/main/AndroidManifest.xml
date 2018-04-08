@@ -1477,9 +1477,6 @@
         <!--</provider>-->
         <!--appkey-->
         <!--Android	APP ID：3101208014	APP KEY：Aqc1150004142-->
-        <meta-data
-            android:name="TA_APPKEY"
-            android:value="Aqc1150004142"/>
         <!--Channel-->
         <meta-data
             android:name="InstallChannel"
