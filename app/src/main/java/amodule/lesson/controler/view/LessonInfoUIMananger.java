@@ -63,6 +63,7 @@ public class LessonInfoUIMananger {
         mRvListView = (RvListView) mActivity.findViewById(R.id.rvListview);
         mInfoHeader = new LessonInfoHeader(mActivity);
         mHaFriendCommentView = new LessonModuleView(mActivity);
+        mHaFriendCommentView.setUseDefaultBottomPadding(true);
         mConentView = new LessonModuleView(mActivity);
         mGuessYouLikeView = new LessonModuleView(mActivity);
 
@@ -87,6 +88,9 @@ public class LessonInfoUIMananger {
             //不预留系统栏位置
             if (mContentChild != null) {
                 ViewCompat.setFitsSystemWindows(mContentChild, false);
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                window.setStatusBarColor(Color.parseColor("#00FFFFFF"));
             }
             RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, mTopBarHeight);
             mTopbar.setLayoutParams(layout);
@@ -167,8 +171,6 @@ public class LessonInfoUIMananger {
     private void updateTopbarBg(int dy) {
         int colorRes = (dy <= mInfoHeader.getImageHeight()/2 - mTopBarHeight) ? R.color.transparent : R.color.common_top_bg;
         mTopbar.setBackgroundResource(colorRes);
-        String colors = Tools.getColorStr(mActivity, colorRes);
-//        Tools.setStatusBarColor(mActivity, Color.parseColor(colors));
     }
 
     private void onBackPressed() {

@@ -50,7 +50,7 @@ public class ModuleLessonContentView extends ModuleBaseView {
         mImageView = (ImageView) findViewById(R.id.image);
         mTagTextView = (TextViewShow) findViewById(R.id.text1);
         mTextDesc = (TextView) findViewById(R.id.text2);
-        mTextLessonDesc = (TextView) findViewById(R.id.text2);
+        mTextLessonDesc = (TextView) findViewById(R.id.text3);
     }
 
     @Override
@@ -61,8 +61,8 @@ public class ModuleLessonContentView extends ModuleBaseView {
 //        }
         //在特殊处理
         showTagTextView(map);
-        WidgetUtility.setTextToView(mTextDesc,map.get("text2"),false);
-        WidgetUtility.setTextToView(mTextLessonDesc,map.get("text3"),false);
+        WidgetUtility.setTextToView(mTextDesc,map.get("text3"),false);
+        WidgetUtility.setTextToView(mTextLessonDesc,map.get("text1"),false);
 //        setViewImage(mImageView,map.get());
         setVisibility(VISIBLE);
     }
@@ -71,10 +71,10 @@ public class ModuleLessonContentView extends ModuleBaseView {
         VipStyleBuilder vipStyleBuilder =  null;
         switch (map.get("iconVip")){
             case "1":
-                vipStyleBuilder = new VipStyleBuilder(getContext(), "试看", R.drawable.bg_round4_ff533c);
+                vipStyleBuilder = new VipStyleBuilder(getContext(), "试看", R.drawable.bg_round4_45c300);
                 break;
             case "2":
-                vipStyleBuilder = new VipStyleBuilder(getContext(), "VIP", R.drawable.bg_round4_ff533c);
+                vipStyleBuilder = new VipStyleBuilder(getContext(), "VIP", R.drawable.bg_round4_ebb45e);
                 break;
             case "3":
                 vipStyleBuilder = new VipStyleBuilder(getContext(), "上新", R.drawable.bg_round4_ff533c);
@@ -84,12 +84,12 @@ public class ModuleLessonContentView extends ModuleBaseView {
         if(vipStyleBuilder != null){
             vipStyleBuilder.setTextColor("#FFFFFF");
             MultifunctionTextView.MultifunctionText multifunctionText = new MultifunctionTextView.MultifunctionText();
-            String titleValue = map.get("text1");
+            String titleValue = map.get("text2");
             multifunctionText.addStyle(vipStyleBuilder.getText() + " " + (TextUtils.isEmpty(titleValue)?"":titleValue),
                     vipStyleBuilder.build());
             mTagTextView.setText(multifunctionText);
         }else{
-            WidgetUtility.setTextToView(mTagTextView,map.get("text1"));
+            WidgetUtility.setTextToView(mTagTextView,map.get("text2"));
         }
     }
 

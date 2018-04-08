@@ -85,10 +85,13 @@ public abstract class LessonParentLayout extends LinearLayout implements IBindMa
 
     @Override
     public void setData(Map<String, String> data) {
+//        Map<String, String> widgetDataMap = StringManager.getFirstMap(data.get(KEY_WIDGET_DATA));
+//        mDatas = StringManager.getListMapByJson(widgetDataMap.get("list"));
         mDatas = StringManager.getListMapByJson(data.get(KEY_WIDGET_DATA));
-        Map<String, String> widgetDataMap = StringManager.getFirstMap(data.get(KEY_WIDGET_EXTRA));
-        setTopExtraData(widgetDataMap);
-        setBottomExtraData(widgetDataMap);
+
+        Map<String, String> widgetExtraDataMap = StringManager.getFirstMap(data.get(KEY_WIDGET_EXTRA));
+        setTopExtraData(widgetExtraDataMap);
+        setBottomExtraData(widgetExtraDataMap);
         //TODO
         showNextItem();
     }

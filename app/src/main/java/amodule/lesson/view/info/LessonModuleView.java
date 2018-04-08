@@ -26,6 +26,7 @@ public class LessonModuleView extends LessonParentLayout {
     String mTitleText = "";
     //    List<Map<String,String>> mDatas = new ArrayList<>();
     boolean isOnce = true;
+    private boolean isUseDefaultBottomPadding = false;
 
     public LessonModuleView(Context context) {
         super(context);
@@ -44,7 +45,6 @@ public class LessonModuleView extends LessonParentLayout {
         isOnce = true;
         Map<String, String> widgetDataMap = StringManager.getFirstMap(data.get(KEY_WIDGET_DATA));
         mTitleText = widgetDataMap.get("text1");
-        mTitleText = data.get("text1");
         Log.i("tzy", "setData: " + mTitleText);
 //        mDatas = StringManager.getListMapByJson(widgetDataMap.get("data"));
         super.setData(data);
@@ -65,11 +65,15 @@ public class LessonModuleView extends LessonParentLayout {
             Map<String, String> data = mDatas.remove(0);
             if (data != null) {
                 ModuleItemS0View moduleItemS0View = new ModuleItemS0View(getContext());
-                moduleItemS0View.setUseDefaultBottomPadding(false);
+                moduleItemS0View.setUseDefaultBottomPadding(isUseDefaultBottomPadding);
                 moduleItemS0View.initData(data);
                 addView(moduleItemS0View);
             }
         }
         return !mDatas.isEmpty();
+    }
+
+    public void setUseDefaultBottomPadding(boolean useDefaultBottomPadding) {
+        isUseDefaultBottomPadding = useDefaultBottomPadding;
     }
 }
