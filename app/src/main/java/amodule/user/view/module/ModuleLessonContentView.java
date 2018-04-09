@@ -10,6 +10,7 @@ import com.xiangha.R;
 
 import java.util.Map;
 
+import acore.logic.AppCommon;
 import acore.widget.TextViewShow;
 import acore.widget.multifunction.VipStyleBuilder;
 import acore.widget.multifunction.view.MultifunctionTextView;
@@ -28,6 +29,8 @@ public class ModuleLessonContentView extends ModuleBaseView {
     private ImageView mImageView;
     private TextViewShow mTagTextView;
     private TextView mTextDesc,mTextLessonDesc;
+
+    private String mUrl;
 
     public ModuleLessonContentView(Context context) {
         super(context, LAYOUT_ID);
@@ -52,10 +55,7 @@ public class ModuleLessonContentView extends ModuleBaseView {
 
     @Override
     public void initData(Map<String, String> map) {
-//        if(!map.containsKey("styleData")|| TextUtils.isEmpty(map.get("styleData"))){
-//            setVisibility(GONE);
-//            return;
-//        }
+        mUrl = map.get("url");
         //在特殊处理
         showTagTextView(map);
         WidgetUtility.setTextToView(mTextDesc,map.get("text3"),false);
@@ -92,6 +92,6 @@ public class ModuleLessonContentView extends ModuleBaseView {
 
     @Override
     public void setListener() {
-
+        setOnClickListener(v -> AppCommon.openUrl(mUrl,true));
     }
 }

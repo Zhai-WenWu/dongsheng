@@ -2,6 +2,7 @@ package amodule.user.view.module;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -9,6 +10,7 @@ import com.xiangha.R;
 
 import java.util.Map;
 
+import acore.logic.AppCommon;
 import acore.tools.StringManager;
 import amodule._common.utility.WidgetUtility;
 
@@ -24,6 +26,8 @@ public class ModuleLessonGuessLike extends ModuleBaseView {
 
     private ImageView mImageView;
     private TextView mTextTitle,mTextDesc,mTextLessonDesc;
+
+    private String mUrl;
 
     public ModuleLessonGuessLike(Context context) {
         super(context, LAYOUT_ID);
@@ -48,6 +52,7 @@ public class ModuleLessonGuessLike extends ModuleBaseView {
 
     @Override
     public void initData(Map<String, String> map) {
+        mUrl = map.get("url");
         Map<String,String> styleData = StringManager.getFirstMap(map.get("styleData"));
         if(styleData.isEmpty()){
             mImageView.setVisibility(INVISIBLE);
@@ -61,6 +66,6 @@ public class ModuleLessonGuessLike extends ModuleBaseView {
 
     @Override
     public void setListener() {
-
+        setOnClickListener(v -> AppCommon.openUrl(mUrl,true));
     }
 }
