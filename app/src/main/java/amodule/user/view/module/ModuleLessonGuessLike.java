@@ -1,24 +1,19 @@
 package amodule.user.view.module;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.xiangha.R;
 
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import acore.tools.StringManager;
 import amodule._common.utility.WidgetUtility;
 
 /**
- * Description : //TODO
+ * Description :
  * PackageName : amodule.user.view.module
  * Created by tanzeyu on 2018/4/2 11:41.
  * e_mail : ztanzeyu@gmail.com

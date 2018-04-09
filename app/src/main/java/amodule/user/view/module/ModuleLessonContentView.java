@@ -16,7 +16,7 @@ import acore.widget.multifunction.view.MultifunctionTextView;
 import amodule._common.utility.WidgetUtility;
 
 /**
- * Description : //TODO
+ * Description :
  * PackageName : amodule.user.view.module
  * Created by tanzeyu on 2018/4/2 11:33.
  * e_mail : ztanzeyu@gmail.com

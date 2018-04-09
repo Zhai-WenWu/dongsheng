@@ -9,7 +9,7 @@ import acore.tools.ToolsDevice;
 import acore.widget.multifunction.base.StyleConfigBuilder;
 
 /**
- * Description : //TODO
+ * Description :
  * PackageName : acore.widget.multifunction
  * Created by tanzeyu on 2018/4/3 16:59.
  * e_mail : ztanzeyu@gmail.com
