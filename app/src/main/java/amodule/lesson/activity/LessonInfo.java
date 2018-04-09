@@ -29,6 +29,7 @@ import static amodule.lesson.controler.data.LessonInfoDataMananger.DATA_TYPE_VIP
 public class LessonInfo extends BaseAppCompatActivity implements IObserver {
 
     public static final String TAG = "tzy";
+    public static final String EXTRA_CODE = "code";
     public static final String EXTRA_INFO_JSON = "extraInfo";
 
 
@@ -36,12 +37,6 @@ public class LessonInfo extends BaseAppCompatActivity implements IObserver {
     private LessonInfoDataMananger mDataMananger;
 
     private boolean isOpenVip = false;
-
-    //TODO test
-    public static void startActivity(@NonNull Context context,String extraInfo){
-        context.startActivity(new Intent(context,LessonInfo.class).putExtra(EXTRA_INFO_JSON,extraInfo));
-    }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,7 +87,9 @@ public class LessonInfo extends BaseAppCompatActivity implements IObserver {
     }
 
     private void initializeData() {
-        mDataMananger = new LessonInfoDataMananger(this);
+        Intent intent = getIntent();
+        String lessonCode = intent.getStringExtra(EXTRA_CODE);
+        mDataMananger = new LessonInfoDataMananger(this, lessonCode);
         mDataMananger.setOnLoadedDataCallback((dataType, dataValue) -> {
             final Map<String, String> data = StringManager.getFirstMap(dataValue);
             switch (dataType) {

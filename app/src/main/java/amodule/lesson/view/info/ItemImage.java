@@ -6,10 +6,9 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.request.animation.GlideAnimation;
@@ -20,6 +19,7 @@ import java.util.Map;
 
 import acore.tools.ImgManager;
 import acore.tools.StringManager;
+import acore.tools.Tools;
 import amodule._common.delegate.IBindExtraArrayMap;
 import amodule._common.delegate.IBindMap;
 import amodule._common.widget.baseWidget.BaseExtraLinearLayout;
@@ -91,9 +91,11 @@ public class ItemImage extends LinearLayout implements IBindMap, IBindExtraArray
     }
 
     private void showImage(String imageUrl) {
+        mImageView.setImageResource(R.drawable.bg_grey_e0e0e0);
         if (TextUtils.isEmpty(imageUrl)) {
             return;
         }
+        updateImageHieght(imageUrl);
         LoadImage.with(getContext())
                 .load(imageUrl)
                 .build()
@@ -103,6 +105,27 @@ public class ItemImage extends LinearLayout implements IBindMap, IBindExtraArray
                         ImgManager.setImgViewByWH(mImageView, bitmap, mImageWidth, 0, false);
                     }
                 });
+    }
+
+    private void updateImageHieght(String imageUrl) {
+        if(imageUrl.contains("?")){
+            String[] urls = imageUrl.split("/?");
+            if(urls.length == 2
+                    && !TextUtils.isEmpty(urls[1])
+                    && urls[1].contains("_")){
+                String[] sizeValue = urls[1].split("_");
+                if(sizeValue.length == 2){
+                    int width = Tools.parseIntOfThrow(sizeValue[0],0);
+                    int height = Tools.parseIntOfThrow(sizeValue[1],0);
+                    if(width != 0 && height != 0){
+                        ViewGroup.LayoutParams layoutParams = mImageView.getLayoutParams();
+                        layoutParams.width = mImageWidth;
+                        layoutParams.height = mImageWidth * height/ width;
+                        mImageView.setLayoutParams(layoutParams);
+                    }
+                }
+            }
+        }
     }
 
     @Override

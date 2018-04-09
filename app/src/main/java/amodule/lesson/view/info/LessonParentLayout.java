@@ -1,6 +1,7 @@
 package amodule.lesson.view.info;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
@@ -48,8 +49,12 @@ public abstract class LessonParentLayout extends LinearLayout implements IBindMa
     }
 
     private void innerInitialize() {
+        setOrientation(VERTICAL);
+        int color = Color.parseColor("#FFFFFF");
+//        setBackgroundColor(Color.parseColor("#FFFFFF"));
         if (mTopExtraLayout == null) {
             mTopExtraLayout = new DelayLoadExtraLayout(getContext());
+            mTopExtraLayout.setBackgroundColor(color);
             mTopExtraLayout.setDelayLoadData(true);
             addView(mTopExtraLayout);
         }
@@ -60,6 +65,7 @@ public abstract class LessonParentLayout extends LinearLayout implements IBindMa
         }
         if (mBottomExtraLayout == null) {
             mBottomExtraLayout = new DelayLoadExtraLayout(getContext());
+            mBottomExtraLayout.setBackgroundColor(color);
             mBottomExtraLayout.setDelayLoadData(true);
             addView(mBottomExtraLayout);
         }
@@ -94,8 +100,7 @@ public abstract class LessonParentLayout extends LinearLayout implements IBindMa
         Map<String, String> widgetExtraDataMap = StringManager.getFirstMap(data.get(KEY_WIDGET_EXTRA));
         setTopExtraData(widgetExtraDataMap);
         setBottomExtraData(widgetExtraDataMap);
-        //TODO
-//        showNextItem();
+        showAllItem();
     }
 
     protected void setTopExtraData(Map<String, String> data) {
@@ -116,6 +121,14 @@ public abstract class LessonParentLayout extends LinearLayout implements IBindMa
 
     public boolean hasChildView() {
         return mContentLayout != null && mContentLayout.getChildCount() > 0;
+    }
+
+    public void showAllItem(){
+        showTopNextItem();
+        if(mContentLayout!=null){
+            showInnerNextItem();
+        }
+        showBottomNextItem();
     }
 
     @Override

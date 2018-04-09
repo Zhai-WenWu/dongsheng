@@ -889,5 +889,17 @@ public class Tools {
             e.printStackTrace();
         }
         return packageInfo != null;
+    }
+
+    public static int parseIntOfThrow(String strValue, int defaultValue) {
+        int result = defaultValue;
+        try{
+            if(!TextUtils.isEmpty(strValue)){
+                result = Integer.parseInt(strValue);
+            }
+        }catch (Exception ignored){
+            ignored.printStackTrace();
         }
+        return result;
+    }
 }

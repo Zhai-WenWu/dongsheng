@@ -1,33 +1,28 @@
 package amodule.lesson.controler.view;
 
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Handler;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
 import com.xiangha.R;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import acore.logic.AppCommon;
 import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
-import acore.tools.ToolsDevice;
 import acore.widget.rvlistview.RvListView;
 import amodule._common.utility.WidgetUtility;
 import amodule.lesson.view.info.LessonInfoHeader;
 import amodule.lesson.view.info.LessonModuleView;
 import amodule.vip.VIPButton;
-import amodule.vip.VipDataController;
 
 import static android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
 
@@ -86,24 +81,8 @@ public class LessonInfoUIMananger {
 
     protected void initTitle() {
         mTopbar = (RelativeLayout) mActivity.findViewById(R.id.top_bar);
-        if (Tools.isShowTitle()) {
-            Window window = mActivity.getWindow();
-            //设置Window为全透明
-            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            ViewGroup mContentView = (ViewGroup) window.findViewById(Window.ID_ANDROID_CONTENT);
-            //获取父布局
-            View mContentChild = mContentView.getChildAt(0);
-            //不预留系统栏位置
-            if (mContentChild != null) {
-                ViewCompat.setFitsSystemWindows(mContentChild, false);
-            }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                window.setStatusBarColor(Color.parseColor("#00FFFFFF"));
-            }
-            RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, mTopBarHeight);
-            mTopbar.setLayoutParams(layout);
-            mTopbar.setPadding(0, Tools.getStatusBarHeight(mActivity), 0, 0);
-        }
+        String colorValue = mActivity.getResources().getString(R.color.common_top_bg);
+       Tools.setStatusBarColor(mActivity,Color.parseColor(colorValue));
     }
 
     private void setClickListener() {
@@ -112,7 +91,7 @@ public class LessonInfoUIMananger {
 
     public void setHeaderData(Map<String, String> headerData) {
         mInfoHeader.setData(headerData);
-        showNextItem();
+//        showNextItem();
     }
 
     public void setHaFriendCommentData(Map<String, String> data) {
@@ -174,7 +153,7 @@ public class LessonInfoUIMananger {
                                 alowLoad = false;
                                 if (currentState == SCROLL_STATE_IDLE
                                         && hasNextItem) {
-                                    hasNextItem = showNextItem();
+//                                    hasNextItem = showNextItem();
                                 }
                                 new Handler().postDelayed(() -> alowLoad = true, 500);
                             }
@@ -198,14 +177,11 @@ public class LessonInfoUIMananger {
         hasNextItem = mHaFriendCommentView.showNextItem()
                 || mConentView.showNextItem()
                 || mGuessYouLikeView.showNextItem();
-        if (mRvListView != null
-                && !mRvListView.canScrollVertically(1)) {
-            new Handler().postDelayed(this::showNextItem, 200);
-        }
         return hasNextItem;
     }
 
     private void updateTopbarBg(int dy) {
+        Log.i("tzy", "updateTopbarBg: ");
         boolean isShow = dy <= mInfoHeader.getImageHeight() / 2 - mTopBarHeight;
         int colorRes = isShow ? R.color.transparent : R.color.common_top_bg;
         mTopbar.setBackgroundResource(colorRes);
@@ -222,6 +198,6 @@ public class LessonInfoUIMananger {
     }
 
     public void refresh() {
-
+        setHaFriendCommentData(new HashMap<>());
     }
 }
