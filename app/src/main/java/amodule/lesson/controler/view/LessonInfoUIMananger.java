@@ -97,6 +97,7 @@ public class LessonInfoUIMananger {
 
     public void setHeaderData(Map<String, String> headerData) {
         mInfoHeader.setData(headerData);
+        setRvListViewVisibility(View.VISIBLE);
 //        showNextItem();
     }
 
@@ -148,23 +149,23 @@ public class LessonInfoUIMananger {
                 @Override
                 public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                     super.onScrollStateChanged(recyclerView, newState);
-                    currentState = newState;
-                    RecyclerView.Adapter adapter = mRvListView.getAdapter();
-                    final LinearLayoutManager layoutManager = (LinearLayoutManager) mRvListView.getLayoutManager();
-                    if (layoutManager != null && adapter != null) {
-                        int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
-                        if (newState == RecyclerView.SCROLL_STATE_IDLE
-                                && lastVisibleItemPosition + 1 >= adapter.getItemCount() - 4) {
-                            if (alowLoad) {
-                                alowLoad = false;
-                                if (currentState == SCROLL_STATE_IDLE
-                                        && hasNextItem) {
-//                                    hasNextItem = showNextItem();
-                                }
-                                new Handler().postDelayed(() -> alowLoad = true, 500);
-                            }
-                        }
-                    }
+//                    currentState = newState;
+//                    RecyclerView.Adapter adapter = mRvListView.getAdapter();
+//                    final LinearLayoutManager layoutManager = (LinearLayoutManager) mRvListView.getLayoutManager();
+//                    if (layoutManager != null && adapter != null) {
+//                        int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
+//                        if (newState == RecyclerView.SCROLL_STATE_IDLE
+//                                && lastVisibleItemPosition + 1 >= adapter.getItemCount() - 4) {
+//                            if (alowLoad) {
+//                                alowLoad = false;
+//                                if (currentState == SCROLL_STATE_IDLE
+//                                        && hasNextItem) {
+////                                    hasNextItem = showNextItem();
+//                                }
+//                                new Handler().postDelayed(() -> alowLoad = true, 500);
+//                            }
+//                        }
+//                    }
                 }
 
                 @Override
@@ -205,6 +206,12 @@ public class LessonInfoUIMananger {
 
     public RvListView getRvListView() {
         return mRvListView;
+    }
+
+    public void setRvListViewVisibility(int visibility){
+        if(mRvListView != null){
+            mRvListView.setVisibility(visibility);
+        }
     }
 
     public void refresh() {

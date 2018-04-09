@@ -1,8 +1,8 @@
 package amodule.lesson.controler.data;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.annimon.stream.Stream;
 
@@ -51,6 +51,7 @@ public class LessonInfoDataMananger {
     private List<Map<String, String>> mData = new ArrayList<>();
     private Map<String, List<Map<String, String>>> mImgsArray = new HashMap<>();
     private OnLoadedDataCallback mOnLoadedDataCallback;
+    private OnLoadFailedCallback mOnLoadFailedCallback;
 
     public LessonInfoDataMananger(BaseAppCompatActivity activity, String lessonCode) {
         mActivity = activity;
@@ -166,7 +167,7 @@ public class LessonInfoDataMananger {
                 if (i >= ReqInternet.REQ_OK_STRING) {
                     handInnerLoadedDataCallback(dataType, (String) o);
                 } else {
-                    //TODO 处理错误的情况
+                    handlerLoadFailedCallback(dataType);
                 }
             }
         });
@@ -262,6 +263,12 @@ public class LessonInfoDataMananger {
         }
     }
 
+    private void handlerLoadFailedCallback(@NonNull String dataType){
+        if(mOnLoadFailedCallback != null){
+            mOnLoadFailedCallback.onLoadFailed(dataType);
+        }
+    }
+
     public LessonInfoAdapter getAdapter() {
         return mAdapter;
     }
@@ -276,7 +283,15 @@ public class LessonInfoDataMananger {
         mOnLoadedDataCallback = onLoadedDataCallback;
     }
 
+    public void setOnLoadFailedCallback(OnLoadFailedCallback onLoadFailedCallback) {
+        mOnLoadFailedCallback = onLoadFailedCallback;
+    }
+
     public interface OnLoadedDataCallback {
         void onLoadedData(String dataType, String data);
+    }
+
+    public interface OnLoadFailedCallback{
+        void onLoadFailed(String dataType);
     }
 }

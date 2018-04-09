@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -132,11 +133,18 @@ public class LessonInfoHeader extends RelativeLayout implements IBindMap {
     private void showScore(Map<String, String> data) {
         WidgetUtility.setTextToView(mScoreText,data.get("text1"));
         WidgetUtility.setTextToView(mScoreSuffixText,data.get("text2"));
-        boolean isShow = mScoreText.getVisibility() == VISIBLE || mScoreSuffixText.getVisibility() == VISIBLE;
+        boolean isShow = mScoreText.getVisibility() == VISIBLE && mScoreSuffixText.getVisibility() == VISIBLE;
         mScoreLayout.setVisibility(isShow?VISIBLE:GONE);
     }
 
     private void showLessonDesc(Map<String, String> data) {
+        //默认数据处理
+        if(TextUtils.isEmpty(data.get("text1"))){
+            data.put("text1","0");
+        }
+        if(TextUtils.isEmpty(data.get("text2"))){
+            data.put("text2","节课");
+        }
         WidgetUtility.setTextToView(mLessonNumText,data.get("text1"));
         WidgetUtility.setTextToView(mLessonNumSuffixText,data.get("text2"));
         boolean isShow = mLessonNumText.getVisibility() == VISIBLE || mLessonNumSuffixText.getVisibility() == VISIBLE;

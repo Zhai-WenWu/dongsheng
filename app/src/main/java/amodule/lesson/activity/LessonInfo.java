@@ -1,10 +1,11 @@
 package amodule.lesson.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 
 import com.xiangha.R;
 
@@ -15,6 +16,7 @@ import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.IObserver;
 import acore.tools.ObserverManager;
 import acore.tools.StringManager;
+import acore.tools.ToolsDevice;
 import amodule.lesson.controler.data.LessonInfoDataMananger;
 import amodule.lesson.controler.view.LessonInfoUIMananger;
 import amodule.main.Main;
@@ -31,7 +33,6 @@ public class LessonInfo extends BaseAppCompatActivity implements IObserver {
     public static final String TAG = "tzy";
     public static final String EXTRA_CODE = "code";
     public static final String EXTRA_INFO_JSON = "extraInfo";
-
 
     private LessonInfoUIMananger mUIMananger;
     private LessonInfoDataMananger mDataMananger;
@@ -64,8 +65,12 @@ public class LessonInfo extends BaseAppCompatActivity implements IObserver {
     /** 处理外带数据 */
     private void setPreData() {
         Intent intent = getIntent();
-        Map<String, String> preData = StringManager.getFirstMap(intent.getStringExtra(EXTRA_INFO_JSON));
-        mUIMananger.setHeaderData(preData);
+        String extraJsonValue = intent.getStringExtra(EXTRA_INFO_JSON);
+        if(!TextUtils.isEmpty(extraJsonValue)){
+            loadManager.hideProgressBar();
+            Map<String, String> preData = StringManager.getFirstMap(intent.getStringExtra(EXTRA_INFO_JSON));
+            mUIMananger.setHeaderData(preData);
+        }
     }
 
     private void initialize() {
@@ -94,8 +99,8 @@ public class LessonInfo extends BaseAppCompatActivity implements IObserver {
             final Map<String, String> data = StringManager.getFirstMap(dataValue);
             switch (dataType) {
                 case DATA_TYPE_LESSON_INFO:
+                    loadSuccess();
                     mUIMananger.setHeaderData(data);
-                    loadManager.hideProgressBar();
                     break;
                 case DATA_TYPE_COMMENT:
                     mUIMananger.setHaFriendCommentData(data);
@@ -113,11 +118,38 @@ public class LessonInfo extends BaseAppCompatActivity implements IObserver {
                     break;
             }
         });
+        mDataMananger.setOnLoadFailedCallback(dataType -> {
+            switch (dataType) {
+                case DATA_TYPE_LESSON_INFO:
+                    loadFialed();
+                    break;
+                default:
+                    break;
+            }
+        });
+    }
+
+    private void loadFialed() {
+        Log.i(TAG, "loadFialed: ");
+        mUIMananger.setRvListViewVisibility(View.GONE);
+        loadManager.showLoadFaildBar();
+        loadManager.hideProgressBar();
+    }
+
+    private void loadSuccess() {
+        Log.i(TAG, "loadSuccess: ");
+        mUIMananger.setRvListViewVisibility(View.VISIBLE);
+        loadManager.hideLoadFaildBar();
+        loadManager.hideProgressBar();
     }
 
     /** 加载数据 */
     private void loadData() {
-        Log.d(TAG, "loadData: ");
+        if(!ToolsDevice.isNetworkAvailable(this)){
+            Toast.makeText(this, "请检查网络设置", Toast.LENGTH_SHORT).show();
+            loadFialed();
+            return;
+        }
         mDataMananger.loadData();
     }
 
