@@ -57,7 +57,7 @@ public class LessonInfoUIMananger {
     }
 
     private void initializeData() {
-        mTopBarHeight = Tools.getDimen(mActivity, R.dimen.dp_49) + Tools.getStatusBarHeight(mActivity);
+        mTopBarHeight = Tools.getStatusBarHeight(mActivity);//Tools.getDimen(mActivity, R.dimen.dp_49) +
     }
 
     private void initializeUI() {
@@ -81,8 +81,14 @@ public class LessonInfoUIMananger {
 
     protected void initTitle() {
         mTopbar = (RelativeLayout) mActivity.findViewById(R.id.top_bar);
+        resetTopbar();
         String colorValue = mActivity.getResources().getString(R.color.common_top_bg);
        Tools.setStatusBarColor(mActivity,Color.parseColor(colorValue));
+    }
+
+    private void resetTopbar() {
+        mTopbar.setBackgroundResource(R.color.transparent);
+        currentColorRes = R.color.transparent;
     }
 
     private void setClickListener() {
@@ -180,11 +186,15 @@ public class LessonInfoUIMananger {
         return hasNextItem;
     }
 
+    private int currentColorRes = R.color.transparent;
     private void updateTopbarBg(int dy) {
-        Log.i("tzy", "updateTopbarBg: ");
-        boolean isShow = dy <= mInfoHeader.getImageHeight() / 2 - mTopBarHeight;
+        boolean isShow = dy <= (mInfoHeader.getImageHeight() / 2 - mTopBarHeight);
         int colorRes = isShow ? R.color.transparent : R.color.common_top_bg;
-        mTopbar.setBackgroundResource(colorRes);
+        if(currentColorRes != colorRes){
+            Log.i("tzy", "updateTopbarBg: dy=" + dy + " ; mInfoHeader/2=" + (mInfoHeader.getImageHeight() / 2));
+            currentColorRes = colorRes;
+            mTopbar.setBackgroundResource(colorRes);
+        }
     }
 
     private void onBackPressed() {
@@ -198,6 +208,15 @@ public class LessonInfoUIMananger {
     }
 
     public void refresh() {
+        resetTopbar();
+        returnListTop();
         setHaFriendCommentData(new HashMap<>());
+    }
+
+    //回到第一个位置
+    private void returnListTop() {
+        if (mRvListView != null) {
+            mRvListView.scrollToPosition(0);
+        }
     }
 }

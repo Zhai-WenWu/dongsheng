@@ -23,6 +23,7 @@
         android:id="@+id/item_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textStyle="bold"
         android:padding="@dimen/dp_20"
         android:textColor="@color/common_text"
         android:textSize="@dimen/sp_16"

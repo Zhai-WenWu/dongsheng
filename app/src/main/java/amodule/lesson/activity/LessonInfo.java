@@ -41,7 +41,7 @@ public class LessonInfo extends BaseAppCompatActivity implements IObserver {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initActivity("", 5, 0, 0, R.layout.a_lesson_info_layout);
+        initActivity("", 7, 0, 0, R.layout.a_lesson_info_layout);
         initialize();
         setPreData();
         ObserverManager.getInstance().registerObserver(this, NOTIFY_VIPSTATE_CHANGED);

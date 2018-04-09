@@ -67,7 +67,6 @@ public class LessonInfoDataMananger {
         if (TextUtils.isEmpty(type)) {
             return;
         }
-        Log.i(TAG, "onClickMore: " + type);
         List<Map<String, String>> imgs = mImgsArray.get(type);
         if (imgs == null || imgs.isEmpty()) {
             return;
@@ -178,7 +177,6 @@ public class LessonInfoDataMananger {
             case DATA_TYPE_LESSON_INFO:
                 //特殊处理
                 loadOtherData();
-                Log.d(TAG, "handInnerLoadedDataCallback: " + data);
                 handlerLoadedDataCallback(dataType, data);
                 break;
             case DATA_TYPE_LESSON_INTROCTION:

@@ -2,6 +2,7 @@ package amodule.lesson.view.info;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -41,6 +42,8 @@ public class ItemImage extends LinearLayout implements IBindMap, IBindExtraArray
 
     private OnClickMoreCallbcak mClickMoreCallbcak;
 
+    private Map<String,String> mData;
+
     private int mImageWidth = 0;
 
     private String mType = "";
@@ -69,7 +72,12 @@ public class ItemImage extends LinearLayout implements IBindMap, IBindExtraArray
     }
 
     @Override
-    public void setData(Map<String, String> data) {
+    public void setData(@NonNull Map<String, String> data) {
+        if(mData != null
+                && mData.equals(data)){
+            return;
+        }
+        mData = data;
 
         showImage(data.get("img"));
         showMoreLayout(data);
