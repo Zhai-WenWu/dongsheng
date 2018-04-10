@@ -16,6 +16,7 @@ import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
 import amodule._common.delegate.IBindExtraArrayMap;
 import amodule._common.delegate.IBindMap;
+import amodule._common.delegate.StatisticCallback;
 import amodule._common.utility.WidgetUtility;
 import amodule._common.widget.baseWidget.BaseExtraLinearLayout;
 
@@ -28,6 +29,7 @@ import amodule._common.widget.baseWidget.BaseExtraLinearLayout;
 public class ItemTitle extends LinearLayout implements IBindMap,IBindExtraArrayMap {
     private BaseExtraLinearLayout mExtraLinearLayout;
     private TextView mTitle;
+    private StatisticCallback mStatisticCallback;
     public ItemTitle(Context context) {
         this(context,null);
     }
@@ -67,5 +69,9 @@ public class ItemTitle extends LinearLayout implements IBindMap,IBindExtraArrayM
 
     public void showTopPadding(){
         findViewById(R.id.extra_padding_top).setVisibility(VISIBLE);
+    }
+
+    public void setStatisticCallback(StatisticCallback statisticCallback) {
+        mStatisticCallback = statisticCallback;
     }
 }

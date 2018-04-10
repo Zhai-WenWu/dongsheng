@@ -11,9 +11,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import acore.logic.XHClick;
 import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.StringManager;
+import acore.tools.Tools;
+import amodule.lesson.activity.LessonInfo;
 import amodule.lesson.adapter.LessonInfoAdapter;
+import amodule.lesson.view.info.ItemImage;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
 
@@ -44,7 +48,7 @@ public class LessonInfoDataMananger {
 
     public static final String DATA_TYPE_VIP_BUTTON = "vipButton";
 
-    private final BaseAppCompatActivity mActivity;
+    private final LessonInfo mActivity;
     private final String lessonCode;
 
     private LessonInfoAdapter mAdapter;
@@ -53,7 +57,7 @@ public class LessonInfoDataMananger {
     private OnLoadedDataCallback mOnLoadedDataCallback;
     private OnLoadFailedCallback mOnLoadFailedCallback;
 
-    public LessonInfoDataMananger(BaseAppCompatActivity activity, String lessonCode) {
+    public LessonInfoDataMananger(LessonInfo activity, String lessonCode) {
         mActivity = activity;
         this.lessonCode = lessonCode;
         initializeAdapter(activity);
@@ -61,7 +65,11 @@ public class LessonInfoDataMananger {
 
     private void initializeAdapter(BaseAppCompatActivity activity) {
         mAdapter = new LessonInfoAdapter(activity, mData);
-        mAdapter.setMoreCallbcak(this::replaceImgsData);
+        mAdapter.setMoreCallbcak((String type) -> {
+            int position = Tools.parseIntOfThrow(type,0) + 1;
+            XHClick.mapStat(mActivity,mActivity.getStatisticsId(),"点击查看更多","模块"+position+"点击查看更多");
+            replaceImgsData(type);
+        });
     }
 
     private void replaceImgsData(String type) {

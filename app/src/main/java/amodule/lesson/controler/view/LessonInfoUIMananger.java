@@ -15,11 +15,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import acore.logic.AppCommon;
+import acore.logic.XHClick;
 import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.rvlistview.RvListView;
 import amodule._common.utility.WidgetUtility;
+import amodule.lesson.activity.LessonInfo;
 import amodule.lesson.view.info.LessonInfoHeader;
 import amodule.lesson.view.info.LessonModuleView;
 import amodule.vip.VIPButton;
@@ -34,7 +36,7 @@ import static android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
  */
 public class LessonInfoUIMananger {
 
-    private final BaseAppCompatActivity mActivity;
+    private final LessonInfo mActivity;
 
     private RelativeLayout mTopbar;
     private RvListView mRvListView;
@@ -49,7 +51,7 @@ public class LessonInfoUIMananger {
     private int mTopBarHeight = 0;
     private boolean hasNextItem = true;
 
-    public LessonInfoUIMananger(BaseAppCompatActivity activity) {
+    public LessonInfoUIMananger(LessonInfo activity) {
         this.mActivity = activity;
         initializeData();
         initializeUI();
@@ -83,7 +85,7 @@ public class LessonInfoUIMananger {
         mTopbar = (RelativeLayout) mActivity.findViewById(R.id.top_bar);
         resetTopbar();
         String colorValue = mActivity.getResources().getString(R.color.common_top_bg);
-       Tools.setStatusBarColor(mActivity,Color.parseColor(colorValue));
+        Tools.setStatusBarColor(mActivity, Color.parseColor(colorValue));
     }
 
     private void resetTopbar() {
@@ -135,7 +137,10 @@ public class LessonInfoUIMananger {
         WidgetUtility.setTextToView(mVIPButton, titleValue);
         mVIPButton.setTextColor(Color.parseColor(colorValue));
         mVIPButton.setBackgroundColor(Color.parseColor(bgColorValue));
-        mVIPButton.setOnClickListener(v -> AppCommon.openUrl(mActivity, url, true));
+        mVIPButton.setOnClickListener(v -> {
+            XHClick.mapStat(mActivity,LessonInfo.STATISTICS_ID_NONVIP,"底部浮动按钮点击","");
+            AppCommon.openUrl(mActivity, url, true);
+        });
     }
 
     /** 设置滑动监听 */
@@ -188,10 +193,11 @@ public class LessonInfoUIMananger {
     }
 
     private int currentColorRes = R.color.transparent;
+
     private void updateTopbarBg(int dy) {
         boolean isShow = dy <= (mInfoHeader.getImageHeight() / 2 - mTopBarHeight);
         int colorRes = isShow ? R.color.transparent : R.color.common_top_bg;
-        if(currentColorRes != colorRes){
+        if (currentColorRes != colorRes) {
             Log.i("tzy", "updateTopbarBg: dy=" + dy + " ; mInfoHeader/2=" + (mInfoHeader.getImageHeight() / 2));
             currentColorRes = colorRes;
             mTopbar.setBackgroundResource(colorRes);
@@ -208,8 +214,8 @@ public class LessonInfoUIMananger {
         return mRvListView;
     }
 
-    public void setRvListViewVisibility(int visibility){
-        if(mRvListView != null){
+    public void setRvListViewVisibility(int visibility) {
+        if (mRvListView != null) {
             mRvListView.setVisibility(visibility);
         }
     }

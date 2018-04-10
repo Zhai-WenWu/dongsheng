@@ -12,6 +12,7 @@ import com.xiangha.R;
 import java.util.Map;
 
 import acore.logic.LoginManager;
+import acore.logic.XHClick;
 import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.IObserver;
 import acore.tools.ObserverManager;
@@ -31,6 +32,10 @@ import static amodule.lesson.controler.data.LessonInfoDataMananger.DATA_TYPE_VIP
 public class LessonInfo extends BaseAppCompatActivity implements IObserver {
 
     public static final String TAG = "tzy";
+
+    public static final String STATISTICS_ID_VIP = "vip_middlepage";
+    public static final String STATISTICS_ID_NONVIP = "nonvip_middlepage";
+
     public static final String EXTRA_CODE = "code";
     public static final String EXTRA_INFO_JSON = "extraInfo";
 
@@ -175,7 +180,12 @@ public class LessonInfo extends BaseAppCompatActivity implements IObserver {
         if (isOpenVip) {
             Main.colse_level = 7;
         }
+        XHClick.mapStat(this,getStatisticsId(),"返回按钮","");
         Log.d("tzy", "onBackPressed: ");
         super.onBackPressed();
+    }
+
+    public String getStatisticsId(){
+        return LoginManager.isVIP()?STATISTICS_ID_VIP:STATISTICS_ID_NONVIP;
     }
 }
