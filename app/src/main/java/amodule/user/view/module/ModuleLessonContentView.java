@@ -62,6 +62,7 @@ public class ModuleLessonContentView extends ModuleBaseView {
         WidgetUtility.setTextToView(mTextLessonDesc,map.get("text1"),false);
 //        setViewImage(mImageView,map.get());
         setVisibility(VISIBLE);
+        setListener();
     }
 
     private void showTagTextView(Map<String, String> map) {

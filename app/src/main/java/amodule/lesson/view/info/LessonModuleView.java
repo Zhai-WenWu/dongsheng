@@ -69,13 +69,13 @@ public class LessonModuleView extends LessonParentLayout {
             Map<String, String> data = mDatas.remove(0);
             if (data != null) {
                 ModuleItemS0View moduleItemS0View = new ModuleItemS0View(getContext());
-                moduleItemS0View.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        //TODO
-                        handlerStatisticCallback(mTitleText+"的点击","");
-                    }
-                });
+//                moduleItemS0View.setOnClickListener(new OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        //TODO
+//                        handlerStatisticCallback(mTitleText+"的点击","");
+//                    }
+//                });
                 moduleItemS0View.setUseDefaultBottomPadding(isUseDefaultBottomPadding);
                 moduleItemS0View.initData(data);
                 addView(moduleItemS0View);

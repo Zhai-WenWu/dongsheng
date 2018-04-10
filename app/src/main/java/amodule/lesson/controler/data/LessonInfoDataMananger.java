@@ -17,8 +17,8 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import amodule.lesson.activity.LessonInfo;
 import amodule.lesson.adapter.LessonInfoAdapter;
-import amodule.lesson.view.info.ItemImage;
 import aplug.basic.InternetCallback;
+import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 
 import static acore.tools.StringManager.API_SCHOOL_COMMENTCHAPTERS;
@@ -166,10 +166,9 @@ public class LessonInfoDataMananger {
             default:
                 return;
         }
-        apiUrl += "?courseCode="+lessonCode;
-        apiUrl += "&debug=4d5c01842f37d90651f9693783c6564279fed6f4&isDelCache=false";
+        String params = "courseCode="+lessonCode;
         //发起请求
-        ReqInternet.in().doGet(apiUrl, new InternetCallback() {
+        ReqEncyptInternet.in().doEncypt(apiUrl,params, new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
                 if (i >= ReqInternet.REQ_OK_STRING) {
