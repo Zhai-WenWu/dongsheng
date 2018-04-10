@@ -66,6 +66,7 @@ public class ModuleItemS0View extends RelativeLayout {
         part_1.getChildAt(3).setTag("B4");
         part_1.getChildAt(4).setTag("B5");
         part_1.getChildAt(5).setTag("B6");
+        part_1.getChildAt(6).setTag("B7");
     }
 
     /**

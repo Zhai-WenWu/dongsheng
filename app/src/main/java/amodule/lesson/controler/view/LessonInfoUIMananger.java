@@ -113,6 +113,7 @@ public class LessonInfoUIMananger {
 
     public void setGuessYouLikeData(Map<String, String> data) {
         mGuessYouLikeView.setData(data);
+        mGuessYouLikeView.setPadding(0,0,0,Tools.getDimen(mActivity,R.dimen.dp_20));
     }
 
     public void setVipButton(Map<String, String> data) {

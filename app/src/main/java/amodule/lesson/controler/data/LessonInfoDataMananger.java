@@ -225,6 +225,7 @@ public class LessonInfoDataMananger {
                     .forEach(value -> imageArray.add(handlerImageData(value.get(""))));
             if (!imageArray.isEmpty() && TextUtils.isEmpty(extraData.get("bottom"))) {
                 imageArray.get(imageArray.size() - 1).put("bottom", extraData.get("bottom"));
+                imageArray.get(imageArray.size() - 1).put("isEnd", "2");
             }
             mImgsArray.put(String.valueOf(i), imageArray);
         }
@@ -255,6 +256,7 @@ public class LessonInfoDataMananger {
         data.put("img", imgUrl);
         if (!TextUtils.isEmpty(type)) {
             data.put("end", type);
+            data.put("isEnd", "2");
         }
         if (!TextUtils.isEmpty(text2)) {
             data.put("text2", text2);

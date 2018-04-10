@@ -67,6 +67,12 @@
             android:layout_height="wrap_content"
             android:layout="@layout/module_b6_left"
             android:tag="B6"/>
+
+        <ViewStub
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout="@layout/module_b7_more"
+            android:tag="B7"/>
     </RelativeLayout>
 
     <RelativeLayout

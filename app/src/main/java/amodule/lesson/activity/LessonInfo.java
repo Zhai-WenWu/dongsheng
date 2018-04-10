@@ -188,4 +188,5 @@ public class LessonInfo extends BaseAppCompatActivity implements IObserver {
     public String getStatisticsId(){
         return LoginManager.isVIP()?STATISTICS_ID_VIP:STATISTICS_ID_NONVIP;
     }
+
 }

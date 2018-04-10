@@ -28,8 +28,8 @@ public class ModuleUserCommentView extends ModuleBaseView{
 
     static final int LAYOUT_ID = R.layout.module_user_comment_view;
 
-    private ImageView auther_userImg;
-    private TextView auther_name,right_text;
+    private ImageView auther_userImg,auther_level;
+    private TextView auther_name,left_text,right_text;
     private ProperRatingBar mRatingBar;
     private String userUrl="";//用户点击跳转url
     public ModuleUserCommentView(Context context) {
@@ -47,8 +47,10 @@ public class ModuleUserCommentView extends ModuleBaseView{
     public void initUI() {
         setMODULE_TAG("A2");
         auther_userImg= (ImageView) findViewById(R.id.auther_userImg);
+        auther_level= (ImageView) findViewById(R.id.auther_level);
         auther_name= (TextView) findViewById(R.id.auther_name);
         right_text= (TextView) findViewById(R.id.right_text);
+        left_text= (TextView) findViewById(R.id.left_text);
         mRatingBar = (ProperRatingBar) findViewById(R.id.rating_bar);
     }
     @Override
@@ -66,14 +68,17 @@ public class ModuleUserCommentView extends ModuleBaseView{
                 }
                 userUrl = mapUser.containsKey("url")&& !TextUtils.isEmpty(mapUser.get("url")) ? mapUser.get("url") : "";
             }
-            //url点击跳转
         }
+        WidgetUtility.setTextToView(left_text,map.get("subTtitle"));
         WidgetUtility.setTextToView(right_text,map.get("rightTxt"));
         String starCountValue = map.get("starCount");
         int defaultValue = 5;
         int starCount = parseIntOfThrow(starCountValue, defaultValue);
         mRatingBar.setRating(starCount);
         setListener();
+        //TODO 对UI
+        AppCommon.setLvImage(1,auther_level);
+        WidgetUtility.setTextToView(left_text,"昨天");
     }
 
     @Override

@@ -21,7 +21,7 @@
         <LinearLayout
             android:id="@+id/more_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/dp_73"
             android:layout_alignBottom="@+id/image"
             android:background="@drawable/lesson_white_shadow"
             android:gravity="center"
@@ -56,6 +56,5 @@
         android:id="@+id/bottom_extra_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
-
 
 </LinearLayout>

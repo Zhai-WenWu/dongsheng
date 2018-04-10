@@ -95,11 +95,10 @@ public abstract class LessonParentLayout extends LinearLayout implements IBindMa
         if (mContentLayout.getChildCount() > 0) {
             mContentLayout.removeAllViews();
         }
-//        mDatas = StringManager.getListMapByJson(data.get(KEY_WIDGET_DATA));
-
-        Map<String, String> widgetExtraDataMap = StringManager.getFirstMap(data.get(KEY_WIDGET_EXTRA));
-        setTopExtraData(widgetExtraDataMap);
-        setBottomExtraData(widgetExtraDataMap);
+        //TODO 对UI
+//        Map<String, String> widgetExtraDataMap = StringManager.getFirstMap(data.get(KEY_WIDGET_EXTRA));
+//        setTopExtraData(widgetExtraDataMap);
+//        setBottomExtraData(widgetExtraDataMap);
         showAllItem();
     }
 

@@ -8,7 +8,6 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -108,6 +107,7 @@ public class LessonInfoHeader extends RelativeLayout implements IBindMap {
         WidgetUtility.setTextToView(mDescription,data.get("desc"));
         boolean isShowDescriptionLayout = mTitle.getVisibility() == VISIBLE || mDescription.getVisibility() == VISIBLE;
         findViewById(R.id.description_layout).setVisibility(isShowDescriptionLayout?VISIBLE:GONE);
+        findViewById(R.id.description_layout_shadow).setVisibility(isShowDescriptionLayout?VISIBLE:GONE);
 
         showScore(StringManager.getFirstMap(data.get("score")));
 
