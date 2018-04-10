@@ -15,9 +15,11 @@ import acore.logic.AppCommon;
 import acore.logic.XHClick;
 import acore.override.helper.XHActivityManager;
 import acore.tools.StringManager;
+import acore.tools.Tools;
 import acore.widget.ProperRatingBar;
 import amodule._common.utility.WidgetUtility;
 
+import static acore.tools.Tools.parseFloatOfThrow;
 import static acore.tools.Tools.parseIntOfThrow;
 
 
@@ -69,12 +71,22 @@ public class ModuleUserCommentView extends ModuleBaseView{
                 userUrl = mapUser.containsKey("url")&& !TextUtils.isEmpty(mapUser.get("url")) ? mapUser.get("url") : "";
             }
         }
-        WidgetUtility.setTextToView(left_text,map.get("subTtitle"));
+        WidgetUtility.setTextToView(left_text,map.get("subTtitle"),false);
         WidgetUtility.setTextToView(right_text,map.get("rightTxt"));
+        int lv = Tools.parseIntOfThrow(map.get("lv"),0);
+        AppCommon.setLvImage(lv,auther_level);
         String starCountValue = map.get("starCount");
-        int defaultValue = 5;
-        int starCount = parseIntOfThrow(starCountValue, defaultValue);
-        mRatingBar.setRating(starCount);
+        if(TextUtils.isEmpty(starCountValue)){
+            mRatingBar.setRating(5);
+        }else if(starCountValue.contains(".")){
+            float defaultValue = 5.0f;
+            float starCount = parseFloatOfThrow(starCountValue, defaultValue);
+            mRatingBar.setRating(starCount);
+        }else{
+            int defaultValue = 5;
+            int starCount = parseIntOfThrow(starCountValue, defaultValue);
+            mRatingBar.setRating(starCount);
+        }
         setListener();
     }
 

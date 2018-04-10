@@ -38,19 +38,20 @@
 
         <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/dp_40"
             android:layout_marginLeft="@dimen/dp_9"
             android:layout_toRightOf="@+id/auther_userImg"
             android:background="@color/transparent">
 
-            <LinearLayout
+            <RelativeLayout
                 android:id="@+id/left_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
                 android:background="@color/transparent"
                 android:orientation="vertical">
 
                 <LinearLayout
+                    android:id="@+id/user_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
@@ -81,17 +82,16 @@
                     android:id="@+id/left_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
                     android:textColor="#A9A9A9"
                     android:textSize="@dimen/sp_12"
                     tools:text="昨天"/>
 
-            </LinearLayout>
+            </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/left_layout"
-                android:layout_alignTop="@+id/left_layout"
+                android:layout_height="match_parent"
                 android:layout_alignParentRight="true">
 
                 <acore.widget.ProperRatingBar
@@ -103,6 +103,7 @@
                     app:prb_defaultRating="5"
                     app:prb_tickNormalDrawable="@drawable/i_score_lesson"
                     app:prb_tickSelectedDrawable="@drawable/i_score_lesson_activity"
+                    app:prb_tickSelectedHalfDrawable="@drawable/i_score_lesson_half"
                     app:prb_tickSize="@dimen/dp_18"
                     app:prb_tickSpacing="@dimen/dp_2"
                     app:prb_totalTicks="5"/>

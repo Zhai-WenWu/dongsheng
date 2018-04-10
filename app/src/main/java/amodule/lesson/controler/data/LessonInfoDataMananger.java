@@ -167,6 +167,7 @@ public class LessonInfoDataMananger {
                 return;
         }
         apiUrl += "?courseCode="+lessonCode;
+        apiUrl += "&debug=4d5c01842f37d90651f9693783c6564279fed6f4&isDelCache=false";
         //发起请求
         ReqInternet.in().doGet(apiUrl, new InternetCallback() {
             @Override

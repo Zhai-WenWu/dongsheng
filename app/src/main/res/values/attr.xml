@@ -23,6 +23,7 @@
         <attr name="prb_tickNormalDrawable" format="reference" />
         <!-- Drawable resource to use as a tick that is selected (rated). No default value. -->
         <attr name="prb_tickSelectedDrawable" format="reference" />
+        <attr name="prb_tickSelectedHalfDrawable" format="reference" />
         <!-- Margin to be applied to tick drawables. Only applies to drawable-type ticks. Default is '1dp' (gray). -->
         <attr name="prb_tickSpacing" format="dimension" />
         <attr name="prb_tickSize" format="dimension" />

@@ -68,6 +68,7 @@ public class ProperRatingBar extends LinearLayout {
     private int customTextSelectedColor;
     private Drawable tickNormalDrawable;
     private Drawable tickSelectedDrawable;
+    private Drawable tickSelectedHalfDrawable;
     private int tickSpacing;
     private int tickSize;
 
@@ -101,6 +102,7 @@ public class ProperRatingBar extends LinearLayout {
         //
         tickNormalDrawable = a.getDrawable(R.styleable.ProperRatingBar_prb_tickNormalDrawable);
         tickSelectedDrawable = a.getDrawable(R.styleable.ProperRatingBar_prb_tickSelectedDrawable);
+        tickSelectedHalfDrawable = a.getDrawable(R.styleable.ProperRatingBar_prb_tickSelectedHalfDrawable);
         tickSpacing = a.getDimensionPixelOffset(R.styleable.ProperRatingBar_prb_tickSpacing,
                 context.getResources().getDimensionPixelOffset(DF_TICK_SPACING_RES));
         tickSize = a.getDimensionPixelOffset(R.styleable.ProperRatingBar_prb_tickSize,
@@ -336,6 +338,41 @@ public class ProperRatingBar extends LinearLayout {
      */
     public int getRating() {
         return rating;
+    }
+
+    public void setRating(float rating){
+        setClickable(false);
+        if (rating  > this.totalTicks) rating = totalTicks;
+        int fakeRating = (int) (rating*10);
+        lastSelectedTickIndex = fakeRating / 10 - 1;
+        boolean hasHalf = false;
+        int remainder = fakeRating % 10;
+        if(remainder == 0){
+            hasHalf = false;
+        }else  if(remainder < 5){
+            hasHalf = true;
+        }else{
+            hasHalf = false;
+            lastSelectedTickIndex++;
+        }
+        final boolean finalHasHalf = hasHalf;
+        iterateTicks(new TicksIterator() {
+            @Override
+            public void onTick(View tick, int position) {
+                if (useSymbolicTick) {
+//                    redrawTickSelection((TextView) tick,
+//                            position <= lastSelectedTickIndex);
+                } else {
+                    if(position <= lastSelectedTickIndex){
+                        redrawTickSelection((ImageView) tick, true);
+                    }else if(finalHasHalf){
+                        ((ImageView) tick).setImageDrawable(tickSelectedHalfDrawable);
+                    }else{
+                        redrawTickSelection((ImageView) tick, false);
+                    }
+                }
+            }
+        });
     }
 
     /**
