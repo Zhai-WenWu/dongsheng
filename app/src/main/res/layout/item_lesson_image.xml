@@ -47,10 +47,22 @@
 
     </RelativeLayout>
 
+    <LinearLayout
+            android:id="@+id/bottom_line"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+
+        <View
+            android:background="#FFFFFF"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_20"/>
+
     <View
-        android:id="@+id/bottom_line"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_5"/>
+    </LinearLayout>
+
 
     <amodule._common.widget.baseWidget.BaseExtraLinearLayout
         android:id="@+id/bottom_extra_layout"

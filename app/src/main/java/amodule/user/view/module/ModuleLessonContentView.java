@@ -60,8 +60,6 @@ public class ModuleLessonContentView extends ModuleBaseView {
         showTagTextView(map);
         WidgetUtility.setTextToView(mTextDesc,map.get("text3"),false);
         WidgetUtility.setTextToView(mTextLessonDesc,map.get("text1"),false);
-        //TODO 对UI
-        WidgetUtility.setTextToView(mTextLessonDesc,"12455人已完成学习",false);
 //        setViewImage(mImageView,map.get());
         setVisibility(VISIBLE);
     }

@@ -166,8 +166,7 @@ public class LessonInfoDataMananger {
             default:
                 return;
         }
-        //TODO
-        apiUrl += "?courseCode="+lessonCode+"&debug=4d5c01842f37d90651f9693783c6564279fed6f4&isDelCache=false";
+        apiUrl += "?courseCode="+lessonCode;
         //发起请求
         ReqInternet.in().doGet(apiUrl, new InternetCallback() {
             @Override

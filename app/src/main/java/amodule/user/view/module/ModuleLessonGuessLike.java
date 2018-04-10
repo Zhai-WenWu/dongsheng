@@ -62,10 +62,6 @@ public class ModuleLessonGuessLike extends ModuleBaseView {
         WidgetUtility.setTextToView(mTextTitle,map.get("text1"),false);
         WidgetUtility.setTextToView(mTextDesc,map.get("text2"),false);
         WidgetUtility.setTextToView(mTextLessonDesc,map.get("text2"),false);
-        //TODO 对UI
-        WidgetUtility.setTextToView(mTextDesc,"30天轻断食瘦身计划，最专业的团队为您合理\n" +
-                "搭配4周8天的早、中、晚轻食",false);
-        WidgetUtility.setTextToView(mTextLessonDesc,"25节课  24555人已完成学习",false);
     }
 
     @Override

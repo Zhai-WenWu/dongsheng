@@ -204,7 +204,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:textColor="@color/common_super_tint_text"
-                android:textSize="@dimen/sp_12"
+                android:textSize="@dimen/sp_13"
                 tools:text="1566人已完成学习"/>
 
         </RelativeLayout>

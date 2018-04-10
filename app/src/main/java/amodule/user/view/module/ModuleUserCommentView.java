@@ -76,9 +76,6 @@ public class ModuleUserCommentView extends ModuleBaseView{
         int starCount = parseIntOfThrow(starCountValue, defaultValue);
         mRatingBar.setRating(starCount);
         setListener();
-        //TODO 对UI
-        AppCommon.setLvImage(1,auther_level);
-        WidgetUtility.setTextToView(left_text,"昨天");
     }
 
     @Override
