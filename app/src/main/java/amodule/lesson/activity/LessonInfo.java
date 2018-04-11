@@ -22,12 +22,13 @@ import amodule.lesson.controler.data.LessonInfoDataMananger;
 import amodule.lesson.controler.view.LessonInfoUIMananger;
 import amodule.main.Main;
 
+import static acore.tools.ObserverManager.NOTIFY_LESSON_VIPBUTTON;
 import static acore.tools.ObserverManager.NOTIFY_VIPSTATE_CHANGED;
 import static amodule.lesson.controler.data.LessonInfoDataMananger.DATA_TYPE_COMMENT;
 import static amodule.lesson.controler.data.LessonInfoDataMananger.DATA_TYPE_GUESS_LIKE;
 import static amodule.lesson.controler.data.LessonInfoDataMananger.DATA_TYPE_LESSON_CONTENT;
 import static amodule.lesson.controler.data.LessonInfoDataMananger.DATA_TYPE_LESSON_INFO;
-import static amodule.lesson.controler.data.LessonInfoDataMananger.DATA_TYPE_VIP_BUTTON;
+import static amodule.lesson.controler.data.LessonInfoDataMananger.loadVipButtonData;
 
 public class LessonInfo extends BaseAppCompatActivity implements IObserver {
 
@@ -53,13 +54,13 @@ public class LessonInfo extends BaseAppCompatActivity implements IObserver {
         initActivity("", 7, 0, 0, R.layout.a_lesson_info_layout);
         initialize();
         setPreData();
-        ObserverManager.getInstance().registerObserver(this, NOTIFY_VIPSTATE_CHANGED);
+        ObserverManager.getInstance().registerObserver(this, NOTIFY_VIPSTATE_CHANGED,NOTIFY_LESSON_VIPBUTTON);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (isOpenVip) {
+        if (isOpenVip && Main.colse_level != 7) {
             refresh();
         }
     }
@@ -128,9 +129,9 @@ public class LessonInfo extends BaseAppCompatActivity implements IObserver {
                 case DATA_TYPE_GUESS_LIKE:
                     mUIMananger.setGuessYouLikeData(data);
                     break;
-                case DATA_TYPE_VIP_BUTTON:
-                    mUIMananger.setVipButton(data);
-                    break;
+//                case DATA_TYPE_VIP_BUTTON:
+//                    mUIMananger.setVipButton(data);
+//                    break;
                 default:
                     break;
             }
@@ -181,6 +182,12 @@ public class LessonInfo extends BaseAppCompatActivity implements IObserver {
         switch (name) {
             case NOTIFY_VIPSTATE_CHANGED:
                 isOpenVip = LoginManager.isVIP();
+                loadVipButtonData();
+                break;
+            case NOTIFY_LESSON_VIPBUTTON:
+                if(mUIMananger != null){
+                    mUIMananger.setVipButton(StringManager.getFirstMap(data));
+                }
                 break;
             default:
                 break;

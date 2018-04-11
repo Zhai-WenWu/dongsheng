@@ -8,11 +8,13 @@ import com.annimon.stream.Stream;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import acore.logic.XHClick;
 import acore.override.activity.base.BaseAppCompatActivity;
+import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import amodule.lesson.activity.LessonInfo;
@@ -21,6 +23,7 @@ import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 
+import static acore.tools.ObserverManager.NOTIFY_LESSON_VIPBUTTON;
 import static acore.tools.StringManager.API_SCHOOL_COMMENTCHAPTERS;
 import static acore.tools.StringManager.API_SCHOOL_COMMENTINFO;
 import static acore.tools.StringManager.API_SCHOOL_COURSEINTRODUCEINFO;
@@ -45,8 +48,6 @@ public class LessonInfoDataMananger {
     public static final String DATA_TYPE_COMMENT = "comment";
     public static final String DATA_TYPE_LESSON_CONTENT = "lessonContent";
     public static final String DATA_TYPE_GUESS_LIKE = "guessLike";
-
-    public static final String DATA_TYPE_VIP_BUTTON = "vipButton";
 
     private final LessonInfo mActivity;
     private final String lessonCode;
@@ -98,7 +99,7 @@ public class LessonInfoDataMananger {
         mData.clear();
         notifyDataSetChanged();
         mImgsArray.clear();
-        loadData();
+        loadTopInfo();
     }
 
     /** 加载数据 */
@@ -107,8 +108,22 @@ public class LessonInfoDataMananger {
         loadVipButtonData();
     }
 
-    private void loadVipButtonData() {
-        handlerRequest(DATA_TYPE_VIP_BUTTON);
+    private static boolean isLoadingVipButtonData = false;
+    public static synchronized void loadVipButtonData() {
+        if(isLoadingVipButtonData){
+            return;
+        }
+        isLoadingVipButtonData = true;
+        //发起请求
+        ReqEncyptInternet.in().doEncypt(API_SCHOOL_INFO_VIPBUTTON,new LinkedHashMap<>(), new InternetCallback() {
+            @Override
+            public void loaded(int i, String s, Object o) {
+                isLoadingVipButtonData = false;
+                if (i >= ReqInternet.REQ_OK_STRING) {
+                    ObserverManager.getInstance().notify(NOTIFY_LESSON_VIPBUTTON,null,o);
+                }
+            }
+        });
     }
 
     private void loadTopInfo() {
@@ -159,9 +174,6 @@ public class LessonInfoDataMananger {
                 break;
             case DATA_TYPE_GUESS_LIKE:
                 apiUrl = API_SCHOOL_LIKELIST;
-                break;
-            case DATA_TYPE_VIP_BUTTON:
-                apiUrl = API_SCHOOL_INFO_VIPBUTTON;
                 break;
             default:
                 return;
