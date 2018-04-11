@@ -80,7 +80,7 @@ public class LessonInfoAdapter extends RvBaseAdapter<Map<String, String>> {
         public TitleViewHolder(@NonNull ItemTitle title) {
             super(title);
             this.mTitle = title;
-            mTitle.setPadding(0,Tools.getDimen(title.getContext(),R.dimen.dp_5),0,Tools.getDimen(title.getContext(),R.dimen.dp_5));
+            mTitle.setPadding(0,Tools.getDimen(title.getContext(),R.dimen.dp_5),0,Tools.getDimen(title.getContext(),R.dimen.dp_6));
         }
 
         @Override

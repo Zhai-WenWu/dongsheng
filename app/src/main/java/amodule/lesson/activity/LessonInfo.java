@@ -39,7 +39,7 @@ public class LessonInfo extends BaseAppCompatActivity implements IObserver {
     public static final String STATISTICS_ID_NONVIP = "nonvip_middlepage";
 
     public static final String EXTRA_CODE = "code";
-    public static final String EXTRA_INFO_JSON = "extraInfo";
+    public static final String EXTRA_INFO_JSON = "extraJson";
 
     private LessonInfoUIMananger mUIMananger;
     private LessonInfoDataMananger mDataMananger;
