@@ -347,9 +347,9 @@ public class ProperRatingBar extends LinearLayout {
         lastSelectedTickIndex = fakeRating / 10 - 1;
         boolean hasHalf = false;
         int remainder = fakeRating % 10;
-        if(remainder == 0){
+        if(remainder < 4){
             hasHalf = false;
-        }else  if(remainder < 5){
+        }else  if(remainder <=6 ){
             hasHalf = true;
         }else{
             hasHalf = false;

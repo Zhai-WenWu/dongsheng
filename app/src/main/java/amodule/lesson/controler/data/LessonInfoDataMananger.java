@@ -214,9 +214,7 @@ public class LessonInfoDataMananger {
             if(!widgetData.isEmpty()){
                 //添加title
                 mData.add(handlerTitleData(type, widgetData.get("text1"), extraData.get("top")));
-                //添加第一张图片
-                String text2 = widgetData.get("text2");
-                mData.add(handlerImageData(type, widgetData.get("defaultImg"), text2, extraData.get("bottom")));
+
                 //暂存
                 List<Map<String, String>> imgs = StringManager.getListMapByJson(widgetData.get("imgs"));
                 List<Map<String, String>> imageArray = new ArrayList<>();
@@ -228,6 +226,15 @@ public class LessonInfoDataMananger {
                     imageArray.get(imageArray.size() - 1).put("isEnd", "2");
                 }
                 mImgsArray.put(String.valueOf(i), imageArray);
+                //添加第一张图片
+                if(imageArray.size() < 2){
+                    Map<String, String> imageMap = handlerImageData("", widgetData.get("defaultImg"), "", extraData.get("bottom"));
+                    imageMap.put("isEnd", "2");
+                    mData.add(imageMap);
+                }else {
+                    String text2 = widgetData.get("text2");
+                    mData.add(handlerImageData(type, widgetData.get("defaultImg"), text2, extraData.get("bottom")));
+                }
             }
         }
         //刷新UI
