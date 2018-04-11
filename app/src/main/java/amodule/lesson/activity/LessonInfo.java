@@ -33,6 +33,8 @@ public class LessonInfo extends BaseAppCompatActivity implements IObserver {
 
     public static final String TAG = "tzy";
 
+    public static int startCount = 0;
+
     public static final String STATISTICS_ID_VIP = "vip_middlepage";
     public static final String STATISTICS_ID_NONVIP = "nonvip_middlepage";
 
@@ -47,6 +49,7 @@ public class LessonInfo extends BaseAppCompatActivity implements IObserver {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        startCount++;
         initActivity("", 7, 0, 0, R.layout.a_lesson_info_layout);
         initialize();
         setPreData();
@@ -65,6 +68,15 @@ public class LessonInfo extends BaseAppCompatActivity implements IObserver {
     protected void onDestroy() {
         super.onDestroy();
         ObserverManager.getInstance().unRegisterObserver(this);
+    }
+
+    @Override
+    public void finish() {
+        startCount--;
+        if(startCount <= 1){
+            Main.colse_level = 1000;
+        }
+        super.finish();
     }
 
     /** 处理外带数据 */
@@ -177,7 +189,7 @@ public class LessonInfo extends BaseAppCompatActivity implements IObserver {
 
     @Override
     public void onBackPressed() {
-        if (isOpenVip) {
+        if (isOpenVip && startCount >= 7) {
             Main.colse_level = 7;
         }
         XHClick.mapStat(this,getStatisticsId(),"返回按钮","");

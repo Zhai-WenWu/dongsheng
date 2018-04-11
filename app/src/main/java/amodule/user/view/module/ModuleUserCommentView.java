@@ -61,7 +61,10 @@ public class ModuleUserCommentView extends ModuleBaseView{
         if(map.containsKey("userView")&&!TextUtils.isEmpty(map.get("userView"))) {
             Map<String,String> mapUser= StringManager.getFirstMap(map.get("userView"));
             if (mapUser != null && !mapUser.isEmpty()) {
-                auther_name.setText(mapUser.get("nickName"));
+                int lv = Tools.parseIntOfThrow(mapUser.get("lv"),0);
+                AppCommon.setLvImage(lv,auther_level);
+                WidgetUtility.setTextToView(left_text,mapUser.get("subTitle"),false);
+                WidgetUtility.setTextToView(auther_name,mapUser.get("nickName"),false);
                 findViewById(R.id.cusType).setVisibility(mapUser.containsKey("iconGourmet") && "2".equals(mapUser.get("iconGourmet")) ? VISIBLE : GONE);
                 if (mapUser.containsKey("img") && !TextUtils.isEmpty(mapUser.get("img")))
                     setViewImage(auther_userImg, mapUser.get("img"));
@@ -71,10 +74,9 @@ public class ModuleUserCommentView extends ModuleBaseView{
                 userUrl = mapUser.containsKey("url")&& !TextUtils.isEmpty(mapUser.get("url")) ? mapUser.get("url") : "";
             }
         }
-        WidgetUtility.setTextToView(left_text,map.get("subTtitle"),false);
+
         WidgetUtility.setTextToView(right_text,map.get("rightTxt"));
-        int lv = Tools.parseIntOfThrow(map.get("lv"),0);
-        AppCommon.setLvImage(lv,auther_level);
+
         String starCountValue = map.get("starCount");
         if(TextUtils.isEmpty(starCountValue)){
             mRatingBar.setRating(5);

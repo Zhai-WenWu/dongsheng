@@ -82,7 +82,7 @@ public class ItemImage extends LinearLayout implements IBindMap, IBindExtraArray
         showImage(data.get("img"));
         showMoreLayout(data);
         setExtraData(StringManager.getListMapByJson(data.get("bottom")));
-        findViewById(R.id.bottom_line).setVisibility("2".equals(data.get("isEnd"))?VISIBLE:GONE);
+        findViewById(R.id.bottom_line).setVisibility(!TextUtils.isEmpty(data.get("img"))&&"2".equals(data.get("isEnd"))?VISIBLE:GONE);
     }
 
     private void showMoreLayout(Map<String, String> data) {

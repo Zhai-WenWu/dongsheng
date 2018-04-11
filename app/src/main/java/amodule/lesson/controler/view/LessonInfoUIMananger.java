@@ -97,8 +97,8 @@ public class LessonInfoUIMananger {
     }
 
     private void resetTopbar() {
-        mTopbar.setBackgroundResource(R.color.transparent);
         currentColorRes = R.color.transparent;
+        mTopbar.setBackgroundResource(R.color.transparent);
     }
 
     private void setClickListener() {

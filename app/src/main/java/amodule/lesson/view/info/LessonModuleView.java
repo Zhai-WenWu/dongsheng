@@ -57,7 +57,7 @@ public class LessonModuleView extends LessonParentLayout {
 
     @Override
     protected boolean showInnerNextItem() {
-        if (isOnce) {
+        if (isOnce && !TextUtils.isEmpty(mTitleText)) {
             isOnce = false;
             ItemTitle title = new ItemTitle(getContext());
             title.setTitle(mTitleText);
