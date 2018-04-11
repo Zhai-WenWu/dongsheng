@@ -101,13 +101,10 @@ public class ModuleLessonMoreImgView extends ModuleBaseView{
         video_image.setOnClickListener(UrlOnClickListener);
     }
 
-    private OnClickListener UrlOnClickListener= new OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            if(!TextUtils.isEmpty(url)) {
-                AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), url, false);
-                if(TextUtils.isEmpty(getStatisticId())&&mContext!=null) XHClick.mapStat(mContext,getStatisticId(),"点击内容","");
-            }
+    private OnClickListener UrlOnClickListener= v -> {
+        if(!TextUtils.isEmpty(url)) {
+            AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), url, false);
+            if(TextUtils.isEmpty(getStatisticId())&&mContext!=null) XHClick.mapStat(mContext,getStatisticId(),"点击内容","");
         }
     };
     /**

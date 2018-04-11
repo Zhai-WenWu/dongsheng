@@ -1,6 +1,7 @@
 package amodule.lesson.view.info;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -44,6 +45,7 @@ public class ItemTitle extends LinearLayout implements IBindMap,IBindExtraArrayM
     }
 
     private void initializeUI() {
+        setBackgroundColor(Color.parseColor("#FFFFFF"));
         LayoutInflater.from(getContext()).inflate(R.layout.item_lesson_title,this);
         mExtraLinearLayout = (BaseExtraLinearLayout) findViewById(R.id.top_extra_layout);
         mTitle = (TextView) findViewById(R.id.item_title);

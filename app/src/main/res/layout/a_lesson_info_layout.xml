@@ -10,6 +10,7 @@
 
     <acore.widget.rvlistview.RvListView
         android:id="@+id/rvListview"
+        android:overScrollMode="never"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/vip_button"/>

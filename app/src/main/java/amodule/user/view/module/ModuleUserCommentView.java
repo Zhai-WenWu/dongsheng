@@ -78,6 +78,12 @@ public class ModuleUserCommentView extends ModuleBaseView{
         WidgetUtility.setTextToView(right_text,map.get("rightTxt"));
 
         String starCountValue = map.get("starCount");
+        showStar(starCountValue);
+
+        setListener();
+    }
+
+    private void showStar(String starCountValue) {
         if(TextUtils.isEmpty(starCountValue)){
             mRatingBar.setRating(5);
         }else if(starCountValue.contains(".")){
@@ -89,7 +95,6 @@ public class ModuleUserCommentView extends ModuleBaseView{
             int starCount = parseIntOfThrow(starCountValue, defaultValue);
             mRatingBar.setRating(starCount);
         }
-        setListener();
     }
 
     @Override

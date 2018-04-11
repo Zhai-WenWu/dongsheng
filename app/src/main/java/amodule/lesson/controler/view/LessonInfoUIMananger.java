@@ -97,6 +97,7 @@ public class LessonInfoUIMananger {
     }
 
     private void resetTopbar() {
+        Log.i("tzy", "resetTopbar: ");
         currentColorRes = R.color.transparent;
         mTopbar.setBackgroundResource(R.color.transparent);
     }
@@ -158,7 +159,7 @@ public class LessonInfoUIMananger {
             mOnScrollListener = new RecyclerView.OnScrollListener() {
                 boolean alowLoad = true;
                 int currentState;
-                int totalDy = 0;
+
 
                 @Override
                 public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -204,7 +205,9 @@ public class LessonInfoUIMananger {
     private int currentColorRes = R.color.transparent;
 
     private void updateTopbarBg(int dy) {
+        Log.i("tzy", "updateTopbarBg: ");
         boolean isShow = dy <= (mInfoHeader.getImageHeight() / 2 - mTopBarHeight);
+        Log.i("tzy", "updateTopbarBg: dy=" + dy);
         int colorRes = isShow ? R.color.transparent : R.color.common_top_bg;
         if (currentColorRes != colorRes) {
             Log.i("tzy", "updateTopbarBg: dy=" + dy + " ; mInfoHeader/2=" + (mInfoHeader.getImageHeight() / 2));
@@ -235,8 +238,10 @@ public class LessonInfoUIMananger {
         setHaFriendCommentData(new HashMap<>());
     }
 
+    private int totalDy = 0;
     //回到第一个位置
     private void returnListTop() {
+        totalDy = 0;
         if (mRvListView != null) {
             mRvListView.scrollToPosition(0);
         }

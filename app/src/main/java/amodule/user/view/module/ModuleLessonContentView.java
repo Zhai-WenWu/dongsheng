@@ -3,7 +3,6 @@ package amodule.user.view.module;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.xiangha.R;
@@ -26,7 +25,6 @@ public class ModuleLessonContentView extends ModuleBaseView {
 
     static final int LAYOUT_ID = R.layout.module_lesson_content_view;
 
-    private ImageView mImageView;
     private TextViewShow mTagTextView;
     private TextView mTextDesc,mTextLessonDesc;
     private Map<String, String> map;
@@ -48,7 +46,6 @@ public class ModuleLessonContentView extends ModuleBaseView {
     @Override
     public void initUI() {
         setMODULE_TAG("B5");
-        mImageView = (ImageView) findViewById(R.id.image);
         mTagTextView = (TextViewShow) findViewById(R.id.text1);
         mTextDesc = (TextView) findViewById(R.id.text2);
         mTextLessonDesc = (TextView) findViewById(R.id.text3);
@@ -62,7 +59,6 @@ public class ModuleLessonContentView extends ModuleBaseView {
         showTagTextView(map);
         WidgetUtility.setTextToView(mTextDesc,map.get("text3"),false);
         WidgetUtility.setTextToView(mTextLessonDesc,map.get("text1"),false);
-//        setViewImage(mImageView,map.get());
         setVisibility(VISIBLE);
         setListener();
     }

@@ -211,22 +211,24 @@ public class LessonInfoDataMananger {
             Map<String, String> extraData = StringManager.getFirstMap(moduleData.get("extraData"));
             //列表
             Map<String, String> widgetData = StringManager.getFirstMap(moduleData.get("widgetData"));
-            //添加title
-            mData.add(handlerTitleData(type, widgetData.get("text1"), extraData.get("top")));
-            //添加第一张图片
-            String text2 = widgetData.get("text2");
-            mData.add(handlerImageData(type, widgetData.get("defaultImg"), text2, extraData.get("bottom")));
-            //暂存
-            List<Map<String, String>> imgs = StringManager.getListMapByJson(widgetData.get("imgs"));
-            List<Map<String, String>> imageArray = new ArrayList<>();
-            Stream.of(imgs)
-                    .filter(value -> !TextUtils.isEmpty(value.get("")))
-                    .forEach(value -> imageArray.add(handlerImageData(value.get(""))));
-            if (!imageArray.isEmpty() && TextUtils.isEmpty(extraData.get("bottom"))) {
-                imageArray.get(imageArray.size() - 1).put("bottom", extraData.get("bottom"));
-                imageArray.get(imageArray.size() - 1).put("isEnd", "2");
+            if(!widgetData.isEmpty()){
+                //添加title
+                mData.add(handlerTitleData(type, widgetData.get("text1"), extraData.get("top")));
+                //添加第一张图片
+                String text2 = widgetData.get("text2");
+                mData.add(handlerImageData(type, widgetData.get("defaultImg"), text2, extraData.get("bottom")));
+                //暂存
+                List<Map<String, String>> imgs = StringManager.getListMapByJson(widgetData.get("imgs"));
+                List<Map<String, String>> imageArray = new ArrayList<>();
+                Stream.of(imgs)
+                        .filter(value -> !TextUtils.isEmpty(value.get("")))
+                        .forEach(value -> imageArray.add(handlerImageData(value.get(""))));
+                if (!imageArray.isEmpty() && TextUtils.isEmpty(extraData.get("bottom"))) {
+                    imageArray.get(imageArray.size() - 1).put("bottom", extraData.get("bottom"));
+                    imageArray.get(imageArray.size() - 1).put("isEnd", "2");
+                }
+                mImgsArray.put(String.valueOf(i), imageArray);
             }
-            mImgsArray.put(String.valueOf(i), imageArray);
         }
         //刷新UI
         notifyDataSetChanged();
