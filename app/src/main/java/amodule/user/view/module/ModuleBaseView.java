@@ -2,9 +2,11 @@ package amodule.user.view.module;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -22,6 +24,7 @@ import acore.tools.ToolsDevice;
 import aplug.basic.LoadImage;
 import aplug.basic.SubAnimTarget;
 import aplug.basic.SubBitmapTarget;
+import aplug.basic.XHConf;
 import xh.basic.tool.UtilImage;
 
 /**
@@ -41,6 +44,7 @@ public abstract class ModuleBaseView extends RelativeLayout{
     protected ImageView.ScaleType mScaleType = ImageView.ScaleType.CENTER_CROP;
     public Context mContext;
     public String statisticId="";//统计id
+    protected OnClickCallback mOnClickCallback;
     public ModuleBaseView(Context context,int layoutId) {
         super(context);
         mContext= context;
@@ -168,5 +172,20 @@ public abstract class ModuleBaseView extends RelativeLayout{
             View view = getChildAt(index);
             view.setOnLongClickListener(l);
         }
+    }
+
+    protected void handlerClickCallback(Map<String,String> map){
+        Log.i(XHConf.log_tag_stat, "handlerClickCallback: ");
+          if(null != mOnClickCallback){
+              mOnClickCallback.onClick(map);
+          }
+    }
+
+    public void setOnClickCallback(@NonNull OnClickCallback onClickCallback) {
+        mOnClickCallback = onClickCallback;
+    }
+
+    public interface OnClickCallback{
+          void onClick(Map<String,String> map);
     }
 }

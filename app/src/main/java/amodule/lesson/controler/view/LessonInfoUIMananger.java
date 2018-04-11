@@ -20,6 +20,7 @@ import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.rvlistview.RvListView;
+import amodule._common.delegate.StatisticCallback;
 import amodule._common.utility.WidgetUtility;
 import amodule.lesson.activity.LessonInfo;
 import amodule.lesson.view.info.LessonInfoHeader;
@@ -77,8 +78,15 @@ public class LessonInfoUIMananger {
         mRvListView.addFooterView(mConentView);
         mRvListView.addFooterView(mGuessYouLikeView);
 
+        setStatisticCallback();
         setClickListener();
         setScrollListener();
+    }
+
+    private void setStatisticCallback() {
+        StatisticCallback statisticCallback = (id, twoLevel, threeLevel, position) -> XHClick.mapStat(mActivity,id,twoLevel,threeLevel);
+        mConentView.setStatisticCallback(statisticCallback);
+        mGuessYouLikeView.setStatisticCallback(statisticCallback);
     }
 
     protected void initTitle() {

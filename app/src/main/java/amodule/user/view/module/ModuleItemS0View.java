@@ -1,6 +1,7 @@
 package amodule.user.view.module;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -25,6 +26,7 @@ public class ModuleItemS0View extends RelativeLayout {
     private String statisticId = "";
     private OnClickListener mClickListener;
     private OnLongClickListener mLongClickListener;
+    private ModuleBaseView.OnClickCallback mOnClickCallback;
     private boolean isUseDefaultBottomPadding = true;
 
     public ModuleItemS0View(Context context) {
@@ -106,6 +108,9 @@ public class ModuleItemS0View extends RelativeLayout {
                 if (mLongClickListener != null) {
                     baseView.setOnLongClickListener(mLongClickListener);
                 }
+                if(mOnClickCallback != null){
+                    baseView.setOnClickCallback(mOnClickCallback);
+                }
             } else viewStub.setVisibility(GONE);
         }
     }
@@ -145,4 +150,9 @@ public class ModuleItemS0View extends RelativeLayout {
     public void setUseDefaultBottomPadding(boolean useDefaultBottomPadding) {
         isUseDefaultBottomPadding = useDefaultBottomPadding;
     }
+
+    public void setOnClickCallback(ModuleBaseView.OnClickCallback onClickCallback) {
+        mOnClickCallback = onClickCallback;
+    }
+
 }

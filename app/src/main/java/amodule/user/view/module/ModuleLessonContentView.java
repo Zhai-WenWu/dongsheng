@@ -29,6 +29,7 @@ public class ModuleLessonContentView extends ModuleBaseView {
     private ImageView mImageView;
     private TextViewShow mTagTextView;
     private TextView mTextDesc,mTextLessonDesc;
+    private Map<String, String> map;
 
     private String mUrl;
 
@@ -55,6 +56,7 @@ public class ModuleLessonContentView extends ModuleBaseView {
 
     @Override
     public void initData(Map<String, String> map) {
+        this.map =map;
         mUrl = map.get("url");
         //在特殊处理
         showTagTextView(map);
@@ -93,6 +95,9 @@ public class ModuleLessonContentView extends ModuleBaseView {
 
     @Override
     public void setListener() {
-        setOnClickListener(v -> AppCommon.openUrl(mUrl,true));
+        setOnClickListener(v -> {
+            AppCommon.openUrl(mUrl, true);
+            handlerClickCallback(map);
+        });
     }
 }

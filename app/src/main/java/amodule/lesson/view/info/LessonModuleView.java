@@ -2,6 +2,7 @@ package amodule.lesson.view.info;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -12,6 +13,7 @@ import acore.logic.LoginManager;
 import acore.tools.StringManager;
 import amodule._common.delegate.StatisticCallback;
 import amodule.lesson.activity.LessonInfo;
+import amodule.user.view.module.ModuleBaseView;
 import amodule.user.view.module.ModuleItemS0View;
 
 import static amodule._common.helper.WidgetDataHelper.KEY_WIDGET_DATA;
@@ -69,13 +71,7 @@ public class LessonModuleView extends LessonParentLayout {
             Map<String, String> data = mDatas.remove(0);
             if (data != null) {
                 ModuleItemS0View moduleItemS0View = new ModuleItemS0View(getContext());
-//                moduleItemS0View.setOnClickListener(new OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        //TODO
-//                        handlerStatisticCallback(mTitleText+"的点击","");
-//                    }
-//                });
+                moduleItemS0View.setOnClickCallback(map -> clickStatistic(map, position));
                 moduleItemS0View.setUseDefaultBottomPadding(isUseDefaultBottomPadding);
                 moduleItemS0View.initData(data);
                 addView(moduleItemS0View);
@@ -85,14 +81,37 @@ public class LessonModuleView extends LessonParentLayout {
         return !mDatas.isEmpty();
     }
 
+    private void clickStatistic(Map<String, String> map, int position) {
+        String styleValue = map.get("style");
+        if (TextUtils.isEmpty(styleValue)) {
+            return;
+        }
+        switch (styleValue) {
+            case "B5":
+                if("1".equals(map.get("iconVip"))){
+                    handlerStatisticCallback("试看课程内容的点击","");
+                }else if("2".equals(map.get("iconVip"))){
+                    handlerStatisticCallback("非试看内容的点击","");
+                }else {
+                    handlerStatisticCallback("课程内容点击","第" + (position + 1) + "讲");
+                }
+                break;
+            case "B6":
+                handlerStatisticCallback("猜你喜欢的点击","第" + (position + 1) + "个");
+                break;
+            default:
+                break;
+        }
+    }
+
     public void setUseDefaultBottomPadding(boolean useDefaultBottomPadding) {
         isUseDefaultBottomPadding = useDefaultBottomPadding;
     }
 
-    public void handlerStatisticCallback(String twoLevel,String threeLevel) {
+    public void handlerStatisticCallback(String twoLevel, String threeLevel) {
         if (mStatisticCallback != null) {
-            String id = LoginManager.isVIP() ? LessonInfo.STATISTICS_ID_VIP:LessonInfo.STATISTICS_ID_NONVIP;
-            mStatisticCallback.onStatistic(id,twoLevel,threeLevel,0);
+            String id = LoginManager.isVIP() ? LessonInfo.STATISTICS_ID_VIP : LessonInfo.STATISTICS_ID_NONVIP;
+            mStatisticCallback.onStatistic(id, twoLevel, threeLevel, 0);
         }
     }
 

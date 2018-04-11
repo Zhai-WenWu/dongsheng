@@ -24,7 +24,8 @@ public class ModuleLessonGuessLike extends ModuleBaseView {
     static final int LAYOUT_ID = R.layout.module_lesson_guess_like;
 
     private ImageView mImageView;
-    private TextView mTextTitle,mTextDesc,mTextLessonDesc;
+    private TextView mTextTitle, mTextDesc, mTextLessonDesc;
+    private Map<String, String> map;
 
     private String mUrl;
 
@@ -51,21 +52,25 @@ public class ModuleLessonGuessLike extends ModuleBaseView {
 
     @Override
     public void initData(Map<String, String> map) {
+        this.map = map;
         mUrl = map.get("url");
-        Map<String,String> styleData = StringManager.getFirstMap(map.get("styleData"));
-        if(styleData.isEmpty()){
+        Map<String, String> styleData = StringManager.getFirstMap(map.get("styleData"));
+        if (styleData.isEmpty()) {
             mImageView.setVisibility(INVISIBLE);
-        }else{
-            setViewImage(mImageView,styleData.get("img"));
+        } else {
+            setViewImage(mImageView, styleData.get("img"));
         }
-        WidgetUtility.setTextToView(mTextTitle,map.get("text1"),false);
-        WidgetUtility.setTextToView(mTextDesc,map.get("text2"),false);
-        WidgetUtility.setTextToView(mTextLessonDesc,map.get("text2"),false);
+        WidgetUtility.setTextToView(mTextTitle, map.get("text1"), false);
+        WidgetUtility.setTextToView(mTextDesc, map.get("text2"), false);
+        WidgetUtility.setTextToView(mTextLessonDesc, map.get("text2"), false);
         setListener();
     }
 
     @Override
     public void setListener() {
-        setOnClickListener(v -> AppCommon.openUrl(mUrl,true));
+        setOnClickListener(v -> {
+            AppCommon.openUrl(mUrl, true);
+            handlerClickCallback(map);
+        });
     }
 }
