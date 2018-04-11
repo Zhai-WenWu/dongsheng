@@ -68,10 +68,8 @@ public class MessageTipIcon extends RelativeLayout implements ISetMessageTip, Vi
 
     @Override
     public void onClick(View v) {
-        //TODO
-        getContext().startActivity(new Intent(getContext(),LessonInfo.class).putExtra("code","70"));
-//        getContext().startActivity(new Intent(getContext(), MyMessage.class));
-//        MessageTipController.newInstance().setQuanMessage(0);
-//        setMessage(MessageTipController.newInstance().getMessageNum());
+        getContext().startActivity(new Intent(getContext(), MyMessage.class));
+        MessageTipController.newInstance().setQuanMessage(0);
+        setMessage(MessageTipController.newInstance().getMessageNum());
     }
 }
