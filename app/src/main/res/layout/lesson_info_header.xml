@@ -47,6 +47,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#FFFFFF"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:textSize="@dimen/sp_17"
                 app:layout_constraintBottom_toBottomOf="@+id/background"
                 tools:text="课程标题"/>

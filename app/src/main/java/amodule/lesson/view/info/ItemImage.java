@@ -101,6 +101,7 @@ public class ItemImage extends LinearLayout implements IBindMap, IBindExtraArray
     private void showImage(String imageUrl) {
         mImageView.setImageResource(R.drawable.bg_grey_e0e0e0);
         if (TextUtils.isEmpty(imageUrl)) {
+            mImageView.setVisibility(GONE);
             return;
         }
         updateImageHieght(imageUrl);
@@ -111,6 +112,7 @@ public class ItemImage extends LinearLayout implements IBindMap, IBindExtraArray
                     @Override
                     public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
                         ImgManager.setImgViewByWH(mImageView, bitmap, mImageWidth, 0, false);
+                        mImageView.setVisibility(VISIBLE);
                     }
                 });
     }

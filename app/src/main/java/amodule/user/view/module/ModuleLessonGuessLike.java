@@ -62,7 +62,7 @@ public class ModuleLessonGuessLike extends ModuleBaseView {
         }
         WidgetUtility.setTextToView(mTextTitle, map.get("text1"), false);
         WidgetUtility.setTextToView(mTextDesc, map.get("text2"), false);
-        WidgetUtility.setTextToView(mTextLessonDesc, map.get("text2"), false);
+        WidgetUtility.setTextToView(mTextLessonDesc, map.get("text3"), false);
         setListener();
     }
 
