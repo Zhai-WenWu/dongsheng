@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -119,7 +120,8 @@ public class ItemImage extends LinearLayout implements IBindMap, IBindExtraArray
 
     private void updateImageHieght(String imageUrl) {
         if(imageUrl.contains("?")){
-            String[] urls = imageUrl.split("/?");
+            Log.i("tzy", "updateImageHieght: " + imageUrl);
+            String[] urls = imageUrl.split("\\?");
             if(urls.length == 2
                     && !TextUtils.isEmpty(urls[1])
                     && urls[1].contains("_")){
@@ -127,10 +129,12 @@ public class ItemImage extends LinearLayout implements IBindMap, IBindExtraArray
                 if(sizeValue.length == 2){
                     int width = Tools.parseIntOfThrow(sizeValue[0],0);
                     int height = Tools.parseIntOfThrow(sizeValue[1],0);
+                    Log.i("tzy", "updateImageHieght: image w="+width+" , h="+height);
                     if(width != 0 && height != 0){
                         ViewGroup.LayoutParams layoutParams = mImageView.getLayoutParams();
                         layoutParams.width = mImageWidth;
                         layoutParams.height = mImageWidth * height/ width;
+                        Log.i("tzy", "updateImageHieght: layoutParams w="+layoutParams.width+" , h="+layoutParams.height);
                         mImageView.setLayoutParams(layoutParams);
                     }
                 }

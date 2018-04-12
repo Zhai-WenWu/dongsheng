@@ -1,8 +1,6 @@
 package amodule.lesson.controler.view;
 
 import android.graphics.Color;
-import android.os.Handler;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
@@ -16,7 +14,6 @@ import java.util.Map;
 
 import acore.logic.AppCommon;
 import acore.logic.XHClick;
-import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.rvlistview.RvListView;
@@ -26,8 +23,6 @@ import amodule.lesson.activity.LessonInfo;
 import amodule.lesson.view.info.LessonInfoHeader;
 import amodule.lesson.view.info.LessonModuleView;
 import amodule.vip.VIPButton;
-
-import static android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
 
 /**
  * Description :
@@ -157,9 +152,8 @@ public class LessonInfoUIMananger {
     private void setScrollListener() {
         if (mOnScrollListener == null) {
             mOnScrollListener = new RecyclerView.OnScrollListener() {
-                boolean alowLoad = true;
-                int currentState;
-
+//                boolean alowLoad = true;
+//                int currentState;
 
                 @Override
                 public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -205,9 +199,7 @@ public class LessonInfoUIMananger {
     private int currentColorRes = R.color.transparent;
 
     private void updateTopbarBg(int dy) {
-        Log.i("tzy", "updateTopbarBg: ");
         boolean isShow = dy <= (mInfoHeader.getImageHeight() / 2 - mTopBarHeight);
-        Log.i("tzy", "updateTopbarBg: dy=" + dy);
         int colorRes = isShow ? R.color.transparent : R.color.common_top_bg;
         if (currentColorRes != colorRes) {
             Log.i("tzy", "updateTopbarBg: dy=" + dy + " ; mInfoHeader/2=" + (mInfoHeader.getImageHeight() / 2));

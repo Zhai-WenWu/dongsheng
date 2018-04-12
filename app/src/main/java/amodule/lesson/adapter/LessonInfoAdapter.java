@@ -99,8 +99,8 @@ public class LessonInfoAdapter extends RvBaseAdapter<Map<String, String>> {
 
         @Override
         public void bindData(int position, @Nullable Map<String, String> data) {
-            mImage.setData(data);
             mImage.setImageWidth(mImageWidth);
+            mImage.setData(data);
             if(mMoreCallbcak != null){
                 mImage.setClickMoreCallbcak(mMoreCallbcak);
             }

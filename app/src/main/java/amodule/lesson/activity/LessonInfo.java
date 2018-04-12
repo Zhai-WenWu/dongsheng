@@ -87,6 +87,9 @@ public class LessonInfo extends BaseAppCompatActivity implements IObserver {
         if(!TextUtils.isEmpty(extraJsonValue)){
             loadManager.hideProgressBar();
             Map<String, String> preData = StringManager.getFirstMap(intent.getStringExtra(EXTRA_INFO_JSON));
+            if(preData != null && !preData.isEmpty()){
+                preData.put("isFake","2");
+            }
             mUIMananger.setHeaderData(preData);
         }
     }
