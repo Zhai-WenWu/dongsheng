@@ -57,12 +57,6 @@ public class LessonModuleView extends LessonParentLayout {
 
     @Override
     protected boolean showInnerNextItem() {
-        if (isOnce && !TextUtils.isEmpty(mTitleText)) {
-            isOnce = false;
-            ItemTitle title = new ItemTitle(getContext());
-            title.setTitle(mTitleText);
-            addView(title);
-        }
         for (int count = 0; !mDatas.isEmpty(); count++) {
             final int position = count;
             if (mDatas.isEmpty()) {
@@ -76,7 +70,14 @@ public class LessonModuleView extends LessonParentLayout {
                 moduleItemS0View.initData(data);
                 addView(moduleItemS0View);
             }
-
+        }
+        if (isOnce
+                && !TextUtils.isEmpty(mTitleText)
+                && hasChildView()) {
+            isOnce = false;
+            ItemTitle title = new ItemTitle(getContext());
+            title.setTitle(mTitleText);
+            addView(title,0);
         }
         return !mDatas.isEmpty();
     }

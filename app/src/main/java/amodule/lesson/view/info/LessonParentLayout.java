@@ -89,6 +89,19 @@ public abstract class LessonParentLayout extends LinearLayout implements IBindMa
     }
 
     @Override
+    public void addView(View child, int index) {
+        if (child != mTopExtraLayout
+                && child != mContentLayout
+                && child != mBottomExtraLayout) {
+            if (mContentLayout != null) {
+                mContentLayout.addView(child,index);
+            }
+        } else {
+            super.addView(child, index);
+        }
+    }
+
+    @Override
     public void setData(Map<String, String> data) {
         Map<String, String> widgetDataMap = StringManager.getFirstMap(data.get(KEY_WIDGET_DATA));
         mDatas = StringManager.getListMapByJson(widgetDataMap.get("list"));
