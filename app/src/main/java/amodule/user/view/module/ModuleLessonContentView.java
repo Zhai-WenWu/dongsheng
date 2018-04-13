@@ -3,6 +3,7 @@ package amodule.user.view.module;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.TextView;
 
 import com.xiangha.R;
@@ -21,7 +22,7 @@ import amodule._common.utility.WidgetUtility;
  * Created by tanzeyu on 2018/4/2 11:33.
  * e_mail : ztanzeyu@gmail.com
  */
-public class ModuleLessonContentView extends ModuleBaseView {
+public class ModuleLessonContentView extends ModuleBaseView implements View.OnClickListener{
 
     static final int LAYOUT_ID = R.layout.module_lesson_content_view;
 
@@ -47,6 +48,7 @@ public class ModuleLessonContentView extends ModuleBaseView {
     public void initUI() {
         setMODULE_TAG("B5");
         mTagTextView = (TextViewShow) findViewById(R.id.text1);
+        mTagTextView.setClickable(false);
         mTextDesc = (TextView) findViewById(R.id.text2);
         mTextLessonDesc = (TextView) findViewById(R.id.text3);
     }
@@ -91,9 +93,14 @@ public class ModuleLessonContentView extends ModuleBaseView {
 
     @Override
     public void setListener() {
-        setOnClickListener(v -> {
-            AppCommon.openUrl(mUrl, true);
-            handlerClickCallback(map);
-        });
+        mTagTextView.setOnClickListener(this);
+        setOnClickListener(this);
     }
+
+    @Override
+    public void onClick(View v) {
+        AppCommon.openUrl(mUrl, true);
+        handlerClickCallback(map);
+    }
+
 }
