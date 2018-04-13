@@ -19,6 +19,7 @@ import com.xiangha.R;
 import java.util.List;
 import java.util.Map;
 
+import acore.logic.XHClick;
 import acore.tools.ImgManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -42,6 +43,7 @@ public class ItemImage extends LinearLayout implements IBindMap, IBindExtraArray
     private LinearLayout mMoreLayout;
 
     private OnClickMoreCallbcak mClickMoreCallbcak;
+    private OnShowMoreCallback mOnShowMoreCallback;
 
     private Map<String,String> mData;
 
@@ -93,6 +95,11 @@ public class ItemImage extends LinearLayout implements IBindMap, IBindExtraArray
             mType = data.get("end");
             mMoreText.setText(data.get("text2"));
             mMoreLayout.setVisibility(VISIBLE);
+            Log.i("tzy", "showMoreLayout: " + mType);
+            if(mOnShowMoreCallback != null && !"2".equals(data.get("isShow"))){
+                data.put("isShow","2");
+                mOnShowMoreCallback.onShow(mType);
+            }
         } else {
             mMoreLayout.setVisibility(GONE);
         }
@@ -167,7 +174,15 @@ public class ItemImage extends LinearLayout implements IBindMap, IBindExtraArray
         mClickMoreCallbcak = clickMoreCallbcak;
     }
 
+    public void setOnShowMoreCallback(OnShowMoreCallback onShowMoreCallback) {
+        mOnShowMoreCallback = onShowMoreCallback;
+    }
+
     public interface OnClickMoreCallbcak {
         void onClickMore(String type);
+    }
+
+    public interface OnShowMoreCallback{
+        void onShow(String type);
     }
 }

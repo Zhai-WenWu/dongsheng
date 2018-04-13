@@ -32,6 +32,7 @@ public class LessonInfoAdapter extends RvBaseAdapter<Map<String, String>> {
     public static final int VIEW_TYPE_IMAGE = 2;
 
     private ItemImage.OnClickMoreCallbcak mMoreCallbcak;
+    private ItemImage.OnShowMoreCallback mShowMoreCallback;
 
     private LayoutInflater mLayoutInflater;
 
@@ -73,6 +74,10 @@ public class LessonInfoAdapter extends RvBaseAdapter<Map<String, String>> {
         mMoreCallbcak = moreCallbcak;
     }
 
+    public void setShowMoreCallback(ItemImage.OnShowMoreCallback showMoreCallback) {
+        mShowMoreCallback = showMoreCallback;
+    }
+
     class TitleViewHolder extends RvBaseViewHolder<Map<String, String>> {
 
         private ItemTitle mTitle;
@@ -100,10 +105,13 @@ public class LessonInfoAdapter extends RvBaseAdapter<Map<String, String>> {
         @Override
         public void bindData(int position, @Nullable Map<String, String> data) {
             mImage.setImageWidth(mImageWidth);
-            mImage.setData(data);
             if(mMoreCallbcak != null){
                 mImage.setClickMoreCallbcak(mMoreCallbcak);
             }
+            if(mShowMoreCallback != null){
+                mImage.setOnShowMoreCallback(mShowMoreCallback);
+            }
+            mImage.setData(data);
         }
     }
 

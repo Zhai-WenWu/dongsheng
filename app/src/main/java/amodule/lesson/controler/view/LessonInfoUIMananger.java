@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.xiangha.R;
 
@@ -35,6 +36,7 @@ public class LessonInfoUIMananger {
     private final LessonInfo mActivity;
 
     private RelativeLayout mTopbar;
+    private TextView mTitle;
     private RvListView mRvListView;
     private LessonInfoHeader mInfoHeader;
     private LessonModuleView mHaFriendCommentView;
@@ -61,6 +63,7 @@ public class LessonInfoUIMananger {
     private void initializeUI() {
         initTitle();
         mRvListView = (RvListView) mActivity.findViewById(R.id.rvListview);
+
         mInfoHeader = new LessonInfoHeader(mActivity);
         mHaFriendCommentView = new LessonModuleView(mActivity);
         mHaFriendCommentView.setUseDefaultBottomPadding(true);
@@ -79,13 +82,14 @@ public class LessonInfoUIMananger {
     }
 
     private void setStatisticCallback() {
-        StatisticCallback statisticCallback = (id, twoLevel, threeLevel, position) -> XHClick.mapStat(mActivity,id,twoLevel,threeLevel);
+        StatisticCallback statisticCallback = (id, twoLevel, threeLevel, position) -> XHClick.mapStat(mActivity, id, twoLevel, threeLevel);
         mConentView.setStatisticCallback(statisticCallback);
         mGuessYouLikeView.setStatisticCallback(statisticCallback);
     }
 
     protected void initTitle() {
         mTopbar = (RelativeLayout) mActivity.findViewById(R.id.top_bar);
+        mTitle = (TextView) mActivity.findViewById(R.id.title);
         resetTopbar();
         String colorValue = mActivity.getResources().getString(R.color.common_top_bg);
         Tools.setStatusBarColor(mActivity, Color.parseColor(colorValue));
@@ -103,6 +107,7 @@ public class LessonInfoUIMananger {
 
     public void setHeaderData(Map<String, String> headerData) {
         mInfoHeader.setData(headerData);
+        WidgetUtility.setTextToView(mTitle, headerData.get("name"));
         setRvListViewVisibility(View.VISIBLE);
 //        showNextItem();
     }
@@ -117,7 +122,7 @@ public class LessonInfoUIMananger {
 
     public void setGuessYouLikeData(Map<String, String> data) {
         mGuessYouLikeView.setData(data);
-        mGuessYouLikeView.setPadding(0,0,0,Tools.getDimen(mActivity,R.dimen.dp_20));
+        mGuessYouLikeView.setPadding(0, 0, 0, Tools.getDimen(mActivity, R.dimen.dp_20));
     }
 
     public void setVipButton(Map<String, String> data) {
@@ -143,7 +148,7 @@ public class LessonInfoUIMananger {
         mVIPButton.setTextColor(Color.parseColor(colorValue));
         mVIPButton.setBackgroundColor(Color.parseColor(bgColorValue));
         mVIPButton.setOnClickListener(v -> {
-            XHClick.mapStat(mActivity,LessonInfo.STATISTICS_ID_NONVIP,"底部浮动按钮点击","");
+            XHClick.mapStat(mActivity, LessonInfo.STATISTICS_ID_NONVIP, "底部浮动按钮点击", "");
             AppCommon.openUrl(mActivity, url, true);
         });
     }
@@ -199,12 +204,17 @@ public class LessonInfoUIMananger {
     private int currentColorRes = R.color.transparent;
 
     private void updateTopbarBg(int dy) {
-        boolean isShow = dy <= (mInfoHeader.getImageHeight() / 2 - mTopBarHeight);
-        int colorRes = isShow ? R.color.transparent : R.color.common_top_bg;
-        if (currentColorRes != colorRes) {
-            Log.i("tzy", "updateTopbarBg: dy=" + dy + " ; mInfoHeader/2=" + (mInfoHeader.getImageHeight() / 2));
-            currentColorRes = colorRes;
-            mTopbar.setBackgroundResource(colorRes);
+        int totalHeight = mInfoHeader.getImageHeight() / 2 - mTopBarHeight;
+        if (dy <= totalHeight) {
+            String colorSuffix = Integer.toHexString((int) (255.0f * dy / totalHeight));
+            if (colorSuffix.length() < 2) {
+                colorSuffix = "0" + colorSuffix;
+            }
+            mTopbar.setBackgroundColor(Color.parseColor("#" + colorSuffix + "1B1B1F"));
+            mTitle.setTextColor(Color.parseColor("#"+colorSuffix+"FFFFFF"));
+        }else{
+            mTitle.setTextColor(Color.parseColor("#FFFFFF"));
+            mTopbar.setBackgroundResource(R.color.common_top_bg);
         }
     }
 
@@ -231,6 +241,7 @@ public class LessonInfoUIMananger {
     }
 
     private int totalDy = 0;
+
     //回到第一个位置
     private void returnListTop() {
         totalDy = 0;

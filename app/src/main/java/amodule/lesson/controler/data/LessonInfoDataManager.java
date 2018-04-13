@@ -16,9 +16,9 @@ import acore.logic.XHClick;
 import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.ObserverManager;
 import acore.tools.StringManager;
-import acore.tools.Tools;
 import amodule.lesson.activity.LessonInfo;
 import amodule.lesson.adapter.LessonInfoAdapter;
+import amodule.lesson.view.info.ItemImage;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
@@ -40,10 +40,10 @@ import static amodule.lesson.adapter.LessonInfoAdapter.VIEW_TYPE_TITLE;
  * Created by tanze on 2018/3/29 17:10.
  * e_mail : ztanzeyu@gmail.com
  */
-public class LessonInfoDataMananger {
+public class LessonInfoDataManager {
     public static final String TAG = "tzy";
 
-    private static final String DATA_TYPE_LESSON_INTROCTION = "lessonIntroction";
+    private static final String DATA_TYPE_LESSON_INTRODUCTION = "lessonIntroduction";
     public static final String DATA_TYPE_LESSON_INFO = "lessonInfo";
     public static final String DATA_TYPE_COMMENT = "comment";
     public static final String DATA_TYPE_LESSON_CONTENT = "lessonContent";
@@ -54,11 +54,11 @@ public class LessonInfoDataMananger {
 
     private LessonInfoAdapter mAdapter;
     private List<Map<String, String>> mData = new ArrayList<>();
-    private Map<String, List<Map<String, String>>> mImgsArray = new HashMap<>();
+    private Map<String, List<Map<String, String>>> mImagesArray = new HashMap<>();
     private OnLoadedDataCallback mOnLoadedDataCallback;
     private OnLoadFailedCallback mOnLoadFailedCallback;
 
-    public LessonInfoDataMananger(LessonInfo activity, String lessonCode) {
+    public LessonInfoDataManager(LessonInfo activity, String lessonCode) {
         mActivity = activity;
         this.lessonCode = lessonCode;
         initializeAdapter(activity);
@@ -67,20 +67,21 @@ public class LessonInfoDataMananger {
     private void initializeAdapter(BaseAppCompatActivity activity) {
         mAdapter = new LessonInfoAdapter(activity, mData);
         mAdapter.setMoreCallbcak((String type) -> {
-            int position = Tools.parseIntOfThrow(type,0) + 1;
-            XHClick.mapStat(mActivity,mActivity.getStatisticsId(),"点击查看更多","模块"+position+"点击查看更多");
+            XHClick.mapStat(mActivity,mActivity.getStatisticsId(),"点击查看更多",type);
             replaceImgsData(type);
         });
+        mAdapter.setShowMoreCallback(type -> XHClick.mapStat(mActivity,mActivity.getStatisticsId(),"显示查看更多",type));
     }
 
     private void replaceImgsData(String type) {
         if (TextUtils.isEmpty(type)) {
             return;
         }
-        List<Map<String, String>> imgs = mImgsArray.get(type);
+        List<Map<String, String>> imgs = mImagesArray.get(type);
         if (imgs == null || imgs.isEmpty()) {
             return;
         }
+        //替换图片，刷新UI
         for (int i = 0; i < mData.size(); i++) {
             Map<String, String> data = mData.get(i);
             if (data.containsKey("end")
@@ -88,7 +89,7 @@ public class LessonInfoDataMananger {
                 mData.set(i,imgs.remove(0));
                 mData.addAll(i+1, imgs);
                 notifyDataSetChanged();
-                mImgsArray.remove(type);
+                mImagesArray.remove(type);
                 return;
             }
         }
@@ -98,7 +99,7 @@ public class LessonInfoDataMananger {
     public void refresh() {
         mData.clear();
         notifyDataSetChanged();
-        mImgsArray.clear();
+        mImagesArray.clear();
         loadTopInfo();
     }
 
@@ -109,7 +110,9 @@ public class LessonInfoDataMananger {
     }
 
     private static boolean isLoadingVipButtonData = false;
+    /**请求VIP Button数据*/
     public static synchronized void loadVipButtonData() {
+        //避免同事发出多次请求
         if(isLoadingVipButtonData){
             return;
         }
@@ -126,10 +129,12 @@ public class LessonInfoDataMananger {
         });
     }
 
+    //获取top数据
     private void loadTopInfo() {
         handlerRequest(DATA_TYPE_LESSON_INFO);
     }
 
+    //获取其他数据
     private void loadOtherData() {
         loadLessonIntroductionData();
         loadHaFriendCommentData();
@@ -137,22 +142,30 @@ public class LessonInfoDataMananger {
         loadGuessYouLike();
     }
 
+    //获取课程介绍数据
     private void loadLessonIntroductionData() {
-        handlerRequest(DATA_TYPE_LESSON_INTROCTION);
+        handlerRequest(DATA_TYPE_LESSON_INTRODUCTION);
     }
 
+    //获取哈友评价数据
     private void loadHaFriendCommentData() {
         handlerRequest(DATA_TYPE_COMMENT);
     }
 
+    //获取课程内容数据
     private void loadLessonContentData() {
         handlerRequest(DATA_TYPE_LESSON_CONTENT);
     }
 
+    //获取猜你喜欢内容
     private void loadGuessYouLike() {
         handlerRequest(DATA_TYPE_GUESS_LIKE);
     }
 
+    /**
+     * 处理请求
+     * @param dataType 请求类型
+     */
     private void handlerRequest(final String dataType) {
         if (TextUtils.isEmpty(dataType)) {
             return;
@@ -163,7 +176,7 @@ public class LessonInfoDataMananger {
                 apiUrl = API_SCHOOL_TOPINFO;
                 break;
             //内部处理数据
-            case DATA_TYPE_LESSON_INTROCTION:
+            case DATA_TYPE_LESSON_INTRODUCTION:
                 apiUrl = API_SCHOOL_COURSEINTRODUCEINFO;
                 break;
             case DATA_TYPE_COMMENT:
@@ -192,6 +205,11 @@ public class LessonInfoDataMananger {
         });
     }
 
+    /**
+     * 内部处理请求回调
+     * @param dataType 请求类型
+     * @param data 数据
+     */
     private void handInnerLoadedDataCallback(String dataType, String data) {
         switch (dataType) {
             case DATA_TYPE_LESSON_INFO:
@@ -199,7 +217,7 @@ public class LessonInfoDataMananger {
                 loadOtherData();
                 handlerLoadedDataCallback(dataType, data);
                 break;
-            case DATA_TYPE_LESSON_INTROCTION:
+            case DATA_TYPE_LESSON_INTRODUCTION:
                 //内部处理
                 analysisDatas(data);
                 break;
@@ -209,6 +227,10 @@ public class LessonInfoDataMananger {
         }
     }
 
+    /**
+     * 解析课程介绍数据
+     * @param data 数据
+     */
     private void analysisDatas(String data) {
         if (TextUtils.isEmpty(data)) {
             return;
@@ -217,13 +239,14 @@ public class LessonInfoDataMananger {
         List<Map<String, String>> moduleDatas = StringManager.getListMapByJson(data);
 
         for (int i = 0; i < moduleDatas.size(); i++) {
-            final String type = String.valueOf(i);
+
             Map<String, String> moduleData = moduleDatas.get(i);
             //额外数据
             Map<String, String> extraData = StringManager.getFirstMap(moduleData.get("extraData"));
             //列表
             Map<String, String> widgetData = StringManager.getFirstMap(moduleData.get("widgetData"));
             if(!widgetData.isEmpty()){
+                final String type = widgetData.get("text1");
                 //添加title
                 mData.add(handlerTitleData(type, widgetData.get("text1"), extraData.get("top")));
 
@@ -237,7 +260,7 @@ public class LessonInfoDataMananger {
                     imageArray.get(imageArray.size() - 1).put("bottom", extraData.get("bottom"));
                     imageArray.get(imageArray.size() - 1).put("isEnd", "2");
                 }
-                mImgsArray.put(String.valueOf(i), imageArray);
+                mImagesArray.put(String.valueOf(i), imageArray);
                 //添加第一张图片
                 if(imageArray.size() < 2){
                     Map<String, String> imageMap = handlerImageData("", widgetData.get("defaultImg"), "", extraData.get("bottom"));
@@ -253,6 +276,13 @@ public class LessonInfoDataMananger {
         notifyDataSetChanged();
     }
 
+    /**
+     * 处理课程介绍title数据
+     * @param type
+     * @param title
+     * @param extraData
+     * @return
+     */
     private Map<String, String> handlerTitleData(String type, String title, String extraData) {
         Map<String, String> data = new HashMap<>();
         data.put(KEY_VIEW_TYPE, String.valueOf(VIEW_TYPE_TITLE));
@@ -266,10 +296,23 @@ public class LessonInfoDataMananger {
         return data;
     }
 
+    /**
+     * 处理课程介绍图片数据
+     * @param imgUrl
+     * @return
+     */
     private Map<String, String> handlerImageData(String imgUrl) {
         return handlerImageData("",imgUrl,"","");
     }
 
+    /**
+     *
+     * @param type
+     * @param imgUrl
+     * @param text2
+     * @param extraData
+     * @return
+     */
     private Map<String, String> handlerImageData(String type, String imgUrl, @Nullable String text2, String extraData) {
         Map<String, String> data = new HashMap<>();
         data.put(KEY_VIEW_TYPE, String.valueOf(VIEW_TYPE_IMAGE));

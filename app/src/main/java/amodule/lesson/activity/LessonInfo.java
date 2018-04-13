@@ -18,17 +18,17 @@ import acore.tools.IObserver;
 import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
-import amodule.lesson.controler.data.LessonInfoDataMananger;
+import amodule.lesson.controler.data.LessonInfoDataManager;
 import amodule.lesson.controler.view.LessonInfoUIMananger;
 import amodule.main.Main;
 
 import static acore.tools.ObserverManager.NOTIFY_LESSON_VIPBUTTON;
 import static acore.tools.ObserverManager.NOTIFY_VIPSTATE_CHANGED;
-import static amodule.lesson.controler.data.LessonInfoDataMananger.DATA_TYPE_COMMENT;
-import static amodule.lesson.controler.data.LessonInfoDataMananger.DATA_TYPE_GUESS_LIKE;
-import static amodule.lesson.controler.data.LessonInfoDataMananger.DATA_TYPE_LESSON_CONTENT;
-import static amodule.lesson.controler.data.LessonInfoDataMananger.DATA_TYPE_LESSON_INFO;
-import static amodule.lesson.controler.data.LessonInfoDataMananger.loadVipButtonData;
+import static amodule.lesson.controler.data.LessonInfoDataManager.DATA_TYPE_COMMENT;
+import static amodule.lesson.controler.data.LessonInfoDataManager.DATA_TYPE_GUESS_LIKE;
+import static amodule.lesson.controler.data.LessonInfoDataManager.DATA_TYPE_LESSON_CONTENT;
+import static amodule.lesson.controler.data.LessonInfoDataManager.DATA_TYPE_LESSON_INFO;
+import static amodule.lesson.controler.data.LessonInfoDataManager.loadVipButtonData;
 
 public class LessonInfo extends BaseAppCompatActivity implements IObserver {
 
@@ -43,7 +43,7 @@ public class LessonInfo extends BaseAppCompatActivity implements IObserver {
     public static final String EXTRA_INFO_JSON = "extraJson";
 
     private LessonInfoUIMananger mUIMananger;
-    private LessonInfoDataMananger mDataMananger;
+    private LessonInfoDataManager mDataMananger;
 
     private boolean isOpenVip = false;
 
@@ -115,7 +115,7 @@ public class LessonInfo extends BaseAppCompatActivity implements IObserver {
     private void initializeData() {
         Intent intent = getIntent();
         String lessonCode = intent.getStringExtra(EXTRA_CODE);
-        mDataMananger = new LessonInfoDataMananger(this, lessonCode);
+        mDataMananger = new LessonInfoDataManager(this, lessonCode);
         mDataMananger.setOnLoadedDataCallback((dataType, dataValue) -> {
             final Map<String, String> data = StringManager.getFirstMap(dataValue);
             switch (dataType) {
