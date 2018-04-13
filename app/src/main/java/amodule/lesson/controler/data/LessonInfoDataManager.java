@@ -67,10 +67,10 @@ public class LessonInfoDataManager {
     private void initializeAdapter(BaseAppCompatActivity activity) {
         mAdapter = new LessonInfoAdapter(activity, mData);
         mAdapter.setMoreCallbcak((String type) -> {
-            XHClick.mapStat(mActivity,mActivity.getStatisticsId(),"点击查看更多",type);
+            XHClick.mapStat(mActivity, mActivity.getStatisticsId(), "点击查看更多", type);
             replaceImgsData(type);
         });
-        mAdapter.setShowMoreCallback(type -> XHClick.mapStat(mActivity,mActivity.getStatisticsId(),"显示查看更多",type));
+        mAdapter.setShowMoreCallback(type -> XHClick.mapStat(mActivity, mActivity.getStatisticsId(), "显示查看更多", type));
     }
 
     private void replaceImgsData(String type) {
@@ -86,8 +86,8 @@ public class LessonInfoDataManager {
             Map<String, String> data = mData.get(i);
             if (data.containsKey("end")
                     && type.equals(data.get("end"))) {
-                mData.set(i,imgs.remove(0));
-                mData.addAll(i+1, imgs);
+                mData.set(i, imgs.remove(0));
+                mData.addAll(i + 1, imgs);
                 notifyDataSetChanged();
                 mImagesArray.remove(type);
                 return;
@@ -110,20 +110,21 @@ public class LessonInfoDataManager {
     }
 
     private static boolean isLoadingVipButtonData = false;
-    /**请求VIP Button数据*/
+
+    /** 请求VIP Button数据 */
     public static synchronized void loadVipButtonData() {
         //避免同事发出多次请求
-        if(isLoadingVipButtonData){
+        if (isLoadingVipButtonData) {
             return;
         }
         isLoadingVipButtonData = true;
         //发起请求
-        ReqEncyptInternet.in().doEncypt(API_SCHOOL_INFO_VIPBUTTON,new LinkedHashMap<>(), new InternetCallback() {
+        ReqEncyptInternet.in().doEncypt(API_SCHOOL_INFO_VIPBUTTON, new LinkedHashMap<>(), new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
                 isLoadingVipButtonData = false;
                 if (i >= ReqInternet.REQ_OK_STRING) {
-                    ObserverManager.getInstance().notify(NOTIFY_LESSON_VIPBUTTON,null,o);
+                    ObserverManager.getInstance().notify(NOTIFY_LESSON_VIPBUTTON, null, o);
                 }
             }
         });
@@ -164,6 +165,7 @@ public class LessonInfoDataManager {
 
     /**
      * 处理请求
+     *
      * @param dataType 请求类型
      */
     private void handlerRequest(final String dataType) {
@@ -191,9 +193,9 @@ public class LessonInfoDataManager {
             default:
                 return;
         }
-        String params = "courseCode="+lessonCode;
+        String params = "courseCode=" + lessonCode;
         //发起请求
-        ReqEncyptInternet.in().doEncypt(apiUrl,params, new InternetCallback() {
+        ReqEncyptInternet.in().doEncypt(apiUrl, params, new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
                 if (i >= ReqInternet.REQ_OK_STRING) {
@@ -207,8 +209,9 @@ public class LessonInfoDataManager {
 
     /**
      * 内部处理请求回调
+     *
      * @param dataType 请求类型
-     * @param data 数据
+     * @param data     数据
      */
     private void handInnerLoadedDataCallback(String dataType, String data) {
         switch (dataType) {
@@ -229,6 +232,7 @@ public class LessonInfoDataManager {
 
     /**
      * 解析课程介绍数据
+     *
      * @param data 数据
      */
     private void analysisDatas(String data) {
@@ -245,8 +249,8 @@ public class LessonInfoDataManager {
             Map<String, String> extraData = StringManager.getFirstMap(moduleData.get("extraData"));
             //列表
             Map<String, String> widgetData = StringManager.getFirstMap(moduleData.get("widgetData"));
-            if(!widgetData.isEmpty()){
-                final String type = widgetData.get("text1");
+            if (!widgetData.isEmpty()) {
+                final String type = TextUtils.isEmpty(widgetData.get("text1")) ? String.valueOf(i) : widgetData.get("text1");
                 //添加title
                 mData.add(handlerTitleData(type, widgetData.get("text1"), extraData.get("top")));
 
@@ -260,13 +264,13 @@ public class LessonInfoDataManager {
                     imageArray.get(imageArray.size() - 1).put("bottom", extraData.get("bottom"));
                     imageArray.get(imageArray.size() - 1).put("isEnd", "2");
                 }
-                mImagesArray.put(String.valueOf(i), imageArray);
+                mImagesArray.put(type, imageArray);
                 //添加第一张图片
-                if(imageArray.size() < 2){
+                if (imageArray.size() < 2) {
                     Map<String, String> imageMap = handlerImageData("", widgetData.get("defaultImg"), "", extraData.get("bottom"));
                     imageMap.put("isEnd", "2");
                     mData.add(imageMap);
-                }else {
+                } else {
                     String text2 = widgetData.get("text2");
                     mData.add(handlerImageData(type, widgetData.get("defaultImg"), text2, extraData.get("bottom")));
                 }
@@ -278,9 +282,11 @@ public class LessonInfoDataManager {
 
     /**
      * 处理课程介绍title数据
+     *
      * @param type
      * @param title
      * @param extraData
+     *
      * @return
      */
     private Map<String, String> handlerTitleData(String type, String title, String extraData) {
@@ -298,19 +304,21 @@ public class LessonInfoDataManager {
 
     /**
      * 处理课程介绍图片数据
+     *
      * @param imgUrl
+     *
      * @return
      */
     private Map<String, String> handlerImageData(String imgUrl) {
-        return handlerImageData("",imgUrl,"","");
+        return handlerImageData("", imgUrl, "", "");
     }
 
     /**
-     *
      * @param type
      * @param imgUrl
      * @param text2
      * @param extraData
+     *
      * @return
      */
     private Map<String, String> handlerImageData(String type, String imgUrl, @Nullable String text2, String extraData) {
@@ -336,8 +344,8 @@ public class LessonInfoDataManager {
         }
     }
 
-    private void handlerLoadFailedCallback(@NonNull String dataType){
-        if(mOnLoadFailedCallback != null){
+    private void handlerLoadFailedCallback(@NonNull String dataType) {
+        if (mOnLoadFailedCallback != null) {
             mOnLoadFailedCallback.onLoadFailed(dataType);
         }
     }
@@ -364,7 +372,7 @@ public class LessonInfoDataManager {
         void onLoadedData(String dataType, String data);
     }
 
-    public interface OnLoadFailedCallback{
+    public interface OnLoadFailedCallback {
         void onLoadFailed(String dataType);
     }
 }
