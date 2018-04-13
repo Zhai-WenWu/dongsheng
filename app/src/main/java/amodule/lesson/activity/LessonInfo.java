@@ -19,7 +19,7 @@ import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
 import amodule.lesson.controler.data.LessonInfoDataManager;
-import amodule.lesson.controler.view.LessonInfoUIMananger;
+import amodule.lesson.controler.view.LessonInfoUIManager;
 import amodule.main.Main;
 
 import static acore.tools.ObserverManager.NOTIFY_LESSON_VIPBUTTON;
@@ -42,7 +42,7 @@ public class LessonInfo extends BaseAppCompatActivity implements IObserver {
     public static final String EXTRA_CODE = "code";
     public static final String EXTRA_INFO_JSON = "extraJson";
 
-    private LessonInfoUIMananger mUIMananger;
+    private LessonInfoUIManager mUIMananger;
     private LessonInfoDataManager mDataMananger;
 
     private boolean isOpenVip = false;
@@ -109,7 +109,7 @@ public class LessonInfo extends BaseAppCompatActivity implements IObserver {
     }
 
     private void initializeUI() {
-        mUIMananger = new LessonInfoUIMananger(this);
+        mUIMananger = new LessonInfoUIManager(this);
     }
 
     private void initializeData() {

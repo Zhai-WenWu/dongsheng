@@ -31,7 +31,7 @@ import amodule.vip.VIPButton;
  * Created by tanze on 2018/3/29 17:10.
  * e_mail : ztanzeyu@gmail.com
  */
-public class LessonInfoUIMananger {
+public class LessonInfoUIManager {
 
     private final LessonInfo mActivity;
 
@@ -49,7 +49,7 @@ public class LessonInfoUIMananger {
     private int mTopBarHeight = 0;
     private boolean hasNextItem = true;
 
-    public LessonInfoUIMananger(LessonInfo activity) {
+    public LessonInfoUIManager(LessonInfo activity) {
         this.mActivity = activity;
         initializeData();
         initializeUI();
