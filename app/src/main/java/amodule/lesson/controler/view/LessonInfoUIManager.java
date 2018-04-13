@@ -107,7 +107,11 @@ public class LessonInfoUIManager {
 
     public void setHeaderData(Map<String, String> headerData) {
         mInfoHeader.setData(headerData);
-        WidgetUtility.setTextToView(mTitle, headerData.get("name"));
+        String titleValue = headerData.get("name");
+        if(!TextUtils.isEmpty(titleValue) && titleValue.length() >= 12){
+            titleValue = titleValue.substring(0,11) + "...";
+        }
+        WidgetUtility.setTextToView(mTitle, titleValue);
         setRvListViewVisibility(View.VISIBLE);
 //        showNextItem();
     }
