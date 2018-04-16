@@ -48,17 +48,18 @@
     </RelativeLayout>
 
     <LinearLayout
-        android:id="@+id/bottom_line"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <View
+            android:id="@+id/bottom_line_top"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_20"
             android:background="#FFFFFF"/>
 
         <View
+            android:id="@+id/bottom_line"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_5"/>
     </LinearLayout>

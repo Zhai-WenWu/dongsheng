@@ -18,7 +18,6 @@ import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import amodule.lesson.activity.LessonInfo;
 import amodule.lesson.adapter.LessonInfoAdapter;
-import amodule.lesson.view.info.ItemImage;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
@@ -327,7 +326,7 @@ public class LessonInfoDataManager {
         data.put("img", imgUrl);
         if (!TextUtils.isEmpty(type)) {
             data.put("end", type);
-            data.put("isEnd", "2");
+            data.put("isEnd", "1");
         }
         if (!TextUtils.isEmpty(text2)) {
             data.put("text2", text2);
