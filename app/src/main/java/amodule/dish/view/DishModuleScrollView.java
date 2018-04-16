@@ -107,6 +107,9 @@ public class DishModuleScrollView extends ItemBaseView{
             rvHorizatolListView.setAdapter(adapterModuleScroll);
         }
         adapterModuleScroll.notifyDataSetChanged();
+        if(dishGridDialog != null && !TextUtils.isEmpty(dishCode)){
+            dishGridDialog.updateParam(dishCode);
+        }
         module_more.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
