@@ -28,12 +28,11 @@
         <ImageView
             android:id="@+id/description_layout_shadow"
             android:background="@drawable/lesson_black_shadow"
-            android:layout_alignTop="@+id/description_layout"
             android:layout_alignBottom="@+id/description_layout"
             android:visibility="gone"
             tools:visibility="visible"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="@dimen/dp_86"/>
 
         <LinearLayout
             android:id="@+id/description_layout"
