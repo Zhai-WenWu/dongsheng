@@ -37,7 +37,27 @@ public class UrlFilter {
         }
         return url;
     }
+    /*广告专用*/
+    public static String filterAdToDownloadUrl(String url) {
+        if (!TextUtils.isEmpty(url)) {
+            String ruleValue = ConfigMannager.getConfigByLocal(KEY_AdDownLoad);
+            if(TextUtils.isEmpty(ruleValue))
+                return "";
+            Map<String, String> ruleMap = StringManager.getFirstMap(ruleValue);
+            if(null == ruleMap || ruleMap.isEmpty())
+                return "";
+            for (Map.Entry<String, String> entry : ruleMap.entrySet()) {
+                if (isMatchdispatch(url, entry.getKey(), entry.getValue())) {
+                    StringBuffer newUrl = new StringBuffer("download.app?")
+                            .append("url=").append(Uri.encode(url))
+                            .append("&").append("appname=xiangha_ad");
 
+                    return newUrl.toString();
+                }
+            }
+        }
+        return "";
+    }
     static final String CASE_START = "start";
     static final String CASE_END = "end";
     static final String CASE_CONTAIN = "contain";

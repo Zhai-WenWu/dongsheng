@@ -4,12 +4,16 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.TextView;
 
 import com.xiangha.R;
 
+import acore.logic.AppCommon;
+import acore.logic.UrlFilter;
 import acore.override.activity.base.BaseActivity;
 
 /**
@@ -34,7 +38,54 @@ public class NativeShowWeb extends BaseActivity {
 
     private void initView() {
         webView = (WebView) findViewById(R.id.webview);
-        webView.setWebViewClient(new WebViewClient());
+        webView.setWebViewClient(new WebViewClient() {
+            // 设置title
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                String title = view.getTitle();
+                if (!TextUtils.isEmpty(title)) {
+                    ((TextView)findViewById(R.id.title)).setText(title);
+//                    titleView.setCenterText(title);
+                }
+            }
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                Log.i("yule", "shouldOverrideUrlLoading: " + "url =" + url);
+                final String newUrl = UrlFilter.filterAdToDownloadUrl(url);
+                if (!TextUtils.isEmpty(newUrl)){
+                    Log.i("yule", "shouldOverrideUrlLoading: " + "开始下载" + newUrl);
+                    AppCommon.openUrl(newUrl,false);
+                    return true;
+                }
+                if (shouldOverrideUrlLoadingByApp(view, url)) {
+                    return true;
+                }
+                return super.shouldOverrideUrlLoading(view, url);
+            }
+
+            /**
+             * 根据url的scheme处理跳转第三方app的业务
+             */
+            private boolean shouldOverrideUrlLoadingByApp(WebView view, String url) {
+                Log.i("yule", "shouldOverrideUrlLoadingByApp: " + "url =" + url);
+                if (url.startsWith("http") || url.startsWith("https") || url.startsWith("ftp")) {
+                    //不处理http, https, ftp的请求
+                    return false;
+                }
+                Intent intent;
+                try {
+
+                    intent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME);
+                    view.getContext().startActivity(intent);
+                } catch (Exception e) {
+                    Log.i("yule", "shouldOverrideUrlLoadingByApp: " + "e" + e);
+                    return false;
+                }
+                return true;
+            }
+        });
+
         WebSettings settings = webView.getSettings();
         settings.setDefaultZoom(WebSettings.ZoomDensity.MEDIUM);
         settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
