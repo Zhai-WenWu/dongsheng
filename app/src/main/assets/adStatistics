@@ -162,6 +162,6 @@
 "sy_banner":{
 "show":"ad_show_index",
 "click":"ad_click_index",
-"twoData":"banner1"
+"twoData":"banner"
 }
 }

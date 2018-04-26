@@ -12,15 +12,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
+import third.ad.db.AdStatistics;
 
 /**
  * Date:2018/3/16.
@@ -33,7 +34,6 @@ public class BaseAdConfigTools {
 
     private Handler mStatisticHandler;
     private Runnable mStatisticRun;
-    private ArrayList<JSONObject> mShowCacheParams;
     private long mIntervalTime = 30 * 1000;
     private int mCacheSize = 5;
     private boolean isStart = false;
@@ -44,16 +44,14 @@ public class BaseAdConfigTools {
 
     private void init() {
         mStatisticHandler = new Handler();
-        mShowCacheParams = new ArrayList<>();
         mStatisticRun = () -> {
-            if (mShowCacheParams == null)
-                return;
             requestShowStatistics();
             startStatistics();
         };
     }
 
     private void requestShowStatistics() {
+        List<JSONObject> mShowCacheParams = AdStatistics.getInstance().getAllData();
         if(mShowCacheParams != null && !mShowCacheParams.isEmpty()){
             JSONArray jsonArray = new JSONArray();
             LinkedHashMap<String,String> params = new LinkedHashMap<>();
@@ -62,14 +60,18 @@ public class BaseAdConfigTools {
                     .forEach(jsonArray::put);
             params.put("log_json",jsonArray.toString());
             mShowCacheParams.clear();
-            requestStatistics(StringManager.api_adsNumber, params);
+            requestStatistics(StringManager.api_adsNumber, params,"show");
         }
     }
 
-    private void requestStatistics(String url, LinkedHashMap<String, String> params) {
+    private void requestStatistics(String url, LinkedHashMap<String, String> params,String event) {
         ReqInternet.in().doPost(url, params, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
+                if("show".equals(event)){
+                    Log.i("tzy", "loaded: deleteAll");
+                    AdStatistics.getInstance().deleteAll();
+                }
             }
         });
     }
@@ -114,10 +116,10 @@ public class BaseAdConfigTools {
             case "click":
             case "download":
                 params.put("log_json", new JSONArray().put(jsonObject).toString());
-                requestStatistics(StringManager.api_adsNumber, params);
+                requestStatistics(StringManager.api_adsNumber, params,event);
                 break;
             case "show":
-                mShowCacheParams.add(jsonObject);
+                AdStatistics.getInstance().insert(jsonObject.toString());
                 if (!isStart){
                     isStart = true;
                     startStatistics();
@@ -130,7 +132,7 @@ public class BaseAdConfigTools {
     }
 
     private boolean checkSendSta() {
-        return mShowCacheParams != null && mShowCacheParams.size() >= mCacheSize;
+        return AdStatistics.getInstance().getSize() >= mCacheSize;
     }
 
     private static JSONObject MapToJsonEncode(Map<String, String> maps) {
@@ -186,7 +188,6 @@ public class BaseAdConfigTools {
         stopStatistics();
         mStatisticRun = null;
         mStatisticHandler = null;
-        mShowCacheParams = null;
     }
 
     public void recreateStatistics() {

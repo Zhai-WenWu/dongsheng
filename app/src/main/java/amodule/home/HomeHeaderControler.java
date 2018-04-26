@@ -248,9 +248,11 @@ public class HomeHeaderControler implements ISaveStatistic, ISetAdController {
     private ArrayList<Map<String, String>> addAdMapToList(ArrayList<Map<String, String>> targetList, Map<String, String> originalMap) {
         if (originalMap == null || originalMap.isEmpty())
             return targetList;
-        for (String key : originalMap.keySet()) {
+        for(int index = 0 ; index < HOME_BANNEER_LIST.length ; index++){
+            final String key = HOME_BANNEER_LIST[index];
             Map<String, String> adMap = new HashMap<>();
             adMap.put("adPosId", key);
+            adMap.put("realIndex", String.valueOf(index));
             Map<String, String> m = StringManager.getFirstMap(originalMap.get(key));
             if(!"xh".equals(m.get("type"))){
                 continue;

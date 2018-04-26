@@ -46,10 +46,10 @@ public class XHScrollerSelf extends XHScrollerAdParent {
     @Override
     public void onThirdClick(String oneLevel, String twoLevel) {
         if (null != mNativeData) {
+            onAdClick(oneLevel, twoLevel, key);
             if ("1".equals(mNativeData.getDbType())) {
                 showSureDownload(mNativeData, mAdPlayId, adid, key, mNativeData.getId());
             } else {
-                onAdClick(oneLevel, twoLevel, key);
                 handlerAdClick();
             }
         }

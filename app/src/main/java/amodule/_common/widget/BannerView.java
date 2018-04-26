@@ -138,8 +138,14 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
             if (position < 0 || position >= mArrayList.size()) return;
             Map<String, String> dataMapTemp = mArrayList.get(position);
             if (dataMapTemp.containsKey("adPosId")) {
+                int index = -1;
+                try{
+                    index = Integer.parseInt(dataMapTemp.get("realIndex"));
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
                 if (mAdControl != null)
-                    mAdControl.onAdClick(mAdViews.get(position), position, String.valueOf(position + 1));
+                    mAdControl.onAdClick(mAdViews.get(position), index, String.valueOf(index + 1));
                 return;
             }
             String url = dataMapTemp.get("url");
@@ -243,8 +249,14 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
                         && adMap != null
                         && !adMap.containsKey(KEY_ALREADY_SHOW)) {
                     adMap.put(KEY_ALREADY_SHOW, "2");
+                    int index = -1;
+                    try{
+                        index = Integer.parseInt(adMap.get("realIndex"));
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                     if (mAdControl != null)
-                        mAdControl.onAdBind(position, mAdViews.get(position), String.valueOf(position + 1));
+                        mAdControl.onAdBind(index, mAdViews.get(position), String.valueOf(index + 1));
                 }
             }
         };
