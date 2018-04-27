@@ -24,7 +24,7 @@
             android:paddingRight="@dimen/dp_20">
 
             <TextView
-                android:id="@+id/title"
+                android:id="@+id/title_rec"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
@@ -38,14 +38,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/title"
+                android:layout_toLeftOf="@+id/title_rec"
                 android:background="#E1E1E1"/>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:layout_centerVertical="true"
-                android:layout_toRightOf="@+id/title"
+                android:layout_toRightOf="@+id/title_rec"
                 android:background="#E1E1E1"/>
 
         </RelativeLayout>

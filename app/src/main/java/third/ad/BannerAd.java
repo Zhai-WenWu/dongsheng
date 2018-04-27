@@ -31,8 +31,6 @@ import static third.ad.scrollerAd.XHScrollerAdParent.ADKEY_BANNER;
 public class BannerAd {
     private Activity mAct;
     private ImageView mAdImage;
-    /** banner广告无需刷新，次标记标识是否已经加载过 */
-    private boolean mIsHasShow = false;
     private OnBannerListener mListener;
 
     public int marginLeft = 0, marginRight = 0;
@@ -50,19 +48,16 @@ public class BannerAd {
     }
 
     public void onShowAd(Map<String, String> map) {
-        if (!mIsHasShow) {
-            mIsHasShow = true;
-            setActivityData(map);
-        }
+        setActivityData(map);
     }
 
     private void setActivityData(Map<String, String> map) {
-//        Log.i("tzy", "setActivityData: " + map.toString());
-        if (mAdImage == null
-                || !ADKEY_BANNER.equals(map.get("type"))) {
+        if (mAdImage == null)
+            return;
+        if (map == null || map.isEmpty() || !ADKEY_BANNER.equals(map.get("type"))) {
+            mAdImage.setVisibility(View.GONE);
             return;
         }
-
         String mImgUrl = map.get("imgUrl");
         //设置活动图
         BitmapRequestBuilder<GlideUrl, Bitmap> bitmapRequest = LoadImage.with(XHApplication.in())
@@ -90,7 +85,6 @@ public class BannerAd {
                     mAdImage.setScaleType(ImageView.ScaleType.FIT_XY);
                     ImgManager.setImgViewByWH(mAdImage, bitmap, imgViewWidth, imgHeight, true);
 
-                    mAdImage.setVisibility(View.VISIBLE);
                     mAdImage.setVisibility(View.VISIBLE);
                     if (mListener != null)
                         mListener.onImgShow(imgHeight);

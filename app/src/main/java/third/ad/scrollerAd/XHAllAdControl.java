@@ -133,7 +133,7 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
         if (act == null) {
             return;
         }
-        lastSelfAdTime = System.currentTimeMillis();
+        lastSelfAdTime = System.currentTimeMillis() - 1000;
         ActivityMethodManager activityMethodManager = null;
         if (act instanceof BaseActivity) {
             activityMethodManager = ((BaseActivity) act).getActMagager();

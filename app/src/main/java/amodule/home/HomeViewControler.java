@@ -298,6 +298,9 @@ public class HomeViewControler implements ISetAdController {
     public void autoRefresh() {
         if (null != mRefreshLayout)
             mRefreshLayout.autoRefresh();
+    }
+
+    public void refreshBuoy() {
         if(mBuoy != null){
             mBuoy.resetData();
         }
@@ -324,8 +327,8 @@ public class HomeViewControler implements ISetAdController {
         mHeaderControler.setAdController(controller);
     }
 
-    public void setAdData(Map<String, String> map, List<String> adIDs) {
+    public void setAdData(Map<String, String> map, List<String> adIDs, boolean refresh) {
         mHeaderControler.setAdID(adIDs);
-        mHeaderControler.setAdData(map);
+        mHeaderControler.setAdData(map, refresh);
     }
 }

@@ -485,9 +485,9 @@ public class ArticleDetailActivity extends BaseActivity {
     public void showAd(Map<String, String> adDataMap) {
         if (articleContentBottomView == null
                 || isFinishing()
-                || adView != null
-                || !webviewLoadOver)
+                || !webviewLoadOver){
             return;
+        }
         adView = mArticleAdContrler.getBigAdView(adDataMap);
         articleContentBottomView.addViewToAdLayout(adView);
         detailAdapter.notifyDataSetChanged();
@@ -499,8 +499,10 @@ public class ArticleDetailActivity extends BaseActivity {
      * @param onlyUser 是否只刷新用户数据
      */
     private void refreshData(boolean onlyUser) {
-        if (!onlyUser)
+        if (!onlyUser){
             resetData();
+            mArticleAdContrler.initADData();
+        }
         requestArticleData(onlyUser);
     }
 

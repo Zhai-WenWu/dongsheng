@@ -140,15 +140,16 @@ public class HomeBuoy {
     private void initBuoy() {
         if (mAct == null)
             return;
-        imageButton = new ImageView(mAct);
-        int width = Tools.getDimen(mAct, R.dimen.dp_45);
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(width, width);
-        params.setMargins(params.leftMargin, params.topMargin, Tools.getDimen(mAct, R.dimen.dp_11), Tools.getDimen(mAct, R.dimen.dp_34));
-        params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-
-        addToRoot(params);
-        hide();//初始化完成后hide浮标
+        if (imageButton == null) {
+            imageButton = new ImageView(mAct);
+            int width = Tools.getDimen(mAct, R.dimen.dp_45);
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(width, width);
+            params.setMargins(params.leftMargin, params.topMargin, Tools.getDimen(mAct, R.dimen.dp_11), Tools.getDimen(mAct, R.dimen.dp_34));
+            params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+            addToRoot(params);
+            hide();//初始化完成后hide浮标
+        }
     }
 
     private void addToRoot(RelativeLayout.LayoutParams params) {

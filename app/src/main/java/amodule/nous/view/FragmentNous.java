@@ -68,6 +68,7 @@ public class FragmentNous {
         mAds.add(23);
         mAds.add(33);
         mAds.add(43);
+        getAdData();
     }
 
 
@@ -111,11 +112,13 @@ public class FragmentNous {
             if (i == mAds.size() - 1) {
                 mAds.add(mAds.get(i) + 9);
             }
-            if (listDataNous.size() > mAds.get(i)) {
-                Map<String, String> twiceMap = listDataNous.get(mAds.get(i));
-                twiceMap.put("ad", "show");
+            if(listDataNous != null){
+                if (listDataNous.size() > mAds.get(i)) {
+                    Map<String, String> twiceMap = listDataNous.get(mAds.get(i));
+                    twiceMap.put("ad", "show");
+                }
+                adapter.notifyDataSetChanged();
             }
-            adapter.notifyDataSetChanged();
         }
     }
 
@@ -260,7 +263,6 @@ public class FragmentNous {
                 }
             });
             LoadOver = true;
-            getAdData();
         }
     }
 
@@ -314,6 +316,7 @@ public class FragmentNous {
                         map2.put("ad", "hide");
                         listDataNous.add(map2);
                     }
+                    setDataNous();
                     if (adCount > 0) {
                         for (int i = 0; i < mAds.size(); i++) {
                             if (listDataNous.size() > mAds.get(i) && adCount > i) {

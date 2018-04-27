@@ -175,7 +175,11 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
                     mViewContrloer.getRvListView(),
                     mHomeAdapter,
                     true,
-                    v -> innerRefresh(),
+                    v -> {
+                        innerRefresh();
+                        if (mViewContrloer != null)
+                            mViewContrloer.refreshBuoy();
+                    },
                     v -> {
                         if (HeaderDataLoaded)
                             EntryptData(!LoadOver);
@@ -213,7 +217,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
         Collections.addAll(arr,AdPlayIdConfig.HOME_BANNEER_LIST);
         mDataControler.loadAdData(arr, (isRefresh, map) -> {
             mViewContrloer.setAdController(mDataControler.getAllAdController());
-            mViewContrloer.setAdData(map, arr);},
+            mViewContrloer.setAdData(map, arr, isRefresh);},
                 this, "sy_banner");
     }
 

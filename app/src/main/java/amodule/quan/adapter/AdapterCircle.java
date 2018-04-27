@@ -13,13 +13,11 @@ import java.util.Map;
 import acore.logic.AppCommon;
 import acore.logic.XHClick;
 import acore.override.adapter.AdapterSimple;
-import amodule.quan.tool.HomeAdvertControl;
 import amodule.quan.tool.QuanAdvertControl;
 import amodule.quan.view.NormalContentView;
 import amodule.quan.view.NormarlContentItemImageVideoView;
 import amodule.quan.view.RecommendFriendView;
 import amodule.quan.view.UserRankView;
-import third.ad.tools.AdConfigTools;
 import xh.basic.tool.UtilString;
 
 public class AdapterCircle extends AdapterSimple {

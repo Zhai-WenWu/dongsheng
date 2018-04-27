@@ -69,8 +69,14 @@ public class ArticleContentBottomView extends ItemBaseView implements View.OnCli
 
     public void addViewToAdLayout(View view){
         if(view != null){
+            if(adLayout.getChildCount() > 0){
+                adLayout.removeAllViews();
+            }
             adLayout.addView(view);
             adLayout.setVisibility(VISIBLE);
+        }else {
+            adLayout.removeAllViews();
+            adLayout.setVisibility(GONE);
         }
     }
 

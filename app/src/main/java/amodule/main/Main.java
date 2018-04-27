@@ -240,6 +240,9 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
 
     /** 腾讯统计 */
     private void initMTA() {
+        //原始：Aqc1150004142
+        //VIP：A1DGHJVJ938H
+        StatConfig.setAppKey(LoginManager.isVIPLocal(XHApplication.in())?"A1DGHJVJ938H":"Aqc1150004142");
         StatConfig.setDebugEnable(false);
         StatConfig.setInstallChannel(this, ChannelUtil.getChannel(this));
         StatConfig.setSendPeriodMinutes(1);//设置发送策略：每一分钟发送一次
@@ -513,6 +516,8 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                 //请求广告位
                 XHAdSqlite.newInstance(this).deleteOverdueConfig();
                 AdConfigTools.getInstance().getAdConfigInfo();
+                AdConfigTools.getInstance().startStatisticsNow();
+                AdConfigTools.getInstance().destroyStatistics();
                 UploadDishControl.getInstance().updataAllUploadingDish(getApplicationContext());
                 try {
                     // 开启自我唤醒

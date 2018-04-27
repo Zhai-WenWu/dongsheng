@@ -35,7 +35,7 @@ import third.share.BarShare;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilString;
 
-import static third.ad.tools.AdPlayIdConfig.Dish_CLASSIFY;
+import static third.ad.tools.AdPlayIdConfig.DETAIL_HEALTH;
 
 /**
  * Title:DetailHealth.java Copyright: Copyright (c) 2014~2017
@@ -129,29 +129,29 @@ public class DetailHealth extends BaseActivity {
     private void initAd() {
         imageView = (ImageView) findViewById(R.id.ad_banner_item_iv_single);
         ArrayList<String> list = new ArrayList<>();
-//        list.add(DETAIL_HEALTH);
-        list.add(Dish_CLASSIFY);
+        list.add(DETAIL_HEALTH);
+        bannerAdBurden = new BannerAd(DetailHealth.this, xhAllAdControl, imageView);
+        bannerAdBurden.setOnBannerListener(new BannerAd.OnBannerListener() {
+            @Override
+            public void onShowAd() {
+                imageView.setVisibility(isLoadOver?View.VISIBLE:View.GONE);
+            }
+
+            @Override
+            public void onClickAd() {
+
+            }
+
+            @Override
+            public void onImgShow(int imgH) {
+
+            }
+        });
         xhAllAdControl = new XHAllAdControl(list, (isRefresh,map) -> {
-            if (map.containsKey(Dish_CLASSIFY)) {
-                bannerAdBurden = new BannerAd(DetailHealth.this, xhAllAdControl, imageView);
-                bannerAdBurden.setOnBannerListener(new BannerAd.OnBannerListener() {
-                    @Override
-                    public void onShowAd() {
-                        imageView.setVisibility(isLoadOver?View.VISIBLE:View.GONE);
-                    }
-
-                    @Override
-                    public void onClickAd() {
-
-                    }
-
-                    @Override
-                    public void onImgShow(int imgH) {
-
-                    }
-                });
-                map = StringManager.getFirstMap(map.get(Dish_CLASSIFY));
-                bannerAdBurden.onShowAd(map);
+            if (map.containsKey(DETAIL_HEALTH)) {
+                map = StringManager.getFirstMap(map.get(DETAIL_HEALTH));
+                if (bannerAdBurden != null)
+                    bannerAdBurden.onShowAd(map);
             }
         }, this, "other_health");
         xhAllAdControl.registerRefreshCallback();
