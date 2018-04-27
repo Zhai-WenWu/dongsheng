@@ -17,11 +17,11 @@ FileExtension=${var##*.}
 # &&
 if [[ "$FileExtension" == "java" ]]
 then
-haveFlag=`grep '\/\/Log\.i(' $var|wc -l`
+haveFlag=`grep 'YLKLog\.i(' $var | wc -l`
 if [ $haveFlag -ne 0 ]
 then
 echo "更改的文件是" $var
-sed -i "" 's/\/\/Log\.i(/Log\.i(/g' $var
+sed -i "" 's/\/\/YLKLog\.i(/Log\.i(/g' $var
 fi
 fi
 }
