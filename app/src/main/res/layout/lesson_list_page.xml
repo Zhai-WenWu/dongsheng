@@ -25,7 +25,7 @@
 
     </cn.srain.cube.views.ptr.PtrClassicFrameLayout>
 
-    <amodule.lesson.view.VIPButton
+    <amodule.vip.VIPButton
         android:id="@+id/vip_button"
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"

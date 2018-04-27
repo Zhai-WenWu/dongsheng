@@ -37,6 +37,7 @@ public class ModuleUserView extends ModuleBaseView{
     }
     @Override
     public void initUI() {
+        setMODULE_TAG("A1");
         auther_userImg= (ImageView) findViewById(R.id.auther_userImg);
         auther_name= (TextView) findViewById(R.id.auther_name);
         right_title= (TextView) findViewById(R.id.right_title);

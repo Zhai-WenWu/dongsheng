@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#FFFFFF"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/image_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_200">
+
+        <ImageView
+            android:id="@+id/background_fake"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"/>
+
+        <ImageView
+            android:id="@+id/background"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"/>
+
+        <ImageView
+            android:id="@+id/description_layout_shadow"
+            android:background="@drawable/lesson_black_shadow"
+            android:layout_alignBottom="@+id/description_layout"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_86"/>
+
+        <LinearLayout
+            android:id="@+id/description_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/dp_5"
+            android:paddingLeft="@dimen/dp_20"
+            android:paddingRight="@dimen/dp_20"
+            android:paddingTop="@dimen/dp_4.5"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#FFFFFF"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:textSize="@dimen/sp_17"
+                app:layout_constraintBottom_toBottomOf="@+id/background"
+                tools:text="课程标题"/>
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:visibility="gone"
+                android:maxLines="2"
+                android:paddingBottom="@dimen/dp_2"
+                android:textColor="#FFFFFF"
+                android:textSize="@dimen/sp_13"
+                tools:text="课程介绍课程介绍课程介绍课程介绍课程介绍课程介绍课程介绍课程介绍课程介绍"
+                />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/info_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_87"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/score_layout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#F23030"
+                android:textSize="@dimen/sp_17"
+                tools:text="9.8"/>
+
+            <TextView
+                android:id="@+id/score_suffix"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_4"
+                android:textColor="@color/common_text"
+                android:textSize="@dimen/sp_13"
+                tools:text="哈有评价"/>
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/line"
+            android:layout_width="@dimen/dp_1"
+            android:layout_height="@dimen/dp_10"
+            android:background="#CCCCCC"
+            />
+
+        <LinearLayout
+            android:id="@+id/lesson_num_layout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/lesson_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/common_text"
+                android:textSize="@dimen/sp_17"
+                tools:text="9"/>
+
+            <TextView
+                android:id="@+id/lesson_num_suffix"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_4"
+                android:textColor="@color/common_text"
+                android:textSize="@dimen/sp_13"
+                tools:text="节课"/>
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/line2"
+            android:layout_width="@dimen/dp_1"
+            android:layout_height="@dimen/dp_10"
+            android:background="#CCCCCC"
+            />
+
+        <LinearLayout
+            android:id="@+id/update_layout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/update_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/dp_2"
+                android:paddingBottom="@dimen/dp_3"
+                android:textColor="@color/common_text"
+                android:textSize="@dimen/sp_13"
+                tools:text="每周三"/>
+
+            <TextView
+                android:id="@+id/update_time_suffix"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_4"
+                android:textColor="@color/common_text"
+                android:textSize="@dimen/sp_13"
+                tools:text="更新"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/learned_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp_20"
+        android:layout_marginRight="@dimen/dp_20"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="#E5E5E5"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_45">
+
+            <LinearLayout
+                android:id="@+id/learned_user"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toLeftOf="@+id/learned_desc"
+                android:gravity="left|center_vertical"
+                android:orientation="horizontal"/>
+
+            <TextView
+                android:id="@+id/learned_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:textColor="@color/common_super_tint_text"
+                android:textSize="@dimen/sp_13"
+                tools:text="1566人已完成学习"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/bottom_line"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginLeft="@dimen/dp_20"
+        android:layout_marginRight="@dimen/dp_20"
+        android:background="#E5E5E5"/>
+
+</LinearLayout>

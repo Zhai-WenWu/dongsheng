@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="#FFFFFF"
+    android:paddingTop="@dimen/dp_8.5"
+    android:paddingBottom="@dimen/dp_25"
+    android:paddingLeft="@dimen/dp_20"
+    android:paddingRight="@dimen/dp_20">
+
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="@dimen/dp_55"
+        android:layout_height="@dimen/dp_65"
+        android:src="@drawable/lesson_desc_icon"/>
+
+    <TextView
+        android:id="@+id/text3"
+        android:layout_width="wrap_content"
+        android:maxLines="1"
+        android:layout_alignBottom="@+id/image"
+        android:layout_alignLeft="@+id/image"
+        android:layout_alignRight="@+id/image"
+        tools:text="第一讲"
+        android:padding="@dimen/dp_2.5"
+        android:textSize="@dimen/sp_12"
+        android:gravity="center"
+        android:textColor="#E7640D"
+        android:layout_height="wrap_content"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_toRightOf="@+id/image"
+        android:layout_alignBottom="@+id/image"
+        android:layout_alignTop="@+id/image"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:layout_height="wrap_content">
+
+        <acore.widget.TextViewShow
+            android:id="@+id/text1"
+            android:layout_marginTop="@dimen/dp__2"
+            android:textColor="@color/common_text"
+            android:textSize="@dimen/sp_16"
+            android:layout_width="match_parent"
+            android:maxLines="2"
+            tools:text="这是一个测试的title，用户是看不到的。。。。。。"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/text2"
+            android:textSize="@dimen/sp_13"
+            tools:text="1234人已完成学习"
+            android:layout_alignParentBottom="true"
+            android:textColor="@color/common_super_tint_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>

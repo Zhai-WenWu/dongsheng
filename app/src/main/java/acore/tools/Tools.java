@@ -64,10 +64,12 @@ public class Tools {
 
     /**
      * 是否是debug
+     *
      * @param context
+     *
      * @return
      */
-    public static boolean isDebug(Context context){
+    public static boolean isDebug(Context context) {
         String versoinName = VersionOp.getVerName(context);
         String[] temp = versoinName.split("\\.");
         String currentPackName = ToolsDevice.getPackageName(context);
@@ -76,11 +78,13 @@ public class Tools {
 
     /**
      * 是否开启请求返回值提示
+     *
      * @param context
+     *
      * @return
      */
-    public static boolean isOpenRequestTip(Context context){
-        String isOpen = FileManager.loadShared(context,FileManager.xmlFile_appInfo,FileManager.xmlKey_request_tip).toString();
+    public static boolean isOpenRequestTip(Context context) {
+        String isOpen = FileManager.loadShared(context, FileManager.xmlFile_appInfo, FileManager.xmlKey_request_tip).toString();
         return "2".equals(isOpen);
     }
 
@@ -89,6 +93,7 @@ public class Tools {
      *
      * @param formatStr 形如"yyyy年MM月dd日HH:mm:ss"
      * @param overTime  0为当前时间,其他根据值加减时间ms
+     *
      * @return 时间
      */
     public static String getAssignTime(String formatStr, long overTime) {
@@ -102,6 +107,7 @@ public class Tools {
      *
      * @param pattern  ：指定格式
      * @param dateTime ：毫秒
+     *
      * @return
      */
     public static String getFormatedDateTime(String pattern, long dateTime) {
@@ -126,7 +132,9 @@ public class Tools {
      *
      * @param lastTime    上一条记录时间
      * @param currentTime 当前记录时间
+     *
      * @return 时间的正确显示字符串
+     *
      * @throws ParseException
      */
     public static String dealTime(String lastTime, String currentTime, String dateFormat, String time) throws ParseException {
@@ -147,6 +155,7 @@ public class Tools {
      * 将数组转换为JSON格式的数据。
      *
      * @param strs 数据源
+     *
      * @return JSON格式的数据
      */
     public static String changeArrayDateToJson(String[] strs) {
@@ -217,6 +226,7 @@ public class Tools {
 
     /**
      * @param type year 年 , month 月, date 日, day 星期, hour 时 , minute 分 , second 秒
+     *
      * @return 0 没有对应类型 -1 type为null
      */
     @SuppressWarnings("deprecation")
@@ -247,6 +257,7 @@ public class Tools {
     /**
      * @param context
      * @param id      dimens文件中的id(仅适用于dp)
+     *
      * @return dimen 对应分辨率的dp或者sp值
      */
     public static int getDimen(Context context, int id) {
@@ -259,6 +270,7 @@ public class Tools {
     /**
      * @param context
      * @param id      dimens文件中的id(仅适用于dp)
+     *
      * @return dimen sp值
      */
     public static Float getDimenSp(Context context, int id) {
@@ -307,7 +319,7 @@ public class Tools {
         }
     }
 
-    public static JSONArray list2JsonArray(List<Map<String, String>> data){
+    public static JSONArray list2JsonArray(List<Map<String, String>> data) {
         JSONArray jsonArray = new JSONArray();
         for (Map<String, String> map : data) {
             JSONObject jsonObject = new JSONObject();
@@ -330,6 +342,7 @@ public class Tools {
 
     /**
      * @param context
+     *
      * @return 获取手机内存和CPU频率以及系统版本
      */
     public static boolean getPhoneInformation(Context context) {
@@ -354,6 +367,7 @@ public class Tools {
      * 将imageview转成bitmap
      *
      * @param imageView
+     *
      * @return
      */
     public static Bitmap getBitmap(ImageView imageView) {
@@ -370,6 +384,7 @@ public class Tools {
      * 算出真实的useracode
      *
      * @param user
+     *
      * @return
      */
     public static String getUserCode(String user) {
@@ -388,6 +403,7 @@ public class Tools {
      * 获得当前进程的名字
      *
      * @param context
+     *
      * @return 进程号
      */
     public static String getCurProcessName(Context context) {
@@ -425,7 +441,7 @@ public class Tools {
     }
 
     public static String InputStream2String(InputStream is) {
-        String str = ""; 
+        String str = "";
         ByteArrayOutputStream os = null;
         try {
             os = new ByteArrayOutputStream();
@@ -454,7 +470,7 @@ public class Tools {
     }
 
     public static String getColorStr(Context context, int resId) {
-        if(null == context){
+        if (null == context) {
             return "#00FFFFFE";
         }
         return context.getResources().getString(resId);
@@ -469,6 +485,7 @@ public class Tools {
      * 获取状态栏高度
      *
      * @param context
+     *
      * @return
      */
     public static int getStatusBarHeight(Context context) {
@@ -485,6 +502,7 @@ public class Tools {
      * 获取导航栏高度
      *
      * @param context
+     *
      * @return
      */
     public static int getNavigationBarHeight(Context context) {
@@ -511,6 +529,7 @@ public class Tools {
 
     /**
      * 直接改变view的颜色
+     *
      * @param activity
      * @param statusColor
      */
@@ -641,6 +660,7 @@ public class Tools {
      * 将字节转换为KB,MB,GB
      *
      * @param size
+     *
      * @return
      */
     public static String getPrintSize(long size) {
@@ -679,9 +699,10 @@ public class Tools {
      * 对字符串md5加密
      *
      * @param str
+     *
      * @return
      */
-    public static String getMD5(String str){
+    public static String getMD5(String str) {
         try {
             // 生成一个MD5加密计算摘要
             MessageDigest md = MessageDigest.getInstance("MD5");
@@ -711,26 +732,26 @@ public class Tools {
     }
 
 
-    public static boolean isFileExists(String filePath){
+    public static boolean isFileExists(String filePath) {
 
-        if(TextUtils.isEmpty(filePath))
-            return  false;
+        if (TextUtils.isEmpty(filePath))
+            return false;
         File file = new File(filePath);
         return file.exists() && file.isFile();
     }
 
-    public static int getScreenHeight(){
-        return  ToolsDevice.getWindowPx(XHApplication.in()).heightPixels;
+    public static int getScreenHeight() {
+        return ToolsDevice.getWindowPx(XHApplication.in()).heightPixels;
     }
 
     /**
-     *
      * @param context
      * @param tvWidth : textView的宽
      * @param tvSize
+     *
      * @return
      */
-    public static int getTextNumbers (Context context,int tvWidth,int tvSize) {
+    public static int getTextNumbers(Context context, int tvWidth, int tvSize) {
 //        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
 //        int tv_distance = (int) context.getResources().getDimension(R.dimen.dp_18);
 //        int waith = wm.getDefaultDisplay().getWidth();
@@ -742,6 +763,7 @@ public class Tools {
 
     /**
      * 程序是否在前台运行
+     *
      * @return
      */
     public static boolean isAppOnForeground() {
@@ -763,38 +785,40 @@ public class Tools {
         return false;
     }
 
-    public static void getApiSurTime(String twoLevel,long oldTime,long newTime){
+    public static void getApiSurTime(String twoLevel, long oldTime, long newTime) {
         long backTimeMin = (newTime - oldTime) / 1000 / 60;
         long surTime;
-        if(oldTime == 0){
+        if (oldTime == 0) {
             surTime = 1;
-        }else if(backTimeMin < 6){
+        } else if (backTimeMin < 6) {
             surTime = backTimeMin / 2 + 1;
-        }else if(backTimeMin > 60){
+        } else if (backTimeMin > 60) {
             surTime = 8;
-        }else{
-            if(backTimeMin < 11){
+        } else {
+            if (backTimeMin < 11) {
                 surTime = 4;
-            }else if(backTimeMin < 31){
+            } else if (backTimeMin < 31) {
                 surTime = 5;
-            }else if(backTimeMin < 46){
+            } else if (backTimeMin < 46) {
                 surTime = 6;
-            }else{
+            } else {
                 surTime = 7;
             }
         }
-        XHClick.mapStat(XHApplication.in(),"apiSurTime",twoLevel,String.valueOf(surTime));
+        XHClick.mapStat(XHApplication.in(), "apiSurTime", twoLevel, String.valueOf(surTime));
     }
+
     /**
      * map转json
      *
      * @param maps
+     *
      * @return
      */
     public static JSONObject MapToJson(Map<String, String> maps) {
 
         JSONObject jsonObject = new JSONObject();
-        if(maps==null||maps.size()<=0)return jsonObject;
+        if (maps == null || maps.size() <= 0) return jsonObject;
 
         Iterator<Map.Entry<String, String>> enty = maps.entrySet().iterator();
         try {
@@ -808,36 +832,36 @@ public class Tools {
         return jsonObject;
     }
 
-    public static String getTimeDifferent(long nowTime,long time){
-        String timeShow="";
-        if(nowTime<=0||time<=0){
+    public static String getTimeDifferent(long nowTime, long time) {
+        String timeShow = "";
+        if (nowTime <= 0 || time <= 0) {
             return "问题时间";
         }
-        long timeDifferent=nowTime-time;
-        if(timeDifferent<60){//秒
-            timeShow="刚刚";
-        }else if(timeDifferent<60*60){//分钟
-            int num= (int) (timeDifferent/(60));
-            timeShow=num+"分钟前";
-        }else if(timeDifferent<60*60*24){//小时
-            int num= (int) (timeDifferent/(60*60));
-            timeShow=num+"小时前";
-        }else if(timeDifferent<60*60*48){//昨天
-            timeShow="昨天";
-        }else if(timeDifferent<60*60*24*30){//几天
-            int num= (int) (timeDifferent/(60*60*24));
-            timeShow=num+"天前";
-        }else if(timeDifferent<60*60*24*30*12){//几月
-            int num= (int) (timeDifferent/(60*60*24*30));
-            timeShow=num+"月前";
-        }else {
-            timeShow="很久前";
+        long timeDifferent = nowTime - time;
+        if (timeDifferent < 60) {//秒
+            timeShow = "刚刚";
+        } else if (timeDifferent < 60 * 60) {//分钟
+            int num = (int) (timeDifferent / (60));
+            timeShow = num + "分钟前";
+        } else if (timeDifferent < 60 * 60 * 24) {//小时
+            int num = (int) (timeDifferent / (60 * 60));
+            timeShow = num + "小时前";
+        } else if (timeDifferent < 60 * 60 * 48) {//昨天
+            timeShow = "昨天";
+        } else if (timeDifferent < 60 * 60 * 24 * 30) {//几天
+            int num = (int) (timeDifferent / (60 * 60 * 24));
+            timeShow = num + "天前";
+        } else if (timeDifferent < 60 * 60 * 24 * 30 * 12) {//几月
+            int num = (int) (timeDifferent / (60 * 60 * 24 * 30));
+            timeShow = num + "月前";
+        } else {
+            timeShow = "很久前";
         }
         return timeShow;
     }
 
-    public static void setMute(Context context){
-        AudioManager audioManager = (AudioManager)context.getSystemService("audio");
+    public static void setMute(Context context) {
+        AudioManager audioManager = (AudioManager) context.getSystemService("audio");
         int mCurrSoundNum = audioManager.getStreamVolume(3);
         audioManager.setStreamVolume(3, 0, 0);
     }
@@ -846,6 +870,7 @@ public class Tools {
      * 获取Context所在进程的名称
      *
      * @param context
+     *
      * @return
      */
     public static String getProcessName(Context context) {
@@ -863,22 +888,24 @@ public class Tools {
 
     /**
      * 插入文本到剪切板
+     *
      * @param context
      * @param str
      */
-    public static void inputToClipboard(Context context,String str){
-        if(context == null || TextUtils.isEmpty(str))
+    public static void inputToClipboard(Context context, String str) {
+        if (context == null || TextUtils.isEmpty(str))
             return;
         final ClipboardManager manager = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clip = ClipData.newPlainText("simple text copy", str);
         manager.setPrimaryClip(clip);
     }
+
     /*获取Context所在进程的名称
 
     pkgName 包名
     *
     * */
-    public static boolean isPkgInstalled(String pkgName,Context context) {
+    public static boolean isPkgInstalled(String pkgName, Context context) {
         PackageInfo packageInfo = null;
         try {
 
@@ -889,5 +916,29 @@ public class Tools {
             e.printStackTrace();
         }
         return packageInfo != null;
+    }
+
+    public static int parseIntOfThrow(String strValue, int defaultValue) {
+        int result = defaultValue;
+        try {
+            if (!TextUtils.isEmpty(strValue)) {
+                result = Integer.parseInt(strValue);
+            }
+        } catch (Exception ignored) {
+            ignored.printStackTrace();
         }
+        return result;
+    }
+
+    public static float parseFloatOfThrow(String strValue, float defaultValue) {
+        float result = defaultValue;
+        try {
+            if (!TextUtils.isEmpty(strValue)) {
+                result = Float.parseFloat(strValue);
+            }
+        } catch (Exception ignored) {
+            ignored.printStackTrace();
+        }
+        return result;
+    }
 }

@@ -385,6 +385,12 @@ public class StringManager extends UtilString {
     public final static String API_SCHOOL_COURSELIST = apiUrl + "main8/school/courseList";//会员首页列表
     public final static String API_SCHOOL_CHAPTERLIST = apiUrl + "main8/school/chapterList";//会员首页列表
     public final static String API_SCHOOL_VIPBUTTON = apiUrl + "main8/school/getVipButtonStatus";//获取会员的button状态
+    public final static String API_SCHOOL_TOPINFO = apiUrl + "main8/school/getTopInfo";
+    public final static String API_SCHOOL_COURSEINTRODUCEINFO = apiUrl + "main8/school/getCourseIntroduceInfo";
+    public final static String API_SCHOOL_COMMENTINFO = apiUrl + "main8/school/getCommentInfo";
+    public final static String API_SCHOOL_COMMENTCHAPTERS = apiUrl + "main8/school/getCourseChapters";
+    public final static String API_SCHOOL_LIKELIST = apiUrl + "main8/school/getLikeList";
+    public final static String API_SCHOOL_INFO_VIPBUTTON = apiUrl + "main8/school/getVipButton";
 
     public final static String API_AD_GETADDATA = apiUrl + "main7/open/getAdData";//获取广告数据
 

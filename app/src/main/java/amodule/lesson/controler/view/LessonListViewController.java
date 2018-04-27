@@ -19,7 +19,7 @@ import acore.widget.rvlistview.RvListView;
 import amodule._common.delegate.StatisticCallback;
 import amodule._common.helper.WidgetDataHelper;
 import amodule.home.viewholder.XHBaseRvViewHolder;
-import amodule.lesson.view.VIPButton;
+import amodule.vip.VIPButton;
 import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
 
 /**

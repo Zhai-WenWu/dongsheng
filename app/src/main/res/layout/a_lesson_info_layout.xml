@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activityLayout"
+    android:background="#f2f2f2"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <acore.widget.rvlistview.RvListView
+        android:id="@+id/rvListview"
+        android:overScrollMode="never"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/vip_button"/>
+
+    <RelativeLayout
+        android:id="@+id/top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/topbar_height"
+        android:background="@color/common_top_bg">
+
+        <include
+            android:id="@+id/back_ll"
+            layout="@layout/a_bar_item_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"/>
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_marginLeft="@dimen/dp_55"
+            android:layout_marginRight="@dimen/dp_55"
+            style="@style/top_title_singleText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"/>
+
+    </RelativeLayout>
+
+    <amodule.vip.VIPButton
+        android:id="@+id/vip_button"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_49"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone"
+        tools:visibility="visible"/>
+
+</RelativeLayout>

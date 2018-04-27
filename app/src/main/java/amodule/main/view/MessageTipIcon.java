@@ -12,6 +12,7 @@ import com.xiangha.R;
 
 import acore.logic.MessageTipController;
 import amodule._common.utility.WidgetUtility;
+import amodule.lesson.activity.LessonInfo;
 import amodule.main.delegate.ISetMessageTip;
 import amodule.user.activity.MyMessage;
 
@@ -21,9 +22,9 @@ import amodule.user.activity.MyMessage;
  * Created by mrtrying on 2018/1/5 11:18:36.
  * e_mail : ztanzeyu@gmail.com
  */
-public class MessageTipIcon extends RelativeLayout implements ISetMessageTip ,View.OnClickListener{
+public class MessageTipIcon extends RelativeLayout implements ISetMessageTip, View.OnClickListener {
 
-    private TextView tipLessTen,tipMore;
+    private TextView tipLessTen, tipMore;
 
     public MessageTipIcon(Context context) {
         super(context);
@@ -41,23 +42,23 @@ public class MessageTipIcon extends RelativeLayout implements ISetMessageTip ,Vi
     }
 
     private void initialize() {
-        LayoutInflater.from(getContext()).inflate(R.layout.message_tip_icon_layout,this);
+        LayoutInflater.from(getContext()).inflate(R.layout.message_tip_icon_layout, this);
         tipLessTen = (TextView) findViewById(R.id.tv_tab_msg_num);
         tipMore = (TextView) findViewById(R.id.tv_tab_msg_tow_num);
 
         setOnClickListener(this);
     }
 
-    public void setMessage(int messgeTip){
+    public void setMessage(int messgeTip) {
         String lessTenValue = messgeTip > 0 && messgeTip < 10 ? String.valueOf(messgeTip) : "";
-        String moreValue ="";
-        if(messgeTip >= 10 && messgeTip < 100){
+        String moreValue = "";
+        if (messgeTip >= 10 && messgeTip < 100) {
             moreValue = String.valueOf(messgeTip);
-        }else if(messgeTip >= 100){
+        } else if (messgeTip >= 100) {
             moreValue = "99+";
         }
-        WidgetUtility.setTextToView(tipLessTen,lessTenValue);
-        WidgetUtility.setTextToView(tipMore,moreValue);
+        WidgetUtility.setTextToView(tipLessTen, lessTenValue);
+        WidgetUtility.setTextToView(tipMore, moreValue);
     }
 
     @Override

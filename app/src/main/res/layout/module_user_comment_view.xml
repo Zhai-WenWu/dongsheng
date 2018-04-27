@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#fffffe"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/rela_1_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/transparent"
+        android:gravity="center_vertical"
+        android:paddingTop="@dimen/dp_6"
+        android:paddingLeft="@dimen/dp_20"
+        android:paddingRight="@dimen/dp_20">
+
+        <ImageView
+            android:id="@+id/auther_userImg"
+            android:layout_width="@dimen/dp_40"
+            android:layout_height="@dimen/dp_40"
+            android:background="@drawable/bg_round_zannum"
+            android:scaleType="centerCrop"/>
+
+        <ImageView
+            android:id="@+id/cusType"
+            android:layout_width="@dimen/dp_13"
+            android:layout_height="@dimen/dp_13"
+            android:layout_alignBottom="@+id/auther_userImg"
+            android:layout_alignRight="@+id/auther_userImg"
+            android:background="@color/transparent"
+            android:clickable="true"
+            android:src="@drawable/z_user_gourmet_ico"
+            android:visibility="gone"/>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_40"
+            android:layout_marginLeft="@dimen/dp_9"
+            android:layout_toRightOf="@+id/auther_userImg"
+            android:background="@color/transparent">
+
+            <RelativeLayout
+                android:id="@+id/left_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@color/transparent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/user_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/auther_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:maxWidth="@dimen/dp_130"
+                        android:textColor="#333333"
+                        android:textSize="@dimen/sp_15"
+                        tools:text="用戶名"
+                        tools:visibility="visible"/>
+
+                    <ImageView
+                        android:id="@+id/auther_level"
+                        android:layout_width="@dimen/dp_18.5"
+                        android:layout_height="@dimen/dp_18.5"
+                        android:layout_marginLeft="@dimen/dp_4"
+                        android:layout_toRightOf="@+id/auther_name"/>
+
+                </LinearLayout>
+
+
+                <TextView
+                    android:id="@+id/left_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:textColor="#A9A9A9"
+                    android:textSize="@dimen/sp_12"
+                    tools:text="昨天"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true">
+
+                <acore.widget.ProperRatingBar
+                    android:id="@+id/rating_bar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    app:prb_clickable="false"
+                    app:prb_defaultRating="5"
+                    app:prb_tickNormalDrawable="@drawable/i_score_lesson"
+                    app:prb_tickSelectedDrawable="@drawable/i_score_lesson_activity"
+                    app:prb_tickSelectedHalfDrawable="@drawable/i_score_lesson_half"
+                    app:prb_tickSize="@dimen/dp_18"
+                    app:prb_tickSpacing="@dimen/dp_2"
+                    app:prb_totalTicks="5"/>
+
+                <TextView
+                    android:id="@+id/right_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentBottom="true"
+                    android:textColor="#A9A9A9"
+                    android:textSize="@dimen/sp_12"
+                    tools:text="课程评价"/>
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>
