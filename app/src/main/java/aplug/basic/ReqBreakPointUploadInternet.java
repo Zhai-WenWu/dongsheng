@@ -17,7 +17,7 @@ public class ReqBreakPointUploadInternet extends BreakPointUploadInternet{
     @Override
     public void breakPointUpload(String filePath, String key, String token, BreakPointUploadCallBack callBack) {
         if(TextUtils.isEmpty(key)||TextUtils.isEmpty(token)){
-            Log.i("qiniu",  "key或token数据为null ");
+           //YLKLog.i("qiniu",  "key或token数据为null ");
             return ;
         }
         super.breakPointUpload(filePath, key, token, callBack);

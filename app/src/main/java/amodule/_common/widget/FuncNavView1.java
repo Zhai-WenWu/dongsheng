@@ -67,7 +67,7 @@ public class FuncNavView1 extends HomeFuncNavView1 implements IBindMap,IStatictu
 
     @Override
     public void setData(Map<String, String> data) {
-//        Log.i("tzy","data = " + data);
+//       //YLKLog.i("tzy","data = " + data);
         if (null == data || data.isEmpty()){
             setVisibility(GONE);
             return;

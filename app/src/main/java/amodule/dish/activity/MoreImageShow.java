@@ -118,7 +118,7 @@ public class MoreImageShow extends BaseActivity{
                 if (map != null && map.size() > 0) {
                     for (String adKey : AD_IDS) {
                         String adStr = map.get(adKey);
-                        Log.i("zyj","adStr::"+adStr);
+                       //YLKLog.i("zyj","adStr::"+adStr);
                         if (!TextUtils.isEmpty(adStr)) {
                             ArrayList<Map<String, String>> adList = StringManager.getListMapByJson(adStr);
                             if (adList != null && adList.size() > 0) {

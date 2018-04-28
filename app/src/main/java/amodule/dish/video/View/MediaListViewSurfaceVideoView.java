@@ -90,7 +90,7 @@ public class MediaListViewSurfaceVideoView extends RelativeLayout  {
             @Override
             public void onStateChanged(boolean isPlaying) {
 //                stopView.setVisibility(isPlaying ? View.VISIBLE : View.GONE);
-                Log.i("zhangyujian","isPlaying::"+isPlaying);
+               //YLKLog.i("zhangyujian","isPlaying::"+isPlaying);
                 if(isPlaying){
                     isPlay=true;
                     stopView.setVisibility(View.GONE);
@@ -166,7 +166,7 @@ public class MediaListViewSurfaceVideoView extends RelativeLayout  {
      */
     public void onClickView(){
         onClickView=true;
-        Log.i("zhangyujian",":::"+startVideo+":::onClickView:::"+surfaceVideoView.isPlaying());
+       //YLKLog.i("zhangyujian",":::"+startVideo+":::onClickView:::"+surfaceVideoView.isPlaying());
         if(startVideo) {
             if (surfaceVideoView.isPlaying())
                 surfaceVideoView.pause();
@@ -185,7 +185,7 @@ public class MediaListViewSurfaceVideoView extends RelativeLayout  {
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public void setMediaBean(MediaPaperBean mediaBean){
 
-        Log.i("zhangyujian","::::"+mediaBean.getPath());
+       //YLKLog.i("zhangyujian","::::"+mediaBean.getPath());
         this.mediaBean= mediaBean;
         if(mediaBean.isCut){
             topView.setBackground(new BitmapDrawable(ToolsCammer.getFrameAtTime(mediaBean.getPath(), (long) (mediaBean.getStartTime()*1000))));
@@ -219,7 +219,7 @@ public class MediaListViewSurfaceVideoView extends RelativeLayout  {
     public void setInfo(String str){
         try {
             JSONObject jsonObject= new JSONObject(str);
-            Log.i("surfaceview","str::"+str);
+           //YLKLog.i("surfaceview","str::"+str);
             MediaPaperBean mediaPaperBean= new MediaPaperBean();
             mediaPaperBean.jsonToBean(jsonObject);
             setMediaBean(mediaPaperBean);
@@ -233,7 +233,7 @@ public class MediaListViewSurfaceVideoView extends RelativeLayout  {
      * @param str
      */
     public void setInfo(String str,String state,String mediaState){
-        Log.i("surfaceview","state::"+state+":::mediaState::"+mediaState);
+       //YLKLog.i("surfaceview","state::"+state+":::mediaState::"+mediaState);
         try {
             JSONObject jsonObject= new JSONObject(str);
             MediaPaperBean mediaPaperBean= new MediaPaperBean();
@@ -264,7 +264,7 @@ public class MediaListViewSurfaceVideoView extends RelativeLayout  {
      * @param mediaState
      */
     public void setStateData(String mediaState){
-        Log.i("surfaceview","mediaState::"+mediaState);
+       //YLKLog.i("surfaceview","mediaState::"+mediaState);
         if("1".equals(mediaState)){
             surfaceVideoView.pause();
             stopView.setVisibility(View.VISIBLE);

@@ -457,7 +457,7 @@ public class Banner extends RelativeLayout {
 
         @Override
         public int getCount() {
-//            Log.i("tzy","InnerPagerAdapter.getCount()" + mDataInner.size());
+//           //YLKLog.i("tzy","InnerPagerAdapter.getCount()" + mDataInner.size());
             return mDataInner.size();
         }
 
@@ -590,11 +590,11 @@ public class Banner extends RelativeLayout {
      */
     private boolean isValid() {
         if (mViewPager == null) {
-            Log.i(TAG, "ViewPager is not exist!");
+           //YLKLog.i(TAG, "ViewPager is not exist!");
             return false;
         }
         if (mData == null || mData.size() == 0) {
-            Log.i(TAG, "DataList must be not empty!");
+           //YLKLog.i(TAG, "DataList must be not empty!");
             return false;
         }
         return true;

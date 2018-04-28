@@ -157,7 +157,7 @@ public class XHTemplateManager {
                     }
                 });
             }else{
-                Log.i("wyl","当前sign:正确::");
+               //YLKLog.i("wyl","当前sign:正确::");
                 ++templateNum;
                 handlerAllTemplateData();
             }

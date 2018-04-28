@@ -187,7 +187,7 @@ public class ViewCommentItem extends LinearLayout {
             contentText.setVisibility(View.GONE);
         }else {
             contentText.setVisibility(View.VISIBLE);
-            Log.i("commentReplay","addCotentView normalBackColor:" + normalBackColor);
+           //YLKLog.i("commentReplay","addCotentView normalBackColor:" + normalBackColor);
             if (normalBackColor != -1)
                 contentText.setNormBackColor(normalBackColor);
             contentText.setChoseBackColor(choseBackColor);
@@ -351,7 +351,7 @@ public class ViewCommentItem extends LinearLayout {
 
     public void addReplayView(final ArrayList<Map<String, String>> replayArray, boolean isClear){
         if(isClear)commentReplay.removeAllViews();
-        Log.i("commentReplay","addReplayView() replayArray.size:" + replayArray.size());
+       //YLKLog.i("commentReplay","addReplayView() replayArray.size:" + replayArray.size());
         View view;
         MultifunctionTextView replayTv;
         boolean isReset = false;
@@ -370,9 +370,9 @@ public class ViewCommentItem extends LinearLayout {
             final String replay_ucode = replayMap.get("replay_ucode");
             final String is_replay_author = replayMap.get("is_replay_author");
 
-            Log.i("commentReplay","uName:" + uName + "   is_anchor:" + is_anchor);
+           //YLKLog.i("commentReplay","uName:" + uName + "   is_anchor:" + is_anchor);
             if("2".equals(is_anchor)){ //是否是锚点
-                Log.i("commentReplay","is_anchor:" + is_anchor);
+               //YLKLog.i("commentReplay","is_anchor:" + is_anchor);
                 view.setBackgroundColor(Color.parseColor("#fffae3"));
                 if(mListener != null) {
                     boolean isMyselft = !TextUtils.isEmpty(ucode) && ucode.equals(LoginManager.userInfo.get("code"));

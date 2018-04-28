@@ -125,7 +125,7 @@ public class PtrCLog {
         if (sLevel > LEVEL_INFO) {
             return;
         }
-        Log.i(tag, msg);
+       //YLKLog.i(tag, msg);
     }
 
     /**
@@ -142,7 +142,7 @@ public class PtrCLog {
         if (args.length > 0) {
             msg = String.format(msg, args);
         }
-        Log.i(tag, msg);
+       //YLKLog.i(tag, msg);
     }
 
     /**
@@ -155,7 +155,7 @@ public class PtrCLog {
         if (sLevel > LEVEL_INFO) {
             return;
         }
-        Log.i(tag, msg, throwable);
+       //YLKLog.i(tag, msg, throwable);
     }
 
     /**
@@ -212,7 +212,7 @@ public class PtrCLog {
         if (sLevel > LEVEL_ERROR) {
             return;
         }
-        Log.i(tag, msg);
+       //YLKLog.i(tag, msg);
     }
 
     /**
@@ -229,7 +229,7 @@ public class PtrCLog {
         if (args.length > 0) {
             msg = String.format(msg, args);
         }
-        Log.i(tag, msg);
+       //YLKLog.i(tag, msg);
     }
 
     /**
@@ -243,7 +243,7 @@ public class PtrCLog {
         if (sLevel > LEVEL_ERROR) {
             return;
         }
-        Log.i(tag, msg, throwable);
+       //YLKLog.i(tag, msg, throwable);
     }
 
     /**

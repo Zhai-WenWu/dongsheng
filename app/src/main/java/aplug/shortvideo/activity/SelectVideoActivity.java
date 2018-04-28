@@ -94,7 +94,7 @@ public class SelectVideoActivity extends BaseActivity implements View.OnClickLis
             @Override
             public void onDelete(int position, View view, Map<String, String> data) {
                 XHClick.mapStat(SelectVideoActivity.this,"a_select_shortvideo","删除","");
-                Log.i("zhangyujian","::::"+data.get(VideoPreviewView.VIDEO_PATH));
+               //YLKLog.i("zhangyujian","::::"+data.get(VideoPreviewView.VIDEO_PATH));
 //                MediaHandleControl.deleteFile(data.get(VideoPreviewView.VIDEO_PATH));
                 mData.remove(data);
                 handler.sendEmptyMessage(DATA_LOAD_OVER);

@@ -35,7 +35,7 @@ public class XHScrollerBaidu extends XHScrollerAdParent {
     @Override
     public void onResumeAd(String oneLevel, String twoLevel) {
         if(null != nativeResponse && null != view){
-            Log.i("tzy","广告展示:::"+XHScrollerAdParent.ADKEY_BAIDU+":::位置::"+twoLevel);
+           //YLKLog.i("tzy","广告展示:::"+XHScrollerAdParent.ADKEY_BAIDU+":::位置::"+twoLevel);
             nativeResponse.recordImpression(view);
             onAdShow(oneLevel,twoLevel,key);
         }
@@ -49,7 +49,7 @@ public class XHScrollerBaidu extends XHScrollerAdParent {
     @Override
     public void onThirdClick(String oneLevel, String twoLevel) {
         if(null != nativeResponse && null != view){
-            Log.i("tzy","广告点击:::"+XHScrollerAdParent.ADKEY_BAIDU+":::位置:"+twoLevel);
+           //YLKLog.i("tzy","广告点击:::"+XHScrollerAdParent.ADKEY_BAIDU+":::位置:"+twoLevel);
             nativeResponse.handleClick(view);
             onAdClick(oneLevel,twoLevel,key);
         }

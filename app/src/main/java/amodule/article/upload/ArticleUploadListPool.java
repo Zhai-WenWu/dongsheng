@@ -75,7 +75,7 @@ public class ArticleUploadListPool extends UploadListPool {
         }else if(dataType == EditParentActivity.DATA_TYPE_VIDEO) {
             sqLite = new UploadVideoSQLite(XHApplication.in().getApplicationContext());
         }
-        Log.i("articleUpload","ArticleUploadListPool coverPath:" + coverPath);
+       //YLKLog.i("articleUpload","ArticleUploadListPool coverPath:" + coverPath);
         uploadPoolData.setDraftId(draftId);
         UploadArticleData uploadArticleData = modifyUploadListPoolData();
         uploadPoolData.setUploadArticleData(uploadArticleData);
@@ -111,7 +111,7 @@ public class ArticleUploadListPool extends UploadListPool {
      */
     @Override
     public void uploadOver(final boolean flag, final String response) {
-        Log.i("articleUpload","uploadOver flag:" + flag + "   response:" + response);
+       //YLKLog.i("articleUpload","uploadOver flag:" + flag + "   response:" + response);
         if (isPause)
             return;
         uploadPoolData.loopPoolData(uploadPoolData.getTailDataList(),
@@ -196,12 +196,12 @@ public class ArticleUploadListPool extends UploadListPool {
      */
     @Override
     public void uploadLast() {
-        Log.i("articleUpload","uploadLast()");
+       //YLKLog.i("articleUpload","uploadLast()");
 
         //排除物料上传成功后，重复回调物料上传成功，触发上传最后一步
         if(hasDoUploadLastInfo.get())
             return;
-        Log.i("articleUpload","uploadLast() checkStuffUploadOver:" + checkStuffUploadOver());
+       //YLKLog.i("articleUpload","uploadLast() checkStuffUploadOver:" + checkStuffUploadOver());
         if (checkStuffUploadOver()) {
             hasDoUploadLastInfo.set(true);
             final LinkedHashMap<String, String> params = combineParameter();
@@ -235,7 +235,7 @@ public class ArticleUploadListPool extends UploadListPool {
      */
     @Override
     protected void uploadThingOver(final boolean flag, final String uniquId, final String responseStr, final JSONObject jsonObject) {
-        Log.i("articleUpload","uploadThingOver() isPause:" + isPause);
+       //YLKLog.i("articleUpload","uploadThingOver() isPause:" + isPause);
         if (isPause)
             return;
         uploadPoolData.loopPoolData(uploadPoolData.getTotalDataList(),
@@ -245,7 +245,7 @@ public class ArticleUploadListPool extends UploadListPool {
                         if (itemData.getUniqueId().equals(uniquId)) {
                             if (flag) {
                                 if (jsonObject != null)
-                                    Log.i("itemData ", responseStr+","+itemData.getType() + "," + jsonObject.optString("hash"));
+                                   //YLKLog.i("itemData ", responseStr+","+itemData.getType() + "," + jsonObject.optString("hash"));
 
                                 if (UploadItemData.TYPE_VIDEO == itemData.getType()){
                                     //处理url,has值丢失
@@ -322,7 +322,7 @@ public class ArticleUploadListPool extends UploadListPool {
         uploadPoolData.loopPoolData(uploadPoolData.getHeadDataList(), new UploadPoolData.LoopCallback() {
             @Override
             public boolean onLoop(UploadItemData itemData) {
-                Log.i("articleUpload","checkStuffUploadOver() ---HeadData--- itemData.getRecMsg():" + itemData.getRecMsg());
+               //YLKLog.i("articleUpload","checkStuffUploadOver() ---HeadData--- itemData.getRecMsg():" + itemData.getRecMsg());
                 if (TextUtils.isEmpty(itemData.getRecMsg())) {
                     flag = false;
                     return true;
@@ -337,7 +337,7 @@ public class ArticleUploadListPool extends UploadListPool {
         uploadPoolData.loopPoolData(uploadPoolData.getBodyDataList(), new UploadPoolData.LoopCallback() {
             @Override
             public boolean onLoop(UploadItemData itemData) {
-                Log.i("articleUpload","checkStuffUploadOver()   ---BodyData--- itemData.getRecMsg():" + itemData.getRecMsg());
+               //YLKLog.i("articleUpload","checkStuffUploadOver()   ---BodyData--- itemData.getRecMsg():" + itemData.getRecMsg());
                 if (TextUtils.isEmpty(itemData.getRecMsg())) {
                     flag = false;
                     return true;
@@ -351,7 +351,7 @@ public class ArticleUploadListPool extends UploadListPool {
     private UploadArticleData modifyUploadArticleData(final boolean isReset) {
         final UploadArticleData uploadDishData = uploadPoolData.getUploadArticleData();
         if (uploadDishData == null){
-            Log.i("articleUpload","UploadDishData 空");
+           //YLKLog.i("articleUpload","UploadDishData 空");
             return null;
         }
 
@@ -365,7 +365,7 @@ public class ArticleUploadListPool extends UploadListPool {
                     if (itemData.getType() == UploadItemData.TYPE_BREAKPOINT_IMG) {
                         for (int i = 0; i < makesList.size(); i++) {
                             Map<String, String> map = makesList.get(i);
-                            Log.i("articleUpload","视频图片信息 map.path:" + map.get("image") + "  url:" + itemData.getRecMsg());
+                           //YLKLog.i("articleUpload","视频图片信息 map.path:" + map.get("image") + "  url:" + itemData.getRecMsg());
                             if (map.get("image").equals(itemData.getPath())) {
                                 map.put("imageUrl",isReset ? "" : itemData.getRecMsg());
                                 break;
@@ -387,7 +387,7 @@ public class ArticleUploadListPool extends UploadListPool {
                     if (itemData.getType() == UploadItemData.TYPE_VIDEO) {
                         for (int i = 0; i < makesList.size(); i++) {
                             Map<String, String> map = makesList.get(i);
-                            Log.i("articleUpload","视频信息 map.path:" + map.get("video") + "  url:" + itemData.getRecMsg());
+                           //YLKLog.i("articleUpload","视频信息 map.path:" + map.get("video") + "  url:" + itemData.getRecMsg());
                             if (map.get("video").equals(itemData.getPath())) {
                                 map.put("videoUrl",isReset ? "" : itemData.getRecMsg());
                                 break;
@@ -406,10 +406,10 @@ public class ArticleUploadListPool extends UploadListPool {
                 @Override
                 public boolean onLoop(UploadItemData itemData) {
                     if (itemData.getType() == UploadItemData.TYPE_BREAKPOINT_IMG) {
-                        Log.i("articleUpload","图片信息 path:" + itemData.getPath() + "  type:" + itemData.getType() + "  size:" + makesList.size());
+                       //YLKLog.i("articleUpload","图片信息 path:" + itemData.getPath() + "  type:" + itemData.getType() + "  size:" + makesList.size());
                         for (int i = 0; i < makesList.size(); i++) {
                             Map<String, String> map = makesList.get(i);
-                            Log.i("articleUpload","图片信息 map.path:" + map.get("path") + "  url:" + itemData.getRecMsg());
+                           //YLKLog.i("articleUpload","图片信息 map.path:" + map.get("path") + "  url:" + itemData.getRecMsg());
                             if (map.get("path").equals(itemData.getPath())) {
                                 map.put("url",isReset ? "" : itemData.getRecMsg());
                                 break;
@@ -429,13 +429,13 @@ public class ArticleUploadListPool extends UploadListPool {
      */
     public UploadArticleData modifyUploadListPoolData() {
         UploadArticleData uploadArticleData = sqLite.selectById(uploadPoolData.getDraftId());
-        Log.i("articleUpload","修改上传池数据 draftId:" + uploadPoolData.getDraftId());
+       //YLKLog.i("articleUpload","修改上传池数据 draftId:" + uploadPoolData.getDraftId());
         if (uploadArticleData != null) {
 
             ArrayList<UploadItemData> bodyItemDatas = new ArrayList<>();
             int bodyIndex = 0;
             String imgsDataStr = uploadArticleData.getImgs();
-            Log.i("articleUpload","修改上传池数据 imgsDataStr:" + imgsDataStr);
+           //YLKLog.i("articleUpload","修改上传池数据 imgsDataStr:" + imgsDataStr);
             if (!TextUtils.isEmpty(imgsDataStr)) {
                 UploadItemData bodyItemData;
                 ArrayList<Map<String, String>> makesList = StringManager.getListMapByJson(imgsDataStr);
@@ -475,8 +475,8 @@ public class ArticleUploadListPool extends UploadListPool {
                         String videoImage = map.get("image");
                         String imageUrl = map.get("imageUrl");
 
-                        Log.i("articleUpload", "文章上传 videoPath: " + videoPath + "  videoUrl:" + videoUrl);
-                        Log.i("articleUpload", "文章上传 videoImage: " + videoImage + "  imageUrl:" + imageUrl);
+                       //YLKLog.i("articleUpload", "文章上传 videoPath: " + videoPath + "  videoUrl:" + videoUrl);
+                       //YLKLog.i("articleUpload", "文章上传 videoImage: " + videoImage + "  imageUrl:" + imageUrl);
                         if (videoPath.indexOf("http") != 0 && !Tools.isFileExists(videoPath)) {
                             Toast.makeText(Main.allMain, "获取不到文章视频路径 " + i, Toast.LENGTH_SHORT).show();
                             return null;
@@ -534,19 +534,19 @@ public class ArticleUploadListPool extends UploadListPool {
             return uploadTextData;
         }
         String content = uploadArticleData.getContent();
-        Log.i("articleUpload","combineParameter() content:" + content);
+       //YLKLog.i("articleUpload","combineParameter() content:" + content);
         ArrayList<Map<String,String>> arrayList = uploadArticleData.getImgArray();
         content = replaceUrl(content,arrayList,"path","url");
-        Log.i("articleUpload","combineParameter() 替换图片 content:" + content);
+       //YLKLog.i("articleUpload","combineParameter() 替换图片 content:" + content);
         ArrayList<Map<String,String>> videoArrayList = uploadArticleData.getVideoArray();
         content = replaceUrl(content,videoArrayList,"video","videoUrl");
-        Log.i("articleUpload","combineParameter() 替换视频 content:" + content);
+       //YLKLog.i("articleUpload","combineParameter() 替换视频 content:" + content);
         content = replaceUrl(content,videoArrayList,"image","imageUrl");
-        Log.i("articleUpload","combineParameter() 2222content:" + content);
+       //YLKLog.i("articleUpload","combineParameter() 2222content:" + content);
         try {
             ArrayList<Map<String, String>> imgArray = uploadArticleData.getImgArray();
-            Log.i("articleUpload", "combineParameter() uploadArticleData.getImgUrl():" + uploadArticleData.getImgUrl());
-            Log.i("articleUpload", "combineParameter() uploadArticleData.getVideos():" + uploadArticleData.getVideos());
+           //YLKLog.i("articleUpload", "combineParameter() uploadArticleData.getImgUrl():" + uploadArticleData.getImgUrl());
+           //YLKLog.i("articleUpload", "combineParameter() uploadArticleData.getVideos():" + uploadArticleData.getVideos());
             uploadTextData.put("title", Uri.encode(uploadArticleData.getTitle(), "utf-8"));
             uploadTextData.put("classCode", uploadArticleData.getClassCode());
             uploadTextData.put("content", new String(Uri.encode(content, "utf-8")));
@@ -572,9 +572,9 @@ public class ArticleUploadListPool extends UploadListPool {
             String url = map.get(urlKey);
             String newPath = path.replace("/","\\/");
             String newUrl = url.replace("/","\\/");
-            Log.i("articleUpload","combineParameter() path:" + path + "   url:" + url);
+           //YLKLog.i("articleUpload","combineParameter() path:" + path + "   url:" + url);
             content = content.replace(newPath,newUrl);
-            Log.i("articleUpload","combineParameter() newPath:" + newPath + "   newUrl:" + newUrl);
+           //YLKLog.i("articleUpload","combineParameter() newPath:" + newPath + "   newUrl:" + newUrl);
         }
         return content;
     }
@@ -597,7 +597,7 @@ public class ArticleUploadListPool extends UploadListPool {
 //            String recMsg = uploadPoolData.getTailDataList().get(0).getRecMsg();
 //            String clickUrl = StringManager.wwwUrl + "caipu/" + recMsg + ".html";
 //
-//            Log.i("VideoDishUploadListPool", "imgUrl  "+imgUrl);
+//           //YLKLog.i("VideoDishUploadListPool", "imgUrl  "+imgUrl);
 //            UploadSuccessPopWindowDialog dialog = new UploadSuccessPopWindowDialog(Main.allMain,
 //                    uploadPoolData.getTitle(), imgUrl, new UploadSuccessPopWindowDialog.UploadSuccessDialogCallback() {
 //                @Override

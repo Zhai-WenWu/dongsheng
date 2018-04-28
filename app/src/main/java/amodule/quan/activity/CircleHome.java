@@ -307,7 +307,7 @@ public class CircleHome extends BaseAppCompatActivity implements OnClickListener
             } else {
                 // 发布失败
                 // 修改数据状态
-                Log.i("shortVideo","subjectData::"+subjectData.getVideoLocalPath());
+               //YLKLog.i("shortVideo","subjectData::"+subjectData.getVideoLocalPath());
                 updateSubjectDataArray(subjectData, SubjectData.UPLOAD_FAIL);
             }
             // 通知Fragment刷新

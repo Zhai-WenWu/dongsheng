@@ -58,7 +58,7 @@ public class XHAdAutoRefresh {
         if(intervalOnResumeTime > 0
                 && intervalOnResumeTime < intervalTime
                 && mTimerHandler != null){
-            Log.i("tzy", "startTimer: " + intervalOnResumeTime + "ms");
+           //YLKLog.i("tzy", "startTimer: " + intervalOnResumeTime + "ms");
             mTimerHandler.postDelayed(postSingle(),intervalOnResumeTime);
         }
     }

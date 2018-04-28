@@ -109,7 +109,7 @@ public class Welcome extends BaseActivity {
                     @Override
                     public void onAdPresent() {
                         mADLayout.setVisibility(View.GONE);
-                        Log.i("zhangyujian", "GdtCallback");
+                       //YLKLog.i("zhangyujian", "GdtCallback");
                         if (mAdTime > 5) {
                             endCountDown();
                             mAdTime = 5;
@@ -121,7 +121,7 @@ public class Welcome extends BaseActivity {
                         showSkipContainer();
                         isAdLoadOk = true;
                         XHClick.mapStat(Welcome.this, "ad_show_index", "开屏", "sdk_gdt");
-                        Log.i("zhangyujian", "开屏展示");
+                       //YLKLog.i("zhangyujian", "开屏展示");
                     }
 
                     @Override
@@ -130,17 +130,17 @@ public class Welcome extends BaseActivity {
 
                     @Override
                     public void onAdDismissed() {
-                        Log.i("zhangyujian", "onAdDismissed");
-                        Log.i("zhangyujian", "onAdDismissed::;" + isclose);
+                       //YLKLog.i("zhangyujian", "onAdDismissed");
+                       //YLKLog.i("zhangyujian", "onAdDismissed::;" + isclose);
                         closeActivity();
                     }
 
                     @Override
                     public void onAdClick() {
-                        Log.i("zhangyujian", "onAdClick");
+                       //YLKLog.i("zhangyujian", "onAdClick");
                         closeActivity();
                         XHClick.mapStat(Welcome.this, "ad_click_index", "开屏", "sdk_gdt");
-                        Log.i("zhangyujian", "开屏点击");
+                       //YLKLog.i("zhangyujian", "开屏点击");
                     }
 
                     @Override
@@ -286,7 +286,7 @@ public class Welcome extends BaseActivity {
                 closeActivity();
                 return;
             }
-            Log.i("zhangyujian", "mAdTime:::" + mAdTime);
+           //YLKLog.i("zhangyujian", "mAdTime:::" + mAdTime);
             mAdTime--;
             startCountDown(true);
         }
@@ -328,7 +328,7 @@ public class Welcome extends BaseActivity {
      * 关闭dialog
      */
     public void closeActivity() {
-        Log.i("zhangyujian", "isclose:::" + isclose);
+       //YLKLog.i("zhangyujian", "isclose:::" + isclose);
         if (!isclose) {
             isclose = true;
             if (mMainHandler != null) {

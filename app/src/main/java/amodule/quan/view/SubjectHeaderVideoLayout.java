@@ -252,7 +252,7 @@ public class SubjectHeaderVideoLayout extends RelativeLayout {
                     }
                 }
                 //wifi自动播放
-                Log.i("zhangyujian","isAutoPaly::"+isAutoPaly);
+               //YLKLog.i("zhangyujian","isAutoPaly::"+isAutoPaly);
                 if(isAutoPaly&&mVideoPlayerController!=null){
                     mVideoPlayerController.setOnClick();
                 }
@@ -318,7 +318,7 @@ public class SubjectHeaderVideoLayout extends RelativeLayout {
                 super.handleMessage(msg);
                 mNum.setText("" + msg.what);
                 if(msg.what == 0){
-                    Log.i("zhangyujian","");
+                   //YLKLog.i("zhangyujian","");
                     view.setVisibility(View.GONE);
                     if(mVideoPlayerController!=null) {
                         mVideoPlayerController.setShowAd(false);

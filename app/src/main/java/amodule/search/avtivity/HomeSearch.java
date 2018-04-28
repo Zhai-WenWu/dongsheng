@@ -34,7 +34,7 @@ public class HomeSearch extends BaseActivity {
         initData();
         initView();
 //        SearchResultAdDataProvider.getInstance().getAdData();
-        Log.i("tzy","onCreate :: time = " + (System.currentTimeMillis() - startTime) + "ms.");
+       //YLKLog.i("tzy","onCreate :: time = " + (System.currentTimeMillis() - startTime) + "ms.");
     }
 
     private void initData() {
@@ -44,7 +44,7 @@ public class HomeSearch extends BaseActivity {
             searchKey = bundle.getString("s");
         }
 
-        Log.i("渠道号"," "+ ChannelUtil.getChannel(this));
+       //YLKLog.i("渠道号"," "+ ChannelUtil.getChannel(this));
     }
 
     private void initView() {

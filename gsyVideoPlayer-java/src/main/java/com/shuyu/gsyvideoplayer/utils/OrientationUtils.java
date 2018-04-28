@@ -43,8 +43,8 @@ public class OrientationUtils {
             @Override
             public void onOrientationChanged(int rotation) {
                 boolean autoRotateOn = (Settings.System.getInt(activity.getContentResolver(), Settings.System.ACCELEROMETER_ROTATION, 0) == 1);
-                Log.i("tyz","onOrientationChanged mRotateWithSystem = " + mRotateWithSystem);
-                Log.i("tyz","onOrientationChanged autoRotateOn = " + autoRotateOn);
+               //YLKLog.i("tyz","onOrientationChanged mRotateWithSystem = " + mRotateWithSystem);
+               //YLKLog.i("tyz","onOrientationChanged autoRotateOn = " + autoRotateOn);
                 if (!autoRotateOn || !mRotateWithSystem) {
                     //if (mIsLand == 0) {
                         return;

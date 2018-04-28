@@ -244,7 +244,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
             @Override
             public void loaded(int i, String s, Object o) {
                 loadManager.hideProgressBar();
-                Log.i("tzy", (isCache ? "cacheTime = " : "serviceTime = ") + (System.currentTimeMillis() - startLoadTime) + "ms");
+               //YLKLog.i("tzy", (isCache ? "cacheTime = " : "serviceTime = ") + (System.currentTimeMillis() - startLoadTime) + "ms");
                 HeaderDataLoaded = true;
                 mViewContrloer.refreshComplete();
                 if (i >= ReqEncyptInternet.REQ_OK_STRING) {
@@ -252,7 +252,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
                         if (mViewContrloer != null)
                             mViewContrloer.setHeaderData(StringManager.getListMapByJson(o), isCache);
                     },300);
-                    Log.i("tzy", "setHeaderData " + (isCache ? "cacheTime = " : "serviceTime = ") + (System.currentTimeMillis() - startLoadTime) + "ms");
+                   //YLKLog.i("tzy", "setHeaderData " + (isCache ? "cacheTime = " : "serviceTime = ") + (System.currentTimeMillis() - startLoadTime) + "ms");
                     if (!isCache && mDataControler != null) {
                         mDataControler.saveCacheHomeData((String) o);
                     }
@@ -275,14 +275,14 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
      * @param refresh，是否刷新
      */
     private void EntryptData(final boolean refresh) {
-//        Log.i("tzy_data", "EntryptData::" + refresh);
+//       //YLKLog.i("tzy_data", "EntryptData::" + refresh);
         //已经load
         LoadOver = true;
         if (refresh && mDataControler != null) {
             mDataControler.isNeedRefresh(true);
         }
         if (mDataControler != null) {
-//            Log.i("tzy", "EntryptData::" + mDataControler.isNeedRefCurrData());
+//           //YLKLog.i("tzy", "EntryptData::" + mDataControler.isNeedRefCurrData());
             if (mDataControler.isNeedRefCurrData()) {
                 //需要刷新当前数据
                 mDataControler.setNeedRefCurrData(false);
@@ -350,7 +350,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
             mDataControler.isNeedRefresh(false);
         }
         onResumeFake();
-        Log.i("zyj", "mainHome::onPause");
+       //YLKLog.i("zyj", "mainHome::onPause");
         setRecommedTime(System.currentTimeMillis());
         if (mNeedRefCurrFm) {
             mNeedRefCurrFm = false;
@@ -384,7 +384,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
         if (!TextUtils.isEmpty(name)) {
             switch (name) {
                 case ObserverManager.NOTIFY_VIPSTATE_CHANGED://VIP 状态发生改变需要刷新
-                    Log.i("tzy", "VIP 状态发生改变需要刷新");
+                   //YLKLog.i("tzy", "VIP 状态发生改变需要刷新");
                     mNeedRefCurrFm = true;
                     break;
             }
@@ -395,7 +395,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
     boolean isRefreshingFeed = false;
 
     public void refresh() {
-        Log.i("tzy_data", "refresh()");
+       //YLKLog.i("tzy_data", "refresh()");
         mViewContrloer.autoRefresh();
     }
 
@@ -419,7 +419,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
     private void setRecommedStatistic() {
         long nowTime = System.currentTimeMillis();
         if (startTime > 0) {
-            Log.i("zyj", "stop::" + String.valueOf((nowTime - startTime) / 1000));
+           //YLKLog.i("zyj", "stop::" + String.valueOf((nowTime - startTime) / 1000));
             XHClick.saveStatictisFile("home", recommedType_statictus, "", "", "", "stop", String.valueOf((nowTime - startTime) / 1000), "", "", "", "");
             //置数据
             setRecommedTime(0);

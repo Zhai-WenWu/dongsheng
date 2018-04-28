@@ -96,7 +96,7 @@ public class NormarlContentItemImageVideoView extends NormarlContentItemView {
      * 重新开始videoView
      */
     public void startVideoView() {
-        Log.i("zhangyujian","startVideoView");
+       //YLKLog.i("zhangyujian","startVideoView");
 //        if (videoView != null) {
 //            video_rela.setVisibility(View.VISIBLE);
 //            ViewGroup viewParent = (ViewGroup) videoView.getParent();
@@ -106,7 +106,7 @@ public class NormarlContentItemImageVideoView extends NormarlContentItemView {
 //            video_layout.addView(videoView);
 //            videoView.onResume();
 //            video_image.setVisibility(View.GONE);
-//            Log.i("zhangyujian","播放");
+//           //YLKLog.i("zhangyujian","播放");
 //        }else{
 //
 //        }
@@ -116,7 +116,7 @@ public class NormarlContentItemImageVideoView extends NormarlContentItemView {
      * 暂停videoView
      */
     public void stopVideoView() {
-        Log.i("zhangyujian","stopVideoView");
+       //YLKLog.i("zhangyujian","stopVideoView");
 //        if (videoView != null) {
 //            video_layout.removeAllViews();
 //            videoView.stop();
@@ -134,7 +134,7 @@ public class NormarlContentItemImageVideoView extends NormarlContentItemView {
      * 对Video进行处理
      */
     private void showImageViewVideoIndex(final int position) {
-        Log.i("zhangyujian","showImageViewVideoIndex");
+       //YLKLog.i("zhangyujian","showImageViewVideoIndex");
         if (map.containsKey("selfVideo") && !TextUtils.isEmpty(map.get("selfVideo"))) {//有数据进行控制
 //            RelativeLayout layout = (RelativeLayout) view.findViewById(R.id.quan_middle);
             video_rela.setVisibility(View.VISIBLE);
@@ -180,7 +180,7 @@ public class NormarlContentItemImageVideoView extends NormarlContentItemView {
      * 对图片数量处理
      */
     private void setImageView() {
-        Log.i("zhangyujian","setImageView");
+       //YLKLog.i("zhangyujian","setImageView");
         ImageViewVideo quan_item_model_video = (ImageViewVideo) view.findViewById(R.id.quan_item_model_video);
         ImageView quan_iv_img_1 = (ImageView) view.findViewById(R.id.quan_iv_img_1);
         ImageView quan_iv_img_2 = (ImageView) view.findViewById(R.id.quan_iv_img_2);

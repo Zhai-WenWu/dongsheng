@@ -296,7 +296,7 @@ public abstract class MediaRecorderBase implements SurfaceHolder.Callback,Camera
                 // camera.lock();
                 mCamera.release();
             } catch (Exception e) {
-                Log.i("Yixia", "stopPreview...");
+               //YLKLog.i("Yixia", "stopPreview...");
             }
             mCamera = null;
         }
@@ -410,7 +410,7 @@ public abstract class MediaRecorderBase implements SurfaceHolder.Callback,Camera
                 }
                 return true;
             } catch (Exception e) {
-                Log.i("Yixia", "setFlashMode", e);
+               //YLKLog.i("Yixia", "setFlashMode", e);
             }
         }
         return false;

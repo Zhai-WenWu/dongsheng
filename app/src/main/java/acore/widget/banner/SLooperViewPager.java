@@ -165,14 +165,14 @@ public class SLooperViewPager extends ViewPager {
 
         @Override
         public void onPageSelected(int position) {
-//            Log.i("tzy","------------------------------- onPageSelected -------------------------------");
+//           //YLKLog.i("tzy","------------------------------- onPageSelected -------------------------------");
             if(mSLooperAdapter != null ){
                 int realPosition = mSLooperAdapter.getInnerAdapterPosition(position);
 
                 if (mSLooperAdapter.getCount() > 1
                         && (position == 0 || position == mSLooperAdapter.getCount() - 1)) {
                     //强制回到映射位置
-//                    Log.i("tzy","onPageSelected -> setCurrentItem");
+//                   //YLKLog.i("tzy","onPageSelected -> setCurrentItem");
 //                    postDelayed(()->setCurrentItem(realPosition, false),mPageChangeDuration);
                 }
 

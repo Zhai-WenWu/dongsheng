@@ -91,7 +91,7 @@ public class MainInitDataControl {
      * welcome oncreate初始化
      */
     public void initWelcomeOncreate(){
-        Log.i("zhangyujian","initWelcomeOncreate");
+       //YLKLog.i("zhangyujian","initWelcomeOncreate");
         long startTime= System.currentTimeMillis();
         new Thread(new Runnable() {
             @Override
@@ -104,14 +104,14 @@ public class MainInitDataControl {
             }
         }).start();
         long endTime=System.currentTimeMillis();
-        Log.i("zhangyujian","initWelcomeOncreate::时间:"+(endTime-startTime));
+       //YLKLog.i("zhangyujian","initWelcomeOncreate::时间:"+(endTime-startTime));
 
     }
     /**
      * welcome布局完成之后之后初始化
      */
     public void initWelcomeAfter(final Activity activity){
-        Log.i("zhangyujian","initWelcomeAfter");
+       //YLKLog.i("zhangyujian","initWelcomeAfter");
         long startTime= System.currentTimeMillis();
         initWelcome(activity);
         new Thread() {
@@ -127,7 +127,7 @@ public class MainInitDataControl {
         }.start();
         ConfigMannager.saveConfigData(XHApplication.in());
         long endTime2=System.currentTimeMillis();
-        Log.i("zhangyujian","initWelcomeAfter::时间:"+(endTime2-startTime));
+       //YLKLog.i("zhangyujian","initWelcomeAfter::时间:"+(endTime2-startTime));
 
     }
     /**
@@ -146,7 +146,7 @@ public class MainInitDataControl {
      * Main之后初始化
      */
     public void iniMainAfter(final Activity act){
-        Log.i("zhangyujian","iniMainAfter");
+       //YLKLog.i("zhangyujian","iniMainAfter");
         long startTime= System.currentTimeMillis();
         //初始化语音
         new Thread(new Runnable() {
@@ -169,7 +169,7 @@ public class MainInitDataControl {
         OffDishToFavoriteControl.addCollection(act);
         PageStatisticsUtils.getInstance().getPageInfo(act.getApplicationContext());//初始化电商页面统计
         LocalPushManager.stopLocalPush(act);
-        Log.i("zhangyujian","iniMainAfter::时间:"+(endTime-startTime));
+       //YLKLog.i("zhangyujian","iniMainAfter::时间:"+(endTime-startTime));
         //提交統計
         AdConfigTools.getInstance().startStatisticsNow();
     }
@@ -189,7 +189,7 @@ public class MainInitDataControl {
      * @param act
      */
     public void initMainOnResume(final Activity act){
-        Log.i("zhangyujian","initMainOnResume");
+       //YLKLog.i("zhangyujian","initMainOnResume");
 
         LoginManager.initYiYuanBindState(act, null);
 
@@ -236,7 +236,7 @@ public class MainInitDataControl {
         onMainResumeStatics();
 
         long endTime2=System.currentTimeMillis();
-        Log.i("zhangyujian","initMainOnResume::时间::3::"+(endTime2-startTime));
+       //YLKLog.i("zhangyujian","initMainOnResume::时间::3::"+(endTime2-startTime));
     }
 
     /**
@@ -264,7 +264,7 @@ public class MainInitDataControl {
      * Welcome应用数据初始化
      */
     private void initWelcome(final Context context) {
-        Log.i("zhangyujian","initWelcome");
+       //YLKLog.i("zhangyujian","initWelcome");
         long startTime= System.currentTimeMillis();
 
         // 自动登录
@@ -275,7 +275,7 @@ public class MainInitDataControl {
         AppCommon.clearCache();
 
         long endTime4=System.currentTimeMillis();
-        Log.i("zhangyujian","initWelcome::时间:::3:"+(endTime4-startTime));
+       //YLKLog.i("zhangyujian","initWelcome::时间:::3:"+(endTime4-startTime));
 
         new Thread(){
             @Override

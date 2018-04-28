@@ -87,7 +87,7 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
         bgKey = typedArray.getString(R.styleable.BannerView_bgKey);
         typedArray.recycle();
         if(!TextUtils.isEmpty(bgKey)){
-//            Log.i("tzy", "BannerView: bgKey = " + bgKey);
+//           //YLKLog.i("tzy", "BannerView: bgKey = " + bgKey);
             //同步设置bg图片
             String firstImageUrl = FileManager.loadShared(getContext(), FileManager.xmlFile_appInfo, bgKey).toString();
             setBackImageView(imageView -> ImgManager.loadLongImage(imageView, firstImageUrl));
@@ -108,7 +108,7 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
         imageWidth = ToolsDevice.getWindowPx(context).widthPixels;
         imageHeight = (int) (imageWidth * 320 / 750f);
         int height = imageHeight + paddingBottom;
-//        Log.i("tzy", "width = " + ToolsDevice.getWindowPx(context).widthPixels + " , height = " + height);
+//       //YLKLog.i("tzy", "width = " + ToolsDevice.getWindowPx(context).widthPixels + " , height = " + height);
         setTargetHeight(height);
         setVisibility(VISIBLE);
         showMinH = Tools.getStatusBarHeight(context) + Tools.getDimen(context, R.dimen.topbar_height) - height;
@@ -319,7 +319,7 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
             return;
         }
         weightSum = 0;
-//        Log.i("tzy","setRandomItem");
+//       //YLKLog.i("tzy","setRandomItem");
         weightArray = new int[arrayList.size()];
         for (int index = 0; index < weightArray.length; index++) {
             Map<String, String> map = arrayList.get(index);
@@ -347,7 +347,7 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
         for (int index = 0; index < weightArray.length; index++) {
             if (randomWeight < weightArray[index]) {
                 setCurrentItem(index);
-//                Log.i("tzy","setCurrentItem::" + index);
+//               //YLKLog.i("tzy","setCurrentItem::" + index);
                 break;
             }
         }
@@ -392,8 +392,8 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
             case MotionEvent.ACTION_MOVE:
                 dealtX += Math.abs(x - lastX);
                 dealtY += Math.abs(y - lastY);
-//                Log.i("dispatchTouchEvent", "dealtX:=" + dealtX);
-//                Log.i("dispatchTouchEvent", "dealtY:=" + dealtY);
+//               //YLKLog.i("dispatchTouchEvent", "dealtX:=" + dealtX);
+//               //YLKLog.i("dispatchTouchEvent", "dealtY:=" + dealtY);
                 // 这里是够拦截的判断依据是左右滑动，读者可根据自己的逻辑进行是否拦截
                 if (dealtX >= dealtY) {
                     getParent().requestDisallowInterceptTouchEvent(true);

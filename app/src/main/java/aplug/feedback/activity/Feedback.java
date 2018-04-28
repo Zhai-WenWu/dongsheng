@@ -73,7 +73,7 @@ public class Feedback extends BaseActivity implements OnClickListener {
             backData = bundle.getString("backData");
             doTongJi(from);//统计
         }
-        Log.i("FeedbackFuntion", "backData:" + backData);
+       //YLKLog.i("FeedbackFuntion", "backData:" + backData);
         Token = XGPushServer.getXGToken(this);
         initActivity("香哈小秘书", 2, 0, R.layout.c_view_bar_title, R.layout.a_xh_feedback);
         // 设置加载

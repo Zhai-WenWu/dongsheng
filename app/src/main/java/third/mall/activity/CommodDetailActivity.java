@@ -192,7 +192,7 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
 
             @Override
             public void setYandState(float y, boolean state) {
-                Log.i("zyj", "y = " + y + "   setInterfaceSv::" + state);
+               //YLKLog.i("zyj", "y = " + y + "   setInterfaceSv::" + state);
             }
         });
         mall_commod_scroll.setOnScrollChangedListener(new MyScrollView.OnScrollChangedListener() {
@@ -326,7 +326,7 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
      * 展示购物车数量
      */
     private void setShopcatNum() {
-        Log.i("zyj", "MallCommon.num_shopcat::" + MallCommon.num_shopcat);
+       //YLKLog.i("zyj", "MallCommon.num_shopcat::" + MallCommon.num_shopcat);
         if (MallCommon.num_shopcat > 0) {
             if (MallCommon.num_shopcat > 9) {
                 mall_news_num.setVisibility(View.GONE);

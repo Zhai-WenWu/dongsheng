@@ -90,7 +90,7 @@ public class WelcomeAdTools {
 
     private WelcomeAdTools() {
         //获取广告数据
-        Log.i("tzy", "WelcomeAdTools create.");
+       //YLKLog.i("tzy", "WelcomeAdTools create.");
         //获取参数
         String splashConfigDataStr = ConfigMannager.getConfigByLocal(CONFIGKEY);
         if (TextUtils.isEmpty(splashConfigDataStr)) {
@@ -134,7 +134,7 @@ public class WelcomeAdTools {
         index_ad = 0;
         this.mAdNoDataCallBack = CallBack;
 
-        Log.i("tzy", "WelcomeAdTools handlerAdData.");
+       //YLKLog.i("tzy", "WelcomeAdTools handlerAdData.");
         XHAdSqlite adSqlite = XHAdSqlite.newInstance(XHApplication.in());
         AdBean adBean = adSqlite.getAdConfig(WELCOME);
         if (adBean == null) {
@@ -176,7 +176,7 @@ public class WelcomeAdTools {
      * 下一个广告数据
      */
     private void nextAd(boolean isCache) {
-        Log.i("tzy", "WelcomeAdTools nextAd.");
+       //YLKLog.i("tzy", "WelcomeAdTools nextAd.");
         if (index_ad == 0 && isCache) {
             return;
         }
@@ -219,7 +219,7 @@ public class WelcomeAdTools {
             nextAd(false);
             return;
         }
-        Log.i("zhangyujian", "adid:::" + adid);
+       //YLKLog.i("zhangyujian", "adid:::" + adid);
 
         GdtAdTools.newInstance().showSplashAD(
                 XHActivityManager.getInstance().getCurrentActivity(),
@@ -229,14 +229,14 @@ public class WelcomeAdTools {
                 new third.ad.tools.GdtAdTools.GdtSplashAdListener() {
                     @Override
                     public void onAdPresent() {
-                        Log.i("zhangyujian", "GDT：：onAdPresent");
+                       //YLKLog.i("zhangyujian", "GDT：：onAdPresent");
                         mGdtCallback.onAdPresent();
                         AdConfigTools.getInstance().postStatistics("show", WELCOME, adPositionId, ADKEY_GDT, "");
                     }
 
                     @Override
                     public void onAdFailed(String reason) {
-                        Log.i("zhangyujian", "GDT：：onAdFailed");
+                       //YLKLog.i("zhangyujian", "GDT：：onAdFailed");
                         index_ad++;
                         nextAd(false);
                         mGdtCallback.onAdFailed(reason);
@@ -307,7 +307,7 @@ public class WelcomeAdTools {
             nextAd(false);
             return;
         }
-        Log.i("tzy", "displayBaiduAD");
+       //YLKLog.i("tzy", "displayBaiduAD");
         new Handler(Looper.getMainLooper()).post(
                 () -> BaiduAdTools.newInstance().showSplashAD(XHActivityManager.getInstance().getCurrentActivity(),
                         mBaiduCallback.getADLayout(),
@@ -315,7 +315,7 @@ public class WelcomeAdTools {
                         new BaiduAdTools.BaiduSplashAdCallback() {
                             @Override
                             public void onAdPresent() {
-                                Log.i("zhangyujian", "displayBaiduAD::onAdPresent");
+                               //YLKLog.i("zhangyujian", "displayBaiduAD::onAdPresent");
                                 AdConfigTools.getInstance().postStatistics("show", WELCOME, adPositionId, ADKEY_BAIDU, "");
                                 mBaiduCallback.onAdPresent();
                             }
@@ -327,7 +327,7 @@ public class WelcomeAdTools {
 
                             @Override
                             public void onAdFailed(String s) {
-                                Log.i("zhangyujian", "displayBaiduAD::onAdFailed");
+                               //YLKLog.i("zhangyujian", "displayBaiduAD::onAdFailed");
                                 index_ad++;
                                 nextAd(false);
                                 mBaiduCallback.onAdFailed(s);

@@ -232,7 +232,7 @@ public class DishHeaderViewNew extends LinearLayout {
             adVideoController.destroy();
         }
         adVideoController= new AdVideoController(context);
-        Log.i("xianghaTag","initAdTypeVideo:::"+adVideoController.isAvailable()+"::"+(adVideoController.getAdVideoPlayer()!=null));
+       //YLKLog.i("xianghaTag","initAdTypeVideo:::"+adVideoController.isAvailable()+"::"+(adVideoController.getAdVideoPlayer()!=null));
         if(adVideoController.isAvailable()&&adVideoController.getAdVideoPlayer()!=null){
             adVideoController.setStaticId("a_menuvideo_ad");
             ad_type_video.addView(adVideoController.getAdVideoPlayer());
@@ -473,7 +473,7 @@ public class DishHeaderViewNew extends LinearLayout {
     boolean isHaspause = false;
     int limitTime = 0;
     private boolean setSelfVideo(final String title, final String selfVideoJson, final String img, Map<String, String> permissionMap) {
-        Log.i("xianghaTag","setSelfVideo");
+       //YLKLog.i("xianghaTag","setSelfVideo");
         boolean isUrlVaild = false;
         isContinue=false;
         isHaspause=false;
@@ -498,7 +498,7 @@ public class DishHeaderViewNew extends LinearLayout {
                 Map<String,String> timeMap = StringManager.getFirstMap(videoPermionMap.get("fields"));
                 if(!TextUtils.isEmpty(timeMap.get("time"))){
                     limitTime = Integer.parseInt(timeMap.get("time"));
-                    Log.i("tzy","limitTime = " + limitTime);
+                   //YLKLog.i("tzy","limitTime = " + limitTime);
                     setVipPermision(commonMap);
                 }
             }else{
@@ -557,7 +557,7 @@ public class DishHeaderViewNew extends LinearLayout {
 
     private void setVipPermision(final Map<String, String> common){
         if(!StringManager.getBooleanByEqualsValue(common,"isShow")){
-//            Log.i("tzy","common = " + common.toString());
+//           //YLKLog.i("tzy","common = " + common.toString());
             final String url = common.get("url");
             if(TextUtils.isEmpty(url)) return;
             vipView = new VideoDredgeVipView(context);
@@ -602,7 +602,7 @@ public class DishHeaderViewNew extends LinearLayout {
      * @param img          》图片链接
      */
     public void setImg(final String img,int height) {
-        Log.i("wyl","img:___:::"+img);
+       //YLKLog.i("wyl","img:___:::"+img);
         oneImgUrl=img;
         isLoadImg=true;
         dishvideo_img.setVisibility(View.GONE);
@@ -648,7 +648,7 @@ public class DishHeaderViewNew extends LinearLayout {
         if(mVideoPlayerController != null
                 && (dredgeVipLayout == null || dredgeVipLayout.getVisibility() == GONE)) {
             mVideoPlayerController.onResume();
-            Log.i("xianghaTag","onResume:::header");
+           //YLKLog.i("xianghaTag","onResume:::header");
         }
         if(adVideoController!=null) {
             adVideoController.onResume();
@@ -659,7 +659,7 @@ public class DishHeaderViewNew extends LinearLayout {
         isOnResuming = false;
         if(mVideoPlayerController != null)
         mVideoPlayerController.onPause();
-        Log.i("xianghaTag","onPause:::header");
+       //YLKLog.i("xianghaTag","onPause:::header");
         if(adVideoController!=null) {
             adVideoController.onPause();
         }
@@ -705,7 +705,7 @@ public class DishHeaderViewNew extends LinearLayout {
         ImageView imageView = new ImageView(getContext());
         imageView.setLayoutParams(params);
         dishVidioLayout.addView(imageView);
-        Log.i("wyl","处理图片：：："+url);
+       //YLKLog.i("wyl","处理图片：：："+url);
         oneImgUrl = url;
         BitmapRequestBuilder<GlideUrl, Bitmap> bitmapRequest = LoadImage.with(getContext())
                 .load(url)

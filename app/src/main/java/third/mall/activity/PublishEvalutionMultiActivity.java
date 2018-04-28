@@ -203,7 +203,7 @@ public class PublishEvalutionMultiActivity extends MallBaseActivity {
                 params.put("data[" + index + "][score]",map.get("score"));
             }
         }
-//        Log.i("tzy","params = " + params.toString());
+//       //YLKLog.i("tzy","params = " + params.toString());
         return params;
     }
 

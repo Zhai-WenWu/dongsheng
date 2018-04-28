@@ -73,7 +73,7 @@ public class QuanAdvertControl implements ActivityMethodManager.IAutoRefresh {
         if (!TextUtils.isEmpty(isGourmet) && Integer.parseInt(isGourmet) == 2) {
             return old_list;
         }
-        Log.i(tag_yu, "old_list.size::" + old_list.size() + "::cid:::" + cid + ":mid::" + mid + "::beforeNum:" + beforeNum);
+       //YLKLog.i(tag_yu, "old_list.size::" + old_list.size() + "::cid:::" + cid + ":mid::" + mid + "::beforeNum:" + beforeNum);
         return getAdvertAndQuanData(false,old_list, cid, mid, beforeNum);
     }
 
@@ -83,7 +83,7 @@ public class QuanAdvertControl implements ActivityMethodManager.IAutoRefresh {
         if (!TextUtils.isEmpty(isGourmet) && Integer.parseInt(isGourmet) == 2) {
             return old_list;
         }
-        Log.i(tag_yu, "old_list.size::" + old_list.size() + "::cid:::" + cid + ":mid::" + mid + "::beforeNum:" + beforeNum);
+       //YLKLog.i(tag_yu, "old_list.size::" + old_list.size() + "::cid:::" + cid + ":mid::" + mid + "::beforeNum:" + beforeNum);
         return getBdData(isRefresh,old_list, cid, mid, beforeNum);
     }
 
@@ -147,7 +147,7 @@ public class QuanAdvertControl implements ActivityMethodManager.IAutoRefresh {
 //                            }
 //                        }
                     }
-//                    Log.i("tzy", "getBdData: isRefresh" + isRefresh);
+//                   //YLKLog.i("tzy", "getBdData: isRefresh" + isRefresh);
                 }
             }
         }
@@ -217,7 +217,7 @@ public class QuanAdvertControl implements ActivityMethodManager.IAutoRefresh {
             map.put("customer", customerArray.toString());
         } catch (JSONException e) {
             e.printStackTrace();
-            Log.i("tzy", "setAdList: " + e.getMessage());
+           //YLKLog.i("tzy", "setAdList: " + e.getMessage());
         }
 
         //遍历找到相同位置
@@ -306,7 +306,7 @@ public class QuanAdvertControl implements ActivityMethodManager.IAutoRefresh {
     }
 
     private void logtzy(String tag, String info) {
-        Log.i(tag, info);
+       //YLKLog.i(tag, info);
     }
 
     @Override

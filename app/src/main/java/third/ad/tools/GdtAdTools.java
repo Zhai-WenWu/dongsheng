@@ -135,7 +135,7 @@ public class GdtAdTools {
                 new NativeAD.NativeAdListener() {
                     @Override
                     public void onADLoaded(List<NativeADDataRef> list) {
-                        Log.i("tzy", "GDT NactiveAD loaded");
+                       //YLKLog.i("tzy", "GDT NactiveAD loaded");
                         if (null != callback) {
                             callback.onNativeLoad(list);
                         }
@@ -143,7 +143,7 @@ public class GdtAdTools {
 
                     @Override
                     public void onNoAD(AdError adError) {
-                        Log.i("tzy", "GDT NactiveAD onNoAD");
+                       //YLKLog.i("tzy", "GDT NactiveAD onNoAD");
                         if (null != callback && adError !=null) {
                             callback.onNativeFail(null, "onNoAD:code = " + adError.getErrorMsg());
                         }
@@ -151,7 +151,7 @@ public class GdtAdTools {
 
                     @Override
                     public void onADStatusChanged(NativeADDataRef nativeADDataRef) {
-//                        Log.i("tzy", "GDT NactiveAD onADStatusChanged");
+//                       //YLKLog.i("tzy", "GDT NactiveAD onADStatusChanged");
                         if (null != callback) {
                             callback.onADStatusChanged(nativeADDataRef);
                         }
@@ -159,13 +159,13 @@ public class GdtAdTools {
 
                     @Override
                     public void onADError(NativeADDataRef nativeADDataRef, AdError adError) {
-                        Log.i("tzy", "GDT NactiveAD onADError");
+                       //YLKLog.i("tzy", "GDT NactiveAD onADError");
                         if (null != callback && adError != null) {
                             callback.onNativeFail(nativeADDataRef, "adError:code = " + adError.getErrorCode());
                         }
                     }
                 });
-//        Log.i("tzy", "GDT NactiveAD start load");
+//       //YLKLog.i("tzy", "GDT NactiveAD start load");
         nativeAD.loadAD(adCount);// 一次拉取的广告条数：范围1-30
     }
 

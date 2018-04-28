@@ -204,7 +204,7 @@ public class ReqEncryptCommon {
             jsonObject.put("sign",sign);
             GY=GY.replace("-----BEGIN PUBLIC KEY-----","");
             GY=GY.replace("-----END PUBLIC KEY-----","");
-            Log.i("articleUpload","getData() jsonObject:" + jsonObject);
+           //YLKLog.i("articleUpload","getData() jsonObject:" + jsonObject);
             byte[] data=jsonObject.toString().getBytes();
 
             return RSAUtils.encryptByPublicKey(data,GY);

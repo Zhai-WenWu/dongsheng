@@ -193,9 +193,9 @@ public class VideoImagePlayerController {
                     if(mediaViewCallBack!=null)mediaViewCallBack.onclick();
                     return;
                 }
-                Log.i("zhangyujian","isShowMedia:::"+isShowMedia);
+               //YLKLog.i("zhangyujian","isShowMedia:::"+isShowMedia);
                 if(!isShowMedia){
-                    Log.i("zhangyujian","isAutoPaly:::"+isAutoPaly);
+                   //YLKLog.i("zhangyujian","isAutoPaly:::"+isAutoPaly);
                     if(isAutoPaly){//当前wifi
                         removeTipView();
                     }else{

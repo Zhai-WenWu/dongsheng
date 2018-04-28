@@ -182,7 +182,7 @@ public class UserHomeDish extends TabContentView {
                     }
                 });
             }
-            Log.i("tzy","initLoad");
+           //YLKLog.i("tzy","initLoad");
         }
         if (isMyselft) {
             UploadDishSqlite sqlite = new UploadDishSqlite(mAct);
@@ -220,8 +220,8 @@ public class UserHomeDish extends TabContentView {
             draf_h = Tools.getDimen(mAct, R.dimen.dp_65);
         int bigImg_h = Tools.getDimen(mAct, R.dimen.dp_200) + Tools.getStatusBarHeight(mAct);
         int userinfo_h = Tools.getTargetHeight(friend_info);
-//        Log.i("tzy","userinfo_h = " + userinfo_h);
-//        Log.i("tzy","draf_h = " + draf_h);
+//       //YLKLog.i("tzy","userinfo_h = " + userinfo_h);
+//       //YLKLog.i("tzy","draf_h = " + draf_h);
         try {
             if (friend_info.getText() == null || friend_info.getText().toString().equals("")) {
 //                headLayout.setLayoutParams(new AbsListView.LayoutParams(
@@ -237,7 +237,7 @@ public class UserHomeDish extends TabContentView {
                 headLayout.getLayoutParams().height=tabHost_h + draf_h + bigImg_h + userinfo_h;
             }
             headLayout.requestLayout();
-//            Log.i("tzy","height = " + headLayout.getLayoutParams().height);
+//           //YLKLog.i("tzy","height = " + headLayout.getLayoutParams().height);
         } catch (Exception e) {
             UtilLog.reportError("MyselfSubject头部局异常", e);
         }
@@ -326,7 +326,7 @@ public class UserHomeDish extends TabContentView {
                     }
                     loadPage = returnList.size();
                     isBlankSpace = false;
-                    Log.i("tzy","request");
+                   //YLKLog.i("tzy","request");
                     setHeadViewHeight();
                     adapter.notifyDataSetChanged();
                 }

@@ -135,7 +135,7 @@ public class ThirdLoginBaseActivity extends BaseLoginActivity {
             public void onError(Platform arg0, int arg1, Throwable arg2) {
                 handler.sendEmptyMessage(EMPOWER_ERROR);
                 UtilLog.reportError("用户授权出错", null);
-                Log.i("zhangyujian","用户授权出错::Platform::"+arg0.getName()+"::"+arg1);
+               //YLKLog.i("zhangyujian","用户授权出错::Platform::"+arg0.getName()+"::"+arg1);
             }
 
             @Override
@@ -154,7 +154,7 @@ public class ThirdLoginBaseActivity extends BaseLoginActivity {
                     if (platform.equals(ShareTools.WEI_XIN)) {
                         param += "&p7=" + res.get("unionid").toString();
                     }
-                    Log.i("zhangyujian","---------第三方用户信息----------" + res.toString());
+                   //YLKLog.i("zhangyujian","---------第三方用户信息----------" + res.toString());
                     UtilLog.print("d", "---------第三方用户信息----------" + res.toString());
                 }
                 //

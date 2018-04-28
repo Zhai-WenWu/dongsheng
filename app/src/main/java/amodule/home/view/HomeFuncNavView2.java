@@ -64,7 +64,7 @@ public class HomeFuncNavView2 extends LinearLayout {
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH");
         String currentHourStr = dateFormat.format(System.currentTimeMillis());
         int currentHour = Integer.parseInt(currentHourStr);
-//        Log.i("tzy","currentHour = " + currentHour);
+//       //YLKLog.i("tzy","currentHour = " + currentHour);
         int resId = R.drawable.home_nav_dish_2;
         if (currentHour < 10 || currentHour >= 22) {
             resId = R.drawable.home_nav_dish_1;

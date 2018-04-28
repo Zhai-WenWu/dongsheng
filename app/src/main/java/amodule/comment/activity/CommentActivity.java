@@ -128,7 +128,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if(View.VISIBLE == sendTv.getVisibility()) {
-                    Log.i("commentReplay","downRefreshList onTouch()");
+                   //YLKLog.i("commentReplay","downRefreshList onTouch()");
                     oldUrl = currentUrl;
                     changeKeyboard(false,false);
                     commend_write_et.setHint(" 写评论");
@@ -153,7 +153,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void changeDataChange(){
-        Log.i("commentActivity","changeDataChange() size:" + listArray.size());
+       //YLKLog.i("commentActivity","changeDataChange() size:" + listArray.size());
         if(listArray.size() == 0){
             downRefreshList.setVisibility(View.GONE);
             findViewById(R.id.commend_hind).setVisibility(View.VISIBLE);
@@ -202,7 +202,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
 
             @Override
             public void onReportReplayClick(String comment_id, String replay_id, String replay_user_code, String replay_user_name, String reportContent) {
-                Log.i("commentReplay","onReportReplayClick()");
+               //YLKLog.i("commentReplay","onReportReplayClick()");
                 if(!LoginManager.isLogin()){
                     startActivity(new Intent(CommentActivity.this, LoginByAccout.class));
                     return;
@@ -230,14 +230,14 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                         new InternetCallback() {
                     @Override
                     public void loaded(int flag, String s, Object o) {
-                        Log.i("commentReplay","deleteReplay() flag:" + flag + "   obj:" + o);
-//                        Log.i("commentReplay","deleteReplay() position:" + position + "  listArray.size():" + listArray.size() + "   replayIndex:" + replayIndex);
+                       //YLKLog.i("commentReplay","deleteReplay() flag:" + flag + "   obj:" + o);
+//                       //YLKLog.i("commentReplay","deleteReplay() position:" + position + "  listArray.size():" + listArray.size() + "   replayIndex:" + replayIndex);
                         if(flag >= ReqInternet.REQ_OK_STRING){
                             if(position < listArray.size()) {
                                 Map<String, String> map = listArray.get(position);
                                 String replay = map.get("replay");
                                 ArrayList<Map<String, String>> arrayList = StringManager.getListMapByJson(replay);
-//                                Log.i("commentReplay","deleteReplay() arrayList.size():" + arrayList.size());
+//                               //YLKLog.i("commentReplay","deleteReplay() arrayList.size():" + arrayList.size());
                                 if (replayIndex < arrayList.size()) {
                                     arrayList.remove(replayIndex);
                                     map.put("replay", StringManager.getJsonByArrayList(arrayList).toString());
@@ -317,7 +317,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
             @Override
             public void onContentReplayClick(String comment_id,String replay_id,String replay_code, String replay_name,String type,boolean isShowKeyBoard,boolean isMyselft) {
                 if(isMyselft) return;
-                Log.i("commentReplay","onContentReplayClick() isShowKeyboard:" + isShowKeyboard);
+               //YLKLog.i("commentReplay","onContentReplayClick() isShowKeyboard:" + isShowKeyboard);
                 if(isShowKeyboard && isShowKeyBoard){
                     oldUrl = currentUrl;
                     changeKeyboard(false,false);
@@ -325,9 +325,9 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                 }
                 XHClick.mapStat(CommentActivity.this,contentTongjiId,"回复",type);
                 changeKeyboard(true,isShowKeyBoard);
-                Log.i("commentReplay","onContentReplayClick() replay_name:" + replay_name);
+               //YLKLog.i("commentReplay","onContentReplayClick() replay_name:" + replay_name);
                 commend_write_et.setHint(" 回复" + replay_name);
-                Log.i("commentReplay","onContentReplayClick() oldUrl:" + oldUrl);
+               //YLKLog.i("commentReplay","onContentReplayClick() oldUrl:" + oldUrl);
                 currentParams = "&commentId=" + comment_id + "&replayUcode=" + replay_code;
                 replayIndex = position;
                 if(!StringManager.api_addReplay.equals(oldUrl) || !comment_id.equals(oldCommentId) || !replay_code.equals(oldReplayId)){
@@ -459,7 +459,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
         if(!TextUtils.isEmpty(gotoReplayId))
             params += "&replayId=" + gotoReplayId;;
         params += "&from=" + from + "&source=" + source + "&slide=" + slide + "&dropPage=" + dropPage;
-        Log.i("commentReplay","getCommentData() params:" + params);
+       //YLKLog.i("commentReplay","getCommentData() params:" + params);
         ReqEncyptInternet.in().doEncypt(StringManager.api_forumList, params, new InternetCallback() {
             @Override
             public void loaded(int flag, String s, Object o) {
@@ -482,7 +482,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                         if(isForward){
                             if(dropPage == 1){
                                 listArray.clear();
-                                Log.i("commentReplay","清除数据，重新加载");
+                               //YLKLog.i("commentReplay","清除数据，重新加载");
                             }
                             listArray.addAll(0,arrayList);
                         }else{
@@ -567,17 +567,17 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
             newParams = "type=" + type + "&code=" + code + currentParams + "&content=" + content;
         }
         newParams += "&commentIds=" + commentIdStrBuffer;
-        Log.i("commentReplay","sendData() newParams:" + newParams);
+       //YLKLog.i("commentReplay","sendData() newParams:" + newParams);
         ReqEncyptInternet.in().doEncypt(currentUrl,newParams,new InternetCallback(){
             @Override
             public void loaded(int flag, String s, Object o) {
-                Log.i("commentReplay","sendData() flag:" + flag + "   o:" + o);
+               //YLKLog.i("commentReplay","sendData() flag:" + flag + "   o:" + o);
                 if(flag >= ReqInternet.REQ_OK_STRING) {
                     commend_write_et.setText("");
                     changeKeyboard(false,false);
                     if(isAddForm){
                         ArrayList<Map<String,String>> arrayList = getListMapByJson(o);
-                        Log.i("commentReplay","sendData() arrayList:" + arrayList.size());
+                       //YLKLog.i("commentReplay","sendData() arrayList:" + arrayList.size());
                         if(arrayList.size() > 0) {
                             Map<String,String> map = arrayList.get(0);
                             if(commentIdStrBuffer.length() != 0) commentIdStrBuffer.append(",");
@@ -589,10 +589,10 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                         adapterSimple.notifyDataSetChanged();
                         downRefreshList.setSelection(0);
                     }else{
-                        Log.i("commentReplay","sendData() replayIndex:" + replayIndex);
+                       //YLKLog.i("commentReplay","sendData() replayIndex:" + replayIndex);
                         Map<String,String> map = listArray.get(replayIndex);
                         String replay = map.get("replay");
-                        Log.i("commentReplay","sendData() replay:" + replay);
+                       //YLKLog.i("commentReplay","sendData() replay:" + replay);
                         if(!TextUtils.isEmpty(replay)) {
                             JSONArray jsonArray = new JSONArray();
                             JSONObject jsonObject;
@@ -613,7 +613,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                                 exception.printStackTrace();
                             }
                             map.put("replay",jsonArray.toString());
-                            Log.i("commentReplay","sendData() jsonArray:" + jsonArray.toString());
+                           //YLKLog.i("commentReplay","sendData() jsonArray:" + jsonArray.toString());
                             adapterSimple.notifyDataSetChanged();
                         }
                     }

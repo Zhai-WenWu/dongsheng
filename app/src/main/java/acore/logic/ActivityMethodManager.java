@@ -80,7 +80,7 @@ public class ActivityMethodManager {
         //判断是否显示
         if (WelcomeAdTools.getInstance().isOpenSecond()) {
             String switchTimeStr = FileManager.loadShared(mAct, FileManager.xmlFile_appInfo, "switchTime").toString();
-        Log.i("tzy","switchTimeStr");
+       //YLKLog.i("tzy","switchTimeStr");
             if (!TextUtils.isEmpty(switchTimeStr)) {
                 //清空切换时间
                 FileManager.saveShared(mAct, FileManager.xmlFile_appInfo, "switchTime", "");
@@ -90,7 +90,7 @@ public class ActivityMethodManager {
                 final long MIN = WelcomeAdTools.getInstance().getSplashmins() * 1000;
                 final long MAX = WelcomeAdTools.getInstance().getSplashmaxs() * 1000;
                 long 时间差值 = currentTime - switchTime;
-                Log.i("tzy","" + 时间差值);
+               //YLKLog.i("tzy","" + 时间差值);
                 if (时间差值 >= MIN){
                         //&& 时间差值 <= MAX) {
                     //获取已启动次数
@@ -99,14 +99,14 @@ public class ActivityMethodManager {
                     if (!TextUtils.isEmpty(currentCountStr)) {
                         currentCount = Integer.parseInt(currentCountStr);
                     }
-                    Log.i("tzy","已启动次数 ： " + currentCount);
+                   //YLKLog.i("tzy","已启动次数 ： " + currentCount);
                     final int showCount = WelcomeAdTools.getInstance().getShownum();
-                    Log.i("tzy","启动MAX次数 ： " + showCount);
+                   //YLKLog.i("tzy","启动MAX次数 ： " + showCount);
 //                    if (0 >= showCount || currentCount <= showCount) {
                         int adShowTime = WelcomeAdTools.getInstance().getDuretimes();
                         if(!Main.isShowWelcomeDialog) {
 //                            new WelcomeDialog(mAct, adShowTime).show();
-                            Log.i("zhangyujian","二次开屏");
+                           //YLKLog.i("zhangyujian","二次开屏");
                             //请求广告位
                             AdConfigTools.getInstance().getAdConfigInfo();
                             mAct.startActivity(new Intent(mAct, Welcome.class));
@@ -166,7 +166,7 @@ public class ActivityMethodManager {
     }
 
     public void onUserLeaveHint(){
-        Log.i("tzy", "onUserLeaveHint: ");
+       //YLKLog.i("tzy", "onUserLeaveHint: ");
         if(Main.allMain != null){
             Main.allMain.stopTimer();
         }
@@ -186,9 +186,9 @@ public class ActivityMethodManager {
                     AdConfigTools.getInstance().startStatisticsNow();
                     // 进行点击Home键的处理
                     XHClick.HomeKeyListener(mAct);
-                    Log.i("zhangyujian","HomeKeyListener111");
+                   //YLKLog.i("zhangyujian","HomeKeyListener111");
                     if (WelcomeAdTools.getInstance().isOpenSecond()) {
-                    Log.i("zhangyujian","onHomePressed");
+                   //YLKLog.i("zhangyujian","onHomePressed");
                         FileManager.saveShared(mAct, FileManager.xmlFile_appInfo, "switchTime", String.valueOf(System.currentTimeMillis()));
                         WelcomeAdTools.getInstance().handlerAdData(true);
                     }
@@ -216,7 +216,7 @@ public class ActivityMethodManager {
             if(!TextUtils.isEmpty(text)){
                 //写如剪切板
                 Tools.inputToClipboard(mAct,text);
-//                Log.i("tzy","inputToClipboard :: text = " + text);
+//               //YLKLog.i("tzy","inputToClipboard :: text = " + text);
             }
         }
     }

@@ -106,7 +106,7 @@ public class WelcomeControls {
         textLead.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("zhangyujian", "展示点击：textLeadtextLead：");
+               //YLKLog.i("zhangyujian", "展示点击：textLeadtextLead：");
                 isAdLeadClick = true;
                 closeDialog();
             }
@@ -114,7 +114,7 @@ public class WelcomeControls {
         textSkip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("zhangyujian", "展示点击：：跳过");
+               //YLKLog.i("zhangyujian", "展示点击：：跳过");
                 closeDialog();
             }
         });
@@ -132,7 +132,7 @@ public class WelcomeControls {
                     @Override
                     public void onAdPresent() {
                         mADLayout.setVisibility(View.GONE);
-                        Log.i("zhangyujian", "GdtCallback");
+                       //YLKLog.i("zhangyujian", "GdtCallback");
                         if (mAdTime > 5) {
                             endCountDown();
                             mAdTime = 5;
@@ -152,13 +152,13 @@ public class WelcomeControls {
 
                     @Override
                     public void onAdDismissed() {
-                        Log.i("zhangyujian", "onAdDismissed");
+                       //YLKLog.i("zhangyujian", "onAdDismissed");
                         closeDialog();
                     }
 
                     @Override
                     public void onAdClick() {
-                        Log.i("zhangyujian", "onAdClick");
+                       //YLKLog.i("zhangyujian", "onAdClick");
                         closeDialog();
                         XHClick.mapStat(activity, "ad_click_index", "开屏", "sdk_gdt");
                     }
@@ -317,7 +317,7 @@ public class WelcomeControls {
         if(!Main.isShowWelcomeDialog){
             return;
         }
-        Log.i("tzy", "closeDialog: ");
+       //YLKLog.i("tzy", "closeDialog: ");
         Main.isShowWelcomeDialog = false;//至当前dialog状态
         if (!isExectueFree && welcomeCallBack != null) {
             welcomeCallBack.welcomeFree();
@@ -326,7 +326,7 @@ public class WelcomeControls {
             mMainHandler.removeCallbacksAndMessages(null);
             mMainHandler = null;
         }
-        Log.i("zhangyujian", "closeDialog");
+       //YLKLog.i("zhangyujian", "closeDialog");
         if (isAdLeadClick) {
             AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), StringManager.getVipUrl(false) + "&vipFrom=开屏广告会员免广告", true);
         }
@@ -338,13 +338,13 @@ public class WelcomeControls {
         @Override
         public void run() {
             endCountDown();
-//            Log.i("zhangyujian", "Runnable：：：：mAdTime::" + mAdTime + "::isAdLoadOk:" + isAdLoadOk + ":::" + LoginManager.isShowAd());
+//           //YLKLog.i("zhangyujian", "Runnable：：：：mAdTime::" + mAdTime + "::isAdLoadOk:" + isAdLoadOk + ":::" + LoginManager.isShowAd());
             if (mAdTime <= 0 || (mAdTime <= 2 && !isAdLoadOk && LoginManager.isShowAd())) {
                 closeDialog();
                 return;
             }
             layoutCallBack();
-//            Log.i("zhangyujian", "Runnable：：：mAdTime:::" + mAdTime);
+//           //YLKLog.i("zhangyujian", "Runnable：：：mAdTime:::" + mAdTime);
             mAdTime--;
             startCountDown(true);
         }
@@ -369,7 +369,7 @@ public class WelcomeControls {
     private void layoutCallBack() {
         if (!isExectueFree && mAdTime <= 3) {
             isExectueFree = true;
-            Log.i("zhangyujian", "layoutCallBack::" + mAdTime);
+           //YLKLog.i("zhangyujian", "layoutCallBack::" + mAdTime);
             if (welcomeCallBack != null) welcomeCallBack.welcomeFree();
         }
     }

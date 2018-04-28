@@ -149,7 +149,7 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,I
             mRecyclerAdapter.setOnItemShow(new RvBaseAdapter.OnItemShow<Map<String,String>>() {
                 @Override
                 public void onItemShow(Map<String,String> data, int position) {
-//                    Log.i("XHClick", "onItemShow: ");
+//                   //YLKLog.i("XHClick", "onItemShow: ");
                     if(!TextUtils.isEmpty(page) && data != null && !data.isEmpty()
                             && !"2".equals(data.get("isShowStatistic"))){
                         XHClick.saveStatictisFile(page, getModeType(), data.get("type"), data.get("code"),
@@ -196,7 +196,7 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,I
     }
 
     private void statistic(int position,Map<String, String> data) {
-//        Log.i("XHClick", "click: ");
+//       //YLKLog.i("XHClick", "click: ");
         if(!TextUtils.isEmpty(page)){
             XHClick.saveStatictisFile(page, getModeType(), data.get("type"), data.get("code"), "", "click", "", "", String.valueOf(position + 1), "", "");
         }

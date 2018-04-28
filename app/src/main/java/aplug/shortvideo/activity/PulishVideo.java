@@ -249,7 +249,7 @@ public class PulishVideo extends BaseActivity implements View.OnClickListener {
             stringBuffer.append("@").append(map.get("")).append(" ");
         }
         friends=stringBuffer;
-        Log.i("zhangyujian","value::::"+stringBuffer.toString());
+       //YLKLog.i("zhangyujian","value::::"+stringBuffer.toString());
         Map<String, String> contentMap = new HashMap<>();
         contentMap.put(ImgTextCombineLayout.IMGEURL, "");
         contentMap.put(ImgTextCombineLayout.CONTENT, stringBuffer.toString());

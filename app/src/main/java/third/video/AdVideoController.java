@@ -75,13 +75,13 @@ public class AdVideoController {
         mConfigTool = AdVideoConfigTool.of();
         setUpIsAvailable();
         if (!isAvailable) {
-            Log.i("tzy", "AdVideoController: " + (System.currentTimeMillis() - startTime));
+           //YLKLog.i("tzy", "AdVideoController: " + (System.currentTimeMillis() - startTime));
             return;
         }
         currentVideo = mConfigTool.getVideoUrlOrPath();
         initVideoPlayer(context);
         createAdView(mConfigTool.getConfigMap());
-        Log.i("tzy", "AdVideoController: " + (System.currentTimeMillis() - startTime));
+       //YLKLog.i("tzy", "AdVideoController: " + (System.currentTimeMillis() - startTime));
     }
 
     public void setUpIsAvailable() {
@@ -168,7 +168,7 @@ public class AdVideoController {
             };
             mAdVideoPlayer.addListener(mInnerListener);
         }
-        Log.i("tzy", "initVideoPlayer: " + (System.currentTimeMillis() - startTime));
+       //YLKLog.i("tzy", "initVideoPlayer: " + (System.currentTimeMillis() - startTime));
     }
 
     private void complete() {
@@ -218,7 +218,7 @@ public class AdVideoController {
 
         WidgetUtility.setTextToView(seeDetailView, configData.get("title"));
         setAdLayout(view);
-        Log.i("tzy", "createAdView: " + (System.currentTimeMillis() - startTime));
+       //YLKLog.i("tzy", "createAdView: " + (System.currentTimeMillis() - startTime));
     }
 
     public void setAdLayout(@NonNull View adView) {
@@ -274,7 +274,7 @@ public class AdVideoController {
             mAdVideoPlayer.setUp(currentVideo);
             mAdVideoPlayer.startPalyVideo();
             if (monStartCallback != null) monStartCallback.onStart(isRemoteUrl());
-            Log.i("tzy", "start: " + (System.currentTimeMillis() - startTime));
+           //YLKLog.i("tzy", "start: " + (System.currentTimeMillis() - startTime));
         } else excuteErrorCallback();
     }
 
@@ -334,7 +334,7 @@ public class AdVideoController {
         int currentPlayCount = loadCurrentPlayCount();
         currentPlayCount ++;
         String currentDataValue = Tools.getAssignTime("yyyyMMdd",0);
-        Log.i("isAvailable", "setUpDateAndCount: " + currentDataValue);
+       //YLKLog.i("isAvailable", "setUpDateAndCount: " + currentDataValue);
         Map<String,String> map = new HashMap<>();
         map.put(KEY_COUNT,String.valueOf(currentPlayCount));
         map.put(KEY_DATE,currentDataValue);

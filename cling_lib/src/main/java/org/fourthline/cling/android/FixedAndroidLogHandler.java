@@ -118,7 +118,7 @@ public class FixedAndroidLogHandler extends Handler {
             String message = getFormatter().format(record);
             Log.println(level, tag, message);
         } catch (RuntimeException e) {
-            Log.i("AndroidHandler", "Error logging message.", e);
+           //YLKLog.i("AndroidHandler", "Error logging message.", e);
         }
     }
 

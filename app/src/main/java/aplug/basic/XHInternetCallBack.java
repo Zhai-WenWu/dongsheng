@@ -66,7 +66,7 @@ public class XHInternetCallBack extends InterCallback {
         if (isCookieChange) {
             handlerChangeData();
             isCookieChange = false;
-            Log.i("xianghaTag","mapCookie:::"+mapCookie.toString());
+           //YLKLog.i("xianghaTag","mapCookie:::"+mapCookie.toString());
         }
         return mapCookie;
     }

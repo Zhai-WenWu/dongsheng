@@ -155,7 +155,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
         @Override
         public void welcomeShowState(boolean isShow) {
             if (!isShow) {//展示后关闭
-                Log.i("zhangyujian", "________________________________________________________");
+               //YLKLog.i("zhangyujian", "________________________________________________________");
                 if (mainInitDataControl != null) {
                     mainInitDataControl.initMainOnResume(Main.this);
                     mainInitDataControl.iniMainAfter(Main.this);
@@ -329,7 +329,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
     Runnable mRunnable = null;
     // 时刻取得导航提醒
     public void initRunTime() {
-        Log.i("tzy", "initRunTime: ");
+       //YLKLog.i("tzy", "initRunTime: ");
         if(mTimerHandler == null){
             mTimerHandler = new Handler();
             execute();
@@ -351,7 +351,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
     }
 
     public void stopTimer() {
-        Log.i("tzy", "stopTimer: ");
+       //YLKLog.i("tzy", "stopTimer: ");
         if (mTimerHandler != null) {
             mTimerHandler.removeCallbacks(mRunnable);
             mTimerHandler = null;
@@ -446,7 +446,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        Log.i("tzy", "onKeyDown: "+event.getKeyCode());
+       //YLKLog.i("tzy", "onKeyDown: "+event.getKeyCode());
         return super.onKeyDown(keyCode, event);
     }
 
@@ -749,7 +749,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        Log.i("zhangyujian", "main::onPostCreate");
+       //YLKLog.i("zhangyujian", "main::onPostCreate");
     }
 
     @Override
@@ -803,7 +803,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
 
     @Override
     public void setMessageTip(int tipCournt) {
-//        Log.i("tzy", "MainCircle::setMessageTip: " + tipCournt);
+//       //YLKLog.i("tzy", "MainCircle::setMessageTip: " + tipCournt);
         if (allTab != null) {
             Stream.of(allTab)
                     .filter(value -> value.getValue() != null && value.getValue() instanceof ISetMessageTip)

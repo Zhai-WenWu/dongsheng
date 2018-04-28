@@ -39,7 +39,7 @@ public class AVTransportSubscriptionCallback  extends BaseSubscriptionCallback {
         Map values = subscription.getCurrentValues();
         if (values != null && values.containsKey("LastChange")) {
             String lastChangeValue = values.get("LastChange").toString();
-            Log.i(TAG, "LastChange:" + lastChangeValue);
+           //YLKLog.i(TAG, "LastChange:" + lastChangeValue);
             doAVTransportChange(lastChangeValue);
         }
     }
@@ -53,22 +53,22 @@ public class AVTransportSubscriptionCallback  extends BaseSubscriptionCallback {
             if (transportState != null) {
                 TransportState ts = transportState.getValue();
                 if (ts == TransportState.PLAYING) {
-                    Log.i(TAG, "PLAYING");
+                   //YLKLog.i(TAG, "PLAYING");
                     if (mCallback != null)
                         mCallback.action(Intents.ACTION_PLAYING);
                     return;
                 } else if (ts == TransportState.PAUSED_PLAYBACK) {
-                    Log.i(TAG, "PAUSED_PLAYBACK");
+                   //YLKLog.i(TAG, "PAUSED_PLAYBACK");
                     if (mCallback != null)
                         mCallback.action(Intents.ACTION_PAUSED_PLAYBACK);
                     return;
                 } else if (ts == TransportState.STOPPED) {
-                    Log.i(TAG, "STOPPED");
+                   //YLKLog.i(TAG, "STOPPED");
                     if (mCallback != null)
                         mCallback.action(Intents.ACTION_STOPPED);
                     return;
                 } else if (ts == TransportState.TRANSITIONING) { // 转菊花状态
-                    Log.i(TAG, "BUFFER");
+                   //YLKLog.i(TAG, "BUFFER");
                     if (mCallback != null)
                         mCallback.action(Intents.ACTION_TRANSITIONING);
                     return;
@@ -81,7 +81,7 @@ public class AVTransportSubscriptionCallback  extends BaseSubscriptionCallback {
             if (Utils.isNotNull(eventedValue)) {
                 position = lastChange.getEventedValue(0, AVTransportVariable.RelativeTimePosition.class).getValue();
                 int intTime = Utils.getIntTime(position);
-                Log.i(TAG, "position: " + position + ", intTime: " + intTime);
+               //YLKLog.i(TAG, "position: " + position + ", intTime: " + intTime);
 
                 // 该设备支持进度回传
                 Config.getInstance().setHasRelTimePosCallback(true);

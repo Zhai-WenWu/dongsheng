@@ -26,20 +26,20 @@ public class ClingUpnpService extends AndroidUpnpServiceImpl {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Log.i("xianghaTag","ClingUpnpService:::onCreate");
+       //YLKLog.i("xianghaTag","ClingUpnpService:::onCreate");
         //LocalBinder instead of binder
         binder = new LocalBinder();
     }
 
     @Override
     public void onDestroy() {
-        Log.i("xianghaTag","ClingUpnpService:::onBind");
+       //YLKLog.i("xianghaTag","ClingUpnpService:::onBind");
         super.onDestroy();
     }
 
     @Override
     public IBinder onBind(Intent intent) {
-        Log.i("xianghaTag","ClingUpnpService:::onBind");
+       //YLKLog.i("xianghaTag","ClingUpnpService:::onBind");
         return binder;
     }
 

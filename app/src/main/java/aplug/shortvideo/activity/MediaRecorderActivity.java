@@ -650,7 +650,7 @@ public class MediaRecorderActivity extends BaseActivity implements View.OnClickL
         if(TextUtils.isEmpty(imagePath) || TextUtils.isEmpty(videoPath)){
             return;
         }
-        Log.i("zhangyujian","Intent跳转pulishvideo页面");
+       //YLKLog.i("zhangyujian","Intent跳转pulishvideo页面");
         Intent intent = new Intent(this,PulishVideo.class);
         intent.putExtra(SelectVideoActivity.EXTRAS_IMAGE_PATH,imagePath);
         intent.putExtra(SelectVideoActivity.EXTRAS_VIDEO_PATH,videoPath);
@@ -697,9 +697,9 @@ public class MediaRecorderActivity extends BaseActivity implements View.OnClickL
     private void handlerPapersVideo(){
 //        MediaInfo mediaInfo = new MediaInfo(videoPath);
 //        mediaInfo.prepare();
-//        Log.i("zhangyujian",mediaInfo.vWidth+":::::::"+mediaInfo.vHeight+"::::::"+mediaInfo.vCodecName);
-//        Log.i("zhangyujian",mediaInfo.vHeight*3/4+":::::::"+mediaInfo.vHeight);
-//        Log.i("zhangyujian",checkVideoSize(mediaInfo.vHeight*3/4)+":::::::"+checkVideoSize(mediaInfo.vHeight));
+//       //YLKLog.i("zhangyujian",mediaInfo.vWidth+":::::::"+mediaInfo.vHeight+"::::::"+mediaInfo.vCodecName);
+//       //YLKLog.i("zhangyujian",mediaInfo.vHeight*3/4+":::::::"+mediaInfo.vHeight);
+//       //YLKLog.i("zhangyujian",checkVideoSize(mediaInfo.vHeight*3/4)+":::::::"+checkVideoSize(mediaInfo.vHeight));
 //        videoEditor.executeVideoFrameCrop(videoPath,checkVideoSize(mediaInfo.vHeight*3/4),checkVideoSize(mediaInfo.vHeight),0,0,pathDirs+"/parper.mp4",mediaInfo.vCodecName,(int) (mediaInfo.vBitRate*1.2f));
 //        MediaInfo mediaInfo_parper = new MediaInfo(pathDirs+"/parper.mp4");
 //        mediaInfo_parper.prepare();
@@ -709,7 +709,7 @@ public class MediaRecorderActivity extends BaseActivity implements View.OnClickL
 //            videoEditor.executeVideoRotate90Clockwise(pathDirs+"/parper.mp4",mediaInfo_parper.vCodecName, (int) (mediaInfo_parper.vBitRate*1.2f),pathDirs+"/no.mp4");
 //        MediaHandleControl.deleteFile(videoPath);
 //        MediaHandleControl.deleteFile(pathDirs+"/parper.mp4");
-////        Log.i("zhangyujian",checkVideoSize(mediaInfo.vHeight*3/4)+":::::::"+checkVideoSize(mediaInfo.vHeight));
+////       //YLKLog.i("zhangyujian",checkVideoSize(mediaInfo.vHeight*3/4)+":::::::"+checkVideoSize(mediaInfo.vHeight));
     }
     /**哦
      * 给视频加音频

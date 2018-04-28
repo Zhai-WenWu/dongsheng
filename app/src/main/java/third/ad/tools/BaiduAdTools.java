@@ -39,32 +39,32 @@ public class BaiduAdTools {
      * @param callback 回调
      */
     public void showSplashAD(Activity activity, ViewGroup parent,String adid,final BaiduSplashAdCallback callback){
-//        Log.i("tzy_AD","showSplashAD");
+//       //YLKLog.i("tzy_AD","showSplashAD");
         SplashAd splashAd = new SplashAd(activity, parent, new SplashAdListener() {
             @Override
             public void onAdPresent() {
-//                Log.i("tzy_AD","baidu splash onAdPresent");
+//               //YLKLog.i("tzy_AD","baidu splash onAdPresent");
                 if(null != callback)
                     callback.onAdPresent();
             }
 
             @Override
             public void onAdDismissed() {
-//                Log.i("tzy_AD","baidu splash onAdDismissed");
+//               //YLKLog.i("tzy_AD","baidu splash onAdDismissed");
                 if(null != callback)
                     callback.onAdDismissed();
             }
 
             @Override
             public void onAdFailed(String s) {
-//                Log.i("tzy_AD","baidu splash onAdFailed : msg = " + s);
+//               //YLKLog.i("tzy_AD","baidu splash onAdFailed : msg = " + s);
                 if(null != callback)
                     callback.onAdFailed(s);
             }
 
             @Override
             public void onAdClick() {
-//                Log.i("tzy_AD","baidu splash onAdClick");
+//               //YLKLog.i("tzy_AD","baidu splash onAdClick");
                 if(null != callback)
                     callback.onAdClick();
 
@@ -76,14 +76,14 @@ public class BaiduAdTools {
         BaiduNative baiduNative = new BaiduNative(context, adid, new BaiduNative.BaiduNativeNetworkListener() {
             @Override
             public void onNativeLoad(List<NativeResponse> list) {
-                Log.i("tzy", "onNativeLoad: ");
+               //YLKLog.i("tzy", "onNativeLoad: ");
                 if(null != callback)
                     callback.onNativeLoad(list);
             }
 
             @Override
             public void onNativeFail(NativeErrorCode nativeErrorCode) {
-                Log.i("tzy", "onNativeFail: " + nativeErrorCode);
+               //YLKLog.i("tzy", "onNativeFail: " + nativeErrorCode);
                 if(null != callback)
                     callback.onNativeFail(nativeErrorCode);
             }

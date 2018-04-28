@@ -176,7 +176,7 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
 
     private void clearEditViewFocus(boolean isClearFocus) {
         if (isClearFocus) {
-//            Log.i("tzy","clearEditViewFocus 执行了");
+//           //YLKLog.i("tzy","clearEditViewFocus 执行了");
             edSearch.clearFocus();
             ToolsDevice.keyboardControl(false, mActivity, edSearch);
         }
@@ -334,7 +334,7 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
             default:
                 break;
         }
-//        Log.i("tzy","搜索");
+//       //YLKLog.i("tzy","搜索");
         if (SearchConstant.SEARCH_CAIPU == searchType) {
             clearEditViewFocus(true);
         }

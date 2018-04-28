@@ -319,7 +319,7 @@ public class DetailDishViewManager {
                     XHClick.mapStat(mAct, DetailDish.tongjiId_detail, twoLevelValue, threeLevelValue);
                 });
                 dishVipView.setData(relation);
-                Log.i("xianghaTag","VIP::::handlerVipView:::title:::"+relation.get("title"));
+               //YLKLog.i("xianghaTag","VIP::::handlerVipView:::title:::"+relation.get("title"));
             }else dishVipView.setVisibility(View.GONE);
         }
     }

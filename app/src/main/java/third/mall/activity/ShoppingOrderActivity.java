@@ -426,7 +426,7 @@ public class ShoppingOrderActivity extends MallBaseActivity implements OnClickLi
                             if(!TextUtils.isEmpty(MallCommon.statictisFrom)){
                                 param+="&ds_from="+MallCommon.getStatictisFrom();
                             }
-                            Log.i("wyl","param:::"+param);
+                           //YLKLog.i("wyl","param:::"+param);
 			Log.i("remark", jsonArray.toString());
 			MallReqInternet.in().doPost(MallStringManager.mall_createOrderByCart_v2, param, new MallInternetCallback() {
 				@Override

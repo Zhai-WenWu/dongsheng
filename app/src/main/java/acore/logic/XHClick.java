@@ -961,13 +961,13 @@ public class XHClick {
             }
             LinkedHashMap<String, String> map1 = new LinkedHashMap<>();
             map1.put("log_json", jsonObject.toString());
-            Log.i("wyl", "log_json::::" + jsonObject.toString());
+           //YLKLog.i("wyl", "log_json::::" + jsonObject.toString());
 
             ReqInternet.in().doPost(url, map1, new InternetCallback() {
                 @Override
                 public void loaded(int flag, String url, Object object) {
                     if (flag >= ReqInternet.REQ_OK_STRING) {
-                        Log.i("wyl", "上传数据s6");
+                       //YLKLog.i("wyl", "上传数据s6");
                     } else {
 
                     }
@@ -1042,7 +1042,7 @@ public class XHClick {
             long time = System.currentTimeMillis();
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String app_time = formatter.format(time);
-//            Log.i("zhangyujian","数据时间::"+app_time+":::"+event);
+//           //YLKLog.i("zhangyujian","数据时间::"+app_time+":::"+event);
             String params = "";
             params += "app_time=" + checkString(app_time);
             params += "&page_title=" + checkString(page_title);
@@ -1056,10 +1056,10 @@ public class XHClick {
             params += "&position=" + checkString(position);
             params += "&button_name=" + checkString(button_name);
             params += "&deep=" + checkString(deep);
-//            Log.i("zhangyujian","加载数据：：："+params);
+//           //YLKLog.i("zhangyujian","加载数据：：："+params);
             //默认插入数据
             StatictisSQLiteDataBase.getInstance().insterData(params);
-            Log.i("wyl", "位置：::" + StatictisSQLiteDataBase.getInstance().getDataNum());
+           //YLKLog.i("wyl", "位置：::" + StatictisSQLiteDataBase.getInstance().getDataNum());
             if (StatictisSQLiteDataBase.getInstance().getDataNum() >= 500) {
                 //获取全部数据
                 final ArrayList<String> list = StatictisSQLiteDataBase.getInstance().selectAllData();
@@ -1109,13 +1109,13 @@ public class XHClick {
             }
             LinkedHashMap<String, String> map1 = new LinkedHashMap<>();
             map1.put("log_json", jsonObject.toString());
-            Log.i("wyl", "log_json::::" + jsonObject.toString());
+           //YLKLog.i("wyl", "log_json::::" + jsonObject.toString());
 
             ReqInternet.in().doPost(url, map1, new InternetCallback() {
                 @Override
                 public void loaded(int flag, String url, Object object) {
                     if (flag >= ReqInternet.REQ_OK_STRING) {
-                        Log.i("wyl", "上传数据s8");
+                       //YLKLog.i("wyl", "上传数据s8");
                     } else {
 
                     }

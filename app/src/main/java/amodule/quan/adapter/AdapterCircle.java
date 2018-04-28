@@ -260,7 +260,7 @@ public class AdapterCircle extends AdapterSimple {
                 view.setVideoClickCallBack(new NormarlContentItemImageVideoView.VideoClickCallBack() {
                     @Override
                     public void videoImageOnClick(int position) {
-                        Log.i("zhangyujian", "position::"+position);//被点击
+                       //YLKLog.i("zhangyujian", "position::"+position);//被点击
                         videoClickCallBack.videoImageOnClick(position);
                     }
                 });

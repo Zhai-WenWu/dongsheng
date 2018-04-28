@@ -322,7 +322,7 @@ public class WebviewManager {
 
     public static void syncXHCookie() {
         Map<String, String> header = ReqInternet.in().getHeader(XHApplication.in());
-        Log.i("tzy", "syncXHCookie: header = " + header);
+       //YLKLog.i("tzy", "syncXHCookie: header = " + header);
         String cookieStr = Uri.decode(header.containsKey("XH-Client-Data") ? header.get("XH-Client-Data") : "");
         Map<String, String> cookieMap = StringManager.getFirstMap(cookieStr);
         CookieManager cookieManager = CookieManager.getInstance();

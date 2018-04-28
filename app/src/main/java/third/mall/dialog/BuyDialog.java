@@ -110,7 +110,7 @@ public class BuyDialog extends SimpleDialog {
         findViewById(R.id.item_commod_add).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("zyj","maxSaleNum::"+maxSaleNum+":::"+saleableNum);
+               //YLKLog.i("zyj","maxSaleNum::"+maxSaleNum+":::"+saleableNum);
                 if(saleableNum>0&&saleableNum<=productNum){
                     XHClick.mapStat(mContext, "a_mail_goods", "立即购买", "加号点击量");
                     Tools.showToast(context,"最多购买"+productNum+"个");

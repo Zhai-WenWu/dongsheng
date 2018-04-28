@@ -302,16 +302,16 @@ public class UploadListControl {
      * @return
      */
     private int startUploadImg(final UploadItemData itemData, final UploadListNetCallBack callback) {
-        Log.i("articleUpload", "startUploadImg() path:" + itemData.getPath());
+       //YLKLog.i("articleUpload", "startUploadImg() path:" + itemData.getPath());
         new UploadImg("", itemData.getPath(), new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object msg) {
                 if (flag >= UtilInternet.REQ_OK_STRING) {
-                    Log.i("articleUpload", "startUploadImg() onSuccess()" + url);
+                   //YLKLog.i("articleUpload", "startUploadImg() onSuccess()" + url);
                     callback.onSuccess((String) msg, itemData.getUniqueId(), null);
                 } else {
                     callback.onFaild((String) msg, itemData.getUniqueId());
-                    Log.i("articleUpload", "startUploadImg() onFaild()" + url);
+                   //YLKLog.i("articleUpload", "startUploadImg() onFaild()" + url);
                 }
             }
         }).uploadImg();
@@ -400,10 +400,10 @@ public class UploadListControl {
 
 
     private void uploadLastInfo(final Class<? extends UploadListPool> poolType, final int draftId) {
-        Log.i("articleUpload", "uploadLastInfo() draftId:" + draftId);
+       //YLKLog.i("articleUpload", "uploadLastInfo() draftId:" + draftId);
         final UploadListPool pool = getPool(poolType.getSimpleName() + draftId);
         if (pool == null) {
-//            Log.i("uploadLastInfo", "数据丢失");
+//           //YLKLog.i("uploadLastInfo", "数据丢失");
 //            Toast.makeText(XHApplication.in(), "上传最后一步，数据丢失", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -414,12 +414,12 @@ public class UploadListControl {
             public boolean onLoop(UploadItemData itemData) {
                 if (itemData.getType() == UploadItemData.TYPE_LAST_TEXT) {
                     if (TextUtils.isEmpty(itemData.getUploadUrl())) {
-                        Log.i("articleUpload", "上传url为空");
+                       //YLKLog.i("articleUpload", "上传url为空");
                         Toast.makeText(XHApplication.in(), "上传最后一步，上传url为空", Toast.LENGTH_SHORT).show();
                         return false;
                     }
                     String path = itemData.getUploadUrl();
-                    Log.i("articleUpload", "uploadLastInfo() getUploadUrl:" + path);
+                   //YLKLog.i("articleUpload", "uploadLastInfo() getUploadUrl:" + path);
                     InternetCallback internetCallback = new InternetCallback() {
                         @Override
                         public void loaded(int flag, String url, Object msg) {
@@ -436,9 +436,9 @@ public class UploadListControl {
                             }
                         }
                     };
-                    Log.i("articleUpload", "uploadLastInfo() params:" + MapToString(itemData.getUploadMsg(), "&", "="));
+                   //YLKLog.i("articleUpload", "uploadLastInfo() params:" + MapToString(itemData.getUploadMsg(), "&", "="));
                     if (path.contains("main7")) {
-                        Log.i("articleUpload", "uploadLastInfo() doEncypt()");
+                       //YLKLog.i("articleUpload", "uploadLastInfo() doEncypt()");
                         ReqEncyptInternet.in().doEncypt(path, itemData.getUploadMsg(), internetCallback);
                     } else {
                         ReqInternet.in().doPost(path, itemData.getUploadMsg(), internetCallback);

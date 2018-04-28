@@ -175,7 +175,7 @@ public abstract class ModuleBaseView extends RelativeLayout{
     }
 
     protected void handlerClickCallback(Map<String,String> map){
-        Log.i(XHConf.log_tag_stat, "handlerClickCallback: ");
+       //YLKLog.i(XHConf.log_tag_stat, "handlerClickCallback: ");
           if(null != mOnClickCallback){
               mOnClickCallback.onClick(map);
           }

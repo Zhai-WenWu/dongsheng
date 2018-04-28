@@ -525,14 +525,14 @@ public class ListDish extends BaseActivity {
             int lenght = AD_INSTERT_INDEX.length;
             for (int j = 0; j < lenght; j++) {
                 if (i == AD_INSTERT_INDEX[j]) {//是要插广告的位置
-                    Log.i("tzy", "handlerAdData: ==");
+                   //YLKLog.i("tzy", "handlerAdData: ==");
                     //数据无不是广告直接插入广告
                     if (!listData.get(i).containsKey("adStyle")
                             || TextUtils.isEmpty(listData.get(i).get("adStyle"))) {
                         //插入广告
                         if (adData.get(j) != null && adData.get(j).size() > 0) {//数据
                             listData.add(i, adData.get(j));
-                            Log.i("tzy", "handlerAdData: add");
+                           //YLKLog.i("tzy", "handlerAdData: add");
                         }
                     }//不进行如何操作。
                 }

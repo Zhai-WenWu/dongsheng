@@ -55,7 +55,7 @@ public class MediaHandleActivity extends BaseActivity implements View.OnClickLis
                         cancelSucessTimer();
                         startPreview();
                     }
-                    Log.i("mediahandler","progress_now::"+progress_now);
+                   //YLKLog.i("mediahandler","progress_now::"+progress_now);
                     break;
             }
         }
@@ -93,7 +93,7 @@ public class MediaHandleActivity extends BaseActivity implements View.OnClickLis
 //            @Override
 //            public void setCallBack(int progress) {
 //                progress_new=progress;
-//                Log.i("mediahandler","progress_new::"+progress_new);
+//               //YLKLog.i("mediahandler","progress_new::"+progress_new);
 //            }
 //
 //            @Override
@@ -105,7 +105,7 @@ public class MediaHandleActivity extends BaseActivity implements View.OnClickLis
 //            @Override
 //            public void callBackSucess(String path,int id,String time,String cover) {
 //                XHClick.mapStat(MediaHandleActivity.this,"a_video_splice","合成成功","");
-//                Log.i("zhangyujian","合成成功:::"+path+":::"+id);
+//               //YLKLog.i("zhangyujian","合成成功:::"+path+":::"+id);
 //                path_finish= path;
 //                id_data=id;
 //                time_key= time;
@@ -162,7 +162,7 @@ public class MediaHandleActivity extends BaseActivity implements View.OnClickLis
     }
     @Override
     protected void onDestroy() {
-        Log.i("mediahandler","onDestroy");
+       //YLKLog.i("mediahandler","onDestroy");
         cancelOriTime();
         cancelSucessTimer();
         super.onDestroy();
@@ -170,7 +170,7 @@ public class MediaHandleActivity extends BaseActivity implements View.OnClickLis
 
     @Override
     public void finish() {
-        Log.i("mediahandler","finish");
+       //YLKLog.i("mediahandler","finish");
         cancelOriTime();
         cancelSucessTimer();
         super.finish();
@@ -206,7 +206,7 @@ public class MediaHandleActivity extends BaseActivity implements View.OnClickLis
      * 开始预览页面
      */
     private void startPreview(){
-        Log.i("zhangyujian","合成成功:::"+path_finish+":::"+id_data+"::::"+time_key+"::::");
+       //YLKLog.i("zhangyujian","合成成功:::"+path_finish+":::"+id_data+"::::"+time_key+"::::");
 //        if(!TextUtils.isEmpty(path_finish)&&id_data>-1) {
 //            Intent intent = new Intent(MediaHandleActivity.this, MediaPreviewActivity.class);
 //            intent.putExtra("path", path_finish);

@@ -311,7 +311,7 @@ public class CircleMainFragment extends Fragment {
                                 if (value <= Max && value >= Min) {
                                     ((NormalContentView) itemView).startVideoView();
                                     currentPlayPosition = mLinearLayoutManager.getPosition(itemView);
-                                    Log.i("zhangyujian", "自动数据的位置:::" + ((NormalContentView) itemView).getPositionNow());
+                                   //YLKLog.i("zhangyujian", "自动数据的位置:::" + ((NormalContentView) itemView).getPositionNow());
                                     setVideoLayout(itemView, ((NormalContentView) itemView).getPositionNow());
                                 } else {
                                     count++;

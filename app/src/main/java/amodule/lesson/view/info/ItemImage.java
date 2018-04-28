@@ -97,7 +97,7 @@ public class ItemImage extends LinearLayout implements IBindMap, IBindExtraArray
             mType = data.get("end");
             mMoreText.setText(data.get("text2"));
             mMoreLayout.setVisibility(VISIBLE);
-            Log.i("tzy", "showMoreLayout: " + mType);
+           //YLKLog.i("tzy", "showMoreLayout: " + mType);
             if(mOnShowMoreCallback != null && !"2".equals(data.get("isShow"))){
                 data.put("isShow","2");
                 mOnShowMoreCallback.onShow(mType);
@@ -129,7 +129,7 @@ public class ItemImage extends LinearLayout implements IBindMap, IBindExtraArray
 
     private void updateImageHieght(String imageUrl) {
         if(imageUrl.contains("?")){
-            Log.i("tzy", "updateImageHieght: " + imageUrl);
+           //YLKLog.i("tzy", "updateImageHieght: " + imageUrl);
             String[] urls = imageUrl.split("\\?");
             if(urls.length == 2
                     && !TextUtils.isEmpty(urls[1])
@@ -138,12 +138,12 @@ public class ItemImage extends LinearLayout implements IBindMap, IBindExtraArray
                 if(sizeValue.length == 2){
                     int width = Tools.parseIntOfThrow(sizeValue[0],0);
                     int height = Tools.parseIntOfThrow(sizeValue[1],0);
-                    Log.i("tzy", "updateImageHieght: image w="+width+" , h="+height);
+                   //YLKLog.i("tzy", "updateImageHieght: image w="+width+" , h="+height);
                     if(width != 0 && height != 0){
                         ViewGroup.LayoutParams layoutParams = mImageView.getLayoutParams();
                         layoutParams.width = mImageWidth;
                         layoutParams.height = mImageWidth * height/ width;
-                        Log.i("tzy", "updateImageHieght: layoutParams w="+layoutParams.width+" , h="+layoutParams.height);
+                       //YLKLog.i("tzy", "updateImageHieght: layoutParams w="+layoutParams.width+" , h="+layoutParams.height);
                         mImageView.setLayoutParams(layoutParams);
                     }
                 }

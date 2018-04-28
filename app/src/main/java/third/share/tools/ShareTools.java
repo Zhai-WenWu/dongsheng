@@ -483,7 +483,7 @@ public class ShareTools {
     public void requestAuthorize(String platform) {
         Platform pf = ShareSDK.getPlatform(platform);
         pf.SSOSetting(false);
-        Log.i("SLL", "onComplete111");
+       //YLKLog.i("SLL", "onComplete111");
         pf.setPlatformActionListener(new PlatformActionListener() {
             @Override
             public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
@@ -502,7 +502,7 @@ public class ShareTools {
 
             @Override
             public void onError(Platform platform, int i, Throwable throwable) {
-                Log.i("yule", "onError: " + throwable.toString());
+               //YLKLog.i("yule", "onError: " + throwable.toString());
                 Tools.showToast(XHApplication.in(),"onError: " + throwable.toString());
                 handleCallback(Option.AUTHORIZE.getType(), ERROR, platform, null);
             }

@@ -304,7 +304,7 @@ public class MainCircle extends MainBaseActivity implements View.OnClickListener
 
     @Override
     public void setMessageTip(int tipCournt) {
-//        Log.i("tzy", "MainCircle::setMessageTip: " + tipCournt);
+//       //YLKLog.i("tzy", "MainCircle::setMessageTip: " + tipCournt);
         if(mMessageTipIcon != null){
             mMessageTipIcon.setMessage(tipCournt);
         }

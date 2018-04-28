@@ -258,7 +258,7 @@ public class RangeSeekBar<T extends Number> extends ImageView {
      * @return The currently selected min value.
      */
     public T getSelectedMinValue() {
-        Log.i("zhangyujian","数量：：："+normalizedMinValue);
+       //YLKLog.i("zhangyujian","数量：：："+normalizedMinValue);
         return normalizedToValue(normalizedMinValue);
     }
 
@@ -350,7 +350,7 @@ public class RangeSeekBar<T extends Number> extends ImageView {
                     nowState=true;
                     isTouchState = false;
                     if (pressedThumb != null) {
-                        Log.i("zhangyujian","mIsDragging："+mIsDragging);
+                       //YLKLog.i("zhangyujian","mIsDragging："+mIsDragging);
                         if (mIsDragging) {
                             trackTouchEvent(event);
                         } else {
@@ -381,7 +381,7 @@ public class RangeSeekBar<T extends Number> extends ImageView {
                 if(getState()&&nowState) {
                     setX(event);
                     isTouchState = true;
-                    Log.i("zhangyujian","mIsDragging："+mIsDragging);
+                   //YLKLog.i("zhangyujian","mIsDragging："+mIsDragging);
                     if (mIsDragging) {
                         trackTouchEvent(event);
                         onStopTrackingTouch();
@@ -428,8 +428,8 @@ public class RangeSeekBar<T extends Number> extends ImageView {
 //                }else return true;
                 break;
             case MotionEvent.ACTION_CANCEL:
-//                Log.i("zhangyujian","ACTION_CANCEL"+getState());
-//                Log.i("zhangyujian","mIsDragging："+mIsDragging);
+//               //YLKLog.i("zhangyujian","ACTION_CANCEL"+getState());
+//               //YLKLog.i("zhangyujian","mIsDragging："+mIsDragging);
 //                if(getState()&&nowState) {
 //                    setX(event);
 //                    isTouchState = true;
@@ -530,7 +530,7 @@ public class RangeSeekBar<T extends Number> extends ImageView {
     @Override
     protected synchronized void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        Log.i("zhangyujian","onDraw");
+       //YLKLog.i("zhangyujian","onDraw");
 //        if(!getState()){
 //            return;
 //        }
@@ -558,7 +558,7 @@ public class RangeSeekBar<T extends Number> extends ImageView {
         mRect.right = getWidth() - padding;
         paint.setColor( Color.parseColor("#666666"));
         canvas.drawRect(mRect, paint);
-        Log.i("zhangyujian","33::"+getSelectedMinValue());
+       //YLKLog.i("zhangyujian","33::"+getSelectedMinValue());
         boolean selectedValuesAreDefault = (getSelectedMinValue().equals(getAbsoluteMinValue()) &&
                 getSelectedMaxValue().equals(getAbsoluteMaxValue()));
 
@@ -595,7 +595,7 @@ public class RangeSeekBar<T extends Number> extends ImageView {
             // give text a bit more space here so it doesn't get cut off
             int offset =  dpToPx(getContext(), TEXT_LATERAL_PADDING_IN_DP);
             DecimalFormat    df   = new DecimalFormat("######0.0");
-            Log.i("zhangyujian","44::"+getSelectedMinValue());
+           //YLKLog.i("zhangyujian","44::"+getSelectedMinValue());
             String minText = String.valueOf(df.format(getSelectedMinValue()));
             String maxText = String.valueOf(df.format(getSelectedMaxValue()));
             float minTextWidth = paint.measureText(minText) + offset;
@@ -902,12 +902,12 @@ public class RangeSeekBar<T extends Number> extends ImageView {
         if(Float.parseFloat(maxText)-Float.parseFloat(minText)>=2) {
 //            minValue=normalizedMinValue;
 //            maxValue=normalizedMaxValue;
-            Log.i("zhangyujian","大："+(Float.parseFloat(maxText)-Float.parseFloat(minText)));
+           //YLKLog.i("zhangyujian","大："+(Float.parseFloat(maxText)-Float.parseFloat(minText)));
             return true;
         }else {
 //            normalizedMinValue=minValue;
 //            normalizedMaxValue=maxValue;
-            Log.i("zhangyujian","小："+(Float.parseFloat(maxText)-Float.parseFloat(minText)));
+           //YLKLog.i("zhangyujian","小："+(Float.parseFloat(maxText)-Float.parseFloat(minText)));
             return false;
         }
     }

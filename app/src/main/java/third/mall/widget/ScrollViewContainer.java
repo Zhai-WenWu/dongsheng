@@ -292,9 +292,9 @@ public class ScrollViewContainer extends RelativeLayout {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_UP:
                     if (sv.getChildAt(0)  != null && sv.getChildAt(0) .getMeasuredHeight() <= sv.getScrollY() + sv.getHeight()) {
-                        Log.i("wyl","--到底部了");
+                       //YLKLog.i("wyl","--到底部了");
                     } else if (sv.getScrollY() == 0) {
-                        Log.i("wyl","-到顶部了");
+                       //YLKLog.i("wyl","-到顶部了");
                     }
                     break;
             }
@@ -311,9 +311,9 @@ public class ScrollViewContainer extends RelativeLayout {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_UP:
                     if (sv.getChildAt(0)  != null && sv.getChildAt(0) .getMeasuredHeight() <= sv.getScrollY() + sv.getHeight()) {
-                        Log.i("wyl","--到底部了");
+                       //YLKLog.i("wyl","--到底部了");
                     } else if (sv.getScrollY() == 0) {
-                        Log.i("wyl","-到顶部了");
+                       //YLKLog.i("wyl","-到顶部了");
                     }
                     break;
             }

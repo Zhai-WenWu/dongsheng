@@ -90,7 +90,7 @@ public class ClingPresenter {
         mUpnpServiceConnection = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName className, IBinder service) {
-                Log.i(TAG, "mUpnpServiceConnection onServiceConnected");
+               //YLKLog.i(TAG, "mUpnpServiceConnection onServiceConnected");
                 mServiceConnecting = false;
                 mHasConnected = true;
                 mConnectSucc = true;
@@ -107,7 +107,7 @@ public class ClingPresenter {
                         return;
                     switch (action) {
                         case Intents.ACTION_PLAYING:
-                            Log.i(TAG, "action_play");
+                           //YLKLog.i(TAG, "action_play");
                             Message msg = new Message();
                             Map<String, String> map = new HashMap<>();
                             map.put("url", mPlayUrl);
@@ -116,7 +116,7 @@ public class ClingPresenter {
                             sendMessage(msg);
                             break;
                         case Intents.ACTION_PAUSED_PLAYBACK:
-                            Log.i(TAG, "action_pause");
+                           //YLKLog.i(TAG, "action_pause");
                             Message msg2 = new Message();
                             Map<String, String> map2 = new HashMap<>();
                             map2.put("url", mPlayUrl);
@@ -125,7 +125,7 @@ public class ClingPresenter {
                             sendMessage(msg2);
                             break;
                         case Intents.ACTION_STOPPED:
-                            Log.i(TAG, "action_stop");
+                           //YLKLog.i(TAG, "action_stop");
                             Message msg3 = new Message();
                             Map<String, String> map3 = new HashMap<>();
                             map3.put("url", mPlayUrl);
@@ -134,7 +134,7 @@ public class ClingPresenter {
                             sendMessage(msg3);
                             break;
                         case Intents.ACTION_TRANSITIONING:
-                            Log.i(TAG, "action_transtioning");
+                           //YLKLog.i(TAG, "action_transtioning");
                             Message msg4 = new Message();
                             Map<String, String> map4 = new HashMap<>();
                             map4.put("url", mPlayUrl);
@@ -156,7 +156,7 @@ public class ClingPresenter {
 
             @Override
             public void onServiceDisconnected(ComponentName className) {
-                Log.i(TAG, "mUpnpServiceConnection onServiceDisconnected");
+               //YLKLog.i(TAG, "mUpnpServiceConnection onServiceDisconnected");
                 mServiceConnecting = false;
                 mHasConnected = true;
                 mConnectSucc = false;
@@ -177,7 +177,7 @@ public class ClingPresenter {
         if (mRootContext == null)
             mRootContext = context;
         mCurrContext = context;
-        Log.i(TAG, "onCreate_add_run = " + runnable);
+       //YLKLog.i(TAG, "onCreate_add_run = " + runnable);
         mRunsMap.put(context, runnable);
         addListener();
         bindServices();
@@ -207,7 +207,7 @@ public class ClingPresenter {
                 Message msg = new Message();
                 msg.obj = device;
                 msg.what = action_add_device;
-                Log.i(TAG, "action_add_device");
+               //YLKLog.i(TAG, "action_add_device");
                 sendMessage(msg);
             }
 
@@ -216,7 +216,7 @@ public class ClingPresenter {
                 Message msg = new Message();
                 msg.obj = device;
                 msg.what = action_remove_device;
-                Log.i(TAG, "action_remove_device");
+               //YLKLog.i(TAG, "action_remove_device");
                 sendMessage(msg);
             }
         });
@@ -259,7 +259,7 @@ public class ClingPresenter {
 
                 @Override
                 public void success(IResponse response) {
-                    Log.i(TAG, "play success");
+                   //YLKLog.i(TAG, "play success");
                     Map<String, String> map = new HashMap<>();
                     map.put("url", url);
                     Message msg = new Message();
@@ -272,7 +272,7 @@ public class ClingPresenter {
 
                 @Override
                 public void fail(IResponse response) {
-                    Log.i(TAG, "play fail");
+                   //YLKLog.i(TAG, "play fail");
                     Map<String, String> map = new HashMap<>();
                     map.put("url", url);
                     Message msg = new Message();
@@ -285,7 +285,7 @@ public class ClingPresenter {
             mClingPlayControl.play(new ControlCallback() {
                 @Override
                 public void success(IResponse response) {
-                    Log.i(TAG, "play success");
+                   //YLKLog.i(TAG, "play success");
                     Map<String, String> map = new HashMap<>();
                     map.put("url", url);
                     Message msg = new Message();
@@ -296,7 +296,7 @@ public class ClingPresenter {
 
                 @Override
                 public void fail(IResponse response) {
-                    Log.i(TAG, "play fail");
+                   //YLKLog.i(TAG, "play fail");
                     Map<String, String> map = new HashMap<>();
                     map.put("url", url);
                     Message msg = new Message();
@@ -315,12 +315,12 @@ public class ClingPresenter {
         mClingPlayControl.pause(new ControlCallback() {
             @Override
             public void success(IResponse response) {
-                Log.i(TAG, "pause success");
+               //YLKLog.i(TAG, "pause success");
             }
 
             @Override
             public void fail(IResponse response) {
-                Log.i(TAG, "pause fail");
+               //YLKLog.i(TAG, "pause fail");
             }
         });
     }
@@ -332,25 +332,25 @@ public class ClingPresenter {
         mClingPlayControl.stop(new ControlCallback() {
             @Override
             public void success(IResponse response) {
-                Log.i(TAG, "stop success");
+               //YLKLog.i(TAG, "stop success");
             }
 
             @Override
             public void fail(IResponse response) {
-                Log.i(TAG, "stop fail");
+               //YLKLog.i(TAG, "stop fail");
             }
         });
     }
 
     public void onDestroy(Context context) {
         mRunsMap.remove(context);
-        Log.i(TAG, "onDestroy_removeRun context = " + context);
+       //YLKLog.i(TAG, "onDestroy_removeRun context = " + context);
         if (context != mRootContext) {
-            Log.i(TAG, "onDestroy_removeUrl context = " + context);
+           //YLKLog.i(TAG, "onDestroy_removeUrl context = " + context);
             mDataMap.remove(context);
             return;
         }
-        Log.i(TAG, "onDestroy");
+       //YLKLog.i(TAG, "onDestroy");
         // Unbind UPnP service
         if (mServiceBind)
             mRootContext.unbindService(mUpnpServiceConnection);

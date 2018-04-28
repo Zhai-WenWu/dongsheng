@@ -219,13 +219,13 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 preStr = s.toString();
-                Log.i("editArticle","beforeTextChanged() preStr:" + preStr + "   start:" + start + "   count:" + count + "    after:" + after);
+               //YLKLog.i("editArticle","beforeTextChanged() preStr:" + preStr + "   start:" + start + "   count:" + count + "    after:" + after);
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 editTitle.setTextSize(Tools.getDimenSp(EditParentActivity.this, R.dimen.sp_24));
-                Log.i("editArticle","onTextChanged() s:" + s + "    before:" + before + "   start:" + start + "   count:" + count);
+               //YLKLog.i("editArticle","onTextChanged() s:" + s + "    before:" + before + "   start:" + start + "   count:" + count);
             }
 
             @Override
@@ -588,7 +588,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
         boolean isHasText = mixLayout.hasText();
         boolean isHasImg = mixLayout.hasImage();
         boolean isHasVideo = mixLayout.hasVideo();
-        Log.i("articleUpload", "checkData() isHasText:" + isHasText + "  isHasImg=" + isHasImg + "   isHasVideo:" + isHasVideo);
+       //YLKLog.i("articleUpload", "checkData() isHasText:" + isHasText + "  isHasImg=" + isHasImg + "   isHasVideo:" + isHasVideo);
         if (!isHasText && !isHasImg && !isHasVideo) {
             return "内容不能为空";
         }
@@ -616,7 +616,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
 
     private void timingSave() {
         if(timer != null)return;
-        Log.i("timeSave","timingSave()");
+       //YLKLog.i("timeSave","timingSave()");
         timer = new Timer();
         final Handler handler = new Handler(Looper.getMainLooper());
         mTimerTask = new TimerTask() {
@@ -640,11 +640,11 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
         }
         uploadArticleData.setTitle(String.valueOf(editTitle.getText()));
         String content = mixLayout.getXHServiceData();
-        Log.i("articleUpload", "saveDraft() content:" + content);
+       //YLKLog.i("articleUpload", "saveDraft() content:" + content);
         uploadArticleData.setContent(content);
         uploadArticleData.setVideoArray(mixLayout.getVideoArrayMap());
         uploadArticleData.setImgArray(mixLayout.getImageMapArray());
-        Log.i("articleUpload", "saveDraft() imgs:" + uploadArticleData.getImgs());
+       //YLKLog.i("articleUpload", "saveDraft() imgs:" + uploadArticleData.getImgs());
         uploadArticleData.setUploadType(UploadDishData.UPLOAD_DRAF);
 
         if (uploadArticleData.getId() > 0) {
@@ -654,7 +654,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
             if (id > 0)
                 uploadArticleData.setId(id);
         }
-        Log.i("articleUpload", "saveDraft() 保存后id:" + id);
+       //YLKLog.i("articleUpload", "saveDraft() 保存后id:" + id);
         return id;
     }
 
@@ -697,12 +697,12 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
             timer.cancel();
             timer.purge();
             timer = null;
-            Log.i("timeSave","timer.cancel()");
+           //YLKLog.i("timeSave","timer.cancel()");
         }
         if(mTimerTask != null){
             mTimerTask.cancel();
             mTimerTask = null;
-            Log.i("timeSave","mTimerTask.cancel()");
+           //YLKLog.i("timeSave","mTimerTask.cancel()");
         }
         if (isKeyboradShow)
             ToolsDevice.keyboardControl(false, this, editTitle);

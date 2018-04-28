@@ -59,7 +59,7 @@ public class StepVideoPosCompute {
         if (list == null || list.size() < 1)
             return;
 
-        Log.i("StepVideoPosCompute","startVideoTime:"+startVideoTime);
+       //YLKLog.i("StepVideoPosCompute","startVideoTime:"+startVideoTime);
         float titleDur = getTitleDur();
         float dishDur = getDishDur();
         Float stepStarTime = startVideoTime + titleDur + dishDur;
@@ -75,13 +75,13 @@ public class StepVideoPosCompute {
             float stepDur = list.get(i);
             ArrayList<Float> pointList = new ArrayList<>();
             pointList.add(stepStarTime);
-            Log.i("StepVideoPosCompute","stepPosList:"+stepStarTime);
+           //YLKLog.i("StepVideoPosCompute","stepPosList:"+stepStarTime);
             pointList.add(stepStarTime + stepDur);
             stepStarTime = stepStarTime + stepDur;
             stepPosList.add(pointList);
         }
         posMap.put("stepPos",stepPosList);
-        Log.i("StepVideoPosCompute","lastPos:"+stepStarTime);
+       //YLKLog.i("StepVideoPosCompute","lastPos:"+stepStarTime);
     }
 
     private float getStartVideoTime() {
@@ -97,7 +97,7 @@ public class StepVideoPosCompute {
         }else{
             titleDur = 3f;
         }
-        Log.i("StepVideoPosCompute","titleDur:"+titleDur);
+       //YLKLog.i("StepVideoPosCompute","titleDur:"+titleDur);
         return titleDur;
     }
 
@@ -110,7 +110,7 @@ public class StepVideoPosCompute {
         } else {
             stuffDur = 5f;
         }
-        Log.i("StepVideoPosCompute","stuffDur:"+stuffDur);
+       //YLKLog.i("StepVideoPosCompute","stuffDur:"+stuffDur);
         return stuffDur;
     }
 
@@ -146,9 +146,9 @@ public class StepVideoPosCompute {
                         }
                         if (!Tools.isFileExists(path)) {
                             Toast.makeText(Main.allMain, "获取不到步骤视频大小", Toast.LENGTH_SHORT).show();
-                            Log.i("菜谱视频预览", "cutPath: " + path + ", " + false);
+                           //YLKLog.i("菜谱视频预览", "cutPath: " + path + ", " + false);
                         } else {
-                            Log.i("菜谱视频预览", "cutPath: " + path + ", " + true);
+                           //YLKLog.i("菜谱视频预览", "cutPath: " + path + ", " + true);
                             ArrayList<Map<String, String>> videoList = StringManager.getListMapByJson(videoInfo);
                             if (videoList != null && videoList.size() > 0) {
                                 Map<String, String> videoMap = videoList.get(0);

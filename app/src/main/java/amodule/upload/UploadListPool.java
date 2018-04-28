@@ -102,7 +102,7 @@ public class UploadListPool {
             @Override
             public boolean onLoop(UploadItemData itemData) {
                 if (itemData.getState() != UploadItemData.STATE_SUCCESS) {
-                    Log.i("articleUpload","allStartOrStop " + itemData.getPos() + "   " + itemData.getPath());
+                   //YLKLog.i("articleUpload","allStartOrStop " + itemData.getPos() + "   " + itemData.getPath());
                     startOrStop(itemData.getPos(), itemData.getIndex(), operation);
                 }
                 return false;
@@ -144,8 +144,8 @@ public class UploadListPool {
     public void startOrStop(int pos, int index, int operation) {
         List<UploadItemData> itemDatas = uploadPoolData.getUploadItemDataList(pos);
         UploadItemData itemData = itemDatas.get(index);
-        Log.i("articleUpload","startOrStop() pos:" + pos + "   path:" + itemData.getPath());
-        Log.i("articleUpload","startOrStop() operation:" + operation + "   itemData.getAdType():" + itemData.getType());
+       //YLKLog.i("articleUpload","startOrStop() pos:" + pos + "   path:" + itemData.getPath());
+       //YLKLog.i("articleUpload","startOrStop() operation:" + operation + "   itemData.getAdType():" + itemData.getType());
         if (operation == TYPE_START) {
             if (itemData.getType() == UploadItemData.TYPE_LAST_TEXT) {
                 uploadLast();

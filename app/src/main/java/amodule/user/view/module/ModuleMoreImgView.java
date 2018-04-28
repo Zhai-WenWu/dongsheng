@@ -118,7 +118,7 @@ public class ModuleMoreImgView extends ModuleBaseView{
      * 对图片数量处理
      */
     private void setImageView() {
-        Log.i("zhangyujian", "setImageView");
+       //YLKLog.i("zhangyujian", "setImageView");
         ImageViewVideo quan_item_model_video = (ImageViewVideo)findViewById(R.id.quan_item_model_video);
         ImageView quan_iv_img_1 = (ImageView)findViewById(R.id.quan_iv_img_1);
         ImageView quan_iv_img_2 = (ImageView)findViewById(R.id.quan_iv_img_2);

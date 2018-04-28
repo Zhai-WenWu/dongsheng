@@ -44,7 +44,7 @@ public class RenderingControlSubscriptionCallback extends BaseSubscriptionCallba
         }
 
         String lastChangeValue = values.get("LastChange").toString();
-        Log.i(TAG, "LastChange:" + lastChangeValue);
+       //YLKLog.i(TAG, "LastChange:" + lastChangeValue);
         LastChange lastChange;
         try {
             lastChange = new LastChange(new RenderingControlLastChangeParser(), lastChangeValue);
@@ -54,7 +54,7 @@ public class RenderingControlSubscriptionCallback extends BaseSubscriptionCallba
 
                 volume = lastChange.getEventedValue(0, RenderingControlVariable.Volume.class).getValue().getVolume();
 
-                Log.i(TAG, "onVolumeChange volume: " + volume);
+               //YLKLog.i(TAG, "onVolumeChange volume: " + volume);
                 Intent intent = new Intent(Intents.ACTION_VOLUME_CALLBACK);
                 intent.putExtra(Intents.EXTRA_VOLUME, volume);
                 mContext.sendBroadcast(intent);

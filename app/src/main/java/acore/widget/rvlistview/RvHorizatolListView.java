@@ -64,8 +64,8 @@ public class RvHorizatolListView extends RvListView {
             case MotionEvent.ACTION_MOVE:
                 dealtX += Math.abs(x - lastX);
                 dealtY += Math.abs(y - lastY);
-//                Log.i("dispatchTouchEvent", "dealtX:=" + dealtX);
-//                Log.i("dispatchTouchEvent", "dealtY:=" + dealtY);
+//               //YLKLog.i("dispatchTouchEvent", "dealtX:=" + dealtX);
+//               //YLKLog.i("dispatchTouchEvent", "dealtY:=" + dealtY);
                 // 这里是够拦截的判断依据是左右滑动，读者可根据自己的逻辑进行是否拦截
                 if (dealtX >= dealtY) {
                     getParent().requestDisallowInterceptTouchEvent(true);

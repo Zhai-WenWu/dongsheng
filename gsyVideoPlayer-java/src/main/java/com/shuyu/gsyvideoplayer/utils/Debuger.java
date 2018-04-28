@@ -31,7 +31,7 @@ public class Debuger {
         if (DEBUG_TAG && log != null) {
             if (!TextUtils.isEmpty(log))
             {
-                Log.i(tag, log);
+               //YLKLog.i(tag, log);
             }
 
         }
@@ -59,7 +59,7 @@ public class Debuger {
         if (DEBUG_TAG) {
             if (!TextUtils.isEmpty(log))
             {
-                Log.i(LOG_TAG, log);
+               //YLKLog.i(LOG_TAG, log);
             }
         }
     }
@@ -68,7 +68,7 @@ public class Debuger {
         if (DEBUG_TAG) {
             if (!TextUtils.isEmpty(log))
             {
-                Log.i(Tag, log);
+               //YLKLog.i(Tag, log);
             }
         }
     }
@@ -77,7 +77,7 @@ public class Debuger {
         if (DEBUG_TAG) {
             if (!TextUtils.isEmpty(log))
             {
-                Log.i(LOG_TAG, log);
+               //YLKLog.i(LOG_TAG, log);
             }
             e.printStackTrace();
         }

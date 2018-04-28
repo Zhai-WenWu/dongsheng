@@ -289,9 +289,9 @@ public class VideoImageView extends RelativeLayout{
             load_progress.setVisibility(View.GONE);
             image_bg.setVisibility(View.GONE);
             image_btn_play.setVisibility(View.GONE);
-            Log.i("zhangyujian","isShowMedia:::"+isShowMedia);
+           //YLKLog.i("zhangyujian","isShowMedia:::"+isShowMedia);
             if(!isShowMedia){
-                Log.i("zhangyujian","isAutoPaly:::"+isAutoPaly);
+               //YLKLog.i("zhangyujian","isAutoPaly:::"+isAutoPaly);
                 if(isAutoPaly){//当前wifi
                     tipLayout.setVisibility(View.GONE);
                 }else{
