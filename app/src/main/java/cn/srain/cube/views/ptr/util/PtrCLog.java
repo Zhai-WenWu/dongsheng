@@ -212,7 +212,7 @@ public class PtrCLog {
         if (sLevel > LEVEL_ERROR) {
             return;
         }
-        Log.e(tag, msg);
+        Log.i(tag, msg);
     }
 
     /**
@@ -229,7 +229,7 @@ public class PtrCLog {
         if (args.length > 0) {
             msg = String.format(msg, args);
         }
-        Log.e(tag, msg);
+        Log.i(tag, msg);
     }
 
     /**
@@ -243,7 +243,7 @@ public class PtrCLog {
         if (sLevel > LEVEL_ERROR) {
             return;
         }
-        Log.e(tag, msg, throwable);
+        Log.i(tag, msg, throwable);
     }
 
     /**

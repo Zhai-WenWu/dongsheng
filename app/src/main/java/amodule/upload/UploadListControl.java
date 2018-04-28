@@ -403,7 +403,7 @@ public class UploadListControl {
         Log.i("articleUpload", "uploadLastInfo() draftId:" + draftId);
         final UploadListPool pool = getPool(poolType.getSimpleName() + draftId);
         if (pool == null) {
-//            Log.e("uploadLastInfo", "数据丢失");
+//            Log.i("uploadLastInfo", "数据丢失");
 //            Toast.makeText(XHApplication.in(), "上传最后一步，数据丢失", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -414,7 +414,7 @@ public class UploadListControl {
             public boolean onLoop(UploadItemData itemData) {
                 if (itemData.getType() == UploadItemData.TYPE_LAST_TEXT) {
                     if (TextUtils.isEmpty(itemData.getUploadUrl())) {
-                        Log.e("articleUpload", "上传url为空");
+                        Log.i("articleUpload", "上传url为空");
                         Toast.makeText(XHApplication.in(), "上传最后一步，上传url为空", Toast.LENGTH_SHORT).show();
                         return false;
                     }

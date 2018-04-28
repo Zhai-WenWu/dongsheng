@@ -28,7 +28,7 @@ public abstract class BaseSubscriptionCallback extends SubscriptionCallback {
 
     @Override
     protected void failed(GENASubscription subscription, UpnpResponse responseStatus, Exception exception, String defaultMsg) {
-        Log.e(TAG, "AVTransportSubscriptionCallback failed.");
+        Log.i(TAG, "AVTransportSubscriptionCallback failed.");
     }
 
     @Override
@@ -42,6 +42,6 @@ public abstract class BaseSubscriptionCallback extends SubscriptionCallback {
     @Override
     protected void ended(GENASubscription subscription, CancelReason reason, UpnpResponse responseStatus) {
         mContext = null;
-        Log.e(TAG, "ended");
+        Log.i(TAG, "ended");
     }
 }

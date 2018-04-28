@@ -194,7 +194,7 @@ public class ClingPlayControl implements IPlayControl {
         }
 
         String time = Utils.getStringTime(pos);
-        Log.e(TAG, "seek->pos: " + pos + ", time: " + time);
+        Log.i(TAG, "seek->pos: " + pos + ", time: " + time);
         controlPointImpl.execute(new Seek(avtService, time) {
 
             @Override
@@ -412,7 +412,7 @@ public class ClingPlayControl implements IPlayControl {
         VideoItem videoItem = new VideoItem(id, "0", name, creator, res);
 
         String metadata = createItemMetadata(videoItem);
-        Log.e(TAG, "metadata: " + metadata);
+        Log.i(TAG, "metadata: " + metadata);
         return metadata;
     }
 
@@ -452,7 +452,7 @@ public class ClingPlayControl implements IPlayControl {
                 protocolinfo = String.format("protocolInfo=\"%s:%s:%s:%s\"", pi.getProtocol(), pi.getNetwork(), pi.getContentFormatMimeType(), pi
                         .getAdditionalInfo());
             }
-            Log.e(TAG, "protocolinfo: " + protocolinfo);
+            Log.i(TAG, "protocolinfo: " + protocolinfo);
 
             // resolution, extra info, not adding yet
             String resolution = "";

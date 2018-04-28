@@ -483,7 +483,7 @@ public class ShareTools {
     public void requestAuthorize(String platform) {
         Platform pf = ShareSDK.getPlatform(platform);
         pf.SSOSetting(false);
-        Log.e("SLL", "onComplete111");
+        Log.i("SLL", "onComplete111");
         pf.setPlatformActionListener(new PlatformActionListener() {
             @Override
             public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {

@@ -413,7 +413,7 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
                             try {
                                 xhBackIdsDataCallBack.callBack(isRefresh, AdData);
                             } catch (Exception e) {
-                                Log.e("tzy", "Exception : " + e.getMessage());
+                                Log.i("tzy", "Exception : " + e.getMessage());
                             }
                         }
                     }
@@ -579,7 +579,7 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
             }
             return jsonObject;
         } catch (Exception e) {
-            Log.e("tzy", "Exception : " + e.getMessage());
+            Log.i("tzy", "Exception : " + e.getMessage());
         }
         return null;
     }

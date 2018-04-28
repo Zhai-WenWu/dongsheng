@@ -245,7 +245,7 @@ public class ArticleUploadListPool extends UploadListPool {
                         if (itemData.getUniqueId().equals(uniquId)) {
                             if (flag) {
                                 if (jsonObject != null)
-                                    Log.e("itemData ", responseStr+","+itemData.getType() + "," + jsonObject.optString("hash"));
+                                    Log.i("itemData ", responseStr+","+itemData.getType() + "," + jsonObject.optString("hash"));
 
                                 if (UploadItemData.TYPE_VIDEO == itemData.getType()){
                                     //处理url,has值丢失
@@ -351,7 +351,7 @@ public class ArticleUploadListPool extends UploadListPool {
     private UploadArticleData modifyUploadArticleData(final boolean isReset) {
         final UploadArticleData uploadDishData = uploadPoolData.getUploadArticleData();
         if (uploadDishData == null){
-            Log.e("articleUpload","UploadDishData 空");
+            Log.i("articleUpload","UploadDishData 空");
             return null;
         }
 
@@ -475,8 +475,8 @@ public class ArticleUploadListPool extends UploadListPool {
                         String videoImage = map.get("image");
                         String imageUrl = map.get("imageUrl");
 
-                        Log.e("articleUpload", "文章上传 videoPath: " + videoPath + "  videoUrl:" + videoUrl);
-                        Log.e("articleUpload", "文章上传 videoImage: " + videoImage + "  imageUrl:" + imageUrl);
+                        Log.i("articleUpload", "文章上传 videoPath: " + videoPath + "  videoUrl:" + videoUrl);
+                        Log.i("articleUpload", "文章上传 videoImage: " + videoImage + "  imageUrl:" + imageUrl);
                         if (videoPath.indexOf("http") != 0 && !Tools.isFileExists(videoPath)) {
                             Toast.makeText(Main.allMain, "获取不到文章视频路径 " + i, Toast.LENGTH_SHORT).show();
                             return null;
@@ -597,7 +597,7 @@ public class ArticleUploadListPool extends UploadListPool {
 //            String recMsg = uploadPoolData.getTailDataList().get(0).getRecMsg();
 //            String clickUrl = StringManager.wwwUrl + "caipu/" + recMsg + ".html";
 //
-//            Log.e("VideoDishUploadListPool", "imgUrl  "+imgUrl);
+//            Log.i("VideoDishUploadListPool", "imgUrl  "+imgUrl);
 //            UploadSuccessPopWindowDialog dialog = new UploadSuccessPopWindowDialog(Main.allMain,
 //                    uploadPoolData.getTitle(), imgUrl, new UploadSuccessPopWindowDialog.UploadSuccessDialogCallback() {
 //                @Override

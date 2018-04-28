@@ -44,7 +44,7 @@ public class HomeSearch extends BaseActivity {
             searchKey = bundle.getString("s");
         }
 
-        Log.e("渠道号"," "+ ChannelUtil.getChannel(this));
+        Log.i("渠道号"," "+ ChannelUtil.getChannel(this));
     }
 
     private void initView() {

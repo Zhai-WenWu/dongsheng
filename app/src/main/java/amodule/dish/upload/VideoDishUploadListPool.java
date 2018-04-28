@@ -154,7 +154,7 @@ public class VideoDishUploadListPool extends UploadListPool {
                         if (itemData.getUniqueId().equals(uniquId)) {
                             if (flag) {
                                 if (jsonObject != null)
-                                    Log.e("itemData ", responseStr+","+itemData.getType() + "," + jsonObject.optString("hash"));
+                                    Log.i("itemData ", responseStr+","+itemData.getType() + "," + jsonObject.optString("hash"));
 
                                 if (UploadItemData.TYPE_VIDEO == itemData.getType()){
                                     //处理url,has值丢失
@@ -275,7 +275,7 @@ public class VideoDishUploadListPool extends UploadListPool {
             String recMsg = uploadPoolData.getTailDataList().get(0).getRecMsg();
             String clickUrl = StringManager.wwwUrl + "caipu/" + recMsg + ".html";
 
-            Log.e("VideoDishUploadListPool", "imgUrl  "+imgUrl);
+            Log.i("VideoDishUploadListPool", "imgUrl  "+imgUrl);
             UploadSuccessPopWindowDialog dialog = new UploadSuccessPopWindowDialog(Main.allMain,
                     uploadPoolData.getTitle(), imgUrl, new UploadSuccessPopWindowDialog.UploadSuccessDialogCallback() {
                 @Override
@@ -374,7 +374,7 @@ public class VideoDishUploadListPool extends UploadListPool {
 
         final UploadDishData uploadDishData = uploadPoolData.getUploadDishData();
         if (uploadDishData == null){
-            Log.e("VideoDishUploadListPool","UploadDishData 空");
+            Log.i("VideoDishUploadListPool","UploadDishData 空");
             return null;
         }
 
@@ -388,7 +388,7 @@ public class VideoDishUploadListPool extends UploadListPool {
             object.putOpt("videoMd5", captureItem.getHashCode());
             uploadDishData.setCaptureVideoInfo(object.toString());
         } catch (Exception e) {
-            Log.e("VideoDishUploadListPool","UploadDishData 异常");
+            Log.i("VideoDishUploadListPool","UploadDishData 异常");
             return null;
         }
 
@@ -442,8 +442,8 @@ public class VideoDishUploadListPool extends UploadListPool {
             String cover = uploadDishData.getCover();
             String coverUrl = uploadDishData.getCoverUrl();
             if (TextUtils.isEmpty(cover)&& TextUtils.isEmpty(coverUrl)) {
-                Log.e("cover   ",cover);
-                Log.e("coverUrl   ",coverUrl);
+                Log.i("cover   ",cover);
+                Log.i("coverUrl   ",coverUrl);
 
                 if(!Tools.isFileExists(coverPath)){
                     Toast.makeText(Main.allMain,"获取不到视频菜谱大图路径",Toast.LENGTH_SHORT).show();
@@ -507,14 +507,14 @@ public class VideoDishUploadListPool extends UploadListPool {
 
                             if(!Tools.isFileExists(assemblePath)){
                                 Toast.makeText(Main.allMain,"获取不到步骤视频路径 "+i,Toast.LENGTH_SHORT).show();
-                                Log.e("菜谱视频上传","cutPath: "+path+", " + false);
+                                Log.i("菜谱视频上传","cutPath: "+path+", " + false);
                                 return null;
                             }
 
                             path = assemblePath;
 
                         }
-                        Log.e("菜谱视频上传", "cutPath: " + path + ", " + true);
+                        Log.i("菜谱视频上传", "cutPath: " + path + ", " + true);
 
                         bodyItemData = new UploadItemData();
                         bodyItemData.setType(UploadItemData.TYPE_VIDEO);

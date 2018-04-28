@@ -59,7 +59,7 @@ public class Debuger {
         if (DEBUG_TAG) {
             if (!TextUtils.isEmpty(log))
             {
-                Log.e(LOG_TAG, log);
+                Log.i(LOG_TAG, log);
             }
         }
     }
@@ -68,7 +68,7 @@ public class Debuger {
         if (DEBUG_TAG) {
             if (!TextUtils.isEmpty(log))
             {
-                Log.e(Tag, log);
+                Log.i(Tag, log);
             }
         }
     }
@@ -77,7 +77,7 @@ public class Debuger {
         if (DEBUG_TAG) {
             if (!TextUtils.isEmpty(log))
             {
-                Log.e(LOG_TAG, log);
+                Log.i(LOG_TAG, log);
             }
             e.printStackTrace();
         }

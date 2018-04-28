@@ -590,11 +590,11 @@ public class Banner extends RelativeLayout {
      */
     private boolean isValid() {
         if (mViewPager == null) {
-            Log.e(TAG, "ViewPager is not exist!");
+            Log.i(TAG, "ViewPager is not exist!");
             return false;
         }
         if (mData == null || mData.size() == 0) {
-            Log.e(TAG, "DataList must be not empty!");
+            Log.i(TAG, "DataList must be not empty!");
             return false;
         }
         return true;

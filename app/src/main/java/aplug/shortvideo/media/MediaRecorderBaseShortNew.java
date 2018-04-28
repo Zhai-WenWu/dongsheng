@@ -175,9 +175,9 @@ public abstract class MediaRecorderBaseShortNew implements SurfaceHolder.Callbac
                 mCamera.addCallbackBuffer(new byte[buffSize]);
 //                mCamera.setPreviewCallbackWithBuffer(this);
             } catch (OutOfMemoryError e) {
-                Log.e("zhangyujian", "startPreview...setPreviewCallback...", e);
+                Log.i("zhangyujian", "startPreview...setPreviewCallback...", e);
             }
-            Log.e("zhangyujian", "startPreview...setPreviewCallbackWithBuffer...width:" + size.width + " height:" + size.height);
+            Log.i("zhangyujian", "startPreview...setPreviewCallbackWithBuffer...width:" + size.width + " height:" + size.height);
         } else {
 //            mCamera.setPreviewCallback(this);
         }
@@ -298,7 +298,7 @@ public abstract class MediaRecorderBaseShortNew implements SurfaceHolder.Callbac
                 // camera.lock();
                 mCamera.release();
             } catch (Exception e) {
-                Log.e("zhangyujian", "stopPreview...");
+                Log.i("zhangyujian", "stopPreview...");
             }
             mCamera = null;
         }
@@ -410,7 +410,7 @@ public abstract class MediaRecorderBaseShortNew implements SurfaceHolder.Callbac
                 }
                 return true;
             } catch (Exception e) {
-                Log.e("zhangyujian", "setFlashMode", e);
+                Log.i("zhangyujian", "setFlashMode", e);
             }
         }
         return false;

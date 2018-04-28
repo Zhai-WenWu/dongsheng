@@ -54,7 +54,7 @@ public class RenderingControlSubscriptionCallback extends BaseSubscriptionCallba
 
                 volume = lastChange.getEventedValue(0, RenderingControlVariable.Volume.class).getValue().getVolume();
 
-                Log.e(TAG, "onVolumeChange volume: " + volume);
+                Log.i(TAG, "onVolumeChange volume: " + volume);
                 Intent intent = new Intent(Intents.ACTION_VOLUME_CALLBACK);
                 intent.putExtra(Intents.EXTRA_VOLUME, volume);
                 mContext.sendBroadcast(intent);

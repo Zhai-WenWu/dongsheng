@@ -294,7 +294,7 @@ public class BaseLoginActivity extends BaseActivity {
                         callback.onSuccess();
                     } else {
                         callback.onFalse(flag);
-                        Log.e("checkRegisted", map.get("reason"));
+                        Log.i("checkRegisted", map.get("reason"));
                     }
                 }
             }
@@ -322,7 +322,7 @@ public class BaseLoginActivity extends BaseActivity {
                     if ("2".equals(result)) {
                         registed = true;
                     } else {
-                        Log.e("checkRegisted", map.get("reason"));
+                        Log.i("checkRegisted", map.get("reason"));
                     }
                     if (registed) {
                         callback.onSuccess();
@@ -490,7 +490,7 @@ public class BaseLoginActivity extends BaseActivity {
                 } else {
                     callback.onFalse(flag);
                     LoginManager.loginFail(returnObj);
-                    Log.e("modifySecret", returnObj.toString());
+                    Log.i("modifySecret", returnObj.toString());
                 }
                 loadManager.hideProgressBar();
             }

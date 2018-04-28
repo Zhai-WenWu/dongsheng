@@ -53,22 +53,22 @@ public class AVTransportSubscriptionCallback  extends BaseSubscriptionCallback {
             if (transportState != null) {
                 TransportState ts = transportState.getValue();
                 if (ts == TransportState.PLAYING) {
-                    Log.e(TAG, "PLAYING");
+                    Log.i(TAG, "PLAYING");
                     if (mCallback != null)
                         mCallback.action(Intents.ACTION_PLAYING);
                     return;
                 } else if (ts == TransportState.PAUSED_PLAYBACK) {
-                    Log.e(TAG, "PAUSED_PLAYBACK");
+                    Log.i(TAG, "PAUSED_PLAYBACK");
                     if (mCallback != null)
                         mCallback.action(Intents.ACTION_PAUSED_PLAYBACK);
                     return;
                 } else if (ts == TransportState.STOPPED) {
-                    Log.e(TAG, "STOPPED");
+                    Log.i(TAG, "STOPPED");
                     if (mCallback != null)
                         mCallback.action(Intents.ACTION_STOPPED);
                     return;
                 } else if (ts == TransportState.TRANSITIONING) { // 转菊花状态
-                    Log.e(TAG, "BUFFER");
+                    Log.i(TAG, "BUFFER");
                     if (mCallback != null)
                         mCallback.action(Intents.ACTION_TRANSITIONING);
                     return;
@@ -81,7 +81,7 @@ public class AVTransportSubscriptionCallback  extends BaseSubscriptionCallback {
             if (Utils.isNotNull(eventedValue)) {
                 position = lastChange.getEventedValue(0, AVTransportVariable.RelativeTimePosition.class).getValue();
                 int intTime = Utils.getIntTime(position);
-                Log.e(TAG, "position: " + position + ", intTime: " + intTime);
+                Log.i(TAG, "position: " + position + ", intTime: " + intTime);
 
                 // 该设备支持进度回传
                 Config.getInstance().setHasRelTimePosCallback(true);
