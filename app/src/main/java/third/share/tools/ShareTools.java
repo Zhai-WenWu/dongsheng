@@ -35,6 +35,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import acore.logic.XHClick;
+import acore.override.XHApplication;
 import acore.tools.ImgManager;
 import acore.tools.ObserverManager;
 import acore.tools.StringManager;
@@ -332,6 +333,7 @@ public class ShareTools {
                             Tools.showToast(mContext, "未检测到相关应用");
                         } else
                             Tools.showToast(mContext, pf[0] + "分享失败");
+
                         notifyMsgResult(Option.SHARE, pf[0], "1", pf[2]);
                     } else if (arg1 == Option.AUTHORIZE.getType()) {
                         Tools.showToast(mContext, pf[0] + "授权失败");
@@ -500,6 +502,8 @@ public class ShareTools {
 
             @Override
             public void onError(Platform platform, int i, Throwable throwable) {
+                Log.i("yule", "onError: " + throwable.toString());
+                Tools.showToast(XHApplication.in(),"onError: " + throwable.toString());
                 handleCallback(Option.AUTHORIZE.getType(), ERROR, platform, null);
             }
 

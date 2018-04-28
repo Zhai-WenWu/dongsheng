@@ -21,7 +21,7 @@ then
     if [ $haveFlag -ne 0 ]
     then
     echo "更改的文件是" $var
-    sed -i "" 's/Log\.i(/\/\/YLKLog\.i(/g' $var
+    sed -i "" 's/ Log\.i(/\/\/YLKLog\.i(/g' $var
     fi
 fi
 }
