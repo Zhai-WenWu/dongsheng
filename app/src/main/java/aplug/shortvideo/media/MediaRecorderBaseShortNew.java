@@ -83,7 +83,7 @@ public abstract class MediaRecorderBaseShortNew implements SurfaceHolder.Callbac
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
-       //YLKLog.i("zhangyujian","surfaceCreated");
+        Log.i("zhangyujian","surfaceCreated");
         this.mSurfaceHolder = surfaceHolder;
         this.mSurfaceCreated = true;
         if (mPrepared && !mStartPreview)
@@ -97,7 +97,7 @@ public abstract class MediaRecorderBaseShortNew implements SurfaceHolder.Callbac
 
     @Override
     public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
-       //YLKLog.i("zhangyujian","surfaceDestroyed");
+        Log.i("zhangyujian","surfaceDestroyed");
         if(mCamera != null){
             mCamera.stopPreview();
             mCamera.release();
@@ -108,7 +108,7 @@ public abstract class MediaRecorderBaseShortNew implements SurfaceHolder.Callbac
      * 开始预览
      */
     public void prepare() {
-       //YLKLog.i("zhangyujian","prepare");
+        Log.i("zhangyujian","prepare");
         mPrepared = true;
         if (mSurfaceCreated)
             startPreview();
@@ -117,7 +117,7 @@ public abstract class MediaRecorderBaseShortNew implements SurfaceHolder.Callbac
     /** 开始预览 */
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     public void startPreview() {
-       //YLKLog.i("zhangyujian","startPreview");
+        Log.i("zhangyujian","startPreview");
         if (mStartPreview || mSurfaceHolder == null)
             return;
         else
@@ -175,9 +175,9 @@ public abstract class MediaRecorderBaseShortNew implements SurfaceHolder.Callbac
                 mCamera.addCallbackBuffer(new byte[buffSize]);
 //                mCamera.setPreviewCallbackWithBuffer(this);
             } catch (OutOfMemoryError e) {
-               //YLKLog.i("zhangyujian", "startPreview...setPreviewCallback...", e);
+                Log.i("zhangyujian", "startPreview...setPreviewCallback...", e);
             }
-           //YLKLog.i("zhangyujian", "startPreview...setPreviewCallbackWithBuffer...width:" + size.width + " height:" + size.height);
+            Log.i("zhangyujian", "startPreview...setPreviewCallbackWithBuffer...width:" + size.width + " height:" + size.height);
         } else {
 //            mCamera.setPreviewCallback(this);
         }
@@ -189,7 +189,7 @@ public abstract class MediaRecorderBaseShortNew implements SurfaceHolder.Callbac
      */
     @SuppressWarnings("deprecation")
     public void prepareCameraParaments() {
-       //YLKLog.i("zhangyujian","prepareCameraParaments");
+        Log.i("zhangyujian","prepareCameraParaments");
         try {
             List<Integer> rates = mParameters.getSupportedPreviewFrameRates();
             if (rates != null) {
@@ -231,7 +231,7 @@ public abstract class MediaRecorderBaseShortNew implements SurfaceHolder.Callbac
                 for (Camera.Size size : list) {
                     if (size.height / 3 * 4 == size.width) {
                         recorderSizes.add(size);
-                       //YLKLog.i("zhangyujian","16:9 sizeW H:" + size.width + "  " + size.height);
+                        Log.i("zhangyujian","16:9 sizeW H:" + size.width + "  " + size.height);
                     }
                 }
                 Collections.sort(recorderSizes, comp);
@@ -247,7 +247,7 @@ public abstract class MediaRecorderBaseShortNew implements SurfaceHolder.Callbac
             // 设置surfaceView分辨率
             mSurfaceHolder.setFixedSize(previewW, previewH);
             mParameters.setPreviewSize(previewW, previewH);
-           //YLKLog.i("zhangyujian","previewH:" + previewH + " previewW:: " + previewW);
+            Log.i("zhangyujian","previewH:" + previewH + " previewW:: " + previewW);
 
             // 设置输出视频流尺寸，采样率
             mParameters.setPreviewFormat(ImageFormat.NV21);
@@ -298,7 +298,7 @@ public abstract class MediaRecorderBaseShortNew implements SurfaceHolder.Callbac
                 // camera.lock();
                 mCamera.release();
             } catch (Exception e) {
-               //YLKLog.i("zhangyujian", "stopPreview...");
+                Log.i("zhangyujian", "stopPreview...");
             }
             mCamera = null;
         }
@@ -410,7 +410,7 @@ public abstract class MediaRecorderBaseShortNew implements SurfaceHolder.Callbac
                 }
                 return true;
             } catch (Exception e) {
-               //YLKLog.i("zhangyujian", "setFlashMode", e);
+                Log.i("zhangyujian", "setFlashMode", e);
             }
         }
         return false;

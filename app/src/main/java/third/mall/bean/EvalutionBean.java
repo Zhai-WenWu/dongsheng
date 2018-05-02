@@ -63,7 +63,7 @@ public class EvalutionBean {
 
     public void addImage(@NonNull String imageUrl){
         images.put(imageUrl,"");
-//       //YLKLog.i("tzy","images = " + images.toString());
+//        Log.i("tzy","images = " + images.toString());
     }
 
     public void replaceImage(String oldUrl,String newUrl){
@@ -74,7 +74,7 @@ public class EvalutionBean {
                 addImage(oldUrl);
             }
         }
-//       //YLKLog.i("tzy","images = " + images.toString());
+//        Log.i("tzy","images = " + images.toString());
     }
 
     public void removeImage(@NonNull String key){

@@ -252,7 +252,7 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
                         mTransferUrl += "&module_type=" + (isTopTypeView() ? "top_info" : "info");
                     }
                 }
-               //YLKLog.i("zhangyujian", "点击：" + mDataMap.get("code") + ":::" + mTransferUrl);
+                Log.i("zhangyujian", "点击：" + mDataMap.get("code") + ":::" + mTransferUrl);
                 XHClick.saveStatictisFile("home", getModleViewType(), mDataMap.get("type"), mDataMap.get("code"), "", "click", "", "", String.valueOf(mPosition + 1), "", "");
             }
             if (mTransferUrl.contains("dishInfo.app")
@@ -261,7 +261,7 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
                 mTransferUrl += "&img=" + mDataMap.get("img");
             }
             String params = mTransferUrl.substring(mTransferUrl.indexOf("?") + 1, mTransferUrl.length());
-           //YLKLog.i("zhangyujian", "mTransferUrl:::" + params);
+            Log.i("zhangyujian", "mTransferUrl:::" + params);
             Map<String, String> map = StringManager.getMapByString(params, "&", "=");
             Class c = null;
             Intent intent = new Intent();
@@ -337,7 +337,7 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
                     && MainHomePage.recommedType.equals(mModuleBean.getType())
                     && !TextUtils.isEmpty(mDataMap.get("code"))
                     && (!mDataMap.containsKey("isShowStatistic") || "1".equals(mDataMap.get("isShowStatistic")))) {//保证推荐模块类型
-               //YLKLog.i("zhangyujian", "展示曝光数据::" + mDataMap.get("name") + "::::" + mDataMap.get("type") + "::position:::" + position);
+                Log.i("zhangyujian", "展示曝光数据::" + mDataMap.get("name") + "::::" + mDataMap.get("type") + "::position:::" + position);
                 XHClick.saveStatictisFile("home", getModleViewType(), mDataMap.get("type"), mDataMap.get("code"), "", "show", "", "", String.valueOf(mPosition + 1), "", "");
                 mDataMap.put("isShowStatistic", "2");
             }
@@ -407,7 +407,7 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
             }
         }
         if (mIsAd) {
-           //YLKLog.i("tzy", "initData: mIsAd = " + mIsAd);
+            Log.i("tzy", "initData: mIsAd = " + mIsAd);
             if (mAdControlParent != null && !mDataMap.containsKey("isADShow")) {
                 mAdControlParent.onAdShow(mDataMap, this);
                 mDataMap.put("isADShow", "1");

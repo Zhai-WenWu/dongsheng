@@ -45,7 +45,7 @@ public class MediaPaperItemViewNew extends RelativeLayout implements View.OnClic
             switch (msg.what){
                 case 1:
                     float nowtime=surfaceVideoView.getPosition();
-                   //YLKLog.i("zhangyujian",":当时时间::："+nowtime/1000);
+                    Log.i("zhangyujian",":当时时间::："+nowtime/1000);
                     callBack.changeVideoTime(nowtime/1000);
                     break;
             }
@@ -94,10 +94,10 @@ public class MediaPaperItemViewNew extends RelativeLayout implements View.OnClic
                     MediaPaperItemViewNew.this.context.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                 }
                 if(state){
-                   //YLKLog.i("itemview","开始：");
+                    Log.i("itemview","开始：");
                     startShowPlayer();
                 }else{
-                   //YLKLog.i("itemview","关闭：");
+                    Log.i("itemview","关闭：");
                     stopShowPlayer();
                 }
             }
@@ -112,16 +112,16 @@ public class MediaPaperItemViewNew extends RelativeLayout implements View.OnClic
     }
 
     public void onResume(){
-       //YLKLog.i("time","onResume");
+        Log.i("time","onResume");
         surfaceVideoView.onResume();
     }
     public void onPause(){
-       //YLKLog.i("time","onPause");
+        Log.i("time","onPause");
         surfaceVideoView.onPause();
     }
 
     public void onDestory(){
-       //YLKLog.i("time","onDestory");
+        Log.i("time","onDestory");
         surfaceVideoView.onDestory();
     }
     @Override

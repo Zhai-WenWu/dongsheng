@@ -131,7 +131,7 @@ public class RangeSeekBarView extends ImageView {
 
         float x_end= (float) (right_percent*(lineWidth - rightSB.widthSize));
         rightSB.slideX(x_end+rightSB.widthSize);
-       //YLKLog.i("zhangyujian",":leftSB.left:"+leftSB.left+"::rightSB.right::"+rightSB.right);
+        Log.i("zhangyujian",":leftSB.left:"+leftSB.left+"::rightSB.right::"+rightSB.right);
         dsts.left = leftSB.left+getDimen(context,R.dimen.dp_29)/2;
         dsts.top =heightRect;
         dsts.right = rightSB.right-getDimen(context,R.dimen.dp_29)/2;
@@ -212,8 +212,8 @@ public class RangeSeekBarView extends ImageView {
                     }else
                         left_percent = percent;
 
-//                   //YLKLog.i("zhangyujian",":x:"+left_percent+"::::"+right_percent);
-//                   //YLKLog.i("zhangyujian",":x:"+x);
+//                    Log.i("zhangyujian",":x:"+left_percent+"::::"+right_percent);
+//                    Log.i("zhangyujian",":x:"+x);
                     if(left_percent>=0)
                         leftSB.slideX(x);
                     if(left_percent<=0)left_percent=0;
@@ -225,7 +225,7 @@ public class RangeSeekBarView extends ImageView {
                         x= (float) ((lineWidth - rightSB.widthSize)*right_percent)+leftSB.widthSize;
                     }else
                         right_percent=percent;
-//                   //YLKLog.i("zhangyujian","percent::"+percent);
+//                    Log.i("zhangyujian","percent::"+percent);
                     if(right_percent<=1)
                         rightSB.slideX(x);
                     if(right_percent>=1)right_percent=1;
@@ -265,7 +265,7 @@ public class RangeSeekBarView extends ImageView {
     @Override
     public void invalidate() {
         super.invalidate();
-       //YLKLog.i("zhangyujian",":刷新view:");
+        Log.i("zhangyujian",":刷新view:");
     }
     public void setAllTime(float alltime, int select_position){
         this.select_position=select_position;
@@ -302,7 +302,7 @@ public class RangeSeekBarView extends ImageView {
         invalidate();
     }
     public void setProgressVideo(float nowTime){
-       //YLKLog.i("zhangyujian", "nowTime:"+nowTime);
+        Log.i("zhangyujian", "nowTime:"+nowTime);
         if(nowTime>0) {
             float now_progress = nowTime / max;
             x_progress = now_progress * (lineWidth + rightSB.widthSize);

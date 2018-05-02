@@ -81,7 +81,7 @@ public class BreakPointUploadManager {
      */
     public boolean getTokenState(String type){
        if(!tokenBeans.containsKey(type)){
-          //YLKLog.i("qiniu", "不包含数据");
+           Log.i("qiniu", "不包含数据");
             BreakPointTokenBean breakPointTokenBean= new BreakPointTokenBean(type);
             tokenBeans.put(type,breakPointTokenBean);
            return breakPointTokenBean.getTokenState();

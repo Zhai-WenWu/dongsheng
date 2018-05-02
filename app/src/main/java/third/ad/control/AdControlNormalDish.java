@@ -59,7 +59,7 @@ public class AdControlNormalDish extends AdControlParent implements ActivityMeth
         adControlParent.newRunableGetAdData(XHActivityManager.getInstance().getCurrentActivity(),statisticKey,String.valueOf(++adControlNum),Control_up);
         adControlMap.put(adControlNum,adControlParent);
 
-       //YLKLog.i(tag_yu,"首页加载数据");
+        Log.i(tag_yu,"首页加载数据");
     }
 
     public ArrayList<Map<String, String>> getAutoRefreshAdData(ArrayList<Map<String, String>> old_list) {
@@ -67,14 +67,14 @@ public class AdControlNormalDish extends AdControlParent implements ActivityMeth
         if(adOptionHomeDish == null){
             return old_list;
         }else{
-           //YLKLog.i(tag_yu,"getLimitNum()::"+getLimitNum());
+            Log.i(tag_yu,"getLimitNum()::"+getLimitNum());
             adOptionHomeDish.setLimitNum(getLimitNum());
             if(downCurrentControlTag>0)
                 adOptionHomeDish.setStartIndex(getIndexAd(downCurrentControlTag*10));
             adOptionHomeDish.setAdLoadNumberCallBack(new AdOptionParent.AdLoadNumberCallBack() {
                 @Override
                 public void loadNumberCallBack(int Number) {
-                   //YLKLog.i(tag_yu,"*********Number****************:::"+Number+":::::tag::"+adOptionHomeDish.getControlTag());
+                    Log.i(tag_yu,"*********Number****************:::"+Number+":::::tag::"+adOptionHomeDish.getControlTag());
                     String tag=adOptionHomeDish.getControlTag();
                     if(!TextUtils.isEmpty(tag)) {
                         int tagIndex= Integer.parseInt(tag);
@@ -99,12 +99,12 @@ public class AdControlNormalDish extends AdControlParent implements ActivityMeth
     @Override
     public ArrayList<Map<String, String>> getNewAdData(ArrayList<Map<String, String>> old_list,boolean isBack) {
         //向上加载数据,则循环找到广告
-       //YLKLog.i(tag_yu,"当前:getNewAdData");
+        Log.i(tag_yu,"当前:getNewAdData");
         final AdOptionHomeDish adOptionHomeDish = getCurrentControl(isBack);
         if(adOptionHomeDish == null){
             return old_list;
         }else{
-           //YLKLog.i(tag_yu,"getLimitNum()::"+getLimitNum());
+            Log.i(tag_yu,"getLimitNum()::"+getLimitNum());
             if(getLimitNum()>0&&!isBack)
                 adOptionHomeDish.setLimitNum(getLimitNum());
            if(!isBack) {
@@ -114,7 +114,7 @@ public class AdControlNormalDish extends AdControlParent implements ActivityMeth
             adOptionHomeDish.setAdLoadNumberCallBack(new AdOptionParent.AdLoadNumberCallBack() {
                 @Override
                 public void loadNumberCallBack(int Number) {
-                   //YLKLog.i(tag_yu,"*********Number****************:::"+Number+":::::tag::"+adOptionHomeDish.getControlTag());
+                    Log.i(tag_yu,"*********Number****************:::"+Number+":::::tag::"+adOptionHomeDish.getControlTag());
                     String tag=adOptionHomeDish.getControlTag();
                     if(!TextUtils.isEmpty(tag)) {
                         int tagIndex= Integer.parseInt(tag);
@@ -127,13 +127,13 @@ public class AdControlNormalDish extends AdControlParent implements ActivityMeth
             });
             old_list = adOptionHomeDish.getNewAdData(old_list,isBack);
 
-           //YLKLog.i(tag_yu,"预加载 控制类**************************:" + isBack+"：："+adOptionHomeDish.getIsLoadNext()+"：：："+downCurrentControlTag+":::"+downAdControlMap.size()+":::"+downNextAdNum);
+            Log.i(tag_yu,"预加载 控制类**************************:" + isBack+"：："+adOptionHomeDish.getIsLoadNext()+"：：："+downCurrentControlTag+":::"+downAdControlMap.size()+":::"+downNextAdNum);
             //判断是否需要提前加载广告数据
             if(isBack &&  adOptionHomeDish.getIsLoadNext() && currentControlTag > adControlMap.size() - nextAdNum){//向上加载数据
                 AdOptionHomeDish adControl = new AdOptionHomeDish(AdPlayIdConfig.MAIN_HOME_RECOMENT_LIST);
                 adControl.getAdData(XHActivityManager.getInstance().getCurrentActivity(),statisticKey,String.valueOf(++adControlNum),Control_up);
                 adControlMap.put(adControlNum,adControl);
-               //YLKLog.i(tag_yu,"up预加载 控制类:" + currentControlTag);
+                Log.i(tag_yu,"up预加载 控制类:" + currentControlTag);
             }else if(!isBack &&adOptionHomeDish.getIsLoadNext()&&downCurrentControlTag>=downAdControlMap.size()-downNextAdNum-1){//向下翻页。
                 AdOptionHomeDish adControl = new AdOptionHomeDish(AdPlayIdConfig.MAIN_HOME_RECOMENT_LIST);
                 adControl.getAdData(XHActivityManager.getInstance().getCurrentActivity(),statisticKey,String.valueOf(++downadControlNum),Control_down);
@@ -147,7 +147,7 @@ public class AdControlNormalDish extends AdControlParent implements ActivityMeth
                     }
                 });
                 downAdControlMap.put(downadControlNum,adControl);
-               //YLKLog.i(tag_yu,"down*********************预加载 控制类:" + downCurrentControlTag+"*********"+downadControlNum);
+                Log.i(tag_yu,"down*********************预加载 控制类:" + downCurrentControlTag+"*********"+downadControlNum);
             }
             return old_list;
         }
@@ -156,7 +156,7 @@ public class AdControlNormalDish extends AdControlParent implements ActivityMeth
     private AdOptionHomeDish getCurrentControl(boolean isBack){
         AdOptionHomeDish adOptionHomeDish = null;
         if(isBack) {
-           //YLKLog.i(tag_yu, "up这个控制adControlMap::"+adControlMap.size()+"，切换下一个currentControlTag :" + currentControlTag);
+            Log.i(tag_yu, "up这个控制adControlMap::"+adControlMap.size()+"，切换下一个currentControlTag :" + currentControlTag);
             if (adControlMap.size() > nextAdNum) {
                 if (currentControlTag < nextAdNum) {
                     currentControlTag = nextAdNum;
@@ -165,13 +165,13 @@ public class AdControlNormalDish extends AdControlParent implements ActivityMeth
                     adOptionHomeDish = adControlMap.get(currentControlTag);
                     if (!adOptionHomeDish.getIsHasNewData()) {
                         currentControlTag++;
-                       //YLKLog.i(tag_yu, "up这个控制类没有了数据，切换下一个currentControlTag :" + currentControlTag);
+                        Log.i(tag_yu, "up这个控制类没有了数据，切换下一个currentControlTag :" + currentControlTag);
                         adOptionHomeDish = getCurrentControl(isBack);
                     }
                 }
             }
         }else{
-           //YLKLog.i(tag_yu, "down **********************************这个控制类制adControlMap::"+downAdControlMap.size()+"一个currentControlTag :" + downCurrentControlTag);
+            Log.i(tag_yu, "down **********************************这个控制类制adControlMap::"+downAdControlMap.size()+"一个currentControlTag :" + downCurrentControlTag);
             if(downAdControlMap.size()>downNextAdNum){
                 if(downCurrentControlTag<downNextAdNum){
                     downCurrentControlTag= downNextAdNum;
@@ -180,7 +180,7 @@ public class AdControlNormalDish extends AdControlParent implements ActivityMeth
                     adOptionHomeDish = downAdControlMap.get(downCurrentControlTag);
                     if (!adOptionHomeDish.getIsHasNewData()) {
                         downCurrentControlTag++;
-                       //YLKLog.i(tag_yu, "down *******************************这个控制类没有了数据，切换下一个currentControlTag :" + downCurrentControlTag);
+                        Log.i(tag_yu, "down *******************************这个控制类没有了数据，切换下一个currentControlTag :" + downCurrentControlTag);
                         adOptionHomeDish = getCurrentControl(isBack);
                     }
                 }
@@ -196,7 +196,7 @@ public class AdControlNormalDish extends AdControlParent implements ActivityMeth
         if(TextUtils.isEmpty(controlTag)){
             return;
         }
-       //YLKLog.i(tag_yu,"onAdHintClick::"+controlState+" controlTag:" + controlTag);
+        Log.i(tag_yu,"onAdHintClick::"+controlState+" controlTag:" + controlTag);
         if(!TextUtils.isEmpty(controlState)&&Control_up.equals(controlState)){//上刷新
             AdOptionHomeDish adOptionHomeDish = adControlMap.get(Integer.parseInt(controlTag));
             adOptionHomeDish.onAdClick(map);
@@ -213,7 +213,7 @@ public class AdControlNormalDish extends AdControlParent implements ActivityMeth
         if(TextUtils.isEmpty(controlTag)){
             return;
         }
-       //YLKLog.i(tag_yu,"onAdHintClick::"+controlState+" controlTag:" + controlTag);
+        Log.i(tag_yu,"onAdHintClick::"+controlState+" controlTag:" + controlTag);
         if(!TextUtils.isEmpty(controlState)&&Control_up.equals(controlState)){//上刷新
             AdOptionHomeDish adOptionHomeDish = adControlMap.get(Integer.parseInt(controlTag));
             adOptionHomeDish.onAdHintClick(act,map,eventID,twoLevel);
@@ -230,7 +230,7 @@ public class AdControlNormalDish extends AdControlParent implements ActivityMeth
         if(TextUtils.isEmpty(controlTag)){
             return;
         }
-       //YLKLog.i(tag_yu,"onAdShow::"+controlState+" controlTag:" + controlTag);
+        Log.i(tag_yu,"onAdShow::"+controlState+" controlTag:" + controlTag);
         if(!TextUtils.isEmpty(controlState)&&Control_up.equals(controlState)){//上刷新
             AdOptionHomeDish adOptionHomeDish = adControlMap.get(Integer.parseInt(controlTag));
             adOptionHomeDish.onAdShow(map,view);
@@ -256,7 +256,7 @@ public class AdControlNormalDish extends AdControlParent implements ActivityMeth
 
     @Override
     public void refreshData() {
-       //YLKLog.i(tag_yu,"刷新数据::refreshData");
+        Log.i(tag_yu,"刷新数据::refreshData");
         //刷新数据
         adControlMap.clear();
         downAdControlMap.clear();
@@ -276,13 +276,13 @@ public class AdControlNormalDish extends AdControlParent implements ActivityMeth
             @Override
             public void adDataBack(int tag, int nums) {
 
-               //YLKLog.i(tag_yu,"*****____________________________________");
+                Log.i(tag_yu,"*****____________________________________");
                 downAdState.put(String.valueOf(tag),String.valueOf(nums));
                 if (adLoadNumberCallBack != null&&downAd.containsKey(String.valueOf(tag))) {
                     adLoadNumberCallBack.loadNumberCallBack(Integer.parseInt(downAd.get(String.valueOf(tag))));
                 }
                 if(adDataCallBack!=null)adDataCallBack.adDataBack(1,nums);
-               //YLKLog.i(tag_yu,"刷新数据::tag：：："+tag+"：：："+nums);
+                Log.i(tag_yu,"刷新数据::tag：：："+tag+"：：："+nums);
             }
         });
 

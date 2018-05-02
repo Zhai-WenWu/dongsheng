@@ -70,7 +70,7 @@ public class DishAdDataViewNew extends ItemBaseView {
             public void callBack(boolean isRefresh,Map<String, String> map) {
                 //对数据进行处理
                 String data = map.get(AdPlayIdConfig.DISH_TIESHI);
-               //YLKLog.i("xianghaTag", AdPlayIdConfig.DISH_TIESHI + " : " + data);
+                Log.i("xianghaTag", AdPlayIdConfig.DISH_TIESHI + " : " + data);
                 adDataMap = StringManager.getFirstMap(data);
                 DishAdDataViewNew.this.setVisibility(View.VISIBLE);
                 if (adDataMap.containsKey("type")) {
@@ -109,7 +109,7 @@ public class DishAdDataViewNew extends ItemBaseView {
                         setViewImage(bigImage, map.get("imgUrl"));
                     }
                 });
-       //YLKLog.i("zyj","展示广告");
+        Log.i("zyj","展示广告");
         //设置文字
         TextView title = (TextView) findViewById(R.id.ad_name);
         title.setText(map.get("title"));
@@ -226,10 +226,10 @@ public class DishAdDataViewNew extends ItemBaseView {
         int[] layoutIds = {R.id.ad_big_pic_layout, R.id.ad_small_pic_layout, R.id.ad_three_pic_layout};
         int count = 0;
         for (int id : layoutIds) {
-           //YLKLog.i("xianghaTag", "id :" + count++);
+            Log.i("xianghaTag", "id :" + count++);
             findViewById(id).setVisibility(id == showId ? View.VISIBLE : View.GONE);
         }
-       //YLKLog.i("xianghaTag", "addView");
+        Log.i("xianghaTag", "addView");
         if(DishAdDataViewNew.this!=null&&context!=null)
             parentView.removeAllViews();
             parentView.addView(DishAdDataViewNew.this);

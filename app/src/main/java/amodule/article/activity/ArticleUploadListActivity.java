@@ -85,7 +85,7 @@ public class ArticleUploadListActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         initActivity("上传列表", 4, 0, R.layout.c_view_bar_title_uploadlist,R.layout.a_dish_upload_list);
         dataType = getIntent().getIntExtra("dataType",0);
-       //YLKLog.i("articleUpload","ArticleUploadListActivity dataType:" + dataType);
+        Log.i("articleUpload","ArticleUploadListActivity dataType:" + dataType);
         if(dataType != EditParentActivity.DATA_TYPE_ARTICLE && dataType != EditParentActivity.DATA_TYPE_VIDEO){
             Tools.showToast(this,"发布数据类型为空");
             finish();
@@ -106,7 +106,7 @@ public class ArticleUploadListActivity extends BaseActivity {
         timesStamp = intent.getStringExtra("time");
         coverPath = intent.getStringExtra("coverPath");
         finalVideoPath = intent.getStringExtra("finalVideoPath");
-       //YLKLog.i("articleUpload","initData() draftId:" + draftId + "    timesStamp:" + timesStamp + "    coverPath:" + coverPath + "    finalVideoPath:" + finalVideoPath);
+        Log.i("articleUpload","initData() draftId:" + draftId + "    timesStamp:" + timesStamp + "    coverPath:" + coverPath + "    finalVideoPath:" + finalVideoPath);
         isStopUpload = false;
     }
 
@@ -163,17 +163,17 @@ public class ArticleUploadListActivity extends BaseActivity {
         return new UploadListUICallBack() {
             @Override
             public void changeState() {
-//               //YLKLog.i("articleUpload","改变ui回调 changeState()");
+//                Log.i("articleUpload","改变ui回调 changeState()");
                 refreshUploadView();
             }
 
             @Override
             public void changeState(int pos, int index, UploadItemData data) {
-//               //YLKLog.i("articleUpload","改变ui回调 changeState() " + pos + "   index:" + index);
+//                Log.i("articleUpload","改变ui回调 changeState() " + pos + "   index:" + index);
             }
             @Override
             public void uploadOver(boolean flag, String responseStr) {
-               //YLKLog.i("articleUpload","改变ui回调 uploadOver flag:" + flag + "   responseStr:" + responseStr);
+                Log.i("articleUpload","改变ui回调 uploadOver flag:" + flag + "   responseStr:" + responseStr);
                 refreshUploadView();
                 isStopUpload = !flag;
 //                gotoFriendHome();
@@ -429,7 +429,7 @@ public class ArticleUploadListActivity extends BaseActivity {
     }
 
     private void gotoFriendHome() {
-       //YLKLog.i("articleUpload","gotoFriendHome() FriendHome.isAlive:" + FriendHome.isAlive + "   code:" + LoginManager.userInfo.get("code"));
+        Log.i("articleUpload","gotoFriendHome() FriendHome.isAlive:" + FriendHome.isAlive + "   code:" + LoginManager.userInfo.get("code"));
         Main.colse_level = 5;
         if (FriendHome.isAlive) {
             Intent broadIntent = new Intent();
@@ -456,7 +456,7 @@ public class ArticleUploadListActivity extends BaseActivity {
     }
 
     private void allStartOrPause(boolean isAllStart) {
-       //YLKLog.i("articleUpload","allStartOrPause() isAllStart:" + isAllStart);
+        Log.i("articleUpload","allStartOrPause() isAllStart:" + isAllStart);
         isStopUpload = !isAllStart;
         if (isAllStart) {
             listPool.allStartOrStop(UploadListPool.TYPE_START);

@@ -262,7 +262,7 @@ public abstract class GSYBaseVideoPlayer extends FrameLayout implements GSYMedia
      * 恢复
      */
     protected void resolveNormalVideoShow(View oldF, ViewGroup vp, GSYVideoPlayer gsyVideoPlayer) {
-       //YLKLog.i("tzy","resolveNormalVideoShow");
+        Log.i("tzy","resolveNormalVideoShow");
         if (oldF != null && oldF.getParent() != null) {
             ViewGroup viewGroup = (ViewGroup) oldF.getParent();
             vp.removeView(viewGroup);

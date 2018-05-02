@@ -36,19 +36,19 @@ public class UploadParentSQLite extends SQLiteOpenHelper {
     }
 
     public UploadArticleData getDraftData(){
-       //YLKLog.i("articleUpload","获取草稿数据()");
+        Log.i("articleUpload","获取草稿数据()");
         Cursor cur = null;
         SQLiteDatabase readableDatabase = null;
         try {
             readableDatabase = getReadableDatabase();
             UploadArticleData upData = new UploadArticleData();
             cur = readableDatabase.query(TB_NAME, null,"", null, null, null, UploadArticleData.article_id + " desc");// 查询并获得游标
-           //YLKLog.i("articleUpload","获取草稿数据() size:" + cur.getCount());
+            Log.i("articleUpload","获取草稿数据() size:" + cur.getCount());
             if (cur.moveToFirst()) {// 判断游标是否为空
                 do {
                     String uploadType = cur.getString(cur.getColumnIndex(UploadArticleData.article_uploadType));
                     if(UploadDishData.UPLOAD_DRAF.equals(uploadType)) {
-                       //YLKLog.i("articleUpload","获取草稿数据() 是草稿");
+                        Log.i("articleUpload","获取草稿数据() 是草稿");
                         upData.setId(cur.getInt(cur.getColumnIndex(UploadArticleData.article_id)));
                         upData.setTitle(cur.getString(cur.getColumnIndex(UploadArticleData.article_title)));
                         upData.setClassCode(cur.getString(cur.getColumnIndex(UploadArticleData.article_classCode)));
@@ -78,13 +78,13 @@ public class UploadParentSQLite extends SQLiteOpenHelper {
             readableDatabase = getReadableDatabase();
             UploadArticleData upData = null;
             cur = readableDatabase.query(TB_NAME, null,"", null, null, null, UploadArticleData.article_id + " desc");// 查询并获得游标
-           //YLKLog.i("articleUpload","获取上传中数据() size:" + cur.getCount());
+            Log.i("articleUpload","获取上传中数据() size:" + cur.getCount());
             if (cur.moveToFirst()) {// 判断游标是否为空
                 do {
                     String uploadType = cur.getString(cur.getColumnIndex(UploadArticleData.article_uploadType));
-                   //YLKLog.i("articleUpload","获取上传中数据() uploadType:" + uploadType);
+                    Log.i("articleUpload","获取上传中数据() uploadType:" + uploadType);
                     if(!UploadDishData.UPLOAD_DRAF.equals(uploadType)) {
-                       //YLKLog.i("articleUpload","获取上传中数据() 不是草稿");
+                        Log.i("articleUpload","获取上传中数据() 不是草稿");
                         upData = new UploadArticleData();
                         upData.setId(cur.getInt(cur.getColumnIndex(UploadArticleData.article_id)));
                         upData.setTitle(cur.getString(cur.getColumnIndex(UploadArticleData.article_title)));
@@ -116,13 +116,13 @@ public class UploadParentSQLite extends SQLiteOpenHelper {
             ArrayList<UploadArticleData> articleDatas = new ArrayList<>();
             UploadArticleData upData;
             cur = readableDatabase.query(TB_NAME, null,"", null, null, null, UploadArticleData.article_id + " desc");// 查询并获得游标
-           //YLKLog.i("articleUpload","获取上传中数据() size:" + cur.getCount());
+            Log.i("articleUpload","获取上传中数据() size:" + cur.getCount());
             if (cur.moveToFirst()) {// 判断游标是否为空
                 do {
                     String uploadType = cur.getString(cur.getColumnIndex(UploadArticleData.article_uploadType));
-                   //YLKLog.i("articleUpload","获取上传中数据() uploadType:" + uploadType);
+                    Log.i("articleUpload","获取上传中数据() uploadType:" + uploadType);
                     if(!UploadDishData.UPLOAD_DRAF.equals(uploadType)) {
-                       //YLKLog.i("articleUpload","获取上传中数据() 不是草稿");
+                        Log.i("articleUpload","获取上传中数据() 不是草稿");
                         upData = new UploadArticleData();
                         upData.setId(cur.getInt(cur.getColumnIndex(UploadArticleData.article_id)));
                         upData.setTitle(cur.getString(cur.getColumnIndex(UploadArticleData.article_title)));

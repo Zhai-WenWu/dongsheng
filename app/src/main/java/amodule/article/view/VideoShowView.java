@@ -224,13 +224,13 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
                 if(mOnChooseImageListener != null) mOnChooseImageListener.onClick(VideoShowView.this);
                 break;
             case R.id.video_delete_cover_img:
-//               //YLKLog.i("tzy","coverImageUrl = " + coverImageUrl);
-//               //YLKLog.i("tzy","oldCoverImageUrl = " + oldCoverImageUrl);
+//                Log.i("tzy","coverImageUrl = " + coverImageUrl);
+//                Log.i("tzy","oldCoverImageUrl = " + oldCoverImageUrl);
                 this.coverImageUrl = oldCoverImageUrl;
                 oldCoverImageUrl = null;
                 findViewById(R.id.video_delete_cover_img).setVisibility(View.GONE);
                 setVideoImage(false,this.coverImageUrl);
-//               //YLKLog.i("tzy","setVideoImage::coverImageUrl = " + coverImageUrl);
+//                Log.i("tzy","setVideoImage::coverImageUrl = " + coverImageUrl);
                 break;
 
         }
@@ -247,9 +247,9 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
     public void setNewCoverImageUrl(String newCoverImageUrl) {
         this.oldCoverImageUrl = coverImageUrl;
         this.coverImageUrl = newCoverImageUrl;
-//       //YLKLog.i("tzy","setNewCoverImageUrl::newCoverImageUrl = " + newCoverImageUrl);
-//       //YLKLog.i("tzy","setNewCoverImageUrl::coverImageUrl = " + coverImageUrl);
-//       //YLKLog.i("tzy","setNewCoverImageUrl::oldCoverImageUrl = " + oldCoverImageUrl);
+//        Log.i("tzy","setNewCoverImageUrl::newCoverImageUrl = " + newCoverImageUrl);
+//        Log.i("tzy","setNewCoverImageUrl::coverImageUrl = " + coverImageUrl);
+//        Log.i("tzy","setNewCoverImageUrl::oldCoverImageUrl = " + oldCoverImageUrl);
         findViewById(R.id.video_delete_cover_img).setVisibility(View.VISIBLE);
         setVideoImage(true,coverImageUrl);
     }

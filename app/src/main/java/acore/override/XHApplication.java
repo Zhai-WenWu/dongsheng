@@ -69,7 +69,7 @@ public class XHApplication extends MobApplication {
         initUmengPush();
 
         String processName = Tools.getProcessName(this);
-       //YLKLog.i("zhangyujian", "进程名字::" + processName);
+        Log.i("zhangyujian", "进程名字::" + processName);
         if (processName != null && processName.equals(ToolsDevice.getPackageName(this))) {//多进程多初始化，只对xiangha进程进行初始化
             initData();
         }
@@ -108,7 +108,7 @@ public class XHApplication extends MobApplication {
             AppActivity.getActionBarColorTheme().setCloseColor(commonTopTextColor);
             AppActivity.getActionBarColorTheme().setProgressColor(commonTopTextColor);
         }catch (Exception e){
-           //YLKLog.i("", "initData: SB");
+            Log.i("", "initData: SB");
         }
 
         LogManager.printStartTime("zhangyujian","XhApplication:222:initData::");

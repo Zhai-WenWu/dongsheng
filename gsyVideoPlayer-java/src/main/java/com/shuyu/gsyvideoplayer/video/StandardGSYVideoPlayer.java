@@ -209,7 +209,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
                     if (!mNetSate.equals(state)) {
                         Debuger.printfError("******* change network state ******* " + state);
                         mNetChanged = true;
-                       //YLKLog.i(TAG, "******* change network state ******* " + state);
+                        Log.i(TAG, "******* change network state ******* " + state);
                     }
                     mNetSate = state;
                     handlerNetWorkState(getContext());

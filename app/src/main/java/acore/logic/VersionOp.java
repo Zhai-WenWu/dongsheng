@@ -88,13 +88,13 @@ public class VersionOp extends BaseDialogControl {
     @Override
     public void show() {
         if (isMustUpdata){
-           //YLKLog.i(TAG, "VersionOp :: show() :: starUpdate()");
+            Log.i(TAG, "VersionOp :: show() :: starUpdate()");
             versionUpload.starUpdate(!mShowPro, silentListener);
         } else if(!misSilentInstall && !versionUpload.isDownloading()) {
             //不是静默升级 && 后台没有下载
             versionUpload.starUpdate(!mShowPro, silentListener);
         } else {
-           //YLKLog.i(TAG, "VersionOp :: show() :: silentInstall()");
+            Log.i(TAG, "VersionOp :: show() :: silentInstall()");
             File file = new File(path + apkName + "_" + newNum + ".apk");
             VersionUpload.silentInstall(isMustUpdata, XHActivityManager.getInstance().getCurrentActivity(), Uri.fromFile(file),
                     VersionUpload.INTALL_TYPE_NEXT_STAR, true, nowNum, newNum, appNum, hintNum, silentListener);
@@ -156,7 +156,7 @@ public class VersionOp extends BaseDialogControl {
                                     if (!misSilentInstall){
                                         isNeedUpdata = versionUpload.isUpdata(!mShowPro);
                                     }
-                                   //YLKLog.i(TAG, "checkUpdate :: isNeedUpdata = " + isNeedUpdata + " ; isMustUpdata = " + isMustUpdata);
+                                    Log.i(TAG, "checkUpdate :: isNeedUpdata = " + isNeedUpdata + " ; isMustUpdata = " + isMustUpdata);
                                     if (isNeedUpdata) {
                                         callback.onNeedUpdata();
                                     } else {
@@ -256,7 +256,7 @@ public class VersionOp extends BaseDialogControl {
 
         @Override
         public void downError(String arg0) {
-           //YLKLog.i("xianghaTag","arg0::"+arg0);
+            Log.i("xianghaTag","arg0::"+arg0);
             Tools.showToast(XHActivityManager.getInstance().getCurrentActivity(), arg0);
         }
     };

@@ -93,7 +93,7 @@ public class AdapterCaipuSearch extends BaseAdapter {
         mSearchResultAdDataProvider.setAutoRefreshCallback(new SearchResultAdDataProvider.OnAutoRefreshCallback() {
             @Override
             public void autoRefresh() {
-               //YLKLog.i("tzy", "mSearchResultAdDataProvider::autoRefresh: ");
+                Log.i("tzy", "mSearchResultAdDataProvider::autoRefresh: ");
                 CopyOnWriteArrayList<Map<String, String>> listCaipuData = new CopyOnWriteArrayList<>();
                 listCaipuData.addAll(mListCaipuData);
                 CopyOnWriteArrayList<Map<String, String>> listShicaiData = new CopyOnWriteArrayList<>();
@@ -650,13 +650,13 @@ public class AdapterCaipuSearch extends BaseAdapter {
             }
             adPos = new int[]{2, 8, 15, 23, 32, 42};
         }
-//       //YLKLog.i("tzy", "generateAdPos: adDdata.size()=" + adDdata.size());
+//        Log.i("tzy", "generateAdPos: adDdata.size()=" + adDdata.size());
         for (int i = 0; i < adDdata.size() && i < adPos.length; i++) {
             if(adDdata.get(i) != null && !adDdata.get(i).isEmpty()){
                 adPosList.add(adPos[i]);
             }
         }
-//       //YLKLog.i("tzy","adPosList = " + adPosList.toString());
+//        Log.i("tzy","adPosList = " + adPosList.toString());
         int adNumCanInsert = computeAdNumCanInsert(adPosList);
         adPosList = adPosList.subList(0, adNumCanInsert);
         this.adNum = adNumCanInsert;

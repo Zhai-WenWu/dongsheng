@@ -46,7 +46,7 @@ public class DeviceManager implements IDeviceManager {
 //            sendBroadcast(intent);
 //        }
 
-       //YLKLog.i(TAG, "Change selected device.");
+        Log.i(TAG, "Change selected device.");
         mSelectedDevice = (ClingDevice) selectedDevice;
 
         // 重置选中状态

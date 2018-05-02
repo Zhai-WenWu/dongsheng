@@ -343,7 +343,7 @@ public class ListHealthTime extends BaseActivity {
 		titleV.setText(name);
 		for (int i = 0; i < allDatas.length; i++) {
 			if (allDatas[i].equals(allDatas[hour])) {
-				////YLKLog.i("xiangha_log", allTimes[i]);
+				// Log.i("xiangha_log", allTimes[i]);
 				time.setText(allTimes[i]);
 			}
 		}

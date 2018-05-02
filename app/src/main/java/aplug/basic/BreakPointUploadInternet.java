@@ -89,7 +89,7 @@ public class BreakPointUploadInternet {
                     new UpCompletionHandler() {
                         @Override
                         public void complete(String key, ResponseInfo info, JSONObject res) {
-                           //YLKLog.i("zhangyujian","key::"+key+":::info::"+info.toString());
+                            Log.i("zhangyujian","key::"+key+":::info::"+info.toString());
                             //res包含hash、key等信息，具体字段取决于上传策略的设置。
                             if(res!=null&&res.has("key")&&res.has("hash")){//包含两个参数标示成功
                                 callBack.loaded(REQ_UPLOAD_OK,key,100,res);
@@ -126,7 +126,7 @@ public class BreakPointUploadInternet {
                             new UpCancellationSignal() {
                             @Override
                             public boolean isCancelled() {
-                               //YLKLog.i("zhangyujian","isCancell()::"+isCancel);
+                                Log.i("zhangyujian","isCancell()::"+isCancel);
                                 return isCancel;
                             }
                     }));

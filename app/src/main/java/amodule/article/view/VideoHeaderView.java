@@ -416,7 +416,7 @@ public class VideoHeaderView extends RelativeLayout {
     private AdVideoController adVideoController;
     private boolean initAdTypeVideo(){
         adVideoController= new AdVideoController(activity);
-       //YLKLog.i("xianghaTag","initAdTypeVideo:::"+adVideoController.isAvailable()+"::"+(adVideoController.getAdVideoPlayer()!=null));
+        Log.i("xianghaTag","initAdTypeVideo:::"+adVideoController.isAvailable()+"::"+(adVideoController.getAdVideoPlayer()!=null));
         if(adVideoController.isAvailable()&&adVideoController.getAdVideoPlayer()!=null){
             adVideoController.setStaticId("a_ShortVideoDetail_ad");
             ad_type_video.addView(adVideoController.getAdVideoPlayer());
@@ -457,7 +457,7 @@ public class VideoHeaderView extends RelativeLayout {
         adVideoController.setNetworkNotifyListener(new CleanVideoPlayer.NetworkNotifyListener() {
             @Override
             public void wifiConnected() {
-               //YLKLog.i("xianghaTag","wifiConnected:::"+adVideoController.getVideoCurrentState());
+                Log.i("xianghaTag","wifiConnected:::"+adVideoController.getVideoCurrentState());
                 removeTipView();
                 int state=adVideoController.getVideoCurrentState();
                 if(state<0||state>6) {

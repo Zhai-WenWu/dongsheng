@@ -129,7 +129,7 @@ public class TemplateWebView extends XHWebView{
 
             @Override
             public void onPageStarted(final WebView view, String url, Bitmap favicon) {
-               //YLKLog.i("zyj","onPageStarted::");
+                Log.i("zyj","onPageStarted::");
                 if (onWebviewStateCallBack != null) {
                     onWebviewStateCallBack.onLoadStart();
                 }
@@ -139,7 +139,7 @@ public class TemplateWebView extends XHWebView{
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-               //YLKLog.i("zyj","onPageFinished::");
+                Log.i("zyj","onPageFinished::");
                 if (JSAction.loadAction.length() > 0) {
                     view.loadUrl("javascript:" + JSAction.loadAction + ";");
                     JSAction.loadAction = "";
@@ -169,7 +169,7 @@ public class TemplateWebView extends XHWebView{
             // 当前页打开
             @Override
             public boolean shouldOverrideUrlLoading(final WebView view, String url) {
-               //YLKLog.i(Main.TAG,"url::"+url);
+                Log.i(Main.TAG,"url::"+url);
                 String XH_PROTOCOL = "xiangha://welcome?";
                 // 如果识别到外部开启链接，则解析
                 if(act instanceof DetailDishWeb) {
@@ -184,7 +184,7 @@ public class TemplateWebView extends XHWebView{
                             url = tmpUrl;
                         }
                     }
-                   //YLKLog.i(Main.TAG, "url:22:" + url);
+                    Log.i(Main.TAG, "url:22:" + url);
                     try {
                         if (url.contains("?")) {
                             Map<String, String> urlRule = AppCommon.geturlRule(act);
@@ -194,25 +194,25 @@ public class TemplateWebView extends XHWebView{
                                 urlKey = urls[0].substring(urls[0].lastIndexOf("/") + 1);
                             }
                             if (urlRule == null || urlRule.get(urlKey) == null) {
-                               //YLKLog.i(Main.TAG, "url:33:" + url);
+                                Log.i(Main.TAG, "url:33:" + url);
                                 AppCommon.openUrl(act, url, true);
                             } else {
-                               //YLKLog.i(Main.TAG, "name::" + act.getComponentName().getClassName());
-                               //YLKLog.i(Main.TAG, "urlKey::" + urlKey + "::::" + urlRule.get(urlKey));
+                                Log.i(Main.TAG, "name::" + act.getComponentName().getClassName());
+                                Log.i(Main.TAG, "urlKey::" + urlKey + "::::" + urlRule.get(urlKey));
                                 if (act != null && act.getComponentName().getClassName().equals(urlRule.get(urlKey))) {
                                     String params = url.substring(urlKey.length() + 1, url.length());
-                                   //YLKLog.i(Main.TAG, "params::" + params);
+                                    Log.i(Main.TAG, "params::" + params);
                                     if (onTemplateCallBack != null) {
                                         onTemplateCallBack.readLoad(params);
                                     }
                                 } else {
-                                   //YLKLog.i(Main.TAG, "url:44:" + url);
+                                    Log.i(Main.TAG, "url:44:" + url);
                                     AppCommon.openUrl(act, url, true);
                                 }
                             }
 
                         } else {
-                           //YLKLog.i(Main.TAG, "url:55:" + url);
+                            Log.i(Main.TAG, "url:55:" + url);
                             AppCommon.openUrl(act, url, true);
                         }
                     } catch (Exception e) {
@@ -300,7 +300,7 @@ public class TemplateWebView extends XHWebView{
                 try {
                     mMouldVersion = version;
                     if (isSuccess) {
-                       //YLKLog.i(Main.TAG, "模版开始渲染");
+                        Log.i(Main.TAG, "模版开始渲染");
                         if (originData != null && originData.length > 0 && nowData != null && nowData.length > 0) {
                             int lenght = originData.length;
                             int nowLenght = nowData.length;

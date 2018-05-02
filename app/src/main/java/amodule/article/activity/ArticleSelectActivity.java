@@ -145,7 +145,7 @@ public class ArticleSelectActivity extends BaseActivity implements View.OnClickL
         int windW = ToolsDevice.getWindowPx(this).widthPixels;
         final int itemSpace = (windW - Tools.getDimen(this,R.dimen.dp_20) * 2 - Tools.getDimen(this,R.dimen.dp_97) * 3) / 4;
         final int dp3 = Tools.getDimen(this,R.dimen.dp_3);
-       //YLKLog.i("articleSelect","articleSelect windW:" + windW + "    itemSpace:" + itemSpace);
+        Log.i("articleSelect","articleSelect windW:" + windW + "    itemSpace:" + itemSpace);
         gridView = (GridView) findViewById(R.id.article_select_gridview);
         adapterSimple = new AdapterSimple(gridView,data,R.layout.a_article_select_activity_item,
                 new String[]{"name"},
@@ -212,7 +212,7 @@ public class ArticleSelectActivity extends BaseActivity implements View.OnClickL
         ReqEncyptInternet.in().doEncypt(url, "", new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
-               //YLKLog.i("commentUpload","getClassifyData() falg:" + i + "  return data:" + o);
+                Log.i("commentUpload","getClassifyData() falg:" + i + "  return data:" + o);
                 if(i >= ReqInternet.REQ_OK_STRING){
                     ArrayList<Map<String, String>> arrayList = StringManager.getListMapByJson(o);
                     if(arrayList.size() > 0){
@@ -364,7 +364,7 @@ public class ArticleSelectActivity extends BaseActivity implements View.OnClickL
     }
 
     private void gotoFriendHome() {
-       //YLKLog.i("articleUpload","gotoFriendHome() FriendHome.isAlive:" + FriendHome.isAlive + "   code:" + LoginManager.userInfo.get("code"));
+        Log.i("articleUpload","gotoFriendHome() FriendHome.isAlive:" + FriendHome.isAlive + "   code:" + LoginManager.userInfo.get("code"));
         Main.colse_level = 5;
         if (FriendHome.isAlive) {
             Intent broadIntent = new Intent();

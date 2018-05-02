@@ -149,7 +149,7 @@ public class ToolsDevice {
 
             arrayOfString = str2.split("\\s+");
             // for (String num : arrayOfString) {
-            ////YLKLog.i(str2, num + "\t");
+            // Log.i(str2, num + "\t");
             // }
 
             // initial_memory = Integer.valueOf(arrayOfString[1]).intValue() *

@@ -49,7 +49,7 @@ public class LessonModuleView extends LessonParentLayout {
         isOnce = true;
         Map<String, String> widgetDataMap = StringManager.getFirstMap(data.get(KEY_WIDGET_DATA));
         mTitleText = widgetDataMap.get("text1");
-       //YLKLog.i("tzy", "setData: " + mTitleText);
+        Log.i("tzy", "setData: " + mTitleText);
 //        mDatas = StringManager.getListMapByJson(widgetDataMap.get("data"));
         super.setData(data);
         showPadding(hasChildView());

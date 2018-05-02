@@ -74,7 +74,7 @@ public class DishTestActivity extends BaseAppCompatActivity{
             @Override
             public void loaded(int flag, String url, Object object) {
                 loadManager.hideProgressBar();
-               //YLKLog.i("xianghaTag","isfinish::"+isfinish);
+                Log.i("xianghaTag","isfinish::"+isfinish);
                 if(isfinish){
                     return;
                 }
@@ -95,7 +95,7 @@ public class DishTestActivity extends BaseAppCompatActivity{
                     DishTestActivity.this.finish();
                 }else loadManager.showLoadFaildBar();
                 long endTime= System.currentTimeMillis();
-               //YLKLog.i("xianghaTag","时间：："+(endTime-startTime));
+                Log.i("xianghaTag","时间：："+(endTime-startTime));
 
             }
         });
@@ -142,14 +142,14 @@ public class DishTestActivity extends BaseAppCompatActivity{
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         long endTime= System.currentTimeMillis();
-       //YLKLog.i("xianghaTag","test::onWindowFocusChanged时间：："+(endTime-startTime));
+        Log.i("xianghaTag","test::onWindowFocusChanged时间：："+(endTime-startTime));
     }
     /**
      * 展示顶图view,是大图还是视频
      * @param img          》图片链接
      */
     public void setImg(final String img) {
-       //YLKLog.i("wyl","img:___:::"+img);
+        Log.i("wyl","img:___:::"+img);
         int waith = ToolsDevice.getWindowPx(this).widthPixels *5/6;
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT);
         RelativeLayout.LayoutParams params_rela = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,waith);

@@ -154,7 +154,7 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
         XHAdSqlite adSqlite = XHAdSqlite.newInstance(XHApplication.in());
         //根据广告位置id在广告数据 进行筛选通
         if (listIds.size() > 0) {
-//           //YLKLog.i("tzy", "getAllAdDataBySqlite: size = " + listIds.size());
+//            Log.i("tzy", "getAllAdDataBySqlite: size = " + listIds.size());
             for (int i = 0, size = listIds.size(); i < size; i++) {
                 AdTypeData.put(listIds.get(i), "");
                 /*获取数据广告位的数据体*/
@@ -413,7 +413,7 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
                             try {
                                 xhBackIdsDataCallBack.callBack(isRefresh, AdData);
                             } catch (Exception e) {
-                               //YLKLog.i("tzy", "Exception : " + e.getMessage());
+                                Log.i("tzy", "Exception : " + e.getMessage());
                             }
                         }
                     }
@@ -469,7 +469,7 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
             if (count < listAdContrls.size()
                     && listAdContrls.get(count) != null
                     && !isDataEqual(map, originalMap)) {
-//               //YLKLog.i("tzy", "resetAdContrlDisplay: ");
+//                Log.i("tzy", "resetAdContrlDisplay: ");
                 listAdContrls.get(count).resetDispaly();
             }
         }
@@ -484,21 +484,21 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
      * @return
      */
     private boolean isDataEqual(Map<String, String> newMap, Map<String, String> originalMap) {
-//       //YLKLog.i("tzy", "isDataEqual: 111");
+//        Log.i("tzy", "isDataEqual: 111");
         if (newMap != null && originalMap != null) {
-//           //YLKLog.i("tzy", "isDataEqual: 222");
+//            Log.i("tzy", "isDataEqual: 222");
             if (ADKEY_BANNER.equals(newMap.get("type"))
                     && ADKEY_BANNER.equals(originalMap.get("type"))) {
-//               //YLKLog.i("tzy", "isDataEqual: 333" + (TextUtils.equals(newMap.get("id"), originalMap.get("id"))
+//                Log.i("tzy", "isDataEqual: 333" + (TextUtils.equals(newMap.get("id"), originalMap.get("id"))
 //                        && TextUtils.equals(newMap.get("updateTime"), originalMap.get("updateTime"))));
                 return TextUtils.equals(newMap.get("id"), originalMap.get("id"))
                         && TextUtils.equals(newMap.get("updateTime"), originalMap.get("updateTime"));
             } else {
-//               //YLKLog.i("tzy", "isDataEqual: 444" + (newMap.equals(originalMap)));
+//                Log.i("tzy", "isDataEqual: 444" + (newMap.equals(originalMap)));
                 return newMap.equals(originalMap);
             }
         }
-//       //YLKLog.i("tzy", "isDataEqual: 555" + (newMap == null && originalMap == null));
+//        Log.i("tzy", "isDataEqual: 555" + (newMap == null && originalMap == null));
         return newMap == null && originalMap == null;
     }
 
@@ -579,7 +579,7 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
             }
             return jsonObject;
         } catch (Exception e) {
-           //YLKLog.i("tzy", "Exception : " + e.getMessage());
+            Log.i("tzy", "Exception : " + e.getMessage());
         }
         return null;
     }
@@ -610,7 +610,7 @@ public class XHAllAdControl implements ActivityMethodManager.IAutoRefresh {
      */
     public boolean isNeedRefersh() {
         long nowTime = System.currentTimeMillis();
-       //YLKLog.i(tag_yu, "nowTime:::" + nowTime + ":::" + oneAdTime + "：：：" + (nowTime - oneAdTime) + ":::" + showTime);
+        Log.i(tag_yu, "nowTime:::" + nowTime + ":::" + oneAdTime + "：：：" + (nowTime - oneAdTime) + ":::" + showTime);
         if (nowTime - oneAdTime >= showTime) {//当前广告已过期
             return true;
         }

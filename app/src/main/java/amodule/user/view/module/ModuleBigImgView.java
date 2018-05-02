@@ -40,14 +40,14 @@ public class ModuleBigImgView extends ModuleBaseView{
     @Override
     public void initUI() {
         setMODULE_TAG("B1");
-//       //YLKLog.i("xianghaTag","ModuleBigImgView:::initUI");
+//        Log.i("xianghaTag","ModuleBigImgView:::initUI");
         big_title= (TextView) findViewById(R.id.big_title);
         big_img= (ImageView) findViewById(R.id.big_img);
     }
 
     @Override
     public void initData(Map<String, String> map) {
-//       //YLKLog.i("xianghaTag","ModuleBigImgView::initData");
+//        Log.i("xianghaTag","ModuleBigImgView::initData");
         //标题
         if(map.containsKey("text1")&& !TextUtils.isEmpty(map.get("text1"))){
             big_title.setVisibility(View.VISIBLE);

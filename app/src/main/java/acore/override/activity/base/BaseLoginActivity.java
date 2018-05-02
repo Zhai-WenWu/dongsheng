@@ -116,7 +116,7 @@ public class BaseLoginActivity extends BaseActivity {
         this.level = level;
         mAct = this;
         className = this.getComponentName().getClassName();
-       //YLKLog.i("zhangyujian", "className::" + className);
+        Log.i("zhangyujian", "className::" + className);
         control = new CommonBottonControl();
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(control.setCommonBottonView(className, this, contentXml));
@@ -294,7 +294,7 @@ public class BaseLoginActivity extends BaseActivity {
                         callback.onSuccess();
                     } else {
                         callback.onFalse(flag);
-                       //YLKLog.i("checkRegisted", map.get("reason"));
+                        Log.i("checkRegisted", map.get("reason"));
                     }
                 }
             }
@@ -322,7 +322,7 @@ public class BaseLoginActivity extends BaseActivity {
                     if ("2".equals(result)) {
                         registed = true;
                     } else {
-                       //YLKLog.i("checkRegisted", map.get("reason"));
+                        Log.i("checkRegisted", map.get("reason"));
                     }
                     if (registed) {
                         callback.onSuccess();
@@ -419,8 +419,8 @@ public class BaseLoginActivity extends BaseActivity {
                     JSONObject object = new JSONObject(throwable.getMessage());
                     String des = object.optString("detail");//错误描述
                     int status = object.optInt("status");//错误代码
-                   //YLKLog.i("login", "sendSMS() status:" + status + " ; \n des:" + des);
-                   //YLKLog.i("login", "sendSMS() des:" + des);
+                    Log.i("login", "sendSMS() status:" + status + " ; \n des:" + des);
+                    Log.i("login", "sendSMS() des:" + des);
                     //统计错误情况
                     statisticsErrorCode(status);
                     if (462 == status || 472 == status) {
@@ -490,7 +490,7 @@ public class BaseLoginActivity extends BaseActivity {
                 } else {
                     callback.onFalse(flag);
                     LoginManager.loginFail(returnObj);
-                   //YLKLog.i("modifySecret", returnObj.toString());
+                    Log.i("modifySecret", returnObj.toString());
                 }
                 loadManager.hideProgressBar();
             }

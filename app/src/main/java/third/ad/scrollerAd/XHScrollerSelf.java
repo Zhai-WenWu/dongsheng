@@ -35,7 +35,7 @@ public class XHScrollerSelf extends XHScrollerAdParent {
     @Override
     public void onResumeAd(String oneLevel, String twoLevel) {
         onAdShow(oneLevel, twoLevel, key);
-       //YLKLog.i("zhangyujian", "广告展示:::" + XHScrollerAdParent.ADKEY_BANNER + ":::位置::" + twoLevel);
+        Log.i("zhangyujian", "广告展示:::" + XHScrollerAdParent.ADKEY_BANNER + ":::位置::" + twoLevel);
     }
 
     @Override
@@ -53,7 +53,7 @@ public class XHScrollerSelf extends XHScrollerAdParent {
                 handlerAdClick();
             }
         }
-       //YLKLog.i("zhangyujian", "广告点击:::" + XHScrollerAdParent.ADKEY_BANNER + ":::位置::" + twoLevel);
+        Log.i("zhangyujian", "广告点击:::" + XHScrollerAdParent.ADKEY_BANNER + ":::位置::" + twoLevel);
     }
 
     @Override
@@ -81,7 +81,7 @@ public class XHScrollerSelf extends XHScrollerAdParent {
                         if (nativeData != null) {
                             AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), nativeData.getUrl(), true);
                         }
-                       //YLKLog.i("zhangyujian", "广告确认下载:::" + XHScrollerAdParent.ADKEY_BANNER + ":::位置::");
+                        Log.i("zhangyujian", "广告确认下载:::" + XHScrollerAdParent.ADKEY_BANNER + ":::位置::");
                     })
                     .setNegativeButton("取消", (dialog, which) -> dialog.dismiss());
             builder.show();

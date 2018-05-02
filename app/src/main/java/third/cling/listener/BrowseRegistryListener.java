@@ -37,7 +37,7 @@ public class BrowseRegistryListener extends DefaultRegistryListener {
 
     @Override
     public void remoteDeviceDiscoveryFailed(Registry registry, final RemoteDevice device, final Exception ex) {
-       //YLKLog.i(TAG, "remoteDeviceDiscoveryFailed device: " + device.getDisplayString());
+        Log.i(TAG, "remoteDeviceDiscoveryFailed device: " + device.getDisplayString());
         deviceRemoved(device);
     }
     /* End of optimization, you can remove the whole block if your Android handset is fast (>= 600 Mhz) */
@@ -63,9 +63,9 @@ public class BrowseRegistryListener extends DefaultRegistryListener {
     }
 
     private void deviceAdded(Device device) {
-       //YLKLog.i(TAG, "deviceAdded");
+        Log.i(TAG, "deviceAdded");
         if (!device.getType().equals(ClingManager.DMR_DEVICE_TYPE)) {
-           //YLKLog.i(TAG, "deviceAdded called, but not match");
+            Log.i(TAG, "deviceAdded called, but not match");
             return;
         }
 
@@ -79,7 +79,7 @@ public class BrowseRegistryListener extends DefaultRegistryListener {
     }
 
     public void deviceRemoved(Device device) {
-       //YLKLog.i(TAG, "deviceRemoved");
+        Log.i(TAG, "deviceRemoved");
         if (Utils.isNotNull(mOnDeviceListChangedListener) && mMainHandler != null) {
             mMainHandler.post(() -> {
                 ClingDevice clingDevice = ClingDeviceList.getInstance().getClingDevice(device);

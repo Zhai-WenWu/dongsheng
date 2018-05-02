@@ -109,7 +109,7 @@ public class DishActivityViewControlNew {
      * view的初始化
      */
     private void initView(TemplateWebView.OnTemplateCallBack onTemplateCallBack){
-       //YLKLog.i("zyj","H5______initView::"+(System.currentTimeMillis()-startTime));
+        Log.i("zyj","H5______initView::"+(System.currentTimeMillis()-startTime));
         titleHeight = Tools.getDimen(mAct,R.dimen.topbar_height);
         initTitle();
         //头部view处理
@@ -128,7 +128,7 @@ public class DishActivityViewControlNew {
         templateWebView.setWebViewCallBack(new TemplateWebView.OnWebviewStateCallBack() {
             @Override
             public void onLoadFinish() {
-               //YLKLog.i(Main.TAG,"模版加载完成");
+                Log.i(Main.TAG,"模版加载完成");
                 new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -232,9 +232,9 @@ public class DishActivityViewControlNew {
                         }
                         break;
                     case MotionEvent.ACTION_CANCEL:
-                       //YLKLog.i("zyj","MotionEvent::ACTION_CANCEL");
+                        Log.i("zyj","MotionEvent::ACTION_CANCEL");
                     case MotionEvent.ACTION_UP:
-                       //YLKLog.i("zyj","MotionEvent::ACTION_UP");
+                        Log.i("zyj","MotionEvent::ACTION_UP");
                         if (!isHasVideo) {
                             isRecored = false;
                             startY = 0;
@@ -257,7 +257,7 @@ public class DishActivityViewControlNew {
      * @param permissionMap
      */
     public void analyzeDishInfoData(String dishInfo, Map<String, String> permissionMap) {
-       //YLKLog.i("zyj","analyzeDishInfoData::" + (System.currentTimeMillis() - startTime));
+        Log.i("zyj","analyzeDishInfoData::" + (System.currentTimeMillis() - startTime));
         saveDishInfo(dishInfo);
         ArrayList<Map<String, String>> list = StringManager.getListMapByJson(dishInfo);
         if(list.size() == 0) return;
@@ -336,7 +336,7 @@ public class DishActivityViewControlNew {
         needSaveDishInfo.put("img", dishMap.get("img"));
         needSaveDishInfo.put("code", dishMap.get("code"));
         needSaveDishInfo.put("hasVideo", dishMap.get("type"));
-//       //YLKLog.i("tzy","needSaveDishInfo = " + needSaveDishInfo.toString());
+//        Log.i("tzy","needSaveDishInfo = " + needSaveDishInfo.toString());
         saveHistoryToDB();
     }
 
@@ -347,7 +347,7 @@ public class DishActivityViewControlNew {
         needSaveDishInfo.put("isMakeImg", apiDataMap.get("isMakeImg"));
         needSaveDishInfo.put("isFav", dishTitleViewControl.isNowFav() ? "2" : "1");
 //        dishTitleViewControl.setFavStatus(apiDataMap.get("isFav"));
-//       //YLKLog.i("tzy","needSaveDishInfo = " + needSaveDishInfo.toString());
+//        Log.i("tzy","needSaveDishInfo = " + needSaveDishInfo.toString());
         saveHistoryToDB();
     }
 
@@ -357,7 +357,7 @@ public class DishActivityViewControlNew {
         needSaveDishInfo.put("allClick",allClick);
         needSaveDishInfo.put("nickName",nickName);
         needSaveDishInfo.put("favorites",favorites);
-//       //YLKLog.i("tzy","needSaveDishInfo = " + needSaveDishInfo.toString());
+//        Log.i("tzy","needSaveDishInfo = " + needSaveDishInfo.toString());
         if(dishTitleViewControl!=null){
             dishTitleViewControl.setNickName(nickName);
         }
@@ -482,8 +482,8 @@ public class DishActivityViewControlNew {
      */
     public void handlerDishWebviewData(){
 //        if(!isLoadWebViewData) {
-           //YLKLog.i("wyl","24");
-           //YLKLog.i("zyj","H5______handlerDishWebviewData::"+(System.currentTimeMillis()-startTime));
+            Log.i("wyl","24");
+            Log.i("zyj","H5______handlerDishWebviewData::"+(System.currentTimeMillis()-startTime));
             String[] temp= XHTemplateManager.TEMPLATE_MATCHING.get(XHTemplateManager.XHDISHLAYOUT);
             ArrayList<String> strLists= new ArrayList<>();
             for(String str:temp){

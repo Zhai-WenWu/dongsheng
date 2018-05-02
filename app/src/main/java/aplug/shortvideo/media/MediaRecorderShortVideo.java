@@ -151,8 +151,8 @@ public class MediaRecorderShortVideo extends MediaRecorderBaseShortNew implement
             if (!tempFile.getParentFile().exists()) {
                 tempFile.getParentFile().mkdirs();
             }
-//           //YLKLog.i(TAG,"filePath:" + filePath);
-//           //YLKLog.i(TAG,"save Path:" + tempFile.getPath());
+//            Log.i(TAG,"filePath:" + filePath);
+//            Log.i(TAG,"save Path:" + tempFile.getPath());
 
             mMediaRecorder.setOutputFile(filePath);
             mMediaRecorder.setPreviewDisplay(mSurfaceHolder.getSurface()); // 预览

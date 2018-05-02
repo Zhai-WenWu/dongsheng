@@ -162,7 +162,7 @@ public class OffDishToFavoriteControl {
         for (String code : codes) {
             params.append(code);
             params.append(",");
-           //YLKLog.i("wyl","离线数据：：："+code);
+            Log.i("wyl","离线数据：：："+code);
         }
         ReqEncyptInternet.in().doEncypt(StringManager.api_addCollection, params.toString(), new InternetCallback() {
             @Override

@@ -287,7 +287,7 @@ public class VideoPlayerController {
             mNetworkNotifyListener=new StandardGSYVideoPlayer.NetworkNotifyListener() {
                 @Override
                 public void wifiConnected() {
-                   //YLKLog.i("tzy", "wifiConnected: ");
+                    Log.i("tzy", "wifiConnected: ");
                     isNetworkDisconnect = false;
                     removeTipView();
                     onResume();
@@ -295,7 +295,7 @@ public class VideoPlayerController {
 
                 @Override
                 public void mobileConnected() {
-                   //YLKLog.i("tzy", "mobileConnected: ");
+                    Log.i("tzy", "mobileConnected: ");
                     isNetworkDisconnect = false;
                     if(!"1".equals(FileManager.loadShared(mContext,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI).toString())){
                         if(!isNetworkDisconnect){
@@ -315,7 +315,7 @@ public class VideoPlayerController {
 
                 @Override
                 public void nothingConnected() {
-                   //YLKLog.i("tzy", "nothingConnected: ");
+                    Log.i("tzy", "nothingConnected: ");
                     isNetworkDisconnect = true;
                     if(view_Tip == null){
                         initNoNetwork(mContext);
@@ -356,7 +356,7 @@ public class VideoPlayerController {
             return;
         }
         if(!TextUtils.isEmpty(mVideoUrl) && mVideoUrl.startsWith("http")){
-           //YLKLog.i("tzy","mVideoUrl = "+mVideoUrl);
+            Log.i("tzy","mVideoUrl = "+mVideoUrl);
             setNetworkCallback();
         }
         if(!ToolsDevice.isNetworkAvailable(mContext)){
@@ -367,18 +367,18 @@ public class VideoPlayerController {
             }
             return;
         }
-       //YLKLog.i("tzy","广告点:::"+mHasVideoInfo);
+        Log.i("tzy","广告点:::"+mHasVideoInfo);
         isAutoPaly = "wifi".equals(ToolsDevice.getNetWorkSimpleType(mContext));
         if (mHasVideoInfo) {
-           //YLKLog.i("tzy","广告点:::isShowAd"+isShowAd);
+            Log.i("tzy","广告点:::isShowAd"+isShowAd);
             if(isShowAd){
                 if(mediaViewCallBack != null)
                     mediaViewCallBack.onclick();
                 return;
             }
-           //YLKLog.i("tzy","isShowMedia:::"+isShowMedia);
+            Log.i("tzy","isShowMedia:::"+isShowMedia);
             if(!isShowMedia){
-               //YLKLog.i("tzy","isAutoPaly:::"+isAutoPaly);
+                Log.i("tzy","isAutoPaly:::"+isAutoPaly);
                 if(isAutoPaly){//当前wifi
                     removeTipView();
                 }else{

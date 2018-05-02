@@ -272,7 +272,7 @@ public class HomeSecondListFragment extends Fragment {
                         //当前只有向上刷新，并且服务端确认可以刷新数据
                         if (mCompelClearData || (refresh && !TextUtils.isEmpty(dataMap.get("reset")) && "2".equals(dataMap.get("reset")))) {
                             mListData.clear();
-                           //YLKLog.i("zyj","刷新数据：清集合");
+                            Log.i("zyj","刷新数据：清集合");
                             isNeedRefresh(true);
                             //强制刷新，重置数据
                             if(!TextUtils.isEmpty(dataMap.get("mBackUrl")))
@@ -288,7 +288,7 @@ public class HomeSecondListFragment extends Fragment {
                                 //如果需要加广告，插入广告
                                 if (mAdControl != null) {
                                     //插入广告
-                                   //YLKLog.i(tag_yu,"listDatas::111:"+listDatas.size());
+                                    Log.i(tag_yu,"listDatas::111:"+listDatas.size());
                                     listDatas = mAdControl.getNewAdData(listDatas, true);
                                 }
                                 mListData.addAll(0, listDatas);//插入到第一个位置

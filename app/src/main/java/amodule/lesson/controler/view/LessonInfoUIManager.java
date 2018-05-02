@@ -96,7 +96,7 @@ public class LessonInfoUIManager {
     }
 
     private void resetTopbar() {
-       //YLKLog.i("tzy", "resetTopbar: ");
+        Log.i("tzy", "resetTopbar: ");
         currentColorRes = R.color.transparent;
         mTopbar.setBackgroundResource(R.color.transparent);
     }
