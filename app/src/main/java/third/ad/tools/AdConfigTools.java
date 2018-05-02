@@ -1,13 +1,8 @@
 package third.ad.tools;
 
-import android.text.TextUtils;
-
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import acore.logic.ConfigMannager;
-import acore.logic.LoginManager;
 import acore.override.XHApplication;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
@@ -32,27 +27,10 @@ public class AdConfigTools extends BaseAdConfigTools {
             synchronized (AdConfigTools.class) {
                 if (mAdConfigTools == null) {
                     mAdConfigTools = new AdConfigTools();
-                    mAdConfigTools.initParams();
                 }
             }
         }
         return mAdConfigTools;
-    }
-
-    private void initParams() {
-        Map<String, String> params = StringManager.getFirstMap(ConfigMannager.getConfigByLocal(ConfigMannager.KEY_NEW_AD_CONFIG));
-        String timeStr = params.get("postTime");
-        if (!TextUtils.isEmpty(timeStr)) {
-            int time = Integer.parseInt(timeStr);
-            if (time > 0)
-                mAdConfigTools.setIntervalTime(time);
-        }
-        String countStr = params.get("postCount");
-        if (!TextUtils.isEmpty(countStr)) {
-            int count = Integer.parseInt(countStr);
-            if (count > 0)
-                mAdConfigTools.setCacheSize(count);
-        }
     }
 
     public void getAdConfigInfo() {

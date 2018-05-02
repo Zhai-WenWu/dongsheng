@@ -23,6 +23,7 @@ public class XHSelfNativeData {
     private String brandName;
     private int showNum;
     private String url;
+    private String showUrl;
     private String adType;//1-自有活动，2-自有广告
     private String dbType;//1-下载类型，2-落地页
     private String updateTime;
@@ -140,6 +141,14 @@ public class XHSelfNativeData {
 
     public String getLogoImage(){
         return imgs != null ? imgs.get(IMG_TYPE_LOGO) : "";
+    }
+
+    public String getShowUrl() {
+        return showUrl;
+    }
+
+    public void setShowUrl(String showUrl) {
+        this.showUrl = showUrl;
     }
 
     @Override

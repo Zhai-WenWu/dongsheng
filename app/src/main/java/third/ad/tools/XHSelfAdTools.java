@@ -73,6 +73,7 @@ public class XHSelfAdTools {
                                 int showNum = TextUtils.isEmpty(showNumValue)?0:Integer.parseInt(showNumValue);
                                 nativeData.setShowNum(showNum);
                                 nativeData.setUrl(map.get("andUrl"));
+                                nativeData.setShowUrl(map.get("andShowUrl"));
                                 nativeData.setAdType(map.get("adType"));
                                 nativeData.setDbType(map.get("dbType"));
                                 nativeData.setLogoImage(map.get("logoImg"));

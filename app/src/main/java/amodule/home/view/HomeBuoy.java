@@ -24,6 +24,8 @@ import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
+import aplug.basic.InternetCallback;
+import aplug.basic.ReqInternet;
 import third.ad.db.bean.AdBean;
 import third.ad.db.bean.XHSelfNativeData;
 import third.ad.tools.AdConfigTools;
@@ -247,6 +249,14 @@ public class HomeBuoy {
 
         Glide.with(mAct).load(imgUrl).into(imageButton);
         AdConfigTools.getInstance().postStatistics("show", AdPlayIdConfig.HOME_FLOAT, mNativeData.getPositionId(), "xh", mNativeData.getId());
+        if(mNativeData != null && !TextUtils.isEmpty(mNativeData.getShowUrl())){
+            ReqInternet.in().doGet(mNativeData.getShowUrl(), new InternetCallback() {
+                @Override
+                public void loaded(int i, String s, Object o) {
+                    super.loaded(i, s, o);
+                }
+            });
+        }
     }
 
     public void executeOpenAnim() {

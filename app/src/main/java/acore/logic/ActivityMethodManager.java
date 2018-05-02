@@ -183,7 +183,6 @@ public class ActivityMethodManager {
                 public void onHomePressed() {
                     //刷新广告配置数据
                     AdConfigTools.getInstance().getAdConfigInfo();
-                    AdConfigTools.getInstance().startStatisticsNow();
                     // 进行点击Home键的处理
                     XHClick.HomeKeyListener(mAct);
                     Log.i("zhangyujian","HomeKeyListener111");

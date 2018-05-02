@@ -16,6 +16,8 @@ import acore.logic.LoginManager;
 import acore.override.helper.XHActivityManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
+import aplug.basic.InternetCallback;
+import aplug.basic.ReqInternet;
 import third.ad.db.bean.XHSelfNativeData;
 import third.ad.tools.AdConfigTools;
 
@@ -35,6 +37,14 @@ public class XHScrollerSelf extends XHScrollerAdParent {
     @Override
     public void onResumeAd(String oneLevel, String twoLevel) {
         onAdShow(oneLevel, twoLevel, key);
+        if(mNativeData != null && !TextUtils.isEmpty(mNativeData.getShowUrl())){
+            ReqInternet.in().doGet(mNativeData.getShowUrl(), new InternetCallback() {
+                @Override
+                public void loaded(int i, String s, Object o) {
+                    super.loaded(i, s, o);
+                }
+            });
+        }
         Log.i("zhangyujian", "广告展示:::" + XHScrollerAdParent.ADKEY_BANNER + ":::位置::" + twoLevel);
     }
 

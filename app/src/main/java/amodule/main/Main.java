@@ -516,8 +516,6 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                 //请求广告位
                 XHAdSqlite.newInstance(this).deleteOverdueConfig();
                 AdConfigTools.getInstance().getAdConfigInfo();
-                AdConfigTools.getInstance().startStatisticsNow();
-                AdConfigTools.getInstance().destroyStatistics();
                 UploadDishControl.getInstance().updataAllUploadingDish(getApplicationContext());
                 try {
                     // 开启自我唤醒

@@ -28,7 +28,9 @@ import acore.override.XHApplication;
 import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
+import aplug.basic.InternetCallback;
 import aplug.basic.LoadImage;
+import aplug.basic.ReqInternet;
 import aplug.basic.SubBitmapTarget;
 import third.ad.db.bean.XHSelfNativeData;
 import third.ad.tools.AdConfigTools;
@@ -200,6 +202,16 @@ public class Welcome extends BaseActivity {
                                         imageView.setImageBitmap(bitmap);
 //                                        UtilImage.setImgViewByWH(imageView, bitmap, ToolsDevice.getWindowPx(Welcome.this).widthPixels, 0, false);
                                         XHClick.mapStat(Welcome.this, "ad_show_index", "开屏", "xh");
+
+                                        AdConfigTools.getInstance().postStatistics("show", AdPlayIdConfig.WELCOME, nativeData.getPositionId(), "xh", nativeData.getId());
+                                        if(nativeData != null && !TextUtils.isEmpty(nativeData.getShowUrl())){
+                                            ReqInternet.in().doGet(nativeData.getShowUrl(), new InternetCallback() {
+                                                @Override
+                                                public void loaded(int i, String s, Object o) {
+                                                    super.loaded(i, s, o);
+                                                }
+                                            });
+                                        }
                                     }
                                 }
                             });
@@ -218,10 +230,10 @@ public class Welcome extends BaseActivity {
                                         @Override
                                         public void run() {
                                             if ("1".equals(nativeData.getDbType())) {
-                                                showSureDownload(nativeData, AdPlayIdConfig.HOME_FLOAT, nativeData.getPositionId(),"xh", nativeData.getId());
+                                                showSureDownload(nativeData, AdPlayIdConfig.WELCOME, nativeData.getPositionId(),"xh", nativeData.getId());
                                             } else {
                                                 AppCommon.openUrl(Welcome.this, loadingUrl, true);
-                                                AdConfigTools.getInstance().postStatistics("click", AdPlayIdConfig.HOME_FLOAT, nativeData.getPositionId(),"xh", nativeData.getId());
+                                                AdConfigTools.getInstance().postStatistics("click", AdPlayIdConfig.WELCOME, nativeData.getPositionId(),"xh", nativeData.getId());
                                             }
                                         }
                                     });

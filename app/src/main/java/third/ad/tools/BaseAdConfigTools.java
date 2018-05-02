@@ -1,12 +1,9 @@
 package third.ad.tools;
 
 import android.net.Uri;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
-
-import com.annimon.stream.Stream;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -14,7 +11,6 @@ import org.json.JSONObject;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import acore.tools.StringManager;
@@ -32,36 +28,9 @@ import third.ad.db.AdStatistics;
 
 public class BaseAdConfigTools {
 
-    private Handler mStatisticHandler;
-    private Runnable mStatisticRun;
-    private long mIntervalTime = 30 * 1000;
-    private int mCacheSize = 5;
-    private boolean isStart = false;
 
     BaseAdConfigTools() {
-        init();
-    }
 
-    private void init() {
-        mStatisticHandler = new Handler();
-        mStatisticRun = () -> {
-            requestShowStatistics();
-            startStatistics();
-        };
-    }
-
-    private void requestShowStatistics() {
-        List<JSONObject> mShowCacheParams = AdStatistics.getInstance().getAllData();
-        if(mShowCacheParams != null && !mShowCacheParams.isEmpty()){
-            JSONArray jsonArray = new JSONArray();
-            LinkedHashMap<String,String> params = new LinkedHashMap<>();
-            Stream.of(mShowCacheParams)
-                    .filter(value -> value != null && value.length() > 0)
-                    .forEach(jsonArray::put);
-            params.put("log_json",jsonArray.toString());
-            mShowCacheParams.clear();
-            requestStatistics(StringManager.api_adsNumber, params,"show");
-        }
     }
 
     private void requestStatistics(String url, LinkedHashMap<String, String> params,String event) {
@@ -115,24 +84,11 @@ public class BaseAdConfigTools {
         switch (event) {
             case "click":
             case "download":
+            case "show":
                 params.put("log_json", new JSONArray().put(jsonObject).toString());
                 requestStatistics(StringManager.api_adsNumber, params,event);
                 break;
-            case "show":
-                AdStatistics.getInstance().insert(jsonObject.toString());
-                if (!isStart){
-                    isStart = true;
-                    startStatistics();
-                }
-                if (checkSendSta()) {
-                    startStatisticsNow();
-                }
-                break;
         }
-    }
-
-    private boolean checkSendSta() {
-        return AdStatistics.getInstance().getSize() >= mCacheSize;
     }
 
     private static JSONObject MapToJsonEncode(Map<String, String> maps) {
@@ -151,46 +107,4 @@ public class BaseAdConfigTools {
         return jsonObject;
     }
 
-    /**
-     * 设置间隔时间
-     * @param intervalTime 单位是s
-     */
-    public void setIntervalTime(long intervalTime) {
-        if (intervalTime > 0)
-            mIntervalTime = intervalTime * 1000;
-    }
-
-    public void setCacheSize(int cacheSize) {
-        if (cacheSize != 0)
-            mCacheSize = cacheSize;
-    }
-
-    protected void startStatistics(long intervalTime) {
-        if (mStatisticRun != null && mStatisticHandler != null) {
-            stopStatistics();
-            mStatisticHandler.postDelayed(mStatisticRun, intervalTime);
-        }
-    }
-
-    public void startStatistics() {
-        startStatistics(mIntervalTime);
-    }
-
-    public void startStatisticsNow() {
-        startStatistics(0);
-    }
-
-    public void stopStatistics() {
-        mStatisticHandler.removeCallbacks(mStatisticRun);
-    }
-
-    public void destroyStatistics() {
-        stopStatistics();
-        mStatisticRun = null;
-        mStatisticHandler = null;
-    }
-
-    public void recreateStatistics() {
-        init();
-    }
 }
