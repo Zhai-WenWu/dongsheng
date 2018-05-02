@@ -73,7 +73,7 @@ public class QuanAdvertControl implements ActivityMethodManager.IAutoRefresh {
         if (!TextUtils.isEmpty(isGourmet) && Integer.parseInt(isGourmet) == 2) {
             return old_list;
         }
-       //YLKLog.i(tag_yu, "old_list.size::" + old_list.size() + "::cid:::" + cid + ":mid::" + mid + "::beforeNum:" + beforeNum);
+        Log.i(tag_yu, "old_list.size::" + old_list.size() + "::cid:::" + cid + ":mid::" + mid + "::beforeNum:" + beforeNum);
         return getAdvertAndQuanData(false,old_list, cid, mid, beforeNum);
     }
 
@@ -83,7 +83,7 @@ public class QuanAdvertControl implements ActivityMethodManager.IAutoRefresh {
         if (!TextUtils.isEmpty(isGourmet) && Integer.parseInt(isGourmet) == 2) {
             return old_list;
         }
-       //YLKLog.i(tag_yu, "old_list.size::" + old_list.size() + "::cid:::" + cid + ":mid::" + mid + "::beforeNum:" + beforeNum);
+        Log.i(tag_yu, "old_list.size::" + old_list.size() + "::cid:::" + cid + ":mid::" + mid + "::beforeNum:" + beforeNum);
         return getBdData(isRefresh,old_list, cid, mid, beforeNum);
     }
 
@@ -147,7 +147,7 @@ public class QuanAdvertControl implements ActivityMethodManager.IAutoRefresh {
 //                            }
 //                        }
                     }
-//                   //YLKLog.i("tzy", "getBdData: isRefresh" + isRefresh);
+//                    Log.i("tzy", "getBdData: isRefresh" + isRefresh);
                 }
             }
         }
@@ -217,7 +217,7 @@ public class QuanAdvertControl implements ActivityMethodManager.IAutoRefresh {
             map.put("customer", customerArray.toString());
         } catch (JSONException e) {
             e.printStackTrace();
-           //YLKLog.i("tzy", "setAdList: " + e.getMessage());
+            Log.i("tzy", "setAdList: " + e.getMessage());
         }
 
         //遍历找到相同位置
@@ -306,7 +306,7 @@ public class QuanAdvertControl implements ActivityMethodManager.IAutoRefresh {
     }
 
     private void logtzy(String tag, String info) {
-       //YLKLog.i(tag, info);
+        Log.i(tag, info);
     }
 
     @Override

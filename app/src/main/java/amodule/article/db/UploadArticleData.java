@@ -202,7 +202,7 @@ public class UploadArticleData {
     }
 
     public void upload(String url,InternetCallback callback){
-       //YLKLog.i("articleUpload","upload()  title:" + getTitle());
+        Log.i("articleUpload","upload()  title:" + getTitle());
         LinkedHashMap map = new LinkedHashMap();
 //        map.put("title",getTitle());
         map.put("title", Uri.encode(getTitle(), "utf-8"));

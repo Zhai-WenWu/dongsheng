@@ -62,7 +62,7 @@ public class MediaPaperActivity extends BaseActivity implements View.OnClickList
             id= bundle.getInt("id",-1);
         }
         sqlite = new UploadDishSqlite(this);
-       //YLKLog.i("zhangyujian","id::"+id);
+        Log.i("zhangyujian","id::"+id);
         initView();
         initTitle();
         initData();
@@ -109,10 +109,10 @@ public class MediaPaperActivity extends BaseActivity implements View.OnClickList
         select_position = position;
         try {
             JSONArray jsonArray= new JSONArray(mediaJson);
-           //YLKLog.i("zhangyujian","length:::"+jsonArray.length());
+            Log.i("zhangyujian","length:::"+jsonArray.length());
             lists= UtilString.getListMapByJson(jsonArray);
             for(int i=0;i<lists.size();i++){
-               //YLKLog.i("zhangyujian","temp:::"+lists.get(i).get("videoInfo"));
+                Log.i("zhangyujian","temp:::"+lists.get(i).get("videoInfo"));
                 String strTemp=lists.get(i).get("videoInfo");
                 if(!TextUtils.isEmpty(strTemp)){
                     JSONObject jsonObject= new JSONObject(lists.get(i).get("videoInfo"));
@@ -123,9 +123,9 @@ public class MediaPaperActivity extends BaseActivity implements View.OnClickList
                 }
             }
             int size = mediaPaperBeans.size();
-           //YLKLog.i("zhangyujian","size:::"+size);
+            Log.i("zhangyujian","size:::"+size);
             for (int i = 0; i < size; i++) {
-               //YLKLog.i("time",mediaPaperBeans.get(i).toString());
+                Log.i("time",mediaPaperBeans.get(i).toString());
                 MediaPaperItemViewNew MediaPaperItemViewNew = new MediaPaperItemViewNew(this, mediaPaperBeans.get(i),i,size);
                 MediaPaperItemViewNew.setChangeTimeCallBack(new MediaPaperItemViewNew.VideoTimeCallBack() {
                     @Override
@@ -195,7 +195,7 @@ public class MediaPaperActivity extends BaseActivity implements View.OnClickList
 
                 BigDecimal b_end  =   new BigDecimal(endValue);
                 endValue   =  b_end.setScale(1, BigDecimal.ROUND_HALF_UP).floatValue();
-               //YLKLog.i("zhangyujian",":startValue:"+startValue+":::"+endValue);
+                Log.i("zhangyujian",":startValue:"+startValue+":::"+endValue);
                 if(startValue!=mediaBean.getStartTime()||endValue!=mediaBean.getEndTime()){
                     mediaBean.setStartTime(startValue);
                     mediaBean.setEndTime(endValue);
@@ -337,13 +337,13 @@ public class MediaPaperActivity extends BaseActivity implements View.OnClickList
             for (int i=0;i<size;i++) {
                 JSONObject jsonObjectAll= new JSONObject();
                 jsonObjectAll.put("makesStep",lists.get(i).get("makesStep"));
-               //YLKLog.i("time",lists.get(i).get("makesStep")+"：：：step位置");
+                Log.i("time",lists.get(i).get("makesStep")+"：：：step位置");
                 jsonObjectAll.put("makesInfo",lists.get(i).get("makesInfo"));
                 jsonObjectAll.put("videoInfo","");
                 int beans= mediaPaperBeans.size();
                 for(int j=0;j<beans;j++){
                     if(i==mediaPaperBeans.get(j).getIndex()){
-                       //YLKLog.i("time",mediaPaperBeans.get(j).getIndex()+"：：：位置");
+                        Log.i("time",mediaPaperBeans.get(j).getIndex()+"：：：位置");
                         JSONObject jsonObject = new JSONObject();
                         jsonObject=mediaPaperBeans.get(j).beanToJson();
                         jsonObjectAll.put("videoInfo",jsonObject);
@@ -398,9 +398,9 @@ public class MediaPaperActivity extends BaseActivity implements View.OnClickList
     }
 
     private void selectByIdData(){
-       //YLKLog.i("zhangyujian","id::"+id);
+        Log.i("zhangyujian","id::"+id);
         UploadDishData data=sqlite.selectById(id);
         data.getMakes();
-       //YLKLog.i("zhangyujian","makes::"+data.getMakes());
+        Log.i("zhangyujian","makes::"+data.getMakes());
     }
 }

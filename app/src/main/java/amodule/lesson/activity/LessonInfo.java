@@ -151,14 +151,14 @@ public class LessonInfo extends BaseAppCompatActivity implements IObserver {
     }
 
     private void loadFialed() {
-       //YLKLog.i(TAG, "loadFialed: ");
+        Log.i(TAG, "loadFialed: ");
         mUIMananger.setRvListViewVisibility(View.GONE);
         loadManager.showLoadFaildBar();
         loadManager.hideProgressBar();
     }
 
     private void loadSuccess() {
-       //YLKLog.i(TAG, "loadSuccess: ");
+        Log.i(TAG, "loadSuccess: ");
         mUIMananger.setRvListViewVisibility(View.VISIBLE);
         loadManager.hideLoadFaildBar();
         loadManager.hideProgressBar();

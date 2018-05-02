@@ -111,10 +111,10 @@ public class MediaPaperItemView extends RelativeLayout implements View.OnClickLi
                 }
                 nowValue=mediaBean.getStartTime();
                 if(state){
-                   //YLKLog.i("itemview","开始：");
+                    Log.i("itemview","开始：");
                     startShowPlayer();
                 }else{
-                   //YLKLog.i("itemview","关闭：");
+                    Log.i("itemview","关闭：");
                     stopShowPlayer();
                 }
             }
@@ -147,7 +147,7 @@ public class MediaPaperItemView extends RelativeLayout implements View.OnClickLi
 
             @Override
             public void getstartAndEndValue(float startValue, float endValue,boolean isTouchState) {
-               //YLKLog.i("time",startValue+"::::"+endValue+":::"+isTouchState);
+                Log.i("time",startValue+"::::"+endValue+":::"+isTouchState);
                 DecimalFormat df   = new DecimalFormat("######0.0");
                 df.format(startValue);
                 df.format(endValue);
@@ -169,16 +169,16 @@ public class MediaPaperItemView extends RelativeLayout implements View.OnClickLi
     }
 
     public void onResume(){
-       //YLKLog.i("time","onResume");
+        Log.i("time","onResume");
         surfaceVideoView.onResume();
     }
     public void onPause(){
-       //YLKLog.i("time","onPause");
+        Log.i("time","onPause");
         surfaceVideoView.onPause();
     }
 
     public void onDestory(){
-       //YLKLog.i("time","onDestory");
+        Log.i("time","onDestory");
         surfaceVideoView.onDestory();
     }
     @Override

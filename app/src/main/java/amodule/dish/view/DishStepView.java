@@ -147,7 +147,7 @@ public class DishStepView extends ItemBaseView {
                  findViewById(R.id.view_linear).setVisibility(View.VISIBLE);
                  itemImg1.setVisibility(View.VISIBLE);
                  String img = map.get("img");
-                //YLKLog.i("xianghaTag","img:存在::"+img);
+                 Log.i("xianghaTag","img:存在::"+img);
                  handlerImgHeight(img);
                  setViewImage(itemImg1, map.get("img"));
 //                 if (map.containsKey("height") && Integer.parseInt(map.get("height")) > 0) {
@@ -176,7 +176,7 @@ public class DishStepView extends ItemBaseView {
                 }
             }
         }else if(map.containsKey("height")&&!TextUtils.isEmpty(map.get("height"))){
-           //YLKLog.i("xianghaTag","height存在：：：");
+            Log.i("xianghaTag","height存在：：：");
             RelativeLayout.LayoutParams layoutParams= new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,Integer.parseInt(map.get("height")));
             itemImg1.setLayoutParams(layoutParams);
         }
@@ -241,7 +241,7 @@ public class DishStepView extends ItemBaseView {
                     .listener(new RequestListener<String, GifDrawable>() {
                         @Override
                         public boolean onException(Exception e, String s, Target<GifDrawable> target, boolean b) {
-                           //YLKLog.i("xianghaTag","e"+(e == null ? "Message is null." : e.getMessage()));
+                            Log.i("xianghaTag","e"+(e == null ? "Message is null." : e.getMessage()));
                             return false;
                         }
                         @Override

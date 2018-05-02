@@ -192,7 +192,7 @@ public class CleanVideoPlayer extends FrameLayout implements GSYMediaPlayerListe
         ((Activity) getContext()).getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         mBackUpPlayingBufferState = -1;
         mGSYVideoManager.prepare(mOriginUrl, new HashMap(), false, 1);
-       //YLKLog.i("CleanVideo","prepareVideo");
+        Log.i("CleanVideo","prepareVideo");
         setStateAndUi(CURRENT_STATE_PREPAREING);
     }
 
@@ -207,7 +207,7 @@ public class CleanVideoPlayer extends FrameLayout implements GSYMediaPlayerListe
                     if (!mNetSate.equals(state)) {
                         Debuger.printfError("******* change network state ******* " + state);
                         mNetChanged = true;
-                       //YLKLog.i(TAG, "******* change network state ******* " + state);
+                        Log.i(TAG, "******* change network state ******* " + state);
                     }
                     mNetSate = state;
                     handlerNetWorkState(getContext());
@@ -284,7 +284,7 @@ public class CleanVideoPlayer extends FrameLayout implements GSYMediaPlayerListe
      */
     protected void setStateAndUi(int state) {
         mCurrentState = state;
-       //YLKLog.i("CleanVideo", "video setStateAndUi :: mCurrentState = " + mCurrentState);
+        Log.i("CleanVideo", "video setStateAndUi :: mCurrentState = " + mCurrentState);
         switch (mCurrentState) {
             case CURRENT_STATE_NORMAL:
                 if (isCurrentMediaListener()) {
@@ -371,7 +371,7 @@ public class CleanVideoPlayer extends FrameLayout implements GSYMediaPlayerListe
      * 重置
      */
     public void onVideoReset() {
-       //YLKLog.i("CleanVideo", this.getClass().getSimpleName() + "::onVideoReset");
+        Log.i("CleanVideo", this.getClass().getSimpleName() + "::onVideoReset");
         setStateAndUi(CURRENT_STATE_NORMAL);
     }
 
@@ -422,7 +422,7 @@ public class CleanVideoPlayer extends FrameLayout implements GSYMediaPlayerListe
         }
 
         startProgressTimer();
-       //YLKLog.i("CleanVideo","onPrepared");
+        Log.i("CleanVideo","onPrepared");
         setStateAndUi(CURRENT_STATE_PLAYING);
 
         if (mVideoAllCallBack != null && isCurrentMediaListener()) {
@@ -468,7 +468,7 @@ public class CleanVideoPlayer extends FrameLayout implements GSYMediaPlayerListe
     @Override
     public void onCompletion() {
 //make me normal first
-       //YLKLog.i("CleanVideo",this.getClass().getSimpleName() + "::onCompletion");
+        Log.i("CleanVideo",this.getClass().getSimpleName() + "::onCompletion");
         setStateAndUi(CURRENT_STATE_NORMAL);
         if (mTextureViewContainer.getChildCount() > 0) {
             mTextureViewContainer.removeAllViews();
@@ -500,7 +500,7 @@ public class CleanVideoPlayer extends FrameLayout implements GSYMediaPlayerListe
 
     @Override
     public void onError(int what, int extra) {
-//       //YLKLog.i("tzy","onError");
+//        Log.i("tzy","onError");
 //        if (mNetChanged) {
 //            mNetChanged = false;
 //            netWorkErrorLogic();
@@ -524,8 +524,8 @@ public class CleanVideoPlayer extends FrameLayout implements GSYMediaPlayerListe
         Log.d("CleanVideo","onInfo::what = " + what + " ; extra = " + extra);
 //        if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START) {
 //            mBackUpPlayingBufferState = mCurrentState;
-//           //YLKLog.i("CleanVideo","onInfo::mBackUpPlayingBufferState = " + mBackUpPlayingBufferState);
-//           //YLKLog.i("CleanVideo","onInfo::mHadPlay = " + mHadPlay);
+//            Log.i("CleanVideo","onInfo::mBackUpPlayingBufferState = " + mBackUpPlayingBufferState);
+//            Log.i("CleanVideo","onInfo::mHadPlay = " + mHadPlay);
 //            //避免在onPrepared之前就进入了buffering，导致一只loading
 //            if (mHadPlay && mCurrentState != CURRENT_STATE_PREPAREING && mCurrentState > 0)
 //                setStateAndUi(CURRENT_STATE_PLAYING_BUFFERING_START);
@@ -561,7 +561,7 @@ public class CleanVideoPlayer extends FrameLayout implements GSYMediaPlayerListe
 
     @Override
     public void onVideoPause() {
-       //YLKLog.i("CleanVideo","onVideoPause");
+        Log.i("CleanVideo","onVideoPause");
         try{
             if (mGSYVideoManager.getMediaPlayer() != null
                     && mGSYVideoManager.getMediaPlayer().isPlaying()) {
@@ -573,7 +573,7 @@ public class CleanVideoPlayer extends FrameLayout implements GSYMediaPlayerListe
         }catch (Exception e){
             onVideoReset();
             e.printStackTrace();
-           //YLKLog.i("CleanVideo","onVideoPause::" + e.getMessage());
+            Log.i("CleanVideo","onVideoPause::" + e.getMessage());
         }
     }
 
@@ -581,21 +581,21 @@ public class CleanVideoPlayer extends FrameLayout implements GSYMediaPlayerListe
     public void onVideoResume() {
         try{
             mPauseTime = 0;
-           //YLKLog.i("CleanVideo","onVideoResume");
+            Log.i("CleanVideo","onVideoResume");
 //            if (mCurrentState == CURRENT_STATE_PAUSE) {
             if (mGSYVideoManager.getMediaPlayer() != null
                     && !mGSYVideoManager.getMediaPlayer().isPlaying()) {
                 if (mCurrentPosition > 0 && mGSYVideoManager.getMediaPlayer() != null) {
                     setStateAndUi(CURRENT_STATE_PLAYING);
                     mGSYVideoManager.getMediaPlayer().seekTo(mCurrentPosition);
-                   //YLKLog.i("CleanVideo","mCurrentPosition = " + mCurrentPosition);
+                    Log.i("CleanVideo","mCurrentPosition = " + mCurrentPosition);
                     mGSYVideoManager.getMediaPlayer().start();
                 }
             }
         }catch (Exception igored){
             onVideoReset();
             igored.printStackTrace();
-           //YLKLog.i("CleanVideo","Exception = " + igored.getMessage());
+            Log.i("CleanVideo","Exception = " + igored.getMessage());
         }
     }
 

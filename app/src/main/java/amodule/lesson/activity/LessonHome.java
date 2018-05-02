@@ -156,12 +156,12 @@ public class LessonHome extends BaseAppCompatActivity implements IObserver {
     boolean isRefreshingFeed = false;
 
     public void refresh() {
-       //YLKLog.i("tzy_data", "refresh()");
+        Log.i("tzy_data", "refresh()");
         mViewController.autoRefresh();
     }
 
     private void inerRefresh() {
-       //YLKLog.i("tzy", "inerRefresh: ");
+        Log.i("tzy", "inerRefresh: ");
         if (isRefreshingHeader || isRefreshingFeed) {
             return;
         }
@@ -208,7 +208,7 @@ public class LessonHome extends BaseAppCompatActivity implements IObserver {
         }
         long nowTime = System.currentTimeMillis();
         if (startTime > 0) {
-           //YLKLog.i("zyj", "stop::" + String.valueOf((nowTime - startTime) / 1000));
+            Log.i("zyj", "stop::" + String.valueOf((nowTime - startTime) / 1000));
             XHClick.saveStatictisFile("VipHome", "", "", "", "", "stop", String.valueOf((nowTime - startTime) / 1000), "", "", "", "");
             //置数据
             setRecommedTime(0);

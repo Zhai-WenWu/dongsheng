@@ -136,7 +136,7 @@ public class SearchResultAdViewGenerater {
      * @param dataMap
      */
     private static void setAdView(View adView, Map<String, String> dataMap) {
-       //YLKLog.i("tzy", "setAdView: "+dataMap.toString());
+        Log.i("tzy", "setAdView: "+dataMap.toString());
         String title = dataMap.get("title");
         String desc = dataMap.get("desc");
         String iconUrl = dataMap.get("iconUrl");

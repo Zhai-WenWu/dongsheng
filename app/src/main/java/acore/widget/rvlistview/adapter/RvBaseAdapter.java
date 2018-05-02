@@ -97,7 +97,7 @@ public abstract class RvBaseAdapter<T> extends RecyclerView.Adapter<RvBaseViewHo
                 notifyItemInserted(index);
                 return true;
             } else {
-               //YLKLog.i(TAG, " insertData :: " + outOfBoundsMsg(index));
+                Log.i(TAG, " insertData :: " + outOfBoundsMsg(index));
             }
         }
         return false;
@@ -124,7 +124,7 @@ public abstract class RvBaseAdapter<T> extends RecyclerView.Adapter<RvBaseViewHo
                 notifyItemRemoved(index);
                 return oldT;
             }else{
-               //YLKLog.i(TAG, " removeData :: " + outOfBoundsMsg(index));
+                Log.i(TAG, " removeData :: " + outOfBoundsMsg(index));
             }
         }
         return null;

@@ -49,11 +49,11 @@ public class PageStatisticsUtils {
     }
 
     public void onPageChange(String from,String to){
-       //YLKLog.i("pageStatistics.......路径","from:" + from + "  to:" + to);
+        Log.i("pageStatistics.......路径","from:" + from + "  to:" + to);
     }
 
     private void onPausePage(String name,long resumeTime, long pauseTime){
-       //YLKLog.i("pageStatistics.时间",name + "  pageTime:" + (pauseTime - resumeTime));
+        Log.i("pageStatistics.时间",name + "  pageTime:" + (pauseTime - resumeTime));
         XHClick.savePageStatictis(Uri.encode(name),String.valueOf((pauseTime - resumeTime)/1000));
     }
 

@@ -89,7 +89,7 @@ public class ClingControl {
     }
 
     public void onDestroy(Context context) {
-       //YLKLog.i(TAG, "onDestroy_context = " + context);
+        Log.i(TAG, "onDestroy_context = " + context);
         ClingPresenter.getInstance().onDestroy(context);
         if (mDevicesPopup != null)
             mDevicesPopup.destroyPopup();
@@ -116,49 +116,49 @@ public class ClingControl {
                     return;
             }
             
-           //YLKLog.i(TAG, "handleMessage_msg = " + msg.toString());
+            Log.i(TAG, "handleMessage_msg = " + msg.toString());
             
             switch (msg.what) {
                 case ClingPresenter.action_play://正在投放
-                   //YLKLog.i(TAG, "Execute action_play");
+                    Log.i(TAG, "Execute action_play");
                     ClingPresenter.getInstance().setCurrentState(DLANPlayState.PLAY);
                     if (mClingOptionView != null)
                         mClingOptionView.onPlaying();
                     break;
                 case ClingPresenter.action_pause:
-                   //YLKLog.i(TAG, "Execute action_pause");
+                    Log.i(TAG, "Execute action_pause");
                     ClingPresenter.getInstance().setCurrentState(DLANPlayState.PAUSE);
                     if (mClingOptionView != null)
                         mClingOptionView.onPause();
                     break;
                 case ClingPresenter.action_stop:
-                   //YLKLog.i(TAG, "Execute action_stop");
+                    Log.i(TAG, "Execute action_stop");
                     ClingPresenter.getInstance().setCurrentState(DLANPlayState.STOP);
                     if (mClingOptionView != null)
                         mClingOptionView.onStop();
                     break;
                 case ClingPresenter.action_transtioning://正在连接
-                   //YLKLog.i(TAG, "Execute action_transtioning");
+                    Log.i(TAG, "Execute action_transtioning");
                     if (mClingOptionView != null)
                         mClingOptionView.onTranstioning();
                     break;
                 case ClingPresenter.action_error://投放失败
-                   //YLKLog.i(TAG, "Execute action_error");
+                    Log.i(TAG, "Execute action_error");
                     if (mClingOptionView != null)
                         mClingOptionView.onError();
                     break;
                 case ClingPresenter.action_succ://投放成功
-                   //YLKLog.i(TAG, "Execute action_succ");
+                    Log.i(TAG, "Execute action_succ");
                     if (mClingOptionView != null)
                         mClingOptionView.onSucc();
                     break;
                 case ClingPresenter.action_add_device://添加设备
-                   //YLKLog.i(TAG, "Execute action_add_device");
+                    Log.i(TAG, "Execute action_add_device");
                     if (mDevicesPopup != null && obj != null && obj instanceof IDevice)
                         mDevicesPopup.addDevice((IDevice) obj);
                     break;
                 case ClingPresenter.action_remove_device://删除设备
-                   //YLKLog.i(TAG, "Execute action_remove_device");
+                    Log.i(TAG, "Execute action_remove_device");
                     Object obj2 = msg.obj;
                     if (mDevicesPopup != null && obj2 != null && obj2 instanceof IDevice)
                         mDevicesPopup.removeDevice((IDevice) obj2);

@@ -390,7 +390,7 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
     }
     @Override
     public void notify(String name, Object sender, Object data) {
-       //YLKLog.i("xianghaTag","name:::"+name);
+        Log.i("xianghaTag","name:::"+name);
         switch (name){
             case ObserverManager.NOTIFY_PAYFINISH://支付
                 isPay=true;

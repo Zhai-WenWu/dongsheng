@@ -69,7 +69,7 @@ public class BaseAdConfigTools {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
                 if("show".equals(event)){
-                   //YLKLog.i("tzy", "loaded: deleteAll");
+                    Log.i("tzy", "loaded: deleteAll");
                     AdStatistics.getInstance().deleteAll();
                 }
             }
@@ -110,7 +110,7 @@ public class BaseAdConfigTools {
         JSONObject jsonObject = MapToJsonEncode(map);
         LinkedHashMap<String, String> params = new LinkedHashMap<>();
 
-       //YLKLog.i("tongji", "postStatistics: params=" + params.toString());
+        Log.i("tongji", "postStatistics: params=" + params.toString());
 //        requestStatistics(StringManager.api_monitoring_9,params);
         switch (event) {
             case "click":

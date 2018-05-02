@@ -269,7 +269,7 @@ public class CircleFragment extends Fragment {
                                         if(value <= Max && value >= Min){
 //                                            ((NormalContentView)itemView).startVideoView();
                                             currentPlayPosition = view.getPositionForView(itemView);
-                                           //YLKLog.i("zhangyujian","自动数据的位置:::"+((NormalContentView)itemView).getPositionNow());
+                                            Log.i("zhangyujian","自动数据的位置:::"+((NormalContentView)itemView).getPositionNow());
                                             setVideoLayout(itemView,((NormalContentView)itemView).getPositionNow());
                                         }else{
                                             count++;
@@ -550,7 +550,7 @@ public class CircleFragment extends Fragment {
         final int length = dataArray.size();
         for (int index = 0; index < length; index++) {
             SubjectData subjectData = dataArray.get(index);
-           //YLKLog.i("shortVideo","subjectData:::subjectData:"+subjectData.getVideoLocalPath());
+            Log.i("shortVideo","subjectData:::subjectData:"+subjectData.getVideoLocalPath());
             String mid = subjectData.getMid();
             if ((TextUtils.isEmpty(mid) && position == 0)
                     || mid.equals(mPlateData.getMid())) {

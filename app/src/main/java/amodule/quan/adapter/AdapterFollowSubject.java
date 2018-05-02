@@ -128,7 +128,7 @@ public class AdapterFollowSubject extends AdapterSimple {
                 view.setVideoClickCallBack(new NormarlContentItemImageVideoView.VideoClickCallBack() {
                     @Override
                     public void videoImageOnClick(int position) {
-                       //YLKLog.i("zhangyujian", "position::" + position);//被点击
+                        Log.i("zhangyujian", "position::" + position);//被点击
                         videoClickCallBack.videoImageOnClick(position);
                     }
                 });

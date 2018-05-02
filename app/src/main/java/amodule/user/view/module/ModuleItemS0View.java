@@ -53,7 +53,7 @@ public class ModuleItemS0View extends RelativeLayout {
      * @param layoutId
      */
     private void initLayout(int layoutId) {
-       //YLKLog.i("xianghaTag", "initLayout");
+        Log.i("xianghaTag", "initLayout");
         View view = LayoutInflater.from(mContext).inflate(layoutId, null, true);
         addView(view);
         mLine = findViewById(R.id.line);
@@ -90,11 +90,11 @@ public class ModuleItemS0View extends RelativeLayout {
 
     private void handlerViewShow(RelativeLayout part, Map<String, String> map) {
         int part_0_size = part.getChildCount();
-       //YLKLog.i("xianghaTag", "part_0_size::" + part_0_size);
+        Log.i("xianghaTag", "part_0_size::" + part_0_size);
         for (int i = 0; i < part_0_size; i++) {
             View viewStub = part.getChildAt(i);
             if (viewStub == null) {
-               //YLKLog.i("xianghaTag", "viewStub:::" + i);
+                Log.i("xianghaTag", "viewStub:::" + i);
             }
             if (viewStub != null && TextUtils.equals(map.get("style"), (CharSequence) viewStub.getTag())) {
                 viewStub.setVisibility(View.VISIBLE);

@@ -251,7 +251,7 @@ public class JsAppCommon extends JsBase {
         }
 
         if (title != "" && content != "" && img != "" && url != "" && type != "") {
-           //YLKLog.i("zhangyujian", "type::::" + type);
+            Log.i("zhangyujian", "type::::" + type);
             mBarShare = new BarShare(mAct, type, "");
             mBarShare.setShare(BarShare.IMG_TYPE_WEB, title, content, img, url);
             mBarShare.setShareProgram(transferData(title, content, img, url, type, shareType, path));
@@ -819,7 +819,7 @@ public class JsAppCommon extends JsBase {
 
     @JavascriptInterface
     public void showDishStep(final String[] imgArr, final String[] stepArr, final int index) {
-       //YLKLog.i("zyj", "showDishStep");
+        Log.i("zyj", "showDishStep");
         handler.post(new Runnable() {
             @Override
             public void run() {
@@ -929,7 +929,7 @@ public class JsAppCommon extends JsBase {
             onPayCallback(false, "网络异常，请检查网络");
             return;
         }
-       //YLKLog.i("xianghaTag","goPayBs() url: " + url + "  params:" + params + "  tpye:" + type+"::typeBs::"+typeBs);
+        Log.i("xianghaTag","goPayBs() url: " + url + "  params:" + params + "  tpye:" + type+"::typeBs::"+typeBs);
         if(!TextUtils.isEmpty(typeBs)) payType = typeBs;//记录当前支付类型
         goPay(url,params,type);
     }

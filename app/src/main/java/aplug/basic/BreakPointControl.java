@@ -68,7 +68,7 @@ public class BreakPointControl {
         setRetryNum(0);
         setPause(false);
         if (BreakPointUploadManager.getInstance().getTokenState(type)) {//token过期
-           //YLKLog.i("zhangyujian", uniqueId + "::过期请求");
+            Log.i("zhangyujian", uniqueId + "::过期请求");
             reqState = "1";
             BreakPointUploadManager.getInstance().ReqToken(context, type);
         } else {
@@ -83,9 +83,9 @@ public class BreakPointControl {
     private void startBreakPointUpload() {
         reqState = "2";
         setFilePath(filePath);
-       //YLKLog.i("zhangyujian", uniqueId + "::start开始上传");
-       //YLKLog.i("zhangyujian", uniqueId + "::filePath::" + filePath);
-       //YLKLog.i("zhangyujian", uniqueId + "::key::" + key);
+        Log.i("zhangyujian", uniqueId + "::start开始上传");
+        Log.i("zhangyujian", uniqueId + "::filePath::" + filePath);
+        Log.i("zhangyujian", uniqueId + "::key::" + key);
         FileSize = fileDataSize(filePath);
         startProgress();
         ReqBreakPointUploadInternet.isCancel = false;
@@ -115,7 +115,7 @@ public class BreakPointControl {
                         if (progress > 0) setProgress(progress);
                         if (uploadListNetCallBack != null)
                             uploadListNetCallBack.onProgress(progress, uniqueId);
-                       //YLKLog.i("zhangyujian", uniqueId + "::" + flag + "::::key:::" + key + ",\r\n percent::::" + progress);
+                        Log.i("zhangyujian", uniqueId + "::" + flag + "::::key:::" + key + ",\r\n percent::::" + progress);
                     } else if (flag == BreakPointUploadInternet.REQ_UPLOAD_OK) {//上传完成
                         timer = null;
                         reqState = "4";
@@ -123,7 +123,7 @@ public class BreakPointControl {
                         BreakPointUploadManager.getInstance().delBreakPointUpload(filePath);
                         if (uploadListNetCallBack != null)
                             uploadListNetCallBack.onSuccess(BreakPointUploadManager.getInstance().getDomain(type) + "/" + key, uniqueId, jsonObject);
-                       //YLKLog.i("zhangyujian", uniqueId + "::" + flag + "::::key:::" + key + ",\r\n jsonObject::::" + jsonObject);
+                        Log.i("zhangyujian", uniqueId + "::" + flag + "::::key:::" + key + ",\r\n jsonObject::::" + jsonObject);
                     } else {//上传失败
                         if (!isPause() &&
                                 getRetryNum() < MAX_RETRY_NUM) {
@@ -136,7 +136,7 @@ public class BreakPointControl {
                             BreakPointUploadManager.getInstance().delBreakPointUpload(filePath);
                             if (uploadListNetCallBack != null)
                                 uploadListNetCallBack.onFaild(jsonObject == null ? "未知错误" : jsonObject.toString(), uniqueId);
-                           //YLKLog.i("zhangyujian", uniqueId + "::" + flag + ":::key:::" + key + ",\r\n jsonObject::::" + jsonObject);
+                            Log.i("zhangyujian", uniqueId + "::" + flag + ":::key:::" + key + ",\r\n jsonObject::::" + jsonObject);
                         }
                     }
                 }
@@ -148,7 +148,7 @@ public class BreakPointControl {
      * 开启准备状态的下请求类
      */
     public void startReCallback(String nowType) {
-       //YLKLog.i("zhangyujian", "reqState::" + reqState);
+        Log.i("zhangyujian", "reqState::" + reqState);
         if ("1".equals(reqState) && type.equals(nowType)) {
             startBreakPointUpload();
         }
@@ -308,7 +308,7 @@ public class BreakPointControl {
     private long fileDataSize(String filePath) {
         File f = new File(filePath);
         if (f.exists() && f.isFile()) {
-           //YLKLog.i("zhangyujian", uniqueId + "::" + f.length() + "：：lenght");
+            Log.i("zhangyujian", uniqueId + "::" + f.length() + "：：lenght");
             return f.length();
         }
         return 0;
@@ -323,7 +323,7 @@ public class BreakPointControl {
                 if (now_progress > before_progress && FileSize > 0 && uploadListNetCallBack != null) {
                     double progress = now_progress - before_progress;
                     long size = (long) (FileSize * progress);
-                   //YLKLog.i("zhangyujian", uniqueId + "::速度::" + size);
+                    Log.i("zhangyujian", uniqueId + "::速度::" + size);
                     before_progress = now_progress;
                     uploadListNetCallBack.onProgressSpeed(uniqueId, size);
                 } else return;

@@ -48,7 +48,7 @@ public class ModuleRightImgView extends ModuleBaseView{
 
     @Override
     public void initData(Map<String, String> map) {
-       //YLKLog.i("xianghaTag","ModuleRightImgView::");
+        Log.i("xianghaTag","ModuleRightImgView::");
         setKeyContent(map,module_title_txt,"text1");//标题
         setKeyContent(map,module_desc,"text2");//内容
         //url点击跳转

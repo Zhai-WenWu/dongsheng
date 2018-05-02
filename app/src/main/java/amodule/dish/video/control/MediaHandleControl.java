@@ -65,7 +65,7 @@ public class MediaHandleControl {
 ////                int state=editor.executemp3(toArray,viewPath_cancel+"3/path_audio"+"/audio.mp3");
 ////                int state_1=editor.executemp3(viewPath_cancel+"3/path_audio"+"/audio_start.mp3",viewPath_cancel+"3/path_audio"+"/audio_cut.mp3",viewPath_cancel+"3/path_audio"+"/audio_1.mp3");
 ////                editor.concatMp3("/sdcard/a2.mp3","/sdcard/a6.mp3","/sdcard/c3.mp3");
-////               //YLKLog.i(state_1+"::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::"+state);
+////                Log.i(state_1+"::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::"+state);
 ////                successHandlerAudio();
 ////                handlerBgmAudio();
 ////                executeCrop();
@@ -323,10 +323,10 @@ public class MediaHandleControl {
 //     */
 //    public void startPaperMedia() {
 //        try {
-//           //YLKLog.i("zhangyujian","开始裁剪");
+//            Log.i("zhangyujian","开始裁剪");
 //            ArrayList<Map<String, String>> lists = UtilString.getListMapByJson(uploadDishData.getMakes());
 //            int size = lists.size();
-//           //YLKLog.i("zhangyujian","size:::"+size);
+//            Log.i("zhangyujian","size:::"+size);
 //            JSONArray jsonArray = new JSONArray();
 //            for (int i = 0; i < size; i++) {
 //                //数据处理
@@ -338,12 +338,12 @@ public class MediaHandleControl {
 //                JSONObject jsonObject = new JSONObject(lists.get(i).get("videoInfo"));
 //                MediaPaperBean bean = new MediaPaperBean();
 //                bean.jsonToBean(jsonObject);
-//               //YLKLog.i("zhangyujian","bean.getPath()::"+bean.getPath());
+//                Log.i("zhangyujian","bean.getPath()::"+bean.getPath());
 //
 //                DecimalFormat df   = new DecimalFormat("######0.0");
 //                editor.executeDeleteAudio(bean.getPath(),now_path_img + "/"+time + "_parper_" + i + ".mp4");
 //                //第二次执行，避免第一次文件未生成-----------------------------
-//               //YLKLog.i("zhangyujian", i+"::当前文件paper是否存在::"+new File(now_path_img + "/"+time + "_parper_" + i + ".mp4").exists());
+//                Log.i("zhangyujian", i+"::当前文件paper是否存在::"+new File(now_path_img + "/"+time + "_parper_" + i + ".mp4").exists());
 //                if(!new File(now_path_img + "/"+time + "_parper_" + i + ".mp4").exists()){
 //                    editor.executeDeleteAudio(bean.getPath(),now_path_img + "/"+time + "_parper_" + i + ".mp4");
 //                }
@@ -355,14 +355,14 @@ public class MediaHandleControl {
 //                    }
 //                } else {//进行裁剪
 //                    if (paperPathState(now_path_img + "/"+time + "_parper_" + i + ".mp4", now_path_paper)) {
-//                       //YLKLog.i("zhangyujian","开始裁剪：：：" + i);
+//                        Log.i("zhangyujian","开始裁剪：：：" + i);
 ////                        editor.executeVideoCutOverlay(bean.getPath(), mediaInfo.aCodecName, now_path_img + "/text_"+i+".png", bean.getStartTime(), bean.getCutTime(), 0, 0, now_path_paper + "/" + time + "_" + i + ".mp4", codeRate);
 //                        editor.executeVideoCutOut(now_path_img + "/"+time + "_parper_" + i + ".mp4",now_path_paper + "/" + time + "_" + i + ".mp4", bean.getStartTime(), bean.getCutTime());
 //                        bean.setCutPath(now_path_paper + "/" + time + "_" + i + ".mp4");
 //                    }
 //                }
 //                //第二次执行，避免第一次文件未生成---------------------------------------------
-//               //YLKLog.i("zhangyujian", i+"::当前文件paper是否存在::"+new File(now_path_paper + "/" + time + "_" + i + ".mp4").exists());
+//                Log.i("zhangyujian", i+"::当前文件paper是否存在::"+new File(now_path_paper + "/" + time + "_" + i + ".mp4").exists());
 //                if(!new File(now_path_paper + "/" + time + "_" + i + ".mp4").exists()){
 //                    if (bean.getCutTime() >= bean.getAllTime()) {//未进行裁剪---拷贝文件
 //                        if(paperPathState(now_path_img + "/"+time + "_parper_" + i + ".mp4", now_path_paper)){
@@ -372,7 +372,7 @@ public class MediaHandleControl {
 //                        }
 //                    } else {//进行裁剪
 //                        if (paperPathState(now_path_img + "/"+time + "_parper_" + i + ".mp4", now_path_paper)) {
-//                           //YLKLog.i("zhangyujian","开始裁剪：：：" + i);
+//                            Log.i("zhangyujian","开始裁剪：：：" + i);
 ////                        editor.executeVideoCutOverlay(bean.getPath(), mediaInfo.aCodecName, now_path_img + "/text_"+i+".png", bean.getStartTime(), bean.getCutTime(), 0, 0, now_path_paper + "/" + time + "_" + i + ".mp4", codeRate);
 //                            editor.executeVideoCutOut(now_path_img + "/"+time + "_parper_" + i + ".mp4",now_path_paper + "/" + time + "_" + i + ".mp4", bean.getStartTime(), bean.getCutTime());
 //                            bean.setCutPath(now_path_paper + "/" + time + "_" + i + ".mp4");
@@ -383,7 +383,7 @@ public class MediaHandleControl {
 //                jsonObject_data.put("videoInfo",bean.beanToJson());
 //                jsonArray.put(jsonObject_data);
 //            }
-//           //YLKLog.i("zhangyujian",uploadDishData.getId()+"::步骤数据处理::"+jsonArray.toString());
+//            Log.i("zhangyujian",uploadDishData.getId()+"::步骤数据处理::"+jsonArray.toString());
 //            UploadDishSqlite uploadDishSqlite= new UploadDishSqlite(context);
 //            uploadDishSqlite.update(uploadDishData.getId(),UploadDishData.ds_makes,jsonArray.toString());
 //            handlerDataCallBack.setCallBack(95);
@@ -398,7 +398,7 @@ public class MediaHandleControl {
 //     */
 //    private void startPaperMediaText(){
 //        try {
-//           //YLKLog.i("zhangyujian","裁剪加字幕");
+//            Log.i("zhangyujian","裁剪加字幕");
 //            ArrayList<Map<String, String>> lists = UtilString.getListMapByJson(uploadDishData.getMakes());
 //            int size = lists.size();
 //            for (int i = 0; i < size; i++) {
@@ -480,7 +480,7 @@ public class MediaHandleControl {
 //                setViewToBitmap(view_text, "text_"+i+".png");
 //                editor.executeDeleteAudio(bean.getPath(),now_path_img + "/"+time + "_text_" + i + ".mp4");
 //                //第二次执行，避免第一次文件未生成------------------
-//               //YLKLog.i("zhangyujian", i+"::当前文件webp是否存在::"+new File(now_path_img + "/"+time + "_text_" + i + ".mp4").exists());
+//                Log.i("zhangyujian", i+"::当前文件webp是否存在::"+new File(now_path_img + "/"+time + "_text_" + i + ".mp4").exists());
 //                if(!new File(now_path_img + "/"+time + "_text_" + i + ".mp4").exists()){//文件未生成，再进行一次操作
 //                    editor.executeDeleteAudio(bean.getPath(),now_path_img + "/"+time + "_text_" + i + ".mp4");
 //                }
@@ -496,7 +496,7 @@ public class MediaHandleControl {
 //                    }
 //                }
 //                //第二次执行，避免第一次文件未生成------------------
-//               //YLKLog.i("zhangyujian", i+"::当前文件webp是否存在::"+new File(now_path_img + "/"+time + "_text_" + i + ".mp4").exists());
+//                Log.i("zhangyujian", i+"::当前文件webp是否存在::"+new File(now_path_img + "/"+time + "_text_" + i + ".mp4").exists());
 //                if(!new File(now_path_img + "/"+time + "_text_" + i + ".mp4").exists()){//文件未生成，再进行一次操作
 //                    if(bean.getCutTime() >= bean.getAllTime()){
 //                        if(paperPathState(now_path_img + "/"+time + "_text_" + i + ".mp4",now_path_paper_text)){
@@ -525,13 +525,13 @@ public class MediaHandleControl {
 //     */
 //    private void startVideoToTs(){
 //        try {
-//           //YLKLog.i("zhangyujian","开始转ts");
+//            Log.i("zhangyujian","开始转ts");
 //            File file = new File(now_path_paper_text);
 //            File[] tempList = file.listFiles();
 //            for (int i = 0; i < tempList.length; i++) {
 //                if (tempList[i].isFile()) {
 //                    if (paperPathState(tempList[i].getAbsolutePath(), now_path_ts)) {
-//                       //YLKLog.i("zhangyujian","开始转ts:::" + i);
+//                        Log.i("zhangyujian","开始转ts:::" + i);
 //                        editor.executeConvertMp4toTs(tempList[i].getAbsolutePath(), now_path_ts + "/" + time + "_" + i + ".ts");
 //                    }
 //                }
@@ -547,7 +547,7 @@ public class MediaHandleControl {
 //     */
 //    public void startCompound() {
 //        try {
-//           //YLKLog.i("zhangyujian","开始合成");
+//            Log.i("zhangyujian","开始合成");
 //            File file = new File(now_path_ts);
 //            File[] tempList = file.listFiles();
 //            ArrayList<String> lists = new ArrayList<>();
@@ -634,7 +634,7 @@ public class MediaHandleControl {
 //            mediaPlayer.prepare();
 //            float endtime=mediaPlayer.getDuration()/1000;
 //            audioHandlerTime=vtime+endtime;
-//           //YLKLog.i("zhangyujian", "时常：" + audioHandlerTime);
+//            Log.i("zhangyujian", "时常：" + audioHandlerTime);
 //            if (paperPathState(path_voide + "/xiangha_bgm.aac", now_path_audio)) {
 //                editor.executeAudioCutOut(path_voide + "/xiangha_bgm.aac", now_path_audio+"/audio_cut_new.aac", 0, audioHandlerTime);
 //            }
@@ -717,7 +717,7 @@ public class MediaHandleControl {
 //     * 合成视频转ts
 //     */
 //    private void startVideoSuccessToTs(){
-//       //YLKLog.i("zhangyujian","合成视频转ts");
+//        Log.i("zhangyujian","合成视频转ts");
 //
 //        try {
 //            //去除音頻
@@ -752,10 +752,10 @@ public class MediaHandleControl {
 //     * 原则上是图片的转视频进行切割划分
 //     */
 //    private void startOneVideoImage(){
-//       //YLKLog.i("zhangyujian","视频放入第一帧图片");
+//        Log.i("zhangyujian","视频放入第一帧图片");
 //        try{
 //            String cover = uploadDishData.getCover();//对大图
-//           //YLKLog.i("zhangyujian","cover:"+cover);
+//            Log.i("zhangyujian","cover:"+cover);
 //            MediaInfo mediaInfo = new MediaInfo(now_path_code + "/start_no.mp4");
 //            mediaInfo.prepare();
 //
@@ -780,7 +780,7 @@ public class MediaHandleControl {
 //     */
 //    private void startSuccessCompoundVideo(){
 //        try {
-//           //YLKLog.i("zhangyujian","片头片尾的视频::开始合成");
+//            Log.i("zhangyujian","片头片尾的视频::开始合成");
 //            File file = new File(now_path_sucess_ts);
 //            File[] tempList = file.listFiles();
 //            ArrayList<String> lists = new ArrayList<>();
@@ -805,7 +805,7 @@ public class MediaHandleControl {
 //     * 最后完成
 //     */
 //    private void successHandler(){
-//       //YLKLog.i("zhangyujian","去除背景音乐，加背景音乐，最后合成");
+//        Log.i("zhangyujian","去除背景音乐，加背景音乐，最后合成");
 //        editor.executeDeleteAudio(now_path + "success.mp4",now_path + "success_no.mp4");
 //        String videoFile=now_path + "success_no.mp4";
 //        String audioFile=path_voide+"/ok.aac";

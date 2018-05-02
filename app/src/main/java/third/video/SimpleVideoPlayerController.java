@@ -163,7 +163,7 @@ public class SimpleVideoPlayerController extends VideoPlayerController {
         videoPlayer.addListener(new StandardGSYVideoPlayer.NetworkNotifyListener() {
             @Override
             public void wifiConnected() {
-               //YLKLog.i("tzy","wifiConnected");
+                Log.i("tzy","wifiConnected");
                 removeTipView();
                 if(view_dish != null){
                     view_dish.performClick();
@@ -175,7 +175,7 @@ public class SimpleVideoPlayerController extends VideoPlayerController {
 
             @Override
             public void mobileConnected() {
-               //YLKLog.i("tzy","mobileConnected");
+                Log.i("tzy","mobileConnected");
                 if(!"1".equals(FileManager.loadShared(mContext,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI).toString())){
                     if(isNetworkDisconnect){
                         removeTipView();
@@ -194,7 +194,7 @@ public class SimpleVideoPlayerController extends VideoPlayerController {
 
             @Override
             public void nothingConnected() {
-               //YLKLog.i("tzy","nothingConnected");
+                Log.i("tzy","nothingConnected");
                 if(view_Tip==null){
                     initNoNetwork(mContext);
                     mPraentViewGroup.addView(view_Tip);

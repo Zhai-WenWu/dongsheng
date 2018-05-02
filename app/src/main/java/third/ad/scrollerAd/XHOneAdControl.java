@@ -88,7 +88,7 @@ public class XHOneAdControl {
      * 广告的点击事件
      */
     public void onAdClick(String oneLevel, String twoLevel) {
-       //YLKLog.i("tzy", "onAdClick::::" + index_ad);
+        Log.i("tzy", "onAdClick::::" + index_ad);
         if (index_ad > -1 && index_ad < listAdParent.size())
             listAdParent.get(index_ad).onThirdClick(oneLevel, twoLevel);
     }
@@ -97,7 +97,7 @@ public class XHOneAdControl {
      * 广告曝光
      */
     public void onAdBind(View view, String oneLevel, String twoLevel) {
-       //YLKLog.i("tzy", "onAdBind::::" + index_ad + "::::" + (view == null ? "view为null" : "正常"));
+        Log.i("tzy", "onAdBind::::" + index_ad + "::::" + (view == null ? "view为null" : "正常"));
         if (index_ad > -1 && index_ad < listAdParent.size() && !isDisplayed) {
             if (view != null)
                 listAdParent.get(index_ad).setShowView(view);

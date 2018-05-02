@@ -86,7 +86,7 @@ public class BreakPointTokenBean implements Serializable{
         if(TextUtils.isEmpty(key)||TextUtils.isEmpty(token))return true;//数据为null
 
         if(nowTime>=expiredTime*1000){
-           //YLKLog.i("qiniu","token已过期");
+            Log.i("qiniu","token已过期");
             return true;
         }else{
             return false;

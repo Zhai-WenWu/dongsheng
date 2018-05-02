@@ -76,7 +76,7 @@ public abstract class AdOptionParent implements ActivityMethodManager.IAutoRefre
     }
 
     public synchronized void getAdData(final Context context, final String statisticKey, final String controlTag, final String controlState) {
-       //YLKLog.i(tag_yu, "开始获取  广告  数据-------------:" + controlTag);
+        Log.i(tag_yu, "开始获取  广告  数据-------------:" + controlTag);
         this.statisticKey = statisticKey;
         this.controlTag = controlTag;
         adArray.clear();
@@ -204,7 +204,7 @@ public abstract class AdOptionParent implements ActivityMethodManager.IAutoRefre
                                                        boolean isBack) {
         Log("getBdData adArray.size():" + adArray.size());
         ArrayList<Map<String, String>> tempList = new ArrayList<>();
-       //YLKLog.i(tag_yu, "getLimitNum::" + getLimitNum());
+        Log.i(tag_yu, "getLimitNum::" + getLimitNum());
         if (!isBack && getLimitNum() > 0) {//listDatas，向下翻页
             int limitNum = getLimitNum();
             for (int index = 0; index < limitNum; index++) {
@@ -213,7 +213,7 @@ public abstract class AdOptionParent implements ActivityMethodManager.IAutoRefre
             for (int index = 0; index < limitNum; index++) {
                 old_list.remove(0);
             }
-           //YLKLog.i(tag_yu, "节点数据为::" + old_list.get(0).get("name"));
+            Log.i(tag_yu, "节点数据为::" + old_list.get(0).get("name"));
         }
         //先移除广告
         int adPositionIndex = TextUtils.isEmpty(controlTag) ? 0 : Integer.parseInt(controlTag);
@@ -226,7 +226,7 @@ public abstract class AdOptionParent implements ActivityMethodManager.IAutoRefre
              i++) {
             Map<String, String> dataMap = old_list.get(i);
             if ("ad".equals(dataMap.get("adstyle"))) {
-               //YLKLog.i("tzy", "getBdData: remove");
+                Log.i("tzy", "getBdData: remove");
                 old_list.remove(dataMap);
                 i--;
             }
@@ -242,7 +242,7 @@ public abstract class AdOptionParent implements ActivityMethodManager.IAutoRefre
                 //获取当前要插入对角标位
                 int index = getIndexAd(idIndex);
                 index += startIndex;
-               //YLKLog.i(tag_yu, "：startIndex：：" + startIndex + "：：：index:::" + index + "::::" + old_list.size());
+                Log.i(tag_yu, "：startIndex：：" + startIndex + "：：：index:::" + index + "::::" + old_list.size());
                 if (index > 0 && index < old_list.size()) {
                     if (adArray.size() > 0) showIndex = index;
                     Map<String, String> dataMap = old_list.get(index);
@@ -264,7 +264,7 @@ public abstract class AdOptionParent implements ActivityMethodManager.IAutoRefre
                 }
             }
             if (adLoadNumberCallBack != null) {
-               //YLKLog.i(tag_yu, "old_list.size()-showIndex:::::::::::" + (old_list.size() - showIndex));
+                Log.i(tag_yu, "old_list.size()-showIndex:::::::::::" + (old_list.size() - showIndex));
                 adLoadNumberCallBack.loadNumberCallBack(old_list.size() - showIndex);
             }
         }
@@ -306,10 +306,10 @@ public abstract class AdOptionParent implements ActivityMethodManager.IAutoRefre
                     } else {
                         ImgKey = IMG_KEY;
                     }
-//                   //YLKLog.i("tzy", "ImgKey::**********************************" + ImgKey);
+//                    Log.i("tzy", "ImgKey::**********************************" + ImgKey);
                     if (adMap.containsKey(ImgKey) && !TextUtils.isEmpty(adMap.get(ImgKey))) {
                         adImg = adMap.get(ImgKey);
-//                       //YLKLog.i("tzy", "ImgKey::****************2******************" + adImg);
+//                        Log.i("tzy", "ImgKey::****************2******************" + adImg);
                         adMap.put("img", adImg);
                     }
                     ArrayList<Map<String, String>> imgsMap = StringManager.getListMapByJson(adMap.get("imgs"));
@@ -408,7 +408,7 @@ public abstract class AdOptionParent implements ActivityMethodManager.IAutoRefre
     }
 
     public void Log(String content) {
-       //YLKLog.i(tag_yu, content);
+        Log.i(tag_yu, content);
     }
 
     /**

@@ -76,7 +76,7 @@ public class DeviceUtilDialog {
                 deviceCallBack.backResultState(false);
             }
         } else {
-           //YLKLog.i("DeviceUtilDialog ", "参数错误");
+            Log.i("DeviceUtilDialog ", "参数错误");
         }
     }
 

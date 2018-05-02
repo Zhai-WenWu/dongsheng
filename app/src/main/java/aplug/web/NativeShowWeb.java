@@ -51,10 +51,10 @@ public class NativeShowWeb extends BaseActivity {
             }
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-               //YLKLog.i("yule", "shouldOverrideUrlLoading: " + "url =" + url);
+                Log.i("yule", "shouldOverrideUrlLoading: " + "url =" + url);
                 final String newUrl = UrlFilter.filterAdToDownloadUrl(url);
                 if (!TextUtils.isEmpty(newUrl)){
-                   //YLKLog.i("yule", "shouldOverrideUrlLoading: " + "开始下载" + newUrl);
+                    Log.i("yule", "shouldOverrideUrlLoading: " + "开始下载" + newUrl);
                     AppCommon.openUrl(newUrl,false);
                     return true;
                 }
@@ -68,7 +68,7 @@ public class NativeShowWeb extends BaseActivity {
              * 根据url的scheme处理跳转第三方app的业务
              */
             private boolean shouldOverrideUrlLoadingByApp(WebView view, String url) {
-               //YLKLog.i("yule", "shouldOverrideUrlLoadingByApp: " + "url =" + url);
+                Log.i("yule", "shouldOverrideUrlLoadingByApp: " + "url =" + url);
                 if (url.startsWith("http") || url.startsWith("https") || url.startsWith("ftp")) {
                     //不处理http, https, ftp的请求
                     return false;
@@ -79,7 +79,7 @@ public class NativeShowWeb extends BaseActivity {
                     intent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME);
                     view.getContext().startActivity(intent);
                 } catch (Exception e) {
-                   //YLKLog.i("yule", "shouldOverrideUrlLoadingByApp: " + "e" + e);
+                    Log.i("yule", "shouldOverrideUrlLoadingByApp: " + "e" + e);
                     return false;
                 }
                 return true;

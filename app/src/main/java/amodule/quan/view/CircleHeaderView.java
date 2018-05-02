@@ -508,7 +508,7 @@ public class CircleHeaderView extends LinearLayout {
         Map<String, String> map = subjectToMap(subjectData);
         NormalContentView contentView = new NormalContentView(context);
         contentView.setTag(String.valueOf(subjectData.getId()));
-       //YLKLog.i("subjectData.getId()", String.valueOf(subjectData.getId()));
+        Log.i("subjectData.getId()", String.valueOf(subjectData.getId()));
         contentView.initView(map,0);
         layout.addView(contentView, 0);//添加到第一个位置
         layout.setVisibility(View.VISIBLE);

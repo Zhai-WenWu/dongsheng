@@ -110,7 +110,7 @@ public class DetailDishWeb extends BaseAppCompatActivity implements IObserver {
         },15 * 60 * 1000);
         //sufureView页面闪烁
         getWindow().setFormat(PixelFormat.TRANSLUCENT);
-       //YLKLog.i(Main.TAG,"菜谱详情页");
+        Log.i(Main.TAG,"菜谱详情页");
         init();
         XHClick.track(XHApplication.in(), "浏览菜谱详情页");
         //注册监听
@@ -148,7 +148,7 @@ public class DetailDishWeb extends BaseAppCompatActivity implements IObserver {
         }, new TemplateWebView.OnTemplateCallBack() {
             @Override
             public void readLoad(String param) {
-               //YLKLog.i(Main.TAG,"数据：：："+param);
+                Log.i(Main.TAG,"数据：：："+param);
                 Map<String,String> map= StringManager.getMapByString(param,"&","=");
                 code=map.get("code");
                 courseCode=map.get("courseCode");
@@ -234,7 +234,7 @@ public class DetailDishWeb extends BaseAppCompatActivity implements IObserver {
             @Override
             public void loaded(int flag, String s, Object o) {
                 if (flag >= ReqInternet.REQ_OK_STRING) {
-                   //YLKLog.i(Main.TAG,"topinfo返回数据");
+                    Log.i(Main.TAG,"topinfo返回数据");
                     if(!hasPermission || !contiunRefresh) return;
                     dishActivityViewControl.reset();
                     if (!TextUtils.isEmpty(o.toString()) && !o.toString().equals("[]")) {
@@ -263,7 +263,7 @@ public class DetailDishWeb extends BaseAppCompatActivity implements IObserver {
             @Override
             public void loaded(int i, String s, Object o) {
                 if(i >= ReqInternet.REQ_OK_STRING){
-                   //YLKLog.i(Main.TAG,"tieinfo返回数据");
+                    Log.i(Main.TAG,"tieinfo返回数据");
                     dishActivityViewControl.analyzeUserShowDishInfoData(String.valueOf(o));
                 }
             }
@@ -331,8 +331,8 @@ public class DetailDishWeb extends BaseAppCompatActivity implements IObserver {
 
     @Override
     protected void onResume() {
-       //YLKLog.i("zyj","onResume::"+(System.currentTimeMillis()-startTime));
-       //YLKLog.i("tzy","onResume()");
+        Log.i("zyj","onResume::"+(System.currentTimeMillis()-startTime));
+        Log.i("tzy","onResume()");
         mFavePopWindowDialog=dishActivityViewControl.getDishTitleViewControl().getPopWindowDialog();
         super.onResume();
         Rect outRect = new Rect();
@@ -345,7 +345,7 @@ public class DetailDishWeb extends BaseAppCompatActivity implements IObserver {
 
     @Override
     protected void onPause() {
-       //YLKLog.i("tzy","onPause()");
+        Log.i("tzy","onPause()");
         mFavePopWindowDialog=dishActivityViewControl.getDishTitleViewControl().getPopWindowDialog();
         super.onPause();
         if(dishActivityViewControl != null){
@@ -396,7 +396,7 @@ public class DetailDishWeb extends BaseAppCompatActivity implements IObserver {
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-       //YLKLog.i("zyj","onWindowFocusChanged::"+(System.currentTimeMillis()-startTime));
+        Log.i("zyj","onWindowFocusChanged::"+(System.currentTimeMillis()-startTime));
     }
 
     /**

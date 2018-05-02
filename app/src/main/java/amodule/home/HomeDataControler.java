@@ -127,7 +127,7 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
         } else {
             params.append(TextUtils.isEmpty(nextUrl) ? "type=" + mHomeModuleBean.getType() : nextUrl);
         }
-//       //YLKLog.i("tzy", "refresh::" + refresh + "::data:" + params.toString());
+//        Log.i("tzy", "refresh::" + refresh + "::data:" + params.toString());
         //准备请求
         if (callback != null)
             callback.onPrepare();
@@ -160,7 +160,7 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
                                 if (compelClearData || (refresh && "2".equals(resetValue))) {
                                     mData.clear();
                                     safeNotifySetChanged();
-                                   //YLKLog.i("zyj", "刷新数据：清集合");
+                                    Log.i("zyj", "刷新数据：清集合");
                                     isNeedRefresh(true);
                                     //强制刷新，重置数据
                                     if (!TextUtils.isEmpty(currentBackUrl))
@@ -175,14 +175,14 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
                                     if (mInsertADCallback != null) {
                                         listDatas = mInsertADCallback.insertAD(listDatas, true);
                                         upDataSize += listDatas.size();
-                                       //YLKLog.i(tag_yu, "listDatas::111:" + listDatas.size());
+                                        Log.i(tag_yu, "listDatas::111:" + listDatas.size());
                                     }
                                     mData.addAll(0, listDatas);//插入到第一个位置
                                 } else {
                                     mData.addAll(listDatas);//顺序插入
                                     //如果需要加广告，插入广告
                                     if (mInsertADCallback != null) {
-                                       //YLKLog.i(tag_yu, "mListData::222:" + mData.size() + "::" + upDataSize);
+                                        Log.i(tag_yu, "mListData::222:" + mData.size() + "::" + upDataSize);
                                         mData = mInsertADCallback.insertAD(mData, false);
                                     }
                                 }
@@ -190,7 +190,7 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
                                 safeNotifySetChanged();
                                 //自动请求下一页数据
                                 if (mData.size() <= 4) {//推荐列表：低于等5的数据自动请求数据
-                                   //YLKLog.i("zhangyujian", "自动下次请求:::" + mData.size());
+                                    Log.i("zhangyujian", "自动下次请求:::" + mData.size());
                                     if (mEntryptDataCallback != null)
                                         mEntryptDataCallback.onEntryptData(false);
                                 }
@@ -240,7 +240,7 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
                 || mData == null)
             return;//条件过滤
         boolean state = mAdControl.isNeedRefresh();
-       //YLKLog.i(tag_yu, "isNeedRefresh::::" + state + " :: 推荐 ; isForceRefresh = " + isForceRefresh);
+        Log.i(tag_yu, "isNeedRefresh::::" + state + " :: 推荐 ; isForceRefresh = " + isForceRefresh);
         if (isForceRefresh)
             state = true;//强制刷新
         if (state) {
@@ -260,7 +260,7 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
             Stream.of(mData)
                     .filter(map -> map.containsKey("adstyle") && "ad".equals(map.get("adstyle")))
                     .forEach(listTemp::add);
-           //YLKLog.i(tag_yu, "删除广告");
+            Log.i(tag_yu, "删除广告");
             if (listTemp.size() > 0) {
                 mData.removeAll(listTemp);
             }

@@ -30,7 +30,7 @@ public class XHScrollerGdt extends XHScrollerAdParent {
     @Override
     public void onResumeAd(String oneLevel, String twoLevel) {
         if (null != nativeADDataRef && null != view) {
-           //YLKLog.i("tzy", "广告展示:::" + XHScrollerAdParent.ADKEY_GDT + ":::位置::" + twoLevel);
+            Log.i("tzy", "广告展示:::" + XHScrollerAdParent.ADKEY_GDT + ":::位置::" + twoLevel);
             nativeADDataRef.onExposured(view);
             onAdShow(oneLevel, twoLevel, key);
         }
@@ -43,14 +43,14 @@ public class XHScrollerGdt extends XHScrollerAdParent {
     @Override
     public void onThirdClick(String oneLevel, String twoLevel) {
         if (null == nativeADDataRef) {
-           //YLKLog.i("tzy", "nativeResponseObject为null");
+            Log.i("tzy", "nativeResponseObject为null");
             return;
         }
         if (view == null) {
-           //YLKLog.i("tzy", "view为null");
+            Log.i("tzy", "view为null");
             return;
         }
-       //YLKLog.i("tzy", "广告点击:::" + XHScrollerAdParent.ADKEY_GDT + ":::位置:" + twoLevel);
+        Log.i("tzy", "广告点击:::" + XHScrollerAdParent.ADKEY_GDT + ":::位置:" + twoLevel);
         nativeADDataRef.onClicked(view);
         onAdClick(oneLevel, twoLevel, key);
     }
@@ -69,7 +69,7 @@ public class XHScrollerGdt extends XHScrollerAdParent {
                     @Override
                     public void addAdView(String title, String desc, String iconUrl,
                                           String imageUrl, View.OnClickListener clickListener) {
-//                       //YLKLog.i("tzy", "GDT NactiveAD onHandlerData");
+//                        Log.i("tzy", "GDT NactiveAD onHandlerData");
                         if (!TextUtils.isEmpty(title) && !TextUtils.isEmpty(imageUrl)) {
                             Map<String, String> map = new HashMap<>();
                             map.put("title", title);
