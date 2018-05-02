@@ -205,8 +205,10 @@ public class AppCommon {
             LinkedHashMap<String, String> map_link = UtilString.getMapByString(temp, "&", "=");
             String downUrl = Uri.decode(map_link.get("url"));
             String appName = Uri.decode(map_link.get("appname"));
+            boolean showProgressDialog = "2".equals(map_link.get("showDialog"));
             try {
-                final DownLoad downLoad = new DownLoad(XHApplication.in());
+                final DownLoad downLoad = new DownLoad(act);
+                downLoad.setShowProgressDialog(showProgressDialog);
                 downLoad.setDownLoadTip("开始下载", appName + ".apk", "正在下载", R.drawable.ic_launcher, false);
                 downLoad.starDownLoad(downUrl, FileManager.getSDCacheDir(), appName, true, new DownloadCallBack() {
                     @Override

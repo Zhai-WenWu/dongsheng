@@ -126,7 +126,7 @@ public class XHScrollerSelf extends XHScrollerAdParent {
         mNativeData = nativeData;
         if (mNativeData != null && "1".equals(mNativeData.getDbType())) {
             String appname = TextUtils.isEmpty(mNativeData.getBrandName()) ? Tools.getMD5(mNativeData.getUrl()) : mNativeData.getBrandName();
-            mNativeData.setUrl("download.app?url=" + Uri.encode(mNativeData.getUrl()) + "&appname=" + appname);
+            mNativeData.setUrl("download.app?url=" + Uri.encode(mNativeData.getUrl()) + "&appname=" + appname + "&showDialog=1");
         }
     }
 }
