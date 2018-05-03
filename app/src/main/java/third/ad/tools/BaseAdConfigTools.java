@@ -37,10 +37,10 @@ public class BaseAdConfigTools {
         ReqInternet.in().doPost(url, params, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
-                if("show".equals(event)){
-                    Log.i("tzy", "loaded: deleteAll");
-                    AdStatistics.getInstance().deleteAll();
-                }
+//                if("show".equals(event)){
+//                    Log.i("tzy", "loaded: deleteAll");
+//                    AdStatistics.getInstance().deleteAll();
+//                }
             }
         });
     }

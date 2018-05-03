@@ -20,6 +20,7 @@ import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
 import acore.widget.rvlistview.RvListView;
+import acore.widget.rvlistview.layoutmanager.LinearLayoutManagerWrapper;
 import amodule.home.HomeModuleControler;
 import amodule.home.adapter.HomeSecondRecyclerAdapter;
 import amodule.main.bean.HomeModuleBean;
@@ -93,6 +94,7 @@ public class HomeWeekListActivity extends BaseAppCompatActivity {
 
     private void initView() {
         mRv = (RvListView) findViewById(R.id.recycler_view);
+        mRv.setLayoutManager(new LinearLayoutManagerWrapper(this));
         mPtrFrameLayout = (PtrClassicFrameLayout) findViewById(R.id.refresh_list_view_frame);
         mPtrFrameLayout.disableWhenHorizontalMove(true);
         TextView titleV = (TextView) findViewById(R.id.title);
