@@ -511,7 +511,7 @@ public class ToolsDevice {
             return "11111111111";
 
         // LogManager.print("d", "imei:" +deviceID);
-        return "zhouyue123";
+        return deviceID;
     }
 
     /**
