@@ -208,6 +208,7 @@ public class AppCommon {
             boolean showProgressDialog = "2".equals(map_link.get("showDialog"));
             try {
                 final DownLoad downLoad = new DownLoad(act);
+                downLoad.setActionStr("下载");
                 downLoad.setShowProgressDialog(showProgressDialog);
                 downLoad.setDownLoadTip("开始下载", appName + ".apk", "正在下载", R.drawable.ic_launcher, false);
                 downLoad.starDownLoad(downUrl, FileManager.getSDCacheDir(), appName, true, new DownloadCallBack() {
