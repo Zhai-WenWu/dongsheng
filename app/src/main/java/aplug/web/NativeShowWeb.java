@@ -55,7 +55,7 @@ public class NativeShowWeb extends BaseActivity {
                 final String newUrl = UrlFilter.filterAdToDownloadUrl(url);
                 if (!TextUtils.isEmpty(newUrl)){
                     Log.i("yule", "shouldOverrideUrlLoading: " + "开始下载" + newUrl);
-                    AppCommon.openUrl(newUrl,false);
+                    AppCommon.openUrl(newUrl + "&showDialog=2",false);
                     return true;
                 }
                 if (shouldOverrideUrlLoadingByApp(view, url)) {
