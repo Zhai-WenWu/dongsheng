@@ -52,7 +52,8 @@ public class CircleHeaderAD extends LinearLayout {
         ImageView adImageView = (ImageView) findViewById(R.id.ad_banner_item_iv_single);
         ArrayList<String> list = new ArrayList<>();
         list.add(MAIN_CIRCLE_TITLE);
-        xhAllAdControl = new XHAllAdControl(list, (isRefresh,map) -> {
+        xhAllAdControl = new XHAllAdControl(list, activity, "community_top");
+        xhAllAdControl.start((isRefresh,map) -> {
             if (xhAllAdControl == null) {
                 return;
             }
@@ -62,7 +63,7 @@ public class CircleHeaderAD extends LinearLayout {
                 bannerAdBurden.onShowAd(map);
                 xhAllAdControl.onAdBind(0, adImageView, "");
             }
-        }, activity, "community_top");
+        });
         xhAllAdControl.registerRefreshCallback();
     }
 

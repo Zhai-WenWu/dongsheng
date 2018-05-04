@@ -40,12 +40,12 @@ public class SubjectFloorAdvertControl {
         imageView = (ImageView) floorView.findViewById(R.id.ad_banner_item_iv_single);
         ArrayList<String> ads = new ArrayList<>();
         ads.add(DETAIL_SUBJECT_FLOOR_BOTTOM);
-        xhAllAdControl = new XHAllAdControl(ads,
-                (isRefresh, map)  -> {
-                    BannerAd bannerAd = new BannerAd(mAct, xhAllAdControl, imageView);
-                    map = StringManager.getFirstMap(map.get(DETAIL_SUBJECT_FLOOR_BOTTOM));
-                    bannerAd.onShowAd(map);
-                }, mAct, "community_detail");
+        xhAllAdControl = new XHAllAdControl(ads, mAct, "community_detail");
+        xhAllAdControl.start((isRefresh, map)  -> {
+            BannerAd bannerAd = new BannerAd(mAct, xhAllAdControl, imageView);
+            map = StringManager.getFirstMap(map.get(DETAIL_SUBJECT_FLOOR_BOTTOM));
+            bannerAd.onShowAd(map);
+        });
         xhAllAdControl.registerRefreshCallback();
     }
 

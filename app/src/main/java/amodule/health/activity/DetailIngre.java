@@ -193,13 +193,14 @@ public class DetailIngre extends BaseActivity {
         mImageView = (ImageView) ll_info.findViewById(R.id.ad_banner_item_iv_single);
         ArrayList<String> list = new ArrayList<>();
         list.add(DETAIL_INGRE);
-        xhAllAdControl = new XHAllAdControl(list, (isRefresh, map) -> {
+        xhAllAdControl = new XHAllAdControl(list, this, "other_restain");
+        xhAllAdControl.start((isRefresh, map) -> {
             if (map.containsKey(DETAIL_INGRE)) {
                 bannerAdBurden = new BannerAd(DetailIngre.this, xhAllAdControl, mImageView);
                 map = StringManager.getFirstMap(map.get(DETAIL_INGRE));
                 bannerAdBurden.onShowAd(map);
             }
-        }, this, "other_restain");
+        });
         xhAllAdControl.registerRefreshCallback();
     }
 

@@ -2,6 +2,7 @@ package third.ad;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -41,7 +42,7 @@ public class BannerAd {
      * @param adControl 广告控制
      * @param imageView 显示图片额imageview
      */
-    public BannerAd(Activity act, XHAllAdControl adControl, ImageView imageView) {
+    public BannerAd(Activity act, @NonNull XHAllAdControl adControl, ImageView imageView) {
         mAct = act;
         mXHAllAdControl = adControl;
         mAdImage = imageView;
@@ -108,7 +109,9 @@ public class BannerAd {
     }
 
     public void onAdClick() {
-        mXHAllAdControl.onAdClick(0, "");
+        if(mXHAllAdControl != null){
+            mXHAllAdControl.onAdClick(0, "");
+        }
         adClick();
     }
 

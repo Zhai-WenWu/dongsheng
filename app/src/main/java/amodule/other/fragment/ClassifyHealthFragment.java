@@ -358,19 +358,19 @@ public class ClassifyHealthFragment extends Fragment {
         ArrayList<String> ads = new ArrayList<>();
         ads.add(adPlayId);
         final String finalAdPlayId = adPlayId;
-        xhAllAdControl = new XHAllAdControl(ads,
-                (isRefresh,map) -> {
-                    if (map.containsKey(finalAdPlayId)) {
-                        BannerAd bannerAd = new BannerAd(mActivity, xhAllAdControl, mImageView);
-                        bannerAd.marginLeft = ToolsDevice.dp2px(mActivity, 60);
-                        bannerAd.marginRight = ToolsDevice.dp2px(mActivity, 60);
-                        map = StringManager.getFirstMap(map.get(finalAdPlayId));
-                        bannerAd.onShowAd(map);
-                        if(TextUtils.equals(mXhIndex,mSelectIndex)){
-                            onAdShow();
-                        }
-                    }
-                }, getActivity(), "");
+        xhAllAdControl = new XHAllAdControl(ads, getActivity(), "");
+        xhAllAdControl.start((isRefresh,map) -> {
+            if (map.containsKey(finalAdPlayId)) {
+                BannerAd bannerAd = new BannerAd(mActivity, xhAllAdControl, mImageView);
+                bannerAd.marginLeft = ToolsDevice.dp2px(mActivity, 60);
+                bannerAd.marginRight = ToolsDevice.dp2px(mActivity, 60);
+                map = StringManager.getFirstMap(map.get(finalAdPlayId));
+                bannerAd.onShowAd(map);
+                if(TextUtils.equals(mXhIndex,mSelectIndex)){
+                    onAdShow();
+                }
+            }
+        });
         xhAllAdControl.registerRefreshCallback();
     }
 

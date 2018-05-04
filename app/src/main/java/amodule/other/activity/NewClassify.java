@@ -417,7 +417,8 @@ public class NewClassify extends BaseActivity {
         final String adid = "caipu".equals(type) ? AdPlayIdConfig.Dish_CLASSIFY : AdPlayIdConfig.HEALTH_ClASSIFY;
         ArrayList<String> list = new ArrayList<>();
         list.add(adid);
-        xhAllAdControl = new XHAllAdControl(list, (isRefresh,map) -> {
+        xhAllAdControl = new XHAllAdControl(list, this, "");
+        xhAllAdControl.start((isRefresh,map) -> {
             if (xhAllAdControl == null) {
                 return;
             }
@@ -429,7 +430,7 @@ public class NewClassify extends BaseActivity {
                 bannerAd.onShowAd(map);
                 xhAllAdControl.onAdBind(0, imageView, "");
             }
-        }, this, "");
+        });
         xhAllAdControl.registerRefreshCallback();
     }
 

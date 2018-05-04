@@ -111,7 +111,7 @@ public class DetailHealth extends BaseActivity {
 
             @Override
             public void onScrollChanged(int l, int t, int oldl, int oldt) {
-                if (imageView == null || bannerAdBurden == null)
+                if (imageView == null || bannerAdBurden == null || xhAllAdControl == null)
                     return;
                 int[] location = new int[2];
                 imageView.getLocationOnScreen(location);
@@ -130,30 +130,33 @@ public class DetailHealth extends BaseActivity {
         imageView = (ImageView) findViewById(R.id.ad_banner_item_iv_single);
         ArrayList<String> list = new ArrayList<>();
         list.add(DETAIL_HEALTH);
-        bannerAdBurden = new BannerAd(DetailHealth.this, xhAllAdControl, imageView);
-        bannerAdBurden.setOnBannerListener(new BannerAd.OnBannerListener() {
-            @Override
-            public void onShowAd() {
-                imageView.setVisibility(isLoadOver?View.VISIBLE:View.GONE);
-            }
-
-            @Override
-            public void onClickAd() {
-
-            }
-
-            @Override
-            public void onImgShow(int imgH) {
-
-            }
-        });
-        xhAllAdControl = new XHAllAdControl(list, (isRefresh,map) -> {
+        xhAllAdControl = new XHAllAdControl(list, this, "other_health");
+        xhAllAdControl.start((isRefresh,map) -> {
             if (map.containsKey(DETAIL_HEALTH)) {
                 map = StringManager.getFirstMap(map.get(DETAIL_HEALTH));
+                if(bannerAdBurden == null){
+                    bannerAdBurden = new BannerAd(DetailHealth.this, xhAllAdControl, imageView);
+                    bannerAdBurden.setOnBannerListener(new BannerAd.OnBannerListener() {
+                        @Override
+                        public void onShowAd() {
+                            imageView.setVisibility(isLoadOver?View.VISIBLE:View.GONE);
+                        }
+
+                        @Override
+                        public void onClickAd() {
+
+                        }
+
+                        @Override
+                        public void onImgShow(int imgH) {
+
+                        }
+                    });
+                }
                 if (bannerAdBurden != null)
                     bannerAdBurden.onShowAd(map);
             }
-        }, this, "other_health");
+        });
         xhAllAdControl.registerRefreshCallback();
     }
 

@@ -51,7 +51,8 @@ public class DishADBannerView extends ItemBaseView {
         } else {
             activity = XHActivityManager.getInstance().getCurrentActivity();
         }
-        xhAllAdControl = new XHAllAdControl(list, (isRefresh, map) -> {
+        xhAllAdControl = new XHAllAdControl(list, activity,"");
+        xhAllAdControl.start((isRefresh, map) -> {
             if(map.containsKey(DISH_YONGLIAO)){
                 BannerAd bannerAd = new BannerAd(XHActivityManager.getInstance().getCurrentActivity(), xhAllAdControl, img_banner);
                 bannerAd.setOnBannerListener(new BannerAd.OnBannerListener() {
@@ -73,7 +74,7 @@ public class DishADBannerView extends ItemBaseView {
                 map = StringManager.getFirstMap(map.get(DISH_YONGLIAO));
                 bannerAd.onShowAd(map);
             }
-        },activity,"");
+        });
         xhAllAdControl.registerRefreshCallback();
     }
 
