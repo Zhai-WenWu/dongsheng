@@ -13,13 +13,16 @@ import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.annimon.stream.Stream;
@@ -42,6 +45,7 @@ import acore.logic.XHClick;
 import acore.notification.controller.NotificationSettingController;
 import acore.override.XHApplication;
 import acore.override.activity.mian.MainBaseActivity;
+import acore.override.helper.XHActivityManager;
 import acore.tools.ChannelUtil;
 import acore.tools.FileManager;
 import acore.tools.IObserver;
@@ -52,6 +56,7 @@ import acore.tools.Tools;
 import acore.widget.XiangHaTabHost;
 import amodule.dish.tools.OffDishToFavoriteControl;
 import amodule.dish.tools.UploadDishControl;
+import amodule.lesson.activity.LessonHome;
 import amodule.main.Tools.MainInitDataControl;
 import amodule.main.Tools.WelcomeControls;
 import amodule.main.activity.MainCircle;
@@ -61,7 +66,6 @@ import amodule.main.delegate.ISetMessageTip;
 import amodule.user.activity.MyFavorite;
 import amodule.user.activity.login.LoginByAccout;
 import aplug.shortvideo.ShortVideoInit;
-import third.ad.XHAdAutoRefresh;
 import third.ad.control.AdControlHomeDish;
 import third.ad.db.XHAdSqlite;
 import third.ad.tools.AdConfigTools;
@@ -76,18 +80,18 @@ import xh.basic.tool.UtilLog;
 
 import static android.content.Intent.FLAG_ACTIVITY_NO_USER_ACTION;
 import static com.xiangha.R.id.iv_itemIsFine;
+import static com.xiangha.R.id.pay_wechat;
 
 @SuppressWarnings("deprecation")
 public class Main extends Activity implements OnClickListener, IObserver, ISetMessageTip {
     public static final String TAG = "xianghaTag";
 
-    private String[] tabTitle = {"学做菜", "社区", "收藏", "我的"};
-    private Class<?>[] classes = new Class<?>[]{MainHomePage.class, MainCircle.class, MyFavorite.class, MainMyself.class};
-    private int[] tabImgs = new int[]{R.drawable.tab_index, R.drawable.tab_circle, R.drawable.tab_fav, R.drawable.tab_myself};
+    private String[] tabTitle = {"学做菜", "VIP会员", "社区", "我的"};
+    private Class<?>[] classes = new Class<?>[]{MainHomePage.class, LessonHome.class, MainCircle.class, MainMyself.class};
+    private int[] tabImgs = new int[]{R.drawable.tab_index, R.drawable.tab_fav, R.drawable.tab_circle, R.drawable.tab_myself};
     public static final int TAB_HOME = 0;
-    public static final int TAB_CIRCLE = 1;
-    //    public static final int TAB_MESSAGE = 2;
-    public static final int TAB_FAVORIT = 2;
+    public static final int TAB_LESSON = 1;
+    public static final int TAB_CIRCLE = 2;
     public static final int TAB_SELF = 3;
 
     @SuppressLint("StaticFieldLeak")
@@ -181,6 +185,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                 if(mainInitDataControl!=null)mainInitDataControl.mainAfterUpload(Main.this);
                 FileManager.saveShared(Main.this,FileManager.app_welcome,VersionOp.getVerName(Main.this),"1");
                 ClingPresenter.getInstance().onCreate(Main.this, null);
+                checkShowGuidance();
             }
         }
         @Override
@@ -396,11 +401,6 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
         );
         initRunTime();
         openUri();
-        //如果是从收藏去登录，并登录成功，直接切换到收藏页面
-        if(loginIsFromFav && LoginManager.isLogin()){
-            setCurrentTabByClass(MyFavorite.class);
-        }
-        loginIsFromFav = false;
         LogManager.printStartTime("zhangyujian","main::onResume:end::");
     }
 
@@ -651,7 +651,6 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
         }
     }
 
-    boolean loginIsFromFav = false;
     /**
      * 点击下方tab切换,并且加上美食圈点击后进去第一个页面并刷新
      */
@@ -659,31 +658,23 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
     public void onClick(View v) {
         for (int i = 0; i < tabViews.length; i++) {
             if (v == tabViews[i].findViewById(R.id.tab_layout) && allTab.size() > 0) {
-                loginIsFromFav = false;
-                if(i == 2 && !LoginManager.isLogin()){
-                    if(mainActivity != null)
-                        mainActivity.startActivity(new Intent(this, LoginByAccout.class));
-                    else
-                        startActivity(new Intent(this, LoginByAccout.class));
-                    loginIsFromFav = true;
-                    return;
-                }
                 if (i == TAB_HOME && allTab.containsKey(MainHomePage.KEY) && i == nowTab) {
                     MainHomePage mainIndex = (MainHomePage) allTab.get(MainHomePage.KEY);
                     mainIndex.refresh();
-                } else if (i == TAB_CIRCLE && allTab.containsKey(MainCircle.KEY) && tabHost.getCurrentTab() == i) {
+                } else if (i == TAB_LESSON && allTab.containsKey(LessonHome.KEY) && tabHost.getCurrentTab() == i) {
                     //当所在页面正式你要刷新的页面,就直接刷新
-                    MainCircle circle = (MainCircle) allTab.get(MainCircle.KEY);
-                    if (circle != null)
-                        circle.refresh();
+                    LessonHome lesson = (LessonHome) allTab.get(LessonHome.KEY);
+                    if (lesson != null)
+                        lesson.refresh();
+
                 } else if (i == TAB_SELF && allTab.containsKey(MainMyself.KEY)) {
                     //在onResume方法添加了刷新方法
 //                    MainMyself mainMyself = (MainMyself) allTab.get(MainMyself.KEY);
 //                    mainMyself.scrollToTop();
-                } else if (i == TAB_FAVORIT && allTab.containsKey(MyFavorite.KEY) && i == nowTab) {
-                    MyFavorite myFavorite = (MyFavorite) allTab.get(MyFavorite.KEY);
-                    if(myFavorite != null)
-                        myFavorite.onRefresh();
+                } else if (i == TAB_CIRCLE && allTab.containsKey(MainCircle.KEY) && i == nowTab) {
+                    MainCircle circle = (MainCircle) allTab.get(MainCircle.KEY);
+                    if (circle != null)
+                        circle.refresh();
                 }
                 try {
                     setCurrentTabByIndex(i);
@@ -807,6 +798,23 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                     .filter(value -> value.getValue() != null && value.getValue() instanceof ISetMessageTip)
                     .forEach(value -> ((ISetMessageTip) value.getValue()).setMessageTip(tipCournt));
         }
+    }
+
+    private void checkShowGuidance() {
+        String show = (String) FileManager.loadShared(this, FileManager.xmlKey_homeGuidanceShow, "show");
+        if (TextUtils.equals("2", show))
+            return;
+        FileManager.saveShared(this, FileManager.xmlKey_homeGuidanceShow, "show", "2");
+        View contentView = LayoutInflater.from(this).inflate(R.layout.home_guidance_layout, null);
+        PopupWindow pw = new PopupWindow(contentView, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT, true);
+        contentView.findViewById(R.id.guidance_img).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pw.dismiss();
+            }
+        });
+        pw.setBackgroundDrawable(null);
+        pw.showAtLocation(findViewById(android.R.id.content), Gravity.CENTER, 0, 0);
     }
 
 }

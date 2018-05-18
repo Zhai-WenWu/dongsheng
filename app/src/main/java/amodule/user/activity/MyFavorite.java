@@ -32,6 +32,7 @@ import acore.logic.AppCommon;
 import acore.logic.FavoriteHelper;
 import acore.logic.LoginManager;
 import acore.logic.MessageTipController;
+import acore.override.activity.base.BaseAppCompatActivity;
 import acore.override.activity.mian.MainBaseActivity;
 import acore.tools.IObserver;
 import acore.tools.ObserverManager;
@@ -61,13 +62,10 @@ import static acore.tools.ObserverManager.NOTIFY_UNFAVORITE;
 /**
  * 我的收藏页面改版
  */
-public class MyFavorite extends MainBaseActivity implements View.OnClickListener, IObserver, ISetMessageTip {
-    public static final String KEY = "MyFavorite";
+public class MyFavorite extends BaseAppCompatActivity implements View.OnClickListener, IObserver{
     private ArrayList<Map<String, String>> mData = new ArrayList<>();
     private LayoutScroll mLayoutScroll;
-    private HomePushIconView mPushIconView;
     private PtrClassicFrameLayout refreshLayout;
-    private MessageTipIcon mMessageTipIcon;
     private LinearLayout noDataLayout;
     private RelativeLayout noLoginLayout;
     private RvListView rvListview;
@@ -78,8 +76,7 @@ public class MyFavorite extends MainBaseActivity implements View.OnClickListener
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.a_my_favorite);
-        setActivity();
+        initActivity("", 2, 0, 0, R.layout.a_my_favorite);
         initUi();
         initData();
         //未登录自动跳转去登录
@@ -90,18 +87,10 @@ public class MyFavorite extends MainBaseActivity implements View.OnClickListener
                 NOTIFY_FAVORITE, NOTIFY_UNFAVORITE);
     }
 
-    private void setActivity() {
-        if(Main.allMain != null && Main.allMain.allTab != null
-                && !Main.allMain.allTab.containsKey(KEY)){
-            Main.allMain.allTab.put(KEY, this);//这个Key值不变
-        }
-    }
-
     private void initUi() {
         TextView title = (TextView) findViewById(R.id.title);
         title.setText("我的收藏");
         mLayoutScroll = (LayoutScroll) findViewById(R.id.scroll_body);
-        mMessageTipIcon = (MessageTipIcon) findViewById(R.id.message_tip);
         refreshLayout = (PtrClassicFrameLayout) findViewById(R.id.refresh_list_view_frame);
         rvListview = (RvListView) findViewById(R.id.rvListview);
         //屏幕高-（topbar高 + 底部导航高）+ 搜索框高
@@ -114,14 +103,11 @@ public class MyFavorite extends MainBaseActivity implements View.OnClickListener
         mLayoutScroll.setTouchView(rvListview);
         mLayoutScroll.setTouchView(refreshLayout);
 
-        mPushIconView = (HomePushIconView) findViewById(R.id.favorite_pulish);
-        mPushIconView.setOnClickListener(this);
-
         findViewById(R.id.noLogin_layout).setOnClickListener(this);
         noLoginLayout.setOnTouchListener((v, event) -> true);
         findViewById(R.id.seek_layout).setOnClickListener(this);
         findViewById(R.id.title).setOnClickListener(this);
-        findViewById(R.id.back).setVisibility(View.GONE);
+        findViewById(R.id.back).setOnClickListener(this);
         findViewById(R.id.btn_no_data).setOnClickListener(this);
 
         refreshLayout.getHeader().setBackgroundColor(Color.parseColor("#f2f2f2"));
@@ -217,7 +203,6 @@ public class MyFavorite extends MainBaseActivity implements View.OnClickListener
     @Override
     protected void onResume() {
         super.onResume();
-        mMessageTipIcon.setMessage(MessageTipController.newInstance().getMessageNum());
         refreshLoginstatus();
         if(!LoginManager.isLogin() && loadManager != null)
             loadManager.hideProgressBar();
@@ -232,6 +217,9 @@ public class MyFavorite extends MainBaseActivity implements View.OnClickListener
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.back:
+                finish();
+                break;
             case R.id.title:
                 gotoTop();
                 break;
@@ -244,11 +232,6 @@ public class MyFavorite extends MainBaseActivity implements View.OnClickListener
             //回到首页第一页
             case R.id.btn_no_data:
                 gotoHomePage();
-                break;
-            case R.id.favorite_pulish:
-                if(mPushIconView != null){
-                    mPushIconView.showPulishMenu();
-                }
                 break;
             default:
                 break;
@@ -376,12 +359,5 @@ public class MyFavorite extends MainBaseActivity implements View.OnClickListener
     private void refreshLoginstatus() {
         if (noLoginLayout != null)
             noLoginLayout.setVisibility(LoginManager.isLogin() ? View.GONE : View.VISIBLE);
-    }
-
-    @Override
-    public void setMessageTip(int tipCournt) {
-        if (mMessageTipIcon != null) {
-            mMessageTipIcon.setMessage(tipCournt);
-        }
     }
 }

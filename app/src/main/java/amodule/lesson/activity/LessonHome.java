@@ -11,6 +11,7 @@ import com.xiangha.R;
 import acore.logic.XHClick;
 import acore.logic.load.LoadManager;
 import acore.override.activity.base.BaseAppCompatActivity;
+import acore.override.activity.mian.MainBaseActivity;
 import acore.tools.IObserver;
 import acore.tools.ObserverManager;
 import acore.tools.StringManager;
@@ -18,13 +19,17 @@ import acore.tools.ToolsDevice;
 import amodule.lesson.adapter.LessonHomeAdapter;
 import amodule.lesson.controler.data.LessonHomeDataController;
 import amodule.lesson.controler.view.LessonHomeViewController;
+import amodule.main.Main;
+import amodule.main.delegate.ISetMessageTip;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 
 import static acore.tools.ObserverManager.NOTIFY_VIPSTATE_CHANGED;
 
-public class LessonHome extends BaseAppCompatActivity implements IObserver {
+public class LessonHome extends MainBaseActivity implements IObserver, ISetMessageTip {
+
+    public static final String KEY = "LessonHome";
 
     LessonHomeViewController mViewController;
     LessonHomeDataController mDataController;
@@ -37,14 +42,21 @@ public class LessonHome extends BaseAppCompatActivity implements IObserver {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mViewController = new LessonHomeViewController(this);
-        initActivity("", 2, 0, R.layout.back_title_bar, R.layout.a_lesson_home);
-
+        setContentView(R.layout.a_lesson_home);
+        setActivity();
         //初始化
         initialize();
         //加载数据
         loadData();
 
         ObserverManager.getInstance().registerObserver(this, NOTIFY_VIPSTATE_CHANGED);
+    }
+
+    private void setActivity() {
+        if(Main.allMain != null && Main.allMain.allTab != null
+                && !Main.allMain.allTab.containsKey(KEY)){
+            Main.allMain.allTab.put(KEY, this);//这个Key值不变
+        }
     }
 
     private void initialize() {
@@ -174,18 +186,21 @@ public class LessonHome extends BaseAppCompatActivity implements IObserver {
     @Override
     protected void onResume() {
         super.onResume();
+        mViewController.onResume();
         setRecommedTime(System.currentTimeMillis());
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        mViewController.onPause();
         saveStatistic();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        mViewController.onDestroy();
         ObserverManager.getInstance().unRegisterObserver(this);
     }
 
@@ -217,5 +232,11 @@ public class LessonHome extends BaseAppCompatActivity implements IObserver {
 
     public void setRecommedTime(long time) {
         this.startTime = time;
+    }
+
+    @Override
+    public void setMessageTip(int tipCournt) {
+        if (mViewController != null)
+            mViewController.setMessageTip(tipCournt);
     }
 }

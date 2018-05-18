@@ -6,30 +6,11 @@
     style="@style/layout"
     android:background="@android:color/transparent">
 
-    <RelativeLayout
+    <include
         android:id="@+id/title_rela_all"
         android:layout_width="match_parent"
         android:layout_height="@dimen/topbar_height"
-        android:background="@color/common_top_bg">
-
-        <include
-            android:id="@+id/ll_title"
-            layout="@layout/c_view_bar_title" />
-
-        <amodule.main.view.MessageTipIcon
-            android:id="@+id/message_tip"
-            android:layout_width="@dimen/dp_57"
-            android:layout_height="match_parent" />
-
-        <amodule.home.view.HomePushIconView
-            android:id="@+id/favorite_pulish"
-            android:layout_width="@dimen/dp_52"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:paddingLeft="@dimen/dp_12"
-            android:paddingRight="@dimen/dp_20"
-            android:src="@drawable/home_pulish" />
-    </RelativeLayout>
+        layout="@layout/back_title_bar" />
 
     <android.support.design.widget.CoordinatorLayout
         android:id="@+id/coordinator_layout"

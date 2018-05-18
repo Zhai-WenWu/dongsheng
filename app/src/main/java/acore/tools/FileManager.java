@@ -94,6 +94,7 @@ public class FileManager extends UtilFile{
 	public static final String xmlKey_uploadDishSetingIsShow = "uploadDishSetingIsShow";
 	public static final String xmlKey_appKillTime = "appKillTime";
 	public static final String xmlKey_favoriteGuidanceShow = "favoriteGuidanceShow";
+	public static final String xmlKey_homeGuidanceShow = "homeGuidanceShow";
 
 	public static final String xmlFile_shareShowPop = "ShareShowPop"; //发菜谱时弹分享弹框，今天提升了几次
 	public static final String xmlKey_shareShowPopDataUpDish = "shareShowPopDataUpDish"; //发菜谱时弹分享弹框是哪天

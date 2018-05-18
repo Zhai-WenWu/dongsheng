@@ -729,7 +729,7 @@
             android:configChanges="orientation|keyboardHidden"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
-            android:theme="@style/AppMainTheme"
+            android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name="amodule.lesson.activity.LessonListPage"

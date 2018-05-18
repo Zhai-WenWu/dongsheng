@@ -10,8 +10,12 @@ import com.xiangha.R;
 import java.util.List;
 import java.util.Map;
 
+import acore.logic.MessageTipController;
 import acore.widget.rvlistview.RvListView;
 import amodule._common.plugin.WidgetVerticalLayout;
+import amodule.home.view.HomePushIconView;
+import amodule.main.delegate.ISetMessageTip;
+import amodule.main.view.MessageTipIcon;
 import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
 
 /**
@@ -20,7 +24,7 @@ import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
  * Created by mrtrying on 2017/12/19 11:23:38.
  * e_mail : ztanzeyu@gmail.com
  */
-public class LessonHomeViewController implements View.OnClickListener{
+public class LessonHomeViewController implements View.OnClickListener, ISetMessageTip {
 
     private Activity mActivity;
 
@@ -31,19 +35,37 @@ public class LessonHomeViewController implements View.OnClickListener{
 
     private LessonHomeHeaderControler mHeaderControler;
 
+    private MessageTipIcon mMessageTipIcon;
+    private HomePushIconView mPushIconView;
+
     public LessonHomeViewController(Activity activity) {
         this.mActivity = activity;
         mHeaderView = LayoutInflater.from(mActivity).inflate(R.layout.a_lesson_header_layout, null, true);
     }
 
-    public void onCreate(){
+    public void onCreate() {
         initUI();
+    }
+
+    public void onResume() {
+        mMessageTipIcon.setMessage(MessageTipController.newInstance().getMessageNum());
+    }
+
+    public void onPause() {
+
+    }
+
+    public void onDestroy() {
+
     }
 
     private void initUI() {
         TextView title = (TextView) mActivity.findViewById(R.id.title);
         title.setText("VIP会员");
-        mActivity.findViewById(R.id.back).setOnClickListener(this);
+        mMessageTipIcon = (MessageTipIcon) mActivity.findViewById(R.id.message_tip);
+        mPushIconView = (HomePushIconView) mActivity.findViewById(R.id.favorite_pulish);
+        mPushIconView.setOnClickListener(this);
+        mActivity.findViewById(R.id.back).setVisibility(View.INVISIBLE);
         //创建headerData控制器
         mHeaderControler = new LessonHomeHeaderControler(mHeaderView);
 
@@ -53,7 +75,7 @@ public class LessonHomeViewController implements View.OnClickListener{
         mRvListView.addHeaderView(mHeaderView);
     }
 
-    public void setHeaderData(List<Map<String, String>> data){
+    public void setHeaderData(List<Map<String, String>> data) {
         if (data == null || data.isEmpty()) {
             return;
         }
@@ -79,18 +101,19 @@ public class LessonHomeViewController implements View.OnClickListener{
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.back:
-                if(null == mActivity){
-                    mActivity.onBackPressed();
+        switch (v.getId()) {
+            case R.id.favorite_pulish:
+                if (mPushIconView != null) {
+                    mPushIconView.showPulishMenu();
                 }
-            break;
-            default:break;
+                break;
+            default:
+                break;
         }
     }
 
-    public void saveStatisticData(String page){
-        if(mHeaderControler != null){
+    public void saveStatisticData(String page) {
+        if (mHeaderControler != null) {
             mHeaderControler.saveStatisticData(page);
         }
     }
@@ -106,4 +129,10 @@ public class LessonHomeViewController implements View.OnClickListener{
     }
 
 
+    @Override
+    public void setMessageTip(int tipCournt) {
+        if (mMessageTipIcon != null) {
+            mMessageTipIcon.setMessage(tipCournt);
+        }
+    }
 }

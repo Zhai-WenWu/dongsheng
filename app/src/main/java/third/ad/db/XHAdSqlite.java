@@ -239,7 +239,7 @@ public class XHAdSqlite extends SQLiteOpenHelper {
             try{
                 database = getWritableDatabase();
                 final long OverdueTime = System.currentTimeMillis() - (24*60*60*1000L);
-                database.execSQL("delete from tb_ad_config where " + AdEntry.COLUMN_UPDATETIME +
+                database.execSQL("delete from " + TABLE_ADCONFIG + " where " + AdEntry.COLUMN_UPDATETIME +
                         "<="+OverdueTime+";");
             }catch (Exception e){
                 e.printStackTrace();

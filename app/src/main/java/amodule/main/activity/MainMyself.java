@@ -74,10 +74,10 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
     private RelativeLayout right_myself, userPage;
     private LinearLayout gourp1, gourp2,gourp3;
     private String[] name1 = {"我的订单"},
-            name2 = {"我的会员", "当前设备已开通会员", "我的问答","浏览历史"},
+            name2 = {"我的会员", "当前设备已开通会员", "我的问答", "我的收藏", "浏览历史"},
             name3 = {"邀请好友", "反馈帮助","设置"};
     private String[] clickTag1 = {"order"},
-            clickTag2 = {"vip", "yiyuan", "qa","hitstory"},
+            clickTag2 = {"vip", "yiyuan", "qa", "myFavorite", "hitstory"},
             clickTag3 = {"invitation", "helpe","setting"};
 
     private final String tongjiId = "a_mine";
@@ -196,6 +196,7 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
 
     @SuppressLint("SetTextI18n")
     private void initUI() {
+
         goManagerInfo = (TextView) findViewById(R.id.goManagerInfo);
         goManagerInfo.setText("马甲");
         goManagerInfo.setTextColor(0xffffff);
@@ -603,6 +604,10 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
                 case "invitation":
                     XHClick.mapStat(MainMyself.this, tongjiId, "列表", "邀请好友");
                     startActivity(new Intent(this, InviteFriend.class));
+                    break;
+                case "myFavorite":
+                    Intent intent = new Intent(MainMyself.this, MyFavorite.class);
+                    startActivity(intent);
                     break;
             }
         }
