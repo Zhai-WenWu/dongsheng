@@ -19,6 +19,7 @@ import xh.basic.internet.UtilInternet;
  * 菜谱详情页面数据管理者
  */
 public class DetailDishDataManager {
+    public final static String DISH_RECOMMEND = "dish_recommend";//相关推荐数据类型
     public final static String DISH_DATA_TOP = "dish_top";//topInfo数据类型
     public final static String DISH_DATA_INGRE = "dish_ingre";//用料
 //    public final static String DISH_DATA_BANNER = "dish_banner";//banner
@@ -87,6 +88,7 @@ public class DetailDishDataManager {
     public void reqTwo() {
         reqStep();
         reqQAData();
+        reqRelatedRecommend();
     }
 
     /**
@@ -266,5 +268,15 @@ public class DetailDishDataManager {
         if(!TextUtils.isEmpty(courseCode))params+="&courseCode="+courseCode;
         if(!TextUtils.isEmpty(chapterCode))params+="&chapterCode="+chapterCode;
         return params;
+    }
+
+    public void reqRelatedRecommend() {
+        String params = "code=" + dishCode + "&pg=2";
+        ReqEncyptInternet.in().doGet(StringManager.API_DISH_RECOMMEND + "?" + params, new InternetCallback() {
+            @Override
+            public void loaded(int flag, String s, Object o) {
+                handleDataSuccess(flag,DISH_RECOMMEND, o);
+            }
+        });
     }
 }

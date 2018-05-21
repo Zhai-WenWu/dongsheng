@@ -180,6 +180,9 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
     }
     private void dishTypeData(String type,ArrayList<Map<String,String>> list,Map<String,String> map){
         switch (type){
+            case DetailDishDataManager.DISH_RECOMMEND:
+                detailDishViewManager.handleRelatedRecommendView(list);
+                break;
             case DetailDishDataManager.DISH_DATA_TOP://topInfo,菜谱的基本信息和用户的基本信息
                 mapTop= list.get(0);
                 code = mapTop.get("dishCode");

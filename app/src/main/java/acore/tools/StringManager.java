@@ -394,6 +394,8 @@ public class StringManager extends UtilString {
 
     public final static String API_AD_GETADDATA = apiUrl + "main7/open/getAdData";//获取广告数据
 
+    public final static String API_DISH_RECOMMEND = apiUrl + "main6/caipu/info";
+
     //替换url
     public final static String replaceUrl(String url) {
         if (defaultDomain != domain || defaultProtocol != protocol) {

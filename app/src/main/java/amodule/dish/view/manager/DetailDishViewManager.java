@@ -45,12 +45,12 @@ import amodule.dish.view.DishIngreDataShow;
 import amodule.dish.view.DishModuleScrollView;
 import amodule.dish.view.DishQAView;
 import amodule.dish.view.DishRecommedAndAdView;
+import amodule.dish.view.DishRelatedRecommendView;
 import amodule.dish.view.DishTitleViewControl;
 import amodule.dish.view.DishVipView;
 import third.video.VideoPlayerController;
 
 import static acore.logic.ConfigMannager.KEY_CAIPUVIP;
-import static amodule.dish.activity.DetailDish.STATICIS_ID_VIDEO;
 
 /**
  * 当前只处理View的拼装
@@ -81,6 +81,7 @@ public class DetailDishViewManager {
     public DishExplainView dishExplainView;
     public DishADBannerView dishADBannerView;
     public DishQAView dishQAView;
+    public DishRelatedRecommendView dishRelatedRecommendView;
     public DishModuleScrollView dishModuleScrollView;
     public View noStepView;
     private RelativeLayout bar_title_1;
@@ -152,6 +153,8 @@ public class DetailDishViewManager {
         layoutHeader.addView(noStepView);
         dishQAView = new DishQAView(mAct);
         dishQAView.setVisibility(View.GONE);
+        dishRelatedRecommendView = new DishRelatedRecommendView(mAct);
+        dishRelatedRecommendView.setVisibility(View.GONE);
 
         //foot
         dishExplainView = new DishExplainView(mAct);
@@ -160,6 +163,7 @@ public class DetailDishViewManager {
         dishRecommedAndAdView.setVisibility(View.GONE);
         layoutFooter.addView(dishExplainView);
         layoutFooter.addView(dishQAView);
+        layoutFooter.addView(dishRelatedRecommendView);
         RelativeLayout layout= new RelativeLayout(mAct);
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,Tools.getDimen(mAct,R.dimen.dp_60));
         layout.setLayoutParams(layoutParams);
@@ -402,6 +406,22 @@ public class DetailDishViewManager {
             }
         }
     }
+
+    /**
+     * 处理相关推荐
+     * @param list
+     */
+    public void handleRelatedRecommendView(ArrayList<Map<String, String>> list) {
+        if (dishRelatedRecommendView != null) {
+            if (list == null || list.isEmpty())
+                dishRelatedRecommendView.setVisibility(View.GONE);
+            else {
+                dishRelatedRecommendView.setVisibility(View.VISIBLE);
+                dishRelatedRecommendView.setData(list);
+            }
+        }
+    }
+
     /**
      * 处理底部推荐
      * @param list
