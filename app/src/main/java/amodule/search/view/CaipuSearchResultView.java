@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import com.xiangha.R;
 
@@ -59,6 +60,7 @@ public class CaipuSearchResultView extends LinearLayout {
     private CaidanResultView caidan_result;
     private AdapterCaipuSearch adapterCaipuSearch;
     private ZhishiResultView zhishi_result;
+    private SearchVIPLessonView mLessonView;
     private AdapterCaipuSearch.CaipuSearchResultCallback caipuSearchResultCallback;
     private int firstCaipuLoadFlag;
     private View mParentView;
@@ -97,6 +99,11 @@ public class CaipuSearchResultView extends LinearLayout {
         ll_noData = (LinearLayout) findViewById(v_no_data_search);
         ll_noData.setVisibility(View.GONE);
         list_search_result.setDivider(null);
+        mLessonView = new SearchVIPLessonView(context);
+        RelativeLayout header = new RelativeLayout(context);
+        header.addView(mLessonView);
+        list_search_result.addHeaderView(header);
+
         initCaidanResultView();
         initZhishiResultView();
 
@@ -163,6 +170,7 @@ public class CaipuSearchResultView extends LinearLayout {
 
                         clearSearchResult();
                         isRefreash.set(true);
+                        searchVIPLesson();
                         searchCaipu();
                         searchCaiDan();
                         searchZhiShi();
@@ -175,7 +183,7 @@ public class CaipuSearchResultView extends LinearLayout {
                     }
 
                 });
-
+        searchVIPLesson();
         searchCaiDan();
         searchZhiShi();
     }
@@ -205,6 +213,10 @@ public class CaipuSearchResultView extends LinearLayout {
         ll_noData.setVisibility(View.GONE);
         adapterCaipuSearch.clearAdList();
         adapterCaipuSearch.notifyDataSetChanged();
+    }
+
+    private void searchVIPLesson() {
+        mLessonView.searchLesson(searchKey);
     }
 
 
