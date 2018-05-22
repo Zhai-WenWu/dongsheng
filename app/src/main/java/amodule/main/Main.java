@@ -84,7 +84,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
 
     private String[] tabTitle = {"学做菜", "VIP会员", "社区", "我的"};
     private Class<?>[] classes = new Class<?>[]{MainHomePage.class, LessonHome.class, MainCircle.class, MainMyself.class};
-    private int[] tabImgs = new int[]{R.drawable.tab_index, R.drawable.tab_fav, R.drawable.tab_circle, R.drawable.tab_myself};
+    private int[] tabImgs = new int[]{R.drawable.tab_index, R.drawable.tab_vip, R.drawable.tab_circle, R.drawable.tab_myself};
     public static final int TAB_HOME = 0;
     public static final int TAB_LESSON = 1;
     public static final int TAB_CIRCLE = 2;

@@ -280,7 +280,10 @@ public class MyFavorite extends BaseAppCompatActivity implements View.OnClickLis
             mBottomDialog.setCannleClick("", v -> {XHClick.mapStat(this, mStatisticId, "点击取消", "");});
         }else{
             mBottomDialog.setItemClick(0,
-                    v -> FavoriteHelper.instance().setFavoriteStatus(this, code, typeName, type, null)
+                    v -> {
+                        FavoriteHelper.instance().setFavoriteStatus(this, code, typeName, type, null);
+                        XHClick.mapStat(this, mStatisticId, "点击取消收藏按钮", "");
+                    }
             );
         }
         mBottomDialog.show();

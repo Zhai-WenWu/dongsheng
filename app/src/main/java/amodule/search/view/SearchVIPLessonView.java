@@ -102,7 +102,8 @@ public class SearchVIPLessonView extends BaseItemView implements View.OnClickLis
                     .setText(tagTitle)
                     .setBgHeight(16F)
                     .setRadius(1F);
-            SpannableStringBuilder ssb = new SpannableStringBuilder(title);
+            SpannableStringBuilder ssb = new SpannableStringBuilder();
+            ssb.append(" ").append(title);
             ssb.setSpan(builder.build(), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             mTitleText.setText(ssb);
             String subTitle = mDataMap.get("subTitle");

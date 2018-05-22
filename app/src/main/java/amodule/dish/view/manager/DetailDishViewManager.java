@@ -39,6 +39,7 @@ import amodule.dish.activity.DetailDish;
 import amodule.dish.view.DishADBannerView;
 import amodule.dish.view.DishAboutView;
 import amodule.dish.view.DishExplainView;
+import amodule.dish.view.DishGridDialog;
 import amodule.dish.view.DishHeaderViewNew;
 import amodule.dish.view.DishHoverViewControl;
 import amodule.dish.view.DishIngreDataShow;
@@ -530,6 +531,13 @@ public class DetailDishViewManager {
                         break;
                 }
                 return false;
+            }
+        });
+
+        dishRelatedRecommendView.setOnItemClickCallback(new DishGridDialog.OnItemClickCallback() {
+            @Override
+            public void onItemClick(View view, int position, Map<String, String> stringStringMap) {
+                XHClick.mapStat(mAct, DetailDish.tongjiId_detail, "底部推荐数据", "推荐" + (position + 1));
             }
         });
     }

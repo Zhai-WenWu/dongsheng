@@ -15,6 +15,8 @@ import acore.tools.StringManager;
 public class DishRelatedRecommendView extends LinearLayout {
 
     private LinearLayout mContentLayout;
+
+    private DishGridDialog.OnItemClickCallback mOnItemClickCallback;
     public DishRelatedRecommendView(Context context) {
         super(context);
         initView(context);
@@ -41,11 +43,17 @@ public class DishRelatedRecommendView extends LinearLayout {
         int p = 0;
         for (Map<String, String> data : entity){
             DishRelatedRecommendItemView itemView = new DishRelatedRecommendItemView(getContext());
+            if (mOnItemClickCallback != null)
+                itemView.setOnClickCallback(mOnItemClickCallback);
             int temp = p;
             itemView.setData(data, temp);
             mContentLayout.addView(itemView);
             p ++;
         }
+    }
+
+    public void setOnItemClickCallback(DishGridDialog.OnItemClickCallback callback) {
+        mOnItemClickCallback = callback;
     }
 
 }

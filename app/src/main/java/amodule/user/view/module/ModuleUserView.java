@@ -89,7 +89,7 @@ public class ModuleUserView extends ModuleBaseView{
         public void onClick(View v) {
             if(!TextUtils.isEmpty(userUrl)){
                 AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(),userUrl,false);
-                if(TextUtils.isEmpty(getStatisticId())&&mContext!=null) XHClick.mapStat(mContext,getStatisticId(),"点击头像和昵称","");
+                if(!TextUtils.isEmpty(getStatisticId())&&mContext!=null) XHClick.mapStat(mContext,getStatisticId(),"点击头像和昵称","");
             }
         }
     };

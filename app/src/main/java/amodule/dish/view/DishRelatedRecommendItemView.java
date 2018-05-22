@@ -22,6 +22,8 @@ import amodule.main.view.item.BaseLinearItemView;
 
 public class DishRelatedRecommendItemView extends BaseLinearItemView implements View.OnClickListener{
 
+    private DishGridDialog.OnItemClickCallback mClickCallback;
+
     private View mTopLine;
     private ImageViewVideo mImageViewVideo;
     private TextView mDishNameText;
@@ -94,6 +96,11 @@ public class DishRelatedRecommendItemView extends BaseLinearItemView implements 
         String url = getValueByKey("link");
         if (!TextUtils.isEmpty(url))
             AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), url, true);
-        XHClick.mapStat(getContext(), mIsVideo ? "a_menu_detail_video" : "a_menu_detail_normal", "底部推荐数据", "推荐" + mPosition);
+        if (mClickCallback != null)
+            mClickCallback.onItemClick(v, mPosition, mDataMap);
+    }
+
+    public void setOnClickCallback(DishGridDialog.OnItemClickCallback callback) {
+        mClickCallback = callback;
     }
 }
