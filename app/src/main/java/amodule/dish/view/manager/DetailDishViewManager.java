@@ -153,17 +153,16 @@ public class DetailDishViewManager {
         layoutHeader.addView(noStepView);
         dishQAView = new DishQAView(mAct);
         dishQAView.setVisibility(View.GONE);
-        dishRelatedRecommendView = new DishRelatedRecommendView(mAct);
-        dishRelatedRecommendView.setVisibility(View.GONE);
 
         //foot
         dishExplainView = new DishExplainView(mAct);
         dishExplainView.setVisibility(View.GONE);
         dishRecommedAndAdView= new DishRecommedAndAdView(mAct);
         dishRecommedAndAdView.setVisibility(View.GONE);
+        dishRelatedRecommendView = (DishRelatedRecommendView) dishRecommedAndAdView.findViewById(R.id.related_recommend);
+        dishRelatedRecommendView.setVisibility(View.GONE);
         layoutFooter.addView(dishExplainView);
         layoutFooter.addView(dishQAView);
-        layoutFooter.addView(dishRelatedRecommendView);
         RelativeLayout layout= new RelativeLayout(mAct);
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,Tools.getDimen(mAct,R.dimen.dp_60));
         layout.setLayoutParams(layoutParams);

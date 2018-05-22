@@ -531,7 +531,6 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
         boolean isOption = false;
         if (LoginManager.userInfo.size() == 0) {
             switch (clickTag) {
-                case "favor": //收藏
                 case "score": //积分
                 case "order": //订单
                 case "coupon": //优惠券
@@ -554,12 +553,6 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
                     FileManager.saveShared(this,FileManager.xmlFile_appInfo,"isShowQA","2");
                     notifyQAItemChanged (0, false, true);
                     startActivity(new Intent(MainMyself.this, QAMsgListActivity.class));
-                    break;
-                case "favor"://收藏
-                    XHClick.track(getApplicationContext(), "点击我的页面的收藏");
-                    XHClick.mapStat(this, tongjiId,"列表","收藏");
-                    Intent intent_fav = new Intent(MainMyself.this, MyFavorite.class);
-                    startActivity(intent_fav);
                     break;
                 case "hitstory"://浏览记录
                     XHClick.mapStat(this, tongjiId,"列表","看过");
@@ -608,6 +601,7 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
                 case "myFavorite":
                     Intent intent = new Intent(MainMyself.this, MyFavorite.class);
                     startActivity(intent);
+                    XHClick.mapStat(this, tongjiId, "我的收藏", "");
                     break;
             }
         }

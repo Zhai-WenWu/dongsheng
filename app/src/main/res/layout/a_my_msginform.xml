@@ -90,7 +90,7 @@
                     android:textSize="@dimen/sp_16"
                     android:layout_gravity="center"
                     android:textColor="@color/ysf_white"
-                    android:background="@drawable/bg_round_corners_f23030"
+                    android:background="@drawable/bg_round_corners8_f23030"
                     android:tag="start_btn"/>
             </LinearLayout>
 

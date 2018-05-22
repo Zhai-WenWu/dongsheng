@@ -11,9 +11,10 @@ import java.util.List;
 import java.util.Map;
 
 import acore.logic.MessageTipController;
+import acore.logic.XHClick;
 import acore.widget.rvlistview.RvListView;
-import amodule._common.plugin.WidgetVerticalLayout;
 import amodule.home.view.HomePushIconView;
+import amodule.main.StatisticData;
 import amodule.main.delegate.ISetMessageTip;
 import amodule.main.view.MessageTipIcon;
 import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
@@ -45,6 +46,7 @@ public class LessonHomeViewController implements View.OnClickListener, ISetMessa
 
     public void onCreate() {
         initUI();
+        setStatisticsData();
     }
 
     public void onResume() {
@@ -73,6 +75,14 @@ public class LessonHomeViewController implements View.OnClickListener, ISetMessa
         mRefreshLayout.disableWhenHorizontalMove(true);
         mRvListView = (RvListView) mActivity.findViewById(R.id.rvListview);
         mRvListView.addHeaderView(mHeaderView);
+    }
+
+    private void setStatisticsData() {
+        StatisticData data = new StatisticData();
+        data.setId("vip_homepage621");
+        data.setContentTwo("顶部tapbar");
+        data.setContentThree("消息");
+        mMessageTipIcon.setStatisticsData(mMessageTipIcon.type_click, data);
     }
 
     public void setHeaderData(List<Map<String, String>> data) {
@@ -105,6 +115,7 @@ public class LessonHomeViewController implements View.OnClickListener, ISetMessa
             case R.id.favorite_pulish:
                 if (mPushIconView != null) {
                     mPushIconView.showPulishMenu();
+                    XHClick.mapStat(mActivity, "vip_homepage621", "顶部tapbar", "发布");
                 }
                 break;
             default:

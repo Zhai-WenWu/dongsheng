@@ -14,8 +14,8 @@
 
     <ImageView
         android:id="@+id/lesson_img"
-        android:layout_width="@dimen/dp_112"
-        android:layout_height="@dimen/dp_112"
+        android:layout_width="@dimen/dp_120"
+        android:layout_height="@dimen/dp_120"
         android:layout_marginStart="@dimen/dp_15"
         android:layout_marginTop="@dimen/dp_18"
         android:layout_marginBottom="@dimen/dp_18"
@@ -26,8 +26,8 @@
 
     <ImageView
         android:id="@+id/lesson_play_img"
-        android:layout_width="@dimen/dp_36"
-        android:layout_height="@dimen/dp_36"
+        android:layout_width="@dimen/dp_34"
+        android:layout_height="@dimen/dp_34"
         app:layout_constraintTop_toTopOf="@+id/lesson_img"
         app:layout_constraintBottom_toBottomOf="@+id/lesson_img"
         app:layout_constraintStart_toStartOf="@+id/lesson_img"
@@ -41,6 +41,7 @@
         android:layout_height="wrap_content"
         android:lines="1"
         android:textSize="@dimen/sp_18"
+        android:textStyle="bold"
         android:textColor="@color/c_white_text"
         app:layout_constraintStart_toEndOf="@+id/lesson_img"
         app:layout_constraintTop_toTopOf="@+id/lesson_img"
@@ -67,7 +68,7 @@
         android:lines="1"
         android:textSize="@dimen/sp_14"
         android:textColor="@color/c_white_text"
-        android:layout_marginTop="@dimen/dp_10"
+        android:layout_marginTop="@dimen/dp_5"
         app:layout_constraintStart_toEndOf="@+id/lesson_img"
         app:layout_constraintTop_toBottomOf="@+id/lesson_info"
         android:layout_marginLeft="@dimen/dp_15"
@@ -84,7 +85,7 @@
         android:textColor="@color/c_white_text"
         android:text="立即播放"
         android:layout_marginTop="@dimen/dp_10"
-        android:background="@drawable/bg_round_corners_f23030"
+        android:background="@drawable/bg_round_corners6_f23030"
         app:layout_constraintStart_toEndOf="@+id/lesson_img"
         app:layout_constraintTop_toBottomOf="@+id/lesson_name"
         app:layout_constraintBottom_toBottomOf="@id/lesson_img"

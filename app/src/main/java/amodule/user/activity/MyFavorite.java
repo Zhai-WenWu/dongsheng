@@ -4,26 +4,17 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.text.TextUtils;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.annimon.stream.Stream;
-import com.annimon.stream.function.Consumer;
-import com.annimon.stream.function.Predicate;
 import com.popdialog.util.Tools;
 import com.xiangha.R;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -31,9 +22,8 @@ import java.util.Map;
 import acore.logic.AppCommon;
 import acore.logic.FavoriteHelper;
 import acore.logic.LoginManager;
-import acore.logic.MessageTipController;
+import acore.logic.XHClick;
 import acore.override.activity.base.BaseAppCompatActivity;
-import acore.override.activity.mian.MainBaseActivity;
 import acore.tools.IObserver;
 import acore.tools.ObserverManager;
 import acore.tools.StringManager;
@@ -41,12 +31,7 @@ import acore.tools.ToolsDevice;
 import acore.widget.LayoutScroll;
 import acore.widget.rvlistview.RvListView;
 import amodule.article.view.BottomDialog;
-import amodule.home.view.HomePushIconView;
-import amodule.main.Main;
-import amodule.main.activity.MainHomePage;
-import amodule.main.delegate.ISetMessageTip;
-import amodule.main.view.MessageTipIcon;
-import amodule.user.activity.SreachFavoriteActivity;
+import amodule.home.activity.HomeSecondListActivity;
 import amodule.user.activity.login.LoginByAccout;
 import amodule.user.adapter.AdapterModuleS0;
 import aplug.basic.InternetCallback;
@@ -72,6 +57,8 @@ public class MyFavorite extends BaseAppCompatActivity implements View.OnClickLis
     private AdapterModuleS0 myFavorite;
     private int currentpage = 0, everyPage = 0;//页面号码
     private String pageTime;
+
+    private final String mStatisticId = "a_my_collection";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,7 +102,7 @@ public class MyFavorite extends BaseAppCompatActivity implements View.OnClickLis
 
     private void initData() {
         myFavorite = new AdapterModuleS0(this, mData);
-        myFavorite.setStatisticId("a_my_collection");
+        myFavorite.setStatisticId(mStatisticId);
         DividerItemDecoration itemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         Drawable drawable = getResources().getDrawable(R.drawable.item_decoration);
         itemDecoration.setDrawable(drawable);
@@ -219,6 +206,7 @@ public class MyFavorite extends BaseAppCompatActivity implements View.OnClickLis
         switch (v.getId()) {
             case R.id.back:
                 finish();
+                XHClick.mapStat(this, mStatisticId, "点击返回", "");
                 break;
             case R.id.title:
                 gotoTop();
@@ -228,10 +216,11 @@ public class MyFavorite extends BaseAppCompatActivity implements View.OnClickLis
                 break;
             case R.id.seek_layout:
                 gotoSearch();
+                XHClick.mapStat(this, mStatisticId, "点击搜索框", "");
                 break;
             //回到首页第一页
             case R.id.btn_no_data:
-                gotoHomePage();
+                gotoPage();
                 break;
             default:
                 break;
@@ -242,9 +231,8 @@ public class MyFavorite extends BaseAppCompatActivity implements View.OnClickLis
         startActivity(new Intent(this, SreachFavoriteActivity.class));
     }
 
-    private void gotoHomePage() {
-        if (Main.allMain != null)
-            Main.allMain.setCurrentTabByClass(MainHomePage.class);
+    private void gotoPage() {
+        startActivity(new Intent(this, HomeSecondListActivity.class).putExtra(HomeSecondListActivity.TAG, "day"));
     }
 
     private void gotoLogin() {
@@ -284,8 +272,12 @@ public class MyFavorite extends BaseAppCompatActivity implements View.OnClickLis
         if(mBottomDialog == null){
             mBottomDialog = new BottomDialog(this);
             mBottomDialog.addButton("取消收藏",
-                    v -> FavoriteHelper.instance().setFavoriteStatus(this, code, typeName, type, null)
+                    v ->  {
+                FavoriteHelper.instance().setFavoriteStatus(this, code, typeName, type, null);
+                XHClick.mapStat(this, mStatisticId, "点击取消收藏按钮", "");
+            }
             );
+            mBottomDialog.setCannleClick("", v -> {XHClick.mapStat(this, mStatisticId, "点击取消", "");});
         }else{
             mBottomDialog.setItemClick(0,
                     v -> FavoriteHelper.instance().setFavoriteStatus(this, code, typeName, type, null)

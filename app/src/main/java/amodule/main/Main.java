@@ -45,7 +45,6 @@ import acore.logic.XHClick;
 import acore.notification.controller.NotificationSettingController;
 import acore.override.XHApplication;
 import acore.override.activity.mian.MainBaseActivity;
-import acore.override.helper.XHActivityManager;
 import acore.tools.ChannelUtil;
 import acore.tools.FileManager;
 import acore.tools.IObserver;
@@ -63,8 +62,6 @@ import amodule.main.activity.MainCircle;
 import amodule.main.activity.MainHomePage;
 import amodule.main.activity.MainMyself;
 import amodule.main.delegate.ISetMessageTip;
-import amodule.user.activity.MyFavorite;
-import amodule.user.activity.login.LoginByAccout;
 import aplug.shortvideo.ShortVideoInit;
 import third.ad.control.AdControlHomeDish;
 import third.ad.db.XHAdSqlite;
@@ -80,7 +77,6 @@ import xh.basic.tool.UtilLog;
 
 import static android.content.Intent.FLAG_ACTIVITY_NO_USER_ACTION;
 import static com.xiangha.R.id.iv_itemIsFine;
-import static com.xiangha.R.id.pay_wechat;
 
 @SuppressWarnings("deprecation")
 public class Main extends Activity implements OnClickListener, IObserver, ISetMessageTip {
@@ -185,7 +181,6 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                 if(mainInitDataControl!=null)mainInitDataControl.mainAfterUpload(Main.this);
                 FileManager.saveShared(Main.this,FileManager.app_welcome,VersionOp.getVerName(Main.this),"1");
                 ClingPresenter.getInstance().onCreate(Main.this, null);
-                checkShowGuidance();
             }
         }
         @Override

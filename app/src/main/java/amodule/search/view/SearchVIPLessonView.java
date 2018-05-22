@@ -17,6 +17,7 @@ import com.xiangha.R;
 import java.util.Map;
 
 import acore.logic.AppCommon;
+import acore.logic.XHClick;
 import acore.override.helper.XHActivityManager;
 import acore.tools.StringManager;
 import acore.widget.IconTextSpan;
@@ -36,6 +37,8 @@ public class SearchVIPLessonView extends BaseItemView implements View.OnClickLis
     private Button mPlayBtn;
 
     private Map<String, String> mDataMap;
+
+    private final String mStatisticsId = "a_searesult_vip";
 
     public SearchVIPLessonView(Context context) {
         super(context);
@@ -66,7 +69,7 @@ public class SearchVIPLessonView extends BaseItemView implements View.OnClickLis
     public void searchLesson(String searchKey) {
         if (TextUtils.isEmpty(searchKey))
             return;
-        String params = "keywords=" + searchKey + "&type=";
+        String params = "keywords=" + searchKey;
         ReqEncyptInternet.in().doEncypt(StringManager.API_SEARCH_COURSE_DISH, params, new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
@@ -108,6 +111,7 @@ public class SearchVIPLessonView extends BaseItemView implements View.OnClickLis
             mNameText.setText(name);
             mPlayImg.setVisibility(TextUtils.equals(mDataMap.get("isVideo"), "2") ? View.VISIBLE : View.GONE);
             setViewImage(mLessonImg, mDataMap.get("img"));
+            XHClick.mapStat(getContext(), mStatisticsId, "顶部VIP内容展现量", "");
         } else {
             setVisibility(View.GONE);
         }
@@ -118,6 +122,7 @@ public class SearchVIPLessonView extends BaseItemView implements View.OnClickLis
         switch (v.getId()) {
             case R.id.lesson_play_btn:
                 AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), mDataMap.get("url"), true);
+                XHClick.mapStat(getContext(), mStatisticsId, "顶部VIP内容点击量", "");
                 break;
         }
     }

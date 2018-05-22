@@ -10,47 +10,35 @@
     <View
         android:id="@+id/v_top_line"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_0.5"
-        android:layout_alignParentBottom="true"
-        android:background="#EAE8E0" />
+        android:layout_height="1px"
+        android:background="#ececec"
+        android:layout_alignParentBottom="true" />
 
     <RelativeLayout
         android:id="@+id/rl_caipu"
         android:layout_width="fill_parent"
         android:layout_height="@dimen/dp_120"
-        android:padding="@dimen/dp_15">
+        android:paddingTop="@dimen/dp_15"
+        android:paddingBottom="@dimen/dp_15"
+        android:paddingLeft="@dimen/dp_20"
+        android:paddingRight="@dimen/dp_20">
 
-        <RelativeLayout
-            android:id="@+id/image_layout"
+        <acore.widget.ImageViewVideo
+            android:id="@+id/img"
             android:layout_width="@dimen/dp_120"
             android:layout_height="@dimen/dp_90"
+            android:scaleType="centerCrop"
+            android:src="@drawable/i_nopic"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:layout_marginRight="@dimen/dp_10">
-
-            <ImageView
-                android:id="@+id/iv_caipuCover"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="fitXY"
-                android:src="@drawable/i_nopic" />
-
-            <ImageView
-                android:id="@+id/image_play"
-                android:layout_width="@dimen/dp_41"
-                android:layout_height="@dimen/dp_41"
-                android:src="@drawable/home_item_play"
-                android:scaleType="centerInside"
-                android:layout_centerInParent="true"
-                android:visibility="gone"/>
-        </RelativeLayout>
+            android:layout_marginRight="@dimen/dp_10"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignBottom="@+id/image_layout"
+            android:layout_alignBottom="@+id/img"
             android:layout_marginLeft="@dimen/dp_5"
-            android:layout_toRightOf="@+id/image_layout"
+            android:layout_toRightOf="@+id/img"
             android:orientation="vertical"
             android:paddingRight="@dimen/dp_15">
 

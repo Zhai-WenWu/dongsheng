@@ -13,11 +13,20 @@
         android:layout_marginRight="@dimen/dp_20"
         android:orientation="vertical" />
 
+    <amodule.dish.view.DishRelatedRecommendView
+        android:id="@+id/related_recommend"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/a_dish_detail_new_tieshi_ad"
+        android:layout_marginBottom="@dimen/dp_10">
+
+    </amodule.dish.view.DishRelatedRecommendView>
+
     <View
         android:id="@+id/qa_line"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_5"
-        android:layout_below="@+id/a_dish_detail_new_tieshi_ad"
+        android:layout_below="@+id/related_recommend"
         android:background="#f2f2f2" />
 
     <RelativeLayout
@@ -39,7 +48,7 @@
             android:layout_toLeftOf="@+id/a_dish_detail_new_tv_num"
             android:text="哈友晒的这道菜"
             android:textColor="#333"
-            android:textSize="@dimen/sp_17"
+            android:textSize="@dimen/sp_18"
             android:textStyle="bold" />
 
         <TextView

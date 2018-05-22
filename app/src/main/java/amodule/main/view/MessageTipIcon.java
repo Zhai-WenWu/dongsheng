@@ -2,6 +2,7 @@ package amodule.main.view;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,10 +11,15 @@ import android.widget.TextView;
 
 import com.xiangha.R;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import acore.logic.MessageTipController;
+import acore.logic.XHClick;
 import amodule._common.utility.WidgetUtility;
-import amodule.lesson.activity.LessonInfo;
+import amodule.main.StatisticData;
 import amodule.main.delegate.ISetMessageTip;
+import amodule.main.delegate.IStatistics;
 import amodule.user.activity.MyMessage;
 
 /**
@@ -22,9 +28,11 @@ import amodule.user.activity.MyMessage;
  * Created by mrtrying on 2018/1/5 11:18:36.
  * e_mail : ztanzeyu@gmail.com
  */
-public class MessageTipIcon extends RelativeLayout implements ISetMessageTip, View.OnClickListener {
+public class MessageTipIcon extends RelativeLayout implements ISetMessageTip, View.OnClickListener, IStatistics{
 
     private TextView tipLessTen, tipMore;
+
+    private Map<String, StatisticData> mStatisticMap;
 
     public MessageTipIcon(Context context) {
         super(context);
@@ -71,5 +79,19 @@ public class MessageTipIcon extends RelativeLayout implements ISetMessageTip, Vi
         getContext().startActivity(new Intent(getContext(), MyMessage.class));
         MessageTipController.newInstance().setQuanMessage(0);
         setMessage(MessageTipController.newInstance().getMessageNum());
+        if (mStatisticMap != null && mStatisticMap.containsKey(type_click)){
+            StatisticData data = mStatisticMap.get(type_click);
+            if (data != null && !data.isEmpty())
+                XHClick.mapStat(getContext(), data.getId(), data.getContentTwo(), data.getContentThree());
+        }
+    }
+
+    @Override
+    public void setStatisticsData(String type, StatisticData statisticData) {
+        if (!TextUtils.isEmpty(type)) {
+            if (mStatisticMap == null)
+                mStatisticMap = new HashMap<>();
+            mStatisticMap.put(type, statisticData);
+        }
     }
 }

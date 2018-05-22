@@ -1,4 +1,5 @@
 package amodule.user.view.module;
+
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -6,9 +7,9 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.xiangha.R;
+
 import java.util.Map;
 
 import acore.logic.AppCommon;
@@ -88,7 +89,7 @@ public class ModuleUserView extends ModuleBaseView{
         public void onClick(View v) {
             if(!TextUtils.isEmpty(userUrl)){
                 AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(),userUrl,false);
-                if(TextUtils.isEmpty(getStatisticId())&&mContext!=null) XHClick.mapStat(mContext,getStatisticId(),"点击头像","");
+                if(TextUtils.isEmpty(getStatisticId())&&mContext!=null) XHClick.mapStat(mContext,getStatisticId(),"点击头像和昵称","");
             }
         }
     };
