@@ -73,7 +73,7 @@ public class DishRelatedRecommendItemView extends BaseLinearItemView implements 
         setText(mDishUserNameText, customerMap.get("nickName"));
         setText(mDishTextView1, handleNumber(getValueByKey("allClick")) + "浏览");
         setText(mDishTextView2, handleNumber(getValueByKey("favorites")) + "收藏");
-        mIsVideo = TextUtils.equals(getValueByKey("type"), "2");
+        mIsVideo = TextUtils.equals(getValueByKey("hasVideo"), "2");
         mImageViewVideo.playImgWH = Tools.getDimen(getContext(), R.dimen.dp_34);
         mImageViewVideo.parseItemImg(getValueByKey("img"), mIsVideo, true);
     }
