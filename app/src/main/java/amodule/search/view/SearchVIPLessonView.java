@@ -66,7 +66,7 @@ public class SearchVIPLessonView extends BaseItemView implements View.OnClickLis
         setVisibility(View.GONE);
     }
 
-    public void searchLesson(String searchKey) {
+    public void searchLesson(String searchKey, LessonCallback callback) {
         if (TextUtils.isEmpty(searchKey))
             return;
         String params = "keywords=" + searchKey;
@@ -74,15 +74,15 @@ public class SearchVIPLessonView extends BaseItemView implements View.OnClickLis
             @Override
             public void loaded(int i, String s, Object o) {
                 if (i >= UtilInternet.REQ_OK_STRING) {
-                    onDataReady(o);
+                    onDataReady(o, callback);
                 } else {
-                    onDataReady(null);
+                    onDataReady(null, callback);
                 }
             }
         });
     }
 
-    private void onDataReady(Object o) {
+    private void onDataReady(Object o, LessonCallback callback) {
         if (mDataMap != null)
             mDataMap.clear();
         if (o != null) {
@@ -112,9 +112,13 @@ public class SearchVIPLessonView extends BaseItemView implements View.OnClickLis
             mNameText.setText(name);
             mPlayImg.setVisibility(TextUtils.equals(mDataMap.get("isVideo"), "2") ? View.VISIBLE : View.GONE);
             setViewImage(mLessonImg, mDataMap.get("img"));
+            if (callback != null)
+                callback.callback(mDataMap.get("code"));
             XHClick.mapStat(getContext(), mStatisticsId, "顶部VIP内容展现量", "");
         } else {
             setVisibility(View.GONE);
+            if (callback != null)
+                callback.callback(null);
         }
     }
 
@@ -126,5 +130,9 @@ public class SearchVIPLessonView extends BaseItemView implements View.OnClickLis
                 XHClick.mapStat(getContext(), mStatisticsId, "顶部VIP内容点击量", "");
                 break;
         }
+    }
+
+    public interface LessonCallback {
+        void callback(String code);
     }
 }

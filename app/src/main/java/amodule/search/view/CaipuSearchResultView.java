@@ -3,6 +3,7 @@ package amodule.search.view;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -67,6 +68,10 @@ public class CaipuSearchResultView extends LinearLayout {
     private int adNum;
     private AtomicBoolean isRefreash = new AtomicBoolean(false);
 
+    private boolean mLessonDataReady = false;
+    private boolean mDishDataReady = false;
+    private String mLessonCode;
+    private Map<String, String> mDishStrMap;
 
     public CaipuSearchResultView(Context context) {
         this(context, null);
@@ -202,6 +207,10 @@ public class CaipuSearchResultView extends LinearLayout {
 
 
     private void clearSearchResult() {
+        mDishDataReady = false;
+        mLessonDataReady = false;
+        mDishStrMap = null;
+        mLessonCode = "";
         mListCaipuData.clear();
         mListShicaiData.clear();
         mListCaidanData.clear();
@@ -216,7 +225,14 @@ public class CaipuSearchResultView extends LinearLayout {
     }
 
     private void searchVIPLesson() {
-        mLessonView.searchLesson(searchKey);
+        mLessonView.searchLesson(searchKey, new SearchVIPLessonView.LessonCallback() {
+            @Override
+            public void callback(String code) {
+                mLessonCode = code;
+                mLessonDataReady = true;
+                onLessonAndDishDataReady();
+            }
+        });
     }
 
 
@@ -233,61 +249,14 @@ public class CaipuSearchResultView extends LinearLayout {
         new SearchDataImp().getCaipuAndShicaiResult(context, searchKey, currentCaipuPage, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
-
-                int loadCount;
+                mDishDataReady = true;
                 if (flag >= ReqInternet.REQ_OK_STRING) {
                     if (currentCaipuPage == 1) {
                         mListCaipuData.clear();
                         mListShicaiData.clear();
                     }
-                    Map<String, String> map = StringManager.getFirstMap(returnObj);
-                    if (map != null && map.containsKey("dishs")) {
-                        String caipuStr = map.get("dishs");
-                        ArrayList<Map<String, String>> tempList = StringManager.getListMapByJson(caipuStr);
-                        for (int k = 0; k < tempList.size(); k++) {
-                            Map<String, String> map1 = tempList.get(k);
-                            if (map1.containsKey("customers")) {
-                                Map<String, String> customer = StringManager.getFirstMap(map1.get("customers"));
-                                map1.put("cusNickName", customer.get("nickName"));
-                                map1.put("cusImg", customer.get("img"));
-                                map1.put("cusCode", customer.get("code"));
-                                map1.remove("customers");
-                            }
-                            map1.put("allClick", map1.get("allClick") + "浏览");
-                            map1.put("favorites", map1.get("favorites") + "收藏");
-                        }
-                        mListCaipuData.addAll(tempList);
-
-                        if (isFirstPage
-                                && map != null
-                                && map.containsKey("theIngre")) {
-                            String shicaiStr = map.get("theIngre");
-                            ArrayList<Map<String, String>> tempList2 = StringManager.getListMapByJson(shicaiStr);
-                            for (Map<String, String> map2 : tempList2) {
-                                map2.put("allClick", map2.get("allClick") + "浏览");
-                                map2.put("name", map2.get("name") + "百科");
-                            }
-                            mListShicaiData.addAll(tempList2);
-                        }
-
-                        if (!isFirstPage) {
-                            loadCount = mListCaidanData.size() + mListCaipuData.size() + mListShicaiData.size() + mListZhishiData.size() + adNum;
-                            if (adapterCaipuSearch == null) {
-                                adapterCaipuSearch = (AdapterCaipuSearch) list_search_result.getAdapter();
-                            }
-                            new Handler(Looper.getMainLooper()).post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    adNum = adapterCaipuSearch.refresh(isFirstPage, mListCaipuData, mListShicaiData, mListCaidanData, mListZhishiData);
-                                }
-                            });
-                            currentCaipuPage = loadManager.changeMoreBtn(list_search_result, flag, LoadManager.FOOTTIME_PAGE, loadCount, currentCaipuPage, isFirstPage);
-                        }
-                    } else {
-                        if (!isFirstPage) {
-                            setLoadMoreBtn();
-                        }
-                    }
+                    mDishStrMap = StringManager.getFirstMap(returnObj);
+                    onLessonAndDishDataReady();
                 } else {
                 }
 
@@ -298,6 +267,66 @@ public class CaipuSearchResultView extends LinearLayout {
             }
         });
 
+    }
+
+    private void onLessonAndDishDataReady() {
+        if (mLessonDataReady && mDishDataReady) {
+            if (mDishStrMap != null && mDishStrMap.containsKey("dishs")) {
+                String caipuStr = mDishStrMap.get("dishs");
+                ArrayList<Map<String, String>> tempList = StringManager.getListMapByJson(caipuStr);
+                int invalideIndex = -1;
+                for (int k = 0; k < tempList.size(); k++) {
+                    Map<String, String> map1 = tempList.get(k);
+                    if (map1.containsKey("customers")) {
+                        Map<String, String> customer = StringManager.getFirstMap(map1.get("customers"));
+                        map1.put("cusNickName", customer.get("nickName"));
+                        map1.put("cusImg", customer.get("img"));
+                        map1.put("cusCode", customer.get("code"));
+                        map1.remove("customers");
+                    }
+                    map1.put("allClick", map1.get("allClick") + "浏览");
+                    map1.put("favorites", map1.get("favorites") + "收藏");
+                    if (isFirstPage && TextUtils.equals(mLessonCode, map1.get("code")) && invalideIndex == -1) {
+                        invalideIndex = k;
+                    }
+                }
+                if (invalideIndex != -1) {
+                    tempList.remove(invalideIndex);
+                }
+                mListCaipuData.addAll(tempList);
+
+                if (isFirstPage
+                        && mDishStrMap != null
+                        && mDishStrMap.containsKey("theIngre")) {
+                    String shicaiStr = mDishStrMap.get("theIngre");
+                    ArrayList<Map<String, String>> tempList2 = StringManager.getListMapByJson(shicaiStr);
+                    for (Map<String, String> map2 : tempList2) {
+                        map2.put("allClick", map2.get("allClick") + "浏览");
+                        map2.put("name", map2.get("name") + "百科");
+                    }
+                    mListShicaiData.addAll(tempList2);
+                }
+
+                if (!isFirstPage) {
+                    int loadCount = mListCaidanData.size() + mListCaipuData.size() + mListShicaiData.size() + mListZhishiData.size() + adNum;
+                    if (adapterCaipuSearch == null) {
+                        adapterCaipuSearch = (AdapterCaipuSearch) list_search_result.getAdapter();
+                    }
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            adNum = adapterCaipuSearch.refresh(isFirstPage, mListCaipuData, mListShicaiData, mListCaidanData, mListZhishiData);
+                        }
+                    });
+                    currentCaipuPage = loadManager.changeMoreBtn(list_search_result, ReqInternet.REQ_OK_STRING, LoadManager.FOOTTIME_PAGE, loadCount, currentCaipuPage, isFirstPage);
+                }
+            } else {
+                if (!isFirstPage) {
+                    setLoadMoreBtn();
+                }
+            }
+
+        }
     }
 
     private void searchCaiDan() {
