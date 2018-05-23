@@ -62,7 +62,8 @@ public class SearchVIPLessonView extends BaseItemView implements View.OnClickLis
         mInfoText = (TextView) findViewById(R.id.lesson_info);
         mNameText = (TextView) findViewById(R.id.lesson_name);
         mPlayBtn = (Button) findViewById(R.id.lesson_play_btn);
-        mPlayBtn.setOnClickListener(this);
+        mPlayBtn.setClickable(false);
+        setOnClickListener(this);
         setVisibility(View.GONE);
     }
 
@@ -124,12 +125,8 @@ public class SearchVIPLessonView extends BaseItemView implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.lesson_play_btn:
-                AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), mDataMap.get("url"), true);
-                XHClick.mapStat(getContext(), mStatisticsId, "顶部VIP内容点击量", "");
-                break;
-        }
+        AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), mDataMap.get("url"), true);
+        XHClick.mapStat(getContext(), mStatisticsId, "顶部VIP内容点击量", "");
     }
 
     public interface LessonCallback {
