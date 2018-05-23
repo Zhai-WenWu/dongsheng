@@ -366,6 +366,7 @@ public class AppCommon {
                 final Class<?> c = Class.forName(urls[0]);
                 if (urls[0].contains("amodule.main.activity.")
                         || urls[0].contains("amodule.user.activity.MyFavorite")
+                        || urls[0].contains("amodule.lesson.activity.LessonHome")
                         ) {
                     Main.colse_level = 2;
                     if (Main.allMain != null) {
