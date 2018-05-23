@@ -82,7 +82,7 @@ import static com.xiangha.R.id.iv_itemIsFine;
 public class Main extends Activity implements OnClickListener, IObserver, ISetMessageTip {
     public static final String TAG = "xianghaTag";
 
-    private String[] tabTitle = {"学做菜", "VIP会员", "社区", "我的"};
+    private String[] tabTitle = {"学做菜", "名厨课", "社区", "我的"};
     private Class<?>[] classes = new Class<?>[]{MainHomePage.class, LessonHome.class, MainCircle.class, MainMyself.class};
     private int[] tabImgs = new int[]{R.drawable.tab_index, R.drawable.tab_vip, R.drawable.tab_circle, R.drawable.tab_myself};
     public static final int TAB_HOME = 0;
