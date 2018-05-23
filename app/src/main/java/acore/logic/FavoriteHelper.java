@@ -17,7 +17,6 @@ import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 
 import static acore.tools.ObserverManager.NOTIFY_FAVORITE;
-import static acore.tools.ObserverManager.NOTIFY_UNFAVORITE;
 
 /**
  * Description : 收藏功能辅助类
@@ -128,11 +127,11 @@ public class FavoriteHelper {
                                     Tools.showToast(context,"2".equals(state)?"收藏成功":"取消收藏");
                                 }
                             }
-                            Map<String,String> data = StringManager.getFirstMap(map.get("data"));
-                            ObserverManager.getInstance().notify("2".equals(state) ? NOTIFY_FAVORITE:NOTIFY_UNFAVORITE,null,data);
+                            ObserverManager.getInstance().notify(NOTIFY_FAVORITE,null, map);
                         }else{
                             if(null != callback)
                                 callback.onFailed();
+                            ObserverManager.getInstance().notify(NOTIFY_FAVORITE,null, null);
                         }
                     }
                 });

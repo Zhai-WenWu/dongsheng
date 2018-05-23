@@ -9,7 +9,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.popdialog.util.Tools;
@@ -42,7 +41,6 @@ import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
 import static acore.tools.ObserverManager.NOTIFY_FAVORITE;
 import static acore.tools.ObserverManager.NOTIFY_LOGIN;
 import static acore.tools.ObserverManager.NOTIFY_LOGOUT;
-import static acore.tools.ObserverManager.NOTIFY_UNFAVORITE;
 
 /**
  * 我的收藏页面改版
@@ -65,8 +63,7 @@ public class MyFavorite extends BaseAppCompatActivity implements View.OnClickLis
         initActivity("", 2, 0, 0, R.layout.a_my_favorite);
         initUi();
         initData();
-        ObserverManager.getInstance().registerObserver(this, NOTIFY_LOGIN, NOTIFY_LOGOUT,
-                NOTIFY_FAVORITE, NOTIFY_UNFAVORITE);
+        ObserverManager.getInstance().registerObserver(this, NOTIFY_LOGIN, NOTIFY_LOGOUT, NOTIFY_FAVORITE);
     }
 
     private void initUi() {
@@ -292,16 +289,20 @@ public class MyFavorite extends BaseAppCompatActivity implements View.OnClickLis
                 }
                 break;
             case NOTIFY_FAVORITE:
-                if (LoginManager.isLogin()
-                        && data != null && data instanceof Map) {
-                    mData.add(0, (Map<String, String>) data);
-                    rvListview.notifyItemViewInserted(0);
-                }
-                break;
-            case NOTIFY_UNFAVORITE:
-                if (LoginManager.isLogin()
-                        && data != null && data instanceof Map) {
-                    removeData((Map) data);
+                if (data != null && data instanceof Map) {
+                    Map<String, String> mapData = (Map<String, String>)data;
+                    Map<String,String> map = StringManager.getFirstMap(mapData.get("data"));
+                    String state = map.get("state");
+                    if (TextUtils.equals(state, "2")) {//收藏
+                        if (LoginManager.isLogin() && !map.isEmpty()) {
+                            mData.add(0, map);
+                            rvListview.notifyItemViewInserted(0);
+                        }
+                    } else {//取消收藏
+                        if (LoginManager.isLogin() && !map.isEmpty()) {
+                            removeData(map);
+                        }
+                    }
                 }
                 break;
             default:
@@ -311,15 +312,17 @@ public class MyFavorite extends BaseAppCompatActivity implements View.OnClickLis
 
     private void removeData(Map data) {
         Map<String, String> map = StringManager.getFirstMap(data.get("parameter"));
-        for (Map<String, String> value : mData) {
+        String type1 = map.get("type");
+        String code1 = map.get("code");
+        for (int i = 0; i < mData.size(); i ++) {
+            Map<String, String> value = mData.get(i);
             Map<String, String> parameterMap = StringManager.getFirstMap(value.get("parameter"));
-            if (TextUtils.equals(map.toString(), parameterMap.toString())) {
-                int position = mData.indexOf(value);
-                if (position >= 0 && position < mData.size()) {
-                    mData.remove(position);
-                    rvListview.notifyItemViewRemove(position);
-                    handlerNoDataLayout();
-                }
+            String type2 = parameterMap.get("type");
+            String code2 = parameterMap.get("code");
+            if (TextUtils.equals(type1, type2) && TextUtils.equals(code1, code2)) {
+                mData.remove(value);
+                rvListview.notifyItemViewRemove(i);
+                handlerNoDataLayout();
                 break;
             }
         }

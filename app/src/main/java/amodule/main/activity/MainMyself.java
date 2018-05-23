@@ -74,10 +74,10 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
     private RelativeLayout right_myself, userPage;
     private LinearLayout gourp1, gourp2,gourp3;
     private String[] name1 = {"我的订单"},
-            name2 = {"我的会员", "当前设备已开通会员", "我的问答", "我的收藏", "浏览历史"},
+            name2 = {"我的会员", "当前设备已开通会员", "我的收藏", "浏览历史", "我的问答"},
             name3 = {"邀请好友", "反馈帮助","设置"};
     private String[] clickTag1 = {"order"},
-            clickTag2 = {"vip", "yiyuan", "qa", "myFavorite", "hitstory"},
+            clickTag2 = {"vip", "yiyuan", "myFavorite", "hitstory", "qa"},
             clickTag3 = {"invitation", "helpe","setting"};
 
     private final String tongjiId = "a_mine";

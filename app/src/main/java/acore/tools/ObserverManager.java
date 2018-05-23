@@ -18,7 +18,6 @@ public class ObserverManager {
     public static final String NOTIFY_LOGOUT = "notify_logout";
     public static final String NOTIFY_MESSAGE_REFRESH = "notify_message_refresh";
     public static final String NOTIFY_FAVORITE = "notify_favorite";
-    public static final String NOTIFY_UNFAVORITE = "notify_unfavorite";
     public static final String NOTIFY_FOLLOW = "notify_follow";
     public static final String NOTIFY_PAYFINISH = "notify_payfinish";
     public static final String NOTIFY_SHARE = "notify_share";

@@ -11,6 +11,7 @@
         android:id="@+id/v_top_line"
         android:layout_width="match_parent"
         android:layout_height="1px"
+        android:layout_marginLeft="@dimen/dp_20"
         android:background="#ececec"
         android:layout_alignParentBottom="true" />
 
