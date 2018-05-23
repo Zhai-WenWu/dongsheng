@@ -246,6 +246,10 @@ public class SpecialWebControl {
             //0.03
             refererMap.put("Referer", "https://m.xiangha.com/");
         }
+        if(refererMap == null){
+            refererMap = new HashMap<>();
+        }
+        refererMap.put("Cookie","xhWebStat=1");
         return refererMap;
     }
 }
