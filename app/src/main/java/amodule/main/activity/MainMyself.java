@@ -599,6 +599,10 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
                     startActivity(new Intent(this, InviteFriend.class));
                     break;
                 case "myFavorite":
+                    if (!LoginManager.isLogin()) {
+                        startActivity(new Intent(this, LoginByAccout.class));
+                        return;
+                    }
                     Intent intent = new Intent(MainMyself.this, MyFavorite.class);
                     startActivity(intent);
                     XHClick.mapStat(this, tongjiId, "我的收藏", "");

@@ -52,7 +52,6 @@ public class MyFavorite extends BaseAppCompatActivity implements View.OnClickLis
     private LayoutScroll mLayoutScroll;
     private PtrClassicFrameLayout refreshLayout;
     private LinearLayout noDataLayout;
-    private RelativeLayout noLoginLayout;
     private RvListView rvListview;
     private AdapterModuleS0 myFavorite;
     private int currentpage = 0, everyPage = 0;//页面号码
@@ -66,10 +65,6 @@ public class MyFavorite extends BaseAppCompatActivity implements View.OnClickLis
         initActivity("", 2, 0, 0, R.layout.a_my_favorite);
         initUi();
         initData();
-        //未登录自动跳转去登录
-        if (!LoginManager.isLogin()) {
-            gotoLogin();
-        }
         ObserverManager.getInstance().registerObserver(this, NOTIFY_LOGIN, NOTIFY_LOGOUT,
                 NOTIFY_FAVORITE, NOTIFY_UNFAVORITE);
     }
@@ -84,14 +79,10 @@ public class MyFavorite extends BaseAppCompatActivity implements View.OnClickLis
         refreshLayout.post(()->refreshLayout.getLayoutParams().height = ToolsDevice.getWindowPx(this).heightPixels - Tools.getDimen(this,R.dimen.dp_53));
 
         noDataLayout = (LinearLayout) findViewById(R.id.noData_layout);
-        noLoginLayout = (RelativeLayout) findViewById(R.id.no_login_rela);
-        noLoginLayout.setOnClickListener(this);
         mLayoutScroll.init(acore.tools.Tools.getDimen(this,R.dimen.dp_45));
         mLayoutScroll.setTouchView(rvListview);
         mLayoutScroll.setTouchView(refreshLayout);
 
-        findViewById(R.id.noLogin_layout).setOnClickListener(this);
-        noLoginLayout.setOnTouchListener((v, event) -> true);
         findViewById(R.id.seek_layout).setOnClickListener(this);
         findViewById(R.id.title).setOnClickListener(this);
         findViewById(R.id.back).setOnClickListener(this);
@@ -190,7 +181,6 @@ public class MyFavorite extends BaseAppCompatActivity implements View.OnClickLis
     @Override
     protected void onResume() {
         super.onResume();
-        refreshLoginstatus();
         if(!LoginManager.isLogin() && loadManager != null)
             loadManager.hideProgressBar();
     }
@@ -210,9 +200,6 @@ public class MyFavorite extends BaseAppCompatActivity implements View.OnClickLis
                 break;
             case R.id.title:
                 gotoTop();
-                break;
-            case R.id.noLogin_layout:
-                gotoLogin();
                 break;
             case R.id.seek_layout:
                 gotoSearch();
@@ -294,13 +281,11 @@ public class MyFavorite extends BaseAppCompatActivity implements View.OnClickLis
         switch (name) {
             case NOTIFY_LOGIN:
                 if (data != null && data instanceof Boolean && (Boolean) data) {
-                    refreshLoginstatus();
                     requestData(true);
                 }
                 break;
             case NOTIFY_LOGOUT:
                 if (data != null && data instanceof Boolean && (Boolean) data) {
-                    refreshLoginstatus();
                     //清空数据
                     mData.clear();
                     myFavorite.notifyDataSetChanged();
@@ -349,10 +334,5 @@ public class MyFavorite extends BaseAppCompatActivity implements View.OnClickLis
             if(rvListview != null)
                 rvListview.scrollToPosition(0);
         }
-    }
-
-    private void refreshLoginstatus() {
-        if (noLoginLayout != null)
-            noLoginLayout.setVisibility(LoginManager.isLogin() ? View.GONE : View.VISIBLE);
     }
 }
