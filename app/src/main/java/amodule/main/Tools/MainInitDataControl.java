@@ -220,10 +220,13 @@ public class MainInitDataControl {
         //获取随机推广数据
         AppCommon.saveRandPromotionData(act);
         if(act!=null && XHADView.getInstence(act)!=null) {
+            final long currentTime = System.currentTimeMillis();
             XHADView.getInstence(act).setCanShowCallback(new XHADView.CanShowCallback() {
                 @Override
                 public boolean canShow() {
-                    return Main.allMain != null && Main.allMain.getCurrentTab() == 0;
+                    return Main.allMain != null
+                            && Main.allMain.getCurrentTab() == 0
+                            && System.currentTimeMillis() - currentTime <= 10000;
                 }
             });
         }
