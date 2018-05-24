@@ -183,11 +183,12 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
                     v -> {
                         if (HeaderDataLoaded)
                             EntryptData(!LoadOver);
-                        else {//第一次加载feed数据
-                            loadFeedData(!LoadOver);
+                        else if (!LoadOver) {//第一次加载feed数据
+                            EntryptData(false);
                         }
                     }
             );
+            loadManager.getSingleLoadMore(mViewContrloer.getRvListView()).setVisibility(View.GONE);
             mViewContrloer.addOnScrollListener();
             if (!ToolsDevice.isNetworkAvailable(this)) {
                 loadManager.hideProgressBar();
