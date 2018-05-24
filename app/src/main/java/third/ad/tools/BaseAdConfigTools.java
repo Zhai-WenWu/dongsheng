@@ -13,6 +13,8 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import acore.logic.XHClick;
+import acore.override.XHApplication;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import aplug.basic.InternetCallback;
@@ -85,8 +87,11 @@ public class BaseAdConfigTools {
             case "click":
             case "download":
             case "show":
+                StringBuffer sb = new StringBuffer();
+                sb.append("ad_").append(event).append("_625");
                 params.put("log_json", new JSONArray().put(jsonObject).toString());
-                requestStatistics(StringManager.api_adsNumber, params,event);
+                requestStatistics(StringManager.api_adsNumber, params,sb.toString());
+                XHClick.mapStat(XHApplication.in(), sb.toString(), gg_business, gg_position_code);
                 break;
         }
     }
