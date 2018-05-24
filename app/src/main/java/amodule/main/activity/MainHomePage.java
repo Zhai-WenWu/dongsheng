@@ -188,7 +188,6 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
                         }
                     }
             );
-            loadManager.getSingleLoadMore(mViewContrloer.getRvListView()).setVisibility(View.GONE);
             mViewContrloer.addOnScrollListener();
             if (!ToolsDevice.isNetworkAvailable(this)) {
                 loadManager.hideProgressBar();
