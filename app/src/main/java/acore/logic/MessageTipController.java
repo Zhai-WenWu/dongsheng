@@ -51,7 +51,7 @@ public class MessageTipController {
     /** 获取公用数据消息 */
     public void getCommonData(final InternetCallback callback) {
         final long currentTime = System.currentTimeMillis();
-        if(lastRequestTime < 0 || (currentTime - lastRequestTime > 2000 && fiallNum == 0)){
+        if(lastRequestTime < 0 || (currentTime - lastRequestTime > 2000) || (fiallNum < 3 && fiallNum > 0)){
             lastRequestTime = currentTime;
             String url = StringManager.api_commonData + "?m=commonData";
             ReqInternet.in().doGet(url, new InternetCallback() {
@@ -71,6 +71,9 @@ public class MessageTipController {
                     }
                 }
             });
+        } else {
+            if (callback != null)
+                callback.loaded(ReqInternet.REQ_FAILD, "", "");
         }
     }
 

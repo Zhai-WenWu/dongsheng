@@ -79,7 +79,7 @@
             <TextView
                 android:id="@+id/tv_sub_user_name"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/dp_19"
+                android:layout_height="wrap_content"
                 android:maxWidth="@dimen/dp_200"
                 android:singleLine="true"
                 android:text="昵称"
@@ -102,22 +102,6 @@
                 tagTextView:radius="@dimen/dp_2" />
 
             <include layout="@layout/a_user_type" />
-
-            <!-- <ImageView
-                 android:id="@+id/i_user_lv"
-                 android:layout_width="@dimen/dp_16"
-                 android:layout_height="@dimen/dp_16"
-                 android:layout_marginBottom="@dimen/dp_1"
-                 android:layout_marginLeft="@dimen/dp_5"
-                 android:visibility="gone" />
-
-             <ImageView
-                 android:id="@+id/i_user_vip"
-                 android:layout_width="@dimen/dp_16"
-                 android:layout_height="@dimen/dp_16"
-                 android:layout_marginLeft="@dimen/dp_3"
-                 android:gravity="center"
-                 android:scaleType="fitCenter" />-->
 
         </LinearLayout>
 

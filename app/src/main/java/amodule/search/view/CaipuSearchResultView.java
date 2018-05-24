@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -176,6 +177,8 @@ public class CaipuSearchResultView extends LinearLayout {
                         clearSearchResult();
                         isRefreash.set(true);
                         searchVIPLesson();
+                        Log.e("TAG", "searchCaipu: -----------111");
+
                         searchCaipu();
                         searchCaiDan();
                         searchZhiShi();
@@ -184,6 +187,9 @@ public class CaipuSearchResultView extends LinearLayout {
                     @Override
                     public void onClick(View v) {
                         isRefreash.set(false);
+
+                        Log.e("TAG", "searchCaipu: -----------222");
+
                         searchCaipu();
                     }
 
@@ -237,6 +243,7 @@ public class CaipuSearchResultView extends LinearLayout {
 
 
     private void searchCaipu() {
+        Log.e("TAG", "searchCaipu: -----------");
 
         currentCaipuPage++;
         isFirstPage = currentCaipuPage == 1;

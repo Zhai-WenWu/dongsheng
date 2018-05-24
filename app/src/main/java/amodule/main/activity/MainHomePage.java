@@ -183,6 +183,9 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
                     v -> {
                         if (HeaderDataLoaded)
                             EntryptData(!LoadOver);
+                        else {//第一次加载feed数据
+                            loadFeedData(!LoadOver);
+                        }
                     }
             );
             loadManager.getSingleLoadMore(mViewContrloer.getRvListView()).setVisibility(View.GONE);
@@ -297,6 +300,12 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
             if (mDataControler != null)
                 mDataControler.refreshADIndex();
         }
+        loadFeedData(refresh);
+    }
+
+    private void loadFeedData(boolean refresh) {
+        if (mDataControler == null)
+            return;
         mDataControler.loadServiceFeedData(refresh, new HomeDataControler.OnLoadDataCallback() {
             @Override
             public void onPrepare() {
