@@ -177,8 +177,6 @@ public class CaipuSearchResultView extends LinearLayout {
                         clearSearchResult();
                         isRefreash.set(true);
                         searchVIPLesson();
-                        Log.e("TAG", "searchCaipu: -----------111");
-
                         searchCaipu();
                         searchCaiDan();
                         searchZhiShi();
@@ -187,9 +185,6 @@ public class CaipuSearchResultView extends LinearLayout {
                     @Override
                     public void onClick(View v) {
                         isRefreash.set(false);
-
-                        Log.e("TAG", "searchCaipu: -----------222");
-
                         searchCaipu();
                     }
 
