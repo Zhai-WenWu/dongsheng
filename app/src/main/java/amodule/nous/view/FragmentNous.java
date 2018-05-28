@@ -171,10 +171,7 @@ public class FragmentNous {
                         final Map<String, String> map2 = adArray.get(adIndex);
                         if (map2 != null && map2.size() > 0) {
                             setAdView(adLayout, map2);
-                            if (!"2".equals(map2.get("isShow"))) {
-                                xhAllAdControl.onAdBind(Integer.valueOf(map2.get("index")), adLayout, (adIndex + 1) + "");
-                                map2.put("isShow", "2");
-                            }
+                            xhAllAdControl.onAdBind(Integer.valueOf(map2.get("index")), adLayout, (adIndex + 1) + "");
 
                             final int finalAdIndex = adIndex;
                             view.setOnClickListener(new OnClickListener() {

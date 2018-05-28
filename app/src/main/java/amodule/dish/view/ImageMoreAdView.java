@@ -121,12 +121,9 @@ public class ImageMoreAdView extends ImageMoreView implements View.OnClickListen
 
     public void onShow(){
 
-        if("ad".equals(mAdPlayKey)){
-            Map<String,String> map = (Map<String, String>) mData.get(0);
-            if(!"2".equals(map.get("isShow"))){
-                mXhadControl.onAdBind(0,mParentView,"");
-                map.put("isShow","2");
-            }
+        if ("ad".equals(mAdPlayKey)) {
+            Map<String, String> map = (Map<String, String>) mData.get(0);
+            mXhadControl.onAdBind(0, mParentView, "");
         }
     }
 

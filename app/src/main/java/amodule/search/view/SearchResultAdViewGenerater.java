@@ -122,10 +122,7 @@ public class SearchResultAdViewGenerater {
             }
         });
 
-        if (!"2".equals(dataMap.get("isShow"))) {
-            xhAllAdControl.onAdBind(Integer.valueOf(dataMap.get("index")), view, indexOnShow);
-            dataMap.put("isShow", "2");
-        }
+        xhAllAdControl.onAdBind(Integer.valueOf(dataMap.get("index")), view, indexOnShow);
     }
 
 

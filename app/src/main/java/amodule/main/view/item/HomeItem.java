@@ -408,10 +408,7 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
         }
         if (mIsAd) {
             Log.i("tzy", "initData: mIsAd = " + mIsAd);
-            if (mAdControlParent != null && !mDataMap.containsKey("isADShow")) {
-                mAdControlParent.onAdShow(mDataMap, this);
-                mDataMap.put("isADShow", "1");
-            }
+            mAdControlParent.onAdShow(mDataMap, this);
             if (mAdTag != null && (!mDataMap.containsKey("adType") || !"1".equals(mDataMap.get("adType"))))
                 mAdTag.setVisibility(View.VISIBLE);
             else if (mAdTag != null)

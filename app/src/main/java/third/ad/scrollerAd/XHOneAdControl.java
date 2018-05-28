@@ -98,10 +98,13 @@ public class XHOneAdControl {
      */
     public void onAdBind(View view, String oneLevel, String twoLevel) {
         Log.i("tzy", "onAdBind::::" + index_ad + "::::" + (view == null ? "view为null" : "正常"));
-        if (index_ad > -1 && index_ad < listAdParent.size() && !isDisplayed) {
+        if (index_ad > -1 && index_ad < listAdParent.size()) {
+            XHScrollerAdParent scrollerAdParent = listAdParent.get(index_ad);
             if (view != null)
-                listAdParent.get(index_ad).setShowView(view);
-            listAdParent.get(index_ad).onResumeAd(oneLevel, twoLevel);
+                scrollerAdParent.setShowView(view);
+            if (scrollerAdParent instanceof XHScrollerSelf || !isDisplayed) {
+                scrollerAdParent.onResumeAd(oneLevel, twoLevel);
+            }
         }
     }
 

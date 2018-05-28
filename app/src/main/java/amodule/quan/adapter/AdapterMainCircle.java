@@ -225,11 +225,8 @@ public class AdapterMainCircle extends RvBaseAdapter<Map<String, String>> {
                     @Override
                     public void onAdShow(View view) {
                         if (data.containsKey("isPromotion")) {
-                            if (!"2".equals(data.get("isShow"))) {
-                                quanAdvertControl.onAdBind(data.get("controlTag"), Integer.valueOf(data.get("indexInData")), view,
-                                        data.get("promotionIndex"));
-                                data.put("isShow", "2");
-                            }
+                            quanAdvertControl.onAdBind(data.get("controlTag"), Integer.valueOf(data.get("indexInData")), view,
+                                    data.get("promotionIndex"));
                         }
                     }
 

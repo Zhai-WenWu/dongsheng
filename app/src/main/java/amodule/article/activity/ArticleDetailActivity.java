@@ -103,7 +103,6 @@ public class ArticleDetailActivity extends BaseActivity {
     private Map<String, String> shareMap = new HashMap<>();
     private String commentNum = "0";
     private boolean isKeyboradShow = false;
-    private boolean isAdShow = false;
     private String code = "";//请求数据的code
     private int page = 0;//相关推荐的page
     private boolean isOnce = true;
@@ -423,12 +422,11 @@ public class ArticleDetailActivity extends BaseActivity {
 
                     @Override
                     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                        if (adView != null && !isAdShow) {
+                        if (adView != null) {
                             int[] location = new int[2];
                             adView.getLocationOnScreen(location);
                             if (location[1] > 0
                                     && location[1] < srceenHeight * 3 / 4) {
-                                isAdShow = true;
                                 mArticleAdContrler.onBigAdBind(adView);
                             }
                         }

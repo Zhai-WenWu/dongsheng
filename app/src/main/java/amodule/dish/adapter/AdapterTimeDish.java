@@ -87,10 +87,8 @@ public class AdapterTimeDish extends AdapterSimple {
             view.findViewById(R.id.iv_userType).setVisibility(View.GONE);
             iv_itemIsSolo.setVisibility(View.INVISIBLE);
 
-            if (!"2".equals(map.get("isShow"))) {
-                adControl.onAdBind(Integer.valueOf(map.get("indexOnData")), view, "");
-                map.put("isShow", "2");
-            }
+            adControl.onAdBind(Integer.valueOf(map.get("indexOnData")), view, "");
+
             AppCommon.setAdHintClick(mAct,view.findViewById(R.id.ad_hint_imv),adControl,Integer.valueOf(map.get("indexOnData")), "");
             setAdItemListener(view, map);
             setAdItemListener(view.findViewById(R.id.iv_userImg), map);

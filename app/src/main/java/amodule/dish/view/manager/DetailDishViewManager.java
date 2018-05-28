@@ -61,7 +61,7 @@ public class DetailDishViewManager {
     private RelativeLayout dishVidioLayout;
     private ListView listView;
     private int firstItemIndex = -1,startY;
-    private boolean isHasVideo=false,isRecored=false;
+    private boolean isHasVideo=false,isRecored=false, isSchool;
     private int wm_height;//屏幕高度
 
     public DishTitleViewControl dishTitleViewControl;
@@ -88,6 +88,8 @@ public class DetailDishViewManager {
     private RelativeLayout bar_title_1;
     private boolean isLoadVip= false;
     private LinearLayout linearLayoutOne;
+
+//    private boolean mAdBannerViewVisibleToUser = false;
 
     /**
      * 对view进行基础初始化
@@ -231,7 +233,8 @@ public class DetailDishViewManager {
     }
     public void handlerIsSchool(String isSchool){
         linearLayoutOne.removeAllViews();
-        if(!TextUtils.isEmpty(isSchool)&&"2".equals(isSchool)){
+        this.isSchool = TextUtils.equals("2", isSchool);
+        if(this.isSchool){
             linearLayoutOne.addView(dishModuleScrollView);
             linearLayoutOne.addView(dishIngreDataShow);
         }else {
@@ -317,10 +320,16 @@ public class DetailDishViewManager {
         if(dishVipView != null){
             if(relation.containsKey("isShow")&&"2".equals(relation.get("isShow"))) {
                 dishVipView.setVisibility(View.VISIBLE);
+                if (isHasVideo) {
+                    XHClick.mapStat(mAct, "vipbutton_video", isSchool ? "展现会员视频下按钮" : "展现非会员视频下按钮", "");
+                }
                 dishVipView.setOnClickViewCallback(() -> {
                     String twoLevelValue = isHasVideo ? "视频" : "顶部导航栏";
                     String threeLevelValue = isHasVideo ? "视频下方会员开通按钮" : "头图下方会员开通按钮";
                     XHClick.mapStat(mAct, DetailDish.tongjiId_detail, twoLevelValue, threeLevelValue);
+                    if (isHasVideo) {
+                        XHClick.mapStat(mAct, "vipbutton_video", isSchool ? "点击会员视频下按钮" : "点击非会员视频下按钮", "");
+                    }
                 });
                 dishVipView.setData(relation);
                 Log.i("xianghaTag","VIP::::handlerVipView:::title:::"+relation.get("title"));
@@ -645,4 +654,6 @@ public class DetailDishViewManager {
             }
         }
     }
+
+
 }

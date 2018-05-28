@@ -97,10 +97,7 @@ public class UserHomeTxtItem extends UserHomeItem implements View.OnClickListene
             }
             if (mADTag != null && (!mDataMap.containsKey("adType") || !"1".equals(mDataMap.get("adType"))))
                 mADTag.setVisibility(View.VISIBLE);
-            if (mAdControlParent != null && !mDataMap.containsKey("isADShow")) {
-                mAdControlParent.onAdShow(mDataMap, this);
-                mDataMap.put("isADShow", "1");
-            }
+            mAdControlParent.onAdShow(mDataMap, this);
         }
         if (!mIsAd) {
             String name = mDataMap.get("title");

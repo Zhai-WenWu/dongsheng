@@ -103,17 +103,16 @@ public class DetailDishDataManager {
                 if(flag>=UtilInternet.REQ_OK_STRING) {
                     if(!hasPermission || !contiunRefresh) return;
                     detailAct.reset();
-                    customerCode= StringManager.getFirstMap(object).get("customerCode");
+                    Map<String, String> map = StringManager.getFirstMap(object);
+                    customerCode= map.get("customerCode");
                     if (!TextUtils.isEmpty(object.toString()) && !object.toString().equals("[]")) {
-                        Map<String,String> mapTemp = StringManager.getFirstMap(object);
-                        if(mapTemp!=null&&mapTemp.containsKey("dishState")&&"4".equals(mapTemp.get("dishState"))){
+                        if(map!=null&&map.containsKey("dishState")&&"4".equals(map.get("dishState"))){
                             if(detailAct!=null)detailAct.finish();
                             return;
                         }
                         handleDataSuccess(flag, DISH_DATA_TOP, object);
                         if(isGon)reqOne();
-                        Map<String,String> maps= StringManager.getFirstMap(object);
-                        if(maps.containsKey("isHide")&&!"2".equals(maps.get("isHide"))){
+                        if(map.containsKey("isHide")&&!"2".equals(map.get("isHide"))){
                             reqOtherTieData();
                         }
                     }

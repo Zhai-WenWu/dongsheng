@@ -81,7 +81,7 @@ public class BaseAdConfigTools {
         JSONObject jsonObject = MapToJsonEncode(map);
         LinkedHashMap<String, String> params = new LinkedHashMap<>();
 
-        Log.i("tongji", "postStatistics: params=" + params.toString());
+//        Log.i("tongji", "gg_business: " + gg_business);
 //        requestStatistics(StringManager.api_monitoring_9,params);
         switch (event) {
             case "click":

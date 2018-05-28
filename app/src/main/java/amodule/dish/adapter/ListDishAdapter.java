@@ -70,11 +70,9 @@ public class ListDishAdapter extends BaseAdapter {
             if (data == null || data.size() <= 0 || mItemView == null)
                 return;
             mItemView.setData(data);
-            if (xhAllControl != null && data.containsKey("adStyle") && "1".equals(data.get("adStyle"))
-                    && !(data.containsKey("adshow") && "1".equals(data.get("adshow")))) {
+            if (xhAllControl != null && data.containsKey("adStyle") && "1".equals(data.get("adStyle"))) {
                 int adposition = Integer.parseInt(data.get("adPosition"));
                 xhAllControl.onAdBind(adposition, mItemView, String.valueOf(adposition + 1));
-                data.put("adshow", "1");
             }
         }
     }

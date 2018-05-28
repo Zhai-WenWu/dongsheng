@@ -386,12 +386,8 @@ public abstract class AdOptionParent implements ActivityMethodManager.IAutoRefre
     }
 
     public void onAdShow(Map<String, String> map, View view) {
-        Log("onAdShow");
-        if (map != null && !"2".equals(map.get("isShow"))) {
-            Log("--------------onAdShow----------------");
-            xhAllAdControl.onAdBind(Integer.parseInt(map.get("indexOnData")), view, map.get("index"));
-            map.put("isShow", "2");
-        }
+        Log("--------------onAdShow----------------");
+        xhAllAdControl.onAdBind(Integer.parseInt(map.get("indexOnData")), view, map.get("index"));
     }
 
     public void onAdClick(Map<String, String> map) {

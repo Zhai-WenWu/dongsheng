@@ -58,7 +58,6 @@ import third.ad.scrollerAd.XHAllAdControl;
 
 public class BannerView extends Banner implements IBindMap, IStatictusData, ISaveStatistic, IHandlerClickEvent,ISetAdID
         ,IStatisticCallback,ISetStatisticPage, ISetAdController, ISetShowIndex, IUpdatePadding {
-    public static final String KEY_ALREADY_SHOW = "alreadyshow";
     private LayoutInflater mInflater;
     private ArrayList<String> mAdIDArray = new ArrayList<>();
     private int showMinH, showMaxH;
@@ -246,9 +245,7 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
                 getLocationInWindow(location);
                 Map<String, String> adMap = isAdByPos(position);
                 if (location[1] > showMinH && location[1] < showMaxH
-                        && adMap != null
-                        && !adMap.containsKey(KEY_ALREADY_SHOW)) {
-                    adMap.put(KEY_ALREADY_SHOW, "2");
+                        && adMap != null) {
                     int index = -1;
                     try{
                         index = Integer.parseInt(adMap.get("realIndex"));

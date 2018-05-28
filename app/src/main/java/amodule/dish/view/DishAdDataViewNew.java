@@ -236,9 +236,8 @@ public class DishAdDataViewNew extends ItemBaseView {
     }
 
     public void onListScroll() {
-        if (xhAllAdControl!=null&&adDataMap.size()>0 && !"2".equals(adDataMap.get("isShow"))) {
+        if (xhAllAdControl!=null&&adDataMap.size()>0 ) {
             xhAllAdControl.onAdBind(0, root_layout, "");
-            adDataMap.put("isShow", "2");
         }
     }
 

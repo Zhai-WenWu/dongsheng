@@ -224,11 +224,8 @@ public class AdapterCircle extends AdapterSimple {
                     @Override
                     public void onAdShow(View view) {
                         if (map.containsKey("isPromotion")) {
-                            if (!"2".equals(map.get("isShow"))) {
-                                quanAdvertControl.onAdBind(map.get("controlTag"),Integer.valueOf(map.get("indexInData")), view,
-                                        map.get("promotionIndex"));
-                                map.put("isShow", "2");
-                            }
+                            quanAdvertControl.onAdBind(map.get("controlTag"), Integer.valueOf(map.get("indexInData")), view,
+                                    map.get("promotionIndex"));
                         }
                     }
 
