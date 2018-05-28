@@ -114,6 +114,8 @@ public class ArticleDetailActivity extends BaseActivity {
     private boolean isFav = false;
     private String title = "";
 
+    private boolean mAdBannerViewIsInScreen = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -414,22 +416,13 @@ public class ArticleDetailActivity extends BaseActivity {
 //                            requestRelateData();
                     }
                 }, new AutoLoadMore.OnListScrollListener() {
-                    int srceenHeight = ToolsDevice.getWindowPx(ArticleDetailActivity.this).heightPixels;
-
                     @Override
                     public void onScrollStateChanged(AbsListView view, int scrollState) {
                     }
 
                     @Override
                     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                        if (adView != null) {
-                            int[] location = new int[2];
-                            adView.getLocationOnScreen(location);
-                            if (location[1] > 0
-                                    && location[1] < srceenHeight * 3 / 4) {
-                                mArticleAdContrler.onBigAdBind(adView);
-                            }
-                        }
+                        checkAdStatistic();
                     }
                 });
         View view = new View(this);
@@ -489,6 +482,46 @@ public class ArticleDetailActivity extends BaseActivity {
         adView = mArticleAdContrler.getBigAdView(adDataMap);
         articleContentBottomView.addViewToAdLayout(adView);
         detailAdapter.notifyDataSetChanged();
+
+        checkAdStatistic();
+    }
+
+    private void checkAdStatistic() {
+        if (adView == null)
+            return;
+        boolean visibleToUser = onBannerViewVisibleToUser();
+        boolean xhAd = TextUtils.equals("xh", mArticleAdContrler.getAdType());
+        if(visibleToUser && xhAd){//自有广告
+            mArticleAdContrler.onBigAdBind(adView);
+            return;
+        }
+        if (mArticleAdContrler != null) {//其他广告，底层有只统计一次的判断
+            mArticleAdContrler.onBigAdBind(adView);
+        }
+    }
+
+    private boolean onBannerViewVisibleToUser() {
+        boolean inScreen = adBannerOnScreen();
+        if (inScreen && !mAdBannerViewIsInScreen) {
+            mAdBannerViewIsInScreen = inScreen;
+            return true;
+        } else if (!inScreen){
+            mAdBannerViewIsInScreen = false;
+        }
+        return false;
+    }
+
+    private boolean adBannerOnScreen() {
+        if (adView != null && adView.getVisibility() == View.VISIBLE) {
+            int bannerViewHeight = adView.getHeight();
+            int[] location = new int[2];
+            adView.getLocationOnScreen(location);
+            if (location[1] + bannerViewHeight > Tools.getStatusBarHeight(this)
+                    && location[1] < Tools.getScreenHeight() - mArticleCommentBar.getHeight()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

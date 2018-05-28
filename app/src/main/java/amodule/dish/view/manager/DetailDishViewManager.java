@@ -89,7 +89,7 @@ public class DetailDishViewManager {
     private boolean isLoadVip= false;
     private LinearLayout linearLayoutOne;
 
-//    private boolean mAdBannerViewVisibleToUser = false;
+    private boolean mAdBannerViewIsInScreen = false;
 
     /**
      * 对view进行基础初始化
@@ -494,13 +494,9 @@ public class DetailDishViewManager {
                 if(layoutFooter!=null){
                     onSrollView();
                 }
-                if(dishADBannerView != null && dishADBannerView.getVisibility() == View.VISIBLE){
-                    int[] location = new int[2];
-                    dishADBannerView.getLocationOnScreen(location);
-                    if ((location[1] > Tools.getStatusBarHeight(mAct)
-                            && location[1] < Tools.getScreenHeight() - ToolsDevice.dp2px(mAct, 57))) {
-                        dishADBannerView.onAdShow();
-                    }
+                boolean visibleToUser = onBannerViewVisibleToUser();
+                if(visibleToUser){
+                    dishADBannerView.onAdShow();
                 }
             }
         });
@@ -556,6 +552,31 @@ public class DetailDishViewManager {
             }
         });
     }
+
+    private boolean onBannerViewVisibleToUser() {
+        boolean inScreen = adBannerOnScreen();
+        if (inScreen && !mAdBannerViewIsInScreen) {
+            mAdBannerViewIsInScreen = inScreen;
+            return true;
+        } else if (!inScreen){
+            mAdBannerViewIsInScreen = false;
+        }
+        return false;
+    }
+
+    private boolean adBannerOnScreen() {
+        if (dishADBannerView != null && dishADBannerView.getVisibility() == View.VISIBLE) {
+            int bannerViewHeight = dishADBannerView.getHeight();
+            int[] location = new int[2];
+            dishADBannerView.getLocationOnScreen(location);
+            if ((location[1] + bannerViewHeight > Tools.getStatusBarHeight(mAct)
+                    && location[1] < Tools.getScreenHeight() - ToolsDevice.dp2px(mAct, 57))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private boolean isShowScreen(){
         int[] location = new int[2];
         dishHeaderViewNew.getLocationOnScreen(location);

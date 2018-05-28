@@ -59,6 +59,9 @@ public class ArticleAdContrler {
     //adPosition 的 index 值
     public final int ARTICLE_RECOMMEND_1 = 0;
     public final int ARTICLE_RECOMMEND_2 = 1;
+
+    private String mAdType;
+
     protected Handler adHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
@@ -243,14 +246,19 @@ public class ArticleAdContrler {
             adView.setLayoutParams(layoutParams);
         }
         View view = adView.findViewById(ID_AD_ICON_GDT);
+        mAdType = dataMap.get("type");
         if (view != null) {
-            view.setVisibility(ADKEY_GDT.equals(dataMap.get("type")) ? View.VISIBLE : View.GONE);
+            view.setVisibility(ADKEY_GDT.equals(mAdType) ? View.VISIBLE : View.GONE);
         }
         //设置ad点击
         if (adView != null) {
             setAdClick(adView, dataMap);
         }
         return adView;
+    }
+
+    public String getAdType() {
+        return mAdType;
     }
 
     public void setAdClick(final View adView, Map<String, String> dataMap) {
