@@ -241,7 +241,16 @@ public class DetailDishViewManager {
             linearLayoutOne.addView(dishIngreDataShow);
             linearLayoutOne.addView(dishModuleScrollView);
         }
+
+        statisticVipShow();
     }
+
+    private void statisticVipShow() {
+        if (isHasVideo && dishVipView != null && dishVipView.getVisibility() == View.VISIBLE) {
+            XHClick.mapStat(mAct, "vipbutton_video", isSchool ? "展现会员视频下按钮" : "展现非会员视频下按钮", "");
+        }
+    }
+
     /**
      * 处理标题信息数据
      */
@@ -320,9 +329,6 @@ public class DetailDishViewManager {
         if(dishVipView != null){
             if(relation.containsKey("isShow")&&"2".equals(relation.get("isShow"))) {
                 dishVipView.setVisibility(View.VISIBLE);
-                if (isHasVideo) {
-                    XHClick.mapStat(mAct, "vipbutton_video", isSchool ? "展现会员视频下按钮" : "展现非会员视频下按钮", "");
-                }
                 dishVipView.setOnClickViewCallback(() -> {
                     String twoLevelValue = isHasVideo ? "视频" : "顶部导航栏";
                     String threeLevelValue = isHasVideo ? "视频下方会员开通按钮" : "头图下方会员开通按钮";
