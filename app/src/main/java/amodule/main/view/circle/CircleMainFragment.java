@@ -45,6 +45,7 @@ import amodule.quan.view.VideoImageView;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
 import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
+import third.ad.BannerAd;
 
 import static com.xiangha.R.id.return_top;
 
@@ -120,6 +121,9 @@ public class CircleMainFragment extends Fragment {
     private VideoImageView videoImageView;
     private int headerCount = 0;//存在listview头数据
 
+    private CircleHeaderAD mCircleHeaderAD;
+    private boolean mAdBannerViewIsInScreen = false;
+
     public static CircleMainFragment newInstance(PlateData plateData) {
         CircleMainFragment fragment = new CircleMainFragment();
         fragment.setPosition(plateData.getPosition());
@@ -187,9 +191,24 @@ public class CircleMainFragment extends Fragment {
         PlateData plateData = getCurrentPlateData();
         if (plateData != null && plateData.isShowAd()) {
             RelativeLayout headerLayout = new RelativeLayout(getContext());
-            CircleHeaderAD mCircleHeaderAD = new CircleHeaderAD(mActivity);
+            mCircleHeaderAD = new CircleHeaderAD(mActivity);
             mCircleHeaderAD.setStiaticID(mPlateData.getStiaticID());
-            mCircleHeaderAD.init(mActivity);
+            mCircleHeaderAD.init(mActivity, new BannerAd.OnBannerListener() {
+                @Override
+                public void onShowAd() {
+                    statisticBanner();
+                }
+
+                @Override
+                public void onClickAd() {
+
+                }
+
+                @Override
+                public void onImgShow(int imgH) {
+
+                }
+            });
             headerLayout.addView(mCircleHeaderAD);
             mListView.addHeaderView(headerLayout);
             headerCount++;
@@ -331,6 +350,8 @@ public class CircleMainFragment extends Fragment {
                         firstVisibleItems = mLinearLayoutManager.findFirstVisibleItemPosition();
                         setQuanmCurrentPage();
                     }
+
+                    statisticBanner();
                 }
             });
             LoadOver = true;
@@ -355,6 +376,40 @@ public class CircleMainFragment extends Fragment {
                 return;
             setVideoLayout(parentView, position);
         });
+    }
+
+    private void statisticBanner() {
+        if (mCircleHeaderAD == null || !"xh".equals(mCircleHeaderAD.getAdType()))
+            return;
+        boolean visibleToUser = onBannerViewVisibleToUser();
+        if(visibleToUser){
+            mCircleHeaderAD.onAdBind();
+        }
+    }
+
+    private boolean onBannerViewVisibleToUser() {
+        boolean inScreen = adBannerOnScreen();
+        if (inScreen && !mAdBannerViewIsInScreen) {
+            mAdBannerViewIsInScreen = inScreen;
+            return true;
+        } else if (!inScreen){
+            mAdBannerViewIsInScreen = false;
+        }
+        return false;
+    }
+
+    private boolean adBannerOnScreen() {
+        if (mCircleHeaderAD != null && mCircleHeaderAD.getVisibility() == View.VISIBLE) {
+            int bannerViewHeight = mCircleHeaderAD.getHeight();
+            int[] location = new int[2];
+            int titleHeight = Tools.getDimen(mActivity, R.dimen.topbar_height);
+            mCircleHeaderAD.getLocationOnScreen(location);
+            if ((location[1] + bannerViewHeight) > titleHeight
+                    && location[1] < (titleHeight + mListView.getHeight())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void safeNotifyItemRangeChanged() {

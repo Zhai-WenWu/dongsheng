@@ -7,19 +7,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import com.xiangha.R;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Map;
 
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import third.ad.BannerAd;
 import third.ad.scrollerAd.XHAllAdControl;
-import third.ad.tools.AdPlayIdConfig;
 
 import static third.ad.tools.AdPlayIdConfig.MAIN_CIRCLE_TITLE;
 
@@ -30,7 +26,8 @@ import static third.ad.tools.AdPlayIdConfig.MAIN_CIRCLE_TITLE;
  */
 public class CircleHeaderAD extends LinearLayout {
     private String stiaticID = "";
-
+    private ImageView adImageView;
+    private String mAdType;
     public CircleHeaderAD(Context context) {
         this(context, null, 0);
     }
@@ -48,8 +45,8 @@ public class CircleHeaderAD extends LinearLayout {
     XHAllAdControl xhAllAdControl;
 
     //生活圈首页顶部
-    public void init(Activity activity) {
-        ImageView adImageView = (ImageView) findViewById(R.id.ad_banner_item_iv_single);
+    public void init(Activity activity, BannerAd.OnBannerListener listener) {
+        adImageView = (ImageView) findViewById(R.id.ad_banner_item_iv_single);
         ArrayList<String> list = new ArrayList<>();
         list.add(MAIN_CIRCLE_TITLE);
         xhAllAdControl = new XHAllAdControl(list, activity, "community_top");
@@ -60,11 +57,38 @@ public class CircleHeaderAD extends LinearLayout {
             if (map.containsKey(MAIN_CIRCLE_TITLE)) {
                 BannerAd bannerAdBurden = new BannerAd(activity, xhAllAdControl, adImageView);
                 map = StringManager.getFirstMap(map.get(MAIN_CIRCLE_TITLE));
+                mAdType = map.get("type");
                 bannerAdBurden.onShowAd(map);
-                xhAllAdControl.onAdBind(0, adImageView, "");
+                bannerAdBurden.setOnBannerListener(new BannerAd.OnBannerListener() {
+                    @Override
+                    public void onShowAd() {
+                        if (listener != null)
+                            listener.onShowAd();
+                    }
+
+                    @Override
+                    public void onClickAd() {
+                        if (listener != null)
+                            listener.onClickAd();
+                    }
+
+                    @Override
+                    public void onImgShow(int imgH) {
+                        if (listener != null)
+                            listener.onImgShow(imgH);
+                    }
+                });
             }
         });
         xhAllAdControl.registerRefreshCallback();
+    }
+
+    public void onAdBind() {
+        xhAllAdControl.onAdBind(0, adImageView, "");
+    }
+
+    public String getAdType() {
+        return mAdType;
     }
 
     @Override
