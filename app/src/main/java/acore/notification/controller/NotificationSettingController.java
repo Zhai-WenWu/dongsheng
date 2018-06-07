@@ -100,20 +100,22 @@ public class NotificationSettingController {
     }
 
     public static void openNotificationSettings() {
-        BuildProperties properties = ToolsDevice.getBuildProperties();
-        if (properties == null)
-            return;
         try {
             openAndroidSystemNotificationSettings();
         } catch (Exception e) {
             e.printStackTrace();
+            BuildProperties properties = ToolsDevice.getBuildProperties();
             String rom_type = ToolsDevice.getRomType(properties);
             switch (rom_type) {
                 case ToolsDevice.EMUI:
                     openEMUINotificationSettings();
                     break;
                 case ToolsDevice.MIUI:
-                    openMIUINotificationSettings(properties);
+                    if (properties != null) {
+                        openMIUINotificationSettings(properties);
+                    } else {
+                        openSettings();
+                    }
                     break;
                 case ToolsDevice.FLYME:
                     openFlymeNotificationSettings();
