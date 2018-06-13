@@ -80,8 +80,6 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
     public static final String STATICIS_ID_VIDEO = "a_menu_detail_video";
     public static final String STATICIS_ID_NORMAL = "a_menu_detail_normal";
 
-    private boolean mGotoEnable;//page字段的内容是否生效
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,7 +95,6 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         Bundle bundle = getIntent().getExtras();
         startTime = System.currentTimeMillis();
         if (bundle != null) {
-            mGotoEnable = TextUtils.equals(bundle.getString("gotoEnable", "1"), "2");
             code = bundle.getString("code");
             dishTitle = bundle.getString("name");
             if (dishTitle == null) dishTitle = "香哈菜谱";
@@ -339,15 +336,6 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
             }
         }
         return false;
-    }
-
-    public boolean analyzeJumpPageData(Map<String,String> map) {
-        if (!TextUtils.isEmpty(map.get("gotoUrl")) && mGotoEnable) {
-            AppCommon.openUrl(this, map.get("gotoUrl"), true);
-            mGotoEnable = false;
-            return false;
-        }
-        return true;
     }
 
     /**
