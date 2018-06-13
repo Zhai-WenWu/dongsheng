@@ -18,6 +18,8 @@ import com.xiangha.R;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.SpecialWebControl;
 import acore.logic.XHClick;
@@ -40,7 +42,6 @@ import amodule.user.db.BrowseHistorySqlite;
 import amodule.user.db.HistoryData;
 import aplug.web.tools.WebviewManager;
 import aplug.web.view.XHWebView;
-import third.video.VideoPlayerController;
 import xh.basic.internet.UtilInternet;
 
 import static amodule.dish.activity.DetailDishWeb.tongjiId;
@@ -79,21 +80,24 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
     public static final String STATICIS_ID_VIDEO = "a_menu_detail_video";
     public static final String STATICIS_ID_NORMAL = "a_menu_detail_normal";
 
+    private boolean mGotoEnable;//page字段的内容是否生效
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         startTime= System.currentTimeMillis();
-        initBudle();
+        initBundle();
         initView();
         initData();
     }
     /**
      * 处理页面初始数据
      */
-    private void initBudle() {
+    private void initBundle() {
         Bundle bundle = getIntent().getExtras();
         startTime = System.currentTimeMillis();
         if (bundle != null) {
+            mGotoEnable = TextUtils.equals(bundle.getString("gotoEnable", "1"), "2");
             code = bundle.getString("code");
             dishTitle = bundle.getString("name");
             if (dishTitle == null) dishTitle = "香哈菜谱";
@@ -336,6 +340,16 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         }
         return false;
     }
+
+    public boolean analyzeJumpPageData(Map<String,String> map) {
+        if (!TextUtils.isEmpty(map.get("gotoUrl")) && mGotoEnable) {
+            AppCommon.openUrl(this, map.get("gotoUrl"), true);
+            mGotoEnable = false;
+            return false;
+        }
+        return true;
+    }
+
     /**
      * 页面限制：显示h5页面，例如：显示一个开通会员页面
      * @param pagePermission

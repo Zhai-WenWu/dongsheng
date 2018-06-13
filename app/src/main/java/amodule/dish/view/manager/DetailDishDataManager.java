@@ -133,6 +133,11 @@ public class DetailDishDataManager {
                             lastPermission = obj.toString();
                     }
                     permissionMap = StringManager.getFirstMap(obj);
+                    if (permissionMap.containsKey("jumpPage")) {
+                        Map<String,String> jumpPageMap = StringManager.getFirstMap(permissionMap.get("jumpPage"));
+                        boolean hasPermission = detailAct.analyzeJumpPageData(jumpPageMap);
+                        if (!hasPermission) return;
+                    }
                     if(permissionMap.containsKey("page")){
                         Map<String,String> pagePermission = StringManager.getFirstMap(permissionMap.get("page"));
                         hasPermission = detailAct.analyzePagePermissionData(pagePermission);
