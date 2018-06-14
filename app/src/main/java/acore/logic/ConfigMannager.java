@@ -2,6 +2,7 @@ package acore.logic;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import java.util.Map;
@@ -78,5 +79,14 @@ public class ConfigMannager {
         return data;
     }
 
+    @Nullable
+    public static Map<String, String> getConfigMapByLocal() {
+        String configData = readFile(getConfigPath());
+        if (TextUtils.isEmpty(configData)) {
+            return null;
+        }
+        Map<String, String> map = StringManager.getFirstMap(configData);
+        return map;
+    }
 
 }
