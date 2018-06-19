@@ -85,6 +85,7 @@ public class XHSelfAdTools {
                                 nativeData.setDesc(map.get("desc"));
                                 nativeData.setBrandName(map.get("brandName"));
                                 String showNumValue = map.get("showNum");
+                                nativeData.setAdType(map.get("adType"));
                                 int showNum = TextUtils.isEmpty(showNumValue)?0:Integer.parseInt(showNumValue);
                                 nativeData.setShowNum(showNum);
                                 final String dbType = map.get("dbType");
@@ -94,7 +95,6 @@ public class XHSelfAdTools {
                                 nativeData.setUrl(TextUtils.equals(dbType, "2") ? combineParams(andUrl, "1") : andUrl);
                                 nativeData.setShowUrl(combineParams(andShowUrl, "2"));
 
-                                nativeData.setAdType(dbType);
                                 nativeData.setLogoImage(map.get("logoImg"));
                                 nativeData.setUpdateTime(map.get("updateTime"));
                                 Map<String,String> bigImageMap = StringManager.getFirstMap(map.get("big"));
