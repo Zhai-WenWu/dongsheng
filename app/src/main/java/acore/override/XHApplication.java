@@ -28,6 +28,7 @@ import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import aplug.basic.LoadImage;
 import aplug.basic.XHConf;
+import third.location.LocationSys;
 import third.push.umeng.UMPushServer;
 
 import static acore.logic.ConfigMannager.KEY_BAIDUAPPID;
@@ -137,6 +138,7 @@ public class XHApplication extends MobApplication {
             public void onActivityDestroyed(Activity activity) {
             }
         });
+        startLocation();
     }
 
     @Override
@@ -152,6 +154,20 @@ public class XHApplication extends MobApplication {
         } catch (Exception e) {
             //防止
         }
+    }
+
+    private void startLocation() {
+        LocationSys locationSys = new LocationSys(this);
+        locationSys.starLocation(new LocationSys.LocationSysCallBack() {
+            @Override
+            public void onLocationFail() {
+            }
+
+            @Override
+            public void onLocationSuccess(String country, String countryCode, String province, String city, String district, String lat, String lng) {
+                super.onLocationSuccess(country, countryCode, province, city, district, lat, lng);
+            }
+        });
     }
 
     /**
