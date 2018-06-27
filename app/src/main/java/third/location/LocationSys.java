@@ -9,6 +9,7 @@ import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.location.LocationClientOption.LocationMode;
 
+import java.net.FileNameMap;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -16,6 +17,7 @@ import acore.override.XHApplication;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import aplug.basic.XHInternetCallBack;
+import xh.basic.tool.UtilFile;
 
 public class LocationSys implements BDLocationListener {
 
@@ -83,56 +85,69 @@ public class LocationSys implements BDLocationListener {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    ArrayList<String> directCities = new ArrayList<>(4);
-                    directCities.add("北京");
-                    directCities.add("上海");
-                    directCities.add("天津");
-                    directCities.add("重庆");
-                    if (city != null) {
-                        boolean isDirectCity = false;
-                        for (String directCity : directCities) {
-                            if (city.contains(directCity)) {
-                                isDirectCity = true;
-                                break;
-                            }
+                    String locationInfoJson = UtilFile.loadShared(XHApplication.in(), FileManager.xmlFile_appInfo, FileManager.location_info).toString();
+                    if (!TextUtils.isEmpty(locationInfoJson)) {
+                        Map<String, String> locationInfoMap = StringManager.getFirstMap(locationInfoJson);
+                        String firstAddressId = locationInfoMap.get("firstAddressId");
+                        String secondAddressId = locationInfoMap.get("secondAddressId");
+                        String append = null;
+                        if (!TextUtils.isEmpty(firstAddressId)) {
+                            append = "#" + firstAddressId + (TextUtils.isEmpty(secondAddressId) ? "" : ("#" + secondAddressId));
                         }
-                        String cityJson = FileManager.getFromAssets(XHApplication.in(), "city.json");
-                        ArrayList<Map<String, String>> cityMaps = StringManager.getListMapByJson(cityJson);
-                        String firstId = null;
-                        String secondId = null;
-                        for (Map<String, String> cityMap : cityMaps){
-                            if (cityMap != null) {
-                                if (isDirectCity) {
-                                    String cityId = cityMap.get(city);
-                                    if (!TextUtils.isEmpty(cityId)) {
-                                        firstId = cityId;
-                                        Map<String, String> districtMap = StringManager.getFirstMap(cityMap.get(cityId));
-                                        String districtId = districtMap.get(district);
-                                        if (!TextUtils.isEmpty(districtId)) {
-                                            secondId = districtId;
-                                            break;
-                                        }
-                                    }
-                                } else {
-                                    String provinceId = cityMap.get(province);
-                                    if (!TextUtils.isEmpty(provinceId)) {
-                                        firstId = provinceId;
-                                        Map<String, String> tempCityMap = StringManager.getFirstMap(cityMap.get(provinceId));
-                                        String cityId = tempCityMap.get(city);
+                        FileManager.saveShared(XHApplication.in(), FileManager.file_location, FileManager.file_location, lng + "#" + lat + (append == null ? "" : append));
+                        XHInternetCallBack.setIsCookieChange(true);
+                    } else {
+                        ArrayList<String> directCities = new ArrayList<>(4);
+                        directCities.add("北京");
+                        directCities.add("上海");
+                        directCities.add("天津");
+                        directCities.add("重庆");
+                        if (city != null) {
+                            boolean isDirectCity = false;
+                            for (String directCity : directCities) {
+                                if (city.contains(directCity)) {
+                                    isDirectCity = true;
+                                    break;
+                                }
+                            }
+                            String cityJson = FileManager.getFromAssets(XHApplication.in(), "city.json");
+                            ArrayList<Map<String, String>> cityMaps = StringManager.getListMapByJson(cityJson);
+                            String firstId = null;
+                            String secondId = null;
+                            for (Map<String, String> cityMap : cityMaps){
+                                if (cityMap != null) {
+                                    if (isDirectCity) {
+                                        String cityId = cityMap.get(city);
                                         if (!TextUtils.isEmpty(cityId)) {
-                                            secondId  = cityId;
-                                            break;
+                                            firstId = cityId;
+                                            Map<String, String> districtMap = StringManager.getFirstMap(cityMap.get(cityId));
+                                            String districtId = districtMap.get(district);
+                                            if (!TextUtils.isEmpty(districtId)) {
+                                                secondId = districtId;
+                                                break;
+                                            }
+                                        }
+                                    } else {
+                                        String provinceId = cityMap.get(province);
+                                        if (!TextUtils.isEmpty(provinceId)) {
+                                            firstId = provinceId;
+                                            Map<String, String> tempCityMap = StringManager.getFirstMap(cityMap.get(provinceId));
+                                            String cityId = tempCityMap.get(city);
+                                            if (!TextUtils.isEmpty(cityId)) {
+                                                secondId  = cityId;
+                                                break;
+                                            }
                                         }
                                     }
                                 }
                             }
+                            String append = null;
+                            if (!TextUtils.isEmpty(firstId)) {
+                                append = "#" + firstId + (TextUtils.isEmpty(secondId) ? "" : ("#" + secondId));
+                            }
+                            FileManager.saveShared(XHApplication.in(), FileManager.file_location, FileManager.file_location, lng + "#" + lat + (append == null ? "" : append));
+                            XHInternetCallBack.setIsCookieChange(true);
                         }
-                        String append = null;
-                        if (!TextUtils.isEmpty(firstId)) {
-                            append = "#" + firstId + (TextUtils.isEmpty(secondId) ? "" : ("#" + secondId));
-                        }
-                        FileManager.saveShared(XHApplication.in(), FileManager.file_location, FileManager.file_location, lng + "#" + lat + (append == null ? "" : append));
-                        XHInternetCallBack.setIsCookieChange(true);
                     }
                 }
             }).start();

@@ -1,24 +1,42 @@
 package amodule.user.activity;
 
+import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
+import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.xiangha.R;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
@@ -28,6 +46,11 @@ import acore.tools.ChannelUtil;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
+import acore.widget.rvlistview.RvListView;
+import acore.widget.rvlistview.adapter.RvBaseAdapter;
+import acore.widget.rvlistview.holder.RvBaseViewHolder;
+import aplug.basic.XHInternetCallBack;
+import third.location.LocationSys;
 import third.mall.aplug.MallStringManager;
 import xh.basic.tool.UtilFile;
 
@@ -58,6 +81,21 @@ public class ChangeUrl extends BaseActivity {
     private EditText mInputEdit2;
     private Button mGotoBtn2;
 
+    private Button mClearAddress;
+    private TextView mFirstAddressText;
+    private TextView mSecondAddressText;
+    private String mFirstAddressName;
+    private String mFirstAddressId;
+    private String mSecondAddressName;
+    private String mSecondAddressId;
+    private PopupWindow mAddressPoup;
+    private RecyclerView mAddressRecy;
+    private AddressAdapter mAddressAdapter;
+    private int mCurrentAddressLevel;
+    private Map<String, String> mFirstAddressMap;
+    private Map<String, Map<String, String>> mSecondAddressMap;
+    private ArrayList<String> mAddressNames;
+    private boolean mAddressLoading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +145,37 @@ public class ChangeUrl extends BaseActivity {
                     String newDomain = mMallDomain + tempPort;
                     MallStringManager.changeUrl(mProtocol, newDomain);
                     UtilFile.saveShared(ChangeUrl.this, FileManager.xmlFile_appInfo, FileManager.xmlKey_mall_domain, newDomain);
+                }
+                if (!TextUtils.isEmpty(mFirstAddressName) && !TextUtils.isEmpty(mFirstAddressId)) {
+                    JSONObject jsonObject = new JSONObject();
+                    try {
+                        jsonObject.put("firstAddressName", mFirstAddressName);
+                        jsonObject.put("firstAddressId", mFirstAddressId);
+                        if (!TextUtils.isEmpty(mSecondAddressName) && !TextUtils.isEmpty(mSecondAddressId)) {
+                            jsonObject.put("secondAddressName", mSecondAddressName);
+                            jsonObject.put("secondAddressId", mSecondAddressId);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    UtilFile.saveShared(ChangeUrl.this, FileManager.xmlFile_appInfo, FileManager.location_info, jsonObject.toString());
+                    //如果配置了位置信息，则需要保存数据。
+                    String append = null;
+                    if (!TextUtils.isEmpty(mFirstAddressId)) {
+                        append = "#" + mFirstAddressId + (TextUtils.isEmpty(mSecondAddressId) ? "" : ("#" + mSecondAddressId));
+                    }
+                    FileManager.saveShared(XHApplication.in(), FileManager.file_location, FileManager.file_location, 111.1111 + "#" + 222.222 + (append == null ? "" : append));
+                    XHInternetCallBack.setIsCookieChange(true);
+                } else {
+                    UtilFile.saveShared(ChangeUrl.this, FileManager.xmlFile_appInfo, FileManager.location_info, "");
+                    //如果没有配置位置信息，则需要重新定位
+                    LocationSys locationSys = new LocationSys(ChangeUrl.this);
+                    locationSys.starLocation(new LocationSys.LocationSysCallBack() {
+                        @Override
+                        public void onLocationFail() {
+
+                        }
+                    });
                 }
                 ChangeUrl.this.finish();
             }
@@ -237,6 +306,31 @@ public class ChangeUrl extends BaseActivity {
                             inputStr = fixedStr + URLEncoder.encode(inputStr.substring(fixedStr.length()));
                         }
                         break;
+                    case R.id.first_text:
+                        if (mAddressLoading) {
+                            Toast.makeText(ChangeUrl.this, "正在加载数据，请稍后", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        showAddressPopup(1);
+                        break;
+                    case R.id.second_text:
+                        if (mAddressLoading) {
+                            Toast.makeText(ChangeUrl.this, "正在加载数据，请稍后", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        if (TextUtils.isEmpty(mFirstAddressName) && TextUtils.isEmpty(mFirstAddressId)) {
+                            Toast.makeText(ChangeUrl.this, "请先选择一级地区", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        showAddressPopup(2);
+                        break;
+                    case R.id.clear_text:
+                        mFirstAddressName = "";
+                        mFirstAddressId = "";
+                        mSecondAddressName = "";
+                        mSecondAddressId = "";
+                        clearAddress();
+                        break;
                 }
                 AppCommon.openUrl(ChangeUrl.this, inputStr, true);
             }
@@ -244,6 +338,10 @@ public class ChangeUrl extends BaseActivity {
 
         mGotoBtn.setOnClickListener(l);
         mGotoBtn2.setOnClickListener(l);
+
+        mClearAddress.setOnClickListener(l);
+        mFirstAddressText.setOnClickListener(l);
+        mSecondAddressText.setOnClickListener(l);
     }
 
     private void initView() {
@@ -265,6 +363,10 @@ public class ChangeUrl extends BaseActivity {
         mGotoBtn = (Button) findViewById(R.id.goto_btn);
         mInputEdit2 = (EditText) findViewById(R.id.edit_text2);
         mGotoBtn2 = (Button) findViewById(R.id.goto_btn2);
+
+        mClearAddress = (Button) findViewById(R.id.clear_text);
+        mFirstAddressText = (TextView) findViewById(R.id.first_text);
+        mSecondAddressText = (TextView) findViewById(R.id.second_text);
     }
 
     private void initData() {
@@ -324,5 +426,180 @@ public class ChangeUrl extends BaseActivity {
         //电商来源提示
         String ds_form = FileManager.loadShared(this, FileManager.xmlFile_appInfo, FileManager.xmlKey_ds_from_show).toString();
         ds_from_switch.setChecked("2".equals(ds_form));
+
+        String locationInfo = FileManager.loadShared(this, FileManager.xmlFile_appInfo, FileManager.location_info).toString();
+        Map<String, String> locationMap = StringManager.getFirstMap(locationInfo);
+        String firstAddressName = locationMap.get("firstAddressName");
+        String firstAddressId = locationMap.get("firstAddressId");
+        mFirstAddressId = TextUtils.isEmpty(firstAddressId) ? "" : firstAddressId;
+        String secondAddressName = locationMap.get("secondAddressName");
+        String secondAddressId = locationMap.get("secondAddressId");
+        mSecondAddressId = TextUtils.isEmpty(secondAddressId) ? "" : secondAddressId;
+        mFirstAddressName = TextUtils.isEmpty(firstAddressName) ? "" : firstAddressName;
+        mSecondAddressName = TextUtils.isEmpty(secondAddressName) ? "" : secondAddressName;
+        setFirstAddress(mFirstAddressName, mFirstAddressId);
+        setSecondAddress(mSecondAddressName, mSecondAddressId);
+        loadAddressData();
+    }
+
+    private void loadAddressData() {
+        mAddressLoading = true;
+        mFirstAddressMap = new HashMap<>();
+        mSecondAddressMap = new HashMap<>();
+        mAddressNames = new ArrayList<>();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String cityJson = FileManager.getFromAssets(XHApplication.in(), "city.json");
+                ArrayList<Map<String, String>> cityMaps = StringManager.getListMapByJson(cityJson);
+                for (Map<String, String> cityMap : cityMaps){
+                    Set<Map.Entry<String, String>> entries = cityMap.entrySet();
+                    for (Map.Entry<String, String> entry : entries) {
+                        try {
+                            int id = Integer.parseInt(entry.getKey());
+                            Map<String, String> secondMap = StringManager.getFirstMap(entry.getValue());
+                            mSecondAddressMap.put(String.valueOf(id), secondMap);
+                        } catch (Exception e) {
+                            mFirstAddressMap.put(entry.getKey(), entry.getValue());
+                        }
+                    }
+                }
+                onAddressDataReady();
+            }
+        }).start();
+    }
+
+    private void onAddressDataReady() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mAddressLoading = false;
+            }
+        });
+    }
+
+    private void setFirstAddress(String addressName, String addressId) {
+        mFirstAddressText.setText(TextUtils.isEmpty(addressName) ? "" : (addressName + "(" + addressId + ")"));
+    }
+
+    private void setSecondAddress(String addressName, String addressId) {
+        mSecondAddressText.setText(TextUtils.isEmpty(addressName) ? "" : (addressName + "(" + addressId + ")"));
+    }
+
+    private  void clearAddress() {
+        setFirstAddress("", "");
+        setSecondAddress("", "");
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mAddressPoup != null && mAddressPoup.isShowing()) {
+            mAddressPoup.dismiss();
+            return;
+        }
+        super.onBackPressed();
+    }
+
+    /**
+     * 展示地址列表
+     * @param addressLevel 1.一级地区 2.二级地区
+     */
+    private void showAddressPopup(int addressLevel) {
+        if (mAddressRecy == null) {
+            mAddressRecy = new RvListView(this);
+            mAddressRecy.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        }
+        if (mAddressAdapter == null) {
+            mAddressAdapter = new AddressAdapter(this, mAddressNames);
+            mAddressRecy.setAdapter(mAddressAdapter);
+        }
+        if (mAddressPoup == null) {
+            mAddressPoup = new PopupWindow(this);
+            mAddressPoup.setWidth(WindowManager.LayoutParams.MATCH_PARENT);
+            mAddressPoup.setHeight(getWindowManager().getDefaultDisplay().getHeight() / 2);
+            mAddressPoup.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.myself_gray_bg)));
+            mAddressPoup.setContentView(mAddressRecy);
+            mAddressPoup.setOutsideTouchable(true);
+        }
+
+        if (mAddressPoup.isShowing()) {
+            return;
+        }
+        mCurrentAddressLevel = addressLevel;
+        mAddressNames.clear();
+        switch (addressLevel) {
+            case 1:
+                for (String name : mFirstAddressMap.keySet()) {
+                    mAddressNames.add(name);
+                }
+                break;
+            case 2:
+                for (String name : mSecondAddressMap.get(mFirstAddressId).keySet()) {
+                    mAddressNames.add(name);
+                }
+                break;
+        }
+        mAddressAdapter.setData(mAddressNames);
+        mAddressPoup.showAtLocation(findViewById(android.R.id.content), Gravity.BOTTOM, 0, 0);
+        mAddressAdapter.notifyDataSetChanged();
+    }
+
+    class AddressAdapter extends RvBaseAdapter<String> {
+
+        public AddressAdapter(Context context, @Nullable List<String> data) {
+            super(context, data);
+        }
+
+        @Override
+        public RvBaseViewHolder<String> onCreateViewHolder(ViewGroup parent, int viewType) {
+            TextView textView = new TextView(parent.getContext());
+            textView.setPadding(0, getResources().getDimensionPixelSize(R.dimen.dp_10), 0, getResources().getDimensionPixelSize(R.dimen.dp_10));
+            textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            textView.setGravity(Gravity.CENTER);
+            return new AddressHolder(textView);
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            return 0;
+        }
+    }
+
+    class AddressHolder extends RvBaseViewHolder<String> implements OnClickListener {
+
+        private TextView mTextView;
+        private String mData;
+        public AddressHolder(@NonNull TextView itemView) {
+            super(itemView);
+            mTextView = itemView;
+            mTextView.setOnClickListener(this);
+        }
+
+        @Override
+        public void bindData(int position, @Nullable String data) {
+            mData = data;
+            mTextView.setText(data);
+        }
+
+        @Override
+        public void onClick(View v) {
+            switch (mCurrentAddressLevel) {
+                case 1:
+                    mFirstAddressName = this.mData;
+                    mFirstAddressId = mFirstAddressMap.get(mFirstAddressName);
+                    mSecondAddressName = "";
+                    mSecondAddressId = "";
+                    mAddressPoup.dismiss();
+                    setFirstAddress(mFirstAddressName, mFirstAddressId);
+                    setSecondAddress(mSecondAddressName, mSecondAddressId);
+                    break;
+                case 2:
+                    mSecondAddressName = this.mData;
+                    mSecondAddressId = mSecondAddressMap.get(mFirstAddressId).get(mSecondAddressName);
+                    mAddressPoup.dismiss();
+                    setSecondAddress(mSecondAddressName, mSecondAddressId);
+                    break;
+            }
+        }
     }
 }

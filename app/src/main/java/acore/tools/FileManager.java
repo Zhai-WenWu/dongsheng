@@ -160,6 +160,7 @@ public class FileManager extends UtilFile{
 	public static final String xg_config = "xg_config";
 	public static final String xg_config_official = "xg_config_official";
 	public static final String notification_permission = "notification_permission";
+	public static final String location_info = "location_info";
 	/**
 	 * 获取字符串数组
 	 */
