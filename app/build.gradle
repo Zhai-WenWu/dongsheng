@@ -49,7 +49,7 @@ android {
         applicationId "com.xiangha"
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 265
+        versionCode 270
         versionName "6.3.0.1"
         // dex突破65535的限制
         multiDexEnabled true
