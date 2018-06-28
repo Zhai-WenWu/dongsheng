@@ -160,11 +160,7 @@ public class ChangeUrl extends BaseActivity {
                     }
                     UtilFile.saveShared(ChangeUrl.this, FileManager.xmlFile_appInfo, FileManager.location_info, jsonObject.toString());
                     //如果配置了位置信息，则需要保存数据。
-                    String append = null;
-                    if (!TextUtils.isEmpty(mFirstAddressId)) {
-                        append = "#" + mFirstAddressId + (TextUtils.isEmpty(mSecondAddressId) ? "" : ("#" + mSecondAddressId));
-                    }
-                    FileManager.saveShared(XHApplication.in(), FileManager.file_location, FileManager.file_location, 111.1111 + "#" + 222.222 + (append == null ? "" : append));
+                    FileManager.saveShared(XHApplication.in(), FileManager.file_location, FileManager.file_location, 111.1111 + "#" + 222.222 + "#" + mFirstAddressId + "#" + (TextUtils.isEmpty(mSecondAddressId) ? "" : mSecondAddressId));
                     XHInternetCallBack.setIsCookieChange(true);
                 } else {
                     UtilFile.saveShared(ChangeUrl.this, FileManager.xmlFile_appInfo, FileManager.location_info, "");

@@ -90,11 +90,7 @@ public class LocationSys implements BDLocationListener {
                         Map<String, String> locationInfoMap = StringManager.getFirstMap(locationInfoJson);
                         String firstAddressId = locationInfoMap.get("firstAddressId");
                         String secondAddressId = locationInfoMap.get("secondAddressId");
-                        String append = null;
-                        if (!TextUtils.isEmpty(firstAddressId)) {
-                            append = "#" + firstAddressId + (TextUtils.isEmpty(secondAddressId) ? "" : ("#" + secondAddressId));
-                        }
-                        FileManager.saveShared(XHApplication.in(), FileManager.file_location, FileManager.file_location, lng + "#" + lat + (append == null ? "" : append));
+                        FileManager.saveShared(XHApplication.in(), FileManager.file_location, FileManager.file_location, lng + "#" + lat + "#" + (TextUtils.isEmpty(firstAddressId) ? "" : firstAddressId) + "#" + (TextUtils.isEmpty(secondAddressId) ? "" : secondAddressId));
                         XHInternetCallBack.setIsCookieChange(true);
                     } else {
                         ArrayList<String> directCities = new ArrayList<>(4);
@@ -141,11 +137,7 @@ public class LocationSys implements BDLocationListener {
                                     }
                                 }
                             }
-                            String append = null;
-                            if (!TextUtils.isEmpty(firstId)) {
-                                append = "#" + firstId + (TextUtils.isEmpty(secondId) ? "" : ("#" + secondId));
-                            }
-                            FileManager.saveShared(XHApplication.in(), FileManager.file_location, FileManager.file_location, lng + "#" + lat + (append == null ? "" : append));
+                            FileManager.saveShared(XHApplication.in(), FileManager.file_location, FileManager.file_location, lng + "#" + lat + "#" + (TextUtils.isEmpty(firstId) ? "" : firstId) + "#" + (TextUtils.isEmpty(secondId) ? "" : secondId));
                             XHInternetCallBack.setIsCookieChange(true);
                         }
                     }
