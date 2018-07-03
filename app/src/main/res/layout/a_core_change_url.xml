@@ -259,50 +259,6 @@
                     android:text="encode_goto"/>
             </LinearLayout>
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bg_white_gray">
-
-                <Button
-                    android:id="@+id/clear_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:text="清除"
-                    android:textStyle="bold"
-                    android:textSize="@dimen/sp_20"/>
-
-                <TextView
-                    android:id="@+id/select_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="地址选择："
-                    android:textStyle="bold"
-                    android:textSize="@dimen/sp_20" />
-
-                <TextView
-                    android:id="@+id/first_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/sp_16"
-                    android:paddingTop="@dimen/dp_10"
-                    android:paddingBottom="@dimen/dp_10"
-                    android:hint="点击选择一级地区"
-                    android:layout_below="@+id/select_text"/>
-
-                <TextView
-                    android:id="@+id/second_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/sp_16"
-                    android:paddingTop="@dimen/dp_10"
-                    android:paddingBottom="@dimen/dp_10"
-                    android:hint="点击选择二级地区"
-                    android:layout_below="@+id/first_text"/>
-
-            </RelativeLayout>
-
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>
