@@ -653,12 +653,7 @@ public class DetailDishViewManager {
         for (int i = 0; i < layoutFooter.getChildCount(); i++) {
             View dishAdDataView = layoutFooter.getChildAt(i);
             if (dishAdDataView != null && dishAdDataView instanceof DishExplainView) {
-                int[] viewLocation = new int[2];
-                dishAdDataView.getLocationOnScreen(viewLocation);
-                if ((viewLocation[1] > Tools.getStatusBarHeight(mAct)
-                        && viewLocation[1] < Tools.getScreenHeight() - ToolsDevice.dp2px(mAct, 57))) {
-                    ((DishExplainView) dishAdDataView).onListScroll();
-                }
+                ((DishExplainView) dishAdDataView).onListScroll();
             }
         }
     }

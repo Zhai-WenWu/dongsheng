@@ -57,7 +57,8 @@ public class DishExplainView extends ItemBaseView {
     }
 
     public void onListScroll() {
-        if (dishAdDataView != null) dishAdDataView.onListScroll();
+        if (dishAdDataView != null)
+            dishAdDataView.onListScroll();
     }
 
     /**

@@ -144,10 +144,17 @@ public class ArticleAdContrler {
             adHandler.sendMessage(message);
         }
     }
-
+    boolean canAdBind = true;
     public void onBigAdBind(View adView) {
-        if (xhAllAdControlBootom != null && adView != null)
-            xhAllAdControlBootom.onAdBind(0, adView, "");
+        if (Tools.inScreenAdView(adView)) {
+            if (xhAllAdControlBootom != null && adView != null && canAdBind) {
+                xhAllAdControlBootom.onAdBind(0, adView, "");
+            }
+            canAdBind = false;
+        } else {
+            canAdBind = true;
+        }
+
     }
 
     public void onListAdClick(View view, int index, String s) {

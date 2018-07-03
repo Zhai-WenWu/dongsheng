@@ -744,6 +744,18 @@ public class Tools {
         return ToolsDevice.getWindowPx(XHApplication.in()).heightPixels;
     }
 
+    public static boolean inScreenAdView(View view) {
+        if (view != null) {
+            int[] location = new int[2];
+            view.getLocationOnScreen(location);
+            int screenW = ToolsDevice.getWindowPx(view.getContext()).widthPixels;
+            int screenH = ToolsDevice.getWindowPx(view.getContext()).heightPixels;
+            return location[0] + view.getWidth() >= 0 && location[0] < screenW
+                    && location[1] + view.getHeight() > Tools.getStatusBarHeight(view.getContext()) && location[1] < screenH;
+        }
+        return false;
+    }
+
     /**
      * @param context
      * @param tvWidth : textView的宽

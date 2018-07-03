@@ -38,15 +38,15 @@ public class DishAdDataViewNew extends ItemBaseView {
     private Map<String, String> adDataMap = new HashMap<>();
     RelativeLayout root_layout;
 
-    public DishAdDataViewNew(Context context,int layoutId) {
+    public DishAdDataViewNew(Context context, int layoutId) {
         super(context, layoutId);
     }
 
-    public DishAdDataViewNew(Context context, AttributeSet attrs,int layoutId) {
+    public DishAdDataViewNew(Context context, AttributeSet attrs, int layoutId) {
         super(context, attrs, layoutId);
     }
 
-    public DishAdDataViewNew(Context context, AttributeSet attrs, int defStyleAttr,int layoutId) {
+    public DishAdDataViewNew(Context context, AttributeSet attrs, int defStyleAttr, int layoutId) {
         super(context, attrs, defStyleAttr, layoutId);
     }
 
@@ -67,7 +67,7 @@ public class DishAdDataViewNew extends ItemBaseView {
         list.add(AdPlayIdConfig.DISH_TIESHI);
         xhAllAdControl = new XHAllAdControl(list, new XHAllAdControl.XHBackIdsDataCallBack() {
             @Override
-            public void callBack(boolean isRefresh,Map<String, String> map) {
+            public void callBack(boolean isRefresh, Map<String, String> map) {
                 //对数据进行处理
                 String data = map.get(AdPlayIdConfig.DISH_TIESHI);
                 Log.i("xianghaTag", AdPlayIdConfig.DISH_TIESHI + " : " + data);
@@ -85,7 +85,7 @@ public class DishAdDataViewNew extends ItemBaseView {
                             DishAdDataViewNew.this.setVisibility(View.GONE);
                             break;
                     }
-                }else DishAdDataViewNew.this.setVisibility(View.GONE);
+                } else DishAdDataViewNew.this.setVisibility(View.GONE);
             }
         }, activity, "result_tip");
         xhAllAdControl.registerRefreshCallback();
@@ -109,7 +109,7 @@ public class DishAdDataViewNew extends ItemBaseView {
                         setViewImage(bigImage, map.get("imgUrl"));
                     }
                 });
-        Log.i("zyj","展示广告");
+        Log.i("zyj", "展示广告");
         //设置文字
         TextView title = (TextView) findViewById(R.id.ad_name);
         title.setText(map.get("title"));
@@ -122,12 +122,12 @@ public class DishAdDataViewNew extends ItemBaseView {
         //添加到parent
         addViewToPraent(R.id.ad_big_pic_layout, parentView);
 
-        setIconVisibility(ID_AD_ICON_GDT,ADKEY_GDT.equals(map.get("type")));
+        setIconVisibility(ID_AD_ICON_GDT, ADKEY_GDT.equals(map.get("type")));
     }
 
-    private void setIconVisibility(int id,boolean isVisibility){
-        View view =  findViewById(id);
-        if(view != null){
+    private void setIconVisibility(int id, boolean isVisibility) {
+        View view = findViewById(id);
+        if (view != null) {
             view.setVisibility(isVisibility ? VISIBLE : GONE);
         }
     }
@@ -230,20 +230,27 @@ public class DishAdDataViewNew extends ItemBaseView {
             findViewById(id).setVisibility(id == showId ? View.VISIBLE : View.GONE);
         }
         Log.i("xianghaTag", "addView");
-        if(DishAdDataViewNew.this!=null&&context!=null)
+        if (DishAdDataViewNew.this != null && context != null)
             parentView.removeAllViews();
-            parentView.addView(DishAdDataViewNew.this);
+        parentView.addView(DishAdDataViewNew.this);
     }
 
+    boolean canAdBind = true;
+
     public void onListScroll() {
-        if (xhAllAdControl!=null&&adDataMap.size()>0 ) {
-            xhAllAdControl.onAdBind(0, root_layout, "");
+        if (Tools.inScreenAdView(this)) {
+            if (xhAllAdControl != null && adDataMap.size() > 0 && canAdBind) {
+                xhAllAdControl.onAdBind(0, root_layout, "");
+            }
+            canAdBind = false;
+        } else {
+            canAdBind = true;
         }
     }
 
-    public void onDestroy(){
-        if(xhAllAdControl!=null){
-            xhAllAdControl=null;
+    public void onDestroy() {
+        if (xhAllAdControl != null) {
+            xhAllAdControl = null;
         }
     }
 

@@ -49,15 +49,20 @@ public class SubjectFloorAdvertControl {
         xhAllAdControl.registerRefreshCallback();
     }
 
+    boolean canAdBind = true;
     public void onAdShow(){
-        if(imageView != null && xhAllAdControl !=null){
-            int[] location = new int[2];
-            imageView.getLocationOnScreen(location);
-            if ((location[1] > Tools.getStatusBarHeight(mAct)
-                    && location[1] < Tools.getScreenHeight() - ToolsDevice.dp2px(mAct, 57))) {
+        if(imageView == null){
+            return;
+        }
+        if (Tools.inScreenAdView(imageView)) {
+            if(xhAllAdControl !=null && canAdBind){
                 xhAllAdControl.onAdBind(0, imageView, "");
             }
+            canAdBind = false;
+        }else{
+            canAdBind = true;
         }
+
     }
 
 }

@@ -387,13 +387,16 @@ public class BarSubjectFloorOwnerNew extends RelativeLayout implements OnClickLi
      * view滚动时调用
      */
     public void viewScroll(){
-        if(isHasVideo){
-            videoLayout.viewScroll();
-        }
         if(mFloorAdvertControl != null){
             mFloorAdvertControl.onAdShow();
         }
 
+    }
+
+    public void viewScrollStateChanged(){
+        if(isHasVideo){
+            videoLayout.viewScroll();
+        }
     }
 
 

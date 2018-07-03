@@ -145,4 +145,11 @@ public class VideoAdContorler extends ArticleAdContrler {
         }
         return adView;
     }
+
+    @Override
+    public void onBigAdBind(View adView) {
+        if (xhAllAdControlBootom != null && adView != null && canAdBind) {
+            xhAllAdControlBootom.onAdBind(0, adView, "");
+        }
+    }
 }

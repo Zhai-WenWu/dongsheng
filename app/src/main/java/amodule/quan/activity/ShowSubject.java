@@ -455,12 +455,13 @@ public class ShowSubject extends BaseAppCompatActivity {
 		}, new LoadManager.ViewScrollCallBack() {
 			@Override
 			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+				louZhuHeadView.viewScroll();
 				Log.i("zhangyujian","onScroll");
 			}
 
 			@Override
 			public void onScrollStateChanged(AbsListView arg0, int scrollState) {
-				louZhuHeadView.viewScroll();
+				louZhuHeadView.viewScrollStateChanged();
 				Log.i("zhangyujian","onScrollStateChanged:::"+scrollState);
 			}
 		});

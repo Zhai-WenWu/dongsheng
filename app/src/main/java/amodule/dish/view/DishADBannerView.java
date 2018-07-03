@@ -78,9 +78,15 @@ public class DishADBannerView extends ItemBaseView {
         xhAllAdControl.registerRefreshCallback();
     }
 
+    boolean canAdBind = true;
     public void onAdShow(){
-        if(xhAllAdControl != null){
-            xhAllAdControl.onAdBind(0,img_banner,"");
+        if(Tools.inScreenAdView(this)){
+            if(xhAllAdControl != null && canAdBind){
+                xhAllAdControl.onAdBind(0,img_banner,"");
+            }
+            canAdBind = false;
+        }else{
+            canAdBind = true;
         }
     }
 }

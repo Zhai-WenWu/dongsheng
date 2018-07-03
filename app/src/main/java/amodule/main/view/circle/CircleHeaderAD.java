@@ -58,7 +58,6 @@ public class CircleHeaderAD extends LinearLayout {
                 BannerAd bannerAdBurden = new BannerAd(activity, xhAllAdControl, adImageView);
                 map = StringManager.getFirstMap(map.get(MAIN_CIRCLE_TITLE));
                 mAdType = map.get("type");
-                bannerAdBurden.onShowAd(map);
                 bannerAdBurden.setOnBannerListener(new BannerAd.OnBannerListener() {
                     @Override
                     public void onShowAd() {
@@ -78,6 +77,7 @@ public class CircleHeaderAD extends LinearLayout {
                             listener.onImgShow(imgH);
                     }
                 });
+                bannerAdBurden.onShowAd(map);
             }
         });
         xhAllAdControl.registerRefreshCallback();
