@@ -36,6 +36,7 @@ import java.util.Map;
 import acore.logic.AppCommon;
 import acore.logic.SetDataView;
 import acore.logic.XHClick;
+import acore.override.XHApplication;
 import acore.override.activity.base.BaseFragmentActivity;
 import acore.override.adapter.AdapterSimple;
 import acore.tools.StringManager;
@@ -335,8 +336,8 @@ public class ClassifyHealthFragment extends Fragment {
         if(xhAllAdControl != null && mImageView != null){
             int[] location = new int[2];
             mImageView.getLocationOnScreen(location);
-            if(location[0] >= 0 && location[0] <= ToolsDevice.getWindowPx(getContext()).widthPixels
-                    && location[1] >= 0 && location[1] <= ToolsDevice.getWindowPx(getContext()).heightPixels){
+            if(location[0] >= 0 && location[0] <= ToolsDevice.getWindowPx(XHApplication.in()).widthPixels
+                    && location[1] >= 0 && location[1] <= ToolsDevice.getWindowPx(XHApplication.in()).heightPixels){
                 xhAllAdControl.onAdBind(0, mImageView, "");
             }
         }

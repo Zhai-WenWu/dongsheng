@@ -112,8 +112,11 @@ public class ToolsDevice {
      */
     public static DisplayMetrics getWindowPx(Context context) {
         DisplayMetrics metric = new DisplayMetrics();
-        WindowManager manager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        if (manager != null) manager.getDefaultDisplay().getMetrics(metric);
+        if(context != null){
+            WindowManager manager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+            if (manager != null)
+                manager.getDefaultDisplay().getMetrics(metric);
+        }
         return metric;
     }
 
