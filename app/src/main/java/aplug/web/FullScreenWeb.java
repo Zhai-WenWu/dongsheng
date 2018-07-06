@@ -2,7 +2,6 @@ package aplug.web;
 
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -11,8 +10,10 @@ import com.xiangha.R;
 
 import java.util.Map;
 
+import acore.logic.AppCommon;
 import acore.logic.XHClick;
 import acore.override.activity.base.WebActivity;
+import acore.override.helper.XHActivityManager;
 import acore.tools.IObserver;
 import acore.tools.ObserverManager;
 import aplug.web.tools.JSAction;
@@ -24,9 +25,11 @@ import aplug.web.tools.WebviewManager;
  */
 public class FullScreenWeb extends WebActivity implements IObserver {
 
+    public static final String BACK_PAGE = "back_page";
     protected JsAppCommon jsAppCommon;
     protected String url = "";
 
+    private String mBackPageUrl;
     private String code = "";
     private String data_type = "";//推荐列表过来的数据
     private String module_type = "";
@@ -43,6 +46,7 @@ public class FullScreenWeb extends WebActivity implements IObserver {
         // 正常调用
         if (bundle != null) {
             url = bundle.getString("url");
+            mBackPageUrl = bundle.getString(BACK_PAGE);
             JSAction.loadAction = bundle.getString("doJs") != null ? bundle.getString("doJs") : "";
             code = bundle.getString("code");
             data_type = bundle.getString("data_type");
@@ -98,6 +102,14 @@ public class FullScreenWeb extends WebActivity implements IObserver {
         super.onDestroy();
 
         ObserverManager.getInstance().unRegisterObserver(this);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!TextUtils.isEmpty(mBackPageUrl)) {
+            AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), mBackPageUrl, true);
+        }
+        super.onBackPressed();
     }
 
     @Override

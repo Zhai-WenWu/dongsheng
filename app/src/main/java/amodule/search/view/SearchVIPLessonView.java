@@ -1,6 +1,7 @@
 package amodule.search.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -17,6 +18,7 @@ import com.xiangha.R;
 import java.util.Map;
 
 import acore.logic.AppCommon;
+import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.helper.XHActivityManager;
 import acore.tools.StringManager;
@@ -24,6 +26,7 @@ import acore.widget.IconTextSpan;
 import amodule.main.view.item.BaseItemView;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
+import aplug.web.FullScreenWeb;
 import xh.basic.internet.UtilInternet;
 
 public class SearchVIPLessonView extends BaseItemView implements View.OnClickListener {
@@ -125,7 +128,14 @@ public class SearchVIPLessonView extends BaseItemView implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
-        AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), mDataMap.get("url"), true);
+        String jumpBuyVipUrl = mDataMap.get("jumpBuyVip");
+        if (!TextUtils.isEmpty(jumpBuyVipUrl) && !LoginManager.isVIP()) {
+            Intent intent = AppCommon.parseURL(XHActivityManager.getInstance().getCurrentActivity(), jumpBuyVipUrl);
+            intent.putExtra(FullScreenWeb.BACK_PAGE, mDataMap.get("url"));
+            XHActivityManager.getInstance().getCurrentActivity().startActivity(intent);
+        } else {
+            AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), mDataMap.get("url"), true);
+        }
         XHClick.mapStat(getContext(), mStatisticsId, "顶部VIP内容点击量", "");
     }
 

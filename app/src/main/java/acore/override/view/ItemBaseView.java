@@ -1,7 +1,9 @@
 package acore.override.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -83,7 +85,9 @@ public class ItemBaseView extends RelativeLayout {
             if(v.getId()!=R.id.auther_userImg)v.setImageResource(roundImgPixels == 0 ? imgResource : R.drawable.bg_round_user_icon);
             v.setScaleType(ImageView.ScaleType.CENTER_CROP);
             v.setTag(TAG_ID, value);
-            if(context==null)return;
+            if (checkActivityIsDistoryed()) {
+                return;
+            }
             BitmapRequestBuilder<GlideUrl, Bitmap> requestBuilder = LoadImage.with(context)
                     .load(value)
                     .setImageRound(roundImgPixels)
@@ -109,6 +113,9 @@ public class ItemBaseView extends RelativeLayout {
         else if (!value.equals("ignore")) {
             if (v.getTag(TAG_ID) != null && v.getTag(TAG_ID).equals(value))
                 return;
+            if (checkActivityIsDistoryed()) {
+                return;
+            }
             v.setTag(TAG_ID, value);
             BitmapRequestBuilder<GlideUrl, Bitmap> requestBuilder = LoadImage.with(context)
                     .load(value)
@@ -180,5 +187,20 @@ public class ItemBaseView extends RelativeLayout {
             textView.setText(new StringBuilder(prefix).append(map.get(key)).append(suffix));
             textView.setVisibility(View.VISIBLE);
         }else textView.setVisibility( View.INVISIBLE == visibility ? View.INVISIBLE:View.GONE);
+    }
+
+    private boolean checkActivityIsDistoryed() {
+        if (context == null) {
+            return true;
+        }
+        if (context instanceof Activity) {
+            if (((Activity)context).isFinishing()) {
+                return true;
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && ((Activity)context).isDestroyed()) {
+                return true;
+            }
+        }
+        return false;
     }
 }

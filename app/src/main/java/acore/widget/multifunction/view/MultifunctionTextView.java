@@ -196,7 +196,7 @@ public class MultifunctionTextView extends TextView {
 			drawableHeight = rect.height();
 			// font metrics of text to be replaced
 			Paint.FontMetricsInt fm = paint.getFontMetricsInt();
-			int transY = Math.abs((Math.abs(fm.ascent - fm.descent) - drawableHeight) / 2) + Math.abs(fm.top - bounds2.top);
+			int transY = Math.abs((Math.abs(fm.ascent - fm.descent) - drawableHeight) / 2) + Math.abs(fm.top - bounds2.top) / 2;
 			canvas.save();
 			canvas.translate(x, transY);
 			drawable.draw(canvas);

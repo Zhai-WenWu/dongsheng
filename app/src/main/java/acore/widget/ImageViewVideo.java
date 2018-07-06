@@ -130,9 +130,11 @@ public class ImageViewVideo extends ImageView {
 		if (imgValue.indexOf("http") == 0) {
 			setScaleType(scaleType);
 			//设置默认图
-			InputStream is = getResources().openRawResource(imgResource);
-			Bitmap bitmap = ImgManager.inputStreamTobitmap(is);
-			setImageBitmap(bitmap, false);
+			if (imgResource != 0) {
+				InputStream is = getResources().openRawResource(imgResource);
+				Bitmap bitmap = ImgManager.inputStreamTobitmap(is);
+				setImageBitmap(bitmap, false);
+			}
 			if (imgValue.length() < 10)
 				return;
 			setTag(TAG_ID, imgValue);
@@ -158,9 +160,11 @@ public class ImageViewVideo extends ImageView {
 			setVisibility(View.GONE);
 			// 直接加载本地图片
 		else if (!imgValue.equals("ignore")) {
-			InputStream is = getResources().openRawResource(imgResource);
-			Bitmap bitmap = ImgManager.inputStreamTobitmap(is);
-			setImageBitmap(bitmap, false);
+			if (imgResource != 0) {
+				InputStream is = getResources().openRawResource(imgResource);
+				Bitmap bitmap = ImgManager.inputStreamTobitmap(is);
+				setImageBitmap(bitmap, false);
+			}
 			if (imgValue.length() < 10)
 				return;
 			setTag(TAG_ID, imgValue);
