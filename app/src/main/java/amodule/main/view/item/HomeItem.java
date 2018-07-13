@@ -58,7 +58,7 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
     //用户信息和置顶view
     private ImageView mTopTag;
     private ImageView mUserGourmet;
-    private TextView mUserName;
+    protected TextView mUserName;
     protected View mDot;
     protected TextView mTopTxt;
 

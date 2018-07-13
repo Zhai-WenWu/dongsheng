@@ -65,6 +65,8 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
 
     private long lastSelfAdTime;
 
+    private String mListType;
+
     public HomeDataControler(MainHomePage activity) {
         this.mActivity = activity;
         mHomeModuleBean = new HomeModuleControler().getHomeModuleByType(activity, null);
@@ -117,15 +119,16 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
     //获取服务端Feed流数据
     public void loadServiceFeedData(boolean refresh, @NonNull OnLoadDataCallback callback) {
         StringBuilder params = new StringBuilder();
+        String type = mHomeModuleBean.getType();
         if (refresh) {
             if (!TextUtils.isEmpty(backUrl)) {
                 params.append(backUrl);
             } else {
-                String localBackUrl = (String) FileManager.loadShared(mActivity, mHomeModuleBean.getType(), SP_KEY_BACKURL);
-                params.append(TextUtils.isEmpty(localBackUrl) ? "type=" + mHomeModuleBean.getType() : localBackUrl);
+                String localBackUrl = (String) FileManager.loadShared(mActivity, type, SP_KEY_BACKURL);
+                params.append(TextUtils.isEmpty(localBackUrl) ? "type=" + type : localBackUrl);
             }
         } else {
-            params.append(TextUtils.isEmpty(nextUrl) ? "type=" + mHomeModuleBean.getType() : nextUrl);
+            params.append(TextUtils.isEmpty(nextUrl) ? "type=" + type : nextUrl);
         }
 //        Log.i("tzy", "refresh::" + refresh + "::data:" + params.toString());
         //准备请求
@@ -144,9 +147,17 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
                             //当前数据有问题，直接return数据
                             ArrayList<Map<String, String>> listDatas = StringManager.getListMapByJson(dataMap.get("list"));
                             if (null != listDatas && listDatas.size() > 0) {
+                                if (mListType == null) {
+                                    mListType = dataMap.get("listType");
+                                    if (mOnListTypeCallback != null) {
+                                        mOnListTypeCallback.listTypeBack(mListType);
+                                        mOnListTypeCallback = null;
+                                    }
+                                }
+
                                 //存储当前backurl
                                 if (!TextUtils.isEmpty(backUrl) && refresh) {
-                                    FileManager.saveShared(mActivity, mHomeModuleBean.getType(), SP_KEY_BACKURL, backUrl);
+                                    FileManager.saveShared(mActivity, type, SP_KEY_BACKURL, backUrl);
                                 }
                                 //上拉数据，下拉数据
                                 if (TextUtils.isEmpty(backUrl)
@@ -226,8 +237,8 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
     }
 
     private void safeNotifySetChanged() {
-            if (mNotifyDataSetChangedCallback != null)
-                mNotifyDataSetChangedCallback.notifyDataSetChanged();
+        if (mNotifyDataSetChangedCallback != null)
+            mNotifyDataSetChangedCallback.notifyDataSetChanged();
     }
 
     /**
@@ -362,6 +373,10 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
         }
     }
 
+    public void setOnListTypeCallback(OnListTypeCallback onListTypeCallback) {
+        mOnListTypeCallback = onListTypeCallback;
+    }
+
     /*--------------------------------------------- Interface ---------------------------------------------*/
 
     public interface OnLoadDataCallback {
@@ -389,5 +404,12 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
     public XHAllAdControl getAllAdController() {
         return mViewAdControl;
     }
+
+    public interface OnListTypeCallback {
+        void listTypeBack(String listType);
+    }
+
+    private OnListTypeCallback mOnListTypeCallback;
+
 
 }

@@ -115,4 +115,5 @@
     <color name="camera_progress_three">#24ff00</color>
     <color name="camera_progress_overflow">#1b5d89</color>
     <color name="camera_progress_delete">#f68b2b</color>
+    <color name="icon_text_bg">#ff0833</color>
 </resources>

@@ -44,9 +44,9 @@ public class RvListView extends RecyclerView {
 
     private static final String TAG = Config.TAG + " :: " + RvListView.class.getSimpleName();
 
-    static final int VIEW_TYPE_HEADER = -1;
-    static final int VIEW_TYPE_FOOTER = -2;
-    static final int VIEW_TYPE_EMPTY = Integer.MAX_VALUE - 1;
+    protected static final int VIEW_TYPE_HEADER = -1;
+    protected static final int VIEW_TYPE_FOOTER = -2;
+    protected static final int VIEW_TYPE_EMPTY = Integer.MAX_VALUE - 1;
 
     protected LinearLayout mHeaderContainer;
     protected LinearLayout mFooterContainer;
@@ -264,7 +264,7 @@ public class RvListView extends RecyclerView {
     /*------------------------------------------------------- Inner Adapter -------------------------------------------------------*/
 
     /** 支持Header&Footer的Adapter */
-    final class RvHeaderAndFooterViewAdapter extends RecyclerView.Adapter {
+    protected final class RvHeaderAndFooterViewAdapter extends RecyclerView.Adapter {
 
         private RecyclerView.Adapter mOriginalAdapter;
 

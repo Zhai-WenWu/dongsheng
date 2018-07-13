@@ -3,16 +3,23 @@ package amodule.main.adapter;
 import android.app.Activity;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
+
+import com.xiangha.R;
 
 import java.util.List;
 import java.util.Map;
 
+import acore.tools.ToolsDevice;
 import acore.widget.rvlistview.adapter.RvBaseAdapter;
 import acore.widget.rvlistview.holder.RvBaseViewHolder;
 import amodule.main.bean.HomeModuleBean;
 import amodule.main.view.item.HomeAlbumItem;
 import amodule.main.view.item.HomeAnyImgStyleItem;
+import amodule.main.view.item.HomeGridADItem;
+import amodule.main.view.item.HomeGridItem;
 import amodule.main.view.item.HomePostItem;
 import amodule.main.view.item.HomeRecipeItem;
 import amodule.main.view.item.HomeTxtItem;
@@ -30,10 +37,18 @@ public class HomeAdapter extends RvBaseAdapter<Map<String, String>> {
     public final static int type_levelImage = 5;//蒙版图
     public final static int type_anyImage = 6;//任意图 限宽不限高
 
+    public final static int type_gridImage = 101;//网格样式
+    public final static int type_gridADImage = 102;//网格样式 广告
+
     protected Activity mAct;
-    protected HomeModuleBean moduleBean;
 
     protected AdControlParent mAdControlParent;
+
+    protected HomeModuleBean moduleBean;
+
+    public final static String LIST_TYPE_LIST = "1";
+    public final static String LIST_TYPE_GRID = "2";
+    private String mListType = LIST_TYPE_LIST;//网格列表
 
     public HomeAdapter(Activity mActivity, @Nullable List<Map<String, String>> data, AdControlParent adControlParent) {
         super(mActivity, data);
@@ -41,13 +56,18 @@ public class HomeAdapter extends RvBaseAdapter<Map<String, String>> {
         mAdControlParent = adControlParent;
     }
 
-    public void setHomeModuleBean(HomeModuleBean moduleBean) {
-        this.moduleBean = moduleBean;
+    public void setHomeModuleBean(HomeModuleBean homeModuleBean) {
+        moduleBean = homeModuleBean;
     }
 
     @Override
     public RvBaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        Log.i("xianghaTag","viewType::::"+viewType);
         switch (viewType) {
+            case type_gridImage://网格
+                return new GridImageViewHolder(new HomeGridItem(mContext));
+            case type_gridADImage://网格广告
+                return new GridADImageViewHolder(new HomeGridADItem(mContext));
             case type_tagImage://大图
                 return new ViewDishViewHolder(new HomeRecipeItem(mContext));
             case type_levelImage://蒙版
@@ -65,17 +85,24 @@ public class HomeAdapter extends RvBaseAdapter<Map<String, String>> {
 
     @Override
     public void onBindViewHolder(RvBaseViewHolder holder, int position) {
+        if (holder == null)
+            return;
         holder.bindData(position, getItem(position));
     }
 
     @Override
     public int getItemViewType(int position) {
-        return Integer.parseInt(getItemType(position));
+        Map<String, String> item = getItem(position);
+        if (TextUtils.equals(mListType, LIST_TYPE_GRID)) {
+            return TextUtils.equals("ad", item == null ? "" : item.get("adstyle")) ? type_gridADImage : type_gridImage;
+        } else {
+            String style = (item == null || item.size() <= 0 || !item.containsKey("style") || TextUtils.isEmpty(item.get("style"))) ? String.valueOf(type_noImage) : item.get("style");
+            return Integer.parseInt(style);
+        }
     }
 
-    public String getItemType(int position) {
-        Map<String, String> item = getItem(position);
-        return (item == null || item.size() <= 0 || !item.containsKey("style") || TextUtils.isEmpty(item.get("style"))) ? String.valueOf(type_noImage) : item.get("style");
+    public void setListType(String listType) {
+        mListType = listType;
     }
 
     /**
@@ -185,6 +212,63 @@ public class HomeAdapter extends RvBaseAdapter<Map<String, String>> {
                 view.setAdControl(mAdControlParent);
                 view.setData(data, position);
                 if (viewClickCallBack != null) view.setRefreshTag(viewClickCallBack);
+            }
+        }
+    }
+
+    /**
+     * 网格
+     */
+    public class GridImageViewHolder extends RvBaseViewHolder<Map<String, String>> {
+        HomeGridItem view;
+
+        public GridImageViewHolder(HomeGridItem view) {
+            super(view);
+            this.view = view;
+            final int originalW = 345;
+            final int originalH = 471;
+            int screenW = ToolsDevice.getWindowPx(getContext()).widthPixels;
+            int itemW = (screenW - getContext().getResources().getDimensionPixelSize(R.dimen.dp_30)) / 2;
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(itemW, itemW * originalH / originalW);
+            view.setLayoutParams(params);
+        }
+
+        @Override
+        public void bindData(int position, @Nullable Map<String, String> data) {
+            if (view != null) {
+                view.setHomeModuleBean(moduleBean);
+                view.setAdControl(mAdControlParent);
+                view.setData(data, position);
+                if (viewClickCallBack != null) view.setRefreshTag(viewClickCallBack);
+            }
+        }
+    }
+
+    /**
+     * 网格广告
+     */
+    public class GridADImageViewHolder extends RvBaseViewHolder<Map<String, String>> {
+        HomeGridADItem view;
+
+        public GridADImageViewHolder(HomeGridADItem view) {
+            super(view);
+            this.view = view;
+            final int originalW = 345;
+            final int originalH = 471;
+            int screenW = ToolsDevice.getWindowPx(getContext()).widthPixels;
+            int itemW = (screenW - getContext().getResources().getDimensionPixelSize(R.dimen.dp_30)) / 2;
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(itemW, itemW * originalH / originalW);
+            view.setLayoutParams(params);
+        }
+
+        @Override
+        public void bindData(int position, @Nullable Map<String, String> data) {
+            if (view != null) {
+                view.setHomeModuleBean(moduleBean);
+                view.setAdControl(mAdControlParent);
+                view.setData(data, position);
+                if (viewClickCallBack != null)
+                    view.setRefreshTag(viewClickCallBack);
             }
         }
     }

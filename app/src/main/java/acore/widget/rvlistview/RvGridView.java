@@ -19,7 +19,7 @@ import com.xiangha.R;
 
 public class RvGridView extends RvListView {
 
-    private int spanCount;
+    protected int spanCount;
     public RvGridView(Context context) {
         this(context,null);
     }
@@ -44,18 +44,20 @@ public class RvGridView extends RvListView {
 
     @Override
     public void setAdapter(@NonNull Adapter adapter) {
-        GridLayoutManager layoutManager = new GridLayoutManager(getContext(),spanCount);
-        setLayoutManager(layoutManager);
-        layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-            @Override
-            public int getSpanSize(int position) {
-                return getSpanSizeInternal(position);
-            }
-        });
+        if (getLayoutManager() == null) {
+            GridLayoutManager layoutManager = new GridLayoutManager(getContext(), spanCount);
+            setLayoutManager(layoutManager);
+            layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                @Override
+                public int getSpanSize(int position) {
+                    return getSpanSizeInternal(position);
+                }
+            });
+        }
         super.setAdapter(adapter);
     }
 
-    private int getSpanSizeInternal(int position){
+    protected int getSpanSizeInternal(int position){
         if(mAdapter != null){
             if(VIEW_TYPE_HEADER == mAdapter.getItemViewType(position)
                     ||VIEW_TYPE_FOOTER == mAdapter.getItemViewType(position)

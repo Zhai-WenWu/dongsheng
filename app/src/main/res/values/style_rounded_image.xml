@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--<declare-styleable name="RoundStyle">
+        <attr name="android:radius"/>
+        <attr name="android:topLeftRadius"/>
+        <attr name="topRightRadii" format="dimension"/>
+        <attr name="bottomRightRadii" format="dimension"/>
+        <attr name="bottomLeftRadii" format="dimension"/>
+    </declare-styleable>-->
+    <declare-styleable name="RoundStyle">
+        <attr name="android:radius"/>
+        <attr name="android:topLeftRadius"/>
+        <attr name="android:topRightRadius"/>
+        <attr name="android:bottomRightRadius"/>
+        <attr name="android:bottomLeftRadius"/>
+    </declare-styleable>
+
+</resources>

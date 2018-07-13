@@ -118,6 +118,12 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
                 mHomeAdapter.notifyItemRangeChanged(0,mDataControler.getDataSize());
         });
         mDataControler.setEntryptDataCallback(this::EntryptData);
+        mDataControler.setOnListTypeCallback(listType -> {
+            if (mHomeAdapter != null)
+                mHomeAdapter.setListType(listType);
+            if (mViewContrloer != null)
+                mViewContrloer.setListType(listType);
+        });
         //初始化adapter
         mHomeAdapter = new HomeAdapter(this, mDataControler.getData(), mDataControler.getAdControl());
         mHomeAdapter.setHomeModuleBean(mDataControler.getHomeModuleBean());
@@ -183,9 +189,6 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
                     v -> {
                         if (HeaderDataLoaded)
                             EntryptData(!LoadOver);
-                        else if (!LoadOver) {//第一次加载feed数据
-                            EntryptData(false);
-                        }
                     }
             );
             loadManager.getSingleLoadMore(mViewContrloer.getRvListView()).setVisibility(View.GONE);
@@ -219,8 +222,8 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
         ArrayList<String> arr = new ArrayList<>();
         Collections.addAll(arr,AdPlayIdConfig.HOME_BANNEER_LIST);
         mDataControler.loadAdData(arr, (isRefresh, map) -> {
-            mViewContrloer.setAdController(mDataControler.getAllAdController());
-            mViewContrloer.setAdData(map, arr, isRefresh);},
+                    mViewContrloer.setAdController(mDataControler.getAllAdController());
+                    mViewContrloer.setAdData(map, arr, isRefresh);},
                 this, "sy_banner");
     }
 
@@ -300,12 +303,6 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
             if (mDataControler != null)
                 mDataControler.refreshADIndex();
         }
-        loadFeedData(refresh);
-    }
-
-    private void loadFeedData(boolean refresh) {
-        if (mDataControler == null)
-            return;
         mDataControler.loadServiceFeedData(refresh, new HomeDataControler.OnLoadDataCallback() {
             @Override
             public void onPrepare() {

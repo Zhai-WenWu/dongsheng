@@ -56,7 +56,7 @@
             cube_ptr:ptr_ratio_of_header_height_to_refresh="1"
             cube_ptr:ptr_resistance="1.7">
 
-            <acore.widget.rvlistview.RvListView
+            <amodule.home.view.HomeGridView
                 android:id="@+id/rvListview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

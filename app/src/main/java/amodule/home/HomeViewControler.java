@@ -24,6 +24,7 @@ import amodule._common.delegate.ISetAdController;
 import amodule._common.helper.WidgetDataHelper;
 import amodule._common.utility.WidgetUtility;
 import amodule.home.view.HomeBuoy;
+import amodule.home.view.HomeGridView;
 import amodule.home.view.HomeTitleLayout;
 import amodule.main.activity.MainHomePage;
 import amodule.main.view.item.HomeItem;
@@ -53,7 +54,7 @@ public class HomeViewControler implements ISetAdController {
     private HomeBuoy mBuoy;
 
     private PtrClassicFrameLayout mRefreshLayout;
-    private RvListView mRvListView;
+    private HomeGridView mRvListView;
 
     //feed头部view
     private View mHeaderView;
@@ -92,7 +93,7 @@ public class HomeViewControler implements ISetAdController {
         mRefreshLayout = (PtrClassicFrameLayout) mActivity.findViewById(R.id.refresh_list_view_frame);
         mRefreshLayout.disableWhenHorizontalMove(true);
         mRefreshLayout.setLoadingMinTime(300);
-        mRvListView = (RvListView) mActivity.findViewById(R.id.rvListview);
+        mRvListView = (HomeGridView) mActivity.findViewById(R.id.rvListview);
         mRvListView.closeDefaultAnimator();
         mRvListView.addHeaderView(mHeaderView);
         mRvListView.addHeaderView(mHomeFeedHeaderControler.getLayout());
@@ -135,6 +136,12 @@ public class HomeViewControler implements ISetAdController {
                         mBuoy.executeCloseAnim();
                 }
             });
+        }
+    }
+
+    public void setListType(String listType) {
+        if (mRvListView != null) {
+            mRvListView.setListType(listType);
         }
     }
 
@@ -268,7 +275,7 @@ public class HomeViewControler implements ISetAdController {
     }
 
     //去设置
-    private void gotoSetting(){
+    private void gotoSetting() {
         mActivity.startActivity(new Intent(android.provider.Settings.ACTION_SETTINGS));
     }
 
@@ -301,13 +308,13 @@ public class HomeViewControler implements ISetAdController {
     }
 
     public void refreshBuoy() {
-        if(mBuoy != null){
+        if (mBuoy != null) {
             mBuoy.resetData();
         }
     }
 
-    public void setMessage(int messageTipCount){
-        if(mTitleLayout != null){
+    public void setMessage(int messageTipCount) {
+        if (mTitleLayout != null) {
             mTitleLayout.setMessage(messageTipCount);
         }
     }
