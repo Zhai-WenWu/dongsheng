@@ -44,6 +44,7 @@ import acore.logic.VersionOp;
 import acore.logic.XHClick;
 import acore.notification.controller.NotificationSettingController;
 import acore.override.XHApplication;
+import acore.override.activity.base.BaseLoginActivity;
 import acore.override.activity.mian.MainBaseActivity;
 import acore.tools.ChannelUtil;
 import acore.tools.FileManager;
@@ -53,6 +54,7 @@ import acore.tools.ObserverManager;
 import acore.tools.PageStatisticsUtils;
 import acore.tools.Tools;
 import acore.widget.XiangHaTabHost;
+import amodule.article.activity.edit.VideoEditActivity;
 import amodule.dish.tools.OffDishToFavoriteControl;
 import amodule.dish.tools.UploadDishControl;
 import amodule.lesson.activity.LessonHome;
@@ -62,6 +64,7 @@ import amodule.main.activity.MainCircle;
 import amodule.main.activity.MainHomePage;
 import amodule.main.activity.MainMyself;
 import amodule.main.delegate.ISetMessageTip;
+import amodule.user.activity.login.LoginByAccout;
 import aplug.shortvideo.ShortVideoInit;
 import third.ad.control.AdControlHomeDish;
 import third.ad.db.XHAdSqlite;
@@ -82,13 +85,13 @@ import static com.xiangha.R.id.iv_itemIsFine;
 public class Main extends Activity implements OnClickListener, IObserver, ISetMessageTip {
     public static final String TAG = "xianghaTag";
 
-    private String[] tabTitle = {"学做菜", "名厨课", "社区", "我的"};
-    private Class<?>[] classes = new Class<?>[]{MainHomePage.class, LessonHome.class, MainCircle.class, MainMyself.class};
-    private int[] tabImgs = new int[]{R.drawable.tab_index, R.drawable.tab_vip, R.drawable.tab_circle, R.drawable.tab_myself};
+    private String[] tabTitle = {"学做菜", "名厨课","发布", "社区", "我的"};
+    private Class<?>[] classes = new Class<?>[]{MainHomePage.class, LessonHome.class, VideoEditActivity.class,MainCircle.class, MainMyself.class};
+    private int[] tabImgs = new int[]{R.drawable.tab_index, R.drawable.tab_vip, R.drawable.tab_circle,R.drawable.tab_circle, R.drawable.tab_myself};
     public static final int TAB_HOME = 0;
     public static final int TAB_LESSON = 1;
-    public static final int TAB_CIRCLE = 2;
-    public static final int TAB_SELF = 3;
+    public static final int TAB_CIRCLE = 3;
+    public static final int TAB_SELF = 4;
 
     @SuppressLint("StaticFieldLeak")
     public static Main allMain;
@@ -131,12 +134,9 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Main.this.requestWindowFeature(Window.FEATURE_NO_TITLE); // 声明使用自定义标题
-        LogManager.printStartTime("zhangyujian","main::oncreate::super::");
         setContentView(R.layout.xh_main);//耗时250毫秒
-        LogManager.printStartTime("zhangyujian","main::oncreate::setContentView::");
         mLocalActivityManager = new LocalActivityManager(this, true);
         mLocalActivityManager.dispatchCreate(savedInstanceState);
-        LogManager.printStartTime("zhangyujian", "main::oncreate::start::");
         //腾讯统计
         initMTA();
         allMain = this;
@@ -323,6 +323,14 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                 tabHost.addContent(i + "", new Intent(this, classes[i]));
             }
         }
+    }
+    public void onChangeSend(View view){
+        if (!LoginManager.isLogin()) {
+            startActivity(new Intent(this, LoginByAccout.class));
+        } else if (LoginManager.isBindMobilePhone()) {
+            this.startActivity(new Intent(this, VideoEditActivity.class));
+        } else
+            BaseLoginActivity.gotoBindPhoneNum(this);
     }
 
     Handler mTimerHandler = null;
