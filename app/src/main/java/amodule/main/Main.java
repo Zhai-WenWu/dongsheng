@@ -69,6 +69,7 @@ import aplug.shortvideo.ShortVideoInit;
 import third.ad.control.AdControlHomeDish;
 import third.ad.db.XHAdSqlite;
 import third.ad.tools.AdConfigTools;
+import third.aliyun.work.AliyunCommon;
 import third.cling.control.ClingPresenter;
 import third.mall.alipay.MallPayActivity;
 import third.push.localpush.LocalPushDataManager;
@@ -325,12 +326,13 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
         }
     }
     public void onChangeSend(View view){
-        if (!LoginManager.isLogin()) {
-            startActivity(new Intent(this, LoginByAccout.class));
-        } else if (LoginManager.isBindMobilePhone()) {
-            this.startActivity(new Intent(this, VideoEditActivity.class));
-        } else
-            BaseLoginActivity.gotoBindPhoneNum(this);
+//        if (!LoginManager.isLogin()) {
+//            startActivity(new Intent(this, LoginByAccout.class));
+//        } else if (LoginManager.isBindMobilePhone()) {
+//            this.startActivity(new Intent(this, VideoEditActivity.class));
+//        } else
+//            BaseLoginActivity.gotoBindPhoneNum(this);
+        AliyunCommon.getInstance().startAliyunVideo(this);
     }
 
     Handler mTimerHandler = null;

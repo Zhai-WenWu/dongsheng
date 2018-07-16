@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/effect_list_filter"
+        android:layout_width="match_parent"
+        android:background="#992d2d2d"
+        android:overScrollMode="never"
+        android:layout_height="@dimen/dp_100"/>
+    <RelativeLayout
+        android:id="@+id/effect_list_dismiss"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_40"
+        android:background="@color/tab_bg_color"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:gravity="center_vertical"
+        android:visibility="gone"
+        >
+        <ImageView
+            android:id="@+id/dismiss"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_centerInParent="true"/>
+    </RelativeLayout>
+</LinearLayout>

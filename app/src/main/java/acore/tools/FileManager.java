@@ -35,6 +35,7 @@ import xh.basic.tool.UtilLog;
 
 public class FileManager extends UtilFile{
 	public static final String save_cache = "cache";
+	public static final String save_long = "long";
 	public static final int file_up_version = 4;
 	public static final String file_IMEI = "IMEI";
 	public static final String file_appData = "appNewData" + file_up_version;
@@ -161,6 +162,10 @@ public class FileManager extends UtilFile{
 	public static final String xg_config_official = "xg_config_official";
 	public static final String notification_permission = "notification_permission";
 	public static final String xhmKey_shortVideoGuidanceShow = "shortVideoGuidanceShow";
+
+	public static String getSDLongDir(){
+		return getSDDir()+save_long+"/";
+	}
 	/**
 	 * 获取字符串数组
 	 */

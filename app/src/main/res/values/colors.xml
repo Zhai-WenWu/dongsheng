@@ -116,4 +116,19 @@
     <color name="camera_progress_overflow">#1b5d89</color>
     <color name="camera_progress_delete">#f68b2b</color>
     <color name="icon_text_bg">#ff0833</color>
+    <!--aliyun-->
+    <color name="tab_bg_color">#1B2133</color>
+    <color name="effect_bg_color">#EF4B81</color>
+    <color name="tab_bg_color_50pct">#7f1B2133</color>
+    <color name="action_bar_bg_50pct">#7f232A42</color>
+    <color name="tab_indicator_color">#EF4B81</color>
+    <color name="music_back_color">#1B2033</color>
+
+    <color name="message_unread">#2B2B2B</color>
+    <color name="message_read">#1c1c1c</color>
+    <color name="aliyun_color_yellow_bg">#ffda44</color>
+    <color name="alpha_grey">#992D2D2D</color>
+    <color name="alpha_black_75percent">#BF000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="action_bar_bg">#232A42</color>
 </resources>

@@ -8,6 +8,7 @@ import android.support.multidex.MultiDex;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.aliyun.common.httpfinal.QupaiHttpFinal;
 import com.baidu.mobads.AdView;
 import com.baidu.mobads.AppActivity;
 import com.mob.MobApplication;
@@ -53,7 +54,10 @@ public class XHApplication extends MobApplication {
     @Override
     public void onCreate() {
         mAppApplication = this;
+
         startTime = System.currentTimeMillis();
+        loadLibs();
+        QupaiHttpFinal.getInstance().initOkHttpFinal();
         LogManager.printStartTime("zhangyujian","XhApplication::11111.oncreate::");
         boolean isOnce = TextUtils.isEmpty(FileManager.loadShared(this,FileManager.xmlFile_appInfo,"once").toString());
         FileManager.saveShared(this,FileManager.xmlFile_appInfo,"once",String.valueOf(isOnce));
@@ -190,6 +194,11 @@ public class XHApplication extends MobApplication {
                 CrashReport.setUserId(ToolsDevice.getXhIMEI(context));
             }
         }).start();
+    }
+    private void loadLibs() {
+        System.loadLibrary("live-openh264");
+        System.loadLibrary("QuCore-ThirdParty");
+        System.loadLibrary("QuCore");
     }
 
 }

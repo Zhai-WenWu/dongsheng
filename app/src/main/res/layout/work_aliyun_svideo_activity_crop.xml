@@ -1,0 +1,130 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/trim_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000">
+
+
+    <third.aliyun.widget.VideoTrimFrameLayout
+        android:id="@+id/aliyun_video_surfaceLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/black">
+
+        <TextureView
+            android:id="@+id/aliyun_video_textureview"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:scaleX="1.0001"
+            android:scaleY="1.0001" />
+    </third.aliyun.widget.VideoTrimFrameLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_110"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/bg_shape_back_50_90"/>
+    <TextView
+        android:id="@+id/aliyun_duration_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/aliyun_list_layout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/dp_10"
+        android:textColor="#ffffff"
+        android:textSize="@dimen/sp_14" />
+    <LinearLayout
+        android:id="@+id/aliyun_list_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/dp_10"
+        android:background="@android:color/transparent"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <third.aliyun.widget.HorizontalListView
+                android:id="@+id/aliyun_video_tailor_image_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <third.aliyun.widget.VideoSliceSeekBar
+                android:id="@+id/aliyun_seek_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </FrameLayout>
+    </LinearLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_75"
+        android:paddingTop="@dimen/dp_12"
+        android:background="@drawable/bg_shape_back_60_270">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <include
+                layout="@layout/a_bar_item_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/aliyun_next"
+                android:layout_width="@dimen/dp_70"
+                android:layout_height="@dimen/dp_25"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/dp_20"
+                android:background="@drawable/bg_circle_yellow_6"
+                android:gravity="center"
+                android:layout_centerVertical="true"
+                android:text="下一步"
+                android:textColor="#000000"
+                android:textSize="@dimen/dp_13" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/progressBar_layout"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/progressBar_linear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="vertical"
+            android:padding="@dimen/dp_15"
+            android:background="@drawable/bg_circle_back_6"
+            >
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="@dimen/dp_47"
+                android:layout_height="@dimen/dp_47"
+                android:padding="0dp"
+                android:indeterminateDrawable="@drawable/aliyun_progressbar"
+                android:layout_gravity="center"
+                android:max="100"
+                android:progress="100"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/aliyun_progress_crop"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/dp_2"
+                android:textColor="#2acd07"
+                android:textSize="@dimen/sp_13" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

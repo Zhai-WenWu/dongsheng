@@ -7,6 +7,11 @@ repositories {
         dirs 'libsxh'
     }
 }
+configurations {
+    compile.exclude module: 'okhttp'
+    compile.exclude module: 'okio'
+    compile.exclude module: 'glide'
+}
 dependencies {
     //添加广点通广告
     compile fileTree(include: '*.jar', dir: 'libsAddGd')
@@ -40,8 +45,15 @@ dependencies {
     implementation project(':gsyVideoPlayer-java')
     //Java8的stream API第三方兼容包
     compile 'com.annimon:stream:1.0.3'
-}
+    implementation (project(':AliyunVideoSdk')) {
+        transitive = false
+    }
+    implementation 'com.google.code.gson:gson:2.8.0'
+    implementation 'pub.devrel:easypermissions:0.2.1'
+    implementation 'org.greenrobot:eventbus:3.1.1'
+    implementation 'com.aliyun.dpa:oss-android-sdk:2.4.4'
 
+}
 android {
     compileSdkVersion 25
     buildToolsVersion '26.0.2'
@@ -50,7 +62,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 21
         versionCode 271
-        versionName "6.3.1"
+        versionName "8.0.0.0"
         // dex突破65535的限制
         multiDexEnabled true
         ndk {
