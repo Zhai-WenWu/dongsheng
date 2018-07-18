@@ -2,7 +2,9 @@ package amodule.home.view;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -11,12 +13,19 @@ import android.widget.TextView;
 
 import com.xiangha.R;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import acore.logic.AppCommon;
 import acore.override.helper.XHActivityManager;
+import acore.tools.ToolsDevice;
+import acore.widget.rvlistview.RvHorizatolListView;
+import acore.widget.rvlistview.RvListView;
 import amodule._common.utility.WidgetUtility;
+import amodule.home.adapter.HorizontalAdapterFuncNav1;
 
 /**
  * Description :
@@ -27,6 +36,7 @@ import amodule._common.utility.WidgetUtility;
  */
 
 public class HomeFuncNavView1 extends LinearLayout {
+    private Context context;
     public HomeFuncNavView1(Context context) {
         this(context, null);
     }
@@ -37,17 +47,19 @@ public class HomeFuncNavView1 extends LinearLayout {
 
     public HomeFuncNavView1(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-
+        this.context = context;
         initialize();
     }
 
-    protected List<Integer> navIds = Arrays.asList(R.id.nav_1, R.id.nav_2, R.id.nav_3, R.id.nav_4);
-    protected List<Integer> lineIds = Arrays.asList(R.id.line_1, R.id.line_2, R.id.line_3);
-
+    public ArrayList<Map<String,String>> mapArrayList  = new ArrayList<>();
+    public HorizontalAdapterFuncNav1 adapterFuncNav1;
+    public RvHorizatolListView listView;
     private void initialize() {
         //填充UI
-        LayoutInflater.from(getContext()).inflate(R.layout.widget_func_nav_1_layout, this, true);
-
+        LayoutInflater.from(getContext()).inflate(R.layout.widget_func_nav_1_layout_new, this, true);
+        adapterFuncNav1 = new HorizontalAdapterFuncNav1(context,mapArrayList);
+        listView= (RvHorizatolListView) findViewById(R.id.recycler_view);
+        listView.setAdapter(adapterFuncNav1);
         initData();
     }
 
@@ -60,31 +72,34 @@ public class HomeFuncNavView1 extends LinearLayout {
                 "xiangha://welcome?WeekDish.app",
                 "xiangha://welcome?xhds.home.app",
         };
-        for (int index = 0; index < navIds.size(); index++) {
-            View navView = findViewById(navIds.get(index));
-            setResToView(navView, textArray[index], iconArray[index]);
-            String url = urls[index];
-            navView.setOnClickListener(v -> AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), url, true));
+
+        for (int index = 0; index < iconArray.length; index++) {
+            Map<String,String> map = new HashMap<>();
+            map.put("text1",textArray[index]);
+            map.put("drawableId",String.valueOf(iconArray[index]));
+            map.put("url",urls[index]);
+            mapArrayList.add(map);
         }
+        setItemWaith();
+        adapterFuncNav1.notifyDataSetChanged();
         setVisibility(VISIBLE);
+        listView.setOnItemClickListener(new RvListView.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
+                if(position<mapArrayList.size()) {
+                    AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), mapArrayList.get(position).get("url"), true);
+                }
+            }
+        });
+
     }
 
-    private void setResToView(View itemView, String text, int icon) {
-        TextView textView = (TextView) itemView.findViewById(R.id.text_1);
-        ImageView imageView = (ImageView) itemView.findViewById(R.id.icon);
-
-        WidgetUtility.setTextToView(textView, text, false);
-        WidgetUtility.setResToImage(imageView, icon, false);
-    }
-
-    protected void setNavItemVisibility(int id, boolean isShow) {
-        if (id <= 0) return;
-        findViewById(id).setVisibility(isShow ? VISIBLE : GONE);
-        final int index = navIds.indexOf(id);
-        if (index < 0) {
-            return;
+    public void setItemWaith(){
+        if(adapterFuncNav1!=null){
+            int waith = ToolsDevice.getWindowPx(context).widthPixels;
+            int size = mapArrayList.size();
+            adapterFuncNav1.setItemWaith(size>5?(int) (waith/5.3):waith/size);
+            listView.setNestedScrollingEnabled(size>5);
         }
-        int lineid = lineIds.get(index < lineIds.size() ? index : lineIds.size() - 1);
-        findViewById(lineid).setVisibility(isShow ? VISIBLE : GONE);
     }
 }

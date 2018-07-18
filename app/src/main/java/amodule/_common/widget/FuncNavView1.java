@@ -3,6 +3,7 @@ package amodule._common.widget;
 import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -22,6 +23,7 @@ import acore.logic.XHClick;
 import acore.override.helper.XHActivityManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
+import acore.widget.rvlistview.RvListView;
 import amodule._common.delegate.IBindMap;
 import amodule._common.delegate.IHandlerClickEvent;
 import amodule._common.delegate.ISaveStatistic;
@@ -90,30 +92,26 @@ public class FuncNavView1 extends HomeFuncNavView1 implements IBindMap,IStatictu
             setVisibility(GONE);
             return;
         }
-        final int length = Math.min(navIds.size(),data.size());
-        for(int index = 0 ; index < length ; index ++){
-            setMapToView(index,findViewById(navIds.get(index)),data.get(index));
+//        final int length = Math.min(navIds.size(),data.size());
+        mapArrayList.clear();
+        for(int index = 0 ; index < data.size() ; index ++){
+            mapArrayList.add(data.get(index));
+            Log.i("xianghaTag","数据为：：：：——————"+data.get(index));
         }
+        setItemWaith();
+        adapterFuncNav1.notifyDataSetChanged();
         setVisibility(VISIBLE);
+        listView.setOnItemClickListener(new RvListView.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
+                if(position<mapArrayList.size()) {
+                    AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), mapArrayList.get(position).get("url"), true);
+                    statistic(position, mapArrayList.get(position));
+                }
+            }
+        });
     }
 
-    private boolean setMapToView(final int index,View itemView,Map<String,String> data){
-        if(null == itemView || null == data || data.isEmpty()) return false;
-
-        TextView textView = (TextView) itemView.findViewById(R.id.text_1);
-        ImageView imageView = (ImageView) itemView.findViewById(R.id.icon);
-
-        WidgetUtility.setTextToView(textView,data.get("text1"),false);
-        if(null != imageView){
-            if(!TextUtils.isEmpty(data.get("img")))
-                Glide.with(getContext()).load(data.get("img")).into(imageView);
-            itemView.setOnClickListener(v->{
-                AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(),data.get("url"),true);
-                statistic(index,data);
-            });
-        }
-        return true;
-    }
 
     private void statistic(int index,Map<String, String> data) {
         XHClick.saveStatictisFile("home", "homeSmallNav", data.get("type"), "", "",

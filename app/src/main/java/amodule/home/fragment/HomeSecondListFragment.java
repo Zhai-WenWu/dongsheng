@@ -40,7 +40,7 @@ import static third.ad.control.AdControlHomeDish.tag_yu;
  * 首页二级页面（视频、每日三餐）
  */
 public class HomeSecondListFragment extends Fragment {
-    
+
     public static final String TAG = HomeSecondListFragment.class.getSimpleName();
 
     private static final String KEY_HOMEMODULE = "home_module";
@@ -66,7 +66,7 @@ public class HomeSecondListFragment extends Fragment {
     private RvListView mRv;
     private HomeSecondRecyclerAdapter mHomeAdapter;
     private LoadManager mLoadManager;
-    
+
     private HomeModuleBean mModuleBean;
     private HomeSecondModule mSecondModuleBean;
     private int mPosition;
@@ -96,13 +96,15 @@ public class HomeSecondListFragment extends Fragment {
             mPosition = getArguments().getInt(KEY_POSITION);
         }
         mAdControl = getAdControl();
-        mAdControl.setRefreshCallback(() -> {
-            mListData = mAdControl.getAutoRefreshAdData(mListData);
-            if (mHomeAdapter != null){
-                mHomeAdapter.notifyDataSetChanged();
-            }
-        });
-        mActivity.getActMagager().registerADController(mAdControl);
+        if(mAdControl!=null) {
+            mAdControl.setRefreshCallback(() -> {
+                mListData = mAdControl.getAutoRefreshAdData(mListData);
+                if (mHomeAdapter != null) {
+                    mHomeAdapter.notifyDataSetChanged();
+                }
+            });
+            mActivity.getActMagager().registerADController(mAdControl);
+        }
     }
 
     @Override
@@ -401,7 +403,7 @@ public class HomeSecondListFragment extends Fragment {
                 mHomeAdapter.notifyDataSetChanged();
         });
     }
-    
+
     @Override
     public void onDetach() {
         super.onDetach();
