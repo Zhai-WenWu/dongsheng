@@ -30,13 +30,8 @@ import acore.widget.rvlistview.Config;
 import acore.widget.rvlistview.holder.RvBaseViewHolder;
 
 /**
- * Description :
- * PackageName : acore.widget.rvlistview
- * Created by MrTrying on 2017/9/27 11:19.
- * Author : mrtrying
- * E_mail : ztanzeyu@gmail.com
+ * 基础adapter
  */
-
 public abstract class RvBaseAdapter<T> extends RecyclerView.Adapter<RvBaseViewHolder<T>> {
 
     public final static String TAG = Config.TAG + " :: " + RvBaseAdapter.class.getSimpleName();

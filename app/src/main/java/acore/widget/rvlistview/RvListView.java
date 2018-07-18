@@ -22,31 +22,23 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import java.util.List;
 
-import acore.widget.rvlistview.layoutmanager.LinearLayoutManagerWrapper;
-
-
-/**
- * Description :
- * PackageName : acore.widget.rvlistview
- * Created by MrTrying on 2017/9/26 19:32.
- * Author : mrtrying
- * E_mail : ztanzeyu@gmail.com
- */
 
 public class RvListView extends RecyclerView {
 
     private static final String TAG = Config.TAG + " :: " + RvListView.class.getSimpleName();
 
-    protected static final int VIEW_TYPE_HEADER = -1;
-    protected static final int VIEW_TYPE_FOOTER = -2;
-    protected static final int VIEW_TYPE_EMPTY = Integer.MAX_VALUE - 1;
+    public static final int VIEW_TYPE_HEADER = -1;
+    public static final int VIEW_TYPE_FOOTER = -2;
+    public static final int VIEW_TYPE_EMPTY = Integer.MAX_VALUE - 1;
 
     protected LinearLayout mHeaderContainer;
     protected LinearLayout mFooterContainer;
@@ -60,8 +52,6 @@ public class RvListView extends RecyclerView {
     private OnItemClickListener mOnItemClickListener;
 
     private OnItemLongClickListener mOnItemLongClickListener;
-
-    private LinearLayoutManagerWrapper mLayoutManagerWrapper;
     /**Default implement for check can show EmptyView*/
     public final EmptyHandler DefaultEmptyHandler = new EmptyHandler() {
         @Override
@@ -93,7 +83,9 @@ public class RvListView extends RecyclerView {
 
     protected void initialize() {
         mHeaderContainer = new LinearLayout(getContext());
+        mHeaderContainer.setOrientation(LinearLayout.VERTICAL);
         mFooterContainer = new LinearLayout(getContext());
+        mFooterContainer.setOrientation(LinearLayout.VERTICAL);
 //        Log.d("tzy", "Constructor execute.");
     }
 
@@ -107,9 +99,8 @@ public class RvListView extends RecyclerView {
     @Override
     public void setAdapter(Adapter adapter) {
         if(getLayoutManager() == null){
-            mLayoutManagerWrapper = new LinearLayoutManagerWrapper(getContext());
             //默认使用LinearLayoutManager，并且处置布局
-            setLayoutManager(mLayoutManagerWrapper);
+            setLayoutManager(new LinearLayoutManager(getContext()));
         }
         mAdapter = new RvHeaderAndFooterViewAdapter(adapter);
         super.setAdapter(mAdapter);
@@ -308,6 +299,7 @@ public class RvListView extends RecyclerView {
 
         };
 
+
         /** 构造器 */
         RvHeaderAndFooterViewAdapter(RecyclerView.Adapter adapter) {
             if (this.mOriginalAdapter != null) {
@@ -334,7 +326,6 @@ public class RvListView extends RecyclerView {
             itemCount += getFooterViewHolderCount();
             return itemCount;
         }
-
         @Override
         public int getItemViewType(int position) {
             if (isHeaderViewPos(position)) {
@@ -453,6 +444,15 @@ public class RvListView extends RecyclerView {
                     && VIEW_TYPE_EMPTY != holder.getItemViewType()
                     ) {
                 mOriginalAdapter.onViewAttachedToWindow(holder);
+            }
+//            holder.getAdapterPosition()
+            ViewGroup.LayoutParams lp = holder.itemView.getLayoutParams();
+            if(lp != null
+                    && lp instanceof StaggeredGridLayoutManager.LayoutParams
+                    && (VIEW_TYPE_HEADER == holder.getItemViewType()
+                    ||VIEW_TYPE_FOOTER == holder.getItemViewType())) {
+                StaggeredGridLayoutManager.LayoutParams p = (StaggeredGridLayoutManager.LayoutParams) lp;
+                p.setFullSpan(true);
             }
         }
 
@@ -653,7 +653,4 @@ public class RvListView extends RecyclerView {
         ((SimpleItemAnimator) this.getItemAnimator()).setSupportsChangeAnimations(false);
     }
 
-    public boolean isCareshed(){
-        return mLayoutManagerWrapper != null && mLayoutManagerWrapper.isCareshed();
-    }
 }

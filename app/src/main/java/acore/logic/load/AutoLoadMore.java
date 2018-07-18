@@ -1,8 +1,10 @@
 package acore.logic.load;
 
 import android.os.Handler;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -457,7 +459,7 @@ public class AutoLoadMore {
 
 	public static void setAutoMoreListen(RvListView listView,final Button loadMore, final View.OnClickListener clicker){
 		listView.addFooterView(loadMore);
-		final LinearLayoutManager layoutManager = (LinearLayoutManager)listView.getLayoutManager();
+		final RecyclerView.LayoutManager layoutManager = listView.getLayoutManager();
 		final RecyclerView.Adapter adapter = listView.getAdapter();
 		listView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 			boolean alowLoad = true;
@@ -465,20 +467,63 @@ public class AutoLoadMore {
 			public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
 				super.onScrollStateChanged(recyclerView, newState);
 
-				int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
-				if (loadMore != null
-						&& newState == RecyclerView.SCROLL_STATE_IDLE
-						&& lastVisibleItemPosition + 1 >= adapter.getItemCount() - 4
-						&& loadMore.isEnabled()) {
-					if (alowLoad) {
-						alowLoad = false;
-						clicker.onClick (loadMore);
-						new Handler().postDelayed(new Runnable() {
-							@Override
-							public void run() {
-								alowLoad = true;
-							}
-						}, 500);
+				if(layoutManager instanceof LinearLayoutManager) {
+					int lastVisibleItemPosition = ((LinearLayoutManager)layoutManager).findLastVisibleItemPosition();
+					if (loadMore != null
+							&& newState == RecyclerView.SCROLL_STATE_IDLE
+							&& lastVisibleItemPosition + 1 >= adapter.getItemCount() - 4
+							&& loadMore.isEnabled()) {
+						if (alowLoad) {
+							alowLoad = false;
+							clicker.onClick(loadMore);
+							new Handler().postDelayed(new Runnable() {
+								@Override
+								public void run() {
+									alowLoad = true;
+								}
+							}, 500);
+						}
+					}
+				}else if(layoutManager instanceof StaggeredGridLayoutManager){//瀑布流处理---还要再次调整
+					int[] lastPositions = null;
+					StaggeredGridLayoutManager staggeredGridLayoutManager
+							= (StaggeredGridLayoutManager) layoutManager;
+					if (lastPositions == null) {
+						lastPositions = new int[staggeredGridLayoutManager.getSpanCount()];
+					}
+					staggeredGridLayoutManager.findLastVisibleItemPositions(lastPositions);
+					int lastVisibleItemPosition = Tools.findMax(lastPositions);
+					int visibleItemCount = layoutManager.getChildCount();
+					int totalItemCount = layoutManager.getItemCount();
+					if((visibleItemCount > 0 && newState == RecyclerView.SCROLL_STATE_IDLE &&
+							(lastVisibleItemPosition) >= totalItemCount - 1)&&loadMore != null&&loadMore.isEnabled()){
+						if (alowLoad) {
+							alowLoad = false;
+							clicker.onClick(loadMore);
+							new Handler().postDelayed(new Runnable() {
+								@Override
+								public void run() {
+									alowLoad = true;
+								}
+							}, 500);
+						}
+					}
+				}else if(layoutManager instanceof GridLayoutManager){//网格布局
+					int lastVisibleItemPosition = ((GridLayoutManager) layoutManager).findLastVisibleItemPosition();
+					int visibleItemCount = layoutManager.getChildCount();
+					int totalItemCount = layoutManager.getItemCount();
+					if((visibleItemCount > 0 && newState == RecyclerView.SCROLL_STATE_IDLE &&
+							(lastVisibleItemPosition) >= totalItemCount - 1)&&loadMore != null&&loadMore.isEnabled()){
+						if (alowLoad) {
+							alowLoad = false;
+							clicker.onClick(loadMore);
+							new Handler().postDelayed(new Runnable() {
+								@Override
+								public void run() {
+									alowLoad = true;
+								}
+							}, 500);
+						}
 					}
 				}
 			}

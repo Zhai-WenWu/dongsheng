@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -19,7 +21,9 @@ import java.util.Map;
 import acore.logic.AppCommon;
 import acore.logic.XHClick;
 import acore.tools.StringManager;
+import acore.tools.Tools;
 import acore.widget.rvlistview.RvListView;
+import acore.widget.rvlistview.RvStaggeredGridView;
 import amodule._common.delegate.ISetAdController;
 import amodule._common.helper.WidgetDataHelper;
 import amodule._common.utility.WidgetUtility;
@@ -34,13 +38,8 @@ import third.ad.scrollerAd.XHAllAdControl;
 import third.umeng.OnlineConfigControler;
 
 /**
- * Description :
- * PackageName : amodule.home
- * Created by MrTrying on 2017/11/13 15:00.
- * Author : mrtrying
- * E_mail : ztanzeyu@gmail.com
+ * 首页view的控制
  */
-
 public class HomeViewControler implements ISetAdController {
 
     static String MODULETOPTYPE = "moduleTopType";//置顶数据的类型
@@ -54,7 +53,7 @@ public class HomeViewControler implements ISetAdController {
     private HomeBuoy mBuoy;
 
     private PtrClassicFrameLayout mRefreshLayout;
-    private HomeGridView mRvListView;
+    private RvStaggeredGridView recyclerView;
 
     //feed头部view
     private View mHeaderView;
@@ -93,11 +92,11 @@ public class HomeViewControler implements ISetAdController {
         mRefreshLayout = (PtrClassicFrameLayout) mActivity.findViewById(R.id.refresh_list_view_frame);
         mRefreshLayout.disableWhenHorizontalMove(true);
         mRefreshLayout.setLoadingMinTime(300);
-        mRvListView = (HomeGridView) mActivity.findViewById(R.id.rvListview);
-        mRvListView.closeDefaultAnimator();
-        mRvListView.addHeaderView(mHeaderView);
-        mRvListView.addHeaderView(mHomeFeedHeaderControler.getLayout());
-        mRvListView.setOnItemClickListener((view, holder, position) -> {
+        recyclerView = (RvStaggeredGridView) mActivity.findViewById(R.id.recyclerView);
+        recyclerView.closeDefaultAnimator();
+        recyclerView.addHeaderView(mHeaderView);
+        recyclerView.addHeaderView(mHomeFeedHeaderControler.getLayout());
+        recyclerView.setOnItemClickListener((view, holder, position) -> {
             if (view instanceof HomeItem) {
                 ((HomeItem) view).onClickEvent(view);
             }
@@ -111,13 +110,13 @@ public class HomeViewControler implements ISetAdController {
     }
 
     public void addOnScrollListener() {
-        RecyclerView.LayoutManager layoutManager = mRvListView.getLayoutManager();
+        RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
         if (layoutManager != null && layoutManager instanceof LinearLayoutManager) {
-            final LinearLayoutManager linearLayoutManager = (LinearLayoutManager) layoutManager;
-            mRvListView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override
                 public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                     super.onScrollStateChanged(recyclerView, newState);
+                    Log.i("xianghaTag","recyclerView::::-------------------");
                     if (RecyclerView.SCROLL_STATE_IDLE == newState
                             && mBuoy != null
                             && !mBuoy.isMove()) {
@@ -128,7 +127,14 @@ public class HomeViewControler implements ISetAdController {
                 @Override
                 public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                     super.onScrolled(recyclerView, dx, dy);
-                    int lastVisibleItemPosition = linearLayoutManager.findLastVisibleItemPosition();
+                    int[] lastPositions = null;
+                    StaggeredGridLayoutManager staggeredGridLayoutManager
+                            = (StaggeredGridLayoutManager) layoutManager;
+                    if (lastPositions == null) {
+                        lastPositions = new int[staggeredGridLayoutManager.getSpanCount()];
+                    }
+                    staggeredGridLayoutManager.findLastVisibleItemPositions(lastPositions);
+                    int lastVisibleItemPosition = Tools.findMax(lastPositions);
                     if (scrollDataIndex < (lastVisibleItemPosition - 1)) {
                         scrollDataIndex = (lastVisibleItemPosition - 1);
                     }
@@ -140,9 +146,9 @@ public class HomeViewControler implements ISetAdController {
     }
 
     public void setListType(String listType) {
-        if (mRvListView != null) {
-            mRvListView.setListType(listType);
-        }
+//        if (mRvListView != null) {
+//            mRvListView.setListType(listType);
+//        }
     }
 
     //
@@ -166,8 +172,8 @@ public class HomeViewControler implements ISetAdController {
 
     //回到第一个位置
     public void returnListTop() {
-        if (mRvListView != null) {
-            mRvListView.scrollToPosition(0);
+        if (recyclerView != null) {
+            recyclerView.scrollToPosition(0);
         }
     }
 
@@ -322,7 +328,7 @@ public class HomeViewControler implements ISetAdController {
     /*--------------------------------------------- Get&Set ---------------------------------------------*/
 
     public RvListView getRvListView() {
-        return mRvListView;
+        return recyclerView;
     }
 
     public PtrClassicFrameLayout getRefreshLayout() {

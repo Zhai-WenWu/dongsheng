@@ -31,13 +31,8 @@ import third.ad.scrollerAd.XHAllAdControl;
 import static third.ad.control.AdControlHomeDish.tag_yu;
 
 /**
- * Description :
- * PackageName : amodule.home
- * Created by MrTrying on 2017/11/13 14:51.
- * Author : mrtrying
- * E_mail : ztanzeyu@gmail.com
+ * 数据控制器
  */
-
 public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, ILoadAdData{
 
     private XHAllAdControl mViewAdControl;

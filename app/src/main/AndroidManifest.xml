@@ -1257,6 +1257,14 @@
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan"/>
 
+        <activity android:name="amodule.dish.activity.ShortVideoDetailActivity"
+            android:launchMode="singleTask"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:screenOrientation="portrait"
+            android:hardwareAccelerated="true"
+            android:theme="@style/FullScreenTheme"
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"/>
+
 
         <!-- *************************************** fanli appKey  *************************************** -->
         <!-- <meta-data android:name="com.yidonglianjie.applicationid" android:value="app-fdj9l1d"/> -->

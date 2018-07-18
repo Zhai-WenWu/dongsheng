@@ -41,13 +41,9 @@ import third.ad.tools.AdPlayIdConfig;
 import static acore.logic.ConfigMannager.KEY_LOGPOSTTIME;
 
 /**
- * Description :
- * PackageName : amodule.home
- * Created by MrTrying on 2017/11/13 13:53.
- * Author : mrtrying
- * E_mail : ztanzeyu@gmail.com
+ * 首页
+ * 采用mvc
  */
-
 public class MainHomePage extends MainBaseActivity implements IObserver,ISetMessageTip {
     public final static String KEY = "MainIndex";
     public final static String recommedType = "recomv1";//推荐类型

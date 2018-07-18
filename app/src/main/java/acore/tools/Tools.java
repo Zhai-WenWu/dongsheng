@@ -980,4 +980,13 @@ public class Tools {
 
         }
     }
+    public static int findMax(int[] lastPositions) {
+        int max = lastPositions[0];
+        for (int value : lastPositions) {
+            if (value > max) {
+                max = value;
+            }
+        }
+        return max;
+    }
 }
