@@ -1256,6 +1256,16 @@
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name="third.aliyun.work.AliyunVideoRecorder"
+            android:theme="@style/titleTheme"
+            tools:replace="android:theme"
+            android:screenOrientation="portrait">
+        <intent-filter>
+            <action android:name="com.duanqu.qupai.action.recorder"/>
+            <category android:name="android.intent.category.DEFAULT"/>
+        </intent-filter>
+        </activity>
 
         <activity android:name="amodule.dish.activity.ShortVideoDetailActivity"
             android:launchMode="singleTask"

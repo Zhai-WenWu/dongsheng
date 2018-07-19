@@ -7,7 +7,12 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.aliyun.struct.common.CropKey;
+import com.aliyun.struct.common.ScaleMode;
 import com.aliyun.struct.common.VideoQuality;
+import com.aliyun.struct.encoder.VideoCodecs;
+import com.aliyun.struct.recorder.CameraType;
+import com.aliyun.struct.recorder.FlashType;
+import com.aliyun.struct.snap.AliyunSnapVideoParam;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -146,5 +151,33 @@ public class AliyunCommon {
             }
         }
         arrayActivity.clear();
+    }
+    public void startRecoderVideo(Context context){
+        AliyunSnapVideoParam recordParam = new AliyunSnapVideoParam.Builder()
+                .setResolutionMode(AliyunSnapVideoParam.RESOLUTION_720P)
+                .setRatioMode(AliyunSnapVideoParam.RATIO_MODE_9_16)
+                .setRecordMode(AliyunSnapVideoParam.RECORD_MODE_AUTO)
+                .setFilterList(new String[]{})
+                .setBeautyLevel(80)
+                .setBeautyStatus(true)
+                .setCameraType(CameraType.FRONT)
+                .setFlashType(FlashType.ON)
+                .setNeedClip(true)
+                .setMaxDuration(30000)
+                .setMinDuration(1000)
+                .setVideoQuality(VideoQuality.HD)
+                .setGop(5)
+                .setVideoBitrate(0)
+                .setVideoCodec(VideoCodecs.H264_HARDWARE)
+                /**
+                 * 裁剪参数
+                 */
+                .setMinVideoDuration(4000)
+                .setMaxVideoDuration(29 * 1000)
+                .setMinCropDuration(3000)
+                .setFrameRate(25)
+                .setCropMode(ScaleMode.PS)
+                .build();
+        AliyunVideoRecorder.startRecord(context,recordParam);
     }
 }
