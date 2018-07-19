@@ -37,6 +37,7 @@ import acore.tools.IObserver;
 import acore.tools.LogManager;
 import acore.tools.ObserverManager;
 import acore.tools.StringManager;
+import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.TagTextView;
 import amodule.answer.activity.QAMsgListActivity;
@@ -111,6 +112,8 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
         setActivity();
         loadManager.showProgressBar();
         initUI();
+        String colors = Tools.getColorStr(this, R.color.common_top_bg_back);
+        Tools.setStatusBarColor(this, Color.parseColor(colors));
         XHClick.track(this,"浏览我的页面");
         loadManager.setLoading(v -> getYiYuanBindState());
         ObserverManager.getInstance().registerObserver(this, ObserverManager.NOTIFY_LOGIN, ObserverManager.NOTIFY_YIYUAN_BIND, ObserverManager.NOTIFY_PAYFINISH);

@@ -2,8 +2,9 @@
 <resources>
 
     <color name="common_bg">#F7F7F7</color>
-    <color name="common_top_bg">#1B1B1F</color>
-    <color name="common_top_text">#FFFFFE</color>
+    <color name="common_top_bg_back">#1B1B1F</color>
+    <color name="common_top_bg">#fffffe</color>
+    <color name="common_top_text">#333333</color>
     <color name="common_top_search_text">#000000</color>
     <color name="common_top_button_text">#000000</color>
     <color name="common_top_shoping_bg">#ffffff</color>

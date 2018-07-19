@@ -36,7 +36,7 @@
                 android:id="@+id/circle_tab"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                app:pstsIndicatorColor="#FFFFFE"
+                app:pstsIndicatorColor="#fa273b"
                 app:pstsIndicatorWidthFollowText="true"
                 app:pstsTabBackground="@color/transparent"
                 app:pstsTabPaddingLeftRight="@dimen/dp_12.5"

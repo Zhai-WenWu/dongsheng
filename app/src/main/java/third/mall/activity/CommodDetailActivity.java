@@ -312,12 +312,12 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
     private void handleTitleState() {
         switch (titleState) {
             case "1":
-                title.setTextColor(Color.parseColor("#fffffe"));
-                title_detail.setTextColor(Color.parseColor("#999999"));
+                title.setTextColor(Color.parseColor("#333333"));
+                title_detail.setTextColor(Color.parseColor("#bbbbbb"));
                 break;
             case "2":
-                title.setTextColor(Color.parseColor("#999999"));
-                title_detail.setTextColor(Color.parseColor("#fffffe"));
+                title.setTextColor(Color.parseColor("#bbbbbb"));
+                title_detail.setTextColor(Color.parseColor("#333333"));
                 break;
         }
     }

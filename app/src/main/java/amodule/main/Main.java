@@ -86,7 +86,7 @@ import static com.xiangha.R.id.iv_itemIsFine;
 public class Main extends Activity implements OnClickListener, IObserver, ISetMessageTip {
     public static final String TAG = "xianghaTag";
 
-    private String[] tabTitle = {"学做菜", "名厨课","发布", "社区", "我的"};
+    private String[] tabTitle = {"首页", "名厨菜","发布", "社区", "我的"};
     private Class<?>[] classes = new Class<?>[]{MainHomePage.class, LessonHome.class, VideoEditActivity.class,MainCircle.class, MainMyself.class};
     private int[] tabImgs = new int[]{R.drawable.tab_index, R.drawable.tab_vip, R.drawable.tab_circle,R.drawable.tab_circle, R.drawable.tab_myself};
     public static final int TAB_HOME = 0;
@@ -332,7 +332,8 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
 //            this.startActivity(new Intent(this, VideoEditActivity.class));
 //        } else
 //            BaseLoginActivity.gotoBindPhoneNum(this);
-        AliyunCommon.getInstance().startAliyunVideo(this);
+        AliyunCommon.getInstance().startRecoderVideo(this);
+//        AliyunCommon.getInstance().startAliyunVideo(this);
     }
 
     Handler mTimerHandler = null;
@@ -575,12 +576,12 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
         for (int j = 0; j < tabViews.length; j++) {
             if (j == index) {
 
-                ((TextView) tabViews[j].findViewById(R.id.textView1)).setTextColor(Color.parseColor("#333333"));
+                ((TextView) tabViews[j].findViewById(R.id.textView1)).setTextColor(Color.parseColor("#fa273b"));
                 tabViews[j].findViewById(iv_itemIsFine).setSelected(true);
                 tabViews[j].findViewById(iv_itemIsFine).setPressed(false);
             } else {
                 TextView textView = (TextView) tabViews[j].findViewById(R.id.textView1);
-                textView.setTextColor(Color.parseColor("#1b1b1f"));
+                textView.setTextColor(Color.parseColor("#888888"));
                 if (j == 1) textView.setText(tabTitle[j]);
                 tabViews[j].findViewById(iv_itemIsFine).setSelected(false);
                 tabViews[j].findViewById(iv_itemIsFine).setPressed(false);

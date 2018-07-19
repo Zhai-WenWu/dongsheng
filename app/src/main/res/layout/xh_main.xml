@@ -29,7 +29,7 @@
             android:layout_height="@dimen/dp_49"
             android:layout_alignParentBottom="true"
             android:layout_gravity="bottom"
-            android:background="#F2F2F2">
+            android:background="#fffffe">
 
             <LinearLayout
                 android:id="@+id/linear_item"
