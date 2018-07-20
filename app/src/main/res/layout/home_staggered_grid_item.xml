@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:paddingBottom="@dimen/dp_10"
     android:background="#ffffff">
-<acore.widget.RoundConstraint
+<acore.widget.RoundConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/bg_round_ffffff"
@@ -111,5 +111,5 @@
 
     </android.support.constraint.ConstraintLayout>
 
-</acore.widget.RoundConstraint>
+</acore.widget.RoundConstraintLayout>
     </RelativeLayout>
