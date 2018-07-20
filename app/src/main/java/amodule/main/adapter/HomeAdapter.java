@@ -22,6 +22,7 @@ import amodule.main.view.item.HomeGridADItem;
 import amodule.main.view.item.HomeGridItem;
 import amodule.main.view.item.HomePostItem;
 import amodule.main.view.item.HomeRecipeItem;
+import amodule.main.view.item.HomeStaggeredGridItem;
 import amodule.main.view.item.HomeTxtItem;
 import third.ad.control.AdControlParent;
 
@@ -65,7 +66,7 @@ public class HomeAdapter extends RvBaseAdapter<Map<String, String>> {
         Log.i("xianghaTag","viewType::::"+viewType);
         switch (viewType) {
             case type_gridImage://网格
-                return new GridImageViewHolder(new HomeGridItem(mContext));
+                return new StaggeredGridImageViewHolder(new HomeStaggeredGridItem(mContext));
             case type_gridADImage://网格广告
                 return new GridADImageViewHolder(new HomeGridADItem(mContext));
             case type_tagImage://大图
@@ -216,6 +217,27 @@ public class HomeAdapter extends RvBaseAdapter<Map<String, String>> {
         }
     }
 
+    /**
+     * 错落网格
+     */
+    public class StaggeredGridImageViewHolder extends RvBaseViewHolder<Map<String, String>> {
+        HomeStaggeredGridItem view;
+
+        public StaggeredGridImageViewHolder(HomeStaggeredGridItem view) {
+            super(view);
+            this.view = view;
+        }
+
+        @Override
+        public void bindData(int position, @Nullable Map<String, String> data) {
+            if (view != null) {
+                view.setHomeModuleBean(moduleBean);
+                view.setAdControl(mAdControlParent);
+                view.setData(data, position);
+                if (viewClickCallBack != null) view.setRefreshTag(viewClickCallBack);
+            }
+        }
+    }
     /**
      * 网格
      */

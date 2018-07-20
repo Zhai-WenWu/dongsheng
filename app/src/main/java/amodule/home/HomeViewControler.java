@@ -2,7 +2,10 @@ package amodule.home;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -101,6 +104,14 @@ public class HomeViewControler implements ISetAdController {
                 ((HomeItem) view).onClickEvent(view);
             }
         });
+//        Drawable drawable = mActivity.getResources().getDrawable(R.drawable.bg_divider);
+//        DividerItemDecoration itemDecorationV = new DividerItemDecoration(mActivity, DividerItemDecoration.VERTICAL);
+//        itemDecorationV.setDrawable(drawable);
+//        DividerItemDecoration itemDecorationH = new DividerItemDecoration(mActivity, DividerItemDecoration.HORIZONTAL);
+//        itemDecorationH.setDrawable(drawable);
+//        recyclerView.addItemDecoration(itemDecorationV);
+//        recyclerView.addItemDecoration(itemDecorationH);
+        recyclerView.addItemDecoration(new GridSpacingItemDecoration());
 
         //设置活动icon点击
         mTitleLayout.setOnClickActivityIconListener((v, url) -> {
@@ -344,4 +355,23 @@ public class HomeViewControler implements ISetAdController {
         mHeaderControler.setAdID(adIDs);
         mHeaderControler.setAdData(map, refresh);
     }
+    public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
+        public GridSpacingItemDecoration() {}
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+
+            StaggeredGridLayoutManager.LayoutParams params =(StaggeredGridLayoutManager.LayoutParams) view.getLayoutParams();
+            int distance=Tools.getDimen(mActivity,R.dimen.dp_15);
+            if(view instanceof HomeItem){
+                if(params.getSpanIndex()%2==0){
+                    outRect.left=distance;
+                    outRect.right=distance/2;
+                }else{
+                    outRect.right=distance;
+                    outRect.left=distance/2;
+                }
+            }
+        }
+    }
+
 }
