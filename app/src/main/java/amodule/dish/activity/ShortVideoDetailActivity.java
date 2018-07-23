@@ -1,18 +1,14 @@
 package amodule.dish.activity;
 
-import android.annotation.SuppressLint;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -21,16 +17,13 @@ import com.xiangha.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import acore.logic.XHClick;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
-import acore.widget.VerticalViewPager;
 import amodule.dish.adapter.RvVericalVideoItemAdapter;
-import amodule.dish.adapter.ShortVideoDetailPagerAdapter;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
@@ -51,8 +44,6 @@ public class ShortVideoDetailActivity extends AppCompatActivity {
 
     private DataController mDataController;
     private AtomicBoolean mLoading;
-
-    private int mCurrentPos;
 
     private String mUserCode;
     private String mSourcePage;
@@ -90,33 +81,6 @@ public class ShortVideoDetailActivity extends AppCompatActivity {
                 mGuidanceLayout.setVisibility(View.GONE);
             }
         });
-//        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-//            @Override
-//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-//            }
-//
-//            @Override
-//            public void onPageSelected(int position) {
-//                int orientationScroll = 0;
-//                if (mCurrentPos > position) {
-//                    orientationScroll = DOWN_SCROLL;
-//                } else if (mCurrentPos < position) {
-//                    orientationScroll = UP_SCROLL;
-//                }
-//                mCurrentPos = position;
-//                if (position >= mAdapter.getCount() - 1) {
-//                    mDataController.executeNextOption();
-//                }
-//                if (orientationScroll == 0)
-//                    return;
-//                XHClick.mapStat(ShortVideoDetailActivity.this, STATISTIC_ID, "视频", orientationScroll == DOWN_SCROLL ? "上滑（下一条）" : "下滑（上一条）");
-//            }
-//
-//            @Override
-//            public void onPageScrollStateChanged(int state) {
-//
-//            }
-//        });
 //        mAdapter.setOnPlayPauseListener(new ShortVideoDetailFragment.OnPlayPauseClickListener() {
 //            @Override
 //            public void onClick(boolean isPlay) {
@@ -141,7 +105,13 @@ public class ShortVideoDetailActivity extends AppCompatActivity {
                 if(newState==RecyclerView.SCROLL_STATE_IDLE){
                     LinearLayoutManager linearLayoutManager = (LinearLayoutManager)recyclerView.getLayoutManager();
                     int lastPosition = linearLayoutManager.findLastVisibleItemPosition();
+                    int orientationScroll = 0;
                     if(lastPosition>=0&&nowPosition!= lastPosition){
+                        if (nowPosition > lastPosition) {
+                            orientationScroll = DOWN_SCROLL;
+                        } else if (nowPosition < lastPosition) {
+                            orientationScroll = UP_SCROLL;
+                        }
                         nowPosition= lastPosition;
                     }
                     int visibleItemPosition= linearLayoutManager.findLastCompletelyVisibleItemPosition();
@@ -155,6 +125,11 @@ public class ShortVideoDetailActivity extends AppCompatActivity {
                             rvVericalVideoItemAdapter.startCurVideoView();
                         }
                     }
+                    //处理请求下一页
+                    if (nowPosition >= mapArrayList.size() - 1) {
+                        mDataController.executeNextOption();
+                    }
+                    XHClick.mapStat(ShortVideoDetailActivity.this, STATISTIC_ID, "视频", orientationScroll == DOWN_SCROLL ? "上滑（下一条）" : "下滑（上一条）");
                 }
             }
             @Override
@@ -230,24 +205,9 @@ public class ShortVideoDetailActivity extends AppCompatActivity {
         rvVericalVideoItemAdapter.stopCurVideoView();
     }
 
-    private ShortVideoDetailFragment getFragmentByPosition(int pos) {
-        ShortVideoDetailFragment fragment = null;
-        @SuppressLint("RestrictedApi")
-        List<Fragment> fragmentList = getSupportFragmentManager().getFragments();
-        if (fragmentList == null || fragmentList.isEmpty())
-            return null;
-        for (Fragment f : fragmentList) {
-            if (f != null && f instanceof ShortVideoDetailFragment && pos == (((ShortVideoDetailFragment)f).getPos()))
-                fragment = (ShortVideoDetailFragment) f;
-        }
-        return fragment;
-    }
 
     @Override
     public void onBackPressed() {
-        ShortVideoDetailFragment fragment = getFragmentByPosition(mCurrentPos);
-        if (fragment != null && fragment.onBackPressed())
-            return ;
         super.onBackPressed();
     }
 
