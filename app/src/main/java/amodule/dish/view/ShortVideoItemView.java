@@ -341,7 +341,6 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
      * 开始播放入口
      */
     public void prepareAsync() {
-        Log.i("xianghaTag","item_______________________prepareAsync____"+position);
         mMainHandler.post(new Runnable() {
             @Override
             public void run() {
@@ -350,14 +349,12 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         });
     }
     public void resumeVideoView(){
-        Log.i("xianghaTag","item_______________________resumeVideoView____"+position);
         mPlayerView.onVideoResume();
     }
     /**
      * 暂停
      */
     public void pauseVideoView(){
-        Log.i("xianghaTag","item_______________________pauseVideoView____"+position);
         mPlayerView.onVideoPause();
     }
 
@@ -365,7 +362,6 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
      * 重置数据
      */
     public void releaseVideoView(){
-        Log.i("xianghaTag","item_______________________releaseVideoView____"+position);
         mPlayerView.release();
         mPlayerView.releaseAllVideos();
     }
