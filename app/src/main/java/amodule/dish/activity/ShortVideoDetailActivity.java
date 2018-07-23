@@ -8,7 +8,11 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PagerSnapHelper;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -25,6 +29,7 @@ import acore.logic.XHClick;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.widget.VerticalViewPager;
+import amodule.dish.adapter.RvVericalVideoItemAdapter;
 import amodule.dish.adapter.ShortVideoDetailPagerAdapter;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
@@ -39,8 +44,10 @@ public class ShortVideoDetailActivity extends AppCompatActivity {
 
     private ConstraintLayout mGuidanceLayout;
 
-    private VerticalViewPager mViewPager;
-    private ShortVideoDetailPagerAdapter mAdapter;
+//    private VerticalViewPager mViewPager;
+//    private ShortVideoDetailPagerAdapter mAdapter;
+    private RecyclerView recyclerView;
+    private RvVericalVideoItemAdapter rvVericalVideoItemAdapter;
 
     private DataController mDataController;
     private AtomicBoolean mLoading;
@@ -49,13 +56,17 @@ public class ShortVideoDetailActivity extends AppCompatActivity {
 
     private String mUserCode;
     private String mSourcePage;
+    private ArrayList<Map<String,String>> mapArrayList= new ArrayList<>();
+    private int nowPosition = 0;
+    private int mCurrentPosition = 0;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         getWindow().setFormat(PixelFormat.TRANSPARENT);
         setContentView(R.layout.layout_shortvideo_detail_activity);
-        mViewPager = (VerticalViewPager) findViewById(R.id.shortvideo_viewpager);
+        recyclerView= (RecyclerView) findViewById(R.id.recyclerView);
+        new PagerSnapHelper().attachToRecyclerView(recyclerView);
         mGuidanceLayout = (ConstraintLayout) findViewById(R.id.guidance_layout);
         init();
         addListener();
@@ -79,64 +90,106 @@ public class ShortVideoDetailActivity extends AppCompatActivity {
                 mGuidanceLayout.setVisibility(View.GONE);
             }
         });
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+//        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+//            @Override
+//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+//            }
+//
+//            @Override
+//            public void onPageSelected(int position) {
+//                int orientationScroll = 0;
+//                if (mCurrentPos > position) {
+//                    orientationScroll = DOWN_SCROLL;
+//                } else if (mCurrentPos < position) {
+//                    orientationScroll = UP_SCROLL;
+//                }
+//                mCurrentPos = position;
+//                if (position >= mAdapter.getCount() - 1) {
+//                    mDataController.executeNextOption();
+//                }
+//                if (orientationScroll == 0)
+//                    return;
+//                XHClick.mapStat(ShortVideoDetailActivity.this, STATISTIC_ID, "视频", orientationScroll == DOWN_SCROLL ? "上滑（下一条）" : "下滑（上一条）");
+//            }
+//
+//            @Override
+//            public void onPageScrollStateChanged(int state) {
+//
+//            }
+//        });
+//        mAdapter.setOnPlayPauseListener(new ShortVideoDetailFragment.OnPlayPauseClickListener() {
+//            @Override
+//            public void onClick(boolean isPlay) {
+//                // TODO: 2018/4/19 处理暂停/播放按钮的点击事件
+//            }
+//        });
+//        mAdapter.setOnSeekBarTrackingTouchListener(new ShortVideoDetailFragment.OnSeekBarTrackingTouchListener() {
+//            @Override
+//            public void onStartTrackingTouch(int position) {
+//                // TODO: 2018/4/19 处理开始触摸进度条的行为
+//            }
+//
+//            @Override
+//            public void onStopTrackingTouch(int position) {
+//                // TODO: 2018/4/19 处理触摸完毕后的行为
+//            }
+//        });
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                int orientationScroll = 0;
-                if (mCurrentPos > position) {
-                    orientationScroll = DOWN_SCROLL;
-                } else if (mCurrentPos < position) {
-                    orientationScroll = UP_SCROLL;
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if(newState==RecyclerView.SCROLL_STATE_IDLE){
+                    LinearLayoutManager linearLayoutManager = (LinearLayoutManager)recyclerView.getLayoutManager();
+                    int lastPosition = linearLayoutManager.findLastVisibleItemPosition();
+                    if(lastPosition>=0&&nowPosition!= lastPosition){
+                        nowPosition= lastPosition;
+                    }
+                    int visibleItemPosition= linearLayoutManager.findLastCompletelyVisibleItemPosition();
+                    if(visibleItemPosition>=0 && mCurrentPosition!=visibleItemPosition){
+                        rvVericalVideoItemAdapter.stopCurVideoView();
+                        mCurrentPosition = visibleItemPosition;
+                        View holderView= recyclerView.findViewWithTag(mCurrentPosition);
+                        if(holderView!=null){
+                            RvVericalVideoItemAdapter.ItemViewHolder itemViewHolder= (RvVericalVideoItemAdapter.ItemViewHolder) recyclerView.getChildViewHolder(holderView);
+                            rvVericalVideoItemAdapter.setCurViewHolder(itemViewHolder);
+                            rvVericalVideoItemAdapter.startCurVideoView();
+                        }
+                    }
                 }
-                mCurrentPos = position;
-                if (position >= mAdapter.getCount() - 1) {
-                    mDataController.executeNextOption();
-                }
-                if (orientationScroll == 0)
-                    return;
-                XHClick.mapStat(ShortVideoDetailActivity.this, STATISTIC_ID, "视频", orientationScroll == DOWN_SCROLL ? "上滑（下一条）" : "下滑（上一条）");
             }
-
             @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
-        mAdapter.setOnPlayPauseListener(new ShortVideoDetailFragment.OnPlayPauseClickListener() {
-            @Override
-            public void onClick(boolean isPlay) {
-                // TODO: 2018/4/19 处理暂停/播放按钮的点击事件
-            }
-        });
-        mAdapter.setOnSeekBarTrackingTouchListener(new ShortVideoDetailFragment.OnSeekBarTrackingTouchListener() {
-            @Override
-            public void onStartTrackingTouch(int position) {
-                // TODO: 2018/4/19 处理开始触摸进度条的行为
-            }
-
-            @Override
-            public void onStopTrackingTouch(int position) {
-                // TODO: 2018/4/19 处理触摸完毕后的行为
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
             }
         });
     }
 
+    /**
+     * 第一次视频播放
+     */
+    public void startVideoOne(){
+        if(mCurrentPosition==0){
+            View holderView= recyclerView.findViewWithTag(mCurrentPosition);
+            if(holderView!=null){
+                RvVericalVideoItemAdapter.ItemViewHolder itemViewHolder= (RvVericalVideoItemAdapter.ItemViewHolder) recyclerView.getChildViewHolder(holderView);
+                rvVericalVideoItemAdapter.setCurViewHolder(itemViewHolder);
+                rvVericalVideoItemAdapter.startCurVideoView();
+            }
+        }
+    }
+
     private void init() {
-        mAdapter = new ShortVideoDetailPagerAdapter(this, getSupportFragmentManager());
-        mViewPager.setAdapter(mAdapter);
+        rvVericalVideoItemAdapter= new RvVericalVideoItemAdapter(this,mapArrayList);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(rvVericalVideoItemAdapter);
+//        mAdapter = new ShortVideoDetailPagerAdapter(this, getSupportFragmentManager());
+//        mViewPager.setAdapter(mAdapter);
         mDataController = new DataController();
         mLoading = new AtomicBoolean(false);
     }
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-
-
-
         return super.dispatchTouchEvent(ev);
     }
 
@@ -149,6 +202,7 @@ public class ShortVideoDetailActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         checkShowGuidance();
+        rvVericalVideoItemAdapter.rumeseVideoView();
     }
 
     private void checkShowGuidance() {
@@ -162,6 +216,7 @@ public class ShortVideoDetailActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        rvVericalVideoItemAdapter.pauseVideoView();
     }
 
     @Override
@@ -172,6 +227,7 @@ public class ShortVideoDetailActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        rvVericalVideoItemAdapter.stopCurVideoView();
     }
 
     private ShortVideoDetailFragment getFragmentByPosition(int pos) {
@@ -276,9 +332,15 @@ public class ShortVideoDetailActivity extends AppCompatActivity {
                     if (flag >= ReqInternet.REQ_OK_STRING) {
                         String listStr = StringManager.getFirstMap(o).get("list");
                         ArrayList<Map<String, String>> datas = StringManager.getListMapByJson(listStr);
-                        mAdapter.setData(datas);
+                        mapArrayList.addAll(datas);
+                        rvVericalVideoItemAdapter.notifyDataSetChanged();
+//                        mAdapter.setData(datas);
+                        if(mapArrayList.size()>0){
+                            startVideoOne();
+                        }
                         if (checkPrepareNext())
                             innerExecuteNextOption(true);
+
                     } else {
                         if (!loadMore) {
                             // TODO: 2018/4/17 第一次的网络请求失败

@@ -43,8 +43,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.TimeZone;
 
 import acore.logic.VersionOp;
 import acore.notification.BuildProperties;
@@ -798,5 +800,22 @@ public class ToolsDevice {
             }
         }
         return OTHER;
+    }
+    /** * 获取当前时区 * @return */
+    public static String getCurrentTimeZone() {
+        TimeZone tz = TimeZone.getDefault();
+        String strTz = tz.getDisplayName(false, TimeZone.SHORT);
+        return strTz;
+
+    }
+
+
+    /** * 获取当前系统语言格式 * @param mContext * @return */
+    public static String getCurrentLanguage(Context mContext){
+        Locale locale =mContext.getResources().getConfiguration().locale;
+        String language=locale.getLanguage();
+        String country = locale.getCountry();
+        String lc=language+"_"+country;
+        return lc;
     }
 }

@@ -3,7 +3,7 @@ apply plugin: 'me.tatarka.retrolambda'
 
 android {
 
-    compileSdkVersion 25
+    compileSdkVersion 27
     buildToolsVersion '26.0.2'
 
     defaultConfig {
@@ -40,6 +40,6 @@ dependencies {
     compile 'tv.danmaku.ijk.media:ijkplayer-java:0.8.1'
     compile 'com.andkulikov:transitionseverywhere:1.7.0'
     compile 'com.danikula:videocache:2.7.0'
-    implementation 'com.android.support:appcompat-v7:25.3.1'
+    implementation 'com.android.support:appcompat-v7:'+rootProject.supportLibVersion
     implementation 'com.android.support:multidex:1.0.2'
 }

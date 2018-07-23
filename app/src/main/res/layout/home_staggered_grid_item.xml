@@ -5,6 +5,11 @@
     android:layout_height="wrap_content"
     android:paddingBottom="@dimen/dp_10"
     android:background="#ffffff">
+<View
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dp_4"
+    android:layout_alignParentBottom="true"
+    android:background="@drawable/bg_shape_back_60_270"/>
 <acore.widget.RoundConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -36,7 +41,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_30"
         app:layout_constraintTop_toBottomOf="@+id/img"
-        android:background="#ffcccccc"/>
+        android:background="#ffffff"/>
     <TextView
         android:id="@+id/title"
         android:layout_width="match_parent"
