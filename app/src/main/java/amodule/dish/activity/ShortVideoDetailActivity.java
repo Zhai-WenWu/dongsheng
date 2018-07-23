@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.MotionEvent;
@@ -23,7 +22,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import acore.logic.XHClick;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
+import acore.tools.ToolsDevice;
 import amodule.dish.adapter.RvVericalVideoItemAdapter;
+import amodule.dish.helper.ParticularPositionEnableSnapHelper;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
@@ -39,9 +40,12 @@ public class ShortVideoDetailActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private RvVericalVideoItemAdapter rvVericalVideoItemAdapter;
+    private ParticularPositionEnableSnapHelper mPagerSnapHelper;
 
     private DataController mDataController;
     private AtomicBoolean mLoading;
+    private AtomicBoolean mOnResuming;
+    boolean mCanDispatchTouch = true;
 
     private String mUserCode;
     private String mSourcePage;
@@ -49,15 +53,15 @@ public class ShortVideoDetailActivity extends AppCompatActivity {
     private ArrayList<Map<String,String>> mapArrayList= new ArrayList<>();
     private int nowPosition = 0;
     private int mCurrentPosition = 0;
+
+    private int mScreenWidth;
+    private float mPointerX = -1f;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         getWindow().setFormat(PixelFormat.TRANSPARENT);
         setContentView(R.layout.layout_shortvideo_detail_activity);
-        recyclerView= (RecyclerView) findViewById(R.id.recyclerView);
-        new PagerSnapHelper().attachToRecyclerView(recyclerView);
-        mGuidanceLayout = (ConstraintLayout) findViewById(R.id.guidance_layout);
         init();
         addListener();
         Bundle bundle = getIntent().getExtras();
@@ -122,7 +126,9 @@ public class ShortVideoDetailActivity extends AppCompatActivity {
                         if(holderView!=null){
                             RvVericalVideoItemAdapter.ItemViewHolder itemViewHolder= (RvVericalVideoItemAdapter.ItemViewHolder) recyclerView.getChildViewHolder(holderView);
                             rvVericalVideoItemAdapter.setCurViewHolder(itemViewHolder);
-                            rvVericalVideoItemAdapter.startCurVideoView();
+                            if (mOnResuming.get()) {
+                                rvVericalVideoItemAdapter.startCurVideoView();
+                            }
                         }
                     }
                     //处理请求下一页
@@ -154,6 +160,10 @@ public class ShortVideoDetailActivity extends AppCompatActivity {
     }
 
     private void init() {
+        recyclerView= findViewById(R.id.recyclerView);
+        mPagerSnapHelper = new ParticularPositionEnableSnapHelper();
+        mPagerSnapHelper.attachToRecyclerView(recyclerView);
+        mGuidanceLayout = findViewById(R.id.guidance_layout);
         rvVericalVideoItemAdapter= new RvVericalVideoItemAdapter(this,mapArrayList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(rvVericalVideoItemAdapter);
@@ -161,21 +171,60 @@ public class ShortVideoDetailActivity extends AppCompatActivity {
 //        mViewPager.setAdapter(mAdapter);
         mDataController = new DataController();
         mLoading = new AtomicBoolean(false);
+        mOnResuming = new AtomicBoolean(false);
+        mScreenWidth = ToolsDevice.getWindowPx(this).widthPixels;
     }
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
+        switch (ev.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                if (mPointerX == -1) {
+                    mPointerX = ev.getX();
+                }
+                break;
+            case MotionEvent.ACTION_MOVE:
+                float currentX = ev.getX();
+                if (mPointerX - currentX > mScreenWidth / 5 && recyclerView.getScrollState() == RecyclerView.SCROLL_STATE_IDLE) {
+                    mCanDispatchTouch = false;
+                    mPagerSnapHelper.particularTargetSnapPositionEnable(mCurrentPosition);
+                    gotoUser();
+                    resetPointerX();
+                    return true;
+                }
+                break;
+            case MotionEvent.ACTION_UP:
+                mCanDispatchTouch = true;
+                resetPointerX();
+                break;
+        }
+        if (!mCanDispatchTouch) {
+            return true;
+        }
+        mPagerSnapHelper.invalidParticularTargetSnapPosition();
         return super.dispatchTouchEvent(ev);
+    }
+
+    private void resetPointerX() {
+        mPointerX = -1f;
+    }
+
+    public void gotoUser() {
+        if (rvVericalVideoItemAdapter != null) {
+            rvVericalVideoItemAdapter.notifyGotoUser();
+        }
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        mOnResuming.set(false);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        mOnResuming.set(true);
         checkShowGuidance();
         rvVericalVideoItemAdapter.rumeseVideoView();
     }
@@ -191,17 +240,20 @@ public class ShortVideoDetailActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        mOnResuming.set(false);
         rvVericalVideoItemAdapter.pauseVideoView();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+        mOnResuming.set(false);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        mOnResuming.set(false);
         rvVericalVideoItemAdapter.stopCurVideoView();
     }
 

@@ -71,6 +71,7 @@ public class RvVericalVideoItemAdapter extends RvBaseAdapter<Map<String,String>>
     public void setCurViewHolder(ItemViewHolder viewHolder) {
         mCurViewHolder = viewHolder;
     }
+
     public void startCurVideoView() {
         if (mCurViewHolder != null && mCurViewHolder.shortVideoItemView != null
                 && !mCurViewHolder.shortVideoItemView.isPlaying()
@@ -93,6 +94,12 @@ public class RvVericalVideoItemAdapter extends RvBaseAdapter<Map<String,String>>
     public void stopCurVideoView() {
         if (mCurViewHolder != null && mCurViewHolder.shortVideoItemView != null) {
             mCurViewHolder.shortVideoItemView.releaseVideoView();
+        }
+    }
+
+    public void notifyGotoUser() {
+        if (mCurViewHolder != null && mCurViewHolder.shortVideoItemView != null) {
+            mCurViewHolder.shortVideoItemView.gotoUser();
         }
     }
 }
