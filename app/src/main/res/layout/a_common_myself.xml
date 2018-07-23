@@ -96,7 +96,7 @@
                                 android:layout_width="wrap_content"
                                 android:clickable="false"
                                 android:maxWidth="@dimen/dp_145"
-                                android:textColor="@color/common_top_text"
+                                android:textColor="#040000"
                                 android:textSize="@dimen/sp_16"
                                 android:textStyle="bold"
                                 />
@@ -223,12 +223,14 @@
                             style="@style/myTabTitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:textColor="#040000"
                             android:text="0"/>
 
                         <TextView
                             style="@style/myTabText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:textColor="#666666"
                             android:text="美食记"/>
                     </LinearLayout>
 
@@ -245,12 +247,14 @@
                             style="@style/myTabTitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:textColor="#040000"
                             android:text="0"/>
 
                         <TextView
                             style="@style/myTabText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:textColor="#666666"
                             android:text="菜谱"/>
                     </LinearLayout>
 
@@ -267,20 +271,28 @@
                             style="@style/myTabTitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:textColor="#040000"
                             android:text="0"/>
 
                         <TextView
                             style="@style/myTabText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:textColor="#666666"
                             android:text="关注"/>
                     </LinearLayout>
                 </LinearLayout>
+                <View
+                    android:id="@+id/line_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_below="@+id/myself_ll_tab"
+                    android:background="#f1f1f1"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp_60"
-                    android:layout_below="@+id/myself_ll_tab"
+                    android:layout_below="@+id/line_header"
                     android:orientation="horizontal"
                     android:background="#fff"
                     >

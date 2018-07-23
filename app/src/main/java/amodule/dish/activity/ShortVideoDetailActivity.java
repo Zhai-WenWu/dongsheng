@@ -37,8 +37,6 @@ public class ShortVideoDetailActivity extends AppCompatActivity {
 
     private ConstraintLayout mGuidanceLayout;
 
-//    private VerticalViewPager mViewPager;
-//    private ShortVideoDetailPagerAdapter mAdapter;
     private RecyclerView recyclerView;
     private RvVericalVideoItemAdapter rvVericalVideoItemAdapter;
 
@@ -47,6 +45,7 @@ public class ShortVideoDetailActivity extends AppCompatActivity {
 
     private String mUserCode;
     private String mSourcePage;
+    private String topicCode;
     private ArrayList<Map<String,String>> mapArrayList= new ArrayList<>();
     private int nowPosition = 0;
     private int mCurrentPosition = 0;
@@ -70,6 +69,7 @@ public class ShortVideoDetailActivity extends AppCompatActivity {
             }
             mUserCode = bundle.getString("userCode");
             mSourcePage = bundle.getString("sourcePage");
+            topicCode = bundle.getString("topicCode");
             mDataController.start(code);
         }
     }
@@ -320,6 +320,9 @@ public class ShortVideoDetailActivity extends AppCompatActivity {
             sb.append("code=").append(lastCode).append("&");
             sb.append("sourcePage=").append(mSourcePage).append("&");
             sb.append("userCode=").append(TextUtils.isEmpty(mUserCode) ? "" : mUserCode);
+            if(!TextUtils.isEmpty(topicCode)){
+                sb.append("&").append("topicCode=").append(topicCode);
+            }
             ReqEncyptInternet.in().doEncypt(StringManager.API_SHORT_VIDEOCODES, sb.toString(), new InternetCallback() {
                 @Override
                 public void loaded(int flag, String s, Object o) {
