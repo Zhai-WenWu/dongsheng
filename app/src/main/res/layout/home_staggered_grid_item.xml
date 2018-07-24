@@ -3,13 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="@dimen/dp_10"
-    android:background="#ffffff">
-<View
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/dp_4"
-    android:layout_alignParentBottom="true"
-    android:background="@drawable/bg_shape_back_60_270"/>
+    android:paddingBottom="@dimen/dp_4"
+    android:paddingTop="@dimen/dp_10"
+    android:background="@drawable/bg_staggered_item_shape">
 <acore.widget.RoundConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"

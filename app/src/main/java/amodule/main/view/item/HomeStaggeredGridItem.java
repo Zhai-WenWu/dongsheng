@@ -69,17 +69,16 @@ public class HomeStaggeredGridItem extends HomeItem {
         super.setData(dataMap, position);
         if(mDataMap == null)
             return;
-        Map<String, String> imgMap = StringManager.getFirstMap(mDataMap.get("styleData"));
-        if (imgMap.size() > 0) {
-            String imgUrl = imgMap.get("url");
-            if (!TextUtils.isEmpty(imgUrl)) {
-                loadImage(imgUrl, mImg);
-            }
-            if(mDataMap.containsKey("waithImg")&&mDataMap.containsKey("heightImg")
-                    &&!TextUtils.isEmpty(mDataMap.get("waithImg"))&&!TextUtils.isEmpty(mDataMap.get("heightImg"))){
-                ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(Integer.parseInt(mDataMap.get("waithImg")),Integer.parseInt(mDataMap.get("heightImg")));
-                mImg.setLayoutParams(layoutParams);
-            }
+        if(mDataMap.containsKey("img")&&!TextUtils.isEmpty(mDataMap.get("img"))){
+            loadImage(mDataMap.get("img"), mImg);
+        }
+        if(mDataMap.containsKey("imgWidth")&&!TextUtils.isEmpty(mDataMap.get("imgWidth"))
+                &&mDataMap.containsKey("imgHeight")&&!TextUtils.isEmpty(mDataMap.get("imgHeight"))){
+            int imgWidth= Integer.parseInt(mDataMap.get("imgWidth"));
+            int imgHeight= Integer.parseInt(mDataMap.get("imgHeight"));
+            int heightImg = (waith / imgWidth) * imgHeight;
+            ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(waith,heightImg);
+            mImg.setLayoutParams(layoutParams);
         }
         if (mDataMap.containsKey("video")) {
             String video = mDataMap.get("video");
