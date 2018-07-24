@@ -277,6 +277,14 @@
             android:textSize="@dimen/sp_12"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+        <include
+            android:id="@+id/layout_address"
+            layout="@layout/layout_img_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/dp_12"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_topic" />
 
         <TextView
             android:id="@+id/text_title"
@@ -289,7 +297,7 @@
             android:ellipsize="end"
             android:lineSpacingExtra="@dimen/dp_2"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_topic" />
+            app:layout_constraintTop_toBottomOf="@+id/layout_address" />
 
     </android.support.constraint.ConstraintLayout>
 

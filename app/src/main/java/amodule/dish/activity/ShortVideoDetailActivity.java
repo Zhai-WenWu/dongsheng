@@ -267,18 +267,13 @@ public class ShortVideoDetailActivity extends AppCompatActivity {
         private static final int COUNT_EACH_PAGE = 10;
         private static final int COUNT_CODES_CACHE = 50;
         private int mNextPageStartPosition;
-        private ArrayList<String> mCurrentPageCodes;
-
         private ArrayList<String> mCodes;
-        private Map<String, ArrayList<String>> mCacheCodes;
 
         public DataController() {
             mCodes = new ArrayList<>();
-            mCacheCodes = new HashMap<>();
-            mCurrentPageCodes = new ArrayList<>();
         }
 
-        public void executeNextOption() {
+        private void executeNextOption() {
             innerExecuteNextOption(false);
         }
 
@@ -309,41 +304,31 @@ public class ShortVideoDetailActivity extends AppCompatActivity {
         }
 
         private void addCode(String code) {
-            String s = code.substring(0, 1);
-            ArrayList<String> codes = mCacheCodes.get(s);
-            if (codes == null) {
-                codes = new ArrayList<>();
-                codes.add(code);
-                mCacheCodes.put(s, codes);
-                mCodes.add(code);
-            } else {
-                if (!codes.contains(code)) {
-                    mCodes.add(code);
-                    codes.add(code);
-                    if (codes.size() > COUNT_CODES_CACHE)
-                        codes.remove(0);
-                }
-            }
+            mCodes.add(code);
         }
 
+        /**
+         * 加载详情
+         * @param codes
+         * @param loadMore
+         */
         private void loadVideoDetail(ArrayList<String> codes,boolean loadMore) {
             if (codes == null || codes.isEmpty())
                 return;
             mNextPageStartPosition += codes.size();
-            StringBuffer buffer = new StringBuffer("code=");
+            StringBuffer buffer = new StringBuffer("codes=");
             for (int i = 0; i < codes.size(); i++) {
                 buffer.append(codes.get(i));
                 if (i != codes.size() - 1) {
                     buffer.append(",");
                 }
             }
-            String params = buffer.append("&type=RAW").toString();
+            String params = buffer.toString();
             ReqEncyptInternet.in().doEncypt(StringManager.api_getVideoInfo, params, new InternetCallback() {
                 @Override
                 public void loaded(int flag, String s, Object o) {
                     if (flag >= ReqInternet.REQ_OK_STRING) {
-                        String listStr = StringManager.getFirstMap(o).get("list");
-                        ArrayList<Map<String, String>> datas = StringManager.getListMapByJson(listStr);
+                        ArrayList<Map<String, String>> datas = StringManager.getListMapByJson(o);
                         mapArrayList.addAll(datas);
                         rvVericalVideoItemAdapter.notifyDataSetChanged();
 //                        mAdapter.setData(datas);
@@ -364,6 +349,12 @@ public class ShortVideoDetailActivity extends AppCompatActivity {
             });
         }
 
+        /**
+         *加载ids
+         * @param lastCode
+         * @param successRun
+         * @param failedRun
+         */
         private void loadVideoCodes(String lastCode, Runnable successRun, Runnable failedRun) {
             if (mLoading.get() || lastCode == null || lastCode.isEmpty())
                 return;
@@ -395,6 +386,10 @@ public class ShortVideoDetailActivity extends AppCompatActivity {
             });
         }
 
+        /**
+         *
+         * @param fromInner
+         */
         private void innerExecuteNextOption(boolean fromInner) {
             ArrayList<String> nextPageCodes = getNextPageCodes();
             int lastPos = mCodes.size() - 1;
@@ -404,7 +399,7 @@ public class ShortVideoDetailActivity extends AppCompatActivity {
                     public void run() {
                         if (lastPos >= mCodes.size() - 1)
                             return;
-                        if (mNextPageStartPosition - 1 == lastPos)
+                        if (lastPos!=0&&mNextPageStartPosition - 1 == lastPos)
                             loadVideoDetail(getNextPageCodes(), true);
                     }
                 }, null);

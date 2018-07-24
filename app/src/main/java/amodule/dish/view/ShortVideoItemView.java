@@ -95,11 +95,12 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
     private TextView mTopicText;
     private TextView mTitleText;
     private ConstraintLayout mBottomLayout;
+    private View layout_address;
     private View mBottomCommentLayout;
     private View mBottomShareLayout;
     private View mBottomGoodLayout;
-    private ImageView mCommentImg;
-    private TextView mCommentNumText;
+    private ImageView mCommentImg,addressImg;
+    private TextView mCommentNumText,addressText;
     private ImageView mShareImg;
     private TextView mShareNum;
     private ImageView mGoodImg;
@@ -107,12 +108,10 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
     private ProgressBar mBottomProgress;
     private TextView mCommentHint;
 
-    private Map<String, String> mData;
-    private Map<String, String> mTopicMap;
-    private Map<String, String> mUserMap;
-    private Map<String, String> mVideoMap;
-    private Map<String, String> mFavMap;
-    private ArrayList<Map<String, String>> mNumInfoMaps;
+    private Map<String, String> mData;//全部
+    private Map<String, String> mTopicMap;//话题
+    private Map<String, String> mUserMap;//用户
+    private Map<String, String> mVideoMap;//视频
     private boolean mIsSelf;
 
     private AtomicBoolean mGoodLoaded;
@@ -125,6 +124,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
     private Handler mMainHandler;
     private String mVideoUrl;
     private String mTopicClickUrl;
+    private String mAddressClickUrl;
 
     private int mCommentsNum;
     private int mPos;
@@ -166,6 +166,9 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         mBottomCommentLayout = findViewById(R.id.layout_bottom_comment);
         mCommentImg = (ImageView) mBottomCommentLayout.findViewById(R.id.image);
         mCommentNumText = (TextView) mBottomCommentLayout.findViewById(R.id.text);
+        layout_address=findViewById(R.id.layout_address);
+        addressImg= layout_address.findViewById(R.id.image);
+        addressText= layout_address.findViewById(R.id.text);
         mCommentHint = (TextView) findViewById(R.id.comment_hint);
         mBottomShareLayout = findViewById(R.id.layout_bottom_share);
         mShareImg = (ImageView) mBottomShareLayout.findViewById(R.id.image);
@@ -186,10 +189,10 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
     }
 
     private void initData() {
-        if (mData != null) {
-            String commentNum = mData.get("commentNum");
-            mCommentsNum = TextUtils.isEmpty(commentNum) ? 0 : Integer.parseInt(commentNum);
-        }
+//        if (mData != null) {
+//            String commentNum = mData.get("commentNum");
+//            mCommentsNum = TextUtils.isEmpty(commentNum) ? 0 : Integer.parseInt(commentNum);
+//        }
         mGoodLoaded = new AtomicBoolean(false);
         mAttentionLoading = new AtomicBoolean(false);
         mFavLoading = new AtomicBoolean(false);
@@ -215,6 +218,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         mEmptyView.setOnClickListener(this);
         mPlayPauseImg.setOnClickListener(this);
         mBottomCommentLayout.setOnClickListener(this);
+        layout_address.setOnClickListener(this);
         mBottomGoodLayout.setOnClickListener(this);
         mBottomShareLayout.setOnClickListener(this);
         mCommentHint.setOnClickListener(this);
@@ -222,67 +226,40 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
 
         mPlayerView.setStandardVideoAllCallBack(new StandardVideoAllCallBack() {
             @Override
-            public void onClickStartThumb(String url, Object... objects) {
-
-            }
-
+            public void onClickStartThumb(String url, Object... objects) {}
             @Override
-            public void onClickBlank(String url, Object... objects) {
-
-            }
-
+            public void onClickBlank(String url, Object... objects) {}
             @Override
-            public void onClickBlankFullscreen(String url, Object... objects) {
-
-            }
-
+            public void onClickBlankFullscreen(String url, Object... objects) {}
             @Override
             public void onPrepared(String url, Object... objects) {
                 changePlayPauseUI(true);
                 changeThumbImageState(false);
             }
-
             @Override
-            public void onClickStartIcon(String url, Object... objects) {
-
-            }
-
+            public void onClickStartIcon(String url, Object... objects) {}
             @Override
-            public void onClickStartError(String url, Object... objects) {
-
-            }
-
+            public void onClickStartError(String url, Object... objects) {}
             @Override
             public void onClickStop(String url, Object... objects) {
                 changePlayPauseUI(false);
             }
 
             @Override
-            public void onClickStopFullscreen(String url, Object... objects) {
-
-            }
-
+            public void onClickStopFullscreen(String url, Object... objects) {}
             @Override
             public void onClickResume(String url, Object... objects) {
                 changePlayPauseUI(true);
             }
 
             @Override
-            public void onClickResumeFullscreen(String url, Object... objects) {
-
-            }
-
+            public void onClickResumeFullscreen(String url, Object... objects) {}
             @Override
             public void onClickSeekbar(String url, Object... objects) {
                 XHClick.mapStat(getContext(), ShortVideoDetailActivity.STATISTIC_ID, "视频", "进度条");
-
             }
-
             @Override
-            public void onClickSeekbarFullscreen(String url, Object... objects) {
-
-            }
-
+            public void onClickSeekbarFullscreen(String url, Object... objects) {}
             @Override
             public void onAutoComplete(String url, Object... objects) {
                 changeThumbImageState(true);
@@ -292,42 +269,20 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
 //                    prepareAsync();
 //                }
             }
-
             @Override
-            public void onEnterFullscreen(String url, Object... objects) {
-
-            }
-
+            public void onEnterFullscreen(String url, Object... objects) {}
             @Override
-            public void onQuitFullscreen(String url, Object... objects) {
-
-            }
-
+            public void onQuitFullscreen(String url, Object... objects) {}
             @Override
-            public void onQuitSmallWidget(String url, Object... objects) {
-
-            }
-
+            public void onQuitSmallWidget(String url, Object... objects) {}
             @Override
-            public void onEnterSmallWidget(String url, Object... objects) {
-
-            }
-
+            public void onEnterSmallWidget(String url, Object... objects) {}
             @Override
-            public void onTouchScreenSeekVolume(String url, Object... objects) {
-
-            }
-
+            public void onTouchScreenSeekVolume(String url, Object... objects) {}
             @Override
-            public void onTouchScreenSeekPosition(String url, Object... objects) {
-
-            }
-
+            public void onTouchScreenSeekPosition(String url, Object... objects) {}
             @Override
-            public void onTouchScreenSeekLight(String url, Object... objects) {
-
-            }
-
+            public void onTouchScreenSeekLight(String url, Object... objects) {}
             @Override
             public void onPlayError(String url, Object... objects) {
                 changePlayPauseUI(false);
@@ -341,6 +296,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
      * 开始播放入口
      */
     public void prepareAsync() {
+//        Log.i("xianghaTag","item_______________________prepareAsync____"+position);
         mMainHandler.post(new Runnable() {
             @Override
             public void run() {
@@ -349,12 +305,14 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         });
     }
     public void resumeVideoView(){
+//        Log.i("xianghaTag","item_______________________resumeVideoView____"+position);
         mPlayerView.onVideoResume();
     }
     /**
      * 暂停
      */
     public void pauseVideoView(){
+//        Log.i("xianghaTag","item_______________________pauseVideoView____"+position);
         mPlayerView.onVideoPause();
     }
 
@@ -362,6 +320,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
      * 重置数据
      */
     public void releaseVideoView(){
+//        Log.i("xianghaTag","item_______________________releaseVideoView____"+position);
         mPlayerView.release();
         mPlayerView.releaseAllVideos();
     }
@@ -402,8 +361,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
             mAttentionText.setVisibility(View.VISIBLE);
             mAttentionText.setTag(TAG_ID, followTag);
             mMoreImg.setVisibility(View.GONE);
-            mFavMap = StringManager.getFirstMap(mData.get("favorites"));
-            mLikeImg.setSelected(TextUtils.equals("2", mFavMap.get("status")));
+            mLikeImg.setSelected(TextUtils.equals("2", mData.get("isFav")));
             mLikeImg.setVisibility(View.VISIBLE);
         }
         mVideoMap = StringManager.getFirstMap(mData.get("video"));
@@ -413,22 +371,20 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         int screenH = dm.heightPixels;
         int vW = Integer.parseInt(mVideoMap.get("width"));
         int vH = Integer.parseInt(mVideoMap.get("height"));
-        // TODO: 2018/5/30 处理视频封面图大小的问题？
-        int tempH = vW * screenH / screenW;
-        lp.width = vW;
-        lp.height = vH;
+        int heightImg = (screenW / vW) * vH;
+        lp.width = screenW;
+        lp.height = heightImg;
         mThumbImg.setLayoutParams(lp);
         mVideoUrl = StringManager.getFirstMap(mVideoMap.get("videoUrl")).get("defaultUrl");
-        mNumInfoMaps = StringManager.getListMapByJson(mData.get("numInfo"));
         mCommentImg.setImageResource(R.drawable.short_video_detail_comment);
         mCommentNumText.setText(mData.get("commentNum"));
         mGoodImg.setImageResource(R.drawable.bg_select_good);
         mGoodImg.setSelected(TextUtils.equals("2", mData.get("isLike")));
-        mGoodText.setText(mNumInfoMaps.get(0).get(""));
+        mGoodText.setText(mData.get("likeNum"));
         mShareImg.setImageResource(R.drawable.short_video_detail_share);
-        mShareNum.setText(mNumInfoMaps.get(1).get(""));
+        mShareNum.setText(mData.get("shareNum"));
         mTitleText.setText("");
-        String title = mData.get("title");
+        String title = mData.get("name");
         if (!TextUtils.isEmpty(title)) {
             mTitleText.setVisibility(View.VISIBLE);
             if (TextUtils.equals(mData.get("isEssence"), "2")) {
@@ -465,6 +421,21 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         } else {
             mTopicText.setVisibility(View.INVISIBLE);
         }
+        Map<String,String> mAddressMap= StringManager.getFirstMap(mData.get("address"));
+        if(mAddressMap!=null && !mAddressMap.isEmpty()&&!TextUtils.isEmpty(mAddressMap.get("title"))){
+            layout_address.setVisibility(View.VISIBLE);
+            addressText.setText(mAddressMap.get("title"));
+            if(!TextUtils.isEmpty(mAddressMap.get("bgColor"))) {
+                addressText.setBackgroundColor(Color.parseColor(mAddressMap.get("bgColor")));
+            }
+            if(!TextUtils.isEmpty(mAddressMap.get("color"))) {
+                addressText.setTextColor(Color.parseColor(mAddressMap.get("color")));
+            }
+
+            //TODO
+        }else{
+            layout_address.setVisibility(View.GONE);
+        }
         loadUserHeader(mUserMap.get("img"));
         loadVideoImg(mVideoMap.get("videoImg"));
         mPlayerView.setUp(mVideoUrl, false, "");
@@ -493,7 +464,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         if (mFavLoading.get())
             return;
         mFavLoading.set(true);
-        FavoriteHelper.instance().setFavoriteStatus(context.getApplicationContext(), mData.get("code"), mData.get("title"),
+        FavoriteHelper.instance().setFavoriteStatus(context.getApplicationContext(), mData.get("code"), mData.get("name"),
                 FavoriteHelper.TYPE_DISH_VIDEO, new FavoriteHelper.FavoriteStatusCallback() {
                     @Override
                     public void onSuccess(boolean isFav) {
@@ -648,6 +619,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
     private void doShare() {
         if (checkLoginAndHandle())
             return;
+        Map<String,String> mShareMap = StringManager.getFirstMap(mData.get("share"));
         Intent intent = new Intent(context, ShareActivityDialog.class);
         intent.putExtra("tongjiId", ShortVideoDetailActivity.STATISTIC_ID);
         intent.putExtra("shareTwoContent", "分享框");
@@ -656,18 +628,11 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         intent.putExtra("code", mUserMap.get("code"));
         intent.putExtra("shareFrom", "菜谱详情页");
         intent.putExtra("reportUrl", "Feedback.app?feekUrl=https://www.xiangha.com/caipu/" + mUserMap.get("code") + ".html");
-        intent.putExtra("imgUrl", mData.get("shareImg"));
-        intent.putExtra("title", mData.get("title"));
-        intent.putExtra("content", mData.get("content"));
-        String shareStr = mData.get("share");
-        Map<String, String> shareMap = StringManager.getFirstMap(shareStr);
-        Map<String, String> shareConf = StringManager.getFirstMap(shareMap.get("shareConfig"));
-        Map<String, String> shareConf1 = StringManager.getFirstMap(shareConf.get("1"));
-        String clickUrl = shareConf1.get("url");
+        intent.putExtra("imgUrl", mShareMap.get("img"));
+        intent.putExtra("title", mShareMap.get("title"));
+        intent.putExtra("content", mShareMap.get("content"));
+        String clickUrl = mShareMap.get("url");
         intent.putExtra("clickUrl", clickUrl);
-        if (!TextUtils.isEmpty(shareStr)) {
-            intent.putExtra("shareParams", shareStr);
-        }
         context.startActivity(intent);
     }
 

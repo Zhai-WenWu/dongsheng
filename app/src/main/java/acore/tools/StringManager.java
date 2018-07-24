@@ -318,7 +318,6 @@ public class StringManager extends UtilString {
 
     /*视频*/
     public final static String getVideoClass = apiUrl + "main7/video/getVideoClass"; //视频分类
-    public final static String api_getVideoInfo = apiUrl + "main7/video/videoInfo"; //视频详情
     public final static String api_getVideoRelated = apiUrl + "main7/video/getRelated"; //视频详情
     public final static String api_likeVideo = apiUrl + "main7/video/likeVideo"; //视频详情
     public final static String api_videoAdd = apiUrl + "main7/video/videoAdd"; //发布视频
@@ -399,6 +398,7 @@ public class StringManager extends UtilString {
     public final static String API_SEARCH_COURSE_DISH = apiUrl + "main8/search/byCourseDish";//搜索名厨课菜谱
     //短视频详情页
     public final static String API_SHORT_VIDEOCODES = apiUrl + "main7/Video/videoCodeList";
+    public final static String api_getVideoInfo = apiUrl + "main8/ShortVideo/shortVideoInfo"; //视频详情
 
     //替换url
     public final static String replaceUrl(String url) {
