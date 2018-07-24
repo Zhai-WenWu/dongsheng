@@ -399,7 +399,7 @@ public class ShortVideoDetailActivity extends AppCompatActivity {
                     public void run() {
                         if (lastPos >= mCodes.size() - 1)
                             return;
-                        if (lastPos!=0&&mNextPageStartPosition - 1 == lastPos)
+                        if (mNextPageStartPosition - 1 == lastPos)
                             loadVideoDetail(getNextPageCodes(), true);
                     }
                 }, null);
