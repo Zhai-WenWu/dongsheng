@@ -400,6 +400,10 @@ public class StringManager extends UtilString {
     public final static String API_SHORT_VIDEOCODES = apiUrl + "main7/Video/videoCodeList";
     public final static String api_getVideoInfo = apiUrl + "main8/ShortVideo/shortVideoInfo"; //视频详情
 
+    //话题详情页
+    public final static String API_TOPIC_INFO = apiUrl + "main8/ShortVideo/topicInfo";//简介
+    public final static String API_TOPIC_LIST = apiUrl + "main8/ShortVideo/topicShortVideoList";//列表
+
     //替换url
     public final static String replaceUrl(String url) {
         if (defaultDomain != domain || defaultProtocol != protocol) {
