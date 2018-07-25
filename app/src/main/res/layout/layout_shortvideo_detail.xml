@@ -88,8 +88,8 @@
 
         <ImageView
             android:id="@+id/back"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="@dimen/dp_27"
+            android:layout_height="@dimen/dp_48"
             android:layout_centerVertical="true"
             android:padding="10dp"
             android:scaleType="centerInside"
@@ -99,7 +99,7 @@
         <ImageView
             android:id="@+id/image_back"
             style="@style/common_title_style"
-            android:layout_width="@dimen/dp_34"
+            android:layout_width="@dimen/dp_38"
             android:layout_height="wrap_content"
             android:layout_marginLeft="0dp"
             android:paddingTop="@dimen/dp_5"
@@ -107,7 +107,7 @@
             android:paddingRight="@dimen/dp_5"
             android:paddingLeft="@dimen/dp_20"
             android:scaleType="centerInside"
-            android:src="@drawable/z_z_topbar_ico_back_white"
+            android:src="@drawable/video_back"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -123,19 +123,15 @@
 
         <TextView
             android:id="@+id/text_user_name"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/dp_4"
-            android:layout_marginStart="@dimen/dp_4"
+            android:layout_marginLeft="@dimen/dp_5"
             android:lines="1"
             android:textColor="@color/c_white_text"
-            android:textSize="@dimen/sp_16"
+            android:textSize="@dimen/sp_15"
             app:layout_constraintLeft_toRightOf="@+id/image_user_header"
-            app:layout_constraintRight_toLeftOf="@+id/text_attention"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-
         <TextView
             android:id="@+id/text_attention"
             android:layout_width="wrap_content"
@@ -145,13 +141,12 @@
             android:paddingTop="@dimen/dp_2"
             android:paddingBottom="@dimen/dp_2"
             android:layout_marginEnd="@dimen/dp_15"
+            android:layout_marginLeft="@dimen/dp_5"
             android:background="@drawable/bg_circle_red_20"
             android:textColor="@color/c_white_text"
             android:textSize="@dimen/sp_13"
-            android:gravity="center"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/image_like"
+            app:layout_constraintStart_toEndOf="@+id/text_user_name"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
@@ -276,15 +271,15 @@
             android:textColor="@color/c_white_text"
             android:textSize="@dimen/sp_12"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/layout_address"/>
         <include
             android:id="@+id/layout_address"
             layout="@layout/layout_img_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/dp_12"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_topic" />
+            app:layout_constraintBottom_toTopOf="@+id/text_title" />
 
         <TextView
             android:id="@+id/text_title"
@@ -296,8 +291,38 @@
             android:maxLines="3"
             android:ellipsize="end"
             android:lineSpacingExtra="@dimen/dp_2"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/layout_address" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/layout_right"/>
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/layout_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintRight_toRightOf="parent"
+            android:paddingBottom="@dimen/dp_30">
+            <include
+                android:id="@+id/layout_bottom_comment"
+                layout="@layout/layout_img_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <include
+                android:id="@+id/layout_bottom_good"
+                layout="@layout/layout_img_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_30"
+                app:layout_constraintTop_toBottomOf="@+id/layout_bottom_comment"/>
+
+            <include
+                android:id="@+id/layout_bottom_share"
+                layout="@layout/layout_img_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_30"
+                app:layout_constraintTop_toBottomOf="@+id/layout_bottom_good"/>
+
+        </android.support.constraint.ConstraintLayout>
 
     </android.support.constraint.ConstraintLayout>
 
@@ -322,7 +347,7 @@
 
         <TextView
             android:id="@+id/comment_hint"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="@dimen/dp_32"
             android:hint="@string/whatToSay"
             android:gravity="center_vertical"
@@ -338,37 +363,8 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintRight_toLeftOf="@+id/layout_bottom_comment"/>
+            />
 
-        <include
-            android:id="@+id/layout_bottom_comment"
-            layout="@layout/layout_img_text"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/dp_12"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toLeftOf="@+id/layout_bottom_good"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <include
-            android:id="@+id/layout_bottom_good"
-            layout="@layout/layout_img_text"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/dp_12"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toLeftOf="@+id/layout_bottom_share"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <include
-            android:id="@+id/layout_bottom_share"
-            layout="@layout/layout_img_text"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/dp_20"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
 

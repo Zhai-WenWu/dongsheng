@@ -13,6 +13,12 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.GifRequestBuilder;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.gif.GifDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.tencent.bugly.crashreport.BuglyLog;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.xiangha.R;
@@ -30,7 +36,7 @@ import xh.basic.tool.UtilImage;
 
 public class HomeStaggeredGridItem extends HomeItem {
 
-    private ImageView mImg;
+    private ImageView mImg,mImgGif;
     private ImageView mPlayIcon;
     private ConstraintLayout mContentLayout;
     private TextView mTitle,num_tv;
@@ -55,6 +61,7 @@ public class HomeStaggeredGridItem extends HomeItem {
     protected void initView() {
         super.initView();
         mImg = (ImageView) findViewById(R.id.img);
+        mImgGif = (ImageView) findViewById(R.id.img_gif);
         mPlayIcon = (ImageView) findViewById(R.id.icon_play);
         mContentLayout = (ConstraintLayout) findViewById(R.id.content_layout);
         mTitle = (TextView) findViewById(R.id.title);
@@ -69,16 +76,20 @@ public class HomeStaggeredGridItem extends HomeItem {
         super.setData(dataMap, position);
         if(mDataMap == null)
             return;
-        if(mDataMap.containsKey("img")&&!TextUtils.isEmpty(mDataMap.get("img"))){
-            loadImage(mDataMap.get("img"), mImg);
-        }
-        if(mDataMap.containsKey("imgWidth")&&!TextUtils.isEmpty(mDataMap.get("imgWidth"))
-                &&mDataMap.containsKey("imgHeight")&&!TextUtils.isEmpty(mDataMap.get("imgHeight"))){
-            int imgWidth= Integer.parseInt(mDataMap.get("imgWidth"));
-            int imgHeight= Integer.parseInt(mDataMap.get("imgHeight"));
+        Map<String,String> mResourceData = StringManager.getFirstMap(mDataMap.get("resourceData"));
+        if(mResourceData!=null && !mResourceData.isEmpty()){
+            int imgWidth= Integer.parseInt(mResourceData.get("width"));
+            int imgHeight= Integer.parseInt(mResourceData.get("height"));
             int heightImg = (waith / imgWidth) * imgHeight;
             ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(waith,heightImg);
             mImg.setLayoutParams(layoutParams);
+            mImgGif.setLayoutParams(layoutParams);
+            loadImage(mResourceData.get("img"), mImg);
+            if(!TextUtils.isEmpty(mResourceData.get("gif"))) {
+                loadGif(mResourceData.get("gif"), mImgGif);
+            }else{
+                mImgGif.setVisibility(View.GONE);
+            }
         }
         if (mDataMap.containsKey("video")) {
             String video = mDataMap.get("video");
@@ -199,6 +210,46 @@ public class HomeStaggeredGridItem extends HomeItem {
             Map<String,String> map= StringManager.getFirstMap(mDataMap.get("customer"));
             if(map!=null&&!map.isEmpty()&&map.containsKey("img")){
                 loadImage(map.get("img"),auther_userImg);
+            }
+        }
+    }
+
+    /**
+     * 设置GIF
+     * @param gifUrl
+     * @param imageView
+     */
+    private void loadGif(String gifUrl,ImageView imageView){
+        if(!TextUtils.isEmpty(gifUrl)){
+            if(imageView.getTag() == null)
+                imageView.setTag(TAG_ID, gifUrl);
+            mImg.setVisibility(View.VISIBLE);
+            GifRequestBuilder requestBuilder = Glide.with(getContext())
+                    .load(gifUrl)
+                    .asGif()
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    .listener(new RequestListener<String, GifDrawable>() {
+                        @Override
+                        public boolean onException(Exception e, String s, Target<GifDrawable> target, boolean b) {
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(GifDrawable gifDrawable, String s, Target<GifDrawable> target, boolean b, boolean b1) {
+                            if (imageView.getTag(TAG_ID).equals(gifUrl)) {
+                                mImg.setVisibility(View.GONE);
+//                                setImageWH(itemGif, itemImg1.getHeight());
+                            }
+                            mImgGif.setVisibility(View.GONE);
+
+                            return false;
+                        }
+                    });
+            if(imageView != null){
+                if (imageView.getTag(TAG_ID).equals(gifUrl)){
+                    requestBuilder.into(imageView);
+                    imageView.setVisibility(VISIBLE);
+                }
             }
         }
     }
