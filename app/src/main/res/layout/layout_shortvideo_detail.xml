@@ -343,7 +343,17 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_50"
         app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="@dimen/dp_30"
+        android:layout_marginLeft="@dimen/dp_20"
+        android:layout_marginRight="@dimen/dp_20"
+        android:background="@drawable/bg_round_aaaaaa32"
         android:clickable="true">
+        
+        <ImageView
+            android:id="@+id/comment_hint_img"
+            android:layout_width="@dimen/dp_20"
+            android:layout_height="@dimen/dp_20"
+            android:src="@drawable/comment_hint_img"/>
 
         <TextView
             android:id="@+id/comment_hint"
@@ -351,9 +361,6 @@
             android:layout_height="@dimen/dp_32"
             android:hint="@string/whatToSay"
             android:gravity="center_vertical"
-            android:layout_marginStart="@dimen/dp_20"
-            android:layout_marginEnd="@dimen/dp_30"
-            android:background="@drawable/bg_round_aaaaaa32"
             android:textColorHint="@color/c_white_text"
             android:textSize="@dimen/sp_14"
             android:paddingLeft="@dimen/dp_14"
@@ -362,7 +369,7 @@
             android:ellipsize="end"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/comment_hint_img"
             />
 
 
