@@ -13,15 +13,6 @@
     android:radius="@dimen/dp_5">
 <!--android:background="@drawable/bg_cccccc"-->
     <ImageView
-        android:id="@+id/img"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="@dimen/dp_80"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:scaleType="centerCrop"/>
-    <ImageView
         android:id="@+id/img_gif"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -31,6 +22,16 @@
         app:layout_constraintTop_toTopOf="parent"
         android:scaleType="centerCrop"
         android:visibility="gone"/>
+
+    <ImageView
+        android:id="@+id/img"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/dp_80"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:scaleType="centerCrop"/>
 
     <ImageView
         android:id="@+id/icon_play"
