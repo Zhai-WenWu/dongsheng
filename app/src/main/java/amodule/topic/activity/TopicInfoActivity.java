@@ -39,7 +39,7 @@ import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
 
 public class TopicInfoActivity extends BaseAppCompatActivity {
 
-    public static final String TOPIC_CODE = "topic_code";
+    public static final String TOPIC_CODE = "topicCode";
 
     private TextView mTitle;
     private PtrClassicFrameLayout mRefreshLayout;
