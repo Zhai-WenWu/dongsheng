@@ -221,8 +221,7 @@ public class HomeStaggeredGridItem extends HomeItem {
      */
     private void loadGif(String gifUrl,ImageView imageView){
         if(!TextUtils.isEmpty(gifUrl)){
-            if(imageView.getTag() == null)
-                imageView.setTag(TAG_ID, gifUrl);
+            imageView.setTag(TAG_ID, gifUrl);
             mImg.setVisibility(View.VISIBLE);
             GifRequestBuilder requestBuilder = Glide.with(getContext())
                     .load(gifUrl)
@@ -238,10 +237,7 @@ public class HomeStaggeredGridItem extends HomeItem {
                         public boolean onResourceReady(GifDrawable gifDrawable, String s, Target<GifDrawable> target, boolean b, boolean b1) {
                             if (imageView.getTag(TAG_ID).equals(gifUrl)) {
                                 mImg.setVisibility(View.GONE);
-//                                setImageWH(itemGif, itemImg1.getHeight());
                             }
-                            mImgGif.setVisibility(View.GONE);
-
                             return false;
                         }
                     });
