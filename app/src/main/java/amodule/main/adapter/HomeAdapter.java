@@ -63,7 +63,9 @@ public class HomeAdapter extends RvBaseAdapter<Map<String, String>> {
 
     @Override
     public RvBaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Log.i("xianghaTag","viewType::::"+viewType);
+        if(viewType<=101){
+            viewType=101;
+        }
         switch (viewType) {
             case type_gridImage://网格
                 return new StaggeredGridImageViewHolder(new HomeStaggeredGridItem(mContext));
