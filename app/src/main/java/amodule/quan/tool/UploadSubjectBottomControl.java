@@ -13,7 +13,6 @@ import acore.tools.AgreementManager;
 import acore.tools.Tools;
 import amodule.quan.activity.upload.UploadSubjectNew;
 import amodule.user.activity.BrowseHistory;
-import third.location.LocationSys;
 
 /**
  * Created by XiangHa on 2017/7/19.
@@ -24,7 +23,6 @@ public class UploadSubjectBottomControl implements View.OnClickListener{
     private AgreementManager mAgreementManager;
     //----------定位------------
     private UploadSubjectLocationControl mLocationControl;
-    public LocationSys mLocationSys;
 
     private TextView followDishTv;
     private LinearLayout scoreLayout;
@@ -39,8 +37,7 @@ public class UploadSubjectBottomControl implements View.OnClickListener{
     public UploadSubjectBottomControl(UploadSubjectNew act, final String atreementUrl){
         mAct = act;
         mAgreementManager = new AgreementManager(act,atreementUrl);
-        mLocationSys = new LocationSys(act);
-        mLocationControl = new UploadSubjectLocationControl(act,mLocationSys);
+        mLocationControl = new UploadSubjectLocationControl(act);
         act.findViewById(R.id.follow_dish_parentlayout).setOnClickListener(this);
         followDishTv = (TextView) act.findViewById(R.id.follow_dish_tv);
         scoreLayout = (LinearLayout) act.findViewById(R.id.score_dish_linearLayout);
@@ -81,7 +78,9 @@ public class UploadSubjectBottomControl implements View.OnClickListener{
     }
 
     public void stopLocation(){
-        mLocationSys.mLocationClient.stop();
+        if (mLocationControl != null) {
+            mLocationControl.unregisterLocationListener();
+        }
     }
 
     public void onLocationClick(){

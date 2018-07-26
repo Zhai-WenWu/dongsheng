@@ -6,6 +6,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.amap.api.location.AMapLocation;
 import com.xiangha.R;
 
 import java.util.LinkedHashMap;
@@ -13,10 +14,9 @@ import java.util.Map;
 
 import acore.tools.Tools;
 import amodule.quan.activity.upload.UploadSubjectNew;
-import third.location.LocationSys;
+import third.location.LocationHelper;
 
 public class UploadSubjectLocationControl {
-	private LocationSys mLocationSys;
 	public Map<String,String> locationMap;
 	//---------定位------------
 	private TextView tv_location;
@@ -26,8 +26,7 @@ public class UploadSubjectLocationControl {
 	//--------- end 定位------------
 	private boolean isLocation = false,isOneShowLocation=true;
 		
-	public UploadSubjectLocationControl(UploadSubjectNew upload,LocationSys locationSys){
-		mLocationSys = locationSys;
+	public UploadSubjectLocationControl(UploadSubjectNew upload){
 		upload.findViewById(R.id.ll_location).setOnClickListener(upload);
 		//获取地理信息
 		iv_location = (ImageView)upload.findViewById(R.id.iv_location);
@@ -42,15 +41,15 @@ public class UploadSubjectLocationControl {
 	public void onLocationClick(){
 		if(isLocation){
 			//停止定位
-			mLocationSys.stopLocation();
+			unregisterLocationListener();
 			location = "显示地址";
 			pb_location.setVisibility(View.GONE);
 			iv_location.setVisibility(View.VISIBLE);
 			iv_location.setBackgroundResource(R.drawable.z_quan_location_off);
 
 			tv_location.setTextColor(Color.parseColor(Tools.getColorStr(tv_location.getContext(),R.color.comment_color)));
-		}else{	
-			mLocationSys.starLocation(locationCallBack);
+		}else{
+			LocationHelper.getInstance().registerLocationListener(locationCallBack);
 			location = "正在定位";
 			pb_location.setVisibility(View.VISIBLE);
 			iv_location.setVisibility(View.GONE);
@@ -98,31 +97,35 @@ public class UploadSubjectLocationControl {
 	public boolean getIsLocation(){
 		return isLocation;
 	}
-		
-	private LocationSys.LocationSysCallBack locationCallBack = new LocationSys.LocationSysCallBack() {
-		
-		@Override
-		public void onLocationFail() {
-			logMsg("定位失败");
-		}
 
+	private LocationHelper.LocationListener locationCallBack = new LocationHelper.LocationListener() {
 		@Override
-		public void onLocationSuccess(String country, String countryCode,String province, String city, String district, String lat,String lng) {
-			super.onLocationSuccess(country, countryCode, province, city, district, lat, lng);
-			locationMap.put("country", country);
-			locationMap.put("countryCode", countryCode);
-			locationMap.put("province", province);
-			locationMap.put("city", city);
-			locationMap.put("district", district);
-			locationMap.put("lat", "" + lat);
-			locationMap.put("lng", "" + lng);
+		public void onSuccess(AMapLocation value) {
+			unregisterLocationListener();
+			locationMap.put("country", value.getCountry());
+			locationMap.put("countryCode", "");
+			locationMap.put("province", value.getProvince());
+			locationMap.put("city", value.getCity());
+			locationMap.put("district", value.getDistrict());
+			locationMap.put("lat", "" + value.getLatitude());
+			locationMap.put("lng", "" + value.getLongitude());
 			String showText;
-			if(province.equals(city)){
-				showText = city + " " + district;
+			if(value.getProvince().equals(value.getCity())){
+				showText = value.getCity() + " " + value.getDistrict();
 			}else{
-				showText = province + " " + city;
+				showText = value.getProvince() + " " + value.getCity();
 			}
 			logMsg(showText);
 		}
+
+		@Override
+		public void onFailed() {
+			unregisterLocationListener();
+			logMsg("定位失败");
+		}
 	};
+
+	public void unregisterLocationListener() {
+		LocationHelper.getInstance().unregisterLocationListener(locationCallBack);
+	}
 }

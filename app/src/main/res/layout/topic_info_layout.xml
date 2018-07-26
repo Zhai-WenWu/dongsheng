@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activityLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/common_top_bg">
 
     <cn.srain.cube.views.ptr.PtrClassicFrameLayout
         xmlns:cube_ptr="http://schemas.android.com/apk/res-auto"
@@ -22,7 +23,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:spanCount="3"
-            android:overScrollMode="never"/>
+            android:overScrollMode="never"
+            android:background="@color/common_top_bg"/>
 
     </cn.srain.cube.views.ptr.PtrClassicFrameLayout>
         

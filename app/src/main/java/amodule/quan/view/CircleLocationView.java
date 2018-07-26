@@ -10,13 +10,14 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.amap.api.location.AMapLocation;
 import com.xiangha.R;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import acore.tools.Tools;
-import third.location.LocationSys;
+import third.location.LocationHelper;
 
 /**
  * PackageName : amodule.quan.view
@@ -25,7 +26,6 @@ import third.location.LocationSys;
  */
 
 public class CircleLocationView extends RelativeLayout {
-    private LocationSys mLocationSys;
     public Map<String,String> locationMap;
 
     private ProgressBar pb_location;
@@ -57,14 +57,13 @@ public class CircleLocationView extends RelativeLayout {
         //初始化定位map
         locationMap = new LinkedHashMap<String, String>();
         //初始化定位class
-        mLocationSys = new LocationSys(getContext());
     }
 
     /** 定位按钮点击处理 */
     public void onLocationClick(){
         if(isLocation){
             //停止定位
-            mLocationSys.stopLocation();
+            LocationHelper.getInstance().unregisterLocationListener(locationCallBack);
             location = "显示地址";
             pb_location.setVisibility(View.GONE);
             iv_location.setVisibility(View.VISIBLE);
@@ -72,7 +71,7 @@ public class CircleLocationView extends RelativeLayout {
 
             tv_location.setTextColor(Color.parseColor(Tools.getColorStr(tv_location.getContext(),R.color.comment_color)));
         }else{
-            mLocationSys.starLocation(locationCallBack);
+            LocationHelper.getInstance().registerLocationListener(locationCallBack);
             location = "正在定位";
             pb_location.setVisibility(View.VISIBLE);
             iv_location.setVisibility(View.GONE);
@@ -121,30 +120,30 @@ public class CircleLocationView extends RelativeLayout {
         return isLocation;
     }
 
-    private LocationSys.LocationSysCallBack locationCallBack = new LocationSys.LocationSysCallBack() {
-
+    private LocationHelper.LocationListener locationCallBack = new LocationHelper.LocationListener() {
         @Override
-        public void onLocationFail() {
-            logMsg("定位失败");
+        public void onSuccess(AMapLocation value) {
+            LocationHelper.getInstance().unregisterLocationListener(locationCallBack);
+            locationMap.put("country", value.getCountry());
+            locationMap.put("countryCode", "");
+            locationMap.put("province", value.getProvince());
+            locationMap.put("city", value.getCity());
+            locationMap.put("district", value.getDistrict());
+            locationMap.put("lat", "" + value.getLatitude());
+            locationMap.put("lng", "" + value.getLongitude());
+            String showText;
+            if(value.getProvince().equals(value.getCity())){
+                showText = value.getCity() + " " + value.getDistrict();
+            }else{
+                showText = value.getProvince() + " " + value.getCity();
+            }
+            logMsg(showText);
         }
 
         @Override
-        public void onLocationSuccess(String country, String countryCode,String province, String city, String district, String lat,String lng) {
-            super.onLocationSuccess(country, countryCode, province, city, district, lat, lng);
-            locationMap.put("country", country);
-            locationMap.put("countryCode", countryCode);
-            locationMap.put("province", province);
-            locationMap.put("city", city);
-            locationMap.put("district", district);
-            locationMap.put("lat", "" + lat);
-            locationMap.put("lng", "" + lng);
-            String showText;
-            if(province.equals(city)){
-                showText = city + " " + district;
-            }else{
-                showText = province + " " + city;
-            }
-            logMsg(showText);
+        public void onFailed() {
+            LocationHelper.getInstance().unregisterLocationListener(locationCallBack);
+            logMsg("定位失败");
         }
     };
 
