@@ -117,6 +117,7 @@
     <color name="camera_progress_overflow">#1b5d89</color>
     <color name="camera_progress_delete">#f68b2b</color>
     <color name="icon_text_bg">#ff0833</color>
+    <color name="color_fa273b">#fa273b</color>
     <!--aliyun-->
     <color name="tab_bg_color">#1B2133</color>
     <color name="effect_bg_color">#EF4B81</color>

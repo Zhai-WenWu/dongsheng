@@ -3,9 +3,7 @@ package amodule.home;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -23,6 +21,7 @@ import java.util.Map;
 
 import acore.logic.AppCommon;
 import acore.logic.XHClick;
+import acore.override.XHApplication;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.rvlistview.RvListView;
@@ -31,7 +30,6 @@ import amodule._common.delegate.ISetAdController;
 import amodule._common.helper.WidgetDataHelper;
 import amodule._common.utility.WidgetUtility;
 import amodule.home.view.HomeBuoy;
-import amodule.home.view.HomeGridView;
 import amodule.home.view.HomeTitleLayout;
 import amodule.main.activity.MainHomePage;
 import amodule.main.view.item.HomeItem;
@@ -66,6 +64,8 @@ public class HomeViewControler implements ISetAdController {
     private View mNetworkTip;
 
     private int scrollDataIndex = -1;//滚动数据的位置
+    private int mBigSpacing = Tools.getDimen(XHApplication.in(),R.dimen.dp_20);
+    private int mLittleSpacing = Tools.getDimen(XHApplication.in(),R.dimen.dp_10);
 
     @SuppressLint("InflateParams")
     public HomeViewControler(MainHomePage activity) {
@@ -361,15 +361,19 @@ public class HomeViewControler implements ISetAdController {
         public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
 
             StaggeredGridLayoutManager.LayoutParams params =(StaggeredGridLayoutManager.LayoutParams) view.getLayoutParams();
-            int distance=Tools.getDimen(mActivity,R.dimen.dp_15);
             if(view instanceof HomeItem){
-                if(params.getSpanIndex()%2==0){
-                    outRect.left=distance;
-                    outRect.right=distance/2;
-                }else{
-                    outRect.right=distance;
-                    outRect.left=distance/2;
+                switch (params.getSpanIndex()) {
+                    case 0:
+                        outRect.set(mBigSpacing, mLittleSpacing / 2, mLittleSpacing / 2, mLittleSpacing / 2);
+                        break;
+                    case 1:
+                        outRect.set(mLittleSpacing / 2, mLittleSpacing / 2, mBigSpacing, mLittleSpacing / 2);
+                        break;
+                    default:
+                        outRect.set(0, 0, 0, 0);
+                        break;
                 }
+
             }
         }
     }

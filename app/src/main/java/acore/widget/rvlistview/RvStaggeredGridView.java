@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.AttributeSet;
 
@@ -13,7 +12,7 @@ import com.xiangha.R;
 
 public class RvStaggeredGridView extends RvListView {
 
-    private int spanCount;
+    protected int spanCount;
     public RvStaggeredGridView(Context context) {
         this(context,null);
     }
@@ -38,20 +37,11 @@ public class RvStaggeredGridView extends RvListView {
 
     @Override
     public void setAdapter(@NonNull Adapter adapter) {
-        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL);
-        setLayoutManager(layoutManager);
-        super.setAdapter(adapter);
-    }
-
-    private int getSpanSizeInternal(int position){
-        if(mAdapter != null){
-            if(VIEW_TYPE_HEADER == mAdapter.getItemViewType(position)
-                    ||VIEW_TYPE_FOOTER == mAdapter.getItemViewType(position)
-                    ||VIEW_TYPE_EMPTY == mAdapter.getItemViewType(position)){
-                return spanCount;
-            }
+        if (getLayoutManager() == null) {
+            StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL);
+            setLayoutManager(layoutManager);
         }
-        return 1;
+        super.setAdapter(adapter);
     }
 
 }

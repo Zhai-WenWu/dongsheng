@@ -49,6 +49,7 @@ public class HomeAdapter extends RvBaseAdapter<Map<String, String>> {
 
     public final static String LIST_TYPE_LIST = "1";
     public final static String LIST_TYPE_GRID = "2";
+    public final static String LIST_TYPE_STAGGERED = "3";
     private String mListType = LIST_TYPE_LIST;//网格列表
 
     public HomeAdapter(Activity mActivity, @Nullable List<Map<String, String>> data, AdControlParent adControlParent) {
@@ -63,9 +64,6 @@ public class HomeAdapter extends RvBaseAdapter<Map<String, String>> {
 
     @Override
     public RvBaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if(viewType<=101){
-            viewType=101;
-        }
         switch (viewType) {
             case type_gridImage://网格
                 return new StaggeredGridImageViewHolder(new HomeStaggeredGridItem(mContext));
@@ -96,12 +94,18 @@ public class HomeAdapter extends RvBaseAdapter<Map<String, String>> {
     @Override
     public int getItemViewType(int position) {
         Map<String, String> item = getItem(position);
-        if (TextUtils.equals(mListType, LIST_TYPE_GRID)) {
-            return TextUtils.equals("ad", item == null ? "" : item.get("adstyle")) ? type_gridADImage : type_gridImage;
-        } else {
-            String style = (item == null || item.size() <= 0 || !item.containsKey("style") || TextUtils.isEmpty(item.get("style"))) ? String.valueOf(type_noImage) : item.get("style");
-            return Integer.parseInt(style);
+        int type;
+        switch (mListType) {
+            case LIST_TYPE_GRID:
+            case LIST_TYPE_STAGGERED:
+                type = TextUtils.equals("ad", item == null ? "" : item.get("adstyle")) ? type_gridADImage : type_gridImage;
+                break;
+            default:
+                String style = (item == null || item.size() <= 0 || !item.containsKey("style") || TextUtils.isEmpty(item.get("style"))) ? String.valueOf(type_noImage) : item.get("style");
+                type = Integer.parseInt(style);
+                break;
         }
+        return type;
     }
 
     public void setListType(String listType) {

@@ -7,11 +7,13 @@ import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.xiangha.R;
@@ -23,17 +25,20 @@ public class KeyboardDialog extends Dialog implements View.OnClickListener {
     private View mRootView;
     private EditText mEditText;
     private TextView mSendText;
+    private RelativeLayout mKeyboardBottom;
 
     private String mHintStr;
     private String mContentStr;
 
     private View.OnClickListener mOnSendClickListener;
+    private SoftKeyboardManager mSoftKeyboardManager;
     public KeyboardDialog(@NonNull Context context) {
         this(context, R.style.dialog_keyboard);
     }
 
     public KeyboardDialog(@NonNull Context context, int themeResId) {
         super(context, themeResId);
+        getWindow().setWindowAnimations(0);
         init(context);
     }
 
@@ -43,20 +48,22 @@ public class KeyboardDialog extends Dialog implements View.OnClickListener {
     }
 
     private void init(Context context) {
-        View contentView = LayoutInflater.from(context).inflate(R.layout.keyboard_layout, null);
-        setContentView(contentView);
-        mRootView = contentView.findViewById(R.id.a_comment_keyboard_parent);
+        mRootView = LayoutInflater.from(context).inflate(R.layout.keyboard_layout, null);
+        setContentView(mRootView);
+        mSoftKeyboardManager = new SoftKeyboardManager(mRootView);
         Window win = getWindow();
         if (win != null) {
             win.getDecorView().setPadding(0, 0, 0, 0);
             WindowManager.LayoutParams lp = win.getAttributes();
             lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+            lp.gravity = Gravity.BOTTOM;
+            lp.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE;
             win.setAttributes(lp);
         }
-
-        mEditText = (EditText) contentView.findViewById(R.id.commend_write_et);
-        mSendText = (TextView) contentView.findViewById(R.id.comment_send);
+        mEditText = mRootView.findViewById(R.id.commend_write_et);
+        mSendText = mRootView.findViewById(R.id.comment_send);
+        mKeyboardBottom = mRootView.findViewById(R.id.a_comment_keyboard);
 
         addListener();
     }
@@ -78,6 +85,23 @@ public class KeyboardDialog extends Dialog implements View.OnClickListener {
             @Override
             public void afterTextChanged(Editable s) {
                 mSendText.setEnabled(StringManager.isHasChar(String.valueOf(s)));
+            }
+        });
+        mSoftKeyboardManager.addSoftKeyboardStateListener(new SoftKeyboardManager.SoftKeyboardStateListener() {
+            @Override
+            public void onSoftKeyboardOpened(int keyboardHeightInPx, boolean rootChanged) {
+                if (rootChanged) {
+                    return;
+                }
+                mEditText.postDelayed(()->mRootView.scrollTo(0, mKeyboardBottom.getPaddingBottom()), 100);
+            }
+
+            @Override
+            public void onSoftKeyboardClosed() {
+                if (KeyboardDialog.this.isShowing()) {
+                    KeyboardDialog.this.dismiss();
+                }
+                mRootView.scrollTo(0, 0);
             }
         });
     }

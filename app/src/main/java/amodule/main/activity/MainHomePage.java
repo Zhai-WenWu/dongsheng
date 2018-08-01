@@ -115,8 +115,8 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
         });
         mDataControler.setEntryptDataCallback(this::EntryptData);
         mDataControler.setOnListTypeCallback(listType -> {
-            if (mHomeAdapter != null)
-                mHomeAdapter.setListType(listType);
+            if (mHomeAdapter != null)//此处设置固定的listType：3，瀑布流，只有此样式！
+                mHomeAdapter.setListType(HomeAdapter.LIST_TYPE_STAGGERED);
             if (mViewContrloer != null)
                 mViewContrloer.setListType(listType);
         });
