@@ -281,12 +281,6 @@ public class HomeAdapter extends RvBaseAdapter<Map<String, String>> {
         public GridADImageViewHolder(HomeGridADItem view) {
             super(view);
             this.view = view;
-            final int originalW = 345;
-            final int originalH = 471;
-            int screenW = ToolsDevice.getWindowPx(getContext()).widthPixels;
-            int itemW = (screenW - getContext().getResources().getDimensionPixelSize(R.dimen.dp_30)) / 2;
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(itemW, itemW * originalH / originalW);
-            view.setLayoutParams(params);
         }
 
         @Override

@@ -25,12 +25,11 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.IconTextSpan;
 import aplug.basic.LoadImage;
+import xh.basic.internet.img.transformation.RoundTransformation;
 
 public class HomeStaggeredGridItem extends HomeItem {
 
     private ImageView mImg;
-    private ImageView mPlayIcon;
-    private ConstraintLayout mContentLayout;
     private ConstraintLayout mImgContainer;
     private TextView mTitle,num_tv;
     private ImageView auther_userImg,img_fav;
@@ -53,14 +52,12 @@ public class HomeStaggeredGridItem extends HomeItem {
     @Override
     protected void initView() {
         super.initView();
-        mImg = (ImageView) findViewById(R.id.img);
-        mPlayIcon = (ImageView) findViewById(R.id.icon_play);
-        mContentLayout = (ConstraintLayout) findViewById(R.id.content_layout);
-        mTitle = (TextView) findViewById(R.id.title);
-        auther_userImg = (ImageView) findViewById(R.id.auther_userImg);
-        img_fav = (ImageView) findViewById(R.id.img_fav);
-        num_tv= (TextView) findViewById(R.id.num_tv);
-        mImgContainer = findViewById(R.id.img_container);
+        mImg = findViewById(R.id.img);
+        mTitle = findViewById(R.id.title);
+        auther_userImg = findViewById(R.id.user_header_img);
+        img_fav = findViewById(R.id.img_fav);
+        num_tv= findViewById(R.id.num_tv);
+        mImgContainer = findViewById(R.id.staggered_container);
     }
 
     @Override
@@ -93,6 +90,8 @@ public class HomeStaggeredGridItem extends HomeItem {
             cs.constrainMinHeight(mImg.getId(), mHeightRange[0]);
             cs.connect(mImg.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
             cs.connect(mImg.getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END);
+            cs.connect(mImg.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
+            cs.connect(mImg.getId(), ConstraintSet.BOTTOM, R.id.guideline, ConstraintSet.TOP);
             cs.applyTo(mImgContainer);
             mImg.postInvalidate();
             if(!TextUtils.isEmpty(mResourceData.get("gif"))) {
@@ -100,7 +99,7 @@ public class HomeStaggeredGridItem extends HomeItem {
                 Glide.with(getContext()).load(mResourceData.get("gif")).asGif().placeholder(R.drawable.i_nopic).diskCacheStrategy(DiskCacheStrategy.SOURCE).into(mImg);
             } else {
                 mImg.setTag(TAG_ID, mResourceData.get("img"));
-                LoadImage.with(getContext()).load(mResourceData.get("img")).setSaveType(FileManager.save_cache).setPlaceholderId(R.drawable.i_nopic).build().into(mImg);
+                LoadImage.with(getContext()).load(mResourceData.get("img")).setSaveType(FileManager.save_cache).setPlaceholderId(R.drawable.i_nopic).setErrorId(R.drawable.i_nopic).build().into(mImg);
             }
         }
         if (mDataMap.containsKey("video")) {
@@ -117,7 +116,6 @@ public class HomeStaggeredGridItem extends HomeItem {
                 }
             }
         }
-        mPlayIcon.setVisibility(mIsVideo ? View.VISIBLE : View.GONE);
         mTitle.setText("");
         String title = mDataMap.get("name");
         if (!TextUtils.isEmpty(title)) {
@@ -143,13 +141,12 @@ public class HomeStaggeredGridItem extends HomeItem {
         } else {
             mTitle.setVisibility(View.GONE);
         }
-
-        mContentLayout.setVisibility(!TextUtils.isEmpty(title) || (mUserName != null && !TextUtils.isEmpty(mUserName.getText())) ? View.VISIBLE : View.GONE);
         setImgFav();
         if(mDataMap.containsKey("favorites")){
             num_tv.setText(mDataMap.get("favorites"));
         }
-        handleImgUse();
+        Map<String,String> map= StringManager.getFirstMap(mDataMap.get("customer"));
+        LoadImage.with(getContext()).load(map.get("img")).setSaveType(FileManager.save_cache).setPlaceholderId(R.drawable.i_nopic).setErrorId(R.drawable.i_nopic).build().into(auther_userImg);
         img_fav.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -182,12 +179,20 @@ public class HomeStaggeredGridItem extends HomeItem {
             });
         }
     }
-    private void handleImgUse(){
-        if(mDataMap.containsKey("customer")){
-            Map<String,String> map= StringManager.getFirstMap(mDataMap.get("customer"));
-            if(map!=null&&!map.isEmpty()&&map.containsKey("img")){
-                loadImage(map.get("img"),auther_userImg);
-            }
-        }
-    }
+
+//    @Override
+//    protected SubAnimTarget getSubAnimTarget(ImageView v, String url) {
+//        return new SubAnimTarget(v) {
+//            @Override
+//            protected void setResource(Bitmap bitmap) {
+//                if (bitmap != null && v.getTag(TAG_ID) != null && v.getTag(TAG_ID).equals(url)) {
+//                    if (v.getId() == R.id.user_header_img) {
+//                        v.setImageBitmap(UtilImage.toRoundCorner(v.getResources(), bitmap, 1, ToolsDevice.dp2px(getContext(), 500)));
+//                    } else {
+//                        v.setImageBitmap(bitmap);
+//                    }
+//                }
+//            }
+//        };
+//    }
 }
