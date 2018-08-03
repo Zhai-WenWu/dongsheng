@@ -2,18 +2,19 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/dp_49"
+    android:layout_height="@dimen/dp_44"
     android:background="@color/common_top_bg">
 
     <amodule.main.view.MessageTipIcon
         android:id="@+id/message_tip"
         android:layout_width="@dimen/dp_57"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"/>
 
     <RelativeLayout
         android:id="@+id/home_search_layout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_32"
+        android:layout_height="@dimen/dp_34"
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@+id/home_publish_btn"
         android:layout_toRightOf="@+id/message_tip"
@@ -36,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="@dimen/dp_8"
                 android:text="搜菜谱、食材"
-                android:textColor="#000"
+                android:textColor="#777"
                 android:textSize="@dimen/sp_13"/>
 
         </LinearLayout>
@@ -45,11 +46,13 @@
 
     <amodule.home.view.HomePushIconView
         android:id="@+id/home_publish_btn"
-        android:layout_width="@dimen/dp_57"
+        android:layout_width="@dimen/dp_60"
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"
-        android:paddingLeft="@dimen/dp_17"
+        android:layout_centerVertical="true"
+        android:paddingLeft="@dimen/dp_18"
         android:paddingRight="@dimen/dp_20"
+        android:scaleType="fitCenter"
         android:src="@drawable/home_pulish"/>
 
 </RelativeLayout>

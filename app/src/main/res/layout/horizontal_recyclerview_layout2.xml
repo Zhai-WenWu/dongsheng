@@ -2,8 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    style="@style/horizontalRecyclerView_rootStyle">
 
     <amodule._common.widget.CountDownSubTitleView
         android:id="@+id/subtitle_view"

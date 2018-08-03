@@ -28,12 +28,13 @@ public class ViewHolder2 extends XHBaseRvViewHolder {
     private final String ICONTYPE_VIDEO_PLAY = "1";
 
     private View mItemView;
+    private View mShadow;
     private ImageView mImageView1;
     private ImageView mIcon;
-    private View mShadow;
     private TextView mTextView1;
     private TextView mTextView2;
     private TextView mTextView3;
+    private TextView mTextView4;
     private LinearLayout mLinearlayout1;
 
     public ViewHolder2(@NonNull View itemView) {
@@ -42,13 +43,14 @@ public class ViewHolder2 extends XHBaseRvViewHolder {
         if (mItemView == null)
             return;
         mLinearlayout1 = (LinearLayout) mItemView.findViewById(R.id.linearlayout1);
+        mShadow = findViewById(R.id.shadow);
         RelativeLayout imageLayout = (RelativeLayout) mItemView.findViewById(R.id.imageview_layout);
         mImageView1 = (ImageView) mItemView.findViewById(R.id.imageview1);
-        mShadow = mItemView.findViewById(R.id.shadow);
         mIcon = (ImageView) mItemView.findViewById(R.id.icon);
         mTextView1 = (TextView) mItemView.findViewById(R.id.textview1);
         mTextView2 = (TextView) mItemView.findViewById(R.id.textview2);
         mTextView3 = (TextView) mItemView.findViewById(R.id.textview3);
+        mTextView4 = (TextView) mItemView.findViewById(R.id.textview4);
         int[] wh = computeItemWH(326, 326, mItemView.getContext().getResources().getDimensionPixelSize(R.dimen.dp_50), 2);
         mItemView.setLayoutParams(new RelativeLayout.LayoutParams(wh[0], RelativeLayout.LayoutParams.WRAP_CONTENT));
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mImageView1.getLayoutParams();
@@ -66,14 +68,18 @@ public class ViewHolder2 extends XHBaseRvViewHolder {
             return;
         setViewImage(mImageView1, data.get("img"));
         showIcon(data.get("icon"));
-        WidgetUtility.setTextToView(mTextView1, data.get("text1"));
         String t2 = data.get("text2");
         String t3 = data.get("text3");
         boolean gone = TextUtils.isEmpty(t2) && TextUtils.isEmpty(t3);
-        if (mLinearlayout1 != null) {
-            mLinearlayout1.setVisibility(gone ? View.GONE : View.VISIBLE);
-            if (gone)
-                return;
+        mLinearlayout1.setVisibility(gone ? View.GONE : View.VISIBLE);
+        mShadow.setVisibility(gone ? View.VISIBLE : View.GONE);
+        if (gone) {
+            WidgetUtility.setTextToView(mTextView4, data.get("text1"));
+            mTextView1.setVisibility(View.GONE);
+            return;
+        } else {
+            WidgetUtility.setTextToView(mTextView1, data.get("text1"));
+            mTextView4.setVisibility(View.GONE);
         }
         WidgetUtility.setTextToView(mTextView2, t2);
         if (null != mTextView3) {
@@ -101,12 +107,10 @@ public class ViewHolder2 extends XHBaseRvViewHolder {
     }
 
     private void showVideoPlayIcon(){
-        mShadow.setVisibility(View.VISIBLE);
         mIcon.setVisibility(View.VISIBLE);
     }
 
     private void hideAllIcon(){
-        mShadow.setVisibility(View.GONE);
         mIcon.setVisibility(View.GONE);
     }
 }

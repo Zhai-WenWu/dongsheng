@@ -86,12 +86,6 @@ public class HomeGridItem extends HomeItem {
         String title = mDataMap.get("name");
         if (!TextUtils.isEmpty(title)) {
             mTitle.setVisibility(View.VISIBLE);
-
-            // TODO: 2018/5/29 测试代码-------
-            mDataMap.put("isEssence", "2");
-            //TODO:---------
-
-
             if (TextUtils.equals(mDataMap.get("isEssence"), "2")) {
 
                 IconTextSpan.Builder ib = new IconTextSpan.Builder(getContext());

@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<acore.widget.rcwidget.RCRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:round_corner="@dimen/dp_3">
 
     <ImageView
         android:id="@+id/imageview1"
@@ -9,24 +11,13 @@
         android:layout_height="match_parent"
         android:scaleType="centerCrop"/>
 
-    <TextView
-        android:id="@+id/textview4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/sp_10"
-        android:textColor="@color/c_white_text"
-        android:background="@drawable/bg_rounded_corner_33cc00"
-        android:layout_marginTop="@dimen/dp_7"
-        android:layout_marginRight="@dimen/dp_5"
-        android:layout_alignParentRight="true"/>
-
     <LinearLayout
         android:id="@+id/linearlayout1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/dp_11"
-        android:paddingRight="@dimen/dp_11"
-        android:paddingTop="@dimen/dp_96"
+        android:paddingLeft="@dimen/dp_10"
+        android:paddingRight="@dimen/dp_10"
+        android:paddingTop="@dimen/dp_12"
         android:paddingBottom="@dimen/dp_10"
         android:orientation="vertical"
         android:layout_alignParentBottom="true"
@@ -34,35 +25,34 @@
         android:gravity="bottom">
 
         <TextView
+            android:id="@+id/textview4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/sp_12"
+            android:textColor="#3e3e3e"
+            android:background="@drawable/bg_rounded_corner_ffffff"
+            android:layout_marginTop="@dimen/dp_12"/>
+
+        <TextView
             android:id="@+id/textview1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:lines="1"
             android:maxEms="7"
+            android:layout_marginTop="@dimen/dp_7"
             android:textColor="@color/c_white_text"
             android:textStyle="bold"
-            android:textSize="@dimen/sp_16"/>
-
-        <TextView
-            android:id="@+id/textview2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_2"
-            android:lines="1"
-            android:maxEms="10"
-            android:textColor="@color/c_white_text"
-            android:textSize="@dimen/sp_11"/>
+            android:textSize="@dimen/sp_18"/>
 
         <TextView
             android:id="@+id/textview3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_3"
             android:lines="1"
             android:maxEms="10"
             android:textColor="@color/c_white_text"
-            android:textSize="@dimen/sp_11"/>
+            android:textSize="@dimen/sp_14"/>
 
     </LinearLayout>
 
-</RelativeLayout>
+</acore.widget.rcwidget.RCRelativeLayout>

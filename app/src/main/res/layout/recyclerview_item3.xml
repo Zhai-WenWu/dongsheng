@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<acore.widget.rcwidget.RCRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="@dimen/dp_336"
-    android:layout_height="@dimen/dp_181">
+    android:layout_height="@dimen/dp_181"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:round_corner="@dimen/dp_4">
 
     <ImageView
         android:id="@+id/imageview1"
@@ -13,7 +14,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#4c000000"/>
+        android:background="#33000000"/>
 
     <LinearLayout
         android:id="@+id/linearlayout1"
@@ -42,9 +43,10 @@
             android:id="@+id/textview2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp__2"
             android:textSize="@dimen/sp_14"
             android:textColor="@color/c_white_text"/>
 
     </LinearLayout>
 
-</RelativeLayout>
+</acore.widget.rcwidget.RCRelativeLayout>

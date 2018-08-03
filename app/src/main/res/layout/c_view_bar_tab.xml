@@ -13,13 +13,12 @@
 
         <ImageView
             android:id="@+id/iv_itemIsFine"
-            android:layout_width="@dimen/dp_25"
-            android:layout_height="@dimen/dp_22"
+            android:layout_width="@dimen/dp_24"
+            android:layout_height="@dimen/dp_24"
             android:layout_gravity="center"
-            android:layout_marginTop="@dimen/dp_9"
+            android:layout_marginTop="@dimen/dp_7"
             android:scaleType="fitXY"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/iv_itemIsFine"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
@@ -29,7 +28,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/iv_itemIsFine"
             android:gravity="center"
-            android:paddingTop="@dimen/dp_2"
             android:text="TextView"
             android:textColor="#929292"
             android:textSize="@dimen/sp_10"
@@ -52,7 +50,7 @@
             android:id="@+id/tv_tab_msg_num"
             android:layout_width="@dimen/dp_16"
             android:layout_height="@dimen/dp_16"
-            android:layout_marginTop="@dimen/dp_3"
+            android:layout_marginTop="@dimen/dp_1"
             android:background="@drawable/tv_circle_ff533c_20"
             android:gravity="center_horizontal|center_vertical"
             android:text="1"

@@ -372,7 +372,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         int screenH = dm.heightPixels;
         int vW = Integer.parseInt(mVideoMap.get("width"));
         int vH = Integer.parseInt(mVideoMap.get("height"));
-        int heightImg = (screenW / vW) * vH;
+        int heightImg = screenW * vH / vW;
         lp.width = screenW;
         lp.height = heightImg;
         mThumbImg.setLayoutParams(lp);

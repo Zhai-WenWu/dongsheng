@@ -7,8 +7,8 @@
 
     <ImageView
         android:id="@+id/iv_itemIsFine"
-        android:layout_width="@dimen/dp_22"
-        android:layout_height="@dimen/dp_22"
+        android:layout_width="@dimen/dp_20"
+        android:layout_height="@dimen/dp_20"
         android:layout_centerVertical="true"
         android:layout_gravity="center"
         android:layout_marginLeft="@dimen/dp_20"

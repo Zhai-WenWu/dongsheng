@@ -15,7 +15,6 @@
         android:visibility="gone">
 
         <amodule._common.widget.BannerView
-            app:bgKey="lessonbannerBg"
             android:id="@+id/banner_view_1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>

@@ -4,6 +4,13 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.RectF;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -13,8 +20,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.Target;
 import com.xiangha.R;
 
@@ -46,7 +55,10 @@ import amodule._common.delegate.IUpdatePadding;
 import amodule._common.delegate.StatisticCallback;
 import amodule._common.helper.WidgetDataHelper;
 import aplug.basic.LoadImage;
+import aplug.basic.SubBitmapTarget;
 import third.ad.scrollerAd.XHAllAdControl;
+import xh.basic.internet.img.transformation.RoundTransformation;
+import xh.basic.tool.UtilImage;
 
 /**
  * Description :
@@ -65,8 +77,6 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
     private Map<Integer, View> mAdViews = new HashMap<>();
     public static final int TAG_ID = R.string.tag;
     int imageHeight = 0, imageWidth = 0;
-    boolean bgLoadOver = false;
-    private String bgKey = "";
     private StatisticCallback mStatisticCallback;
     private int mShowIndex = -1;
 
@@ -81,17 +91,6 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
     public BannerView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         setViewSize(context);
-
-        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.BannerView);
-        bgKey = typedArray.getString(R.styleable.BannerView_bgKey);
-        typedArray.recycle();
-        if(!TextUtils.isEmpty(bgKey)){
-//            Log.i("tzy", "BannerView: bgKey = " + bgKey);
-            //同步设置bg图片
-            String firstImageUrl = FileManager.loadShared(getContext(), FileManager.xmlFile_appInfo, bgKey).toString();
-            setBackImageView(imageView -> ImgManager.loadLongImage(imageView, firstImageUrl));
-        }
-
         setDefault();
     }
 
@@ -105,7 +104,7 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
         updatePadding(0, 0, 0, paddingBottom);
         mInflater = LayoutInflater.from(context);
         imageWidth = ToolsDevice.getWindowPx(context).widthPixels;
-        imageHeight = (int) (imageWidth * 320 / 750f);
+        imageHeight = (int) (imageWidth * 280 / 750f);
         int height = imageHeight + paddingBottom;
 //        Log.i("tzy", "width = " + ToolsDevice.getWindowPx(context).widthPixels + " , height = " + height);
         setTargetHeight(height);
@@ -178,17 +177,6 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
         mArrayList.addAll(arrayList);
         notifyDataHasChanged();
         setRandomItem(arrayList);
-        final String firstImageUrl = mArrayList.get(0).get("img");
-        if(!TextUtils.isEmpty(bgKey)){
-            FileManager.scynSaveSharePreference(getContext(), FileManager.xmlFile_appInfo, bgKey, firstImageUrl);
-        }
-        //设置默认BG
-        if (bgLoadOver) {
-            postDelayed(() -> setBackImageView(imageView -> loadBgImage(firstImageUrl, imageView)), 800);
-        } else {
-            bgLoadOver = true;
-//            setBackImageView(imageView -> loadBgImage(firstImageUrl, imageView));
-        }
         setVisibility(VISIBLE);
     }
 
@@ -270,34 +258,10 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
         return null;
     }
 
-    private void loadBgImage(final String imageUrl, ImageView imageView) {
-        if (TextUtils.isEmpty(imageUrl) || null == imageView)
-            return;
-        LoadImage.with(getContext())
-                .load(imageUrl)
-                .setSaveType(LoadImage.SAVE_LONG)
-                .setPlaceholderId(0)
-                .build()
-                .dontAnimate()
-                .dontTransform()
-                .listener(new RequestListener<GlideUrl, Bitmap>() {
-                    @Override
-                    public boolean onException(Exception e, GlideUrl glideUrl, Target<Bitmap> target, boolean b) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(Bitmap bitmap, GlideUrl glideUrl, Target<Bitmap> target, boolean b, boolean b1) {
-                        ImgManager.saveImg(imageUrl, LoadImage.SAVE_LONG);
-                        return false;
-                    }
-                })
-                .into(imageView);
-    }
-
     private void loadImage(String imageUrl, ImageView imageView) {
         if (TextUtils.isEmpty(imageUrl) || null == imageView)
             return;
+        imageView.setTag(TAG_ID, imageUrl);
         LoadImage.with(getContext())
                 .load(imageUrl)
                 .setSaveType(LoadImage.SAVE_LONG)
@@ -305,7 +269,53 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
                 .build()
                 .dontAnimate()
                 .dontTransform()
-                .into(imageView);
+                .into(new SubBitmapTarget() {
+                    @Override
+                    public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
+                        if (imageView != null && imageUrl.equals(imageView.getTag(TAG_ID)) && bitmap != null) {
+                            float radi = getResources().getDimensionPixelSize(R.dimen.dp_5);
+                            float[] radii = new float[] {radi, radi, radi, radi, radi, radi, radi, radi};
+                            Bitmap result = genBitmap(bitmap, radii);
+                            if (result != null) {
+                                imageView.setImageBitmap(result);
+                            }
+
+
+//                            Bitmap bm = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+//                            Canvas c = new Canvas(bm);
+//                            Path path = new Path();
+//                            path.addRoundRect(new RectF(0, 0, w, h), radiusArray, Path.Direction.CW);
+//                            Paint bitmapPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+//                            bitmapPaint.setColor(Color.GREEN); // 颜色随意，不要有透明度。
+//                            c.drawPath(path, bitmapPaint);
+                        }
+                    }
+                });
+    }
+
+    private Bitmap genBitmap(Bitmap bitmap, float[] radii) {
+        Bitmap target = null;
+        Path path = new Path();
+        float[] radiis = new float[]{radii[0], radii[0], radii[1], radii[1], radii[2], radii[2], radii[3], radii[3]};
+        try {
+            if(bitmap == null)
+                return null;
+            Paint paint = new Paint();
+            paint.setAntiAlias(true);
+            target = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(target);
+            RectF rectf = new RectF(0, 0, bitmap.getWidth(), bitmap.getHeight());
+            canvas.drawARGB(0, 0, 0, 0);
+            path.reset();
+            if(radii[0] == 0 && radii[1] == 0 && radii[2] == 0 && radii[3] == 0)
+                path.addRect(rectf, Path.Direction.CW);
+            else
+                path.addRoundRect(rectf, radiis, Path.Direction.CW);
+            canvas.drawPath(path, paint);
+            paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+            canvas.drawBitmap(bitmap, 0, 0, paint);
+        } catch(OutOfMemoryError e) {}
+        return target;
     }
 
     int weightSum = 0;

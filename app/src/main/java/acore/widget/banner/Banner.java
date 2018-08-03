@@ -342,6 +342,7 @@ public class Banner extends RelativeLayout {
         if (offset > 0) {
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LWC, LWC);
             lp.setMargins(mPointLeftRightMargin, mPointTopBottomMargin, mPointLeftRightMargin, mPointTopBottomMargin);
+            lp.gravity = Gravity.CENTER;
             ImageView imageView;
             for (int i = 0; i < offset; i++) {
                 imageView = new ImageView(getContext());

@@ -28,7 +28,7 @@ public class ViewHolder3 extends XHBaseRvViewHolder {
         mItemView = itemView;
         if (mItemView == null)
             return;
-        int[] wh = computeItemWH(670, 360, mItemView.getContext().getResources().getDimensionPixelSize(R.dimen.dp_40), 1);
+        int[] wh = computeItemWH(670, 380, mItemView.getContext().getResources().getDimensionPixelSize(R.dimen.dp_40), 1);
         mItemView.setLayoutParams(new RelativeLayout.LayoutParams(wh[0], wh[1]));
         mItemView.invalidate();
         mImageView1 = (ImageView) mItemView.findViewById(R.id.imageview1);
@@ -43,6 +43,6 @@ public class ViewHolder3 extends XHBaseRvViewHolder {
             return;
         setViewImage(mImageView1, data.get("img"));
         WidgetUtility.setTextToView(mTextView1, data.get("text1"));
-        WidgetUtility.setTextToView(mTextView2, data.get("text2"));
+        WidgetUtility.setTextToView(mTextView2,  "— " + data.get("text2") + " —");
     }
 }

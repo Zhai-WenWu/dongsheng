@@ -118,7 +118,7 @@
             android:layout_width="@dimen/dp_45"
             android:layout_height="@dimen/dp_45"
             android:layout_centerInParent="true"
-            android:src="@drawable/home_item_play"
+            android:src="@drawable/play_img"
             android:visibility="gone"/>
 
         <TextView
@@ -165,7 +165,7 @@
             android:layout_width="@dimen/dp_45"
             android:layout_height="@dimen/dp_45"
             android:layout_centerInParent="true"
-            android:src="@drawable/home_item_play"
+            android:src="@drawable/play_img"
             android:visibility="gone"/>
 
         <ImageView

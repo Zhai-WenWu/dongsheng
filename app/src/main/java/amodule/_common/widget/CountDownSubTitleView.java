@@ -6,6 +6,7 @@ import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -32,14 +33,9 @@ import amodule._common.widget.baseview.BaseSubTitleView;
 
 public class CountDownSubTitleView extends BaseSubTitleView {
 
-    private TextView mPoint1;
     private TextView mTitle1;
     private TextView mTitle2;
     private TextView mTitle3;
-    private TextView mTitle4;
-    private TextView mTitle5;
-    private TextView mTitle6;
-    private LinearLayout mLinearLayout1;
 
     private long mMillisInFuture;
     private long mMillisInterval = 1000;
@@ -66,28 +62,23 @@ public class CountDownSubTitleView extends BaseSubTitleView {
 
     @Override
     protected void initView() {
-        mLinearLayout1 = (LinearLayout) findViewById(R.id.linearlayout1);
         mTitle1 = (TextView) findViewById(R.id.text1);
         mTitle2 = (TextView) findViewById(R.id.text2);
         mTitle3 = (TextView) findViewById(R.id.text3);
-        mTitle4 = (TextView) findViewById(R.id.text4);
-        mTitle5 = (TextView) findViewById(R.id.text5);
-        mTitle6 = (TextView) findViewById(R.id.text6);
-        mPoint1 = (TextView) findViewById(R.id.title_3);
     }
 
     @Override
     protected void onDataReady(Map<String, String> map) {
         Map<String, String> titleMap = StringManager.getFirstMap(map.get(WidgetDataHelper.KEY_TITLE));
         WidgetUtility.setTextToView(mTitle1,titleMap.get("text1"));
-        WidgetUtility.setTextToView(mTitle6,titleMap.get("text2"));
+        WidgetUtility.setTextToView(mTitle3,titleMap.get("text2"));
         this.setTitle1ClickListener(v -> {
             String url1 = titleMap.get("url1");
             if (TextUtils.isEmpty(url1))
                 return;
             AppCommon.openUrl((Activity) CountDownSubTitleView.this.getContext(), url1, true);
         });
-        this.setTitle6ClickListener(v -> {
+        this.setTitle3ClickListener(v -> {
             String url2 = titleMap.get("url2");
             if (TextUtils.isEmpty(url2))
                 return;
@@ -95,17 +86,14 @@ public class CountDownSubTitleView extends BaseSubTitleView {
         });
         String millisInFuture = titleMap.get("endTime");
         if(TextUtils.isEmpty(millisInFuture)){
-            mLinearLayout1.setVisibility(GONE);
             return;
         }
         mMillisInFuture = (Integer.parseInt(millisInFuture) + 1) * 1000;
         if (mMillisInFuture <= 0) {
-            mLinearLayout1.setVisibility(View.GONE);
             return;
         }
         mDataReady = true;
         startCountDownTime();
-        mLinearLayout1.setVisibility(VISIBLE);
     }
 
     public void startCountDownTime() {
@@ -152,27 +140,21 @@ public class CountDownSubTitleView extends BaseSubTitleView {
 
     private void setTimeText(long millis) {
         String formatTime = mSdf.format(millis);
+
+        Log.i("TAG", "setTimeText: " + formatTime);
+
         if (TextUtils.isEmpty(formatTime))
             return;
         String[] times = formatTime.split(":");
         int day = Integer.parseInt(times[0]);
+        LayoutParams lp = (LayoutParams) mTitle2.getLayoutParams();
         if(1 >= day){
-            setViewVisibility(mTitle2,GONE);
-            setViewVisibility(mPoint1,GONE);
+            lp.width = getResources().getDimensionPixelSize(R.dimen.dp_62);
+            WidgetUtility.setTextToView(mTitle2, times[1] + ":" + times[2] + ":" + times[3]);
         } else {
-            setText(mTitle2,(day - 1) + "天");
-            setViewVisibility(mTitle2,VISIBLE);
-            setViewVisibility(mPoint1,VISIBLE);
+            lp.width = getResources().getDimensionPixelSize(R.dimen.dp_82);
+            WidgetUtility.setTextToView(mTitle2, (day - 1) + "天" + times[1] + ":" + times[2] + ":" + times[3]);
         }
-        setText(mTitle3,times[1]);
-        setText(mTitle4,times[2]);
-        setText(mTitle5,times[3]);
-    }
-
-    public void setText(@NonNull TextView textView, @NonNull String text){
-        if(textView == null || TextUtils.equals(text,textView.getText()))
-            return;
-        textView.setText(text);
     }
 
     public void setViewVisibility(View view,int visibility){
@@ -217,9 +199,9 @@ public class CountDownSubTitleView extends BaseSubTitleView {
         }
     }
 
-    public void setTitle6ClickListener(OnClickListener listener) {
+    public void setTitle3ClickListener(OnClickListener listener) {
         if (listener != null) {
-            mTitle6.setOnClickListener(listener);
+            mTitle3.setOnClickListener(listener);
         }
     }
 }

@@ -1,24 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<acore.widget.rcwidget.RCConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingRight="@dimen/dp_5">
+    android:paddingRight="@dimen/dp_5"
+    app:round_corner="@dimen/dp_3">
 
-    <LinearLayout
+    <acore.widget.rvlistview.RvListView
+        android:id="@+id/rvListview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/home_pulish_list_bg"
-        >
-
-        <acore.widget.rvlistview.RvListView
-            android:id="@+id/rvListview"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:overScrollMode="never"
-            android:scrollbars="none"/>
-    </LinearLayout>
+        android:overScrollMode="never"
+        android:scrollbars="none"
+        android:background="#F7FFFFFF"/>
 
 
-</LinearLayout>
+</acore.widget.rcwidget.RCConstraintLayout>

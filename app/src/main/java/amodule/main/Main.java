@@ -44,7 +44,6 @@ import acore.logic.VersionOp;
 import acore.logic.XHClick;
 import acore.notification.controller.NotificationSettingController;
 import acore.override.XHApplication;
-import acore.override.activity.base.BaseLoginActivity;
 import acore.override.activity.mian.MainBaseActivity;
 import acore.tools.ChannelUtil;
 import acore.tools.FileManager;
@@ -64,7 +63,6 @@ import amodule.main.activity.MainCircle;
 import amodule.main.activity.MainHomePage;
 import amodule.main.activity.MainMyself;
 import amodule.main.delegate.ISetMessageTip;
-import amodule.user.activity.login.LoginByAccout;
 import aplug.shortvideo.ShortVideoInit;
 import third.ad.control.AdControlHomeDish;
 import third.ad.db.XHAdSqlite;
@@ -294,9 +292,9 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
         String colors = Tools.getColorStr(Main.this, R.color.common_top_bg);
         Tools.setStatusBarColor(Main.this, Color.parseColor(colors));
 
-        tabHost = (XiangHaTabHost) findViewById(R.id.xiangha_tabhost);
+        tabHost = findViewById(R.id.xiangha_tabhost);
         tabHost.setup(mLocalActivityManager);
-        linear_item = (LinearLayout) findViewById(R.id.linear_item);
+        linear_item = findViewById(R.id.linear_item);
     }
 
     /**

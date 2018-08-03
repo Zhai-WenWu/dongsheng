@@ -4,15 +4,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.DividerItemDecoration;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 
 import com.xiangha.R;
 
@@ -20,13 +25,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.Inflater;
 
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.activity.base.BaseLoginActivity;
 import acore.tools.Tools;
 import acore.widget.rvlistview.RvListView;
+import acore.widget.rvlistview.adapter.RvBaseAdapter;
 import acore.widget.rvlistview.adapter.RvBaseSimpleAdapter;
+import acore.widget.rvlistview.holder.RvBaseViewHolder;
 import amodule.article.activity.edit.ArticleEidtActivity;
 import amodule.article.activity.edit.VideoEditActivity;
 import amodule.dish.activity.upload.UploadDishActivity;
@@ -45,6 +53,7 @@ public class HomePushIconView extends AppCompatImageView {
 
     private String statictusID = "";
     PopupWindow mPopupWindow;
+    private List<Map<String, String>> mDatas = new ArrayList<>();
 
     public HomePushIconView(Context context) {
         this(context, null);
@@ -76,21 +85,15 @@ public class HomePushIconView extends AppCompatImageView {
         RvListView rvListView = (RvListView) view.findViewById(R.id.rvListview);
         int[] images = {R.drawable.pulish_subject_popup, R.drawable.pulish_dish_popup, R.drawable.pulish_article_popup};
         String[] texts = {"晒美食", "写菜谱", "发文章"};
-        List<Map<String, String>> data = new ArrayList<>();
         for (int index = 0; index < images.length; index++) {
             Map<String, String> map = new HashMap<>();
             map.put("image", String.valueOf(images[index]));
             map.put("text", texts[index]);
-            data.add(map);
+            mDatas.add(map);
         }
-        RvBaseSimpleAdapter adapter = new RvBaseSimpleAdapter(getContext(), data,
-                R.layout.a_home_popup_item,
-                new String[]{"image", "text"},
-                new int[]{R.id.image, R.id.text});
+        HomePushIconAdapter adapter = new HomePushIconAdapter(getContext(), mDatas);
         rvListView.setAdapter(adapter);
-        DividerItemDecoration itemDecoration = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
-        itemDecoration.setDrawable(getResources().getDrawable(R.drawable.divider_black));
-        rvListView.addItemDecoration(itemDecoration);
+        adapter.notifyDataSetChanged();
         rvListView.setOnItemClickListener((view1, holder, position) -> {
             //统计
             if (!TextUtils.isEmpty(statictusID) && position < texts.length) {
@@ -146,5 +149,51 @@ public class HomePushIconView extends AppCompatImageView {
 
     public void setStatictusID(String statictusID) {
         this.statictusID = statictusID;
+    }
+
+    private class HomePushIconAdapter extends RvBaseAdapter<Map<String, String>> {
+
+        public HomePushIconAdapter(Context context, @Nullable List<Map<String, String>> data) {
+            super(context, data);
+        }
+
+        @Override
+        public RvBaseViewHolder<Map<String, String>> onCreateViewHolder(ViewGroup parent, int viewType) {
+            return new HomePushIconHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.a_home_popup_item, null));
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            return 0;
+        }
+    }
+
+    private class HomePushIconHolder extends RvBaseViewHolder<Map<String, String>> {
+
+        ImageView mIcon;
+        TextView mTitle;
+        View mLine;
+        public HomePushIconHolder(@NonNull View itemView) {
+            super(itemView);
+            mIcon = findViewById(R.id.image);
+            mTitle = findViewById(R.id.text);
+            mLine = findViewById(R.id.line);
+            ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(getResources().getDimensionPixelSize(R.dimen.dp_150), getResources().getDimensionPixelSize(R.dimen.dp_50));
+            itemView.setLayoutParams(lp);
+        }
+
+        @Override
+        public void bindData(int position, @Nullable Map<String, String> data) {
+            if (position == mDatas.size() - 1) {
+                Log.i("TAG", "bindData  GONE  : pos = " + position + "   title = " + data.get("text"));
+                mLine.setVisibility(View.GONE);
+            } else {
+                mLine.setVisibility(View.VISIBLE);
+                Log.i("TAG", "bindData  VISIBLE  : pos = " + position + "   title = " + data.get("text"));
+
+            }
+            mIcon.setImageResource(Integer.parseInt(data.get("image")));
+            mTitle.setText(data.get("text"));
+        }
     }
 }

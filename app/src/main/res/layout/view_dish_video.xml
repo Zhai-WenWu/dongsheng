@@ -39,7 +39,7 @@
         android:id="@+id/play_layout_2"
         android:layout_centerInParent="true"
         android:visibility="gone"
-        android:background="@drawable/play_video"
+        android:background="@drawable/play_img"
         android:layout_width="@dimen/dp_49"
         android:layout_height="@dimen/dp_49"/>
 
