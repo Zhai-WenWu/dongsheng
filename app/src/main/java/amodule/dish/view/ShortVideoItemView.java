@@ -363,6 +363,10 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
             mAttentionText.setTag(TAG_ID, followTag);
             mMoreImg.setVisibility(View.GONE);
             mLikeImg.setSelected(TextUtils.equals("2", mData.get("isFav")));
+            if(ShortVideoDetailActivity.favoriteLocalStates.containsKey(mData.get("code"))
+                    &&!TextUtils.isEmpty(ShortVideoDetailActivity.favoriteLocalStates.get(mData.get("code")))){
+                mLikeImg.setSelected(TextUtils.equals("2", ShortVideoDetailActivity.favoriteLocalStates.get(mData.get("code"))));
+            }
             mLikeImg.setVisibility(View.VISIBLE);
         }
         mVideoMap = StringManager.getFirstMap(mData.get("video"));
@@ -482,6 +486,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
                     public void onSuccess(boolean isFav) {
                         mFavLoading.set(false);
                         mLikeImg.setSelected(isFav);
+                        ShortVideoDetailActivity.favoriteLocalStates.put(mData.get("code"),isFav ? "2" : "1");
                     }
 
                     @Override

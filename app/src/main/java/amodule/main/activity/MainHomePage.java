@@ -352,13 +352,13 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
             mDataControler.isNeedRefresh(false);
         }
         onResumeFake();
-        Log.i("zyj", "mainHome::onPause");
         setRecommedTime(System.currentTimeMillis());
         if (mNeedRefCurrFm) {
             mNeedRefCurrFm = false;
             refresh();
         }
         mViewContrloer.setMessage(MessageTipController.newInstance().getMessageNum());
+        mHomeAdapter.notifyDataSetChanged();//刷新数据
     }
 
     @Override

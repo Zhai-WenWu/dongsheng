@@ -24,6 +24,7 @@ import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.IconTextSpan;
+import amodule.dish.activity.ShortVideoDetailActivity;
 import aplug.basic.LoadImage;
 import xh.basic.internet.img.transformation.RoundTransformation;
 
@@ -163,6 +164,10 @@ public class HomeStaggeredGridItem extends HomeItem {
 
     private void setImgFav(){
         img_fav.setImageResource(mDataMap.containsKey("isFavorites")&&"2".equals(mDataMap.get("isFavorites"))?R.drawable.icon_fav_active:R.drawable.icon_fav);
+        if(ShortVideoDetailActivity.favoriteLocalStates.containsKey(mDataMap.get("code"))&&
+                !TextUtils.isEmpty(ShortVideoDetailActivity.favoriteLocalStates.get(mDataMap.get("code")))){//已经包含
+            img_fav.setImageResource("2".equals(ShortVideoDetailActivity.favoriteLocalStates.get(mDataMap.get("code")))?R.drawable.icon_fav_active:R.drawable.icon_fav);
+        }
     }
     private void requestFav(){
         if(mDataMap.containsKey("isFavorites")&&!"2".equals(mDataMap.get("isFavorites"))){

@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;
@@ -477,25 +478,21 @@ public class FriendHome extends BaseActivity {
                 }
             }
         } else {
-            String code = dataMap.get("code");
-            if (!TextUtils.isEmpty(code)) {
-                Intent intent = new Intent();
-                Bundle bundle = new Bundle();
-                bundle.putString("code", code);
-                intent.putExtras(bundle);
-                Class c = null;
-                switch (listType) {
-                    case "1"://视频
-                        c = VideoDetailActivity.class;
-                        break;
-                    case "2"://文章
-                        c = ArticleDetailActivity.class;
-                        break;
+            if("1".equals(listType)) {
+                String gotoUrl= dataMap.get("gotoUrl");
+                if(!TextUtils.isEmpty(gotoUrl)){
+                    AppCommon.openUrl(gotoUrl,false);
                 }
-                if (c == null)
-                    return;
-                intent.setClass(this, c);
-                startActivity(intent);
+            }else if("2".equals(listType)){
+                String code = dataMap.get("code");
+                if (!TextUtils.isEmpty(code)) {
+                    Intent intent = new Intent();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("code", code);
+                    intent.putExtras(bundle);
+                    intent.setClass(this, ArticleDetailActivity.class);
+                    startActivity(intent);
+                }
             }
         }
     }

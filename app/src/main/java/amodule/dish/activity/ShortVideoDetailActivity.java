@@ -56,6 +56,7 @@ public class ShortVideoDetailActivity extends AppCompatActivity {
 
     private int mScreenWidth;
     private float mPointerX = -1f;
+    public static Map<String,String> favoriteLocalStates= new HashMap<>();//收藏状态集合 1--否，2--是
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -227,6 +228,7 @@ public class ShortVideoDetailActivity extends AppCompatActivity {
         mOnResuming.set(true);
         checkShowGuidance();
         rvVericalVideoItemAdapter.rumeseVideoView();
+        handleItemDataChange();
     }
 
     private void checkShowGuidance() {
@@ -405,6 +407,19 @@ public class ShortVideoDetailActivity extends AppCompatActivity {
                 }, null);
             } else if (/*nextPageCodes.size() < COUNT_EACH_PAGE && */!fromInner) {
                 loadVideoDetail(nextPageCodes, true);
+            }
+        }
+    }
+
+    /**
+     * 刷新当前item数据
+     */
+    private void handleItemDataChange(){
+        if(mCurrentPosition>=0 && mapArrayList.size()>mCurrentPosition){
+            View holderView= recyclerView.findViewWithTag(mCurrentPosition);
+            if(holderView!=null){
+                RvVericalVideoItemAdapter.ItemViewHolder itemViewHolder= (RvVericalVideoItemAdapter.ItemViewHolder) recyclerView.getChildViewHolder(holderView);
+                itemViewHolder.bindData(mCurrentPosition,mapArrayList.get(mCurrentPosition));
             }
         }
     }
