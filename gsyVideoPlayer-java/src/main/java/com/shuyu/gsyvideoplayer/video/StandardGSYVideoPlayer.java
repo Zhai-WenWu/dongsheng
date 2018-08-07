@@ -749,9 +749,9 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
             if (mCurrentState == CURRENT_STATE_PLAYING) {
                 imageView.setImageResource(R.drawable.video_click_pause_selector);
             } else if (mCurrentState == CURRENT_STATE_ERROR) {
-                imageView.setImageResource(R.drawable.video_click_play_selector);
+                imageView.setImageResource(R.drawable.video_play_normal);
             } else {
-                imageView.setImageResource(R.drawable.video_click_play_selector);
+                imageView.setImageResource(R.drawable.video_play_normal);
             }
         } else if (mStartButton instanceof ENPlayView) {
             ENPlayView enPlayView = (ENPlayView) mStartButton;
@@ -764,7 +764,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
 //                mStartButton.setImageResource(R.drawable.video_click_error_selector);
             } else {
                 enPlayView.pause();
-//                mStartButton.setImageResource(R.drawable.video_click_play_selector);
+//                mStartButton.setImageResource(R.drawable.video_play_normal);
             }
         }
     }

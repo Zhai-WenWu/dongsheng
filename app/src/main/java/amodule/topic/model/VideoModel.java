@@ -15,6 +15,15 @@ public class VideoModel {
     private Map<String, String> mVideoUrlMap;
     private String mVideoImg;//视频封面图
     private String mVideoGif;//视频封面动态图
+    private String mPlayableTime;//可播放时长
+
+    public String getPlayableTime() {
+        return mPlayableTime;
+    }
+
+    public void setPlayableTime(String playableTime) {
+        mPlayableTime = playableTime;
+    }
 
     public boolean isAutoPlay() {
         return mIsAutoPlay;

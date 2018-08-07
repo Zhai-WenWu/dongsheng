@@ -2,7 +2,6 @@ package amodule.main.view.item;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.os.MessageQueue;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.text.TextUtils;
@@ -11,29 +10,22 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.model.GlideUrl;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.xiangha.R;
 
 import java.util.Map;
-import java.util.Queue;
-import java.util.concurrent.LinkedTransferQueue;
-import java.util.logging.Handler;
 
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import aplug.basic.BlurBitmapTransformation;
 import aplug.basic.LoadImage;
 import aplug.basic.SubAnimTarget;
-import xh.basic.tool.UtilImage;
 
 public class HomeGridADItem extends HomeItem {
 
     private ConstraintLayout mAdContainer;
     private ImageView mImgBlur;
     private ImageView mImg;
+    private ImageView mGDTIconImg;
     private TextView mTitle;
     private TextView mHeaderText;
     private TextView mAdName;
@@ -56,6 +48,7 @@ public class HomeGridADItem extends HomeItem {
         mAdContainer = findViewById(R.id.ad_container);
         mImgBlur = findViewById(R.id.img_blur);
         mImg = findViewById(R.id.img);
+        mGDTIconImg = findViewById(R.id.icon_ad_gdt);
         mTitle = findViewById(R.id.title);
         mHeaderText = findViewById(R.id.header_text);
         mAdName = findViewById(R.id.ad_name);
@@ -98,6 +91,7 @@ public class HomeGridADItem extends HomeItem {
                 LoadImage.with(getContext()).load(imgUrl).setSaveType(FileManager.save_cache).setPlaceholderId(R.drawable.i_nopic).setErrorId(R.drawable.i_nopic).build().transform(new BlurBitmapTransformation(getContext(), 6, 6, 6)).into(mImgBlur);
             }
         }
+        mGDTIconImg.setVisibility("sdk_gdt".equals(mDataMap.get("adClass")) ? View.VISIBLE : View.GONE);
         String adName = mDataMap.get("name");
         if (!TextUtils.isEmpty(adName)) {
             mAdName.setText(adName);

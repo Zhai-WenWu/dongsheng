@@ -267,11 +267,7 @@ public class Banner extends RelativeLayout {
         //创建指示器容器的相对布局
         RelativeLayout indicatorContainerRl = new RelativeLayout(context);
         //设置指示器容器的背景
-        if (Build.VERSION.SDK_INT >= 16) {
-            indicatorContainerRl.setBackground(mPointContainerBackgroundDrawable);
-        } else {
-            indicatorContainerRl.setBackgroundDrawable(mPointContainerBackgroundDrawable);
-        }
+        indicatorContainerRl.setBackground(mPointContainerBackgroundDrawable);
         //设置指示器容器Padding
         indicatorContainerRl.setPadding(mPointContainerLeftRightPadding, 0, mPointContainerLeftRightPadding, 0);
         //初始化指示器容器的布局参数
@@ -342,7 +338,6 @@ public class Banner extends RelativeLayout {
         if (offset > 0) {
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LWC, LWC);
             lp.setMargins(mPointLeftRightMargin, mPointTopBottomMargin, mPointLeftRightMargin, mPointTopBottomMargin);
-            lp.gravity = Gravity.CENTER;
             ImageView imageView;
             for (int i = 0; i < offset; i++) {
                 imageView = new ImageView(getContext());

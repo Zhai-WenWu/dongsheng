@@ -34,7 +34,7 @@ public class RCConstraintLayout extends ConstraintLayout implements RCAttrs, Che
     }
 
     @Override
-    protected void dispatchDraw(Canvas canvas) {
+    public void dispatchDraw(Canvas canvas) {
         canvas.saveLayer(mRCHelper.mLayer, null, Canvas.ALL_SAVE_FLAG);
         super.dispatchDraw(canvas);
         mRCHelper.onClipDraw(canvas);

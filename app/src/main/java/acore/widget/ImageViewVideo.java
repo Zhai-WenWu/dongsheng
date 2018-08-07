@@ -73,7 +73,7 @@ public class ImageViewVideo extends ImageView {
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
 		if (mIsHasVideo) {
-			InputStream is = getResources().openRawResource(R.drawable.play_img);
+			InputStream is = getResources().openRawResource(R.drawable.video_play_normal);
 			mPlayBitmap = UtilImage.inputStreamTobitmap(is);
 			if (mPlayBitmap == null)
 				return;

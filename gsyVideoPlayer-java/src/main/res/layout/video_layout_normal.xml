@@ -133,7 +133,7 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:layout_gravity="center_vertical"
-        android:src="@drawable/video_click_play_selector" />
+        android:src="@drawable/video_play_normal" />
 
 
     <ImageView

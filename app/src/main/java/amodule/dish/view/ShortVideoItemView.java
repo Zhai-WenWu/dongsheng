@@ -58,7 +58,7 @@ import amodule.article.activity.edit.ArticleEidtActivity;
 import amodule.article.view.BottomDialog;
 import amodule.comment.CommentDialog;
 import amodule.dish.activity.ShortVideoDetailActivity;
-import amodule.dish.activity.ShortVideoDetailFragment;
+import amodule.dish.video.module.ShortVideoDetailModule;
 import amodule.main.Main;
 import amodule.main.view.item.BaseItemView;
 import amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver;
@@ -85,7 +85,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
     private ImageView mBackImg;
     private ImageView mHeaderImg;
     private TextView mUserName;
-    private TextView mAttentionText;
+    private ImageView mAttentionImage;
     private ImageView mLikeImg;
     private ImageView mMoreImg;
     private View mEmptyView;
@@ -110,11 +110,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
     private ProgressBar mBottomProgress;
     private TextView mCommentHint;
 
-    private Map<String, String> mData;//全部
-    private Map<String, String> mTopicMap;//话题
-    private Map<String, String> mAddressMap;//地址
-    private Map<String, String> mUserMap;//用户
-    private Map<String, String> mVideoMap;//视频
+    private ShortVideoDetailModule mData;//全部
     private boolean mIsSelf;
 
     private AtomicBoolean mGoodLoaded;
@@ -131,8 +127,8 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
     private ShortVideoPlayer mPlayerView;
     private CommentDialog mCommentDialog;
 
-    private ShortVideoDetailFragment.OnPlayPauseClickListener mOnPlayPauseListener;
-    private ShortVideoDetailFragment.OnSeekBarTrackingTouchListener mOnSeekBarTrackingTouchListener;
+    private OnPlayPauseClickListener mOnPlayPauseListener;
+    private OnSeekBarTrackingTouchListener mOnSeekBarTrackingTouchListener;
     private int position;
 
     private Handler mMainHandler;
@@ -154,7 +150,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         mBackImg = findViewById(R.id.image_back);
         mHeaderImg = findViewById(R.id.image_user_header);
         mUserName = findViewById(R.id.text_user_name);
-        mAttentionText = findViewById(R.id.text_attention);
+        mAttentionImage = findViewById(R.id.img_attention);
         mLikeImg = findViewById(R.id.image_like);
         mMoreImg = findViewById(R.id.image_more);
         mEmptyView = findViewById(R.id.view_empty);
@@ -169,24 +165,15 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         mBottomLayout = findViewById(R.id.layout_bottom_info);
         mBottomProgress = findViewById(R.id.bottom_progressbar);
         mBottomCommentLayout = findViewById(R.id.layout_bottom_comment);
-        mCommentImg = mBottomCommentLayout.findViewById(R.id.image);
-        ConstraintLayout.LayoutParams commentLp = (ConstraintLayout.LayoutParams) mCommentImg.getLayoutParams();
-        commentLp.width = getResources().getDimensionPixelSize(R.dimen.dp_28);
-        commentLp.height = getResources().getDimensionPixelSize(R.dimen.dp_28);
-        mCommentNumText = mBottomCommentLayout.findViewById(R.id.text);
+        mCommentImg = mBottomCommentLayout.findViewById(R.id.image3);
+        mCommentNumText = mBottomCommentLayout.findViewById(R.id.text3);
         mCommentHint = findViewById(R.id.comment_hint);
         mBottomShareLayout = findViewById(R.id.layout_bottom_share);
-        mShareImg = mBottomShareLayout.findViewById(R.id.image);
-        ConstraintLayout.LayoutParams shareLp = (ConstraintLayout.LayoutParams) mShareImg.getLayoutParams();
-        shareLp.width = getResources().getDimensionPixelSize(R.dimen.dp_27);
-        shareLp.height = getResources().getDimensionPixelSize(R.dimen.dp_27);
-        mShareNum = mBottomShareLayout.findViewById(R.id.text);
+        mShareImg = mBottomShareLayout.findViewById(R.id.image2);
+        mShareNum = mBottomShareLayout.findViewById(R.id.text2);
         mBottomGoodLayout = findViewById(R.id.layout_bottom_good);
-        mGoodImg = mBottomGoodLayout.findViewById(R.id.image);
-        ConstraintLayout.LayoutParams goodLp = (ConstraintLayout.LayoutParams) mGoodImg.getLayoutParams();
-        goodLp.width = getResources().getDimensionPixelSize(R.dimen.dp_30);
-        goodLp.height = getResources().getDimensionPixelSize(R.dimen.dp_23);
-        mGoodText = mBottomGoodLayout.findViewById(R.id.text);
+        mGoodImg = mBottomGoodLayout.findViewById(R.id.image1);
+        mGoodText = mBottomGoodLayout.findViewById(R.id.text1);
 
         mScrollBarTopLayout.setVisibility(View.GONE);
         mPlayPauseImg.setSelected(true);
@@ -211,7 +198,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         mBackImg.setOnClickListener(this);
         mHeaderImg.setOnClickListener(this);
         mUserName.setOnClickListener(this);
-        mAttentionText.setOnClickListener(this);
+        mAttentionImage.setOnClickListener(this);
         mLikeImg.setOnClickListener(this);
         mMoreImg.setOnClickListener(this);
         mEmptyView.setOnClickListener(this);
@@ -330,69 +317,52 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
     }
     /**
      * 设置数据
-     * @param map
+     * @param module
      */
-    public void setData(Map<String, String> map,int position) {
-        mData = map;
-        if (mData == null || mData.isEmpty())
+    public void setData(ShortVideoDetailModule module, int position) {
+        mData = module;
+        if (mData == null)
             return;
         this.position = position;
-        mUserMap = StringManager.getFirstMap(mData.get("customer"));
-        mUserName.setText(mUserMap.get("nickName"));
-        mIsSelf = TextUtils.equals(LoginManager.userInfo.get("code"), mUserMap.get("code"));
+        mUserName.setText(mData.getCustomerModel().getNickName());
+        mIsSelf = TextUtils.equals(LoginManager.userInfo.get("code"), mData.getCustomerModel().getUserCode());
+        mAttentionImage.setVisibility(mData.getCustomerModel().isFollow() ? View.GONE : View.VISIBLE);
         if (mIsSelf) {
-            mAttentionText.setVisibility(View.GONE);
+            mAttentionImage.setVisibility(View.GONE);
             mLikeImg.setVisibility(View.GONE);
             mMoreImg.setVisibility(View.VISIBLE);
         } else {
-            String isFollow = mUserMap.get("isFollow");
-            String followText;
-            String followTag;
-            switch (isFollow) {
-                case "2":
-                    followText = getString(R.string.attentioned);
-                    followTag = "2";
-                    break;
-                default:
-                    followText = getString(R.string.attention);
-                    followTag = "1";
-                    break;
-            }
-            mAttentionText.setText(followText);
-            mAttentionText.setVisibility(View.VISIBLE);
-            mAttentionText.setTag(TAG_ID, followTag);
+            mAttentionImage.setVisibility(View.VISIBLE);
             mMoreImg.setVisibility(View.GONE);
-            mLikeImg.setSelected(TextUtils.equals("2", mData.get("isFav")));
-            if(ShortVideoDetailActivity.favoriteLocalStates.containsKey(mData.get("code"))
-                    &&!TextUtils.isEmpty(ShortVideoDetailActivity.favoriteLocalStates.get(mData.get("code")))){
-                mLikeImg.setSelected(TextUtils.equals("2", ShortVideoDetailActivity.favoriteLocalStates.get(mData.get("code"))));
+            if(ShortVideoDetailActivity.favoriteLocalStates.containsKey(mData.getCode())
+                    &&!TextUtils.isEmpty(ShortVideoDetailActivity.favoriteLocalStates.get(mData.getCode()))){
+                mLikeImg.setSelected(TextUtils.equals("2", ShortVideoDetailActivity.favoriteLocalStates.get(mData.getCode())));
             }
             mLikeImg.setVisibility(View.VISIBLE);
         }
-        mVideoMap = StringManager.getFirstMap(mData.get("video"));
         RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mThumbImg.getLayoutParams();
         DisplayMetrics dm = ToolsDevice.getWindowPx(getContext());
         int screenW = dm.widthPixels;
         int screenH = dm.heightPixels;
-        int vW = Integer.parseInt(mVideoMap.get("width"));
-        int vH = Integer.parseInt(mVideoMap.get("height"));
+        int vW = Integer.parseInt(mData.getVideoModel().getVideoW());
+        int vH = Integer.parseInt(mData.getVideoModel().getVideoH());
         int heightImg = screenW * vH / vW;
         lp.width = screenW;
         lp.height = heightImg;
         mThumbImg.setLayoutParams(lp);
-        mVideoUrl = StringManager.getFirstMap(mVideoMap.get("videoUrl")).get("defaultUrl");
+        mVideoUrl = mData.getVideoModel().getVideoUrlMap().get("defaultUrl");
         mCommentImg.setImageResource(R.drawable.short_video_detail_comment);
-        mCommentNumText.setText(mData.get("commentNum"));
+        mCommentNumText.setText(mData.getCommentNum());
         mGoodImg.setImageResource(R.drawable.bg_select_good);
-        mGoodImg.setSelected(TextUtils.equals("2", mData.get("isLike")));
-        mGoodText.setText(mData.get("likeNum"));
+        mGoodImg.setSelected(mData.isLike());
+        mGoodText.setText(mData.getLikeNum());
         mShareImg.setImageResource(R.drawable.short_video_detail_share);
-        mShareNum.setText(mData.get("shareNum"));
+        mShareNum.setText(mData.getShareNum());
         mTitleText.setText("");
-        String title = mData.get("name");
+        String title = mData.getName();
         if (!TextUtils.isEmpty(title)) {
             mTitleText.setVisibility(View.VISIBLE);
-            if (TextUtils.equals(mData.get("isEssence"), "2")) {
+            if (mData.isEssence()) {
                 IconTextSpan.Builder ib = new IconTextSpan.Builder(context);
                 ib.setBgColorInt(getResources().getColor(R.color.color_fa273b));
                 ib.setTextColorInt(getResources().getColor(R.color.c_white_text));
@@ -412,18 +382,17 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         } else {
             mTitleText.setVisibility(View.GONE);
         }
-        mTopicMap = StringManager.getFirstMap(mData.get("topic"));
-        mTopicClickUrl = mTopicMap.get("url");
-        String topicTitle = mTopicMap.get("title");
+        mTopicClickUrl = mData.getTopicModel().getGotoUrl();
+        String topicTitle = mData.getTopicModel().getTitle();
         if (!TextUtils.isEmpty(topicTitle)) {
             GradientDrawable drawable = new GradientDrawable();
-            String bgColor = mTopicMap.get("bgColor");
+            String bgColor = mData.getTopicModel().getBgColor();
             if (TextUtils.isEmpty(bgColor))
                 bgColor = "#66000000";
             drawable.setColor(Color.parseColor(bgColor));
             drawable.setCornerRadius(2f);
             mLayoutTopic.setBackground(drawable);
-            String textColor = mTopicMap.get("color");
+            String textColor = mData.getTopicModel().getColor();
             if (TextUtils.isEmpty(textColor))
                 textColor = "#ffffff";
             mTopicText.setTextColor(Color.parseColor(textColor));
@@ -432,18 +401,17 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         } else {
             mLayoutTopic.setVisibility(View.GONE);
         }
-        mAddressMap= StringManager.getFirstMap(mData.get("address"));
-        mAddressClickUrl = mAddressMap.get("url");
-        String address = mAddressMap.get("title");
-        if(!mAddressMap.isEmpty()&&!TextUtils.isEmpty(address)){
+        mAddressClickUrl = mData.getAddressModel().getGotoUrl();
+        String address = mData.getAddressModel().getAddress();
+        if(!TextUtils.isEmpty(address)){
             GradientDrawable drawable = new GradientDrawable();
-            String bgColor = mAddressMap.get("bgColor");
+            String bgColor = mData.getAddressModel().getBgColor();
             if (TextUtils.isEmpty(bgColor))
                 bgColor = "#66000000";
             drawable.setColor(Color.parseColor(bgColor));
             drawable.setCornerRadius(2f);
             mLayoutAddress.setBackground(drawable);
-            String textColor = mAddressMap.get("color");
+            String textColor = mData.getAddressModel().getColor();
             if (TextUtils.isEmpty(textColor))
                 textColor = "#ffffff";
             mTopicText.setTextColor(Color.parseColor(textColor));
@@ -452,8 +420,8 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         }else{
             mLayoutAddress.setVisibility(View.GONE);
         }
-        loadUserHeader(mUserMap.get("img"));
-        loadVideoImg(mVideoMap.get("videoImg"));
+        loadUserHeader(mData.getCustomerModel().getHeaderImg());
+        loadVideoImg(mData.getVideoModel().getVideoImg());
         mPlayerView.setUp(mVideoUrl, false, "");
     }
 
@@ -480,13 +448,13 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         if (mFavLoading.get())
             return;
         mFavLoading.set(true);
-        FavoriteHelper.instance().setFavoriteStatus(context.getApplicationContext(), mData.get("code"), mData.get("name"),
+        FavoriteHelper.instance().setFavoriteStatus(context.getApplicationContext(), mData.getCode(), mData.getName(),
                 FavoriteHelper.TYPE_DISH_VIDEO, new FavoriteHelper.FavoriteStatusCallback() {
                     @Override
                     public void onSuccess(boolean isFav) {
                         mFavLoading.set(false);
                         mLikeImg.setSelected(isFav);
-                        ShortVideoDetailActivity.favoriteLocalStates.put(mData.get("code"),isFav ? "2" : "1");
+                        ShortVideoDetailActivity.favoriteLocalStates.put(mData.getCode(),isFav ? "2" : "1");
                     }
 
                     @Override
@@ -518,7 +486,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
                 gotoUser();
                 XHClick.mapStat(getContext(), ShortVideoDetailActivity.STATISTIC_ID, "顶部栏", "头像和昵称");
                 break;
-            case R.id.text_attention:
+            case R.id.img_attention:
                 attention();
                 break;
             case R.id.image_like:
@@ -576,7 +544,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         Map<String, String> commentMap = new HashMap<>();
         commentMap.put("from", "2");
         commentMap.put("type", "2");
-        commentMap.put("code", mData.get("code"));
+        commentMap.put("code", mData.getCode());
         commentMap.put("commentNum", String.valueOf(mCommentsNum));
         if (mCommentDialog == null) {
             mCommentDialog = new CommentDialog(XHActivityManager.getInstance().getCurrentActivity(), commentMap);
@@ -616,7 +584,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         if (mGoodLoaded.get())
             return;
         mGoodLoaded.set(true);
-        String params = "code=" + mData.get("code") + "&type=likeList";
+        String params = "code=" + mData.getCode() + "&type=likeList";
         ReqEncyptInternet.in().doEncypt(StringManager.api_quanSetSubject, params, new InternetCallback() {
             @Override
             public void loaded(int flag, String s, Object o) {
@@ -638,19 +606,18 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
     private void doShare() {
         if (checkLoginAndHandle())
             return;
-        Map<String,String> mShareMap = StringManager.getFirstMap(mData.get("share"));
         Intent intent = new Intent(context, ShareActivityDialog.class);
         intent.putExtra("tongjiId", ShortVideoDetailActivity.STATISTIC_ID);
         intent.putExtra("shareTwoContent", "分享框");
         intent.putExtra("isHasReport", !mIsSelf);
-        intent.putExtra("nickName", mUserMap.get("nickName"));
-        intent.putExtra("code", mUserMap.get("code"));
+        intent.putExtra("nickName", mData.getCustomerModel().getNickName());
+        intent.putExtra("code", mData.getCustomerModel().getUserCode());
         intent.putExtra("shareFrom", "菜谱详情页");
-        intent.putExtra("reportUrl", "Feedback.app?feekUrl=https://www.xiangha.com/caipu/" + mUserMap.get("code") + ".html");
-        intent.putExtra("imgUrl", mShareMap.get("img"));
-        intent.putExtra("title", mShareMap.get("title"));
-        intent.putExtra("content", mShareMap.get("content"));
-        String clickUrl = mShareMap.get("url");
+        intent.putExtra("reportUrl", "Feedback.app?feekUrl=https://www.xiangha.com/caipu/" + mData.getCustomerModel().getUserCode() + ".html");
+        intent.putExtra("imgUrl", mData.getShareModule().getImg());
+        intent.putExtra("title", mData.getShareModule().getTitle());
+        intent.putExtra("content", mData.getShareModule().getContent());
+        String clickUrl = mData.getShareModule().getUrl();
         intent.putExtra("clickUrl", clickUrl);
         context.startActivity(intent);
     }
@@ -700,7 +667,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
             public void onClick(View v) {
                 dialog.dismiss();
                 Intent intent = new Intent(getContext(), ArticleEidtActivity.class);
-                intent.putExtra("code", mData.get("code"));
+                intent.putExtra("code", mData.getCode());
                 context.startActivity(intent);
                 XHClick.mapStat(getContext(), ShortVideoDetailActivity.STATISTIC_ID, "更多（自己发布的视频）", "编辑");
             }
@@ -732,7 +699,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
                             @Override
                             public void onClick(View v) {
                                 dialogManager.cancel();
-                                delete(mData.get("code"));
+                                delete(mData.getCode());
                             }
                         }))).show();
     }
@@ -766,27 +733,11 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         if (mAttentionLoading.get())
             return;
         mAttentionLoading.set(true);
-        AppCommon.onAttentionClick(mUserMap.get("code"), "follow", new Runnable() {
+        AppCommon.onAttentionClick(mData.getCustomerModel().getUserCode(), "follow", new Runnable() {
             @Override
             public void run() {
                 mAttentionLoading.set(false);
-                String isFollow = (String) mAttentionText.getTag(TAG_ID);
-                if (TextUtils.isEmpty(isFollow))
-                    return;
-                String followText;
-                String followTag;
-                switch (isFollow) {
-                    case "2":
-                        followText = getString(R.string.attention);
-                        followTag = "1";
-                        break;
-                    default:
-                        followText = getString(R.string.attentioned);
-                        followTag = "2";
-                        break;
-                }
-                mAttentionText.setText(followText);
-                mAttentionText.setTag(TAG_ID, followTag);
+                mAttentionImage.setVisibility(View.GONE);
 
             }
         });
@@ -794,7 +745,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
 
     public void gotoUser() {
         Intent intent = new Intent(context, FriendHome.class);
-        intent.putExtra("code", mUserMap.get("code"));
+        intent.putExtra("code", mData.getCustomerModel().getUserCode());
         intent.putExtra("index", 2);
         context.startActivity(intent);
     }
@@ -819,7 +770,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
                         public void run() {
                             if (!mHeaderImg.getTag(TAG_ID).equals(url))
                                 return;
-                            mHeaderImg.setImageBitmap(UtilImage.toRoundCorner(getResources(), bitmap, 1, 500));
+                            mHeaderImg.setImageBitmap(bitmap);
                         }
                     });
                 }
@@ -850,11 +801,11 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         return true;
     }
 
-    public void setOnPlayPauseListener(ShortVideoDetailFragment.OnPlayPauseClickListener onPlayPauseListener) {
+    public void setOnPlayPauseListener(OnPlayPauseClickListener onPlayPauseListener) {
         mOnPlayPauseListener = onPlayPauseListener;
     }
 
-    public void setOnSeekBarTrackingTouchListener(ShortVideoDetailFragment.OnSeekBarTrackingTouchListener onSeekBarTrackingTouchListener) {
+    public void setOnSeekBarTrackingTouchListener(OnSeekBarTrackingTouchListener onSeekBarTrackingTouchListener) {
         mOnSeekBarTrackingTouchListener = onSeekBarTrackingTouchListener;
     }
 
@@ -884,7 +835,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
 
         StringBuilder sbuild = new StringBuilder();
         sbuild.append("type=").append("2").append("&")
-                .append("code=").append(mData.get("code")).append("&")
+                .append("code=").append(mData.getCode()).append("&")
                 .append("content=").append(Uri.encode(contentParams));
         ReqEncyptInternet.in().doEncypt(StringManager.api_addForum, sbuild.toString(),
                 new InternetCallback() {
@@ -928,4 +879,5 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
     public final String getString(@StringRes int resId) {
         return getResources().getString(resId);
     }
+
 }

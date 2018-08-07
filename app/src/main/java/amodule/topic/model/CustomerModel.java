@@ -7,7 +7,7 @@ public class CustomerModel {
     private String mUserCode;
     private String mNickName;
     private String mHeaderImg;
-    private String mIsFollow;
+    private boolean mIsFollow;
     private String mGotoUrl;
 
     public String getUserCode() {
@@ -34,12 +34,12 @@ public class CustomerModel {
         mHeaderImg = headerImg;
     }
 
-    public String getIsFollow() {
+    public boolean isFollow() {
         return mIsFollow;
     }
 
-    public void setIsFollow(String isFollow) {
-        mIsFollow = isFollow;
+    public void setFollow(boolean follow) {
+        mIsFollow = follow;
     }
 
     public String getGotoUrl() {

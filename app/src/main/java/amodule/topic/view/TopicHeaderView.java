@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.constraint.ConstraintLayout;
 import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.ClickableSpan;
@@ -15,11 +16,13 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.request.animation.GlideAnimation;
 import com.xiangha.R;
 
 import acore.tools.FileManager;
@@ -27,9 +30,10 @@ import amodule.topic.style.CustomClickableSpan;
 import aplug.basic.BlurBitmapTransformation;
 import aplug.basic.LoadImage;
 import aplug.basic.SubAnimTarget;
+import aplug.basic.SubBitmapTarget;
 import xh.basic.tool.UtilImage;
 
-public class TopicHeaderView extends ConstraintLayout {
+public class TopicHeaderView extends RelativeLayout {
 
     private CustomClickableSpan mCustomClickableSpan;
 
@@ -75,23 +79,28 @@ public class TopicHeaderView extends ConstraintLayout {
                 .load(url)
                 .setSaveType(FileManager.save_cache)
                 .build();
-        bitmapRequest.into(new SubAnimTarget(mUserFrontImg) {
-            @Override
-            protected void setResource(Bitmap bitmap) {
-                if (bitmap != null && mUserFrontImg.getTag(R.string.tag) != null && mUserFrontImg.getTag(R.string.tag).equals(url)) {
-                    mUserFrontImg.setVisibility(View.VISIBLE);
-                    mUserFrontImg.setImageBitmap(bitmap);
-                    Bitmap bitmap1 = UtilImage.BoxBlurFilter(bitmap, 3, 3, 3);
-                    mUserRearImg.setImageBitmap(bitmap1);
-                } else {
-                    hideTopicImage();
-                }
-            }
+        bitmapRequest.into(new SubBitmapTarget() {
 
             @Override
             public void onLoadFailed(Exception e, Drawable drawable) {
                 super.onLoadFailed(e, drawable);
                 hideTopicImage();
+            }
+
+            @Override
+            public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
+                if (bitmap != null && mUserFrontImg.getTag(R.string.tag) != null && mUserFrontImg.getTag(R.string.tag).equals(url)) {
+                    mUserFrontImg.setVisibility(View.VISIBLE);
+                    mUserFrontImg.setImageBitmap(bitmap);
+                    Bitmap bitmap1 = UtilImage.BoxBlurFilter(bitmap, 3, 3, 3);
+                    mUserRearImg.setImageBitmap(bitmap1);
+
+
+
+//                    TopicHeaderView.this.
+                } else {
+                    hideTopicImage();
+                }
             }
         });
     }
@@ -112,16 +121,19 @@ public class TopicHeaderView extends ConstraintLayout {
         ssb.setSpan(mCustomClickableSpan, 0, userName.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         ssb.append(" 创建的话题");
         mTopicUser.setText(ssb);
+        requestLayout();
     }
 
     public void showTopicAttention(boolean attentioned, OnClickListener listener){
         mTopicAttention.setVisibility(View.VISIBLE);
         mTopicAttention.setOnClickListener(listener);
         mTopicAttention.setEnabled(!attentioned);
+        requestLayout();
     }
 
     public void setAttentionEnable(boolean enable) {
         mTopicAttention.setEnabled(enable);
+        requestLayout();
     }
 
     public void showTopicInfo(String info) {
@@ -131,6 +143,7 @@ public class TopicHeaderView extends ConstraintLayout {
         }
         mTopicInfo.setVisibility(View.VISIBLE);
         mTopicInfo.setText(info);
+        requestLayout();
     }
 
     public void showTopicNum(String numStr) {
@@ -139,7 +152,11 @@ public class TopicHeaderView extends ConstraintLayout {
             return;
         }
         mTopicNum.setVisibility(View.VISIBLE);
-        mTopicNum.setText(String.format("-%s人参与-", numStr));
+        SpannableStringBuilder ss = new SpannableStringBuilder("— ");
+        ss.append(numStr).append(" 人参与 —");
+        ss.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.white)), 2, numStr.length() + 2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        mTopicNum.setText(ss);
+        requestLayout();
     }
 
     public void hideTopicImage() {

@@ -47,8 +47,7 @@ public class HomeModuleControler {
                     || TextUtils.equals(moduleMap.get("type"), mType)) {
                 mModuleBean = new HomeModuleBean();
                 mModuleBean.setTitle(moduleMap.get("title"));
-                // TODO: 2018/4/26 测试代码
-                mModuleBean.setType(/*moduleMap.get("type")*/"recomv2");
+                mModuleBean.setType("recomv2");
                 mModuleBean.setWebUrl(moduleMap.get("webUrl"));
                 mModuleBean.setIsSelf(moduleMap.get("isSelf"));
                 mModuleBean.setOpenMode(moduleMap.get("openMode"));

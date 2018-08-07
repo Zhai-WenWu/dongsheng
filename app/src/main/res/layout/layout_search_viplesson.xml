@@ -33,7 +33,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/lesson_img"
         app:layout_constraintStart_toStartOf="@+id/lesson_img"
         app:layout_constraintEnd_toEndOf="@+id/lesson_img"
-        android:src="@drawable/play_img"
+        android:src="@drawable/video_play_normal"
         android:visibility="gone"/>
 
     <TextView

@@ -4,14 +4,65 @@
     android:id="@+id/activityLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/common_top_bg">
+    android:background="@color/ysf_black_333333">
+
+    <RelativeLayout
+        android:id="@+id/title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/topbar_height"
+        android:background="@color/ysf_black_333333">
+
+        <ImageView
+            android:id="@+id/back_img"
+            android:layout_width="@dimen/dp_18"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/dp_15"
+            android:padding="@dimen/dp_5"
+            android:scaleType="centerInside"
+            android:src="@drawable/calssify_health_back"/>
+
+        <LinearLayout
+            android:id="@+id/title_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_toRightOf="@+id/back_img"
+            android:layout_toLeftOf="@+id/empty_title"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="@dimen/dp_17"
+                android:layout_height="@dimen/dp_17"
+                android:src="@drawable/icon_topic"/>
+
+            <TextView
+                android:id="@+id/title"
+                style="@style/top_title_singleText"
+                android:layout_width="wrap_content"
+                android:layout_marginLeft="@dimen/dp_3"
+                android:textSize="@dimen/sp_18"
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:clickable="true" />
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/empty_title"
+            android:layout_width="@dimen/dp_18"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/dp_15"
+            android:layout_alignParentRight="true"/>
+    </RelativeLayout>
 
     <cn.srain.cube.views.ptr.PtrClassicFrameLayout
         xmlns:cube_ptr="http://schemas.android.com/apk/res-auto"
         android:id="@+id/refresh_list_view_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/tips_layout"
+        android:layout_below="@+id/title_layout"
         cube_ptr:ptr_duration_to_close="200"
         cube_ptr:ptr_duration_to_close_header="500"
         cube_ptr:ptr_pull_to_fresh="false"
@@ -23,8 +74,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:spanCount="3"
-            android:overScrollMode="never"
-            android:background="@color/common_top_bg"/>
+            android:overScrollMode="never" />
 
     </cn.srain.cube.views.ptr.PtrClassicFrameLayout>
         

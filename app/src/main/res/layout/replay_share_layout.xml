@@ -16,7 +16,7 @@
             android:layout_width="@dimen/dp_28"
             android:layout_height="@dimen/dp_28"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/play_img"/>
+            android:src="@drawable/video_play_normal"/>
         <TextView
             android:id="@+id/replay_text"
             android:layout_width="wrap_content"

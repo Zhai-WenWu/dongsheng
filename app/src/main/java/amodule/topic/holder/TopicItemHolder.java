@@ -3,6 +3,8 @@ package amodule.topic.holder;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.ConstraintSet;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.xiangha.R;
+
+import org.eclipse.jetty.util.security.Constraint;
 
 import acore.logic.AppCommon;
 import acore.tools.FileManager;
@@ -24,14 +28,19 @@ import amodule.topic.model.VideoModel;
 import aplug.basic.LoadImage;
 
 public class TopicItemHolder extends RvBaseViewHolder<TopicItemModel> implements View.OnClickListener {
-    private int mScreenW;
     private TopicItemModel mTopicItemModel;
 
     private ImageView mImg;
     private TextView mLabel;
     public TopicItemHolder(@NonNull View topicItemView) {
         super(topicItemView);
-        mScreenW = ToolsDevice.getWindowPx(itemView.getContext()).widthPixels;
+        int originalW = 124;
+        int originalH = 165;
+        int screenW = ToolsDevice.getWindowPx(itemView.getContext()).widthPixels;
+        int newW = (screenW - topicItemView.getResources().getDimensionPixelSize(R.dimen.dp_2)) / 3;
+        int newH = newW * originalH / originalW;
+        ConstraintLayout.LayoutParams lp = new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, newH);
+        topicItemView.setLayoutParams(lp);
         initView();
     }
 
@@ -55,17 +64,6 @@ public class TopicItemHolder extends RvBaseViewHolder<TopicItemModel> implements
                 mLabel.setVisibility(View.GONE);
             }
             ImageModel imageModel = data.getImageModel();
-            if (imageModel != null) {
-                int imgH = Integer.parseInt(imageModel.getImageH());
-                int imgW = Integer.parseInt(imageModel.getImageW());
-                int[] wh = new int[2];
-                wh[0] = imgW;
-                wh[1] = imgH;
-                computeItemWH(wh);
-                ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(wh[0], wh[1]);
-                itemView.setLayoutParams(lp);
-                itemView.invalidate();
-            }
             VideoModel videoModel = data.getVideoModel();
             if (videoModel != null && !videoModel.isEmpty()) {
                 String videoImg = videoModel.getVideoImg();
@@ -85,14 +83,6 @@ public class TopicItemHolder extends RvBaseViewHolder<TopicItemModel> implements
         } else {
             mLabel.setVisibility(View.GONE);
         }
-    }
-
-    private int[] computeItemWH(int[] wh) {
-        int originalW = wh[0];
-        int originalH = wh[1];
-        wh[0] = mScreenW / 3;
-        wh[1] = wh[0] * originalH / originalW;
-        return wh;
     }
 
     private void loadImage(String url, ImageView view) {

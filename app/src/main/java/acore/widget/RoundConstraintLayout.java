@@ -64,7 +64,7 @@ public class RoundConstraintLayout extends ConstraintLayout {
     }
 
     @Override
-    protected void dispatchDraw(Canvas canvas) {
+    public void dispatchDraw(Canvas canvas) {
         canvas.saveLayer(new RectF(0, 0, canvas.getWidth(), canvas.getHeight()), imagePaint, Canvas.ALL_SAVE_FLAG);
         super.dispatchDraw(canvas);
         drawTopLeft(canvas);

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
+import android.support.v4.view.ViewCompat;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -26,7 +27,6 @@ import acore.tools.Tools;
 import acore.widget.IconTextSpan;
 import amodule.dish.activity.ShortVideoDetailActivity;
 import aplug.basic.LoadImage;
-import xh.basic.internet.img.transformation.RoundTransformation;
 
 public class HomeStaggeredGridItem extends HomeItem {
 
@@ -53,6 +53,7 @@ public class HomeStaggeredGridItem extends HomeItem {
     @Override
     protected void initView() {
         super.initView();
+        ViewCompat.setElevation(this, 10f);
         mImg = findViewById(R.id.img);
         mTitle = findViewById(R.id.title);
         auther_userImg = findViewById(R.id.user_header_img);
@@ -184,20 +185,4 @@ public class HomeStaggeredGridItem extends HomeItem {
             });
         }
     }
-
-//    @Override
-//    protected SubAnimTarget getSubAnimTarget(ImageView v, String url) {
-//        return new SubAnimTarget(v) {
-//            @Override
-//            protected void setResource(Bitmap bitmap) {
-//                if (bitmap != null && v.getTag(TAG_ID) != null && v.getTag(TAG_ID).equals(url)) {
-//                    if (v.getId() == R.id.user_header_img) {
-//                        v.setImageBitmap(UtilImage.toRoundCorner(v.getResources(), bitmap, 1, ToolsDevice.dp2px(getContext(), 500)));
-//                    } else {
-//                        v.setImageBitmap(bitmap);
-//                    }
-//                }
-//            }
-//        };
-//    }
 }

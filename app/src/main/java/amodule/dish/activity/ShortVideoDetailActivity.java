@@ -25,6 +25,13 @@ import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
 import amodule.dish.adapter.RvVericalVideoItemAdapter;
 import amodule.dish.helper.ParticularPositionEnableSnapHelper;
+import amodule.dish.video.module.ShareModule;
+import amodule.dish.video.module.ShortVideoDetailModule;
+import amodule.topic.model.AddressModel;
+import amodule.topic.model.CustomerModel;
+import amodule.topic.model.ImageModel;
+import amodule.topic.model.TopicModel;
+import amodule.topic.model.VideoModel;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
@@ -50,7 +57,7 @@ public class ShortVideoDetailActivity extends AppCompatActivity {
     private String mUserCode;
     private String mSourcePage;
     private String topicCode;
-    private ArrayList<Map<String,String>> mapArrayList= new ArrayList<>();
+    private ArrayList<ShortVideoDetailModule> mDatas = new ArrayList<>();
     private int nowPosition = 0;
     private int mCurrentPosition = 0;
 
@@ -133,7 +140,7 @@ public class ShortVideoDetailActivity extends AppCompatActivity {
                         }
                     }
                     //处理请求下一页
-                    if (nowPosition >= mapArrayList.size() - 1) {
+                    if (nowPosition >= mDatas.size() - 1) {
                         mDataController.executeNextOption();
                     }
                     XHClick.mapStat(ShortVideoDetailActivity.this, STATISTIC_ID, "视频", orientationScroll == DOWN_SCROLL ? "上滑（下一条）" : "下滑（上一条）");
@@ -165,7 +172,7 @@ public class ShortVideoDetailActivity extends AppCompatActivity {
         mPagerSnapHelper = new ParticularPositionEnableSnapHelper();
         mPagerSnapHelper.attachToRecyclerView(recyclerView);
         mGuidanceLayout = findViewById(R.id.guidance_layout);
-        rvVericalVideoItemAdapter= new RvVericalVideoItemAdapter(this,mapArrayList);
+        rvVericalVideoItemAdapter= new RvVericalVideoItemAdapter(this,mDatas);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(rvVericalVideoItemAdapter);
 //        mAdapter = new ShortVideoDetailPagerAdapter(this, getSupportFragmentManager());
@@ -331,10 +338,72 @@ public class ShortVideoDetailActivity extends AppCompatActivity {
                 public void loaded(int flag, String s, Object o) {
                     if (flag >= ReqInternet.REQ_OK_STRING) {
                         ArrayList<Map<String, String>> datas = StringManager.getListMapByJson(o);
-                        mapArrayList.addAll(datas);
+                        for (int i = 0; i < datas.size() && datas.size() > 0; i ++) {
+                            Map<String, String> itemMap = datas.get(i);
+                            ShortVideoDetailModule module = new ShortVideoDetailModule();
+                            module.setCode(itemMap.get("code"));
+                            module.setName(itemMap.get("name"));
+                            module.setEssence("2".equals(itemMap.get("isEssence")));
+                            module.setFav("2".equals(itemMap.get("isFav")));
+                            module.setLike("2".equals(itemMap.get("isLike")));
+                            module.setFavNum(itemMap.get("favNum"));
+                            module.setCommentNum(itemMap.get("commentNum"));
+                            module.setLikeNum(itemMap.get("likeNum"));
+                            module.setShareNum(itemMap.get("shareNum"));
+                            module.setClickNum(itemMap.get("clickNum"));
+                            Map<String, String> videoMap = StringManager.getFirstMap(itemMap.get("video"));
+                            VideoModel videoModel = new VideoModel();
+                            videoModel.setAutoPlay("2".equals(videoMap.get("isAuto")));
+                            videoModel.setVideoTime(videoMap.get("time"));
+                            videoModel.setPlayableTime(videoMap.get("playableTime"));
+                            videoModel.setVideoW(videoMap.get("width"));
+                            videoModel.setVideoH(videoMap.get("height"));
+                            videoModel.setVideoUrlMap(StringManager.getFirstMap(videoMap.get("videoUrl")));
+                            videoModel.setVideoImg(videoMap.get("videoImg"));
+                            videoModel.setVideoGif(videoMap.get("videoGif"));
+                            module.setVideoModel(videoModel);
+                            Map<String, String> imageMap = StringManager.getFirstMap(itemMap.get("image"));
+                            ImageModel imageModel = new ImageModel();
+                            imageModel.setImageW(imageMap.get("width"));
+                            imageModel.setImageH(imageMap.get("height"));
+                            imageModel.setImageUrl(imageMap.get("url"));
+                            module.setImageModel(imageModel);
+                            Map<String, String> customerMap = StringManager.getFirstMap(itemMap.get("customer"));
+                            CustomerModel customerModel = new CustomerModel();
+                            customerModel.setUserCode(customerMap.get("code"));
+                            customerModel.setNickName(customerMap.get("nickName"));
+                            customerModel.setHeaderImg(customerMap.get("img"));
+                            customerModel.setFollow("2".equals(customerMap.get("isFollow")));
+                            customerModel.setGotoUrl(customerMap.get("url"));
+                            module.setCustomerModel(customerModel);
+                            Map<String, String> topicMap = StringManager.getFirstMap(itemMap.get("topic"));
+                            TopicModel topicModel = new TopicModel();
+                            topicModel.setCode(topicMap.get("code"));
+                            topicModel.setTitle(topicMap.get("title"));
+                            topicModel.setColor(topicMap.get("color"));
+                            topicModel.setBgColor(topicMap.get("bgColor"));
+                            topicModel.setGotoUrl(topicMap.get("url"));
+                            module.setTopicModel(topicModel);
+                            Map<String, String> addressMap = StringManager.getFirstMap(itemMap.get("address"));
+                            AddressModel addressModel = new AddressModel();
+                            addressModel.setCode(addressMap.get("code"));
+                            addressModel.setAddress(addressMap.get("title"));
+                            addressModel.setColor(addressMap.get("color"));
+                            addressModel.setBgColor(addressMap.get("bgColor"));
+                            addressModel.setGotoUrl(addressMap.get("url"));
+                            module.setAddressModel(addressModel);
+                            Map<String, String> shareMap = StringManager.getFirstMap(itemMap.get("share"));
+                            ShareModule shareModule = new ShareModule();
+                            shareModule.setUrl(shareMap.get("url"));
+                            shareModule.setContent(shareMap.get("content"));
+                            shareModule.setTitle(shareMap.get("title"));
+                            shareModule.setImg(shareMap.get("img"));
+                            module.setShareModule(shareModule);
+                            mDatas.add(module);
+                        }
                         rvVericalVideoItemAdapter.notifyDataSetChanged();
 //                        mAdapter.setData(datas);
-                        if(mapArrayList.size()>0){
+                        if(mDatas.size()>0){
                             startVideoOne();
                         }
                         if (checkPrepareNext())
@@ -415,11 +484,11 @@ public class ShortVideoDetailActivity extends AppCompatActivity {
      * 刷新当前item数据
      */
     private void handleItemDataChange(){
-        if(mCurrentPosition>=0 && mapArrayList.size()>mCurrentPosition){
+        if(mCurrentPosition>=0 && mDatas.size()>mCurrentPosition){
             View holderView= recyclerView.findViewWithTag(mCurrentPosition);
             if(holderView!=null){
                 RvVericalVideoItemAdapter.ItemViewHolder itemViewHolder= (RvVericalVideoItemAdapter.ItemViewHolder) recyclerView.getChildViewHolder(holderView);
-                itemViewHolder.bindData(mCurrentPosition,mapArrayList.get(mCurrentPosition));
+                itemViewHolder.bindData(mCurrentPosition,mDatas.get(mCurrentPosition));
             }
         }
     }

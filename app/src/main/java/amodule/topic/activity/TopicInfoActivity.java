@@ -2,18 +2,21 @@ package amodule.topic.activity;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.xiangha.R;
 
 import java.util.ArrayList;
@@ -24,6 +27,7 @@ import acore.logic.AppCommon;
 import acore.logic.load.LoadManager;
 import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.StringManager;
+import acore.widget.rvlistview.RvListView;
 import acore.widget.rvlistview.RvStaggeredGridView;
 import amodule.topic.adapter.TopicInfoStaggeredAdapter;
 import amodule.topic.model.ImageModel;
@@ -31,7 +35,6 @@ import amodule.topic.model.LabelModel;
 import amodule.topic.model.TopicItemModel;
 import amodule.topic.model.VideoModel;
 import amodule.topic.view.TopicHeaderView;
-import aplug.basic.BlurBitmapTransformation;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
@@ -42,6 +45,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
     public static final String TOPIC_CODE = "topicCode";
 
     private TextView mTitle;
+    private ImageView mBackImg;
     private PtrClassicFrameLayout mRefreshLayout;
     private RvStaggeredGridView mStaggeredGridView;
     private FloatingActionButton mFloatingActionButton;
@@ -62,7 +66,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initActivity("", 2, 0, R.layout.c_view_bar_title, R.layout.topic_info_layout);
+        initActivity("", 2, 0, 0, R.layout.topic_info_layout);
         initView();
         initData();
         if (!checkCondition()) {
@@ -84,6 +88,10 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
 
     private void initView() {
         mTitle = findViewById(R.id.title);
+        mBackImg = findViewById(R.id.back_img);
+        mBackImg.setOnClickListener(v -> {
+            TopicInfoActivity.this.finish();
+        });
         mRefreshLayout = findViewById(R.id.refresh_list_view_frame);
         mRefreshLayout.disableWhenHorizontalMove(true);
         mRefreshLayout.setLoadingMinTime(300);
@@ -94,6 +102,39 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
 
         mTopicHeaderView = new TopicHeaderView(this);
         mStaggeredGridView.addHeaderView(mTopicHeaderView);
+        mStaggeredGridView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+                StaggeredGridLayoutManager.LayoutParams params =(StaggeredGridLayoutManager.LayoutParams) view.getLayoutParams();
+                int position = parent.getChildAdapterPosition(view);
+                int viewType = parent.getAdapter().getItemViewType(position);
+                switch (viewType) {
+                    case RvListView.VIEW_TYPE_EMPTY:
+                    case RvListView.VIEW_TYPE_FOOTER:
+                    case RvListView.VIEW_TYPE_HEADER:
+                        super.getItemOffsets(outRect, view, parent, state);
+                        return;
+                }
+                switch (params.getSpanIndex()) {
+                    case 0:
+                        outRect.set(0, dp2px(R.dimen.dp_0_5), dp2px(R.dimen.dp_0_5), dp2px(R.dimen.dp_0_5));
+                        break;
+                    case 1:
+                        outRect.set(dp2px(R.dimen.dp_0_5), dp2px(R.dimen.dp_0_5), dp2px(R.dimen.dp_0_5), dp2px(R.dimen.dp_0_5));
+                        break;
+                    case 2:
+                        outRect.set(dp2px(R.dimen.dp_0_5), dp2px(R.dimen.dp_0_5), 0, dp2px(R.dimen.dp_0_5));
+                        break;
+                    default:
+                        outRect.set(0, 0, 0, 0);
+                        break;
+                }
+            }
+        });
+    }
+
+    private int dp2px(int dimenId) {
+        return getResources().getDimensionPixelSize(dimenId);
     }
 
     private boolean checkCondition() {
@@ -138,10 +179,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                     mInfoMap = StringManager.getFirstMap(o);
                     String name = mInfoMap.get("name");
                     if (!TextUtils.isEmpty(name)) {
-                        SpannableStringBuilder ssb = new SpannableStringBuilder("#");
-                        ssb.setSpan(new ForegroundColorSpan(Color.YELLOW), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        ssb.append(" " + name);
-                        mTitle.setText(ssb);
+                        mTitle.setText(name);
                     }
                     mAuthorMap = StringManager.getFirstMap(mInfoMap.get("author"));
                     mTopicHeaderView.showUserImage(mAuthorMap.get("img"), new View.OnClickListener() {
