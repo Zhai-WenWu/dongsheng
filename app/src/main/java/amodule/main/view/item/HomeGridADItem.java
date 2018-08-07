@@ -27,7 +27,7 @@ public class HomeGridADItem extends HomeItem {
     private ImageView mImg;
     private ImageView mGDTIconImg;
     private TextView mTitle;
-    private TextView mHeaderText;
+    private ImageView mAdHeaderImg;
     private TextView mAdName;
 
     public HomeGridADItem(Context context) {
@@ -50,7 +50,7 @@ public class HomeGridADItem extends HomeItem {
         mImg = findViewById(R.id.img);
         mGDTIconImg = findViewById(R.id.icon_ad_gdt);
         mTitle = findViewById(R.id.title);
-        mHeaderText = findViewById(R.id.header_text);
+        mAdHeaderImg = findViewById(R.id.ad_header_img);
         mAdName = findViewById(R.id.ad_name);
     }
 
@@ -91,14 +91,13 @@ public class HomeGridADItem extends HomeItem {
                 LoadImage.with(getContext()).load(imgUrl).setSaveType(FileManager.save_cache).setPlaceholderId(R.drawable.i_nopic).setErrorId(R.drawable.i_nopic).build().transform(new BlurBitmapTransformation(getContext(), 6, 6, 6)).into(mImgBlur);
             }
         }
+        LoadImage.with(getContext()).load(dataMap.get("iconUrl")).setSaveType(FileManager.save_cache).setPlaceholderId(R.drawable.i_nopic).setErrorId(R.drawable.i_nopic).build().into(mAdHeaderImg);
         mGDTIconImg.setVisibility("sdk_gdt".equals(mDataMap.get("adClass")) ? View.VISIBLE : View.GONE);
         String adName = mDataMap.get("name");
         if (!TextUtils.isEmpty(adName)) {
             mAdName.setText(adName);
-            mHeaderText.setText(adName.substring(0, 1));
         } else {
             mTitle.setText("");
-            mHeaderText.setText("");
         }
         String content = mDataMap.get("content");
         mTitle.setText(TextUtils.isEmpty(content) ? "" : content);

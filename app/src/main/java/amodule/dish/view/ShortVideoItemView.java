@@ -118,6 +118,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
     private AtomicBoolean mFavLoading;
     private AtomicBoolean mDelLoading;
     private boolean mRepeatEnable;
+    private boolean mStaticEnable;
     private String mVideoUrl;
     private String mTopicClickUrl;
     private String mAddressClickUrl;
@@ -249,11 +250,10 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
             @Override
             public void onAutoComplete(String url, Object... objects) {
                 changeThumbImageState(true);
-                // TODO: 2018/5/29 是否要循环播放？
-//                if (mRepeatEnable) {
-//                    changePlayPauseUI(true);
-//                    prepareAsync();
-//                }
+                if (mRepeatEnable) {
+                    changePlayPauseUI(true);
+                    prepareAsync();
+                }
             }
             @Override
             public void onEnterFullscreen(String url, Object... objects) {}
@@ -275,6 +275,27 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
                 changeThumbImageState(true);
             }
         });
+
+        mPlayerView.setOnProgressChangedCallback(new GSYVideoPlayer.OnProgressChangedCallback() {
+            @Override
+            public void onProgressChanged(int progress, int secProgress, int currentTime, int totalTime) {
+                double playableTime = Double.parseDouble(mData.getVideoModel().getPlayableTime());
+                if (currentTime * 1.0 / totalTime >= playableTime) {
+                    if (!mStaticEnable) {
+                        mStaticEnable = true;
+                        ReqEncyptInternet.in().doEncypt(StringManager.API_SHORT_VIDEO_VIEW_VALIDATE, mData.getCode(), new InternetCallback() {
+                            @Override
+                            public void loaded(int i, String s, Object o) {
+                                super.loaded(i, s, o);
+                            }
+                        });
+                    }
+                } else {
+                    mStaticEnable = false;
+                }
+            }
+        });
+
     }
 
 
@@ -851,7 +872,6 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
     }
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
     }
 
     @Override

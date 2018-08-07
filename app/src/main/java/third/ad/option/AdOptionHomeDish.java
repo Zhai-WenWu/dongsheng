@@ -34,6 +34,7 @@ public class AdOptionHomeDish extends AdOptionList {
     public Map<String, String> getAdListItemData(final String title, final String desc, final String iconUrl,
                                                  String imageUrl, String adTag,String isBigPic) {
         Map<String, String> map = new HashMap<>();
+        map.put("iconUrl", iconUrl);
         map.put("name", title );
         map.put("img", imageUrl);
         map.put("content", desc);

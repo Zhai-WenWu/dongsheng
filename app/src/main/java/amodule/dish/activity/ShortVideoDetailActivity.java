@@ -74,15 +74,21 @@ public class ShortVideoDetailActivity extends AppCompatActivity {
         addListener();
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            String code = bundle.getString("code");
-            if (TextUtils.isEmpty(code)) {
-                finish();
-                return;
-            }
-            mUserCode = bundle.getString("userCode");
-            mSourcePage = bundle.getString("sourcePage");
-            topicCode = bundle.getString("topicCode");
-            mDataController.start(code);
+//            String json = bundle.getString("json");
+//            json = Uri.decode(json);
+//            if (json != null) {
+//                // TODO: 2018/8/7 组装数据 直接加载
+//            } else {
+                String code = bundle.getString("code");
+                if (TextUtils.isEmpty(code)) {
+                    finish();
+                    return;
+                }
+                mUserCode = bundle.getString("userCode");
+                mSourcePage = bundle.getString("sourcePage");
+                topicCode = bundle.getString("topicCode");
+                mDataController.start(code);
+//            }
         }
     }
 

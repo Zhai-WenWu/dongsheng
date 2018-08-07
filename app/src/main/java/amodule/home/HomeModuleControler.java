@@ -47,7 +47,7 @@ public class HomeModuleControler {
                     || TextUtils.equals(moduleMap.get("type"), mType)) {
                 mModuleBean = new HomeModuleBean();
                 mModuleBean.setTitle(moduleMap.get("title"));
-                mModuleBean.setType("recomv2");
+                mModuleBean.setType(moduleMap.get("type"));
                 mModuleBean.setWebUrl(moduleMap.get("webUrl"));
                 mModuleBean.setIsSelf(moduleMap.get("isSelf"));
                 mModuleBean.setOpenMode(moduleMap.get("openMode"));
@@ -66,7 +66,7 @@ public class HomeModuleControler {
     private void setRequestModuleData(InternetCallback callback) {
         if (isRequest) return;
         final String modulePath = FileManager.getDataDir() + FileManager.file_homeTopModle;
-        ReqEncyptInternet.in().doEncyptAEC(StringManager.API_GET_LEVEL, "version=" + "v1",
+        ReqEncyptInternet.in().doEncyptAEC(StringManager.API_GET_LEVEL, "version=" + "v2",
                 new InternetCallback() {
                     @Override
                     public void loaded(int flag, String url, final Object o) {

@@ -30,7 +30,7 @@
 
     <ImageView
         android:id="@+id/icon_ad_gdt"
-        android:layout_width="@dimen/dp_42"
+        android:layout_width="@dimen/dp_25"
         android:layout_height="@dimen/dp_14"
         app:layout_constraintEnd_toEndOf="@+id/img"
         app:layout_constraintBottom_toBottomOf="@+id/img"
@@ -60,21 +60,18 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/img_blur" />
 
-    <TextView
-        android:id="@+id/header_text"
+    <acore.widget.rcwidget.RCImageView
+        android:id="@+id/ad_header_img"
         android:layout_width="@dimen/dp_28"
         android:layout_height="@dimen/dp_28"
         android:layout_marginStart="@dimen/dp_8"
         android:layout_marginBottom="@dimen/dp_10"
-        android:padding="@dimen/dp_1"
-        android:background="@drawable/bg_round_stroke_solid"
-        android:textSize="@dimen/sp_16"
-        android:gravity="center"
-        android:textColor="@color/white"
-        android:textStyle="bold"
-        android:includeFontPadding="false"
+        app:stroke_width="@dimen/dp_1"
+        app:stroke_color="@color/white"
+        android:scaleType="centerCrop"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:round_as_circle="true"/>
 
     <TextView
         android:id="@+id/ad_name"
@@ -88,7 +85,7 @@
         android:textColor="#bbbbbb"
         android:textSize="@dimen/sp_12"
         android:includeFontPadding="false"
-        app:layout_constraintStart_toEndOf="@+id/header_text"
+        app:layout_constraintStart_toEndOf="@+id/ad_header_img"
         app:layout_constraintEnd_toStartOf="@+id/ad_tag"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline"/>

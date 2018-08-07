@@ -73,19 +73,11 @@ public class HomeStaggeredGridItem extends HomeItem {
             int imgHeight= Integer.parseInt(mResourceData.get("height"));
             int realWidth = (Tools.getPhoneWidth() - getResources().getDimensionPixelSize(R.dimen.dp_50)) / 2;
             int realHeight = realWidth * imgHeight / imgWidth;
-
-            Log.i("TAG", "setData: min = " + mHeightRange[0] + "   max = " + mHeightRange[1] + "   realH = " + realHeight);
-
             if (realHeight < mHeightRange[0]) {
                 realHeight = mHeightRange[0];
             } else if (realHeight > mHeightRange[1]) {
                 realHeight = mHeightRange[1];
             }
-
-
-
-            Log.i("TAG", "setData2: min = " + mHeightRange[0] + "   max = " + mHeightRange[1] + "   realH = " + realHeight);
-
             ConstraintSet cs = new ConstraintSet();
             cs.constrainWidth(mImg.getId(), ConstraintSet.MATCH_CONSTRAINT);
             cs.constrainHeight(mImg.getId(), realHeight);
