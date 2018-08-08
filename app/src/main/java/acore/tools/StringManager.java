@@ -406,6 +406,8 @@ public class StringManager extends UtilString {
 
     //短视频有效浏览统计
     public final static String API_SHORT_VIDEO_VIEW_VALIDATE = apiUrl + "main8/shortVideo/shortVideoEffecStat";
+    //短视频访问统计
+    public final static String API_SHORT_VIDEO_ACCESS = apiUrl + "main8/shortVideo/shortVideoStat";
 
     //替换url
     public final static String replaceUrl(String url) {

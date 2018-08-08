@@ -3,12 +3,9 @@ package amodule._common.widget;
 import android.app.Activity;
 import android.content.Context;
 import android.os.CountDownTimer;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.xiangha.R;
@@ -36,6 +33,7 @@ public class CountDownSubTitleView extends BaseSubTitleView {
     private TextView mTitle1;
     private TextView mTitle2;
     private TextView mTitle3;
+    private TextView mInvisibleText;
 
     private long mMillisInFuture;
     private long mMillisInterval = 1000;
@@ -65,6 +63,7 @@ public class CountDownSubTitleView extends BaseSubTitleView {
         mTitle1 = (TextView) findViewById(R.id.text1);
         mTitle2 = (TextView) findViewById(R.id.text2);
         mTitle3 = (TextView) findViewById(R.id.text3);
+        mInvisibleText = findViewById(R.id.invisible_text);
     }
 
     @Override
@@ -140,21 +139,25 @@ public class CountDownSubTitleView extends BaseSubTitleView {
 
     private void setTimeText(long millis) {
         String formatTime = mSdf.format(millis);
-
-        Log.i("TAG", "setTimeText: " + formatTime);
-
         if (TextUtils.isEmpty(formatTime))
             return;
         String[] times = formatTime.split(":");
         int day = Integer.parseInt(times[0]);
-        LayoutParams lp = (LayoutParams) mTitle2.getLayoutParams();
+        String text = "";
+        String invisibleText = "";
         if(1 >= day){
-            lp.width = getResources().getDimensionPixelSize(R.dimen.dp_62);
-            WidgetUtility.setTextToView(mTitle2, times[1] + ":" + times[2] + ":" + times[3]);
+            text = times[1] + ":" + times[2] + ":" + times[3];
+            invisibleText = "00:00:00";
         } else {
-            lp.width = getResources().getDimensionPixelSize(R.dimen.dp_82);
-            WidgetUtility.setTextToView(mTitle2, (day - 1) + "天" + times[1] + ":" + times[2] + ":" + times[3]);
+            text = (day - 1) + "天" + times[1] + ":" + times[2] + ":" + times[3];
+            if (day - 1 > 9) {
+                invisibleText = "00天00:00:00";
+            } else {
+                invisibleText = "0天00:00:00";
+            }
         }
+        WidgetUtility.setTextToView(mInvisibleText, invisibleText);
+        WidgetUtility.setTextToView(mTitle2, text);
     }
 
     public void setViewVisibility(View view,int visibility){

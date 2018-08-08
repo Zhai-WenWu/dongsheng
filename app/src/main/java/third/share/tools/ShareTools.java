@@ -90,6 +90,11 @@ public class ShareTools {
 
     private void showSharePlatform(String title, String content, String types,
                                    String img, String clickUrl, String platform, String from, String parent, boolean isShowBeginToast, ActionListener listener) {
+        showSharePlatform(title, content, types, img, clickUrl, platform, from, parent, null, isShowBeginToast, listener);
+    }
+
+    private void showSharePlatform(String title, String content, String types,
+                                   String img, String clickUrl, String platform, String from, String parent, String extraParams, boolean isShowBeginToast, ActionListener listener) {
         starEvent("a_share400", mParent, mFrom);
         if (TextUtils.isEmpty(clickUrl))
             clickUrl = "";
@@ -140,7 +145,7 @@ public class ShareTools {
             nullImg = false;
         }
         if (WechatMoments.NAME.equals(platform) && nullTitle && !nullContent && !nullImg) {
-            sendWechatMoments(content, img, imgPath, clickUrl, listener);
+            sendWechatMoments(content, img, imgPath, clickUrl, extraParams, listener);
             return;
         }
 
@@ -170,25 +175,25 @@ public class ShareTools {
             public void onError(Platform plf, int arg1, Throwable arg2) {
                 arg2.printStackTrace();
                 if (listener != null)
-                    listener.onError(Option.SHARE.getType(), ERROR, plf, null);
+                    listener.onError(Option.SHARE.getType(), ERROR, plf, extraParams);
                 else
-                    handleCallback(Option.SHARE.getType(), ERROR, plf, null);
+                    handleCallback(Option.SHARE.getType(), ERROR, plf, extraParams);
             }
 
             @Override
             public void onComplete(Platform plf, int arg1, HashMap<String, Object> arg2) {
                 if (listener != null)
-                    listener.onComplete(Option.SHARE.getType(), OK, plf, null);
+                    listener.onComplete(Option.SHARE.getType(), OK, plf, extraParams);
                 else
-                    handleCallback(Option.SHARE.getType(), OK, plf, null);
+                    handleCallback(Option.SHARE.getType(), OK, plf, extraParams);
             }
 
             @Override
             public void onCancel(Platform plf, int arg1) {
                 if (listener != null)
-                    listener.onCancel(Option.SHARE.getType(), CANCEL, plf, null);
+                    listener.onCancel(Option.SHARE.getType(), CANCEL, plf, extraParams);
                 else
-                    handleCallback(Option.SHARE.getType(), CANCEL, plf, null);
+                    handleCallback(Option.SHARE.getType(), CANCEL, plf, extraParams);
             }
         });
 
@@ -244,8 +249,8 @@ public class ShareTools {
             String from = map.get("from");
             String parent = map.get("parent");
             String platform = map.get("platform");
-            showSharePlatform(title, content, type, imgUrl, clickUrl, platform, from, parent,
-                    true, listener);
+            String extraParams = map.get("extraParams");
+            showSharePlatform(title, content, type, imgUrl, clickUrl, platform, from, parent, extraParams, true, listener);
         }
     }
 
@@ -314,13 +319,13 @@ public class ShareTools {
                         starEvent("a_share_success", mParent, mFrom);
                         XHClick.statisticsShare(mFrom, mClickUrl, pf[1]);
                         Tools.showToast(mContext, pf[0] + "分享成功");
-                        String jsCallbackParams = null;
+                        String callbackParams = null;
                         Bundle bundle = msg.getData();
                         if (bundle != null) {
-                            jsCallbackParams = bundle.getString("bundle");
+                            callbackParams = bundle.getString("bundle");
                         }
                         notifyMsgResult(Option.SHARE, pf[0], "2", TextUtils.isEmpty
-                                (jsCallbackParams) ? pf[2] : jsCallbackParams);
+                                (callbackParams) ? pf[2] : callbackParams);
                     } else if (arg1 == Option.AUTHORIZE.getType()) {
                         Tools.showToast(mContext, pf[0] + "授权成功");
                         notifyMsgResult(Option.AUTHORIZE, pf[0], "2", msg.getData()
@@ -356,11 +361,11 @@ public class ShareTools {
     });
 
     private void notifyMsgResult(Option option, String platform, String success, String
-            jsCallbackParams) {
+            callbackParams) {
         Map<String, String> data = new HashMap<>();
         data.put("platform", platform);
         data.put("status", success);
-        data.put("callbackParams", jsCallbackParams);
+        data.put("callbackParams", callbackParams);
         String name = "";
         switch (option) {
             case SHARE:
@@ -455,26 +460,26 @@ public class ShareTools {
             @Override
             public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
                 if (listener != null)
-                    listener.onComplete(Option.SHARE.getType(), OK, platform, null);
+                    listener.onComplete(Option.SHARE.getType(), OK, platform, map.get("extraParams"));
                 else
-                    handleCallback(Option.SHARE.getType(), OK, platform, null);
+                    handleCallback(Option.SHARE.getType(), OK, platform, map.get("extraParams"));
             }
 
             @Override
             public void onError(Platform platform, int i, Throwable throwable) {
                 throwable.printStackTrace();
                 if (listener != null)
-                    listener.onError(Option.SHARE.getType(), ERROR, platform, null);
+                    listener.onError(Option.SHARE.getType(), ERROR, platform, map.get("extraParams"));
                 else
-                    handleCallback(Option.SHARE.getType(), ERROR, platform, null);
+                    handleCallback(Option.SHARE.getType(), ERROR, platform, map.get("extraParams"));
             }
 
             @Override
             public void onCancel(Platform platform, int i) {
                 if (listener != null)
-                    listener.onCancel(Option.SHARE.getType(), CANCEL, platform, null);
+                    listener.onCancel(Option.SHARE.getType(), CANCEL, platform, map.get("extraParams"));
                 else
-                    handleCallback(Option.SHARE.getType(), CANCEL, platform, null);
+                    handleCallback(Option.SHARE.getType(), CANCEL, platform, map.get("extraParams"));
             }
         });
         platform.share(shareParams);
@@ -565,7 +570,7 @@ public class ShareTools {
 
     }
 
-    private void sendWechatMoments(String content, String img, String imgPath, String clickUrl, ActionListener listener) {
+    private void sendWechatMoments(String content, String img, String imgPath, String clickUrl, String extraParams, ActionListener listener) {
 
         //朋友圈的图文分享
         HashMap<String, Object> configShare = new HashMap<>();
@@ -592,26 +597,26 @@ public class ShareTools {
             @Override
             public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
                 if (listener != null)
-                    listener.onComplete(Option.SHARE.getType(), OK, platform, null);
+                    listener.onComplete(Option.SHARE.getType(), OK, platform, extraParams);
                 else
-                    handleCallback(Option.SHARE.getType(), OK, platform, null);
+                    handleCallback(Option.SHARE.getType(), OK, platform, extraParams);
             }
 
             @Override
             public void onError(Platform platform, int i, Throwable throwable) {
                 throwable.printStackTrace();
                 if (listener != null)
-                    listener.onError(Option.SHARE.getType(), ERROR, platform, null);
+                    listener.onError(Option.SHARE.getType(), ERROR, platform, extraParams);
                 else
-                    handleCallback(Option.SHARE.getType(), ERROR, platform, null);
+                    handleCallback(Option.SHARE.getType(), ERROR, platform, extraParams);
             }
 
             @Override
             public void onCancel(Platform platform, int i) {
                 if (listener != null)
-                    listener.onCancel(Option.SHARE.getType(), CANCEL, platform, null);
+                    listener.onCancel(Option.SHARE.getType(), CANCEL, platform, extraParams);
                 else
-                    handleCallback(Option.SHARE.getType(), CANCEL, platform, null);
+                    handleCallback(Option.SHARE.getType(), CANCEL, platform, extraParams);
             }
         });
         platform.share(shareParams);

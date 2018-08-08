@@ -93,7 +93,8 @@ public class CommentDialog extends Dialog implements View.OnClickListener {
     private int replayIndex;
     private boolean isSend = false,isAddForm;
 
-    private int mCommentsNum;
+    private int mCommentsNum = -1;
+    private String mCommentsNumStr;
 
     private CommentOptionSuccCallback mCommentOptionSuccCallback;
 
@@ -188,7 +189,12 @@ public class CommentDialog extends Dialog implements View.OnClickListener {
     private void initData(Map<String, String> data) {
         mLoadManager = new LoadManager(mContext, mRootLayout);
         commentIdStrBuffer = new StringBuffer();
-        mCommentsNum = Integer.parseInt(data.get("commentNum"));
+        mCommentsNumStr = data.get("commentNum");
+        try {
+            mCommentsNum = Integer.parseInt(mCommentsNumStr);
+        } catch (Exception e) {
+            mCommentsNum = -1;
+        }
         setCommentsNum();
         type = data.get("type");
         code = data.get("code");
@@ -253,7 +259,7 @@ public class CommentDialog extends Dialog implements View.OnClickListener {
     }
 
     private void setCommentsNum() {
-        comment_allNum.setText("全部评论(" + mCommentsNum + ")");
+        comment_allNum.setText("全部评论(" + (mCommentsNum == -1 ? mCommentsNumStr : mCommentsNum) + ")");
     }
 
     @Override
@@ -425,8 +431,16 @@ public class CommentDialog extends Dialog implements View.OnClickListener {
                                                 if(flag >= ReqInternet.REQ_OK_STRING){
                                                     listArray.remove(position);
                                                     adapterSimple.notifyDataSetChanged();
-                                                    mCommentsNum --;
-                                                    mCommentsNum = Math.max(mCommentsNum, 0);
+                                                    try {
+                                                        mCommentsNum = Integer.parseInt(mCommentsNumStr);
+                                                    } catch (Exception e) {
+                                                        mCommentsNum = -1;
+                                                    }
+                                                    if (mCommentsNum != -1) {
+                                                        mCommentsNum--;
+                                                        mCommentsNum = Math.max(mCommentsNum, 0);
+                                                        mCommentsNumStr = String.valueOf(mCommentsNum);
+                                                    }
                                                     setCommentsNum();
                                                     if(listArray.size() == 0){
                                                         upDropPage = 1;
@@ -679,7 +693,15 @@ public class CommentDialog extends Dialog implements View.OnClickListener {
                         }
                         adapterSimple.notifyDataSetChanged();
                         downRefreshList.setSelection(0);
-                        mCommentsNum ++;
+                        try {
+                            mCommentsNum = Integer.parseInt(mCommentsNumStr);
+                        } catch (Exception e) {
+                            mCommentsNum = -1;
+                        }
+                        if (mCommentsNum != -1) {
+                            mCommentsNum++;
+                            mCommentsNumStr = String.valueOf(mCommentsNum);
+                        }
                         setCommentsNum();
                         if (mCommentOptionSuccCallback != null)
                             mCommentOptionSuccCallback.onSendSucc();

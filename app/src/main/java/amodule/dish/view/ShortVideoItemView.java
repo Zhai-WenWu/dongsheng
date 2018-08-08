@@ -119,11 +119,11 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
     private AtomicBoolean mDelLoading;
     private boolean mRepeatEnable;
     private boolean mStaticEnable;
+    private boolean mStaticEnable2;
     private String mVideoUrl;
     private String mTopicClickUrl;
     private String mAddressClickUrl;
 
-    private int mCommentsNum;
     private int mPos;
     private ShortVideoPlayer mPlayerView;
     private CommentDialog mCommentDialog;
@@ -283,21 +283,23 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
                 if (currentTime * 1.0 / totalTime >= playableTime) {
                     if (!mStaticEnable) {
                         mStaticEnable = true;
-                        ReqEncyptInternet.in().doEncypt(StringManager.API_SHORT_VIDEO_VIEW_VALIDATE, mData.getCode(), new InternetCallback() {
-                            @Override
-                            public void loaded(int i, String s, Object o) {
-                                super.loaded(i, s, o);
-                            }
-                        });
+                        startStatistics(StringManager.API_SHORT_VIDEO_VIEW_VALIDATE);
                     }
                 } else {
                     mStaticEnable = false;
+                }
+                if (currentTime < 2) {
+                    if (!mStaticEnable2) {
+                        mStaticEnable2 = true;
+                        startStatistics(StringManager.API_SHORT_VIDEO_ACCESS);
+                    }
+                } else {
+                    mStaticEnable2 = false;
                 }
             }
         });
 
     }
-
 
     /**
      * 开始播放入口
@@ -566,18 +568,40 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         commentMap.put("from", "2");
         commentMap.put("type", "2");
         commentMap.put("code", mData.getCode());
-        commentMap.put("commentNum", String.valueOf(mCommentsNum));
+        commentMap.put("commentNum", mData.getCommentNum());
         if (mCommentDialog == null) {
             mCommentDialog = new CommentDialog(XHActivityManager.getInstance().getCurrentActivity(), commentMap);
             mCommentDialog.setCommentOptionSuccCallback(new CommentDialog.CommentOptionSuccCallback() {
                 @Override
                 public void onSendSucc() {
-                    mCommentsNum ++;
+                    if (mData == null)
+                        return;
+                    String commentsNum = "";
+                    try {
+                        commentsNum = String.valueOf(Integer.parseInt(mData.getCommentNum()) + 1);
+                    } catch (Exception e) {
+                        commentsNum = mData.getCommentNum();
+                    }
+                    mData.setCommentNum(commentsNum);
+                    if (mCommentNumText != null) {
+                        mCommentNumText.setText(commentsNum);
+                    }
                 }
 
                 @Override
                 public void onDelSucc() {
-                    mCommentsNum = Math.max(-- mCommentsNum, 0);
+                    if (mData == null)
+                        return;
+                    String commentsNum = "";
+                    try {
+                        commentsNum = String.valueOf(Math.max(Integer.parseInt(mData.getCommentNum()) - 1, 0));
+                    } catch (Exception e) {
+                        commentsNum = mData.getCommentNum();
+                    }
+                    mData.setCommentNum(commentsNum);
+                    if (mCommentNumText != null) {
+                        mCommentNumText.setText(commentsNum);
+                    }
                 }
             });
             mCommentDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -612,8 +636,8 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
                 if (flag >= ReqInternet.REQ_OK_STRING) {
                     try {
                         mGoodImg.setSelected(!mGoodImg.isSelected());
-//                        int zanNum = Integer.parseInt(mNumInfoMaps.get(0).get(""));
-//                        mGoodText.setText(String.valueOf(++zanNum));
+                        mData.setLikeNum(String.valueOf(Integer.parseInt(mData.getLikeNum())));
+                        mGoodText.setText(mData.getLikeNum());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -638,6 +662,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         intent.putExtra("imgUrl", mData.getShareModule().getImg());
         intent.putExtra("title", mData.getShareModule().getTitle());
         intent.putExtra("content", mData.getShareModule().getContent());
+        intent.putExtra("extraParams", mData.getCode());
         String clickUrl = mData.getShareModule().getUrl();
         intent.putExtra("clickUrl", clickUrl);
         context.startActivity(intent);
@@ -863,7 +888,10 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
                     @Override
                     public void loaded(int flag, String url, Object obj) {
                         if (flag >= ReqEncyptInternet.REQ_OK_STRING) {
-                            mCommentsNum ++;
+                            try {
+                                mData.setCommentNum(String.valueOf(Integer.parseInt(mData.getCommentNum()) + 1));
+                                mCommentNumText.setText(mData.getCommentNum());
+                            } catch (Exception e) {}
                         } else {
                             Tools.showToast(getContext(), "评论失败，请重试");
                         }
@@ -898,6 +926,15 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
 
     public final String getString(@StringRes int resId) {
         return getResources().getString(resId);
+    }
+
+    private void startStatistics(String url) {
+        ReqEncyptInternet.in().doEncypt(url, "code=" + mData.getCode(), new InternetCallback() {
+            @Override
+            public void loaded(int i, String s, Object o) {
+                super.loaded(i, s, o);
+            }
+        });
     }
 
 }

@@ -7,8 +7,7 @@
 
     <include
         android:id="@+id/a_dish_detail_new_title"
-        layout="@layout/a_dish_detail_bar_title_new"
-        android:background="@color/transparent" />
+        layout="@layout/a_dish_detail_bar_title_new" />
 
     <ListView
         android:id="@+id/listview"

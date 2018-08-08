@@ -65,29 +65,27 @@ public class TopicItemHolder extends RvBaseViewHolder<TopicItemModel> implements
             }
             ImageModel imageModel = data.getImageModel();
             VideoModel videoModel = data.getVideoModel();
-            if (videoModel != null && !videoModel.isEmpty()) {
+            if (imageModel != null && !TextUtils.isEmpty(imageModel.getImageUrl())) {
+                loadImage(imageModel.getImageUrl(), mImg);
+            } else if (videoModel != null && !videoModel.isEmpty()) {
                 String videoImg = videoModel.getVideoImg();
-                String videoGif = videoModel.getVideoGif();
-                if (!TextUtils.isEmpty(videoGif)) {
-                    Glide.with(itemView.getContext()).load(videoGif).asGif().diskCacheStrategy(DiskCacheStrategy.SOURCE).placeholder(R.drawable.i_nopic).into(mImg);
-                } else if (!TextUtils.isEmpty(videoImg)) {
+                if (!TextUtils.isEmpty(videoImg)) {
                     loadImage(videoImg, mImg);
                 } else {
                     mImg.setImageResource(R.drawable.i_nopic);
                 }
-            } else if (imageModel != null && !TextUtils.isEmpty(imageModel.getImageUrl())) {
-                loadImage(imageModel.getImageUrl(), mImg);
             } else {
                 mImg.setImageResource(R.drawable.i_nopic);
             }
         } else {
+            mImg.setImageResource(R.drawable.i_nopic);
             mLabel.setVisibility(View.GONE);
         }
     }
 
     private void loadImage(String url, ImageView view) {
         LoadImage.with(itemView.getContext())
-                .load(url).setPlaceholderId(R.drawable.i_nopic)
+                .load(url).setPlaceholderId(R.drawable.i_nopic).setErrorId(R.drawable.i_nopic)
                 .setSaveType(FileManager.save_cache)
                 .build().into(view);
     }

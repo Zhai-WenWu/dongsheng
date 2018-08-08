@@ -48,6 +48,7 @@ public class ShareActivityDialog extends Activity implements View.OnClickListene
     private String tongjiId = "a_user";
 
     private String mShareParams;
+    private String mExtraParams;
 
     private boolean mShowIntegralTip;
 
@@ -89,6 +90,7 @@ public class ShareActivityDialog extends Activity implements View.OnClickListene
         mShareParams = getIntent().getStringExtra("shareParams");
 
         mShowIntegralTip = getIntent().getBooleanExtra("showIntegralTip", false);
+        mExtraParams = getIntent().getStringExtra("extraParams");
 
         init();
     }
@@ -132,6 +134,7 @@ public class ShareActivityDialog extends Activity implements View.OnClickListene
                     dataMap.put("from", mShareFrom);
                     dataMap.put("parent", mParent);
                     dataMap.put("platform", platfrom);
+                    dataMap.put("extraParams", mExtraParams);
                     if (!TextUtils.isEmpty(mShareParams))
                         dataMap.put("shareParams", mShareParams);
                     barShare.showSharePlatform(dataMap);

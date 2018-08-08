@@ -21,6 +21,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import acore.logic.XHClick;
 import acore.tools.FileManager;
+import acore.tools.IObserver;
+import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
 import amodule.dish.adapter.RvVericalVideoItemAdapter;
@@ -36,7 +38,7 @@ import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 
-public class ShortVideoDetailActivity extends AppCompatActivity {
+public class ShortVideoDetailActivity extends AppCompatActivity implements IObserver {
 
     public static final String STATISTIC_ID = "a_NewShortVideoDetail";
 
@@ -90,6 +92,7 @@ public class ShortVideoDetailActivity extends AppCompatActivity {
                 mDataController.start(code);
 //            }
         }
+        ObserverManager.getInstance().registerObserver(this, ObserverManager.NOTIFY_SHARE);
     }
 
     private void addListener() {
@@ -270,12 +273,38 @@ public class ShortVideoDetailActivity extends AppCompatActivity {
         super.onDestroy();
         mOnResuming.set(false);
         rvVericalVideoItemAdapter.stopCurVideoView();
+        ObserverManager.getInstance().unRegisterObserver(this);
     }
 
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+    }
+
+    @Override
+    public void notify(String name, Object sender, Object data) {
+        if (name == null)
+            return;
+        switch (name) {
+            case ObserverManager.NOTIFY_SHARE:
+                if (data != null) {
+                    Map<String, String> dataMap = (Map<String, String>) data;
+                    String videoCode = dataMap.get("callbackParams");
+                    if (!TextUtils.isEmpty(videoCode)) {
+                        for (int i = 0; i < mDatas.size(); i ++) {
+                            ShortVideoDetailModule module = mDatas.get(i);
+                            if (module != null && TextUtils.equals(module.getCode(), videoCode)) {
+                                try {
+                                    module.setShareNum(String.valueOf(Integer.parseInt(module.getShareNum()) + 1));
+                                    rvVericalVideoItemAdapter.notifyItemChanged(i);
+                                } catch (Exception e) {}
+                            }
+                        }
+                    }
+                }
+                break;
+        }
     }
 
     private class DataController {

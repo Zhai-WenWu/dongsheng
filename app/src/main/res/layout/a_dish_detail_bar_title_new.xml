@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/barTitle"
     android:layout_width="match_parent"
-    android:background="@color/black"
+    android:background="@color/transparent"
     android:layout_height="@dimen/topbar_height">
 
     <View
@@ -45,6 +45,7 @@
             style="@style/rightBtn"
             android:clickable="false"
             android:visibility="visible"
+            android:layout_centerVertical="true"
             android:src="@drawable/i_ad_more" />
 
         <TextView
