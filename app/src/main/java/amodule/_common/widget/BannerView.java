@@ -70,7 +70,7 @@ import xh.basic.tool.UtilImage;
 
 public class BannerView extends Banner implements IBindMap, IStatictusData, ISaveStatistic, IHandlerClickEvent,ISetAdID
         ,IStatisticCallback,ISetStatisticPage, ISetAdController, ISetShowIndex, IUpdatePadding {
-    private LayoutInflater mInflater;
+    protected LayoutInflater mInflater;
     private ArrayList<String> mAdIDArray = new ArrayList<>();
     private int showMinH, showMaxH;
     private XHAllAdControl mAdControl;
@@ -216,10 +216,14 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
             @SuppressLint("InflateParams")
             @Override
             public View getView(int position) {
-                return mInflater.inflate(R.layout.widget_banner_item, null, true);
+                return BannerView.this.getView(position);
             }
         };
         setBannerAdapter(bannerAdapter);
+    }
+
+    protected View getView(int position) {
+        return mInflater.inflate(R.layout.widget_banner_item, null, true);
     }
 
     private ViewPager.OnPageChangeListener pageChangeListener;

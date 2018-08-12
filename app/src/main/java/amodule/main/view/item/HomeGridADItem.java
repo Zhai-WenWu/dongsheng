@@ -102,4 +102,8 @@ public class HomeGridADItem extends HomeItem {
         String content = mDataMap.get("content");
         mTitle.setText(TextUtils.isEmpty(content) ? "" : content);
     }
+
+    public ConstraintLayout getContentLayout() {
+        return mAdContainer;
+    }
 }

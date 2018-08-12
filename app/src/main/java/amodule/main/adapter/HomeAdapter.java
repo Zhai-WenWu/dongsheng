@@ -2,24 +2,19 @@ package amodule.main.adapter;
 
 import android.app.Activity;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
-
-import com.xiangha.R;
 
 import java.util.List;
 import java.util.Map;
 
-import acore.tools.ToolsDevice;
 import acore.widget.rvlistview.adapter.RvBaseAdapter;
 import acore.widget.rvlistview.holder.RvBaseViewHolder;
 import amodule.main.bean.HomeModuleBean;
 import amodule.main.view.item.HomeAlbumItem;
 import amodule.main.view.item.HomeAnyImgStyleItem;
 import amodule.main.view.item.HomeGridADItem;
-import amodule.main.view.item.HomeGridItem;
 import amodule.main.view.item.HomePostItem;
 import amodule.main.view.item.HomeRecipeItem;
 import amodule.main.view.item.HomeStaggeredGridItem;
@@ -228,37 +223,11 @@ public class HomeAdapter extends RvBaseAdapter<Map<String, String>> {
      */
     public class StaggeredGridImageViewHolder extends RvBaseViewHolder<Map<String, String>> {
         HomeStaggeredGridItem view;
-
+        public ConstraintLayout homeStaggeredGridItemContentLayout;
         public StaggeredGridImageViewHolder(HomeStaggeredGridItem view) {
             super(view);
             this.view = view;
-        }
-
-        @Override
-        public void bindData(int position, @Nullable Map<String, String> data) {
-            if (view != null) {
-                view.setHomeModuleBean(moduleBean);
-                view.setAdControl(mAdControlParent);
-                view.setData(data, position);
-                if (viewClickCallBack != null) view.setRefreshTag(viewClickCallBack);
-            }
-        }
-    }
-    /**
-     * 网格
-     */
-    public class GridImageViewHolder extends RvBaseViewHolder<Map<String, String>> {
-        HomeGridItem view;
-
-        public GridImageViewHolder(HomeGridItem view) {
-            super(view);
-            this.view = view;
-            final int originalW = 345;
-            final int originalH = 471;
-            int screenW = ToolsDevice.getWindowPx(getContext()).widthPixels;
-            int itemW = (screenW - getContext().getResources().getDimensionPixelSize(R.dimen.dp_30)) / 2;
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(itemW, itemW * originalH / originalW);
-            view.setLayoutParams(params);
+            homeStaggeredGridItemContentLayout = view.getContentLayout();
         }
 
         @Override
@@ -277,10 +246,11 @@ public class HomeAdapter extends RvBaseAdapter<Map<String, String>> {
      */
     public class GridADImageViewHolder extends RvBaseViewHolder<Map<String, String>> {
         HomeGridADItem view;
-
+        public ConstraintLayout homeGirdAdItemContentLayout;
         public GridADImageViewHolder(HomeGridADItem view) {
             super(view);
             this.view = view;
+            homeGirdAdItemContentLayout = view.getContentLayout();
         }
 
         @Override

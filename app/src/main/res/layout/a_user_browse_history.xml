@@ -26,7 +26,6 @@
         android:id="@+id/tabs_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#f5f5f5"
         android:layout_below="@+id/bar_title"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
@@ -37,13 +36,15 @@
             android:layout_height="@dimen/dp_41"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center_horizontal"
-            android:background="#f5f5f5"
+            app:pstsTabBackground="@color/transparent"
             android:visibility="visible"
-            app:pstsIndicatorColor="@color/comment_color"
+            app:pstsIndicatorColor="#fa273b"
+            app:pstsIndicatorHeight="@dimen/dp_2"
+            app:pstsIndicatorWidth="@dimen/dp_18"
+            app:pstsIndicatorToTextTopMargin="@dimen/dp__1"
             app:pstsIndicatorWidthFollowText="true"
-            app:pstsTabBackground="@color/dish_gray_bg_list"
             app:pstsTabPaddingLeftRight="@dimen/dp_25"
-            app:pstsTabTextColor="@color/tab_text_color"
+            app:pstsTabTextColor="@color/circle_tab_text_color"
             app:pstsTabTextSize="@dimen/sp_13"/>
     </RelativeLayout>
 

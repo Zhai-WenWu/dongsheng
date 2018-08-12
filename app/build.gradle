@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 apply plugin: 'walle'
-apply plugin: 'me.tatarka.retrolambda'
 
 repositories {
     flatDir {
@@ -63,7 +62,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 21
         versionCode 271
-        versionName "6.3.9.1"
+        versionName "6.4.0.1"
         // dex突破65535的限制
         multiDexEnabled true
         ndk {
@@ -78,8 +77,6 @@ android {
 
 
     dexOptions {
-        incremental true
-        jumboMode = true
         javaMaxHeapSize "4g"
     }
     packagingOptions {

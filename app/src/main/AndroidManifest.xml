@@ -1284,7 +1284,6 @@
             android:name="amodule.dish.activity.ShortVideoDetailActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:hardwareAccelerated="true"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/FullScreenTheme"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />

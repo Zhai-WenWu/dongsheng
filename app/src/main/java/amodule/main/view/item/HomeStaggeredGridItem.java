@@ -30,12 +30,12 @@ import aplug.basic.LoadImage;
 
 public class HomeStaggeredGridItem extends HomeItem {
 
+    private ConstraintLayout mContentLayout;
     private ImageView mImg;
-    private ConstraintLayout mImgContainer;
     private TextView mTitle,num_tv;
     private ImageView auther_userImg,img_fav;
     private boolean mIsVideo;
-    private int[] mHeightRange = new int[]{getResources().getDimensionPixelSize(R.dimen.dp_130), getResources().getDimensionPixelSize(R.dimen.dp_230)};
+    private int[] mHeightRange = new int[]{getResources().getDimensionPixelSize(R.dimen.dp_152), getResources().getDimensionPixelSize(R.dimen.dp_260)};
 
     public HomeStaggeredGridItem(Context context) {
         this(context, null);
@@ -53,13 +53,12 @@ public class HomeStaggeredGridItem extends HomeItem {
     @Override
     protected void initView() {
         super.initView();
-        ViewCompat.setElevation(this, 10f);
+        mContentLayout = findViewById(R.id.staggered_container);
         mImg = findViewById(R.id.img);
         mTitle = findViewById(R.id.title);
         auther_userImg = findViewById(R.id.user_header_img);
         img_fav = findViewById(R.id.img_fav);
         num_tv= findViewById(R.id.num_tv);
-        mImgContainer = findViewById(R.id.staggered_container);
     }
 
     @Override
@@ -71,7 +70,7 @@ public class HomeStaggeredGridItem extends HomeItem {
         if(mResourceData!=null && !mResourceData.isEmpty()){
             int imgWidth= Integer.parseInt(mResourceData.get("width"));
             int imgHeight= Integer.parseInt(mResourceData.get("height"));
-            int realWidth = (Tools.getPhoneWidth() - getResources().getDimensionPixelSize(R.dimen.dp_50)) / 2;
+            int realWidth = (Tools.getPhoneWidth() - getResources().getDimensionPixelSize(R.dimen.dp_51)) / 2;
             int realHeight = realWidth * imgHeight / imgWidth;
             if (realHeight < mHeightRange[0]) {
                 realHeight = mHeightRange[0];
@@ -86,7 +85,7 @@ public class HomeStaggeredGridItem extends HomeItem {
             cs.connect(mImg.getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END);
             cs.connect(mImg.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
             cs.connect(mImg.getId(), ConstraintSet.BOTTOM, R.id.guideline, ConstraintSet.TOP);
-            cs.applyTo(mImgContainer);
+            cs.applyTo(mContentLayout);
             mImg.postInvalidate();
             if(!TextUtils.isEmpty(mResourceData.get("gif"))) {
                 mImg.setTag(TAG_ID, mResourceData.get("gif"));
@@ -176,5 +175,9 @@ public class HomeStaggeredGridItem extends HomeItem {
                 }
             });
         }
+    }
+
+    public ConstraintLayout getContentLayout() {
+        return mContentLayout;
     }
 }

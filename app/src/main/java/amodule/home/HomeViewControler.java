@@ -32,6 +32,7 @@ import amodule._common.utility.WidgetUtility;
 import amodule.home.view.HomeBuoy;
 import amodule.home.view.HomeTitleLayout;
 import amodule.main.activity.MainHomePage;
+import amodule.main.adapter.HomeAdapter;
 import amodule.main.view.item.HomeItem;
 import aplug.web.ShowWeb;
 import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
@@ -361,13 +362,28 @@ public class HomeViewControler implements ISetAdController {
         public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
 
             StaggeredGridLayoutManager.LayoutParams params =(StaggeredGridLayoutManager.LayoutParams) view.getLayoutParams();
+            int paddingLeft = 0, paddingRight = 0, paddingTop = 0, paddingBottom = 0;
+            RecyclerView.ViewHolder holder = parent.getChildViewHolder(view);
+            if (holder instanceof HomeAdapter.StaggeredGridImageViewHolder) {
+                HomeAdapter.StaggeredGridImageViewHolder staggeredGridImageViewHolder = (HomeAdapter.StaggeredGridImageViewHolder) holder;
+                paddingLeft = staggeredGridImageViewHolder.homeStaggeredGridItemContentLayout.getPaddingLeft();
+                paddingTop = staggeredGridImageViewHolder.homeStaggeredGridItemContentLayout.getPaddingTop();
+                paddingRight = staggeredGridImageViewHolder.homeStaggeredGridItemContentLayout.getPaddingRight();
+                paddingBottom = staggeredGridImageViewHolder.homeStaggeredGridItemContentLayout.getPaddingBottom();
+            } else if (holder instanceof HomeAdapter.GridADImageViewHolder) {
+                HomeAdapter.GridADImageViewHolder gridADImageViewHolder = (HomeAdapter.GridADImageViewHolder) holder;
+                paddingLeft = gridADImageViewHolder.homeGirdAdItemContentLayout.getPaddingLeft();
+                paddingTop = gridADImageViewHolder.homeGirdAdItemContentLayout.getPaddingTop();
+                paddingRight = gridADImageViewHolder.homeGirdAdItemContentLayout.getPaddingRight();
+                paddingBottom = gridADImageViewHolder.homeGirdAdItemContentLayout.getPaddingBottom();
+            }
             if(view instanceof HomeItem){
                 switch (params.getSpanIndex()) {
                     case 0:
-                        outRect.set(mBigSpacing, mLittleSpacing / 2, mLittleSpacing / 2, mLittleSpacing / 2);
+                        outRect.set(mBigSpacing - paddingLeft, mLittleSpacing / 2 - paddingTop, mLittleSpacing / 2 - paddingRight, mLittleSpacing / 2 - paddingBottom);
                         break;
                     case 1:
-                        outRect.set(mLittleSpacing / 2, mLittleSpacing / 2, mBigSpacing, mLittleSpacing / 2);
+                        outRect.set(mLittleSpacing / 2 - paddingLeft, mLittleSpacing / 2 - paddingTop, mBigSpacing - paddingRight, mLittleSpacing / 2 - paddingBottom);
                         break;
                     default:
                         outRect.set(0, 0, 0, 0);

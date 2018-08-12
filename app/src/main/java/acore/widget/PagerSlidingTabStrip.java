@@ -25,6 +25,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
+import android.graphics.Path;
+import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Parcel;
@@ -33,7 +35,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.Pair;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -85,6 +86,8 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 
     private int mIndicatorColor;
     private int mIndicatorHeight = 2;
+    private int mIndicatorToTextTopMargin = 0;
+    private int mIndicatorWidth = -1;
     private int mIndicatorPadding = 0;
 
     private int mUnderlineHeight = 0;
@@ -145,6 +148,8 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         DisplayMetrics dm = getResources().getDisplayMetrics();
         mScrollOffset = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, mScrollOffset, dm);
         mIndicatorHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, mIndicatorHeight, dm);
+        mIndicatorToTextTopMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, mIndicatorToTextTopMargin, dm);
+        mIndicatorWidth = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, mIndicatorWidth, dm);
         mIndicatorPadding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, mIndicatorPadding, dm);
         mUnderlineHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, mUnderlineHeight, dm);
         mDividerPadding = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, mDividerPadding, dm);
@@ -183,6 +188,10 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         mIndicatorColor = a.getColor(R.styleable.PagerSlidingTabStrip_pstsIndicatorColor, mIndicatorColor);
         mIndicatorHeight = a.getDimensionPixelSize(R.styleable.PagerSlidingTabStrip_pstsIndicatorHeight,
                 mIndicatorHeight);
+        mIndicatorWidth = a.getDimensionPixelSize(R.styleable.PagerSlidingTabStrip_pstsIndicatorWidth,
+                mIndicatorWidth);
+        mIndicatorToTextTopMargin = a.getDimensionPixelSize(R.styleable.PagerSlidingTabStrip_pstsIndicatorToTextTopMargin,
+                mIndicatorToTextTopMargin);
         mIndicatorPadding = a.getDimensionPixelSize(R.styleable.PagerSlidingTabStrip_pstsIndicatorPaddingLeftRight,
                 mIndicatorPadding);
         mUnderlineColor = a.getColor(R.styleable.PagerSlidingTabStrip_pstsUnderlineColor, mUnderlineColor);
@@ -558,14 +567,40 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         // draw indicator line
         if (mIndicatorHeight > 0) {
             mRectPaint.setColor(mIndicatorColor);
-            Pair<Float, Float> lines = getDrawIndicatorCoordinates();
-            if (isIndicatorWidthFollowText) {
-                canvas.drawRect(lines.first + mPaddingLeft + mIndicatorPadding + mTabPadding, height - mIndicatorHeight,
-                        lines.second + mPaddingLeft - mIndicatorPadding - mTabPadding, height, mRectPaint);
-            } else {
-                canvas.drawRect(lines.first + mPaddingLeft + mIndicatorPadding, height - mIndicatorHeight,
-                        lines.second + mPaddingLeft - mIndicatorPadding, height, mRectPaint);
+            float tabHeight = mTabsContainer.getChildAt(0).findViewById(R.id.psts_tab_title).getHeight();
+            float top = height - mIndicatorHeight, bottom = height;
+            if (mIndicatorToTextTopMargin != 0) {
+                top = height / 2 + tabHeight / 2 + mIndicatorToTextTopMargin;
+                bottom = height / 2 + tabHeight / 2 + mIndicatorToTextTopMargin + mIndicatorHeight;
             }
+
+//            top = 131.0f;
+//            bottom = 140.0f;
+
+            Pair<Float, Float> lines = getDrawIndicatorCoordinates();
+            Path path = new Path();
+            if (mIndicatorWidth > 0) {
+                RectF rectF = new RectF(lines.first + (lines.second - lines.first - mIndicatorWidth) / 2, top, lines.second - (lines.second - lines.first - mIndicatorWidth) / 2, bottom);
+                float radii = mIndicatorHeight * 1.0f / 2;
+                path.addRoundRect(rectF, radii, radii, Path.Direction.CW);
+                canvas.drawPath(path, mRectPaint);
+            } else {
+                if (isIndicatorWidthFollowText) {
+                    RectF rectF = new RectF(lines.first + mPaddingLeft + mIndicatorPadding + mTabPadding, top,
+                            lines.second + mPaddingLeft - mIndicatorPadding - mTabPadding, bottom);
+                    float radii = mIndicatorHeight * 1.0f / 2;
+                    path.addRoundRect(rectF, radii, radii, Path.Direction.CW);
+                    canvas.drawPath(path, mRectPaint);
+                } else {
+
+                    RectF rectF = new RectF(lines.first + mPaddingLeft + mIndicatorPadding, top,
+                            lines.second + mPaddingLeft - mIndicatorPadding, bottom);
+                    float radii = mIndicatorHeight * 1.0f / 2;
+                    path.addRoundRect(rectF, radii, radii, Path.Direction.CW);
+                    canvas.drawPath(path, mRectPaint);
+                }
+            }
+
         }
     }
 

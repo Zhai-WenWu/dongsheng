@@ -93,22 +93,24 @@
                     android:id="@+id/psts"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:background="@color/common_top_bg">
 
                     <acore.widget.PagerSlidingTabStrip
                         android:id="@+id/tabs"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/dp_45"
                         android:layout_gravity="center_horizontal"
-                        android:background="#fffffe"
+                        app:pstsTabBackground="@color/transparent"
                         android:visibility="visible"
-                        app:pstsIndicatorColor="@color/comment_color"
+                        app:pstsIndicatorColor="#fa273b"
+                        app:pstsIndicatorHeight="@dimen/dp_2"
+                        app:pstsIndicatorWidth="@dimen/dp_18"
+                        app:pstsIndicatorToTextTopMargin="@dimen/dp__1"
                         app:pstsIndicatorWidthFollowText="true"
                         app:pstsTabColumn="5"
-                        app:pstsTabTextColor="@color/tab_text_color"
-                        app:pstsTabTextSize="@dimen/sp_14"
-                        app:pstsUnderlineColor="#e1e1e1"
-                        app:pstsUnderlineHeight="@dimen/dp_0.5"/>
+                        app:pstsTabTextColor="@color/circle_tab_text_color"
+                        app:pstsTabTextSize="@dimen/sp_14"/>
                 </RelativeLayout>
 
                 <android.support.v4.view.ViewPager

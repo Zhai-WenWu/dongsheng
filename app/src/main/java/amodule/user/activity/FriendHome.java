@@ -89,6 +89,8 @@ public class FriendHome extends BaseActivity {
     private String type="";//当前选择type类型
     private String type_subject="subject";
     private String type_dish="dish";
+    private String type_video = "video";
+    private String type_article = "article";
     public static boolean isAlive = false;
 
     private boolean mIsMySelf;
@@ -147,6 +149,10 @@ public class FriendHome extends BaseActivity {
             tabIndex=1;
         }else if(type_subject.equals(type)){
             tabIndex=0;
+        } else if (type_video.equals(type)) {
+            tabIndex = 2;
+        } else if (type_article.equals(type)) {
+            tabIndex = 3;
         }
     }
     private void initView() {

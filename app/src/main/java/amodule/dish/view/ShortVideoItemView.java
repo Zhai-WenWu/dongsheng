@@ -77,6 +77,14 @@ import xh.basic.tool.UtilImage;
  * 短视频itemView
  */
 public class ShortVideoItemView extends BaseItemView implements View.OnClickListener, SeekBar.OnSeekBarChangeListener{
+    private static final int INNER_PLAY_STATE_START = 1;
+    private static final int INNER_PLAY_STATE_PLAYING = 2;
+    private static final int INNER_PLAY_STATE_PAUSE = 3;
+    private static final int INNER_PLAY_STATE_STOP = 4;
+    private static final int INNER_PLAY_STATE_AUTO_COMPLETE = 5;
+
+    private int mInnerPlayState;
+
     private Context context;
     private KeyboardDialog mKeyboardDialog;
     private ImageView mThumbImg;
@@ -89,8 +97,6 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
     private ImageView mLikeImg;
     private ImageView mMoreImg;
     private View mEmptyView;
-    private ConstraintLayout mScrollBarTopLayout;
-    private ImageView mPlayPauseImg;
     private ConstraintLayout mInfoLayout;
     private LinearLayout mLayoutTopic;
     private LinearLayout mLayoutAddress;
@@ -155,8 +161,6 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         mLikeImg = findViewById(R.id.image_like);
         mMoreImg = findViewById(R.id.image_more);
         mEmptyView = findViewById(R.id.view_empty);
-        mScrollBarTopLayout = findViewById(R.id.layout_scrollbar_top);
-        mPlayPauseImg = findViewById(R.id.image_play_pause);
         mInfoLayout = findViewById(R.id.layout_info);
         mLayoutTopic = findViewById(R.id.layout_topic);
         mLayoutAddress = findViewById(R.id.layout_address);
@@ -176,8 +180,6 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         mGoodImg = mBottomGoodLayout.findViewById(R.id.image1);
         mGoodText = mBottomGoodLayout.findViewById(R.id.text1);
 
-        mScrollBarTopLayout.setVisibility(View.GONE);
-        mPlayPauseImg.setSelected(true);
         mPlayerView= findViewById(R.id.short_video);
 
         mPlayerView.setShowFullAnimation(false);
@@ -203,7 +205,6 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         mLikeImg.setOnClickListener(this);
         mMoreImg.setOnClickListener(this);
         mEmptyView.setOnClickListener(this);
-        mPlayPauseImg.setOnClickListener(this);
         mBottomCommentLayout.setOnClickListener(this);
         mBottomGoodLayout.setOnClickListener(this);
         mBottomShareLayout.setOnClickListener(this);
@@ -220,8 +221,19 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
             public void onClickBlankFullscreen(String url, Object... objects) {}
             @Override
             public void onPrepared(String url, Object... objects) {
-                changePlayPauseUI(true);
-                changeThumbImageState(false);
+                switch (mInnerPlayState) {
+                    case INNER_PLAY_STATE_PAUSE:
+                        changeThumbImageState(true);
+                        pauseVideo();
+                        break;
+                    case INNER_PLAY_STATE_STOP:
+                        changeThumbImageState(true);
+                        releaseVideo();
+                        break;
+                    default:
+                        changeThumbImageState(false);
+                        break;
+                }
             }
             @Override
             public void onClickStartIcon(String url, Object... objects) {}
@@ -229,14 +241,12 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
             public void onClickStartError(String url, Object... objects) {}
             @Override
             public void onClickStop(String url, Object... objects) {
-                changePlayPauseUI(false);
             }
 
             @Override
             public void onClickStopFullscreen(String url, Object... objects) {}
             @Override
             public void onClickResume(String url, Object... objects) {
-                changePlayPauseUI(true);
             }
 
             @Override
@@ -249,9 +259,9 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
             public void onClickSeekbarFullscreen(String url, Object... objects) {}
             @Override
             public void onAutoComplete(String url, Object... objects) {
+                mInnerPlayState = INNER_PLAY_STATE_AUTO_COMPLETE;
                 changeThumbImageState(true);
                 if (mRepeatEnable) {
-                    changePlayPauseUI(true);
                     prepareAsync();
                 }
             }
@@ -271,7 +281,6 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
             public void onTouchScreenSeekLight(String url, Object... objects) {}
             @Override
             public void onPlayError(String url, Object... objects) {
-                changePlayPauseUI(false);
                 changeThumbImageState(true);
             }
         });
@@ -305,36 +314,41 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
      * 开始播放入口
      */
     public void prepareAsync() {
-//        Log.i("xianghaTag","item_______________________prepareAsync____"+position);
-        if (mMainHandler == null)
-            mMainHandler = new Handler(Looper.getMainLooper());
-        mMainHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                mPlayerView.startPlayLogic();
-            }
-        });
+        if (mInnerPlayState == INNER_PLAY_STATE_START)
+            return;
+        mInnerPlayState = INNER_PLAY_STATE_START;
+        mPlayerView.startPlayLogic();
     }
-    public void resumeVideoView(){
-//        Log.i("xianghaTag","item_______________________resumeVideoView____"+position);
+    public void resumeVideo(){
+        if (mInnerPlayState == INNER_PLAY_STATE_PLAYING)
+            return;
+        mInnerPlayState = INNER_PLAY_STATE_PLAYING;
         mPlayerView.onVideoResume();
     }
     /**
      * 暂停
      */
-    public void pauseVideoView(){
-//        Log.i("xianghaTag","item_______________________pauseVideoView____"+position);
+    public void pauseVideo(){
+        if (mInnerPlayState == INNER_PLAY_STATE_PAUSE)
+            return;
+        mInnerPlayState = INNER_PLAY_STATE_PAUSE;
         mPlayerView.onVideoPause();
     }
 
     /**
      * 重置数据
      */
-    public void releaseVideoView(){
-//        Log.i("xianghaTag","item_______________________releaseVideoView____"+position);
+    public void releaseVideo(){
+        if (mInnerPlayState == INNER_PLAY_STATE_STOP)
+            return;
+        mInnerPlayState = INNER_PLAY_STATE_STOP;
         mPlayerView.release();
-        mPlayerView.releaseAllVideos();
     }
+
+    public int getPlayState() {
+        return mPlayerView.getCurrentState();
+    }
+
     public boolean isPlaying(){
         return  mPlayerView.getCurrentState()==GSYVideoPlayer.CURRENT_STATE_PLAYING;
     }
@@ -346,6 +360,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         mData = module;
         if (mData == null)
             return;
+        mThumbImg.setImageBitmap(null);
         this.position = position;
         mUserName.setText(mData.getCustomerModel().getNickName());
         mIsSelf = TextUtils.equals(LoginManager.userInfo.get("code"), mData.getCustomerModel().getUserCode());
@@ -369,10 +384,17 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         int screenH = dm.heightPixels;
         int vW = Integer.parseInt(mData.getVideoModel().getVideoW());
         int vH = Integer.parseInt(mData.getVideoModel().getVideoH());
-        int heightImg = screenW * vH / vW;
+        int heightImg = 0;
+        if (vW == 0 || vH == 0) {
+            screenW = LayoutParams.MATCH_PARENT;
+            heightImg = LayoutParams.MATCH_PARENT;
+        } else {
+            heightImg = screenW * vH / vW;
+        }
         lp.width = screenW;
         lp.height = heightImg;
         mThumbImg.setLayoutParams(lp);
+        changeThumbImageState(true);
         mVideoUrl = mData.getVideoModel().getVideoUrlMap().get("defaultUrl");
         mCommentImg.setImageResource(R.drawable.short_video_detail_comment);
         mCommentNumText.setText(mData.getCommentNum());
@@ -520,7 +542,6 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
                 showBottomDialog();
                 break;
             case R.id.view_empty:
-            case R.id.image_play_pause:
                 handlePlay();
                 break;
             case R.id.layout_bottom_share:
@@ -672,19 +693,16 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
 
         switch (mPlayerView.getCurrentState()) {
             case GSYVideoPlayer.CURRENT_STATE_PLAYING:
-                mPlayerView.onVideoPause();
-                changePlayPauseUI(false);
+                pauseVideo();
                 break;
             case GSYVideoPlayer.CURRENT_STATE_ERROR:
                 Toast.makeText(getContext(), "视频播放错误", Toast.LENGTH_SHORT).show();
                 break;
             case GSYVideoPlayer.CURRENT_STATE_AUTO_COMPLETE:
                 prepareAsync();
-                changePlayPauseUI(true);
                 break;
             case GSYVideoPlayer.CURRENT_STATE_PAUSE:
-                mPlayerView.onVideoResume();
-                changePlayPauseUI(true);
+                resumeVideo();
                 break;
             case GSYVideoPlayer.CURRENT_STATE_PLAYING_BUFFERING_START:
                 Toast.makeText(getContext(), "正在缓冲", Toast.LENGTH_SHORT).show();
@@ -693,11 +711,6 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
                 Toast.makeText(getContext(), "正在加载中", Toast.LENGTH_SHORT).show();
                 break;
         }
-    }
-
-    private void changePlayPauseUI(boolean isPlaying) {
-        mPlayPauseImg.setSelected(isPlaying);
-        XHClick.mapStat(getContext(), ShortVideoDetailActivity.STATISTIC_ID, "视频", isPlaying ? "播放" : "暂停");
     }
 
     private void changeThumbImageState(boolean visible) {

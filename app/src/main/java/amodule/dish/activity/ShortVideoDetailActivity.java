@@ -12,6 +12,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 
+import com.shuyu.gsyvideoplayer.GSYVideoPlayer;
 import com.xiangha.R;
 
 import java.util.ArrayList;
@@ -52,16 +53,14 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
     private ParticularPositionEnableSnapHelper mPagerSnapHelper;
 
     private DataController mDataController;
-    private AtomicBoolean mLoading;
     private AtomicBoolean mOnResuming;
+    private boolean mFirstPlayStarted;
     boolean mCanDispatchTouch = true;
 
     private String mUserCode;
     private String mSourcePage;
     private String topicCode;
     private ArrayList<ShortVideoDetailModule> mDatas = new ArrayList<>();
-    private int nowPosition = 0;
-    private int mCurrentPosition = 0;
 
     private int mScreenWidth;
     private float mPointerX = -1f;
@@ -102,57 +101,71 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
                 mGuidanceLayout.setVisibility(View.GONE);
             }
         });
-//        mAdapter.setOnPlayPauseListener(new ShortVideoDetailFragment.OnPlayPauseClickListener() {
-//            @Override
-//            public void onClick(boolean isPlay) {
-//                // TODO: 2018/4/19 处理暂停/播放按钮的点击事件
-//            }
-//        });
-//        mAdapter.setOnSeekBarTrackingTouchListener(new ShortVideoDetailFragment.OnSeekBarTrackingTouchListener() {
-//            @Override
-//            public void onStartTrackingTouch(int position) {
-//                // TODO: 2018/4/19 处理开始触摸进度条的行为
-//            }
-//
-//            @Override
-//            public void onStopTrackingTouch(int position) {
-//                // TODO: 2018/4/19 处理触摸完毕后的行为
-//            }
-//        });
+        recyclerView.addOnChildAttachStateChangeListener(new RecyclerView.OnChildAttachStateChangeListener() {
+            @Override
+            public void onChildViewAttachedToWindow(View view) {
+                int pos = recyclerView.getChildAdapterPosition(view);
+                if (pos == 0 && !mFirstPlayStarted) {
+                    mFirstPlayStarted = true;
+                    RvVericalVideoItemAdapter.ItemViewHolder viewHolder = (RvVericalVideoItemAdapter.ItemViewHolder)recyclerView.getChildViewHolder(view);
+                    rvVericalVideoItemAdapter.setCurrentViewHolder(viewHolder);
+                    viewHolder.startVideo();
+                }
+            }
+
+            @Override
+            public void onChildViewDetachedFromWindow(View view) {
+
+            }
+        });
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 if(newState==RecyclerView.SCROLL_STATE_IDLE){
-                    LinearLayoutManager linearLayoutManager = (LinearLayoutManager)recyclerView.getLayoutManager();
-                    int lastPosition = linearLayoutManager.findLastVisibleItemPosition();
-                    int orientationScroll = 0;
-                    if(lastPosition>=0&&nowPosition!= lastPosition){
-                        if (nowPosition > lastPosition) {
-                            orientationScroll = DOWN_SCROLL;
-                        } else if (nowPosition < lastPosition) {
-                            orientationScroll = UP_SCROLL;
-                        }
-                        nowPosition= lastPosition;
+                    LinearLayoutManager llm = (LinearLayoutManager) recyclerView.getLayoutManager();
+                    int pos = llm.findLastCompletelyVisibleItemPosition();
+                    RvVericalVideoItemAdapter.ItemViewHolder currentHolder = (RvVericalVideoItemAdapter.ItemViewHolder) recyclerView.findViewHolderForAdapterPosition(pos);
+                    RvVericalVideoItemAdapter.ItemViewHolder adapterLastHolder = rvVericalVideoItemAdapter.getCurrentViewHolder();
+                    if (currentHolder == adapterLastHolder || adapterLastHolder == null || currentHolder == null)
+                        return;
+                    rvVericalVideoItemAdapter.setCurrentViewHolder(currentHolder);
+                    int lastState = adapterLastHolder.getPlayState();
+                    switch (lastState) {
+                        case GSYVideoPlayer.CURRENT_STATE_PLAYING:
+                            adapterLastHolder.pauseVideo();
+                            break;
+                        case GSYVideoPlayer.CURRENT_STATE_PLAYING_BUFFERING_START:
+                        case GSYVideoPlayer.CURRENT_STATE_PREPAREING:
+                        case GSYVideoPlayer.CURRENT_STATE_AUTO_COMPLETE:
+                        case GSYVideoPlayer.CURRENT_STATE_ERROR:
+                            adapterLastHolder.stopVideo();
+                            break;
+                        default:
+                            adapterLastHolder.stopVideo();
+                            break;
                     }
-                    int visibleItemPosition= linearLayoutManager.findLastCompletelyVisibleItemPosition();
-                    if(visibleItemPosition>=0 && mCurrentPosition!=visibleItemPosition){
-                        rvVericalVideoItemAdapter.stopCurVideoView();
-                        mCurrentPosition = visibleItemPosition;
-                        View holderView= recyclerView.findViewWithTag(mCurrentPosition);
-                        if(holderView!=null){
-                            RvVericalVideoItemAdapter.ItemViewHolder itemViewHolder= (RvVericalVideoItemAdapter.ItemViewHolder) recyclerView.getChildViewHolder(holderView);
-                            rvVericalVideoItemAdapter.setCurViewHolder(itemViewHolder);
-                            if (mOnResuming.get()) {
-                                rvVericalVideoItemAdapter.startCurVideoView();
-                            }
-                        }
+                    int currState = currentHolder.getPlayState();
+                    switch (currState) {
+                        case GSYVideoPlayer.CURRENT_STATE_PAUSE:
+                            currentHolder.resumeVideo();
+                            break;
+                        default:
+                            currentHolder.startVideo();
+                            break;
+                    }
+                    int orientationScroll = 0;
+                    if(currentHolder.getAdapterPosition() > adapterLastHolder.getAdapterPosition()){
+                        orientationScroll = DOWN_SCROLL;
+                    } else if (currentHolder.getAdapterPosition() < adapterLastHolder.getAdapterPosition()) {
+                        orientationScroll = UP_SCROLL;
                     }
                     //处理请求下一页
-                    if (nowPosition >= mDatas.size() - 1) {
+                    if (currentHolder.getAdapterPosition() >= mDatas.size() - 1) {
                         mDataController.executeNextOption();
                     }
-                    XHClick.mapStat(ShortVideoDetailActivity.this, STATISTIC_ID, "视频", orientationScroll == DOWN_SCROLL ? "上滑（下一条）" : "下滑（上一条）");
+                    if (orientationScroll !=0)
+                        XHClick.mapStat(ShortVideoDetailActivity.this, STATISTIC_ID, "视频", orientationScroll == DOWN_SCROLL ? "上滑（下一条）" : "下滑（上一条）");
                 }
             }
             @Override
@@ -162,32 +175,16 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
         });
     }
 
-    /**
-     * 第一次视频播放
-     */
-    public void startVideoOne(){
-        if(mCurrentPosition==0){
-            View holderView= recyclerView.findViewWithTag(mCurrentPosition);
-            if(holderView!=null){
-                RvVericalVideoItemAdapter.ItemViewHolder itemViewHolder= (RvVericalVideoItemAdapter.ItemViewHolder) recyclerView.getChildViewHolder(holderView);
-                rvVericalVideoItemAdapter.setCurViewHolder(itemViewHolder);
-                rvVericalVideoItemAdapter.startCurVideoView();
-            }
-        }
-    }
-
     private void init() {
         recyclerView= findViewById(R.id.recyclerView);
         mPagerSnapHelper = new ParticularPositionEnableSnapHelper();
         mPagerSnapHelper.attachToRecyclerView(recyclerView);
         mGuidanceLayout = findViewById(R.id.guidance_layout);
         rvVericalVideoItemAdapter= new RvVericalVideoItemAdapter(this,mDatas);
+        recyclerView.setItemViewCacheSize(3);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(rvVericalVideoItemAdapter);
-//        mAdapter = new ShortVideoDetailPagerAdapter(this, getSupportFragmentManager());
-//        mViewPager.setAdapter(mAdapter);
         mDataController = new DataController();
-        mLoading = new AtomicBoolean(false);
         mOnResuming = new AtomicBoolean(false);
         mScreenWidth = ToolsDevice.getWindowPx(this).widthPixels;
     }
@@ -204,7 +201,10 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
                 float currentX = ev.getX();
                 if (mPointerX - currentX > mScreenWidth / 5 && recyclerView.getScrollState() == RecyclerView.SCROLL_STATE_IDLE) {
                     mCanDispatchTouch = false;
-                    mPagerSnapHelper.particularTargetSnapPositionEnable(mCurrentPosition);
+                    RvVericalVideoItemAdapter.ItemViewHolder currHolder = rvVericalVideoItemAdapter.getCurrentViewHolder();
+                    if (currHolder != null) {
+                        mPagerSnapHelper.particularTargetSnapPositionEnable(currHolder.getAdapterPosition());
+                    }
                     gotoUser();
                     resetPointerX();
                     return true;
@@ -243,8 +243,7 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
         super.onResume();
         mOnResuming.set(true);
         checkShowGuidance();
-        rvVericalVideoItemAdapter.rumeseVideoView();
-        handleItemDataChange();
+        rvVericalVideoItemAdapter.onResume();
     }
 
     private void checkShowGuidance() {
@@ -259,7 +258,7 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
     protected void onPause() {
         super.onPause();
         mOnResuming.set(false);
-        rvVericalVideoItemAdapter.pauseVideoView();
+        rvVericalVideoItemAdapter.onPause();
     }
 
     @Override
@@ -272,7 +271,7 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
     protected void onDestroy() {
         super.onDestroy();
         mOnResuming.set(false);
-        rvVericalVideoItemAdapter.stopCurVideoView();
+        rvVericalVideoItemAdapter.onDestroy();
         ObserverManager.getInstance().unRegisterObserver(this);
     }
 
@@ -297,6 +296,7 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
                             if (module != null && TextUtils.equals(module.getCode(), videoCode)) {
                                 try {
                                     module.setShareNum(String.valueOf(Integer.parseInt(module.getShareNum()) + 1));
+                                    // TODO: 2018/8/9 有漏洞 不能直接notify item，
                                     rvVericalVideoItemAdapter.notifyItemChanged(i);
                                 } catch (Exception e) {}
                             }
@@ -309,46 +309,50 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
 
     private class DataController {
         private static final int COUNT_EACH_PAGE = 10;
-        private static final int COUNT_CODES_CACHE = 50;
         private int mNextPageStartPosition;
         private ArrayList<String> mCodes;
 
+        private AtomicBoolean mCodesLoading;
+        private AtomicBoolean mLoadCodesEnable;
+        private AtomicBoolean mDetailLoading;
+        private AtomicBoolean mLoadDetailEnable;
+
         public DataController() {
             mCodes = new ArrayList<>();
+            mCodesLoading = new AtomicBoolean(false);
+            mLoadCodesEnable = new AtomicBoolean(true);
+            mDetailLoading = new AtomicBoolean(false);
+            mLoadDetailEnable = new AtomicBoolean(true);
         }
 
-        private void executeNextOption() {
-            innerExecuteNextOption(false);
-        }
-
-        private ArrayList<String> getNextPageCodes() {
-            int codesSize = mCodes.size();
-            int lastPosition = codesSize - 1;
-            if (mNextPageStartPosition > lastPosition) {
-                return null;
-            } else {
-                ArrayList<String> ret = new ArrayList<>();
-                for (int i = 0; i < COUNT_EACH_PAGE; i ++) {
-                    int getPos = mNextPageStartPosition + i;
-                    if (getPos > lastPosition)
-                        break;
-                    ret.add(mCodes.get(getPos));
+        public void executeNextOption() {
+            ArrayList<String> nextPageCodes = getNextPageCodes();
+            if (!nextPageCodes.isEmpty()) {
+                loadVideoDetail(nextPageCodes, true);
+                if (nextPageCodes.size() < COUNT_EACH_PAGE) {
+                    loadVideoCodes(nextPageCodes.get(nextPageCodes.size() - 1), null, null, false);
                 }
-                return ret;
+            } else {
+                loadVideoCodes(mCodes.get(mNextPageStartPosition - 1), null, null, true);
             }
         }
 
+        private ArrayList<String> getNextPageCodes() {
+            int lastPosition = mCodes.size() - 1;
+            ArrayList<String> ret = new ArrayList<>();
+            for (int i = 0; i < COUNT_EACH_PAGE; i ++) {
+                int getPos = mNextPageStartPosition + i;
+                if (getPos > lastPosition)
+                    break;
+                ret.add(mCodes.get(getPos));
+            }
+            return ret;
+        }
+
         public void start(String code) {
-            addCode(code);
-            loadVideoDetail(mCodes, false);
-        }
-
-        private boolean checkPrepareNext() {
-            return mCodes.size() - mNextPageStartPosition < COUNT_EACH_PAGE;
-        }
-
-        private void addCode(String code) {
             mCodes.add(code);
+            loadVideoDetail(mCodes, false);
+            loadVideoCodes(code, null, null, true);
         }
 
         /**
@@ -357,8 +361,9 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
          * @param loadMore
          */
         private void loadVideoDetail(ArrayList<String> codes,boolean loadMore) {
-            if (codes == null || codes.isEmpty())
+            if (mDetailLoading.get() || codes == null || codes.isEmpty())
                 return;
+            mDetailLoading.set(true);
             mNextPageStartPosition += codes.size();
             StringBuffer buffer = new StringBuffer("codes=");
             for (int i = 0; i < codes.size(); i++) {
@@ -371,7 +376,9 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
             ReqEncyptInternet.in().doEncypt(StringManager.api_getVideoInfo, params, new InternetCallback() {
                 @Override
                 public void loaded(int flag, String s, Object o) {
+                    mDetailLoading.set(false);
                     if (flag >= ReqInternet.REQ_OK_STRING) {
+                        int insertPosStart = mDatas.size();
                         ArrayList<Map<String, String>> datas = StringManager.getListMapByJson(o);
                         for (int i = 0; i < datas.size() && datas.size() > 0; i ++) {
                             Map<String, String> itemMap = datas.get(i);
@@ -436,14 +443,9 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
                             module.setShareModule(shareModule);
                             mDatas.add(module);
                         }
-                        rvVericalVideoItemAdapter.notifyDataSetChanged();
-//                        mAdapter.setData(datas);
-                        if(mDatas.size()>0){
-                            startVideoOne();
+                        if (mDatas.size() != insertPosStart) {
+                            rvVericalVideoItemAdapter.notifyItemRangeInserted(insertPosStart, datas.size());
                         }
-                        if (checkPrepareNext())
-                            innerExecuteNextOption(true);
-
                     } else {
                         if (!loadMore) {
                             // TODO: 2018/4/17 第一次的网络请求失败
@@ -460,11 +462,14 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
          * @param lastCode
          * @param successRun
          * @param failedRun
+         * @param needLoadDetail
          */
-        private void loadVideoCodes(String lastCode, Runnable successRun, Runnable failedRun) {
-            if (mLoading.get() || lastCode == null || lastCode.isEmpty())
+        private void loadVideoCodes(String lastCode, Runnable successRun, Runnable failedRun, boolean needLoadDetail) {
+            if (!mLoadCodesEnable.get() || mCodesLoading.get() || lastCode == null || lastCode.isEmpty()) {
+                // TODO: 2018/8/9 正在加载中 或者 数据错误
                 return;
-            mLoading.set(true);
+            }
+            mCodesLoading.set(true);
             StringBuffer sb = new StringBuffer();
             sb.append("code=").append(lastCode).append("&");
             sb.append("sourcePage=").append(mSourcePage).append("&");
@@ -475,57 +480,29 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
             ReqEncyptInternet.in().doEncypt(StringManager.API_SHORT_VIDEOCODES, sb.toString(), new InternetCallback() {
                 @Override
                 public void loaded(int flag, String s, Object o) {
-                    mLoading.set(false);
+                    mCodesLoading.set(false);
                     if (flag >= ReqInternet.REQ_OK_STRING) {
                         ArrayList<Map<String, String>> maps = StringManager.getListMapByJson(StringManager.getFirstMap(o).get("list"));
                         for (int i = 0; i < maps.size(); i++) {
                             String code = maps.get(i).get("");
-                            addCode(code);
+                            mCodes.add(code);
+                        }
+                        if (maps.size() <= 0) {
+                            mLoadCodesEnable.set(false);
                         }
                         if (successRun != null)
                             successRun.run();
+
+                        if (needLoadDetail) {
+                            loadVideoDetail(getNextPageCodes(), true);
+                        }
                     } else {
+                        mLoadCodesEnable.set(false);
                         if (failedRun != null)
                             failedRun.run();
                     }
                 }
             });
         }
-
-        /**
-         *
-         * @param fromInner
-         */
-        private void innerExecuteNextOption(boolean fromInner) {
-            ArrayList<String> nextPageCodes = getNextPageCodes();
-            int lastPos = mCodes.size() - 1;
-            if (nextPageCodes == null || nextPageCodes.isEmpty()) {
-                loadVideoCodes(mCodes.get(lastPos), new Runnable() {
-                    @Override
-                    public void run() {
-                        if (lastPos >= mCodes.size() - 1)
-                            return;
-                        if (mNextPageStartPosition - 1 == lastPos)
-                            loadVideoDetail(getNextPageCodes(), true);
-                    }
-                }, null);
-            } else if (/*nextPageCodes.size() < COUNT_EACH_PAGE && */!fromInner) {
-                loadVideoDetail(nextPageCodes, true);
-            }
-        }
     }
-
-    /**
-     * 刷新当前item数据
-     */
-    private void handleItemDataChange(){
-        if(mCurrentPosition>=0 && mDatas.size()>mCurrentPosition){
-            View holderView= recyclerView.findViewWithTag(mCurrentPosition);
-            if(holderView!=null){
-                RvVericalVideoItemAdapter.ItemViewHolder itemViewHolder= (RvVericalVideoItemAdapter.ItemViewHolder) recyclerView.getChildViewHolder(holderView);
-                itemViewHolder.bindData(mCurrentPosition,mDatas.get(mCurrentPosition));
-            }
-        }
-    }
-
 }
