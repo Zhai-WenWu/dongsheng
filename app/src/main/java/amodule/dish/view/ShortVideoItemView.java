@@ -83,10 +83,11 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
     private static final int INNER_PLAY_STATE_STOP = 4;
     private static final int INNER_PLAY_STATE_AUTO_COMPLETE = 5;
 
+    private final int FIXED_TEXT_COUNT = 50;
+
     private int mInnerPlayState;
 
     private Context context;
-    private KeyboardDialog mKeyboardDialog;
     private ImageView mThumbImg;
     private RelativeLayout mVideoLayout;
     private ConstraintLayout mTitleLayout;
@@ -564,22 +565,18 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
     }
 
     private void showCommentEdit() {
-        if (mKeyboardDialog == null) {
-            mKeyboardDialog = new KeyboardDialog(getContext());
-            mKeyboardDialog.setOnSendClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mKeyboardDialog.cancel();
-                    String text = mKeyboardDialog.getText();
-                    if (TextUtils.isEmpty(text))
-                        return;
-                    sendComment(text);
-                }
-            });
-        }
-        if (mKeyboardDialog.isShowing())
-            return;
-        mKeyboardDialog.show();
+        KeyboardDialog keyboardDialog = new KeyboardDialog(getContext());
+        keyboardDialog.setOnSendClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                keyboardDialog.cancel();
+                String text = keyboardDialog.getText();
+                if (TextUtils.isEmpty(text))
+                    return;
+                sendComment(text);
+            }
+        });
+        keyboardDialog.show();
     }
 
     private void showComments() {
@@ -670,8 +667,6 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
     }
 
     private void doShare() {
-        if (checkLoginAndHandle())
-            return;
         Intent intent = new Intent(context, ShareActivityDialog.class);
         intent.putExtra("tongjiId", ShortVideoDetailActivity.STATISTIC_ID);
         intent.putExtra("shareTwoContent", "分享框");
@@ -880,8 +875,8 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
             return;
         }
 
-        if (content.length() > 2000) {
-            Tools.showToast(getContext(), "发送内容不能超过2000字");
+        if (content.length() > FIXED_TEXT_COUNT) {
+            Tools.showToast(getContext(), String.format("最多%1d字", FIXED_TEXT_COUNT));
             return;
         }
 

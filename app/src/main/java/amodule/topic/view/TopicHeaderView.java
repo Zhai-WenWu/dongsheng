@@ -2,15 +2,12 @@ package amodule.topic.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.support.constraint.ConstraintLayout;
 import android.text.Spannable;
-import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
-import android.text.style.ClickableSpan;
+import android.text.method.LinkMovementMethod;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -20,16 +17,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.BitmapRequestBuilder;
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.xiangha.R;
 
 import acore.tools.FileManager;
 import amodule.topic.style.CustomClickableSpan;
-import aplug.basic.BlurBitmapTransformation;
 import aplug.basic.LoadImage;
-import aplug.basic.SubAnimTarget;
 import aplug.basic.SubBitmapTarget;
 import xh.basic.tool.UtilImage;
 
@@ -120,6 +114,7 @@ public class TopicHeaderView extends RelativeLayout {
         mCustomClickableSpan.setOnClickListener(listener);
         ssb.setSpan(mCustomClickableSpan, 0, userName.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         ssb.append(" 创建的话题");
+        mTopicUser.setMovementMethod(LinkMovementMethod.getInstance());
         mTopicUser.setText(ssb);
         requestLayout();
     }

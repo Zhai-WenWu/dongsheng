@@ -66,7 +66,7 @@ public class HomeViewControler implements ISetAdController {
 
     private int scrollDataIndex = -1;//滚动数据的位置
     private int mBigSpacing = Tools.getDimen(XHApplication.in(),R.dimen.dp_20);
-    private int mLittleSpacing = Tools.getDimen(XHApplication.in(),R.dimen.dp_10);
+    private int mLittleSpacing = Tools.getDimen(XHApplication.in(),R.dimen.dp_11);
 
     @SuppressLint("InflateParams")
     public HomeViewControler(MainHomePage activity) {

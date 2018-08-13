@@ -59,6 +59,8 @@ import static xh.basic.tool.UtilString.getListMapByJson;
 
 public class CommentDialog extends Dialog implements View.OnClickListener {
 
+    private final int FIXED_TEXT_COUNT = 50;
+
     private Context mContext;
 
     private KeyboardDialog mKeyboardDialog;
@@ -649,8 +651,8 @@ public class CommentDialog extends Dialog implements View.OnClickListener {
             Tools.showToast(mContext,"发送内容不能为空");
             return;
         }
-        if(content.length() > 2000){
-            Tools.showToast(mContext,"发送内容不能超过2000字");
+        if(content.length() > FIXED_TEXT_COUNT){
+            Tools.showToast(mContext,String.format("最多%1d字", FIXED_TEXT_COUNT));
             return;
         }
         isSend = true;
