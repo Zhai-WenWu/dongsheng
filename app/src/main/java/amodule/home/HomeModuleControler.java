@@ -26,7 +26,7 @@ import aplug.basic.ReqInternet;
  */
 
 public class HomeModuleControler {
-    private static volatile boolean isRequest = false;
+    private static volatile boolean isRequesting = false;
 
     @Nullable
     public HomeModuleBean getHomeModuleByType(@NonNull Context context, @Nullable String mType) {
@@ -64,14 +64,15 @@ public class HomeModuleControler {
 
     /** 请求模块数据 */
     private void setRequestModuleData(InternetCallback callback) {
-        if (isRequest) return;
+        if (isRequesting) return;
+        isRequesting = true;
         final String modulePath = FileManager.getDataDir() + FileManager.file_homeTopModle;
         ReqEncyptInternet.in().doEncyptAEC(StringManager.API_GET_LEVEL, "version=" + "v2",
                 new InternetCallback() {
                     @Override
                     public void loaded(int flag, String url, final Object o) {
+                        isRequesting = false;
                         if (flag >= ReqInternet.REQ_OK_STRING) {
-                            isRequest = true;
                             FileManager.saveFileToCompletePath(modulePath, o.toString(), false);
                             if(callback != null){
                                 callback.loaded(ReqInternet.REQ_OK_STRING,url,o);

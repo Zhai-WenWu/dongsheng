@@ -63,7 +63,6 @@ public class CommentDialog extends Dialog implements View.OnClickListener {
 
     private Context mContext;
 
-    private KeyboardDialog mKeyboardDialog;
     private LoadManager mLoadManager;
     private View mContentView;
     private RelativeLayout mRootLayout;
@@ -295,22 +294,19 @@ public class CommentDialog extends Dialog implements View.OnClickListener {
     }
 
     private void showCommentEdit() {
-        if (mKeyboardDialog == null) {
-            mKeyboardDialog = new KeyboardDialog(mContext);
-            mKeyboardDialog.setOnSendClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mKeyboardDialog.cancel();
-                    String text = mKeyboardDialog.getText();
-                    mKeyboardDialog = null;
-                    if (!TextUtils.isEmpty(text)) {
-                        commend_write_et.setText(text);
-                        sendData();
-                    }
+        final KeyboardDialog keyboardDialog = new KeyboardDialog(mContext);
+        keyboardDialog.setOnSendClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                keyboardDialog.cancel();
+                String text = keyboardDialog.getText();
+                if (!TextUtils.isEmpty(text)) {
+                    commend_write_et.setText(text);
+                    sendData();
                 }
-            });
-        }
-        mKeyboardDialog.show();
+            }
+        });
+        keyboardDialog.show();
     }
 
     private void changeDataChange(){

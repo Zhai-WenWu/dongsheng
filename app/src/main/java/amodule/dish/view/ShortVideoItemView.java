@@ -495,7 +495,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
             return;
         mFavLoading.set(true);
         FavoriteHelper.instance().setFavoriteStatus(context.getApplicationContext(), mData.getCode(), mData.getName(),
-                FavoriteHelper.TYPE_DISH_VIDEO, new FavoriteHelper.FavoriteStatusCallback() {
+                FavoriteHelper.TYPE_VIDEO, new FavoriteHelper.FavoriteStatusCallback() {
                     @Override
                     public void onSuccess(boolean isFav) {
                         mFavLoading.set(false);

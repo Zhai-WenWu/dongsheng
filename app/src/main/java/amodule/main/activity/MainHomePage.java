@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 
@@ -27,6 +28,7 @@ import acore.tools.IObserver;
 import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
+import amodule._common.helper.WidgetDataHelper;
 import amodule.home.HomeDataControler;
 import amodule.home.HomeViewControler;
 import amodule.main.Main;
@@ -60,7 +62,9 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
     //是否加载
     volatile boolean LoadOver = false;
 
-    boolean HeaderDataLoaded = false;
+    boolean mRecommendFirstLoadEnable = false;
+
+    boolean mRecommendFirstLoad = true;
 
     protected long startTime = -1;//开始的时间戳
 
@@ -95,7 +99,12 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
     private void initialize() {
         //初始化 UI 控制
         mViewContrloer.onCreate();
-        mViewContrloer.getRvListView().setOnTouchListener((v, event) -> isRefreshingFeed);
+        mViewContrloer.getRvListView().setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return isRefreshingHeader;
+            }
+        });
         //初始化数据控制
         mDataControler = new HomeDataControler(this);
         mDataControler.setInsertADCallback((listDatas, isBack) -> {
@@ -108,22 +117,14 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
                     adControlParent.getNewAdData(listDatas, isBack) : listDatas;
         });
         mDataControler.setNotifyDataSetChangedCallback(() -> {
-            if (mHomeAdapter != null
-                    && mViewContrloer.getRvListView() != null
-                    && !mViewContrloer.getRvListView().isComputingLayout())
-                mHomeAdapter.notifyItemRangeChanged(0,mDataControler.getDataSize());
+            notifyDataChanged();
         });
         mDataControler.setEntryptDataCallback(this::EntryptData);
-        mDataControler.setOnListTypeCallback(listType -> {
-            if (mHomeAdapter != null)//此处设置固定的listType：3，瀑布流，只有此样式！
-                mHomeAdapter.setListType(HomeAdapter.LIST_TYPE_STAGGERED);
-            if (mViewContrloer != null)
-                mViewContrloer.setListType(listType);
-        });
         //初始化adapter
         mHomeAdapter = new HomeAdapter(this, mDataControler.getData(), mDataControler.getAdControl());
         mHomeAdapter.setHomeModuleBean(mDataControler.getHomeModuleBean());
         mHomeAdapter.setViewOnClickCallBack(isOnClick -> refresh());
+        mHomeAdapter.setListType(HomeAdapter.LIST_TYPE_STAGGERED);
 
 
     }
@@ -183,11 +184,13 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
                             mViewContrloer.refreshBuoy();
                     },
                     v -> {
-                        if (HeaderDataLoaded)
-                            EntryptData(!LoadOver);
+                        if (mRecommendFirstLoadEnable) {
+                            EntryptData(mRecommendFirstLoad);
+                        } else {
+                            mRecommendFirstLoadEnable = true;
+                        }
                     }
             );
-            loadManager.getSingleLoadMore(mViewContrloer.getRvListView()).setVisibility(View.GONE);
             mViewContrloer.addOnScrollListener();
             if (!ToolsDevice.isNetworkAvailable(this)) {
                 loadManager.hideProgressBar();
@@ -246,24 +249,39 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
             @Override
             public void loaded(int i, String s, Object o) {
                 loadManager.hideProgressBar();
-                Log.i("tzy", (isCache ? "cacheTime = " : "serviceTime = ") + (System.currentTimeMillis() - startLoadTime) + "ms");
-                HeaderDataLoaded = true;
+                mRecommendFirstLoad = true;
                 mViewContrloer.refreshComplete();
+                LoadOver = true;
                 if (i >= ReqEncyptInternet.REQ_OK_STRING) {
                     new Handler().postDelayed(() -> {
-                        if (mViewContrloer != null)
-                            mViewContrloer.setHeaderData(StringManager.getListMapByJson(o), isCache);
+                        if (mViewContrloer != null) {
+                            ArrayList<Map<String, String>> list = StringManager.getListMapByJson(o);
+                            if (list.size() > 2) {
+                                if (mDataControler != null) {
+                                    mDataControler.clearData();
+                                }
+                                Map<String, String> recommendList = list.remove(list.size() - 1);
+                                mViewContrloer.setHeaderData(list, isCache);
+                                if (recommendList != null && !recommendList.isEmpty()) {
+                                    Map<String, String> widgetData = StringManager.getFirstMap(recommendList.get(WidgetDataHelper.KEY_WIDGET_DATA));
+                                    Map<String, String> data = StringManager.getFirstMap(widgetData.get(WidgetDataHelper.KEY_DATA));
+                                    ArrayList<Map<String, String>> listData = StringManager.getListMapByJson(data.get(WidgetDataHelper.KEY_LIST));
+                                    if (mDataControler != null) {
+                                        mDataControler.getData().addAll(listData);
+                                        notifyDataChanged();
+                                    }
+                                }
+                            } else {
+                                mViewContrloer.setHeaderData(list, isCache);
+                            }
+                        }
                     },300);
-                    Log.i("tzy", "setHeaderData " + (isCache ? "cacheTime = " : "serviceTime = ") + (System.currentTimeMillis() - startLoadTime) + "ms");
                     if (!isCache && mDataControler != null) {
                         mDataControler.saveCacheHomeData((String) o);
                     }
                 }
                 if (!isCache && mDataControler != null) {
                     loadTopData();
-                    if(isRefreshingHeader){
-                        new Handler().postDelayed(() -> EntryptData(true),400);
-                    }
                 }
                 isRefreshingHeader = false;
 
@@ -274,39 +292,17 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
     /**
      * 请求数据入口
      *
-     * @param refresh，是否刷新
+     * @param firstLoad，是否第一次加载
      */
-    private void EntryptData(final boolean refresh) {
+    private void EntryptData(final boolean firstLoad) {
 //        Log.i("tzy_data", "EntryptData::" + refresh);
         //已经load
         LoadOver = true;
-        if (refresh && mDataControler != null) {
-            mDataControler.isNeedRefresh(true);
-        }
-        if (mDataControler != null) {
-//            Log.i("tzy", "EntryptData::" + mDataControler.isNeedRefCurrData());
-            if (mDataControler.isNeedRefCurrData()) {
-                //需要刷新当前数据
-                mDataControler.setNeedRefCurrData(false);
-                mDataControler.setBackUrl("");
-                mDataControler.clearData();
-                if (mHomeAdapter != null)
-                    mHomeAdapter.notifyItemRangeChanged(0,mDataControler.getDataSize());
-            }
-        }
-
-        if (refresh) {//向上翻页
-            if (mDataControler != null)
-                mDataControler.refreshADIndex();
-        }
-        mDataControler.loadServiceFeedData(refresh, new HomeDataControler.OnLoadDataCallback() {
+        mRecommendFirstLoad = false;
+        mDataControler.loadServiceFeedData(firstLoad, new HomeDataControler.OnLoadDataCallback() {
             @Override
             public void onPrepare() {
                 loadManager.changeMoreBtn(mViewContrloer.getRvListView(), ReqInternet.REQ_OK_STRING, -1, -1, LoadOver ? 2 : 1, !LoadOver);
-                if (refresh) {
-                    XHClick.mapStat(MainHomePage.this, "a_recommend", "刷新效果", "下拉刷新");
-                    loadManager.hideProgressBar();
-                }
                 Button loadmore = loadManager.getSingleLoadMore(mViewContrloer.getRvListView());
                 if (null != loadmore) {
                     loadmore.setVisibility(View.VISIBLE);
@@ -314,15 +310,11 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
             }
 
             @Override
-            public void onAfter(boolean refresh, int flag, int loadCount) {
-                if (refresh) {
-                    isRefreshingFeed = false;
-                }
+            public void onAfter(int flag, int loadCount) {
                 loadManager.hideProgressBar();
                 mViewContrloer.setFeedheaderVisibility(!mDataControler.getData().isEmpty());
                 if (ToolsDevice.isNetworkAvailable(MainHomePage.this)) {
-                    loadManager.changeMoreBtn(mViewContrloer.getRvListView(), flag, LoadManager.FOOTTIME_PAGE,
-                            refresh ? mDataControler.getData().size() : loadCount, 0, refresh);
+                    loadManager.changeMoreBtn(mViewContrloer.getRvListView(), flag, LoadManager.FOOTTIME_PAGE, loadCount, 0, false);
                 } else {
 
                 }
@@ -338,7 +330,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
                     loadManager.changeMoreBtn(mViewContrloer.getRvListView(),
                             ReqInternet.REQ_OK_STRING,
                             LoadManager.FOOTTIME_PAGE,
-                            -1, 0, refresh);
+                            -1, 0, false);
                 }
             }
         });
@@ -394,7 +386,6 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
     }
 
     boolean isRefreshingHeader = false;
-    boolean isRefreshingFeed = false;
 
     public void refresh() {
         Log.i("tzy_data", "refresh()");
@@ -402,11 +393,10 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
     }
 
     private void innerRefresh() {
-        if (isRefreshingHeader || isRefreshingFeed) {
+        if (isRefreshingHeader) {
             return;
         }
         isRefreshingHeader = true;
-        isRefreshingFeed = true;
         if(mViewContrloer != null){
             mViewContrloer.returnListTop();
         }
@@ -435,5 +425,12 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
     @Override
     public void setMessageTip(int tipCournt) {
         mViewContrloer.setMessage(tipCournt);
+    }
+
+    private void notifyDataChanged() {
+        if (mHomeAdapter != null
+                && mViewContrloer.getRvListView() != null
+                && !mViewContrloer.getRvListView().isComputingLayout())
+            mHomeAdapter.notifyItemRangeChanged(0,mDataControler.getDataSize());
     }
 }

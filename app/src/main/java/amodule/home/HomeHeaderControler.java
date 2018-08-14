@@ -48,7 +48,7 @@ public class HomeHeaderControler implements ISaveStatistic, ISetAdController {
 
     private TextView mFeedTitle;
 
-    private WidgetVerticalLayout[] mLayouts = new WidgetVerticalLayout[6];
+    private WidgetVerticalLayout[] mLayouts = new WidgetVerticalLayout[2];
 
     private View.OnLayoutChangeListener onLayoutChangeListener;
 
@@ -69,12 +69,6 @@ public class HomeHeaderControler implements ISaveStatistic, ISetAdController {
         mLayouts[0].setAdID(Arrays.asList(HOME_BANNEER_LIST));
         //功能导航 4按钮
         mLayouts[1] = (WidgetVerticalLayout) header.findViewById(R.id.funcnav1_widget);
-        //功能导航 2按钮
-        mLayouts[2] = (WidgetVerticalLayout) header.findViewById(R.id.funcnav2_widget);
-        //横向滑动
-        mLayouts[3] = (WidgetVerticalLayout) header.findViewById(R.id.horizontal1_widget);
-        mLayouts[4] = (WidgetVerticalLayout) header.findViewById(R.id.horizontal2_widget);
-        mLayouts[5] = (WidgetVerticalLayout) header.findViewById(R.id.horizontal3_widget);
 
         mFeedHeaderView = header.findViewById(R.id.a_home_feed_title);
         mFeedTitle = (TextView) header.findViewById(R.id.feed_title);

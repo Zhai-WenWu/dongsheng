@@ -50,17 +50,12 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
     private EntryptDataCallback mEntryptDataCallback;
     //向上刷新数据集合大小
     private int upDataSize = 0;
-    private boolean mNeedRefCurrData = false;
-    //强制清楚数据
-    private boolean compelClearData = false;
     //执行数据有问题时，数据请求，只执行一次。
     private boolean isNextUrl = true;
     //广告控制器
     private AdControlHomeDish mAdControl;
 
     private long lastSelfAdTime;
-
-    private String mListType;
 
     public HomeDataControler(MainHomePage activity) {
         this.mActivity = activity;
@@ -112,19 +107,10 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
     }
 
     //获取服务端Feed流数据
-    public void loadServiceFeedData(boolean refresh, @NonNull OnLoadDataCallback callback) {
+    public void loadServiceFeedData(boolean firstLoad, @NonNull OnLoadDataCallback callback) {
         StringBuilder params = new StringBuilder();
         String type = mHomeModuleBean.getType();
-        if (refresh) {
-            if (!TextUtils.isEmpty(backUrl)) {
-                params.append(backUrl);
-            } else {
-                String localBackUrl = (String) FileManager.loadShared(mActivity, type, SP_KEY_BACKURL);
-                params.append(TextUtils.isEmpty(localBackUrl) ? "type=" + type : localBackUrl);
-            }
-        } else {
-            params.append(TextUtils.isEmpty(nextUrl) ? "type=" + type : nextUrl);
-        }
+        params.append(TextUtils.isEmpty(nextUrl) ? "type=" + type : nextUrl).append(firstLoad ? "&page=1" : "");
 //        Log.i("tzy", "refresh::" + refresh + "::data:" + params.toString());
         //准备请求
         if (callback != null)
@@ -137,60 +123,21 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
                         if (flag >= ReqInternet.REQ_OK_STRING) {
                             Map<String, String> dataMap = StringManager.getFirstMap(object);
                             //当前url
-                            final String currentBackUrl = dataMap.get(SP_KEY_BACKURL);
                             final String currentNextkUrl = dataMap.get(SP_KEY_NEXTURL);
                             //当前数据有问题，直接return数据
                             ArrayList<Map<String, String>> listDatas = StringManager.getListMapByJson(dataMap.get("list"));
                             if (null != listDatas && listDatas.size() > 0) {
-                                if (mListType == null) {
-                                    mListType = dataMap.get("listType");
-                                    if (mOnListTypeCallback != null) {
-                                        mOnListTypeCallback.listTypeBack(mListType);
-                                        mOnListTypeCallback = null;
-                                    }
-                                }
 
-                                //存储当前backurl
-                                if (!TextUtils.isEmpty(backUrl) && refresh) {
-                                    FileManager.saveShared(mActivity, type, SP_KEY_BACKURL, backUrl);
-                                }
-                                //上拉数据，下拉数据
-                                if (TextUtils.isEmpty(backUrl)
-                                        || (!TextUtils.isEmpty(currentBackUrl) && refresh))
-                                    backUrl = currentBackUrl;
                                 if (TextUtils.isEmpty(nextUrl)
-                                        || !TextUtils.isEmpty(currentNextkUrl) && !refresh)
+                                        || !TextUtils.isEmpty(currentNextkUrl))
                                     nextUrl = currentNextkUrl;
-                                //当前只有向上刷新，并且服务端确认可以刷新数据
-                                final String resetValue = dataMap.get("reset");
-                                if (compelClearData || (refresh && "2".equals(resetValue))) {
-                                    mData.clear();
-                                    safeNotifySetChanged();
-                                    Log.i("zyj", "刷新数据：清集合");
-                                    isNeedRefresh(true);
-                                    //强制刷新，重置数据
-                                    if (!TextUtils.isEmpty(currentBackUrl))
-                                        backUrl = currentBackUrl;
-                                    if (!TextUtils.isEmpty(currentNextkUrl))
-                                        nextUrl = currentNextkUrl;
-                                }
                                 //*******广告数据插入*******
                                 loadCount = listDatas.size();
-                                if (refresh && mData.size() > 0) {
-                                    //如果需要加广告，插入广告
-                                    if (mInsertADCallback != null) {
-                                        listDatas = mInsertADCallback.insertAD(listDatas, true);
-                                        upDataSize += listDatas.size();
-                                        Log.i(tag_yu, "listDatas::111:" + listDatas.size());
-                                    }
-                                    mData.addAll(0, listDatas);//插入到第一个位置
-                                } else {
-                                    mData.addAll(listDatas);//顺序插入
-                                    //如果需要加广告，插入广告
-                                    if (mInsertADCallback != null) {
-                                        Log.i(tag_yu, "mListData::222:" + mData.size() + "::" + upDataSize);
-                                        mData = mInsertADCallback.insertAD(mData, false);
-                                    }
+                                mData.addAll(listDatas);//顺序插入
+                                //如果需要加广告，插入广告
+                                if (mInsertADCallback != null) {
+                                    Log.i(tag_yu, "mListData::222:" + mData.size() + "::" + upDataSize);
+                                    mData = mInsertADCallback.insertAD(mData, false);
                                 }
                                 //提示刷新UI
                                 safeNotifySetChanged();
@@ -198,7 +145,7 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
                                 if (mData.size() <= 4) {//推荐列表：低于等5的数据自动请求数据
                                     Log.i("zhangyujian", "自动下次请求:::" + mData.size());
                                     if (mEntryptDataCallback != null)
-                                        mEntryptDataCallback.onEntryptData(false);
+                                        mEntryptDataCallback.onEntryptData(firstLoad);
                                 }
                             } else {//置状态---刷新按钮
                                 int size = mData.size();
@@ -214,7 +161,7 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
                                         nextUrl = currentNextkUrl;
                                         isNextUrl = false;
                                         if (mEntryptDataCallback != null)
-                                            mEntryptDataCallback.onEntryptData(false);
+                                            mEntryptDataCallback.onEntryptData(firstLoad);
                                     }
                                 }
                             }
@@ -224,9 +171,8 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
                             if (callback != null)
                                 callback.onFailed();
                         }
-                        compelClearData = false;//强制刷新只能使用一次，一次数据后被置回去
                         if (callback != null)
-                            callback.onAfter(refresh, flag, loadCount);
+                            callback.onAfter(flag, loadCount);
                     }
                 });
     }
@@ -319,14 +265,6 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
         return mHomeModuleBean;
     }
 
-    public boolean isNeedRefCurrData() {
-        return mNeedRefCurrData;
-    }
-
-    public void setNeedRefCurrData(boolean needRefCurrData) {
-        mNeedRefCurrData = needRefCurrData;
-    }
-
     public void setBackUrl(String backUrl) {
         this.backUrl = backUrl;
     }
@@ -368,16 +306,12 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
         }
     }
 
-    public void setOnListTypeCallback(OnListTypeCallback onListTypeCallback) {
-        mOnListTypeCallback = onListTypeCallback;
-    }
-
     /*--------------------------------------------- Interface ---------------------------------------------*/
 
     public interface OnLoadDataCallback {
         void onPrepare();
 
-        void onAfter(boolean refersh, int flag, int loadCount);
+        void onAfter(int flag, int loadCount);
 
         void onSuccess();
 
@@ -393,18 +327,11 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
     }
 
     public interface EntryptDataCallback {
-        void onEntryptData(boolean refersh);
+        void onEntryptData(boolean firstLoad);
     }
 
     public XHAllAdControl getAllAdController() {
         return mViewAdControl;
     }
-
-    public interface OnListTypeCallback {
-        void listTypeBack(String listType);
-    }
-
-    private OnListTypeCallback mOnListTypeCallback;
-
 
 }

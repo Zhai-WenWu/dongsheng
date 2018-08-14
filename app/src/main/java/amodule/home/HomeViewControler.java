@@ -105,13 +105,6 @@ public class HomeViewControler implements ISetAdController {
                 ((HomeItem) view).onClickEvent(view);
             }
         });
-//        Drawable drawable = mActivity.getResources().getDrawable(R.drawable.bg_divider);
-//        DividerItemDecoration itemDecorationV = new DividerItemDecoration(mActivity, DividerItemDecoration.VERTICAL);
-//        itemDecorationV.setDrawable(drawable);
-//        DividerItemDecoration itemDecorationH = new DividerItemDecoration(mActivity, DividerItemDecoration.HORIZONTAL);
-//        itemDecorationH.setDrawable(drawable);
-//        recyclerView.addItemDecoration(itemDecorationV);
-//        recyclerView.addItemDecoration(itemDecorationH);
         recyclerView.addItemDecoration(new GridSpacingItemDecoration());
 
         //设置活动icon点击
@@ -157,16 +150,9 @@ public class HomeViewControler implements ISetAdController {
         }
     }
 
-    public void setListType(String listType) {
-//        if (mRvListView != null) {
-//            mRvListView.setListType(listType);
-//        }
-    }
-
     //
     public void setHeaderData(List<Map<String, String>> data, boolean isShowCache) {
         if (data == null || data.isEmpty()) {
-//            mHeaderControler.setVisibility(false);
             return;
         }
         if (isShowCache) {
@@ -185,7 +171,7 @@ public class HomeViewControler implements ISetAdController {
     //回到第一个位置
     public void returnListTop() {
         if (recyclerView != null) {
-            recyclerView.scrollToPosition(0);
+            recyclerView.getLayoutManager().scrollToPosition(0);
         }
     }
 
@@ -273,10 +259,6 @@ public class HomeViewControler implements ISetAdController {
                     if (null != launchIntent) {
                         mActivity.startActivity(launchIntent);
                     }
-                    //通过Scheme
-//                    Intent intent = new Intent();
-//                    intent.setData(Uri.parse(clickUrl));
-//                    mActivity.startActivity(intent);
                 } catch (Exception ignored) {
                     ignored.printStackTrace();
                 }
