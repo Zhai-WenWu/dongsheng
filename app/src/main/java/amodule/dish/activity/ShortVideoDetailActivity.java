@@ -1,6 +1,8 @@
 package amodule.dish.activity;
 
+import android.content.IntentFilter;
 import android.graphics.PixelFormat;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
@@ -13,6 +15,10 @@ import android.view.View;
 import android.view.WindowManager;
 
 import com.shuyu.gsyvideoplayer.GSYVideoPlayer;
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.TitleMessageView;
 import com.xiangha.R;
 
 import java.util.ArrayList;
@@ -20,12 +26,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import acore.broadcast.ConnectionChangeReceiver;
 import acore.logic.XHClick;
+import acore.override.XHApplication;
 import acore.tools.FileManager;
 import acore.tools.IObserver;
 import acore.tools.ObserverManager;
 import acore.tools.StringManager;
+import acore.tools.Tools;
 import acore.tools.ToolsDevice;
+import amodule._common.conf.GlobalVariableConfig;
 import amodule.dish.adapter.RvVericalVideoItemAdapter;
 import amodule.dish.helper.ParticularPositionEnableSnapHelper;
 import amodule.dish.video.module.ShareModule;
@@ -65,12 +75,21 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
     private int mScreenWidth;
     private float mPointerX = -1f;
     public static Map<String,String> favoriteLocalStates= new HashMap<>();//收藏状态集合 1--否，2--是
+
+    private ConnectionChangeReceiver mReceiver;
+    private DialogManager mNetStateTipDialog;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         getWindow().setFormat(PixelFormat.TRANSPARENT);
         setContentView(R.layout.layout_shortvideo_detail_activity);
+        if ("null".equals(ToolsDevice.getNetWorkSimpleType(XHApplication.in()))) {
+            Tools.showToast(this,"网络异常，请检查网络");
+            finish();
+            return;
+        }
         init();
         addListener();
         Bundle bundle = getIntent().getExtras();
@@ -92,6 +111,7 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
 //            }
         }
         ObserverManager.getInstance().registerObserver(this, ObserverManager.NOTIFY_SHARE);
+        registerConnectionReceiver();
     }
 
     private void addListener() {
@@ -109,7 +129,22 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
                     mFirstPlayStarted = true;
                     RvVericalVideoItemAdapter.ItemViewHolder viewHolder = (RvVericalVideoItemAdapter.ItemViewHolder)recyclerView.getChildViewHolder(view);
                     rvVericalVideoItemAdapter.setCurrentViewHolder(viewHolder);
-                    viewHolder.startVideo();
+                    String netState = ToolsDevice.getNetWorkSimpleType(XHApplication.in());
+                    switch (netState) {
+                        case "wifi":
+                            viewHolder.startVideo();
+                            break;
+                        case "null":
+                            Tools.showToast(ShortVideoDetailActivity.this,"加载失败，请重试");
+                            break;
+                        default:
+                            if (canShowTipDialog()) {
+                                showNetworkTip();
+                            } else {
+                                viewHolder.startVideo();
+                            }
+                            break;
+                    }
                 }
             }
 
@@ -187,6 +222,45 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
         mDataController = new DataController();
         mOnResuming = new AtomicBoolean(false);
         mScreenWidth = ToolsDevice.getWindowPx(this).widthPixels;
+    }
+
+    private void registerConnectionReceiver() {
+        mReceiver = new ConnectionChangeReceiver(new ConnectionChangeReceiver.ConnectionChangeListener() {
+            @Override
+            public void disconnect() {
+                Tools.showToast(ShortVideoDetailActivity.this,"加载失败，请重试");
+            }
+
+            @Override
+            public void wifi() {
+                if (mNetStateTipDialog != null && mNetStateTipDialog.isShowing()) {
+                    mNetStateTipDialog.cancel();
+                    if (rvVericalVideoItemAdapter != null) {
+                        RvVericalVideoItemAdapter.ItemViewHolder currentHolder = rvVericalVideoItemAdapter.getCurrentViewHolder();
+                        if (currentHolder != null) {
+                            int playState = currentHolder.getPlayState();
+                            switch (playState) {
+                                case GSYVideoPlayer.CURRENT_STATE_PAUSE:
+                                    currentHolder.resumeVideo();
+                                    break;
+                                default:
+                                    currentHolder.startVideo();
+                                    break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void mobile() {
+                if (canShowTipDialog()) {
+                    showNetworkTip();
+                }
+            }
+        });
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(mReceiver, filter);
     }
 
     @Override
@@ -273,6 +347,9 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
         mOnResuming.set(false);
         rvVericalVideoItemAdapter.onDestroy();
         ObserverManager.getInstance().unRegisterObserver(this);
+        if (mReceiver != null) {
+            unregisterReceiver(mReceiver);
+        }
     }
 
 
@@ -504,5 +581,70 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
                 }
             });
         }
+    }
+
+    private void showNetworkTip() {
+        if (mNetStateTipDialog != null && mNetStateTipDialog.isShowing()) {
+            return;
+        }
+        if (rvVericalVideoItemAdapter != null) {
+            RvVericalVideoItemAdapter.ItemViewHolder currentHolder = rvVericalVideoItemAdapter.getCurrentViewHolder();
+            if (currentHolder != null) {
+                int playState = currentHolder.getPlayState();
+                switch (playState) {
+                    case GSYVideoPlayer.CURRENT_STATE_PLAYING:
+                        currentHolder.pauseVideo();
+                        break;
+                    case GSYVideoPlayer.CURRENT_STATE_PLAYING_BUFFERING_START:
+                    case GSYVideoPlayer.CURRENT_STATE_PREPAREING:
+                    case GSYVideoPlayer.CURRENT_STATE_AUTO_COMPLETE:
+                    case GSYVideoPlayer.CURRENT_STATE_ERROR:
+                        currentHolder.stopVideo();
+                        break;
+                    default:
+                        currentHolder.stopVideo();
+                        break;
+                }
+            }
+        }
+        if (mNetStateTipDialog == null) {
+            mNetStateTipDialog = new DialogManager(this);
+            ViewManager viewManager = new ViewManager(mNetStateTipDialog);
+            viewManager.setView(new TitleMessageView(this).setText("非wifi环境，是否使用流量继续观看视频？"))
+                    .setView(new HButtonView(this).setPositiveText("继续播放", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mNetStateTipDialog.cancel();
+                            if (rvVericalVideoItemAdapter != null) {
+                                RvVericalVideoItemAdapter.ItemViewHolder currentHolder = rvVericalVideoItemAdapter.getCurrentViewHolder();
+                                if (currentHolder != null) {
+                                    int playState = currentHolder.getPlayState();
+                                    switch (playState) {
+                                        case GSYVideoPlayer.CURRENT_STATE_PAUSE:
+                                            currentHolder.resumeVideo();
+                                            break;
+                                        default:
+                                            currentHolder.startVideo();
+                                            break;
+                                    }
+                                }
+                            }
+                            GlobalVariableConfig.shortVideoDetail_netStateTip_dialogEnable = false;
+                        }
+                    }).setNegativeText("退出播放", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mNetStateTipDialog.cancel();
+                            ShortVideoDetailActivity.this.finish();
+                        }
+                    }));
+            mNetStateTipDialog.setCancelable(false);
+            mNetStateTipDialog.createDialog(viewManager);
+        }
+        mNetStateTipDialog.show();
+    }
+
+    private boolean canShowTipDialog() {
+        return GlobalVariableConfig.shortVideoDetail_netStateTip_dialogEnable;
     }
 }

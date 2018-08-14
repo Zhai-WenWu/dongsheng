@@ -20,6 +20,7 @@ import java.util.Map;
 
 import acore.logic.XHClick;
 import acore.tools.StringManager;
+import amodule._common.delegate.IExtraDataCallback;
 import amodule._common.delegate.ISaveStatistic;
 import amodule._common.delegate.ISetAdController;
 import amodule._common.delegate.StatisticCallback;
@@ -28,7 +29,9 @@ import amodule._common.utility.WidgetUtility;
 import amodule.main.activity.MainHomePage;
 import third.ad.scrollerAd.XHAllAdControl;
 
+import static amodule._common.helper.WidgetDataHelper.KEY_BOTTOM;
 import static amodule._common.helper.WidgetDataHelper.KEY_SORT;
+import static amodule._common.helper.WidgetDataHelper.KEY_TOP;
 import static amodule._common.helper.WidgetDataHelper.KEY_WIDGET_DATA;
 import static third.ad.tools.AdPlayIdConfig.HOME_BANNEER_LIST;
 
@@ -56,8 +59,7 @@ public class HomeHeaderControler implements ISaveStatistic, ISetAdController {
 
     private List<Map<String, String>> mDatas;
 
-    private boolean hasFeedData = false;
-    private boolean hasHeaderData = false;
+    private boolean hasExtraData = false;
     private boolean mSettingAdData = false;
     private boolean mSetttingRemoteData = false;
     private boolean mIsShowCache = false;
@@ -97,8 +99,7 @@ public class HomeHeaderControler implements ISaveStatistic, ISetAdController {
     }
 
     void setFeedheaderVisibility(boolean hasFeedData) {
-        this.hasFeedData = hasFeedData;
-        mFeedHeaderView.setVisibility((hasFeedData && hasHeaderData) ? View.VISIBLE : View.GONE);
+        mFeedHeaderView.setVisibility((hasFeedData && hasExtraData) ? View.VISIBLE : View.GONE);
     }
 
     void setFeedTitleText(String text) {
@@ -179,6 +180,18 @@ public class HomeHeaderControler implements ISaveStatistic, ISetAdController {
             }
             mLayouts[index].setStatisticPage("home");
             mLayouts[index].setAdController(mAdController);
+            mLayouts[index].setExtraDataCallback(new IExtraDataCallback() {
+                @Override
+                public void extraDataCallback(Map<String, String> extraMap) {
+                    if (extraMap != null) {
+                        ArrayList<Map<String, String>> tops = StringManager.getListMapByJson(extraMap.get(KEY_TOP));
+                        ArrayList<Map<String, String>> bottoms = StringManager.getListMapByJson(extraMap.get(KEY_BOTTOM));
+                        if (tops.size() > 0 || bottoms.size() > 0) {
+                            hasExtraData = true;
+                        }
+                    }
+                }
+            });
             mLayouts[index].setData(map);
             mLayouts[index].setStatictusData(MainHomePage.STATICTUS_ID_HOMEPAGE, twoLevelArray[index], threeLevelArray[index]);
             StatisticCallback statisticCallback = (id, twoLevel, threeLevel, position) -> {
@@ -192,8 +205,7 @@ public class HomeHeaderControler implements ISaveStatistic, ISetAdController {
         }
         if(onLayoutChangeListener == null){
             onLayoutChangeListener = (v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
-                hasHeaderData = mHeaderView.getHeight() > mFeedHeaderView.getHeight();
-                int needVisibility = (hasFeedData && hasHeaderData) ? View.VISIBLE : View.GONE;
+                int needVisibility = hasExtraData ? View.VISIBLE : View.GONE;
                 if(needVisibility != mFeedHeaderView.getVisibility()){
                     mFeedHeaderView.setVisibility(needVisibility);
                     mLine.setVisibility(needVisibility);

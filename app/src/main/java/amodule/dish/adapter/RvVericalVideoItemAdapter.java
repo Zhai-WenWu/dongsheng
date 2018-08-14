@@ -123,4 +123,11 @@ public class RvVericalVideoItemAdapter extends BaseAdapter<ShortVideoDetailModul
             mCurrentViewHolder.stopVideo();
         }
     }
+
+    public int getPlayState() {
+        if (mCurrentViewHolder != null) {
+            return mCurrentViewHolder.getPlayState();
+        }
+        return -1;
+    }
 }

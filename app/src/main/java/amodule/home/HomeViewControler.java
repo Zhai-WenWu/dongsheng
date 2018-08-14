@@ -67,6 +67,9 @@ public class HomeViewControler implements ISetAdController {
     private int scrollDataIndex = -1;//滚动数据的位置
     private int mBigSpacing = Tools.getDimen(XHApplication.in(),R.dimen.dp_20);
     private int mLittleSpacing = Tools.getDimen(XHApplication.in(),R.dimen.dp_11);
+    private int mLR1, mLR2, mTB1, mTB2;//四个边距
+
+    private boolean mInvalidateItemDecorationsEnable;
 
     @SuppressLint("InflateParams")
     public HomeViewControler(MainHomePage activity) {
@@ -115,39 +118,45 @@ public class HomeViewControler implements ISetAdController {
     }
 
     public void addOnScrollListener() {
-        RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
-        if (layoutManager != null && layoutManager instanceof LinearLayoutManager) {
-            recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                @Override
-                public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                    super.onScrollStateChanged(recyclerView, newState);
-                    Log.i("xianghaTag","recyclerView::::-------------------");
-                    if (RecyclerView.SCROLL_STATE_IDLE == newState
-                            && mBuoy != null
-                            && !mBuoy.isMove()) {
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                Log.i("xianghaTag","recyclerView::::-------------------  state = " + newState);
+                if (RecyclerView.SCROLL_STATE_IDLE == newState) {
+                    int[] position = ((StaggeredGridLayoutManager)recyclerView.getLayoutManager()).findFirstVisibleItemPositions(null);
+                    int minPos = Tools.findMin(position);
+
+                    if (minPos <= 5 && mInvalidateItemDecorationsEnable) {
+                        mInvalidateItemDecorationsEnable = false;
+                        recyclerView.invalidateItemDecorations();
+                    } else if (minPos > 5){
+                        mInvalidateItemDecorationsEnable = true;
+                    }
+                    if (mBuoy != null && !mBuoy.isMove()) {
                         mBuoy.executeOpenAnim();
                     }
                 }
+            }
 
-                @Override
-                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                    super.onScrolled(recyclerView, dx, dy);
-                    int[] lastPositions = null;
-                    StaggeredGridLayoutManager staggeredGridLayoutManager
-                            = (StaggeredGridLayoutManager) layoutManager;
-                    if (lastPositions == null) {
-                        lastPositions = new int[staggeredGridLayoutManager.getSpanCount()];
-                    }
-                    staggeredGridLayoutManager.findLastVisibleItemPositions(lastPositions);
-                    int lastVisibleItemPosition = Tools.findMax(lastPositions);
-                    if (scrollDataIndex < (lastVisibleItemPosition - 1)) {
-                        scrollDataIndex = (lastVisibleItemPosition - 1);
-                    }
-                    if (mBuoy != null && mBuoy.isMove())
-                        mBuoy.executeCloseAnim();
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                int[] lastPositions = null;
+                StaggeredGridLayoutManager staggeredGridLayoutManager
+                        = (StaggeredGridLayoutManager) recyclerView.getLayoutManager();
+                if (lastPositions == null) {
+                    lastPositions = new int[staggeredGridLayoutManager.getSpanCount()];
                 }
-            });
-        }
+                staggeredGridLayoutManager.findLastVisibleItemPositions(lastPositions);
+                int lastVisibleItemPosition = Tools.findMax(lastPositions);
+                if (scrollDataIndex < (lastVisibleItemPosition - 1)) {
+                    scrollDataIndex = (lastVisibleItemPosition - 1);
+                }
+                if (mBuoy != null && mBuoy.isMove())
+                    mBuoy.executeCloseAnim();
+            }
+        });
     }
 
     //
@@ -342,36 +351,36 @@ public class HomeViewControler implements ISetAdController {
         public GridSpacingItemDecoration() {}
         @Override
         public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-
             StaggeredGridLayoutManager.LayoutParams params =(StaggeredGridLayoutManager.LayoutParams) view.getLayoutParams();
-            int paddingLeft = 0, paddingRight = 0, paddingTop = 0, paddingBottom = 0;
-            RecyclerView.ViewHolder holder = parent.getChildViewHolder(view);
-            if (holder instanceof HomeAdapter.StaggeredGridImageViewHolder) {
-                HomeAdapter.StaggeredGridImageViewHolder staggeredGridImageViewHolder = (HomeAdapter.StaggeredGridImageViewHolder) holder;
-                paddingLeft = staggeredGridImageViewHolder.homeStaggeredGridItemContentLayout.getPaddingLeft();
-                paddingTop = staggeredGridImageViewHolder.homeStaggeredGridItemContentLayout.getPaddingTop();
-                paddingRight = staggeredGridImageViewHolder.homeStaggeredGridItemContentLayout.getPaddingRight();
-                paddingBottom = staggeredGridImageViewHolder.homeStaggeredGridItemContentLayout.getPaddingBottom();
-            } else if (holder instanceof HomeAdapter.GridADImageViewHolder) {
-                HomeAdapter.GridADImageViewHolder gridADImageViewHolder = (HomeAdapter.GridADImageViewHolder) holder;
-                paddingLeft = gridADImageViewHolder.homeGirdAdItemContentLayout.getPaddingLeft();
-                paddingTop = gridADImageViewHolder.homeGirdAdItemContentLayout.getPaddingTop();
-                paddingRight = gridADImageViewHolder.homeGirdAdItemContentLayout.getPaddingRight();
-                paddingBottom = gridADImageViewHolder.homeGirdAdItemContentLayout.getPaddingBottom();
-            }
-            if(view instanceof HomeItem){
-                switch (params.getSpanIndex()) {
-                    case 0:
-                        outRect.set(mBigSpacing - paddingLeft, mLittleSpacing / 2 - paddingTop, mLittleSpacing / 2 - paddingRight, mLittleSpacing / 2 - paddingBottom);
-                        break;
-                    case 1:
-                        outRect.set(mLittleSpacing / 2 - paddingLeft, mLittleSpacing / 2 - paddingTop, mBigSpacing - paddingRight, mLittleSpacing / 2 - paddingBottom);
-                        break;
-                    default:
-                        outRect.set(0, 0, 0, 0);
-                        break;
+            if (mLR1 == 0 && mLR2 == 0 && mTB1 == 0 && mTB2 == 0) {
+                int paddingLeft = 0, paddingRight = 0, paddingTop = 0, paddingBottom = 0;
+                RecyclerView.ViewHolder holder = parent.getChildViewHolder(view);
+                if (holder instanceof HomeAdapter.StaggeredGridImageViewHolder) {
+                    HomeAdapter.StaggeredGridImageViewHolder staggeredGridImageViewHolder = (HomeAdapter.StaggeredGridImageViewHolder) holder;
+                    paddingLeft = staggeredGridImageViewHolder.homeStaggeredGridItemContentLayout.getPaddingLeft();
+                    paddingTop = staggeredGridImageViewHolder.homeStaggeredGridItemContentLayout.getPaddingTop();
+                    paddingRight = staggeredGridImageViewHolder.homeStaggeredGridItemContentLayout.getPaddingRight();
+                    paddingBottom = staggeredGridImageViewHolder.homeStaggeredGridItemContentLayout.getPaddingBottom();
+                } else if (holder instanceof HomeAdapter.GridADImageViewHolder) {
+                    HomeAdapter.GridADImageViewHolder gridADImageViewHolder = (HomeAdapter.GridADImageViewHolder) holder;
+                    paddingLeft = gridADImageViewHolder.homeGirdAdItemContentLayout.getPaddingLeft();
+                    paddingTop = gridADImageViewHolder.homeGirdAdItemContentLayout.getPaddingTop();
+                    paddingRight = gridADImageViewHolder.homeGirdAdItemContentLayout.getPaddingRight();
+                    paddingBottom = gridADImageViewHolder.homeGirdAdItemContentLayout.getPaddingBottom();
                 }
 
+                mLR1 = mBigSpacing - paddingLeft;
+                mLR2 = mLittleSpacing / 2 - paddingRight;
+                mTB1 = mLittleSpacing / 2 - paddingTop;
+                mTB2 = mLittleSpacing / 2 - paddingBottom;
+            }
+            switch (params.getSpanIndex()) {
+                case 0:
+                    outRect.set(mLR1, mTB1, mLR2, mTB2);
+                    break;
+                case 1:
+                    outRect.set(mLR2, mTB1, mLR1, mTB2);
+                    break;
             }
         }
     }
