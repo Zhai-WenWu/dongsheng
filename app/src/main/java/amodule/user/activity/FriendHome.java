@@ -33,7 +33,6 @@ import acore.widget.LayoutScroll;
 import acore.widget.TextViewLimitLine;
 import amodule.article.activity.ArticleDetailActivity;
 import amodule.article.activity.ArticleUploadListActivity;
-import amodule.article.activity.VideoDetailActivity;
 import amodule.article.activity.edit.ArticleEidtActivity;
 import amodule.article.activity.edit.EditParentActivity;
 import amodule.article.db.UploadArticleData;
@@ -487,6 +486,7 @@ public class FriendHome extends BaseActivity {
             if("1".equals(listType)) {
                 String gotoUrl= dataMap.get("gotoUrl");
                 if(!TextUtils.isEmpty(gotoUrl)){
+                    gotoUrl = gotoUrl + "&userCode=" + userCode;
                     AppCommon.openUrl(gotoUrl,false);
                 }
             }else if("2".equals(listType)){

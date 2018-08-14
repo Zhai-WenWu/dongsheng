@@ -85,8 +85,8 @@ public class LocationHelper {
             geocodeSearch.setOnGeocodeSearchListener(new GeocodeSearch.OnGeocodeSearchListener() {
                 @Override
                 public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int i) {
-                    // TODO: 2018/7/25 获取详细地址信息，包括乡镇
-                    Log.i("TAG", "onRegeocodeSearched: " + regeocodeResult.getRegeocodeAddress().getTownship() + "  code = " + regeocodeResult.getRegeocodeAddress().getTowncode());
+                    // TODO: 2018/7/25 获取详细地址信息，包括乡镇 注意判空
+//                    Log.i("TAG", "onRegeocodeSearched: " + regeocodeResult.getRegeocodeAddress().getTownship() + "  code = " + regeocodeResult.getRegeocodeAddress().getTowncode());
                 }
 
                 @Override

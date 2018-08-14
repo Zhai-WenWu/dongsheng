@@ -9,14 +9,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import com.annimon.stream.Stream;
-
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import acore.tools.StringManager;
 import amodule._common.delegate.IBindMap;
+import amodule._common.delegate.IExtraDataCallback;
 import amodule._common.delegate.IResetCallback;
 import amodule._common.delegate.ISaveStatistic;
 import amodule._common.delegate.ISetAdController;
@@ -56,6 +55,8 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
 
     BaseExtraLinearLayout mExtraTop, mExtraBottom;
 
+    private IExtraDataCallback mIExtraDataCallback;
+
     int currentID = -1;
 
     private Map<String, String> data;
@@ -81,6 +82,10 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
     @Override
     public void initialize() {
         mInflater = LayoutInflater.from(getContext());
+    }
+
+    public void setExtraDataCallback(IExtraDataCallback callback) {
+        mIExtraDataCallback = callback;
     }
 
     @Override
@@ -141,10 +146,16 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
         if (widgetExtraMap.isEmpty()
                 || (TextUtils.isEmpty(widgetExtraMap.get(KEY_TOP)) && TextUtils.isEmpty(widgetExtraMap.get(KEY_BOTTOM)))
                 ) {
+            if (mIExtraDataCallback != null) {
+                mIExtraDataCallback.extraDataCallback(null);
+            }
             return;
         }
         updateTopView(StringManager.getListMapByJson(widgetExtraMap.get(KEY_TOP)));
         updateBottom(StringManager.getListMapByJson(widgetExtraMap.get(KEY_BOTTOM)));
+        if (mIExtraDataCallback != null) {
+            mIExtraDataCallback.extraDataCallback(widgetExtraMap);
+        }
     }
 
     private void resetView(){

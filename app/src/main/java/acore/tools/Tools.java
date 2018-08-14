@@ -990,4 +990,14 @@ public class Tools {
         }
         return max;
     }
+
+    public static int findMin(int[] lastPositions) {
+        int min = lastPositions[0];
+        for (int value : lastPositions) {
+            if (value < min) {
+                min = value;
+            }
+        }
+        return min;
+    }
 }
