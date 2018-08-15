@@ -124,7 +124,6 @@ public class KeyboardDialog extends Dialog implements View.OnClickListener {
                 cancel();
                 break;
             case R.id.comment_send:
-                cancel();
                 if (mOnSendClickListener != null)
                     mOnSendClickListener.onClick(v);
                 break;

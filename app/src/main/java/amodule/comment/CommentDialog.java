@@ -259,7 +259,9 @@ public class CommentDialog extends Dialog implements View.OnClickListener {
             public void onClick(View v) {
                 keyboardDialog.cancel();
                 String sendText = keyboardDialog.getText();
-                keyboardDialog.setContentStr(null);
+                if(LoginManager.isLogin()) {
+                    keyboardDialog.setContentStr(null);
+                }
                 sendData(sendText);
             }
         });
