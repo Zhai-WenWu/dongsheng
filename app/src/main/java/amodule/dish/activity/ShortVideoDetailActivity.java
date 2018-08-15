@@ -344,8 +344,12 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mOnResuming.set(false);
-        rvVericalVideoItemAdapter.onDestroy();
+        if (mOnResuming != null) {
+            mOnResuming.set(false);
+        }
+        if (rvVericalVideoItemAdapter != null) {
+            rvVericalVideoItemAdapter.onDestroy();
+        }
         ObserverManager.getInstance().unRegisterObserver(this);
         if (mReceiver != null) {
             unregisterReceiver(mReceiver);
@@ -373,8 +377,14 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
                             if (module != null && TextUtils.equals(module.getCode(), videoCode)) {
                                 try {
                                     module.setShareNum(String.valueOf(Integer.parseInt(module.getShareNum()) + 1));
-                                    // TODO: 2018/8/9 有漏洞 不能直接notify item，
-                                    rvVericalVideoItemAdapter.notifyItemChanged(i);
+                                    RvVericalVideoItemAdapter.ItemViewHolder currentHolder = rvVericalVideoItemAdapter.getCurrentViewHolder();
+                                    if (currentHolder != null) {
+                                        ShortVideoDetailModule currentModule = rvVericalVideoItemAdapter.getItem(currentHolder.getAdapterPosition());
+                                        if (currentModule != null && TextUtils.equals(currentModule.getCode(), videoCode)) {
+                                            currentHolder.updateShareNum(module.getShareNum());
+                                            break;
+                                        }
+                                    }
                                 } catch (Exception e) {}
                             }
                         }

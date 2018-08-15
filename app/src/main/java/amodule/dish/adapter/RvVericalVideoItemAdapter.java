@@ -53,7 +53,7 @@ public class RvVericalVideoItemAdapter extends BaseAdapter<ShortVideoDetailModul
     }
 
     public class ItemViewHolder<T extends ShortVideoDetailModule> extends RvBaseViewHolder<T>{
-        public ShortVideoItemView shortVideoItemView;
+        private ShortVideoItemView shortVideoItemView;
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
             shortVideoItemView= itemView.findViewById(R.id.videoItem);
@@ -89,6 +89,10 @@ public class RvVericalVideoItemAdapter extends BaseAdapter<ShortVideoDetailModul
 
         public void gotoUser() {
             shortVideoItemView.gotoUser();
+        }
+
+        public void updateShareNum(String shareNum) {
+            shortVideoItemView.updateShareNum(shareNum);
         }
     }
 

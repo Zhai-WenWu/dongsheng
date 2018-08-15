@@ -120,7 +120,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
     private ShortVideoDetailModule mData;//全部
     private boolean mIsSelf;
 
-    private AtomicBoolean mGoodLoaded;
+    private AtomicBoolean mGoodLoading;
     private AtomicBoolean mAttentionLoading;
     private AtomicBoolean mFavLoading;
     private AtomicBoolean mDelLoading;
@@ -130,6 +130,8 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
     private String mVideoUrl;
     private String mTopicClickUrl;
     private String mAddressClickUrl;
+
+    private String mSendText;
 
     private int mPos;
     private ShortVideoPlayer mPlayerView;
@@ -191,7 +193,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
     }
 
     private void initData() {
-        mGoodLoaded = new AtomicBoolean(false);
+        mGoodLoading = new AtomicBoolean(false);
         mAttentionLoading = new AtomicBoolean(false);
         mFavLoading = new AtomicBoolean(false);
         mDelLoading = new AtomicBoolean(false);
@@ -566,6 +568,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
 
     private void showCommentEdit() {
         KeyboardDialog keyboardDialog = new KeyboardDialog(getContext());
+        keyboardDialog.setTextLength(50);
         keyboardDialog.setOnSendClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -576,6 +579,13 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
                 sendComment(text);
             }
         });
+        keyboardDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                mSendText = keyboardDialog.getText();
+            }
+        });
+        keyboardDialog.setContentStr(mSendText);
         keyboardDialog.show();
     }
 
@@ -628,9 +638,16 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
                     mCommentDialog = null;
                 }
             });
+            mCommentDialog.setOnCommentTextUpdateListener(new CommentDialog.OnCommentTextUpdateListener() {
+                @Override
+                public void onCommentTextUpdate(String newText) {
+                    mSendText = newText;
+                }
+            });
         }
         if (mCommentDialog.isShowing())
             return;
+        mCommentDialog.setCommentText(mSendText);
         mCommentDialog.show();
     }
 
@@ -644,23 +661,23 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         if (checkLoginAndHandle()) {
             return;
         }
-        if (mGoodLoaded.get())
+        if (mGoodLoading.get() || mData.isLike())
             return;
-        mGoodLoaded.set(true);
-        String params = "code=" + mData.getCode() + "&type=likeList";
-        ReqEncyptInternet.in().doEncypt(StringManager.api_quanSetSubject, params, new InternetCallback() {
+        mGoodLoading.set(true);
+        String params = "code=" + mData.getCode();
+        ReqEncyptInternet.in().doEncypt(StringManager.api_likeVideo, params, new InternetCallback() {
             @Override
             public void loaded(int flag, String s, Object o) {
+                mGoodLoading.set(false);
                 if (flag >= ReqInternet.REQ_OK_STRING) {
+                    mGoodImg.setSelected(!mGoodImg.isSelected());
+                    mData.setLike(true);
                     try {
-                        mGoodImg.setSelected(!mGoodImg.isSelected());
-                        mData.setLikeNum(String.valueOf(Integer.parseInt(mData.getLikeNum())));
+                        mData.setLikeNum(String.valueOf(Integer.parseInt(mData.getLikeNum()) + 1));
                         mGoodText.setText(mData.getLikeNum());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                } else {
-                    mGoodLoaded.set(false);
                 }
             }
         });
@@ -798,10 +815,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
     }
 
     public void gotoUser() {
-        Intent intent = new Intent(context, FriendHome.class);
-        intent.putExtra("code", mData.getCustomerModel().getUserCode());
-        intent.putExtra("index", 2);
-        context.startActivity(intent);
+        AppCommon.openUrl(mData.getCustomerModel().getGotoUrl(), true);
     }
 
 
@@ -943,6 +957,10 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
                 super.loaded(i, s, o);
             }
         });
+    }
+
+    public void updateShareNum(String shareNum) {
+        mShareNum.setText(shareNum);
     }
 
 }

@@ -3,19 +3,14 @@ package amodule.comment;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.Rect;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -59,13 +54,13 @@ import static xh.basic.tool.UtilString.getListMapByJson;
 
 public class CommentDialog extends Dialog implements View.OnClickListener {
 
-    private final int FIXED_TEXT_COUNT = 50;
+    private final int  KEYBOARD_OPTION_COMMENT = 1;
+    private final int  KEYBOARD_OPTION_REPLAY = 2;
 
     private Context mContext;
 
     private LoadManager mLoadManager;
-    private View mContentView;
-    private RelativeLayout mRootLayout;
+    private RelativeLayout mContentView;
     private DownRefreshList downRefreshList;
     private AdapterSimple adapterSimple;
     private ArrayList<Map<String, String>> listArray;
@@ -73,24 +68,25 @@ public class CommentDialog extends Dialog implements View.OnClickListener {
     private int currentPage = 0, everyPage = 0;
     private int dropPage = 1,upDropPage = 1,downDropPage = 1,slide = 1,from = 1,source = 1;
 
-    private TextView commend_write_et;
-    private ImageView writePen;
-    private TextView sendTv,commend_write_tv;
+    private TextView commend_write_tv;
     private LinearLayout titleLayout;
     private TextView titleTv;
     private TextView comment_allNum;
     private ImageView close_img;
 
+    private View mCommentHintView;
+
     private String gotoCommentId,gotoReplayId;
+
+    private String mSendText;
+    private String mReplayText;
 
     private String contentTongjiId,likeTongjiId = "a_like",reportTongjiId="a_report",deleteTongjiId = "a_delete";
     private String likeTwoLeven,reportTwoLeven,deleteTwoLeven;
 
-    private boolean isShowKeyboard = false;
-
     private StringBuffer commentIdStrBuffer;
 
-    private String currentUrl = StringManager.api_addForum,oldUrl,currentParams,oldCommentId,oldReplayId;
+    private String currentUrl = StringManager.api_addForum,currentParams,oldCommentId,mCurrentReplayId, mCurrentReplayName;
     private int replayIndex;
     private boolean isSend = false,isAddForm;
 
@@ -99,78 +95,37 @@ public class CommentDialog extends Dialog implements View.OnClickListener {
 
     private CommentOptionSuccCallback mCommentOptionSuccCallback;
 
+    private int mKeyboardDialogOptionFrom = KEYBOARD_OPTION_COMMENT;
+
     public CommentDialog(Context context, Map<String, String> data) {
         super(context, R.style.dialog_comment);
         mContext = context;
-        mContentView = LayoutInflater.from(context).inflate(R.layout.a_comment_dialog, null);
-        setContentView(mContentView);
+        View rootView = LayoutInflater.from(context).inflate(R.layout.a_comment_dialog, null);
+        setContentView(rootView);
         Window window = getWindow();
-        window.getDecorView().setPadding(0, ToolsDevice.getWindowPx(mContext).heightPixels / 3, 0, 0);
         WindowManager.LayoutParams lp = window.getAttributes();
         lp.width = WindowManager.LayoutParams.MATCH_PARENT;
         lp.height = WindowManager.LayoutParams.MATCH_PARENT;
         lp.gravity = Gravity.BOTTOM;
         window.setAttributes(lp);
         window.setWindowAnimations(R.style.BottomInOutPopupAnim);
-        initView();
+        initView(rootView);
         initData(data);
     }
 
-    private void initView() {
-        mRootLayout = (RelativeLayout) mContentView.findViewById(R.id.activityLayout);
-        titleLayout = (LinearLayout) mContentView.findViewById(R.id.comment_title_layout);
-        titleTv = (TextView) mContentView.findViewById(R.id.comment_title);
-        final LinearLayout bottomBarLayout = (LinearLayout) mContentView.findViewById(R.id.a_comment_keyboard_parent);
-        final int topbarHeight = Tools.getDimen(mContext, R.dimen.topbar_height);
-        mRootLayout.getViewTreeObserver().addOnGlobalLayoutListener(
-                new ViewTreeObserver.OnGlobalLayoutListener() {
-                    public void onGlobalLayout() {
-                        int heightDiff = mRootLayout.getRootView().getHeight() - mRootLayout.getHeight();
-                        Rect r = new Rect();
-                        mRootLayout.getWindowVisibleDisplayFrame(r);
-                        int screenHeight = mRootLayout.getRootView().getHeight();
-                        int heightDifference = screenHeight - (r.bottom - r.top);
-                        isShowKeyboard = heightDifference > 200;
-                        heightDifference = isShowKeyboard ? heightDifference - heightDiff + topbarHeight : 0;
-                        bottomBarLayout.setPadding(0, 0, 0, heightDifference);
-                    }
-                });
+    private void initView(View rootView) {
+        mContentView = rootView.findViewById(R.id.activityLayout);
+        mContentView.setPadding(0, ToolsDevice.getWindowPx(mContext).heightPixels / 3, 0, 0);
+        titleLayout = rootView.findViewById(R.id.comment_title_layout);
+        titleTv = rootView.findViewById(R.id.comment_title);
         listArray = new ArrayList<>();
-        mContentView.findViewById(R.id.commend_hind).setOnClickListener(this);
-        sendTv = (TextView) mContentView.findViewById(R.id.comment_send);
-        comment_allNum = (TextView) mContentView.findViewById(R.id.comment_allNum);
-        close_img = (ImageView) mContentView.findViewById(R.id.close_img);
+        mCommentHintView = rootView.findViewById(R.id.commend_hind);
+        comment_allNum = rootView.findViewById(R.id.comment_allNum);
+        close_img = rootView.findViewById(R.id.close_img);
         close_img.setOnClickListener(this);
-        sendTv.setOnClickListener(this);
-//        sendTv.setClickable(false);
-        writePen = (ImageView) mContentView.findViewById(R.id.commend_write_pen);
-        commend_write_tv = (TextView) mContentView.findViewById(R.id.commend_write_tv);
+        commend_write_tv = rootView.findViewById(R.id.commend_write_tv);
         commend_write_tv.setOnClickListener(this);
-        commend_write_et = (TextView) mContentView.findViewById(R.id.commend_write_et);
-        commend_write_et.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) { }
-            @Override
-            public void afterTextChanged(Editable s) {
-//                sendTv.setClickable(s.length() > 0);
-                sendTv.setTextColor(StringManager.isHasChar(String.valueOf(s)) ? Color.parseColor("#333333") : Color.parseColor("#cccccc"));
-            }
-        });
-        downRefreshList = (DownRefreshList) mContentView.findViewById(R.id.comment_listview);
-        downRefreshList.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if(View.VISIBLE == sendTv.getVisibility()) {
-                    Log.i("commentReplay","downRefreshList onTouch()");
-                    oldUrl = currentUrl;
-                    changeKeyboard(false,false);
-                    commend_write_et.setHint(" 写评论");
-                }
-                return false;
-            }
-        });
+        downRefreshList = rootView.findViewById(R.id.comment_listview);
         adapterSimple = new AdapterSimple(downRefreshList, listArray, R.layout.a_comment_item, new String[]{}, new int[]{}) {
             @Override
             public View getView(final int position, View convertView, ViewGroup parent) {
@@ -178,17 +133,15 @@ public class CommentDialog extends Dialog implements View.OnClickListener {
                 final ViewCommentItem viewCommentItem = (ViewCommentItem) view.findViewById(R.id.comment_item);
                 viewCommentItem.setCommentItemListener(getCommentItenListener(viewCommentItem,position));
                 viewCommentItem.setUserInforListenr(getUserInforListener());
-//                viewCommentItem.setNormBackColor(getResources().getColor(R.color.common_bg));
                 viewCommentItem.setData(listArray.get(position));
                 return view;
             }
         };
-//        mContentView.findViewById(R.id.title).setOnClickListener(this);
-        mContentView.findViewById(R.id.activityLayout).setOnClickListener(this);
+        mContentView.setOnClickListener(this);
     }
 
     private void initData(Map<String, String> data) {
-        mLoadManager = new LoadManager(mContext, mRootLayout);
+        mLoadManager = new LoadManager(mContext, mContentView);
         commentIdStrBuffer = new StringBuffer();
         mCommentsNumStr = data.get("commentNum");
         try {
@@ -239,8 +192,6 @@ public class CommentDialog extends Dialog implements View.OnClickListener {
             Tools.showToast(mContext, "类型不对");
             dismiss();
         }
-
-
         mLoadManager.showProgressBar();
         mLoadManager.setLoading(downRefreshList, adapterSimple, true, new View.OnClickListener() {
             @Override
@@ -266,43 +217,60 @@ public class CommentDialog extends Dialog implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.commend_hind:
-                break;
-            case R.id.comment_send:
-                String content = commend_write_et.getText().toString();
-                if(StringManager.isHasChar(content)){
-                    sendData();
-                }
-                break;
             case R.id.commend_write_tv:
                 XHClick.mapStat(mContext,contentTongjiId,"点击评论框","");
-                if(!currentUrl.equals(oldUrl)){
-                    commend_write_et.setText("");
-                }
+                currentUrl = StringManager.api_addForum;
+                mKeyboardDialogOptionFrom = KEYBOARD_OPTION_COMMENT;
                 showCommentEdit();
-//                changeKeyboard(true,true);
                 break;
             case R.id.close_img:
-                dismiss();
+                cancel();
                 break;
             case R.id.activityLayout:
-                oldUrl = currentUrl;
-                changeKeyboard(false,false);
-                commend_write_et.setHint(" 写评论");
+                cancel();
                 break;
         }
     }
 
+    public void setCommentText(String commentText) {
+        updateCommentText(commentText);
+    }
+
+    private void updateCommentText(String newText) {
+        mSendText = newText;
+        if (mOnCommentTextUpdateListener != null) {
+            mOnCommentTextUpdateListener.onCommentTextUpdate(newText);
+        }
+    }
+
     private void showCommentEdit() {
-        final KeyboardDialog keyboardDialog = new KeyboardDialog(mContext);
+        KeyboardDialog keyboardDialog = new KeyboardDialog(getContext());
+        keyboardDialog.setTextLength(50);
+        if (mKeyboardDialogOptionFrom == KEYBOARD_OPTION_REPLAY) {
+            keyboardDialog.setContentStr(mReplayText);
+            if (TextUtils.isEmpty(mReplayText)) {
+                keyboardDialog.setHintStr("回复" + mCurrentReplayName);
+            }
+        } else if (mKeyboardDialogOptionFrom == KEYBOARD_OPTION_COMMENT) {
+            keyboardDialog.setContentStr(mSendText);
+        }
         keyboardDialog.setOnSendClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 keyboardDialog.cancel();
-                String text = keyboardDialog.getText();
-                if (!TextUtils.isEmpty(text)) {
-                    commend_write_et.setText(text);
-                    sendData();
+                String sendText = keyboardDialog.getText();
+                keyboardDialog.setContentStr(null);
+                sendData(sendText);
+            }
+        });
+        keyboardDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                String finalStr = keyboardDialog.getText();
+                if (mKeyboardDialogOptionFrom == KEYBOARD_OPTION_COMMENT) {
+                    setCommentText(finalStr);
+                } else if (mKeyboardDialogOptionFrom == KEYBOARD_OPTION_REPLAY) {
+                    mReplayText = finalStr;
                 }
             }
         });
@@ -313,11 +281,11 @@ public class CommentDialog extends Dialog implements View.OnClickListener {
         Log.i("commentActivity","changeDataChange() size:" + listArray.size());
         if(listArray.size() == 0){
             downRefreshList.setVisibility(View.GONE);
-            mContentView.findViewById(R.id.commend_hind).setVisibility(View.VISIBLE);
+            mCommentHintView.setVisibility(View.VISIBLE);
         }else{
             downRefreshList.setVisibility(View.VISIBLE);
             downRefreshList.onRefreshComplete();
-            mContentView.findViewById(R.id.commend_hind).setVisibility(View.GONE);
+            mCommentHintView.setVisibility(View.GONE);
         }
     }
 
@@ -487,26 +455,18 @@ public class CommentDialog extends Dialog implements View.OnClickListener {
             @Override
             public void onContentReplayClick(String comment_id,String replay_id,String replay_code, String replay_name,String type,boolean isShowKeyBoard,boolean isMyselft) {
                 if(isMyselft) return;
-                Log.i("commentReplay","onContentReplayClick() isShowKeyboard:" + isShowKeyboard);
-                if(isShowKeyboard && isShowKeyBoard){
-                    oldUrl = currentUrl;
-                    changeKeyboard(false,false);
-                    return;
+                if (!TextUtils.equals(mCurrentReplayId, replay_code)) {
+                    mReplayText = null;
                 }
-                XHClick.mapStat(mContext,contentTongjiId,"回复",type);
-                changeKeyboard(true,isShowKeyBoard);
-                Log.i("commentReplay","onContentReplayClick() replay_name:" + replay_name);
-                commend_write_et.setHint(" 回复" + replay_name);
-                Log.i("commentReplay","onContentReplayClick() oldUrl:" + oldUrl);
                 currentParams = "&commentId=" + comment_id + "&replayUcode=" + replay_code;
                 replayIndex = position;
-                if(!StringManager.api_addReplay.equals(oldUrl) || !comment_id.equals(oldCommentId) || !replay_code.equals(oldReplayId)){
-//                if(!comment_id.equals(oldCommentId) || !replay_code.equals(oldReplayId)){
-                    commend_write_et.setText("");
-                }
                 currentUrl = StringManager.api_addReplay;
                 oldCommentId = comment_id;
-                oldReplayId = replay_code;
+                mCurrentReplayId = replay_code;
+                mCurrentReplayName = replay_name;
+                mKeyboardDialogOptionFrom = KEYBOARD_OPTION_REPLAY;
+                showCommentEdit();
+                XHClick.mapStat(mContext,contentTongjiId,"回复",type);
             }
         };
     }
@@ -530,15 +490,6 @@ public class CommentDialog extends Dialog implements View.OnClickListener {
                 XHClick.mapStat(mContext,contentTongjiId,"用户信息","点击会员icon");
             }
         };
-    }
-
-    private void requstInternet(String url, String params){
-        ReqEncyptInternet.in().doEncypt(url, params, new InternetCallback() {
-            @Override
-            public void loaded(int i, String s, Object o) {
-
-            }
-        });
     }
 
     private void getCommentData(final boolean isForward) {
@@ -634,21 +585,11 @@ public class CommentDialog extends Dialog implements View.OnClickListener {
         });
     }
 
-    private synchronized void sendData(){
-        if(isSend)return;
+    private synchronized void sendData(String sendText){
+        if(isSend || TextUtils.isEmpty(sendText))return;
         if(!LoginManager.isLogin()){
-            ToolsDevice.keyboardControl(false,mContext,commend_write_et);
             Intent intent = new Intent(mContext, LoginByAccout.class);
             mContext.startActivity(intent);
-            return;
-        }
-        String content = commend_write_et.getText().toString();
-        if(content.length() == 0){
-            Tools.showToast(mContext,"发送内容不能为空");
-            return;
-        }
-        if(content.length() > FIXED_TEXT_COUNT){
-            Tools.showToast(mContext,String.format("最多%1d字", FIXED_TEXT_COUNT));
             return;
         }
         isSend = true;
@@ -660,14 +601,14 @@ public class CommentDialog extends Dialog implements View.OnClickListener {
             JSONArray jsonArray = new JSONArray();
             try {
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.put("text", content);
+                jsonObject.put("text", sendText);
                 jsonArray.put(jsonObject);
             }catch (JSONException e){
                 e.printStackTrace();
             }
             newParams = "type=" + type + "&code=" + code + "&content=" + jsonArray.toString();
         }else{
-            newParams = "type=" + type + "&code=" + code + currentParams + "&content=" + content;
+            newParams = "type=" + type + "&code=" + code + currentParams + "&content=" + sendText;
         }
         newParams += "&commentIds=" + commentIdStrBuffer;
         Log.i("commentReplay","sendData() newParams:" + newParams);
@@ -676,8 +617,6 @@ public class CommentDialog extends Dialog implements View.OnClickListener {
             public void loaded(int flag, String s, Object o) {
                 Log.i("commentReplay","sendData() flag:" + flag + "   o:" + o);
                 if(flag >= ReqInternet.REQ_OK_STRING) {
-                    commend_write_et.setText("");
-                    changeKeyboard(false,false);
                     if(isAddForm){
                         ArrayList<Map<String,String>> arrayList = getListMapByJson(o);
                         Log.i("commentReplay","sendData() arrayList:" + arrayList.size());
@@ -740,35 +679,8 @@ public class CommentDialog extends Dialog implements View.OnClickListener {
         });
     }
 
-    private void changeKeyboard(boolean isShowEt,boolean isShowboard){
-        isShowKeyboard = isShowboard;
-        if(isShowEt){
-            commend_write_tv.setVisibility(View.GONE);
-            commend_write_et.setVisibility(View.VISIBLE);
-            commend_write_et.requestFocus();
-            ToolsDevice.keyboardControl(isShowboard,mContext,commend_write_et);
-            sendTv.setVisibility(View.VISIBLE);
-            writePen.setVisibility(View.GONE);
-        }else{
-            oldUrl = currentUrl;
-            currentUrl = StringManager.api_addForum;
-            sendTv.setVisibility(View.GONE);
-            writePen.setVisibility(View.VISIBLE);
-            commend_write_et.setVisibility(View.GONE);
-            commend_write_tv.setVisibility(View.VISIBLE);
-            ToolsDevice.keyboardControl(false,mContext,commend_write_et);
-        }
-    }
-
     @Override
     public void onBackPressed() {
-        if(isShowKeyboard){
-            changeKeyboard(false,false);
-            return;
-        } else if (isShowing()) {
-            dismiss();
-            return;
-        }
         super.onBackPressed();
     }
 
@@ -779,5 +691,15 @@ public class CommentDialog extends Dialog implements View.OnClickListener {
     public interface CommentOptionSuccCallback {
         void onSendSucc();
         void onDelSucc();
+    }
+
+    public interface OnCommentTextUpdateListener {
+        void onCommentTextUpdate(String newText);
+    }
+
+    private OnCommentTextUpdateListener mOnCommentTextUpdateListener;
+
+    public void setOnCommentTextUpdateListener(OnCommentTextUpdateListener onCommentTextUpdateListener) {
+        mOnCommentTextUpdateListener = onCommentTextUpdateListener;
     }
 }

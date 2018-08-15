@@ -15,23 +15,25 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.xiangha.R;
 
 import acore.tools.StringManager;
 
 public class KeyboardDialog extends Dialog implements View.OnClickListener {
-
+    private int mMaxLength = Integer.MAX_VALUE;
     private View mRootView;
     private EditText mEditText;
     private TextView mSendText;
     private RelativeLayout mKeyboardBottom;
 
     private String mHintStr;
-    private String mContentStr;
+    private String mFinalStr;
 
     private View.OnClickListener mOnSendClickListener;
     private SoftKeyboardManager mSoftKeyboardManager;
+    private SoftKeyboardManager.SoftKeyboardStateListener mSoftKeyboardStateListener;
     public KeyboardDialog(@NonNull Context context) {
         this(context, R.style.dialog_keyboard);
     }
@@ -50,7 +52,7 @@ public class KeyboardDialog extends Dialog implements View.OnClickListener {
     private void init(Context context) {
         mRootView = LayoutInflater.from(context).inflate(R.layout.keyboard_layout, null);
         setContentView(mRootView);
-        mSoftKeyboardManager = new SoftKeyboardManager(mRootView);
+        mSoftKeyboardManager = new SoftKeyboardManager(getWindow().getDecorView());
         Window win = getWindow();
         if (win != null) {
             win.getDecorView().setPadding(0, 0, 0, 0);
@@ -64,36 +66,43 @@ public class KeyboardDialog extends Dialog implements View.OnClickListener {
         mEditText = mRootView.findViewById(R.id.commend_write_et);
         mSendText = mRootView.findViewById(R.id.comment_send);
         mKeyboardBottom = mRootView.findViewById(R.id.a_comment_keyboard);
-
-        addListener();
+        setListener();
     }
 
-    private void addListener() {
+    private void setListener() {
         mRootView.setOnClickListener(this);
         mSendText.setOnClickListener(this);
         mEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+
+
+
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+                if (s != null && s.length() > mMaxLength) {
+                    mEditText.setText(s.subSequence(0, mMaxLength));
+                    mEditText.setSelection(mMaxLength);
+                    Toast.makeText(getContext(), String.format("最多%1d字", mMaxLength), Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
             public void afterTextChanged(Editable s) {
                 mSendText.setEnabled(StringManager.isHasChar(String.valueOf(s)));
+                mFinalStr = s.toString();
             }
         });
-        mSoftKeyboardManager.addSoftKeyboardStateListener(new SoftKeyboardManager.SoftKeyboardStateListener() {
+        mSoftKeyboardStateListener = new SoftKeyboardManager.SoftKeyboardStateListener() {
             @Override
             public void onSoftKeyboardOpened(int keyboardHeightInPx, boolean rootChanged) {
                 if (rootChanged) {
                     return;
                 }
-                mEditText.postDelayed(()->mRootView.scrollTo(0, mKeyboardBottom.getPaddingBottom()), 100);
+//                mEditText.postDelayed(()->mRootView.scrollTo(0, mKeyboardBottom.getPaddingBottom()), 100);
             }
 
             @Override
@@ -103,7 +112,8 @@ public class KeyboardDialog extends Dialog implements View.OnClickListener {
                 }
                 mRootView.scrollTo(0, 0);
             }
-        });
+        };
+        mSoftKeyboardManager.addSoftKeyboardStateListener(mSoftKeyboardStateListener);
     }
 
 
@@ -111,9 +121,10 @@ public class KeyboardDialog extends Dialog implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.a_comment_keyboard_parent:
-                dismiss();
+                cancel();
                 break;
             case R.id.comment_send:
+                cancel();
                 if (mOnSendClickListener != null)
                     mOnSendClickListener.onClick(v);
                 break;
@@ -129,19 +140,21 @@ public class KeyboardDialog extends Dialog implements View.OnClickListener {
     }
 
     public void setContentStr(String contentStr) {
-        mContentStr = contentStr;
+        mFinalStr = contentStr;
     }
     public String getText() {
-        if (mEditText != null && mEditText.getText() != null)
-            return mEditText.getText().toString();
-        return null;
+        return mFinalStr;
+    }
+
+    public void setTextLength(int max) {
+        mMaxLength = max;
     }
 
     @Override
     public void show() {
         super.show();
         mEditText.setHint(!TextUtils.isEmpty(mHintStr) ? mHintStr : "");
-        mEditText.setText(!TextUtils.isEmpty(mContentStr) ? mContentStr : "");
+        mEditText.setText(!TextUtils.isEmpty(mFinalStr) ? mFinalStr : "");
         mEditText.requestFocus();
     }
 
@@ -154,6 +167,7 @@ public class KeyboardDialog extends Dialog implements View.OnClickListener {
     public void dismiss() {
         super.dismiss();
         mEditText.clearFocus();
+        mSoftKeyboardManager.removeSoftKeyboardStateListener(mSoftKeyboardStateListener);
     }
 
     public void onResume() {
