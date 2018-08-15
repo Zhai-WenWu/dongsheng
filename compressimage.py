@@ -30,7 +30,7 @@ def list_all_files(rootdir):
     return _files
 
 if __name__ == '__main__':
-    PngquantExe="/Users/yulekwok/Documents/pngquant"
+    PngquantExe="/Users/yulekwok/Documents/macDev/pngquant/pngquant"
     srcDir = os.path.dirname(os.path.realpath(__file__))
     # print("srcDir is ",srcDir)
     # srcDir = "/Users/yulekwok/Desktop/minfangPhoto2"
