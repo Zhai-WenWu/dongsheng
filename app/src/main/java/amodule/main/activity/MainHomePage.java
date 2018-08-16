@@ -15,6 +15,7 @@ import com.xiangha.R;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.Map;
 
 import acore.broadcast.ConnectionChangeReceiver;
@@ -28,6 +29,9 @@ import acore.tools.IObserver;
 import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
+import amodule._common.conf.FavoriteTypeEnum;
+import amodule._common.conf.GlobalFavoriteModule;
+import amodule._common.conf.GlobalVariableConfig;
 import amodule._common.helper.WidgetDataHelper;
 import amodule.home.HomeDataControler;
 import amodule.home.HomeViewControler;
@@ -69,6 +73,8 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
     protected long startTime = -1;//开始的时间戳
 
     private ConnectionChangeReceiver mReceiver;
+
+    private boolean mResumeFromPause = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -348,14 +354,36 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
         if (mNeedRefCurrFm) {
             mNeedRefCurrFm = false;
             refresh();
+            GlobalVariableConfig.clearAttentionModules();
+            GlobalVariableConfig.clearFavoriteModules();
         }
         mViewContrloer.setMessage(MessageTipController.newInstance().getMessageNum());
+        if (mResumeFromPause) {
+            mResumeFromPause = false;
+            if (mDataControler != null) {
+                ArrayList<Map<String, String>> listData = mDataControler.getData();
+                if (listData != null) {
+                    Iterator<Map<String, String>> iterator = listData.iterator();
+                    while (iterator.hasNext()) {
+                        Map<String, String> data = iterator.next();
+                        if (data != null) {
+                            GlobalFavoriteModule favoriteModule = GlobalVariableConfig.containsFavoriteModule(data.get("code"), FavoriteTypeEnum.getTypeEnumByStr(data.get("type")));
+                            if (favoriteModule != null && (favoriteModule.isFav() != "2".equals(data.get("isFavorites")))) {
+                                data.put("isFavorites", favoriteModule.isFav() ? "2" : "1");
+                            }
+                        }
+                    }
+                }
+            }
+            GlobalVariableConfig.clearFavoriteModules();
+        }
         mHomeAdapter.notifyDataSetChanged();//刷新数据
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        mResumeFromPause = true;
         setRecommedStatistic();
         if(mViewContrloer != null){
             mViewContrloer.setStatisticShowNum();

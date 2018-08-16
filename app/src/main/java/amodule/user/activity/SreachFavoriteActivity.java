@@ -27,6 +27,9 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.rvlistview.RvListView;
+import amodule._common.conf.FavoriteTypeEnum;
+import amodule._common.conf.GlobalFavoriteModule;
+import amodule._common.conf.GlobalVariableConfig;
 import amodule.article.view.BottomDialog;
 import amodule.user.adapter.AdapterModuleS0;
 import aplug.basic.InternetCallback;
@@ -252,7 +255,7 @@ public class SreachFavoriteActivity extends BaseActivity implements View.OnClick
         dialog.addButton("取消收藏", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FavoriteHelper.instance().setFavoriteStatus(SreachFavoriteActivity.this, code,  typeName, type,
+                FavoriteHelper.instance().setFavoriteStatus(SreachFavoriteActivity.this, code,  typeName, FavoriteTypeEnum.getTypeEnumByStr(type),
                         new FavoriteHelper.FavoriteStatusCallback() {
                             @Override
                             public void onSuccess(boolean state) {
@@ -262,6 +265,12 @@ public class SreachFavoriteActivity extends BaseActivity implements View.OnClick
                                 mSearchData.remove(position);
                                 mRvListview.notifyItemViewRemove(position);
                                 handlerNoData();
+
+                                GlobalFavoriteModule favoriteModule = new GlobalFavoriteModule();
+                                favoriteModule.setFavCode(code);
+                                favoriteModule.setFav(state);
+                                favoriteModule.setFavType(FavoriteTypeEnum.getTypeEnumByStr(type));
+                                GlobalVariableConfig.handleFavoriteModule(favoriteModule);
 
                             }
 

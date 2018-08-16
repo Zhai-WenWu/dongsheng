@@ -33,6 +33,9 @@ import acore.tools.IObserver;
 import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
+import amodule._common.conf.FavoriteTypeEnum;
+import amodule._common.conf.GlobalFavoriteModule;
+import amodule._common.conf.GlobalVariableConfig;
 import amodule.dish.adapter.ListDishAdapter;
 import amodule.user.activity.FriendHome;
 import amodule.user.activity.login.LoginByAccout;
@@ -291,12 +294,18 @@ public class ListDish extends BaseActivity {
 
     private void handlerFavorite() {
         statistics(isFav ? "取消收藏" : "收藏", "");
-        FavoriteHelper.instance().setFavoriteStatus(this, g1, classifyName, FavoriteHelper.TYPE_MUNE,
+        FavoriteHelper.instance().setFavoriteStatus(this, g1, classifyName, FavoriteTypeEnum.TYPE_MENU,
                 new FavoriteHelper.FavoriteStatusCallback() {
                     @Override
                     public void onSuccess(boolean state) {
                         isFav = state;
                         img_fav.setImageResource(isFav ? R.drawable.z_caipu_xiangqing_topbar_ico_fav_active : R.drawable.z_caipu_xiangqing_topbar_ico_fav);
+
+                        GlobalFavoriteModule module = new GlobalFavoriteModule();
+                        module.setFavCode(g1);
+                        module.setFav(state);
+                        module.setFavType(FavoriteTypeEnum.TYPE_MENU);
+                        GlobalVariableConfig.handleFavoriteModule(module);
                     }
 
                     @Override
@@ -442,7 +451,7 @@ public class ListDish extends BaseActivity {
     }
 
     private void requestFavoriteState() {
-        FavoriteHelper.instance().getFavoriteStatus(this, g1, FavoriteHelper.TYPE_MUNE,
+        FavoriteHelper.instance().getFavoriteStatus(this, g1, FavoriteTypeEnum.TYPE_MENU,
                 new FavoriteHelper.FavoriteStatusCallback() {
                     @Override
                     public void onSuccess(boolean state) {

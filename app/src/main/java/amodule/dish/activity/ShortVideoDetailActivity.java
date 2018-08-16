@@ -3,6 +3,7 @@ package amodule.dish.activity;
 import android.content.IntentFilter;
 import android.graphics.PixelFormat;
 import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
@@ -22,7 +23,7 @@ import com.xh.view.TitleMessageView;
 import com.xiangha.R;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -35,6 +36,9 @@ import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
+import amodule._common.conf.FavoriteTypeEnum;
+import amodule._common.conf.GlobalAttentionModule;
+import amodule._common.conf.GlobalFavoriteModule;
 import amodule._common.conf.GlobalVariableConfig;
 import amodule.dish.adapter.RvVericalVideoItemAdapter;
 import amodule.dish.helper.ParticularPositionEnableSnapHelper;
@@ -63,9 +67,9 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
     private ParticularPositionEnableSnapHelper mPagerSnapHelper;
 
     private DataController mDataController;
-    private AtomicBoolean mOnResuming;
     private boolean mFirstPlayStarted;
     boolean mCanDispatchTouch = true;
+    private boolean mResumeFromPause;
 
     private String mUserCode;
     private String mSourcePage;
@@ -74,10 +78,10 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
 
     private int mScreenWidth;
     private float mPointerX = -1f;
-    public static Map<String,String> favoriteLocalStates= new HashMap<>();//收藏状态集合 1--否，2--是
 
     private ConnectionChangeReceiver mReceiver;
     private DialogManager mNetStateTipDialog;
+    private ShortVideoDetailModule mExtraModule;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -94,21 +98,23 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
         addListener();
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-//            String json = bundle.getString("json");
-//            json = Uri.decode(json);
-//            if (json != null) {
-//                // TODO: 2018/8/7 组装数据 直接加载
-//            } else {
-                String code = bundle.getString("code");
-                if (TextUtils.isEmpty(code)) {
-                    finish();
-                    return;
-                }
-                mUserCode = bundle.getString("userCode");
-                mSourcePage = bundle.getString("sourcePage");
-                topicCode = bundle.getString("topicCode");
-                mDataController.start(code);
-//            }
+            String code = bundle.getString("code");
+            if (TextUtils.isEmpty(code)) {
+                finish();
+                return;
+            }
+            String json = bundle.getString("extraJson");
+            if (!TextUtils.isEmpty(json)) {
+                json = Uri.decode(json);
+                Map<String, String> extraData = StringManager.getFirstMap(json);
+                mExtraModule = mDataController.getModuleByMap(extraData);
+                mDatas.add(mExtraModule);
+                rvVericalVideoItemAdapter.notifyItemRangeInserted(0, mDatas.size());
+            }
+            mUserCode = bundle.getString("userCode");
+            mSourcePage = bundle.getString("sourcePage");
+            topicCode = bundle.getString("topicCode");
+            mDataController.start(code);
         }
         ObserverManager.getInstance().registerObserver(this, ObserverManager.NOTIFY_SHARE);
         registerConnectionReceiver();
@@ -220,7 +226,6 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(rvVericalVideoItemAdapter);
         mDataController = new DataController();
-        mOnResuming = new AtomicBoolean(false);
         mScreenWidth = ToolsDevice.getWindowPx(this).widthPixels;
     }
 
@@ -309,15 +314,40 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
     @Override
     protected void onStart() {
         super.onStart();
-        mOnResuming.set(false);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        mOnResuming.set(true);
         checkShowGuidance();
         rvVericalVideoItemAdapter.onResume();
+        if (mResumeFromPause) {
+            mResumeFromPause = false;
+            Iterator<ShortVideoDetailModule> dataIterator = mDatas.iterator();
+            while (dataIterator.hasNext()) {
+                ShortVideoDetailModule dataModule = dataIterator.next();
+                GlobalFavoriteModule favModule = GlobalVariableConfig.containsFavoriteModule(dataModule.getCode(), FavoriteTypeEnum.TYPE_VIDEO);
+                boolean favChanged = false;
+                boolean attentionChanged = false;
+                if (favModule != null && (favModule.isFav() != dataModule.isFav())) {
+                    favChanged = true;
+                    dataModule.setFav(favModule.isFav());
+                }
+                GlobalAttentionModule attentionModule = GlobalVariableConfig.containsAttentionModule(dataModule.getCustomerModel().getUserCode());
+                if (attentionModule != null && (attentionModule.isAttention() != dataModule.getCustomerModel().isFollow())) {
+                    attentionChanged = true;
+                    dataModule.getCustomerModel().setFollow(attentionModule.isAttention());
+                }
+                if (rvVericalVideoItemAdapter != null && TextUtils.equals(rvVericalVideoItemAdapter.getCurrentViewHolder().data.getCode(), dataModule.getCode())) {
+                    if (attentionChanged) {
+                        rvVericalVideoItemAdapter.getCurrentViewHolder().updateAttentionState();
+                    }
+                    if (favChanged) {
+                        rvVericalVideoItemAdapter.getCurrentViewHolder().updateFavoriteState();
+                    }
+                }
+            }
+        }
     }
 
     private void checkShowGuidance() {
@@ -331,22 +361,19 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
     @Override
     protected void onPause() {
         super.onPause();
-        mOnResuming.set(false);
+        mResumeFromPause = true;
         rvVericalVideoItemAdapter.onPause();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mOnResuming.set(false);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mOnResuming != null) {
-            mOnResuming.set(false);
-        }
+        mResumeFromPause = false;
         if (rvVericalVideoItemAdapter != null) {
             rvVericalVideoItemAdapter.onDestroy();
         }
@@ -402,20 +429,18 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
         private AtomicBoolean mCodesLoading;
         private AtomicBoolean mLoadCodesEnable;
         private AtomicBoolean mDetailLoading;
-        private AtomicBoolean mLoadDetailEnable;
 
         public DataController() {
             mCodes = new ArrayList<>();
             mCodesLoading = new AtomicBoolean(false);
             mLoadCodesEnable = new AtomicBoolean(true);
             mDetailLoading = new AtomicBoolean(false);
-            mLoadDetailEnable = new AtomicBoolean(true);
         }
 
         public void executeNextOption() {
             ArrayList<String> nextPageCodes = getNextPageCodes();
             if (!nextPageCodes.isEmpty()) {
-                loadVideoDetail(nextPageCodes, true);
+                loadVideoDetail(nextPageCodes, true, false);
                 if (nextPageCodes.size() < COUNT_EACH_PAGE) {
                     loadVideoCodes(nextPageCodes.get(nextPageCodes.size() - 1), null, null, false);
                 }
@@ -438,7 +463,7 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
 
         public void start(String code) {
             mCodes.add(code);
-            loadVideoDetail(mCodes, false);
+            loadVideoDetail(mCodes, false, true);
             loadVideoCodes(code, null, null, true);
         }
 
@@ -447,7 +472,7 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
          * @param codes
          * @param loadMore
          */
-        private void loadVideoDetail(ArrayList<String> codes,boolean loadMore) {
+        private void loadVideoDetail(ArrayList<String> codes,boolean loadMore, boolean firstLoad) {
             if (mDetailLoading.get() || codes == null || codes.isEmpty())
                 return;
             mDetailLoading.set(true);
@@ -465,73 +490,39 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
                 public void loaded(int flag, String s, Object o) {
                     mDetailLoading.set(false);
                     if (flag >= ReqInternet.REQ_OK_STRING) {
-                        int insertPosStart = mDatas.size();
-                        ArrayList<Map<String, String>> datas = StringManager.getListMapByJson(o);
-                        for (int i = 0; i < datas.size() && datas.size() > 0; i ++) {
-                            Map<String, String> itemMap = datas.get(i);
-                            ShortVideoDetailModule module = new ShortVideoDetailModule();
-                            module.setCode(itemMap.get("code"));
-                            module.setName(itemMap.get("name"));
-                            module.setEssence("2".equals(itemMap.get("isEssence")));
-                            module.setFav("2".equals(itemMap.get("isFav")));
-                            module.setLike("2".equals(itemMap.get("isLike")));
-                            module.setFavNum(itemMap.get("favNum"));
-                            module.setCommentNum(itemMap.get("commentNum"));
-                            module.setLikeNum(itemMap.get("likeNum"));
-                            module.setShareNum(itemMap.get("shareNum"));
-                            module.setClickNum(itemMap.get("clickNum"));
-                            Map<String, String> videoMap = StringManager.getFirstMap(itemMap.get("video"));
-                            VideoModel videoModel = new VideoModel();
-                            videoModel.setAutoPlay("2".equals(videoMap.get("isAuto")));
-                            videoModel.setVideoTime(videoMap.get("time"));
-                            videoModel.setPlayableTime(videoMap.get("playableTime"));
-                            videoModel.setVideoW(videoMap.get("width"));
-                            videoModel.setVideoH(videoMap.get("height"));
-                            videoModel.setVideoUrlMap(StringManager.getFirstMap(videoMap.get("videoUrl")));
-                            videoModel.setVideoImg(videoMap.get("videoImg"));
-                            videoModel.setVideoGif(videoMap.get("videoGif"));
-                            module.setVideoModel(videoModel);
-                            Map<String, String> imageMap = StringManager.getFirstMap(itemMap.get("image"));
-                            ImageModel imageModel = new ImageModel();
-                            imageModel.setImageW(imageMap.get("width"));
-                            imageModel.setImageH(imageMap.get("height"));
-                            imageModel.setImageUrl(imageMap.get("url"));
-                            module.setImageModel(imageModel);
-                            Map<String, String> customerMap = StringManager.getFirstMap(itemMap.get("customer"));
-                            CustomerModel customerModel = new CustomerModel();
-                            customerModel.setUserCode(customerMap.get("code"));
-                            customerModel.setNickName(customerMap.get("nickName"));
-                            customerModel.setHeaderImg(customerMap.get("img"));
-                            customerModel.setFollow("2".equals(customerMap.get("isFollow")));
-                            customerModel.setGotoUrl(customerMap.get("url"));
-                            module.setCustomerModel(customerModel);
-                            Map<String, String> topicMap = StringManager.getFirstMap(itemMap.get("topic"));
-                            TopicModel topicModel = new TopicModel();
-                            topicModel.setCode(topicMap.get("code"));
-                            topicModel.setTitle(topicMap.get("title"));
-                            topicModel.setColor(topicMap.get("color"));
-                            topicModel.setBgColor(topicMap.get("bgColor"));
-                            topicModel.setGotoUrl(topicMap.get("url"));
-                            module.setTopicModel(topicModel);
-                            Map<String, String> addressMap = StringManager.getFirstMap(itemMap.get("address"));
-                            AddressModel addressModel = new AddressModel();
-                            addressModel.setCode(addressMap.get("code"));
-                            addressModel.setAddress(addressMap.get("title"));
-                            addressModel.setColor(addressMap.get("color"));
-                            addressModel.setBgColor(addressMap.get("bgColor"));
-                            addressModel.setGotoUrl(addressMap.get("url"));
-                            module.setAddressModel(addressModel);
-                            Map<String, String> shareMap = StringManager.getFirstMap(itemMap.get("share"));
-                            ShareModule shareModule = new ShareModule();
-                            shareModule.setUrl(shareMap.get("url"));
-                            shareModule.setContent(shareMap.get("content"));
-                            shareModule.setTitle(shareMap.get("title"));
-                            shareModule.setImg(shareMap.get("img"));
-                            module.setShareModule(shareModule);
-                            mDatas.add(module);
-                        }
-                        if (mDatas.size() != insertPosStart) {
-                            rvVericalVideoItemAdapter.notifyItemRangeInserted(insertPosStart, datas.size());
+                        if (firstLoad && mExtraModule != null) {
+                            Map<String, String> firstMap = StringManager.getFirstMap(o);
+                            ShortVideoDetailModule firstLoadModule = getModuleByMap(firstMap);
+                            boolean updateFavorite = false;
+                            if (mExtraModule.isFav() != firstLoadModule.isFav()) {
+                                updateFavorite = true;
+                                mExtraModule.setFav(firstLoadModule.isFav());
+                            }
+                            boolean updateAttention = false;
+                            if (mExtraModule.isLike() != firstLoadModule.isLike()) {
+                                updateAttention = true;
+                                mExtraModule.setLike(firstLoadModule.isLike());
+                            }
+                            if (rvVericalVideoItemAdapter != null && TextUtils.equals(rvVericalVideoItemAdapter.getCurrentViewHolder().data.getCode(), mExtraModule.getCode())) {
+                                if (updateFavorite) {
+                                    rvVericalVideoItemAdapter.getCurrentViewHolder().updateFavoriteState();
+                                }
+                                if (updateAttention) {
+                                    rvVericalVideoItemAdapter.getCurrentViewHolder().updateAttentionState();
+                                }
+
+                            }
+                        } else {
+                            int insertPosStart = mDatas.size();
+                            ArrayList<Map<String, String>> datas = StringManager.getListMapByJson(o);
+                            for (int i = 0; i < datas.size() && datas.size() > 0; i++) {
+                                Map<String, String> itemMap = datas.get(i);
+                                ShortVideoDetailModule module = getModuleByMap(itemMap);
+                                mDatas.add(module);
+                            }
+                            if (mDatas.size() != insertPosStart) {
+                                rvVericalVideoItemAdapter.notifyItemRangeInserted(insertPosStart, datas.size());
+                            }
                         }
                     } else {
                         if (!loadMore) {
@@ -581,7 +572,7 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
                             successRun.run();
 
                         if (needLoadDetail) {
-                            loadVideoDetail(getNextPageCodes(), true);
+                            loadVideoDetail(getNextPageCodes(), true, false);
                         }
                     } else {
                         mLoadCodesEnable.set(false);
@@ -590,6 +581,69 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
                     }
                 }
             });
+        }
+
+        public ShortVideoDetailModule getModuleByMap(Map<String, String> itemMap) {
+            ShortVideoDetailModule module = new ShortVideoDetailModule();
+            module.setCode(itemMap.get("code"));
+            module.setName(itemMap.get("name"));
+            module.setEssence("2".equals(itemMap.get("isEssence")));
+            module.setFav("2".equals(itemMap.get("isFav")));
+            module.setLike("2".equals(itemMap.get("isLike")));
+            module.setFavNum(itemMap.get("favNum"));
+            module.setCommentNum(itemMap.get("commentNum"));
+            module.setLikeNum(itemMap.get("likeNum"));
+            module.setShareNum(itemMap.get("shareNum"));
+            module.setClickNum(itemMap.get("clickNum"));
+            Map<String, String> videoMap = StringManager.getFirstMap(itemMap.get("video"));
+            VideoModel videoModel = new VideoModel();
+            videoModel.setAutoPlay("2".equals(videoMap.get("isAuto")));
+            videoModel.setVideoTime(videoMap.get("time"));
+            videoModel.setPlayableTime(videoMap.get("playableTime"));
+            videoModel.setVideoW(videoMap.get("width"));
+            videoModel.setVideoH(videoMap.get("height"));
+            videoModel.setVideoUrlMap(StringManager.getFirstMap(videoMap.get("videoUrl")));
+            videoModel.setVideoImg(videoMap.get("videoImg"));
+            videoModel.setVideoGif(videoMap.get("videoGif"));
+            module.setVideoModel(videoModel);
+            Map<String, String> imageMap = StringManager.getFirstMap(itemMap.get("image"));
+            ImageModel imageModel = new ImageModel();
+            imageModel.setImageW(imageMap.get("width"));
+            imageModel.setImageH(imageMap.get("height"));
+            imageModel.setImageUrl(imageMap.get("url"));
+            module.setImageModel(imageModel);
+            Map<String, String> customerMap = StringManager.getFirstMap(itemMap.get("customer"));
+            CustomerModel customerModel = new CustomerModel();
+            customerModel.setUserCode(customerMap.get("code"));
+            customerModel.setNickName(customerMap.get("nickName"));
+            customerModel.setHeaderImg(customerMap.get("img"));
+            customerModel.setFollow("2".equals(customerMap.get("isFollow")));
+            customerModel.setGotoUrl(customerMap.get("url"));
+            module.setCustomerModel(customerModel);
+            Map<String, String> topicMap = StringManager.getFirstMap(itemMap.get("topic"));
+            TopicModel topicModel = new TopicModel();
+            topicModel.setCode(topicMap.get("code"));
+            topicModel.setTitle(topicMap.get("title"));
+            topicModel.setColor(topicMap.get("color"));
+            topicModel.setBgColor(topicMap.get("bgColor"));
+            topicModel.setGotoUrl(topicMap.get("url"));
+            module.setTopicModel(topicModel);
+            Map<String, String> addressMap = StringManager.getFirstMap(itemMap.get("address"));
+            AddressModel addressModel = new AddressModel();
+            addressModel.setCode(addressMap.get("code"));
+            addressModel.setAddress(addressMap.get("title"));
+            addressModel.setColor(addressMap.get("color"));
+            addressModel.setBgColor(addressMap.get("bgColor"));
+            addressModel.setGotoUrl(addressMap.get("url"));
+            module.setAddressModel(addressModel);
+            Map<String, String> shareMap = StringManager.getFirstMap(itemMap.get("share"));
+            ShareModule shareModule = new ShareModule();
+            shareModule.setUrl(shareMap.get("url"));
+            shareModule.setContent(shareMap.get("content"));
+            shareModule.setTitle(shareMap.get("title"));
+            shareModule.setImg(shareMap.get("img"));
+            module.setShareModule(shareModule);
+            return module;
         }
     }
 

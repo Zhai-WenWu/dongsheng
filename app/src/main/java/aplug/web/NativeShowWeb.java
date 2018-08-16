@@ -106,8 +106,9 @@ public class NativeShowWeb extends BaseActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         }
-//        if(!TextUtils.isEmpty(url))
-            webView.loadUrl("https://m.douguo.com/jump/100/2009");
+        if(!TextUtils.isEmpty(url)) {
+            webView.loadUrl(url);
+        }
     }
 
     private void initData() {

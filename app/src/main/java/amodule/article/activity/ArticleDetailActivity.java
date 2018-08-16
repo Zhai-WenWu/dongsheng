@@ -46,6 +46,9 @@ import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
+import amodule._common.conf.FavoriteTypeEnum;
+import amodule._common.conf.GlobalFavoriteModule;
+import amodule._common.conf.GlobalVariableConfig;
 import amodule.article.activity.edit.ArticleEidtActivity;
 import amodule.article.adapter.ArticleDetailAdapter;
 import amodule.article.tools.ArticleAdContrler;
@@ -269,12 +272,17 @@ public class ArticleDetailActivity extends BaseActivity {
 
     private void handlerFavorite(){
         statistics(isFav?"取消收藏":"收藏","");
-        FavoriteHelper.instance().setFavoriteStatus(this, code, title, FavoriteHelper.TYPE_ARTICLE,
+        FavoriteHelper.instance().setFavoriteStatus(this, code, title, FavoriteTypeEnum.TYPE_ARTICLE,
                 new FavoriteHelper.FavoriteStatusCallback() {
                     @Override
                     public void onSuccess(boolean state) {
                         isFav = state;
                         rightButtonFav.setImageResource(isFav?R.drawable.z_caipu_xiangqing_topbar_ico_fav_active:R.drawable.z_caipu_xiangqing_topbar_ico_fav);
+                        GlobalFavoriteModule module = new GlobalFavoriteModule();
+                        module.setFavCode(code);
+                        module.setFav(state);
+                        module.setFavType(FavoriteTypeEnum.TYPE_ARTICLE);
+                        GlobalVariableConfig.handleFavoriteModule(module);
                     }
 
                     @Override
@@ -547,7 +555,7 @@ public class ArticleDetailActivity extends BaseActivity {
     }
 
     private void requestFavoriteState(){
-        FavoriteHelper.instance().getFavoriteStatus(this, code, FavoriteHelper.TYPE_ARTICLE,
+        FavoriteHelper.instance().getFavoriteStatus(this, code, FavoriteTypeEnum.TYPE_ARTICLE,
                 new FavoriteHelper.FavoriteStatusCallback() {
                     @Override
                     public void onSuccess(boolean state) {

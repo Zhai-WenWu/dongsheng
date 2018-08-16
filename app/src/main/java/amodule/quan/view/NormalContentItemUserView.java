@@ -30,6 +30,8 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.TextViewShow;
+import amodule._common.conf.GlobalAttentionModule;
+import amodule._common.conf.GlobalVariableConfig;
 import amodule.quan.activity.CircleRobSofa;
 import amodule.user.activity.login.LoginByAccout;
 import amodule.user.view.UserIconView;
@@ -255,7 +257,16 @@ public class NormalContentItemUserView extends NormarlContentItemView {
                             && userMap.get("folState").equals("2")) {
                         boolean isFollow = customers.get(0).containsKey("folState") && "2".equals(customers.get(0).get("folState"));
                         XHClick.mapStat(mAct, normarlContentData.getStatisID(), normarlContentData.getStatisKey(), isFollow ? "关注" : "已关注");
-                        AppCommon.onAttentionClick(userMap.get("code"), "follow");
+                        AppCommon.onAttentionClick(userMap.get("code"), "follow", new Runnable() {
+                            @Override
+                            public void run() {
+
+                                GlobalAttentionModule module = new GlobalAttentionModule();
+                                module.setAttentionUserCode(userMap.get("code"));
+                                module.setAttention(true);
+                                GlobalVariableConfig.handleAttentionModule(module);
+                            }
+                        });
                         customers.get(0).put("folState", "3");
                         Tools.showToast(mAct, "已关注");
                         setFollowState(customers.get(0));

@@ -26,6 +26,8 @@ import acore.logic.XHClick;
 import acore.override.view.ItemBaseView;
 import acore.tools.StringManager;
 import acore.tools.Tools;
+import amodule._common.conf.GlobalAttentionModule;
+import amodule._common.conf.GlobalVariableConfig;
 import amodule.dish.activity.DetailDish;
 import amodule.user.activity.FriendHome;
 import amodule.user.activity.login.LoginByAccout;
@@ -108,7 +110,15 @@ public class DishAboutView extends ItemBaseView {
                 }
                 if(mapPower.containsKey("isFav")&&mapPower.get("isFav").equals("1")){
                     XHClick.mapStat(activity, DetailDish.tongjiId_detail, "作者信息点击", "关注按钮点击量");
-                    AppCommon.onAttentionClick(mapUser.get("customerCode"), "follow");
+                    AppCommon.onAttentionClick(mapUser.get("customerCode"), "follow", new Runnable() {
+                        @Override
+                        public void run() {
+                            GlobalAttentionModule module = new GlobalAttentionModule();
+                            module.setAttentionUserCode(mapUser.get("customerCode"));
+                            module.setAttention(true);
+                            GlobalVariableConfig.handleAttentionModule(module);
+                        }
+                    });
                     mapPower.put("isFav","2");
                     Tools.showToast(context,"已关注");
                     setFollowState(mapPower);

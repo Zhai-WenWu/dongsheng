@@ -29,6 +29,8 @@ import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.StringManager;
 import acore.widget.rvlistview.RvListView;
 import acore.widget.rvlistview.RvStaggeredGridView;
+import amodule._common.conf.GlobalAttentionModule;
+import amodule._common.conf.GlobalVariableConfig;
 import amodule.topic.adapter.TopicInfoStaggeredAdapter;
 import amodule.topic.model.ImageModel;
 import amodule.topic.model.LabelModel;
@@ -202,6 +204,10 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                                 public void run() {
                                     if (mTopicHeaderView != null)
                                         mTopicHeaderView.setAttentionEnable(false);
+                                    GlobalAttentionModule module = new GlobalAttentionModule();
+                                    module.setAttentionUserCode(mAuthorMap.get("code"));
+                                    module.setAttention(true);
+                                    GlobalVariableConfig.handleAttentionModule(module);
                                 }
                             });
                         }

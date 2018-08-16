@@ -27,6 +27,8 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.TextViewLimitLine;
+import amodule._common.conf.GlobalAttentionModule;
+import amodule._common.conf.GlobalVariableConfig;
 import amodule.user.activity.FansAndFollwers;
 import amodule.user.activity.login.LoginByAccout;
 import amodule.user.activity.login.UserSetting;
@@ -218,7 +220,7 @@ public class UserHomeTitle {
                         mAct.startActivity(intent);
                     }
                 });
-            else
+            else {
                 tv_follow.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -227,18 +229,29 @@ public class UserHomeTitle {
                             mAct.startActivity(intent);
                             return;
                         }
-                        AppCommon.onAttentionClick(userinfo_map.get("code"), "follow");
+                        AppCommon.onAttentionClick(userinfo_map.get("code"), "follow", new Runnable() {
+                            @Override
+                            public void run() {
+                                boolean isFollow = false;
+                                // 没有关注-->关注成功
+                                if (userinfo_map.get("folState").equals("2")) {
+                                    userinfo_map.put("folState", "3");
+                                    isFollow = true;
+                                } else if (userinfo_map.get("folState").equals("3")) {// 已关注-->取消关注
+                                    userinfo_map.put("folState", "2");
+                                    isFollow = false;
+                                }
+                                changeFollow(userinfo_map.get("folState"));
+                                GlobalAttentionModule module = new GlobalAttentionModule();
+                                module.setAttention(isFollow);
+                                module.setAttentionUserCode(userinfo_map.get("code"));
+                                GlobalVariableConfig.handleAttentionModule(module);
+                            }
+                        });
                         XHClick.mapStat(mAct, tongjiId, "个人信息", "关注");
-                        // 没有关注，关注成功
-                        if (userinfo_map.get("folState").equals("2")) {
-                            userinfo_map.put("folState", "3");
-                        }
-                        // 已关注，取消关注
-                        else if (userinfo_map.get("folState").equals("3"))
-                            userinfo_map.put("folState", "2");
-                        changeFollow(userinfo_map.get("folState"));
                     }
                 });
+            }
         }
     }
 
@@ -299,9 +312,9 @@ public class UserHomeTitle {
 //        }
     }
 
-    public void notifyAttentionInfo() {
+    public void notifyAttentionInfo(boolean attention) {
         if (userinfo_map != null && userinfo_map.containsKey("folState")) {
-            userinfo_map.put("folState", "3");
+            userinfo_map.put("folState", attention ? "3" : "2");
             changeFollow("3");
         }
     }

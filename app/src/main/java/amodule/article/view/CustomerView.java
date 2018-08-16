@@ -18,8 +18,9 @@ import java.util.Map;
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
-import acore.override.helper.XHActivityManager;
 import acore.override.view.ItemBaseView;
+import amodule._common.conf.GlobalAttentionModule;
+import amodule._common.conf.GlobalVariableConfig;
 import amodule.article.activity.ArticleDetailActivity;
 import amodule.main.Main;
 import amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver;
@@ -77,6 +78,11 @@ public class CustomerView extends ItemBaseView {
                                 broadIntent.setAction(UploadStateChangeBroadcasterReceiver.ACTION);
                                 broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.ACTION_ATT, TYPE_ARTICLE);
                                 Main.allMain.sendBroadcast(broadIntent);
+
+                                GlobalAttentionModule module = new GlobalAttentionModule();
+                                module.setAttentionUserCode(mapUser.get("code"));
+                                module.setAttention(true);
+                                GlobalVariableConfig.handleAttentionModule(module);
                             }
                         }
                     });

@@ -27,6 +27,9 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.PopWindowDialog;
+import amodule._common.conf.FavoriteTypeEnum;
+import amodule._common.conf.GlobalFavoriteModule;
+import amodule._common.conf.GlobalVariableConfig;
 import amodule.dish.activity.DetailDish;
 import amodule.dish.activity.upload.UploadDishActivity;
 import amodule.dish.tools.OffDishToFavoriteControl;
@@ -331,9 +334,8 @@ public class DishTitleViewControl implements View.OnClickListener {
                     if (loading && context != null) loadManager.startProgress("仍在进行");
                 }
             }, 1000);
-            FavoriteHelper.instance().setFavoriteStatus(detailDish.getApplicationContext(), code, dishInfoMap.get("name"),
-                    isHasVideo ? FavoriteHelper.TYPE_DISH_VIDEO : FavoriteHelper.TYPE_DISH_ImageNText,
-                    new FavoriteHelper.FavoriteStatusCallback() {
+            FavoriteTypeEnum type = isHasVideo ? FavoriteTypeEnum.TYPE_DISH_VIDEO : FavoriteTypeEnum.TYPE_DISH_ImageNText;
+            FavoriteHelper.instance().setFavoriteStatus(detailDish.getApplicationContext(), code, dishInfoMap.get("name"), type, new FavoriteHelper.FavoriteStatusCallback() {
                         @Override
                         public void onSuccess(boolean state) {
                             loading = false;
@@ -363,6 +365,11 @@ public class DishTitleViewControl implements View.OnClickListener {
                                     XHClick.mapStat(XHApplication.in(), "a_share400", "强化分享", "菜谱收藏成功后");
                                 }
                             }
+                            GlobalFavoriteModule module = new GlobalFavoriteModule();
+                            module.setFav(nowFav);
+                            module.setFavCode(code);
+                            module.setFavType(type);
+                            GlobalVariableConfig.handleFavoriteModule(module);
                         }
 
                         @Override
@@ -379,7 +386,7 @@ public class DishTitleViewControl implements View.OnClickListener {
 
     private void requestFavoriteState() {
         FavoriteHelper.instance().getFavoriteStatus(context, code,
-                isHasVideo ? FavoriteHelper.TYPE_DISH_VIDEO : FavoriteHelper.TYPE_DISH_ImageNText,
+                isHasVideo ? FavoriteTypeEnum.TYPE_DISH_VIDEO : FavoriteTypeEnum.TYPE_DISH_ImageNText,
                 new FavoriteHelper.FavoriteStatusCallback() {
                     @Override
                     public void onSuccess(boolean state) {

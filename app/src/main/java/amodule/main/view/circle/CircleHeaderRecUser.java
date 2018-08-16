@@ -26,6 +26,8 @@ import java.util.Map;
 import acore.logic.AppCommon;
 import acore.logic.XHClick;
 import acore.tools.Tools;
+import amodule._common.conf.GlobalAttentionModule;
+import amodule._common.conf.GlobalVariableConfig;
 import aplug.basic.LoadImage;
 
 /**
@@ -102,7 +104,15 @@ public class CircleHeaderRecUser extends LinearLayout {
 				@Override
 				public void onClick(View v) {
 					XHClick.mapStat(getContext(),stiaticID,"顶部推荐关注","关注");
-					AppCommon.onAttentionClick(userData.get("code"), "follow");
+					AppCommon.onAttentionClick(userData.get("code"), "follow", new Runnable() {
+						@Override
+						public void run() {
+							GlobalAttentionModule module = new GlobalAttentionModule();
+							module.setAttentionUserCode(userData.get("code"));
+							module.setAttention(true);
+							GlobalVariableConfig.handleAttentionModule(module);
+						}
+					});
 					postDelayed(new Runnable() {
 						@Override
 						public void run() {

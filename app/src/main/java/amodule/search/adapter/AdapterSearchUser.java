@@ -22,6 +22,8 @@ import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.tools.Tools;
+import amodule._common.conf.GlobalAttentionModule;
+import amodule._common.conf.GlobalVariableConfig;
 import amodule.user.activity.FriendHome;
 import amodule.user.activity.login.LoginByAccout;
 
@@ -57,7 +59,22 @@ public class AdapterSearchUser extends AdapterSearch {
 					mParent.getContext().startActivity(intent);
 					return;
 				}
-				AppCommon.onAttentionClick(map.get("code"),"follow");
+				boolean temp = false;
+				if (map.get("folState").equals("folState3")) {
+					temp = true;
+				} else if (map.get("folState").equals("folState2")) {
+					temp = false;
+				}
+				final boolean attention = temp;
+				AppCommon.onAttentionClick(map.get("code"), "follow", new Runnable() {
+					@Override
+					public void run() {
+						GlobalAttentionModule module = new GlobalAttentionModule();
+						module.setAttentionUserCode(map.get("code"));
+						module.setAttention(attention);
+						GlobalVariableConfig.handleAttentionModule(module);
+					}
+				});
 				if (map.get("folState").equals("folState3")) {
 					map.put("folState", "folState2");
 					item_choose.setText("关注");

@@ -18,7 +18,6 @@ import com.xiangha.R;
 import java.util.List;
 import java.util.Map;
 
-import acore.logic.AppCommon;
 import acore.logic.FavoriteHelper;
 import acore.logic.LoginManager;
 import acore.override.activity.base.BaseActivity;
@@ -26,11 +25,11 @@ import acore.override.adapter.AdapterSimple;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.TagTextView;
-import amodule.article.activity.ArticleDetailActivity;
+import amodule._common.conf.FavoriteTypeEnum;
+import amodule._common.conf.GlobalFavoriteModule;
+import amodule._common.conf.GlobalVariableConfig;
 import amodule.dish.db.DataOperate;
 import amodule.user.activity.login.LoginByAccout;
-import aplug.basic.InternetCallback;
-import xh.basic.internet.UtilInternet;
 
 /**
  * Title:AdapterListDish.java Copyright: Copyright (c) 2014~2017
@@ -124,12 +123,19 @@ public class AdapterListDish extends AdapterSimple {
 
     // 收藏响应
     public void doFavorite(final Map<String, String> map) {
+        FavoriteTypeEnum type = "2".equals(map.get("hasVideo")) ? FavoriteTypeEnum.TYPE_DISH_VIDEO : FavoriteTypeEnum.TYPE_DISH_ImageNText;
         FavoriteHelper.instance().setFavoriteStatus(mAct, map.get("code"), map.get("name"),
-                "2".equals(map.get("hasVideo")) ? FavoriteHelper.TYPE_DISH_VIDEO : FavoriteHelper.TYPE_DISH_ImageNText,
+                type,
                 new FavoriteHelper.FavoriteStatusCallback() {
                     @Override
                     public void onSuccess(boolean state) {
                         parseFavClick(state,map);
+
+                        GlobalFavoriteModule module = new GlobalFavoriteModule();
+                        module.setFavCode(map.get("code"));
+                        module.setFav(state);
+                        module.setFavType(type);
+                        GlobalVariableConfig.handleFavoriteModule(module);
                     }
 
                     @Override

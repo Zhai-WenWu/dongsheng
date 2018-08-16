@@ -29,6 +29,9 @@ import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
 import acore.widget.LayoutScroll;
 import acore.widget.rvlistview.RvListView;
+import amodule._common.conf.FavoriteTypeEnum;
+import amodule._common.conf.GlobalFavoriteModule;
+import amodule._common.conf.GlobalVariableConfig;
 import amodule.article.view.BottomDialog;
 import amodule.home.activity.HomeSecondListActivity;
 import amodule.user.activity.login.LoginByAccout;
@@ -257,7 +260,21 @@ public class MyFavorite extends BaseAppCompatActivity implements View.OnClickLis
             mBottomDialog = new BottomDialog(this);
             mBottomDialog.addButton("取消收藏",
                     v ->  {
-                FavoriteHelper.instance().setFavoriteStatus(this, code, typeName, type, null);
+                FavoriteHelper.instance().setFavoriteStatus(this, code, typeName, FavoriteTypeEnum.getTypeEnumByStr(type), new FavoriteHelper.FavoriteStatusCallback() {
+                    @Override
+                    public void onSuccess(boolean isFav) {
+                        GlobalFavoriteModule favoriteModule = new GlobalFavoriteModule();
+                        favoriteModule.setFavCode(code);
+                        favoriteModule.setFav(isFav);
+                        favoriteModule.setFavType(FavoriteTypeEnum.getTypeEnumByStr(type));
+                        GlobalVariableConfig.handleFavoriteModule(favoriteModule);
+                    }
+
+                    @Override
+                    public void onFailed() {
+
+                    }
+                });
                 XHClick.mapStat(this, mStatisticId, "点击取消收藏按钮", "");
             }
             );
@@ -265,7 +282,21 @@ public class MyFavorite extends BaseAppCompatActivity implements View.OnClickLis
         }else{
             mBottomDialog.setItemClick(0,
                     v -> {
-                        FavoriteHelper.instance().setFavoriteStatus(this, code, typeName, type, null);
+                        FavoriteHelper.instance().setFavoriteStatus(this, code, typeName, FavoriteTypeEnum.getTypeEnumByStr(type), new FavoriteHelper.FavoriteStatusCallback() {
+                            @Override
+                            public void onSuccess(boolean isFav) {
+                                GlobalFavoriteModule favoriteModule = new GlobalFavoriteModule();
+                                favoriteModule.setFavCode(code);
+                                favoriteModule.setFav(isFav);
+                                favoriteModule.setFavType(FavoriteTypeEnum.getTypeEnumByStr(type));
+                                GlobalVariableConfig.handleFavoriteModule(favoriteModule);
+                            }
+
+                            @Override
+                            public void onFailed() {
+
+                            }
+                        });
                         XHClick.mapStat(this, mStatisticId, "点击取消收藏按钮", "");
                     }
             );

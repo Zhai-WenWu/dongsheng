@@ -12,8 +12,8 @@ public class GlobalVariableConfig {
 
     public static void restoreConf() {
         shortVideoDetail_netStateTip_dialogEnable = true;
-        mGlobalAttentionModules.clear();
-        mGlobalFavoriteModules.clear();
+        clearAttentionModules();
+        clearFavoriteModules();
     }
 
     public static GlobalAttentionModule containsAttentionModule(String attentionUserCode) {
@@ -38,7 +38,11 @@ public class GlobalVariableConfig {
             return;
         GlobalAttentionModule module = containsAttentionModule(attentionModule.getAttentionUserCode());
         if (module == null) {
-            mGlobalAttentionModules.add(attentionModule);
+            GlobalAttentionModule add = new GlobalAttentionModule();
+            add.setAttention(attentionModule.isAttention());
+            add.setAttentionNum(attentionModule.getAttentionNum());
+            add.setAttentionUserCode(attentionModule.getAttentionUserCode());
+            mGlobalAttentionModules.add(add);
         }
     }
 
@@ -49,7 +53,9 @@ public class GlobalVariableConfig {
         if (targetModule == null)
             return;
         targetModule.setAttention(sourceModule.isAttention());
-        targetModule.setAttentionNum(sourceModule.getAttentionNum());
+        if (!TextUtils.isEmpty(sourceModule.getAttentionNum())) {
+            targetModule.setAttentionNum(sourceModule.getAttentionNum());
+        }
         targetModule.setAttentionUserCode(sourceModule.getAttentionUserCode());
     }
 
@@ -71,16 +77,16 @@ public class GlobalVariableConfig {
         }
     }
 
-    public static GlobalFavoriteModule containsFavoriteModule(String favCode) {
+    public static GlobalFavoriteModule containsFavoriteModule(String favCode, FavoriteTypeEnum favoriteType) {
         if (TextUtils.isEmpty(favCode))
             return null;
         synchronized (GlobalVariableConfig.class) {
             GlobalFavoriteModule ret = null;
             Iterator<GlobalFavoriteModule> iterator = mGlobalFavoriteModules.iterator();
             while (iterator.hasNext()) {
-                GlobalFavoriteModule attentionModule = iterator.next();
-                if (TextUtils.equals(favCode, attentionModule.getFavCode())) {
-                    ret = attentionModule;
+                GlobalFavoriteModule favoriteModule = iterator.next();
+                if (TextUtils.equals(favCode, favoriteModule.getFavCode()) && favoriteType == favoriteModule.getFavType()) {
+                    ret = favoriteModule;
                     break;
                 }
             }
@@ -91,24 +97,31 @@ public class GlobalVariableConfig {
     public static void addFavoriteModule(GlobalFavoriteModule favModule) {
         if (favModule == null)
             return;
-        GlobalFavoriteModule module = containsFavoriteModule(favModule.getFavCode());
+        GlobalFavoriteModule module = containsFavoriteModule(favModule.getFavCode(), favModule.getFavType());
         if (module == null) {
-            mGlobalFavoriteModules.add(favModule);
+            GlobalFavoriteModule add = new GlobalFavoriteModule();
+            add.setFav(favModule.isFav());
+            add.setFavNum(favModule.getFavNum());
+            add.setFavCode(favModule.getFavCode());
+            add.setFavType(favModule.getFavType());
+            mGlobalFavoriteModules.add(add);
         }
     }
 
     private static void updateFavoriteModule(GlobalFavoriteModule sourceModule) {
         if (sourceModule == null)
             return;
-        GlobalFavoriteModule targetModule = containsFavoriteModule(sourceModule.getFavCode());
+        GlobalFavoriteModule targetModule = containsFavoriteModule(sourceModule.getFavCode(), sourceModule.getFavType());
         if (targetModule == null)
             return;
         targetModule.setFav(sourceModule.isFav());
-        targetModule.setFavNum(sourceModule.getFavNum());
+        if (!TextUtils.isEmpty(sourceModule.getFavNum())) {
+            targetModule.setFavNum(sourceModule.getFavNum());
+        }
         targetModule.setFavCode(sourceModule.getFavCode());
     }
 
-    public static GlobalFavoriteModule deleteFavoriteModuleByCode(String code) {
+    public static GlobalFavoriteModule deleteFavoriteModuleByCode(String code, FavoriteTypeEnum favoriteType) {
         if (TextUtils.isEmpty(code))
             return null;
         synchronized (GlobalVariableConfig.class) {
@@ -116,7 +129,7 @@ public class GlobalVariableConfig {
             Iterator<GlobalFavoriteModule> iterator = mGlobalFavoriteModules.iterator();
             while (iterator.hasNext()) {
                 GlobalFavoriteModule iteratorModule = iterator.next();
-                if (TextUtils.equals(code, iteratorModule.getFavCode())) {
+                if (TextUtils.equals(code, iteratorModule.getFavCode()) && favoriteType == iteratorModule.getFavType()) {
                     iterator.remove();
                     retModule = iteratorModule;
                     break;
@@ -124,5 +137,35 @@ public class GlobalVariableConfig {
             }
             return retModule;
         }
+    }
+
+    public static void handleFavoriteModule(GlobalFavoriteModule module) {
+        if (module == null)
+            return;
+        GlobalFavoriteModule contains = containsFavoriteModule(module.getFavCode(), module.getFavType());
+        if (contains == null) {
+            addFavoriteModule(module);
+        } else {
+            updateFavoriteModule(module);
+        }
+    }
+
+    public static void handleAttentionModule(GlobalAttentionModule module) {
+        if (module == null)
+            return;
+        GlobalAttentionModule contains = containsAttentionModule(module.getAttentionUserCode());
+        if (contains == null) {
+            addAttentionModule(module);
+        } else {
+            updateAttentionModule(module);
+        }
+    }
+
+    public static void clearAttentionModules() {
+        mGlobalAttentionModules.clear();
+    }
+
+    public static void clearFavoriteModules() {
+        mGlobalFavoriteModules.clear();
     }
 }

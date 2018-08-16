@@ -24,6 +24,9 @@ import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.PopWindowDialog;
+import amodule._common.conf.FavoriteTypeEnum;
+import amodule._common.conf.GlobalFavoriteModule;
+import amodule._common.conf.GlobalVariableConfig;
 import amodule.dish.activity.upload.UploadDishActivity;
 import amodule.dish.tools.OffDishToFavoriteControl;
 import amodule.main.Main;
@@ -297,8 +300,9 @@ public class DishTitleViewControlNew implements View.OnClickListener{
                     if (loading&&context!=null) loadManager.startProgress("仍在进行");
                 }
             }, 1000);
+            FavoriteTypeEnum type = isHasVideo ? FavoriteTypeEnum.TYPE_DISH_VIDEO : FavoriteTypeEnum.TYPE_DISH_ImageNText;
             FavoriteHelper.instance().setFavoriteStatus(detailDish.getApplicationContext(), code, dishInfoMap.get("name"),
-                    isHasVideo ? FavoriteHelper.TYPE_DISH_VIDEO : FavoriteHelper.TYPE_DISH_ImageNText,
+                    type,
                     new FavoriteHelper.FavoriteStatusCallback() {
                         @Override
                         public void onSuccess(boolean state) {
@@ -345,6 +349,11 @@ public class DishTitleViewControlNew implements View.OnClickListener{
                                     XHClick.mapStat(XHApplication.in(), "a_share400", "强化分享", "菜谱收藏成功后");
                                 }
                             }
+                            GlobalFavoriteModule module = new GlobalFavoriteModule();
+                            module.setFav(nowFav);
+                            module.setFavCode(code);
+                            module.setFavType(type);
+                            GlobalVariableConfig.handleFavoriteModule(module);
                         }
 
                         @Override

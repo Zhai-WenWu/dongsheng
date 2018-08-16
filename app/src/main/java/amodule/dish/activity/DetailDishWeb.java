@@ -31,6 +31,7 @@ import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
+import amodule._common.conf.FavoriteTypeEnum;
 import amodule.dish.db.DataOperate;
 import amodule.dish.view.DishActivityViewControlNew;
 import amodule.main.Main;
@@ -182,7 +183,7 @@ public class DetailDishWeb extends BaseAppCompatActivity implements IObserver {
 
     private void requestFavoriteState(){
         FavoriteHelper.instance().getFavoriteStatus(this, code,
-                dishActivityViewControl.isHasVideo() ? FavoriteHelper.TYPE_DISH_VIDEO : FavoriteHelper.TYPE_DISH_ImageNText,
+                dishActivityViewControl.isHasVideo() ? FavoriteTypeEnum.TYPE_DISH_VIDEO : FavoriteTypeEnum.TYPE_DISH_ImageNText,
                 new FavoriteHelper.FavoriteStatusCallback() {
                     @Override
                     public void onSuccess(boolean state) {

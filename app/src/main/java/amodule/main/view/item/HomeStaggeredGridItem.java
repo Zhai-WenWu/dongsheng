@@ -4,12 +4,10 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
-import android.support.v4.view.ViewCompat;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,7 +23,7 @@ import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.IconTextSpan;
-import amodule.dish.activity.ShortVideoDetailActivity;
+import amodule._common.conf.FavoriteTypeEnum;
 import aplug.basic.LoadImage;
 
 public class HomeStaggeredGridItem extends HomeItem {
@@ -156,25 +154,19 @@ public class HomeStaggeredGridItem extends HomeItem {
 
     private void setImgFav(){
         img_fav.setImageResource(mDataMap.containsKey("isFavorites")&&"2".equals(mDataMap.get("isFavorites"))?R.drawable.icon_fav_active:R.drawable.icon_fav);
-        if(ShortVideoDetailActivity.favoriteLocalStates.containsKey(mDataMap.get("code"))&&
-                !TextUtils.isEmpty(ShortVideoDetailActivity.favoriteLocalStates.get(mDataMap.get("code")))){//已经包含
-            img_fav.setImageResource("2".equals(ShortVideoDetailActivity.favoriteLocalStates.get(mDataMap.get("code")))?R.drawable.icon_fav_active:R.drawable.icon_fav);
-        }
     }
     private void requestFav(){
-        if(mDataMap.containsKey("isFavorites")&&!"2".equals(mDataMap.get("isFavorites"))){
-            FavoriteHelper.instance().setFavoriteStatus(getContext(), mDataMap.get("code"), mDataMap.get("name"), FavoriteHelper.TYPE_VIDEO, new FavoriteHelper.FavoriteStatusCallback() {
-                @Override
-                public void onSuccess(boolean isFav) {
-                    mDataMap.put("isFavorites","2");
-                    setImgFav();
-                }
+        FavoriteHelper.instance().setFavoriteStatus(getContext(), mDataMap.get("code"), mDataMap.get("name"), FavoriteTypeEnum.TYPE_VIDEO, new FavoriteHelper.FavoriteStatusCallback() {
+            @Override
+            public void onSuccess(boolean isFav) {
+                mDataMap.put("isFavorites","2");
+                setImgFav();
+            }
 
-                @Override
-                public void onFailed() {
-                }
-            });
-        }
+            @Override
+            public void onFailed() {
+            }
+        });
     }
 
     public ConstraintLayout getContentLayout() {

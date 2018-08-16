@@ -43,6 +43,9 @@ import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.DownRefreshList;
+import amodule._common.conf.FavoriteTypeEnum;
+import amodule._common.conf.GlobalFavoriteModule;
+import amodule._common.conf.GlobalVariableConfig;
 import amodule.quan.activity.upload.UploadSubjectNew;
 import amodule.quan.adapter.AdapterQuanShowSubject;
 import amodule.quan.db.SubjectData;
@@ -262,7 +265,7 @@ public class ShowSubject extends BaseAppCompatActivity {
 				//7.29新添加统计
 				XHClick.mapStat(ShowSubject.this.getApplicationContext(), "a_collection", "美食贴", "");
 				if (LoginManager.isLogin()) {
-					FavoriteHelper.instance().setFavoriteStatus(ShowSubject.this, subCode, subjectTitle, FavoriteHelper.TYPE_SUBJECT,
+					FavoriteHelper.instance().setFavoriteStatus(ShowSubject.this, subCode, subjectTitle, FavoriteTypeEnum.TYPE_SUBJECT,
 							new FavoriteHelper.FavoriteStatusCallback() {
 								@Override
 								public void onSuccess(boolean state) {
@@ -270,6 +273,11 @@ public class ShowSubject extends BaseAppCompatActivity {
 									isFav = state;
 									favoriteImageView.setImageResource(isFav ? R.drawable.z_caipu_xiangqing_topbar_ico_fav_active : R.drawable.z_caipu_xiangqing_topbar_ico_fav);
 									favoriteTextView.setText(isFav ? "已收藏" : "  收藏  ");
+									GlobalFavoriteModule module = new GlobalFavoriteModule();
+									module.setFavType(FavoriteTypeEnum.TYPE_SUBJECT);
+									module.setFav(state);
+									module.setFavCode(subCode);
+									GlobalVariableConfig.handleFavoriteModule(module);
 								}
 
 								@Override
@@ -620,7 +628,7 @@ public class ShowSubject extends BaseAppCompatActivity {
 	}
 
 	private void requestFavoriteState() {
-		FavoriteHelper.instance().getFavoriteStatus(this, subCode, FavoriteHelper.TYPE_SUBJECT,
+		FavoriteHelper.instance().getFavoriteStatus(this, subCode, FavoriteTypeEnum.TYPE_SUBJECT,
 				new FavoriteHelper.FavoriteStatusCallback() {
 					@Override
 					public void onSuccess(boolean state) {

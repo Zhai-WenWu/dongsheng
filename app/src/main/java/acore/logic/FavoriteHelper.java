@@ -13,6 +13,7 @@ import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
+import amodule._common.conf.FavoriteTypeEnum;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 
@@ -27,22 +28,6 @@ import static acore.tools.ObserverManager.NOTIFY_FAVORITE;
  */
 
 public class FavoriteHelper {
-    /** 图文菜谱 */
-    public static final String TYPE_DISH_ImageNText = "1";
-    /** 视频菜谱 */
-    public static final String TYPE_DISH_VIDEO = "2";
-    /** 文章（原小知识） */
-    public static final String TYPE_NOUS = "3";
-    /** 专辑（菜单） */
-    public static final String TYPE_MUNE = "4";
-    /** 美食帖 */
-    public static final String TYPE_SUBJECT = "5";
-    /** 新文章 */
-    public static final String TYPE_ARTICLE = "6";
-    /** 短视频 */
-    public static final String TYPE_VIDEO = "7";
-    /** 链接 */
-    public static final String TYPE_LINK = "8";//暂时未用到
 
     private volatile static FavoriteHelper mInstance;
 
@@ -67,11 +52,11 @@ public class FavoriteHelper {
      * @param type 对应类型
      * @param callback 回调
      */
-    public void getFavoriteStatus(Context context, @NonNull String code, @NonNull String type,
+    public void getFavoriteStatus(Context context, @NonNull String code, @NonNull FavoriteTypeEnum type,
                                   @Nullable final FavoriteStatusCallback callback) {
         LinkedHashMap<String, String> params = new LinkedHashMap<>();
         params.put("code", code);
-        params.put("type", type);
+        params.put("type", type.getType());
         ReqEncyptInternet.in().doEncypt(StringManager.API_GET_FAVORITE_STATUS, params,
                 new InternetCallback() {
                     @Override
@@ -101,7 +86,7 @@ public class FavoriteHelper {
      * @param typeName 内容标题
      * @param callback 回调
      */
-    public void setFavoriteStatus(Context context, @NonNull String code, String typeName,@NonNull String type,
+    public void setFavoriteStatus(Context context, @NonNull String code, String typeName,@NonNull FavoriteTypeEnum type,
                                   @Nullable final FavoriteStatusCallback callback) {
         if(!ToolsDevice.isNetworkAvailable(context)){
             Toast.makeText(context, "请检查网络设置", Toast.LENGTH_SHORT).show();
@@ -109,7 +94,7 @@ public class FavoriteHelper {
         }
         LinkedHashMap<String, String> params = new LinkedHashMap<>();
         params.put("code", code);
-        params.put("type", type);
+        params.put("type", type.getType());
         if(!TextUtils.isEmpty(typeName))
             params.put("typeName", typeName);
         ReqEncyptInternet.in().doEncypt(StringManager.API_SET_FAVORITE_STATUS, params,

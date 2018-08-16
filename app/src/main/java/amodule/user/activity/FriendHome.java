@@ -31,6 +31,8 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.LayoutScroll;
 import acore.widget.TextViewLimitLine;
+import amodule._common.conf.GlobalAttentionModule;
+import amodule._common.conf.GlobalVariableConfig;
 import amodule.article.activity.ArticleDetailActivity;
 import amodule.article.activity.ArticleUploadListActivity;
 import amodule.article.activity.edit.ArticleEidtActivity;
@@ -585,7 +587,7 @@ public class FriendHome extends BaseActivity {
         if (mIsFromPause) {
             mIsFromPause = false;
             if (mIsRefreshUserInfo)
-                updateUserAttention();
+                updateUserAttention(true);
             if (mTabContentViews != null && tabIndex >= 0 && mTabContentViews.size() > tabIndex && mTabContentViews.get(tabIndex) != null) {
                 TabContentView currTabView = mTabContentViews.get(tabIndex);
                 String tabType = currTabView.getDataMap().get("type");
@@ -594,6 +596,11 @@ public class FriendHome extends BaseActivity {
                     CommonBottomView.BottomViewBuilder.getInstance().refresh(mCommonBottomView);
                     currTabView.onResume("resume");
                 }
+            }
+
+            GlobalAttentionModule module = GlobalVariableConfig.containsAttentionModule(userCode);
+            if (module != null) {
+                mUserHomeTitle.notifyAttentionInfo(module.isAttention());
             }
         }
     }
@@ -692,10 +699,10 @@ public class FriendHome extends BaseActivity {
 
     private boolean mIsRefreshUserInfo = false;
 
-    private void updateUserAttention() {
+    private void updateUserAttention(boolean attention) {
         mIsRefreshUserInfo = false;
         if (mUserHomeTitle != null) {
-            mUserHomeTitle.notifyAttentionInfo();
+            mUserHomeTitle.notifyAttentionInfo(attention);
         }
     }
 

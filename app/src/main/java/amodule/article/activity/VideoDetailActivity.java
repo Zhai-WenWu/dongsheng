@@ -50,6 +50,9 @@ import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
+import amodule._common.conf.FavoriteTypeEnum;
+import amodule._common.conf.GlobalFavoriteModule;
+import amodule._common.conf.GlobalVariableConfig;
 import amodule.article.activity.edit.VideoEditActivity;
 import amodule.article.adapter.ArticleDetailAdapter;
 import amodule.article.adapter.VideoDetailAdapter;
@@ -340,12 +343,18 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
 
     private void handlerFavorite(){
         statistics(isFav?"取消收藏":"收藏","");
-        FavoriteHelper.instance().setFavoriteStatus(this, code, title, FavoriteHelper.TYPE_VIDEO,
+        FavoriteHelper.instance().setFavoriteStatus(this, code, title, FavoriteTypeEnum.TYPE_VIDEO,
                 new FavoriteHelper.FavoriteStatusCallback() {
                     @Override
                     public void onSuccess(boolean state) {
                         isFav = state;
                         rightButtonFav.setImageResource(isFav?R.drawable.z_caipu_xiangqing_topbar_ico_fav_active:R.drawable.z_caipu_xiangqing_topbar_ico_fav);
+
+                        GlobalFavoriteModule module = new GlobalFavoriteModule();
+                        module.setFavCode(code);
+                        module.setFav(state);
+                        module.setFavType(FavoriteTypeEnum.TYPE_VIDEO);
+                        GlobalVariableConfig.handleFavoriteModule(module);
                     }
 
                     @Override
@@ -580,7 +589,7 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
     }
 
     private void requestFavoriteState(){
-        FavoriteHelper.instance().getFavoriteStatus(this, code, FavoriteHelper.TYPE_VIDEO,
+        FavoriteHelper.instance().getFavoriteStatus(this, code, FavoriteTypeEnum.TYPE_VIDEO,
                 new FavoriteHelper.FavoriteStatusCallback() {
                     @Override
                     public void onSuccess(boolean state) {

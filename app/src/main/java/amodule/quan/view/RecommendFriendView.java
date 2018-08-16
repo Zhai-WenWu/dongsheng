@@ -32,6 +32,8 @@ import java.util.Map;
 import acore.logic.AppCommon;
 import acore.logic.XHClick;
 import acore.tools.Tools;
+import amodule._common.conf.GlobalAttentionModule;
+import amodule._common.conf.GlobalVariableConfig;
 import amodule.user.activity.FriendHome;
 import xh.basic.tool.UtilString;
 
@@ -217,7 +219,15 @@ public class RecommendFriendView extends CircleItemBaseLinearLayout {
                     goFriendHome(userCode);
                 }else{
                     XHClick.mapStat(getContext(),staticID,"推荐关注","关注");
-                    AppCommon.onAttentionClick(recommendList.get(position).get("code"), "follow");
+                    AppCommon.onAttentionClick(recommendList.get(position).get("code"), "follow", new Runnable() {
+                        @Override
+                        public void run() {
+                            GlobalAttentionModule module = new GlobalAttentionModule();
+                            module.setAttentionUserCode(recommendList.get(position).get("code"));
+                            module.setAttention(true);
+                            GlobalVariableConfig.handleAttentionModule(module);
+                        }
+                    });
                     recommendList.get(position).put("folState", "3");
                     setFollowState(view_item,recommendList.get(position));
                     mapCustomers.put("customers",ArrayToJson(recommendList).toString());

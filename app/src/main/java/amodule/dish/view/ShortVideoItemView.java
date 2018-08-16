@@ -54,6 +54,10 @@ import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.KeyboardDialog;
 import acore.widget.multifunction.IconTextSpan;
+import amodule._common.conf.FavoriteTypeEnum;
+import amodule._common.conf.GlobalAttentionModule;
+import amodule._common.conf.GlobalFavoriteModule;
+import amodule._common.conf.GlobalVariableConfig;
 import amodule.article.activity.edit.ArticleEidtActivity;
 import amodule.article.view.BottomDialog;
 import amodule.comment.CommentDialog;
@@ -367,18 +371,14 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         this.position = position;
         mUserName.setText(mData.getCustomerModel().getNickName());
         mIsSelf = TextUtils.equals(LoginManager.userInfo.get("code"), mData.getCustomerModel().getUserCode());
-        mAttentionImage.setVisibility(mData.getCustomerModel().isFollow() ? View.GONE : View.VISIBLE);
         if (mIsSelf) {
             mAttentionImage.setVisibility(View.GONE);
             mLikeImg.setVisibility(View.GONE);
             mMoreImg.setVisibility(View.VISIBLE);
         } else {
-            mAttentionImage.setVisibility(View.VISIBLE);
+            mAttentionImage.setVisibility(mData.getCustomerModel().isFollow() ? View.GONE : View.VISIBLE);
             mMoreImg.setVisibility(View.GONE);
-            if(ShortVideoDetailActivity.favoriteLocalStates.containsKey(mData.getCode())
-                    &&!TextUtils.isEmpty(ShortVideoDetailActivity.favoriteLocalStates.get(mData.getCode()))){
-                mLikeImg.setSelected(TextUtils.equals("2", ShortVideoDetailActivity.favoriteLocalStates.get(mData.getCode())));
-            }
+            mLikeImg.setSelected(mData.isFav());
             mLikeImg.setVisibility(View.VISIBLE);
         }
         RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mThumbImg.getLayoutParams();
@@ -497,12 +497,18 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
             return;
         mFavLoading.set(true);
         FavoriteHelper.instance().setFavoriteStatus(context.getApplicationContext(), mData.getCode(), mData.getName(),
-                FavoriteHelper.TYPE_VIDEO, new FavoriteHelper.FavoriteStatusCallback() {
+                FavoriteTypeEnum.TYPE_VIDEO, new FavoriteHelper.FavoriteStatusCallback() {
                     @Override
                     public void onSuccess(boolean isFav) {
                         mFavLoading.set(false);
                         mLikeImg.setSelected(isFav);
-                        ShortVideoDetailActivity.favoriteLocalStates.put(mData.getCode(),isFav ? "2" : "1");
+                        mData.setFav(isFav);
+                        GlobalFavoriteModule module = new GlobalFavoriteModule();
+                        module.setFavCode(mData.getCode());
+                        module.setFav(isFav);
+                        module.setFavNum(mData.getFavNum());
+                        module.setFavType(FavoriteTypeEnum.TYPE_VIDEO);
+                        GlobalVariableConfig.handleFavoriteModule(module);
                     }
 
                     @Override
@@ -810,6 +816,10 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
                 mAttentionLoading.set(false);
                 mAttentionImage.setVisibility(View.GONE);
 
+                GlobalAttentionModule module = new GlobalAttentionModule();
+                module.setAttentionUserCode(mData.getCustomerModel().getUserCode());
+                module.setAttention(true);
+                GlobalVariableConfig.handleAttentionModule(module);
             }
         });
     }
@@ -961,6 +971,16 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
 
     public void updateShareNum(String shareNum) {
         mShareNum.setText(shareNum);
+    }
+
+    public void updateAttentionState() {
+        if (!mIsSelf) {
+            mAttentionImage.setVisibility(mData.getCustomerModel().isFollow() ? View.GONE : View.VISIBLE);
+        }
+    }
+
+    public void updateFavoriteState() {
+        mLikeImg.setSelected(mData.isFav());
     }
 
 }

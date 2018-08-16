@@ -21,6 +21,8 @@ import acore.override.activity.base.BaseActivity;
 import acore.override.adapter.AdapterSimple;
 import acore.tools.Tools;
 import acore.widget.DownRefreshList;
+import amodule._common.conf.GlobalAttentionModule;
+import amodule._common.conf.GlobalVariableConfig;
 import amodule.user.activity.login.LoginByAccout;
 
 @SuppressLint("ResourceAsColor")
@@ -69,7 +71,22 @@ public class AdapterFansFollwers extends AdapterSimple {
 					TextView tv = (TextView) v;
 					int index = listView.getPositionForView(v);
 					map = arrayList.get(index - UI_TYPE);
-					AppCommon.onAttentionClick(map.get("code"), "follow");
+					boolean temp = false;
+					if (map.get("folState").equals("folState3")) {
+						temp = true;
+					} else if (map.get("folState").equals("folState2")) {
+						temp = false;
+					}
+					final boolean attention = temp;
+					AppCommon.onAttentionClick(map.get("code"), "follow", new Runnable() {
+						@Override
+						public void run() {
+							GlobalAttentionModule module = new GlobalAttentionModule();
+							module.setAttentionUserCode(map.get("code"));
+							module.setAttention(attention);
+							GlobalVariableConfig.handleAttentionModule(module);
+						}
+					});
 					if (map.get("folState").equals("folState3")) {
 						map.put("folState", "folState2");
 						tv.setText("关注");
