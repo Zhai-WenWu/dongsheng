@@ -159,7 +159,7 @@ public class HomeStaggeredGridItem extends HomeItem {
         FavoriteHelper.instance().setFavoriteStatus(getContext(), mDataMap.get("code"), mDataMap.get("name"), FavoriteTypeEnum.TYPE_VIDEO, new FavoriteHelper.FavoriteStatusCallback() {
             @Override
             public void onSuccess(boolean isFav) {
-                mDataMap.put("isFavorites","2");
+                mDataMap.put("isFavorites",isFav ? "2" : "1");
                 setImgFav();
             }
 
