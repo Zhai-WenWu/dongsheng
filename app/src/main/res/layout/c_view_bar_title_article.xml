@@ -28,6 +28,7 @@
         style="@style/rightBtn"
         android:clickable="false"
         android:visibility="visible"
+        android:layout_centerVertical="true"
         android:src="@drawable/i_ad_more"
         android:layout_toRightOf="@+id/share_title"/>
 

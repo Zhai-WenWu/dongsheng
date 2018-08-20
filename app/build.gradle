@@ -62,7 +62,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 21
         versionCode 271
-        versionName "6.4.0.3"
+        versionName "6.4.0.4"
         // dex突破65535的限制
         multiDexEnabled true
         ndk {

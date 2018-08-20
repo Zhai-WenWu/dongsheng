@@ -418,7 +418,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
                 ib.setBgHeight(18f);
                 ib.setTextSize(12f);
                 StringBuffer sb = new StringBuffer(" ");
-                sb.append(title).append(title);
+                sb.append(title);
                 SpannableStringBuilder ssb = new SpannableStringBuilder(sb.toString());
                 ssb.setSpan(ib.build(), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 mTitleText.setText(ssb);
@@ -804,14 +804,13 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
                 mAttentionLoading.set(false);
                 mAttentionImage.setVisibility(View.GONE);
 
-                if (mAttentionResultCallback != null) {
-                    mAttentionResultCallback.onResult(true);
-                }
-
                 GlobalAttentionModule module = new GlobalAttentionModule();
                 module.setAttentionUserCode(mData.getCustomerModel().getUserCode());
                 module.setAttention(true);
                 GlobalVariableConfig.handleAttentionModule(module);
+                if (mAttentionResultCallback != null) {
+                    mAttentionResultCallback.onResult(true);
+                }
             }
         });
     }
