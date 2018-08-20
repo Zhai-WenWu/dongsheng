@@ -2,8 +2,10 @@ package amodule.main.view.item;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
+import android.support.constraint.Guideline;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -19,21 +21,25 @@ import com.xiangha.R;
 import java.util.Map;
 
 import acore.logic.FavoriteHelper;
+import acore.logic.LoginManager;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.IconTextSpan;
 import amodule._common.conf.FavoriteTypeEnum;
+import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.LoadImage;
 
 public class HomeStaggeredGridItem extends HomeItem {
 
+//    private ConstraintLayout mRootLayout;
+    private Guideline mGuideline;
     private ConstraintLayout mContentLayout;
     private ImageView mImg;
     private TextView mTitle,num_tv;
     private ImageView auther_userImg,img_fav;
     private boolean mIsVideo;
-    private int[] mHeightRange = new int[]{getResources().getDimensionPixelSize(R.dimen.dp_152), getResources().getDimensionPixelSize(R.dimen.dp_260)};
+    private int mImgMinHeight, mImgMaxHeight;
 
     public HomeStaggeredGridItem(Context context) {
         this(context, null);
@@ -46,17 +52,21 @@ public class HomeStaggeredGridItem extends HomeItem {
     public HomeStaggeredGridItem(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr, R.layout.home_staggered_grid_item);
     }
-
     @SuppressLint("WrongViewCast")
     @Override
     protected void initView() {
         super.initView();
+//        mRootLayout = findViewById(R.id.staggered_root);
         mContentLayout = findViewById(R.id.staggered_container);
         mImg = findViewById(R.id.img);
         mTitle = findViewById(R.id.title);
         auther_userImg = findViewById(R.id.user_header_img);
         img_fav = findViewById(R.id.img_fav);
         num_tv= findViewById(R.id.num_tv);
+        mGuideline= findViewById(R.id.guideline);
+
+        mImgMinHeight = (Tools.getPhoneWidth() - getResources().getDimensionPixelSize(R.dimen.dp_51)) / 2 * 4 / 5;
+        mImgMaxHeight = getResources().getDimensionPixelSize(R.dimen.dp_260);
     }
 
     @Override
@@ -70,21 +80,23 @@ public class HomeStaggeredGridItem extends HomeItem {
             int imgHeight= Integer.parseInt(mResourceData.get("height"));
             int realWidth = (Tools.getPhoneWidth() - getResources().getDimensionPixelSize(R.dimen.dp_51)) / 2;
             int realHeight = realWidth * imgHeight / imgWidth;
-            if (realHeight < mHeightRange[0]) {
-                realHeight = mHeightRange[0];
-            } else if (realHeight > mHeightRange[1]) {
-                realHeight = mHeightRange[1];
+            if (realHeight < mImgMinHeight) {
+                realHeight = mImgMinHeight;
+            } else if (realHeight > mImgMaxHeight) {
+                realHeight = mImgMaxHeight;
             }
+
+
             ConstraintSet cs = new ConstraintSet();
             cs.constrainWidth(mImg.getId(), ConstraintSet.MATCH_CONSTRAINT);
             cs.constrainHeight(mImg.getId(), realHeight);
-            cs.constrainMinHeight(mImg.getId(), mHeightRange[0]);
+            cs.constrainMinHeight(mImg.getId(), mImgMinHeight);
             cs.connect(mImg.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
             cs.connect(mImg.getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END);
             cs.connect(mImg.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
             cs.connect(mImg.getId(), ConstraintSet.BOTTOM, R.id.guideline, ConstraintSet.TOP);
             cs.applyTo(mContentLayout);
-            mImg.postInvalidate();
+//            mImg.postInvalidate();
             if(!TextUtils.isEmpty(mResourceData.get("gif"))) {
                 mImg.setTag(TAG_ID, mResourceData.get("gif"));
                 Glide.with(getContext()).load(mResourceData.get("gif")).asGif().placeholder(R.drawable.i_nopic).diskCacheStrategy(DiskCacheStrategy.SOURCE).into(mImg);
@@ -156,11 +168,29 @@ public class HomeStaggeredGridItem extends HomeItem {
         img_fav.setImageResource(mDataMap.containsKey("isFavorites")&&"2".equals(mDataMap.get("isFavorites"))?R.drawable.icon_fav_active:R.drawable.icon_fav);
     }
     private void requestFav(){
+        if (!LoginManager.isLogin()) {
+            getContext().startActivity(new Intent(getContext(), LoginByAccout.class));
+            return;
+        }
         FavoriteHelper.instance().setFavoriteStatus(getContext(), mDataMap.get("code"), mDataMap.get("name"), FavoriteTypeEnum.TYPE_VIDEO, new FavoriteHelper.FavoriteStatusCallback() {
             @Override
             public void onSuccess(boolean isFav) {
                 mDataMap.put("isFavorites",isFav ? "2" : "1");
                 setImgFav();
+                try {
+                    int favorites = Integer.parseInt(mDataMap.get("favorites"));
+                    int tempInt = isFav ? (favorites + 1) : (favorites - 1);
+                    String tempStr = "";
+                    if (tempInt > 9999) {
+                        tempStr = "1w";
+                    } else if (tempInt < 0) {
+                        tempStr = "0";
+                    } else {
+                        tempStr = String.valueOf(tempInt);
+                    }
+                    mDataMap.put("favorites", tempStr);
+                    num_tv.setText(tempStr);
+                } catch (Exception e) {}
             }
 
             @Override

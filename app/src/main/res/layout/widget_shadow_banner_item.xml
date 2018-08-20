@@ -2,16 +2,17 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
+    <acore.widget.rcwidget.RCConstraintLayout
         android:id="@+id/shadow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_home_content_shadow"
-        android:layout_marginLeft="@dimen/dp_20"
-        android:layout_marginRight="@dimen/dp_20">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        app:round_corner="@dimen/dp_5">
 
         <ImageView
             android:id="@+id/image"
@@ -19,6 +20,6 @@
             android:layout_height="match_parent"
             android:scaleType="centerCrop" />
 
-    </RelativeLayout>
+    </acore.widget.rcwidget.RCConstraintLayout>
 
 </RelativeLayout>

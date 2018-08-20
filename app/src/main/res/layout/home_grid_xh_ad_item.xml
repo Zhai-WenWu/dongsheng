@@ -2,28 +2,44 @@
 <acore.widget.rcwidget.RCConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/staggered_container"
+    android:id="@+id/ad_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/bg_home_content_shadow"
     app:round_corner_top_left="@dimen/dp_5"
     app:round_corner_top_right="@dimen/dp_5">
+    <!--android:background="@drawable/bg_cccccc"-->
+
+    <ImageView
+        android:id="@+id/img_blur"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toTopOf="@+id/guideline"/>
 
     <ImageView
         android:id="@+id/img"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:scaleType="centerCrop"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/guideline"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="fitCenter"
+        app:layout_constraintTop_toTopOf="@+id/img_blur"
+        app:layout_constraintBottom_toBottomOf="@+id/img_blur"
+        app:layout_constraintEnd_toEndOf="@+id/img_blur"
+        app:layout_constraintStart_toStartOf="@+id/img_blur" />
 
     <ImageView
-        android:id="@+id/shadow_img"
+        android:id="@+id/icon_ad_gdt"
+        android:layout_width="@dimen/dp_25"
+        android:layout_height="@dimen/dp_14"
+        app:layout_constraintEnd_toEndOf="@+id/img"
+        app:layout_constraintBottom_toBottomOf="@+id/img"
+        android:src="@drawable/icon_ad_gdt"
+        android:visibility="gone"/>
+
+    <ImageView
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_100"
-        app:layout_constraintBottom_toBottomOf="@+id/img"
+        app:layout_constraintBottom_toBottomOf="@+id/img_blur"
         android:src="@drawable/shadow_short_video"
         android:scaleType="fitXY"/>
 
@@ -41,10 +57,10 @@
         android:textColor="@color/c_white_text"
         android:textSize="@dimen/sp_16"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@id/img" />
+        app:layout_constraintBottom_toBottomOf="@+id/img_blur" />
 
     <acore.widget.rcwidget.RCImageView
-        android:id="@+id/user_header_img"
+        android:id="@+id/ad_header_img"
         android:layout_width="@dimen/dp_28"
         android:layout_height="@dimen/dp_28"
         android:layout_marginStart="@dimen/dp_8"
@@ -57,7 +73,7 @@
         app:round_as_circle="true"/>
 
     <TextView
-        android:id="@+id/user_name"
+        android:id="@+id/ad_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
@@ -66,36 +82,22 @@
         android:ellipsize="end"
         android:lines="1"
         android:textColor="#bbbbbb"
-        android:includeFontPadding="false"
         android:textSize="@dimen/sp_12"
-        app:layout_constraintStart_toEndOf="@+id/user_header_img"
-        app:layout_constraintEnd_toStartOf="@+id/img_fav"
+        android:includeFontPadding="false"
+        app:layout_constraintStart_toEndOf="@+id/ad_header_img"
+        app:layout_constraintEnd_toStartOf="@+id/ad_tag"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline"/>
 
     <ImageView
-        android:id="@+id/img_fav"
-        android:layout_width="@dimen/dp_23"
-        android:layout_height="@dimen/dp_21"
+        android:id="@+id/ad_tag"
+        android:layout_width="@dimen/dp_28"
+        android:layout_height="@dimen/dp_14"
         android:layout_gravity="center_vertical"
         android:layout_marginStart="@dimen/dp_15"
-        android:padding="@dimen/dp_4"
-        android:src="@drawable/icon_fav"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline"
-        app:layout_constraintEnd_toStartOf="@+id/num_tv"/>
-
-    <TextView
-        android:id="@+id/num_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
         android:layout_marginEnd="@dimen/dp_7"
-        android:ellipsize="end"
-        android:lines="1"
-        android:textColor="#bbbbbb"
-        android:textSize="@dimen/sp_12"
-        android:includeFontPadding="false"
+        android:scaleType="fitCenter"
+        android:src="@drawable/home_item_adicon"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline"
         app:layout_constraintEnd_toEndOf="parent"/>
@@ -106,4 +108,5 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_end="@dimen/dp_33" />
+
 </acore.widget.rcwidget.RCConstraintLayout>

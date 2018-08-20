@@ -44,4 +44,8 @@ public class RvStaggeredGridView extends RvListView {
         super.setAdapter(adapter);
     }
 
+    public int getSpanCount() {
+        return spanCount;
+    }
+
 }

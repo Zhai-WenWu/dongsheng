@@ -15,6 +15,7 @@ import amodule.main.bean.HomeModuleBean;
 import amodule.main.view.item.HomeAlbumItem;
 import amodule.main.view.item.HomeAnyImgStyleItem;
 import amodule.main.view.item.HomeGridADItem;
+import amodule.main.view.item.HomeGridXHADItem;
 import amodule.main.view.item.HomePostItem;
 import amodule.main.view.item.HomeRecipeItem;
 import amodule.main.view.item.HomeStaggeredGridItem;
@@ -35,6 +36,7 @@ public class HomeAdapter extends RvBaseAdapter<Map<String, String>> {
 
     public final static int type_gridImage = 101;//网格样式
     public final static int type_gridADImage = 102;//网格样式 广告
+    public final static int type_gridXHADImage = 103;//网格样式 自有广告
 
     protected Activity mAct;
 
@@ -60,6 +62,8 @@ public class HomeAdapter extends RvBaseAdapter<Map<String, String>> {
     @Override
     public RvBaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
+            case type_gridXHADImage:
+                return new GridXHADImageViewHolder(new HomeGridXHADItem(mContext));
             case type_gridImage://网格
                 return new StaggeredGridImageViewHolder(new HomeStaggeredGridItem(mContext));
             case type_gridADImage://网格广告
@@ -93,7 +97,22 @@ public class HomeAdapter extends RvBaseAdapter<Map<String, String>> {
         switch (mListType) {
             case LIST_TYPE_GRID:
             case LIST_TYPE_STAGGERED:
-                type = TextUtils.equals("ad", item == null ? "" : item.get("adstyle")) ? type_gridADImage : type_gridImage;
+                String adStyle = "";
+                if (item != null) {
+                    adStyle = item.get("adStyle");
+                }
+                adStyle = adStyle == null ? "" : adStyle;
+                switch (adStyle) {
+                    case "ad":
+                        type = type_gridADImage;
+                        break;
+                    case "xh":
+                        type = type_gridXHADImage;
+                        break;
+                    default:
+                        type = type_gridImage;
+                        break;
+                }
                 break;
             default:
                 String style = (item == null || item.size() <= 0 || !item.containsKey("style") || TextUtils.isEmpty(item.get("style"))) ? String.valueOf(type_noImage) : item.get("style");
@@ -222,7 +241,7 @@ public class HomeAdapter extends RvBaseAdapter<Map<String, String>> {
      * 错落网格
      */
     public class StaggeredGridImageViewHolder extends RvBaseViewHolder<Map<String, String>> {
-        HomeStaggeredGridItem view;
+        public HomeStaggeredGridItem view;
         public ConstraintLayout homeStaggeredGridItemContentLayout;
         public StaggeredGridImageViewHolder(HomeStaggeredGridItem view) {
             super(view);
@@ -245,9 +264,33 @@ public class HomeAdapter extends RvBaseAdapter<Map<String, String>> {
      * 网格广告
      */
     public class GridADImageViewHolder extends RvBaseViewHolder<Map<String, String>> {
-        HomeGridADItem view;
+        public HomeGridADItem view;
         public ConstraintLayout homeGirdAdItemContentLayout;
         public GridADImageViewHolder(HomeGridADItem view) {
+            super(view);
+            this.view = view;
+            homeGirdAdItemContentLayout = view.getContentLayout();
+        }
+
+        @Override
+        public void bindData(int position, @Nullable Map<String, String> data) {
+            if (view != null) {
+                view.setHomeModuleBean(moduleBean);
+                view.setAdControl(mAdControlParent);
+                view.setData(data, position);
+                if (viewClickCallBack != null)
+                    view.setRefreshTag(viewClickCallBack);
+            }
+        }
+    }
+
+    /**
+     * 网格广告
+     */
+    public class GridXHADImageViewHolder extends RvBaseViewHolder<Map<String, String>> {
+        public HomeGridXHADItem view;
+        public ConstraintLayout homeGirdAdItemContentLayout;
+        public GridXHADImageViewHolder(HomeGridXHADItem view) {
             super(view);
             this.view = view;
             homeGirdAdItemContentLayout = view.getContentLayout();

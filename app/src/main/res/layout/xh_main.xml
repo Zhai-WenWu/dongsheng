@@ -54,7 +54,8 @@
                     layout="@layout/c_view_bar_tab"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"/>
+                    android:layout_weight="1"
+                    android:visibility="gone"/>
 
                 <include
                     android:id="@+id/item_icon4"
@@ -74,7 +75,7 @@
                 android:id="@+id/btn_changeSend_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:visibility="visible"
+                android:visibility="gone"
                 android:layout_gravity="center"
                 android:onClick="onChangeSend">
 

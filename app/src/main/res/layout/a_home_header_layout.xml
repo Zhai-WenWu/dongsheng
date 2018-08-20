@@ -24,7 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:banner_pointGravity="center_horizontal"
-            app:banner_pointTopBottomMargin="@dimen/dp_10"/>
+            app:banner_pointTopBottomMargin="@dimen/dp_10" />
 
     </amodule._common.plugin.WidgetVerticalLayout>
 

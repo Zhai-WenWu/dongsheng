@@ -114,13 +114,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
         //初始化数据控制
         mDataControler = new HomeDataControler(this);
         mDataControler.setInsertADCallback((listDatas, isBack) -> {
-            AdControlParent adControlParent = mDataControler.getAdControl();
-            if (adControlParent != null
-                    && mDataControler.getUpDataSize() > 0
-                    && !isBack)
-                adControlParent.setLimitNum(mDataControler.getUpDataSize());
-            return adControlParent != null ?
-                    adControlParent.getNewAdData(listDatas, isBack) : listDatas;
+            return insertAd(listDatas, isBack);
         });
         mDataControler.setNotifyDataSetChangedCallback(() -> {
             notifyDataChanged();
@@ -131,8 +125,16 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
         mHomeAdapter.setHomeModuleBean(mDataControler.getHomeModuleBean());
         mHomeAdapter.setViewOnClickCallBack(isOnClick -> refresh());
         mHomeAdapter.setListType(HomeAdapter.LIST_TYPE_STAGGERED);
+    }
 
-
+    private ArrayList<Map<String, String>> insertAd(ArrayList<Map<String, String>> listDatas, boolean isBack) {
+        AdControlParent adControlParent = mDataControler.getAdControl();
+        if (adControlParent != null
+                && mDataControler.getUpDataSize() > 0
+                && !isBack)
+            adControlParent.setLimitNum(mDataControler.getUpDataSize());
+        return adControlParent != null ?
+                adControlParent.getNewAdData(listDatas, isBack) : listDatas;
     }
 
     private void registerConnectionReceiver() {
@@ -273,6 +275,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
                                     Map<String, String> data = StringManager.getFirstMap(widgetData.get(WidgetDataHelper.KEY_DATA));
                                     ArrayList<Map<String, String>> listData = StringManager.getListMapByJson(data.get(WidgetDataHelper.KEY_LIST));
                                     if (mDataControler != null) {
+                                        listData = insertAd(listData, false);
                                         mDataControler.getData().addAll(listData);
                                         notifyDataChanged();
                                     }
@@ -370,6 +373,12 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
                             GlobalFavoriteModule favoriteModule = GlobalVariableConfig.containsFavoriteModule(data.get("code"), FavoriteTypeEnum.getTypeEnumByStr(data.get("type")));
                             if (favoriteModule != null && (favoriteModule.isFav() != "2".equals(data.get("isFavorites")))) {
                                 data.put("isFavorites", favoriteModule.isFav() ? "2" : "1");
+                                try {
+                                    int favorites = Integer.parseInt(data.get("favorites"));
+                                    data.put("favorites", String.valueOf(favoriteModule.isFav() ? (favorites + 1) : (favorites - 1)));
+                                } catch (Exception e) {
+
+                                }
                             }
                         }
                     }
@@ -418,6 +427,8 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
     public void refresh() {
         Log.i("tzy_data", "refresh()");
         mViewContrloer.autoRefresh();
+        GlobalVariableConfig.clearFavoriteModules();
+        GlobalVariableConfig.clearAttentionModules();
     }
 
     private void innerRefresh() {

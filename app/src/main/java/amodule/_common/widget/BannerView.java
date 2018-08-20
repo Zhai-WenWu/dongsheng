@@ -283,15 +283,6 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
                             if (result != null) {
                                 imageView.setImageBitmap(result);
                             }
-
-
-//                            Bitmap bm = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
-//                            Canvas c = new Canvas(bm);
-//                            Path path = new Path();
-//                            path.addRoundRect(new RectF(0, 0, w, h), radiusArray, Path.Direction.CW);
-//                            Paint bitmapPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-//                            bitmapPaint.setColor(Color.GREEN); // 颜色随意，不要有透明度。
-//                            c.drawPath(path, bitmapPaint);
                         }
                     }
                 });

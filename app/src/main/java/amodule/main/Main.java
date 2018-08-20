@@ -53,6 +53,7 @@ import acore.tools.ObserverManager;
 import acore.tools.PageStatisticsUtils;
 import acore.tools.Tools;
 import acore.widget.XiangHaTabHost;
+import amodule._common.conf.GlobalVariableConfig;
 import amodule.article.activity.edit.VideoEditActivity;
 import amodule.dish.tools.OffDishToFavoriteControl;
 import amodule.dish.tools.UploadDishControl;
@@ -754,7 +755,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
         if (!LoginManager.isLogin())
             QiYvHelper.getInstance().destroyQiYvHelper();
         ClingPresenter.getInstance().onDestroy(this);
-
+        GlobalVariableConfig.restoreConf();
         String notifyStatistics = (String) UtilFile.loadShared(this, FileManager.notification_permission, "statistics");
         if (!TextUtils.equals(notifyStatistics, "2")) {
             UtilFile.saveShared(this, FileManager.notification_permission, "statistics", "2");

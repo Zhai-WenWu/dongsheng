@@ -739,16 +739,6 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
 
     private void showBottomDialog() {
         BottomDialog dialog = new BottomDialog(getContext());
-        dialog.addButton("编辑", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-                Intent intent = new Intent(getContext(), ArticleEidtActivity.class);
-                intent.putExtra("code", mData.getCode());
-                context.startActivity(intent);
-                XHClick.mapStat(getContext(), ShortVideoDetailActivity.STATISTIC_ID, "更多（自己发布的视频）", "编辑");
-            }
-        });
         dialog.addButton("删除", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
