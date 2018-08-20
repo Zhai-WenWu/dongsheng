@@ -5,7 +5,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingRight="@dimen/dp_5"
+    android:background="@drawable/bg_home_content_shadow"
     app:round_corner="@dimen/dp_3">
 
     <acore.widget.rvlistview.RvListView

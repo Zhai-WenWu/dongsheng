@@ -44,6 +44,7 @@ import amodule.dish.adapter.RvVericalVideoItemAdapter;
 import amodule.dish.helper.ParticularPositionEnableSnapHelper;
 import amodule.dish.video.module.ShareModule;
 import amodule.dish.video.module.ShortVideoDetailModule;
+import amodule.dish.view.ShortVideoItemView;
 import amodule.topic.model.AddressModel;
 import amodule.topic.model.CustomerModel;
 import amodule.topic.model.ImageModel;
@@ -108,8 +109,10 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
                 json = Uri.decode(json);
                 Map<String, String> extraData = StringManager.getFirstMap(json);
                 mExtraModule = mDataController.getModuleByMap(extraData);
-                mDatas.add(mExtraModule);
-                rvVericalVideoItemAdapter.notifyItemRangeInserted(0, mDatas.size());
+                if (mExtraModule != null) {
+                    mDatas.add(mExtraModule);
+                    rvVericalVideoItemAdapter.notifyItemRangeInserted(0, mDatas.size());
+                }
             }
             mUserCode = bundle.getString("userCode");
             mSourcePage = bundle.getString("sourcePage");
@@ -212,6 +215,21 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
+            }
+        });
+        rvVericalVideoItemAdapter.setAttentionResultCallback(new ShortVideoItemView.AttentionResultCallback() {
+            @Override
+            public void onResult(boolean success) {
+                if (success) {
+                    Iterator<ShortVideoDetailModule> dataIterator = mDatas.iterator();
+                    while (dataIterator.hasNext()) {
+                        ShortVideoDetailModule dataModule = dataIterator.next();
+                        GlobalAttentionModule attentionModule = GlobalVariableConfig.containsAttentionModule(dataModule.getCustomerModel().getUserCode());
+                        if (attentionModule != null && (attentionModule.isAttention() != dataModule.getCustomerModel().isFollow())) {
+                            dataModule.getCustomerModel().setFollow(attentionModule.isAttention());
+                        }
+                    }
+                }
             }
         });
     }
@@ -518,7 +536,9 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
                             for (int i = 0; i < datas.size() && datas.size() > 0; i++) {
                                 Map<String, String> itemMap = datas.get(i);
                                 ShortVideoDetailModule module = getModuleByMap(itemMap);
-                                mDatas.add(module);
+                                if (module != null) {
+                                    mDatas.add(module);
+                                }
                             }
                             if (mDatas.size() != insertPosStart) {
                                 rvVericalVideoItemAdapter.notifyItemRangeInserted(insertPosStart, datas.size());
@@ -584,6 +604,9 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
         }
 
         public ShortVideoDetailModule getModuleByMap(Map<String, String> itemMap) {
+            if (itemMap == null || itemMap.isEmpty()) {
+                return null;
+            }
             ShortVideoDetailModule module = new ShortVideoDetailModule();
             module.setCode(itemMap.get("code"));
             module.setName(itemMap.get("name"));

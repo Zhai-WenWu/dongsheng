@@ -58,7 +58,6 @@ import amodule._common.conf.FavoriteTypeEnum;
 import amodule._common.conf.GlobalAttentionModule;
 import amodule._common.conf.GlobalFavoriteModule;
 import amodule._common.conf.GlobalVariableConfig;
-import amodule.article.activity.edit.ArticleEidtActivity;
 import amodule.article.view.BottomDialog;
 import amodule.comment.CommentDialog;
 import amodule.dish.activity.ShortVideoDetailActivity;
@@ -75,7 +74,6 @@ import aplug.basic.ReqInternet;
 import aplug.basic.SubBitmapTarget;
 import aplug.player.ShortVideoPlayer;
 import third.share.activity.ShareActivityDialog;
-import xh.basic.tool.UtilImage;
 
 /**
  * 短视频itemView
@@ -170,7 +168,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         mEmptyView = findViewById(R.id.view_empty);
         mInfoLayout = findViewById(R.id.layout_info);
         mLayoutTopic = findViewById(R.id.layout_topic);
-        mLayoutAddress = findViewById(R.id.layout_address);
+        mLayoutAddress = findViewById(R.id.layout_address_inner);
         mAddressText = findViewById(R.id.text_address);
         mTopicText = findViewById(R.id.text_topic);
         mTitleText = findViewById(R.id.text_title);
@@ -385,8 +383,8 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         DisplayMetrics dm = ToolsDevice.getWindowPx(getContext());
         int screenW = dm.widthPixels;
         int screenH = dm.heightPixels;
-        int vW = Integer.parseInt(mData.getVideoModel().getVideoW());
-        int vH = Integer.parseInt(mData.getVideoModel().getVideoH());
+        int vW = Integer.parseInt(mData.getImageModel().getImageW());
+        int vH = Integer.parseInt(mData.getImageModel().getImageH());
         int heightImg = 0;
         if (vW == 0 || vH == 0) {
             screenW = LayoutParams.MATCH_PARENT;
@@ -469,7 +467,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
             mLayoutAddress.setVisibility(View.GONE);
         }
         loadUserHeader(mData.getCustomerModel().getHeaderImg());
-        loadVideoImg(mData.getVideoModel().getVideoImg());
+        LoadImage.with(getContext()).load(mData.getVideoModel().getVideoImg()).setSaveType(FileManager.save_cache).build().into(mThumbImg);
         mPlayerView.setUp(mVideoUrl, false, "");
     }
 
@@ -806,6 +804,10 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
                 mAttentionLoading.set(false);
                 mAttentionImage.setVisibility(View.GONE);
 
+                if (mAttentionResultCallback != null) {
+                    mAttentionResultCallback.onResult(true);
+                }
+
                 GlobalAttentionModule module = new GlobalAttentionModule();
                 module.setAttentionUserCode(mData.getCustomerModel().getUserCode());
                 module.setAttention(true);
@@ -841,22 +843,6 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
                             mHeaderImg.setImageBitmap(bitmap);
                         }
                     });
-                }
-            });
-    }
-
-    private void loadVideoImg(String url) {
-        mThumbImg.setTag(TAG_ID, url);
-        BitmapRequestBuilder<GlideUrl, Bitmap> requestBuilder = LoadImage.with(mThumbImg.getContext()).load(url)
-                .setSaveType(FileManager.save_cache)
-                .build();
-        if (requestBuilder != null)
-            requestBuilder.into(new SubBitmapTarget() {
-                @Override
-                public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
-                    if (bitmap != null && !mThumbImg.getTag(TAG_ID).equals(url))
-                        return;
-                    UtilImage.setImgViewByWH(mThumbImg, bitmap, 0, 0, false);
                 }
             });
     }
@@ -910,6 +896,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
                     @Override
                     public void loaded(int flag, String url, Object obj) {
                         if (flag >= ReqEncyptInternet.REQ_OK_STRING) {
+                            mSendText = "";
                             try {
                                 mData.setCommentNum(String.valueOf(Integer.parseInt(mData.getCommentNum()) + 1));
                                 mCommentNumText.setText(mData.getCommentNum());
@@ -973,4 +960,13 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         mLikeImg.setSelected(mData.isFav());
     }
 
+    public interface AttentionResultCallback {
+        void onResult(boolean success);
+    }
+
+    private AttentionResultCallback mAttentionResultCallback;
+
+    public void setAttentionResultCallback(AttentionResultCallback attentionResultCallback) {
+        mAttentionResultCallback = attentionResultCallback;
+    }
 }

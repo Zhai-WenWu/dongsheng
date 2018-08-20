@@ -18,6 +18,8 @@ public class ShortVideoPlayer extends StandardGSYVideoPlayer {
 
     public ShortVideoPlayer(Context context, AttributeSet attrs) {
         super(context, attrs);
+
+        mNeedShowWifiTip = false;
     }
 
     @Override

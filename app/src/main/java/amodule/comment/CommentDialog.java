@@ -632,18 +632,6 @@ public class CommentDialog extends Dialog implements View.OnClickListener {
                         }
                         adapterSimple.notifyDataSetChanged();
                         downRefreshList.setSelection(0);
-                        try {
-                            mCommentsNum = Integer.parseInt(mCommentsNumStr);
-                        } catch (Exception e) {
-                            mCommentsNum = -1;
-                        }
-                        if (mCommentsNum != -1) {
-                            mCommentsNum++;
-                            mCommentsNumStr = String.valueOf(mCommentsNum);
-                        }
-                        setCommentsNum();
-                        if (mCommentOptionSuccCallback != null)
-                            mCommentOptionSuccCallback.onSendSucc();
                     }else{
                         Log.i("commentReplay","sendData() replayIndex:" + replayIndex);
                         Map<String,String> map = listArray.get(replayIndex);
@@ -673,6 +661,19 @@ public class CommentDialog extends Dialog implements View.OnClickListener {
                             adapterSimple.notifyDataSetChanged();
                         }
                     }
+
+                    try {
+                        mCommentsNum = Integer.parseInt(mCommentsNumStr);
+                    } catch (Exception e) {
+                        mCommentsNum = -1;
+                    }
+                    if (mCommentsNum != -1) {
+                        mCommentsNum++;
+                        mCommentsNumStr = String.valueOf(mCommentsNum);
+                    }
+                    setCommentsNum();
+                    if (mCommentOptionSuccCallback != null)
+                        mCommentOptionSuccCallback.onSendSucc();
                 }else{
                     Tools.showToast(XHApplication.in(),String.valueOf(o));
                 }

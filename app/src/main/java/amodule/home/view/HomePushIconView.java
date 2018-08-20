@@ -83,8 +83,8 @@ public class HomePushIconView extends AppCompatImageView {
         mPopupWindow.setOutsideTouchable(true);
 
         RvListView rvListView = (RvListView) view.findViewById(R.id.rvListview);
-        int[] images = {R.drawable.pulish_subject_popup, R.drawable.pulish_dish_popup, R.drawable.pulish_article_popup};
-        String[] texts = {"晒美食", "写菜谱", "发文章"};
+        int[] images = {R.drawable.pulish_subject_popup, R.drawable.pulish_dish_popup, R.drawable.pulish_article_popup, R.drawable.pulish_video_popup};
+        String[] texts = {"晒美食", "写菜谱", "发文章", "短视频"};
         for (int index = 0; index < images.length; index++) {
             Map<String, String> map = new HashMap<>();
             map.put("image", String.valueOf(images[index]));

@@ -22,6 +22,7 @@ import amodule.dish.view.ShortVideoItemView;
 public class RvVericalVideoItemAdapter extends BaseAdapter<ShortVideoDetailModule, RvVericalVideoItemAdapter.ItemViewHolder<ShortVideoDetailModule>> {
 
     private ItemViewHolder<ShortVideoDetailModule> mCurrentViewHolder;
+    private ShortVideoItemView.AttentionResultCallback mAttentionResultCallback;
 
     public RvVericalVideoItemAdapter(Context context, @Nullable List<ShortVideoDetailModule> data) {
         super(context, data);
@@ -52,6 +53,10 @@ public class RvVericalVideoItemAdapter extends BaseAdapter<ShortVideoDetailModul
         super.onBindViewHolder(holder, position);
     }
 
+    public void setAttentionResultCallback(ShortVideoItemView.AttentionResultCallback attentionResultCallback) {
+        mAttentionResultCallback = attentionResultCallback;
+    }
+
     public class ItemViewHolder<T extends ShortVideoDetailModule> extends RvBaseViewHolder<T>{
         private ShortVideoItemView shortVideoItemView;
         public ShortVideoDetailModule data;
@@ -65,6 +70,14 @@ public class RvVericalVideoItemAdapter extends BaseAdapter<ShortVideoDetailModul
             itemView.setTag(position);
             this.data = data;
             shortVideoItemView.setData(data,position);
+            shortVideoItemView.setAttentionResultCallback(new ShortVideoItemView.AttentionResultCallback() {
+                @Override
+                public void onResult(boolean success) {
+                    if (mAttentionResultCallback != null) {
+                        mAttentionResultCallback.onResult(success);
+                    }
+                }
+            });
         }
 
         public int getPlayState() {

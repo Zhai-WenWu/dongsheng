@@ -61,8 +61,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 cube_ptr:spanCount="2"
-                android:layout_marginLeft="@dimen/dp_17"
-                android:layout_marginRight="@dimen/dp_17"/>
+                android:layout_marginLeft="@dimen/dp_14"
+                android:layout_marginRight="@dimen/dp_14"/>
 
         </cn.srain.cube.views.ptr.PtrClassicFrameLayout>
 
