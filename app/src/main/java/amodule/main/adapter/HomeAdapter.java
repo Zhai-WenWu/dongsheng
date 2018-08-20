@@ -99,7 +99,7 @@ public class HomeAdapter extends RvBaseAdapter<Map<String, String>> {
             case LIST_TYPE_STAGGERED:
                 String adStyle = "";
                 if (item != null) {
-                    adStyle = item.get("adStyle");
+                    adStyle = item.get("adstyle");
                 }
                 adStyle = adStyle == null ? "" : adStyle;
                 switch (adStyle) {
