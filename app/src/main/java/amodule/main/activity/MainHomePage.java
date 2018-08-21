@@ -359,6 +359,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
             refresh();
             GlobalVariableConfig.clearAttentionModules();
             GlobalVariableConfig.clearFavoriteModules();
+            GlobalVariableConfig.clearGoodModules();
         }
         mViewContrloer.setMessage(MessageTipController.newInstance().getMessageNum());
         if (mResumeFromPause) {

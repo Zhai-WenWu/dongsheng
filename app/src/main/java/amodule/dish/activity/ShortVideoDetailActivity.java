@@ -38,6 +38,7 @@ import acore.tools.ToolsDevice;
 import amodule._common.conf.FavoriteTypeEnum;
 import amodule._common.conf.GlobalAttentionModule;
 import amodule._common.conf.GlobalFavoriteModule;
+import amodule._common.conf.GlobalGoodModule;
 import amodule._common.conf.GlobalVariableConfig;
 import amodule.dish.adapter.RvVericalVideoItemAdapter;
 import amodule.dish.helper.ParticularPositionEnableSnapHelper;
@@ -227,6 +228,22 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
                 }
             }
         });
+        rvVericalVideoItemAdapter.setGoodResultCallback(new ShortVideoItemView.GoodResultCallback() {
+            @Override
+            public void onResult(boolean success) {
+                if (success) {
+                    Iterator<ShortVideoDetailModule> dataIterator = mDatas.iterator();
+                    while (dataIterator.hasNext()) {
+                        ShortVideoDetailModule dataModule = dataIterator.next();
+                        GlobalGoodModule goodModule = GlobalVariableConfig.containsGoodModule(dataModule.getLikeNum());
+                        if (goodModule != null && (goodModule.isGood() != dataModule.isLike())) {
+                            dataModule.setLike(goodModule.isGood());
+                            dataModule.setLikeNum(goodModule.getGoodNum());
+                        }
+                    }
+                }
+            }
+        });
     }
 
     private void init() {
@@ -383,7 +400,7 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
                                     if (currentHolder != null) {
                                         ShortVideoDetailModule currentModule = rvVericalVideoItemAdapter.getItem(currentHolder.getAdapterPosition());
                                         if (currentModule != null && TextUtils.equals(currentModule.getCode(), videoCode)) {
-                                            currentHolder.updateShareNum(module.getShareNum());
+                                            currentHolder.updateShareNum();
                                             break;
                                         }
                                     }
@@ -474,16 +491,33 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
                                 mExtraModule.setFav(firstLoadModule.isFav());
                             }
                             boolean updateAttention = false;
-                            if (mExtraModule.isLike() != firstLoadModule.isLike()) {
+                            if (mExtraModule.getCustomerModel().isFollow() != firstLoadModule.getCustomerModel().isFollow()) {
                                 updateAttention = true;
+                                mExtraModule.getCustomerModel().setFollow(firstLoadModule.getCustomerModel().isFollow());
+                            }
+                            boolean updateLike = false;
+                            if (mExtraModule.isLike() != firstLoadModule.isLike()) {
+                                updateLike = true;
                                 mExtraModule.setLike(firstLoadModule.isLike());
+                                GlobalGoodModule goodModule = GlobalVariableConfig.containsGoodModule(mExtraModule.getCode());
+                                if (goodModule != null) {
+                                    try {
+                                        int goodNum = Integer.parseInt(goodModule.getGoodNum());
+                                        mExtraModule.setLikeNum(String.valueOf(mExtraModule.isLike() ? ++goodNum : --goodNum));
+                                    } catch (Exception e) {}
+                                }
                             }
                             if (rvVericalVideoItemAdapter != null && TextUtils.equals(rvVericalVideoItemAdapter.getCurrentViewHolder().data.getCode(), mExtraModule.getCode())) {
+                                RvVericalVideoItemAdapter.ItemViewHolder currentHolder = rvVericalVideoItemAdapter.getCurrentViewHolder();
                                 if (updateFavorite) {
-                                    rvVericalVideoItemAdapter.getCurrentViewHolder().updateFavoriteState();
+                                    currentHolder.updateFavoriteState();
                                 }
                                 if (updateAttention) {
-                                    rvVericalVideoItemAdapter.getCurrentViewHolder().updateAttentionState();
+                                    currentHolder.updateAttentionState();
+                                }
+                                if (updateLike) {
+                                    currentHolder.updateLikeState();
+                                    currentHolder.updateLikeNum();
                                 }
 
                             }

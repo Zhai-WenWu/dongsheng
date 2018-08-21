@@ -63,15 +63,6 @@ public class HomeViewControler implements ISetAdController {
     private View mNetworkTip;
 
     private int scrollDataIndex = -1;//滚动数据的位置
-//    private int mBigSpacing = Tools.getDimen(XHApplication.in(),R.dimen.dp_20);
-//    private int mLittleSpacing = Tools.getDimen(XHApplication.in(),R.dimen.dp_5);
-//    private int mLR1, mLR2, mTB1, mTB2;//四个边距
-//
-//    private boolean mInvalidateItemDecorationsEnable;
-//
-//    private Map<Integer, Integer> mPositionSpanCache = new HashMap<>();
-//    private final int mCacheSize = 8;
-//    private boolean mCacheUpdate = false;
 
     @SuppressLint("InflateParams")
     public HomeViewControler(MainHomePage activity) {
@@ -130,37 +121,15 @@ public class HomeViewControler implements ISetAdController {
                     if (mBuoy != null && !mBuoy.isMove()) {
                         mBuoy.executeOpenAnim();
                     }
+                } else if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
+                    if (mBuoy != null && mBuoy.isMove())
+                        mBuoy.executeCloseAnim();
                 }
-
-//                int[] position = ((StaggeredGridLayoutManager)recyclerView.getLayoutManager()).findFirstVisibleItemPositions(null);
-//                int minPos = Tools.findMin(position);
-//
-//                if (minPos <= 4 && mInvalidateItemDecorationsEnable) {
-//                    if (minPos <=2) {
-//                        mInvalidateItemDecorationsEnable = false;
-//                    }
-//                    recyclerView.invalidateItemDecorations();
-//                } else if (minPos > 4){
-//                    mInvalidateItemDecorationsEnable = true;
-//                }
             }
 
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                int[] lastPositions = null;
-                StaggeredGridLayoutManager staggeredGridLayoutManager
-                        = (StaggeredGridLayoutManager) recyclerView.getLayoutManager();
-                if (lastPositions == null) {
-                    lastPositions = new int[staggeredGridLayoutManager.getSpanCount()];
-                }
-                staggeredGridLayoutManager.findLastVisibleItemPositions(lastPositions);
-                int lastVisibleItemPosition = Tools.findMax(lastPositions);
-                if (scrollDataIndex < (lastVisibleItemPosition - 1)) {
-                    scrollDataIndex = (lastVisibleItemPosition - 1);
-                }
-                if (mBuoy != null && mBuoy.isMove())
-                    mBuoy.executeCloseAnim();
             }
         });
     }
@@ -205,6 +174,17 @@ public class HomeViewControler implements ISetAdController {
         //头部统计数据存储
         if (mHeaderControler != null) {
             mHeaderControler.saveStatisticData("home");
+        }
+        int[] lastPositions = null;
+        StaggeredGridLayoutManager staggeredGridLayoutManager
+                = (StaggeredGridLayoutManager) recyclerView.getLayoutManager();
+        if (lastPositions == null) {
+            lastPositions = new int[staggeredGridLayoutManager.getSpanCount()];
+        }
+        staggeredGridLayoutManager.findLastVisibleItemPositions(lastPositions);
+        int lastVisibleItemPosition = Tools.findMax(lastPositions);
+        if (scrollDataIndex < (lastVisibleItemPosition - 1)) {
+            scrollDataIndex = (lastVisibleItemPosition - 1);
         }
         //列表
         if (scrollDataIndex > 0) {

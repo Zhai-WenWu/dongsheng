@@ -83,8 +83,8 @@ public class HomePushIconView extends AppCompatImageView {
         mPopupWindow.setOutsideTouchable(true);
 
         RvListView rvListView = (RvListView) view.findViewById(R.id.rvListview);
-        int[] images = {R.drawable.pulish_subject_popup, R.drawable.pulish_dish_popup, R.drawable.pulish_article_popup, R.drawable.pulish_video_popup};
-        String[] texts = {"晒美食", "写菜谱", "发文章", "短视频"};
+        int[] images = {R.drawable.pulish_subject_popup, R.drawable.pulish_video_popup, R.drawable.pulish_dish_popup, R.drawable.pulish_article_popup};
+        String[] texts = {"晒美食", "拍视频", "写菜谱", "发文章"};
         for (int index = 0; index < images.length; index++) {
             Map<String, String> map = new HashMap<>();
             map.put("image", String.valueOf(images[index]));
@@ -107,13 +107,21 @@ public class HomePushIconView extends AppCompatImageView {
                     getContext().startActivity(subIntent);
                     break;
                 case 1:
+                    if (!LoginManager.isLogin()) {
+                        gotoLogin();
+                    } else if (LoginManager.isBindMobilePhone()) {
+                        getContext().startActivity(new Intent(getContext(), VideoEditActivity.class));
+                    } else
+                        BaseLoginActivity.gotoBindPhoneNum(getContext());
+                    break;
+                case 2:
                     if (LoginManager.isLogin()) {
                         getContext().startActivity(new Intent(getContext(), UploadDishActivity.class));
                     } else {
                         gotoLogin();
                     }
                     break;
-                case 2:
+                case 3:
                     if (!LoginManager.isLogin()) {
                         gotoLogin();
                     } else if (LoginManager.isBindMobilePhone()) {
@@ -121,14 +129,6 @@ public class HomePushIconView extends AppCompatImageView {
                     } else {
                         BaseLoginActivity.gotoBindPhoneNum(getContext());
                     }
-                    break;
-                case 3:
-                    if (!LoginManager.isLogin()) {
-                        gotoLogin();
-                    } else if (LoginManager.isBindMobilePhone()) {
-                        getContext().startActivity(new Intent(getContext(), VideoEditActivity.class));
-                    } else
-                        BaseLoginActivity.gotoBindPhoneNum(getContext());
                     break;
             }
         });

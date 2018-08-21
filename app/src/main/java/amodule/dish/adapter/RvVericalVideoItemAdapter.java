@@ -24,6 +24,8 @@ public class RvVericalVideoItemAdapter extends BaseAdapter<ShortVideoDetailModul
     private ItemViewHolder<ShortVideoDetailModule> mCurrentViewHolder;
     private ShortVideoItemView.AttentionResultCallback mAttentionResultCallback;
 
+    private ShortVideoItemView.GoodResultCallback mGoodResultCallback;
+
     public RvVericalVideoItemAdapter(Context context, @Nullable List<ShortVideoDetailModule> data) {
         super(context, data);
     }
@@ -57,6 +59,10 @@ public class RvVericalVideoItemAdapter extends BaseAdapter<ShortVideoDetailModul
         mAttentionResultCallback = attentionResultCallback;
     }
 
+    public void setGoodResultCallback(ShortVideoItemView.GoodResultCallback goodResultCallback) {
+        mGoodResultCallback = goodResultCallback;
+    }
+
     public class ItemViewHolder<T extends ShortVideoDetailModule> extends RvBaseViewHolder<T>{
         private ShortVideoItemView shortVideoItemView;
         public ShortVideoDetailModule data;
@@ -75,6 +81,14 @@ public class RvVericalVideoItemAdapter extends BaseAdapter<ShortVideoDetailModul
                 public void onResult(boolean success) {
                     if (mAttentionResultCallback != null) {
                         mAttentionResultCallback.onResult(success);
+                    }
+                }
+            });
+            shortVideoItemView.setGoodResultCallback(new ShortVideoItemView.GoodResultCallback() {
+                @Override
+                public void onResult(boolean success) {
+                    if (mGoodResultCallback != null) {
+                        mGoodResultCallback.onResult(success);
                     }
                 }
             });
@@ -106,8 +120,16 @@ public class RvVericalVideoItemAdapter extends BaseAdapter<ShortVideoDetailModul
             shortVideoItemView.gotoUser();
         }
 
-        public void updateShareNum(String shareNum) {
-            shortVideoItemView.updateShareNum(shareNum);
+        public void updateShareNum() {
+            shortVideoItemView.updateShareNum();
+        }
+
+        public void updateLikeState() {
+            shortVideoItemView.updateLikeState();
+        }
+
+        public void updateLikeNum() {
+            shortVideoItemView.updateLikeNum();
         }
 
         public void updateAttentionState() {

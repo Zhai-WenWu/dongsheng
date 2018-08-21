@@ -57,6 +57,7 @@ import acore.widget.multifunction.IconTextSpan;
 import amodule._common.conf.FavoriteTypeEnum;
 import amodule._common.conf.GlobalAttentionModule;
 import amodule._common.conf.GlobalFavoriteModule;
+import amodule._common.conf.GlobalGoodModule;
 import amodule._common.conf.GlobalVariableConfig;
 import amodule.article.view.BottomDialog;
 import amodule.comment.CommentDialog;
@@ -674,13 +675,23 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
             public void loaded(int flag, String s, Object o) {
                 mGoodLoading.set(false);
                 if (flag >= ReqInternet.REQ_OK_STRING) {
-                    mGoodImg.setSelected(!mGoodImg.isSelected());
+                    mGoodImg.setSelected(true);
                     mData.setLike(true);
+                    GlobalGoodModule goodModule = new GlobalGoodModule();
+                    goodModule.setGoodCode(mData.getCode());
+                    goodModule.setGood(true);
                     try {
-                        mData.setLikeNum(String.valueOf(Integer.parseInt(mData.getLikeNum()) + 1));
+                        int goodNum = Integer.parseInt(mData.getLikeNum()) + 1;
+                        mData.setLikeNum(String.valueOf(goodNum));
                         mGoodText.setText(mData.getLikeNum());
+                        goodModule.setGoodNum(String.valueOf(goodNum));
                     } catch (Exception e) {
                         e.printStackTrace();
+                        goodModule.setGoodNum(mData.getLikeNum());
+                    }
+                    GlobalVariableConfig.handleGoodModule(goodModule);
+                    if (mGoodResultCallback != null) {
+                        mGoodResultCallback.onResult(true);
                     }
                 }
             }
@@ -945,14 +956,22 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         });
     }
 
-    public void updateShareNum(String shareNum) {
-        mShareNum.setText(shareNum);
+    public void updateShareNum() {
+        mShareNum.setText(mData.getShareNum());
     }
 
     public void updateAttentionState() {
         if (!mIsSelf) {
             mAttentionImage.setVisibility(mData.getCustomerModel().isFollow() ? View.GONE : View.VISIBLE);
         }
+    }
+
+    public void updateLikeState() {
+        mGoodImg.setSelected(mData.isLike());
+    }
+
+    public void updateLikeNum() {
+        mGoodText.setText(mData.getLikeNum());
     }
 
     public void updateFavoriteState() {
@@ -967,5 +986,15 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
 
     public void setAttentionResultCallback(AttentionResultCallback attentionResultCallback) {
         mAttentionResultCallback = attentionResultCallback;
+    }
+
+    public interface GoodResultCallback {
+        void onResult(boolean success);
+    }
+
+    private GoodResultCallback mGoodResultCallback;
+
+    public void setGoodResultCallback(GoodResultCallback goodResultCallback) {
+        mGoodResultCallback = goodResultCallback;
     }
 }

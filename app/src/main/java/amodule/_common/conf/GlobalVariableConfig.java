@@ -7,13 +7,15 @@ import java.util.Iterator;
 
 public class GlobalVariableConfig {
     public static boolean shortVideoDetail_netStateTip_dialogEnable = true;//是否可以提示网络状态
-    private static ArrayList<GlobalAttentionModule> mGlobalAttentionModules = new ArrayList<>();
-    private static ArrayList<GlobalFavoriteModule> mGlobalFavoriteModules = new ArrayList<>();
+    private static ArrayList<GlobalAttentionModule> mGlobalAttentionModules = new ArrayList<>();//关注
+    private static ArrayList<GlobalFavoriteModule> mGlobalFavoriteModules = new ArrayList<>();//收藏
+    private static ArrayList<GlobalGoodModule> mGlobalGoodModules = new ArrayList<>();//点赞
 
     public static void restoreConf() {
         shortVideoDetail_netStateTip_dialogEnable = true;
         clearAttentionModules();
         clearFavoriteModules();
+        clearGoodModules();
     }
 
     public static GlobalAttentionModule containsAttentionModule(String attentionUserCode) {
@@ -161,11 +163,87 @@ public class GlobalVariableConfig {
         }
     }
 
+    public static void addGoodModule(GlobalGoodModule goodModule) {
+        if (goodModule == null)
+            return;
+        GlobalAttentionModule module = containsAttentionModule(goodModule.getGoodCode());
+        if (module == null) {
+            GlobalGoodModule add = new GlobalGoodModule();
+            add.setGood(goodModule.isGood());
+            add.setGoodNum(goodModule.getGoodNum());
+            add.setGoodCode(goodModule.getGoodCode());
+            mGlobalGoodModules.add(add);
+        }
+    }
+
+    public static GlobalGoodModule containsGoodModule(String goodCode) {
+        if (TextUtils.isEmpty(goodCode))
+            return null;
+        synchronized (GlobalVariableConfig.class) {
+            GlobalGoodModule ret = null;
+            Iterator<GlobalGoodModule> iterator = mGlobalGoodModules.iterator();
+            while (iterator.hasNext()) {
+                GlobalGoodModule goodModule = iterator.next();
+                if (TextUtils.equals(goodCode, goodModule.getGoodCode())) {
+                    ret = goodModule;
+                    break;
+                }
+            }
+            return  ret;
+        }
+    }
+
+    private static void updateGoodModule(GlobalGoodModule sourceModule) {
+        if (sourceModule == null)
+            return;
+        GlobalGoodModule targetModule = containsGoodModule(sourceModule.getGoodCode());
+        if (targetModule == null)
+            return;
+        targetModule.setGood(sourceModule.isGood());
+        if (!TextUtils.isEmpty(sourceModule.getGoodNum())) {
+            targetModule.setGoodNum(sourceModule.getGoodNum());
+        }
+        targetModule.setGoodCode(sourceModule.getGoodCode());
+    }
+
+    public static GlobalGoodModule deleteGoodModuleByUserCode(String goodCode) {
+        if (TextUtils.isEmpty(goodCode))
+            return null;
+        synchronized (GlobalVariableConfig.class) {
+            GlobalGoodModule retModule = null;
+            Iterator<GlobalGoodModule> iterator = mGlobalGoodModules.iterator();
+            while (iterator.hasNext()) {
+                GlobalGoodModule iteratorModule = iterator.next();
+                if (TextUtils.equals(goodCode, iteratorModule.getGoodCode())) {
+                    iterator.remove();
+                    retModule = iteratorModule;
+                    break;
+                }
+            }
+            return retModule;
+        }
+    }
+
+    public static void handleGoodModule(GlobalGoodModule module) {
+        if (module == null)
+            return;
+        GlobalGoodModule contains = containsGoodModule(module.getGoodCode());
+        if (contains == null) {
+            addGoodModule(module);
+        } else {
+            updateGoodModule(module);
+        }
+    }
+
     public static void clearAttentionModules() {
         mGlobalAttentionModules.clear();
     }
 
     public static void clearFavoriteModules() {
         mGlobalFavoriteModules.clear();
+    }
+
+    public static void clearGoodModules() {
+        mGlobalGoodModules.clear();
     }
 }
