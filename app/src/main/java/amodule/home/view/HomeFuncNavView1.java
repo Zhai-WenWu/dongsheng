@@ -96,7 +96,7 @@ public class HomeFuncNavView1 extends LinearLayout {
 
     public void setItemWaith(){
         if(adapterFuncNav1!=null){
-            int waith = ToolsDevice.getWindowPx(context).widthPixels - getResources().getDimensionPixelSize(R.dimen.dp_28);
+            int waith = ToolsDevice.getWindowPx(context).widthPixels;
             int size = mapArrayList.size();
             adapterFuncNav1.setItemWaith(size>5?(int) (waith/5.3):waith/size);
             listView.setNestedScrollingEnabled(size>5);

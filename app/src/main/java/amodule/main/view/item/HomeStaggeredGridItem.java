@@ -150,12 +150,6 @@ public class HomeStaggeredGridItem extends HomeItem {
         }
         Map<String,String> map= StringManager.getFirstMap(mDataMap.get("customer"));
         LoadImage.with(getContext()).load(map.get("img")).setSaveType(FileManager.save_cache).setPlaceholderId(R.drawable.i_nopic).setErrorId(R.drawable.i_nopic).build().into(auther_userImg);
-        img_fav.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                requestFav();
-            }
-        });
     }
 
     @Override
@@ -165,7 +159,7 @@ public class HomeStaggeredGridItem extends HomeItem {
     }
 
     private void setImgFav(){
-        img_fav.setImageResource(mDataMap.containsKey("isFavorites")&&"2".equals(mDataMap.get("isFavorites"))?R.drawable.icon_fav_active:R.drawable.icon_fav);
+        img_fav.setImageResource(mDataMap.containsKey("isFavorites")&&"2".equals(mDataMap.get("isFavorites"))?R.drawable.icon_home_good_selected:R.drawable.icon_home_good_def);
     }
     private void requestFav(){
         if (!LoginManager.isLogin()) {

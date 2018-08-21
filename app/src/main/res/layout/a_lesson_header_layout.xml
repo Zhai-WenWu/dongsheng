@@ -14,10 +14,12 @@
         android:layout_height="wrap_content"
         android:visibility="gone">
 
-        <amodule._common.widget.BannerView
+        <amodule._common.widget.ShadowBannerView
             android:id="@+id/banner_view_1"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            app:banner_pointGravity="center_horizontal"
+            app:banner_pointTopBottomMargin="@dimen/dp_17" />
 
     </amodule._common.plugin.WidgetVerticalLayout>
 

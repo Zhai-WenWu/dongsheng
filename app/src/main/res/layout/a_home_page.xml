@@ -45,24 +45,25 @@
         </LinearLayout>
 
         <cn.srain.cube.views.ptr.PtrClassicFrameLayout
-            xmlns:cube_ptr="http://schemas.android.com/apk/res-auto"
             android:id="@+id/refresh_list_view_frame"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/tips_layout"
-            cube_ptr:ptr_duration_to_close="200"
-            cube_ptr:ptr_duration_to_close_header="500"
-            cube_ptr:ptr_pull_to_fresh="false"
-            cube_ptr:ptr_ratio_of_header_height_to_refresh="1"
-            cube_ptr:ptr_resistance="1.7">
+            app:ptr_duration_to_close="200"
+            app:ptr_duration_to_close_header="500"
+            app:ptr_pull_to_fresh="false"
+            app:ptr_ratio_of_header_height_to_refresh="1"
+            app:ptr_resistance="1.7">
 
             <acore.widget.rvlistview.RvStaggeredGridView
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                cube_ptr:spanCount="2"
-                android:layout_marginLeft="@dimen/dp_14"
-                android:layout_marginRight="@dimen/dp_14"/>
+                android:clipToPadding="false"
+                app:spanCount="2"
+                app:ignoreHaederPaddingLR="true"
+                android:paddingLeft="@dimen/dp_10"
+                android:paddingRight="@dimen/dp_10"/>
 
         </cn.srain.cube.views.ptr.PtrClassicFrameLayout>
 

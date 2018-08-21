@@ -2,10 +2,8 @@ package amodule._common.widget;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PorterDuff;
@@ -17,14 +15,11 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.BitmapRequestBuilder;
-import com.bumptech.glide.load.model.GlideUrl;
-import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.Target;
 import com.xiangha.R;
 
 import java.util.ArrayList;
@@ -35,8 +30,6 @@ import java.util.Map;
 import acore.logic.AppCommon;
 import acore.logic.XHClick;
 import acore.override.helper.XHActivityManager;
-import acore.tools.FileManager;
-import acore.tools.ImgManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -57,8 +50,6 @@ import amodule._common.helper.WidgetDataHelper;
 import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
 import third.ad.scrollerAd.XHAllAdControl;
-import xh.basic.internet.img.transformation.RoundTransformation;
-import xh.basic.tool.UtilImage;
 
 /**
  * Description :
@@ -72,13 +63,15 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
         ,IStatisticCallback,ISetStatisticPage, ISetAdController, ISetShowIndex, IUpdatePadding {
     protected LayoutInflater mInflater;
     private ArrayList<String> mAdIDArray = new ArrayList<>();
-    private int showMinH, showMaxH;
+    protected int showMinH, showMaxH;
     private XHAllAdControl mAdControl;
     private Map<Integer, View> mAdViews = new HashMap<>();
     public static final int TAG_ID = R.string.tag;
-    int imageHeight = 0, imageWidth = 0;
+    protected int imageHeight = 0, imageWidth = 0, contentHeight, contentWidth = ViewGroup.LayoutParams.MATCH_PARENT;
     private StatisticCallback mStatisticCallback;
-    private int mShowIndex = -1;
+    protected int mShowIndex = -1;
+
+    protected int mFixedPadding;
 
     public BannerView(Context context) {
         this(context, null);
@@ -90,33 +83,39 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
 
     public BannerView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        mFixedPadding = getResources().getDimensionPixelSize(R.dimen.dp_10);
+        init(context);
         setViewSize(context);
         setDefault();
     }
+
+    protected void init(Context context){}
 
     private void setDefault() {
         setPageChangeListener();
         setPageChangeDuration(5 * 1000);
     }
 
-    private void setViewSize(Context context) {
-        int paddingBottom = getResources().getDimensionPixelSize(R.dimen.dp_10);
-        updatePadding(0, 0, 0, paddingBottom);
+    protected void setViewSize(Context context) {
+        updatePadding(0, 0, 0, mFixedPadding);
         mInflater = LayoutInflater.from(context);
         imageWidth = ToolsDevice.getWindowPx(context).widthPixels;
-        imageHeight = (int) (imageWidth * 280 / 750f);
-        int height = imageHeight + paddingBottom;
+        imageHeight = (int) (imageWidth * 320 / 750f);
+        contentHeight = imageHeight + mFixedPadding;
 //        Log.i("tzy", "width = " + ToolsDevice.getWindowPx(context).widthPixels + " , height = " + height);
-        setTargetHeight(height);
+        setTargetWH(contentWidth, contentHeight);
         setVisibility(VISIBLE);
-        showMinH = Tools.getStatusBarHeight(context) + Tools.getDimen(context, R.dimen.topbar_height) - height;
+        showMinH = Tools.getStatusBarHeight(context) + Tools.getDimen(context, R.dimen.topbar_height) - contentHeight;
         showMaxH = ToolsDevice.getWindowPx(getContext()).heightPixels - Tools.getDimen(context, R.dimen.dp_50);
     }
 
-    private void setTargetHeight(int height) {
+    protected void setTargetWH(int width, int height) {
         post(() -> {
-            if (getLayoutParams() != null)
-                getLayoutParams().height = height;
+            if (getLayoutParams() != null) {
+                ViewGroup.LayoutParams lp = getLayoutParams();
+                lp.height = height;
+                lp.width = width;
+            }
             setMinimumHeight(height);
         });
     }
@@ -155,11 +154,9 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
             statistic(position);
         });
 
-        int paddingTop = (mShowIndex != -1 && mShowIndex != 0) ? Tools.getDimen(getContext(),R.dimen
-                .dp_10)
-                : 0;
+        int paddingTop = computeTopPadding();
         updatePadding(getPaddingLeft(),paddingTop,getPaddingRight(),getPaddingBottom());
-        setTargetHeight(imageHeight + paddingTop + getPaddingBottom());
+        setTargetWH(contentWidth, contentHeight + paddingTop + getPaddingBottom());
 
         Map<String, String> dataMap = StringManager.getFirstMap(data.get(WidgetDataHelper.KEY_DATA));
         ArrayList<Map<String, String>> arrayList = StringManager.getListMapByJson(dataMap.get(WidgetDataHelper.KEY_LIST));
@@ -178,6 +175,10 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
         notifyDataHasChanged();
         setRandomItem(arrayList);
         setVisibility(VISIBLE);
+    }
+
+    protected int computeTopPadding() {
+        return (mShowIndex != -1 && mShowIndex != 0) ? mFixedPadding : 0;
     }
 
     private void statistic(int position) {

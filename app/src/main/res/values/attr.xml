@@ -42,8 +42,14 @@
         <attr name="quoteCapWidth" format="reference|dimension" />
     </declare-styleable>
 
+    <attr name="spanCount" format="integer"/>
     <declare-styleable name="RvGridView">
-        <attr name="spanCount" format="integer"/>
+        <attr name="spanCount"/>
+    </declare-styleable>
+
+    <declare-styleable name="RvStaggeredGridView">
+        <attr name="spanCount"/>
+        <attr name="ignoreHaederPaddingLR" format="boolean"/>
     </declare-styleable>
 
     <declare-styleable name="OverScrollView">

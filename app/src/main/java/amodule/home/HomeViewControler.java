@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.annimon.stream.Stream;
@@ -76,6 +77,7 @@ public class HomeViewControler implements ISetAdController {
     public HomeViewControler(MainHomePage activity) {
         this.mActivity = activity;
         mHeaderView = LayoutInflater.from(mActivity).inflate(R.layout.a_home_header_layout, null, true);
+        mHeaderView.setLayoutParams(new LinearLayout.LayoutParams(Tools.getPhoneWidth(), LinearLayout.LayoutParams.WRAP_CONTENT));
     }
 
     public void onCreate() {
@@ -101,9 +103,6 @@ public class HomeViewControler implements ISetAdController {
         mRefreshLayout.disableWhenHorizontalMove(true);
         mRefreshLayout.setLoadingMinTime(300);
         recyclerView = (RvStaggeredGridView) mActivity.findViewById(R.id.recyclerView);
-//        StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(recyclerView.getSpanCount(), StaggeredGridLayoutManager.VERTICAL);
-//        StaggeredGridLayoutManager.LayoutParams lp = new
-//        recyclerView.setLayoutParams();
         recyclerView.closeDefaultAnimator();
         recyclerView.addHeaderView(mHeaderView);
         recyclerView.addHeaderView(mHomeFeedHeaderControler.getLayout());
