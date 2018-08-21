@@ -11,7 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -69,16 +68,12 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
 
     private DataController mDataController;
     private boolean mFirstPlayStarted;
-    boolean mCanDispatchTouch = true;
     private boolean mResumeFromPause;
 
     private String mUserCode;
     private String mSourcePage;
     private String topicCode;
     private ArrayList<ShortVideoDetailModule> mDatas = new ArrayList<>();
-
-    private int mScreenWidth;
-    private float mPointerX = -1f;
 
     private ConnectionChangeReceiver mReceiver;
     private DialogManager mNetStateTipDialog;
@@ -244,7 +239,6 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(rvVericalVideoItemAdapter);
         mDataController = new DataController();
-        mScreenWidth = ToolsDevice.getWindowPx(this).widthPixels;
     }
 
     private void registerConnectionReceiver() {
@@ -284,43 +278,6 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
         });
         IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(mReceiver, filter);
-    }
-
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        switch (ev.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                if (mPointerX == -1) {
-                    mPointerX = ev.getX();
-                }
-                break;
-            case MotionEvent.ACTION_MOVE:
-                float currentX = ev.getX();
-                if (mPointerX - currentX > mScreenWidth / 5 && recyclerView.getScrollState() == RecyclerView.SCROLL_STATE_IDLE) {
-                    mCanDispatchTouch = false;
-                    RvVericalVideoItemAdapter.ItemViewHolder currHolder = rvVericalVideoItemAdapter.getCurrentViewHolder();
-                    if (currHolder != null) {
-                        mPagerSnapHelper.particularTargetSnapPositionEnable(currHolder.getAdapterPosition());
-                    }
-                    gotoUser();
-                    resetPointerX();
-                    return true;
-                }
-                break;
-            case MotionEvent.ACTION_UP:
-                mCanDispatchTouch = true;
-                resetPointerX();
-                break;
-        }
-        if (!mCanDispatchTouch) {
-            return true;
-        }
-        mPagerSnapHelper.invalidParticularTargetSnapPosition();
-        return super.dispatchTouchEvent(ev);
-    }
-
-    private void resetPointerX() {
-        mPointerX = -1f;
     }
 
     public void gotoUser() {
