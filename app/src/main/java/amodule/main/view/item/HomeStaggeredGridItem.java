@@ -38,8 +38,7 @@ public class HomeStaggeredGridItem extends HomeItem {
     private ImageView mImg;
     private TextView mTitle,num_tv;
     private ImageView auther_userImg,img_fav;
-    private boolean mIsVideo;
-    private int mImgMinHeight, mImgMaxHeight;
+    private int mImgMinHeight, mImgMaxHeight,fixedWidth;
 
     public HomeStaggeredGridItem(Context context) {
         this(context, null);
@@ -67,6 +66,7 @@ public class HomeStaggeredGridItem extends HomeItem {
 
         mImgMinHeight = (Tools.getPhoneWidth() - getResources().getDimensionPixelSize(R.dimen.dp_51)) / 2 * 4 / 5;
         mImgMaxHeight = getResources().getDimensionPixelSize(R.dimen.dp_260);
+        fixedWidth = (Tools.getPhoneWidth() - getResources().getDimensionPixelSize(R.dimen.dp_51)) / 2;
     }
 
     @Override
@@ -78,8 +78,8 @@ public class HomeStaggeredGridItem extends HomeItem {
         if(mResourceData!=null && !mResourceData.isEmpty()){
             int imgWidth= Integer.parseInt(mResourceData.get("width"));
             int imgHeight= Integer.parseInt(mResourceData.get("height"));
-            int realWidth = (Tools.getPhoneWidth() - getResources().getDimensionPixelSize(R.dimen.dp_51)) / 2;
-            int realHeight = realWidth * imgHeight / imgWidth;
+
+            int realHeight = fixedWidth * imgHeight / (imgWidth < 1 ? 1:imgWidth);
             if (realHeight < mImgMinHeight) {
                 realHeight = mImgMinHeight;
             } else if (realHeight > mImgMaxHeight) {
@@ -96,27 +96,12 @@ public class HomeStaggeredGridItem extends HomeItem {
             cs.connect(mImg.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
             cs.connect(mImg.getId(), ConstraintSet.BOTTOM, R.id.guideline, ConstraintSet.TOP);
             cs.applyTo(mContentLayout);
-//            mImg.postInvalidate();
             if(!TextUtils.isEmpty(mResourceData.get("gif"))) {
                 mImg.setTag(TAG_ID, mResourceData.get("gif"));
                 Glide.with(getContext()).load(mResourceData.get("gif")).asGif().placeholder(R.drawable.i_nopic).diskCacheStrategy(DiskCacheStrategy.SOURCE).into(mImg);
             } else {
                 mImg.setTag(TAG_ID, mResourceData.get("img"));
                 LoadImage.with(getContext()).load(mResourceData.get("img")).setSaveType(FileManager.save_cache).setPlaceholderId(R.drawable.i_nopic).setErrorId(R.drawable.i_nopic).build().into(mImg);
-            }
-        }
-        if (mDataMap.containsKey("video")) {
-            String video = mDataMap.get("video");
-            if (!TextUtils.isEmpty(video)) {
-                Map<String, String> videoMap = StringManager.getFirstMap(video);
-                String videoUrl = videoMap.get("videoUrl");
-                if (!TextUtils.isEmpty(videoUrl)) {
-                    Map<String, String> videoUrlMap = StringManager.getFirstMap(videoUrl);
-                    String defUrl = videoUrlMap.get("defaultUrl");
-                    if (!TextUtils.isEmpty(defUrl)) {
-                        mIsVideo = true;
-                    }
-                }
             }
         }
         mTitle.setText("");
@@ -152,45 +137,9 @@ public class HomeStaggeredGridItem extends HomeItem {
         LoadImage.with(getContext()).load(map.get("img")).setSaveType(FileManager.save_cache).setPlaceholderId(R.drawable.i_nopic).setErrorId(R.drawable.i_nopic).build().into(auther_userImg);
     }
 
-    @Override
-    protected void resetData() {
-        super.resetData();
-        mIsVideo = false;
-    }
 
     private void setImgFav(){
-        img_fav.setImageResource(mDataMap.containsKey("isFavorites")&&"2".equals(mDataMap.get("isFavorites"))?R.drawable.icon_home_good_selected:R.drawable.icon_home_good_def);
-    }
-    private void requestFav(){
-        if (!LoginManager.isLogin()) {
-            getContext().startActivity(new Intent(getContext(), LoginByAccout.class));
-            return;
-        }
-        FavoriteHelper.instance().setFavoriteStatus(getContext(), mDataMap.get("code"), mDataMap.get("name"), FavoriteTypeEnum.TYPE_VIDEO, new FavoriteHelper.FavoriteStatusCallback() {
-            @Override
-            public void onSuccess(boolean isFav) {
-                mDataMap.put("isFavorites",isFav ? "2" : "1");
-                setImgFav();
-                try {
-                    int favorites = Integer.parseInt(mDataMap.get("favorites"));
-                    int tempInt = isFav ? (favorites + 1) : (favorites - 1);
-                    String tempStr = "";
-                    if (tempInt > 9999) {
-                        tempStr = "1w";
-                    } else if (tempInt < 0) {
-                        tempStr = "0";
-                    } else {
-                        tempStr = String.valueOf(tempInt);
-                    }
-                    mDataMap.put("favorites", tempStr);
-                    num_tv.setText(tempStr);
-                } catch (Exception e) {}
-            }
-
-            @Override
-            public void onFailed() {
-            }
-        });
+        img_fav.setImageResource("2".equals(mDataMap.get("isFavorites"))?R.drawable.icon_home_good_selected:R.drawable.icon_home_good_def);
     }
 
     public ConstraintLayout getContentLayout() {
