@@ -978,6 +978,10 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         mLikeImg.setSelected(mData.isFav());
     }
 
+    public void updateCommentNum() {
+        mCommentNumText.setText(mData.getCommentNum());
+    }
+
     public interface AttentionResultCallback {
         void onResult(boolean success);
     }

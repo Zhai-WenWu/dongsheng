@@ -507,6 +507,11 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
                                     } catch (Exception e) {}
                                 }
                             }
+                            boolean updateComment = false;
+                            if (!TextUtils.equals(mExtraModule.getCommentNum(), firstLoadModule.getCommentNum())) {
+                                updateComment = true;
+                                mExtraModule.setCommentNum(firstLoadModule.getCommentNum());
+                            }
                             if (rvVericalVideoItemAdapter != null && TextUtils.equals(rvVericalVideoItemAdapter.getCurrentViewHolder().data.getCode(), mExtraModule.getCode())) {
                                 RvVericalVideoItemAdapter.ItemViewHolder currentHolder = rvVericalVideoItemAdapter.getCurrentViewHolder();
                                 if (updateFavorite) {
@@ -518,6 +523,9 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
                                 if (updateLike) {
                                     currentHolder.updateLikeState();
                                     currentHolder.updateLikeNum();
+                                }
+                                if (updateComment) {
+                                    currentHolder.updateCommentNum();
                                 }
 
                             }
