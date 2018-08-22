@@ -1,6 +1,7 @@
 package amodule.topic.holder;
 
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
@@ -58,7 +59,10 @@ public class TopicItemHolder extends RvBaseViewHolder<TopicItemModel> implements
             if (labelModel != null && !TextUtils.isEmpty(labelModel.getTitle())) {
                 mLabel.setText(labelModel.getTitle());
                 mLabel.setTextColor(Color.parseColor(labelModel.getColor()));
-                mLabel.setBackgroundColor(Color.parseColor(labelModel.getBgColor()));
+                GradientDrawable drawable = new GradientDrawable();
+                drawable.setColor(Color.parseColor(labelModel.getBgColor()));
+                drawable.setCornerRadius(itemView.getResources().getDimensionPixelSize(R.dimen.dp_2));
+                mLabel.setBackground(drawable);
                 mLabel.setVisibility(View.VISIBLE);
             } else {
                 mLabel.setVisibility(View.GONE);

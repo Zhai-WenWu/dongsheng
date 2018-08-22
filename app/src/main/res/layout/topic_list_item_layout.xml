@@ -16,7 +16,12 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_margin="@dimen/dp_20"
+        android:layout_margin="@dimen/dp_6"
+        android:paddingLeft="@dimen/dp_4"
+        android:paddingRight="@dimen/dp_4"
+        android:paddingTop="@dimen/dp_1"
+        android:paddingBottom="@dimen/dp_1"
+        android:textSize="@dimen/sp_11"
         android:visibility="gone"/>
 
 </android.support.constraint.ConstraintLayout>
