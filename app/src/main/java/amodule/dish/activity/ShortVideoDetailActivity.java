@@ -37,6 +37,7 @@ import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule._common.conf.FavoriteTypeEnum;
 import amodule._common.conf.GlobalAttentionModule;
+import amodule._common.conf.GlobalCommentModule;
 import amodule._common.conf.GlobalFavoriteModule;
 import amodule._common.conf.GlobalGoodModule;
 import amodule._common.conf.GlobalVariableConfig;
@@ -321,6 +322,8 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
                 GlobalFavoriteModule favModule = GlobalVariableConfig.containsFavoriteModule(dataModule.getCode(), FavoriteTypeEnum.TYPE_VIDEO);
                 boolean favChanged = false;
                 boolean attentionChanged = false;
+                boolean likeChanged = false;
+                boolean commentChanged = false;
                 if (favModule != null && (favModule.isFav() != dataModule.isFav())) {
                     favChanged = true;
                     dataModule.setFav(favModule.isFav());
@@ -330,12 +333,31 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
                     attentionChanged = true;
                     dataModule.getCustomerModel().setFollow(attentionModule.isAttention());
                 }
+                GlobalGoodModule goodModule = GlobalVariableConfig.containsGoodModule(dataModule.getCode());
+                if (goodModule != null && (goodModule.isGood() != dataModule.isLike() || !TextUtils.equals(goodModule.getGoodNum(), dataModule.getLikeNum()))) {
+                    likeChanged = true;
+                    dataModule.setLike(goodModule.isGood());
+                    dataModule.setLikeNum(goodModule.getGoodNum());
+                }
+                GlobalCommentModule commentModule = GlobalVariableConfig.containsCommentModule(dataModule.getCode());
+                if (commentModule != null && !TextUtils.equals(dataModule.getCommentNum(), commentModule.getCommentNum())) {
+                    commentChanged = true;
+                    dataModule.setCommentNum(commentModule.getCommentNum());
+                }
                 if (rvVericalVideoItemAdapter != null && TextUtils.equals(rvVericalVideoItemAdapter.getCurrentViewHolder().data.getCode(), dataModule.getCode())) {
+                    RvVericalVideoItemAdapter.ItemViewHolder currentHolder = rvVericalVideoItemAdapter.getCurrentViewHolder();
                     if (attentionChanged) {
-                        rvVericalVideoItemAdapter.getCurrentViewHolder().updateAttentionState();
+                        currentHolder.updateAttentionState();
                     }
                     if (favChanged) {
-                        rvVericalVideoItemAdapter.getCurrentViewHolder().updateFavoriteState();
+                        currentHolder.updateFavoriteState();
+                    }
+                    if (likeChanged) {
+                        currentHolder.updateLikeState();
+                        currentHolder.updateLikeNum();
+                    }
+                    if (commentChanged) {
+                        currentHolder.updateCommentNum();
                     }
                 }
             }
@@ -499,12 +521,10 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
                             if (mExtraModule.isLike() != firstLoadModule.isLike()) {
                                 updateLike = true;
                                 mExtraModule.setLike(firstLoadModule.isLike());
+                                mExtraModule.setLikeNum(firstLoadModule.getLikeNum());
                                 GlobalGoodModule goodModule = GlobalVariableConfig.containsGoodModule(mExtraModule.getCode());
                                 if (goodModule != null) {
-                                    try {
-                                        int goodNum = Integer.parseInt(goodModule.getGoodNum());
-                                        mExtraModule.setLikeNum(String.valueOf(mExtraModule.isLike() ? ++goodNum : --goodNum));
-                                    } catch (Exception e) {}
+                                    goodModule.setGoodNum(firstLoadModule.getLikeNum());
                                 }
                             }
                             boolean updateComment = false;

@@ -56,6 +56,7 @@ import acore.widget.KeyboardDialog;
 import acore.widget.multifunction.IconTextSpan;
 import amodule._common.conf.FavoriteTypeEnum;
 import amodule._common.conf.GlobalAttentionModule;
+import amodule._common.conf.GlobalCommentModule;
 import amodule._common.conf.GlobalFavoriteModule;
 import amodule._common.conf.GlobalGoodModule;
 import amodule._common.conf.GlobalVariableConfig;
@@ -619,6 +620,11 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
                     if (mCommentNumText != null) {
                         mCommentNumText.setText(commentsNum);
                     }
+
+                    GlobalCommentModule module = new GlobalCommentModule();
+                    module.setFlagCode(mData.getCode());
+                    module.setCommentNum(mData.getCommentNum());
+                    GlobalVariableConfig.handleCommentModule(module);
                 }
 
                 @Override
@@ -635,6 +641,11 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
                     if (mCommentNumText != null) {
                         mCommentNumText.setText(commentsNum);
                     }
+
+                    GlobalCommentModule module = new GlobalCommentModule();
+                    module.setFlagCode(mData.getCode());
+                    module.setCommentNum(mData.getCommentNum());
+                    GlobalVariableConfig.handleCommentModule(module);
                 }
             });
             mCommentDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -908,8 +919,14 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
                         if (flag >= ReqEncyptInternet.REQ_OK_STRING) {
                             mSendText = "";
                             try {
-                                mData.setCommentNum(String.valueOf(Integer.parseInt(mData.getCommentNum()) + 1));
+                                int commentNum = Integer.parseInt(mData.getCommentNum()) + 1;
+                                mData.setCommentNum(String.valueOf(commentNum));
                                 mCommentNumText.setText(mData.getCommentNum());
+
+                                GlobalCommentModule module = new GlobalCommentModule();
+                                module.setFlagCode(mData.getCode());
+                                module.setCommentNum(mData.getCommentNum());
+                                GlobalVariableConfig.handleCommentModule(module);
                             } catch (Exception e) {}
                         } else {
                             Tools.showToast(getContext(), "评论失败，请重试");

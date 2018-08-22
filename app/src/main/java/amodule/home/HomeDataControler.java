@@ -57,6 +57,8 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
 
     private long lastSelfAdTime;
 
+    private int mRandom;
+
     public HomeDataControler(MainHomePage activity) {
         this.mActivity = activity;
         mHomeModuleBean = new HomeModuleControler().getHomeModuleByType(activity, null);
@@ -98,6 +100,7 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
     public void loadServiceHomeData(@Nullable InternetCallback callback) {
         String url = StringManager.API_HOMEPAGE_6_0;
         LinkedHashMap<String, String> params = new LinkedHashMap<>();
+        params.put("randNum", String.valueOf(mRandom));
         ReqEncyptInternet.in().doEncypt(url, params, callback);
     }
 
@@ -110,8 +113,8 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
     public void loadServiceFeedData(boolean firstLoad, @NonNull OnLoadDataCallback callback) {
         StringBuilder params = new StringBuilder();
         String type = mHomeModuleBean.getType();
-        params.append(TextUtils.isEmpty(nextUrl) ? "type=" + type : nextUrl).append(firstLoad ? "&page=1" : "");
-//        Log.i("tzy", "refresh::" + refresh + "::data:" + params.toString());
+        params.append(firstLoad ? "type=" + type : nextUrl).append(firstLoad ? "&page=1" : "").append(firstLoad ? "&randNum=" + mRandom : "");
+        Log.i("tzy", "firstLoad::" + firstLoad + "::data:" + params.toString());
         //准备请求
         if (callback != null)
             callback.onPrepare();
@@ -304,6 +307,10 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
         if (mViewAdControl != null) {
             mViewAdControl.autoRefreshSelfAD();
         }
+    }
+
+    public void setRandom(int random) {
+        mRandom = random;
     }
 
     /*--------------------------------------------- Interface ---------------------------------------------*/

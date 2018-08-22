@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Random;
 
 import acore.broadcast.ConnectionChangeReceiver;
 import acore.logic.ConfigMannager;
@@ -211,6 +212,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
     @Override
     protected void onStart() {
         super.onStart();
+        generateRandom();
         loadRemoteData();
     }
 
@@ -440,7 +442,18 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
         if(mViewContrloer != null){
             mViewContrloer.returnListTop();
         }
+        generateRandom();
         loadRemoteData();
+    }
+
+    private int generateRandom() {
+        int ret = 0;
+        Random random = new Random();
+        ret = random.nextInt(100);
+        if (mDataControler != null) {
+            mDataControler.setRandom(ret);
+        }
+        return ret;
     }
 
     private void onResumeFake() {

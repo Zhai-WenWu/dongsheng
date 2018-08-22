@@ -10,12 +10,14 @@ public class GlobalVariableConfig {
     private static ArrayList<GlobalAttentionModule> mGlobalAttentionModules = new ArrayList<>();//关注
     private static ArrayList<GlobalFavoriteModule> mGlobalFavoriteModules = new ArrayList<>();//收藏
     private static ArrayList<GlobalGoodModule> mGlobalGoodModules = new ArrayList<>();//点赞
+    private static ArrayList<GlobalCommentModule> mGlobalCommentModules = new ArrayList<>();//评论
 
     public static void restoreConf() {
         shortVideoDetail_netStateTip_dialogEnable = true;
         clearAttentionModules();
         clearFavoriteModules();
         clearGoodModules();
+        clearCommentModules();
     }
 
     public static GlobalAttentionModule containsAttentionModule(String attentionUserCode) {
@@ -233,6 +235,80 @@ public class GlobalVariableConfig {
         } else {
             updateGoodModule(module);
         }
+    }
+
+    public static void addCommentModule(GlobalCommentModule commentModule) {
+        if (commentModule == null)
+            return;
+        GlobalCommentModule module = containsCommentModule(commentModule.getFlagCode());
+        if (module == null) {
+            GlobalCommentModule add = new GlobalCommentModule();
+            add.setCommentNum(commentModule.getCommentNum());
+            add.setFlagCode(commentModule.getFlagCode());
+            mGlobalCommentModules.add(add);
+        }
+    }
+
+    public static GlobalCommentModule containsCommentModule(String flagCode) {
+        if (TextUtils.isEmpty(flagCode))
+            return null;
+        synchronized (GlobalVariableConfig.class) {
+            GlobalCommentModule ret = null;
+            Iterator<GlobalCommentModule> iterator = mGlobalCommentModules.iterator();
+            while (iterator.hasNext()) {
+                GlobalCommentModule commentModule = iterator.next();
+                if (TextUtils.equals(flagCode, commentModule.getFlagCode())) {
+                    ret = commentModule;
+                    break;
+                }
+            }
+            return  ret;
+        }
+    }
+
+    private static void updateCommentModule(GlobalCommentModule sourceModule) {
+        if (sourceModule == null)
+            return;
+        GlobalCommentModule targetModule = containsCommentModule(sourceModule.getFlagCode());
+        if (targetModule == null)
+            return;
+        if (!TextUtils.isEmpty(sourceModule.getCommentNum())) {
+            targetModule.setCommentNum(sourceModule.getCommentNum());
+        }
+        targetModule.setFlagCode(sourceModule.getFlagCode());
+    }
+
+    public static GlobalCommentModule deleteCommentModuleByFlagCode(String flagCode) {
+        if (TextUtils.isEmpty(flagCode))
+            return null;
+        synchronized (GlobalVariableConfig.class) {
+            GlobalCommentModule retModule = null;
+            Iterator<GlobalCommentModule> iterator = mGlobalCommentModules.iterator();
+            while (iterator.hasNext()) {
+                GlobalCommentModule iteratorModule = iterator.next();
+                if (TextUtils.equals(flagCode, iteratorModule.getFlagCode())) {
+                    iterator.remove();
+                    retModule = iteratorModule;
+                    break;
+                }
+            }
+            return retModule;
+        }
+    }
+
+    public static void handleCommentModule(GlobalCommentModule module) {
+        if (module == null)
+            return;
+        GlobalCommentModule contains = containsCommentModule(module.getFlagCode());
+        if (contains == null) {
+            addCommentModule(module);
+        } else {
+            updateCommentModule(module);
+        }
+    }
+
+    public static void clearCommentModules() {
+        mGlobalAttentionModules.clear();
     }
 
     public static void clearAttentionModules() {
