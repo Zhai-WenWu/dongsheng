@@ -74,35 +74,44 @@ public class HomeStaggeredGridItem extends HomeItem {
         super.setData(dataMap, position);
         if(mDataMap == null)
             return;
-        Map<String,String> mResourceData = StringManager.getFirstMap(mDataMap.get("resourceData"));
-        if(mResourceData!=null && !mResourceData.isEmpty()){
-            int imgWidth= Integer.parseInt(mResourceData.get("width"));
-            int imgHeight= Integer.parseInt(mResourceData.get("height"));
-
-            int realHeight = fixedWidth * imgHeight / (imgWidth < 1 ? 1:imgWidth);
-            if (realHeight < mImgMinHeight) {
-                realHeight = mImgMinHeight;
-            } else if (realHeight > mImgMaxHeight) {
-                realHeight = mImgMaxHeight;
+        int imgWidth = 0, imgHeight = 0;
+        String parseResourceDataWidth = mDataMap.get("parseResourceData_width");
+        if (TextUtils.isEmpty(parseResourceDataWidth)) {
+            Map<String, String> resourceData = StringManager.getFirstMap(mDataMap.get("resourceData"));
+            if (resourceData != null && !resourceData.isEmpty()) {
+                String widthStr = resourceData.get("width");
+                imgWidth = Integer.parseInt(widthStr);
+                String heightStr = resourceData.get("height");
+                imgHeight = Integer.parseInt(heightStr);
+                mDataMap.put("parseResourceData_width", widthStr);
+                mDataMap.put("parseResourceData_height", heightStr);
+                mDataMap.put("parseResourceData_gif", resourceData.get("gif"));
+                mDataMap.put("parseResourceData_img", resourceData.get("img"));
             }
+        }
 
+        int realImgHeight = fixedWidth * imgHeight / (imgWidth < 1 ? 1 : imgWidth);
+        if (realImgHeight < mImgMinHeight) {
+            realImgHeight = mImgMinHeight;
+        } else if (realImgHeight > mImgMaxHeight) {
+            realImgHeight = mImgMaxHeight;
+        }
 
-            ConstraintSet cs = new ConstraintSet();
-            cs.constrainWidth(mImg.getId(), ConstraintSet.MATCH_CONSTRAINT);
-            cs.constrainHeight(mImg.getId(), realHeight);
-            cs.constrainMinHeight(mImg.getId(), mImgMinHeight);
-            cs.connect(mImg.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
-            cs.connect(mImg.getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END);
-            cs.connect(mImg.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
-            cs.connect(mImg.getId(), ConstraintSet.BOTTOM, R.id.guideline, ConstraintSet.TOP);
-            cs.applyTo(mContentLayout);
-            if(!TextUtils.isEmpty(mResourceData.get("gif"))) {
-                mImg.setTag(TAG_ID, mResourceData.get("gif"));
-                Glide.with(getContext()).load(mResourceData.get("gif")).asGif().placeholder(R.drawable.i_nopic).diskCacheStrategy(DiskCacheStrategy.SOURCE).into(mImg);
-            } else {
-                mImg.setTag(TAG_ID, mResourceData.get("img"));
-                LoadImage.with(getContext()).load(mResourceData.get("img")).setSaveType(FileManager.save_cache).setPlaceholderId(R.drawable.i_nopic).setErrorId(R.drawable.i_nopic).build().into(mImg);
-            }
+        ConstraintSet cs = new ConstraintSet();
+        cs.constrainWidth(mImg.getId(), ConstraintSet.MATCH_CONSTRAINT);
+        cs.constrainHeight(mImg.getId(), realImgHeight);
+        cs.constrainMinHeight(mImg.getId(), mImgMinHeight);
+        cs.connect(mImg.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
+        cs.connect(mImg.getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END);
+        cs.connect(mImg.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
+        cs.connect(mImg.getId(), ConstraintSet.BOTTOM, R.id.guideline, ConstraintSet.TOP);
+        cs.applyTo(mContentLayout);
+        if (!TextUtils.isEmpty(mDataMap.get("parseResourceData_gif"))) {
+            mImg.setTag(TAG_ID, mDataMap.get("parseResourceData_gif"));
+            Glide.with(getContext()).load(mDataMap.get("parseResourceData_gif")).asGif().placeholder(R.drawable.i_nopic).diskCacheStrategy(DiskCacheStrategy.SOURCE).into(mImg);
+        } else {
+            mImg.setTag(TAG_ID, mDataMap.get("parseResourceData_img"));
+            LoadImage.with(getContext()).load(mDataMap.get("parseResourceData_img")).setSaveType(FileManager.save_cache).setPlaceholderId(R.drawable.i_nopic).setErrorId(R.drawable.i_nopic).build().into(mImg);
         }
         mTitle.setText("");
         String title = mDataMap.get("name");
@@ -133,8 +142,11 @@ public class HomeStaggeredGridItem extends HomeItem {
         if(mDataMap.containsKey("favorites")){
             num_tv.setText(mDataMap.get("favorites"));
         }
-        Map<String,String> map= StringManager.getFirstMap(mDataMap.get("customer"));
-        LoadImage.with(getContext()).load(map.get("img")).setSaveType(FileManager.save_cache).setPlaceholderId(R.drawable.i_nopic).setErrorId(R.drawable.i_nopic).build().into(auther_userImg);
+        if (TextUtils.isEmpty(mDataMap.get("parseResourceData_customer_img"))) {
+            Map<String, String> map = StringManager.getFirstMap(mDataMap.get("customer"));
+            mDataMap.put("parseResourceData_customer_img", map.get("img"));
+        }
+        LoadImage.with(getContext()).load(mDataMap.get("parseResourceData_customer_img")).setSaveType(FileManager.save_cache).setPlaceholderId(R.drawable.i_nopic).setErrorId(R.drawable.i_nopic).build().into(auther_userImg);
     }
 
 
