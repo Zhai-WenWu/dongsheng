@@ -314,6 +314,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
                 } else {
                     mStaticEnable2 = false;
                 }
+                mPlayerView.changePlayBtnState(false);
             }
         });
 
