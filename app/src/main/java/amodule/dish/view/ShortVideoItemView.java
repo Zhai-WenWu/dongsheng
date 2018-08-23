@@ -93,6 +93,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
 
     private Context context;
     private ImageView mThumbImg;
+    private RelativeLayout mThumbContainer;
     private RelativeLayout mVideoLayout;
     private ConstraintLayout mTitleLayout;
     private ImageView mBackImg;
@@ -159,6 +160,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
     }
     public void initView(){
         mThumbImg = findViewById(R.id.image_thumb);
+        mThumbContainer = findViewById(R.id.thumb_container);
         mVideoLayout = findViewById(R.id.surface_container);
         mTitleLayout = findViewById(R.id.layout_title);
         mBackImg = findViewById(R.id.image_back);
@@ -228,9 +230,9 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
             public void onClickBlankFullscreen(String url, Object... objects) {}
             @Override
             public void onPrepared(String url, Object... objects) {
+                mPlayerView.changePlayBtnState(false);
                 switch (mInnerPlayState) {
                     case INNER_PLAY_STATE_PAUSE:
-                        changeThumbImageState(true);
                         pauseVideo();
                         break;
                     case INNER_PLAY_STATE_STOP:
@@ -330,6 +332,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         if (mInnerPlayState == INNER_PLAY_STATE_PLAYING)
             return;
         mInnerPlayState = INNER_PLAY_STATE_PLAYING;
+        mPlayerView.changePlayBtnState(false);
         mPlayerView.onVideoResume();
     }
     /**
@@ -340,6 +343,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
             return;
         mInnerPlayState = INNER_PLAY_STATE_PAUSE;
         mPlayerView.onVideoPause();
+        mPlayerView.changePlayBtnState(true);
     }
 
     /**
@@ -732,6 +736,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         switch (mPlayerView.getCurrentState()) {
             case GSYVideoPlayer.CURRENT_STATE_PLAYING:
                 pauseVideo();
+                mPlayerView.changePlayBtnState(true);
                 break;
             case GSYVideoPlayer.CURRENT_STATE_ERROR:
                 Toast.makeText(getContext(), "视频播放错误", Toast.LENGTH_SHORT).show();
@@ -740,6 +745,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
                 prepareAsync();
                 break;
             case GSYVideoPlayer.CURRENT_STATE_PAUSE:
+                mPlayerView.changePlayBtnState(false);
                 resumeVideo();
                 break;
             case GSYVideoPlayer.CURRENT_STATE_PLAYING_BUFFERING_START:
@@ -752,9 +758,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
     }
 
     private void changeThumbImageState(boolean visible) {
-        if (mThumbImg != null) {
-            mThumbImg.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
-        }
+        mThumbContainer.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
     }
 
     private void showBottomDialog() {
@@ -807,6 +811,9 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
                                 broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.DATA_TYPE, "1");
                                 broadIntent.putExtra(UploadStateChangeBroadcasterReceiver.ACTION_DEL, "2");
                                 Main.allMain.sendBroadcast(broadIntent);
+                            }
+                            if (mOnDeleteCallback != null) {
+                                mOnDeleteCallback.onDelete(mData, position);
                             }
                         }
                     }
@@ -1017,5 +1024,15 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
 
     public void setGoodResultCallback(GoodResultCallback goodResultCallback) {
         mGoodResultCallback = goodResultCallback;
+    }
+
+    public interface OnDeleteCallback {
+        void onDelete(ShortVideoDetailModule module, int position);
+    }
+
+    private OnDeleteCallback mOnDeleteCallback;
+
+    public void setOnDeleteCallback(OnDeleteCallback deleteCallback) {
+        mOnDeleteCallback = deleteCallback;
     }
 }

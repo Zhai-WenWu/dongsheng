@@ -245,6 +245,15 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
                 }
             }
         });
+        rvVericalVideoItemAdapter.setOnDeleteCallback(new ShortVideoItemView.OnDeleteCallback() {
+            @Override
+            public void onDelete(ShortVideoDetailModule module, int position) {
+                if (mDatas != null) {
+                    rvVericalVideoItemAdapter.getCurrentViewHolder().stopVideo();
+                    ShortVideoDetailActivity.this.finish();
+                }
+            }
+        });
     }
 
     private void init() {

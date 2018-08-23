@@ -14,21 +14,6 @@
 
     </RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/thumb"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#000000">
-
-        <ImageView
-            android:id="@+id/image_thumb"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="fitCenter"
-            android:layout_centerInParent="true"/>
-
-    </RelativeLayout>
-
     <LinearLayout
         android:id="@+id/layout_bottom"
         android:layout_width="wrap_content"
@@ -87,6 +72,21 @@
         android:id="@+id/view_empty"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+    <RelativeLayout
+        android:id="@+id/thumb_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true">
+
+        <ImageView
+            android:id="@+id/image_thumb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="fitCenter"
+            android:layout_centerInParent="true"/>
+
+    </RelativeLayout>
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/layout_title"
@@ -551,28 +551,15 @@
 
     </android.support.constraint.ConstraintLayout>
 
-
-    <moe.codeest.enviews.ENDownloadView
-        android:id="@+id/loading"
-        android:layout_width="28dp"
-        android:layout_height="28dp"
-        app:download_line_width="2"
-        app:download_bg_line_width="2"
-        app:download_text_size="6"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:visibility="invisible" />
-
     <ImageView
-        android:id="@+id/start"
+        android:id="@+id/start_btn"
         android:layout_width="@dimen/dp_66"
         android:layout_height="@dimen/dp_66"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:background="@drawable/video_play_normal"
         android:layout_gravity="center_vertical" />
 
 

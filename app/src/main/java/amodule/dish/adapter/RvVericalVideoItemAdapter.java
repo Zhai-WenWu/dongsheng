@@ -26,6 +26,8 @@ public class RvVericalVideoItemAdapter extends BaseAdapter<ShortVideoDetailModul
 
     private ShortVideoItemView.GoodResultCallback mGoodResultCallback;
 
+    private ShortVideoItemView.OnDeleteCallback mOnDeleteCallback;
+
     public RvVericalVideoItemAdapter(Context context, @Nullable List<ShortVideoDetailModule> data) {
         super(context, data);
     }
@@ -63,6 +65,10 @@ public class RvVericalVideoItemAdapter extends BaseAdapter<ShortVideoDetailModul
         mGoodResultCallback = goodResultCallback;
     }
 
+    public void setOnDeleteCallback(ShortVideoItemView.OnDeleteCallback onDeleteCallback) {
+        mOnDeleteCallback = onDeleteCallback;
+    }
+
     public class ItemViewHolder<T extends ShortVideoDetailModule> extends RvBaseViewHolder<T>{
         private ShortVideoItemView shortVideoItemView;
         public ShortVideoDetailModule data;
@@ -89,6 +95,14 @@ public class RvVericalVideoItemAdapter extends BaseAdapter<ShortVideoDetailModul
                 public void onResult(boolean success) {
                     if (mGoodResultCallback != null) {
                         mGoodResultCallback.onResult(success);
+                    }
+                }
+            });
+            shortVideoItemView.setOnDeleteCallback(new ShortVideoItemView.OnDeleteCallback() {
+                @Override
+                public void onDelete(ShortVideoDetailModule module, int position) {
+                    if (mOnDeleteCallback != null) {
+                        mOnDeleteCallback.onDelete(module, position);
                     }
                 }
             });

@@ -203,7 +203,9 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
         mTopContainer = (ViewGroup) findViewById(R.id.layout_top);
         if (isInEditMode())
             return;
-        mStartButton.setOnClickListener(this);
+        if (mStartButton != null) {
+            mStartButton.setOnClickListener(this);
+        }
         mFullscreenButton.setOnClickListener(this);
         mProgressBar.setOnSeekBarChangeListener(this);
         mBottomContainer.setOnClickListener(this);
@@ -371,66 +373,70 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
             hideNavKey(mContext);
         }
         if (i == R.id.start) {
-            if (TextUtils.isEmpty(mUrl)) {
-                Toast.makeText(getActivityContext(), getResources().getString(R.string.no_url), Toast.LENGTH_SHORT).show();
-                return;
-            }
-            if (mCurrentState == CURRENT_STATE_NORMAL || mCurrentState == CURRENT_STATE_ERROR) {
-                if (!mUrl.startsWith("file") && !CommonUtil.isWifiConnected(getContext())
-                        && mNeedShowWifiTip) {
-                    showWifiDialog();
-                    return;
-                }
-                startButtonLogic();
-                handlerClickOnStart();
-            } else if (mCurrentState == CURRENT_STATE_PLAYING) {
-                try{
-                    handlerClickOnPause();
-                    if(mGSYVideoManager.getMediaPlayer() != null)
-                        mGSYVideoManager.getMediaPlayer().pause();
-                }catch (Exception e){
-                    onVideoReset();
-                    e.printStackTrace();
-                }
-                setStateAndUi(CURRENT_STATE_PAUSE);
-                if (mVideoAllCallBack != null && isCurrentMediaListener()) {
-                    if (mIfCurrentIsFullscreen) {
-                        Debuger.printfLog("onClickStopFullscreen");
-                        mVideoAllCallBack.onClickStopFullscreen(mOriginUrl, mTitle, GSYVideoPlayer.this);
-                    } else {
-                        Debuger.printfLog("onClickStop");
-                        mVideoAllCallBack.onClickStop(mOriginUrl, mTitle, GSYVideoPlayer.this);
-                    }
-                }
-            } else if (mCurrentState == CURRENT_STATE_PAUSE) {
-                if (mVideoAllCallBack != null && isCurrentMediaListener()) {
-                    if (mIfCurrentIsFullscreen) {
-                        Debuger.printfLog("onClickResumeFullscreen");
-                        mVideoAllCallBack.onClickResumeFullscreen(mOriginUrl, mTitle, GSYVideoPlayer.this);
-                    } else {
-                        Debuger.printfLog("onClickResume");
-                        mVideoAllCallBack.onClickResume(mOriginUrl, mTitle, GSYVideoPlayer.this);
-                    }
-                }
-                try{
-                    handlerClickOnStart();
-                    if(mGSYVideoManager.getMediaPlayer() != null)
-                        mGSYVideoManager.getMediaPlayer().start();
-                }catch (Exception e){
-                    onVideoReset();
-                    e.printStackTrace();
-                }
-                setStateAndUi(CURRENT_STATE_PLAYING);
-            } else if (mCurrentState == CURRENT_STATE_AUTO_COMPLETE) {
-                startButtonLogic();
-                handlerClickOnStart();
-            }
+            handleStartClick();
         } else if (i == R.id.surface_container && mCurrentState == CURRENT_STATE_ERROR) {
             if (mVideoAllCallBack != null) {
                 Debuger.printfLog("onClickStartError");
                 mVideoAllCallBack.onClickStartError(mOriginUrl, mTitle, GSYVideoPlayer.this);
             }
             prepareVideo();
+        }
+    }
+
+    protected void handleStartClick() {
+        if (TextUtils.isEmpty(mUrl)) {
+            Toast.makeText(getActivityContext(), getResources().getString(R.string.no_url), Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (mCurrentState == CURRENT_STATE_NORMAL || mCurrentState == CURRENT_STATE_ERROR) {
+            if (!mUrl.startsWith("file") && !CommonUtil.isWifiConnected(getContext())
+                    && mNeedShowWifiTip) {
+                showWifiDialog();
+                return;
+            }
+            startButtonLogic();
+            handlerClickOnStart();
+        } else if (mCurrentState == CURRENT_STATE_PLAYING) {
+            try{
+                handlerClickOnPause();
+                if(mGSYVideoManager.getMediaPlayer() != null)
+                    mGSYVideoManager.getMediaPlayer().pause();
+            }catch (Exception e){
+                onVideoReset();
+                e.printStackTrace();
+            }
+            setStateAndUi(CURRENT_STATE_PAUSE);
+            if (mVideoAllCallBack != null && isCurrentMediaListener()) {
+                if (mIfCurrentIsFullscreen) {
+                    Debuger.printfLog("onClickStopFullscreen");
+                    mVideoAllCallBack.onClickStopFullscreen(mOriginUrl, mTitle, GSYVideoPlayer.this);
+                } else {
+                    Debuger.printfLog("onClickStop");
+                    mVideoAllCallBack.onClickStop(mOriginUrl, mTitle, GSYVideoPlayer.this);
+                }
+            }
+        } else if (mCurrentState == CURRENT_STATE_PAUSE) {
+            if (mVideoAllCallBack != null && isCurrentMediaListener()) {
+                if (mIfCurrentIsFullscreen) {
+                    Debuger.printfLog("onClickResumeFullscreen");
+                    mVideoAllCallBack.onClickResumeFullscreen(mOriginUrl, mTitle, GSYVideoPlayer.this);
+                } else {
+                    Debuger.printfLog("onClickResume");
+                    mVideoAllCallBack.onClickResume(mOriginUrl, mTitle, GSYVideoPlayer.this);
+                }
+            }
+            try{
+                handlerClickOnStart();
+                if(mGSYVideoManager.getMediaPlayer() != null)
+                    mGSYVideoManager.getMediaPlayer().start();
+            }catch (Exception e){
+                onVideoReset();
+                e.printStackTrace();
+            }
+            setStateAndUi(CURRENT_STATE_PLAYING);
+        } else if (mCurrentState == CURRENT_STATE_AUTO_COMPLETE) {
+            startButtonLogic();
+            handlerClickOnStart();
         }
     }
 
@@ -918,7 +924,9 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
                 Log.d(TAG, "onStopTrackingTouch :: time = "  + time);
                 if(mCurrentState == CURRENT_STATE_AUTO_COMPLETE){
                     setSeekOnStart(time);
-                    mStartButton.performClick();
+                    if (mStartButton != null) {
+                        mStartButton.performClick();
+                    }
                 }else{
                     mGSYVideoManager.getMediaPlayer().seekTo(time);
                 }
