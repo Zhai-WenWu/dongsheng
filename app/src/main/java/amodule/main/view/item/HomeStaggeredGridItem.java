@@ -111,7 +111,7 @@ public class HomeStaggeredGridItem extends HomeItem {
         cs.applyTo(mContentLayout);
         if (!TextUtils.isEmpty(mDataMap.get("parseResourceData_gif"))) {
             mImg.setTag(TAG_ID, mDataMap.get("parseResourceData_gif"));
-            Glide.with(getContext()).load(mDataMap.get("parseResourceData_gif")).asGif().placeholder(R.drawable.i_nopic).diskCacheStrategy(DiskCacheStrategy.SOURCE).into(mImg);
+            Glide.with(getContext()).load(mDataMap.get("parseResourceData_gif")).asGif().centerCrop().placeholder(R.drawable.i_nopic).diskCacheStrategy(DiskCacheStrategy.SOURCE).into(mImg);
         } else {
             mImg.setTag(TAG_ID, mDataMap.get("parseResourceData_img"));
             LoadImage.with(getContext()).load(mDataMap.get("parseResourceData_img")).setSaveType(FileManager.save_cache).setPlaceholderId(R.drawable.i_nopic).setErrorId(R.drawable.i_nopic).build().into(mImg);

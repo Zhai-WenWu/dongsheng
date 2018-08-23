@@ -125,7 +125,7 @@ public class HomeViewControler implements ISetAdController {
                     int[] poss = new int[manager.getSpanCount()];
                     manager.findLastVisibleItemPositions(poss);
                     if (Tools.findMin(poss) == 0) {
-                        manager.invalidateSpanAssignments();
+                        recyclerView.invalidate();
                     }
                 } else if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
                     if (mBuoy != null && mBuoy.isMove())
