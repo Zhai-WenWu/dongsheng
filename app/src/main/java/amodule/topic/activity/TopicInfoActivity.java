@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import acore.logic.AppCommon;
+import acore.logic.LoginManager;
 import acore.logic.load.LoadManager;
 import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.StringManager;
@@ -37,6 +38,7 @@ import amodule.topic.model.LabelModel;
 import amodule.topic.model.TopicItemModel;
 import amodule.topic.model.VideoModel;
 import amodule.topic.view.TopicHeaderView;
+import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
@@ -199,6 +201,10 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                     mTopicHeaderView.showTopicAttention(TextUtils.equals(mAuthorMap.get("isFollow"), "2"), new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            if (!LoginManager.isLogin()) {
+                                TopicInfoActivity.this.startActivity(new Intent(TopicInfoActivity.this, LoginByAccout.class));
+                                return;
+                            }
                             AppCommon.onAttentionClick(mAuthorMap.get("code"), "follow", new Runnable() {
                                 @Override
                                 public void run() {
