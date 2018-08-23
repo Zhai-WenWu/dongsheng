@@ -276,6 +276,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
                                     ArrayList<Map<String, String>> listData = StringManager.getListMapByJson(data.get(WidgetDataHelper.KEY_LIST));
                                     if (mDataControler != null) {
                                         listData = insertAd(listData, false);
+                                        mDataControler.resetLastDataSize();
                                         mDataControler.getData().addAll(listData);
                                         notifyDataChanged();
                                     }
@@ -453,9 +454,9 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
     }
 
     private void notifyDataChanged() {
-        if (mHomeAdapter != null
-                && mViewContrloer.getRvListView() != null
-                && !mViewContrloer.getRvListView().isComputingLayout())
-            mHomeAdapter.notifyItemRangeChanged(0,mDataControler.getDataSize());
+        if (mHomeAdapter != null && mViewContrloer.getRvListView() != null && !mViewContrloer.getRvListView().isComputingLayout()) {
+            int positionStart = mDataControler.getLastDataSize();
+            mHomeAdapter.notifyItemRangeChanged(positionStart, mDataControler.getDataSize() - positionStart);
+        }
     }
 }

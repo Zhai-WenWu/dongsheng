@@ -88,7 +88,7 @@ public class HomeGridADItem extends HomeItem {
                         }
                     }
                 });
-                LoadImage.with(getContext()).load(imgUrl).setSaveType(FileManager.save_cache).setPlaceholderId(R.drawable.i_nopic).setErrorId(R.drawable.i_nopic).build().transform(new BlurBitmapTransformation(getContext(), 6, 6, 6)).into(mImgBlur);
+                LoadImage.with(getContext()).load(imgUrl).setSaveType(FileManager.save_cache).setPlaceholderId(R.drawable.i_nopic).setErrorId(R.drawable.i_nopic).build().transform(new BlurBitmapTransformation(getContext(), 16, 16, 2)).into(mImgBlur);
             }
         }
         LoadImage.with(getContext()).load(dataMap.get("iconUrl")).setSaveType(FileManager.save_cache).setPlaceholderId(R.drawable.i_nopic).setErrorId(R.drawable.i_nopic).build().into(mAdHeaderImg);

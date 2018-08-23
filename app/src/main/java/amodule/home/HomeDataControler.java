@@ -59,6 +59,8 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
 
     private int mRandom;
 
+    private int mLastDataSize;
+
     public HomeDataControler(MainHomePage activity) {
         this.mActivity = activity;
         mHomeModuleBean = new HomeModuleControler().getHomeModuleByType(activity, null);
@@ -123,6 +125,7 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
                     @Override
                     public void loaded(int flag, String url, Object object) {
                         int loadCount = 0;
+                        resetLastDataSize();
                         if (flag >= ReqInternet.REQ_OK_STRING) {
                             Map<String, String> dataMap = StringManager.getFirstMap(object);
                             //当前url
@@ -311,6 +314,14 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
 
     public void setRandom(int random) {
         mRandom = random;
+    }
+
+    public int getLastDataSize() {
+        return mLastDataSize;
+    }
+
+    public void resetLastDataSize() {
+        mLastDataSize = mData.size();
     }
 
     /*--------------------------------------------- Interface ---------------------------------------------*/
