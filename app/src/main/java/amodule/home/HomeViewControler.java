@@ -121,6 +121,12 @@ public class HomeViewControler implements ISetAdController {
                     if (mBuoy != null && !mBuoy.isMove()) {
                         mBuoy.executeOpenAnim();
                     }
+                    StaggeredGridLayoutManager manager = (StaggeredGridLayoutManager) recyclerView.getLayoutManager();
+                    int[] poss = new int[manager.getSpanCount()];
+                    manager.findLastVisibleItemPositions(poss);
+                    if (Tools.findMin(poss) == 0) {
+                        manager.invalidateSpanAssignments();
+                    }
                 } else if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
                     if (mBuoy != null && mBuoy.isMove())
                         mBuoy.executeCloseAnim();

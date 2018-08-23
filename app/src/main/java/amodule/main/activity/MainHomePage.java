@@ -75,8 +75,6 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
 
     private ConnectionChangeReceiver mReceiver;
 
-    private boolean mResumeFromPause = false;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -364,38 +362,12 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
             GlobalVariableConfig.clearGoodModules();
         }
         mViewContrloer.setMessage(MessageTipController.newInstance().getMessageNum());
-        if (mResumeFromPause) {
-            mResumeFromPause = false;
-            if (mDataControler != null) {
-                ArrayList<Map<String, String>> listData = mDataControler.getData();
-                if (listData != null) {
-                    Iterator<Map<String, String>> iterator = listData.iterator();
-                    while (iterator.hasNext()) {
-                        Map<String, String> data = iterator.next();
-                        if (data != null) {
-                            GlobalFavoriteModule favoriteModule = GlobalVariableConfig.containsFavoriteModule(data.get("code"), FavoriteTypeEnum.getTypeEnumByStr(data.get("type")));
-                            if (favoriteModule != null && (favoriteModule.isFav() != "2".equals(data.get("isFavorites")))) {
-                                data.put("isFavorites", favoriteModule.isFav() ? "2" : "1");
-                                try {
-                                    int favorites = Integer.parseInt(data.get("favorites"));
-                                    data.put("favorites", String.valueOf(favoriteModule.isFav() ? (favorites + 1) : (favorites - 1)));
-                                } catch (Exception e) {
 
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            GlobalVariableConfig.clearFavoriteModules();
-        }
-        mHomeAdapter.notifyDataSetChanged();//刷新数据
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        mResumeFromPause = true;
         setRecommedStatistic();
         if(mViewContrloer != null){
             mViewContrloer.setStatisticShowNum();

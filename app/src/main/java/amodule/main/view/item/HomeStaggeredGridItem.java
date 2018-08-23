@@ -88,6 +88,9 @@ public class HomeStaggeredGridItem extends HomeItem {
                 mDataMap.put("parseResourceData_gif", resourceData.get("gif"));
                 mDataMap.put("parseResourceData_img", resourceData.get("img"));
             }
+        } else {
+            imgWidth = Integer.parseInt(mDataMap.get("parseResourceData_width"));
+            imgHeight = Integer.parseInt(mDataMap.get("parseResourceData_height"));
         }
 
         int realImgHeight = fixedWidth * imgHeight / (imgWidth < 1 ? 1 : imgWidth);
