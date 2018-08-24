@@ -400,8 +400,6 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         mData = module;
         if (mData == null)
             return;
-        mThumbImg.setImageBitmap(null);
-        mThumbImg.setImageDrawable(null);
         this.position = position;
         mUserName.setText(mData.getCustomerModel().getNickName());
         mIsSelf = TextUtils.equals(LoginManager.userInfo.get("code"), mData.getCustomerModel().getUserCode());
@@ -431,6 +429,8 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         lp.width = screenW;
         lp.height = heightImg;
         mThumbImg.setLayoutParams(lp);
+        loadUserHeader(mData.getCustomerModel().getHeaderImg());
+        LoadImage.with(getContext()).load(mData.getVideoModel().getVideoImg()).setPlaceholderId(R.color.transparent).setSaveType(FileManager.save_cache).build().into(mThumbImg);
         changeThumbImageState(true);
         mVideoUrl = mData.getVideoModel().getVideoUrlMap().get("defaultUrl");
         mCommentImg.setImageResource(R.drawable.short_video_detail_comment);
@@ -467,17 +467,6 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         mTopicClickUrl = mData.getTopicModel().getGotoUrl();
         String topicTitle = mData.getTopicModel().getTitle();
         if (!TextUtils.isEmpty(topicTitle)) {
-            GradientDrawable drawable = new GradientDrawable();
-            String bgColor = mData.getTopicModel().getBgColor();
-            if (TextUtils.isEmpty(bgColor))
-                bgColor = "#66000000";
-            drawable.setColor(Color.parseColor(bgColor));
-            drawable.setCornerRadius(2f);
-            mLayoutTopic.setBackground(drawable);
-            String textColor = mData.getTopicModel().getColor();
-            if (TextUtils.isEmpty(textColor))
-                textColor = "#ffffff";
-            mTopicText.setTextColor(Color.parseColor(textColor));
             mTopicText.setText(topicTitle);
             mLayoutTopic.setVisibility(View.VISIBLE);
         } else {
@@ -486,24 +475,11 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         mAddressClickUrl = mData.getAddressModel().getGotoUrl();
         String address = mData.getAddressModel().getAddress();
         if(!TextUtils.isEmpty(address)){
-            GradientDrawable drawable = new GradientDrawable();
-            String bgColor = mData.getAddressModel().getBgColor();
-            if (TextUtils.isEmpty(bgColor))
-                bgColor = "#66000000";
-            drawable.setColor(Color.parseColor(bgColor));
-            drawable.setCornerRadius(2f);
-            mLayoutAddress.setBackground(drawable);
-            String textColor = mData.getAddressModel().getColor();
-            if (TextUtils.isEmpty(textColor))
-                textColor = "#ffffff";
-            mTopicText.setTextColor(Color.parseColor(textColor));
             mAddressText.setText(address);
             mLayoutAddress.setVisibility(View.VISIBLE);
         }else{
             mLayoutAddress.setVisibility(View.GONE);
         }
-        loadUserHeader(mData.getCustomerModel().getHeaderImg());
-        LoadImage.with(getContext()).load(mData.getVideoModel().getVideoImg()).setSaveType(FileManager.save_cache).build().into(mThumbImg);
         mPlayerView.setUp(mVideoUrl, false, "");
     }
 
