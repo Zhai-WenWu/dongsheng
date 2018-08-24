@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -109,6 +110,9 @@ public class FriendHome extends BaseActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         //sufureView页面闪烁
         getWindow().setFormat(PixelFormat.TRANSLUCENT);
+
+        Log.e("TAG", "onCreate: ----------------------");
+
         initData();
         initView();
         addListener();
@@ -139,7 +143,7 @@ public class FriendHome extends BaseActivity {
         setContentView(control.setCommonBottonView(className, this, R.layout.a_my_friend_home));
         XHClick.track(this, "浏览个人主页");
         mCommonBottomView = control.mCommonBottomView;
-        level = 4;
+        level = 2;
         setCommonStyle();
         handlerType();
     }
@@ -583,6 +587,11 @@ public class FriendHome extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+
+        Log.e("TAG", "onResume: ----------------------");
+
+
         mIsResumming = true;
         if (mIsFromPause) {
             mIsFromPause = false;
@@ -608,6 +617,10 @@ public class FriendHome extends BaseActivity {
     @Override
     protected void onPause() {
         super.onPause();
+
+        Log.e("TAG", "onPause: ----------------------");
+
+
         mIsResumming = false;
         mIsFromPause = true;
         //view失焦点
@@ -709,6 +722,11 @@ public class FriendHome extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
+
+        Log.e("TAG", "onDestroy: ----------------------");
+
+
         if (receiver != null) {
             unregisterReceiver(receiver);
         }

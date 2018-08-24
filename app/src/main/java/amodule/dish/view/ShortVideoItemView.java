@@ -299,7 +299,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
             @Override
             public void onProgressChanged(int progress, int secProgress, int currentTime, int totalTime) {
 
-                Log.e("TAG_Player", "onProgressChanged: progress = " + progress + "  currentTime = " + currentTime);
+//                Log.e("TAG_Player", "onProgressChanged: progress = " + progress + "  currentTime = " + currentTime);
 
                 if (progress == 0 && currentTime == 0) {
                     if (mNeedChangePauseToStartEnable) {
