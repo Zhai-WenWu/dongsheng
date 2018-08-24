@@ -76,7 +76,7 @@ public class HomeStaggeredGridItem extends HomeItem {
         String parseResourceDataWidth = mDataMap.get("parseResourceData_width");
         if (TextUtils.isEmpty(parseResourceDataWidth)) {
             Map<String, String> resourceData = StringManager.getFirstMap(mDataMap.get("resourceData"));
-            if (resourceData != null && !resourceData.isEmpty()) {
+            if (!resourceData.isEmpty()) {
                 String widthStr = resourceData.get("width");
                 imgWidth = Integer.parseInt(widthStr);
                 String heightStr = resourceData.get("height");
