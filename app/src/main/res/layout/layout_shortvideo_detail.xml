@@ -88,6 +88,18 @@
 
     </RelativeLayout>
 
+    <ImageView
+        android:id="@+id/start_btn"
+        android:layout_width="@dimen/dp_66"
+        android:layout_height="@dimen/dp_66"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@drawable/video_play_normal"
+        android:layout_gravity="center_vertical"
+        android:visibility="gone"/>
+
     <android.support.constraint.ConstraintLayout
         android:id="@+id/layout_title"
         android:layout_width="match_parent"
@@ -553,18 +565,6 @@
 
 
     </android.support.constraint.ConstraintLayout>
-
-    <ImageView
-        android:id="@+id/start_btn"
-        android:layout_width="@dimen/dp_66"
-        android:layout_height="@dimen/dp_66"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:background="@drawable/video_play_normal"
-        android:layout_gravity="center_vertical"
-        android:visibility="gone"/>
 
 
     <ImageView
