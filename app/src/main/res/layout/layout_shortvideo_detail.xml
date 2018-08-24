@@ -91,7 +91,8 @@
     <android.support.constraint.ConstraintLayout
         android:id="@+id/layout_title"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/topbar_height"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/dp_16"
         android:clickable="true">
 
         <ImageView

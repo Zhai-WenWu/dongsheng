@@ -263,7 +263,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
             public void onClickResumeFullscreen(String url, Object... objects) {}
             @Override
             public void onClickSeekbar(String url, Object... objects) {
-                XHClick.mapStat(getContext(), ShortVideoDetailActivity.STATISTIC_ID, "视频", "进度条");
+
             }
             @Override
             public void onClickSeekbarFullscreen(String url, Object... objects) {}
@@ -534,28 +534,28 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
             case R.id.layout_address:
                 if (!TextUtils.isEmpty(mAddressClickUrl)) {
                     AppCommon.openUrl(mAddressClickUrl, true);
+                    XHClick.mapStat(getContext(), ShortVideoDetailActivity.STA_ID, "位置点击量", "");
                 }
                 break;
             case R.id.layout_topic:
                 if (!TextUtils.isEmpty(mTopicClickUrl)) {
                     AppCommon.openUrl(mTopicClickUrl, true);
+                    XHClick.mapStat(getContext(), ShortVideoDetailActivity.STA_ID, "话题点击量", "");
                 }
                 break;
             case R.id.image_back:
                 closeActivity();
-                XHClick.mapStat(getContext(), ShortVideoDetailActivity.STATISTIC_ID, "顶部栏", "返回");
+                XHClick.mapStat(getContext(), ShortVideoDetailActivity.STA_ID, "返回", "");
                 break;
             case R.id.image_user_header:
             case R.id.text_user_name:
                 gotoUser();
-                XHClick.mapStat(getContext(), ShortVideoDetailActivity.STATISTIC_ID, "顶部栏", "头像和昵称");
                 break;
             case R.id.img_attention:
                 attention();
                 break;
             case R.id.image_like:
                 doFavorite();
-                XHClick.mapStat(getContext(), ShortVideoDetailActivity.STATISTIC_ID, "顶部栏", "收藏");
                 break;
             case R.id.image_more:
                 showBottomDialog();
@@ -565,19 +565,19 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
                 break;
             case R.id.layout_bottom_share:
                 doShare();
-                XHClick.mapStat(getContext(), ShortVideoDetailActivity.STATISTIC_ID, "底部栏", "分享按钮");
+                XHClick.mapStat(getContext(), ShortVideoDetailActivity.STA_ID, "分享", "");
                 break;
             case R.id.layout_bottom_good:
                 doGood();
-                XHClick.mapStat(getContext(), ShortVideoDetailActivity.STATISTIC_ID, "底部栏", "点赞按钮");
+                XHClick.mapStat(getContext(), ShortVideoDetailActivity.STA_ID, "点赞", "");
                 break;
             case R.id.layout_bottom_comment:
                 showComments();
-                XHClick.mapStat(getContext(), ShortVideoDetailActivity.STATISTIC_ID, "底部栏", "评论按钮");
+                XHClick.mapStat(getContext(), ShortVideoDetailActivity.STA_ID, "评论", "评论按钮点击量");
                 break;
             case R.id.layout_bottom_info:
                 showCommentEdit();
-                XHClick.mapStat(getContext(), ShortVideoDetailActivity.STATISTIC_ID, "底部栏", "评论输入框");
+                XHClick.mapStat(getContext(), ShortVideoDetailActivity.STA_ID, "评论", "说点什么点击量");
                 break;
         }
     }
@@ -721,7 +721,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
 
     private void doShare() {
         Intent intent = new Intent(context, ShareActivityDialog.class);
-        intent.putExtra("tongjiId", ShortVideoDetailActivity.STATISTIC_ID);
+        intent.putExtra("tongjiId", ShortVideoDetailActivity.STA_ID);
         intent.putExtra("shareTwoContent", "分享框");
         intent.putExtra("isHasReport", !mIsSelf);
         intent.putExtra("nickName", mData.getCustomerModel().getNickName());
@@ -776,7 +776,6 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
             public void onClick(View v) {
                 dialog.dismiss();
                 openDeleteDialog();
-                XHClick.mapStat(getContext(), ShortVideoDetailActivity.STATISTIC_ID, "更多（自己发布的视频）", "删除");
             }
         });
         dialog.show();

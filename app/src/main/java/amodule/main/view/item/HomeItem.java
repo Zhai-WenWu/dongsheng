@@ -511,6 +511,8 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
                 if (!TextUtils.isEmpty(eventId) && !TextUtils.isEmpty(twoLevel))
                     XHClick.mapStat(getContext(), eventId, twoLevel, "点击" + (mPosition + 1) + "位置");
             }
+
+            XHClick.mapStat(getContext(), "a_index640", "热门推荐瀑布流点击量", "");
         }
     }
 
