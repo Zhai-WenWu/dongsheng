@@ -55,10 +55,6 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
     //广告控制器
     private AdControlHomeDish mAdControl;
 
-    private long lastSelfAdTime;
-
-    private int mRandom;
-
     public HomeDataControler(MainHomePage activity) {
         this.mActivity = activity;
         mHomeModuleBean = new HomeModuleControler().getHomeModuleByType(activity, null);
@@ -72,7 +68,6 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
         if(mActivity == null){
             return;
         }
-        lastSelfAdTime = System.currentTimeMillis();
         ActivityMethodManager activityMethodManager = mActivity.getActMagager();
         if(activityMethodManager != null){
             activityMethodManager.registerADController(this);
@@ -100,7 +95,6 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
     public void loadServiceHomeData(@Nullable InternetCallback callback) {
         String url = StringManager.API_HOMEPAGE_6_0;
         LinkedHashMap<String, String> params = new LinkedHashMap<>();
-        params.put("randNum", String.valueOf(mRandom));
         ReqEncyptInternet.in().doEncypt(url, params, callback);
     }
 
@@ -109,11 +103,14 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
         ReqEncyptInternet.in().doEncyptAEC(url, "", callback);
     }
 
+    public void setNextUrl(String nextUrl) {
+        this.nextUrl = nextUrl;
+    }
+
     //获取服务端Feed流数据
     public void loadServiceFeedData(boolean firstLoad, @NonNull OnLoadDataCallback callback) {
         StringBuilder params = new StringBuilder();
-        String type = mHomeModuleBean.getType();
-        params.append(firstLoad ? "type=" + type : nextUrl).append(firstLoad ? "&page=1" : "").append(firstLoad ? "&randNum=" + mRandom : "");
+        params.append(nextUrl);
         Log.i("tzy", "firstLoad::" + firstLoad + "::data:" + params.toString());
         //准备请求
         if (callback != null)
@@ -307,10 +304,6 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
         if (mViewAdControl != null) {
             mViewAdControl.autoRefreshSelfAD();
         }
-    }
-
-    public void setRandom(int random) {
-        mRandom = random;
     }
 
     /*--------------------------------------------- Interface ---------------------------------------------*/

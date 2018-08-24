@@ -210,7 +210,6 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
     @Override
     protected void onStart() {
         super.onStart();
-        generateRandom();
         loadRemoteData();
     }
 
@@ -277,6 +276,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
                                     if (mDataControler != null) {
                                         listData = insertAd(listData, false);
                                         mDataControler.getData().addAll(listData);
+                                        mDataControler.setNextUrl(data.get("nexturl"));
                                         notifyDataChanged();
                                     }
                                 }
@@ -414,18 +414,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
         if(mViewContrloer != null){
             mViewContrloer.returnListTop();
         }
-        generateRandom();
         loadRemoteData();
-    }
-
-    private int generateRandom() {
-        int ret = 0;
-        Random random = new Random();
-        ret = random.nextInt(100);
-        if (mDataControler != null) {
-            mDataControler.setRandom(ret);
-        }
-        return ret;
     }
 
     private void onResumeFake() {
