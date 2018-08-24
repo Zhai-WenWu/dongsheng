@@ -328,7 +328,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
                     changeThumbImageState(false);
                 }
                 double playableTime = Double.parseDouble(mData.getVideoModel().getPlayableTime());
-                if (currentTime * 1.0 / totalTime >= playableTime) {
+                if ((totalTime == 0 ? 0 : currentTime * 1.0 / totalTime) >= playableTime) {
                     if (!mStaticEnable) {
                         mStaticEnable = true;
                         startStatistics(StringManager.API_SHORT_VIDEO_VIEW_VALIDATE);
@@ -336,7 +336,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
                 } else {
                     mStaticEnable = false;
                 }
-                if (currentTime < 2) {
+                if (progress < 2) {
                     if (!mStaticEnable2) {
                         mStaticEnable2 = true;
                         startStatistics(StringManager.API_SHORT_VIDEO_ACCESS);

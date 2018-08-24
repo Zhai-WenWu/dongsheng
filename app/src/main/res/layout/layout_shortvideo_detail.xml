@@ -92,7 +92,7 @@
         android:id="@+id/layout_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/dp_16"
+        android:paddingTop="@dimen/dp_19"
         android:clickable="true">
 
         <ImageView
@@ -519,7 +519,7 @@
         android:layout_marginRight="@dimen/dp_20"
         android:paddingTop="@dimen/dp_9"
         android:paddingBottom="@dimen/dp_9"
-        android:background="@drawable/bg_round_aaaaaa6"
+        android:background="@drawable/bg_round6_4c000000"
         android:clickable="true">
         
         <ImageView

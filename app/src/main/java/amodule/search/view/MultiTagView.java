@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.xiangha.R;
 
@@ -102,7 +103,7 @@ public class MultiTagView extends LinearLayout {
 
 
     private void addTag(final Tag tag, final int tagTndex) {
-        final Button button = new Button(mContext);
+        final TextView button = new TextView(mContext);
         button.setText(tag.content);
         button.setTextColor(getResources().getColor(android.R.color.black));
         button.setTextSize(14);
