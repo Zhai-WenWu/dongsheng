@@ -69,6 +69,17 @@ public class RvVericalVideoItemAdapter extends BaseAdapter<ShortVideoDetailModul
         mOnDeleteCallback = onDeleteCallback;
     }
 
+    @Override
+    public void onViewAttachedToWindow(ItemViewHolder<ShortVideoDetailModule> holder) {
+        super.onViewAttachedToWindow(holder);
+    }
+
+    @Override
+    public void onViewDetachedFromWindow(ItemViewHolder<ShortVideoDetailModule> holder) {
+        super.onViewDetachedFromWindow(holder);
+        holder.stopVideo();
+    }
+
     public class ItemViewHolder<T extends ShortVideoDetailModule> extends RvBaseViewHolder<T>{
         private ShortVideoItemView shortVideoItemView;
         public ShortVideoDetailModule data;

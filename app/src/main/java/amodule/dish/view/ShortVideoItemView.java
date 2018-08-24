@@ -17,6 +17,7 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -129,6 +130,8 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
     private AtomicBoolean mAttentionLoading;
     private AtomicBoolean mFavLoading;
     private AtomicBoolean mDelLoading;
+    private boolean mNeedChangePauseToStartEnable;
+    private boolean mPauseToStartEnable;
     private boolean mRepeatEnable;
     private boolean mStaticEnable;
     private boolean mStaticEnable2;
@@ -236,11 +239,9 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
                         pauseVideo();
                         break;
                     case INNER_PLAY_STATE_STOP:
-                        changeThumbImageState(true);
                         releaseVideo();
                         break;
                     default:
-                        changeThumbImageState(false);
                         break;
                 }
             }
@@ -297,6 +298,35 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         mPlayerView.setOnProgressChangedCallback(new GSYVideoPlayer.OnProgressChangedCallback() {
             @Override
             public void onProgressChanged(int progress, int secProgress, int currentTime, int totalTime) {
+
+                Log.e("TAG_Player", "onProgressChanged: progress = " + progress + "  currentTime = " + currentTime);
+
+                if (progress == 0 && currentTime == 0) {
+                    if (mNeedChangePauseToStartEnable) {
+                        mNeedChangePauseToStartEnable = false;
+                        mPauseToStartEnable = true;
+                    }
+                    return;
+                } else {
+                    mNeedChangePauseToStartEnable = false;
+                    mPauseToStartEnable = false;
+                }
+                if (mPlayerView.playBtnVisible()) {
+                    mPlayerView.changePlayBtnState(false);
+                }
+
+                switch (mInnerPlayState) {
+                    case INNER_PLAY_STATE_STOP:
+                        releaseVideo();
+                        break;
+                    case INNER_PLAY_STATE_PAUSE:
+                        pauseVideo();
+                        break;
+                }
+
+                if (thumbImageStateVisible() && currentTime >= 1) {
+                    changeThumbImageState(false);
+                }
                 double playableTime = Double.parseDouble(mData.getVideoModel().getPlayableTime());
                 if (currentTime * 1.0 / totalTime >= playableTime) {
                     if (!mStaticEnable) {
@@ -314,7 +344,6 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
                 } else {
                     mStaticEnable2 = false;
                 }
-                mPlayerView.changePlayBtnState(false);
             }
         });
 
@@ -324,24 +353,23 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
      * 开始播放入口
      */
     public void prepareAsync() {
-        if (mInnerPlayState == INNER_PLAY_STATE_START)
-            return;
         mInnerPlayState = INNER_PLAY_STATE_START;
+        mNeedChangePauseToStartEnable = true;
         mPlayerView.startPlayLogic();
     }
     public void resumeVideo(){
-        if (mInnerPlayState == INNER_PLAY_STATE_PLAYING)
+        if (mPauseToStartEnable) {
+            prepareAsync();
             return;
+        }
         mInnerPlayState = INNER_PLAY_STATE_PLAYING;
-        mPlayerView.changePlayBtnState(false);
         mPlayerView.onVideoResume();
+        mPlayerView.changePlayBtnState(false);
     }
     /**
      * 暂停
      */
     public void pauseVideo(){
-        if (mInnerPlayState == INNER_PLAY_STATE_PAUSE)
-            return;
         mInnerPlayState = INNER_PLAY_STATE_PAUSE;
         mPlayerView.onVideoPause();
         mPlayerView.changePlayBtnState(true);
@@ -351,10 +379,10 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
      * 重置数据
      */
     public void releaseVideo(){
-        if (mInnerPlayState == INNER_PLAY_STATE_STOP)
-            return;
         mInnerPlayState = INNER_PLAY_STATE_STOP;
         mPlayerView.release();
+        mPlayerView.changePlayBtnState(false);
+        changeThumbImageState(true);
     }
 
     public int getPlayState() {
@@ -373,6 +401,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         if (mData == null)
             return;
         mThumbImg.setImageBitmap(null);
+        mThumbImg.setImageDrawable(null);
         this.position = position;
         mUserName.setText(mData.getCustomerModel().getNickName());
         mIsSelf = TextUtils.equals(LoginManager.userInfo.get("code"), mData.getCustomerModel().getUserCode());
@@ -737,7 +766,6 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         switch (mPlayerView.getCurrentState()) {
             case GSYVideoPlayer.CURRENT_STATE_PLAYING:
                 pauseVideo();
-                mPlayerView.changePlayBtnState(true);
                 break;
             case GSYVideoPlayer.CURRENT_STATE_ERROR:
                 Toast.makeText(getContext(), "视频播放错误", Toast.LENGTH_SHORT).show();
@@ -746,7 +774,6 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
                 prepareAsync();
                 break;
             case GSYVideoPlayer.CURRENT_STATE_PAUSE:
-                mPlayerView.changePlayBtnState(false);
                 resumeVideo();
                 break;
             case GSYVideoPlayer.CURRENT_STATE_PLAYING_BUFFERING_START:
@@ -760,6 +787,10 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
 
     private void changeThumbImageState(boolean visible) {
         mThumbContainer.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    private boolean thumbImageStateVisible() {
+        return mThumbContainer.getVisibility() == View.VISIBLE;
     }
 
     private void showBottomDialog() {

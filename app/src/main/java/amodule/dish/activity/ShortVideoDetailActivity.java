@@ -171,30 +171,7 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
                     if (currentHolder == adapterLastHolder || adapterLastHolder == null || currentHolder == null)
                         return;
                     rvVericalVideoItemAdapter.setCurrentViewHolder(currentHolder);
-                    int lastState = adapterLastHolder.getPlayState();
-                    switch (lastState) {
-                        case GSYVideoPlayer.CURRENT_STATE_PLAYING:
-                            adapterLastHolder.pauseVideo();
-                            break;
-                        case GSYVideoPlayer.CURRENT_STATE_PLAYING_BUFFERING_START:
-                        case GSYVideoPlayer.CURRENT_STATE_PREPAREING:
-                        case GSYVideoPlayer.CURRENT_STATE_AUTO_COMPLETE:
-                        case GSYVideoPlayer.CURRENT_STATE_ERROR:
-                            adapterLastHolder.stopVideo();
-                            break;
-                        default:
-                            adapterLastHolder.stopVideo();
-                            break;
-                    }
-                    int currState = currentHolder.getPlayState();
-                    switch (currState) {
-                        case GSYVideoPlayer.CURRENT_STATE_PAUSE:
-                            currentHolder.resumeVideo();
-                            break;
-                        default:
-                            currentHolder.startVideo();
-                            break;
-                    }
+                    currentHolder.startVideo();
                     int orientationScroll = 0;
                     if(currentHolder.getAdapterPosition() > adapterLastHolder.getAdapterPosition()){
                         orientationScroll = DOWN_SCROLL;
@@ -262,7 +239,7 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
         mPagerSnapHelper.attachToRecyclerView(recyclerView);
         mGuidanceLayout = findViewById(R.id.guidance_layout);
         rvVericalVideoItemAdapter= new RvVericalVideoItemAdapter(this,mDatas);
-        recyclerView.setItemViewCacheSize(3);
+        recyclerView.setItemViewCacheSize(4);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(rvVericalVideoItemAdapter);
         mDataController = new DataController();
