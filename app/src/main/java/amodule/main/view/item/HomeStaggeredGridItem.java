@@ -33,7 +33,6 @@ import aplug.basic.LoadImage;
 public class HomeStaggeredGridItem extends HomeItem {
 
 //    private ConstraintLayout mRootLayout;
-    private Guideline mGuideline;
     private ConstraintLayout mContentLayout;
     private ImageView mImg;
     private TextView mTitle,num_tv;
@@ -62,7 +61,6 @@ public class HomeStaggeredGridItem extends HomeItem {
         auther_userImg = findViewById(R.id.user_header_img);
         img_fav = findViewById(R.id.img_fav);
         num_tv= findViewById(R.id.num_tv);
-        mGuideline= findViewById(R.id.guideline);
 
         mImgMinHeight = (Tools.getPhoneWidth() - getResources().getDimensionPixelSize(R.dimen.dp_51)) / 2 * 4 / 5;
         mImgMaxHeight = getResources().getDimensionPixelSize(R.dimen.dp_260);
