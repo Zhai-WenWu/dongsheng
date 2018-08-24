@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -30,6 +29,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import acore.broadcast.ConnectionChangeReceiver;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
+import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.FileManager;
 import acore.tools.IObserver;
 import acore.tools.ObserverManager;
@@ -56,9 +56,8 @@ import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 
-public class ShortVideoDetailActivity extends AppCompatActivity implements IObserver {
+public class ShortVideoDetailActivity extends BaseAppCompatActivity implements IObserver {
 
-//    public static final String STATISTIC_ID = "a_NewShortVideoDetail";
     public static final String STA_ID = "a_video_details";
 
     private final int UP_SCROLL = 1;
@@ -93,11 +92,13 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         getWindow().setFormat(PixelFormat.TRANSPARENT);
         setContentView(R.layout.layout_shortvideo_detail_activity);
+        level = 2;
         if ("null".equals(ToolsDevice.getNetWorkSimpleType(XHApplication.in()))) {
             Tools.showToast(this,"网络异常，请检查网络");
             finish();
             return;
         }
+
         init();
         addListener();
         Bundle bundle = getIntent().getExtras();

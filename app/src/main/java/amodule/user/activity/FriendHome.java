@@ -143,7 +143,7 @@ public class FriendHome extends BaseActivity {
         setContentView(control.setCommonBottonView(className, this, R.layout.a_my_friend_home));
         XHClick.track(this, "浏览个人主页");
         mCommonBottomView = control.mCommonBottomView;
-        level = 2;
+        level = 4;
         setCommonStyle();
         handlerType();
     }
