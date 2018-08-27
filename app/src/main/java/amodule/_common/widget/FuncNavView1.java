@@ -96,7 +96,7 @@ public class FuncNavView1 extends HomeFuncNavView1 implements IBindMap,IStatictu
         mapArrayList.clear();
         for(int index = 0 ; index < data.size() ; index ++){
             mapArrayList.add(data.get(index));
-            Log.i("xianghaTag","数据为：：：：——————"+data.get(index));
+//            Log.i("xianghaTag","数据为：：：：——————"+data.get(index));
         }
         setItemWaith();
         adapterFuncNav1.notifyDataSetChanged();

@@ -125,6 +125,7 @@ public abstract class AdOptionParent implements ActivityMethodManager.IAutoRefre
                                     newMap.put("indexOnData", adMap.get("index")); //数据角标位
                                     newMap.put("index", String.valueOf(i + 1)); //在数据源中的位置
                                     newMap.put("adstyle", "ad");
+                                    newMap.put("style", "ad");
                                     newMap.put("isShow", "1");
                                     newMap.put("controlTag", controlTag); //给当前广告Control添加标记
                                     newMap.put("controlState", controlState); //给当前广告Control,down 下加载,up 上刷新
@@ -132,17 +133,17 @@ public abstract class AdOptionParent implements ActivityMethodManager.IAutoRefre
                                     adArray.add(newMap);
                                     Log("adArray.add  ad——ids:" + AD_IDS[i]);
                                 } else {
-                                    Log("---------------广告位没有数据----------");
+                                    Log("--------------1-广告位没有数据----------");
                                     newMap = new HashMap<>();
                                     adArray.add(newMap);
                                 }
                             } else {
-                                Log("---------------广告位没有数据----------");
+                                Log("--------------2-广告位没有数据----------");
                                 Map<String, String> newMap = new HashMap<>();
                                 adArray.add(newMap);
                             }
                         } else {
-                            Log("---------------广告位没有数据----------");
+                            Log("--------------3-广告位没有数据----------");
                             Map<String, String> newMap = new HashMap<>();
                             adArray.add(newMap);
                         }

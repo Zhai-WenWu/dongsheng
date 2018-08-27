@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -99,21 +100,21 @@ public class KeyboardDialog extends Dialog implements View.OnClickListener {
         mSoftKeyboardStateListener = new SoftKeyboardManager.SoftKeyboardStateListener() {
             @Override
             public void onSoftKeyboardOpened(int keyboardHeightInPx, boolean rootChanged) {
-                if (rootChanged) {
-                    return;
-                }
+//                if (rootChanged) {
+//                    return;
+//                }
 //                mEditText.postDelayed(()->mRootView.scrollTo(0, mKeyboardBottom.getPaddingBottom()), 100);
             }
 
             @Override
             public void onSoftKeyboardClosed() {
-                if (KeyboardDialog.this.isShowing()) {
-                    KeyboardDialog.this.dismiss();
-                }
-                mRootView.scrollTo(0, 0);
+//                if (KeyboardDialog.this.isShowing()) {
+//                    KeyboardDialog.this.dismiss();
+//                }
+//                mRootView.scrollTo(0, 0);
             }
         };
-        mSoftKeyboardManager.addSoftKeyboardStateListener(mSoftKeyboardStateListener);
+//        mSoftKeyboardManager.addSoftKeyboardStateListener(mSoftKeyboardStateListener);
     }
 
 
@@ -155,6 +156,7 @@ public class KeyboardDialog extends Dialog implements View.OnClickListener {
         mEditText.setHint(!TextUtils.isEmpty(mHintStr) ? mHintStr : "");
         mEditText.setText(!TextUtils.isEmpty(mFinalStr) ? mFinalStr : "");
         mEditText.requestFocus();
+
     }
 
     @Override
@@ -166,7 +168,7 @@ public class KeyboardDialog extends Dialog implements View.OnClickListener {
     public void dismiss() {
         super.dismiss();
         mEditText.clearFocus();
-        mSoftKeyboardManager.removeSoftKeyboardStateListener(mSoftKeyboardStateListener);
+//        mSoftKeyboardManager.removeSoftKeyboardStateListener(mSoftKeyboardStateListener);
     }
 
     public void onResume() {

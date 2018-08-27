@@ -275,7 +275,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
                                     ArrayList<Map<String, String>> listData = StringManager.getListMapByJson(data.get(WidgetDataHelper.KEY_LIST));
                                     if (mDataControler != null) {
                                         listData = insertAd(listData, false);
-                                        mDataControler.getData().addAll(listData);
+                                        mDataControler.addOuputSideData(listData);
                                         mDataControler.setNextUrl(data.get("nexturl"));
                                         notifyDataChanged();
                                     }

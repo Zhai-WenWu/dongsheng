@@ -115,7 +115,6 @@ public class HomeViewControler implements ISetAdController {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                Log.i("xianghaTag","recyclerView::::-------------------  state = " + newState);
                 if (RecyclerView.SCROLL_STATE_IDLE == newState) {
                     if (mBuoy != null && !mBuoy.isMove()) {
                         mBuoy.executeOpenAnim();

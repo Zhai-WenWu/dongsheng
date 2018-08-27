@@ -416,9 +416,8 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mThumbImg.getLayoutParams();
         DisplayMetrics dm = ToolsDevice.getWindowPx(getContext());
         int screenW = dm.widthPixels;
-        int screenH = dm.heightPixels;
-        int vW = Integer.parseInt(mData.getImageModel().getImageW());
-        int vH = Integer.parseInt(mData.getImageModel().getImageH());
+        int vW = TextUtils.isEmpty(mData.getImageModel().getImageW()) ? 0 : Integer.parseInt(mData.getImageModel().getImageW());
+        int vH = TextUtils.isEmpty(mData.getImageModel().getImageH()) ? 0 : Integer.parseInt(mData.getImageModel().getImageH());
         int heightImg = 0;
         if (vW == 0 || vH == 0) {
             screenW = LayoutParams.MATCH_PARENT;

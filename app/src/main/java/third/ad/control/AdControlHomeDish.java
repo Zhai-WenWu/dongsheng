@@ -27,7 +27,7 @@ import third.ad.tools.AdPlayIdConfig;
  * 1、以第一个广告的加载时间为标准，一个过期全部过期。
  */
 public class AdControlHomeDish extends AdControlParent implements ActivityMethodManager.IAutoRefresh{
-    public static String tag_yu="zyj";
+    public static String tag_yu="zhangyujian";
     private static volatile AdControlHomeDish mAdControlHomeDishUnload;
     public static String Control_up="up";
     public static String Control_down="down";
