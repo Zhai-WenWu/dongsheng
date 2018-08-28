@@ -251,12 +251,14 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
             public void onClickStartError(String url, Object... objects) {}
             @Override
             public void onClickStop(String url, Object... objects) {
+                mInnerPlayState = INNER_PLAY_STATE_STOP;
             }
 
             @Override
             public void onClickStopFullscreen(String url, Object... objects) {}
             @Override
             public void onClickResume(String url, Object... objects) {
+                mInnerPlayState = INNER_PLAY_STATE_PLAYING;
             }
 
             @Override
