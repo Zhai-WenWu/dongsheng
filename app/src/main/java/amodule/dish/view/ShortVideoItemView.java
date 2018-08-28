@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
@@ -17,7 +16,6 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -134,7 +132,6 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
     private boolean mPauseToStartEnable;
     private boolean mRepeatEnable;
     private boolean mStaticEnable;
-    private boolean mStaticEnable2;
     private String mVideoUrl;
     private String mTopicClickUrl;
     private String mAddressClickUrl;
@@ -338,14 +335,6 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
                 } else {
                     mStaticEnable = false;
                 }
-                if (progress < 2) {
-                    if (!mStaticEnable2) {
-                        mStaticEnable2 = true;
-                        startStatistics(StringManager.API_SHORT_VIDEO_ACCESS);
-                    }
-                } else {
-                    mStaticEnable2 = false;
-                }
             }
         });
 
@@ -358,6 +347,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         mInnerPlayState = INNER_PLAY_STATE_START;
         mNeedChangePauseToStartEnable = true;
         mPlayerView.startPlayLogic();
+        startStatistics(StringManager.API_SHORT_VIDEO_ACCESS);
     }
     public void resumeVideo(){
         if (mPauseToStartEnable) {
@@ -418,8 +408,8 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mThumbImg.getLayoutParams();
         DisplayMetrics dm = ToolsDevice.getWindowPx(getContext());
         int screenW = dm.widthPixels;
-        int vW = TextUtils.isEmpty(mData.getImageModel().getImageW()) ? 0 : Integer.parseInt(mData.getImageModel().getImageW());
-        int vH = TextUtils.isEmpty(mData.getImageModel().getImageH()) ? 0 : Integer.parseInt(mData.getImageModel().getImageH());
+        int vW = TextUtils.isEmpty(mData.getVideoModel().getVideoW()) ? 0 : Integer.parseInt(mData.getVideoModel().getVideoW());
+        int vH = TextUtils.isEmpty(mData.getVideoModel().getVideoH()) ? 0 : Integer.parseInt(mData.getVideoModel().getVideoH());
         int heightImg = 0;
         if (vW == 0 || vH == 0) {
             screenW = LayoutParams.MATCH_PARENT;
