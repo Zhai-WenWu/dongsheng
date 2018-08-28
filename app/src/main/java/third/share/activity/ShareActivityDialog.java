@@ -26,6 +26,7 @@ import java.util.Map;
 import acore.logic.AppCommon;
 import acore.logic.XHClick;
 import acore.tools.ToolsDevice;
+import amodule.article.activity.ReportActivity;
 import amodule.quan.activity.QuanReport;
 import third.share.adapter.ShareAdapter;
 import third.share.module.ShareModule;
@@ -50,7 +51,12 @@ public class ShareActivityDialog extends Activity implements View.OnClickListene
     private String mShareParams;
     private String mExtraParams;
 
+    private String mNewReportType;//1:主题，2:评论（默认），3:回复
+    private String mNewReportContent;
+    private String mNewType;//文章1；视频2；问答3；电商4
+
     private boolean mShowIntegralTip;
+    private boolean mUseNewReport;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +98,11 @@ public class ShareActivityDialog extends Activity implements View.OnClickListene
         mShowIntegralTip = getIntent().getBooleanExtra("showIntegralTip", false);
         mExtraParams = getIntent().getStringExtra("extraParams");
 
+        mUseNewReport = getIntent().getBooleanExtra("new_report", false);
+        mNewType = getIntent().getStringExtra("new_type");
+        mNewReportType = getIntent().getStringExtra("new_reportType");
+        mNewReportContent = getIntent().getStringExtra("new_reportContent");
+
         init();
     }
 
@@ -111,7 +122,16 @@ public class ShareActivityDialog extends Activity implements View.OnClickListene
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String platfrom = mSharePlatforms[position];
                 XHClick.mapStat(ShareActivityDialog.this, tongjiId, mShareTwoData, mData.get(position).getTitle());
-                if("report".equals(platfrom)){ //举报
+                if ("report_new".equals(platfrom)) {
+                    Intent intent = new Intent(ShareActivityDialog.this, ReportActivity.class);
+                    intent.putExtra("code", userCode);
+                    intent.putExtra("type", mNewType);
+                    intent.putExtra("userCode", userCode);
+                    intent.putExtra("reportName", nickName);
+                    intent.putExtra("reportContent", mNewReportContent);
+                    intent.putExtra("reportType", mNewReportType);
+                    ShareActivityDialog.this.startActivity(intent);
+                } else if("report".equals(platfrom)){ //举报
                     if(TextUtils.isEmpty(reportUrl)) {
                         Intent intent = new Intent(ShareActivityDialog.this, QuanReport.class);
                         intent.putExtra("isQuan", "0");
@@ -157,7 +177,7 @@ public class ShareActivityDialog extends Activity implements View.OnClickListene
             mSharePlatforms = new String[]{
                     ShareTools.QQ_NAME,ShareTools.QQ_ZONE,
                     ShareTools.SINA_NAME,ShareTools.SHORT_MESSAGE,
-                    ShareTools.LINK_COPY,"report"};
+                    ShareTools.LINK_COPY,mUseNewReport ? "report_new" : "report"};
         }else{
             mNames = new String[]{"微信好友","微信朋友圈","QQ好友","QQ空间","新浪微博","短信","复制链接","举报"};
             mLogos = new int[]{R.drawable.logo_weixin_new,R.drawable.logo_friends_new,
@@ -168,7 +188,7 @@ public class ShareActivityDialog extends Activity implements View.OnClickListene
                     ShareTools.WEI_XIN,ShareTools.WEI_QUAN,
                     ShareTools.QQ_NAME,ShareTools.QQ_ZONE,
                     ShareTools.SINA_NAME,ShareTools.SHORT_MESSAGE,
-                    ShareTools.LINK_COPY,"report"};
+                    ShareTools.LINK_COPY,mUseNewReport ? "report_new" : "report"};
         }
 
         int mapSize = mNames.length;

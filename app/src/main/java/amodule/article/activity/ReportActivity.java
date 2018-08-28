@@ -41,7 +41,7 @@ public class ReportActivity extends BaseActivity {
 
     private String mUserCode = "";
     private String mCode = "";
-    private String mType = "";
+    private String mType = "";//文章1；视频2；问答3；电商4
     private String mCommentId = "";
     private String mReplayId = "";
     private String mReportName = "";

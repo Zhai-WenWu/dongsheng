@@ -718,11 +718,14 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         intent.putExtra("nickName", mData.getCustomerModel().getNickName());
         intent.putExtra("code", mData.getCustomerModel().getUserCode());
         intent.putExtra("shareFrom", "菜谱详情页");
-        intent.putExtra("reportUrl", "Feedback.app?feekUrl=https://www.xiangha.com/caipu/" + mData.getCustomerModel().getUserCode() + ".html");
         intent.putExtra("imgUrl", mData.getShareModule().getImg());
         intent.putExtra("title", mData.getShareModule().getTitle());
         intent.putExtra("content", mData.getShareModule().getContent());
         intent.putExtra("extraParams", mData.getCode());
+        intent.putExtra("new_report", true);
+        intent.putExtra("new_type", "2");
+        intent.putExtra("new_reportContent", mData.getName());
+        intent.putExtra("new_reportType", "1");
         String clickUrl = mData.getShareModule().getUrl();
         intent.putExtra("clickUrl", clickUrl);
         context.startActivity(intent);
