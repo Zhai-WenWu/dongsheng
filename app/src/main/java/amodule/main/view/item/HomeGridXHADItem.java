@@ -73,77 +73,75 @@ public class HomeGridXHADItem extends HomeItem {
             String imgUrl = imgMap.get("url");
             if (!TextUtils.isEmpty(imgUrl)) {
                 int imgWidth = 0, imgHeight = 0;
-                String w_h = imgUrl.substring(imgUrl.lastIndexOf("?"));
-                if (!TextUtils.isEmpty(w_h) && w_h.contains("_")) {
-                    String[] whs = w_h.split("_");
-                    imgWidth = Integer.parseInt(whs[0]);
-                    imgHeight = Integer.parseInt(whs[1]);
-                }
-                int orientation = IMG_HORIZONTAL;
-                if (imgWidth <= imgHeight) {
-                    orientation = IMG_VERTICAL;
-                }
-                switch (orientation) {
-                    case IMG_HORIZONTAL:
-                        mImgBlur.setImageResource(R.drawable.i_nopic);
-                        ConstraintSet cs = new ConstraintSet();
-                        cs.constrainWidth(mImgBlur.getId(), ConstraintSet.MATCH_CONSTRAINT);
-                        cs.constrainHeight(mImgBlur.getId(), mImgMaxHeight);
-                        cs.constrainMinHeight(mImgBlur.getId(), mImgMinHeight);
-                        cs.applyTo(mAdContainer);
-                        mImg.setImageResource(R.drawable.i_nopic);
-                        mImg.setVisibility(View.VISIBLE);
-                        LoadImage.with(getContext()).load(imgUrl).setSaveType(FileManager.save_cache).setPlaceholderId(R.drawable.i_nopic).setErrorId(R.drawable.i_nopic).build().into(new SubAnimTarget(mImg) {
-                            @Override
-                            protected void setResource(Bitmap bitmap) {
-                                if (bitmap != null) {
-                                    int bmW = bitmap.getWidth();
-                                    int bmH = bitmap.getHeight();
-                                    int imgMaxH = mImgBlur.getHeight();
-                                    int imgMaxW = mImgBlur.getWidth();
-                                    int imgH = imgMaxW * bmH / bmW;
-                                    int dstW = imgMaxW;
-                                    int dstH = Math.min(imgMaxH, imgH);
-                                    Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, dstW, dstH, true);
-                                    ConstraintSet cs = new ConstraintSet();
-                                    cs.constrainWidth(mImg.getId(), dstW);
-                                    cs.constrainHeight(mImg.getId(), dstH);
-                                    cs.connect(mImg.getId(), ConstraintSet.TOP, mImgBlur.getId(), ConstraintSet.TOP);
-                                    cs.connect(mImg.getId(), ConstraintSet.BOTTOM, mImgBlur.getId(), ConstraintSet.BOTTOM);
-                                    cs.connect(mImg.getId(), ConstraintSet.END, mImgBlur.getId(), ConstraintSet.END);
-                                    cs.connect(mImg.getId(), ConstraintSet.START, mImgBlur.getId(), ConstraintSet.START);
-                                    cs.applyTo(mAdContainer);
-                                    mImg.setImageBitmap(scaledBitmap);
+                int index = imgUrl.lastIndexOf("?");
+                if (index != -1) {
+                    String w_h = imgUrl.substring(index + 1);
+                    if (!TextUtils.isEmpty(w_h) && w_h.contains("_")) {
+                        String[] whs = w_h.split("_");
+                        imgWidth = Integer.parseInt(whs[0]);
+                        imgHeight = Integer.parseInt(whs[1]);
+                    }
+                    int orientation = IMG_HORIZONTAL;
+                    if (imgWidth <= imgHeight) {
+                        orientation = IMG_VERTICAL;
+                    }
+                    switch (orientation) {
+                        case IMG_HORIZONTAL:
+                            mImgBlur.setImageResource(R.drawable.i_nopic);
+                            ConstraintSet cs = new ConstraintSet();
+                            cs.constrainWidth(mImgBlur.getId(), ConstraintSet.MATCH_CONSTRAINT);
+                            cs.constrainHeight(mImgBlur.getId(), mImgMaxHeight);
+                            cs.constrainMinHeight(mImgBlur.getId(), mImgMinHeight);
+                            cs.applyTo(mAdContainer);
+                            mImg.setImageResource(R.drawable.i_nopic);
+                            mImg.setVisibility(View.VISIBLE);
+                            LoadImage.with(getContext()).load(imgUrl).setSaveType(FileManager.save_cache).setPlaceholderId(R.drawable.i_nopic).setErrorId(R.drawable.i_nopic).build().into(new SubAnimTarget(mImg) {
+                                @Override
+                                protected void setResource(Bitmap bitmap) {
+                                    if (bitmap != null) {
+                                        int bmW = bitmap.getWidth();
+                                        int bmH = bitmap.getHeight();
+                                        int imgMaxH = mImgBlur.getHeight();
+                                        int imgMaxW = mImgBlur.getWidth();
+                                        int imgH = imgMaxW * bmH / bmW;
+                                        int dstW = imgMaxW;
+                                        int dstH = Math.min(imgMaxH, imgH);
+                                        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, dstW, dstH, true);
+                                        ConstraintSet cs = new ConstraintSet();
+                                        cs.constrainWidth(mImg.getId(), dstW);
+                                        cs.constrainHeight(mImg.getId(), dstH);
+                                        cs.connect(mImg.getId(), ConstraintSet.TOP, mImgBlur.getId(), ConstraintSet.TOP);
+                                        cs.connect(mImg.getId(), ConstraintSet.BOTTOM, mImgBlur.getId(), ConstraintSet.BOTTOM);
+                                        cs.connect(mImg.getId(), ConstraintSet.END, mImgBlur.getId(), ConstraintSet.END);
+                                        cs.connect(mImg.getId(), ConstraintSet.START, mImgBlur.getId(), ConstraintSet.START);
+                                        cs.applyTo(mAdContainer);
+                                        mImg.setImageBitmap(scaledBitmap);
+                                    }
                                 }
+                            });
+                            LoadImage.with(getContext()).load(imgUrl).setSaveType(FileManager.save_cache).setPlaceholderId(R.drawable.i_nopic).setErrorId(R.drawable.i_nopic).build().transform(new BlurBitmapTransformation(getContext(), 6, 6, 6)).into(mImgBlur);
+                            break;
+                        case IMG_VERTICAL:
+                            mImg.setVisibility(View.GONE);
+                            mImg.setImageResource(R.drawable.i_nopic);
+                            int realWidth = (Tools.getPhoneWidth() - getResources().getDimensionPixelSize(R.dimen.dp_51)) / 2;
+                            int realHeight = realWidth * imgHeight / imgWidth;
+                            if (realHeight < mImgMinHeight) {
+                                realHeight = mImgMinHeight;
+                            } else if (realHeight > mImgMaxHeight) {
+                                realHeight = mImgMaxHeight;
                             }
-                        });
-                        LoadImage.with(getContext()).load(imgUrl).setSaveType(FileManager.save_cache).setPlaceholderId(R.drawable.i_nopic).setErrorId(R.drawable.i_nopic).build().transform(new BlurBitmapTransformation(getContext(), 6, 6, 6)).into(mImgBlur);
-                        break;
-                    case IMG_VERTICAL:
-                        mImg.setVisibility(View.GONE);
-                        mImg.setImageResource(R.drawable.i_nopic);
-                        int realWidth = (Tools.getPhoneWidth() - getResources().getDimensionPixelSize(R.dimen.dp_51)) / 2;
-                        int realHeight = realWidth * imgHeight / imgWidth;
-                        if (realHeight < mImgMinHeight) {
-                            realHeight = mImgMinHeight;
-                        } else if (realHeight > mImgMaxHeight) {
-                            realHeight = mImgMaxHeight;
-                        }
 
-                        ConstraintSet cs2 = new ConstraintSet();
-                        cs2.constrainWidth(mImgBlur.getId(), ConstraintSet.MATCH_CONSTRAINT);
-                        cs2.constrainHeight(mImgBlur.getId(), realHeight);
-                        cs2.constrainMinHeight(mImgBlur.getId(), mImgMinHeight);
-                        cs2.applyTo(mAdContainer);
+                            ConstraintSet cs2 = new ConstraintSet();
+                            cs2.constrainWidth(mImgBlur.getId(), ConstraintSet.MATCH_CONSTRAINT);
+                            cs2.constrainHeight(mImgBlur.getId(), realHeight);
+                            cs2.constrainMinHeight(mImgBlur.getId(), mImgMinHeight);
+                            cs2.applyTo(mAdContainer);
 
-                        LoadImage.with(getContext()).load(imgUrl).setSaveType(FileManager.save_cache).setPlaceholderId(R.drawable.i_nopic).setErrorId(R.drawable.i_nopic).build().into(mImgBlur);
-                        break;
+                            LoadImage.with(getContext()).load(imgUrl).setSaveType(FileManager.save_cache).setPlaceholderId(R.drawable.i_nopic).setErrorId(R.drawable.i_nopic).build().into(mImgBlur);
+                            break;
+                    }
                 }
-
-
-
-
-
 
             }
         }

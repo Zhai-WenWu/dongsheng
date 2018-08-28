@@ -2,10 +2,8 @@ package amodule.main.view.item;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
-import android.support.constraint.Guideline;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -20,14 +18,10 @@ import com.xiangha.R;
 
 import java.util.Map;
 
-import acore.logic.FavoriteHelper;
-import acore.logic.LoginManager;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.IconTextSpan;
-import amodule._common.conf.FavoriteTypeEnum;
-import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.LoadImage;
 
 public class HomeStaggeredGridItem extends HomeItem {
@@ -85,6 +79,34 @@ public class HomeStaggeredGridItem extends HomeItem {
                 mDataMap.put("parseResourceData_height", heightStr);
                 mDataMap.put("parseResourceData_gif", resourceData.get("gif"));
                 mDataMap.put("parseResourceData_img", resourceData.get("img"));
+            } else {
+                Map<String, String> styleData = StringManager.getFirstMap(mDataMap.get("styleData"));
+                String type = styleData.get("type");
+                if (type != null) {
+                    String imgUrl = styleData.get("url");
+                    if (!TextUtils.isEmpty(imgUrl)) {
+                        int index = imgUrl.lastIndexOf("?");
+                        if (index != -1) {
+                            String w_h = imgUrl.substring(index + 1);
+                            if (!TextUtils.isEmpty(w_h) && w_h.contains("_")) {
+                                String[] whs = w_h.split("_");
+                                imgWidth = Integer.parseInt(whs[0]);
+                                imgHeight = Integer.parseInt(whs[1]);
+                                mDataMap.put("parseResourceData_width", whs[0]);
+                                mDataMap.put("parseResourceData_height", whs[1]);
+                            }
+                        }
+                    }
+                    switch (type) {
+                        case "1"://图片
+                        case "2"://视频
+                            mDataMap.put("parseResourceData_img", imgUrl);
+                            break;
+                        case "3"://GIF
+                            mDataMap.put("parseResourceData_gif", imgUrl);
+                            break;
+                    }
+                }
             }
         } else {
             imgWidth = Integer.parseInt(mDataMap.get("parseResourceData_width"));
