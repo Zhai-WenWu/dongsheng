@@ -46,6 +46,7 @@ public class ShortVideoPlayer extends StandardGSYVideoPlayer {
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.start_btn) {
+            changePlayBtnState(false);
             handleStartClick();
         } else {
             super.onClick(v);
@@ -54,5 +55,9 @@ public class ShortVideoPlayer extends StandardGSYVideoPlayer {
 
     public void changePlayBtnState(boolean show) {
         mPlayBtn.setVisibility(show ? View.VISIBLE : View.GONE);
+    }
+
+    public boolean playBtnVisible() {
+        return mPlayBtn.getVisibility() == View.VISIBLE;
     }
 }

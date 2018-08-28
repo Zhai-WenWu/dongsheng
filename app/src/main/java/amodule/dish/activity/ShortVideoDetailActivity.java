@@ -7,10 +7,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -29,6 +29,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import acore.broadcast.ConnectionChangeReceiver;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
+import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.FileManager;
 import acore.tools.IObserver;
 import acore.tools.ObserverManager;
@@ -55,9 +56,9 @@ import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 
-public class ShortVideoDetailActivity extends AppCompatActivity implements IObserver {
+public class ShortVideoDetailActivity extends BaseAppCompatActivity implements IObserver {
 
-    public static final String STATISTIC_ID = "a_NewShortVideoDetail";
+    public static final String STA_ID = "a_video_details";
 
     private final int UP_SCROLL = 1;
     private final int DOWN_SCROLL = 2;
@@ -81,17 +82,23 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
     private DialogManager mNetStateTipDialog;
     private ShortVideoDetailModule mExtraModule;
 
+    private int mMoveXRang;
+    private float mDownX = -1;
+    private boolean mCanStatic = true;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         getWindow().setFormat(PixelFormat.TRANSPARENT);
         setContentView(R.layout.layout_shortvideo_detail_activity);
+        level = 2;
         if ("null".equals(ToolsDevice.getNetWorkSimpleType(XHApplication.in()))) {
             Tools.showToast(this,"网络异常，请检查网络");
             finish();
             return;
         }
+
         init();
         addListener();
         Bundle bundle = getIntent().getExtras();
@@ -171,30 +178,7 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
                     if (currentHolder == adapterLastHolder || adapterLastHolder == null || currentHolder == null)
                         return;
                     rvVericalVideoItemAdapter.setCurrentViewHolder(currentHolder);
-                    int lastState = adapterLastHolder.getPlayState();
-                    switch (lastState) {
-                        case GSYVideoPlayer.CURRENT_STATE_PLAYING:
-                            adapterLastHolder.pauseVideo();
-                            break;
-                        case GSYVideoPlayer.CURRENT_STATE_PLAYING_BUFFERING_START:
-                        case GSYVideoPlayer.CURRENT_STATE_PREPAREING:
-                        case GSYVideoPlayer.CURRENT_STATE_AUTO_COMPLETE:
-                        case GSYVideoPlayer.CURRENT_STATE_ERROR:
-                            adapterLastHolder.stopVideo();
-                            break;
-                        default:
-                            adapterLastHolder.stopVideo();
-                            break;
-                    }
-                    int currState = currentHolder.getPlayState();
-                    switch (currState) {
-                        case GSYVideoPlayer.CURRENT_STATE_PAUSE:
-                            currentHolder.resumeVideo();
-                            break;
-                        default:
-                            currentHolder.startVideo();
-                            break;
-                    }
+                    currentHolder.startVideo();
                     int orientationScroll = 0;
                     if(currentHolder.getAdapterPosition() > adapterLastHolder.getAdapterPosition()){
                         orientationScroll = DOWN_SCROLL;
@@ -206,7 +190,7 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
                         mDataController.executeNextOption();
                     }
                     if (orientationScroll !=0)
-                        XHClick.mapStat(ShortVideoDetailActivity.this, STATISTIC_ID, "视频", orientationScroll == DOWN_SCROLL ? "上滑（下一条）" : "下滑（上一条）");
+                        XHClick.mapStat(ShortVideoDetailActivity.this, STA_ID, "滑动", orientationScroll == DOWN_SCROLL ? "上滑" : "下滑");
                 }
             }
             @Override
@@ -262,10 +246,12 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
         mPagerSnapHelper.attachToRecyclerView(recyclerView);
         mGuidanceLayout = findViewById(R.id.guidance_layout);
         rvVericalVideoItemAdapter= new RvVericalVideoItemAdapter(this,mDatas);
-        recyclerView.setItemViewCacheSize(3);
+        recyclerView.setItemViewCacheSize(4);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(rvVericalVideoItemAdapter);
         mDataController = new DataController();
+
+        mMoveXRang = Tools.getPhoneWidth() / 5;
     }
 
     private void registerConnectionReceiver() {
@@ -386,6 +372,40 @@ public class ShortVideoDetailActivity extends AppCompatActivity implements IObse
         super.onPause();
         mResumeFromPause = true;
         rvVericalVideoItemAdapter.onPause();
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        int action = ev.getAction();
+        switch (action) {
+            case MotionEvent.ACTION_DOWN:
+                if (mDownX == -1) {
+                    mDownX = ev.getX();
+                }
+                break;
+            case MotionEvent.ACTION_MOVE:
+                float moveX = ev.getX();
+                float rawX = moveX - mDownX;
+                int orientation = -1;// 1.向左滑，2.向右滑
+                if (rawX >= mMoveXRang) {
+                    orientation = 2;
+                } else if (rawX <= -mMoveXRang) {
+                    orientation = 1;
+                }
+
+                if (orientation != -1 && mCanStatic) {
+                    mCanStatic = false;
+                    XHClick.mapStat(this, STA_ID, "滑动", orientation == 1 ? "左滑" : "右滑");
+                }
+                break;
+            case MotionEvent.ACTION_UP:
+                mCanStatic = true;
+                mDownX = -1;
+                break;
+        }
+
+
+        return super.dispatchTouchEvent(ev);
     }
 
     @Override

@@ -81,17 +81,30 @@
 
         <ImageView
             android:id="@+id/image_thumb"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:scaleType="fitCenter"
             android:layout_centerInParent="true"/>
 
     </RelativeLayout>
 
+    <ImageView
+        android:id="@+id/start_btn"
+        android:layout_width="@dimen/dp_66"
+        android:layout_height="@dimen/dp_66"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@drawable/video_play_normal"
+        android:layout_gravity="center_vertical"
+        android:visibility="gone"/>
+
     <android.support.constraint.ConstraintLayout
         android:id="@+id/layout_title"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/topbar_height"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/dp_19"
         android:clickable="true">
 
         <ImageView
@@ -293,7 +306,8 @@
             android:gravity="center_vertical"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginBottom="@dimen/dp_10"
-            app:layout_constraintBottom_toTopOf="@+id/text_title">
+            app:layout_constraintBottom_toTopOf="@+id/text_title"
+            android:background="@drawable/bg_round2_4c000000">
 
             <ImageView
                 android:id="@+id/icon_topic"
@@ -338,6 +352,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:background="@drawable/bg_round2_4c000000"
             android:gravity="center_vertical">
 
             <ImageView
@@ -516,7 +531,7 @@
         android:layout_marginRight="@dimen/dp_20"
         android:paddingTop="@dimen/dp_9"
         android:paddingBottom="@dimen/dp_9"
-        android:background="@drawable/bg_round_aaaaaa6"
+        android:background="@drawable/bg_round6_4c000000"
         android:clickable="true">
         
         <ImageView
@@ -550,17 +565,6 @@
 
 
     </android.support.constraint.ConstraintLayout>
-
-    <ImageView
-        android:id="@+id/start_btn"
-        android:layout_width="@dimen/dp_66"
-        android:layout_height="@dimen/dp_66"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:background="@drawable/video_play_normal"
-        android:layout_gravity="center_vertical" />
 
 
     <ImageView

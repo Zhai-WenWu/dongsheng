@@ -25,6 +25,7 @@ import java.util.Map;
 
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
+import acore.logic.XHClick;
 import acore.logic.load.LoadManager;
 import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.StringManager;
@@ -32,6 +33,7 @@ import acore.widget.rvlistview.RvListView;
 import acore.widget.rvlistview.RvStaggeredGridView;
 import amodule._common.conf.GlobalAttentionModule;
 import amodule._common.conf.GlobalVariableConfig;
+import amodule.dish.activity.ShortVideoDetailActivity;
 import amodule.topic.adapter.TopicInfoStaggeredAdapter;
 import amodule.topic.model.ImageModel;
 import amodule.topic.model.LabelModel;
@@ -45,6 +47,7 @@ import aplug.basic.ReqInternet;
 import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
 
 public class TopicInfoActivity extends BaseAppCompatActivity {
+    public static final String STA_ID = "a_topic_gather";
 
     public static final String TOPIC_CODE = "topicCode";
 
@@ -190,17 +193,21 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                         @Override
                         public void onClick(View v) {
                             gotoUser();
+                            XHClick.mapStat(TopicInfoActivity.this, ShortVideoDetailActivity.STA_ID, "用户内容", "头像");
+
                         }
                     });
                     mTopicHeaderView.showTopicUser(mAuthorMap.get("nickName"), new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             gotoUser();
+                            XHClick.mapStat(TopicInfoActivity.this, ShortVideoDetailActivity.STA_ID, "用户内容", "昵称");
                         }
                     });
                     mTopicHeaderView.showTopicAttention(TextUtils.equals(mAuthorMap.get("isFollow"), "2"), new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            XHClick.mapStat(TopicInfoActivity.this, ShortVideoDetailActivity.STA_ID, "用户内容", "关注");
                             if (!LoginManager.isLogin()) {
                                 TopicInfoActivity.this.startActivity(new Intent(TopicInfoActivity.this, LoginByAccout.class));
                                 return;

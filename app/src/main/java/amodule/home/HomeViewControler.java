@@ -102,7 +102,6 @@ public class HomeViewControler implements ISetAdController {
                 ((HomeItem) view).onClickEvent(view);
             }
         });
-        recyclerView.addItemDecoration(new GridSpacingItemDecoration());
 
         //设置活动icon点击
         mTitleLayout.setOnClickActivityIconListener((v, url) -> {
@@ -116,7 +115,6 @@ public class HomeViewControler implements ISetAdController {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                Log.i("xianghaTag","recyclerView::::-------------------  state = " + newState);
                 if (RecyclerView.SCROLL_STATE_IDLE == newState) {
                     if (mBuoy != null && !mBuoy.isMove()) {
                         mBuoy.executeOpenAnim();
@@ -125,7 +123,7 @@ public class HomeViewControler implements ISetAdController {
                     int[] poss = new int[manager.getSpanCount()];
                     manager.findLastVisibleItemPositions(poss);
                     if (Tools.findMin(poss) == 0) {
-                        recyclerView.invalidate();
+                        recyclerView.getAdapter().notifyDataSetChanged();
                     }
                 } else if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
                     if (mBuoy != null && mBuoy.isMove())
@@ -339,81 +337,4 @@ public class HomeViewControler implements ISetAdController {
         mHeaderControler.setAdID(adIDs);
         mHeaderControler.setAdData(map, refresh);
     }
-
-    private int mLastShowPosition;
-
-    public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
-        public GridSpacingItemDecoration() {
-        }
-
-        @Override
-        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-
-//            int spanIndex = 0;
-//
-//            RecyclerView.ViewHolder holder = parent.getChildViewHolder(view);
-//            int paddingLeft = 0, paddingRight = 0, paddingTop = 0, paddingBottom = 0;
-//            int adapterPos = holder.getAdapterPosition();
-//
-//
-//            if (holder instanceof HomeAdapter.StaggeredGridImageViewHolder || holder instanceof HomeAdapter.GridADImageViewHolder) {
-//
-//                if (mPositionSpanCache.containsKey(adapterPos)) {
-//                    spanIndex = mPositionSpanCache.get(adapterPos);
-//                } else {
-//                    StaggeredGridLayoutManager.LayoutParams params = (StaggeredGridLayoutManager.LayoutParams) view.getLayoutParams();
-//                    spanIndex = params.getSpanIndex();
-////                if (mPositionSpanCache.size() < mCacheSize) {
-//                    mPositionSpanCache.put(adapterPos, spanIndex);
-////                }
-//                }
-//
-////                if (adapterPos >= mLastShowPosition) {
-////                    StaggeredGridLayoutManager.LayoutParams params = (StaggeredGridLayoutManager.LayoutParams) view.getLayoutParams();
-////                    spanIndex = params.getSpanIndex();
-////                }
-//
-//                if (mLR1 == 0 && mLR2 == 0 && mTB1 == 0 && mTB2 == 0) {
-//                    if (holder instanceof HomeAdapter.StaggeredGridImageViewHolder) {
-//                        HomeAdapter.StaggeredGridImageViewHolder staggeredGridImageViewHolder = (HomeAdapter.StaggeredGridImageViewHolder) holder;
-//                        paddingLeft = staggeredGridImageViewHolder.homeStaggeredGridItemContentLayout.getPaddingLeft();
-//                        paddingTop = staggeredGridImageViewHolder.homeStaggeredGridItemContentLayout.getPaddingTop();
-//                        paddingRight = staggeredGridImageViewHolder.homeStaggeredGridItemContentLayout.getPaddingRight();
-//                        paddingBottom = staggeredGridImageViewHolder.homeStaggeredGridItemContentLayout.getPaddingBottom();
-//                    } else if (holder instanceof HomeAdapter.GridADImageViewHolder) {
-//                        HomeAdapter.GridADImageViewHolder gridADImageViewHolder = (HomeAdapter.GridADImageViewHolder) holder;
-//                        paddingLeft = gridADImageViewHolder.homeGirdAdItemContentLayout.getPaddingLeft();
-//                        paddingTop = gridADImageViewHolder.homeGirdAdItemContentLayout.getPaddingTop();
-//                        paddingRight = gridADImageViewHolder.homeGirdAdItemContentLayout.getPaddingRight();
-//                        paddingBottom = gridADImageViewHolder.homeGirdAdItemContentLayout.getPaddingBottom();
-//                    }
-//
-//                    mLR1 = Math.max(mBigSpacing - paddingLeft, 0);
-//                    mLR2 = Math.max((mLittleSpacing - paddingLeft - paddingRight) / 2, 0);
-//                    mTB1 = Math.max((mLittleSpacing - paddingTop - paddingBottom) / 2, 0);
-//                    mTB2 = Math.max((mLittleSpacing - paddingTop - paddingBottom) / 2, 0);
-//
-//                }
-//
-//                if (holder instanceof HomeAdapter.StaggeredGridImageViewHolder) {
-//                    Log.e("TAG", "getItemOffsets: " + spanIndex + "  pos = " + holder.getAdapterPosition() + "   title = " + ((HomeAdapter.StaggeredGridImageViewHolder) holder).view.getData().get("name"));
-//                } else if (holder instanceof HomeAdapter.GridADImageViewHolder) {
-//                    Log.e("TAG", "getItemOffsets: " + spanIndex + "  pos = " + holder.getAdapterPosition() + "   title = " + ((HomeAdapter.GridADImageViewHolder) holder).view.getData().get("name"));
-//
-//                }
-
-
-//                switch (spanIndex) {
-//                    case 0:
-//                        outRect.set(mLR1, mTB1, mLR2, mTB2);
-//                        break;
-//                    case 1:
-//                        outRect.set(mLR2, mTB1, mLR1, mTB2);
-//                        break;
-//                }
-//            }
-
-        }
-    }
-
 }

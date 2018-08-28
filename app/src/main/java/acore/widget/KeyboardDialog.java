@@ -7,9 +7,11 @@ import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -20,6 +22,7 @@ import android.widget.Toast;
 import com.xiangha.R;
 
 import acore.tools.StringManager;
+import acore.tools.ToolsDevice;
 
 public class KeyboardDialog extends Dialog implements View.OnClickListener {
     private int mMaxLength = Integer.MAX_VALUE;
@@ -32,8 +35,8 @@ public class KeyboardDialog extends Dialog implements View.OnClickListener {
     private String mFinalStr;
 
     private View.OnClickListener mOnSendClickListener;
-    private SoftKeyboardManager mSoftKeyboardManager;
-    private SoftKeyboardManager.SoftKeyboardStateListener mSoftKeyboardStateListener;
+    private int phoneHeight;
+    private boolean isAlearyShow= false;
     public KeyboardDialog(@NonNull Context context) {
         this(context, R.style.dialog_keyboard);
     }
@@ -51,8 +54,8 @@ public class KeyboardDialog extends Dialog implements View.OnClickListener {
 
     private void init(Context context) {
         mRootView = LayoutInflater.from(context).inflate(R.layout.keyboard_layout, null);
+        phoneHeight = ToolsDevice.getWindowPx(getContext()).heightPixels;
         setContentView(mRootView);
-        mSoftKeyboardManager = new SoftKeyboardManager(getWindow().getDecorView());
         Window win = getWindow();
         if (win != null) {
             win.getDecorView().setPadding(0, 0, 0, 0);
@@ -75,12 +78,7 @@ public class KeyboardDialog extends Dialog implements View.OnClickListener {
         mEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-
-
-
             }
-
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s != null && s.length() > mMaxLength) {
@@ -96,24 +94,26 @@ public class KeyboardDialog extends Dialog implements View.OnClickListener {
                 mFinalStr = s.toString();
             }
         });
-        mSoftKeyboardStateListener = new SoftKeyboardManager.SoftKeyboardStateListener() {
+        mRootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
-            public void onSoftKeyboardOpened(int keyboardHeightInPx, boolean rootChanged) {
-                if (rootChanged) {
-                    return;
+            public void onGlobalLayout() {
+                if(KeyboardDialog.this.isShowing()&&getContext()!=null) {
+                    int[] location = new int[2];
+                    mEditText.getLocationInWindow(location); //获取在当前窗口内的绝对坐标
+                    mEditText.getLocationOnScreen(location);//获取在整个屏幕内的绝对坐标
+                    int y = location[1];
+                    if(isAlearyShow) {
+                        if (phoneHeight - y < 300) {
+                            KeyboardDialog.this.dismiss();
+                        }
+                    }else{
+                        if(phoneHeight - y>300){
+                            isAlearyShow=true;
+                        }
+                    }
                 }
-//                mEditText.postDelayed(()->mRootView.scrollTo(0, mKeyboardBottom.getPaddingBottom()), 100);
             }
-
-            @Override
-            public void onSoftKeyboardClosed() {
-                if (KeyboardDialog.this.isShowing()) {
-                    KeyboardDialog.this.dismiss();
-                }
-                mRootView.scrollTo(0, 0);
-            }
-        };
-        mSoftKeyboardManager.addSoftKeyboardStateListener(mSoftKeyboardStateListener);
+        });
     }
 
 
@@ -155,6 +155,7 @@ public class KeyboardDialog extends Dialog implements View.OnClickListener {
         mEditText.setHint(!TextUtils.isEmpty(mHintStr) ? mHintStr : "");
         mEditText.setText(!TextUtils.isEmpty(mFinalStr) ? mFinalStr : "");
         mEditText.requestFocus();
+
     }
 
     @Override
@@ -166,7 +167,7 @@ public class KeyboardDialog extends Dialog implements View.OnClickListener {
     public void dismiss() {
         super.dismiss();
         mEditText.clearFocus();
-        mSoftKeyboardManager.removeSoftKeyboardStateListener(mSoftKeyboardStateListener);
+//        mSoftKeyboardManager.removeSoftKeyboardStateListener(mSoftKeyboardStateListener);
     }
 
     public void onResume() {

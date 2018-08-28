@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
@@ -129,9 +128,10 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
     private AtomicBoolean mAttentionLoading;
     private AtomicBoolean mFavLoading;
     private AtomicBoolean mDelLoading;
+    private boolean mNeedChangePauseToStartEnable;
+    private boolean mPauseToStartEnable;
     private boolean mRepeatEnable;
     private boolean mStaticEnable;
-    private boolean mStaticEnable2;
     private String mVideoUrl;
     private String mTopicClickUrl;
     private String mAddressClickUrl;
@@ -236,11 +236,9 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
                         pauseVideo();
                         break;
                     case INNER_PLAY_STATE_STOP:
-                        changeThumbImageState(true);
                         releaseVideo();
                         break;
                     default:
-                        changeThumbImageState(false);
                         break;
                 }
             }
@@ -250,19 +248,21 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
             public void onClickStartError(String url, Object... objects) {}
             @Override
             public void onClickStop(String url, Object... objects) {
+                mInnerPlayState = INNER_PLAY_STATE_STOP;
             }
 
             @Override
             public void onClickStopFullscreen(String url, Object... objects) {}
             @Override
             public void onClickResume(String url, Object... objects) {
+                mInnerPlayState = INNER_PLAY_STATE_PLAYING;
             }
 
             @Override
             public void onClickResumeFullscreen(String url, Object... objects) {}
             @Override
             public void onClickSeekbar(String url, Object... objects) {
-                XHClick.mapStat(getContext(), ShortVideoDetailActivity.STATISTIC_ID, "视频", "进度条");
+
             }
             @Override
             public void onClickSeekbarFullscreen(String url, Object... objects) {}
@@ -297,8 +297,37 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         mPlayerView.setOnProgressChangedCallback(new GSYVideoPlayer.OnProgressChangedCallback() {
             @Override
             public void onProgressChanged(int progress, int secProgress, int currentTime, int totalTime) {
+
+//                Log.e("TAG_Player", "onProgressChanged: progress = " + progress + "  currentTime = " + currentTime);
+
+                if (progress == 0 && currentTime == 0) {
+                    if (mNeedChangePauseToStartEnable) {
+                        mNeedChangePauseToStartEnable = false;
+                        mPauseToStartEnable = true;
+                    }
+                    return;
+                } else {
+                    mNeedChangePauseToStartEnable = false;
+                    mPauseToStartEnable = false;
+                }
+                if (mPlayerView.playBtnVisible()) {
+                    mPlayerView.changePlayBtnState(false);
+                }
+
+                switch (mInnerPlayState) {
+                    case INNER_PLAY_STATE_STOP:
+                        releaseVideo();
+                        break;
+                    case INNER_PLAY_STATE_PAUSE:
+                        pauseVideo();
+                        break;
+                }
+
+                if (thumbImageStateVisible() && currentTime >= 1) {
+                    changeThumbImageState(false);
+                }
                 double playableTime = Double.parseDouble(mData.getVideoModel().getPlayableTime());
-                if (currentTime * 1.0 / totalTime >= playableTime) {
+                if ((totalTime == 0 ? 0 : currentTime * 1.0 / totalTime) >= playableTime) {
                     if (!mStaticEnable) {
                         mStaticEnable = true;
                         startStatistics(StringManager.API_SHORT_VIDEO_VIEW_VALIDATE);
@@ -306,15 +335,6 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
                 } else {
                     mStaticEnable = false;
                 }
-                if (currentTime < 2) {
-                    if (!mStaticEnable2) {
-                        mStaticEnable2 = true;
-                        startStatistics(StringManager.API_SHORT_VIDEO_ACCESS);
-                    }
-                } else {
-                    mStaticEnable2 = false;
-                }
-                mPlayerView.changePlayBtnState(false);
             }
         });
 
@@ -324,24 +344,24 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
      * 开始播放入口
      */
     public void prepareAsync() {
-        if (mInnerPlayState == INNER_PLAY_STATE_START)
-            return;
         mInnerPlayState = INNER_PLAY_STATE_START;
+        mNeedChangePauseToStartEnable = true;
         mPlayerView.startPlayLogic();
+        startStatistics(StringManager.API_SHORT_VIDEO_ACCESS);
     }
     public void resumeVideo(){
-        if (mInnerPlayState == INNER_PLAY_STATE_PLAYING)
+        if (mPauseToStartEnable) {
+            prepareAsync();
             return;
+        }
         mInnerPlayState = INNER_PLAY_STATE_PLAYING;
-        mPlayerView.changePlayBtnState(false);
         mPlayerView.onVideoResume();
+        mPlayerView.changePlayBtnState(false);
     }
     /**
      * 暂停
      */
     public void pauseVideo(){
-        if (mInnerPlayState == INNER_PLAY_STATE_PAUSE)
-            return;
         mInnerPlayState = INNER_PLAY_STATE_PAUSE;
         mPlayerView.onVideoPause();
         mPlayerView.changePlayBtnState(true);
@@ -351,10 +371,10 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
      * 重置数据
      */
     public void releaseVideo(){
-        if (mInnerPlayState == INNER_PLAY_STATE_STOP)
-            return;
         mInnerPlayState = INNER_PLAY_STATE_STOP;
         mPlayerView.release();
+        mPlayerView.changePlayBtnState(false);
+        changeThumbImageState(true);
     }
 
     public int getPlayState() {
@@ -372,7 +392,6 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         mData = module;
         if (mData == null)
             return;
-        mThumbImg.setImageBitmap(null);
         this.position = position;
         mUserName.setText(mData.getCustomerModel().getNickName());
         mIsSelf = TextUtils.equals(LoginManager.userInfo.get("code"), mData.getCustomerModel().getUserCode());
@@ -389,9 +408,8 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mThumbImg.getLayoutParams();
         DisplayMetrics dm = ToolsDevice.getWindowPx(getContext());
         int screenW = dm.widthPixels;
-        int screenH = dm.heightPixels;
-        int vW = Integer.parseInt(mData.getImageModel().getImageW());
-        int vH = Integer.parseInt(mData.getImageModel().getImageH());
+        int vW = TextUtils.isEmpty(mData.getVideoModel().getVideoW()) ? 0 : Integer.parseInt(mData.getVideoModel().getVideoW());
+        int vH = TextUtils.isEmpty(mData.getVideoModel().getVideoH()) ? 0 : Integer.parseInt(mData.getVideoModel().getVideoH());
         int heightImg = 0;
         if (vW == 0 || vH == 0) {
             screenW = LayoutParams.MATCH_PARENT;
@@ -402,6 +420,8 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         lp.width = screenW;
         lp.height = heightImg;
         mThumbImg.setLayoutParams(lp);
+        loadUserHeader(mData.getCustomerModel().getHeaderImg());
+        LoadImage.with(getContext()).load(mData.getVideoModel().getVideoImg()).setPlaceholderId(R.color.transparent).setSaveType(FileManager.save_cache).build().into(mThumbImg);
         changeThumbImageState(true);
         mVideoUrl = mData.getVideoModel().getVideoUrlMap().get("defaultUrl");
         mCommentImg.setImageResource(R.drawable.short_video_detail_comment);
@@ -438,17 +458,6 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         mTopicClickUrl = mData.getTopicModel().getGotoUrl();
         String topicTitle = mData.getTopicModel().getTitle();
         if (!TextUtils.isEmpty(topicTitle)) {
-            GradientDrawable drawable = new GradientDrawable();
-            String bgColor = mData.getTopicModel().getBgColor();
-            if (TextUtils.isEmpty(bgColor))
-                bgColor = "#66000000";
-            drawable.setColor(Color.parseColor(bgColor));
-            drawable.setCornerRadius(2f);
-            mLayoutTopic.setBackground(drawable);
-            String textColor = mData.getTopicModel().getColor();
-            if (TextUtils.isEmpty(textColor))
-                textColor = "#ffffff";
-            mTopicText.setTextColor(Color.parseColor(textColor));
             mTopicText.setText(topicTitle);
             mLayoutTopic.setVisibility(View.VISIBLE);
         } else {
@@ -457,24 +466,11 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         mAddressClickUrl = mData.getAddressModel().getGotoUrl();
         String address = mData.getAddressModel().getAddress();
         if(!TextUtils.isEmpty(address)){
-            GradientDrawable drawable = new GradientDrawable();
-            String bgColor = mData.getAddressModel().getBgColor();
-            if (TextUtils.isEmpty(bgColor))
-                bgColor = "#66000000";
-            drawable.setColor(Color.parseColor(bgColor));
-            drawable.setCornerRadius(2f);
-            mLayoutAddress.setBackground(drawable);
-            String textColor = mData.getAddressModel().getColor();
-            if (TextUtils.isEmpty(textColor))
-                textColor = "#ffffff";
-            mTopicText.setTextColor(Color.parseColor(textColor));
             mAddressText.setText(address);
             mLayoutAddress.setVisibility(View.VISIBLE);
         }else{
             mLayoutAddress.setVisibility(View.GONE);
         }
-        loadUserHeader(mData.getCustomerModel().getHeaderImg());
-        LoadImage.with(getContext()).load(mData.getVideoModel().getVideoImg()).setSaveType(FileManager.save_cache).build().into(mThumbImg);
         mPlayerView.setUp(mVideoUrl, false, "");
     }
 
@@ -529,28 +525,28 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
             case R.id.layout_address:
                 if (!TextUtils.isEmpty(mAddressClickUrl)) {
                     AppCommon.openUrl(mAddressClickUrl, true);
+                    XHClick.mapStat(getContext(), ShortVideoDetailActivity.STA_ID, "位置点击量", "");
                 }
                 break;
             case R.id.layout_topic:
                 if (!TextUtils.isEmpty(mTopicClickUrl)) {
                     AppCommon.openUrl(mTopicClickUrl, true);
+                    XHClick.mapStat(getContext(), ShortVideoDetailActivity.STA_ID, "话题点击量", "");
                 }
                 break;
             case R.id.image_back:
                 closeActivity();
-                XHClick.mapStat(getContext(), ShortVideoDetailActivity.STATISTIC_ID, "顶部栏", "返回");
+                XHClick.mapStat(getContext(), ShortVideoDetailActivity.STA_ID, "返回", "");
                 break;
             case R.id.image_user_header:
             case R.id.text_user_name:
                 gotoUser();
-                XHClick.mapStat(getContext(), ShortVideoDetailActivity.STATISTIC_ID, "顶部栏", "头像和昵称");
                 break;
             case R.id.img_attention:
                 attention();
                 break;
             case R.id.image_like:
                 doFavorite();
-                XHClick.mapStat(getContext(), ShortVideoDetailActivity.STATISTIC_ID, "顶部栏", "收藏");
                 break;
             case R.id.image_more:
                 showBottomDialog();
@@ -560,19 +556,19 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
                 break;
             case R.id.layout_bottom_share:
                 doShare();
-                XHClick.mapStat(getContext(), ShortVideoDetailActivity.STATISTIC_ID, "底部栏", "分享按钮");
+                XHClick.mapStat(getContext(), ShortVideoDetailActivity.STA_ID, "分享", "");
                 break;
             case R.id.layout_bottom_good:
                 doGood();
-                XHClick.mapStat(getContext(), ShortVideoDetailActivity.STATISTIC_ID, "底部栏", "点赞按钮");
+                XHClick.mapStat(getContext(), ShortVideoDetailActivity.STA_ID, "点赞", "");
                 break;
             case R.id.layout_bottom_comment:
                 showComments();
-                XHClick.mapStat(getContext(), ShortVideoDetailActivity.STATISTIC_ID, "底部栏", "评论按钮");
+                XHClick.mapStat(getContext(), ShortVideoDetailActivity.STA_ID, "评论", "评论按钮点击量");
                 break;
             case R.id.layout_bottom_info:
                 showCommentEdit();
-                XHClick.mapStat(getContext(), ShortVideoDetailActivity.STATISTIC_ID, "底部栏", "评论输入框");
+                XHClick.mapStat(getContext(), ShortVideoDetailActivity.STA_ID, "评论", "说点什么点击量");
                 break;
         }
     }
@@ -716,7 +712,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
 
     private void doShare() {
         Intent intent = new Intent(context, ShareActivityDialog.class);
-        intent.putExtra("tongjiId", ShortVideoDetailActivity.STATISTIC_ID);
+        intent.putExtra("tongjiId", ShortVideoDetailActivity.STA_ID);
         intent.putExtra("shareTwoContent", "分享框");
         intent.putExtra("isHasReport", !mIsSelf);
         intent.putExtra("nickName", mData.getCustomerModel().getNickName());
@@ -737,7 +733,6 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         switch (mPlayerView.getCurrentState()) {
             case GSYVideoPlayer.CURRENT_STATE_PLAYING:
                 pauseVideo();
-                mPlayerView.changePlayBtnState(true);
                 break;
             case GSYVideoPlayer.CURRENT_STATE_ERROR:
                 Toast.makeText(getContext(), "视频播放错误", Toast.LENGTH_SHORT).show();
@@ -746,7 +741,6 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
                 prepareAsync();
                 break;
             case GSYVideoPlayer.CURRENT_STATE_PAUSE:
-                mPlayerView.changePlayBtnState(false);
                 resumeVideo();
                 break;
             case GSYVideoPlayer.CURRENT_STATE_PLAYING_BUFFERING_START:
@@ -762,6 +756,10 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         mThumbContainer.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
     }
 
+    private boolean thumbImageStateVisible() {
+        return mThumbContainer.getVisibility() == View.VISIBLE;
+    }
+
     private void showBottomDialog() {
         BottomDialog dialog = new BottomDialog(getContext());
         dialog.addButton("删除", new View.OnClickListener() {
@@ -769,7 +767,6 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
             public void onClick(View v) {
                 dialog.dismiss();
                 openDeleteDialog();
-                XHClick.mapStat(getContext(), ShortVideoDetailActivity.STATISTIC_ID, "更多（自己发布的视频）", "删除");
             }
         });
         dialog.show();

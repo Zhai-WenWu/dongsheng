@@ -19,9 +19,12 @@ import com.xiangha.R;
 import org.eclipse.jetty.util.security.Constraint;
 
 import acore.logic.AppCommon;
+import acore.logic.XHClick;
 import acore.tools.FileManager;
 import acore.tools.ToolsDevice;
 import acore.widget.rvlistview.holder.RvBaseViewHolder;
+import amodule.dish.activity.ShortVideoDetailActivity;
+import amodule.topic.activity.TopicInfoActivity;
 import amodule.topic.model.ImageModel;
 import amodule.topic.model.LabelModel;
 import amodule.topic.model.TopicItemModel;
@@ -98,6 +101,7 @@ public class TopicItemHolder extends RvBaseViewHolder<TopicItemModel> implements
     public void onClick(View v) {
         if (mTopicItemModel != null) {
             AppCommon.openUrl(mTopicItemModel.getGotoUrl(), true);
+            XHClick.mapStat(itemView.getContext(), ShortVideoDetailActivity.STA_ID, "用户内容", "内容详情点击量");
         }
     }
 }

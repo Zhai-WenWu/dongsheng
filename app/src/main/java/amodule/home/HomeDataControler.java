@@ -55,10 +55,6 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
     //广告控制器
     private AdControlHomeDish mAdControl;
 
-    private long lastSelfAdTime;
-
-    private int mRandom;
-
     public HomeDataControler(MainHomePage activity) {
         this.mActivity = activity;
         mHomeModuleBean = new HomeModuleControler().getHomeModuleByType(activity, null);
@@ -72,7 +68,6 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
         if(mActivity == null){
             return;
         }
-        lastSelfAdTime = System.currentTimeMillis();
         ActivityMethodManager activityMethodManager = mActivity.getActMagager();
         if(activityMethodManager != null){
             activityMethodManager.registerADController(this);
@@ -100,7 +95,6 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
     public void loadServiceHomeData(@Nullable InternetCallback callback) {
         String url = StringManager.API_HOMEPAGE_6_0;
         LinkedHashMap<String, String> params = new LinkedHashMap<>();
-        params.put("randNum", String.valueOf(mRandom));
         ReqEncyptInternet.in().doEncypt(url, params, callback);
     }
 
@@ -109,12 +103,15 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
         ReqEncyptInternet.in().doEncyptAEC(url, "", callback);
     }
 
+    public void setNextUrl(String nextUrl) {
+        this.nextUrl = nextUrl;
+    }
+
     //获取服务端Feed流数据
     public void loadServiceFeedData(boolean firstLoad, @NonNull OnLoadDataCallback callback) {
         StringBuilder params = new StringBuilder();
-        String type = mHomeModuleBean.getType();
-        params.append(firstLoad ? "type=" + type : nextUrl).append(firstLoad ? "&page=1" : "").append(firstLoad ? "&randNum=" + mRandom : "");
-        Log.i("tzy", "firstLoad::" + firstLoad + "::data:" + params.toString());
+        params.append(nextUrl);
+        Log.i("xianghaTag", "firstLoad::" + firstLoad + "::data:" + params.toString());
         //准备请求
         if (callback != null)
             callback.onPrepare();
@@ -137,16 +134,15 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
                                 //*******广告数据插入*******
                                 loadCount = listDatas.size();
                                 mData.addAll(listDatas);//顺序插入
-                                //如果需要加广告，插入广告
+                                //如果需要加广告，
                                 if (mInsertADCallback != null) {
-                                    Log.i(tag_yu, "mListData::222:" + mData.size() + "::" + upDataSize);
                                     mData = mInsertADCallback.insertAD(mData, false);
                                 }
                                 //提示刷新UI
                                 safeNotifySetChanged();
                                 //自动请求下一页数据
                                 if (mData.size() <= 4) {//推荐列表：低于等5的数据自动请求数据
-                                    Log.i("zhangyujian", "自动下次请求:::" + mData.size());
+                                    Log.i("xianghaTag", "自动下次请求:::" + mData.size());
                                     if (mEntryptDataCallback != null)
                                         mEntryptDataCallback.onEntryptData(firstLoad);
                                 }
@@ -195,7 +191,7 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
                 || mData == null)
             return;//条件过滤
         boolean state = mAdControl.isNeedRefresh();
-        Log.i(tag_yu, "isNeedRefresh::::" + state + " :: 推荐 ; isForceRefresh = " + isForceRefresh);
+        Log.i("xianghaTag", "isNeedRefresh::::" + state + " :: 推荐 ; isForceRefresh = " + isForceRefresh);
         if (isForceRefresh)
             state = true;//强制刷新
         if (state) {
@@ -255,6 +251,12 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
     public ArrayList<Map<String, String>> getData() {
         return mData;
     }
+    public void addOuputSideData(ArrayList<Map<String, String>> datas){
+        if (mInsertADCallback != null) {
+            datas = mInsertADCallback.insertAD(datas, false);
+            mData.addAll(datas);
+        }
+    }
 
     public int getDataSize(){
         return mData != null ? mData.size() : 0;
@@ -307,10 +309,6 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
         if (mViewAdControl != null) {
             mViewAdControl.autoRefreshSelfAD();
         }
-    }
-
-    public void setRandom(int random) {
-        mRandom = random;
     }
 
     /*--------------------------------------------- Interface ---------------------------------------------*/
