@@ -70,6 +70,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/sp_13"
+            android:lineSpacingExtra="@dimen/dp_2"
             android:textColor="@color/c_gray_dddddd"
             android:layout_marginLeft="@dimen/dp_20"
             android:layout_marginRight="@dimen/dp_20"

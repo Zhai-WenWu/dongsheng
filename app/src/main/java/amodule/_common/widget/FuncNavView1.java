@@ -50,6 +50,8 @@ public class FuncNavView1 extends HomeFuncNavView1 implements IBindMap,IStatictu
     private StatisticCallback mStatisticCallback;
 
     private int mShowIndex = -1;
+    private int mScreenWidth;
+
     public FuncNavView1(Context context) {
         super(context);
     }
@@ -65,6 +67,7 @@ public class FuncNavView1 extends HomeFuncNavView1 implements IBindMap,IStatictu
     @Override
     protected void initData() {
         super.initData();
+        mScreenWidth = Tools.getPhoneWidth();
     }
 
     @Override
@@ -100,10 +103,11 @@ public class FuncNavView1 extends HomeFuncNavView1 implements IBindMap,IStatictu
         }
         int centerSpacing = 0;
         int firstLastSpacing = getResources().getDimensionPixelSize(R.dimen.dp_20);
+        int itemWidth = getResources().getDimensionPixelSize(R.dimen.dp_55);
         if (mapArrayList.size() > 5) {
-            centerSpacing = getResources().getDimensionPixelSize(R.dimen.dp_16);
+            centerSpacing = (mScreenWidth - 2 * firstLastSpacing - itemWidth * 5) / 5;
         } else {
-            centerSpacing = (Tools.getPhoneWidth() - 2 * firstLastSpacing - getResources().getDimensionPixelSize(R.dimen.dp_55) * mapArrayList.size()) / (mapArrayList.size() - 1);
+            centerSpacing = (mScreenWidth - 2 * firstLastSpacing - itemWidth * mapArrayList.size()) / (mapArrayList.size() - 1);
         }
         setItemSpacing(firstLastSpacing,  centerSpacing, firstLastSpacing);
         adapterFuncNav1.notifyDataSetChanged();
