@@ -1,6 +1,7 @@
 package amodule.home.view;
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
@@ -37,6 +38,7 @@ import amodule.home.adapter.HorizontalAdapterFuncNav1;
 
 public class HomeFuncNavView1 extends LinearLayout {
     private Context context;
+    private int mFirstIntervalSpacing, mLastIntervalSpacing, mCenterIntervalSpacing;
     public HomeFuncNavView1(Context context) {
         this(context, null);
     }
@@ -60,6 +62,33 @@ public class HomeFuncNavView1 extends LinearLayout {
         adapterFuncNav1 = new HorizontalAdapterFuncNav1(context,mapArrayList);
         listView= (RvHorizatolListView) findViewById(R.id.recycler_view);
         listView.setAdapter(adapterFuncNav1);
+        listView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+                int pos = parent.getChildAdapterPosition(view);
+                int size = mapArrayList.size();
+                switch (size) {
+                    case 0:
+                        break;
+                    case 1:
+                        outRect.left = mFirstIntervalSpacing;
+                        outRect.right = mLastIntervalSpacing;
+                        break;
+                    default:
+                        if (pos == 0) {
+                            outRect.left = mFirstIntervalSpacing;
+                            outRect.right = mCenterIntervalSpacing / 2;
+                        } else if (pos == size - 1) {
+                            outRect.left = mCenterIntervalSpacing / 2;
+                            outRect.right = mLastIntervalSpacing;
+                        } else {
+                            outRect.left = mCenterIntervalSpacing / 2;
+                            outRect.right = outRect.left;
+                        }
+                        break;
+                }
+            }
+        });
         initData();
     }
 
@@ -80,7 +109,6 @@ public class HomeFuncNavView1 extends LinearLayout {
             map.put("url",urls[index]);
             mapArrayList.add(map);
         }
-        setItemWaith();
         adapterFuncNav1.notifyDataSetChanged();
         setVisibility(VISIBLE);
         listView.setOnItemClickListener(new RvListView.OnItemClickListener() {
@@ -94,12 +122,9 @@ public class HomeFuncNavView1 extends LinearLayout {
 
     }
 
-    public void setItemWaith(){
-        if(adapterFuncNav1!=null){
-            int waith = ToolsDevice.getWindowPx(context).widthPixels;
-            int size = mapArrayList.size();
-            adapterFuncNav1.setItemWaith(size>5?(int) (waith/5.3):waith/size);
-            listView.setNestedScrollingEnabled(size>5);
-        }
+    public void setItemSpacing(int firstIntervalSpacing, int centerIntervalSpacing, int lastIntervalSpacing) {
+        mFirstIntervalSpacing = firstIntervalSpacing;
+        mCenterIntervalSpacing = centerIntervalSpacing;
+        mLastIntervalSpacing = lastIntervalSpacing;
     }
 }

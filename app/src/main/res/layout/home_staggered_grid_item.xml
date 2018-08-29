@@ -52,6 +52,7 @@
         app:stroke_width="@dimen/dp_2"
         app:stroke_color="@color/white"
         android:scaleType="centerCrop"
+        app:clip_background="true"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:round_as_circle="true"/>

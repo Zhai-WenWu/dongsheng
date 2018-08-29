@@ -98,7 +98,14 @@ public class FuncNavView1 extends HomeFuncNavView1 implements IBindMap,IStatictu
             mapArrayList.add(data.get(index));
 //            Log.i("xianghaTag","数据为：：：：——————"+data.get(index));
         }
-        setItemWaith();
+        int centerSpacing = 0;
+        int firstLastSpacing = getResources().getDimensionPixelSize(R.dimen.dp_20);
+        if (mapArrayList.size() > 5) {
+            centerSpacing = getResources().getDimensionPixelSize(R.dimen.dp_16);
+        } else {
+            centerSpacing = (Tools.getPhoneWidth() - 2 * firstLastSpacing - getResources().getDimensionPixelSize(R.dimen.dp_55) * mapArrayList.size()) / (mapArrayList.size() - 1);
+        }
+        setItemSpacing(firstLastSpacing,  centerSpacing, firstLastSpacing);
         adapterFuncNav1.notifyDataSetChanged();
         setVisibility(VISIBLE);
         listView.setOnItemClickListener(new RvListView.OnItemClickListener() {
