@@ -15,7 +15,7 @@
 
         <ImageView
             android:id="@+id/image"
-            android:layout_width="@dimen/dp_240"
+            android:layout_width="@dimen/dp_260"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
