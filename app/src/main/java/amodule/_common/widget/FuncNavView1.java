@@ -50,7 +50,7 @@ public class FuncNavView1 extends HomeFuncNavView1 implements IBindMap,IStatictu
     private StatisticCallback mStatisticCallback;
 
     private int mShowIndex = -1;
-    private int mScreenWidth;
+
 
     public FuncNavView1(Context context) {
         super(context);
@@ -67,7 +67,6 @@ public class FuncNavView1 extends HomeFuncNavView1 implements IBindMap,IStatictu
     @Override
     protected void initData() {
         super.initData();
-        mScreenWidth = Tools.getPhoneWidth();
     }
 
     @Override
@@ -101,18 +100,7 @@ public class FuncNavView1 extends HomeFuncNavView1 implements IBindMap,IStatictu
             mapArrayList.add(data.get(index));
 //            Log.i("xianghaTag","数据为：：：：——————"+data.get(index));
         }
-        int centerSpacing = 0;
-        int firstLastSpacing = getResources().getDimensionPixelSize(R.dimen.dp_20);
-        int itemWidth = getResources().getDimensionPixelSize(R.dimen.dp_55);
-        int itemSize = mapArrayList.size();
-        if (itemSize > 5) {
-            centerSpacing = (mScreenWidth - 2 * firstLastSpacing - itemWidth * 5) / 5;
-        } else if (itemSize > 1){
-            centerSpacing = (mScreenWidth - 2 * firstLastSpacing - itemWidth * itemSize) / (itemSize - 1);
-        } else if (itemSize == 1){
-            firstLastSpacing = (mScreenWidth - itemWidth) / 2;
-        }
-        setItemSpacing(firstLastSpacing,  centerSpacing, firstLastSpacing);
+        computeItemSpacing();
         adapterFuncNav1.notifyDataSetChanged();
         setVisibility(VISIBLE);
         listView.setOnItemClickListener(new RvListView.OnItemClickListener() {

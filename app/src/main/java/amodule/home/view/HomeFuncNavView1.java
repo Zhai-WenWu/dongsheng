@@ -22,6 +22,7 @@ import java.util.Map;
 
 import acore.logic.AppCommon;
 import acore.override.helper.XHActivityManager;
+import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.rvlistview.RvHorizatolListView;
 import acore.widget.rvlistview.RvListView;
@@ -39,6 +40,7 @@ import amodule.home.adapter.HorizontalAdapterFuncNav1;
 public class HomeFuncNavView1 extends LinearLayout {
     private Context context;
     private int mFirstIntervalSpacing, mLastIntervalSpacing, mCenterIntervalSpacing;
+    protected int mScreenWidth;
     public HomeFuncNavView1(Context context) {
         this(context, null);
     }
@@ -50,6 +52,7 @@ public class HomeFuncNavView1 extends LinearLayout {
     public HomeFuncNavView1(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.context = context;
+        mScreenWidth = Tools.getPhoneWidth();
         initialize();
     }
 
@@ -109,6 +112,7 @@ public class HomeFuncNavView1 extends LinearLayout {
             map.put("url",urls[index]);
             mapArrayList.add(map);
         }
+        computeItemSpacing();
         adapterFuncNav1.notifyDataSetChanged();
         setVisibility(VISIBLE);
         listView.setOnItemClickListener(new RvListView.OnItemClickListener() {
@@ -122,9 +126,20 @@ public class HomeFuncNavView1 extends LinearLayout {
 
     }
 
-    public void setItemSpacing(int firstIntervalSpacing, int centerIntervalSpacing, int lastIntervalSpacing) {
-        mFirstIntervalSpacing = firstIntervalSpacing;
-        mCenterIntervalSpacing = centerIntervalSpacing;
-        mLastIntervalSpacing = lastIntervalSpacing;
+    protected void computeItemSpacing() {
+        int centerSpacing = 0;
+        int firstLastSpacing = getResources().getDimensionPixelSize(R.dimen.dp_20);
+        int itemWidth = getResources().getDimensionPixelSize(R.dimen.dp_55);
+        int itemSize = mapArrayList.size();
+        if (itemSize > 5) {
+            centerSpacing = (mScreenWidth - 2 * firstLastSpacing - itemWidth * 5) / 5;
+        } else if (itemSize > 1){
+            centerSpacing = (mScreenWidth - 2 * firstLastSpacing - itemWidth * itemSize) / (itemSize - 1);
+        } else if (itemSize == 1){
+            firstLastSpacing = (mScreenWidth - itemWidth) / 2;
+        }
+        mFirstIntervalSpacing = firstLastSpacing;
+        mCenterIntervalSpacing = centerSpacing;
+        mLastIntervalSpacing = firstLastSpacing;
     }
 }
