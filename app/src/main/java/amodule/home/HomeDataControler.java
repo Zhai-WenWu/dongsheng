@@ -15,6 +15,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import acore.logic.ActivityMethodManager;
+import acore.override.XHApplication;
 import acore.override.helper.XHActivityManager;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
@@ -80,10 +81,11 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
 
     //读取缓存数据
     public void loadCacheHomeData(InternetCallback callback) {
-        String hoemDataStr = FileManager.readFile(CACHE_PATH).trim();
-        if (!TextUtils.isEmpty(hoemDataStr)) {
-            callback.loaded(ReqEncyptInternet.REQ_OK_STRING, "", hoemDataStr);
+        String homeDataStr = FileManager.readFile(CACHE_PATH).trim();
+        if (TextUtils.isEmpty(homeDataStr)) {
+            homeDataStr = FileManager.getFromAssets(XHApplication.in(), "homeHeaderCacheData");
         }
+        callback.loaded(ReqEncyptInternet.REQ_OK_STRING, "", homeDataStr);
     }
 
     public void saveCacheHomeData(String data) {
