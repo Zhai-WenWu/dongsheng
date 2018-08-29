@@ -216,11 +216,14 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
     private void loadCacheData() {
         mDataControler.loadCacheHomeData(getHeaderCallback(true));
     }
-
+    private boolean isRefresh= false;//是否是第一次刷新
     private void loadRemoteData() {
         startLoadTime = System.currentTimeMillis();
         mDataControler.loadServiceHomeData(getHeaderCallback(false));
-
+        if(isRefresh){
+            mDataControler.isNeedRefresh(true);
+        }
+        isRefresh=true;
         loadAdData();
     }
 
