@@ -18,6 +18,7 @@
         android:layout_alignBottom="@+id/view_ad_img"
         android:layout_alignRight="@+id/view_ad_img"
         android:visibility="gone"
+        android:scaleType="fitEnd"
         android:layout_width="@dimen/dp_49"
         android:layout_height="@dimen/dp_16" />
 
