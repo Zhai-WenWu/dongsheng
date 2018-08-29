@@ -104,10 +104,13 @@ public class FuncNavView1 extends HomeFuncNavView1 implements IBindMap,IStatictu
         int centerSpacing = 0;
         int firstLastSpacing = getResources().getDimensionPixelSize(R.dimen.dp_20);
         int itemWidth = getResources().getDimensionPixelSize(R.dimen.dp_55);
-        if (mapArrayList.size() > 5) {
+        int itemSize = mapArrayList.size();
+        if (itemSize > 5) {
             centerSpacing = (mScreenWidth - 2 * firstLastSpacing - itemWidth * 5) / 5;
-        } else {
-            centerSpacing = (mScreenWidth - 2 * firstLastSpacing - itemWidth * mapArrayList.size()) / (mapArrayList.size() - 1);
+        } else if (itemSize > 1){
+            centerSpacing = (mScreenWidth - 2 * firstLastSpacing - itemWidth * itemSize) / (itemSize - 1);
+        } else if (itemSize == 1){
+            firstLastSpacing = (mScreenWidth - itemWidth) / 2;
         }
         setItemSpacing(firstLastSpacing,  centerSpacing, firstLastSpacing);
         adapterFuncNav1.notifyDataSetChanged();
