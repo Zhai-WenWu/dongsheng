@@ -213,6 +213,7 @@
                 android:layout_alignRight="@+id/rec_image"
                 android:visibility="gone"
                 tools:visibility="visible"
+                android:scaleType="fitEnd"
                 android:layout_width="@dimen/dp_40"
                 android:layout_height="@dimen/dp_13.5" />
 

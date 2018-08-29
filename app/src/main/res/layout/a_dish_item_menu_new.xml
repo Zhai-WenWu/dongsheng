@@ -28,6 +28,7 @@
             android:layout_alignRight="@+id/img"
             android:layout_alignBottom="@+id/img"
             android:visibility="gone"
+            android:scaleType="fitEnd"
             android:layout_width="@dimen/dp_49"
             android:layout_height="@dimen/dp_16" />
 

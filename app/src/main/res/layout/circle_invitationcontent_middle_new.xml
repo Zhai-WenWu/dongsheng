@@ -52,6 +52,7 @@
         android:layout_alignRight="@+id/image_one"
         android:layout_alignBottom="@+id/image_one"
         android:src="@drawable/icon_ad_gdt"
+        android:scaleType="fitEnd"
         android:layout_width="@dimen/dp_49"
         android:layout_height="@dimen/dp_16" />
 

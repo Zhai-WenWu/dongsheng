@@ -27,6 +27,7 @@
             android:layout_alignRight="@+id/ad_video_img"
             android:visibility="gone"
             tools:visibility="visible"
+            android:scaleType="fitEnd"
             android:layout_width="@dimen/dp_49"
             android:layout_height="@dimen/dp_16" />
     </RelativeLayout>

@@ -145,6 +145,7 @@
             android:layout_alignBottom="@+id/img"
             android:visibility="gone"
             tools:visibility="visible"
+            android:scaleType="fitEnd"
             android:layout_width="@dimen/dp_40"
             android:layout_height="@dimen/dp_13.5" />
 

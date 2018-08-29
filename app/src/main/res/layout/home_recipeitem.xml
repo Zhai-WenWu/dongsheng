@@ -110,7 +110,8 @@
             android:layout_alignBottom="@+id/img"
             android:layout_alignRight="@id/img"
             android:visibility="gone"
-            android:layout_width="@dimen/dp_49"
+            android:scaleType="fitEnd"
+            android:layout_width="@dimen/dp_45"
             android:layout_height="@dimen/dp_16" />
 
         <ImageView

@@ -85,6 +85,7 @@
             android:layout_alignRight="@+id/img"
             android:visibility="gone"
             tools:visibility="visible"
+            android:scaleType="fitEnd"
             android:src="@drawable/icon_ad_gdt"
             android:layout_width="@dimen/dp_49"
             android:layout_height="@dimen/dp_16" />
