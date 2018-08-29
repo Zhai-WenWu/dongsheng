@@ -339,7 +339,7 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
                     commentChanged = true;
                     dataModule.setCommentNum(commentModule.getCommentNum());
                 }
-                if (rvVericalVideoItemAdapter != null && TextUtils.equals(rvVericalVideoItemAdapter.getCurrentViewHolder().data.getCode(), dataModule.getCode())) {
+                if (rvVericalVideoItemAdapter != null && rvVericalVideoItemAdapter.getCurrentViewHolder() != null && rvVericalVideoItemAdapter.getCurrentViewHolder().data != null && TextUtils.equals(rvVericalVideoItemAdapter.getCurrentViewHolder().data.getCode(), dataModule.getCode())) {
                     RvVericalVideoItemAdapter.ItemViewHolder currentHolder = rvVericalVideoItemAdapter.getCurrentViewHolder();
                     if (attentionChanged) {
                         currentHolder.updateAttentionState();

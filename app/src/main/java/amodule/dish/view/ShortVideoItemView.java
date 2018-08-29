@@ -421,7 +421,13 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         lp.height = heightImg;
         mThumbImg.setLayoutParams(lp);
         loadUserHeader(mData.getCustomerModel().getHeaderImg());
-        LoadImage.with(getContext()).load(mData.getVideoModel().getVideoImg()).setPlaceholderId(R.color.transparent).setSaveType(FileManager.save_cache).build().into(mThumbImg);
+        String videoImg = mData.getVideoModel().getVideoImg();
+        mThumbImg.setTag(TAG_ID, videoImg);
+        mThumbImg.setImageResource(R.color.transparent);
+        BitmapRequestBuilder builder = LoadImage.with(getContext()).load(videoImg).setPlaceholderId(R.color.transparent).setSaveType(FileManager.save_cache).build();
+        if (builder != null) {
+            builder.into(mThumbImg);
+        }
         changeThumbImageState(true);
         mVideoUrl = mData.getVideoModel().getVideoUrlMap().get("defaultUrl");
         mCommentImg.setImageResource(R.drawable.short_video_detail_comment);

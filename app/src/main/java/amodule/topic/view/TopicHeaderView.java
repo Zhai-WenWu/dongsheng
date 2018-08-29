@@ -73,30 +73,28 @@ public class TopicHeaderView extends RelativeLayout {
                 .load(url)
                 .setSaveType(FileManager.save_cache)
                 .build();
-        bitmapRequest.into(new SubBitmapTarget() {
+        if (bitmapRequest != null) {
+            bitmapRequest.into(new SubBitmapTarget() {
 
-            @Override
-            public void onLoadFailed(Exception e, Drawable drawable) {
-                super.onLoadFailed(e, drawable);
-                hideTopicImage();
-            }
-
-            @Override
-            public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
-                if (bitmap != null && mUserFrontImg.getTag(R.string.tag) != null && mUserFrontImg.getTag(R.string.tag).equals(url)) {
-                    mUserFrontImg.setVisibility(View.VISIBLE);
-                    mUserFrontImg.setImageBitmap(bitmap);
-                    Bitmap bitmap1 = UtilImage.BoxBlurFilter(bitmap, 3, 3, 3);
-                    mUserRearImg.setImageBitmap(bitmap1);
-
-
-
-//                    TopicHeaderView.this.
-                } else {
+                @Override
+                public void onLoadFailed(Exception e, Drawable drawable) {
+                    super.onLoadFailed(e, drawable);
                     hideTopicImage();
                 }
-            }
-        });
+
+                @Override
+                public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
+                    if (bitmap != null && mUserFrontImg.getTag(R.string.tag) != null && mUserFrontImg.getTag(R.string.tag).equals(url)) {
+                        mUserFrontImg.setVisibility(View.VISIBLE);
+                        mUserFrontImg.setImageBitmap(bitmap);
+                        Bitmap bitmap1 = UtilImage.BoxBlurFilter(bitmap, 3, 3, 3);
+                        mUserRearImg.setImageBitmap(bitmap1);
+                    } else {
+                        hideTopicImage();
+                    }
+                }
+            });
+        }
     }
 
     public void showTopicUser(String userName, OnClickListener listener) {

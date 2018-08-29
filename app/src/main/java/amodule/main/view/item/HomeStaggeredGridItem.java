@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.xiangha.R;
@@ -133,8 +134,13 @@ public class HomeStaggeredGridItem extends HomeItem {
             mImg.setTag(TAG_ID, mDataMap.get("parseResourceData_gif"));
             Glide.with(getContext()).load(mDataMap.get("parseResourceData_gif")).asGif().centerCrop().placeholder(R.drawable.i_nopic).diskCacheStrategy(DiskCacheStrategy.SOURCE).into(mImg);
         } else {
-            mImg.setTag(TAG_ID, mDataMap.get("parseResourceData_img"));
-            LoadImage.with(getContext()).load(mDataMap.get("parseResourceData_img")).setSaveType(FileManager.save_cache).setPlaceholderId(R.drawable.i_nopic).setErrorId(R.drawable.i_nopic).build().into(mImg);
+            String img = mDataMap.get("parseResourceData_img");
+            mImg.setTag(TAG_ID, img);
+            mImg.setImageResource(R.drawable.i_nopic);
+            BitmapRequestBuilder builder = LoadImage.with(getContext()).load(img).setSaveType(FileManager.save_cache).setPlaceholderId(R.drawable.i_nopic).setErrorId(R.drawable.i_nopic).build();
+            if (builder != null) {
+                builder.into(mImg);
+            }
         }
         mTitle.setText("");
         String title = mDataMap.get("name");
@@ -169,7 +175,13 @@ public class HomeStaggeredGridItem extends HomeItem {
             Map<String, String> map = StringManager.getFirstMap(mDataMap.get("customer"));
             mDataMap.put("parseResourceData_customer_img", map.get("img"));
         }
-        LoadImage.with(getContext()).load(mDataMap.get("parseResourceData_customer_img")).setSaveType(FileManager.save_cache).setPlaceholderId(R.drawable.i_nopic).setErrorId(R.drawable.i_nopic).build().into(auther_userImg);
+        String userImage = mDataMap.get("parseResourceData_customer_img");
+        auther_userImg.setTag(TAG_ID, userImage);
+        auther_userImg.setImageResource(R.drawable.i_nopic);
+        BitmapRequestBuilder bitmapRequestBuilder = LoadImage.with(getContext()).load(userImage).setSaveType(FileManager.save_cache).setPlaceholderId(R.drawable.i_nopic).setErrorId(R.drawable.i_nopic).build();
+        if (bitmapRequestBuilder != null) {
+            bitmapRequestBuilder.into(auther_userImg);
+        }
     }
 
 

@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.BitmapRequestBuilder;
 import com.xiangha.R;
 
 import java.util.Map;
@@ -63,35 +64,50 @@ public class HomeGridADItem extends HomeItem {
         if (imgMap.size() > 0) {
             String imgUrl = imgMap.get("url");
             if (!TextUtils.isEmpty(imgUrl)) {
+                mImgBlur.setTag(TAG_ID, imgUrl);
                 mImgBlur.setImageResource(R.drawable.i_nopic);
-                LoadImage.with(getContext()).load(imgUrl).setSaveType(FileManager.save_cache).setPlaceholderId(R.drawable.i_nopic).setErrorId(R.drawable.i_nopic).build().into(new SubAnimTarget(mImg) {
-                    @Override
-                    protected void setResource(Bitmap bitmap) {
-                        if (bitmap != null) {
-                            int bmW = bitmap.getWidth();
-                            int bmH = bitmap.getHeight();
-                            int imgMaxH = mImgBlur.getHeight();
-                            int imgMaxW = mImgBlur.getWidth();
-                            int imgH = imgMaxW * bmH / bmW;
-                            int dstW = imgMaxW;
-                            int dstH = Math.min(imgMaxH, imgH);
-                            Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, dstW, dstH, true);
-                            ConstraintSet cs = new ConstraintSet();
-                            cs.constrainWidth(mImg.getId(), dstW);
-                            cs.constrainHeight(mImg.getId(), dstH);
-                            cs.connect(mImg.getId(), ConstraintSet.TOP, mImgBlur.getId(), ConstraintSet.TOP);
-                            cs.connect(mImg.getId(), ConstraintSet.BOTTOM, mImgBlur.getId(), ConstraintSet.BOTTOM);
-                            cs.connect(mImg.getId(), ConstraintSet.END, mImgBlur.getId(), ConstraintSet.END);
-                            cs.connect(mImg.getId(), ConstraintSet.START, mImgBlur.getId(), ConstraintSet.START);
-                            cs.applyTo(mAdContainer);
-                            mImg.setImageBitmap(scaledBitmap);
+                mImg.setTag(TAG_ID, imgUrl);
+                mImg.setImageResource(R.drawable.i_nopic);
+                BitmapRequestBuilder builder = LoadImage.with(getContext()).load(imgUrl).setSaveType(FileManager.save_cache).setPlaceholderId(R.drawable.i_nopic).setErrorId(R.drawable.i_nopic).build();
+                if (builder != null) {
+                    builder.into(new SubAnimTarget(mImg) {
+                        @Override
+                        protected void setResource(Bitmap bitmap) {
+                            if (bitmap != null) {
+                                int bmW = bitmap.getWidth();
+                                int bmH = bitmap.getHeight();
+                                int imgMaxH = mImgBlur.getHeight();
+                                int imgMaxW = mImgBlur.getWidth();
+                                int imgH = imgMaxW * bmH / bmW;
+                                int dstW = imgMaxW;
+                                int dstH = Math.min(imgMaxH, imgH);
+                                Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, dstW, dstH, true);
+                                ConstraintSet cs = new ConstraintSet();
+                                cs.constrainWidth(mImg.getId(), dstW);
+                                cs.constrainHeight(mImg.getId(), dstH);
+                                cs.connect(mImg.getId(), ConstraintSet.TOP, mImgBlur.getId(), ConstraintSet.TOP);
+                                cs.connect(mImg.getId(), ConstraintSet.BOTTOM, mImgBlur.getId(), ConstraintSet.BOTTOM);
+                                cs.connect(mImg.getId(), ConstraintSet.END, mImgBlur.getId(), ConstraintSet.END);
+                                cs.connect(mImg.getId(), ConstraintSet.START, mImgBlur.getId(), ConstraintSet.START);
+                                cs.applyTo(mAdContainer);
+                                mImg.setImageBitmap(scaledBitmap);
+                            }
                         }
-                    }
-                });
-                LoadImage.with(getContext()).load(imgUrl).setSaveType(FileManager.save_cache).setPlaceholderId(R.drawable.i_nopic).setErrorId(R.drawable.i_nopic).build().transform(new BlurBitmapTransformation(getContext(), 16, 16, 2)).into(mImgBlur);
+                    });
+                }
+                BitmapRequestBuilder builder1 = LoadImage.with(getContext()).load(imgUrl).setSaveType(FileManager.save_cache).setPlaceholderId(R.drawable.i_nopic).setErrorId(R.drawable.i_nopic).build().transform(new BlurBitmapTransformation(getContext(), 16, 16, 2));
+                if (builder1 != null) {
+                    builder1.into(mImgBlur);
+                }
             }
         }
-        LoadImage.with(getContext()).load(dataMap.get("iconUrl")).setSaveType(FileManager.save_cache).setPlaceholderId(R.drawable.i_nopic).setErrorId(R.drawable.i_nopic).build().into(mAdHeaderImg);
+        String iconUrl = dataMap.get("iconUrl");
+        mAdHeaderImg.setTag(TAG_ID, iconUrl);
+        mAdHeaderImg.setImageResource(R.drawable.i_nopic);
+        BitmapRequestBuilder headerBuilder = LoadImage.with(getContext()).load(iconUrl).setSaveType(FileManager.save_cache).setPlaceholderId(R.drawable.i_nopic).setErrorId(R.drawable.i_nopic).build();
+        if (headerBuilder != null) {
+            headerBuilder.into(mAdHeaderImg);
+        }
         mGDTIconImg.setVisibility("sdk_gdt".equals(mDataMap.get("adClass")) ? View.VISIBLE : View.GONE);
         String adName = mDataMap.get("name");
         if (!TextUtils.isEmpty(adName)) {

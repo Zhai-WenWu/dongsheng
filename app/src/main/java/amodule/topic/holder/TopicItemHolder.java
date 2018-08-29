@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.xiangha.R;
@@ -91,10 +92,15 @@ public class TopicItemHolder extends RvBaseViewHolder<TopicItemModel> implements
     }
 
     private void loadImage(String url, ImageView view) {
-        LoadImage.with(itemView.getContext())
+        view.setTag(R.string.tag, url);
+        view.setImageResource(R.drawable.i_nopic);
+        BitmapRequestBuilder builder = LoadImage.with(itemView.getContext())
                 .load(url).setPlaceholderId(R.drawable.i_nopic).setErrorId(R.drawable.i_nopic)
                 .setSaveType(FileManager.save_cache)
-                .build().into(view);
+                .build();
+        if (builder != null) {
+            builder.into(view);
+        }
     }
 
     @Override
