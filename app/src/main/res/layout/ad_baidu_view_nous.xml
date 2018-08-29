@@ -34,6 +34,7 @@
             android:id="@id/icon_ad_gdt"
             android:src="@drawable/icon_ad_gdt"
             android:visibility="gone"
+            android:scaleType="fitEnd"
             android:layout_alignBottom="@+id/iv_nousCover_ad"
             android:layout_alignRight="@+id/iv_nousCover_ad"
             android:layout_width="@dimen/dp_40"
