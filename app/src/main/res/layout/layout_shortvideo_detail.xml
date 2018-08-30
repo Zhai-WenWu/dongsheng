@@ -295,7 +295,7 @@
         android:layout_marginBottom="@dimen/dp_10"
         android:paddingLeft="@dimen/dp_20"
         android:paddingRight="@dimen/dp_20"
-        app:layout_constraintBottom_toTopOf="@+id/layout_bottom_info"
+        app:layout_constraintBottom_toTopOf="@+id/line_bottom"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <LinearLayout
@@ -510,6 +510,14 @@
 
     </android.support.constraint.ConstraintLayout>
 
+    <View
+        android:id="@+id/line_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#33ffffff"
+        app:layout_constraintBottom_toTopOf="@+id/layout_bottom_info"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
     <ProgressBar
         android:id="@+id/bottom_progressbar"
         android:layout_width="match_parent"
@@ -526,12 +534,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/bottom_progressbar"
-        android:layout_marginBottom="@dimen/dp_22"
+        android:layout_marginBottom="@dimen/dp_7"
         android:layout_marginLeft="@dimen/dp_20"
         android:layout_marginRight="@dimen/dp_20"
         android:paddingTop="@dimen/dp_9"
         android:paddingBottom="@dimen/dp_9"
-        android:background="@drawable/bg_round6_4c000000"
         android:clickable="true">
         
         <ImageView
@@ -541,16 +548,15 @@
             android:src="@drawable/comment_hint_img"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="@dimen/dp_12"/>
+            app:layout_constraintStart_toStartOf="parent"/>
 
         <TextView
             android:id="@+id/comment_hint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="@string/whatToSay"
+            android:text="@string/whatToSay"
             android:gravity="center_vertical"
-            android:textColorHint="@color/c_white_text"
+            android:textColor="@color/umeng_fb_color_btn_pressed"
             android:textSize="@dimen/sp_14"
             android:lines="1"
             android:shadowDx="1"
