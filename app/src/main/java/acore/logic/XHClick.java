@@ -671,12 +671,17 @@ public class XHClick {
      * @param link url链接
      * @param type 分享平台
      */
-    public static void statisticsShare(final String from, final String link, final String type) {
+    public static void statisticsShare(final String from, final String link, final String type, Map<String, String> extraParams) {
         String actionUrl = StringManager.api_statisticShare;
-        String param;
+        StringBuffer param = new StringBuffer();
         try {
-            param = "from=" + URLEncoder.encode(from, "utf-8") + "&link=" + link + "&type=" + type;
-            ReqInternet.in().doPost(actionUrl, param, new InternetCallback() {
+            param.append("from=").append(URLEncoder.encode(from, "utf-8")).append("&link=").append(link).append("&type=").append(type);
+            if (extraParams != null && !extraParams.isEmpty()) {
+                for (String key : extraParams.keySet()) {
+                    param.append("&").append(key).append("=").append(extraParams.get(key));
+                }
+            }
+            ReqInternet.in().doPost(actionUrl, param.toString(), new InternetCallback() {
 
                 @Override
                 public void loaded(int flag, String url, Object returnObj) {

@@ -317,8 +317,6 @@ public class ShareTools {
                 case OK:
                     if (arg1 == Option.SHARE.getType()) {
                         starEvent("a_share_success", mParent, mFrom);
-                        XHClick.statisticsShare(mFrom, mClickUrl, pf[1]);
-                        Tools.showToast(mContext, pf[0] + "分享成功");
                         String callbackParams = null;
                         Bundle bundle = msg.getData();
                         if (bundle != null) {
@@ -326,6 +324,14 @@ public class ShareTools {
                         }
                         notifyMsgResult(Option.SHARE, pf[0], "2", TextUtils.isEmpty
                                 (callbackParams) ? pf[2] : callbackParams);
+                        Map<String, String> extraParams = new HashMap<>();
+                        if (TextUtils.equals(mFrom, "shortVideo")) {//短视频 分享
+                            extraParams.put("contentId", callbackParams);
+                            extraParams.put("contentType", "7");//短视频 7
+                            extraParams.put("platform", "and");
+                        }
+                        XHClick.statisticsShare(mFrom, mClickUrl, pf[1], extraParams);
+                        Tools.showToast(mContext, pf[0] + "分享成功");
                     } else if (arg1 == Option.AUTHORIZE.getType()) {
                         Tools.showToast(mContext, pf[0] + "授权成功");
                         notifyMsgResult(Option.AUTHORIZE, pf[0], "2", msg.getData()
