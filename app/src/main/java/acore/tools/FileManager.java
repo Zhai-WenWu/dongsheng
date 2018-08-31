@@ -162,6 +162,7 @@ public class FileManager extends UtilFile{
 	public static final String xg_config_official = "xg_config_official";
 	public static final String notification_permission = "notification_permission";
 	public static final String xhmKey_shortVideoGuidanceShow = "shortVideoGuidanceShow";
+	public static final String key_header_mode = "header_mode";
 
 	public static String getSDLongDir(){
 		return getSDDir()+save_long+"/";

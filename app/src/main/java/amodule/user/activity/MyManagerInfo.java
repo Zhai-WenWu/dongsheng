@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Map;
 
 import acore.logic.SpecialOrder;
+import acore.override.XHApplication;
+import acore.tools.FileManager;
+import aplug.basic.ReqEncyptInternet;
 import third.push.xg.XGPushServer;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilString;
@@ -15,11 +18,14 @@ import acore.override.adapter.AdapterSimple;
 import acore.tools.StringManager;
 
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TableLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import aplug.basic.InternetCallback;
@@ -34,12 +40,13 @@ import com.xiangha.R;
  * @author ruijiao_fang
  * @date 2014年11月28日
  */
-public class MyManagerInfo extends BaseActivity {
+public class MyManagerInfo extends BaseActivity implements OnClickListener{
 
     private EditText otherUser_code;
 
     private List<Map<String, String>> list;
     private String userCode = "";
+    private TextView tv_module_state,tv_module_num;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +106,20 @@ public class MyManagerInfo extends BaseActivity {
             }
         });
         findViewById(R.id.manager_wrapper).setVisibility(View.VISIBLE);
+        findViewById(R.id.module_start_linear).setOnClickListener(this);
+        findViewById(R.id.module_exit_linear).setOnClickListener(this);
+        tv_module_state = findViewById(R.id.tv_module_state);
+        tv_module_num = findViewById(R.id.tv_module_num);
+        String key= (String) FileManager.loadShared(XHApplication.in(),FileManager.key_header_mode,FileManager.key_header_mode);
+        if(TextUtils.isEmpty(key)){
+            tv_module_state.setText("评论模式(未开启)");
+            tv_module_num.setVisibility(View.GONE);
+        }else{
+            tv_module_state.setText("评论模式(已开启)");
+            tv_module_num.setVisibility(View.VISIBLE);
+            setRequest();
+        }
+
     }
 
 
@@ -122,6 +143,39 @@ public class MyManagerInfo extends BaseActivity {
                     initUI();
                 }
                 loadManager.hideProgressBar();
+            }
+        });
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.module_exit_linear:
+                FileManager.saveShared(XHApplication.in(),FileManager.key_header_mode,FileManager.key_header_mode,"");
+                tv_module_state.setText("评论模式(未开启)");
+                tv_module_num.setVisibility(View.GONE);
+                break;
+            case R.id.module_start_linear:
+                FileManager.saveShared(XHApplication.in(),FileManager.key_header_mode,FileManager.key_header_mode,"comment");
+                tv_module_state.setText("评论模式(已开启)");
+                setRequest();
+                tv_module_num.setVisibility(View.VISIBLE);
+                break;
+        }
+    }
+    public void setRequest(){
+        ReqEncyptInternet.in().doEncypt(StringManager.API_FORUM_GETCOMMENTMODENUMBYDATE,"", new InternetCallback() {
+            @Override
+            public void loaded(int flag, String url, Object msg) {
+                Log.i("xianghaTag","flag::"+flag+"::msg::"+msg);
+                if(flag>=ReqInternet.REQ_OK_STRING){
+                    Log.i("xianghaTag","msg::"+msg);
+                    if(TextUtils.isEmpty((CharSequence) msg)||"[]".equals(String.valueOf(msg))) {
+                        tv_module_num.setText("0");
+                    }else{
+                        tv_module_num.setText(String.valueOf(msg));
+                    }
+                }
             }
         });
     }
