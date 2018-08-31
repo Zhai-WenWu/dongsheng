@@ -61,8 +61,8 @@ android {
         applicationId "com.xiangha"
         minSdkVersion 19
         targetSdkVersion 21
-        versionCode 281
-        versionName "6.4.1"
+        versionCode 285
+        versionName "6.4.5.2"
         // dex突破65535的限制
         multiDexEnabled true
         ndk {
