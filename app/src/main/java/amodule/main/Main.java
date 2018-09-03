@@ -25,10 +25,16 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.aliyun.struct.common.CropKey;
+import com.aliyun.struct.common.ScaleMode;
+import com.aliyun.struct.common.VideoQuality;
+import com.aliyun.struct.encoder.VideoCodecs;
+import com.aliyun.struct.snap.AliyunSnapVideoParam;
 import com.annimon.stream.Stream;
 import com.popdialog.db.FullSrceenDB;
 import com.popdialog.util.GoodCommentManager;
 import com.popdialog.util.PushManager;
+import com.quze.videorecordlib.VideoRecorderCommon;
 import com.tencent.stat.StatConfig;
 import com.tencent.stat.StatService;
 import com.xiangha.R;
@@ -69,6 +75,8 @@ import third.ad.control.AdControlHomeDish;
 import third.ad.db.XHAdSqlite;
 import third.ad.tools.AdConfigTools;
 import third.aliyun.work.AliyunCommon;
+import third.aliyun.work.EditorActivity;
+import third.aliyun.work.MediaActivity;
 import third.cling.control.ClingPresenter;
 import third.mall.alipay.MallPayActivity;
 import third.push.localpush.LocalPushDataManager;
@@ -323,6 +331,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                 tabHost.addContent(i + "", new Intent(this, classes[i]));
             }
         }
+        initAliyunVideo();
     }
     public void onChangeSend(View view){
 //        if (!LoginManager.isLogin()) {
@@ -331,7 +340,9 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
 //            this.startActivity(new Intent(this, VideoEditActivity.class));
 //        } else
 //            BaseLoginActivity.gotoBindPhoneNum(this);
-        AliyunCommon.getInstance().startRecoderVideo(this);
+//        AliyunCommon.getInstance().startRecoderVideo(this);
+        AliyunCommon.getInstance().startRecord(this);
+
 //        AliyunCommon.getInstance().startAliyunVideo(this);
     }
 
@@ -821,5 +832,42 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
         pw.setBackgroundDrawable(null);
         pw.showAtLocation(findViewById(android.R.id.content), Gravity.CENTER, 0, 0);
     }
+    private void initAliyunVideo(){
+        AliyunCommon.getInstance().setAliyunVideoDataCallBack(new AliyunCommon.AliyunVideoDataCallBack() {
+            @Override
+            public void videoCallBack(String videoPath, String imgPath, String otherData) {
+                Log.i("xianghaTag","videoPath:::"+videoPath+"::::"+imgPath+"::::"+otherData);
+            }
+        });
+        //选择本地
+        VideoRecorderCommon.instance().setStartMediaActivityCallback(new VideoRecorderCommon.StartMediaActivityCallback() {
+            @Override
+            public void startMediaActivity() {
 
+                Intent intent = new Intent(Main.this, MediaActivity.class);
+                intent.putExtra(AliyunSnapVideoParam.VIDEO_RESOLUTION, 3);
+                intent.putExtra(AliyunSnapVideoParam.VIDEO_RATIO, CropKey.RATIO_MODE_9_16);
+                intent.putExtra(AliyunSnapVideoParam.NEED_RECORD, false);
+                intent.putExtra(AliyunSnapVideoParam.VIDEO_QUALITY, VideoQuality.HD);
+                intent.putExtra(AliyunSnapVideoParam.VIDEO_GOP, 0);
+                intent.putExtra(AliyunSnapVideoParam.VIDEO_BITRATE, 0);
+                intent.putExtra(AliyunSnapVideoParam.VIDEO_FRAMERATE, 25);
+                intent.putExtra(AliyunSnapVideoParam.CROP_MODE, ScaleMode.PS);
+                intent.putExtra(AliyunSnapVideoParam.MIN_CROP_DURATION, 3000);
+                intent.putExtra(AliyunSnapVideoParam.MIN_VIDEO_DURATION, 3000);
+                intent.putExtra(AliyunSnapVideoParam.MAX_VIDEO_DURATION, 20000);
+                intent.putExtra(AliyunSnapVideoParam.SORT_MODE, AliyunSnapVideoParam.SORT_MODE_MERGE);
+                intent.putExtra(AliyunSnapVideoParam.VIDEO_CODEC, VideoCodecs.H264_HARDWARE);
+                startActivity(intent);
+            }
+        });
+        //到裁剪页面
+        VideoRecorderCommon.instance().setStartEditActivityCallback(new VideoRecorderCommon.StartEditActivityCallback() {
+            @Override
+            public void startEditActivity(Bundle bundle) {
+                Log.i("xianghaTag","setStartEditActivityCallback");
+                startActivity(new Intent(Main.this, EditorActivity.class).putExtras(bundle));
+            }
+        });
+    }
 }

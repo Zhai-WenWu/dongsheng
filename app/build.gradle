@@ -41,6 +41,7 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:' + rootProject.supportConstraintVersion
     compile 'com.qiyukf.unicorn:unicorn:3.10.0'
     implementation project(':cling_lib')
+    implementation project(':videorecordlib')
     implementation project(':gsyVideoPlayer-java')
     //Java8的stream API第三方兼容包
     compile 'com.annimon:stream:1.0.3'

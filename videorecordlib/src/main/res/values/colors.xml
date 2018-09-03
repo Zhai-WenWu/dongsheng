@@ -1,0 +1,14 @@
+<resources>
+
+    <color name="black_overlay">#66000000</color>
+
+    <!--aliyun-->
+    <color name="aliyun_record_fill_progress">#FFDA44</color>
+    <color name="aliyun_record_fill_progress_back">#00ffffff</color>
+    <color name="aliyun_record_fill_progress_select">#FFB933</color>
+    <color name="aliyun_editor_overlay_line">#D8D8D8</color>
+    <color name="aliyun_transparent">#00ffffff</color>
+    <color name="qupai_black_opacity_70pct">#b3000000</color>
+    <color name="aliyun_tools_bar_color">#881B2133</color>
+
+</resources>
