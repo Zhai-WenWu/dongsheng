@@ -33,7 +33,7 @@ public class GalleryMediaChooser {
         this.mStorage = storage;
         adapter = new GalleryAdapter(thumbnailGenerator);
         gallery.setLayoutManager(new WrapContentGridLayoutManager(gallery.getContext(),
-                3, GridLayoutManager.VERTICAL, false));
+                4, GridLayoutManager.VERTICAL, false));
         gallery.addItemDecoration(new RecyclerView.ItemDecoration() {
                                       @Override
                                       public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {

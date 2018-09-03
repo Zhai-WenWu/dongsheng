@@ -129,7 +129,7 @@
     <string name="please_select_video">请选择视频</string>
     <string name="aliyun_svideo_music">音乐</string>
     <string name="aliyun_svideo_cover">封面</string>
-    <string name="aliyun_corp_durtion">已选择视频长度</string>
+    <string name="aliyun_corp_durtion">已选</string>
     <string name="aliyun_download">已下载</string>
     <string name="aliyun_progress_crop">视频裁剪中</string>
     <string name="aliyun_progress_edit">视频合成中</string>

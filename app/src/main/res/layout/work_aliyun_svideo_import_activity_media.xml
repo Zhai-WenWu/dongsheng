@@ -55,7 +55,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="#1c1c1c">
+        android:background="#fffffe">
         <!--底部空出tab的高度-->
         <android.support.v7.widget.RecyclerView
             android:id="@+id/gallery_media"

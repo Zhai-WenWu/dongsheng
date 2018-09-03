@@ -51,7 +51,7 @@ public class VideoSliceSeekBar extends View {
     private int resSweepLeft = R.drawable.aliyun_svideo_icon_sweep_left,resSweepRight = R.drawable.aliyun_svideo_icon_sweep_right;
     private int resFrame = R.drawable.aliyun_svideo_icon_frame;
     private int resBackground = Color.parseColor("#aa000000");
-    private int resPaddingColor  =  R.color.aliyun_color_yellow_bg;
+    private int resPaddingColor  =  R.color.aliyun_color_white_bg;
 
 
     private boolean blocked;

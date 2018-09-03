@@ -53,6 +53,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import acore.override.XHApplication;
 import acore.tools.FileManager;
 import acore.tools.Tools;
 import third.aliyun.media.FrameExtractor10;
@@ -291,6 +292,14 @@ public class AliyunVideoCrop extends Activity implements TextureView.SurfaceText
             }
         });
         findViewById(R.id.progressBar_layout).setOnClickListener(v->{});
+        handleShowHint();
+        findViewById(R.id.show_hint_know).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                findViewById(R.id.show_hint).setVisibility(View.GONE);
+                FileManager.saveShared(XHApplication.in(),FileManager.video_corp_show_hint,FileManager.video_corp_show_hint,"1");
+            }
+        });
     }
 
     private void setListViewHeight() {
@@ -828,17 +837,15 @@ public class AliyunVideoCrop extends Activity implements TextureView.SurfaceText
     }
 
     public String setDurationStyleView(float duration){
-        String time="";
-        if(duration>0){
-            if(duration>60){
-                int index= (int) (duration/60);
-                int indexTwo= (int) (duration-index*60);
-                time = index>=10?String.valueOf(index):"0"+index;
-                time +=":"+(indexTwo>=10?indexTwo:"0"+indexTwo);
-            }else{
-                time="00:"+(duration>=10?((int)duration):"0"+((int)duration));
-            }
+        return duration+"秒";
+    }
+
+    private void handleShowHint(){
+        String hint = (String) FileManager.loadShared(XHApplication.in(),FileManager.video_corp_show_hint,FileManager.video_corp_show_hint);
+        if(TextUtils.isEmpty(hint)){
+            findViewById(R.id.show_hint).setVisibility(View.VISIBLE);
+        }else{
+            findViewById(R.id.show_hint).setVisibility(View.GONE);
         }
-        return time;
     }
 }
