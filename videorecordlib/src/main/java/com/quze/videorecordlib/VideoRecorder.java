@@ -1042,7 +1042,8 @@ public class VideoRecorder extends AppCompatActivity implements View.OnClickList
 
     /** 开始录制 */
     private void startRecording() {
-        String videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/com.quze.lbsvideo/long/aliyun/" + System.currentTimeMillis() + ".mp4";
+//        String videoPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/com.quze.lbsvideo/long/aliyun/" + System.currentTimeMillis() + ".mp4";
+        String videoPath = Environment.getExternalStorageDirectory() + File.separator + Environment.DIRECTORY_DCIM + File.separator + System.currentTimeMillis() + ".mp4";
         mRecorder.setOutputPath(videoPath);
         handleRecordStart();
         mRecorder.setRotation(getPictureRotation());

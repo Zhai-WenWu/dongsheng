@@ -17,6 +17,7 @@ import acore.override.activity.base.BaseActivity;
 import acore.override.adapter.AdapterSimple;
 import acore.tools.StringManager;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -111,14 +112,8 @@ public class MyManagerInfo extends BaseActivity implements OnClickListener{
         tv_module_state = findViewById(R.id.tv_module_state);
         tv_module_num = findViewById(R.id.tv_module_num);
         String key= (String) FileManager.loadShared(XHApplication.in(),FileManager.key_header_mode,FileManager.key_header_mode);
-        if(TextUtils.isEmpty(key)){
-            tv_module_state.setText("评论模式(未开启)");
-            tv_module_num.setVisibility(View.GONE);
-        }else{
-            tv_module_state.setText("评论模式(已开启)");
-            tv_module_num.setVisibility(View.VISIBLE);
-            setRequest();
-        }
+        setModuleChange(!TextUtils.isEmpty(key));
+        setRequest();
 
     }
 
@@ -152,14 +147,12 @@ public class MyManagerInfo extends BaseActivity implements OnClickListener{
         switch (v.getId()){
             case R.id.module_exit_linear:
                 FileManager.saveShared(XHApplication.in(),FileManager.key_header_mode,FileManager.key_header_mode,"");
-                tv_module_state.setText("评论模式(未开启)");
-                tv_module_num.setVisibility(View.GONE);
+                setModuleChange(false);
                 break;
             case R.id.module_start_linear:
                 FileManager.saveShared(XHApplication.in(),FileManager.key_header_mode,FileManager.key_header_mode,"comment");
-                tv_module_state.setText("评论模式(已开启)");
                 setRequest();
-                tv_module_num.setVisibility(View.VISIBLE);
+                setModuleChange(true);
                 break;
         }
     }
@@ -173,10 +166,25 @@ public class MyManagerInfo extends BaseActivity implements OnClickListener{
                     if(TextUtils.isEmpty((CharSequence) msg)||"[]".equals(String.valueOf(msg))) {
                         tv_module_num.setText("0");
                     }else{
-                        tv_module_num.setText(String.valueOf(msg));
+                        tv_module_num.setText("今日"+String.valueOf(msg));
                     }
                 }
             }
         });
+    }
+    private void setModuleChange(boolean isForum){
+        if(isForum){//当前评论模式
+            findViewById(R.id.module_start_linear).setBackgroundResource(R.drawable.bg_circle_blue_6);
+            findViewById(R.id.module_exit_linear).setBackgroundResource(R.drawable.bg_circle_white_6);
+            tv_module_state.setTextColor(Color.parseColor("#fffffe"));
+            tv_module_num.setTextColor(Color.parseColor("#fffffe"));
+            ((TextView)findViewById(R.id.tv_normal)).setTextColor(Color.parseColor("#333333"));
+        }else{//非评论模式
+            findViewById(R.id.module_start_linear).setBackgroundResource(R.drawable.bg_circle_white_6);
+            findViewById(R.id.module_exit_linear).setBackgroundResource(R.drawable.bg_circle_blue_6);
+            tv_module_state.setTextColor(Color.parseColor("#333333"));
+            tv_module_num.setTextColor(Color.parseColor("#333333"));
+            ((TextView)findViewById(R.id.tv_normal)).setTextColor(Color.parseColor("#fffffe"));
+        }
     }
 }

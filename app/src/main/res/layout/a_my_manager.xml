@@ -15,16 +15,40 @@
             android:dividerPadding="@dimen/dp_10" />
     </ScrollView>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_60"
-        android:paddingLeft="@dimen/dp_40"
-        android:paddingRight="@dimen/dp_40"
+        android:paddingLeft="@dimen/dp_10"
+        android:paddingRight="@dimen/dp_10"
+        android:orientation="horizontal"
+        android:background="#e6e3e4"
+        android:gravity="center"
         android:layout_above="@+id/manager_wrapper">
         <LinearLayout
+            android:id="@+id/module_exit_linear"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="@dimen/dp_45"
+            android:background="#999999"
+            android:gravity="center"
+            android:layout_alignParentRight="true"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/tv_normal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="正常模式"
+                android:textSize="@dimen/dp_15"
+                android:layout_gravity="center"/>
+        </LinearLayout>
+        <View
+            android:layout_width="@dimen/dp_10"
+            android:layout_height="@dimen/dp_40"/>
+        <LinearLayout
             android:id="@+id/module_start_linear"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/dp_60"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="@dimen/dp_45"
             android:minWidth="@dimen/dp_100"
             android:background="#999999"
             android:gravity="center"
@@ -34,32 +58,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="评论模式"
-                android:textSize="@dimen/dp_15"
+                android:textSize="@dimen/dp_16"
                 android:layout_gravity="center"/>
             <TextView
                 android:id="@+id/tv_module_num"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/dp_15"
+                android:textSize="@dimen/dp_12"
                 android:layout_gravity="center"
                 />
         </LinearLayout>
-        <LinearLayout
-            android:id="@+id/module_exit_linear"
-            android:layout_width="@dimen/dp_100"
-            android:layout_height="@dimen/dp_60"
-            android:background="#999999"
-            android:gravity="center"
-            android:layout_alignParentRight="true"
-            android:orientation="vertical">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="退出"
-                android:textSize="@dimen/dp_15"
-                android:layout_gravity="center"/>
-        </LinearLayout>
-    </RelativeLayout>
+
+    </LinearLayout>
     <RelativeLayout
         android:id="@+id/manager_wrapper"
         android:layout_width="fill_parent"
