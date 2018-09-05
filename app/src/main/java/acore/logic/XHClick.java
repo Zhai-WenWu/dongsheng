@@ -1065,7 +1065,7 @@ public class XHClick {
             //默认插入数据
             StatictisSQLiteDataBase.getInstance().insterData(params);
             Log.i("wyl", "位置：::" + StatictisSQLiteDataBase.getInstance().getDataNum());
-            if (StatictisSQLiteDataBase.getInstance().getDataNum() >= 500) {
+            if (StatictisSQLiteDataBase.getInstance().getDataNum() >= 100) {
                 //获取全部数据
                 final ArrayList<String> list = StatictisSQLiteDataBase.getInstance().selectAllData();
                 //删除全部数据
