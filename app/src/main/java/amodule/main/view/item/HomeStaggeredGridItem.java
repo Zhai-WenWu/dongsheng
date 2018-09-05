@@ -168,8 +168,8 @@ public class HomeStaggeredGridItem extends HomeItem {
             mTitle.setVisibility(View.GONE);
         }
         setImgFav();
-        if(mDataMap.containsKey("favorites")){
-            num_tv.setText(mDataMap.get("favorites"));
+        if(mDataMap.containsKey("likeNum")){
+            num_tv.setText(mDataMap.get("likeNum"));
         }
         if (TextUtils.isEmpty(mDataMap.get("parseResourceData_customer_img"))) {
             Map<String, String> map = StringManager.getFirstMap(mDataMap.get("customer"));

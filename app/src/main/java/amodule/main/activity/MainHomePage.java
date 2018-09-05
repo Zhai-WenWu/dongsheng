@@ -53,7 +53,7 @@ import static acore.logic.ConfigMannager.KEY_LOGPOSTTIME;
  */
 public class MainHomePage extends MainBaseActivity implements IObserver,ISetMessageTip {
     public final static String KEY = "MainIndex";
-    public final static String recommedType = "recomv1";//推荐类型
+    public final static String recommedType = "recomv2";//推荐类型
     public final static String recommedType_statictus = "recom";//推荐类型-用于统计
     public final static String STATICTUS_ID_HOMEPAGE = "a_index580";
     public final static String STATICTUS_ID_PULISH = "a_post_button580";

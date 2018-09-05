@@ -110,11 +110,7 @@ public class HomeGridADItem extends HomeItem {
         }
         mGDTIconImg.setVisibility("sdk_gdt".equals(mDataMap.get("adClass")) ? View.VISIBLE : View.GONE);
         String adName = mDataMap.get("name");
-        if (!TextUtils.isEmpty(adName)) {
-            mAdName.setText(adName);
-        } else {
-            mTitle.setText("");
-        }
+        mAdName.setText(!TextUtils.isEmpty(adName) ? adName : "");
         String content = mDataMap.get("content");
         mTitle.setText(TextUtils.isEmpty(content) ? "" : content);
     }
