@@ -62,7 +62,6 @@ import com.quze.videorecordlib.util.AlbumNotifyHelper;
 import com.quze.videorecordlib.util.CameraUtil;
 import com.quze.videorecordlib.util.ComposeFactory;
 import com.quze.videorecordlib.util.LocationUtil;
-import com.quze.videorecordlib.util.OrientationDetector;
 import com.quze.videorecordlib.util.Util;
 import com.quze.videorecordlib.widget.AliyunSVideoGlSurfaceView;
 import com.quze.videorecordlib.widget.RecordTimeCircleView;
@@ -335,6 +334,7 @@ public class VideoRecorder extends AppCompatActivity implements View.OnClickList
     }
 
     private void showDraftLayout(boolean isShow) {
+        //TODO 草稿箱
         mDraftLayout.setVisibility(isShow && isNeedDraft ? View.GONE : View.GONE);
     }
 
@@ -355,9 +355,6 @@ public class VideoRecorder extends AppCompatActivity implements View.OnClickList
             @Override
             public void openFailed() {
                 isOpenFailed = true;
-//                Log.i("tzy", "openFailed: " + isOpenFailed);
-//                setCameraType(CameraType.BACK);
-//                mRecorder.startPreview();
             }
         });
         mRecorder.setOnTextureIdCallback(new OnTextureIdCallBack() {
@@ -381,10 +378,12 @@ public class VideoRecorder extends AppCompatActivity implements View.OnClickList
         info.setVideoWidth(resolution[0]);
         info.setVideoHeight(resolution[1]);
         info.setVideoCodec(mVideoCodec);
-        info.setCrf(mBitrate);
-        mOutputPath = baseOutputPath + "record_" + System.currentTimeMillis() + ".mp4";
-        mRecorder.setOutputPath(mOutputPath);
+        info.setCrf(25);
         mRecorder.setMediaInfo(info);
+//        if(!TextUtils.isEmpty(baseOutputPath)){
+//            mOutputPath = baseOutputPath + "record_" + System.currentTimeMillis() + ".mp4";
+//            mRecorder.setOutputPath(mOutputPath);
+//        }
         if (mRecorder.getCameraCount() == 1) {
             mCameraType = CameraType.BACK;
             showSwitchCamera(false);
@@ -398,6 +397,7 @@ public class VideoRecorder extends AppCompatActivity implements View.OnClickList
         mRecorder.setGop(mGop);
         mRecorder.setVideoBitrate(mBitrate);
         mRecorder.setVideoQuality(mVideoQuality);
+
         mRecorder.setRecordCallback(new RecordCallback() {
             @Override
             public void onComplete(boolean validClip, long clipDuration) {
@@ -470,6 +470,8 @@ public class VideoRecorder extends AppCompatActivity implements View.OnClickList
 
         setRecordMode(getIntent().getIntExtra(AliyunSnapVideoParam.RECORD_MODE, AliyunSnapVideoParam.RECORD_MODE_AUTO));
         setFilterList(getIntent().getStringArrayExtra(AliyunSnapVideoParam.FILTER_LIST));
+        int level = getIntent().getIntExtra(AliyunSnapVideoParam.BEAUTY_LEVEL,80);
+        mRecorder.setBeautyLevel(level);
         setCameraType((CameraType) getIntent().getSerializableExtra(AliyunSnapVideoParam.CAMERA_TYPE));
         setFlashType((FlashType) getIntent().getSerializableExtra(AliyunSnapVideoParam.FLASH_TYPE));
         mRecorder.setExposureCompensationRatio(mExposureCompensationRatio);
@@ -863,11 +865,11 @@ public class VideoRecorder extends AppCompatActivity implements View.OnClickList
 //        if ((orientation >= 225) && (orientation < 315)) {
 //            rotation = 0;
 //        }
-//        if (mCameraType == CameraType.FRONT) {
-//            if (rotation != 0) {
-//                rotation = 360 - rotation;
-//            }
-//        }
+        if (mCameraType == CameraType.FRONT) {
+            if (rotation != 0) {
+                rotation = 360 - rotation;
+            }
+        }
         return rotation;
     }
 
@@ -1219,6 +1221,7 @@ public class VideoRecorder extends AppCompatActivity implements View.OnClickList
         mCompleteBtn.setVisibility(View.VISIBLE);
         mDeleteBtn.setVisibility(View.VISIBLE);
         mBackBtn.setVisibility(View.VISIBLE);
+        //TODO 无网暂存
         mDownload.setVisibility(View.GONE);
         if (mRecorder.getCameraCount() > 1) {
             showSwitchCamera(true);
@@ -1239,6 +1242,7 @@ public class VideoRecorder extends AppCompatActivity implements View.OnClickList
             mRecordTimeLayout.setVisibility(View.VISIBLE);
             mDeleteBtn.setVisibility(View.VISIBLE);
             mCompleteBtn.setVisibility(View.VISIBLE);
+            //TODO 无网暂存
             mDownload.setVisibility(View.GONE);
             showGallery(false);
             showDraftLayout(false);
@@ -1261,6 +1265,8 @@ public class VideoRecorder extends AppCompatActivity implements View.OnClickList
         if (mFlashType == FlashType.ON && mCameraType == CameraType.BACK) {
             mRecorder.setLight(FlashType.OFF);
         }
+        handler.removeCallbacks(switchRunnable);
+        mRecordPoint.setVisibility(View.GONE);
     }
 
     private void showComplete() {

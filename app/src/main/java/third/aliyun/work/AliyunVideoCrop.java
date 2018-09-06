@@ -160,6 +160,9 @@ public class AliyunVideoCrop extends Activity implements TextureView.SurfaceText
     }
 
     private void getData() {
+        if(AliyunCommon.getRecordTime("recordMinTime")>0){
+            cropDuration=AliyunCommon.getRecordTime("recordMinTime")*1000;
+        }
         mCurrMediaInfo= (MediaInfo) getIntent().getExtras().getSerializable("videoInfo");
         mRatio = getIntent().getIntExtra(CropKey.VIDEO_RATIO, CropKey.RATIO_MODE_9_16);
         mAction = getIntent().getIntExtra(CropKey.ACTION, CropKey.ACTION_TRANSCODE);
@@ -837,7 +840,18 @@ public class AliyunVideoCrop extends Activity implements TextureView.SurfaceText
     }
 
     public String setDurationStyleView(float duration){
-        return duration+"秒";
+        String time="";
+        if(duration>0){
+            if(duration>60){
+                int index= (int) (duration/60);
+                int indexTwo= (int) (duration-index*60);
+                time = index>=10?String.valueOf(index):"0"+index;
+                time +=":"+(indexTwo>=10?indexTwo:"0"+indexTwo);
+            }else{
+                time="00:"+(duration>=10?((int)duration):"0"+((int)duration));
+            }
+        }
+        return time;
     }
 
     private void handleShowHint(){

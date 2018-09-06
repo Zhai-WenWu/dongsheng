@@ -7,12 +7,12 @@
     android:id="@+id/gallery_actionBar_rela"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#262626">
+    android:background="#fffffe">
     <FrameLayout
         android:id="@+id/gallery_actionBar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/topbar_height"
-        android:background="#262626">
+        android:background="#fffffe">
 
         <ImageView
             android:id="@+id/close"
@@ -34,7 +34,7 @@
                 android:id="@+id/gallery_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/white"
+                android:textColor="#333333"
                 android:textSize="@dimen/dp_18" />
 
             <ImageView

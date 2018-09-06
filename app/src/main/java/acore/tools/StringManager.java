@@ -409,6 +409,7 @@ public class StringManager extends UtilString {
     //短视频访问统计
     public final static String API_SHORT_VIDEO_ACCESS = apiUrl + "main8/shortVideo/shortVideoStat";
     public final static String API_FORUM_GETCOMMENTMODENUMBYDATE = apiUrl + "main7/Forum/getNumByComMode";//灌水接口
+    public final static String API_SHORTVIDEO_MUSICLIST = apiUrl + "main8/shortVideo/musicList";//音乐接口
 
     //替换url
     public final static String replaceUrl(String url) {

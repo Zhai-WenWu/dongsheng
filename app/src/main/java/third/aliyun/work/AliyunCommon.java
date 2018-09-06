@@ -35,6 +35,7 @@ import acore.tools.OsSystemSetting;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import amodule.user.activity.login.LoginByAccout;
+import third.aliyun.edit.util.Common;
 
 /**
  *
@@ -91,6 +92,7 @@ public class AliyunCommon {
         if (context == null) {
             return;
         }
+        Common.requestMusic();
         String packName = context.getClass().getSimpleName();
         if (!LoginManager.isLogin()) {
             context.startActivity(new Intent(context, LoginByAccout.class));
@@ -102,7 +104,7 @@ public class AliyunCommon {
 //            return;
 //        }
         String[] PERMISSIONS = {Manifest.permission.CAMERA, Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION};
+                Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.RECORD_AUDIO};
         for (String permission : PERMISSIONS) {
             if (permission.equals(Manifest.permission.CAMERA)) {
                 camerPermissionState = PermissionChecker.checkPermission(XHApplication.in(), permission, android.os.Process.myPid(), android.os.Process.myUid(), XHApplication.in().getPackageName()) == PackageManager.PERMISSION_GRANTED;
@@ -262,7 +264,7 @@ public class AliyunCommon {
                 .build();
         AliyunVideoRecorder.startRecord(context,recordParam);
     }
-    private int getRecordTime(String key){
+    public static int getRecordTime(String key){
         int recordTime = 0;
         if(!TextUtils.isEmpty(LoginManager.userInfo.get(key))){
             recordTime= Integer.parseInt(LoginManager.userInfo.get(key));

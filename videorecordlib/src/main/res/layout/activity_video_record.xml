@@ -24,18 +24,17 @@
             android:layout_height="38dp"
             android:layout_gravity="left"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="4dp"
             android:padding="10dp"
             android:src="@drawable/icon_close"/>
-    </FrameLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:gravity="right"
-            android:paddingTop="90dp"
-            android:orientation="vertical">
+            android:paddingTop="11dp"
+            android:orientation="horizontal">
 
             <LinearLayout
                 android:id="@+id/aliyun_download_layout"
@@ -43,14 +42,13 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 tools:visibility="visible"
-                android:layout_gravity="center_horizontal"
                 android:visibility="gone"
                 android:orientation="vertical">
 
                 <ImageView
                     android:id="@+id/aliyun_download"
                     android:layout_width="wrap_content"
-                    android:layout_height="30dp"
+                    android:layout_height="24dp"
                     android:src="@drawable/icon_download"
                     />
 
@@ -65,18 +63,44 @@
                     android:textColor="#FFFFFF"
                     android:textSize="12dp"/>
             </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/aliyun_switch_light_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/aliyun_switch_light"
+                    android:layout_width="wrap_content"
+                    android:layout_height="24dp"
+                    android:src="@drawable/aliyun_svideo_switch_light_selector"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="闪光"
+                    android:shadowDx="1"
+                    android:shadowDy="1"
+                    android:shadowRadius="2"
+                    android:shadowColor="#32000000"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12dp"/>
+            </LinearLayout>
+
             <LinearLayout
                 android:id="@+id/aliyun_switch_camera_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
+                android:layout_marginRight="8dp"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
 
                 <ImageView
                     android:id="@+id/aliyun_switch_camera"
                     android:layout_width="wrap_content"
-                    android:layout_height="30dp"
+                    android:layout_height="24dp"
                     android:src="@drawable/icon_camera_switch"/>
 
                 <TextView
@@ -92,37 +116,9 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/aliyun_switch_light_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:layout_marginTop="48dp"
-                android:layout_gravity="center_horizontal"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/aliyun_switch_light"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:src="@drawable/aliyun_svideo_switch_light_selector"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="闪光"
-                    android:shadowDx="1"
-                    android:shadowDy="1"
-                    android:shadowRadius="2"
-                    android:shadowColor="#32000000"
-                    android:textColor="#FFFFFF"
-                    android:textSize="12dp"/>
-            </LinearLayout>
-
-
-
         </LinearLayout>
 
+    </FrameLayout>
 
     <FrameLayout
         android:id="@+id/aliyun_record_layout"
@@ -133,7 +129,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="84dp"
+            android:layout_height="80dp"
             android:layout_gravity="bottom"
             android:layout_marginBottom="40dp">
 
@@ -144,16 +140,16 @@
 
                 <com.quze.videorecordlib.widget.RecordTimeCircleView
                     android:id="@+id/aliyun_record_timeline"
-                    android:layout_width="84dp"
-                    android:layout_height="84dp"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
                     android:layout_centerInParent="true"
                     android:background="@android:color/transparent"
                     />
 
                 <ImageView
                     android:id="@+id/aliyun_record_btn"
-                    android:layout_width="58dp"
-                    android:layout_height="58dp"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
                     android:layout_centerInParent="true"
                     android:background="@drawable/aliyun_svideo_snap_record_state_selector"/>
 
@@ -169,8 +165,8 @@
 
             <ImageView
                 android:id="@+id/aliyun_delete_btn"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="56dp"
                 android:padding="5dp"
@@ -186,9 +182,9 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="56dp"
-                android:src="@drawable/aliyun_svideo_record_finish"
+                android:src="@drawable/aliyun_svideo_snap_icon_complete"
                 android:visibility="gone"
-                tools:visibility="gone"/>
+                tools:visibility="visible"/>
 
 
             <RelativeLayout
@@ -196,7 +192,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_alignParentStart="true"
-                tools:visibility="gone"
+                tools:visibility="visible"
                 android:layout_marginStart="55dp"
                 >
 
@@ -215,7 +211,6 @@
                 <ImageView
                     android:id="@+id/aliyun_icon_default_line"
                     android:layout_width="35dp"
-
                     android:layout_height="35dp"
                     android:layout_centerVertical="true"
                     android:background="@drawable/bg_round_8"
@@ -247,13 +242,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_alignParentRight="true"
-                android:visibility="gone"
                 android:layout_marginRight="55dp">
 
                 <ImageView
                     android:id="@+id/aliyun_icon_draft"
-                    android:layout_width="43dp"
-                    android:layout_height="43dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:layout_centerVertical="true"
                     android:src="@drawable/icon_draft"
                     android:visibility="visible"

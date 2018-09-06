@@ -80,7 +80,7 @@ public class MusicSQL extends SQLiteOpenHelper {
         int size=mapList.size();
         ArrayList<MusicBean> musicBeans = new ArrayList<>();
         for(int i=0;i<size;i++){
-            MusicBean bean =getCodeState(mapList.get(i).get("musicCode"));
+            MusicBean bean =getCodeState(mapList.get(i).get("code"));
             MusicBean musicBeanTemp = new MusicBean();
             musicBeanTemp.setMap(mapList.get(i));
             if(bean!=null){//当前已经存在

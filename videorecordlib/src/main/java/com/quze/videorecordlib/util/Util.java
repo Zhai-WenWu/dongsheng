@@ -33,9 +33,14 @@ public class Util {
         if (TextUtils.isEmpty(filePath)) {
             return null;
         } else {
-            MediaMetadataRetriever media = new MediaMetadataRetriever();
-            media.setDataSource(filePath);// videoPath 本地视频的路径
-            return media.getFrameAtTime(1, MediaMetadataRetriever.OPTION_CLOSEST_SYNC);
+            try{
+                MediaMetadataRetriever media = new MediaMetadataRetriever();
+                media.setDataSource(filePath);// videoPath 本地视频的路径
+                return media.getFrameAtTime(1, MediaMetadataRetriever.OPTION_CLOSEST_SYNC);
+            }catch (Exception e){
+                e.printStackTrace();
+                return null;
+            }
         }
     }
 
