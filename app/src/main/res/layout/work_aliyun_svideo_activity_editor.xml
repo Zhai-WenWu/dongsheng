@@ -139,7 +139,7 @@
                 android:text="@string/aliyun_progress_edit"
                 android:layout_gravity="center"
                 android:layout_marginTop="@dimen/dp_2"
-                android:textColor="#f6496c"
+                android:textColor="#fa273b"
                 android:textSize="@dimen/sp_13" />
         </LinearLayout>
 

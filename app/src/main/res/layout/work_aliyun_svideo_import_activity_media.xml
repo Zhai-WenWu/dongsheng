@@ -1,68 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#262626"
     android:orientation="vertical">
-<RelativeLayout
-    android:id="@+id/gallery_actionBar_rela"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="#fffffe">
-    <FrameLayout
-        android:id="@+id/gallery_actionBar"
+
+    <third.aliyun.views.MediaSelectView
+        android:id="@+id/mediaSelectView"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/topbar_height"
-        android:background="#fffffe">
-
-        <ImageView
-            android:id="@+id/close"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/dp_20"
-            android:layout_width="@dimen/dp_13"
-            android:layout_height="@dimen/dp_13"
-            android:background="@drawable/close_icon"/>
-
-        <LinearLayout
-            android:id="@+id/topPanel"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/gallery_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#333333"
-                android:textSize="@dimen/dp_18" />
-
-            <ImageView
-                android:id="@+id/gallery_drawer"
-                android:layout_width="@dimen/dp_12"
-                android:layout_height="@dimen/dp_7"
-                android:layout_gravity="center_vertical"
-                android:background="@drawable/icon_down"
-                android:layout_marginLeft="5dp" />
-        </LinearLayout>
-
-    </FrameLayout>
-</RelativeLayout>
-
-
-    <FrameLayout
-        android:id="@+id/gallery_container"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="#fffffe">
-        <!--底部空出tab的高度-->
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/gallery_media"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-    </FrameLayout>
-
+        android:layout_height="match_parent"/>
 
 </LinearLayout>
