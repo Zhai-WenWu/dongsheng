@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -92,19 +93,7 @@ public class UploadParentSQLite extends SQLiteOpenHelper {
                     Log.i("articleUpload","获取上传中数据() uploadType:" + uploadType);
                     if(!UploadDishData.UPLOAD_DRAF.equals(uploadType)) {
                         Log.i("articleUpload","获取上传中数据() 不是草稿");
-                        upData = new UploadArticleData();
-                        upData.setId(cur.getInt(cur.getColumnIndex(UploadArticleData.article_id)));
-                        upData.setTitle(cur.getString(cur.getColumnIndex(UploadArticleData.article_title)));
-                        upData.setClassCode(cur.getString(cur.getColumnIndex(UploadArticleData.article_classCode)));
-                        upData.setContent(cur.getString(cur.getColumnIndex(UploadArticleData.article_content)));
-                        upData.setIsOriginal(cur.getInt(cur.getColumnIndex(UploadArticleData.article_isOriginal)));
-                        upData.setRepAddress(cur.getString(cur.getColumnIndex(UploadArticleData.article_repAddress)));
-                        upData.setImg(cur.getString(cur.getColumnIndex(UploadArticleData.article_img)));
-                        upData.setImgs(cur.getString(cur.getColumnIndex(UploadArticleData.article_imgs)));
-                        upData.setCode(cur.getString(cur.getColumnIndex(UploadArticleData.article_code)));
-                        upData.setImgUrl(cur.getString(cur.getColumnIndex(UploadArticleData.article_imgUrl)));
-                        upData.setUploadType(uploadType);
-                        upData.setVideos(cur.getString(cur.getColumnIndex(UploadArticleData.article_videos)));
+                        upData = cursorToData(cur, uploadType);
                         break;
                     }
                 }while (cur.moveToNext());
@@ -113,6 +102,26 @@ public class UploadParentSQLite extends SQLiteOpenHelper {
         } finally {
             close(cur, readableDatabase);
         }
+    }
+
+    @NonNull
+    private UploadArticleData cursorToData(Cursor cur, String uploadType) {
+        UploadArticleData upData;
+        upData = new UploadArticleData();
+        upData.setId(cur.getInt(cur.getColumnIndex(UploadArticleData.article_id)));
+        upData.setTitle(cur.getString(cur.getColumnIndex(UploadArticleData.article_title)));
+        upData.setClassCode(cur.getString(cur.getColumnIndex(UploadArticleData.article_classCode)));
+        upData.setContent(cur.getString(cur.getColumnIndex(UploadArticleData.article_content)));
+        upData.setIsOriginal(cur.getInt(cur.getColumnIndex(UploadArticleData.article_isOriginal)));
+        upData.setRepAddress(cur.getString(cur.getColumnIndex(UploadArticleData.article_repAddress)));
+        upData.setImg(cur.getString(cur.getColumnIndex(UploadArticleData.article_img)));
+        upData.setImgs(cur.getString(cur.getColumnIndex(UploadArticleData.article_imgs)));
+        upData.setCode(cur.getString(cur.getColumnIndex(UploadArticleData.article_code)));
+        upData.setImgUrl(cur.getString(cur.getColumnIndex(UploadArticleData.article_imgUrl)));
+        upData.setUploadType(uploadType);
+        upData.setVideos(cur.getString(cur.getColumnIndex(UploadArticleData.article_videos)));
+        upData.setExtraDataJson(cur.getString(cur.getColumnIndex(UploadArticleData.article_extraDataJson)));
+        return upData;
     }
 
     public ArrayList<UploadArticleData> getAllUploadIngData(){
@@ -130,19 +139,7 @@ public class UploadParentSQLite extends SQLiteOpenHelper {
                     Log.i("articleUpload","获取上传中数据() uploadType:" + uploadType);
                     if(!UploadDishData.UPLOAD_DRAF.equals(uploadType)) {
                         Log.i("articleUpload","获取上传中数据() 不是草稿");
-                        upData = new UploadArticleData();
-                        upData.setId(cur.getInt(cur.getColumnIndex(UploadArticleData.article_id)));
-                        upData.setTitle(cur.getString(cur.getColumnIndex(UploadArticleData.article_title)));
-                        upData.setClassCode(cur.getString(cur.getColumnIndex(UploadArticleData.article_classCode)));
-                        upData.setContent(cur.getString(cur.getColumnIndex(UploadArticleData.article_content)));
-                        upData.setIsOriginal(cur.getInt(cur.getColumnIndex(UploadArticleData.article_isOriginal)));
-                        upData.setRepAddress(cur.getString(cur.getColumnIndex(UploadArticleData.article_repAddress)));
-                        upData.setImg(cur.getString(cur.getColumnIndex(UploadArticleData.article_img)));
-                        upData.setImgs(cur.getString(cur.getColumnIndex(UploadArticleData.article_imgs)));
-                        upData.setCode(cur.getString(cur.getColumnIndex(UploadArticleData.article_code)));
-                        upData.setImgUrl(cur.getString(cur.getColumnIndex(UploadArticleData.article_imgUrl)));
-                        upData.setUploadType(uploadType);
-                        upData.setVideos(cur.getString(cur.getColumnIndex(UploadArticleData.article_videos)));
+                        upData = cursorToData(cur, uploadType);
                         articleDatas.add(upData);
                     }
                 }while (cur.moveToNext());
@@ -170,7 +167,7 @@ public class UploadParentSQLite extends SQLiteOpenHelper {
         cv.put(UploadArticleData.article_imgUrl, upData.getImgUrl());
         cv.put(UploadArticleData.article_uploadType, upData.getUploadType());
         cv.put(UploadArticleData.article_videos, upData.getVideos());
-
+        cv.put(UploadArticleData.article_extraDataJson, upData.getExtraDataJson());
         long id = -1;
         try {
             id = this.getWritableDatabase().insert(TB_NAME, null, cv);
@@ -199,6 +196,25 @@ public class UploadParentSQLite extends SQLiteOpenHelper {
         cv.put(UploadArticleData.article_imgUrl, upData.getImgUrl());
         cv.put(UploadArticleData.article_uploadType, upData.getUploadType());
         cv.put(UploadArticleData.article_videos, upData.getVideos());
+        cv.put(UploadArticleData.article_extraDataJson, upData.getExtraDataJson());
+        try {
+            writableDatabase = getWritableDatabase();
+            row = writableDatabase.update(TB_NAME, cv, UploadArticleData.article_id + "=?", new String[]{String.valueOf(id)});
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            close(null, writableDatabase);
+        }
+//        Tools.showToast(XHApplication.in().getApplicationContext(),"更新数据");
+        return row;
+    }
+
+    public synchronized int update(int id,String uploadType){
+        int row = -1;
+        if(TextUtils.isEmpty(uploadType)) return row;
+        SQLiteDatabase writableDatabase = null;
+        ContentValues cv = new ContentValues();
+        cv.put(UploadArticleData.article_uploadType, uploadType);
         try {
             writableDatabase = getWritableDatabase();
             row = writableDatabase.update(TB_NAME, cv, UploadArticleData.article_id + "=?", new String[]{String.valueOf(id)});
