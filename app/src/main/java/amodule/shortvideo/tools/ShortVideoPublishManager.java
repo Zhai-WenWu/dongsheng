@@ -147,7 +147,7 @@ public class ShortVideoPublishManager {
             @Override
             public void onProgress(double progress, String uniqueId) {
                 if(shortVideoUploadCallBack!=null){
-                    shortVideoUploadCallBack.onProgress((int) (progress*0.9));
+                    shortVideoUploadCallBack.onProgress((int) (progress*90));
                 }
             }
             @Override
@@ -180,7 +180,7 @@ public class ShortVideoPublishManager {
             @Override
             public void onProgress(double progress, String uniqueId) {
                 if(shortVideoUploadCallBack!=null){
-                    shortVideoUploadCallBack.onProgress(90 + (int) (progress*0.1));
+                    shortVideoUploadCallBack.onProgress(90 + (int) (progress*10));
                 }
             }
             @Override
