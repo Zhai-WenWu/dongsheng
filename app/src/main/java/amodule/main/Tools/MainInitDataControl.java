@@ -9,7 +9,6 @@ import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
 import android.webkit.CookieManager;
 import android.widget.Toast;
 
@@ -53,7 +52,6 @@ import amodule.article.db.UploadArticleData;
 import amodule.article.db.UploadArticleSQLite;
 import amodule.article.db.UploadParentSQLite;
 import amodule.article.db.UploadVideoSQLite;
-import amodule.dish.activity.upload.UploadDishListActivity;
 import amodule.dish.db.DishOffData;
 import amodule.dish.db.ShowBuySqlite;
 import amodule.dish.db.UploadDishData;
@@ -150,12 +148,9 @@ public class MainInitDataControl {
         Log.i("zhangyujian","iniMainAfter");
         long startTime= System.currentTimeMillis();
         //初始化语音
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                //讯飞语音： 请勿在“=”与 appid 之间添加任务空字符或者转义符
-                SpeechUtility.createUtility(act, SpeechConstant.APPID +"=56ce9191");
-            }
+        new Thread(() -> {
+            //讯飞语音： 请勿在“=”与 appid 之间添加任务空字符或者转义符
+            SpeechUtility.createUtility(act, SpeechConstant.APPID +"=56ce9191");
         }).start();
         // 发送页面存活时间
         XHClick.sendLiveTime(act);
@@ -197,39 +192,28 @@ public class MainInitDataControl {
         //更模版
         new XHTemplateManager().checkUplateAllTemplate();
 
-        delayedExcute(new Runnable() {
-            @Override
-            public void run() {
-//                showContiunUploadDialog(act);
-                ToolsDevice.sendCrashAndAppInfoToServer(act.getApplicationContext(), LoginManager.userInfo.get("code"));
-                //更新热词匹配数据库
-                new MatchWordsDbUtil().checkUpdateMatchWordsDb(act);
+        delayedExcute(() -> {
+            ToolsDevice.sendCrashAndAppInfoToServer(act.getApplicationContext(), LoginManager.userInfo.get("code"));
+            //更新热词匹配数据库
+            new MatchWordsDbUtil().checkUpdateMatchWordsDb(act);
 
-                //获取圈子静态数据
-                AppCommon.saveCircleStaticData(act);
+            //获取圈子静态数据
+            AppCommon.saveCircleStaticData(act);
 
-//                ServiceManager.startProtectService(act);
+            AppCommon.saveUrlRuleFile(act);
+            AppCommon.saveAppData();
 
-                AppCommon.saveUrlRuleFile(act);
-                AppCommon.saveAppData();
-
-                //取消自我唤醒
-                XGPushManager.clearLocalNotifications(act);
-            }
+            //取消自我唤醒
+            XGPushManager.clearLocalNotifications(act);
         });
 
         //获取随机推广数据
         AppCommon.saveRandPromotionData(act);
         if(act!=null && XHADView.getInstence(act)!=null) {
             final long currentTime = System.currentTimeMillis();
-            XHADView.getInstence(act).setCanShowCallback(new XHADView.CanShowCallback() {
-                @Override
-                public boolean canShow() {
-                    return Main.allMain != null
-                            && Main.allMain.getCurrentTab() == 0
-                            && System.currentTimeMillis() - currentTime <= 10000;
-                }
-            });
+            XHADView.getInstence(act).setCanShowCallback(() -> Main.allMain != null
+                    && Main.allMain.getCurrentTab() == 0
+                    && System.currentTimeMillis() - currentTime <= 10000);
         }
         new AllPopDialogHelper(act).start();
 
@@ -241,9 +225,7 @@ public class MainInitDataControl {
         Log.i("zhangyujian","initMainOnResume::时间::3::"+(endTime2-startTime));
     }
 
-    /**
-     * 页面展示后，发送需要统计的数据
-     */
+    /** 页面展示后，发送需要统计的数据 */
     private void onMainResumeStatics() {
         new Thread(() -> {
             Object userCountStatics = FileManager.loadShared(XHApplication.in(), FileManager.xmlFile_appInfo, "userCount");
@@ -372,30 +354,6 @@ public class MainInitDataControl {
         sqlite.close();
     }
 
-//    /**
-//     *
-//     * @param act
-//     */
-//    private void showContiunUploadDialog(final Activity act){
-//        UploadDishSqlite sqlite = new UploadDishSqlite(act);
-//        final int draftId = sqlite.getFailNeedHintId();
-//        if (draftId > 0) {
-//            final DialogManager dialogManager = new DialogManager(act);
-//            dialogManager.createDialog(new ViewManager(dialogManager)
-//                    .setView(new TitleMessageView(act).setText("您的视频菜谱还未上传完毕，是否继续上传？"))
-//                    .setView(new HButtonView(act)
-//                            .setNegativeText("取消", v -> dialogManager.cancel())
-//                            .setPositiveTextColor(Color.parseColor("#007aff"))
-//                            .setPositiveText("去查看", v -> {
-//                                dialogManager.cancel();
-//                                Intent it = new Intent(act, UploadDishListActivity.class);
-//                                it.putExtra("draftId",draftId);
-//                                act.startActivity(it);
-//                            }))).show();
-//        }
-//        UploadDishControl.getInstance().updataAllUploadingDish(act.getApplicationContext());
-//    }
-
     private void delayedExcute(@NonNull Runnable runnable){
         if(runnable == null) return;
         new Handler(Looper.getMainLooper()).postDelayed(runnable,delayedTime);
@@ -406,8 +364,6 @@ public class MainInitDataControl {
             return;
         if (showUploading(activity,new UploadArticleSQLite(XHApplication.in().getApplicationContext()), EditParentActivity.DATA_TYPE_ARTICLE, "您的文章还未上传完毕，是否继续上传？"))
             return;
-//        if (showUploading(activity,new UploadVideoSQLite(XHApplication.in().getApplicationContext()), EditParentActivity.DATA_TYPE_VIDEO, "您的视频还未上传完毕，是否继续上传？"))
-//            return;
         if(showUploadingVideo(activity)){
             return;
         }
@@ -517,8 +473,6 @@ public class MainInitDataControl {
             }else {
                 sqLite.update(uploadingId,UploadDishData.UPLOAD_FAIL);
                 Toast.makeText(act, "您有未上传成功的作品，已保存至草稿箱", Toast.LENGTH_SHORT).show();
-                //TODO
-                Toast.makeText(act, "我是不会告诉你草稿箱在哪的", Toast.LENGTH_SHORT).show();
                 return true;
             }
         }

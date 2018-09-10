@@ -107,6 +107,8 @@ public class ShortVideoPublishManager {
             return;
         }
         String url= StringManager.API_SHORTVIDEO_RELEASE;
+        //TODO
+        shortVideoPublishBean.setVideoUrl("");
         String params = "name="+shortVideoPublishBean.getName()+"&imageUrl="+shortVideoPublishBean.getImageUrl()
                 +"&imageSize="+shortVideoPublishBean.getImageSize()+"&videoUrl="+shortVideoPublishBean.getVideoUrl()
                 +"&videoSize="+shortVideoPublishBean.getVideoSize()+"&videoTime="+shortVideoPublishBean.getVideoTime()
@@ -115,7 +117,6 @@ public class ShortVideoPublishManager {
         ReqEncyptInternet.in().doEncypt(url, params, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object msg) {
-                //TODO
                 if(flag>ReqEncyptInternet.REQ_OK_STRING){
                     if(shortVideoUploadCallBack!=null){
                         shortVideoUploadCallBack.onSuccess(Integer.parseInt(shortVideoPublishBean.getId()));
@@ -131,9 +132,7 @@ public class ShortVideoPublishManager {
         });
     }
 
-    /**
-     *开始vide上传
-     */
+    /** 开始vide上传*/
     public void startBeakPointUpload(){
         isUploading=true;
         startUploadVideo();

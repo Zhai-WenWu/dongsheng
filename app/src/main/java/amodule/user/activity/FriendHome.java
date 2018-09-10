@@ -162,7 +162,7 @@ public class FriendHome extends BaseActivity {
                     mProgressLayout.setVisibility(View.VISIBLE);
                     if(mTabContentViews.size() > 2 && mTabContentViews.get(2) != null
                             && mTabContentViews.get(2) instanceof UserHomeVideo){
-                        ((UserHomeVideo)mTabContentViews.get(2)).initLoad();
+                        ((UserHomeVideo)mTabContentViews.get(2)).deleteById(id);
                     }
                 }
                 mProgressTv.setText(progress + "%");
@@ -435,7 +435,8 @@ public class FriendHome extends BaseActivity {
                 switch (type) {
                     case "1"://视频列表
                         Intent publishIntent = new Intent(this,ShortPublishActivity.class);
-                        //TODO
+                        publishIntent.putExtra("id",dataMap.get("id"));
+                        publishIntent.putExtra("extraDataJson",dataMap.get("extraDataJson"));
                         startActivity(publishIntent);
                         break;
                     case "2"://文章列表
