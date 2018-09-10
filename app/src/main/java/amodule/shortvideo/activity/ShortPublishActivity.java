@@ -189,7 +189,6 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
      */
     private void saveData(){
         if(checkData()){return;}
-
         UploadArticleData uploadArticleData = new UploadArticleData();
         uploadArticleData.setTitle(shortVideoPublishBean.getName());
         uploadArticleData.setImg(imgPath);

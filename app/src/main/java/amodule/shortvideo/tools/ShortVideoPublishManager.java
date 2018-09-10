@@ -98,11 +98,9 @@ public class ShortVideoPublishManager {
      *短视频上传
      */
     private void setRequstShortVideoRelease(){
-        Log.i("xianghaTag","setRequstShortVideoRelease::33:");
         if(shortVideoPublishBean.isDataEmpty()){
             return;
         }
-        Log.i("xianghaTag","setRequstShortVideoRelease::--:");
         String url= StringManager.API_SHORTVIDEO_RELEASE;
         String params = "name="+shortVideoPublishBean.getName()+"&imageUrl="+shortVideoPublishBean.getImageUrl()
                 +"&imageSize="+shortVideoPublishBean.getImageSize()+"&videoUrl="+shortVideoPublishBean.getVideoUrl()
@@ -140,10 +138,12 @@ public class ShortVideoPublishManager {
         breakPointControl.start(new UploadListNetCallBack() {
             @Override
             public void onProgress(double progress, String uniqueId) {
+                if(shortVideoUploadCallBack!=null){
+                    shortVideoUploadCallBack.onProgress((int) (progress*0.9));
+                }
             }
             @Override
             public void onSuccess(String url, String uniqueId, JSONObject jsonObject) {
-                Log.i("xianghaTag","startUploadVideo:::"+url);
                 if(!TextUtils.isEmpty(url)) {
                     shortVideoPublishBean.setVideoUrl(url);
                     startUploadImg();
@@ -151,7 +151,9 @@ public class ShortVideoPublishManager {
             }
             @Override
             public void onFaild(String faild, String uniqueId) {
-                Log.i("xianghaTag","startUploadVideo:2::"+faild);
+                if(shortVideoUploadCallBack!=null){
+                    shortVideoUploadCallBack.onFailed();
+                }
             }
             @Override
             public void onLastUploadOver(boolean flag, String responseStr) {
@@ -162,13 +164,15 @@ public class ShortVideoPublishManager {
         });
     }
     private void startUploadImg(){
-        Log.i("xianghaTag","startUploadImg:::");
         String md5 = Tools.getMD5(shortVideoPublishBean.getImagePath());
         BreakPointControl breakPointControl= new BreakPointControl(XHApplication.in(),
                 md5,shortVideoPublishBean.getImagePath(),BreakPointUploadManager.TYPE_IMG);
         breakPointControl.start(new UploadListNetCallBack() {
             @Override
             public void onProgress(double progress, String uniqueId) {
+                if(shortVideoUploadCallBack!=null){
+                    shortVideoUploadCallBack.onProgress(90 + (int) (progress*0.1));
+                }
             }
             @Override
             public void onSuccess(String url, String uniqueId, JSONObject jsonObject) {
@@ -180,7 +184,9 @@ public class ShortVideoPublishManager {
             }
             @Override
             public void onFaild(String faild, String uniqueId) {
-                Log.i("xianghaTag","startUploadImg::22:");
+                if(shortVideoUploadCallBack!=null){
+                    shortVideoUploadCallBack.onFailed();
+                }
             }
             @Override
             public void onLastUploadOver(boolean flag, String responseStr) {
