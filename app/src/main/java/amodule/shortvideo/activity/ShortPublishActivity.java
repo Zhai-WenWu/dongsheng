@@ -285,14 +285,16 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
             locationMap.put("province", value.getProvince());
             locationMap.put("city", value.getCity());
             locationMap.put("district", value.getDistrict());
-            locationMap.put("lat", "" + value.getLatitude());
-            locationMap.put("lng", "" + value.getLongitude());
+            locationMap.put("latitude", "" + value.getLatitude());
+            locationMap.put("longitude", "" + value.getLongitude());
             String showText;
             if(value.getProvince().equals(value.getCity())){
                 showText = value.getCity() + " " + value.getDistrict();
             }else{
                 showText = value.getProvince() + " " + value.getCity();
             }
+            String jsonTemp= Tools.map2Json(locationMap);
+            shortVideoPublishBean.setAddress(jsonTemp);
             location_state="2";
             handleLocationMsg(showText);
         }
