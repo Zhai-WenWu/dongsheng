@@ -13,14 +13,20 @@ import android.widget.TextView;
 import com.amap.api.location.AMapLocation;
 import com.xiangha.R;
 
+import org.json.JSONArray;
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
+import amodule.article.db.UploadArticleData;
+import amodule.article.db.UploadVideoSQLite;
 import amodule.search.view.MultiTagView;
+import amodule.shortvideo.tools.ShortVideoPublishBean;
+import amodule.shortvideo.tools.ShortVideoPublishManager;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
@@ -40,6 +46,8 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
     private String location_state= "1";//定位状态 1-正在定位，2-定位成功，3-定位失败
     private boolean isShowLocation= true;//是否显示定位信息
     private ArrayList<Map<String,String>> topicList = new ArrayList<>();
+    private ShortVideoPublishBean shortVideoPublishBean= new ShortVideoPublishBean();
+    private String extraDataJson;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,13 +57,29 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
             videoPath = (String) bundle.get("videoPath");
             imgPath = (String) bundle.get("imgPath");
             otherPath = (String) bundle.get("otherPath");
+            extraDataJson = (String) bundle.get("extraDataJson");
         }
-//        if(TextUtils.isEmpty(videoPath)||TextUtils.isEmpty(imgPath)){
-//            this.finish();
-//            return;
-//        }
+        handleExtraData();
         initView();
         initData();
+    }
+    private void handleExtraData(){
+        if((TextUtils.isEmpty(videoPath)||TextUtils.isEmpty(imgPath))&&TextUtils.isEmpty(extraDataJson)){
+            this.finish();
+            return;
+        }
+        if(!TextUtils.isEmpty(videoPath)){
+            shortVideoPublishBean.setVideoPath(videoPath);
+        }
+        if(!TextUtils.isEmpty(imgPath)){
+            shortVideoPublishBean.setImagePath(imgPath);
+        }
+        if(!TextUtils.isEmpty(otherPath)){
+
+        }
+        if(!TextUtils.isEmpty(extraDataJson)){
+            shortVideoPublishBean.jsonToBean(extraDataJson);
+        }
     }
 
     private void initView() {
@@ -82,8 +106,15 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
         findViewById(R.id.location_tv).setOnClickListener(this);
     }
     private void initData() {
+        initUIData();
         handleLocation();
         getTopicData();
+    }
+
+    public void initUIData(){
+        if(!TextUtils.isEmpty(shortVideoPublishBean.getName())){
+            edit_text.setText(shortVideoPublishBean.getName());
+        }
     }
 
     /**
@@ -94,7 +125,6 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
         LocationHelper.getInstance().registerLocationListener(locationCallBack);
         location_state="1";
         handleLocationMsg("");
-
     }
 
     /**
@@ -116,7 +146,6 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
             @Override
             public void loaded(int flag, String url, Object msg) {
                 if(flag>= ReqInternet.REQ_OK_STRING){
-                    Log.i("xianghaTag","msg:::"+msg);
                     ArrayList<Map<String,String>>  mapArrayList = StringManager.getListMapByJson(msg);
                     int size= mapArrayList.size();
                     if(!mapArrayList.isEmpty()){
@@ -128,7 +157,6 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
                         hot_table.addTags(topicList, new MultiTagView.MutilTagViewCallBack() {
                             @Override
                             public void onClick(int tagIndexr) {
-//                                Log.i("xianghaTag",":::"+topicList.get(tagIndexr).get("name"));
                                 topic_tv.setText(topicList.get(tagIndexr).get("name"));
                             }
                         });
@@ -140,17 +168,36 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
     }
 
     /**
+     * 校验数据
+     */
+    private boolean checkData(){
+        return false;
+    }
+    /**
      * 保存数据---存储草稿
      */
     private void saveData(){
-
+        if(checkData()){return;}
+        String title= edit_text.getText().toString();
+        shortVideoPublishBean.setName(title);
+        UploadArticleData uploadArticleData = new UploadArticleData();
+        uploadArticleData.setTitle(title);
+        uploadArticleData.setImg(imgPath);
+        JSONArray jsonArray = new JSONArray();
+        jsonArray.put(videoPath);
+        uploadArticleData.setVideos(jsonArray.toString());
+        uploadArticleData.setExtraDataJson(shortVideoPublishBean.toJsonString());
+        UploadVideoSQLite uploadVideoSQLite = new UploadVideoSQLite(this);
+        int id=uploadVideoSQLite.insert(uploadArticleData);
+        shortVideoPublishBean.setId(String.valueOf(id));
     }
 
     /**
      * 开始发布
      */
     public void startPublish(){
-
+        ShortVideoPublishManager.getInstance().setShortVideoPublishBean(shortVideoPublishBean);
+        ShortVideoPublishManager.getInstance().startUpload();
     }
 
     /**
