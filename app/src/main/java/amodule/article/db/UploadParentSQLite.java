@@ -153,6 +153,36 @@ public class UploadParentSQLite extends SQLiteOpenHelper {
         }
     }
 
+    public ArrayList<UploadArticleData> getAllDrafData() {
+        Cursor cur = null;
+        SQLiteDatabase readableDatabase = null;
+        try {
+            readableDatabase = getReadableDatabase();
+            ArrayList<UploadArticleData> articleDatas = new ArrayList<>();
+            cur = getData(readableDatabase, articleDatas, UploadDishData.UPLOAD_FAIL);
+            cur = getData(readableDatabase, articleDatas, UploadDishData.UPLOAD_DRAF);
+            return articleDatas;
+        } finally {
+            close(cur, readableDatabase);
+        }
+    }
+
+    @NonNull
+    private Cursor getData(SQLiteDatabase readableDatabase, ArrayList<UploadArticleData> articleDatas, String uploadDraf) {
+        Cursor cur;
+        UploadArticleData upData;
+        cur = readableDatabase.query(TB_NAME, null, UploadArticleData.article_uploadType + "=?", new String[]{uploadDraf},
+                null, null, UploadArticleData.article_id + " desc");// 查询并获得游标
+        Log.i("articleUpload", "获取上传中数据() size:" + cur.getCount());
+        if (cur.moveToFirst()) {// 判断游标是否为空
+            do {
+                String uploadType = cur.getString(cur.getColumnIndex(UploadArticleData.article_uploadType));
+                upData = cursorToData(cur, uploadType);
+                articleDatas.add(upData);
+            } while (cur.moveToNext());
+        }
+        return cur;
+    }
 
     /** 插入一条数据; */
     private int insertData(UploadArticleData upData) {

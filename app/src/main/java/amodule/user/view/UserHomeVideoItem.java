@@ -46,12 +46,14 @@ public class UserHomeVideoItem extends UserHomeTxtItem {
     @Override
     public void setData(Map<String, String> dataMap, int position) {
         super.setData(dataMap, position);
-        boolean hasImg = false;
-        boolean hasVideo = false;
+    }
+
+    @Override
+    protected void bindData() {
+        super.bindData();
         String fromLocal = mDataMap.get("dataFrom");
         if ("1".equals(fromLocal)) {//dataFrom:数据来源，本地:1；网络:2,或者null、""、不存在该字段；
             mUploadType = mDataMap.get("uploadType");
-        mUploadType = UPLOAD_FAIL;
             String statusInfo = "";
             if (mStatusInfo != null) {
                 switch (mUploadType) {
@@ -73,32 +75,23 @@ public class UserHomeVideoItem extends UserHomeTxtItem {
                 mNum1.setVisibility(GONE);
                 mNum2.setVisibility(GONE);
             }
-            String path = null;
-            ArrayList<Map<String, String>> imgs = StringManager.getListMapByJson(mDataMap.get("imgs"));
-            ArrayList<Map<String, String>> videos = StringManager.getListMapByJson(mDataMap.get("videos"));
-            if (imgs != null && imgs.size() > 0) {
-                path = imgs.get(0).get("path");
-                hasImg = true;
-            } else if (videos != null && videos.size() > 0) {
-                hasVideo = true;
-                path = videos.get(0).get("image");
-            }
+            String path = mDataMap.get("imgPath");
             if (mImg != null && path != null) {
-                hasImg = true;
                 Glide.with(getContext())
-                        .load(new File(path))
+                        .load(path)
                         .override(getResources().getDimensionPixelSize(R.dimen.dp_110), getResources().getDimensionPixelSize(R.dimen.dp_72_5))
                         .centerCrop()
                         .into(mImg);
                 mImg.setVisibility(View.VISIBLE);
             }
+            mDeleteIcon.setVisibility(VISIBLE);
+            mTxtContainer.setMinimumHeight(getResources().getDimensionPixelSize(R.dimen.dp_74_5));
+            if (mImgsLayout != null)
+                mImgsLayout.setVisibility(View.VISIBLE);
+            mPlayImg.setVisibility(View.VISIBLE);
+        }else{
+            mDeleteIcon.setVisibility(INVISIBLE);
         }
-    }
-
-    @Override
-    protected void bindData() {
-        super.bindData();
-
     }
 
     @Override

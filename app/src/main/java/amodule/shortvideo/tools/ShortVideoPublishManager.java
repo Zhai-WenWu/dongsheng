@@ -115,6 +115,7 @@ public class ShortVideoPublishManager {
         ReqEncyptInternet.in().doEncypt(url, params, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object msg) {
+                //TODO
                 if(flag>ReqEncyptInternet.REQ_OK_STRING){
                     if(shortVideoUploadCallBack!=null){
                         UploadState(UploadDishData.UPLOAD_SUCCESS);

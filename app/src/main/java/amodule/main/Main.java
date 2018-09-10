@@ -341,8 +341,6 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
         initAliyunVideo();
     }
 
-
-
     public void onChangeSend(View view){
         AliyunCommon.getInstance().startRecord(this);
     }

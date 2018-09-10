@@ -1,7 +1,5 @@
 /**
- * 
  * @author intBird 20140213.
- * 
  */
 package amodule.user.view;
 
@@ -75,7 +73,7 @@ public class UserHomeVideo extends TabContentView {
         view = View.inflate(act, R.layout.myself_txt, null);
         this.mAct = act;
         userCode = code;
-        if(!TextUtils.isEmpty(LoginManager.userInfo.get("code")) && LoginManager.userInfo.get("code").equals(userCode)){
+        if (!TextUtils.isEmpty(LoginManager.userInfo.get("code")) && LoginManager.userInfo.get("code").equals(userCode)) {
             isMyselft = true;
         }
         // 设定scrollLayout的高度
@@ -84,22 +82,6 @@ public class UserHomeVideo extends TabContentView {
         backLayout = mAct.backLayout;
         friend_info = mAct.friend_info;
         init();
-        ShortVideoPublishManager.getInstance().setShortVideoUploadCallBack(new ShortVideoPublishManager.ShortVideoUploadCallBack() {
-            @Override
-            public void onSuccess() {
-
-            }
-
-            @Override
-            public void onProgress(int progress) {
-
-            }
-
-            @Override
-            public void onFailed() {
-
-            }
-        });
     }
 
     @Override
@@ -111,7 +93,7 @@ public class UserHomeVideo extends TabContentView {
         } else
             super.onResume(tag);
         theListView.setSelection(datas.isEmpty() ? 0 : 1);
-        if(ShortVideoPublishManager.getInstance().isUpload()){
+        if (ShortVideoPublishManager.getInstance().isUpload()) {
             //隐藏上传中item
 //            datas.remove(remove)
         }
@@ -120,9 +102,9 @@ public class UserHomeVideo extends TabContentView {
     private void init() {
         // 结果显示
         loadManager = mAct.loadManager;
-        mEmptyContainer =  view.findViewById(R.id.empty_container);
-        mEmptyView =  mEmptyContainer.findViewById(R.id.empty);
-        mGotoBtn =  mEmptyView.findViewById(R.id.goto_btn);
+        mEmptyContainer = view.findViewById(R.id.empty_container);
+        mEmptyView = mEmptyContainer.findViewById(R.id.empty);
+        mGotoBtn = mEmptyView.findViewById(R.id.goto_btn);
         mGotoBtn.setText("发视频");
         mGotoBtn.setOnClickListener(v -> {
             if (LoginManager.isBindMobilePhone())
@@ -140,7 +122,7 @@ public class UserHomeVideo extends TabContentView {
         adapter.scaleType = ScaleType.CENTER_CROP;
         adapter.isAnimate = true;
         adapter.setOnItemClickListener((itemView, dataMap) -> {
-            if (mOnItemClickListener != null){
+            if (mOnItemClickListener != null) {
                 mOnItemClickListener.onItemClick(itemView, dataMap);
             }
         });
@@ -161,21 +143,21 @@ public class UserHomeVideo extends TabContentView {
     }
 
     private void deleteData(Map<String, String> data) {
-        if(data == null || data.isEmpty()){
+        if (data == null || data.isEmpty()) {
             return;
         }
-        final String id  = data.get("id");
+        final String id = data.get("id");
         String fromLocal = data.get("dataFrom");
-        if("1".equals(fromLocal)){
+        if ("1".equals(fromLocal)) {
             //delete local
             UploadVideoSQLite sqLite = new UploadVideoSQLite(mAct);
-            boolean isDeleted = sqLite.deleteById(Tools.parseIntOfThrow(id,-1));
-            Toast.makeText(mAct,isDeleted?"删除成功":"删除失败",Toast.LENGTH_SHORT).show();
-            if(isDeleted){
+            boolean isDeleted = sqLite.deleteById(Tools.parseIntOfThrow(id, -1));
+            Toast.makeText(mAct, isDeleted ? "删除成功" : "删除失败", Toast.LENGTH_SHORT).show();
+            if (isDeleted) {
                 datas.remove(data);
                 adapter.notifyDataSetChanged();
             }
-        }else if("2".equals(fromLocal)){
+        } else if ("2".equals(fromLocal)) {
             //delete remote
         }
     }
@@ -203,6 +185,7 @@ public class UserHomeVideo extends TabContentView {
     }
 
     private UserHomeItem.OnItemClickListener mOnItemClickListener;
+
     public void setOnItemClickListener(UserHomeItem.OnItemClickListener clickListener) {
         mOnItemClickListener = clickListener;
     }
@@ -230,7 +213,7 @@ public class UserHomeVideo extends TabContentView {
         }, datas.size() == 0);
     }
 
-    private void setHeadViewHeight(){
+    private void setHeadViewHeight() {
         final int tabHost_h = Tools.getDimen(mAct, R.dimen.dp_51);
         final int bigImg_h = Tools.getDimen(mAct, R.dimen.dp_200) + Tools.getStatusBarHeight(mAct);
         final int userinfo_h = Tools.getTargetHeight(friend_info);
@@ -249,10 +232,10 @@ public class UserHomeVideo extends TabContentView {
     }
 
     private void loadFromServer() {
-        loadManager.changeMoreBtn(theListView,UtilInternet.REQ_OK_STRING, -1, -1, currentPage,datas.size() == 0);
+        loadManager.changeMoreBtn(theListView, UtilInternet.REQ_OK_STRING, -1, -1, currentPage, datas.size() == 0);
         if (isRefresh) {
             mNetDataReady = false;
-            if(isMyselft)
+            if (isMyselft)
                 mLocalDataReady = false;
         }
         if (isRefresh && isMyselft) {
@@ -262,7 +245,7 @@ public class UserHomeVideo extends TabContentView {
                 mSecondEditDatas.clear();
             new Thread(() -> {
                 UploadVideoSQLite articleSQLite = new UploadVideoSQLite(mAct);
-                ArrayList<UploadArticleData> articleDatas = articleSQLite.getAllUploadIngData();
+                ArrayList<UploadArticleData> articleDatas = articleSQLite.getAllDrafData();
                 if (articleDatas != null && articleDatas.size() > 0) {
                     for (UploadArticleData articleData : articleDatas) {
                         if (articleData != null) {
@@ -279,8 +262,8 @@ public class UserHomeVideo extends TabContentView {
                             String video = "";
                             String videoUrl = "";
                             String videoImgUrl = "";
-                            ArrayList<Map<String,String>> videoArray = articleData.getVideoArray();
-                            if(videoArray.size() > 0){
+                            ArrayList<Map<String, String>> videoArray = articleData.getVideoArray();
+                            if (videoArray.size() > 0) {
                                 video = videoArray.get(0).get("video");
                                 videoUrl = videoArray.get(0).get("videoUrl");
                                 videoImgUrl = videoArray.get(0).get("imageUrl");
@@ -328,7 +311,7 @@ public class UserHomeVideo extends TabContentView {
                 }
                 if (everyPage == 0)
                     everyPage = loadCount;
-                currentPage = loadManager.changeMoreBtn(theListView,flag, everyPage, loadCount, currentPage,datas.size() == 0);
+                currentPage = loadManager.changeMoreBtn(theListView, flag, everyPage, loadCount, currentPage, datas.size() == 0);
                 if (flag < UtilInternet.REQ_OK_STRING) {
                     Tools.showToast(mAct, returnObj.toString());
                     return;
@@ -355,7 +338,7 @@ public class UserHomeVideo extends TabContentView {
             }
             if (!mSecondEditDatas.isEmpty() && !mNetDatas.isEmpty()) {
                 ListIterator<Map<String, String>> netDatas = mNetDatas.listIterator();
-                while(netDatas.hasNext()) {
+                while (netDatas.hasNext()) {
                     Map<String, String> netData = netDatas.next();
                     String code = netData.get("code");
                     if (!TextUtils.isEmpty(code) && mSecondEditDatas.size() > 0 && mSecondEditDatas.containsKey(code)) {
@@ -377,6 +360,17 @@ public class UserHomeVideo extends TabContentView {
         });
     }
 
+    public void deleteById(int id) {
+        for (int i = 0; i < mLocalDatas.size(); i++) {
+            Map<String, String> map = mLocalDatas.get(i);
+            if (TextUtils.equals(map.get("id"), String.valueOf(id))) {
+                datas.remove(map);
+                adapter.notifyDataSetChanged();
+                break;
+            }
+        }
+    }
+
     /**
      * 解析数据
      * @param returnObj 要解析的数据
@@ -386,7 +380,7 @@ public class UserHomeVideo extends TabContentView {
             mNetDatas.clear();
         int loadCount = 0;
         ArrayList<Map<String, String>> listMySelf = StringManager.getListMapByJson(returnObj);
-        if(listMySelf != null && listMySelf.size() > 0) {
+        if (listMySelf != null && listMySelf.size() > 0) {
             for (int i = 0; i < listMySelf.size(); i++) {
                 loadCount++;
                 Map<String, String> map = listMySelf.get(i);
@@ -397,7 +391,7 @@ public class UserHomeVideo extends TabContentView {
                     map.put("isMe", "1");
                     isFilter = filterOthersData(map);
                 }
-                if(!isFilter)
+                if (!isFilter)
                     mNetDatas.add(map);
             }
         }
