@@ -1,5 +1,6 @@
 package amodule.shortvideo.activity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -25,13 +26,16 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import amodule.article.db.UploadArticleData;
 import amodule.article.db.UploadVideoSQLite;
+import amodule.other.activity.PlayVideo;
 import amodule.search.view.MultiTagView;
 import amodule.shortvideo.tools.ShortVideoPublishBean;
 import amodule.shortvideo.tools.ShortVideoPublishManager;
 import aplug.basic.InternetCallback;
+import aplug.basic.LoadImage;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import third.location.LocationHelper;
+import third.qiyu.GlideImageLoader;
 
 /**
  * 视频发布页面
@@ -119,6 +123,7 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
         if(!TextUtils.isEmpty(shortVideoPublishBean.getName())){
             edit_text.setText(shortVideoPublishBean.getName());
         }
+        handleImgPath();
     }
 
     /**
@@ -247,11 +252,22 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
                 break;
             case R.id.video_duration_layout://预览
             case R.id.video_cover:
+                startPalyVideo();
                 break;
             case R.id.location_tv://定位
                 break;
             default:
                 break;
+        }
+    }
+    private void startPalyVideo(){
+        if(!TextUtils.isEmpty(shortVideoPublishBean.getImagePath())&&!TextUtils.isEmpty(shortVideoPublishBean.getVideoPath())){
+            Intent intent  = new Intent(ShortPublishActivity.this,PlayVideo.class);
+            intent.putExtra("url",shortVideoPublishBean.getVideoPath());
+            intent.putExtra("img",shortVideoPublishBean.getImagePath());
+            intent.putExtra("name",shortVideoPublishBean.getName());
+            this.startActivity(intent);
+
         }
     }
 
@@ -325,4 +341,13 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
         }
     }
     //***************************定位start*******************************************
+
+    /**
+     * 处理视频图片
+     */
+    private void handleImgPath(){
+        if(!TextUtils.isEmpty(shortVideoPublishBean.getImagePath())){
+            LoadImage.with(this).load(shortVideoPublishBean.getImagePath()).build().into(video_cover);
+        }
+    }
 }
