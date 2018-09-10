@@ -403,4 +403,26 @@ public class MultiTagView extends LinearLayout {
         this.isSelect = isSelect;
     }
 
+    /**
+     * 还原状态
+     */
+    public void restoreState(){
+        if(isSelect) {
+            int layoutCount = MultiTagView.this.getChildCount();
+            for (int j = 0; j < layoutCount; j++) {
+                if (MultiTagView.this.getChildAt(j) instanceof LinearLayout) {
+                    LinearLayout temp = (LinearLayout) MultiTagView.this.getChildAt(j);
+                    int count = temp.getChildCount();
+                    if (count > 0) {
+                        for (int i = 0; i < count; i++) {
+                            if (temp.getChildAt(i) instanceof FrameLayout) {
+                                ((FrameLayout) temp.getChildAt(i)).getChildAt(0).setBackgroundColor(Color.parseColor("#f7f7f7"));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 }

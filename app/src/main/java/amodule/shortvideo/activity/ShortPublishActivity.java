@@ -295,6 +295,10 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
             case R.id.topic_more_linear://更多话题
                 break;
             case R.id.topic_delete://删除话题
+                uiTopic("");
+                shortVideoPublishBean.setTopicName("");
+                shortVideoPublishBean.setTopicCode("");
+                hot_table.restoreState();
                 break;
             case R.id.video_duration_layout://预览
             case R.id.video_cover:
@@ -408,14 +412,9 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
         }
     }
     public void uiTopic(String topic){
-        if(TextUtils.isEmpty(topic)){
-            topic_img.setSelected(false);
-            topic_tv.setText("添加话题");
-            topic_tv.setTextColor(Color.parseColor("#999999"));
-        }else{
-            topic_img.setSelected(true);
-            topic_tv.setText(topic);
-            topic_tv.setTextColor(Color.parseColor("#3e3e3e"));
-        }
+        topic_img.setSelected(!TextUtils.isEmpty(topic));
+        topic_tv.setText(TextUtils.isEmpty(topic)?"添加话题":topic);
+        topic_tv.setTextColor(Color.parseColor(TextUtils.isEmpty(topic)?"#999999":"#3e3e3e"));
+        findViewById(R.id.topic_delete).setVisibility(TextUtils.isEmpty(topic)?View.GONE:View.VISIBLE);
     }
 }
