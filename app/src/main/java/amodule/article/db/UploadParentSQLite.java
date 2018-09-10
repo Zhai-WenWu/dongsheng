@@ -29,6 +29,13 @@ public class UploadParentSQLite extends SQLiteOpenHelper {
     }
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        if(newVersion == 2){
+            final String tempTableName = TB_NAME + "_temp";
+            db.execSQL("alter table " + TB_NAME + " rename to " + tempTableName);
+            db.execSQL(getCreateTableSql());
+            db.execSQL("insert into " + TB_NAME + " select *,'' from " + tempTableName);
+            db.execSQL("drop table " + tempTableName);
+        }
     }
 
     public int insert(UploadArticleData upData){
@@ -292,7 +299,9 @@ public class UploadParentSQLite extends SQLiteOpenHelper {
                 + UploadArticleData.article_videos + " text,"
                 + UploadArticleData.article_code + " text,"
                 + UploadArticleData.article_imgUrl + " text,"
-                + UploadArticleData.article_uploadType + " text)";
+                + UploadArticleData.article_uploadType + " text,"
+                + UploadArticleData.article_extraDataJson + " text)"
+                ;
     }
 
 }
