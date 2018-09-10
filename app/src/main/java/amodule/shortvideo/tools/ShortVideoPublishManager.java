@@ -59,12 +59,10 @@ public class ShortVideoPublishManager {
      * 开始上传
      */
     public void startUpload(){
-        Log.i("xianghaTag","startUpload::");
         uploadArticleData=null;
         if(shortVideoPublishBean==null||shortVideoPublishBean.isLocalDataEmpty()){
             return;
         }
-        Log.i("xianghaTag","startUpload:11:"+shortVideoPublishBean.toJsonString());
         uploadVideoSQLite = new UploadVideoSQLite(XHApplication.in());
         uploadArticleData = new UploadArticleData();
         uploadArticleData.setTitle(shortVideoPublishBean.getName());
@@ -139,7 +137,6 @@ public class ShortVideoPublishManager {
 
     }
     public void startUploadVideo(){
-        Log.i("xianghaTag","startUploadVideo:::");
         String md5 = Tools.getMD5(shortVideoPublishBean.getVideoPath());
         BreakPointControl breakPointControl= new BreakPointControl(XHApplication.in(),
                 md5,shortVideoPublishBean.getVideoPath(),BreakPointUploadManager.TYPE_VIDEO);
@@ -185,7 +182,6 @@ public class ShortVideoPublishManager {
             }
             @Override
             public void onSuccess(String url, String uniqueId, JSONObject jsonObject) {
-                Log.i("xianghaTag","startUploadImg:::"+url);
                 if(!TextUtils.isEmpty(url)){
                     shortVideoPublishBean.setImageUrl(url);
                     setRequstShortVideoRelease();

@@ -239,7 +239,6 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
                 Tools.showToast(this,"已经成功草稿");
                 shortVideoPublishBean.setId(String.valueOf(id));
             }
-            UploadArticleData data=uploadVideoSQLite.selectById(id);
         }
         this.finish();
         AliyunCommon.getInstance().deleteAllActivity();
