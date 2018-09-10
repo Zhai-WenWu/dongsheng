@@ -255,7 +255,7 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
         ShortVideoPublishManager.getInstance().startUpload();
         Intent intent = new Intent (this, FriendHome.class);
         intent.putExtra("type","video");
-        intent.putExtra("code", LoginManager.userInfo.get("userCode"));
+        intent.putExtra("code", LoginManager.userInfo.get("code"));
         startActivity(intent);
     }
 
