@@ -26,6 +26,7 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import amodule.article.db.UploadArticleData;
 import amodule.article.db.UploadVideoSQLite;
+import amodule.dish.db.UploadDishData;
 import amodule.other.activity.PlayVideo;
 import amodule.search.view.MultiTagView;
 import amodule.shortvideo.tools.ShortVideoPublishBean;
@@ -194,7 +195,7 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
      * 保存数据---存储草稿
      */
     private void saveData(){
-        if(checkData()){return;}
+//        if(checkData()){return;}
         UploadArticleData uploadArticleData = new UploadArticleData();
         uploadArticleData.setTitle(shortVideoPublishBean.getName());
         uploadArticleData.setImg(imgPath);
@@ -202,9 +203,14 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
         jsonArray.put(videoPath);
         uploadArticleData.setVideos(jsonArray.toString());
         uploadArticleData.setExtraDataJson(shortVideoPublishBean.toJsonString());
+        uploadArticleData.setUploadType(UploadDishData.UPLOAD_DRAF);
         UploadVideoSQLite uploadVideoSQLite = new UploadVideoSQLite(this);
         int id=uploadVideoSQLite.insert(uploadArticleData);
-        shortVideoPublishBean.setId(String.valueOf(id));
+        if(id>0) {
+            Tools.showToast(this,"已经成功草稿");
+            shortVideoPublishBean.setId(String.valueOf(id));
+        }
+
     }
 
     /**
