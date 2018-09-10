@@ -118,13 +118,13 @@ public class ShortVideoPublishManager {
                 //TODO
                 if(flag>ReqEncyptInternet.REQ_OK_STRING){
                     if(shortVideoUploadCallBack!=null){
-                        UploadState(UploadDishData.UPLOAD_SUCCESS);
                         shortVideoUploadCallBack.onSuccess(Integer.parseInt(shortVideoPublishBean.getId()));
+                        UploadState(UploadDishData.UPLOAD_SUCCESS);
                     }
                 }else{
                     if(shortVideoUploadCallBack!=null){
-                        UploadState(UploadDishData.UPLOAD_FAIL);
                         shortVideoUploadCallBack.onFailed(Integer.parseInt(shortVideoPublishBean.getId()));
+                        UploadState(UploadDishData.UPLOAD_FAIL);
                     }
                 }
             }
@@ -160,10 +160,10 @@ public class ShortVideoPublishManager {
             }
             @Override
             public void onFaild(String faild, String uniqueId) {
-                UploadState(UploadDishData.UPLOAD_FAIL);
                 if(shortVideoUploadCallBack!=null){
                     shortVideoUploadCallBack.onFailed(Integer.parseInt(shortVideoPublishBean.getId()));
                 }
+                UploadState(UploadDishData.UPLOAD_FAIL);
             }
             @Override
             public void onLastUploadOver(boolean flag, String responseStr) {
@@ -194,10 +194,10 @@ public class ShortVideoPublishManager {
             }
             @Override
             public void onFaild(String faild, String uniqueId) {
-                UploadState(UploadDishData.UPLOAD_FAIL);
                 if(shortVideoUploadCallBack!=null){
                     shortVideoUploadCallBack.onFailed(Integer.parseInt(shortVideoPublishBean.getId()));
                 }
+                UploadState(UploadDishData.UPLOAD_FAIL);
             }
             @Override
             public void onLastUploadOver(boolean flag, String responseStr) {
@@ -217,6 +217,10 @@ public class ShortVideoPublishManager {
             isUploading=false;
             if(UploadDishData.UPLOAD_FAIL.equals(key)&&uploadVideoSQLite.checkOver(UploadDishData.UPLOAD_FAIL)){
                 Tools.showToast(XHApplication.in(),"您已有10个内容发布失败，小哈已经无法为您存储更多了～");
+                uploadVideoSQLite.deleteById(Integer.parseInt(shortVideoPublishBean.getId()));
+                return;
+            }
+            if(UploadDishData.UPLOAD_SUCCESS.equals(key)){//成功删除数据
                 uploadVideoSQLite.deleteById(Integer.parseInt(shortVideoPublishBean.getId()));
                 return;
             }

@@ -132,6 +132,7 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
             edit_text.setText(shortVideoPublishBean.getName());
         }
         handleImgPath();
+        handleTopicUi();
     }
 
     /**
@@ -174,8 +175,9 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
                         hot_table.addTags(topicList, new MultiTagView.MutilTagViewCallBack() {
                             @Override
                             public void onClick(int tagIndexr) {
-                                topic_tv.setText(topicList.get(tagIndexr).get("name"));
                                 shortVideoPublishBean.setTopicCode(topicList.get(tagIndexr).get("code"));
+                                shortVideoPublishBean.setTopicName(topicList.get(tagIndexr).get("name"));
+                                uiTopic(topicList.get(tagIndexr).get("name"));
                             }
                         });
                     }
@@ -394,6 +396,26 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
     private void handleImgPath(){
         if(!TextUtils.isEmpty(shortVideoPublishBean.getImagePath())){
             LoadImage.with(this).load(shortVideoPublishBean.getImagePath()).build().into(video_cover);
+        }
+    }
+
+    /**
+     * 处理话题样式
+     */
+    public void handleTopicUi(){
+        if(!TextUtils.isEmpty(shortVideoPublishBean.getTopicCode())&&!TextUtils.isEmpty(shortVideoPublishBean.getTopicName())){
+            uiTopic(shortVideoPublishBean.getTopicName());
+        }
+    }
+    public void uiTopic(String topic){
+        if(TextUtils.isEmpty(topic)){
+            topic_img.setSelected(false);
+            topic_tv.setText("添加话题");
+            topic_tv.setTextColor(Color.parseColor("#999999"));
+        }else{
+            topic_img.setSelected(true);
+            topic_tv.setText(topic);
+            topic_tv.setTextColor(Color.parseColor("#3e3e3e"));
         }
     }
 }

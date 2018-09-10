@@ -24,6 +24,7 @@ public class ShortVideoPublishBean implements Serializable{
     private String videoTime;//视频的时长秒数
     private String musicCode;//音乐code
     private String topicCode;//话题code
+    private String topicName;//话题name
     private String address;//地址信息
 
     public String getName() {
@@ -122,6 +123,14 @@ public class ShortVideoPublishBean implements Serializable{
         this.id = id;
     }
 
+    public String getTopicName() {
+        return topicName;
+    }
+
+    public void setTopicName(String topicName) {
+        this.topicName = topicName;
+    }
+
     /**
      * 本地数据判断
      * @return
@@ -156,6 +165,7 @@ public class ShortVideoPublishBean implements Serializable{
             jsonObject.put("videoTime",videoTime);
             jsonObject.put("musicCode",musicCode);
             jsonObject.put("topicCode",topicCode);
+            jsonObject.put("topicName",topicName);
             jsonObject.put("address",address);
             return jsonObject.toString();
         }catch (Exception e){
@@ -176,6 +186,7 @@ public class ShortVideoPublishBean implements Serializable{
         setVideoTime(getMapKeyData(map,"videoTime"));
         setMusicCode(getMapKeyData(map,"musicCode"));
         setTopicCode(getMapKeyData(map,"topicCode"));
+        setTopicName(getMapKeyData(map,"topicName"));
     }
     private String getMapKeyData(Map<String,String> map ,String key){
         if(map.containsKey(key)){
