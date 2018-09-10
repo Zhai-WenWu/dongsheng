@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import acore.logic.LoginManager;
 import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -221,7 +222,8 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
         ShortVideoPublishManager.getInstance().setShortVideoPublishBean(shortVideoPublishBean);
         ShortVideoPublishManager.getInstance().startUpload();
         Intent intent = new Intent (this, FriendHome.class);
-        intent.putExtra("index","2");
+        intent.putExtra("type","video");
+        intent.putExtra("code", LoginManager.userInfo.get("userCode"));
         startActivity(intent);
     }
 

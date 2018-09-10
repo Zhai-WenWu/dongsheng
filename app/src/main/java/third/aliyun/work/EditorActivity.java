@@ -707,10 +707,9 @@ public class EditorActivity extends AppCompatActivity implements
                         JSONObject jsonObject = new JSONObject();
                         jsonObject.put("imageSize",mAliyunIPlayer.getVideoWidth()+"x"+mAliyunIPlayer.getVideoHeight());
                         jsonObject.put("videoSize",mAliyunIPlayer.getVideoWidth()+"x"+mAliyunIPlayer.getVideoHeight());
-                        jsonObject.put("videoTime",String.valueOf(mAliyunIPlayer.getDuration()/1000));
+                        jsonObject.put("videoTime",String.valueOf(mAliyunIPlayer.getDuration()/1000000));
 
                         otherJson= jsonObject.toString();
-                        Tools.showToast(XHApplication.in(),"otherJson::"+otherJson);
                     }catch (Exception e){
 
                     }
