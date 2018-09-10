@@ -1206,6 +1206,13 @@
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
+            android:name="amodule.shortvideo.activity.ShortPublishActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/titleTheme"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
             android:name="third.mall.activity.PublishEvalutionSingleActivity"
             android:configChanges="orientation|keyboardHidden|screenLayout"
             android:hardwareAccelerated="true"

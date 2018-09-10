@@ -70,6 +70,7 @@ import amodule.main.activity.MainCircle;
 import amodule.main.activity.MainHomePage;
 import amodule.main.activity.MainMyself;
 import amodule.main.delegate.ISetMessageTip;
+import amodule.shortvideo.activity.ShortPublishActivity;
 import aplug.shortvideo.ShortVideoInit;
 import third.ad.control.AdControlHomeDish;
 import third.ad.db.XHAdSqlite;
@@ -687,6 +688,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                     //在onResume方法添加了刷新方法
 //                    MainMyself mainMyself = (MainMyself) allTab.get(MainMyself.KEY);
 //                    mainMyself.scrollToTop();
+                    this.startActivity(new Intent(this,ShortPublishActivity.class));
                 } else if (i == TAB_CIRCLE && allTab.containsKey(MainCircle.KEY) && i == nowTab) {
                     MainCircle circle = (MainCircle) allTab.get(MainCircle.KEY);
                     if (circle != null)
@@ -837,6 +839,13 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
             @Override
             public void videoCallBack(String videoPath, String imgPath, String otherData) {
                 Log.i("xianghaTag","videoPath:::"+videoPath+"::::"+imgPath+"::::"+otherData);
+                if(!TextUtils.isEmpty(videoPath)&&!TextUtils.isEmpty(imgPath)){
+                    Intent intent = new Intent(Main.this, ShortPublishActivity.class);
+                    intent.putExtra("videoPath",videoPath);
+                    intent.putExtra("imgPath",imgPath);
+                    intent.putExtra("otherData",otherData);
+                    Main.this.startActivity(intent);
+                }
             }
         });
         //选择本地

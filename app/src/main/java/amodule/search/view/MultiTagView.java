@@ -55,6 +55,7 @@ public class MultiTagView extends LinearLayout {
     private boolean tagClickable = true;
     private boolean showAddButton;
     private int elementsInRow;
+    FrameLayout frameLayout;
 
     private MutilTagViewCallBack callback;
 
@@ -102,7 +103,11 @@ public class MultiTagView extends LinearLayout {
     }
 
 
+    public boolean isaddView= true;
     private void addTag(final Tag tag, final int tagTndex) {
+        if(MultiTagView.this.getChildCount()>=lineNum+1||!isaddView){
+            return;
+        }
         final TextView button = new TextView(mContext);
         button.setText(tag.content);
         button.setTextColor(getResources().getColor(android.R.color.black));
@@ -123,13 +128,31 @@ public class MultiTagView extends LinearLayout {
                 if(tag == null)
                     return;
                 callback.onClick(tagTndex);
+                if(isSelect) {
+                    int layoutCount = MultiTagView.this.getChildCount();
+                    for (int j = 0; j < layoutCount; j++) {
+                        if (MultiTagView.this.getChildAt(j) instanceof LinearLayout) {
+                            LinearLayout temp = (LinearLayout) MultiTagView.this.getChildAt(j);
+                            int count = temp.getChildCount();
+                            if (count > 0) {
+                                for (int i = 0; i < count; i++) {
+                                    if (temp.getChildAt(i) instanceof FrameLayout) {
+                                        ((FrameLayout) temp.getChildAt(i)).getChildAt(0).setBackgroundColor(Color.parseColor("#f7f7f7"));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    button.setBackgroundColor(Color.parseColor("#ff6d23"));
+                }
+
             }
         });
         button.setEnabled(tagClickable);
 
         int btnWidth = (int) (2 * dip2px(DEFAULT_TAG_PADDING) + button.getPaint().measureText(button.getText().toString()));
         LayoutParams layoutParams = new LayoutParams(btnWidth, dip2px(DEFAULT_TAG_HEIGHT));
-        FrameLayout frameLayout = new FrameLayout(mContext);
+        frameLayout = new FrameLayout(mContext);
         frameLayout.setLayoutParams(layoutParams);
         frameLayout.addView(button);
         layoutParams.rightMargin = dip2px(DEFAULT_TAG_MARGIN);
@@ -143,6 +166,11 @@ public class MultiTagView extends LinearLayout {
             lParams.topMargin = dip2px(DEFAULT_LAYOUT_MARGIN_TOP);
             mLayoutItem.setLayoutParams(lParams);
             addView(mLayoutItem);
+            if(MultiTagView.this.getChildCount()>=lineNum+1){
+                removeView(mLayoutItem);
+                isaddView=false;
+                return;
+            }
             tempWidth = dip2px(DEFAULT_TAG_MARGIN) + btnWidth;
             elementsInRow = 1;
         }
@@ -185,6 +213,7 @@ public class MultiTagView extends LinearLayout {
         }
         refresh();
     }
+
 
     public void removeAllTagView() {
         tags.clear();
@@ -354,6 +383,24 @@ public class MultiTagView extends LinearLayout {
 
     public interface MutilTagViewCallBack {
         void onClick(int tagIndexr);
+    }
+    public int lineNum= 100;
+
+    /**
+     * 设置显示行数
+     * @param lineNum
+     */
+    public void setlineNum(int lineNum ){
+        this.lineNum=lineNum;
+    }
+    private boolean isSelect= false;
+
+    /**
+     * 是否选中状态
+     * @param isSelect
+     */
+    public void setSelectState(boolean isSelect){
+        this.isSelect = isSelect;
     }
 
 }

@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout.LayoutParams;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -303,6 +304,7 @@ public class AliyunVideoCrop extends Activity implements TextureView.SurfaceText
                 FileManager.saveShared(XHApplication.in(),FileManager.video_corp_show_hint,FileManager.video_corp_show_hint,"1");
             }
         });
+        ((ImageView)findViewById(R.id.leftImgBtn)).setImageResource(R.drawable.z_z_topbar_ico_back_white);
     }
 
     private void setListViewHeight() {

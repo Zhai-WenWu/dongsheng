@@ -174,6 +174,7 @@ public class EditorActivity extends AppCompatActivity implements
             }
         });
         findViewById(R.id.progressBar_layout).setOnClickListener(v->{});
+        ((ImageView)findViewById(R.id.leftImgBtn)).setImageResource(R.drawable.z_z_topbar_ico_back_white);
 
     }
 

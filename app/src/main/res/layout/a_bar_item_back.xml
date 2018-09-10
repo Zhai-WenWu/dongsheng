@@ -20,7 +20,7 @@
             android:layout_marginLeft="@dimen/dp_15"
             android:padding="@dimen/dp_5"
             android:scaleType="centerInside"
-            android:src="@drawable/z_z_topbar_ico_back_white"
+            android:src="@drawable/z_z_topbar_ico_back"
             />
 
         <View
