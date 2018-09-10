@@ -338,7 +338,6 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
             }
         }
         initAliyunVideo();
-        handleUploadData();
     }
 
 
