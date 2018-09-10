@@ -94,9 +94,9 @@ public class ShortVideoPublishManager {
     }
     public ShortVideoUploadCallBack shortVideoUploadCallBack;
     public interface ShortVideoUploadCallBack{
-        public void onSuccess();
-        public void onProgress(int progress);
-        public void onFailed();
+        public void onSuccess(int sqlId);
+        public void onProgress(int progress,int sqlId);
+        public void onFailed(int sqlId);
     }
 
     /**
@@ -118,12 +118,12 @@ public class ShortVideoPublishManager {
                 if(flag>ReqEncyptInternet.REQ_OK_STRING){
                     if(shortVideoUploadCallBack!=null){
                         UploadState(UploadDishData.UPLOAD_SUCCESS);
-                        shortVideoUploadCallBack.onSuccess();
+                        shortVideoUploadCallBack.onSuccess(Integer.parseInt(shortVideoPublishBean.getId()));
                     }
                 }else{
                     if(shortVideoUploadCallBack!=null){
                         UploadState(UploadDishData.UPLOAD_FAIL);
-                        shortVideoUploadCallBack.onFailed();
+                        shortVideoUploadCallBack.onFailed(Integer.parseInt(shortVideoPublishBean.getId()));
                     }
                 }
             }
@@ -147,7 +147,7 @@ public class ShortVideoPublishManager {
             @Override
             public void onProgress(double progress, String uniqueId) {
                 if(shortVideoUploadCallBack!=null){
-                    shortVideoUploadCallBack.onProgress((int) (progress*90));
+                    shortVideoUploadCallBack.onProgress((int) (progress*90),Integer.parseInt(shortVideoPublishBean.getId()));
                 }
             }
             @Override
@@ -161,7 +161,7 @@ public class ShortVideoPublishManager {
             public void onFaild(String faild, String uniqueId) {
                 UploadState(UploadDishData.UPLOAD_FAIL);
                 if(shortVideoUploadCallBack!=null){
-                    shortVideoUploadCallBack.onFailed();
+                    shortVideoUploadCallBack.onFailed(Integer.parseInt(shortVideoPublishBean.getId()));
                 }
             }
             @Override
@@ -180,7 +180,7 @@ public class ShortVideoPublishManager {
             @Override
             public void onProgress(double progress, String uniqueId) {
                 if(shortVideoUploadCallBack!=null){
-                    shortVideoUploadCallBack.onProgress(90 + (int) (progress*10));
+                    shortVideoUploadCallBack.onProgress(99 ,Integer.parseInt(shortVideoPublishBean.getId()));
                 }
             }
             @Override
@@ -195,7 +195,7 @@ public class ShortVideoPublishManager {
             public void onFaild(String faild, String uniqueId) {
                 UploadState(UploadDishData.UPLOAD_FAIL);
                 if(shortVideoUploadCallBack!=null){
-                    shortVideoUploadCallBack.onFailed();
+                    shortVideoUploadCallBack.onFailed(Integer.parseInt(shortVideoPublishBean.getId()));
                 }
             }
             @Override
