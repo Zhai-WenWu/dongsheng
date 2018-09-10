@@ -56,6 +56,7 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
     private ArrayList<Map<String,String>> topicList = new ArrayList<>();
     private ShortVideoPublishBean shortVideoPublishBean= new ShortVideoPublishBean();
     private String extraDataJson;
+    private String id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +67,7 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
             imgPath = (String) bundle.get("imgPath");
             otherData = (String) bundle.get("otherData");
             extraDataJson = (String) bundle.get("extraDataJson");
+            id = (String) bundle.get("id");
         }
         handleExtraData();
         initView();
@@ -90,6 +92,9 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
         }
         if(!TextUtils.isEmpty(extraDataJson)){
             shortVideoPublishBean.jsonToBean(extraDataJson);
+        }
+        if(!TextUtils.isEmpty(id)){
+            shortVideoPublishBean.setId(id);
         }
     }
 
@@ -182,21 +187,30 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
 
     /**
      * 校验数据
+     * isValid
      */
     private boolean checkData(){
         if(TextUtils.isEmpty(edit_text.getText().toString())){
             Tools.showToast(this,"请输入文字");
             return true;
         }
+        saveUIData();
+        return false;
+    }
+
+    /**
+     * 保存ui数据
+     */
+    private void saveUIData(){
         String title= edit_text.getText().toString();
         shortVideoPublishBean.setName(title);
-        return false;
+
     }
     /**
      * 保存数据---存储草稿
      */
     private void saveData(){
-//        if(checkData()){return;}
+        saveUIData();
         UploadVideoSQLite uploadVideoSQLite = new UploadVideoSQLite(this);
         if(uploadVideoSQLite.checkOver(UploadDishData.UPLOAD_DRAF)){
             Tools.showToast(this,"您已经有10个草稿待发布了，清理一下草稿箱后再继续存储吧～");
@@ -210,11 +224,21 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
         uploadArticleData.setVideos(jsonArray.toString());
         uploadArticleData.setExtraDataJson(shortVideoPublishBean.toJsonString());
         uploadArticleData.setUploadType(UploadDishData.UPLOAD_DRAF);
-        int id=uploadVideoSQLite.insert(uploadArticleData);
-        if(id>0) {
-            Tools.showToast(this,"已经成功草稿");
-            shortVideoPublishBean.setId(String.valueOf(id));
+        if(!TextUtils.isEmpty(shortVideoPublishBean.getId())){
+            int num=uploadVideoSQLite.update(Integer.parseInt(shortVideoPublishBean.getId()),uploadArticleData);
+            if(num>0){
+                Tools.showToast(this,"已经成功草稿");
+            }
+        }else{
+            int id=uploadVideoSQLite.insert(uploadArticleData);
+            if(id>0) {
+                Tools.showToast(this,"已经成功草稿");
+                shortVideoPublishBean.setId(String.valueOf(id));
+            }
+            UploadArticleData data=uploadVideoSQLite.selectById(id);
+
         }
+
 
     }
 

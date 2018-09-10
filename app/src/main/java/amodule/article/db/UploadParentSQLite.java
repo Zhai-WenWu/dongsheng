@@ -281,6 +281,7 @@ public class UploadParentSQLite extends SQLiteOpenHelper {
                 upData.setImgUrl(cur.getString(cur.getColumnIndex(UploadArticleData.article_imgUrl)));
                 upData.setUploadType(cur.getString(cur.getColumnIndex(UploadArticleData.article_uploadType)));
                 upData.setVideos(cur.getString(cur.getColumnIndex(UploadArticleData.article_videos)));
+                upData.setExtraDataJson(cur.getString(cur.getColumnIndex(UploadArticleData.article_extraDataJson)));
             }
             return upData;
         } finally {
