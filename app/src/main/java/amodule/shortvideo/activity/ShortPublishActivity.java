@@ -30,6 +30,7 @@ import amodule.other.activity.PlayVideo;
 import amodule.search.view.MultiTagView;
 import amodule.shortvideo.tools.ShortVideoPublishBean;
 import amodule.shortvideo.tools.ShortVideoPublishManager;
+import amodule.user.activity.FriendHome;
 import aplug.basic.InternetCallback;
 import aplug.basic.LoadImage;
 import aplug.basic.ReqEncyptInternet;
@@ -213,6 +214,9 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
         if(checkData()){return;}
         ShortVideoPublishManager.getInstance().setShortVideoPublishBean(shortVideoPublishBean);
         ShortVideoPublishManager.getInstance().startUpload();
+        Intent intent = new Intent (this, FriendHome.class);
+        intent.putExtra("index","2");
+        startActivity(intent);
     }
 
     /**
