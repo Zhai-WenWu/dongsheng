@@ -49,7 +49,7 @@
                     android:paddingRight="@dimen/dp_20"
                     android:paddingTop="@dimen/dp_10"
                     android:textAllCaps="false"
-                    android:textColor="#ffffff"
+                    android:textColor="#333333"
                     android:textColorHint="#5c5e65"
                     android:textSize="@dimen/sp_17" />
 
@@ -267,7 +267,7 @@
             android:gravity="center"
             android:tag="发布"
             android:text="发布"
-            android:textColor="#333333"
+            android:textColor="#fffffe"
             android:textSize="@dimen/sp_17" />
 
     </RelativeLayout>

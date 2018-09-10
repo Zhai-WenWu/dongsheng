@@ -663,6 +663,7 @@ public class AliyunVideoCrop extends Activity implements TextureView.SurfaceText
             mVideoParam.setOutputWidth(videoWidth);
             mVideoParam.setOutputHeight(videoHeight);
         }
+        Log.i("xianghaTag","videoWidth:::"+videoWidth+":::videoHeight::"+videoHeight);
 //        outputPath = Environment.getExternalStorageDirectory() + File.separator + Environment.DIRECTORY_DCIM + File.separator + "crop_" + System.currentTimeMillis() + ".mp4";
         outputPath =FileManager.getSDCacheDir()+"crop_"+System.currentTimeMillis() + ".mp4";
         CropParam cropParam = new CropParam();

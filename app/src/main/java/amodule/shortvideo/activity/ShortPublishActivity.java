@@ -22,6 +22,7 @@ import java.util.Map;
 
 import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
+import acore.tools.Tools;
 import amodule.article.db.UploadArticleData;
 import amodule.article.db.UploadVideoSQLite;
 import amodule.search.view.MultiTagView;
@@ -42,7 +43,7 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
     private RelativeLayout publish_layout;
     private TextView location_tv,topic_tv;
     private MultiTagView hot_table;
-    private String videoPath,imgPath,otherPath;
+    private String videoPath,imgPath,otherData;
     private String location_state= "1";//定位状态 1-正在定位，2-定位成功，3-定位失败
     private boolean isShowLocation= true;//是否显示定位信息
     private ArrayList<Map<String,String>> topicList = new ArrayList<>();
@@ -56,7 +57,7 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
         if(bundle!=null){
             videoPath = (String) bundle.get("videoPath");
             imgPath = (String) bundle.get("imgPath");
-            otherPath = (String) bundle.get("otherPath");
+            otherData = (String) bundle.get("otherData");
             extraDataJson = (String) bundle.get("extraDataJson");
         }
         handleExtraData();
@@ -74,8 +75,11 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
         if(!TextUtils.isEmpty(imgPath)){
             shortVideoPublishBean.setImagePath(imgPath);
         }
-        if(!TextUtils.isEmpty(otherPath)){
-
+        if(!TextUtils.isEmpty(otherData)){
+            Map<String,String> mapTemp = StringManager.getFirstMap(otherData);
+            shortVideoPublishBean.setImageSize(mapTemp.get("imageSize"));
+            shortVideoPublishBean.setVideoSize(mapTemp.get("videoSize"));
+            shortVideoPublishBean.setVideoTime(mapTemp.get("videoTime"));
         }
         if(!TextUtils.isEmpty(extraDataJson)){
             shortVideoPublishBean.jsonToBean(extraDataJson);
@@ -158,6 +162,7 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
                             @Override
                             public void onClick(int tagIndexr) {
                                 topic_tv.setText(topicList.get(tagIndexr).get("name"));
+                                shortVideoPublishBean.setTopicCode(topicList.get(tagIndexr).get("code"));
                             }
                         });
                     }
@@ -171,6 +176,12 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
      * 校验数据
      */
     private boolean checkData(){
+        if(TextUtils.isEmpty(edit_text.getText().toString())){
+            Tools.showToast(this,"请输入文字");
+            return true;
+        }
+        String title= edit_text.getText().toString();
+        shortVideoPublishBean.setName(title);
         return false;
     }
     /**
@@ -178,10 +189,9 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
      */
     private void saveData(){
         if(checkData()){return;}
-        String title= edit_text.getText().toString();
-        shortVideoPublishBean.setName(title);
+
         UploadArticleData uploadArticleData = new UploadArticleData();
-        uploadArticleData.setTitle(title);
+        uploadArticleData.setTitle(shortVideoPublishBean.getName());
         uploadArticleData.setImg(imgPath);
         JSONArray jsonArray = new JSONArray();
         jsonArray.put(videoPath);
@@ -196,6 +206,7 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
      * 开始发布
      */
     public void startPublish(){
+        if(checkData()){return;}
         ShortVideoPublishManager.getInstance().setShortVideoPublishBean(shortVideoPublishBean);
         ShortVideoPublishManager.getInstance().startUpload();
     }

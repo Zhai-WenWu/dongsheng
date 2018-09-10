@@ -1,13 +1,17 @@
 package amodule.shortvideo.tools;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import acore.override.XHApplication;
 import acore.tools.StringManager;
+import acore.tools.Tools;
 import amodule.article.db.UploadArticleData;
 import amodule.article.db.UploadVideoSQLite;
+import amodule.upload.callback.UploadListNetCallBack;
 import aplug.basic.BreakPointControl;
 import aplug.basic.BreakPointUploadManager;
 import aplug.basic.InternetCallback;
@@ -53,10 +57,11 @@ public class ShortVideoPublishManager {
      * 开始上传
      */
     public void startUpload(){
+        Log.i("xianghaTag","startUpload::");
         if(shortVideoPublishBean==null||shortVideoPublishBean.isLocalDataEmpty()){
             return;
         }
-
+        Log.i("xianghaTag","startUpload:11:"+shortVideoPublishBean.toJsonString());
         uploadVideoSQLite = new UploadVideoSQLite(XHApplication.in());
         UploadArticleData uploadArticleData = new UploadArticleData();
         uploadArticleData.setTitle(shortVideoPublishBean.getName());
@@ -93,11 +98,17 @@ public class ShortVideoPublishManager {
      *短视频上传
      */
     private void setRequstShortVideoRelease(){
+        Log.i("xianghaTag","setRequstShortVideoRelease::33:");
         if(shortVideoPublishBean.isDataEmpty()){
             return;
         }
+        Log.i("xianghaTag","setRequstShortVideoRelease::--:");
         String url= StringManager.API_SHORTVIDEO_RELEASE;
-        String params = "";
+        String params = "name="+shortVideoPublishBean.getName()+"&imageUrl="+shortVideoPublishBean.getImageUrl()
+                +"&imageSize="+shortVideoPublishBean.getImageSize()+"&videoUrl="+shortVideoPublishBean.getVideoUrl()
+                +"&videoSize="+shortVideoPublishBean.getVideoSize()+"&videoTime="+shortVideoPublishBean.getVideoTime()
+                +"&musicCode="+shortVideoPublishBean.getMusicCode()+"&topicCode="+shortVideoPublishBean.getTopicCode()
+                +"&address="+shortVideoPublishBean.getAddress();
         ReqEncyptInternet.in().doEncypt(url, params, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object msg) {
@@ -118,7 +129,67 @@ public class ShortVideoPublishManager {
      *开始vide上传
      */
     public void startBeakPointUpload(){
-//        BreakPointUploadManager.getInstance().
+        startUploadVideo();
+
     }
+    public void startUploadVideo(){
+        Log.i("xianghaTag","startUploadVideo:::");
+        String md5 = Tools.getMD5(shortVideoPublishBean.getVideoPath());
+        BreakPointControl breakPointControl= new BreakPointControl(XHApplication.in(),
+                md5,shortVideoPublishBean.getVideoPath(),BreakPointUploadManager.TYPE_VIDEO);
+        breakPointControl.start(new UploadListNetCallBack() {
+            @Override
+            public void onProgress(double progress, String uniqueId) {
+            }
+            @Override
+            public void onSuccess(String url, String uniqueId, JSONObject jsonObject) {
+                Log.i("xianghaTag","startUploadVideo:::"+url);
+                if(!TextUtils.isEmpty(url)) {
+                    shortVideoPublishBean.setVideoUrl(url);
+                    startUploadImg();
+                }
+            }
+            @Override
+            public void onFaild(String faild, String uniqueId) {
+                Log.i("xianghaTag","startUploadVideo:2::"+faild);
+            }
+            @Override
+            public void onLastUploadOver(boolean flag, String responseStr) {
+            }
+            @Override
+            public void onProgressSpeed(String uniqueId, long speed) {
+            }
+        });
+    }
+    private void startUploadImg(){
+        Log.i("xianghaTag","startUploadImg:::");
+        String md5 = Tools.getMD5(shortVideoPublishBean.getImagePath());
+        BreakPointControl breakPointControl= new BreakPointControl(XHApplication.in(),
+                md5,shortVideoPublishBean.getImagePath(),BreakPointUploadManager.TYPE_IMG);
+        breakPointControl.start(new UploadListNetCallBack() {
+            @Override
+            public void onProgress(double progress, String uniqueId) {
+            }
+            @Override
+            public void onSuccess(String url, String uniqueId, JSONObject jsonObject) {
+                Log.i("xianghaTag","startUploadImg:::"+url);
+                if(!TextUtils.isEmpty(url)){
+                    shortVideoPublishBean.setImageUrl(url);
+                    setRequstShortVideoRelease();
+                }
+            }
+            @Override
+            public void onFaild(String faild, String uniqueId) {
+                Log.i("xianghaTag","startUploadImg::22:");
+            }
+            @Override
+            public void onLastUploadOver(boolean flag, String responseStr) {
+            }
+            @Override
+            public void onProgressSpeed(String uniqueId, long speed) {
+            }
+        });
+    }
+
 
 }
