@@ -148,8 +148,10 @@ public class ShortVideoPublishBean implements Serializable{
             jsonObject.put("id",id);
             jsonObject.put("name",name);
             jsonObject.put("imageUrl",imageUrl);
+            jsonObject.put("imagePath",imagePath);
             jsonObject.put("imageSize",imageSize);
             jsonObject.put("videoUrl",videoUrl);
+            jsonObject.put("videoPath",videoPath);
             jsonObject.put("videoSize",videoSize);
             jsonObject.put("videoTime",videoTime);
             jsonObject.put("musicCode",musicCode);
