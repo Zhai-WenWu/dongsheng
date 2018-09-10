@@ -240,8 +240,10 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
                 shortVideoPublishBean.setId(String.valueOf(id));
             }
             UploadArticleData data=uploadVideoSQLite.selectById(id);
-
         }
+        this.finish();
+        AliyunCommon.getInstance().deleteAllActivity();
+        VideoRecorderCommon.instance().deleteAllActivity();
 
 
     }
