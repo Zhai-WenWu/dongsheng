@@ -11,6 +11,7 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import amodule.article.db.UploadArticleData;
 import amodule.article.db.UploadVideoSQLite;
+import amodule.dish.db.UploadDishData;
 import amodule.upload.callback.UploadListNetCallBack;
 import aplug.basic.BreakPointControl;
 import aplug.basic.BreakPointUploadManager;
@@ -24,6 +25,7 @@ public class ShortVideoPublishManager {
     private boolean isUploading = false;//是否正在上传中，true上传，false不上传
     private ShortVideoPublishBean shortVideoPublishBean;
     private UploadVideoSQLite uploadVideoSQLite;
+    private UploadArticleData uploadArticleData;
 
     private static ShortVideoPublishManager shortVideoPublishManager;
     public static ShortVideoPublishManager getInstance(){
@@ -58,12 +60,13 @@ public class ShortVideoPublishManager {
      */
     public void startUpload(){
         Log.i("xianghaTag","startUpload::");
+        uploadArticleData=null;
         if(shortVideoPublishBean==null||shortVideoPublishBean.isLocalDataEmpty()){
             return;
         }
         Log.i("xianghaTag","startUpload:11:"+shortVideoPublishBean.toJsonString());
         uploadVideoSQLite = new UploadVideoSQLite(XHApplication.in());
-        UploadArticleData uploadArticleData = new UploadArticleData();
+        uploadArticleData = new UploadArticleData();
         uploadArticleData.setTitle(shortVideoPublishBean.getName());
         uploadArticleData.setImg(shortVideoPublishBean.getImagePath());
         JSONArray jsonArray = new JSONArray();
@@ -73,8 +76,10 @@ public class ShortVideoPublishManager {
         if(TextUtils.isEmpty(shortVideoPublishBean.getId())) {//插入数据
             //保存数据库
             int id = uploadVideoSQLite.insert(uploadArticleData);
+            uploadArticleData.setUploadType(UploadDishData.UPLOAD_ING);
             shortVideoPublishBean.setId(String.valueOf(id));
         }else{//更新数据
+            uploadArticleData.setUploadType(UploadDishData.UPLOAD_ING);
             uploadVideoSQLite.update(Integer.parseInt(shortVideoPublishBean.getId()),uploadArticleData);
         }
         startBeakPointUpload();
@@ -112,10 +117,12 @@ public class ShortVideoPublishManager {
             public void loaded(int flag, String url, Object msg) {
                 if(flag>ReqEncyptInternet.REQ_OK_STRING){
                     if(shortVideoUploadCallBack!=null){
+                        UploadState(UploadDishData.UPLOAD_SUCCESS);
                         shortVideoUploadCallBack.onSuccess();
                     }
                 }else{
                     if(shortVideoUploadCallBack!=null){
+                        UploadState(UploadDishData.UPLOAD_FAIL);
                         shortVideoUploadCallBack.onFailed();
                     }
                 }
@@ -151,6 +158,7 @@ public class ShortVideoPublishManager {
             }
             @Override
             public void onFaild(String faild, String uniqueId) {
+                UploadState(UploadDishData.UPLOAD_FAIL);
                 if(shortVideoUploadCallBack!=null){
                     shortVideoUploadCallBack.onFailed();
                 }
@@ -184,6 +192,7 @@ public class ShortVideoPublishManager {
             }
             @Override
             public void onFaild(String faild, String uniqueId) {
+                UploadState(UploadDishData.UPLOAD_FAIL);
                 if(shortVideoUploadCallBack!=null){
                     shortVideoUploadCallBack.onFailed();
                 }
@@ -197,5 +206,15 @@ public class ShortVideoPublishManager {
         });
     }
 
+    /**
+     * 更新数据库状态
+     * @param key
+     */
+    private void UploadState(String key){
+        if(uploadArticleData!=null&&uploadVideoSQLite!=null) {
+            uploadArticleData.setUploadType(key);
+            uploadVideoSQLite.update(Integer.parseInt(shortVideoPublishBean.getId()), uploadArticleData);
+        }
+    }
 
 }
