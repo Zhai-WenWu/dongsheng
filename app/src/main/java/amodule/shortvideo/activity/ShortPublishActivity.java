@@ -260,10 +260,12 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
 
         ShortVideoPublishManager.getInstance().setShortVideoPublishBean(shortVideoPublishBean);
         ShortVideoPublishManager.getInstance().startUpload();
-        Intent intent = new Intent (this, FriendHome.class);
-        intent.putExtra("type","video");
-        intent.putExtra("code", LoginManager.userInfo.get("code"));
-        startActivity(intent);
+        if(TextUtils.isEmpty(id)){
+            Intent intent = new Intent (this, FriendHome.class);
+            intent.putExtra("type","video");
+            intent.putExtra("code", LoginManager.userInfo.get("code"));
+            startActivity(intent);
+        }
         this.finish();
         AliyunCommon.getInstance().deleteAllActivity();
         VideoRecorderCommon.instance().deleteAllActivity();

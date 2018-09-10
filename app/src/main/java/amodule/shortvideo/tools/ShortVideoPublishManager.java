@@ -118,13 +118,13 @@ public class ShortVideoPublishManager {
             @Override
             public void loaded(int flag, String url, Object msg) {
                 if(flag >= ReqEncyptInternet.REQ_OK_STRING){
+                    UploadState(UploadDishData.UPLOAD_SUCCESS);
                     if(shortVideoUploadCallBack!=null){
-                        UploadState(UploadDishData.UPLOAD_SUCCESS);
                         shortVideoUploadCallBack.onSuccess(Integer.parseInt(shortVideoPublishBean.getId()));
                     }
                 }else{
+                    UploadState(UploadDishData.UPLOAD_FAIL);
                     if(shortVideoUploadCallBack!=null){
-                        UploadState(UploadDishData.UPLOAD_FAIL);
                         shortVideoUploadCallBack.onFailed(Integer.parseInt(shortVideoPublishBean.getId()));
                     }
                 }
