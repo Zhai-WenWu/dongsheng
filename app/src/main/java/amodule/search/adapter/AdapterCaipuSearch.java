@@ -14,17 +14,16 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.BitmapRequestBuilder;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.animation.GlideAnimation;
-import com.qq.e.ads.nativ.NativeADDataRef;
 import com.xiangha.R;
 
 import org.json.JSONObject;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -46,10 +45,7 @@ import amodule.search.view.SearchResultAdViewGenerater;
 import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
 import third.ad.scrollerAd.XHAllAdControl;
-import third.ad.scrollerAd.XHScrollerAdParent;
 import xh.basic.tool.UtilImage;
-
-import static amodule.search.view.SearchResultAdDataProvider.AD_IDS;
 
 public class AdapterCaipuSearch extends BaseAdapter {
 
@@ -340,6 +336,11 @@ public class AdapterCaipuSearch extends BaseAdapter {
                     .putExtra("img", caipuMap.get("img"));
             mActivity.startActivity(intent);
         });
+
+        String videoImg = caipuMap.get("sizeImg");
+        if (!TextUtils.isEmpty(videoImg)) {
+            Glide.with(convertView.getContext()).load(videoImg).diskCacheStrategy(DiskCacheStrategy.SOURCE).preload();
+        }
         return convertView;
     }
 
@@ -348,7 +349,11 @@ public class AdapterCaipuSearch extends BaseAdapter {
             JSONObject dishInfoJson = new JSONObject();
             dishInfoJson.put("code",data.get("code"));
             dishInfoJson.put("name",data.get("name"));
-            dishInfoJson.put("img",data.get("img"));
+            String img = data.get("sizeImg");
+            if (TextUtils.isEmpty(img)) {
+                img = data.get("img");
+            }
+            dishInfoJson.put("img",img);
             dishInfoJson.put("type",TextUtils.equals(data.get("hasVideo"), "2") ? "2" : "1");
             dishInfoJson.put("allClick",data.get("allClick").replace("浏览",""));
             dishInfoJson.put("favorites",data.get("favorites").replace("收藏",""));

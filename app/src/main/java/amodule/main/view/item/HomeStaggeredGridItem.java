@@ -80,6 +80,7 @@ public class HomeStaggeredGridItem extends HomeItem {
                 mDataMap.put("parseResourceData_height", heightStr);
                 mDataMap.put("parseResourceData_gif", resourceData.get("gif"));
                 mDataMap.put("parseResourceData_img", resourceData.get("img"));
+                mDataMap.put("parseResourceData_videoImg", resourceData.get("videoImg"));
             } else {
                 Map<String, String> styleData = StringManager.getFirstMap(mDataMap.get("styleData"));
                 String type = styleData.get("type");
@@ -181,6 +182,10 @@ public class HomeStaggeredGridItem extends HomeItem {
         BitmapRequestBuilder bitmapRequestBuilder = LoadImage.with(getContext()).load(userImage).setSaveType(FileManager.save_cache).setPlaceholderId(R.drawable.i_nopic).setErrorId(R.drawable.i_nopic).build();
         if (bitmapRequestBuilder != null) {
             bitmapRequestBuilder.into(auther_userImg);
+        }
+        String videoImg = mDataMap.get("parseResourceData_videoImg");
+        if (!TextUtils.isEmpty(videoImg)) {
+            Glide.with(getContext()).load(videoImg).diskCacheStrategy(DiskCacheStrategy.SOURCE).preload();
         }
     }
 
