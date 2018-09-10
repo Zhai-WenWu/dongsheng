@@ -290,6 +290,7 @@ public class UserHomeVideo extends TabContentView {
                             data.put("videos", videos);
                             data.put("isMe", "2");
                             data.put("dataFrom", String.valueOf(1));//dataFrom:数据来源，本地:1；网络:2,或者null、""、不存在该字段；
+                            data.put("extraDataJson",articleData.getExtraDataJson());
                             if (!TextUtils.isEmpty(code)) {
                                 mSecondEditDatas.put(code, data);
                                 continue;
