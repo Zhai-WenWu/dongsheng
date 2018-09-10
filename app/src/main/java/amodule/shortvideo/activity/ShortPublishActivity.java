@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.amap.api.location.AMapLocation;
+import com.quze.videorecordlib.VideoRecorderCommon;
 import com.xiangha.R;
 
 import org.json.JSONArray;
@@ -37,6 +38,7 @@ import aplug.basic.InternetCallback;
 import aplug.basic.LoadImage;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
+import third.aliyun.work.AliyunCommon;
 import third.location.LocationHelper;
 import third.qiyu.GlideImageLoader;
 
@@ -253,12 +255,16 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
             Tools.showToast(this,"当前有正在上传数据");
             return;
         }
+
         ShortVideoPublishManager.getInstance().setShortVideoPublishBean(shortVideoPublishBean);
         ShortVideoPublishManager.getInstance().startUpload();
         Intent intent = new Intent (this, FriendHome.class);
         intent.putExtra("type","video");
         intent.putExtra("code", LoginManager.userInfo.get("code"));
         startActivity(intent);
+        this.finish();
+        AliyunCommon.getInstance().deleteAllActivity();
+        VideoRecorderCommon.instance().deleteAllActivity();
     }
 
     /**

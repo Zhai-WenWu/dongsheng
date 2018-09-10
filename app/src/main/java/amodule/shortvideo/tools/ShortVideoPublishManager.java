@@ -119,13 +119,13 @@ public class ShortVideoPublishManager {
             public void loaded(int flag, String url, Object msg) {
                 if(flag>ReqEncyptInternet.REQ_OK_STRING){
                     if(shortVideoUploadCallBack!=null){
-                        shortVideoUploadCallBack.onSuccess(Integer.parseInt(shortVideoPublishBean.getId()));
                         UploadState(UploadDishData.UPLOAD_SUCCESS);
+                        shortVideoUploadCallBack.onSuccess(Integer.parseInt(shortVideoPublishBean.getId()));
                     }
                 }else{
                     if(shortVideoUploadCallBack!=null){
-                        shortVideoUploadCallBack.onFailed(Integer.parseInt(shortVideoPublishBean.getId()));
                         UploadState(UploadDishData.UPLOAD_FAIL);
+                        shortVideoUploadCallBack.onFailed(Integer.parseInt(shortVideoPublishBean.getId()));
                     }
                 }
             }
@@ -159,10 +159,10 @@ public class ShortVideoPublishManager {
             }
             @Override
             public void onFaild(String faild, String uniqueId) {
+                UploadState(UploadDishData.UPLOAD_FAIL);
                 if(shortVideoUploadCallBack!=null){
                     shortVideoUploadCallBack.onFailed(Integer.parseInt(shortVideoPublishBean.getId()));
                 }
-                UploadState(UploadDishData.UPLOAD_FAIL);
             }
             @Override
             public void onLastUploadOver(boolean flag, String responseStr) {
@@ -193,10 +193,10 @@ public class ShortVideoPublishManager {
             }
             @Override
             public void onFaild(String faild, String uniqueId) {
+                UploadState(UploadDishData.UPLOAD_FAIL);
                 if(shortVideoUploadCallBack!=null){
                     shortVideoUploadCallBack.onFailed(Integer.parseInt(shortVideoPublishBean.getId()));
                 }
-                UploadState(UploadDishData.UPLOAD_FAIL);
             }
             @Override
             public void onLastUploadOver(boolean flag, String responseStr) {
