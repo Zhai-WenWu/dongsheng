@@ -76,6 +76,7 @@ import amodule.main.activity.MainHomePage;
 import amodule.main.activity.MainMyself;
 import amodule.main.delegate.ISetMessageTip;
 import amodule.shortvideo.activity.ShortPublishActivity;
+import amodule.user.activity.login.LoginByAccout;
 import aplug.shortvideo.ShortVideoInit;
 import third.ad.control.AdControlHomeDish;
 import third.ad.db.XHAdSqlite;
@@ -343,16 +344,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
 
 
     public void onChangeSend(View view){
-//        if (!LoginManager.isLogin()) {
-//            startActivity(new Intent(this, LoginByAccout.class));
-//        } else if (LoginManager.isBindMobilePhone()) {
-//            this.startActivity(new Intent(this, VideoEditActivity.class));
-//        } else
-//            BaseLoginActivity.gotoBindPhoneNum(this);
-//        AliyunCommon.getInstance().startRecoderVideo(this);
         AliyunCommon.getInstance().startRecord(this);
-
-//        AliyunCommon.getInstance().startAliyunVideo(this);
     }
 
     Handler mTimerHandler = null;

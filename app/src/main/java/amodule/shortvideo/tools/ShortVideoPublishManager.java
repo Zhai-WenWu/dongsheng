@@ -134,6 +134,7 @@ public class ShortVideoPublishManager {
      *开始vide上传
      */
     public void startBeakPointUpload(){
+        isUploading=true;
         startUploadVideo();
 
     }
@@ -212,6 +213,12 @@ public class ShortVideoPublishManager {
      */
     private void UploadState(String key){
         if(uploadArticleData!=null&&uploadVideoSQLite!=null) {
+            isUploading=false;
+            if(UploadDishData.UPLOAD_FAIL.equals(key)&&uploadVideoSQLite.checkOver(UploadDishData.UPLOAD_FAIL)){
+                Tools.showToast(XHApplication.in(),"您已有10个内容发布失败，小哈已经无法为您存储更多了～");
+                uploadVideoSQLite.deleteById(Integer.parseInt(shortVideoPublishBean.getId()));
+                return;
+            }
             uploadArticleData.setUploadType(key);
             uploadVideoSQLite.update(Integer.parseInt(shortVideoPublishBean.getId()), uploadArticleData);
         }

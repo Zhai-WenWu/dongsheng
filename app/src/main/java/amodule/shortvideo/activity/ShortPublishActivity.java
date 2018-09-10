@@ -197,6 +197,11 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
      */
     private void saveData(){
 //        if(checkData()){return;}
+        UploadVideoSQLite uploadVideoSQLite = new UploadVideoSQLite(this);
+        if(uploadVideoSQLite.checkOver(UploadDishData.UPLOAD_DRAF)){
+            Tools.showToast(this,"您已经有10个草稿待发布了，清理一下草稿箱后再继续存储吧～");
+            return;
+        }
         UploadArticleData uploadArticleData = new UploadArticleData();
         uploadArticleData.setTitle(shortVideoPublishBean.getName());
         uploadArticleData.setImg(imgPath);
@@ -205,7 +210,6 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
         uploadArticleData.setVideos(jsonArray.toString());
         uploadArticleData.setExtraDataJson(shortVideoPublishBean.toJsonString());
         uploadArticleData.setUploadType(UploadDishData.UPLOAD_DRAF);
-        UploadVideoSQLite uploadVideoSQLite = new UploadVideoSQLite(this);
         int id=uploadVideoSQLite.insert(uploadArticleData);
         if(id>0) {
             Tools.showToast(this,"已经成功草稿");
@@ -219,6 +223,10 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
      */
     public void startPublish(){
         if(checkData()){return;}
+        if(ShortVideoPublishManager.getInstance().isUpload()){
+            Tools.showToast(this,"当前有正在上传数据");
+            return;
+        }
         ShortVideoPublishManager.getInstance().setShortVideoPublishBean(shortVideoPublishBean);
         ShortVideoPublishManager.getInstance().startUpload();
         Intent intent = new Intent (this, FriendHome.class);
