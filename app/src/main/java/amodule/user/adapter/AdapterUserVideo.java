@@ -9,6 +9,7 @@ import java.util.Map;
 
 import acore.override.adapter.AdapterSimple;
 import amodule.user.view.UserHomeItem;
+import amodule.user.view.UserHomeTxtItem;
 import amodule.user.view.UserHomeVideoItem;
 
 /**
@@ -44,14 +45,18 @@ public class AdapterUserVideo extends AdapterSimple {
 
         public ViewHolder(UserHomeVideoItem view) {
             this.itemView = view;
-            if (itemView != null)
-                itemView.setOnItemClickListener(new UserHomeItem.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(UserHomeItem itemView, Map<String, String> dataMap) {
-                        if (mOnItemClickListener != null)
-                            mOnItemClickListener.onItemClick(itemView, dataMap);
+            if (itemView != null){
+                itemView.setOnItemClickListener((itemView, dataMap) -> {
+                    if (mOnItemClickListener != null)
+                        mOnItemClickListener.onItemClick(itemView, dataMap);
+                });
+                itemView.setDeleteClickListener(data -> {
+                    if(mOnDeleteClickCallback != null){
+                        mOnDeleteClickCallback.onDeleteClick(data);
                     }
                 });
+            }
+
         }
 
         public void setData(final Map<String, String> map, int position) {
@@ -62,5 +67,10 @@ public class AdapterUserVideo extends AdapterSimple {
     private UserHomeItem.OnItemClickListener mOnItemClickListener;
     public void setOnItemClickListener(UserHomeItem.OnItemClickListener clickListener) {
         this.mOnItemClickListener = clickListener;
+    }
+
+    private UserHomeTxtItem.OnDeleteClickCallback mOnDeleteClickCallback;
+    public void setOnDeleteClickCallback(UserHomeTxtItem.OnDeleteClickCallback onDeleteClickCallback) {
+        mOnDeleteClickCallback = onDeleteClickCallback;
     }
 }

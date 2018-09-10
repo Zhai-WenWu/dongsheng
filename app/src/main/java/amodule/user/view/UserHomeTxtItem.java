@@ -26,22 +26,25 @@ import amodule.dish.db.UploadDishData;
 
 public class UserHomeTxtItem extends UserHomeItem implements View.OnClickListener{
 
-    private LinearLayout mNameGourmet;
-    private TextView mUserName;
-    private ImageView mGourmetIcon;
+    protected LinearLayout mNameGourmet;
+    protected TextView mUserName;
+    protected ImageView mGourmetIcon;
+    protected ImageView mDeleteIcon;
 
-    private TextView mTitle;
-    private RelativeLayout mImgsLayout;
-    private RelativeLayout mTxtContainer;
-    private ImageView mImg;
-    private View mLayerView;
-    private ImageView mADTag;
-    private TextView mNum1;
-    private TextView mStatusInfo;
-    private TextView mNum2;
-    private ImageView mPlayImg;
+    protected TextView mTitle;
+    protected RelativeLayout mImgsLayout;
+    protected RelativeLayout mTxtContainer;
+    protected ImageView mImg;
+    protected View mLayerView;
+    protected ImageView mADTag;
+    protected TextView mNum1;
+    protected TextView mStatusInfo;
+    protected TextView mNum2;
+    protected ImageView mPlayImg;
 
     private String mUploadType = "";
+
+    protected OnDeleteClickCallback mDeleteClickListener;
 
     public UserHomeTxtItem(Context context) {
         super(context, R.layout.userhome_txtitem);
@@ -61,6 +64,7 @@ public class UserHomeTxtItem extends UserHomeItem implements View.OnClickListene
         mTitle = (TextView) findViewById(R.id.title);
         mImgsLayout = (RelativeLayout) findViewById(R.id.imgs);
         mTxtContainer = (RelativeLayout) findViewById(R.id.txt_container);
+        mDeleteIcon = findViewById(R.id.delete);
         mImg = (ImageView) findViewById(R.id.img);
         mLayerView = findViewById(R.id.layer_view);
         mADTag = (ImageView) findViewById(R.id.ad_tag);
@@ -77,6 +81,11 @@ public class UserHomeTxtItem extends UserHomeItem implements View.OnClickListene
 
     private void addListener() {
         this.setOnClickListener(this);
+        mDeleteIcon.setOnClickListener(v -> {
+            if(mDeleteClickListener != null){
+                mDeleteClickListener.onDeleteClick(mDataMap);
+            }
+        });
     }
 
     @Override
@@ -319,5 +328,13 @@ public class UserHomeTxtItem extends UserHomeItem implements View.OnClickListene
                 }
             }
         }
+    }
+
+    public interface OnDeleteClickCallback{
+        void onDeleteClick(Map<String,String> data);
+    }
+
+    public void setDeleteClickListener(OnDeleteClickCallback deleteClickListener) {
+        mDeleteClickListener = deleteClickListener;
     }
 }

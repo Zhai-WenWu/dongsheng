@@ -24,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.aliyun.struct.common.CropKey;
 import com.aliyun.struct.common.ScaleMode;
@@ -61,6 +62,10 @@ import acore.tools.Tools;
 import acore.widget.XiangHaTabHost;
 import amodule._common.conf.GlobalVariableConfig;
 import amodule.article.activity.edit.VideoEditActivity;
+import amodule.article.db.UploadArticleData;
+import amodule.article.db.UploadArticleSQLite;
+import amodule.article.db.UploadVideoSQLite;
+import amodule.dish.db.UploadDishData;
 import amodule.dish.tools.OffDishToFavoriteControl;
 import amodule.dish.tools.UploadDishControl;
 import amodule.lesson.activity.LessonHome;
@@ -333,7 +338,11 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
             }
         }
         initAliyunVideo();
+        handleUploadData();
     }
+
+
+
     public void onChangeSend(View view){
 //        if (!LoginManager.isLogin()) {
 //            startActivity(new Intent(this, LoginByAccout.class));

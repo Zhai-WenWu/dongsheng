@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import amodule.dish.db.UploadDishData;
 
@@ -18,8 +19,9 @@ import amodule.dish.db.UploadDishData;
  * Created by XiangHa on 2017/5/22.
  */
 public class UploadParentSQLite extends SQLiteOpenHelper {
+    protected int MAX_COUNT = 10;
 
-    public UploadParentSQLite(Context context,String tabName,int tabVersion) {
+    public UploadParentSQLite(Context context, String tabName, int tabVersion) {
         super(context, tabName, null, tabVersion);
         TB_NAME = tabName;
     }
@@ -28,9 +30,10 @@ public class UploadParentSQLite extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(getCreateTableSql());
     }
+
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if(newVersion == 2){
+        if (newVersion == 2) {
             final String tempTableName = TB_NAME + "_temp";
             db.execSQL("alter table " + TB_NAME + " rename to " + tempTableName);
             db.execSQL(getCreateTableSql());
@@ -39,24 +42,24 @@ public class UploadParentSQLite extends SQLiteOpenHelper {
         }
     }
 
-    public int insert(UploadArticleData upData){
+    public int insert(UploadArticleData upData) {
         return insertData(upData);
     }
 
-    public UploadArticleData getDraftData(){
-        Log.i("articleUpload","获取草稿数据()");
+    public UploadArticleData getDraftData() {
+        Log.i("articleUpload", "获取草稿数据()");
         Cursor cur = null;
         SQLiteDatabase readableDatabase = null;
         try {
             readableDatabase = getReadableDatabase();
             UploadArticleData upData = new UploadArticleData();
-            cur = readableDatabase.query(TB_NAME, null,"", null, null, null, UploadArticleData.article_id + " desc");// 查询并获得游标
-            Log.i("articleUpload","获取草稿数据() size:" + cur.getCount());
+            cur = readableDatabase.query(TB_NAME, null, "", null, null, null, UploadArticleData.article_id + " desc");// 查询并获得游标
+            Log.i("articleUpload", "获取草稿数据() size:" + cur.getCount());
             if (cur.moveToFirst()) {// 判断游标是否为空
                 do {
                     String uploadType = cur.getString(cur.getColumnIndex(UploadArticleData.article_uploadType));
-                    if(UploadDishData.UPLOAD_DRAF.equals(uploadType)) {
-                        Log.i("articleUpload","获取草稿数据() 是草稿");
+                    if (UploadDishData.UPLOAD_DRAF.equals(uploadType)) {
+                        Log.i("articleUpload", "获取草稿数据() 是草稿");
                         upData.setId(cur.getInt(cur.getColumnIndex(UploadArticleData.article_id)));
                         upData.setTitle(cur.getString(cur.getColumnIndex(UploadArticleData.article_title)));
                         upData.setClassCode(cur.getString(cur.getColumnIndex(UploadArticleData.article_classCode)));
@@ -71,7 +74,7 @@ public class UploadParentSQLite extends SQLiteOpenHelper {
                         upData.setVideos(cur.getString(cur.getColumnIndex(UploadArticleData.article_videos)));
                         break;
                     }
-                }while (cur.moveToNext());
+                } while (cur.moveToNext());
             }
             return upData;
         } finally {
@@ -79,24 +82,24 @@ public class UploadParentSQLite extends SQLiteOpenHelper {
         }
     }
 
-    public UploadArticleData getUploadIngData(){
+    public UploadArticleData getUploadIngData() {
         Cursor cur = null;
         SQLiteDatabase readableDatabase = null;
         try {
             readableDatabase = getReadableDatabase();
             UploadArticleData upData = null;
-            cur = readableDatabase.query(TB_NAME, null,"", null, null, null, UploadArticleData.article_id + " desc");// 查询并获得游标
-            Log.i("articleUpload","获取上传中数据() size:" + cur.getCount());
+            cur = readableDatabase.query(TB_NAME, null, "", null, null, null, UploadArticleData.article_id + " desc");// 查询并获得游标
+            Log.i("articleUpload", "获取上传中数据() size:" + cur.getCount());
             if (cur.moveToFirst()) {// 判断游标是否为空
                 do {
                     String uploadType = cur.getString(cur.getColumnIndex(UploadArticleData.article_uploadType));
-                    Log.i("articleUpload","获取上传中数据() uploadType:" + uploadType);
-                    if(!UploadDishData.UPLOAD_DRAF.equals(uploadType)) {
-                        Log.i("articleUpload","获取上传中数据() 不是草稿");
+                    Log.i("articleUpload", "获取上传中数据() uploadType:" + uploadType);
+                    if (!UploadDishData.UPLOAD_DRAF.equals(uploadType)) {
+                        Log.i("articleUpload", "获取上传中数据() 不是草稿");
                         upData = cursorToData(cur, uploadType);
                         break;
                     }
-                }while (cur.moveToNext());
+                } while (cur.moveToNext());
             }
             return upData;
         } finally {
@@ -124,25 +127,25 @@ public class UploadParentSQLite extends SQLiteOpenHelper {
         return upData;
     }
 
-    public ArrayList<UploadArticleData> getAllUploadIngData(){
+    public ArrayList<UploadArticleData> getAllUploadIngData() {
         Cursor cur = null;
         SQLiteDatabase readableDatabase = null;
         try {
             readableDatabase = getReadableDatabase();
             ArrayList<UploadArticleData> articleDatas = new ArrayList<>();
             UploadArticleData upData;
-            cur = readableDatabase.query(TB_NAME, null,"", null, null, null, UploadArticleData.article_id + " desc");// 查询并获得游标
-            Log.i("articleUpload","获取上传中数据() size:" + cur.getCount());
+            cur = readableDatabase.query(TB_NAME, null, "", null, null, null, UploadArticleData.article_id + " desc");// 查询并获得游标
+            Log.i("articleUpload", "获取上传中数据() size:" + cur.getCount());
             if (cur.moveToFirst()) {// 判断游标是否为空
                 do {
                     String uploadType = cur.getString(cur.getColumnIndex(UploadArticleData.article_uploadType));
-                    Log.i("articleUpload","获取上传中数据() uploadType:" + uploadType);
-                    if(!UploadDishData.UPLOAD_DRAF.equals(uploadType)) {
-                        Log.i("articleUpload","获取上传中数据() 不是草稿");
+                    Log.i("articleUpload", "获取上传中数据() uploadType:" + uploadType);
+                    if (!UploadDishData.UPLOAD_DRAF.equals(uploadType)) {
+                        Log.i("articleUpload", "获取上传中数据() 不是草稿");
                         upData = cursorToData(cur, uploadType);
                         articleDatas.add(upData);
                     }
-                }while (cur.moveToNext());
+                } while (cur.moveToNext());
             }
             return articleDatas;
         } finally {
@@ -151,9 +154,7 @@ public class UploadParentSQLite extends SQLiteOpenHelper {
     }
 
 
-    /**
-     * 插入一条数据;
-     */
+    /** 插入一条数据; */
     private int insertData(UploadArticleData upData) {
         ContentValues cv = new ContentValues();
         cv.put(UploadArticleData.article_title, upData.getTitle());
@@ -177,12 +178,10 @@ public class UploadParentSQLite extends SQLiteOpenHelper {
         return (int) id;
     }
 
-    /**
-     * 修改一条数据;
-     */
+    /** 修改一条数据; */
     public synchronized int update(int id, UploadArticleData upData) {
         int row = -1;
-        if(upData == null) return row;
+        if (upData == null) return row;
         SQLiteDatabase writableDatabase = null;
         ContentValues cv = new ContentValues();
         cv.put(UploadArticleData.article_title, upData.getTitle());
@@ -202,16 +201,16 @@ public class UploadParentSQLite extends SQLiteOpenHelper {
             row = writableDatabase.update(TB_NAME, cv, UploadArticleData.article_id + "=?", new String[]{String.valueOf(id)});
         } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             close(null, writableDatabase);
         }
 //        Tools.showToast(XHApplication.in().getApplicationContext(),"更新数据");
         return row;
     }
 
-    public synchronized int update(int id,String uploadType){
+    public synchronized int update(int id, String uploadType) {
         int row = -1;
-        if(TextUtils.isEmpty(uploadType)) return row;
+        if (TextUtils.isEmpty(uploadType)) return row;
         SQLiteDatabase writableDatabase = null;
         ContentValues cv = new ContentValues();
         cv.put(UploadArticleData.article_uploadType, uploadType);
@@ -220,11 +219,45 @@ public class UploadParentSQLite extends SQLiteOpenHelper {
             row = writableDatabase.update(TB_NAME, cv, UploadArticleData.article_id + "=?", new String[]{String.valueOf(id)});
         } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             close(null, writableDatabase);
         }
 //        Tools.showToast(XHApplication.in().getApplicationContext(),"更新数据");
         return row;
+    }
+
+    public synchronized List<Integer> getAllIdByUploadType(@NonNull String uploadType) {
+        Cursor cur = null;
+        SQLiteDatabase readableDatabase = null;
+        try {
+            List<Integer> ids = new ArrayList<>();
+            readableDatabase = getReadableDatabase();
+            cur = readableDatabase.query(TB_NAME, new String[]{UploadArticleData.article_id},
+                    UploadArticleData.article_uploadType + "=?", new String[]{uploadType},
+                    null, null, UploadArticleData.article_id + " DESC");// 查询并获得游标
+            if (cur.moveToFirst()) {// 判断游标是否为空
+                int id = cur.getInt(cur.getColumnIndex(UploadArticleData.article_id));
+                ids.add(id);
+            }
+            return ids;
+        } finally {
+            close(cur, readableDatabase);
+        }
+    }
+
+    public int checkNeedDeleteId(String uploadType) {
+        List<Integer> ids = getAllIdByUploadType(uploadType);
+        return !ids.isEmpty() && ids.size() < MAX_COUNT ? -1 : ids.get(ids.size() - 1);
+    }
+
+    public boolean checkOver(String uploadType) {
+        List<Integer> ids = getAllIdByUploadType(uploadType);
+        return ids.size() >= MAX_COUNT;
+    }
+
+    public int hasUploading() {
+        List<Integer> ids = getAllIdByUploadType(UploadDishData.UPLOAD_ING);
+        return ids.isEmpty() ? -1 : ids.get(0);
     }
 
     public synchronized UploadArticleData selectById(int id) {
@@ -260,7 +293,7 @@ public class UploadParentSQLite extends SQLiteOpenHelper {
         int i = -1;
         try {
             readableDatabase = getWritableDatabase();
-            i = readableDatabase.delete(TB_NAME, UploadArticleData.article_id + "=" + Integer.valueOf(id) + "",null);
+            i = readableDatabase.delete(TB_NAME, UploadArticleData.article_id + "=" + Integer.valueOf(id) + "", null);
             this.getWritableDatabase().close();
         } catch (Exception e) {
         } finally {
@@ -269,7 +302,7 @@ public class UploadParentSQLite extends SQLiteOpenHelper {
         return i > 0;
     }
 
-    public boolean checkHasMedia(int id){
+    public boolean checkHasMedia(int id) {
         Cursor cur = null;
         SQLiteDatabase readableDatabase = null;
         try {
@@ -302,7 +335,8 @@ public class UploadParentSQLite extends SQLiteOpenHelper {
     }
 
     private String TB_NAME;
-    private String getCreateTableSql(){
+
+    private String getCreateTableSql() {
         return "create table if not exists " + TB_NAME + "("
                 + UploadArticleData.article_id + " integer primary key autoincrement,"
                 + UploadArticleData.article_title + " text,"
