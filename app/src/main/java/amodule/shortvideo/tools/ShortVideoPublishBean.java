@@ -136,7 +136,7 @@ public class ShortVideoPublishBean implements Serializable{
      * @return
      */
     public boolean isLocalDataEmpty(){
-        return TextUtils.isEmpty(name)||TextUtils.isEmpty(imagePath)||TextUtils.isEmpty(videoPath);
+        return TextUtils.isEmpty(imagePath)||TextUtils.isEmpty(videoPath);
     }
 
     /**
@@ -144,7 +144,7 @@ public class ShortVideoPublishBean implements Serializable{
      * @return
      */
     public boolean isDataEmpty(){
-        return TextUtils.isEmpty(name)||TextUtils.isEmpty(imageUrl)||TextUtils.isEmpty(imageUrl);
+        return TextUtils.isEmpty(imageUrl)||TextUtils.isEmpty(videoUrl);
     }
 
     /**
