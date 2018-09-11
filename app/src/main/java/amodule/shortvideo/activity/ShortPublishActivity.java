@@ -379,10 +379,13 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
             locationMap.put("district", value.getDistrict());
             locationMap.put("latitude", "" + value.getLatitude());
             locationMap.put("longitude", "" + value.getLongitude());
-            if(value.getProvince().equals(value.getCity())){
-                showText = value.getCity() + " " + value.getDistrict();
-            }else{
-                showText = value.getProvince() + " " + value.getCity();
+            if(!TextUtils.isEmpty(value.getProvince())||!TextUtils.isEmpty(value.getCity())
+                    ||!TextUtils.isEmpty(value.getDistrict())) {
+                if (value.getProvince().equals(value.getCity())) {
+                    showText = value.getCity() + " " + value.getDistrict();
+                } else {
+                    showText = value.getProvince() + " " + value.getCity();
+                }
             }
             String jsonTemp= Tools.map2Json(locationMap);
             shortVideoPublishBean.setAddress(jsonTemp);
@@ -410,7 +413,7 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
                 return;
             }
             if("2".equals(location_state)) {//定位成功
-                if (str == null || str.equals("") || str.equals("null")) {
+                if (str == null || str.trim().equals("") || str.equals("null")) {
                     location_img.setSelected(false);
                     location_tv.setTextColor(Color.parseColor("#999999"));
                     location_tv.setText("定位失败");
