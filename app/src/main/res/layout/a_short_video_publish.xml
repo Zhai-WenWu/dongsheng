@@ -50,7 +50,7 @@
                     android:paddingTop="@dimen/dp_10"
                     android:textAllCaps="false"
                     android:textColor="#333333"
-                    android:textColorHint="#5c5e65"
+                    android:textColorHint="#999999"
                     android:textSize="@dimen/sp_17" />
 
                 <ImageView
@@ -185,6 +185,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
                         android:layout_toRightOf="@+id/topic_img"
+                        android:layout_marginLeft="@dimen/dp_8"
                         android:textColor="#999999"
                         android:text="添加话题"
                         android:textSize="@dimen/dp_16" />
@@ -265,6 +266,7 @@
             android:layout_centerInParent="true"
             android:background="@drawable/bg_circle_f6496c_6"
             android:gravity="center"
+            android:textStyle="bold"
             android:tag="发布"
             android:text="发布"
             android:textColor="#fffffe"
