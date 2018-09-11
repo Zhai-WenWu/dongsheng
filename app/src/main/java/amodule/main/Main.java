@@ -880,5 +880,11 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                 startActivity(new Intent(Main.this, EditorActivity.class).putExtras(bundle));
             }
         });
+        VideoRecorderCommon.instance().setVideoStatictisCallBack(new VideoRecorderCommon.videoStatictisCallBack() {
+            @Override
+            public void staticticClick(String eventID, String twoLevel, String threeLevel) {
+                XHClick.onEvent(XHApplication.in(),eventID,twoLevel,threeLevel);
+            }
+        });
     }
 }

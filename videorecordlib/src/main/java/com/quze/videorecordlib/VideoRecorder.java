@@ -759,14 +759,18 @@ public class VideoRecorder extends AppCompatActivity implements View.OnClickList
             saveToLocal();
         } else if (v == mBackBtn) {
             onBackPressed();
+            VideoRecorderCommon.instance().statictisEvent("a_preshoot","取消按钮","");
         } else if (v == mCompleteBtn) {
             handleComplete();
+            VideoRecorderCommon.instance().statictisEvent("a_shoot_pause","下一步","");
         } else if (v == mDeleteBtn) {
             handleDelete();
+            VideoRecorderCommon.instance().statictisEvent("a_shoot_pause","回删按钮","");
         } else if (v == mDraftLayout) {
             VideoRecorderCommon.instance().handleStartDarftActivityCallback();
         } else if (v == mAliyunAblum) {
             VideoRecorderCommon.instance().handleStartMediaActivityCallback();
+            VideoRecorderCommon.instance().statictisEvent("a_preshoot","本地上传按钮","");
         } else if (v == mRecordBtn) {
             if (!isRecording) {
                 if (!checkIfStartRecording()) {
@@ -774,8 +778,10 @@ public class VideoRecorder extends AppCompatActivity implements View.OnClickList
                 }
                 mRecordBtn.setHovered(true);
                 startRecording();
+                VideoRecorderCommon.instance().statictisEvent("a_preshoot","开拍按钮","");
                 isRecording = true;
             } else {
+                VideoRecorderCommon.instance().statictisEvent("a_shooting","暂停按钮","");
                 stopRecording();
                 isRecording = false;
             }

@@ -23,6 +23,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import acore.logic.LoginManager;
+import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
@@ -137,9 +138,11 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
         findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                XHClick.onEvent(XHApplication.in(),"a_pre_release","上一步");
                 ShortPublishActivity.this.finish();
             }
         });
+        findViewById(R.id.topic_tv).setOnClickListener(this);
     }
     private void initData() {
         initUIData();
@@ -199,6 +202,7 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
                                 shortVideoPublishBean.setTopicCode(topicList.get(tagIndexr).get("code"));
                                 shortVideoPublishBean.setTopicName(topicList.get(tagIndexr).get("name"));
                                 uiTopic(topicList.get(tagIndexr).get("name"));
+                                XHClick.onEvent(XHApplication.in(),"a_pre_release","添加话题","推荐话题");
                             }
                         });
                     }
@@ -316,9 +320,11 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
         switch (v.getId()){
             case R.id.publish_layout://发布
                 startPublish();
+                XHClick.onEvent(XHApplication.in(),"a_pre_release","发布");
                 break;
             case R.id.rightText://草稿
                 saveData();
+                XHClick.onEvent(XHApplication.in(),"a_pre_release","存草稿");
                 break;
             case R.id.topic_more_linear://更多话题
                 break;
@@ -331,8 +337,15 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
             case R.id.video_duration_layout://预览
             case R.id.video_cover:
                 startPalyVideo();
+                XHClick.onEvent(XHApplication.in(),"a_pre_release","视频缩略图");
                 break;
             case R.id.location_tv://定位
+                XHClick.onEvent(XHApplication.in(),"a_pre_release","地理位置");
+                isShowLocation=!isShowLocation;
+                handleLocationMsg(showText);
+                break;
+            case R.id.topic_tv:
+                XHClick.onEvent(XHApplication.in(),"a_pre_release","添加话题","添加话题");
                 break;
             default:
                 break;
@@ -351,6 +364,7 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
 
 //***************************定位start*******************************************
     private LinkedHashMap<String,String> locationMap;
+    private String showText;
     public void unregisterLocationListener() {
         LocationHelper.getInstance().unregisterLocationListener(locationCallBack);
     }
@@ -365,7 +379,6 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
             locationMap.put("district", value.getDistrict());
             locationMap.put("latitude", "" + value.getLatitude());
             locationMap.put("longitude", "" + value.getLongitude());
-            String showText;
             if(value.getProvince().equals(value.getCity())){
                 showText = value.getCity() + " " + value.getDistrict();
             }else{

@@ -46,7 +46,7 @@ public class MediaActivity extends Activity {
         setContentView(R.layout.work_aliyun_svideo_import_activity_media);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         getData();
-//        Tools.setStatusBarTrans(this);
+        Tools.setStatusBarTrans(this);
         init();
         Common.requestMusic();
         AliyunCommon.getInstance().addActivity(this);
@@ -118,10 +118,10 @@ public class MediaActivity extends Activity {
     }
 
     private void initTitle(){
-//        if (Tools.isShowTitle()) {
-//            LinearLayout rootLayout = findViewById(R.id.rootLayout);
-//            rootLayout.setPadding(0, Tools.getStatusBarHeight(this), 0, 0);
-//        }
+        if (Tools.isShowTitle()) {
+            LinearLayout rootLayout = findViewById(R.id.rootLayout);
+            rootLayout.setPadding(0, Tools.getStatusBarHeight(this), 0, 0);
+        }
     }
 
     @Override

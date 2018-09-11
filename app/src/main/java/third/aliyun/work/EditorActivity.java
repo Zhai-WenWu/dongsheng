@@ -58,6 +58,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.tools.FileManager;
 import acore.tools.Tools;
@@ -173,6 +174,7 @@ public class EditorActivity extends AppCompatActivity implements
         findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                XHClick.onEvent(XHApplication.in(),"a_shoot_handle","上一步");
                 EditorActivity.this.finish();
             }
         });
@@ -353,6 +355,7 @@ public class EditorActivity extends AppCompatActivity implements
                 isShowEdit(true);
                 onPause();
                 composeVideo(mUri.getPath());
+                XHClick.onEvent(XHApplication.in(),"a_shoot_handle","下一步");
             }
         });
     }

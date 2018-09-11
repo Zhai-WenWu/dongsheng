@@ -44,6 +44,7 @@ import com.aliyun.struct.common.CropKey;
 import com.aliyun.struct.common.ScaleMode;
 import com.aliyun.struct.common.VideoQuality;
 import com.aliyun.struct.snap.AliyunSnapVideoParam;
+import com.quze.videorecordlib.VideoRecorderCommon;
 import com.xh.manager.DialogManager;
 import com.xh.manager.ViewManager;
 import com.xh.view.HButtonView;
@@ -54,6 +55,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.tools.FileManager;
 import acore.tools.Tools;
@@ -294,6 +296,7 @@ public class AliyunVideoCrop extends Activity implements TextureView.SurfaceText
         findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                XHClick.onEvent(XHApplication.in(),"a_shoot_cut","上一步");
                 AliyunVideoCrop.this.finish();
             }
         });
@@ -606,7 +609,7 @@ public class AliyunVideoCrop extends Activity implements TextureView.SurfaceText
     @Override
     public void onClick(View v) {
         if (v == nextBtn) {
-            Log.i("xianghaTag","nextBtn:::");
+            XHClick.onEvent(XHApplication.in(),"a_shoot_cut","下一步");
             switch (mAction) {
                 case CropKey.ACTION_TRANSCODE:
                     startCrop();
@@ -709,9 +712,10 @@ public class AliyunVideoCrop extends Activity implements TextureView.SurfaceText
     }
 
     private void dialogShow(){
+        XHClick.onEvent(XHApplication.in(),"a_shoot_cut","视频超长弹框");
         DialogManager dialogManager = new DialogManager(this);
         dialogManager.createDialog(new ViewManager(dialogManager)
-                .setView(new TitleView(this).setText("裁剪的视频要不大于20秒"))
+                .setView(new TitleView(this).setText("裁剪的视频要不大于"+(maxVideoDuration/1000)+"秒"))
                 .setView(new HButtonView(this).setNegativeText("确定", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

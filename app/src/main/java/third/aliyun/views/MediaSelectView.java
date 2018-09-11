@@ -11,6 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.aliyun.jasonparse.JSONSupportImpl;
+import com.quze.videorecordlib.VideoRecorderCommon;
 import com.xh.manager.DialogManager;
 import com.xh.manager.ViewManager;
 import com.xh.view.HButtonView;
@@ -132,6 +133,7 @@ public class MediaSelectView extends RelativeLayout {
         if (onCloseClickCallback != null) {
             onCloseClickCallback.onCloseClick(v);
         }
+        VideoRecorderCommon.instance().statictisEvent("a_shoot_choose","取消按钮","");
     }
 
     private void handleSelectMediaCallback(MediaInfo info) {

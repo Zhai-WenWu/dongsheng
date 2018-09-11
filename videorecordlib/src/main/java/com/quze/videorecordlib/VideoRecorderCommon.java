@@ -161,4 +161,16 @@ public class VideoRecorderCommon {
     public void setVideoAliyunState(videoAliyunState videoAliyunState){
         this.videoAliyunState= videoAliyunState;
     }
+    public videoStatictisCallBack videoStatictisCallBack;
+    public interface videoStatictisCallBack{
+        void staticticClick(String eventID, String twoLevel, String threeLevel);
+    }
+    public void setVideoStatictisCallBack(videoStatictisCallBack CallBack){
+        this.videoStatictisCallBack= CallBack;
+    }
+    public void statictisEvent(String eventID, String twoLevel, String threeLevel){
+        if(videoStatictisCallBack!=null){
+            videoStatictisCallBack.staticticClick(eventID,twoLevel,threeLevel);
+        }
+    }
 }

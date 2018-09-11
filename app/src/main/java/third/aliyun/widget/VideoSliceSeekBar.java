@@ -18,6 +18,9 @@ import android.view.View;
 
 import com.xiangha.R;
 
+import acore.logic.XHClick;
+import acore.override.XHApplication;
+
 public class VideoSliceSeekBar extends View {
     private static String TAG = "VideoSliceSeekBar";
     private static int MERGIN_PADDING = 20;
@@ -274,9 +277,13 @@ public class VideoSliceSeekBar extends View {
         }
     }
 
+    private boolean isUse= false;
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-
+        if(!isUse) {
+            XHClick.onEvent(XHApplication.in(), "a_shoot_cut", "裁剪框");
+            isUse=true;
+        }
         if (!blocked) {
             int mx = (int) event.getX();
 
