@@ -78,6 +78,10 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
     }
     private void handleExtraData(){
         if((TextUtils.isEmpty(videoPath)||TextUtils.isEmpty(imgPath))&&TextUtils.isEmpty(extraDataJson)){
+            if(!TextUtils.isEmpty(id)){
+                UploadVideoSQLite uploadVideoSQLite = new UploadVideoSQLite(this);
+                uploadVideoSQLite.deleteById(Integer.parseInt(id));
+            }
             this.finish();
             return;
         }
