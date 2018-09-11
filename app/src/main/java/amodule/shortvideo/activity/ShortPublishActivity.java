@@ -53,7 +53,7 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
     private RelativeLayout publish_layout;
     private TextView location_tv,topic_tv;
     private MultiTagView hot_table;
-    private String videoPath,imgPath,otherData;
+    private String videoPath,imgPath,otherData,topicCode,topicName;
     private String location_state= "1";//定位状态 1-正在定位，2-定位成功，3-定位失败
     private boolean isShowLocation= true;//是否显示定位信息
     private ArrayList<Map<String,String>> topicList = new ArrayList<>();
@@ -69,6 +69,8 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
             videoPath = (String) bundle.get("videoPath");
             imgPath = (String) bundle.get("imgPath");
             otherData = (String) bundle.get("otherData");
+            topicCode = (String) bundle.get("topicCode");
+            topicName = (String) bundle.get("topicName");
             extraDataJson = (String) bundle.get("extraDataJson");
             id = (String) bundle.get("id");
         }
@@ -97,6 +99,11 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
             shortVideoPublishBean.setVideoSize(mapTemp.get("videoSize"));
             shortVideoPublishBean.setVideoTime(mapTemp.get("videoTime"));
         }
+        if(!TextUtils.isEmpty(topicCode)&&!TextUtils.isEmpty(topicName)){
+            shortVideoPublishBean.setTopicCode(topicCode);
+            shortVideoPublishBean.setTopicName(topicName);
+        }
+
         if(!TextUtils.isEmpty(extraDataJson)){
             shortVideoPublishBean.jsonToBean(extraDataJson);
         }

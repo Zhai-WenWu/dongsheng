@@ -46,7 +46,7 @@ public class MediaActivity extends Activity {
         setContentView(R.layout.work_aliyun_svideo_import_activity_media);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         getData();
-        Tools.setStatusBarTrans(this);
+//        Tools.setStatusBarTrans(this);
         init();
         Common.requestMusic();
         AliyunCommon.getInstance().addActivity(this);

@@ -842,6 +842,10 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                     intent.putExtra("videoPath",videoPath);
                     intent.putExtra("imgPath",imgPath);
                     intent.putExtra("otherData",otherData);
+                    if(!TextUtils.isEmpty(AliyunCommon.topicCode)&&!TextUtils.isEmpty(AliyunCommon.topicName)) {
+                        intent.putExtra("topicCode", AliyunCommon.topicCode);
+                        intent.putExtra("topicName", AliyunCommon.topicName);
+                    }
                     Main.this.startActivity(intent);
                 }
             }

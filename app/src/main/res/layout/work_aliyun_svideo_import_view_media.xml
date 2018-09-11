@@ -15,7 +15,7 @@
         <FrameLayout
             android:id="@+id/gallery_actionBar"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_40">
+            android:layout_height="@dimen/dp_45">
 
             <ImageView
                 android:id="@+id/close"

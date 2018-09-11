@@ -89,7 +89,18 @@ public class AliyunCommon {
         context.startActivity(intent);
     }
 
+    public static String topicCode = "";
+    public static String topicName = "";
+    public void startRecord(Context context,String topicCode,String topicName){
+        this.topicCode= topicCode;
+        this.topicName= topicName;
+        startRecord(context);
+    }
     public void startRecord(Context context) {
+        corpPath="";
+        videoPath="";
+        imgPath="";
+        deleteState=false;
         if (context == null) {
             return;
         }
@@ -138,6 +149,13 @@ public class AliyunCommon {
         }
 
         VideoRecorderCommon.instance().startRecord(context, path, recordMinTime*1000, recordTime*1000, true, true);
+        VideoRecorderCommon.instance().setVideoAliyunState(new VideoRecorderCommon.videoAliyunState() {
+            @Override
+            public void finishActivity() {
+                topicCode="";
+                topicName="";
+            }
+        });
     }
 
     public void showCameraPermissionsDialog(Context context) {
@@ -238,6 +256,8 @@ public class AliyunCommon {
                 activity.finish();
             }
         }
+        topicCode="";
+        topicName="";
         arrayActivity.clear();
     }
     public void startRecoderVideo(Context context){
@@ -283,6 +303,5 @@ public class AliyunCommon {
             }
         }
         return recordTime;
-
     }
 }

@@ -80,6 +80,9 @@ public class VideoRecorderCommon {
         if (arrayActivity.contains(activity)) {
             arrayActivity.remove(activity);
         }
+        if(videoAliyunState!=null){
+            videoAliyunState.finishActivity();
+        }
     }
 
     /**
@@ -94,6 +97,9 @@ public class VideoRecorderCommon {
             }
         }
         arrayActivity.clear();
+        if(videoAliyunState!=null){
+            videoAliyunState.finishActivity();
+        }
     }
 
     public static void deletePath(String path) {
@@ -147,5 +153,12 @@ public class VideoRecorderCommon {
 
     public interface StartEditActivityCallback {
         void startEditActivity(Bundle bundle);
+    }
+    public interface videoAliyunState{
+        void finishActivity();
+    }
+    public videoAliyunState videoAliyunState;
+    public void setVideoAliyunState(videoAliyunState videoAliyunState){
+        this.videoAliyunState= videoAliyunState;
     }
 }

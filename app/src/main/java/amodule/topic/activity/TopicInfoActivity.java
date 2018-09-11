@@ -143,7 +143,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                 String name = mInfoMap.get("name");
                 if (TextUtils.isEmpty(mTopicCode) || mInfoMap == null || mInfoMap.isEmpty() || TextUtils.isEmpty(name))
                     return;
-                AliyunCommon.getInstance().startRecord(this, mTopicCode, name);
+                AliyunCommon.getInstance().startRecord(TopicInfoActivity.this, mTopicCode, name);
             }
         });
     }
