@@ -1,13 +1,11 @@
 package third.location;
 
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.services.core.LatLonPoint;
-import com.amap.api.services.geocoder.GeocodeAddress;
 import com.amap.api.services.geocoder.GeocodeResult;
 import com.amap.api.services.geocoder.GeocodeSearch;
 import com.amap.api.services.geocoder.RegeocodeQuery;
@@ -75,42 +73,41 @@ public class LocationHelper {
     }
 
     public void startLocation() {
-        if(mLocationClient == null){
+        if (mLocationClient == null) {
             mLocationClient = new AMapLocationClient(XHApplication.in());
             mLocationClient.setLocationOption(mLocationClientOption);
-        }
-        mLocationClient.setLocationListener(aMapLocation -> {
-            mCurrentLocation = aMapLocation;
-            GeocodeSearch geocodeSearch = new GeocodeSearch(XHApplication.in());
-            geocodeSearch.setOnGeocodeSearchListener(new GeocodeSearch.OnGeocodeSearchListener() {
-                @Override
-                public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int i) {
-                    // TODO: 2018/7/25 获取详细地址信息，包括乡镇 注意判空
+            mLocationClient.setLocationListener(aMapLocation -> {
+                mCurrentLocation = aMapLocation;
+                GeocodeSearch geocodeSearch = new GeocodeSearch(XHApplication.in());
+                geocodeSearch.setOnGeocodeSearchListener(new GeocodeSearch.OnGeocodeSearchListener() {
+                    @Override
+                    public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int i) {
+                        // TODO: 2018/7/25 获取详细地址信息，包括乡镇 注意判空
 //                    Log.i("TAG", "onRegeocodeSearched: " + regeocodeResult.getRegeocodeAddress().getTownship() + "  code = " + regeocodeResult.getRegeocodeAddress().getTowncode());
-                }
+                    }
 
-                @Override
-                public void onGeocodeSearched(GeocodeResult geocodeResult, int i) {
+                    @Override
+                    public void onGeocodeSearched(GeocodeResult geocodeResult, int i) {
 
-                }
-            });
-            LatLonPoint latLonPoint = new LatLonPoint(getLatitude(), getLongitude());
-            RegeocodeQuery query = new RegeocodeQuery(latLonPoint, 20, GeocodeSearch.AMAP);
-            geocodeSearch.getFromLocationAsyn(query);
-
-            Iterator<LocationListener> iterator = mListeners.iterator();
-            while (iterator.hasNext()) {
-                LocationListener listener = iterator.next();
-                if (listener != null) {
-                    if (aMapLocation != null && aMapLocation.getErrorCode() == 0) {
-                        listener.onSuccess(aMapLocation);
-                        onLocationSuccess(aMapLocation);
-                    } else {
-                        listener.onFailed();
+                    }
+                });
+                LatLonPoint latLonPoint = new LatLonPoint(getLatitude(), getLongitude());
+                RegeocodeQuery query = new RegeocodeQuery(latLonPoint, 20, GeocodeSearch.AMAP);
+                geocodeSearch.getFromLocationAsyn(query);
+                Iterator<LocationListener> iterator = mListeners.iterator();
+                while (iterator.hasNext()) {
+                    LocationListener listener = iterator.next();
+                    if (listener != null) {
+                        if (aMapLocation != null && aMapLocation.getErrorCode() == 0) {
+                            listener.onSuccess(aMapLocation);
+                            onLocationSuccess(aMapLocation);
+                        } else {
+                            listener.onFailed();
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
         mLocationClient.stopLocation();
         mLocationClient.startLocation();
     }

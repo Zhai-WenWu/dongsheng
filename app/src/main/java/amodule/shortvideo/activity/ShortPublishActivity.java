@@ -161,6 +161,7 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
     private void handleLocation(){
         locationMap = new LinkedHashMap<String, String>();
         LocationHelper.getInstance().registerLocationListener(locationCallBack);
+        LocationHelper.getInstance().startLocation();
         location_state="1";
         handleLocationMsg("");
     }
