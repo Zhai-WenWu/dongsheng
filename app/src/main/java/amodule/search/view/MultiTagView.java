@@ -26,6 +26,7 @@ public class MultiTagView extends LinearLayout {
     private final int DEFAULT_TAG_PADDING = 10;
     private final int DEFAULT_TAG_MARGIN = 9;
     private final int DEFAULT_TAG_PADDING_TOP = 3;
+    private final int DEFAULT_TAG_PADDING_buttom = 1;
     private final int DEFAULT_LAYOUT_MARGIN_TOP = 9;
     private final int DEFAULT_TAG_HEIGHT =24;
     private final int MAX_ELEM_IN_ROW = 5;
@@ -110,7 +111,7 @@ public class MultiTagView extends LinearLayout {
         }
         final TextView button = new TextView(mContext);
         button.setText(tag.content);
-        button.setTextColor(getResources().getColor(android.R.color.black));
+        button.setTextColor(isSelect?Color.parseColor("#999999"):getResources().getColor(android.R.color.black));
         button.setTextSize(14);
 //        StateRoundRectDrawable drawable = new StateRoundRectDrawable(Color.parseColor("#000000"), Color.parseColor("#BAA8A8"));
         StateRoundRectDrawable drawable = new StateRoundRectDrawable(Color.parseColor("#f7f7f7"), Color.parseColor("#BAA8A8"));
@@ -121,7 +122,7 @@ public class MultiTagView extends LinearLayout {
             button.setBackgroundDrawable(drawable);
         }
         button.setPadding(dip2px(DEFAULT_TAG_PADDING), dip2px(DEFAULT_TAG_PADDING_TOP),
-                dip2px(DEFAULT_TAG_PADDING), dip2px(DEFAULT_TAG_PADDING_TOP));
+                dip2px(DEFAULT_TAG_PADDING), dip2px(DEFAULT_TAG_PADDING_buttom));
         button.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -137,13 +138,26 @@ public class MultiTagView extends LinearLayout {
                             if (count > 0) {
                                 for (int i = 0; i < count; i++) {
                                     if (temp.getChildAt(i) instanceof FrameLayout) {
-                                        ((FrameLayout) temp.getChildAt(i)).getChildAt(0).setBackgroundColor(Color.parseColor("#f7f7f7"));
+                                        StateRoundRectDrawable drawable = new StateRoundRectDrawable(Color.parseColor("#f7f7f7"), Color.parseColor("#BAA8A8"));
+                                        drawable.setDefautRadius(dip2px(2));
+                                        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
+                                            ((FrameLayout) temp.getChildAt(i)).getChildAt(0).setBackground(drawable);
+                                        } else {
+                                            ((FrameLayout) temp.getChildAt(i)).getChildAt(0).setBackgroundDrawable(drawable);
+                                        }
                                     }
                                 }
                             }
                         }
                     }
-                    button.setBackgroundColor(Color.parseColor("#ff6d23"));
+                    StateRoundRectDrawable drawable = new StateRoundRectDrawable(Color.parseColor("#ffd914"), Color.parseColor("#BAA8A8"));
+                    drawable.setDefautRadius(dip2px(2));
+                    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
+                        button.setBackground(drawable);
+                    } else {
+                        button.setBackgroundDrawable(drawable);
+                    }
+//                    button.setBackgroundColor(Color.parseColor("#ffd914"));
                 }
 
             }
