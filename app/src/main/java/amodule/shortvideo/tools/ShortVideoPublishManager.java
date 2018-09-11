@@ -73,8 +73,8 @@ public class ShortVideoPublishManager {
         uploadArticleData.setExtraDataJson(shortVideoPublishBean.toJsonString());
         if(TextUtils.isEmpty(shortVideoPublishBean.getId())) {//插入数据
             //保存数据库
-            int id = uploadVideoSQLite.insert(uploadArticleData);
             uploadArticleData.setUploadType(UploadDishData.UPLOAD_ING);
+            int id = uploadVideoSQLite.insert(uploadArticleData);
             shortVideoPublishBean.setId(String.valueOf(id));
         }else{//更新数据
             uploadArticleData.setUploadType(UploadDishData.UPLOAD_ING);
