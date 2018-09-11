@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activityLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TabHost
+        android:id="@+id/tabhost"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#D4D4D4"
+                android:visibility="gone">
+
+                <TabWidget
+                    android:id="@android:id/tabs"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content">
+                </TabWidget>
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@android:id/tabcontent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#fff">
+            </FrameLayout>
+        </RelativeLayout>
+    </TabHost>
+    <!-- 存放伪造的tabWidget -->
+    <include
+        android:id="@+id/a_user_home_title"
+        layout="@layout/a_user_home_title"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        />
+
+    <acore.widget.LayoutScroll
+        android:id="@+id/scroll_body"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="invisible">
+
+        <View
+            android:id="@+id/a_user_home_float_title_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_10"
+            android:background="#000000"/>
+
+        <LinearLayout
+            android:id="@+id/tab_float_mainMyself"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_48"
+            android:background="#f7f7f7"
+            android:orientation="horizontal">
+        </LinearLayout>
+    </acore.widget.LayoutScroll>
+
+    <RelativeLayout
+        android:id="@+id/progress_layout"
+        android:background="@drawable/bg_uploading"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dp_80"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="@dimen/dp_70"
+        android:layout_marginRight="@dimen/dp_20"
+        android:paddingBottom="@dimen/dp_7"
+        android:paddingLeft="@dimen/dp_10"
+        android:paddingRight="@dimen/dp_10"
+        android:visibility="visible"
+        tools:visibility="visible"
+        android:paddingTop="@dimen/dp_12">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_height="wrap_content">
+
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                style="@android:style/Widget.Material.ProgressBar.Small"
+                android:layout_width="@dimen/dp_36"
+                android:layout_height="@dimen/dp_36"
+                android:layout_centerInParent="true"/>
+
+            <TextView
+                android:id="@+id/progress_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:textColor="#FFF"
+                android:textSize="@dimen/sp_9"
+                android:text="99%"
+                tools:text="50%"/>
+
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:text="上传中"
+            android:textColor="#FFF"
+            android:textSize="@dimen/sp_12"/>
+    </RelativeLayout>
+
+</RelativeLayout>

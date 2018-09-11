@@ -36,9 +36,8 @@ public class UploadParentSQLite extends SQLiteOpenHelper {
         if (newVersion == 2) {
             final String tempTableName = TB_NAME + "_temp";
             db.execSQL("alter table " + TB_NAME + " rename to " + tempTableName);
-            db.execSQL(getCreateTableSql());
-            db.execSQL("insert into " + TB_NAME + " select *,'' from " + tempTableName);
             db.execSQL("drop table " + tempTableName);
+            db.execSQL(getCreateTableSql());
         }
     }
 
@@ -221,10 +220,10 @@ public class UploadParentSQLite extends SQLiteOpenHelper {
         cv.put(UploadArticleData.article_repAddress, upData.getRepAddress());
         cv.put(UploadArticleData.article_img, upData.getImg());
         cv.put(UploadArticleData.article_imgs, upData.getImgs());
+        cv.put(UploadArticleData.article_videos, upData.getVideos());
         cv.put(UploadArticleData.article_code, upData.getCode());
         cv.put(UploadArticleData.article_imgUrl, upData.getImgUrl());
         cv.put(UploadArticleData.article_uploadType, upData.getUploadType());
-        cv.put(UploadArticleData.article_videos, upData.getVideos());
         cv.put(UploadArticleData.article_extraDataJson, upData.getExtraDataJson());
         try {
             writableDatabase = getWritableDatabase();

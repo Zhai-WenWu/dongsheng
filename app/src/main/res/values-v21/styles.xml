@@ -29,7 +29,7 @@
     </style>
 
     <style name="friednHomeTheme" parent="titleTheme">
-        <item name="colorAccent">#F2273B</item>
+        <item name="colorAccent">#FA273B</item>
     </style>
 
     <style name="lessonTheme" parent="@style/titleTheme">

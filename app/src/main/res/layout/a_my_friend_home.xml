@@ -101,8 +101,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:textColor="#FFF"
-                android:textSize="@dimen/sp_12"
-                tools:text="50%"/>
+                android:textSize="@dimen/sp_11"
+                android:text="0%"/>
 
         </RelativeLayout>
 
