@@ -26,6 +26,7 @@ public class MultiTagView extends LinearLayout {
     private final int DEFAULT_TAG_PADDING = 10;
     private final int DEFAULT_TAG_MARGIN = 9;
     private final int DEFAULT_TAG_PADDING_TOP = 3;
+    private final int DEFAULT_TAG_PADDING_buttom = 1;
     private final int DEFAULT_LAYOUT_MARGIN_TOP = 9;
     private final int DEFAULT_TAG_HEIGHT =24;
     private final int MAX_ELEM_IN_ROW = 5;
@@ -121,7 +122,7 @@ public class MultiTagView extends LinearLayout {
             button.setBackgroundDrawable(drawable);
         }
         button.setPadding(dip2px(DEFAULT_TAG_PADDING), dip2px(DEFAULT_TAG_PADDING_TOP),
-                dip2px(DEFAULT_TAG_PADDING), dip2px(DEFAULT_TAG_PADDING_TOP));
+                dip2px(DEFAULT_TAG_PADDING), dip2px(DEFAULT_TAG_PADDING_buttom));
         button.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
