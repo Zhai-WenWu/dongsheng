@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import acore.logic.ConfigMannager;
 import acore.logic.LoginManager;
 import acore.override.XHApplication;
+import acore.override.activity.base.BaseLoginActivity;
 import acore.tools.OsSystemSetting;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -96,6 +97,9 @@ public class AliyunCommon {
         String packName = context.getClass().getSimpleName();
         if (!LoginManager.isLogin()) {
             context.startActivity(new Intent(context, LoginByAccout.class));
+            return;
+        }else if(!LoginManager.isBindMobilePhone()){
+            BaseLoginActivity.gotoBindPhoneNum(context);
             return;
         }
 

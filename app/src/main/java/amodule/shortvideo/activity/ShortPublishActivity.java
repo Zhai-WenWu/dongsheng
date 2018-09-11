@@ -201,10 +201,10 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
      * isValid
      */
     private boolean checkData(){
-        if(TextUtils.isEmpty(edit_text.getText().toString())){
-            Tools.showToast(this,"请输入文字");
-            return true;
-        }
+//        if(TextUtils.isEmpty(edit_text.getText().toString())){
+//            Tools.showToast(this,"请输入文字");
+//            return true;
+//        }
         saveUIData();
         return false;
     }

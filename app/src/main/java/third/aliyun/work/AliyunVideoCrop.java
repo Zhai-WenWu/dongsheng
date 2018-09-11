@@ -141,6 +141,7 @@ public class AliyunVideoCrop extends Activity implements TextureView.SurfaceText
     private boolean mIsReachedMaxDuration = false;
     private MediaInfo mCurrMediaInfo;
     private String corp_durtion= Tools.getStringToId(R.string.aliyun_corp_durtion);
+    private int maxVideoDuration = 20000;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -158,6 +159,7 @@ public class AliyunVideoCrop extends Activity implements TextureView.SurfaceText
         initView();
         initSurface();
         AliyunCommon.getInstance().addActivity(this);
+        maxVideoDuration = AliyunCommon.getRecordTime("recordTime")*1000;
     }
 
     private void getData() {
@@ -643,7 +645,7 @@ public class AliyunVideoCrop extends Activity implements TextureView.SurfaceText
 
     private long startTime;
     private void startCrop() {
-        if((mEndTime-mStartTime)>20000){
+        if((mEndTime-mStartTime)>maxVideoDuration){
             dialogShow();
             return;
         }
