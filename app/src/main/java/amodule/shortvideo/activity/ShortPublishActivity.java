@@ -23,6 +23,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import acore.logic.LoginManager;
+import acore.override.XHApplication;
 import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -122,6 +123,12 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
         findViewById(R.id.video_duration_layout).setOnClickListener(this);
         findViewById(R.id.video_cover).setOnClickListener(this);
         findViewById(R.id.location_tv).setOnClickListener(this);
+        findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ShortPublishActivity.this.finish();
+            }
+        });
     }
     private void initData() {
         initUIData();
@@ -417,7 +424,7 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
      */
     public void handleTopicUi(){
         if(!TextUtils.isEmpty(shortVideoPublishBean.getTopicCode())&&!TextUtils.isEmpty(shortVideoPublishBean.getTopicName())){
-            uiTopic(shortVideoPublishBean.getTopicName());
+            checkTopic();
         }
     }
     public void uiTopic(String topic){
@@ -425,5 +432,28 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
         topic_tv.setText(TextUtils.isEmpty(topic)?"添加话题":topic);
         topic_tv.setTextColor(Color.parseColor(TextUtils.isEmpty(topic)?"#999999":"#3e3e3e"));
         findViewById(R.id.topic_delete).setVisibility(TextUtils.isEmpty(topic)?View.GONE:View.VISIBLE);
+    }
+
+    /**
+     *校验
+     */
+    public void checkTopic(){
+        if(!TextUtils.isEmpty(shortVideoPublishBean.getTopicCode())) {
+            String url = StringManager.API_SHORTVIDEO_TOPICCHECK;
+            String params= "code="+shortVideoPublishBean.getTopicCode();
+            ReqEncyptInternet.in().doEncypt(url, params, new InternetCallback() {
+                @Override
+                public void loaded(int flag, String url, Object msg) {
+                    if(flag>=ReqInternet.REQ_OK_STRING){
+                        uiTopic(shortVideoPublishBean.getTopicName());
+                    }else{
+                        Tools.showToast(XHApplication.in(),"此话题不存在，请您重新选择~");
+                        shortVideoPublishBean.setTopicCode("");
+                        shortVideoPublishBean.setTopicName("");
+                    }
+                }
+            });
+        }
+
     }
 }
