@@ -128,8 +128,8 @@
             android:id="@+id/delete"
             android:layout_alignParentRight="true"
             android:src="@drawable/icon_tiem_delete"
-            android:layout_width="@dimen/dp_20"
-            android:layout_height="@dimen/dp_20"/>
+            android:layout_width="@dimen/dp_25"
+            android:layout_height="@dimen/dp_25"/>
 
         <View
             android:id="@+id/layer_view"

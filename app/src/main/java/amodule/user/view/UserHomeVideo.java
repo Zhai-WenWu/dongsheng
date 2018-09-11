@@ -41,6 +41,7 @@ import amodule.user.activity.FriendHome;
 import amodule.user.adapter.AdapterUserVideo;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
+import third.aliyun.work.AliyunCommon;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilLog;
 
@@ -93,10 +94,6 @@ public class UserHomeVideo extends TabContentView {
         } else
             super.onResume(tag);
         theListView.setSelection(datas.isEmpty() ? 0 : 1);
-        if (ShortVideoPublishManager.getInstance().isUpload()) {
-            //隐藏上传中item
-//            datas.remove(remove)
-        }
     }
 
     private void init() {
@@ -107,10 +104,11 @@ public class UserHomeVideo extends TabContentView {
         mGotoBtn = mEmptyView.findViewById(R.id.goto_btn);
         mGotoBtn.setText("发视频");
         mGotoBtn.setOnClickListener(v -> {
-            if (LoginManager.isBindMobilePhone())
-                mAct.startActivity(new Intent(mAct, VideoEditActivity.class));
-            else
-                BaseLoginActivity.gotoBindPhoneNum(mAct);
+            AliyunCommon.getInstance().startRecord(mAct);
+//            if (LoginManager.isBindMobilePhone())
+//                mAct.startActivity(new Intent(mAct, VideoEditActivity.class));
+//            else
+//                BaseLoginActivity.gotoBindPhoneNum(mAct);
         });
         theListView = view.findViewById(R.id.list_myself_subject);
         theListView.setDivider(null);
