@@ -147,35 +147,41 @@ public class FriendHome extends BaseActivity {
         level = 4;
         setCommonStyle();
         handlerType();
-        ShortVideoPublishManager.getInstance().setShortVideoUploadCallBack(new ShortVideoPublishManager.ShortVideoUploadCallBack() {
-            @Override
-            public void onSuccess(int id) {
-                mProgressLayout.setVisibility(View.GONE);
-                if(mTabContentViews.size() > 2 && mTabContentViews.get(2) != null){
-                    mTabContentViews.get(2).initLoad();
-                }
-            }
+        registePublishCallback();
+    }
 
-            @Override
-            public void onProgress(int progress,int id) {
-                if(mProgressLayout.getVisibility() == View.GONE){
-                    mProgressLayout.setVisibility(View.VISIBLE);
-                    if(mTabContentViews.size() > 2 && mTabContentViews.get(2) != null
-                            && mTabContentViews.get(2) instanceof UserHomeVideo){
-                        ((UserHomeVideo)mTabContentViews.get(2)).deleteById(id);
+    private void registePublishCallback() {
+        if(LoginManager.isSlef(userCode)){
+            ShortVideoPublishManager.getInstance().setShortVideoUploadCallBack(new ShortVideoPublishManager.ShortVideoUploadCallBack() {
+                @Override
+                public void onSuccess(int id) {
+                    mProgressLayout.setVisibility(View.GONE);
+                    if(mTabContentViews.size() > 2 && mTabContentViews.get(2) != null){
+                        mTabContentViews.get(2).initLoad();
                     }
                 }
-                mProgressTv.setText(progress + "%");
-            }
 
-            @Override
-            public void onFailed(int id) {
-                mProgressLayout.setVisibility(View.GONE);
-                if(mTabContentViews.size() > 2 && mTabContentViews.get(2) != null){
-                    mTabContentViews.get(2).initLoad();
+                @Override
+                public void onProgress(int progress,int id) {
+                    if(mProgressLayout.getVisibility() == View.GONE){
+                        mProgressLayout.setVisibility(View.VISIBLE);
+                        if(mTabContentViews.size() > 2 && mTabContentViews.get(2) != null
+                                && mTabContentViews.get(2) instanceof UserHomeVideo){
+                            ((UserHomeVideo)mTabContentViews.get(2)).deleteById(id);
+                        }
+                    }
+                    mProgressTv.setText(progress + "%");
                 }
-            }
-        });
+
+                @Override
+                public void onFailed(int id) {
+                    mProgressLayout.setVisibility(View.GONE);
+                    if(mTabContentViews.size() > 2 && mTabContentViews.get(2) != null){
+                        mTabContentViews.get(2).initLoad();
+                    }
+                }
+            });
+        }
     }
 
     private void handlerType() {
