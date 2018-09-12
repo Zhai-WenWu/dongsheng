@@ -165,6 +165,15 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
         locationMap = new LinkedHashMap<String, String>();
         LocationHelper.getInstance().registerLocationListener(locationCallBack);
         LocationHelper.getInstance().startLocation();
+        LocationHelper.getInstance().setGeocodeSearchCallBack(new LocationHelper.GeocodeSearchCallBack() {
+            @Override
+            public void onRegeocodeSearched(String adCode) {
+                if((!locationMap.containsKey("adCode")||TextUtils.isEmpty(locationMap.get("adCode")))
+                        &&!TextUtils.isEmpty(adCode)){
+                    locationMap.put("adCode",adCode);
+                }
+            }
+        });
         location_state="1";
         handleLocationMsg("");
     }
@@ -379,6 +388,10 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
             locationMap.put("district", value.getDistrict());
             locationMap.put("latitude", "" + value.getLatitude());
             locationMap.put("longitude", "" + value.getLongitude());
+            if((!locationMap.containsKey("adCode")||TextUtils.isEmpty(locationMap.get("adCode")))
+                    &&!TextUtils.isEmpty(value.getAdCode())){
+                locationMap.put("adCode",value.getAdCode());
+            }
             if(!TextUtils.isEmpty(value.getProvince())||!TextUtils.isEmpty(value.getCity())
                     ||!TextUtils.isEmpty(value.getDistrict())) {
                 if (value.getProvince().equals(value.getCity())) {
