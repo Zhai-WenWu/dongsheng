@@ -134,7 +134,7 @@
     <color name="alpha_black_75percent">#BF000000</color>
     <color name="white">#FFFFFF</color>
     <color name="action_bar_bg">#232A42</color>
-    <color name="aliyun_record_fill_progress">#EF4B81</color>
+    <color name="aliyun_record_fill_progress">#fa273b</color>
     <color name="aliyun_editor_overlay_line">#D8D8D8</color>
     <color name="aliyun_transparent">#00ffffff</color>
     <color name="qupai_black_opacity_70pct">#b3000000</color>
