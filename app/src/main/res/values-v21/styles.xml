@@ -28,6 +28,10 @@
         <item name="colorAccent">#325ef3</item>
     </style>
 
+    <style name="friednHomeTheme" parent="titleTheme">
+        <item name="colorAccent">#FA273B</item>
+    </style>
+
     <style name="lessonTheme" parent="@style/titleTheme">
         <item name="android:fitsSystemWindows">false</item>
         <item name="android:windowTranslucentStatus">true</item>

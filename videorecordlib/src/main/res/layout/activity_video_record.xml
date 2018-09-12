@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".VideoRecorder">
+
+    <com.quze.videorecordlib.widget.AliyunSVideoGlSurfaceView
+        android:id="@+id/aliyun_preview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <FrameLayout
+        android:id="@+id/aliyun_tools_bar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@drawable/bg_shape_back_60_270">
+
+        <ImageView
+            android:id="@+id/aliyun_back"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_gravity="left"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="4dp"
+            android:padding="10dp"
+            android:src="@drawable/icon_close"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:gravity="right"
+            android:paddingTop="11dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/aliyun_download_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                tools:visibility="visible"
+                android:visibility="gone"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/aliyun_download"
+                    android:layout_width="wrap_content"
+                    android:layout_height="24dp"
+                    android:src="@drawable/icon_download"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="无网暂存"
+                    android:shadowDx="1"
+                    android:shadowDy="1"
+                    android:shadowRadius="2"
+                    android:shadowColor="#32000000"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/aliyun_switch_light_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/aliyun_switch_light"
+                    android:layout_width="wrap_content"
+                    android:layout_height="24dp"
+                    android:src="@drawable/aliyun_svideo_switch_light_selector"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="闪光"
+                    android:shadowDx="1"
+                    android:shadowDy="1"
+                    android:shadowRadius="2"
+                    android:shadowColor="#32000000"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/aliyun_switch_camera_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="8dp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/aliyun_switch_camera"
+                    android:layout_width="wrap_content"
+                    android:layout_height="24dp"
+                    android:src="@drawable/icon_camera_switch"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="翻转"
+                    android:shadowDx="1"
+                    android:shadowDy="1"
+                    android:shadowRadius="2"
+                    android:shadowColor="#32000000"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12dp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/aliyun_record_layout"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_gravity="bottom"
+        android:background="@drawable/bg_shape_back_60_90">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="40dp">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true">
+
+                <com.quze.videorecordlib.widget.RecordTimeCircleView
+                    android:id="@+id/aliyun_record_timeline"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_centerInParent="true"
+                    android:background="@android:color/transparent"
+                    />
+
+                <ImageView
+                    android:id="@+id/aliyun_record_btn"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/aliyun_svideo_snap_record_state_selector"/>
+
+            </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/save_to_local"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_centerInParent="true"
+                android:src="@drawable/icon_save_to_local"
+                android:visibility="gone"/>
+
+            <ImageView
+                android:id="@+id/aliyun_delete_btn"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="56dp"
+                android:padding="5dp"
+                android:src="@drawable/img_aliyun_svideo_delete_btn"
+                android:visibility="gone"
+                tools:visibility="visible"
+                />
+
+            <ImageView
+                android:id="@+id/aliyun_complete_btn"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="56dp"
+                android:src="@drawable/aliyun_svideo_snap_icon_complete"
+                android:visibility="gone"
+                tools:visibility="visible"/>
+
+
+            <RelativeLayout
+                android:id="@+id/aliyun_ablum"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                tools:visibility="visible"
+                android:layout_marginStart="55dp"
+                >
+
+                <com.quze.videorecordlib.widget.AliyunRoundImageView
+                    android:id="@+id/aliyun_icon_default"
+                    android:layout_width="33dp"
+                    android:layout_height="33dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="2dp"
+                    android:src="@drawable/aliyun_svideo_icon_default"
+                    android:visibility="visible"
+                    app:aliyun_radius="8dp"
+                    app:type="round"/>
+
+                <ImageView
+                    android:id="@+id/aliyun_icon_default_line"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/bg_round_8"
+                    android:visibility="invisible"
+                    tools:visibility="visible"/>
+
+                <TextView
+                    android:id="@+id/aliyun_text_default"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignEnd="@+id/aliyun_icon_default_line"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignStart="@+id/aliyun_icon_default_line"
+                    android:layout_marginBottom="4dp"
+                    android:gravity="center_horizontal"
+                    android:shadowColor="#3F000000"
+                    android:shadowDx="1"
+                    android:shadowDy="1"
+                    android:shadowRadius="1"
+                    android:text="相册"
+                    android:textColor="@android:color/white"
+                    android:textSize="12sp"/>
+
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/aliyun_draft"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="55dp">
+
+                <ImageView
+                    android:id="@+id/aliyun_icon_draft"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/icon_draft"
+                    android:visibility="visible"
+                    tools:visibility="visible"/>
+
+                <TextView
+                    android:id="@+id/aliyun_text_draft"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignEnd="@+id/aliyun_icon_draft"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignStart="@+id/aliyun_icon_draft"
+                    android:layout_marginBottom="4dp"
+                    android:gravity="center_horizontal"
+                    android:shadowColor="#3F000000"
+                    android:shadowDx="1"
+                    android:shadowDy="1"
+                    android:shadowRadius="1"
+                    android:text="草稿"
+                    android:textColor="@android:color/white"
+                    android:textSize="12sp"/>
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/time_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_marginBottom="140dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <View
+                android:id="@+id/aliyun_record_point"
+                android:layout_width="6dp"
+                android:layout_height="6dp"
+                android:layout_marginRight="3dp"
+                android:background="@drawable/bg_time_point"/>
+
+            <TextView
+                android:id="@+id/aliyun_record_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="00:00"
+                android:textColor="#FFFFFFFF"
+                android:textSize="16dp"
+                tools:text="00:08"/>
+        </LinearLayout>
+
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/aliyun_filter_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:shadowColor="#40000000"
+        android:shadowDx="0"
+        android:shadowDy="8"
+        android:shadowRadius="1"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        android:visibility="gone"/>
+
+    <RelativeLayout
+        android:id="@+id/progressBar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        tools:visibility="gone">
+
+        <LinearLayout
+            android:id="@+id/progressBar_linear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/bg_circle_back_6"
+            android:orientation="vertical"
+            android:padding="15dp">
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyleSmall"
+                android:layout_width="47dp"
+                android:layout_height="47dp"
+                android:layout_gravity="center"
+                android:indeterminateDrawable="@drawable/aliyun_progressbar"
+                android:max="100"
+                android:padding="0dp"
+                android:progress="100"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="2dp"
+                android:textColor="@android:color/white"
+                android:text="处理中..."
+                android:textSize="13sp"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</FrameLayout>

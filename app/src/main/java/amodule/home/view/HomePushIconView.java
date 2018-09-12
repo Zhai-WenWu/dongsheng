@@ -40,6 +40,7 @@ import amodule.article.activity.edit.VideoEditActivity;
 import amodule.dish.activity.upload.UploadDishActivity;
 import amodule.quan.activity.upload.UploadSubjectNew;
 import amodule.user.activity.login.LoginByAccout;
+import third.aliyun.work.AliyunCommon;
 
 /**
  * Description :
@@ -110,7 +111,7 @@ public class HomePushIconView extends AppCompatImageView {
                     if (!LoginManager.isLogin()) {
                         gotoLogin();
                     } else if (LoginManager.isBindMobilePhone()) {
-                        getContext().startActivity(new Intent(getContext(), VideoEditActivity.class));
+                        AliyunCommon.getInstance().startRecord(getContext());
                     } else
                         BaseLoginActivity.gotoBindPhoneNum(getContext());
                     break;

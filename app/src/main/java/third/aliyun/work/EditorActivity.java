@@ -50,6 +50,7 @@ import com.xiangha.R;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -57,7 +58,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import acore.logic.XHClick;
+import acore.override.XHApplication;
 import acore.tools.FileManager;
+import acore.tools.Tools;
 import third.aliyun.edit.effects.control.BottomAnimation;
 import third.aliyun.edit.effects.control.EditorService;
 import third.aliyun.edit.effects.control.EffectInfo;
@@ -170,10 +174,12 @@ public class EditorActivity extends AppCompatActivity implements
         findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                XHClick.onEvent(XHApplication.in(),"a_shoot_handle","上一步");
                 EditorActivity.this.finish();
             }
         });
         findViewById(R.id.progressBar_layout).setOnClickListener(v->{});
+        ((ImageView)findViewById(R.id.leftImgBtn)).setImageResource(R.drawable.z_z_topbar_ico_back_white);
 
     }
 
@@ -349,6 +355,7 @@ public class EditorActivity extends AppCompatActivity implements
                 isShowEdit(true);
                 onPause();
                 composeVideo(mUri.getPath());
+                XHClick.onEvent(XHApplication.in(),"a_shoot_handle","下一步");
             }
         });
     }
@@ -698,7 +705,18 @@ public class EditorActivity extends AppCompatActivity implements
                 AliyunCommon.imgPath=path;
                 Log.i("xianghaTag","裁剪完成：："+path);
                 if(AliyunCommon.getInstance().aliyunVideoDataCallBack!=null){
-                    AliyunCommon.getInstance().aliyunVideoDataCallBack.videoCallBack(mOutputPath,path, String.valueOf(mAliyunIPlayer.getDuration()/1000));
+                    String otherJson="";
+                    try{
+                        JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("imageSize",mAliyunIPlayer.getVideoWidth()+"x"+mAliyunIPlayer.getVideoHeight());
+                        jsonObject.put("videoSize",mAliyunIPlayer.getVideoWidth()+"x"+mAliyunIPlayer.getVideoHeight());
+                        jsonObject.put("videoTime",String.valueOf(mAliyunIPlayer.getDuration()/1000000));
+
+                        otherJson= jsonObject.toString();
+                    }catch (Exception e){
+
+                    }
+                    AliyunCommon.getInstance().aliyunVideoDataCallBack.videoCallBack(mOutputPath,path, otherJson);
                 }
             }
 

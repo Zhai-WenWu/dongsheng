@@ -73,4 +73,5 @@
     <string name="attentioned">已关注</string>
     <string name="whatToSay">说点什么...</string>
     <string name="text_scroll_more">滑动查看更多</string>
+    <string name="hide_bottom_view_on_scroll_behavior" translatable="false">amodule.topic.style.HideBottomViewOnScrollBehavior</string>
 </resources>

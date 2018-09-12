@@ -359,121 +359,137 @@ public class MediaStorage {
         protected Void doInBackground(Void... params) {
 //            if (Environment.getExternalStorageState().equals(
 //                    Environment.MEDIA_MOUNTED)) {
-                Cursor videoCursor = null;
-                if (sortMode == SORT_MODE_MERGE || sortMode == SORT_MODE_VIDEO) {
-                    videoCursor = _Resolver.query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, new String[]{
-                            MediaStore.Video.Media.DATA,
-                            MediaStore.Video.Media._ID,
-                            MediaStore.Video.Media.TITLE,
-                            MediaStore.Video.Media.MIME_TYPE,
-                            MediaStore.Video.Media.DURATION,
-                            MediaStore.Video.Media.DATE_ADDED,
-                    }, String.format("%1$s IN (?, ?, ?) AND %2$s > %3$d",
-                            MediaStore.Video.Media.MIME_TYPE,
-                            MediaStore.Video.Media.DURATION,mMinDuration), new String[]{
-                            "video/mp4",
-                            "video/ext-mp4", /* MEIZU 5.0 */
-                            "video/3gpp",
-                    }, MediaStore.Video.Media.DATE_ADDED + " DESC");
+            Cursor videoCursor = null;
+            if (sortMode == SORT_MODE_MERGE || sortMode == SORT_MODE_VIDEO) {
+                videoCursor = _Resolver.query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, new String[]{
+                        MediaStore.Video.Media.DATA,
+                        MediaStore.Video.Media._ID,
+                        MediaStore.Video.Media.TITLE,
+                        MediaStore.Video.Media.MIME_TYPE,
+                        MediaStore.Video.Media.DURATION,
+                        MediaStore.Video.Media.DATE_ADDED,
+                        MediaStore.Video.Media.LATITUDE,
+                        MediaStore.Video.Media.LONGITUDE,
+                }, String.format("%1$s IN (?, ?, ?) AND %2$s > %3$d",
+                        MediaStore.Video.Media.MIME_TYPE,
+                        MediaStore.Video.Media.DURATION,mMinDuration), new String[]{
+                        "video/mp4",
+                        "video/ext-mp4", /* MEIZU 5.0 */
+                        "video/3gpp",
+                }, MediaStore.Video.Media.DATE_ADDED + " DESC");
+            }
+            Cursor imageCursor = null;
+            if (sortMode == SORT_MODE_MERGE || sortMode == SORT_MODE_PHOTO) {
+                imageCursor = _Resolver.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, new String[]{
+                        MediaStore.Images.Media.DATA,
+                        MediaStore.Images.Media._ID,
+                        MediaStore.Images.Media.TITLE,
+                        MediaStore.Images.Media.MIME_TYPE,
+                        MediaStore.Images.Media.DATE_ADDED,
+                        MediaStore.Images.Media.LATITUDE,
+                        MediaStore.Images.Media.LONGITUDE,
+                }, String.format("%1$s != ?", MediaStore.Images.Media.MIME_TYPE), new String[]{
+                        "image/gif"
+                }, MediaStore.Images.Media.DATE_ADDED + " DESC");
+            }
+            int totalCount = (videoCursor == null ? 0 : videoCursor.getCount()) + (imageCursor == null ? 0 : imageCursor.getCount());
+            //video
+            int col_duration_video = 0;
+            int col_mine_type_video = 0;
+            int col_data_video = 0;
+            int col_title_video = 0;
+            int col_id_video = 0;
+            int col_date_added_video = 0;
+            int col_latitude_video = 0;
+            int col_longitude_video = 0;
+            //image
+            int col_mine_type_image = 0;
+            int col_data_image = 0;
+            int col_title_image = 0;
+            int col_id_image = 0;
+            int col_date_added_image = 0;
+            int col_latitude_image = 0;
+            int col_longitude_image = 0;
+            if (videoCursor != null) {
+                col_duration_video = videoCursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION);
+                col_mine_type_video = videoCursor.getColumnIndexOrThrow(MediaStore.Video.Media.MIME_TYPE);
+                col_data_video = videoCursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
+                col_title_video = videoCursor.getColumnIndexOrThrow(MediaStore.Video.Media.TITLE);
+                col_id_video = videoCursor.getColumnIndexOrThrow(MediaStore.Video.Media._ID);
+                col_date_added_video = videoCursor.getColumnIndex(MediaStore.Video.Media.DATE_ADDED);
+                col_latitude_video = videoCursor.getColumnIndex(MediaStore.Video.Media.LATITUDE);
+                col_longitude_video = videoCursor.getColumnIndex(MediaStore.Video.Media.LONGITUDE);
+            }
+            if (imageCursor != null) {
+                col_mine_type_image = imageCursor.getColumnIndexOrThrow(MediaStore.Images.Media.MIME_TYPE);
+                col_data_image = imageCursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                col_title_image = imageCursor.getColumnIndexOrThrow(MediaStore.Images.Media.TITLE);
+                col_id_image = imageCursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID);
+                col_date_added_image = imageCursor.getColumnIndex(MediaStore.Images.Media.DATE_ADDED);
+                col_latitude_image = imageCursor.getColumnIndex(MediaStore.Images.Media.LATITUDE);
+                col_longitude_image = imageCursor.getColumnIndex(MediaStore.Images.Media.LONGITUDE);
+            }
+            boolean videoMoveToNext = true;
+            boolean imageMoveToNext = true;
+            MediaInfo videoInfo = null;
+            MediaInfo imageInfo = null;
+            ArrayList<MediaInfo> cachedList = new ArrayList<>();
+            int notifySize = FIRST_NOTIFY_SIZE;
+            for (int i = 0; i < totalCount; i++) {
+                if (isCancelled()) {
+                    return null;
                 }
-                Cursor imageCursor = null;
-                if (sortMode == SORT_MODE_MERGE || sortMode == SORT_MODE_PHOTO) {
-                    imageCursor = _Resolver.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, new String[]{
-                            MediaStore.Images.Media.DATA,
-                            MediaStore.Images.Media._ID,
-                            MediaStore.Images.Media.TITLE,
-                            MediaStore.Images.Media.MIME_TYPE,
-                            MediaStore.Images.Media.DATE_ADDED,
-                    }, String.format("%1$s != ?", MediaStore.Images.Media.MIME_TYPE), new String[]{
-                            "image/gif"
-                    }, MediaStore.Images.Media.DATE_ADDED + " DESC");
-                }
-                int totalCount = (videoCursor == null ? 0 : videoCursor.getCount()) + (imageCursor == null ? 0 : imageCursor.getCount());
-                int col_duration_video = 0;
-                int col_mine_type_video = 0;
-                int col_data_video = 0;
-                int col_title_video = 0;
-                int col_id_video = 0;
-                int col_date_added_video = 0;
-                int col_mine_type_image = 0;
-                int col_data_image = 0;
-                int col_title_image = 0;
-                int col_id_image = 0;
-                int col_date_added_image = 0;
                 if (videoCursor != null) {
-                    col_duration_video = videoCursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION);
-                    col_mine_type_video = videoCursor.getColumnIndexOrThrow(MediaStore.Video.Media.MIME_TYPE);
-                    col_data_video = videoCursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
-                    col_title_video = videoCursor.getColumnIndexOrThrow(MediaStore.Video.Media.TITLE);
-                    col_id_video = videoCursor.getColumnIndexOrThrow(MediaStore.Video.Media._ID);
-                    col_date_added_video = videoCursor.getColumnIndex(MediaStore.Video.Media.DATE_ADDED);
+                    while (videoInfo == null && videoMoveToNext && videoCursor.moveToNext()) {
+                        videoInfo = generateVideoInfo(videoCursor, col_data_video, col_duration_video, col_mine_type_video, col_title_video, col_id_video, col_date_added_video,
+                                col_latitude_video,col_longitude_video, _Resolver);
+                    }
                 }
                 if (imageCursor != null) {
-                    col_mine_type_image = imageCursor.getColumnIndexOrThrow(MediaStore.Images.Media.MIME_TYPE);
-                    col_data_image = imageCursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-                    col_title_image = imageCursor.getColumnIndexOrThrow(MediaStore.Images.Media.TITLE);
-                    col_id_image = imageCursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID);
-                    col_date_added_image = imageCursor.getColumnIndex(MediaStore.Images.Media.DATE_ADDED);
+                    while (imageInfo == null && imageMoveToNext && imageCursor.moveToNext()) {
+                        imageInfo = generateImageInfo(imageCursor, col_mine_type_image, col_data_image, col_title_image, col_id_image, col_date_added_image,
+                                col_latitude_image,col_longitude_image,_Resolver);
+                    }
                 }
-                boolean videoMoveToNext = true;
-                boolean imageMoveToNext = true;
-                MediaInfo videoInfo = null;
-                MediaInfo imageInfo = null;
-                ArrayList<MediaInfo> cachedList = new ArrayList<>();
-                int notifySize = FIRST_NOTIFY_SIZE;
-                for (int i = 0; i < totalCount; i++) {
-                    if (isCancelled()) {
-                        return null;
-                    }
-                    if (videoCursor != null) {
-                        while (videoInfo == null && videoMoveToNext && videoCursor.moveToNext()) {
-                            videoInfo = generateVideoInfo(videoCursor, col_data_video, col_duration_video, col_mine_type_video, col_title_video, col_id_video, col_date_added_video, _Resolver);
-                        }
-                    }
-                    if (imageCursor != null) {
-                        while (imageInfo == null && imageMoveToNext && imageCursor.moveToNext()) {
-                            imageInfo = generateImageInfo(imageCursor, col_mine_type_image, col_data_image, col_title_image, col_id_image, col_date_added_image, _Resolver);
-                        }
-                    }
-                    if (videoInfo == null && imageInfo != null) {
-                        addMediaInfo(imageInfo);
-                        cachedList.add(imageInfo);
-                        imageMoveToNext = true;
-                        imageInfo = null;
-                    } else if (imageInfo == null && videoInfo != null) {
+                if (videoInfo == null && imageInfo != null) {
+                    addMediaInfo(imageInfo);
+                    cachedList.add(imageInfo);
+                    imageMoveToNext = true;
+                    imageInfo = null;
+                } else if (imageInfo == null && videoInfo != null) {
+                    addMediaInfo(videoInfo);
+                    cachedList.add(videoInfo);
+                    videoMoveToNext = true;
+                    videoInfo = null;
+                } else if (videoInfo != null) {
+                    if (videoInfo.addTime > imageInfo.addTime) {
                         addMediaInfo(videoInfo);
                         cachedList.add(videoInfo);
                         videoMoveToNext = true;
+                        imageMoveToNext = false;
                         videoInfo = null;
-                    } else if (videoInfo != null) {
-                        if (videoInfo.addTime > imageInfo.addTime) {
-                            addMediaInfo(videoInfo);
-                            cachedList.add(videoInfo);
-                            videoMoveToNext = true;
-                            imageMoveToNext = false;
-                            videoInfo = null;
-                        } else {
-                            addMediaInfo(imageInfo);
-                            cachedList.add(imageInfo);
-                            videoMoveToNext = false;
-                            imageMoveToNext = true;
-                            imageInfo = null;
-                        }
+                    } else {
+                        addMediaInfo(imageInfo);
+                        cachedList.add(imageInfo);
+                        videoMoveToNext = false;
+                        imageMoveToNext = true;
+                        imageInfo = null;
                     }
-                    if (cachedList.size() == notifySize) {
-                        publishProgress(cachedList);
-                        cachedList = new ArrayList<>();
-                        notifySize += NOTIFY_SIZE_OFFSET;
-                    }
-                    Log.d("sort_merge", "current index..." + i);
                 }
-                publishProgress(cachedList);
-                if (videoCursor != null) {
-                    videoCursor.close();
+                if (cachedList.size() == notifySize) {
+                    publishProgress(cachedList);
+                    cachedList = new ArrayList<>();
+                    notifySize += NOTIFY_SIZE_OFFSET;
                 }
-                if (imageCursor != null) {
-                    imageCursor.close();
-                }
+                Log.d("sort_merge", "current index..." + i);
+            }
+            publishProgress(cachedList);
+            if (videoCursor != null) {
+                videoCursor.close();
+            }
+            if (imageCursor != null) {
+                imageCursor.close();
+            }
 
 //            }
             return null;
@@ -493,7 +509,8 @@ public class MediaStorage {
         return null;
     }
 
-    private MediaInfo generateVideoInfo(Cursor cursor, int col_data, int col_duration, int col_mine_type, int col_title, int col_id, int col_date_added, ContentResolver _Resolver) {
+    private MediaInfo generateVideoInfo(Cursor cursor, int col_data, int col_duration, int col_mine_type, int col_title, int col_id, int col_date_added,
+                                        int col_latitude_video, int col_longitude_video, ContentResolver _Resolver) {
 
         String filePath = cursor.getString(col_data);
         if (!new File(filePath).exists()) {
@@ -513,6 +530,8 @@ public class MediaStorage {
         videoInfo.id = cursor.getInt(col_id);
 
         videoInfo.addTime = cursor.getLong(col_date_added);
+        videoInfo.latitude = cursor.getDouble(col_latitude_video);
+        videoInfo.longitude = cursor.getDouble(col_longitude_video);
         Cursor thumbCursor = _Resolver.query(MediaStore.Video.Thumbnails.EXTERNAL_CONTENT_URI,
                 new String[]{
                         MediaStore.Video.Thumbnails.DATA,
@@ -530,7 +549,8 @@ public class MediaStorage {
         return videoInfo;
     }
 
-    private MediaInfo generateImageInfo(Cursor cursor, int col_mine_type, int col_data, int col_title, int col_id, int col_date_added, ContentResolver _Resolver) {
+    private MediaInfo generateImageInfo(Cursor cursor, int col_mine_type, int col_data, int col_title, int col_id, int col_date_added,
+                                        int col_latitude_image, int col_longitude_image, ContentResolver _Resolver) {
 
         String mimeType = cursor.getString(col_mine_type);
         String filePath = cursor.getString(col_data);
@@ -547,6 +567,8 @@ public class MediaStorage {
         mediaInfo.id = cursor.getInt(col_id);
 
         mediaInfo.addTime = cursor.getLong(col_date_added);
+        mediaInfo.latitude = cursor.getDouble(col_latitude_image);
+        mediaInfo.longitude = cursor.getDouble(col_longitude_image);
         Cursor thumbCursor = _Resolver.query(MediaStore.Images.Thumbnails.EXTERNAL_CONTENT_URI,
                 new String[]{
                         MediaStore.Images.Thumbnails.DATA,

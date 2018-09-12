@@ -11,6 +11,7 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
+import android.widget.RelativeLayout;
 import android.widget.TabHost;
 import android.widget.TextView;
 
@@ -45,6 +46,8 @@ import amodule.dish.db.UploadDishData;
 import amodule.main.Main;
 import amodule.main.view.CommonBottomView;
 import amodule.main.view.CommonBottonControl;
+import amodule.shortvideo.activity.ShortPublishActivity;
+import amodule.shortvideo.tools.ShortVideoPublishManager;
 import amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver;
 import amodule.user.view.TabContentView;
 import amodule.user.view.UserHomeAnswer;
@@ -57,6 +60,8 @@ import amodule.user.view.UserHomeVideo;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
+import third.share.BarShare;
+import third.share.tools.ShareTools;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilString;
 
@@ -65,6 +70,7 @@ import static amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver.ACTION
 import static amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver.DATA_TYPE;
 import static amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver.SECONDE_EDIT;
 import static amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver.STATE_KEY;
+import static third.share.tools.ShareTools.IMG_TYPE_WEB;
 
 @SuppressLint("CutPasteId")
 public class FriendHome extends BaseActivity {
@@ -84,12 +90,14 @@ public class FriendHome extends BaseActivity {
     public LinearLayout backLayout;
     public LinearLayout tabMainMyselfFloat;
     public TextViewLimitLine friend_info;
+    private TextView mProgressTv;
+    private RelativeLayout mProgressLayout;
 
     private int tabIndex = 0;
     private String tongjiId = "a_user";
-    private String type="";//当前选择type类型
-    private String type_subject="subject";
-    private String type_dish="dish";
+    private String type = "";//当前选择type类型
+    private String type_subject = "subject";
+    private String type_dish = "dish";
     private String type_video = "video";
     private String type_article = "article";
     public static boolean isAlive = false;
@@ -119,7 +127,7 @@ public class FriendHome extends BaseActivity {
         if (bundle != null) {
             userCode = bundle.getString("code");
             tabIndex = bundle.getInt("index");
-            type=bundle.getString("type");
+            type = bundle.getString("type");
             //消息是否读过
             if (bundle.getString("newsId") != null) {
                 String params = "type=news&p1=" + bundle.getString("newsId");
@@ -142,20 +150,63 @@ public class FriendHome extends BaseActivity {
         level = 4;
         setCommonStyle();
         handlerType();
+        registePublishCallback();
     }
 
-    private void handlerType(){
-        if(TextUtils.isEmpty(type))return;
-        if(type_dish.equals(type)){
-            tabIndex=1;
-        }else if(type_subject.equals(type)){
-            tabIndex=0;
+    private void registePublishCallback() {
+        if(LoginManager.isSlef(userCode)){
+            ShortVideoPublishManager.getInstance().setShortVideoUploadCallBack(new ShortVideoPublishManager.ShortVideoUploadCallBack() {
+                @Override
+                public void onSuccess(int id,Object msg) {
+                    mProgressLayout.setVisibility(View.GONE);
+                    if(mTabContentViews.size() > 2 && mTabContentViews.get(2) != null){
+                        mTabContentViews.get(2).initLoad();
+                    }
+                    Map<String,String> shareData = StringManager.getFirstMap(msg);
+                    if(!shareData.isEmpty()){
+                        BarShare barShare = new BarShare(FriendHome.this,"","");
+                        barShare.setShare(BarShare.IMG_TYPE_WEB,shareData.get("title"),shareData.get("content"),
+                                shareData.get("img"),shareData.get("url"));
+                        barShare.openShare();
+                    }
+                }
+
+                @Override
+                public void onProgress(int progress,int id) {
+                    if(mProgressLayout.getVisibility() == View.GONE){
+                        mProgressLayout.setVisibility(View.VISIBLE);
+                        if(mTabContentViews.size() > 2 && mTabContentViews.get(2) != null
+                                && mTabContentViews.get(2) instanceof UserHomeVideo){
+                            ((UserHomeVideo)mTabContentViews.get(2)).deleteById(id);
+                        }
+                    }
+                    mProgressTv.setText(progress + "%");
+                }
+
+                @Override
+                public void onFailed(int id) {
+                    mProgressLayout.setVisibility(View.GONE);
+                    if(mTabContentViews.size() > 2 && mTabContentViews.get(2) != null){
+                        mTabContentViews.get(2).initLoad();
+                    }
+                }
+            });
+        }
+    }
+
+    private void handlerType() {
+        if (TextUtils.isEmpty(type)) return;
+        if (type_dish.equals(type)) {
+            tabIndex = 1;
+        } else if (type_subject.equals(type)) {
+            tabIndex = 0;
         } else if (type_video.equals(type)) {
             tabIndex = 2;
         } else if (type_article.equals(type)) {
             tabIndex = 3;
         }
     }
+
     private void initView() {
         scrollLayout = (LayoutScroll) findViewById(R.id.scroll_body);
         // 滑动设置
@@ -163,7 +214,8 @@ public class FriendHome extends BaseActivity {
         friend_info = (TextViewLimitLine) findViewById(R.id.a_user_home_title_info);
         activityLayout_show = (LinearLayout) findViewById(R.id.a_user_home_title);
         activityLayout_show.setVisibility(View.INVISIBLE);
-
+        mProgressLayout = findViewById(R.id.progress_layout);
+        mProgressTv = findViewById(R.id.progress_text);
         //设置当向上滑动，浮动tab出现时，假状态栏的高度
         if (Tools.isShowTitle()) {
             View view = findViewById(R.id.a_user_home_float_title_view);
@@ -398,20 +450,17 @@ public class FriendHome extends BaseActivity {
                 final String type = tabMap.get("type");
                 switch (type) {
                     case "1"://视频列表
+                        Intent publishIntent = new Intent(this,ShortPublishActivity.class);
+                        publishIntent.putExtra("id",dataMap.get("id"));
+                        publishIntent.putExtra("extraDataJson",dataMap.get("extraDataJson"));
+                        startActivity(publishIntent);
+                        break;
                     case "2"://文章列表
                         String id = dataMap.get("id");
                         if (TextUtils.isEmpty(id))
                             return;
-                        UploadParentSQLite parentSQL = null;
+                        UploadArticleSQLite parentSQL = new UploadArticleSQLite(this);
                         int dataType = EditParentActivity.DATA_TYPE_ARTICLE;
-                        if ("1".equals(type)) {
-                            parentSQL = new UploadVideoSQLite(this);
-                            dataType = EditParentActivity.DATA_TYPE_VIDEO;
-                        } else if ("2".equals(type)) {
-                            parentSQL = new UploadArticleSQLite(this);
-                        }
-                        if (parentSQL == null)
-                            return;
                         final UploadArticleData articleData = parentSQL.selectById(Integer.parseInt(id));
                         if ("2".equals(hasMedia)) { //如果包括多媒体资源，点击则进入上传列表页面
                             Intent intent = new Intent(FriendHome.this, ArticleUploadListActivity.class);
@@ -463,8 +512,6 @@ public class FriendHome extends BaseActivity {
                             parentSQL.update(articleData.getId(), articleData);
                             final UploadParentSQLite mySql = parentSQL;
                             String url = StringManager.api_articleAdd;
-                            if ("1".equals(type)) url = StringManager.api_videoAdd;
-
                             articleData.upload(url, new InternetCallback() {
                                 @Override
                                 public void loaded(int i, String s, Object o) {
@@ -485,13 +532,13 @@ public class FriendHome extends BaseActivity {
                 }
             }
         } else {
-            if("1".equals(listType)) {
-                String gotoUrl= dataMap.get("gotoUrl");
-                if(!TextUtils.isEmpty(gotoUrl)){
+            if ("1".equals(listType)) {
+                String gotoUrl = dataMap.get("gotoUrl");
+                if (!TextUtils.isEmpty(gotoUrl)) {
                     gotoUrl = gotoUrl + "&userCode=" + userCode;
-                    AppCommon.openUrl(gotoUrl,false);
+                    AppCommon.openUrl(gotoUrl, false);
                 }
-            }else if("2".equals(listType)){
+            } else if ("2".equals(listType)) {
                 String code = dataMap.get("code");
                 if (!TextUtils.isEmpty(code)) {
                     Intent intent = new Intent();

@@ -45,6 +45,7 @@ import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
+import third.aliyun.work.AliyunCommon;
 
 public class TopicInfoActivity extends BaseAppCompatActivity {
     public static final String STA_ID = "a_topic_gather";
@@ -55,7 +56,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
     private ImageView mBackImg;
     private PtrClassicFrameLayout mRefreshLayout;
     private RvStaggeredGridView mStaggeredGridView;
-    private FloatingActionButton mFloatingActionButton;
+    private ImageView mFloatingButton;
     private TopicHeaderView mTopicHeaderView;
 
     private String mTopicCode;
@@ -104,9 +105,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
         mRefreshLayout.setLoadingMinTime(300);
         mStaggeredGridView = findViewById(R.id.staggered_view);
         mStaggeredGridView.closeDefaultAnimator();
-        mFloatingActionButton = findViewById(R.id.fab);
-
-
+        mFloatingButton = findViewById(R.id.floating_btn);
         mTopicHeaderView = new TopicHeaderView(this);
         mStaggeredGridView.addHeaderView(mTopicHeaderView);
         mStaggeredGridView.addItemDecoration(new RecyclerView.ItemDecoration() {
@@ -136,6 +135,15 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                         outRect.set(0, 0, 0, 0);
                         break;
                 }
+            }
+        });
+        mFloatingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String name = mInfoMap.get("name");
+                if (TextUtils.isEmpty(mTopicCode) || mInfoMap == null || mInfoMap.isEmpty() || TextUtils.isEmpty(name))
+                    return;
+                AliyunCommon.getInstance().startRecord(TopicInfoActivity.this, mTopicCode, name);
             }
         });
     }

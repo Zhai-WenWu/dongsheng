@@ -34,6 +34,7 @@ public class UploadArticleData {
     public static String article_code = "code";  //文章code
     public static String article_imgUrl = "imgUrl";  //图片url
     public static String article_uploadType = "uploadType";  //上传类型包括：后台发布、发布中
+    public static String article_extraDataJson = "extraDataJson";//额外数据
 
     private int id = -1;
     private String code;
@@ -48,6 +49,7 @@ public class UploadArticleData {
     private String videos; //所有视频集合
 
     private String uploadType; //上传类型包括：后台发布、发布中
+    private String extraDataJson;
 
     public void setCode(String code) {
         this.code = code;
@@ -201,7 +203,15 @@ public class UploadArticleData {
         return title;
     }
 
-    public void upload(String url,InternetCallback callback){
+    public void setExtraDataJson(String extraDataJson) {
+        this.extraDataJson = extraDataJson;
+    }
+
+    public String getExtraDataJson() {
+        return extraDataJson;
+    }
+
+    public void upload(String url, InternetCallback callback){
         Log.i("articleUpload","upload()  title:" + getTitle());
         LinkedHashMap map = new LinkedHashMap();
 //        map.put("title",getTitle());

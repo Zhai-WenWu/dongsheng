@@ -24,11 +24,18 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.aliyun.struct.common.CropKey;
+import com.aliyun.struct.common.ScaleMode;
+import com.aliyun.struct.common.VideoQuality;
+import com.aliyun.struct.encoder.VideoCodecs;
+import com.aliyun.struct.snap.AliyunSnapVideoParam;
 import com.annimon.stream.Stream;
 import com.popdialog.db.FullSrceenDB;
 import com.popdialog.util.GoodCommentManager;
 import com.popdialog.util.PushManager;
+import com.quze.videorecordlib.VideoRecorderCommon;
 import com.tencent.stat.StatConfig;
 import com.tencent.stat.StatService;
 import com.xiangha.R;
@@ -55,6 +62,10 @@ import acore.tools.Tools;
 import acore.widget.XiangHaTabHost;
 import amodule._common.conf.GlobalVariableConfig;
 import amodule.article.activity.edit.VideoEditActivity;
+import amodule.article.db.UploadArticleData;
+import amodule.article.db.UploadArticleSQLite;
+import amodule.article.db.UploadVideoSQLite;
+import amodule.dish.db.UploadDishData;
 import amodule.dish.tools.OffDishToFavoriteControl;
 import amodule.dish.tools.UploadDishControl;
 import amodule.lesson.activity.LessonHome;
@@ -64,11 +75,15 @@ import amodule.main.activity.MainCircle;
 import amodule.main.activity.MainHomePage;
 import amodule.main.activity.MainMyself;
 import amodule.main.delegate.ISetMessageTip;
+import amodule.shortvideo.activity.ShortPublishActivity;
+import amodule.user.activity.login.LoginByAccout;
 import aplug.shortvideo.ShortVideoInit;
 import third.ad.control.AdControlHomeDish;
 import third.ad.db.XHAdSqlite;
 import third.ad.tools.AdConfigTools;
 import third.aliyun.work.AliyunCommon;
+import third.aliyun.work.EditorActivity;
+import third.aliyun.work.MediaActivity;
 import third.cling.control.ClingPresenter;
 import third.mall.alipay.MallPayActivity;
 import third.push.localpush.LocalPushDataManager;
@@ -323,16 +338,11 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                 tabHost.addContent(i + "", new Intent(this, classes[i]));
             }
         }
+        initAliyunVideo();
     }
+
     public void onChangeSend(View view){
-//        if (!LoginManager.isLogin()) {
-//            startActivity(new Intent(this, LoginByAccout.class));
-//        } else if (LoginManager.isBindMobilePhone()) {
-//            this.startActivity(new Intent(this, VideoEditActivity.class));
-//        } else
-//            BaseLoginActivity.gotoBindPhoneNum(this);
-        AliyunCommon.getInstance().startRecoderVideo(this);
-//        AliyunCommon.getInstance().startAliyunVideo(this);
+        AliyunCommon.getInstance().startRecord(this);
     }
 
     Handler mTimerHandler = null;
@@ -676,6 +686,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                     //在onResume方法添加了刷新方法
 //                    MainMyself mainMyself = (MainMyself) allTab.get(MainMyself.KEY);
 //                    mainMyself.scrollToTop();
+                    this.startActivity(new Intent(this,ShortPublishActivity.class));
                 } else if (i == TAB_CIRCLE && allTab.containsKey(MainCircle.KEY) && i == nowTab) {
                     MainCircle circle = (MainCircle) allTab.get(MainCircle.KEY);
                     if (circle != null)
@@ -821,5 +832,59 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
         pw.setBackgroundDrawable(null);
         pw.showAtLocation(findViewById(android.R.id.content), Gravity.CENTER, 0, 0);
     }
+    private void initAliyunVideo(){
+        AliyunCommon.getInstance().setAliyunVideoDataCallBack(new AliyunCommon.AliyunVideoDataCallBack() {
+            @Override
+            public void videoCallBack(String videoPath, String imgPath, String otherData) {
+                Log.i("xianghaTag","videoPath:::"+videoPath+"::::"+imgPath+"::::"+otherData);
+                if(!TextUtils.isEmpty(videoPath)&&!TextUtils.isEmpty(imgPath)){
+                    Intent intent = new Intent(Main.this, ShortPublishActivity.class);
+                    intent.putExtra("videoPath",videoPath);
+                    intent.putExtra("imgPath",imgPath);
+                    intent.putExtra("otherData",otherData);
+                    if(!TextUtils.isEmpty(AliyunCommon.topicCode)&&!TextUtils.isEmpty(AliyunCommon.topicName)) {
+                        intent.putExtra("topicCode", AliyunCommon.topicCode);
+                        intent.putExtra("topicName", AliyunCommon.topicName);
+                    }
+                    Main.this.startActivity(intent);
+                }
+            }
+        });
+        //选择本地
+        VideoRecorderCommon.instance().setStartMediaActivityCallback(new VideoRecorderCommon.StartMediaActivityCallback() {
+            @Override
+            public void startMediaActivity() {
 
+                Intent intent = new Intent(Main.this, MediaActivity.class);
+                intent.putExtra(AliyunSnapVideoParam.VIDEO_RESOLUTION, 3);
+                intent.putExtra(AliyunSnapVideoParam.VIDEO_RATIO, CropKey.RATIO_MODE_9_16);
+                intent.putExtra(AliyunSnapVideoParam.NEED_RECORD, false);
+                intent.putExtra(AliyunSnapVideoParam.VIDEO_QUALITY, VideoQuality.HD);
+                intent.putExtra(AliyunSnapVideoParam.VIDEO_GOP, 0);
+                intent.putExtra(AliyunSnapVideoParam.VIDEO_BITRATE, 0);
+                intent.putExtra(AliyunSnapVideoParam.VIDEO_FRAMERATE, 25);
+                intent.putExtra(AliyunSnapVideoParam.CROP_MODE, ScaleMode.PS);
+                intent.putExtra(AliyunSnapVideoParam.MIN_CROP_DURATION, 3000);
+                intent.putExtra(AliyunSnapVideoParam.MIN_VIDEO_DURATION, 3000);
+                intent.putExtra(AliyunSnapVideoParam.MAX_VIDEO_DURATION, 20000);
+                intent.putExtra(AliyunSnapVideoParam.SORT_MODE, AliyunSnapVideoParam.SORT_MODE_MERGE);
+                intent.putExtra(AliyunSnapVideoParam.VIDEO_CODEC, VideoCodecs.H264_HARDWARE);
+                startActivity(intent);
+            }
+        });
+        //到裁剪页面
+        VideoRecorderCommon.instance().setStartEditActivityCallback(new VideoRecorderCommon.StartEditActivityCallback() {
+            @Override
+            public void startEditActivity(Bundle bundle) {
+                Log.i("xianghaTag","setStartEditActivityCallback");
+                startActivity(new Intent(Main.this, EditorActivity.class).putExtras(bundle));
+            }
+        });
+        VideoRecorderCommon.instance().setVideoStatictisCallBack(new VideoRecorderCommon.videoStatictisCallBack() {
+            @Override
+            public void staticticClick(String eventID, String twoLevel, String threeLevel) {
+                XHClick.onEvent(XHApplication.in(),eventID,twoLevel,threeLevel);
+            }
+        });
+    }
 }

@@ -54,8 +54,7 @@
                     layout="@layout/c_view_bar_tab"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:visibility="gone"/>
+                    android:layout_weight="1"/>
 
                 <include
                     android:id="@+id/item_icon4"
@@ -75,7 +74,7 @@
                 android:id="@+id/btn_changeSend_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:layout_gravity="center"
                 android:onClick="onChangeSend">
 
@@ -90,7 +89,8 @@
                     android:id="@+id/btn_changeSend"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/dp_42"
-                    android:layout_centerInParent="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="@dimen/dp_3"
                     android:layout_gravity="center"
                     android:scaleType="centerInside"
                     android:src="@drawable/i_post_tie"/>
@@ -102,4 +102,5 @@
         android:layout_width="match_parent"
         layout="@layout/xh_welcome"
         android:visibility="gone"/>
+
 </RelativeLayout>

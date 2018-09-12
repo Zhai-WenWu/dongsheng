@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout.LayoutParams;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -43,6 +44,7 @@ import com.aliyun.struct.common.CropKey;
 import com.aliyun.struct.common.ScaleMode;
 import com.aliyun.struct.common.VideoQuality;
 import com.aliyun.struct.snap.AliyunSnapVideoParam;
+import com.quze.videorecordlib.VideoRecorderCommon;
 import com.xh.manager.DialogManager;
 import com.xh.manager.ViewManager;
 import com.xh.view.HButtonView;
@@ -53,6 +55,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import acore.logic.XHClick;
+import acore.override.XHApplication;
 import acore.tools.FileManager;
 import acore.tools.Tools;
 import third.aliyun.media.FrameExtractor10;
@@ -139,6 +143,7 @@ public class AliyunVideoCrop extends Activity implements TextureView.SurfaceText
     private boolean mIsReachedMaxDuration = false;
     private MediaInfo mCurrMediaInfo;
     private String corp_durtion= Tools.getStringToId(R.string.aliyun_corp_durtion);
+    private int maxVideoDuration = 20000;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -156,9 +161,13 @@ public class AliyunVideoCrop extends Activity implements TextureView.SurfaceText
         initView();
         initSurface();
         AliyunCommon.getInstance().addActivity(this);
+        maxVideoDuration = AliyunCommon.getRecordTime("recordTime")*1000;
     }
 
     private void getData() {
+        if(AliyunCommon.getRecordTime("recordMinTime")>0){
+            cropDuration=AliyunCommon.getRecordTime("recordMinTime")*1000;
+        }
         mCurrMediaInfo= (MediaInfo) getIntent().getExtras().getSerializable("videoInfo");
         mRatio = getIntent().getIntExtra(CropKey.VIDEO_RATIO, CropKey.RATIO_MODE_9_16);
         mAction = getIntent().getIntExtra(CropKey.ACTION, CropKey.ACTION_TRANSCODE);
@@ -287,10 +296,20 @@ public class AliyunVideoCrop extends Activity implements TextureView.SurfaceText
         findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                XHClick.onEvent(XHApplication.in(),"a_shoot_cut","上一步");
                 AliyunVideoCrop.this.finish();
             }
         });
         findViewById(R.id.progressBar_layout).setOnClickListener(v->{});
+        handleShowHint();
+        findViewById(R.id.show_hint_know).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                findViewById(R.id.show_hint).setVisibility(View.GONE);
+                FileManager.saveShared(XHApplication.in(),FileManager.video_corp_show_hint,FileManager.video_corp_show_hint,"1");
+            }
+        });
+        ((ImageView)findViewById(R.id.leftImgBtn)).setImageResource(R.drawable.z_z_topbar_ico_back_white);
     }
 
     private void setListViewHeight() {
@@ -590,7 +609,7 @@ public class AliyunVideoCrop extends Activity implements TextureView.SurfaceText
     @Override
     public void onClick(View v) {
         if (v == nextBtn) {
-            Log.i("xianghaTag","nextBtn:::");
+            XHClick.onEvent(XHApplication.in(),"a_shoot_cut","下一步");
             switch (mAction) {
                 case CropKey.ACTION_TRANSCODE:
                     startCrop();
@@ -629,7 +648,7 @@ public class AliyunVideoCrop extends Activity implements TextureView.SurfaceText
 
     private long startTime;
     private void startCrop() {
-        if((mEndTime-mStartTime)>20000){
+        if((mEndTime-mStartTime)>maxVideoDuration){
             dialogShow();
             return;
         }
@@ -649,6 +668,7 @@ public class AliyunVideoCrop extends Activity implements TextureView.SurfaceText
             mVideoParam.setOutputWidth(videoWidth);
             mVideoParam.setOutputHeight(videoHeight);
         }
+        Log.i("xianghaTag","videoWidth:::"+videoWidth+":::videoHeight::"+videoHeight);
 //        outputPath = Environment.getExternalStorageDirectory() + File.separator + Environment.DIRECTORY_DCIM + File.separator + "crop_" + System.currentTimeMillis() + ".mp4";
         outputPath =FileManager.getSDCacheDir()+"crop_"+System.currentTimeMillis() + ".mp4";
         CropParam cropParam = new CropParam();
@@ -692,9 +712,10 @@ public class AliyunVideoCrop extends Activity implements TextureView.SurfaceText
     }
 
     private void dialogShow(){
+        XHClick.onEvent(XHApplication.in(),"a_shoot_cut","视频超长弹框");
         DialogManager dialogManager = new DialogManager(this);
         dialogManager.createDialog(new ViewManager(dialogManager)
-                .setView(new TitleView(this).setText("裁剪的视频要不大于20秒"))
+                .setView(new TitleView(this).setText("裁剪的视频要不大于"+(maxVideoDuration/1000)+"秒"))
                 .setView(new HButtonView(this).setNegativeText("确定", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -840,5 +861,14 @@ public class AliyunVideoCrop extends Activity implements TextureView.SurfaceText
             }
         }
         return time;
+    }
+
+    private void handleShowHint(){
+        String hint = (String) FileManager.loadShared(XHApplication.in(),FileManager.video_corp_show_hint,FileManager.video_corp_show_hint);
+        if(TextUtils.isEmpty(hint)){
+            findViewById(R.id.show_hint).setVisibility(View.VISIBLE);
+        }else{
+            findViewById(R.id.show_hint).setVisibility(View.GONE);
+        }
     }
 }

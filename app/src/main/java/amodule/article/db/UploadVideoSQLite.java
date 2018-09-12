@@ -11,7 +11,7 @@ public class UploadVideoSQLite extends UploadParentSQLite {
     private static final String TB_NAME = "tb_uploadVideo";
 
     public UploadVideoSQLite(Context context) {
-        super(context, TB_NAME,1);
+        super(context, TB_NAME,2);
     }
 
 }

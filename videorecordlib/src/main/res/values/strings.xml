@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">小视界</string>
+
+    <string name="title_activity_video_record">VideoRecord</string>
+    <string name="aliyun_no_free_memory">您的内存已不足，请及时清理</string>
+    <string name="aliyun_will_no_free_memory">您的内存即将用尽，请及时清理</string>
+    <string name="aliyun_no_import_moudle">当前不包含导入模块</string>
+    <string name="aliyun_filter_null">原片</string>
+    <string name="aliyun_camera_permission_tip">请开启摄像头权限</string>
+
+    <!--短视频拍摄-->
+    <string name="aliyun_switch_camera">翻转</string>
+    <string name="aliyun_switch_light">闪光灯</string>
+    <string name="aliyun_album">相册</string>
+</resources>

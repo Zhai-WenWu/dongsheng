@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_enabled="true" android:state_activated="true" android:drawable="@drawable/img_aliyun_svideo_complete_btn"/>
+    <item android:state_enabled="true" android:drawable="@drawable/img_aliyun_svideo_complete_btn"/>
+    <item android:state_enabled="false" android:state_activated="false" android:drawable="@drawable/img_aliyun_svideo_icon_complete_dis"/>
+</selector>
