@@ -166,34 +166,6 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
         locationMap = new LinkedHashMap<String, String>();
         LocationHelper.getInstance().registerLocationListener(locationCallBack);
         LocationHelper.getInstance().startLocation();
-        LocationHelper.getInstance().setGeocodeSearchCallBack(new LocationHelper.GeocodeSearchCallBack() {
-            @Override
-            public void onRegeocodeSearched(RegeocodeResult regeocodeResult) {
-                if(!locationMap.containsKey("adCode")&&regeocodeResult!=null
-                        &&!TextUtils.isEmpty(regeocodeResult.getRegeocodeAddress().getAdCode())
-                        &&!TextUtils.isEmpty(regeocodeResult.getRegeocodeAddress().getFormatAddress())){
-                    locationMap.put("adCode",regeocodeResult.getRegeocodeAddress().getAdCode());
-                    locationMap.put("address", regeocodeResult.getRegeocodeAddress().getFormatAddress());
-                    locationMap.put("addressDetail", regeocodeResult.getRegeocodeAddress().getFormatAddress());
-                    locationMap.put("country", regeocodeResult.getRegeocodeAddress().getCountry());
-                    locationMap.put("province", regeocodeResult.getRegeocodeAddress().getProvince());
-                    locationMap.put("city", regeocodeResult.getRegeocodeAddress().getCity());
-                    locationMap.put("district", regeocodeResult.getRegeocodeAddress().getDistrict());
-                    if(!TextUtils.isEmpty(regeocodeResult.getRegeocodeAddress().getProvince())||!TextUtils.isEmpty(regeocodeResult.getRegeocodeAddress().getCity())
-                            ||!TextUtils.isEmpty(regeocodeResult.getRegeocodeAddress().getDistrict())) {
-                        if (regeocodeResult.getRegeocodeAddress().getProvince().equals(regeocodeResult.getRegeocodeAddress().getCity())) {
-                            showText = regeocodeResult.getRegeocodeAddress().getCity() + " " + regeocodeResult.getRegeocodeAddress().getDistrict();
-                        } else {
-                            showText = regeocodeResult.getRegeocodeAddress().getProvince() + " " + regeocodeResult.getRegeocodeAddress().getCity();
-                        }
-                    }
-                    String jsonTemp= Tools.map2Json(locationMap);
-                    shortVideoPublishBean.setAddress(jsonTemp);
-                    location_state="2";
-                    handleLocationMsg(showText);
-                }
-            }
-        });
         location_state="1";
         handleLocationMsg("");
     }
@@ -404,7 +376,7 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
 
             locationMap.put("latitude", "" + value.getLatitude());
             locationMap.put("longitude", "" + value.getLongitude());
-            if(!TextUtils.isEmpty(value.getAdCode())){
+            if(!TextUtils.isEmpty(value.getAdCode())&&!TextUtils.isEmpty(value.getAddress())){
                 locationMap.put("adCode",value.getAdCode());
                 locationMap.put("address", value.getAddress());
                 locationMap.put("addressDetail", value.getAddress());
