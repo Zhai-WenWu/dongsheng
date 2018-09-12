@@ -504,15 +504,14 @@ public class VideoRecorder extends AppCompatActivity implements View.OnClickList
             mRecorder.cancelRecording();
             isRecording = false;
         }
-        mRecorder.stopPreview();
-        //部分android4.4机型会出现跳转Activity gl为空的问题，如果不需要适配，隐藏视图代码可以去掉
-        mGlSurfaceView.setVisibility(View.INVISIBLE);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-
+        mRecorder.stopPreview();
+        //部分android4.4机型会出现跳转Activity gl为空的问题，如果不需要适配，隐藏视图代码可以去掉
+        mGlSurfaceView.setVisibility(View.INVISIBLE);
     }
 
     private void getData() {

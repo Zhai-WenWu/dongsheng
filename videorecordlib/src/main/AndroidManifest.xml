@@ -26,6 +26,7 @@
         tools:replace="android:icon,android:label,android:theme,android:allowBackup">
         <activity
             android:name=".VideoRecorder"
+            android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
             android:label="@string/title_activity_video_record"
             android:theme="@style/FullscreenTheme"
