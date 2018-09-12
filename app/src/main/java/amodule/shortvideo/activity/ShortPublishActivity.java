@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.amap.api.location.AMapLocation;
+import com.amap.api.services.geocoder.RegeocodeResult;
 import com.quze.videorecordlib.VideoRecorderCommon;
 import com.xiangha.R;
 
@@ -167,10 +168,29 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
         LocationHelper.getInstance().startLocation();
         LocationHelper.getInstance().setGeocodeSearchCallBack(new LocationHelper.GeocodeSearchCallBack() {
             @Override
-            public void onRegeocodeSearched(String adCode) {
-                if((!locationMap.containsKey("adCode")||TextUtils.isEmpty(locationMap.get("adCode")))
-                        &&!TextUtils.isEmpty(adCode)){
-                    locationMap.put("adCode",adCode);
+            public void onRegeocodeSearched(RegeocodeResult regeocodeResult) {
+                if(!locationMap.containsKey("adCode")&&regeocodeResult!=null
+                        &&!TextUtils.isEmpty(regeocodeResult.getRegeocodeAddress().getAdCode())
+                        &&!TextUtils.isEmpty(regeocodeResult.getRegeocodeAddress().getFormatAddress())){
+                    locationMap.put("adCode",regeocodeResult.getRegeocodeAddress().getAdCode());
+                    locationMap.put("address", regeocodeResult.getRegeocodeAddress().getFormatAddress());
+                    locationMap.put("addressDetail", regeocodeResult.getRegeocodeAddress().getFormatAddress());
+                    locationMap.put("country", regeocodeResult.getRegeocodeAddress().getCountry());
+                    locationMap.put("province", regeocodeResult.getRegeocodeAddress().getProvince());
+                    locationMap.put("city", regeocodeResult.getRegeocodeAddress().getCity());
+                    locationMap.put("district", regeocodeResult.getRegeocodeAddress().getDistrict());
+                    if(!TextUtils.isEmpty(regeocodeResult.getRegeocodeAddress().getProvince())||!TextUtils.isEmpty(regeocodeResult.getRegeocodeAddress().getCity())
+                            ||!TextUtils.isEmpty(regeocodeResult.getRegeocodeAddress().getDistrict())) {
+                        if (regeocodeResult.getRegeocodeAddress().getProvince().equals(regeocodeResult.getRegeocodeAddress().getCity())) {
+                            showText = regeocodeResult.getRegeocodeAddress().getCity() + " " + regeocodeResult.getRegeocodeAddress().getDistrict();
+                        } else {
+                            showText = regeocodeResult.getRegeocodeAddress().getProvince() + " " + regeocodeResult.getRegeocodeAddress().getCity();
+                        }
+                    }
+                    String jsonTemp= Tools.map2Json(locationMap);
+                    shortVideoPublishBean.setAddress(jsonTemp);
+                    location_state="2";
+                    handleLocationMsg(showText);
                 }
             }
         });
@@ -381,29 +401,34 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
         @Override
         public void onSuccess(AMapLocation value) {
             unregisterLocationListener();
-            locationMap.put("country", value.getCountry());
-            locationMap.put("countryCode", "");
-            locationMap.put("province", value.getProvince());
-            locationMap.put("city", value.getCity());
-            locationMap.put("district", value.getDistrict());
+
             locationMap.put("latitude", "" + value.getLatitude());
             locationMap.put("longitude", "" + value.getLongitude());
-            if((!locationMap.containsKey("adCode")||TextUtils.isEmpty(locationMap.get("adCode")))
-                    &&!TextUtils.isEmpty(value.getAdCode())){
+            if(!TextUtils.isEmpty(value.getAdCode())){
                 locationMap.put("adCode",value.getAdCode());
-            }
-            if(!TextUtils.isEmpty(value.getProvince())||!TextUtils.isEmpty(value.getCity())
-                    ||!TextUtils.isEmpty(value.getDistrict())) {
-                if (value.getProvince().equals(value.getCity())) {
-                    showText = value.getCity() + " " + value.getDistrict();
-                } else {
-                    showText = value.getProvince() + " " + value.getCity();
+                locationMap.put("address", value.getAddress());
+                locationMap.put("addressDetail", value.getAddress());
+                locationMap.put("country", value.getCountry());
+                locationMap.put("province", value.getProvince());
+                locationMap.put("city", value.getCity());
+                locationMap.put("district", value.getDistrict());
+                if(!TextUtils.isEmpty(value.getProvince())||!TextUtils.isEmpty(value.getCity())
+                        ||!TextUtils.isEmpty(value.getDistrict())) {
+                    if (value.getProvince().equals(value.getCity())) {
+                        showText = value.getCity() + " " + value.getDistrict();
+                    } else {
+                        showText = value.getProvince() + " " + value.getCity();
+                    }
                 }
+                String jsonTemp= Tools.map2Json(locationMap);
+                shortVideoPublishBean.setAddress(jsonTemp);
+                location_state="2";
+                handleLocationMsg(showText);
+            }else{
+                location_state = "3";
+                handleLocationMsg("定位失败");
             }
-            String jsonTemp= Tools.map2Json(locationMap);
-            shortVideoPublishBean.setAddress(jsonTemp);
-            location_state="2";
-            handleLocationMsg(showText);
+
         }
 
         @Override
