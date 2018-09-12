@@ -60,6 +60,8 @@ import amodule.user.view.UserHomeVideo;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
+import third.share.BarShare;
+import third.share.tools.ShareTools;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilString;
 
@@ -68,6 +70,7 @@ import static amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver.ACTION
 import static amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver.DATA_TYPE;
 import static amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver.SECONDE_EDIT;
 import static amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver.STATE_KEY;
+import static third.share.tools.ShareTools.IMG_TYPE_WEB;
 
 @SuppressLint("CutPasteId")
 public class FriendHome extends BaseActivity {
@@ -154,10 +157,17 @@ public class FriendHome extends BaseActivity {
         if(LoginManager.isSlef(userCode)){
             ShortVideoPublishManager.getInstance().setShortVideoUploadCallBack(new ShortVideoPublishManager.ShortVideoUploadCallBack() {
                 @Override
-                public void onSuccess(int id) {
+                public void onSuccess(int id,Object msg) {
                     mProgressLayout.setVisibility(View.GONE);
                     if(mTabContentViews.size() > 2 && mTabContentViews.get(2) != null){
                         mTabContentViews.get(2).initLoad();
+                    }
+                    Map<String,String> shareData = StringManager.getFirstMap(msg);
+                    if(!shareData.isEmpty()){
+                        BarShare barShare = new BarShare(FriendHome.this,"","");
+                        barShare.setShare(BarShare.IMG_TYPE_WEB,shareData.get("title"),shareData.get("content"),
+                                shareData.get("img"),shareData.get("url"));
+                        barShare.openShare();
                     }
                 }
 
