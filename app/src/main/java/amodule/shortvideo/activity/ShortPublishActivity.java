@@ -249,6 +249,9 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
             Tools.showToast(this,"您已经有10个草稿待发布了，清理一下草稿箱后再继续存储吧～");
             return;
         }
+        if(!isShowLocation){
+            shortVideoPublishBean.setAddress("");
+        }
         UploadArticleData uploadArticleData = new UploadArticleData();
         uploadArticleData.setTitle(shortVideoPublishBean.getName());
         uploadArticleData.setImg(shortVideoPublishBean.getImagePath());
@@ -285,7 +288,9 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
             Tools.showToast(this,"当前有正在上传数据");
             return;
         }
-
+        if(!isShowLocation){
+            shortVideoPublishBean.setAddress("");
+        }
         ShortVideoPublishManager.getInstance().setShortVideoPublishBean(shortVideoPublishBean);
         ShortVideoPublishManager.getInstance().startUpload();
         if(TextUtils.isEmpty(id)){
