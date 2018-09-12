@@ -112,7 +112,7 @@ public class ShortVideoPublishManager {
                 +"&videoSize="+shortVideoPublishBean.getVideoSize()+"&videoTime="+shortVideoPublishBean.getVideoTime()
                 +"&musicCode="+shortVideoPublishBean.getMusicCode()+"&topicCode="+shortVideoPublishBean.getTopicCode()
                 +"&address="+shortVideoPublishBean.getAddress();
-        ReqEncyptInternet.in().doEncypt(url, params, new InternetCallback() {
+        ReqEncyptInternet.in().doGetEncypt(url, params, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object msg) {
                 if(flag >= ReqEncyptInternet.REQ_OK_STRING){

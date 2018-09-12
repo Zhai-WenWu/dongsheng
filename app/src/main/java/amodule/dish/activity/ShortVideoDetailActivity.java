@@ -528,7 +528,7 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
                 }
             }
             String params = buffer.toString();
-            ReqEncyptInternet.in().doEncypt(StringManager.api_getVideoInfo, params, new InternetCallback() {
+            ReqEncyptInternet.in().doGetEncypt(StringManager.api_getVideoInfo, params, new InternetCallback() {
                 @Override
                 public void loaded(int flag, String s, Object o) {
                     mDetailLoading.set(false);
@@ -623,7 +623,7 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
             if(!TextUtils.isEmpty(topicCode)){
                 sb.append("&").append("topicCode=").append(topicCode);
             }
-            ReqEncyptInternet.in().doEncypt(StringManager.API_SHORT_VIDEOCODES, sb.toString(), new InternetCallback() {
+            ReqEncyptInternet.in().doGetEncypt(StringManager.API_SHORT_VIDEOCODES, sb.toString(), new InternetCallback() {
                 @Override
                 public void loaded(int flag, String s, Object o) {
                     mCodesLoading.set(false);

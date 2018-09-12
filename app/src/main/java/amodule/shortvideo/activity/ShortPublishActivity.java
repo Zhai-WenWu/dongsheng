@@ -193,7 +193,7 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
     private void requestTopic(){
         String url = StringManager.API_SHORTVIDEO_TOPICRECOM;
         String params = "source=1";
-        ReqEncyptInternet.in().doEncypt(url, params, new InternetCallback() {
+        ReqEncyptInternet.in().doGetEncypt(url, params, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object msg) {
                 if(flag>= ReqInternet.REQ_OK_STRING){
@@ -482,7 +482,7 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
         if(!TextUtils.isEmpty(shortVideoPublishBean.getTopicCode())) {
             String url = StringManager.API_SHORTVIDEO_TOPICCHECK;
             String params= "code="+shortVideoPublishBean.getTopicCode();
-            ReqEncyptInternet.in().doEncypt(url, params, new InternetCallback() {
+            ReqEncyptInternet.in().doGetEncypt(url, params, new InternetCallback() {
                 @Override
                 public void loaded(int flag, String url, Object msg) {
                     if(flag>=ReqInternet.REQ_OK_STRING){

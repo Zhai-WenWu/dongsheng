@@ -609,7 +609,7 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
     private void requestVideoData(final boolean onlyUser) {
 //        loadManager.showProgressBar();
         String params = new StringBuilder().append("code=").append(code).append("&type=RAW").toString();
-        ReqEncyptInternet.in().doEncypt(StringManager.api_getVideoInfo, params, new InternetCallback() {
+        ReqEncyptInternet.in().doGetEncypt(StringManager.api_getVideoInfo, params, new InternetCallback() {
 
             @Override
             public void getPower(int flag, String url, Object obj) {

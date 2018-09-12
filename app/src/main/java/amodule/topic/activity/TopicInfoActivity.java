@@ -178,7 +178,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
         }
         mTopicInfoLoading = true;
         mTopicInfoLoadStarted = true;
-        ReqEncyptInternet.in().doEncypt(StringManager.API_TOPIC_INFO, "code=" + mTopicCode, new InternetCallback() {
+        ReqEncyptInternet.in().doGetEncypt(StringManager.API_TOPIC_INFO, "code=" + mTopicCode, new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
                 mTopicInfoLoading = false;
@@ -256,7 +256,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
         }
         ++mPage;
         loadManager.changeMoreBtn(mStaggeredGridView, ReqInternet.REQ_OK_STRING, -1, -1, 2, false);
-        ReqEncyptInternet.in().doEncypt(StringManager.API_TOPIC_LIST, "code=" + mTopicCode + "&page=" + mPage, new InternetCallback() {
+        ReqEncyptInternet.in().doGetEncypt(StringManager.API_TOPIC_LIST, "code=" + mTopicCode + "&page=" + mPage, new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
                 mTopicListLoading = false;

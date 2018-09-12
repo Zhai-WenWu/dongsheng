@@ -157,7 +157,7 @@ public class MyManagerInfo extends BaseActivity implements OnClickListener{
         }
     }
     public void setRequest(){
-        ReqEncyptInternet.in().doEncypt(StringManager.API_FORUM_GETCOMMENTMODENUMBYDATE,"", new InternetCallback() {
+        ReqEncyptInternet.in().doGetEncypt(StringManager.API_FORUM_GETCOMMENTMODENUMBYDATE,"", new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object msg) {
                 Log.i("xianghaTag","flag::"+flag+"::msg::"+msg);

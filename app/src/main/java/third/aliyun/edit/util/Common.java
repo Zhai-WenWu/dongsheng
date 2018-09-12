@@ -465,7 +465,7 @@ public class Common {
     public static void requestMusic(){
         String url= StringManager.API_SHORTVIDEO_MUSICLIST;
         String params= "page="+1;
-        ReqEncyptInternet.in().doEncypt(url, params, new InternetCallback() {
+        ReqEncyptInternet.in().doGetEncypt(url, params, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object msg) {
                 if(flag>= ReqInternet.REQ_OK_STRING){

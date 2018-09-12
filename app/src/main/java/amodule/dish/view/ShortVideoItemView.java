@@ -979,7 +979,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
     }
 
     private void startStatistics(String url) {
-        ReqEncyptInternet.in().doEncypt(url, "code=" + mData.getCode(), new InternetCallback() {
+        ReqEncyptInternet.in().doGetEncypt(url, "code=" + mData.getCode(), new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
                 super.loaded(i, s, o);

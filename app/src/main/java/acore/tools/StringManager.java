@@ -398,17 +398,17 @@ public class StringManager extends UtilString {
     public final static String API_SEARCH_COURSE_DISH = apiUrl + "main8/search/byCourseDish";//搜索名厨课菜谱
     //短视频详情页
     public final static String API_SHORT_VIDEOCODES = apiUrl + "main7/Video/videoCodeList";
-    public final static String api_getVideoInfo = apiUrl + "main8/ShortVideo/shortVideoInfo"; //视频详情
+    public final static String api_getVideoInfo = apiUrl + "main8/shortVideo/shortVideoInfo"; //视频详情
 
     //话题详情页
-    public final static String API_TOPIC_INFO = apiUrl + "main8/ShortVideo/topicInfo";//简介
-    public final static String API_TOPIC_LIST = apiUrl + "main8/ShortVideo/topicShortVideoList";//列表
+    public final static String API_TOPIC_INFO = apiUrl + "main8/shortVideo/topicInfo";//简介
+    public final static String API_TOPIC_LIST = apiUrl + "main8/shortVideo/topicShortVideoList";//列表
 
     //短视频有效浏览统计
     public final static String API_SHORT_VIDEO_VIEW_VALIDATE = apiUrl + "main8/shortVideo/shortVideoEffecStat";
     //短视频访问统计
     public final static String API_SHORT_VIDEO_ACCESS = apiUrl + "main8/shortVideo/shortVideoStat";
-    public final static String API_FORUM_GETCOMMENTMODENUMBYDATE = apiUrl + "main7/Forum/getNumByComMode";//灌水接口
+    public final static String API_FORUM_GETCOMMENTMODENUMBYDATE = apiUrl + "main7/forum/getNumByComMode";//灌水接口
     public final static String API_SHORTVIDEO_MUSICLIST = apiUrl + "main8/shortVideo/musicList";//音乐接口
     public final static String API_SHORTVIDEO_TOPICRECOM = apiUrl + "main8/shortVideo/topicRecom";//话题列表
     public final static String API_SHORTVIDEO_RELEASE = apiUrl + "main8/shortVideo/release";//视频发布

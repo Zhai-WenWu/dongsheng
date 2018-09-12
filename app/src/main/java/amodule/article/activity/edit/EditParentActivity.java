@@ -548,7 +548,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
         } else {
             mixLayout.setSecondEdit(true);
             StringBuilder sbuilder = new StringBuilder().append("code=").append(code).append("&type=RAW");
-            ReqEncyptInternet.in().doEncypt(getEditApi(), sbuilder.toString(), new InternetCallback() {
+            ReqEncyptInternet.in().doGetEncypt(getEditApi(), sbuilder.toString(), new InternetCallback() {
                 @Override
                 public void loaded(int i, String s, Object o) {
                     if (i == ReqInternet.REQ_OK_STRING) {
