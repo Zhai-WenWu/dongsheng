@@ -265,8 +265,10 @@ public class UploadParentSQLite extends SQLiteOpenHelper {
                     UploadArticleData.article_uploadType + "=?", new String[]{uploadType},
                     null, null, UploadArticleData.article_id + " DESC");// 查询并获得游标
             if (cur.moveToFirst()) {// 判断游标是否为空
-                int id = cur.getInt(cur.getColumnIndex(UploadArticleData.article_id));
-                ids.add(id);
+                do{
+                    int id = cur.getInt(cur.getColumnIndex(UploadArticleData.article_id));
+                    ids.add(id);
+                }while (cur.moveToNext());
             }
             return ids;
         } finally {
