@@ -44,6 +44,20 @@ public class ReqEncyptInternet extends UtilInternet {
         map.put("mode","doGet");
         doEncypt(actionUrl,map,callback);
     }
+    public void doGetEncypt(String actionUrl,String param,InternetCallback callback){
+        LinkedHashMap<String,String> map = new LinkedHashMap<>();
+        if(!TextUtils.isEmpty(param)){
+            map=StringManager.getMapByString(param,"&","=");
+        }
+        map.put("mode","doGet");
+        doEncypt(actionUrl,map,callback);
+    }
+    public void doGetEncypt(String actionUrl, LinkedHashMap<String,String> map, InternetCallback callback){
+        if(map == null) map = new LinkedHashMap<>();
+        map.put("mode","doGet");
+        doEncypt(actionUrl,map,callback);
+    }
+
     public void doPostEncypt(String actionUrl, LinkedHashMap<String,String> map, InternetCallback callback){
         if(map == null) map = new LinkedHashMap<>();
         map.put("mode","doPost");
@@ -159,6 +173,7 @@ public class ReqEncyptInternet extends UtilInternet {
         internetCallback.setEncryptparams(encryptparams);
         if(map.containsKey("mode")&&"doGet".equals(map.get("mode"))){
             String getUrl=actionUrl;
+            map.remove("mode");
             if(map.size()>1){
                 int index=0;
                 for(String str:map.keySet()){
@@ -168,6 +183,9 @@ public class ReqEncyptInternet extends UtilInternet {
             }
             doGet(getUrl,internetCallback);
         }else {//目前把post和无指定请求类型都当post处理
+            if(map.containsKey("mode")){
+                map.remove("mode");
+            }
             doPost(actionUrl, map, internetCallback);
         }
 
