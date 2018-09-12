@@ -369,7 +369,7 @@ public class StringManager extends UtilString {
     public final static String API_GETDISHBURDENBYCODE = apiUrl + "main7/dish/getDishBurdenByCode";//用料信息
     public final static String API_GETBELOWBURDENBANNER = apiUrl + "main7/dish/getBelowBurdenBanner";//用料下方banner
 
-    public final static String API_MAIN8_SHARE_CONF = apiUrl + "main8/Dish/getDishShareByCode";//获取菜谱分享配置
+    public final static String API_MAIN8_SHARE_CONF = apiUrl + "main8/dish/getDishShareByCode";//获取菜谱分享配置
     public final static String API_MAIN8_TOPINFP = apiUrl  + "main8/dish/topInfo";//菜谱详情页顶部
     public final static String API_MAIN8_DISHMAKE = apiUrl  + "main8/dish/getDishMakeByCode";//菜谱详情页做法
     public final static String API_MAIN8_QAINFO = apiUrl + "main8/dish/getQaInfo";//菜谱详情页做法
@@ -397,7 +397,7 @@ public class StringManager extends UtilString {
 
     public final static String API_SEARCH_COURSE_DISH = apiUrl + "main8/search/byCourseDish";//搜索名厨课菜谱
     //短视频详情页
-    public final static String API_SHORT_VIDEOCODES = apiUrl + "main7/Video/videoCodeList";
+    public final static String API_SHORT_VIDEOCODES = apiUrl + "main7/video/videoCodeList";
     public final static String api_getVideoInfo = apiUrl + "main8/shortVideo/shortVideoInfo"; //视频详情
 
     //话题详情页
