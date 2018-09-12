@@ -90,6 +90,9 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
 
     private int mInnerPlayState;
 
+    private int mScreenW, mScreenH;
+    private int mFixedHW;
+
     private Context context;
     private ImageView mThumbImg;
     private RelativeLayout mThumbContainer;
@@ -204,6 +207,10 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         mFavLoading = new AtomicBoolean(false);
         mDelLoading = new AtomicBoolean(false);
         mRepeatEnable = true;
+        DisplayMetrics dm = ToolsDevice.getWindowPx(getContext());
+        mScreenW = dm.widthPixels;
+        mScreenH = dm.heightPixels;
+        mFixedHW = 667 / 375;
     }
 
     private void addListener() {
@@ -405,19 +412,28 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
             mLikeImg.setSelected(mData.isFav());
             mLikeImg.setVisibility(View.VISIBLE);
         }
+        //安卓手机视频尺寸适配初步策略
+        //• 当视频高宽比小于等于 667/375 时，等宽，自适应高
+        //• 当视频高宽比大于 667/375 时，按高铺满，自适应宽
         RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mThumbImg.getLayoutParams();
-        DisplayMetrics dm = ToolsDevice.getWindowPx(getContext());
-        int screenW = dm.widthPixels;
         int vW = TextUtils.isEmpty(mData.getVideoModel().getVideoW()) ? 0 : Integer.parseInt(mData.getVideoModel().getVideoW());
         int vH = TextUtils.isEmpty(mData.getVideoModel().getVideoH()) ? 0 : Integer.parseInt(mData.getVideoModel().getVideoH());
         int heightImg = 0;
+        int widthImg = 0;
         if (vW == 0 || vH == 0) {
-            screenW = LayoutParams.MATCH_PARENT;
+            widthImg = LayoutParams.MATCH_PARENT;
             heightImg = LayoutParams.MATCH_PARENT;
         } else {
-            heightImg = screenW * vH / vW;
+            int vHW = vH / vW;
+            if (vHW > mFixedHW) {
+                heightImg = mScreenH;
+                widthImg = vW * mScreenH / vH;
+            } else {
+                widthImg = mScreenW;
+                heightImg = vH * mScreenW / vW;
+            }
         }
-        lp.width = screenW;
+        lp.width = widthImg;
         lp.height = heightImg;
         mThumbImg.setLayoutParams(lp);
         loadUserHeader(mData.getCustomerModel().getHeaderImg());
