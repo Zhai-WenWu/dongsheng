@@ -70,6 +70,12 @@ public class XHInternetCallBack extends InterCallback {
             isCookieChange = false;
             Log.i("xianghaTag","mapCookie:::"+mapCookie.toString());
         }
+        String key= (String) FileManager.loadShared(XHApplication.in(),FileManager.key_header_mode,FileManager.key_header_mode);
+        if(!TextUtils.isEmpty(key)){
+            mapCookie.put("mode", key);
+        }else if(mapCookie.containsKey("mode")){
+            mapCookie.remove("mode");
+        }
         return mapCookie;
     }
     public static void setCookie() {

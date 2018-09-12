@@ -1,1 +1,1 @@
-include ':app',':gsyVideoPlayer-java', ':cling_lib',':AliyunVideoSdk'
+include ':app', ':gsyVideoPlayer-java', ':cling_lib', ':AliyunVideoSdk', ':videorecordlib'

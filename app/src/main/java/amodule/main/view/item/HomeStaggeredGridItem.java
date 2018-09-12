@@ -164,7 +164,6 @@ public class HomeStaggeredGridItem extends HomeItem {
             } else {
                 mTitle.setText(title);
             }
-                mTitle.setText(title);
         } else {
             mTitle.setVisibility(View.GONE);
         }

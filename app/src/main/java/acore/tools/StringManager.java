@@ -408,6 +408,11 @@ public class StringManager extends UtilString {
     public final static String API_SHORT_VIDEO_VIEW_VALIDATE = apiUrl + "main8/shortVideo/shortVideoEffecStat";
     //短视频访问统计
     public final static String API_SHORT_VIDEO_ACCESS = apiUrl + "main8/shortVideo/shortVideoStat";
+    public final static String API_FORUM_GETCOMMENTMODENUMBYDATE = apiUrl + "main7/Forum/getNumByComMode";//灌水接口
+    public final static String API_SHORTVIDEO_MUSICLIST = apiUrl + "main8/shortVideo/musicList";//音乐接口
+    public final static String API_SHORTVIDEO_TOPICRECOM = apiUrl + "main8/shortVideo/topicRecom";//话题列表
+    public final static String API_SHORTVIDEO_RELEASE = apiUrl + "main8/shortVideo/release";//视频发布
+    public final static String API_SHORTVIDEO_TOPICCHECK = apiUrl + "main8/shortVideo/topicCheck";//视频发布
 
     //替换url
     public final static String replaceUrl(String url) {

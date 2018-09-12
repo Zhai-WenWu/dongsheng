@@ -109,7 +109,7 @@
     <string name="mode_fill">画面填充</string>
     <string name="mode_crop">画面裁剪</string>
     <string name="start_import">开始导入</string>
-    <string name="gallery_all_media">相机胶卷</string>
+    <string name="gallery_all_media">所有视频</string>
     <string name="resolution_1_1">540*540</string>
     <string name="resolution_3_4">540*720</string>
     <string name="resolution_9_16">540*960</string>

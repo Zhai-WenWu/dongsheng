@@ -73,7 +73,7 @@ public class MusicBean {
     }
     public void setMap(Map<String,String> map){
         if(map!=null){
-            setCode(getValue(map,"musicCode"));
+            setCode(getValue(map,"code"));
             setName(getValue(map,"name"));
             setUrl(getValue(map,"musicUrl"));
             setStatus(getValue(map,"status"));

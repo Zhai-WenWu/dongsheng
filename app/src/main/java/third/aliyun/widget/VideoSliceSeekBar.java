@@ -18,6 +18,9 @@ import android.view.View;
 
 import com.xiangha.R;
 
+import acore.logic.XHClick;
+import acore.override.XHApplication;
+
 public class VideoSliceSeekBar extends View {
     private static String TAG = "VideoSliceSeekBar";
     private static int MERGIN_PADDING = 20;
@@ -51,7 +54,7 @@ public class VideoSliceSeekBar extends View {
     private int resSweepLeft = R.drawable.aliyun_svideo_icon_sweep_left,resSweepRight = R.drawable.aliyun_svideo_icon_sweep_right;
     private int resFrame = R.drawable.aliyun_svideo_icon_frame;
     private int resBackground = Color.parseColor("#aa000000");
-    private int resPaddingColor  =  R.color.aliyun_color_yellow_bg;
+    private int resPaddingColor  =  R.color.aliyun_color_white_bg;
 
 
     private boolean blocked;
@@ -274,9 +277,13 @@ public class VideoSliceSeekBar extends View {
         }
     }
 
+    private boolean isUse= false;
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-
+        if(!isUse) {
+            XHClick.onEvent(XHApplication.in(), "a_shoot_cut", "裁剪框");
+            isUse=true;
+        }
         if (!blocked) {
             int mx = (int) event.getX();
 

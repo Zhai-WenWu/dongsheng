@@ -98,11 +98,11 @@
                 android:layout_height="@dimen/dp_25"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="@dimen/dp_20"
-                android:background="@drawable/bg_circle_yellow_6"
+                android:background="@drawable/bg_circle_f6496c_6"
                 android:gravity="center"
                 android:layout_centerVertical="true"
                 android:text="下一步"
-                android:textColor="#000000"
+                android:textColor="#fffffe"
                 android:textSize="@dimen/dp_13" />
         </RelativeLayout>
     </RelativeLayout>
@@ -139,7 +139,7 @@
                 android:text="@string/aliyun_progress_edit"
                 android:layout_gravity="center"
                 android:layout_marginTop="@dimen/dp_2"
-                android:textColor="#2acd07"
+                android:textColor="#fa273b"
                 android:textSize="@dimen/sp_13" />
         </LinearLayout>
 

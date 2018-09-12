@@ -7,6 +7,8 @@ package third.aliyun.edit.effects.control;
 import android.content.Context;
 import android.content.Intent;
 
+import acore.logic.XHClick;
+import acore.override.XHApplication;
 import third.aliyun.edit.effects.audiomix.AudioMixChooserMediator;
 import third.aliyun.edit.effects.coverImg.CoverImgMediator;
 import third.aliyun.edit.effects.filter.FilterChooserMediator;
@@ -33,6 +35,7 @@ public class ViewStack {
         UIEditorPage index = UIEditorPage.get(value);
         switch (index) {
             case FILTER_EFFECT:
+                XHClick.onEvent(XHApplication.in(),"a_shoot_handle","滤镜");
                 mFilterChooserMediator = FilterChooserMediator.newInstance();
                 mFilterChooserMediator.setmEditorService(mEditorService);
                 mFilterChooserMediator.setOnEffectChangeListener(mOnEffectChangeListener);
@@ -40,6 +43,7 @@ public class ViewStack {
                 mFilterChooserMediator.show(((EditorActivity) mContext).getSupportFragmentManager(), "filter");
                 break;
             case AUDIO_MIX:
+                XHClick.onEvent(XHApplication.in(),"a_shoot_handle","音乐");
                 mAudioMixChooserMediator = AudioMixChooserMediator.newInstance();
                 mAudioMixChooserMediator.setBottomAnimation(mBottomAnimation);
                 mAudioMixChooserMediator.setmEditorService(mEditorService);
@@ -47,6 +51,7 @@ public class ViewStack {
                 mAudioMixChooserMediator.show(((EditorActivity) mContext).getSupportFragmentManager(), "audioMix");
                 break;
             case COVER_IMG:
+                XHClick.onEvent(XHApplication.in(),"a_shoot_handle","封面");
                 coverImgMediator= CoverImgMediator.newInstance();
                 coverImgMediator.setVideoPath(videoPath);
                 coverImgMediator.setVideoCallBack(videoCallBack);

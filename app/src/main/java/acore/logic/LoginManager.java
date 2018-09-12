@@ -644,6 +644,11 @@ public class LoginManager {
         return userInfo != null && userInfo.size() > 0;
     }
 
+    public static boolean isSlef(String userCode){
+        return isLogin() && !TextUtils.isEmpty(userCode)
+                && TextUtils.equals(userCode,userInfo.get("code"));
+    }
+
     public static String getUserRegTime (Context context) {
         String regTime = "";
         Object obj = UtilFile.loadShared(context, FileManager.xmlFile_userInfo, "regTime");

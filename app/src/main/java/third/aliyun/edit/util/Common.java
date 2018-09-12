@@ -463,14 +463,13 @@ public class Common {
      * 请求音乐列表
      */
     public static void requestMusic(){
-//        String url= StringManager.API_MUSIC_LIST;
-        String url= "";
+        String url= StringManager.API_SHORTVIDEO_MUSICLIST;
         String params= "page="+1;
         ReqEncyptInternet.in().doEncypt(url, params, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object msg) {
                 if(flag>= ReqInternet.REQ_OK_STRING){
-                    ArrayList<Map<String,String>> maps = StringManager.getListMapByJson(StringManager.getFirstMap(msg).get("list"));
+                    ArrayList<Map<String,String>> maps = StringManager.getListMapByJson(msg);
                     if(maps!=null&&maps.size()>0){
                         MusicSQL.getInstance().updateAllData();
                         ArrayList<MusicBean> musicBeanArrayList=MusicSQL.getInstance().insertMusic(maps);

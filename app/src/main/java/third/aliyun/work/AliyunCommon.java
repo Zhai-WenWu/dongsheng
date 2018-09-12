@@ -1,10 +1,15 @@
 package third.aliyun.work;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Environment;
+import android.support.v4.content.PermissionChecker;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.aliyun.struct.common.CropKey;
 import com.aliyun.struct.common.ScaleMode;
@@ -13,9 +18,25 @@ import com.aliyun.struct.encoder.VideoCodecs;
 import com.aliyun.struct.recorder.CameraType;
 import com.aliyun.struct.recorder.FlashType;
 import com.aliyun.struct.snap.AliyunSnapVideoParam;
+import com.quze.videorecordlib.VideoRecorderCommon;
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.MessageView;
+import com.xh.view.TitleView;
 
 import java.io.File;
 import java.util.ArrayList;
+
+import acore.logic.ConfigMannager;
+import acore.logic.LoginManager;
+import acore.override.XHApplication;
+import acore.override.activity.base.BaseLoginActivity;
+import acore.tools.OsSystemSetting;
+import acore.tools.StringManager;
+import acore.tools.Tools;
+import amodule.user.activity.login.LoginByAccout;
+import third.aliyun.edit.util.Common;
 
 /**
  *
@@ -26,6 +47,9 @@ public class AliyunCommon {
     public static String corpPath = "";//裁剪视频
     public static String videoPath = "";//合成后的视频
     public static String imgPath = "";//合成图片
+
+    public boolean locationPermissionState;
+    public boolean camerPermissionState;
 
     public static AliyunCommon getInstance(){
         if(aliyunCommon==null){
@@ -65,6 +89,88 @@ public class AliyunCommon {
         context.startActivity(intent);
     }
 
+    public static String topicCode = "";
+    public static String topicName = "";
+    public void startRecord(Context context,String topicCode,String topicName){
+        this.topicCode= topicCode;
+        this.topicName= topicName;
+        startRecord(context);
+    }
+    public void startRecord(Context context) {
+        corpPath="";
+        videoPath="";
+        imgPath="";
+        deleteState=false;
+        if (context == null) {
+            return;
+        }
+        Common.requestMusic();
+        String packName = context.getClass().getSimpleName();
+        if (!LoginManager.isLogin()) {
+            context.startActivity(new Intent(context, LoginByAccout.class));
+            return;
+        }else if(!LoginManager.isBindMobilePhone()){
+            BaseLoginActivity.gotoBindPhoneNum(context);
+            return;
+        }
+
+//        if (PublishManager.getInstance().isPublishing()) {
+//            Toast.makeText(context, R.string.publish_ing_hint, Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+        String[] PERMISSIONS = {Manifest.permission.CAMERA, Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.RECORD_AUDIO};
+        for (String permission : PERMISSIONS) {
+            if (permission.equals(Manifest.permission.CAMERA)) {
+                camerPermissionState = PermissionChecker.checkPermission(XHApplication.in(), permission, android.os.Process.myPid(), android.os.Process.myUid(), XHApplication.in().getPackageName()) == PackageManager.PERMISSION_GRANTED;
+            } else {
+                locationPermissionState = PermissionChecker.checkPermission(XHApplication.in(), permission, android.os.Process.myPid(), android.os.Process.myUid(), XHApplication.in().getPackageName()) == PackageManager.PERMISSION_GRANTED;
+            }
+        }
+        if (!camerPermissionState) {
+            Tools.showToast(context, "请给予相应的权限");
+            showCameraPermissionsDialog(context);
+            return;
+        }
+//        if (!locationPermissionState) {
+//            Tools.showToast(context, "请给予相应的权限");
+//            showLocationPermissionsDialog(context);
+//            return;
+//        }
+        String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/com.xiangha/long/aliyun/";
+        int recordTime = 30;
+        int recordMinTime = 3;
+
+        if(getRecordTime("recordTime")>0){
+            recordTime=getRecordTime("recordTime");
+        }
+        if(getRecordTime("recordMinTime")>0){
+            recordMinTime=getRecordTime("recordMinTime");
+        }
+
+        VideoRecorderCommon.instance().startRecord(context, path, recordMinTime*1000, recordTime*1000, true, true);
+        VideoRecorderCommon.instance().setVideoAliyunState(new VideoRecorderCommon.videoAliyunState() {
+            @Override
+            public void finishActivity() {
+                topicCode="";
+                topicName="";
+            }
+        });
+    }
+
+    public void showCameraPermissionsDialog(Context context) {
+        DialogManager dialogManager = new DialogManager(context);
+        dialogManager.createDialog(new ViewManager(dialogManager)
+                .setView(new TitleView(context).setText("开启访问相机权限"))
+                .setView(new MessageView(context).setText("该权限需要您手动设置，请跳转到设置页面进行操作"))
+                .setView(new HButtonView(context).setNegativeText("取消", v -> dialogManager.cancel())
+                        .setPositiveText("确定", v -> {
+                            OsSystemSetting.openPermissionSettings();
+                            dialogManager.cancel();
+                        })
+                ))
+                .show();
+    }
     /**
      * 关闭页面----对外暴露
      */
@@ -150,6 +256,8 @@ public class AliyunCommon {
                 activity.finish();
             }
         }
+        topicCode="";
+        topicName="";
         arrayActivity.clear();
     }
     public void startRecoderVideo(Context context){
@@ -179,5 +287,21 @@ public class AliyunCommon {
                 .setCropMode(ScaleMode.PS)
                 .build();
         AliyunVideoRecorder.startRecord(context,recordParam);
+    }
+    public static int getRecordTime(String key){
+        int recordTime = 0;
+        if(!TextUtils.isEmpty(LoginManager.userInfo.get(key))){
+            recordTime= Integer.parseInt(LoginManager.userInfo.get(key));
+        }
+        if(recordTime<=0){
+            String videoRecord=ConfigMannager.getConfigByLocal("videoRecord");
+            if(!TextUtils.isEmpty(videoRecord)){
+                String tempKey= StringManager.getFirstMap(videoRecord).get(key);
+                if(!TextUtils.isEmpty(tempKey)){
+                    recordTime= Integer.parseInt(tempKey);
+                }
+            }
+        }
+        return recordTime;
     }
 }

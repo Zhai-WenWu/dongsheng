@@ -129,6 +129,7 @@
     <color name="message_unread">#2B2B2B</color>
     <color name="message_read">#1c1c1c</color>
     <color name="aliyun_color_yellow_bg">#ffda44</color>
+    <color name="aliyun_color_white_bg">#fffffe</color>
     <color name="alpha_grey">#992D2D2D</color>
     <color name="alpha_black_75percent">#BF000000</color>
     <color name="white">#FFFFFF</color>

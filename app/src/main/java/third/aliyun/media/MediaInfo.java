@@ -18,6 +18,8 @@ public class MediaInfo implements Serializable {
     public long addTime;
     public boolean isSquare;
     public int type;
+    public double latitude = Double.MAX_VALUE;
+    public double longitude = Double.MAX_VALUE;
 
     @Override
     public boolean equals(Object o) {
