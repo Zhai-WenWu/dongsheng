@@ -64,7 +64,7 @@
                     android:layout_centerVertical="true"
                     android:padding="@dimen/dp_8"
                     android:scaleType="centerInside"
-                    android:src="@drawable/z_z_topbar_ico_back_white"/>
+                    android:src="@drawable/z_z_topbar_ico_back"/>
             </RelativeLayout>
 
             <RelativeLayout
