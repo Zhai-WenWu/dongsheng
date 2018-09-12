@@ -327,7 +327,7 @@ public class HomeHeaderControler implements ISaveStatistic, ISetAdController {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return StringManager.getFirstMap(obj);
+        return StringManager.getFirstMap(obj.toString());
     }
 
     @Override
