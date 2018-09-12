@@ -17,7 +17,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/dp_6"
             android:scaleType="centerInside"
-            android:src="@drawable/z_z_topbar_ico_back_white" />
+            android:src="@drawable/z_z_topbar_ico_back" />
         
         <EditText
             android:id="@+id/a_circle_user_so_et" 

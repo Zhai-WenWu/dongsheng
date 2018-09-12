@@ -25,7 +25,7 @@
                 android:layout_centerVertical="true"
                 android:scaleType="centerInside"
                 android:padding="@dimen/dp_7"
-                android:src="@drawable/z_z_topbar_ico_back_white" />
+                android:src="@drawable/z_z_topbar_ico_back" />
 
             <RelativeLayout
                 android:id="@+id/ed_search_layout_mall"

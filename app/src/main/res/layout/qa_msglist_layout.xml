@@ -19,7 +19,7 @@
             android:layout_marginLeft="@dimen/dp_16"
             android:padding="@dimen/dp_5"
             android:scaleType="centerInside"
-            android:src="@drawable/z_z_topbar_ico_back_white" />
+            android:src="@drawable/z_z_topbar_ico_back" />
 
         <LinearLayout
             android:id="@+id/tab_container"

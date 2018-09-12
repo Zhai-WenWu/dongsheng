@@ -34,7 +34,7 @@
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/dp_15"
-        android:src="@drawable/z_z_topbar_ico_back_white"/>
+        android:src="@drawable/z_z_topbar_ico_back"/>
 
     <TextView
         android:id="@+id/tv_cancel_upload"

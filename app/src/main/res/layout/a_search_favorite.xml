@@ -27,7 +27,7 @@
                 android:gravity="center"
                 android:paddingLeft="@dimen/dp_20"
                 android:paddingRight="@dimen/dp_20"
-                android:src="@drawable/z_z_topbar_ico_back_white"/>
+                android:src="@drawable/z_z_topbar_ico_back"/>
 
             <RelativeLayout
                 android:id="@+id/ed_search_layout_main"
