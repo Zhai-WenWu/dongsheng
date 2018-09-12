@@ -500,7 +500,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                                 Map<String,String> map = titleArray.get(0);
                                 String title = map.get("title");
                                 final String clickUrl = map.get("url");
-                                if(!TextUtils.isEmpty(title)){
+//                                if(!TextUtils.isEmpty(title)){
                                     titleLayout.setVisibility(View.VISIBLE);
                                     titleTv.setText(title);
                                     if(!TextUtils.isEmpty(clickUrl)) {
@@ -511,7 +511,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                                             }
                                         });
                                     }
-                                }
+//                                }
                             }
                         }
 
