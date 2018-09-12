@@ -254,9 +254,9 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
         }
         UploadArticleData uploadArticleData = new UploadArticleData();
         uploadArticleData.setTitle(shortVideoPublishBean.getName());
-        uploadArticleData.setImg(imgPath);
+        uploadArticleData.setImg(shortVideoPublishBean.getImagePath());
         JSONArray jsonArray = new JSONArray();
-        jsonArray.put(videoPath);
+        jsonArray.put(shortVideoPublishBean.getVideoPath());
         uploadArticleData.setVideos(jsonArray.toString());
         uploadArticleData.setExtraDataJson(shortVideoPublishBean.toJsonString());
         uploadArticleData.setUploadType(UploadDishData.UPLOAD_DRAF);
