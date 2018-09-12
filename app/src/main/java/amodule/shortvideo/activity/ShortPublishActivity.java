@@ -14,6 +14,10 @@ import android.widget.TextView;
 import com.amap.api.location.AMapLocation;
 import com.amap.api.services.geocoder.RegeocodeResult;
 import com.quze.videorecordlib.VideoRecorderCommon;
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.TitleMessageView;
 import com.xiangha.R;
 
 import org.json.JSONArray;
@@ -29,6 +33,7 @@ import acore.override.XHApplication;
 import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
+import acore.tools.ToolsDevice;
 import amodule.article.db.UploadArticleData;
 import amodule.article.db.UploadVideoSQLite;
 import amodule.dish.db.UploadDishData;
@@ -320,7 +325,12 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.publish_layout://发布
-                startPublish();
+                if("wifi".equals(ToolsDevice.getNetWorkType(this))){//WiFi状态下
+                    startPublish();
+                }else{//非wif状态下
+                    showDialog();
+                }
+
                 XHClick.onEvent(XHApplication.in(),"a_pre_release","发布");
                 break;
             case R.id.rightText://草稿
@@ -493,5 +503,24 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
             });
         }
 
+    }
+    private void showDialog(){
+        DialogManager dialogManager = new DialogManager(this);
+        dialogManager.createDialog(new ViewManager(dialogManager)
+                .setView(new TitleMessageView(this).setText("当前不是wifi环境,是否发布?"))
+                .setView(new HButtonView(this)
+                        .setNegativeText("取消", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialogManager.cancel();
+                            }
+                        })
+                        .setPositiveText("确定", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialogManager.cancel();
+                                startPublish();
+                            }
+                        }))).show();
     }
 }
