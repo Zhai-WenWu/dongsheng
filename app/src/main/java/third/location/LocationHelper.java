@@ -85,6 +85,9 @@ public class LocationHelper {
                     @Override
                     public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int i) {
                         // TODO: 2018/7/25 获取详细地址信息，包括乡镇 注意判空
+                        if(geocodeSearchCallBack!=null){
+                            geocodeSearchCallBack.onRegeocodeSearched(regeocodeResult.getRegeocodeAddress().getAdCode());
+                        }
 //                    Log.i("TAG", "onRegeocodeSearched: " + regeocodeResult.getRegeocodeAddress().getTownship() + "  code = " + regeocodeResult.getRegeocodeAddress().getTowncode());
                     }
 
@@ -199,5 +202,12 @@ public class LocationHelper {
                 }
             }
         }).start();
+    }
+    public interface  GeocodeSearchCallBack{
+        void onRegeocodeSearched(String adCode);
+    }
+    private GeocodeSearchCallBack geocodeSearchCallBack;
+    public void setGeocodeSearchCallBack(GeocodeSearchCallBack callBack){
+        this.geocodeSearchCallBack= callBack;
     }
 }
