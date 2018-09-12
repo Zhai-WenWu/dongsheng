@@ -51,7 +51,7 @@ public class UserHomeVideoItem extends UserHomeTxtItem {
                 mStatusInfo.setTextColor(Color.parseColor("#f23030"));
                 switch (uploadType) {
                     case UPLOAD_FAIL:
-                        statusInfo = "上传失败，请重试";
+                        statusInfo = "上传失败";
                         break;
                     case UPLOAD_DRAF:
                         statusInfo = "草稿箱";

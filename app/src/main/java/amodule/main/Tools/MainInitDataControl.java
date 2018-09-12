@@ -472,7 +472,7 @@ public class MainInitDataControl {
                 return false;
             }else {
                 sqLite.update(uploadingId,UploadDishData.UPLOAD_FAIL);
-                Toast.makeText(act, "您有未上传成功的作品，已保存至草稿箱", Toast.LENGTH_SHORT).show();
+                Toast.makeText(act, "您有上传失败的作品，已保存至个人主页", Toast.LENGTH_SHORT).show();
                 return true;
             }
         }
