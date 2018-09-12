@@ -39,6 +39,24 @@ public class ReqEncyptInternet extends UtilInternet {
             instance=new ReqEncyptInternet();
         return instance;
     }
+    public void doGetEncypt(String actionUrl,InternetCallback callback){
+        LinkedHashMap<String,String> map = new LinkedHashMap<>();
+        map.put("mode","doGet");
+        doEncypt(actionUrl,map,callback);
+    }
+    public void doPostEncypt(String actionUrl, LinkedHashMap<String,String> map, InternetCallback callback){
+        if(map == null) map = new LinkedHashMap<>();
+        map.put("mode","doPost");
+        doEncypt(actionUrl,map,callback);
+    }
+    public void doPostEncypt(String actionUrl, String param, InternetCallback callback){
+        LinkedHashMap<String,String> map = new LinkedHashMap<>();
+        if(!TextUtils.isEmpty(param)){
+            map=StringManager.getMapByString(param,"&","=");
+        }
+        map.put("mode","doPost");
+        doEncypt(actionUrl,map,callback);
+    }
 
     /**
      * 加密策略，此处支持并发请求多个接口，
@@ -139,7 +157,19 @@ public class ReqEncyptInternet extends UtilInternet {
             }
         };
         internetCallback.setEncryptparams(encryptparams);
-        doPost(actionUrl,map,internetCallback);
+        if(map.containsKey("mode")&&"doGet".equals(map.get("mode"))){
+            String getUrl=actionUrl;
+            if(map.size()>1){
+                int index=0;
+                for(String str:map.keySet()){
+                    getUrl+= index==0 ?"?":"&"+str+"="+map.get(str);
+                    ++index;
+                }
+            }
+            doGet(getUrl,internetCallback);
+        }else {//目前把post和无指定请求类型都当post处理
+            doPost(actionUrl, map, internetCallback);
+        }
 
 
     }
