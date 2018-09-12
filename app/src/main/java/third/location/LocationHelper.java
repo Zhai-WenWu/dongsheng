@@ -1,6 +1,7 @@
 package third.location;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
@@ -40,7 +41,7 @@ public class LocationHelper {
         mLocationClientOption = new AMapLocationClientOption();
         //设置定位模式为AMapLocationMode.Hight_Accuracy，高精度模式。
         mLocationClientOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
-        mLocationClientOption.setInterval(5 * 1000 * 60);
+//        mLocationClientOption.setInterval(5 * 1000 * 60);
         mLocationClientOption.setNeedAddress(true);
         mListeners = new ArrayList<>();
     }
@@ -77,6 +78,7 @@ public class LocationHelper {
             mLocationClient = new AMapLocationClient(XHApplication.in());
             mLocationClient.setLocationOption(mLocationClientOption);
             mLocationClient.setLocationListener(aMapLocation -> {
+                Log.i("tzy", "startLocation: ");
                 mCurrentLocation = aMapLocation;
                 GeocodeSearch geocodeSearch = new GeocodeSearch(XHApplication.in());
                 geocodeSearch.setOnGeocodeSearchListener(new GeocodeSearch.OnGeocodeSearchListener() {
