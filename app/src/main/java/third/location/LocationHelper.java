@@ -42,6 +42,7 @@ public class LocationHelper {
         //设置定位模式为AMapLocationMode.Hight_Accuracy，高精度模式。
         mLocationClientOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
 //        mLocationClientOption.setInterval(5 * 1000 * 60);
+        mLocationClientOption.setOnceLocation(true);
         mLocationClientOption.setNeedAddress(true);
         mListeners = new ArrayList<>();
     }
@@ -78,7 +79,7 @@ public class LocationHelper {
             mLocationClient = new AMapLocationClient(XHApplication.in());
             mLocationClient.setLocationOption(mLocationClientOption);
             mLocationClient.setLocationListener(aMapLocation -> {
-                Log.i("tzy", "startLocation: ");
+                Log.i("tzy", "startLocation: aMapLocation");
                 mCurrentLocation = aMapLocation;
                 GeocodeSearch geocodeSearch = new GeocodeSearch(XHApplication.in());
                 geocodeSearch.setOnGeocodeSearchListener(new GeocodeSearch.OnGeocodeSearchListener() {
@@ -97,7 +98,7 @@ public class LocationHelper {
                     }
                 });
                 LatLonPoint latLonPoint = new LatLonPoint(getLatitude(), getLongitude());
-                RegeocodeQuery query = new RegeocodeQuery(latLonPoint, 20, GeocodeSearch.AMAP);
+                RegeocodeQuery query = new RegeocodeQuery(latLonPoint, 1000, GeocodeSearch.AMAP);
                 geocodeSearch.getFromLocationAsyn(query);
                 Iterator<LocationListener> iterator = mListeners.iterator();
                 while (iterator.hasNext()) {
@@ -114,6 +115,7 @@ public class LocationHelper {
             });
         }
         mLocationClient.stopLocation();
+        Log.i("tzy", "startLocation: ");
         mLocationClient.startLocation();
     }
 
