@@ -174,10 +174,10 @@ public class ReqEncyptInternet extends UtilInternet {
         if(map.containsKey("mode")&&"doGet".equals(map.get("mode"))){
             String getUrl=actionUrl;
             map.remove("mode");
-            if(map.size()>1){
+            if(map.size()>0){
                 int index=0;
                 for(String str:map.keySet()){
-                    getUrl+= index==0 ?"?":"&"+str+"="+map.get(str);
+                    getUrl+= ((index==0 ?"?":"&")+str+"="+map.get(str));
                     ++index;
                 }
             }
