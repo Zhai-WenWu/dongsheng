@@ -92,7 +92,7 @@ public class ShortVideoPublishManager {
     }
     public ShortVideoUploadCallBack shortVideoUploadCallBack;
     public interface ShortVideoUploadCallBack{
-        public void onSuccess(int sqlId);
+        public void onSuccess(int sqlId,Object msg);
         public void onProgress(int progress,int sqlId);
         public void onFailed(int sqlId);
     }
@@ -118,7 +118,7 @@ public class ShortVideoPublishManager {
                 if(flag >= ReqEncyptInternet.REQ_OK_STRING){
                     UploadState(UploadDishData.UPLOAD_SUCCESS);
                     if(shortVideoUploadCallBack!=null){
-                        shortVideoUploadCallBack.onSuccess(Integer.parseInt(shortVideoPublishBean.getId()));
+                        shortVideoUploadCallBack.onSuccess(Integer.parseInt(shortVideoPublishBean.getId()),msg);
                     }
                 }else{
                     UploadState(UploadDishData.UPLOAD_FAIL);
