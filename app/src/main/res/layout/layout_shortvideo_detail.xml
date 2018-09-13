@@ -386,8 +386,6 @@
             android:layout_marginEnd="@dimen/dp_46"
             android:textColor="@color/c_white_text"
             android:textSize="@dimen/sp_15"
-            android:maxLines="3"
-            android:ellipsize="end"
             android:shadowDx="1"
             android:shadowRadius="1"
             android:shadowDy="1"

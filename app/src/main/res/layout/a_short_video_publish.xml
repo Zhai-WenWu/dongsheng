@@ -48,6 +48,7 @@
                     android:paddingLeft="@dimen/dp_20"
                     android:paddingRight="@dimen/dp_20"
                     android:paddingTop="@dimen/dp_10"
+                    android:maxLength="50"
                     android:textAllCaps="false"
                     android:textColor="#333333"
                     android:textColorHint="#999999"
