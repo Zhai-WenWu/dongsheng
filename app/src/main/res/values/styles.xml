@@ -88,8 +88,9 @@
         <item name="android:windowTranslucentStatus">true</item>
     </style>
 
-    <style name="friendHomeTheme" parent="AppBaseTheme">
+    <style name="friendHomeTheme" parent="@style/titleTheme">
         <item name="android:windowTranslucentStatus">true</item>
+        <item name="colorAccent">#FA273B</item>
     </style>
 
     <style name="activityVoipVideoTransparentTheme" parent="@android:style/Theme.Black.NoTitleBar">

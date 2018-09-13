@@ -793,7 +793,7 @@
             android:configChanges="orientation|keyboardHidden"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
-            android:theme="@style/friednHomeTheme"
+            android:theme="@style/friendHomeTheme"
             android:windowSoftInputMode="adjustPan" />
         <!-- android:launchMode="singleTask" -->
         <activity
