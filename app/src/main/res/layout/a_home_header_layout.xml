@@ -40,11 +40,6 @@
 
     </amodule._common.plugin.WidgetVerticalLayout>
 
-    <View
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/dp_10"
-        android:background="@color/transparent"/>
-
     <include
         android:id="@+id/a_home_feed_title"
         layout="@layout/a_home_feed_title"
