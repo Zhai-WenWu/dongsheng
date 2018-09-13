@@ -210,6 +210,7 @@ public class HomeHeaderControler implements ISaveStatistic, ISetAdController {
                     mFeedHeaderView.setVisibility(needVisibility);
                     mFeedLayout.setVisibility(needVisibility);
                 }
+                mLine.setVisibility(hasExtraData ? View.GONE : View.VISIBLE);
             };
             mHeaderView.addOnLayoutChangeListener(onLayoutChangeListener);
         }
