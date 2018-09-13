@@ -47,7 +47,6 @@ public class MediaSelectView extends RelativeLayout {
 
     private OnCloseClickCallback onCloseClickCallback;
     private OnSelectMediaCallback onSelectMediaCallback;
-    private MediaPlayer mediaPlayer;
 
     public MediaSelectView(Context context) {
         this(context, null);
@@ -83,8 +82,7 @@ public class MediaSelectView extends RelativeLayout {
     }
 
     private void initializeData() {
-        if(mediaPlayer!=null)
-            mediaPlayer = new MediaPlayer();
+
         storage = new MediaStorage(getContext(), new JSONSupportImpl());
         storage.setSortMode(MediaStorage.SORT_MODE_VIDEO);
         storage.startFetchmedias();
@@ -97,22 +95,23 @@ public class MediaSelectView extends RelativeLayout {
             @Override
             public void onCurrentMediaInfoChanged(MediaInfo info) {
                 try {
-                    if(info.width!=0&&info.height>0){
+                    if(info.width!=0&&info.height!=0){
                         if(info.width>1080&&info.height>1080){
-                            Tools.showToast(XHApplication.in(),"视频过长的：视频过大，暂不支持");
+                            Tools.showToast(XHApplication.in(),"视频画幅过大，暂不支持");
                             return;
                         }
                     }else {
-                        if (mediaPlayer != null) {
+                            MediaPlayer mediaPlayer = new MediaPlayer();
                             mediaPlayer.setDataSource(info.filePath);
                             mediaPlayer.prepare();
                             mediaPlayer.start();
                             if(mediaPlayer.getVideoWidth()>1080&&mediaPlayer.getVideoHeight()>1080){
-                                Tools.showToast(XHApplication.in(),"视频过长的：视频过大，暂不支持");
+                                Tools.showToast(XHApplication.in(),"视频画幅过大，暂不支持");
                                 mediaPlayer.release();
                                 return;
                             }
-                        }
+                        mediaPlayer.release();
+                        mediaPlayer=null;
                     }
 
                 }catch (Exception e){
@@ -154,10 +153,6 @@ public class MediaSelectView extends RelativeLayout {
         }
         if (thumbnailGenerator != null) {
             thumbnailGenerator.cancelAllTask();
-        }
-        if(mediaPlayer!=null){
-            mediaPlayer.release();
-            mediaPlayer=null;
         }
     }
 
