@@ -1,6 +1,7 @@
 package third.aliyun.views;
 
 import android.content.Context;
+import android.media.MediaPlayer;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -18,6 +19,8 @@ import com.xh.view.HButtonView;
 import com.xh.view.TitleView;
 import com.xiangha.R;
 
+import acore.override.XHApplication;
+import acore.tools.Tools;
 import third.aliyun.media.GalleryDirChooser;
 import third.aliyun.media.GalleryMediaChooser;
 import third.aliyun.media.MediaDir;
@@ -44,6 +47,7 @@ public class MediaSelectView extends RelativeLayout {
 
     private OnCloseClickCallback onCloseClickCallback;
     private OnSelectMediaCallback onSelectMediaCallback;
+    private MediaPlayer mediaPlayer;
 
     public MediaSelectView(Context context) {
         this(context, null);
@@ -79,6 +83,8 @@ public class MediaSelectView extends RelativeLayout {
     }
 
     private void initializeData() {
+        if(mediaPlayer!=null)
+            mediaPlayer = new MediaPlayer();
         storage = new MediaStorage(getContext(), new JSONSupportImpl());
         storage.setSortMode(MediaStorage.SORT_MODE_VIDEO);
         storage.startFetchmedias();
@@ -90,6 +96,28 @@ public class MediaSelectView extends RelativeLayout {
         storage.setOnCurrentMediaInfoChangeListener(new MediaStorage.OnCurrentMediaInfoChange() {
             @Override
             public void onCurrentMediaInfoChanged(MediaInfo info) {
+                try {
+                    if(info.width!=0&&info.height>0){
+                        if(info.width>1080&&info.height>1080){
+                            Tools.showToast(XHApplication.in(),"视频过长的：视频过大，暂不支持");
+                            return;
+                        }
+                    }else {
+                        if (mediaPlayer != null) {
+                            mediaPlayer.setDataSource(info.filePath);
+                            mediaPlayer.prepare();
+                            mediaPlayer.start();
+                            if(mediaPlayer.getVideoWidth()>1080&&mediaPlayer.getVideoHeight()>1080){
+                                Tools.showToast(XHApplication.in(),"视频过长的：视频过大，暂不支持");
+                                mediaPlayer.release();
+                                return;
+                            }
+                        }
+                    }
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
                 if (info.duration < 3000) {
                     dialogShow();
                     return;
@@ -126,6 +154,10 @@ public class MediaSelectView extends RelativeLayout {
         }
         if (thumbnailGenerator != null) {
             thumbnailGenerator.cancelAllTask();
+        }
+        if(mediaPlayer!=null){
+            mediaPlayer.release();
+            mediaPlayer=null;
         }
     }
 
