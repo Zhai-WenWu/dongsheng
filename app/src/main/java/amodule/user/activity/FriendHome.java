@@ -56,6 +56,7 @@ import amodule.user.view.UserHomeSubject;
 import amodule.user.view.UserHomeTitle;
 import amodule.user.view.UserHomeTxt;
 import amodule.user.view.UserHomeVideo;
+import aplug.basic.DefaultInternetCallback;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
@@ -129,11 +130,7 @@ public class FriendHome extends BaseActivity {
             //消息是否读过
             if (bundle.getString("newsId") != null) {
                 String params = "type=news&p1=" + bundle.getString("newsId");
-                ReqInternet.in().doPost(StringManager.api_setUserData, params, new InternetCallback() {
-                    @Override
-                    public void loaded(int flag, String url, Object returnObj) {
-                    }
-                });
+                ReqInternet.in().doPost(StringManager.api_setUserData, params, new DefaultInternetCallback());
             }
         }
         mIsMySelf = !TextUtils.isEmpty(userCode) && userCode.equals(LoginManager.userInfo.get("code"));
