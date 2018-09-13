@@ -333,7 +333,7 @@ public class AdapterCaipuSearch extends BaseAdapter {
             intent.putExtra("code", caipuMap.get("code"))
                     .putExtra("name", caipuMap.get("name"))
                     .putExtra("dishInfo",getDishInfo(caipuMap))
-                    .putExtra("img", caipuMap.get("img"));
+                    .putExtra("img", handleImg(caipuMap));
             mActivity.startActivity(intent);
         });
 
@@ -349,11 +349,7 @@ public class AdapterCaipuSearch extends BaseAdapter {
             JSONObject dishInfoJson = new JSONObject();
             dishInfoJson.put("code",data.get("code"));
             dishInfoJson.put("name",data.get("name"));
-            String img = data.get("sizeImg");
-            if (TextUtils.isEmpty(img)) {
-                img = data.get("img");
-            }
-            dishInfoJson.put("img",img);
+            dishInfoJson.put("img",handleImg(data));
             dishInfoJson.put("type",TextUtils.equals(data.get("hasVideo"), "2") ? "2" : "1");
             dishInfoJson.put("allClick",data.get("allClick").replace("浏览",""));
             dishInfoJson.put("favorites",data.get("favorites").replace("收藏",""));
@@ -369,6 +365,14 @@ public class AdapterCaipuSearch extends BaseAdapter {
             e.printStackTrace();
             return "";
         }
+    }
+
+    private String handleImg(Map<String, String> data) {
+        String img = data.get("sizeImg");
+        if (TextUtils.isEmpty(img)) {
+            img = data.get("img");
+        }
+        return img;
     }
 
     private View createZhishiView() {
