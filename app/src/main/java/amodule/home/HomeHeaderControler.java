@@ -1,6 +1,7 @@
 package amodule.home;
 
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -74,7 +75,7 @@ public class HomeHeaderControler implements ISaveStatistic, ISetAdController {
 
         mFeedHeaderView = header.findViewById(R.id.a_home_feed_title);
         mFeedTitle = (TextView) header.findViewById(R.id.feed_title);
-        mLine = header.findViewById(R.id.line);
+        mLine = header.findViewById(R.id.sb_line);
         mFeedLayout = (LinearLayout) header.findViewById(R.id.feed_title_layout);
     }
 
@@ -188,6 +189,7 @@ public class HomeHeaderControler implements ISaveStatistic, ISetAdController {
                         ArrayList<Map<String, String>> bottoms = StringManager.getListMapByJson(extraMap.get(KEY_BOTTOM));
                         if (tops.size() > 0 || bottoms.size() > 0) {
                             hasExtraData = true;
+                            mLine.setVisibility(hasExtraData ? View.GONE : View.VISIBLE);
                         }
                     }
                 }
@@ -210,6 +212,7 @@ public class HomeHeaderControler implements ISaveStatistic, ISetAdController {
                     mFeedHeaderView.setVisibility(needVisibility);
                     mFeedLayout.setVisibility(needVisibility);
                 }
+                Log.i("tzy", "setViewData: hasExtraData="+hasExtraData);
                 mLine.setVisibility(hasExtraData ? View.GONE : View.VISIBLE);
             };
             mHeaderView.addOnLayoutChangeListener(onLayoutChangeListener);
