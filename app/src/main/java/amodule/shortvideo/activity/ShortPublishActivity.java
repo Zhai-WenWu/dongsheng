@@ -3,7 +3,9 @@ package amodule.shortvideo.activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -149,6 +151,26 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
             }
         });
         findViewById(R.id.topic_tv).setOnClickListener(this);
+        edit_text.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String textTemp = s.toString();
+                if(textTemp.length()>50){
+                    edit_text.setText(textTemp.substring(0,50));
+                    Tools.showToast(XHApplication.in(),"最多50字");
+                }else{
+
+                }
+            }
+        });
     }
     private void initData() {
         initUIData();
