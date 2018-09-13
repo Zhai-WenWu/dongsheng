@@ -79,9 +79,9 @@ public class FriendHome extends BaseActivity {
     private TabHost tabHost;
     private LinearLayout activityLayout_show, tabMainMyself;
 
-    private ArrayList<View> mTabViews = new ArrayList<View>();
-    private ArrayList<View> mTabViewsFloat = new ArrayList<View>();
-    private ArrayList<TabContentView> mTabContentViews = new ArrayList<TabContentView>();
+    private ArrayList<View> mTabViews = new ArrayList<>();
+    private ArrayList<View> mTabViewsFloat = new ArrayList<>();
+    private ArrayList<TabContentView> mTabContentViews = new ArrayList<>();
     private boolean[] mIsLoadeds = null;
     private String userCode = "";
     private CommonBottomView mCommonBottomView;
@@ -102,7 +102,7 @@ public class FriendHome extends BaseActivity {
 
     private boolean mIsMySelf;
 
-    private Set<String> mTabRefreshTypes = new HashSet<String>();
+    private Set<String> mTabRefreshTypes = new HashSet<>();
     private boolean mIsResumming = false;
     private boolean mIsFromPause = false;
 
@@ -152,30 +152,30 @@ public class FriendHome extends BaseActivity {
     }
 
     private void registePublishCallback() {
-        if(LoginManager.isSlef(userCode)){
+        if (LoginManager.isSlef(userCode)) {
             ShortVideoPublishManager.getInstance().setShortVideoUploadCallBack(new ShortVideoPublishManager.ShortVideoUploadCallBack() {
                 @Override
-                public void onSuccess(int id,Object msg) {
+                public void onSuccess(int id, Object msg) {
                     mProgressLayout.setVisibility(View.GONE);
-                    if(mTabContentViews.size() > 2 && mTabContentViews.get(2) != null){
+                    if (mTabContentViews.size() > 2 && mTabContentViews.get(2) != null) {
                         mTabContentViews.get(2).initLoad();
                     }
-                    Map<String,String> shareData = StringManager.getFirstMap(msg);
-                    if(!shareData.isEmpty()){
-                        BarShare barShare = new BarShare(FriendHome.this,"","");
-                        barShare.setShare(BarShare.IMG_TYPE_WEB,shareData.get("title"),shareData.get("content"),
-                                shareData.get("img"),shareData.get("url"));
+                    Map<String, String> shareData = StringManager.getFirstMap(msg);
+                    if (!shareData.isEmpty()) {
+                        BarShare barShare = new BarShare(FriendHome.this, "", "");
+                        barShare.setShare(BarShare.IMG_TYPE_WEB, shareData.get("title"), shareData.get("content"),
+                                shareData.get("img"), shareData.get("url"));
                         barShare.openShare();
                     }
                 }
 
                 @Override
-                public void onProgress(int progress,int id) {
-                    if(mProgressLayout.getVisibility() == View.GONE){
+                public void onProgress(int progress, int id) {
+                    if (mProgressLayout.getVisibility() == View.GONE) {
                         mProgressLayout.setVisibility(View.VISIBLE);
-                        if(mTabContentViews.size() > 2 && mTabContentViews.get(2) != null
-                                && mTabContentViews.get(2) instanceof UserHomeVideo){
-                            ((UserHomeVideo)mTabContentViews.get(2)).deleteById(id);
+                        if (mTabContentViews.size() > 2 && mTabContentViews.get(2) != null
+                                && mTabContentViews.get(2) instanceof UserHomeVideo) {
+                            ((UserHomeVideo) mTabContentViews.get(2)).deleteById(id);
                         }
                     }
                     mProgressTv.setText(progress + "%");
@@ -184,7 +184,7 @@ public class FriendHome extends BaseActivity {
                 @Override
                 public void onFailed(int id) {
                     mProgressLayout.setVisibility(View.GONE);
-                    if(mTabContentViews.size() > 2 && mTabContentViews.get(2) != null){
+                    if (mTabContentViews.size() > 2 && mTabContentViews.get(2) != null) {
                         mTabContentViews.get(2).initLoad();
                     }
                 }
@@ -196,7 +196,7 @@ public class FriendHome extends BaseActivity {
         if (TextUtils.isEmpty(extraType)) return;
         if ("video".equals(extraType)) {
             tabIndex = 0;
-        }else if ("dish".equals(extraType)) {
+        } else if ("dish".equals(extraType)) {
             tabIndex = 1;
         } else if ("subject".equals(extraType)) {
             tabIndex = 2;
@@ -206,11 +206,11 @@ public class FriendHome extends BaseActivity {
     }
 
     private void initView() {
-        scrollLayout =  findViewById(R.id.scroll_body);
+        scrollLayout = findViewById(R.id.scroll_body);
         // 滑动设置
-        backLayout =  findViewById(R.id.a_user_home_title);
-        friend_info =  findViewById(R.id.a_user_home_title_info);
-        activityLayout_show =  findViewById(R.id.a_user_home_title);
+        backLayout = findViewById(R.id.a_user_home_title);
+        friend_info = findViewById(R.id.a_user_home_title_info);
+        activityLayout_show = findViewById(R.id.a_user_home_title);
         activityLayout_show.setVisibility(View.INVISIBLE);
         mProgressLayout = findViewById(R.id.progress_layout);
         mProgressTv = findViewById(R.id.progress_text);
@@ -250,10 +250,9 @@ public class FriendHome extends BaseActivity {
         ReqInternet.in().doGet(getUrl, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
-                Map<String, String> userinfo_map = null;
                 if (flag >= UtilInternet.REQ_OK_STRING) {
                     ArrayList<Map<String, String>> list = UtilString.getListMapByJson(returnObj);
-                    userinfo_map = UtilString.getListMapByJson(list.get(0).get("userinfo")).get(0);
+                    Map<String, String> userinfo_map = UtilString.getListMapByJson(list.get(0).get("userinfo")).get(0);
                     mTabs.get(2).put("num", userinfo_map.get("subjectCount"));
                     mTabs.get(1).put("num", userinfo_map.get("dishCount"));
                     mUserHomeTitle.setUserData(list.get(0).get("userinfo"));
@@ -271,13 +270,13 @@ public class FriendHome extends BaseActivity {
             public void loaded(int flag, String s, Object o) {
                 if (flag >= UtilInternet.REQ_OK_STRING) {
                     ArrayList<Map<String, String>> list = StringManager.getListMapByJson(o);
-                    Log.i("tzy", "loaded: list="+list.toString());
-                    for(int i =0;i<list.size();i++){
-                        Map<String,String> map = list.get(i);
-                        if(TYPE_VIDEO.equals(map.get("type"))){
-                            mTabs.get(0).put("num",map.get("num"));
-                        }else if(TYPE_ARTICLE.equals(map.get("type"))){
-                            mTabs.get(3).put("num",map.get("num"));
+                    Log.i("tzy", "loaded: list=" + list.toString());
+                    for (int i = 0; i < list.size(); i++) {
+                        Map<String, String> map = list.get(i);
+                        if (TYPE_VIDEO.equals(map.get("type"))) {
+                            mTabs.get(0).put("num", map.get("num"));
+                        } else if (TYPE_ARTICLE.equals(map.get("type"))) {
+                            mTabs.get(3).put("num", map.get("num"));
                         }
                     }
                     mSecondDataReady = true;
@@ -362,15 +361,15 @@ public class FriendHome extends BaseActivity {
         if (mTabs == null || mTabs.size() <= 0)
             return;
         //获取控件高度
-        tabHost =  findViewById(R.id.tabhost);
+        tabHost = findViewById(R.id.tabhost);
         if (Main.allMain == null || Main.allMain.getLocalActivityManager() == null) {
             Tools.showToast(getApplicationContext(), "加载失败，请稍后重试");
             finish();
             return;
         }
         tabHost.setup(Main.allMain.getLocalActivityManager());
-        tabMainMyself =  findViewById(R.id.a_user_home_title_tab);
-        tabMainMyselfFloat =  findViewById(R.id.tab_float_mainMyself);
+        tabMainMyself = findViewById(R.id.a_user_home_title_tab);
+        tabMainMyselfFloat = findViewById(R.id.tab_float_mainMyself);
         if (mIsLoadeds == null)
             mIsLoadeds = new boolean[mTabs.size()];
         for (int i = 0; i < mTabs.size(); i++) {
@@ -429,12 +428,7 @@ public class FriendHome extends BaseActivity {
     }
 
     private OnClickListener getTabClicker(final int i) {
-        return new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tabChanged(i);
-            }
-        };
+        return v -> tabChanged(i);
     }
 
     private void onItemClickListener(final UserHomeItem itemView, final Map<String, String> dataMap, String listType) {
@@ -449,9 +443,9 @@ public class FriendHome extends BaseActivity {
                 final String type = tabMap.get("type");
                 switch (type) {
                     case TYPE_VIDEO://视频列表
-                        Intent publishIntent = new Intent(this,ShortPublishActivity.class);
-                        publishIntent.putExtra("id",dataMap.get("id"));
-                        publishIntent.putExtra("extraDataJson",dataMap.get("extraDataJson"));
+                        Intent publishIntent = new Intent(this, ShortPublishActivity.class);
+                        publishIntent.putExtra("id", dataMap.get("id"));
+                        publishIntent.putExtra("extraDataJson", dataMap.get("extraDataJson"));
                         startActivity(publishIntent);
                         break;
                     case TYPE_ARTICLE://文章列表
@@ -566,9 +560,9 @@ public class FriendHome extends BaseActivity {
     // 获取tab标签卡
     private View getTabWidget(String title, String num, OnClickListener clicker) {
         View view = View.inflate(this, R.layout.tab_item_img_text, null);
-        TextView tv = (TextView) view.findViewById(R.id.tab_title);
+        TextView tv = view.findViewById(R.id.tab_title);
         tv.setText(title);
-        TextView data = (TextView) view.findViewById(R.id.tab_data);
+        TextView data = view.findViewById(R.id.tab_data);
         data.setText(num);
         view.setOnClickListener(clicker);
         LayoutParams lp = new LayoutParams(0, android.view.ViewGroup.LayoutParams.MATCH_PARENT);
@@ -582,7 +576,7 @@ public class FriendHome extends BaseActivity {
         this.tabIndex = tabIndex;
         //统计
         switch (tabIndex) {
-            case 0:
+            case 2:
                 XHClick.mapStat(this, tongjiId, "导航", "美食贴");
                 break;
             case 1:
@@ -611,7 +605,7 @@ public class FriendHome extends BaseActivity {
 
     // 设置tab选中的样式
     private void tabSelectStyle(View tabView, boolean isSelect) {
-        TextView tv = (TextView) tabView.findViewById(R.id.tab_title);
+        TextView tv = tabView.findViewById(R.id.tab_title);
         String color = Tools.getColorStr(this, R.color.comment_color);
         if (isSelect)
             tv.setTextColor(Color.parseColor(color));
@@ -721,7 +715,7 @@ public class FriendHome extends BaseActivity {
             return;
         View view1 = tabMainMyself.getChildAt(tabIndex);
         View view2 = tabMainMyselfFloat.getChildAt(tabIndex);
-        TextView tv = (TextView) view1.findViewById(R.id.tab_data);
+        TextView tv = view1.findViewById(R.id.tab_data);
         int num1 = Integer.parseInt(tv.getText().toString());
         if (isDel)
             --num1;
@@ -731,7 +725,7 @@ public class FriendHome extends BaseActivity {
             tv.setText(num1 + "");
         else
             tv.setText(0 + "");
-        TextView tv2 = (TextView) view2.findViewById(R.id.tab_data);
+        TextView tv2 = view2.findViewById(R.id.tab_data);
         int num2 = Integer.parseInt(tv2.getText().toString());
         if (isDel)
             --num2;
