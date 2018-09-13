@@ -9,7 +9,7 @@ import android.content.Context;
 public class UploadArticleSQLite extends UploadParentSQLite {
     
     public UploadArticleSQLite(Context context) {
-        super(context, TB_NAME,1);
+        super(context, TB_NAME,2);
     }
 
     private static final String TB_NAME = "tb_uploadAriticle";
