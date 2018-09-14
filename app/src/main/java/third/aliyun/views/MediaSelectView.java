@@ -36,7 +36,7 @@ import third.aliyun.media.ThumbnailGenerator;
  */
 public class MediaSelectView extends RelativeLayout {
     private RelativeLayout topbar;
-    private TextView title, rightText,closeText;
+    private TextView title, rightText, closeText;
     private ImageView close;
     private RecyclerView galleryView;
 
@@ -63,7 +63,7 @@ public class MediaSelectView extends RelativeLayout {
 
     private void initialize() {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.work_aliyun_svideo_import_view_media, null);
-        addView(view,LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT);
+        addView(view, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         initializeUI();
         initializeData();
     }
@@ -95,26 +95,26 @@ public class MediaSelectView extends RelativeLayout {
             @Override
             public void onCurrentMediaInfoChanged(MediaInfo info) {
                 try {
-                    if(info.width!=0&&info.height!=0){
-                        if(info.width>1080&&info.height>1080){
-                            Tools.showToast(XHApplication.in(),"视频画幅过大，暂不支持");
+                    if (info.width != 0 && info.height != 0) {
+                        if (Math.min(info.width, info.height) > 1080) {
+                            Tools.showToast(XHApplication.in(), "视频画幅过大，暂不支持");
                             return;
                         }
-                    }else {
-                            MediaPlayer mediaPlayer = new MediaPlayer();
-                            mediaPlayer.setDataSource(info.filePath);
-                            mediaPlayer.prepare();
-                            mediaPlayer.start();
-                            if(mediaPlayer.getVideoWidth()>1080&&mediaPlayer.getVideoHeight()>1080){
-                                Tools.showToast(XHApplication.in(),"视频画幅过大，暂不支持");
-                                mediaPlayer.release();
-                                return;
-                            }
+                    } else {
+                        MediaPlayer mediaPlayer = new MediaPlayer();
+                        mediaPlayer.setDataSource(info.filePath);
+                        mediaPlayer.prepare();
+                        mediaPlayer.start();
+                        if (mediaPlayer.getVideoWidth() > 1080) {//&&mediaPlayer.getVideoHeight()>1080
+                            Tools.showToast(XHApplication.in(), "视频画幅过大，暂不支持");
+                            mediaPlayer.release();
+                            return;
+                        }
                         mediaPlayer.release();
-                        mediaPlayer=null;
+                        mediaPlayer = null;
                     }
 
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 if (info.duration < 3000) {
@@ -160,7 +160,7 @@ public class MediaSelectView extends RelativeLayout {
         if (onCloseClickCallback != null) {
             onCloseClickCallback.onCloseClick(v);
         }
-        VideoRecorderCommon.instance().statictisEvent("a_shoot_choose","取消按钮","");
+        VideoRecorderCommon.instance().statictisEvent("a_shoot_choose", "取消按钮", "");
     }
 
     private void handleSelectMediaCallback(MediaInfo info) {
@@ -171,11 +171,11 @@ public class MediaSelectView extends RelativeLayout {
 
     public void setRightText(String text) {
         rightText.setText(TextUtils.isEmpty(text) ? "" : text);
-        rightText.setVisibility(TextUtils.isEmpty(text)?GONE:VISIBLE);
+        rightText.setVisibility(TextUtils.isEmpty(text) ? GONE : VISIBLE);
     }
 
-    public void setOnRightClickListener(OnClickListener listener){
-        if(listener != null){
+    public void setOnRightClickListener(OnClickListener listener) {
+        if (listener != null) {
             rightText.setOnClickListener(listener);
         }
     }
