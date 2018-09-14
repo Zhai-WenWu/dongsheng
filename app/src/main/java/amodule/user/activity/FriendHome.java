@@ -289,26 +289,18 @@ public class FriendHome extends BaseActivity {
 
     private void initDefTabData() {
         mTabs = new ArrayList<>();
-        Map<String, String> videoMap = new HashMap<>();
-        videoMap.put("title", "视频");
-        videoMap.put("type", TYPE_VIDEO);
-        videoMap.put("num", "");
-        mTabs.add(videoMap);
-        Map<String, String> dishMap = new HashMap<>();
-        dishMap.put("title", "菜谱");
-        dishMap.put("type", TYPE_DISH);
-        dishMap.put("num", "");
-        mTabs.add(dishMap);
-        Map<String, String> subjectMap = new HashMap<>();
-        subjectMap.put("title", "晒美食");
-        subjectMap.put("type", TYPE_SUBJECT);
-        subjectMap.put("num", "");
-        mTabs.add(subjectMap);
-        Map<String, String> artileMap = new HashMap<>();
-        artileMap.put("title", "文章");
-        artileMap.put("type", TYPE_ARTICLE);
-        artileMap.put("num", "");
-        mTabs.add(artileMap);
+        mTabs.add(createTabData("视频",TYPE_VIDEO));
+        mTabs.add(createTabData("晒美食",TYPE_SUBJECT));
+        mTabs.add(createTabData("菜谱",TYPE_DISH));
+        mTabs.add(createTabData("文章",TYPE_ARTICLE));
+    }
+
+    private Map<String,String> createTabData(String title,String type){
+        Map<String, String> tabData = new HashMap<>();
+        tabData.put("title", title);
+        tabData.put("type", type);
+        tabData.put("num", "");
+        return tabData;
     }
 
     private void onLoaded(int flag) {
@@ -340,18 +332,17 @@ public class FriendHome extends BaseActivity {
     private void handleTabsData() {
         if (mTabs == null)
             return;
-        Iterator<Map<String, String>> iterator = mTabs.iterator();
-        while (iterator.hasNext()) {
-            Map<String, String> map = iterator.next();
-            if (map != null && map.size() > 0) {
-                String num = map.get("num");
-                String type = map.get("type");
-                if (TextUtils.isEmpty(num) || (Integer.parseInt(num) <= 0)
-                        && (TYPE_VIDEO.equals(type) || TYPE_ARTICLE.equals(type)) && !mIsMySelf) {
-                    iterator.remove();
-                }
-            }
-        }
+//        Iterator<Map<String, String>> iterator = mTabs.iterator();
+//        while (iterator.hasNext()) {
+//            Map<String, String> map = iterator.next();
+//            if (map != null && map.size() > 0) {
+//                String num = map.get("num");
+//                String type = map.get("type");
+//                if ((TYPE_VIDEO.equals(type) || TYPE_ARTICLE.equals(type))) {
+//                    iterator.remove();
+//                }
+//            }
+//        }
     }
 
     private void setTabHost() {
@@ -573,11 +564,17 @@ public class FriendHome extends BaseActivity {
         this.tabIndex = tabIndex;
         //统计
         switch (tabIndex) {
-            case 2:
-                XHClick.mapStat(this, tongjiId, "导航", "美食贴");
+            case 0:
+                XHClick.mapStat(this, tongjiId, "导航", "视频");
                 break;
             case 1:
+                XHClick.mapStat(this, tongjiId, "导航", "美食贴");
+                break;
+            case 2:
                 XHClick.mapStat(this, tongjiId, "导航", "菜谱");
+                break;
+            case 3:
+                XHClick.mapStat(this, tongjiId, "导航", "文章");
                 break;
         }
         String tag = mTabContentViews.get(tabHost.getCurrentTab()).onPause();

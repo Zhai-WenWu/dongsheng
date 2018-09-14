@@ -348,7 +348,7 @@ public class UserHomeVideo extends TabContentView {
                 }
             }
             datas.addAll(mNetDatas);
-            if (datas.size() == 0 && isMyselft) {
+            if (datas.size() == 0) {
                 RelativeLayout.LayoutParams emptyParams = (RelativeLayout.LayoutParams) mEmptyView.getLayoutParams();
                 emptyParams.topMargin = mHeadViewHeight;
                 mEmptyContainer.setVisibility(View.VISIBLE);
@@ -357,6 +357,7 @@ public class UserHomeVideo extends TabContentView {
                 adapter.notifyDataSetChanged();
                 theListView.setVisibility(View.VISIBLE);
             }
+            mGotoBtn.setVisibility(isMyselft?View.VISIBLE:View.GONE);
         });
     }
 

@@ -106,7 +106,7 @@ public class ShortVideoPublishManager {
         }
         String url= StringManager.API_SHORTVIDEO_RELEASE;
         //TODO
-//        shortVideoPublishBean.setVideoUrl("");
+        shortVideoPublishBean.setVideoUrl("");
         String params = "name="+shortVideoPublishBean.getName()+"&imageUrl="+shortVideoPublishBean.getImageUrl()
                 +"&imageSize="+shortVideoPublishBean.getImageSize()+"&videoUrl="+shortVideoPublishBean.getVideoUrl()
                 +"&videoSize="+shortVideoPublishBean.getVideoSize()+"&videoTime="+shortVideoPublishBean.getVideoTime()

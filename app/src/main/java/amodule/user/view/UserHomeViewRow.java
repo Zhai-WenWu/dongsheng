@@ -38,23 +38,24 @@ public class UserHomeViewRow extends LinearLayout {
 
     private void initializeView() {
         setOrientation(HORIZONTAL);
-        setWeightSum(MAX_SIZE);
+//        setWeightSum(MAX_SIZE);
         //124*165
-        int itemWidth = ToolsDevice.getWindowPx(getContext()).widthPixels / 3;
+        final int dividerSize = 2;
+        int itemWidth = (ToolsDevice.getWindowPx(getContext()).widthPixels - dividerSize * (MAX_SIZE - 1)) / MAX_SIZE;
         int itemHeight = (int) (itemWidth * 165 / 124f);
-        LayoutParams layoutParams = new LayoutParams(0, itemHeight);
-        layoutParams.weight = 1;
+        LayoutParams layoutParams = new LayoutParams(itemWidth + dividerSize, itemHeight);
         for (int i = 0; i < MAX_SIZE; i++) {
             RelativeLayout itemLayout = new RelativeLayout(getContext());
+            itemLayout.setPadding(0,0,i != MAX_SIZE - 1 ? dividerSize : 0,0);
             addView(itemLayout, layoutParams);
-            if(i != MAX_SIZE - 1){
-                View line = new View(getContext());
-                addView(line,2,RLM);
-            }
         }
+        setPadding(0,0,0,dividerSize);
     }
 
-    public void setData(List<Map<String, String>> data) {
+    int position;
+
+    public void setData(List<Map<String, String>> data, int position) {
+        this.position = position;
         if (data == null || data.isEmpty()) {
             setVisibility(GONE);
             return;
@@ -66,18 +67,18 @@ public class UserHomeViewRow extends LinearLayout {
                 View view = null;
                 if (itemLayout.getChildCount() <= 0) {
                     //填充view
-                    if(mCreateViewCallback != null ){
+                    if (mCreateViewCallback != null) {
                         view = mCreateViewCallback.createView();
                     }
-                    if(view != null){
-                        itemLayout.addView(view,RLM,RLM);
+                    if (view != null) {
+                        itemLayout.addView(view, RLM, RLM);
                     }
-                }else{
+                } else {
                     view = itemLayout.getChildAt(0);
                 }
                 //有view，bindData
-                if(mCreateViewCallback != null){
-                    mCreateViewCallback.bindData(view,data.get(i));
+                if (mCreateViewCallback != null) {
+                    mCreateViewCallback.bindData(view, data.get(i));
                 }
                 itemLayout.setVisibility(VISIBLE);
             } else {
@@ -90,8 +91,13 @@ public class UserHomeViewRow extends LinearLayout {
         mCreateViewCallback = createViewCallback;
     }
 
-    public interface CreateViewCallback{
+    public int getRowPosition() {
+        return position;
+    }
+
+    public interface CreateViewCallback {
         View createView();
-        void bindData(View view,Map<String,String> data);
+
+        void bindData(View view, Map<String, String> data);
     }
 }
