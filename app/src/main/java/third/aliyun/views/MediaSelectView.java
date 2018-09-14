@@ -97,7 +97,7 @@ public class MediaSelectView extends RelativeLayout {
                 try {
                     if (info.width != 0 && info.height != 0) {
                         if (Math.min(info.width, info.height) > 1080) {
-                            Tools.showToast(XHApplication.in(), "视频画幅过大，暂不支持");
+                            Tools.showToast(XHApplication.in(), "视频超过1080P，暂不支持");
                             return;
                         }
                     } else {
@@ -106,7 +106,7 @@ public class MediaSelectView extends RelativeLayout {
                         mediaPlayer.prepare();
                         mediaPlayer.start();
                         if (mediaPlayer.getVideoWidth() > 1080) {//&&mediaPlayer.getVideoHeight()>1080
-                            Tools.showToast(XHApplication.in(), "视频画幅过大，暂不支持");
+                            Tools.showToast(XHApplication.in(), "视频超过1080P，暂不支持");
                             mediaPlayer.release();
                             return;
                         }
