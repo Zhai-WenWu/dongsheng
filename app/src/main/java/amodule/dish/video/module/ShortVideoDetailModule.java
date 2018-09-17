@@ -14,6 +14,7 @@ public class ShortVideoDetailModule {
     private boolean isFav;
     private boolean isLike;
     private String mFavNum;
+    private String playMode;
     private String mCommentNum;
     private String mLikeNum;
     private String mShareNum;
@@ -24,6 +25,7 @@ public class ShortVideoDetailModule {
     private TopicModel mTopicModel;
     private AddressModel mAddressModel;
     private amodule.dish.video.module.ShareModule mShareModule;
+
 
     public String getCode() {
         return mCode;
@@ -151,5 +153,13 @@ public class ShortVideoDetailModule {
 
     public void setShareModule(ShareModule shareModule) {
         mShareModule = shareModule;
+    }
+
+    public String getPlayMode() {
+        return playMode;
+    }
+
+    public void setPlayMode(String playMode) {
+        this.playMode = playMode;
     }
 }

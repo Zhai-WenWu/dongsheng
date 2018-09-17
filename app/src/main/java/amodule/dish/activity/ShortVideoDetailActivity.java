@@ -238,6 +238,17 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
                 }
             }
         });
+        rvVericalVideoItemAdapter.setPlayCompleteCallBack(new RvVericalVideoItemAdapter.PlayCompleteCallBack() {
+            @Override
+            public void videoComplete(int position) {
+                if(position>=0&&position+1<mDatas.size()){
+                    String playMode= mDatas.get(position + 1).getPlayMode();
+                    if("1".equals(playMode)||("2".equals(playMode)&&"wifi".equals(ToolsDevice.getNetWorkType(ShortVideoDetailActivity.this)))) {
+                        recyclerView.smoothScrollToPosition(position + 1);
+                    }
+                }
+            }
+        });
     }
 
     private void init() {
@@ -658,6 +669,7 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
             ShortVideoDetailModule module = new ShortVideoDetailModule();
             module.setCode(itemMap.get("code"));
             module.setName(itemMap.get("name"));
+            module.setPlayMode(itemMap.get("playMode"));
             module.setEssence("2".equals(itemMap.get("isEssence")));
             module.setFav("2".equals(itemMap.get("isFav")));
             module.setLike("2".equals(itemMap.get("isLike")));
