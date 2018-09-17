@@ -228,6 +228,9 @@ public class TagTextView extends TextView {
      */
     public void setBackgroundColor(int mBackgroundColor) {
         this.mBackgroundColor = mBackgroundColor;
+        if(gradientDrawable == null){
+            gradientDrawable = new GradientDrawable();
+        }
         gradientDrawable.setColor(mBackgroundColor);
         setBackgroundDrawable(gradientDrawable);
     }
@@ -238,6 +241,9 @@ public class TagTextView extends TextView {
      * @param radii
      */
     public void setRadii(float[] radii) {
+        if(gradientDrawable == null){
+            gradientDrawable = new GradientDrawable();
+        }
         gradientDrawable.setCornerRadii(radii);
         setBackgroundDrawable(gradientDrawable);
     }
@@ -246,6 +252,9 @@ public class TagTextView extends TextView {
      * 设置边框
      */
     private void setStroke() {
+        if(gradientDrawable == null){
+            gradientDrawable = new GradientDrawable();
+        }
         gradientDrawable.setStroke(mSideWidth, mSideColor, mSideDashWidth, mSideDashGap);
         setBackgroundDrawable(gradientDrawable);
     }

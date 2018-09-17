@@ -256,8 +256,8 @@ public class FriendHome extends BaseActivity implements IObserver {
                 if (flag >= UtilInternet.REQ_OK_STRING) {
                     ArrayList<Map<String, String>> list = UtilString.getListMapByJson(returnObj);
                     Map<String, String> userinfo_map = UtilString.getListMapByJson(list.get(0).get("userinfo")).get(0);
-                    mTabs.get(2).put("num", userinfo_map.get("subjectCount"));
-                    mTabs.get(1).put("num", userinfo_map.get("dishCount"));
+                    mTabs.get(1).put("num", userinfo_map.get("subjectCount"));
+                    mTabs.get(2).put("num", userinfo_map.get("dishCount"));
                     mUserHomeTitle.setUserData(list.get(0).get("userinfo"));
                     mFirstDataReady = true;
                     onDataReady();
