@@ -514,7 +514,7 @@ public class FriendHome extends BaseActivity {
             }
         } else {
             if (TYPE_VIDEO.equals(listType)) {
-                String gotoUrl = dataMap.get("gotoUrl");
+                String gotoUrl = dataMap.get("url");
                 if (!TextUtils.isEmpty(gotoUrl)) {
                     gotoUrl = gotoUrl + "&userCode=" + userCode;
                     AppCommon.openUrl(gotoUrl, false);

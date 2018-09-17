@@ -12,6 +12,7 @@ import com.xiangha.R;
 
 import java.util.Map;
 
+import acore.tools.StringManager;
 import acore.widget.TagTextView;
 
 import static amodule.dish.db.UploadDishData.UPLOAD_DRAF;
@@ -96,7 +97,8 @@ public class UserHomeVideoItem extends UserHomeItem {
             deleteIcon.setVisibility(View.VISIBLE);
             descText.setVisibility(View.GONE);
         } else {
-            String path = mDataMap.get("img");
+            Map<String,String> imgMap = StringManager.getFirstMap(mDataMap.get("image"));
+            String path = imgMap.get("url");
             if (imageVew != null && path != null) {
                 Glide.with(getContext())
                         .load(path)
@@ -118,9 +120,9 @@ public class UserHomeVideoItem extends UserHomeItem {
             if (uplaodState.getVisibility() == View.GONE) {
                 //正常数据显示
                 if(isMe){
-                    descText.setText(mDataMap.get("allClick"));//likeNumber	String	0
+                    descText.setText(mDataMap.get("clickNum"));//likeNumber	String	0
                 }else {
-                    String text = mDataMap.get("likeNumber");
+                    String text = mDataMap.get("likeNum");
                     if(!TextUtils.isEmpty(text) && !"0".equals(text)){
                         descText.setText(text);
                     }else{
