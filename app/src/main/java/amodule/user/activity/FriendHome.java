@@ -21,7 +21,6 @@ import com.xiangha.R;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -29,6 +28,8 @@ import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;
+import acore.tools.IObserver;
+import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.LayoutScroll;
@@ -64,6 +65,7 @@ import third.share.BarShare;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilString;
 
+import static acore.tools.ObserverManager.NOTIFY_SAVE_VIDEO_DRAF;
 import static amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver.ACTION_ATT;
 import static amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver.ACTION_DEL;
 import static amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver.DATA_TYPE;
@@ -71,7 +73,7 @@ import static amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver.SECOND
 import static amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver.STATE_KEY;
 
 @SuppressLint("CutPasteId")
-public class FriendHome extends BaseActivity {
+public class FriendHome extends BaseActivity implements IObserver {
     public static final String TYPE_VIDEO = "1";
     public static final String TYPE_ARTICLE = "2";
     public static final String TYPE_SUBJECT = "-1";
@@ -146,6 +148,7 @@ public class FriendHome extends BaseActivity {
         setCommonStyle();
         handlerType();
         registePublishCallback();
+        ObserverManager.getInstance().registerObserver(this,NOTIFY_SAVE_VIDEO_DRAF);
     }
 
     private void registePublishCallback() {
@@ -154,9 +157,7 @@ public class FriendHome extends BaseActivity {
                 @Override
                 public void onSuccess(int id, Object msg) {
                     mProgressLayout.setVisibility(View.GONE);
-                    if (mTabContentViews.size() > 2 && mTabContentViews.get(2) != null) {
-                        mTabContentViews.get(2).initLoad();
-                    }
+                    refreTab(0);
                     Map<String, String> shareData = StringManager.getFirstMap(msg);
                     if (!shareData.isEmpty()) {
                         BarShare barShare = new BarShare(FriendHome.this, "", "");
@@ -170,9 +171,9 @@ public class FriendHome extends BaseActivity {
                 public void onProgress(int progress, int id) {
                     if (mProgressLayout.getVisibility() == View.GONE) {
                         mProgressLayout.setVisibility(View.VISIBLE);
-                        if (mTabContentViews.size() > 2 && mTabContentViews.get(2) != null
-                                && mTabContentViews.get(2) instanceof UserHomeVideo) {
-                            ((UserHomeVideo) mTabContentViews.get(2)).deleteById(id);
+                        if (mTabContentViews.size() > 0 && mTabContentViews.get(0) != null
+                                && mTabContentViews.get(0) instanceof UserHomeVideo) {
+                            ((UserHomeVideo) mTabContentViews.get(0)).deleteById(id);
                         }
                     }
                     mProgressTv.setText(progress + "%");
@@ -181,11 +182,16 @@ public class FriendHome extends BaseActivity {
                 @Override
                 public void onFailed(int id) {
                     mProgressLayout.setVisibility(View.GONE);
-                    if (mTabContentViews.size() > 2 && mTabContentViews.get(2) != null) {
-                        mTabContentViews.get(2).initLoad();
-                    }
+                    refreTab(0);
                 }
             });
+        }
+    }
+
+    private void refreTab(int tabIndex) {
+        if (tabIndex >= 0 && mTabContentViews != null
+                && mTabContentViews.size() > tabIndex && mTabContentViews.get(tabIndex) != null) {
+            mTabContentViews.get(tabIndex).initLoad();
         }
     }
 
@@ -745,6 +751,14 @@ public class FriendHome extends BaseActivity {
         super.onDestroy();
         if (receiver != null) {
             unregisterReceiver(receiver);
+        }
+        ObserverManager.getInstance().unRegisterObserver(this);
+    }
+
+    @Override
+    public void notify(String name, Object sender, Object data) {
+        if(TextUtils.equals(NOTIFY_SAVE_VIDEO_DRAF,name)){
+            refreTab(0);
         }
     }
 }

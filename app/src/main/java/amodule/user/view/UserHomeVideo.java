@@ -3,7 +3,6 @@
  */
 package amodule.user.view;
 
-import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -22,7 +21,6 @@ import com.xiangha.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
@@ -30,14 +28,11 @@ import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.logic.load.LoadManager;
-import acore.override.activity.base.BaseLoginActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
-import amodule.article.activity.edit.VideoEditActivity;
 import amodule.article.db.UploadArticleData;
 import amodule.article.db.UploadVideoSQLite;
 import amodule.dish.db.UploadDishData;
-import amodule.shortvideo.tools.ShortVideoPublishManager;
 import amodule.user.activity.FriendHome;
 import amodule.user.adapter.AdapterUserVideo;
 import aplug.basic.InternetCallback;
