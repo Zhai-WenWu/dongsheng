@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    tools:background="#000"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -37,9 +38,20 @@
         android:paddingTop="@dimen/dp_2"
         android:textColor="#FFFFFF"
         android:textSize="@dimen/sp_11"
+        android:visibility="gone"
         app:backgroundColor="#88000000"
         app:radius="@dimen/dp_2"
         tools:text="上传失败"/>
+
+    <ImageView
+        android:id="@+id/play_icon"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/desc_text"
+        android:layout_marginRight="@dimen/dp_2"
+        android:layout_marginBottom="@dimen/dp_5"
+        android:src="@drawable/icon_play"
+        android:layout_width="@dimen/dp_11"
+        android:layout_height="@dimen/dp_11"/>
 
     <acore.widget.TagTextView
         android:id="@+id/desc_text"
@@ -47,10 +59,24 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
+        android:layout_marginBottom="@dimen/dp_4"
+        android:layout_marginRight="@dimen/dp_7"
+        android:gravity="center_vertical"
+        android:textColor="#FFFFFF"
+        android:textSize="@dimen/sp_11"
+        tools:text="5.6w"/>
+
+    <acore.widget.TagTextView
+        android:id="@+id/like_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
         app:drawableLeftWidth="@dimen/dp_11"
         app:drawableLeftHeight="@dimen/dp_11"
         android:drawablePadding="@dimen/dp_2"
-        android:drawableLeft="@drawable/icon_play"
+        android:visibility="gone"
+        android:drawableLeft="@drawable/icon_likex"
         android:layout_marginBottom="@dimen/dp_4"
         android:layout_marginRight="@dimen/dp_7"
         android:gravity="center_vertical"

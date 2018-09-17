@@ -28,6 +28,7 @@ public class UserHomeVideoItem extends UserHomeItem {
     ImageView deleteIcon;
     TagTextView uplaodState;
     TagTextView descText;
+    TagTextView likeText;
 
     public UserHomeVideoItem(Context context) {
         super(context, LAYOUT_ID);
@@ -48,6 +49,7 @@ public class UserHomeVideoItem extends UserHomeItem {
         deleteIcon = findViewById(R.id.delete_icon);
         uplaodState = findViewById(R.id.upload_state);
         descText = findViewById(R.id.desc_text);
+        likeText = findViewById(R.id.like_text);
 
         addListener();
     }
@@ -121,18 +123,23 @@ public class UserHomeVideoItem extends UserHomeItem {
                 //正常数据显示
                 if(isMe){
                     descText.setText(mDataMap.get("clickNum"));//likeNumber	String	0
+                    findViewById(R.id.play_icon).setVisibility(VISIBLE);
+                    descText.setVisibility(View.VISIBLE);
+                    likeText.setVisibility(View.GONE);
                 }else {
                     String text = mDataMap.get("likeNum");
                     if(!TextUtils.isEmpty(text) && !"0".equals(text)){
-                        descText.setText(text);
+                        likeText.setText(text);
                     }else{
-                        descText.setText("");
+                        likeText.setText("");
                     }
+                    likeText.setVisibility(View.VISIBLE);
+                    findViewById(R.id.play_icon).setVisibility(GONE);
+                    descText.setVisibility(View.GONE);
                 }
-                descText.setDrawableL(isMe ? R.drawable.icon_play : R.drawable.icon_likex);
-                descText.setVisibility(View.VISIBLE);
             }else{
                 descText.setVisibility(View.GONE);
+                likeText.setVisibility(View.GONE);
             }
         }
     }
