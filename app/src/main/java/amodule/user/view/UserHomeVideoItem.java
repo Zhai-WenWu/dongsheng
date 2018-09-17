@@ -138,6 +138,7 @@ public class UserHomeVideoItem extends UserHomeItem {
                     descText.setVisibility(View.GONE);
                 }
             }else{
+                findViewById(R.id.play_icon).setVisibility(GONE);
                 descText.setVisibility(View.GONE);
                 likeText.setVisibility(View.GONE);
             }
