@@ -29,7 +29,6 @@
     </style>
 
     <style name="friendHomeTheme" parent="titleTheme">
-        <item name="android:windowTranslucentStatus">true</item>
         <item name="colorAccent">#FA273B</item>
     </style>
 

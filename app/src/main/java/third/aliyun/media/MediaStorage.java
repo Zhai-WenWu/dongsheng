@@ -29,6 +29,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import acore.override.XHApplication;
+import acore.tools.Tools;
+
 /**
  * Created by Administrator on 2016/5/18.
  */
@@ -370,6 +373,8 @@ public class MediaStorage {
                         MediaStore.Video.Media.DATE_ADDED,
                         MediaStore.Video.Media.LATITUDE,
                         MediaStore.Video.Media.LONGITUDE,
+                        MediaStore.Video.Media.WIDTH,
+                        MediaStore.Video.Media.HEIGHT
                 }, String.format("%1$s IN (?, ?, ?) AND %2$s > %3$d",
                         MediaStore.Video.Media.MIME_TYPE,
                         MediaStore.Video.Media.DURATION,mMinDuration), new String[]{
@@ -387,7 +392,7 @@ public class MediaStorage {
                         MediaStore.Images.Media.MIME_TYPE,
                         MediaStore.Images.Media.DATE_ADDED,
                         MediaStore.Images.Media.LATITUDE,
-                        MediaStore.Images.Media.LONGITUDE,
+                        MediaStore.Images.Media.LONGITUDE
                 }, String.format("%1$s != ?", MediaStore.Images.Media.MIME_TYPE), new String[]{
                         "image/gif"
                 }, MediaStore.Images.Media.DATE_ADDED + " DESC");
@@ -402,6 +407,8 @@ public class MediaStorage {
             int col_date_added_video = 0;
             int col_latitude_video = 0;
             int col_longitude_video = 0;
+            int col_width_video = 0;
+            int col_height_video = 0;
             //image
             int col_mine_type_image = 0;
             int col_data_image = 0;
@@ -419,6 +426,9 @@ public class MediaStorage {
                 col_date_added_video = videoCursor.getColumnIndex(MediaStore.Video.Media.DATE_ADDED);
                 col_latitude_video = videoCursor.getColumnIndex(MediaStore.Video.Media.LATITUDE);
                 col_longitude_video = videoCursor.getColumnIndex(MediaStore.Video.Media.LONGITUDE);
+                col_width_video = videoCursor.getColumnIndex(MediaStore.Video.Media.WIDTH);
+                col_height_video = videoCursor.getColumnIndex(MediaStore.Video.Media.HEIGHT);
+//                Tools.showToast(XHApplication.in(),"col_width_video::"+col_width_video);
             }
             if (imageCursor != null) {
                 col_mine_type_image = imageCursor.getColumnIndexOrThrow(MediaStore.Images.Media.MIME_TYPE);
@@ -442,7 +452,7 @@ public class MediaStorage {
                 if (videoCursor != null) {
                     while (videoInfo == null && videoMoveToNext && videoCursor.moveToNext()) {
                         videoInfo = generateVideoInfo(videoCursor, col_data_video, col_duration_video, col_mine_type_video, col_title_video, col_id_video, col_date_added_video,
-                                col_latitude_video,col_longitude_video, _Resolver);
+                                col_latitude_video,col_longitude_video,col_width_video,col_height_video, _Resolver);
                     }
                 }
                 if (imageCursor != null) {
@@ -510,7 +520,7 @@ public class MediaStorage {
     }
 
     private MediaInfo generateVideoInfo(Cursor cursor, int col_data, int col_duration, int col_mine_type, int col_title, int col_id, int col_date_added,
-                                        int col_latitude_video, int col_longitude_video, ContentResolver _Resolver) {
+                                        int col_latitude_video, int col_longitude_video,int col_width_video,int col_height_video, ContentResolver _Resolver) {
 
         String filePath = cursor.getString(col_data);
         if (!new File(filePath).exists()) {
@@ -529,6 +539,8 @@ public class MediaStorage {
 
         videoInfo.id = cursor.getInt(col_id);
 
+        videoInfo.width= cursor.getInt(col_width_video);
+        videoInfo.height= cursor.getInt(col_height_video);
         videoInfo.addTime = cursor.getLong(col_date_added);
         videoInfo.latitude = cursor.getDouble(col_latitude_video);
         videoInfo.longitude = cursor.getDouble(col_longitude_video);

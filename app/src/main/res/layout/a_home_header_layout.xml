@@ -41,6 +41,7 @@
     </amodule._common.plugin.WidgetVerticalLayout>
 
     <View
+        android:id="@+id/sb_line"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/dp_10"
         android:background="@color/transparent"/>
