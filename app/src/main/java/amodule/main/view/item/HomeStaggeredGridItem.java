@@ -2,34 +2,49 @@ package amodule.main.view.item;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.aliyun.common.utils.MD5Util;
 import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.download.tools.FileUtils;
 import com.xiangha.R;
 
+import java.io.File;
+import java.io.InputStream;
 import java.util.Map;
 
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
+import acore.tools.ToolsDevice;
 import acore.widget.IconTextSpan;
+import aplug.basic.InternetCallback;
 import aplug.basic.LoadImage;
+import aplug.basic.ReqEncyptInternet;
+import aplug.basic.ReqInternet;
+import pl.droidsonroids.gif.GifDrawable;
+import pl.droidsonroids.gif.GifImageView;
+import third.mall.wx.MD5;
 
 public class HomeStaggeredGridItem extends HomeItem {
 
 //    private ConstraintLayout mRootLayout;
     private ConstraintLayout mContentLayout;
     private ImageView mImg;
+    private GifImageView gifImageView;
     private TextView mTitle,num_tv;
     private ImageView auther_userImg,img_fav;
     private int mImgMinHeight, mImgMaxHeight,fixedWidth;
@@ -52,6 +67,7 @@ public class HomeStaggeredGridItem extends HomeItem {
 //        mRootLayout = findViewById(R.id.staggered_root);
         mContentLayout = findViewById(R.id.staggered_container);
         mImg = findViewById(R.id.img);
+        gifImageView=findViewById(R.id.gif_img);
         mTitle = findViewById(R.id.title);
         auther_userImg = findViewById(R.id.user_header_img);
         img_fav = findViewById(R.id.img_fav);
@@ -131,9 +147,20 @@ public class HomeStaggeredGridItem extends HomeItem {
         cs.connect(mImg.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
         cs.connect(mImg.getId(), ConstraintSet.BOTTOM, R.id.guideline, ConstraintSet.TOP);
         cs.applyTo(mContentLayout);
+        ConstraintSet csgif = new ConstraintSet();
+        csgif.constrainWidth(gifImageView.getId(), ConstraintSet.MATCH_CONSTRAINT);
+        csgif.constrainHeight(gifImageView.getId(), realImgHeight);
+        csgif.constrainMinHeight(gifImageView.getId(), mImgMinHeight);
+        csgif.connect(gifImageView.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
+        csgif.connect(gifImageView.getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END);
+        csgif.connect(gifImageView.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
+        csgif.connect(gifImageView.getId(), ConstraintSet.BOTTOM, R.id.guideline, ConstraintSet.TOP);
+        csgif.applyTo(mContentLayout);
+        gifImageView.setVisibility(View.GONE);
         if (!TextUtils.isEmpty(mDataMap.get("parseResourceData_gif"))) {
-            mImg.setTag(TAG_ID, mDataMap.get("parseResourceData_gif"));
-            Glide.with(getContext()).load(mDataMap.get("parseResourceData_gif")).asGif().centerCrop().placeholder(R.drawable.i_nopic).diskCacheStrategy(DiskCacheStrategy.SOURCE).into(mImg);
+            gifImageView.setTag(TAG_ID, mDataMap.get("parseResourceData_gif"));
+            handleGif(mDataMap.get("parseResourceData_gif"));
+//            Glide.with(getContext()).load(mDataMap.get("parseResourceData_gif")).asGif().centerCrop().placeholder(R.drawable.i_nopic).diskCacheStrategy(DiskCacheStrategy.SOURCE).into(mImg);
         } else {
             String img = mDataMap.get("parseResourceData_img");
             mImg.setTag(TAG_ID, img);
@@ -187,13 +214,59 @@ public class HomeStaggeredGridItem extends HomeItem {
             Glide.with(getContext()).load(videoImg).diskCacheStrategy(DiskCacheStrategy.SOURCE).preload();
         }
     }
-
-
     private void setImgFav(){
         img_fav.setImageResource("2".equals(mDataMap.get("isFavorites"))?R.drawable.icon_home_good_selected:R.drawable.icon_home_good_def);
     }
 
     public ConstraintLayout getContentLayout() {
         return mContentLayout;
+    }
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what){
+                case 100:
+                    showGitImage(msg.obj.toString());
+                    break;
+            }
+        }
+    };
+    private void handleGif(String url){
+        String md5url= MD5Util.getMD5(url);
+        String path= FileManager.getSDCacheDir()+md5url;
+        File cacheFile= new File(path);
+        if(cacheFile.exists()){//文件已经存在
+            showGitImage(path);
+            return;
+        }
+        ReqEncyptInternet.in().getInputStream(url, new InternetCallback() {
+            @Override
+            public void loaded(int flag, String s, Object o) {
+                if(flag>= ReqInternet.REQ_OK_IS){
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            FileUtils.saveSDFile(path,(InputStream) o,false);
+                            Message message = handler.obtainMessage(100,path);
+                            handler.sendMessage(message);
+                        }
+                    }).start();
+                }
+            }
+        });
+    }
+    private void showGitImage(String path){
+        if(!TextUtils.isEmpty(path)){
+            try {
+                gifImageView.setVisibility(View.VISIBLE);
+                GifDrawable gifDrawable = new GifDrawable(path);
+                gifImageView.setImageDrawable(gifDrawable);
+            }catch (Exception e){
+                e.printStackTrace();
+                gifImageView.setVisibility(View.GONE);
+            }
+        }else {
+            gifImageView.setVisibility(View.GONE);
+        }
     }
 }
