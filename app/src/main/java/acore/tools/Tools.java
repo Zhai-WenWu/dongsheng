@@ -932,6 +932,10 @@ public class Tools {
         return packageInfo != null;
     }
 
+    public static int parseIntOfThrow(String strValue){
+        return parseIntOfThrow(strValue,-1);
+    }
+
     public static int parseIntOfThrow(String strValue, int defaultValue) {
         int result = defaultValue;
         try {

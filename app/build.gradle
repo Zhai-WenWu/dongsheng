@@ -57,13 +57,12 @@ dependencies {
 }
 android {
     compileSdkVersion 27
-    buildToolsVersion rootProject.buildToolsVersion
     defaultConfig {
         applicationId "com.xiangha"
         minSdkVersion 19
         targetSdkVersion 21
         versionCode 290
-        versionName "6.5.0"
+        versionName "6.5.0.1"
         // dex突破65535的限制
         multiDexEnabled true
         ndk {

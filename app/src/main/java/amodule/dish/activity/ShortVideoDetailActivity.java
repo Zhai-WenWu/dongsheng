@@ -588,6 +588,7 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
                                     mDatas.add(module);
                                 }
                             }
+                            //TODO 插入广告数据
                             if (mDatas.size() != insertPosStart) {
                                 rvVericalVideoItemAdapter.notifyItemRangeInserted(insertPosStart, datas.size());
                             }
