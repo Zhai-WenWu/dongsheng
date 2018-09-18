@@ -21,6 +21,7 @@ import acore.widget.rvlistview.holder.RvBaseViewHolder;
 import aplug.basic.LoadImage;
 import aplug.basic.SubAnimTarget;
 import aplug.basic.SubBitmapTarget;
+import aplug.basic.XHConf;
 
 import static android.view.View.GONE;
 
@@ -41,13 +42,20 @@ public class XHBaseRvViewHolder extends RvBaseViewHolder<Map<String, String>> {
     }
 
     protected void setViewImage(final ImageView v, String value) {
+        setViewImage(v, value, 0);
+    }
+
+    protected void setViewImage(final ImageView v, String value, int placeHolderRedId) {
+        setViewImage(v, value, 0, true);
+    }
+
+    protected void setViewImage(final ImageView v, String value, int placeHolderRedId, boolean animated) {
         if(null == v) return;
         if(TextUtils.isEmpty(value)){
             v.setVisibility(GONE);
             return;
         }
         v.setVisibility(View.VISIBLE);
-
         if (value.indexOf("http") == 0) {// 异步请求网络图片
             if (v.getTag(R.string.tag) != null && v.getTag(R.string.tag).equals(value))
                 return;
@@ -56,13 +64,15 @@ public class XHBaseRvViewHolder extends RvBaseViewHolder<Map<String, String>> {
             v.setTag(R.string.tag, value);
             if (v.getContext() == null) return;
             BitmapRequestBuilder<GlideUrl, Bitmap> bitmapRequest = LoadImage.with(v.getContext())
-                    .load(value)
+                    .load(value).setPlaceholderId(placeHolderRedId == 0 ? XHConf.img_placeholderID : placeHolderRedId)
                     .setSaveType(FileManager.save_cache)
                     .build();
             if (bitmapRequest != null){
-                AlphaAnimation animation = new AlphaAnimation(0f,1f);
-                animation.setDuration(300);
-                bitmapRequest.animate(animation);
+                if (animated) {
+                    AlphaAnimation animation = new AlphaAnimation(0f, 1f);
+                    animation.setDuration(300);
+                    bitmapRequest.animate(animation);
+                }
                 bitmapRequest.into(getSubAnimTarget(v, value));
             }
         }

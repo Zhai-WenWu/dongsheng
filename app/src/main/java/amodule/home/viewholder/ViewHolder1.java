@@ -55,7 +55,7 @@ public class ViewHolder1 extends XHBaseRvViewHolder {
         String img = data.get("img");
         setViewImage(mImageView1, img);
         String icon = StringManager.getFirstMap(data.get("labelIcon")).get("iconUrl");
-        setViewImage(mLabelIcon, icon);
+        setViewImage(mLabelIcon, icon, R.color.transparent, false);
         String t1 = data.get("text1");
         WidgetUtility.setTextToView(mTextView1, t1);
         String t3 = data.get("text3");
