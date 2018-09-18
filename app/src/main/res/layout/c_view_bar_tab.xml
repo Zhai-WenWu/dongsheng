@@ -89,5 +89,16 @@
             android:layout_height="0dp"
             android:layout_centerInParent="true"/>
 
+        <View
+            android:id="@+id/new_info"
+            android:layout_width="@dimen/dp_6"
+            android:layout_height="@dimen/dp_6"
+            app:layout_constraintEnd_toEndOf="@+id/iv_itemIsFine"
+            app:layout_constraintStart_toEndOf="@+id/iv_itemIsFine"
+            app:layout_constraintTop_toTopOf="@+id/iv_itemIsFine"
+            app:layout_constraintBottom_toTopOf="@+id/iv_itemIsFine"
+            android:background="@drawable/btn_circle_red"
+            android:visibility="gone" />
+
     </android.support.constraint.ConstraintLayout>
 </RelativeLayout>

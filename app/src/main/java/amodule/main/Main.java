@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.text.TextUtils;
@@ -24,7 +25,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.aliyun.struct.common.CropKey;
 import com.aliyun.struct.common.ScaleMode;
@@ -49,6 +49,8 @@ import acore.logic.LoginManager;
 import acore.logic.MessageTipController;
 import acore.logic.VersionOp;
 import acore.logic.XHClick;
+import acore.logic.polling.AppHandlerAsyncPolling;
+import acore.logic.polling.IHandleMessage;
 import acore.notification.controller.NotificationSettingController;
 import acore.override.XHApplication;
 import acore.override.activity.mian.MainBaseActivity;
@@ -58,14 +60,11 @@ import acore.tools.IObserver;
 import acore.tools.LogManager;
 import acore.tools.ObserverManager;
 import acore.tools.PageStatisticsUtils;
+import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.XiangHaTabHost;
 import amodule._common.conf.GlobalVariableConfig;
 import amodule.article.activity.edit.VideoEditActivity;
-import amodule.article.db.UploadArticleData;
-import amodule.article.db.UploadArticleSQLite;
-import amodule.article.db.UploadVideoSQLite;
-import amodule.dish.db.UploadDishData;
 import amodule.dish.tools.OffDishToFavoriteControl;
 import amodule.dish.tools.UploadDishControl;
 import amodule.lesson.activity.LessonHome;
@@ -76,7 +75,7 @@ import amodule.main.activity.MainHomePage;
 import amodule.main.activity.MainMyself;
 import amodule.main.delegate.ISetMessageTip;
 import amodule.shortvideo.activity.ShortPublishActivity;
-import amodule.user.activity.login.LoginByAccout;
+import aplug.basic.ReqInternet;
 import aplug.shortvideo.ShortVideoInit;
 import third.ad.control.AdControlHomeDish;
 import third.ad.db.XHAdSqlite;
@@ -90,6 +89,7 @@ import third.push.localpush.LocalPushDataManager;
 import third.push.localpush.LocalPushManager;
 import third.push.xg.XGTagManager;
 import third.qiyu.QiYvHelper;
+import xh.basic.internet.InterCallback;
 import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilLog;
 
@@ -97,7 +97,7 @@ import static android.content.Intent.FLAG_ACTIVITY_NO_USER_ACTION;
 import static com.xiangha.R.id.iv_itemIsFine;
 
 @SuppressWarnings("deprecation")
-public class Main extends Activity implements OnClickListener, IObserver, ISetMessageTip {
+public class Main extends Activity implements OnClickListener, IObserver, ISetMessageTip, IHandleMessage{
     public static final String TAG = "xianghaTag";
 
     private String[] tabTitle = {"首页", "名厨菜","发布", "社区", "我的"};
@@ -161,6 +161,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
         WelcomeDialogstate=false;
         isShowWelcomeDialog=true;
         mainInitDataControl = new MainInitDataControl();
+        mainInitDataControl.setIHandleMessage(this);
         welcomeControls= LoginManager.isShowAd()?new WelcomeControls(this,callBack):
                 new WelcomeControls(this,1,callBack);
         LogManager.printStartTime("zhangyujian","main::oncreate::");
@@ -550,6 +551,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                 // 关闭页面停留时间统计计时器
                 XHClick.closeHandler();
                 VersionOp.getInstance().onDesotry();
+                AppHandlerAsyncPolling.getInstance().destroyPolling();
                 System.exit(0);
                 UtilFile.saveShared(this, FileManager.MALL_STAT, FileManager.MALL_STAT, "");
             }
@@ -679,8 +681,9 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                 } else if (i == TAB_LESSON && allTab.containsKey(LessonHome.KEY) && tabHost.getCurrentTab() == i) {
                     //当所在页面正式你要刷新的页面,就直接刷新
                     LessonHome lesson = (LessonHome) allTab.get(LessonHome.KEY);
-                    if (lesson != null)
+                    if (lesson != null) {
                         lesson.refresh();
+                    }
 
                 } else if (i == TAB_SELF && allTab.containsKey(MainMyself.KEY)) {
                     //在onResume方法添加了刷新方法
@@ -886,5 +889,42 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                 XHClick.onEvent(XHApplication.in(),eventID,twoLevel,threeLevel);
             }
         });
+    }
+
+    @Override
+    public void onHandleMessage(Message message) {
+        if (message == null) {
+            return;
+        }
+        int what = message.what;
+        switch (what) {
+            case 1://名厨菜提示圆点
+                ReqInternet.in().doGet(StringManager.API_COURSE_UPDATE, new InterCallback() {
+                    @Override
+                    public void loaded(int i, String s, Object o) {
+                        if (i >= ReqInternet.REQ_OK_STRING) {
+                            String courseUpdateTime = StringManager.getFirstMap(o).get("courseUpdateTime");
+                            String courseUpdateTimeLocal = (String) FileManager.loadShared(XHApplication.in(), FileManager.xmlFile_appInfo, "courseUpdateTime");
+                            if (!TextUtils.equals(courseUpdateTime, courseUpdateTimeLocal)) {
+                                FileManager.saveShared(XHApplication.in(), FileManager.xmlFile_appInfo, "courseUpdateTime", courseUpdateTime);
+                                Main.this.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        setPointTipVisible(1, true);
+                                    }
+                                });
+                            }
+                        }
+                    }
+                });
+                break;
+        }
+    }
+
+    public void setPointTipVisible(int index, boolean show) {
+        View view = getTabView(index);
+        if (view != null) {
+            view.findViewById(R.id.new_info).setVisibility(show ? View.VISIBLE : View.GONE);
+        }
     }
 }

@@ -46,6 +46,16 @@
             android:textColor="@color/white"
             android:textSize="@dimen/sp_16"/>
 
+        <ImageView
+            android:id="@+id/icon_label"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_25"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_margin="@dimen/dp_3"
+            android:scaleType="fitStart"
+            android:visibility="gone"/>
+
     </acore.widget.rcwidget.RCRelativeLayout>
 
     <TextView

@@ -414,6 +414,9 @@ public class StringManager extends UtilString {
     public final static String API_SHORTVIDEO_RELEASE = apiUrl + "main8/shortVideo/release";//视频发布
     public final static String API_SHORTVIDEO_TOPICCHECK = apiUrl + "main8/shortVideo/topicCheck";//视频发布
 
+    //名厨菜更新时间
+    public static final String API_COURSE_UPDATE = apiUrl + "main8/school/getRotationData";
+
     //替换url
     public final static String replaceUrl(String url) {
         if (defaultDomain != domain || defaultProtocol != protocol) {

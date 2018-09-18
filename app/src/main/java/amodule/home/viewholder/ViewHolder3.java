@@ -11,6 +11,7 @@ import com.xiangha.R;
 
 import java.util.Map;
 
+import acore.tools.StringManager;
 import amodule._common.utility.WidgetUtility;
 
 /**
@@ -21,6 +22,7 @@ public class ViewHolder3 extends XHBaseRvViewHolder {
 
     public View mItemView;
     private ImageView mImageView1;
+    private ImageView mLabelIcon;
     private TextView mTextView1;
     private TextView mTextView2;
     public ViewHolder3(@NonNull View itemView) {
@@ -32,6 +34,7 @@ public class ViewHolder3 extends XHBaseRvViewHolder {
         mItemView.setLayoutParams(new RelativeLayout.LayoutParams(wh[0], wh[1]));
         mItemView.invalidate();
         mImageView1 = (ImageView) mItemView.findViewById(R.id.imageview1);
+        mLabelIcon = (ImageView) mItemView.findViewById(R.id.icon_label);
         mTextView1 = (TextView) mItemView.findViewById(R.id.textview1);
         mTextView2 = (TextView) mItemView.findViewById(R.id.textview2);
     }
@@ -42,6 +45,8 @@ public class ViewHolder3 extends XHBaseRvViewHolder {
         if (mItemView == null || data == null || data.isEmpty())
             return;
         setViewImage(mImageView1, data.get("img"));
+        String icon = StringManager.getFirstMap(data.get("labelIcon")).get("iconUrl");
+        setViewImage(mLabelIcon, icon);
         WidgetUtility.setTextToView(mTextView1, data.get("text1"));
         WidgetUtility.setTextToView(mTextView2,  "— " + data.get("text2") + " —");
     }
