@@ -2,7 +2,7 @@ package acore.logic.polling;
 
 public enum PollingConfig {
 
-    COURSE_GUIDANCE(10000, 1);
+    COURSE_GUIDANCE(60 * 60 * 1000, 1);
 
     private long mMillis;
     private int mType;
