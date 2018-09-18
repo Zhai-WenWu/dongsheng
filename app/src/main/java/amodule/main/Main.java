@@ -75,6 +75,8 @@ import amodule.main.activity.MainHomePage;
 import amodule.main.activity.MainMyself;
 import amodule.main.delegate.ISetMessageTip;
 import amodule.shortvideo.activity.ShortPublishActivity;
+import aplug.basic.InternetCallback;
+import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import aplug.shortvideo.ShortVideoInit;
 import third.ad.control.AdControlHomeDish;
@@ -89,7 +91,6 @@ import third.push.localpush.LocalPushDataManager;
 import third.push.localpush.LocalPushManager;
 import third.push.xg.XGTagManager;
 import third.qiyu.QiYvHelper;
-import xh.basic.internet.InterCallback;
 import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilLog;
 
@@ -707,10 +708,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
     }
 
     public View getTabView(int index) {
-        if (tabViews != null
-                && tabViews.length == 4
-                && index < 4
-                && index > -1) {
+        if (tabViews != null && index < tabViews.length && index >= 0) {
             return tabViews[index];
         }
         return null;
@@ -899,7 +897,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
         int what = message.what;
         switch (what) {
             case 1://名厨菜提示圆点
-                ReqInternet.in().doGet(StringManager.API_COURSE_UPDATE, new InterCallback() {
+                ReqEncyptInternet.in().doGetEncypt(StringManager.API_COURSE_UPDATE, new InternetCallback() {
                     @Override
                     public void loaded(int i, String s, Object o) {
                         if (i >= ReqInternet.REQ_OK_STRING) {
@@ -922,7 +920,9 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
     }
 
     public void setPointTipVisible(int index, boolean show) {
-        View view = getTabView(index);
+        if (Main.allMain == null)
+            return;
+        View view = Main.allMain.getTabView(index);
         if (view != null) {
             view.findViewById(R.id.new_info).setVisibility(show ? View.VISIBLE : View.GONE);
         }
