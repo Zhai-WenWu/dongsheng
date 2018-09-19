@@ -349,7 +349,6 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
     Runnable mRunnable = null;
     // 时刻取得导航提醒
     public void initRunTime() {
-        Log.i("tzy", "initRunTime: ");
         if(mTimerHandler == null){
             mTimerHandler = new Handler();
             execute();
@@ -371,7 +370,6 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
     }
 
     public void stopTimer() {
-        Log.i("tzy", "stopTimer: ");
         if (mTimerHandler != null) {
             mTimerHandler.removeCallbacks(mRunnable);
             mTimerHandler = null;
