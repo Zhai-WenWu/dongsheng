@@ -649,7 +649,6 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
                                     mDatas.add(module);
                                 }
                             }
-                            //TODO 插入广告数据
                             insertADData(insertPosStart);
                             if (mDatas.size() != insertPosStart) {
                                 mAdapter.notifyItemRangeInserted(insertPosStart, datas.size());
