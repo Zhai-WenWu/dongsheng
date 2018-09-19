@@ -1,5 +1,8 @@
 package third.ad.tools;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class AdPlayIdConfig {
 
     public static final String ADTYPE_GDT = "sdk_gdt";
@@ -101,5 +104,18 @@ public class AdPlayIdConfig {
     public static final String[] HOME_BANNEER_LIST = {"sy_banner1","sy_banner2","sy_banner3","sy_banner4","sy_banner5"};
 
     public static final String FULL_SRCEEN_ACTIVITY = "activity";
+
+    public static final Map<String,Boolean> isShownAdMap = new HashMap<>();
+
+    public static boolean hasShown(String adId){
+        return adId != null && isShownAdMap.containsKey(adId)
+                && isShownAdMap.get(adId) != null && isShownAdMap.get(adId);
+    }
+
+    public static void shown(String adId){
+        if(adId != null){
+            isShownAdMap.put(adId,true);
+        }
+    }
 
 }

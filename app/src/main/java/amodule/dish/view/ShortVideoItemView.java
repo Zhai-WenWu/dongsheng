@@ -468,6 +468,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         }
         changeThumbImageState(true);
         mVideoUrl = mData.getVideoModel().getVideoUrlMap().get("defaultUrl");
+
         mCommentImg.setImageResource(R.drawable.short_video_detail_comment);
         mCommentNumText.setText(mData.getCommentNum());
         mGoodImg.setImageResource(R.drawable.bg_select_good);
