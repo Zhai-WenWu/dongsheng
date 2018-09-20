@@ -214,8 +214,10 @@ public class RvVericalVideoItemAdapter extends BaseAdapter<ShortVideoDetailModul
             shortVideoItemView = itemView.findViewById(R.id.videoItem);
             itemView.setTag(position);
             this.data = (ShortVideoDetailADModule) data;
-            shortVideoItemView.setData(data, position);
+            shortVideoItemView.setData((ShortVideoDetailADModule) data, position);
             shortVideoItemView.setOnADClickCallback(mOnADClickCallback);
+            shortVideoItemView.setOnADShowCallback(mOnADShowCallback);
+            shortVideoItemView.setOnAdHintClickListener(mOnAdHintClickListener);
         }
 
         public int getPlayState() {
@@ -229,14 +231,12 @@ public class RvVericalVideoItemAdapter extends BaseAdapter<ShortVideoDetailModul
             Log.i("tzy", "startVideo:");
             shortVideoItemView.prepareAsync();
             //广告展示统计
-            if(!this.data.isShown){
-                Log.i("tzy", "bindADData: ");
-                AdPlayIdConfig.shown(this.data.adId);
-                this.data.isShown = true;
-                if(mOnADShowCallback != null){
-                    mOnADShowCallback.onAdShow(this.data.adRealPosition,itemView,String.valueOf(this.data.adRealPosition + 1));
-                }
-            }
+            AdPlayIdConfig.shown(this.data.adId);
+            //真实刷新数据
+            refreshData();
+        }
+
+        private void refreshData() {
             if (!mADData.isEmpty()) {
                 boolean needRefresh = false;
                 for (int i = 0; i < mADData.size(); i++) {
@@ -324,5 +324,10 @@ public class RvVericalVideoItemAdapter extends BaseAdapter<ShortVideoDetailModul
     private ShortVideoADItemView.OnADClickCallback mOnADClickCallback;
     public void setOnADClickCallback(ShortVideoADItemView.OnADClickCallback onADClickCallback) {
         mOnADClickCallback = onADClickCallback;
+    }
+
+    private ShortVideoADItemView.OnAdHintClickListener mOnAdHintClickListener;
+    public void setOnAdHintClickListener(ShortVideoADItemView.OnAdHintClickListener onAdHintClickListener) {
+        mOnAdHintClickListener = onAdHintClickListener;
     }
 }

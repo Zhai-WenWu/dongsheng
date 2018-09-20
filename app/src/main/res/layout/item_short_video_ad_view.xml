@@ -79,6 +79,8 @@
 
             <ImageView
                 android:id="@+id/image_thumb"
+                android:scaleX="1.5"
+                android:scaleY="1.5"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_centerInParent="true"
@@ -196,7 +198,7 @@
                 android:layout_marginEnd="@dimen/dp_20"
                 android:scaleType="centerInside"
                 android:src="@drawable/icon_title_more"
-                android:visibility="visible"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
@@ -206,11 +208,19 @@
             android:id="@+id/layout_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/dp_10"
+            android:layout_marginBottom="@dimen/dp_14"
             android:paddingLeft="@dimen/dp_20"
             android:paddingRight="@dimen/dp_20"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/line_bottom">
+
+            <ImageView
+                android:id="@+id/view_ad_tag"
+                android:layout_width="@dimen/dp_40"
+                android:layout_height="@dimen/dp_20"
+                android:layout_marginBottom="@dimen/dp_9"
+                android:src="@drawable/icon_video_ad"
+                app:layout_constraintBottom_toTopOf="@+id/text_title"/>
 
             <TextView
                 android:id="@+id/text_title"
@@ -251,6 +261,7 @@
                         android:layout_width="@dimen/dp_27"
                         android:layout_height="@dimen/dp_27"
                         android:scaleType="fitCenter"
+                        android:src="@drawable/bg_select_good"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"/>
@@ -267,6 +278,7 @@
                         android:shadowRadius="1"
                         android:textColor="@color/c_white_text"
                         android:textSize="@dimen/sp_12"
+                        tools:text="3.5w"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/image"/>
@@ -286,6 +298,7 @@
                         android:layout_width="@dimen/dp_30"
                         android:layout_height="@dimen/dp_23"
                         android:scaleType="fitCenter"
+                        android:src="@drawable/short_video_detail_share"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"/>
@@ -302,6 +315,7 @@
                         android:shadowRadius="1"
                         android:textColor="@color/c_white_text"
                         android:textSize="@dimen/sp_12"
+                        tools:text="3.5w"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/image"/>
@@ -320,12 +334,14 @@
                         android:layout_width="@dimen/dp_28"
                         android:layout_height="@dimen/dp_28"
                         android:scaleType="fitCenter"
+                        android:src="@drawable/short_video_detail_comment"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"/>
 
                     <TextView
                         android:id="@+id/text3"
+                        tools:text="3.5w"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dp_2"
@@ -348,14 +364,16 @@
         <View
             android:id="@+id/line_bottom"
             android:layout_width="match_parent"
+            android:visibility="invisible"
             android:layout_height="1px"
             android:background="#33ffffff"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/see_detail_btn"/>
+            app:layout_constraintBottom_toTopOf="@+id/see_detail_Layout"/>
 
         <ProgressBar
             android:id="@+id/bottom_progressbar"
             style="?android:attr/progressBarStyleHorizontal"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_1"
             android:layout_marginTop="@dimen/dp_12"
@@ -364,14 +382,43 @@
             android:progressDrawable="@drawable/video_new_seekbar_progress"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
-        <Button
-            android:id="@+id/see_detail_btn"
+        <acore.widget.rcwidget.RCRelativeLayout
+            android:id="@+id/see_detail_Layout"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_width="0dp"
-            android:text="查看详情"
-            android:layout_height="wrap_content"/>
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_40"
+            android:layout_marginBottom="@dimen/dp_25"
+            android:layout_marginLeft="@dimen/dp_20"
+            android:layout_marginRight="@dimen/dp_20"
+            app:clip_background="true"
+            app:round_corner="@dimen/dp_4">
+
+            <TextView
+                android:id="@+id/see_detail_bg_btn"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:background="#4e4e4e"
+                android:text="查看详情"
+                android:textColor="#9A9A9A"
+                android:textSize="@dimen/sp_16"/>
+
+            <TextView
+                android:id="@+id/see_detail_btn"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:background="#FA273B"
+                android:visibility="gone"
+                android:text="查看详情"
+                android:textColor="#FFFFFF"
+                android:textSize="@dimen/sp_16"/>
+
+        </acore.widget.rcwidget.RCRelativeLayout>
+
+
     </android.support.constraint.ConstraintLayout>
 
 </RelativeLayout>

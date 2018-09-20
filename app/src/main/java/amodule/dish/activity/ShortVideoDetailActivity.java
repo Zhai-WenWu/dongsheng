@@ -31,6 +31,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import acore.broadcast.ConnectionChangeReceiver;
+import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
@@ -52,6 +53,7 @@ import amodule.dish.helper.ParticularPositionEnableSnapHelper;
 import amodule.dish.video.module.ShareModule;
 import amodule.dish.video.module.ShortVideoDetailADModule;
 import amodule.dish.video.module.ShortVideoDetailModule;
+import amodule.dish.view.ShortVideoADItemView;
 import amodule.topic.model.AddressModel;
 import amodule.topic.model.CustomerModel;
 import amodule.topic.model.ImageModel;
@@ -107,6 +109,7 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         getWindow().setFormat(PixelFormat.TRANSPARENT);
+        initAd();
         setContentView(R.layout.layout_shortvideo_detail_activity);
         level = 2;
         if ("null".equals(ToolsDevice.getNetWorkSimpleType(XHApplication.in()))) {
@@ -115,7 +118,6 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
             return;
         }
         init();
-        initAd();
         addListener();
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
@@ -243,6 +245,7 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
         });
         mAdapter.setOnADShowCallback((index, view, listIndex) -> mXHAllAdControl.onAdBind(index, view, listIndex));
         mAdapter.setOnADClickCallback((view, index, listIndex) -> mXHAllAdControl.onAdClick(view, index, listIndex));
+        mAdapter.setOnAdHintClickListener((indexInData, promotionIndex) -> AppCommon.onAdHintClick(ShortVideoDetailActivity.this,mXHAllAdControl,indexInData, promotionIndex,STA_ID,"第" + promotionIndex + "位广告按钮"));
     }
 
     private void init() {
@@ -494,7 +497,8 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
                 for(int i=0;i<adIdList.size();i++){
                     String adId = adIdList.get(i);
                     if(map.containsKey(adId) && !TextUtils.isEmpty(map.get(adId)) && adPositionMap.get(adId) != null
-                            && !AdPlayIdConfig.hasShown(adId)){
+//                            && !AdPlayIdConfig.hasShown(adId)
+                            ){
                         Map<String, String> adMap = StringManager.getFirstMap(map.get(adId));
                         Log.i("tzy", "initAd: " + adMap.toString());
                         ShortVideoDetailADModule adModule = new ShortVideoDetailADModule();
@@ -504,15 +508,18 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
                         adModule.adRealPosition = Tools.parseIntOfThrow(adMap.get("index"));
                         //数据
                         adModule.setName(adMap.get("desc"));
-                        adModule.setLikeNum("999");
-                        adModule.setShareNum("999");
-                        adModule.setClickNum("999");
-                        adModule.setCommentNum("999");
+                        adModule.setLikeNum(String.valueOf(Tools.getRandom(500,1001)));
+                        adModule.setShareNum(String.valueOf(Tools.getRandom(50,201)));
+                        adModule.setCommentNum(String.valueOf(Tools.getRandom(50,151)));
                         ImageModel imageModel = new ImageModel();
                         imageModel.setImageUrl(adMap.get("imgUrl"));
                         adModule.setImageModel(imageModel);
                         CustomerModel customerModel = new CustomerModel();
-                        customerModel.setNickName(adMap.get("title"));
+                        String title = adMap.get("title");
+                        if(title.length() > 8){
+                            title = title.substring(0,8) + "...";
+                        }
+                        customerModel.setNickName(title);
                         customerModel.setHeaderImg(adMap.get("iconUrl"));
                         adModule.setCustomerModel(customerModel);
                         mAdData.add(adModule);

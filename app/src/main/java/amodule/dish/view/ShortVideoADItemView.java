@@ -1,20 +1,20 @@
 package amodule.dish.view;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.annotation.StringRes;
-import android.support.constraint.ConstraintLayout;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -51,27 +51,20 @@ public class ShortVideoADItemView extends BaseItemView implements View.OnClickLi
     private ImageView mBackImg;
     private ImageView mHeaderImg;
     private TextView mUserName;
-    private ImageView mAttentionImage;
     private ImageView mLikeImg;
-    private ImageView mMoreImg;
     private View mEmptyView;
     private TextView mTitleText;
     private View mBottomCommentLayout;
     private View mBottomShareLayout;
     private View mBottomGoodLayout;
-    private ImageView mCommentImg;
     private TextView mCommentNumText;
-    private ImageView mShareImg;
     private TextView mShareNum;
     private ImageView mGoodImg;
     private TextView mGoodText;
-    private Button mSeeDetailButton;
-    private ProgressBar mBottomProgress;
+    private TextView mSeeDetailButton;
 
-    private ShortVideoDetailModule mData;//全部
-    private boolean mIsSelf;
+    private ShortVideoDetailADModule mData;//全部
 
-    private int mPos;
     private int position;
 
     public ShortVideoADItemView(Context context) {
@@ -91,17 +84,12 @@ public class ShortVideoADItemView extends BaseItemView implements View.OnClickLi
         mBackImg = findViewById(R.id.image_back);
         mHeaderImg = findViewById(R.id.image_user_header);
         mUserName = findViewById(R.id.text_user_name);
-        mAttentionImage = findViewById(R.id.img_attention);
         mLikeImg = findViewById(R.id.image_like);
-        mMoreImg = findViewById(R.id.image_more);
         mEmptyView = findViewById(R.id.view_empty);
         mTitleText = findViewById(R.id.text_title);
-        mBottomProgress = findViewById(R.id.bottom_progressbar);
         mBottomCommentLayout = findViewById(R.id.layout_bottom_comment);
-        mCommentImg = mBottomCommentLayout.findViewById(R.id.image3);
         mCommentNumText = mBottomCommentLayout.findViewById(R.id.text3);
         mBottomShareLayout = findViewById(R.id.layout_bottom_share);
-        mShareImg = mBottomShareLayout.findViewById(R.id.image2);
         mShareNum = mBottomShareLayout.findViewById(R.id.text2);
         mBottomGoodLayout = findViewById(R.id.layout_bottom_good);
         mGoodImg = mBottomGoodLayout.findViewById(R.id.image1);
@@ -120,13 +108,13 @@ public class ShortVideoADItemView extends BaseItemView implements View.OnClickLi
     }
 
     private void addListener() {
-        mSeeDetailButton.setOnClickListener(this);
+        findViewById(R.id.see_detail_Layout).setOnClickListener(this);
+        findViewById(R.id.view_ad_tag).setOnClickListener(this);
         mBackImg.setOnClickListener(this);
         mHeaderImg.setOnClickListener(this);
         mUserName.setOnClickListener(this);
-        mAttentionImage.setOnClickListener(this);
         mLikeImg.setOnClickListener(this);
-        mMoreImg.setOnClickListener(this);
+        mTitleText.setOnClickListener(this);
         mEmptyView.setOnClickListener(this);
         mBottomCommentLayout.setOnClickListener(this);
         mBottomGoodLayout.setOnClickListener(this);
@@ -135,6 +123,36 @@ public class ShortVideoADItemView extends BaseItemView implements View.OnClickLi
 
     /** 开始播放入口 */
     public void prepareAsync() {
+        //曝光回调
+        if (!this.mData.isShown) {
+            this.mData.isShown = true;
+            if (mOnADShowCallback != null) {
+                mOnADShowCallback.onAdShow(this.mData.adRealPosition, this, String.valueOf(this.mData.adRealPosition + 1));
+            }
+        }
+        //图片动画
+        ObjectAnimator imageAnimX = ObjectAnimator.ofFloat(mThumbImg, "scaleX", 1.5f, 1.0f);
+        imageAnimX.setDuration(2000);
+        ObjectAnimator imageAnimY = ObjectAnimator.ofFloat(mThumbImg, "scaleY", 1.5f, 1.0f);
+        imageAnimY.setDuration(2000);
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playTogether(imageAnimX, imageAnimY);
+        animatorSet.start();
+        //查看详情动画
+        postDelayed(this::anim, 3000);
+    }
+
+    private void anim() {
+        ObjectAnimator animator = ObjectAnimator.ofFloat(mSeeDetailButton, "alpha", 0f, 1f);
+        animator.setDuration(300);
+        animator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                super.onAnimationStart(animation);
+                mSeeDetailButton.setVisibility(VISIBLE);
+            }
+        });
+        animator.start();
     }
 
     public void resumeVideo() {
@@ -146,6 +164,9 @@ public class ShortVideoADItemView extends BaseItemView implements View.OnClickLi
 
     /** 重置数据 */
     public void releaseVideo() {
+        mSeeDetailButton.setVisibility(GONE);
+        mThumbImg.setScaleX(1.5f);
+        mThumbImg.setScaleY(1.5f);
     }
 
     public boolean isPlaying() {
@@ -157,23 +178,14 @@ public class ShortVideoADItemView extends BaseItemView implements View.OnClickLi
      *
      * @param module
      */
-    public void setData(ShortVideoDetailModule module, int position) {
+    public void setData(ShortVideoDetailADModule module, int position) {
         mData = module;
         this.position = position;
         if (mData == null)
             return;
         mUserName.setText(mData.getCustomerModel().getNickName());
-        mIsSelf = TextUtils.equals(LoginManager.userInfo.get("code"), mData.getCustomerModel().getUserCode());
-        if (mIsSelf) {
-            mAttentionImage.setVisibility(View.GONE);
-            mLikeImg.setVisibility(View.GONE);
-            mMoreImg.setVisibility(View.VISIBLE);
-        } else {
-            mAttentionImage.setVisibility(mData.getCustomerModel().isFollow() ? View.GONE : View.VISIBLE);
-            mMoreImg.setVisibility(View.GONE);
-            mLikeImg.setSelected(mData.isFav());
-            mLikeImg.setVisibility(View.VISIBLE);
-        }
+        mLikeImg.setSelected(mData.isFav());
+        mLikeImg.setVisibility(View.VISIBLE);
 
         loadUserHeader(mData.getCustomerModel().getHeaderImg());
         BitmapRequestBuilder builder = LoadImage.with(getContext())
@@ -184,14 +196,11 @@ public class ShortVideoADItemView extends BaseItemView implements View.OnClickLi
             builder.into(mThumbImg);
         }
 
-        mCommentImg.setImageResource(R.drawable.short_video_detail_comment);
         mCommentNumText.setText(mData.getCommentNum());
 
-        mGoodImg.setImageResource(R.drawable.bg_select_good);
         mGoodImg.setSelected(mData.isLike());
         mGoodText.setText(mData.getLikeNum());
 
-        mShareImg.setImageResource(R.drawable.short_video_detail_share);
         mShareNum.setText(mData.getShareNum());
 
         mTitleText.setText("");
@@ -204,20 +213,17 @@ public class ShortVideoADItemView extends BaseItemView implements View.OnClickLi
         }
     }
 
-    public void setPos(int pos) {
-        mPos = pos;
-    }
-
-    public int getPos() {
-        return mPos;
-    }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.image_back:
                 closeActivity();
                 XHClick.mapStat(getContext(), ShortVideoDetailActivity.STA_ID, "返回", "");
+                break;
+            case R.id.view_ad_tag:
+                if (mOnAdHintClickListener != null) {
+                    mOnAdHintClickListener.onAdHintClick(mData.adRealPosition,String.valueOf(mData.adPositionInData));
+                }
                 break;
             default:
                 if (mOnADClickCallback != null) {
@@ -287,7 +293,7 @@ public class ShortVideoADItemView extends BaseItemView implements View.OnClickLi
         void onAdShow(int index, View view, String listIndex);
     }
 
-    public OnADShowCallback mOnADShowCallback;
+    private OnADShowCallback mOnADShowCallback;
 
     public void setOnADShowCallback(OnADShowCallback onADShowCallback) {
         mOnADShowCallback = onADShowCallback;
@@ -297,10 +303,20 @@ public class ShortVideoADItemView extends BaseItemView implements View.OnClickLi
         void onADClick(View view, int index, String listIndex);
     }
 
-    public OnADClickCallback mOnADClickCallback;
+    private OnADClickCallback mOnADClickCallback;
 
     public void setOnADClickCallback(OnADClickCallback onADClickCallback) {
         mOnADClickCallback = onADClickCallback;
+    }
+
+    public interface OnAdHintClickListener {
+        void onAdHintClick(int indexInData,String promotionIndex);
+    }
+
+    private OnAdHintClickListener mOnAdHintClickListener;
+
+    public void setOnAdHintClickListener(OnAdHintClickListener onAdHintClickListener) {
+        mOnAdHintClickListener = onAdHintClickListener;
     }
 }
 //1062
