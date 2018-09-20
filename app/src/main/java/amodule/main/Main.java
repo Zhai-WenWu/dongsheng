@@ -195,7 +195,6 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                 addQiYvListener();
                 if(mainInitDataControl!=null)mainInitDataControl.mainAfterUpload(Main.this);
                 FileManager.saveShared(Main.this,FileManager.app_welcome,VersionOp.getVerName(Main.this),"1");
-                ClingPresenter.getInstance().onCreate(Main.this, null);
             }
         }
         @Override
