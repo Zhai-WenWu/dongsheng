@@ -36,6 +36,8 @@ import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
 
+import static third.ad.scrollerAd.XHScrollerAdParent.ADKEY_GDT;
+
 /**
  * 短视频itemView
  */
@@ -210,6 +212,13 @@ public class ShortVideoADItemView extends BaseItemView implements View.OnClickLi
             mTitleText.setText(title);
         } else {
             mTitleText.setVisibility(View.GONE);
+        }
+
+        if(ADKEY_GDT.equals(mData.adType)){
+            //TODO 广点通广告
+
+        }else {
+
         }
     }
 

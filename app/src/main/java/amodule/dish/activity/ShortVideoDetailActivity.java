@@ -497,7 +497,7 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
                 for(int i=0;i<adIdList.size();i++){
                     String adId = adIdList.get(i);
                     if(map.containsKey(adId) && !TextUtils.isEmpty(map.get(adId)) && adPositionMap.get(adId) != null
-//                            && !AdPlayIdConfig.hasShown(adId)
+                            && !AdPlayIdConfig.hasShown(adId)
                             ){
                         Map<String, String> adMap = StringManager.getFirstMap(map.get(adId));
                         Log.i("tzy", "initAd: " + adMap.toString());
