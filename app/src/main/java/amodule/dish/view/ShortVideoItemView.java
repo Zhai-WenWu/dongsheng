@@ -39,6 +39,7 @@ import com.xiangha.R;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import acore.logic.AppCommon;
@@ -375,6 +376,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
     public void prepareAsync() {
         mInnerPlayState = INNER_PLAY_STATE_START;
         mNeedChangePauseToStartEnable = true;
+        mPlayerView.setUp(mVideoUrl, false, "");
         mPlayerView.startPlayLogic();
         startStatistics(StringManager.API_SHORT_VIDEO_ACCESS);
     }
@@ -422,6 +424,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         this.position = position;
         if (mData == null)
             return;
+
         mUserName.setText(mData.getCustomerModel().getNickName());
         mIsSelf = TextUtils.equals(LoginManager.userInfo.get("code"), mData.getCustomerModel().getUserCode());
         if (mIsSelf) {
@@ -466,7 +469,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         if (builder != null) {
             builder.into(mThumbImg);
         }
-        changeThumbImageState(true);
+        changeThumbImageState(mInnerPlayState == 0 || mInnerPlayState == INNER_PLAY_STATE_STOP|| mInnerPlayState == INNER_PLAY_STATE_PAUSE);
         mVideoUrl = mData.getVideoModel().getVideoUrlMap().get("defaultUrl");
 
         mCommentImg.setImageResource(R.drawable.short_video_detail_comment);
@@ -508,7 +511,6 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         } else {
             mLayoutAddress.setVisibility(View.GONE);
         }
-        mPlayerView.setUp(mVideoUrl, false, "");
     }
 
     public void setPos(int pos) {

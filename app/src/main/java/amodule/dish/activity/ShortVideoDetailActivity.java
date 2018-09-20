@@ -53,7 +53,6 @@ import amodule.dish.helper.ParticularPositionEnableSnapHelper;
 import amodule.dish.video.module.ShareModule;
 import amodule.dish.video.module.ShortVideoDetailADModule;
 import amodule.dish.video.module.ShortVideoDetailModule;
-import amodule.dish.view.ShortVideoADItemView;
 import amodule.topic.model.AddressModel;
 import amodule.topic.model.CustomerModel;
 import amodule.topic.model.ImageModel;
@@ -274,20 +273,7 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
             public void wifi() {
                 if (mNetStateTipDialog != null && mNetStateTipDialog.isShowing()) {
                     mNetStateTipDialog.cancel();
-                    if (mAdapter != null) {
-                        RvVericalVideoItemAdapter.ItemViewHolder currentHolder = mAdapter.getCurrentViewHolder();
-                        if (currentHolder != null) {
-                            int playState = currentHolder.getPlayState();
-                            switch (playState) {
-                                case GSYVideoPlayer.CURRENT_STATE_PAUSE:
-                                    currentHolder.resumeVideo();
-                                    break;
-                                default:
-                                    currentHolder.startVideo();
-                                    break;
-                            }
-                        }
-                    }
+                    playCurrent();
                 }
             }
 
@@ -471,18 +457,23 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
                 break;
             case NOTIFY_LOGIN:
                 if(!LoginManager.isShowAd()){
-                    mAdData.clear();
-                    for(int i=0;i<mDatas.size();i++){
-                        if(mDatas.get(i) instanceof ShortVideoDetailADModule){
-                            mDatas.remove(i--);
-                        }
-                    }
-                    mAdapter.notifyDataSetChanged();
+                    cleanAdData();
                 }
                 break;
         }
     }
 
+    public void cleanAdData() {
+        mAdData.clear();
+        for (int i = 0; i < mDatas.size(); i++) {
+            if (mDatas.get(i) instanceof ShortVideoDetailADModule) {
+                mDatas.remove(i--);
+            }
+        }
+        mAdapter.notifyDataSetChanged();
+    }
+
+    boolean initAdOver = false;
     private void initAd() {
         final ArrayList<String> adIdList = new ArrayList<>();
         Collections.addAll(adIdList, AD_IDS);
@@ -494,10 +485,13 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
 
         mXHAllAdControl = new XHAllAdControl(adIdList, (isRefresh, map) -> {
             if (map != null && !map.isEmpty()) {
+                if (mAdData != null && !mAdData.isEmpty()) {
+                    cleanAdData();
+                }
                 for(int i=0;i<adIdList.size();i++){
                     String adId = adIdList.get(i);
                     if(map.containsKey(adId) && !TextUtils.isEmpty(map.get(adId)) && adPositionMap.get(adId) != null
-                            && !AdPlayIdConfig.hasShown(adId)
+                            && (!AdPlayIdConfig.hasShown(adId) || initAdOver)
                             ){
                         Map<String, String> adMap = StringManager.getFirstMap(map.get(adId));
                         Log.i("tzy", "initAd: " + adMap.toString());
@@ -528,6 +522,7 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
                 if(mAdapter != null){
                     mAdapter.setADData(mAdData);
                 }
+                initAdOver = true;
             }
         }, this, "search_list", false);
     }
@@ -830,37 +825,35 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
             mNetStateTipDialog = new DialogManager(this);
             ViewManager viewManager = new ViewManager(mNetStateTipDialog);
             viewManager.setView(new TitleMessageView(this).setText("非wifi环境，是否使用流量继续观看视频？"))
-                    .setView(new HButtonView(this).setPositiveText("继续播放", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            mNetStateTipDialog.cancel();
-                            if (mAdapter != null) {
-                                RvVericalVideoItemAdapter.ItemViewHolder currentHolder = mAdapter.getCurrentViewHolder();
-                                if (currentHolder != null) {
-                                    int playState = currentHolder.getPlayState();
-                                    switch (playState) {
-                                        case GSYVideoPlayer.CURRENT_STATE_PAUSE:
-                                            currentHolder.resumeVideo();
-                                            break;
-                                        default:
-                                            currentHolder.startVideo();
-                                            break;
-                                    }
-                                }
-                            }
-                            GlobalVariableConfig.shortVideoDetail_netStateTip_dialogEnable = false;
-                        }
-                    }).setNegativeText("退出播放", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            mNetStateTipDialog.cancel();
-                            ShortVideoDetailActivity.this.finish();
-                        }
+                    .setView(new HButtonView(this).setPositiveText("继续播放", v -> {
+                        mNetStateTipDialog.cancel();
+                        playCurrent();
+                        GlobalVariableConfig.shortVideoDetail_netStateTip_dialogEnable = false;
+                    }).setNegativeText("退出播放", v -> {
+                        mNetStateTipDialog.cancel();
+                        ShortVideoDetailActivity.this.finish();
                     }));
             mNetStateTipDialog.setCancelable(false);
             mNetStateTipDialog.createDialog(viewManager);
         }
         mNetStateTipDialog.show();
+    }
+
+    private void playCurrent() {
+        if (mAdapter != null) {
+            RvVericalVideoItemAdapter.ItemViewHolder currentHolder = mAdapter.getCurrentViewHolder();
+            if (currentHolder != null) {
+                int playState = currentHolder.getPlayState();
+                switch (playState) {
+                    case GSYVideoPlayer.CURRENT_STATE_PAUSE:
+                        currentHolder.resumeVideo();
+                        break;
+                    default:
+                        currentHolder.startVideo();
+                        break;
+                }
+            }
+        }
     }
 
     private boolean canShowTipDialog() {

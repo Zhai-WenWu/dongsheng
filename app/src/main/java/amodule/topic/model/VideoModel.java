@@ -3,6 +3,7 @@ package amodule.topic.model;
 import android.text.TextUtils;
 
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * 视频数据
@@ -83,5 +84,26 @@ public class VideoModel {
 
     public boolean isEmpty() {
         return mVideoUrlMap == null || TextUtils.isEmpty(mVideoUrlMap.get("defaultUrl"));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        VideoModel that = (VideoModel) o;
+        return mIsAutoPlay == that.mIsAutoPlay &&
+                Objects.equals(mVideoTime, that.mVideoTime) &&
+                Objects.equals(mVideoW, that.mVideoW) &&
+                Objects.equals(mVideoH, that.mVideoH) &&
+                Objects.equals(mVideoUrlMap, that.mVideoUrlMap) &&
+                Objects.equals(mVideoImg, that.mVideoImg) &&
+                Objects.equals(mVideoGif, that.mVideoGif) &&
+                Objects.equals(mPlayableTime, that.mPlayableTime);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(mIsAutoPlay, mVideoTime, mVideoW, mVideoH, mVideoUrlMap, mVideoImg, mVideoGif, mPlayableTime);
     }
 }

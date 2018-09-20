@@ -27,6 +27,7 @@ import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.tools.FileManager;
+import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.dish.activity.ShortVideoDetailActivity;
 import amodule.dish.video.module.ShortVideoDetailADModule;
@@ -64,6 +65,7 @@ public class ShortVideoADItemView extends BaseItemView implements View.OnClickLi
     private ImageView mGoodImg;
     private TextView mGoodText;
     private TextView mSeeDetailButton;
+    private ImageView madTag;
 
     private ShortVideoDetailADModule mData;//全部
 
@@ -96,6 +98,7 @@ public class ShortVideoADItemView extends BaseItemView implements View.OnClickLi
         mBottomGoodLayout = findViewById(R.id.layout_bottom_good);
         mGoodImg = mBottomGoodLayout.findViewById(R.id.image1);
         mGoodText = mBottomGoodLayout.findViewById(R.id.text1);
+        madTag = findViewById(R.id.view_ad_tag);
 
         initData();
 
@@ -111,7 +114,7 @@ public class ShortVideoADItemView extends BaseItemView implements View.OnClickLi
 
     private void addListener() {
         findViewById(R.id.see_detail_Layout).setOnClickListener(this);
-        findViewById(R.id.view_ad_tag).setOnClickListener(this);
+        madTag.setOnClickListener(this);
         mBackImg.setOnClickListener(this);
         mHeaderImg.setOnClickListener(this);
         mUserName.setOnClickListener(this);
@@ -132,28 +135,39 @@ public class ShortVideoADItemView extends BaseItemView implements View.OnClickLi
                 mOnADShowCallback.onAdShow(this.mData.adRealPosition, this, String.valueOf(this.mData.adRealPosition + 1));
             }
         }
-        //图片动画
-        ObjectAnimator imageAnimX = ObjectAnimator.ofFloat(mThumbImg, "scaleX", 1.5f, 1.0f);
-        imageAnimX.setDuration(2000);
-        ObjectAnimator imageAnimY = ObjectAnimator.ofFloat(mThumbImg, "scaleY", 1.5f, 1.0f);
-        imageAnimY.setDuration(2000);
-        AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.playTogether(imageAnimX, imageAnimY);
-        animatorSet.start();
+        animScale();
         //查看详情动画
         postDelayed(this::anim, 3000);
     }
 
+    private void animScale() {
+        if(animatorSet == null){
+            //图片动画
+            ObjectAnimator imageAnimX = ObjectAnimator.ofFloat(mThumbImg, "scaleX", 1.5f, 1.0f);
+            imageAnimX.setDuration(2000);
+            ObjectAnimator imageAnimY = ObjectAnimator.ofFloat(mThumbImg, "scaleY", 1.5f, 1.0f);
+            imageAnimY.setDuration(2000);
+            animatorSet = new AnimatorSet();
+            animatorSet.playTogether(imageAnimX, imageAnimY);
+        }
+        animatorSet.start();
+    }
+
+    private AnimatorSet animatorSet;
+    ObjectAnimator animator;
+
     private void anim() {
-        ObjectAnimator animator = ObjectAnimator.ofFloat(mSeeDetailButton, "alpha", 0f, 1f);
-        animator.setDuration(300);
-        animator.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-                super.onAnimationStart(animation);
-                mSeeDetailButton.setVisibility(VISIBLE);
-            }
-        });
+        if(animator == null){
+            animator = ObjectAnimator.ofFloat(mSeeDetailButton, "alpha", 0f, 1f);
+            animator.setDuration(300);
+            animator.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+                    super.onAnimationStart(animation);
+                    mSeeDetailButton.setVisibility(VISIBLE);
+                }
+            });
+        }
         animator.start();
     }
 
@@ -166,6 +180,12 @@ public class ShortVideoADItemView extends BaseItemView implements View.OnClickLi
 
     /** 重置数据 */
     public void releaseVideo() {
+        if(animator != null){
+            animator.cancel();
+        }
+        if(animatorSet != null){
+            animatorSet.cancel();
+        }
         mSeeDetailButton.setVisibility(GONE);
         mThumbImg.setScaleX(1.5f);
         mThumbImg.setScaleY(1.5f);
@@ -216,9 +236,13 @@ public class ShortVideoADItemView extends BaseItemView implements View.OnClickLi
 
         if(ADKEY_GDT.equals(mData.adType)){
             //TODO 广点通广告
-
+            madTag.setImageResource(R.drawable.icon_ad_gdt);
+            madTag.getLayoutParams().width = Tools.getDimen(getContext(),R.dimen.dp_53);
+            madTag.getLayoutParams().height = Tools.getDimen(getContext(),R.dimen.dp_20);
         }else {
-
+            madTag.setImageResource(R.drawable.icon_video_ad);
+            madTag.getLayoutParams().width = Tools.getDimen(getContext(),R.dimen.dp_40);
+            madTag.getLayoutParams().height = Tools.getDimen(getContext(),R.dimen.dp_20);
         }
     }
 

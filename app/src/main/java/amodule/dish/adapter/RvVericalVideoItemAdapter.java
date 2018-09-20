@@ -3,6 +3,7 @@ package amodule.dish.adapter;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import com.xiangha.R;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import acore.widget.rvlistview.adapter.BaseAdapter;
 import acore.widget.rvlistview.holder.RvBaseViewHolder;
@@ -20,6 +22,8 @@ import amodule.dish.video.module.ShortVideoDetailModule;
 import amodule.dish.view.ShortVideoADItemView;
 import amodule.dish.view.ShortVideoItemView;
 import third.ad.tools.AdPlayIdConfig;
+
+import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
 
 /**
  * item adapter
@@ -63,10 +67,13 @@ public class RvVericalVideoItemAdapter extends BaseAdapter<ShortVideoDetailModul
     public ShortVideoDetailModule getItem(int position) {
         if (!mADData.isEmpty()) {
             for (int i = 0; i < mADData.size(); i++) {
-                if (mADData.get(i).adPositionInData == position
-                        && !(super.getItem(position) instanceof ShortVideoDetailADModule)) {
-                    mADData.get(i).isGetData = true;
-                    return mADData.get(i);
+                if (mADData.get(i).adPositionInData == position){
+                    if(super.getItem(position) instanceof ShortVideoDetailADModule) {
+                        return super.getItem(position);
+                    }else{
+                        mADData.get(i).isGetData = true;
+                        return mADData.get(i);
+                    }
                 }
             }
             int currentPosition = position;
@@ -83,7 +90,7 @@ public class RvVericalVideoItemAdapter extends BaseAdapter<ShortVideoDetailModul
 
     @Override
     public void onViewRecycled(ItemViewHolder<ShortVideoDetailModule> holder) {
-        holder.stopVideo();
+//        holder.stopVideo();
     }
 
     @Override
@@ -92,10 +99,34 @@ public class RvVericalVideoItemAdapter extends BaseAdapter<ShortVideoDetailModul
     }
 
     @Override
-    public void onBindViewHolder(ItemViewHolder<ShortVideoDetailModule> holder, int position) {
-        super.onBindViewHolder(holder, position);
+    public void onViewAttachedToWindow(ItemViewHolder<ShortVideoDetailModule> holder) {
+        super.onViewAttachedToWindow(holder);
+
     }
 
+    @Override
+    public void onViewDetachedFromWindow(ItemViewHolder<ShortVideoDetailModule> holder) {
+        super.onViewDetachedFromWindow(holder);
+
+        if(mRecyclerView != null && mRecyclerView.getScrollState() == SCROLL_STATE_IDLE){
+//            holder.stopVideo();
+        }else{
+            holder.stopVideo();
+        }
+    }
+    RecyclerView mRecyclerView;
+
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        this.mRecyclerView = recyclerView;
+    }
+
+    @Override
+    public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView);
+        mRecyclerView = null;
+    }
 
     public void setAttentionResultCallback(ShortVideoItemView.AttentionResultCallback attentionResultCallback) {
         mAttentionResultCallback = attentionResultCallback;
@@ -107,17 +138,6 @@ public class RvVericalVideoItemAdapter extends BaseAdapter<ShortVideoDetailModul
 
     public void setOnDeleteCallback(ShortVideoItemView.OnDeleteCallback onDeleteCallback) {
         mOnDeleteCallback = onDeleteCallback;
-    }
-
-    @Override
-    public void onViewAttachedToWindow(ItemViewHolder<ShortVideoDetailModule> holder) {
-        super.onViewAttachedToWindow(holder);
-    }
-
-    @Override
-    public void onViewDetachedFromWindow(ItemViewHolder<ShortVideoDetailModule> holder) {
-        super.onViewDetachedFromWindow(holder);
-        holder.stopVideo();
     }
 
     public class ItemViewHolder<T extends ShortVideoDetailModule> extends RvBaseViewHolder<T>{
