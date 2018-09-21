@@ -462,7 +462,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         if (!TextUtils.isEmpty(title)) {
             mTitleText.setVisibility(View.VISIBLE);
             if (mData.isEssence()) {
-                IconTextSpan.Builder ib = new IconTextSpan.Builder(context);
+                IconTextSpan.Builder ib = new IconTextSpan.Builder();
                 ib.setBgColorInt(getResources().getColor(R.color.color_fa273b));
                 ib.setTextColorInt(getResources().getColor(R.color.c_white_text));
                 ib.setText("精选");
@@ -473,7 +473,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
                 StringBuffer sb = new StringBuffer(" ");
                 sb.append(title);
                 SpannableStringBuilder ssb = new SpannableStringBuilder(sb.toString());
-                ssb.setSpan(ib.build(), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                ssb.setSpan(ib.build(getContext()), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 mTitleText.setText(ssb);
             } else {
                 mTitleText.setText(title);
