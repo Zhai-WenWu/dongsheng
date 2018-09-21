@@ -11,7 +11,6 @@ import android.graphics.Bitmap;
 import android.support.annotation.StringRes;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -28,26 +27,20 @@ import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.tools.FileManager;
 import acore.tools.Tools;
-import acore.tools.ToolsDevice;
 import amodule.dish.activity.ShortVideoDetailActivity;
 import amodule.dish.video.module.ShortVideoDetailADModule;
-import amodule.dish.video.module.ShortVideoDetailModule;
 import amodule.main.view.item.BaseItemView;
 import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
 
 import static third.ad.scrollerAd.XHScrollerAdParent.ADKEY_GDT;
+import static third.ad.scrollerAd.XHScrollerAdParent.TAG_GDT;
 
 /**
  * 短视频itemView
  */
 public class ShortVideoADItemView extends BaseItemView implements View.OnClickListener, SeekBar.OnSeekBarChangeListener {
-
-    private final int FIXED_TEXT_COUNT = 50;
-
-    private int mScreenW, mScreenH;
-    private int mFixedHW;
 
     private Context context;
     private ImageView mThumbImg;
@@ -100,16 +93,7 @@ public class ShortVideoADItemView extends BaseItemView implements View.OnClickLi
         mGoodText = mBottomGoodLayout.findViewById(R.id.text1);
         madTag = findViewById(R.id.view_ad_tag);
 
-        initData();
-
         addListener();
-    }
-
-    private void initData() {
-        DisplayMetrics dm = ToolsDevice.getWindowPx(getContext());
-        mScreenW = dm.widthPixels;
-        mScreenH = dm.heightPixels;
-        mFixedHW = 667 / 375;
     }
 
     private void addListener() {
@@ -235,14 +219,13 @@ public class ShortVideoADItemView extends BaseItemView implements View.OnClickLi
         }
 
         if(ADKEY_GDT.equals(mData.adType)){
-            //TODO 广点通广告
             madTag.setImageResource(R.drawable.icon_ad_gdt);
-            madTag.getLayoutParams().width = Tools.getDimen(getContext(),R.dimen.dp_53);
-            madTag.getLayoutParams().height = Tools.getDimen(getContext(),R.dimen.dp_20);
+            madTag.getLayoutParams().width = Tools.getDimen(getContext(),R.dimen.dp_48);
+            madTag.getLayoutParams().height = Tools.getDimen(getContext(),R.dimen.dp_18);
         }else {
             madTag.setImageResource(R.drawable.icon_video_ad);
-            madTag.getLayoutParams().width = Tools.getDimen(getContext(),R.dimen.dp_40);
-            madTag.getLayoutParams().height = Tools.getDimen(getContext(),R.dimen.dp_20);
+            madTag.getLayoutParams().width = Tools.getDimen(getContext(),R.dimen.dp_36);
+            madTag.getLayoutParams().height = Tools.getDimen(getContext(),R.dimen.dp_18);
         }
     }
 

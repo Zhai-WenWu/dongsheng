@@ -498,7 +498,7 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
                         ShortVideoDetailADModule adModule = new ShortVideoDetailADModule();
                         adModule.adId = adId;
                         adModule.adPositionInData = adPositionMap.get(adId);
-                        adModule.adType = adMap.get("adType");
+                        adModule.adType = adMap.get("type");
                         adModule.adRealPosition = Tools.parseIntOfThrow(adMap.get("index"));
                         //数据
                         adModule.setName(adMap.get("desc"));

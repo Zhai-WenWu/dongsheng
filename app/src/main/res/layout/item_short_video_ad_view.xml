@@ -216,8 +216,8 @@
 
             <ImageView
                 android:id="@+id/view_ad_tag"
-                android:layout_width="@dimen/dp_40"
-                android:layout_height="@dimen/dp_20"
+                android:layout_width="@dimen/dp_36"
+                android:layout_height="@dimen/dp_18"
                 android:layout_marginBottom="@dimen/dp_9"
                 android:src="@drawable/icon_video_ad"
                 app:layout_constraintBottom_toTopOf="@+id/text_title"/>
