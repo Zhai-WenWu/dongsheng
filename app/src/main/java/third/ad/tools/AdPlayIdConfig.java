@@ -105,6 +105,9 @@ public class AdPlayIdConfig {
 
     public static final String FULL_SRCEEN_ACTIVITY = "activity";
 
+    public static final String VIDEO_LIST_1= "sy_sp1";
+    public static final String VIDEO_LIST_2= "sy_sp2";
+
     public static final Map<String,Boolean> isShownAdMap = new HashMap<>();
 
     public static boolean hasShown(String adId){
