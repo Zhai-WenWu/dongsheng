@@ -2,6 +2,7 @@ package amodule.main.view.item;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
 import android.support.constraint.ConstraintLayout;
@@ -26,6 +27,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.Map;
 
+import acore.logic.ActivityMethodManager;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -159,16 +161,23 @@ public class HomeStaggeredGridItem extends HomeItem {
         gifImageView.setVisibility(View.GONE);
         if (!TextUtils.isEmpty(mDataMap.get("parseResourceData_gif"))) {
             gifImageView.setTag(TAG_ID, mDataMap.get("parseResourceData_gif"));
-            handleGif(mDataMap.get("parseResourceData_gif"));
+            if(ActivityMethodManager.isAppShow) {
+                handleGif(mDataMap.get("parseResourceData_gif"));
+            }else {
+                if(gifImageView.getDrawable()!=null){
+                    Drawable drawable=gifImageView.getDrawable();
+                    if(drawable instanceof GifDrawable){
+                        ((GifDrawable)drawable).stop();
+                        ((GifDrawable)drawable).recycle();
+                    }
+                }
+                gifImageView.setImageDrawable(null);
+                gifImageView.setVisibility(View.GONE);
+                handleImg();
+            }
 //            Glide.with(getContext()).load(mDataMap.get("parseResourceData_gif")).asGif().centerCrop().placeholder(R.drawable.i_nopic).diskCacheStrategy(DiskCacheStrategy.SOURCE).into(mImg);
         } else {
-            String img = mDataMap.get("parseResourceData_img");
-            mImg.setTag(TAG_ID, img);
-            mImg.setImageResource(R.drawable.i_nopic);
-            BitmapRequestBuilder builder = LoadImage.with(getContext()).load(img).setSaveType(FileManager.save_cache).setPlaceholderId(R.drawable.i_nopic).setErrorId(R.drawable.i_nopic).build();
-            if (builder != null) {
-                builder.into(mImg);
-            }
+            handleImg();
         }
         mTitle.setText("");
         String title = mDataMap.get("name");
@@ -217,6 +226,15 @@ public class HomeStaggeredGridItem extends HomeItem {
     private void setImgFav(){
         img_fav.setImageResource("2".equals(mDataMap.get("isFavorites"))?R.drawable.icon_home_good_selected:R.drawable.icon_home_good_def);
     }
+    private void handleImg(){
+        String img = mDataMap.get("parseResourceData_img");
+        mImg.setTag(TAG_ID, img);
+        mImg.setImageResource(R.drawable.i_nopic);
+        BitmapRequestBuilder builder = LoadImage.with(getContext()).load(img).setSaveType(FileManager.save_cache).setPlaceholderId(R.drawable.i_nopic).setErrorId(R.drawable.i_nopic).build();
+        if (builder != null) {
+            builder.into(mImg);
+        }
+    }
 
     public ConstraintLayout getContentLayout() {
         return mContentLayout;
@@ -258,6 +276,7 @@ public class HomeStaggeredGridItem extends HomeItem {
     private void showGitImage(String path){
         if(!TextUtils.isEmpty(path)){
             try {
+                gifImageView.setDrawingCacheEnabled(true);
                 gifImageView.setVisibility(View.VISIBLE);
                 GifDrawable gifDrawable = new GifDrawable(path);
                 gifImageView.setImageDrawable(gifDrawable);

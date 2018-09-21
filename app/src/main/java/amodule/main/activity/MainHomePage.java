@@ -454,4 +454,11 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
             }
         }
     }
+
+    /**
+     * 隐藏gif
+     */
+    public void handleNoGif(){
+        mHomeAdapter.notifyDataSetChanged();
+    }
 }

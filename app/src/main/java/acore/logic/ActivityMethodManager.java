@@ -40,6 +40,7 @@ public class ActivityMethodManager {
     private HomeKeyListener mHomeWatcher;
     private ArrayList<IAutoRefresh> mAdControls = new ArrayList<>();
     private long lastOnResumeTime,intervalOnResumeTime;
+    public static boolean isAppShow=false;
 
     public ActivityMethodManager(Activity mAct) {
         this.mAct = mAct;
@@ -190,6 +191,12 @@ public class ActivityMethodManager {
                     Log.i("zhangyujian","onHomePressed");
                         FileManager.saveShared(mAct, FileManager.xmlFile_appInfo, "switchTime", String.valueOf(System.currentTimeMillis()));
                         WelcomeAdTools.getInstance().handlerAdData(true);
+                    }
+                    if(ActivityMethodManager.isAppShow) {
+                        ActivityMethodManager.isAppShow = false;
+                        if(Main.allMain!=null&&Main.allMain.allTab.get(MainHomePage.KEY)!=null){
+                            ((MainHomePage)Main.allMain.allTab.get(MainHomePage.KEY)).handleNoGif();
+                        }
                     }
                 }
 
