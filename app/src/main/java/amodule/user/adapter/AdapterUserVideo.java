@@ -1,16 +1,30 @@
 package amodule.user.adapter;
 
 import android.app.Activity;
+import android.graphics.Color;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.xiangha.R;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import acore.override.adapter.AdapterSimple;
+import acore.widget.TagTextView;
 import amodule.user.view.UserHomeItem;
 import amodule.user.view.UserHomeTxtItem;
 import amodule.user.view.UserHomeVideoItem;
+import amodule.user.view.UserHomeViewRow;
+
+import static amodule.dish.db.UploadDishData.UPLOAD_DRAF;
+import static amodule.dish.db.UploadDishData.UPLOAD_FAIL;
 
 /**
  * 我的页面：视频
@@ -27,49 +41,67 @@ public class AdapterUserVideo extends AdapterSimple {
     }
 
     @Override
+    public int getCount() {
+        return mData.size() / 3 + (mData.size() % 3 > 0 ? 1 : 0);
+    }
+
+    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder = null;
+        ViewHolder holder;
         if (convertView == null || convertView.getTag() == null) {
-            convertView = new UserHomeVideoItem(mContext);
-            holder = new ViewHolder((UserHomeVideoItem) convertView);
+            convertView = new UserHomeViewRow(mContext);
+            holder = new ViewHolder((UserHomeViewRow) convertView);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        holder.setData(mData.get(position), position);
+        List<Map<String, String>> listData = new ArrayList<>();
+        int targetLength = (position + 1) * 3;
+        int length = targetLength <= mData.size() ? targetLength : mData.size();
+        int dataPosition = position * 3;
+        for (int i = position * 3; i < length; i++) {
+            listData.add(mData.get(i));
+        }
+        holder.setData(listData, dataPosition);
         return convertView;
     }
 
     public class ViewHolder {
-        UserHomeVideoItem itemView;
+        UserHomeViewRow itemView;
 
-        public ViewHolder(UserHomeVideoItem view) {
+        public ViewHolder(UserHomeViewRow view) {
             this.itemView = view;
-            if (itemView != null){
-                itemView.setOnItemClickListener((itemView, dataMap) -> {
-                    if (mOnItemClickListener != null)
-                        mOnItemClickListener.onItemClick(itemView, dataMap);
-                });
-                itemView.setDeleteClickListener(data -> {
-                    if(mOnDeleteClickCallback != null){
-                        mOnDeleteClickCallback.onDeleteClick(data);
-                    }
-                });
-            }
-
         }
 
-        public void setData(final Map<String, String> map, int position) {
-            itemView.setData(map, position);
+        public void setData(final List<Map<String, String>> list, int position) {
+            itemView.setCreateViewCallback(new UserHomeViewRow.CreateViewCallback() {
+                @Override
+                public View createView() {
+                    UserHomeVideoItem view = new UserHomeVideoItem(mContext);
+                    view.setOnItemClickListener(mOnItemClickListener);
+                    view.setDeleteClickListener(mOnDeleteClickCallback);
+                    return view;
+                }
+
+                @Override
+                public void bindData(View view, Map<String, String> data) {
+                    if (view != null && view instanceof UserHomeVideoItem) {
+                        ((UserHomeVideoItem) view).setData(data,itemView.getRowPosition() + position);
+                    }
+                }
+            });
+            itemView.setData(list,position);
         }
     }
 
     private UserHomeItem.OnItemClickListener mOnItemClickListener;
+
     public void setOnItemClickListener(UserHomeItem.OnItemClickListener clickListener) {
         this.mOnItemClickListener = clickListener;
     }
 
-    private UserHomeTxtItem.OnDeleteClickCallback mOnDeleteClickCallback;
+    private UserHomeItem.OnDeleteClickCallback mOnDeleteClickCallback;
+
     public void setOnDeleteClickCallback(UserHomeTxtItem.OnDeleteClickCallback onDeleteClickCallback) {
         mOnDeleteClickCallback = onDeleteClickCallback;
     }

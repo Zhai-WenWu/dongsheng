@@ -108,6 +108,8 @@
         <attr name="sideDashGap" format="dimension"/>
         <attr name="sideColor" format="color"/>
         <attr name="backgroundColor" format="color"/>
+        <attr name="drawableLeftWidth" format="dimension"/>
+        <attr name="drawableLeftHeight" format="dimension"/>
     </declare-styleable>
 
     <declare-styleable name="MultiTagView">

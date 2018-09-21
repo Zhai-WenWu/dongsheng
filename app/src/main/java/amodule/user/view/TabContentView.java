@@ -30,6 +30,10 @@ public abstract class TabContentView implements TabContentFactory{
 	 */
 	public abstract void initLoad();
 
+	public void refresh(){
+		initLoad();
+	}
+
 	public void setDataMap(Map<String, String> dataMap) {
 		mDataMap = dataMap;
 	}

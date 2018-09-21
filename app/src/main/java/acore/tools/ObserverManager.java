@@ -26,6 +26,7 @@ public class ObserverManager {
     public static final String NOTIFY_YIYUAN_BIND = "notify_yiyuan_bind";
     public static final String NOTIFY_VIPSTATE_CHANGED = "notify_vipstate_changed";
     public static final String NOTIFY_LESSON_VIPBUTTON = "notify_lesson_vipbutton";
+    public static final String NOTIFY_SAVE_VIDEO_DRAF = "save_video_draf";
 
     private static volatile ObserverManager mObserverManager;
     private HashMap<String, ArrayList<IObserver>> mObservers;

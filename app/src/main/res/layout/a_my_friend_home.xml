@@ -58,7 +58,7 @@
             android:id="@+id/a_user_home_float_title_view"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_10"
-            android:background="#000000"/>
+            android:background="#f7f7f7"/>
 
         <LinearLayout
             android:id="@+id/tab_float_mainMyself"
