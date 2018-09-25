@@ -151,6 +151,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
     private int position;
 
     private Handler mMainHandler;
+    private boolean isCompleteCallback=true;
 
     public ShortVideoItemView(Context context) {
         this(context,null);
@@ -278,7 +279,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
             public void onAutoComplete(String url, Object... objects) {
                 mInnerPlayState = INNER_PLAY_STATE_AUTO_COMPLETE;
                 changeThumbImageState(true);
-                if( playCompleteCallBack != null && position >= 0){
+                if( isCompleteCallback&&playCompleteCallBack != null && position >= 0){
                     playCompleteCallBack.videoComplete(position);
                 }
                 if (mRepeatEnable) {
@@ -616,10 +617,12 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
             @Override
             public void onDismiss(DialogInterface dialog) {
                 mSendText = keyboardDialog.getText();
+                isCompleteCallback=true;
             }
         });
         keyboardDialog.setContentStr(mSendText);
         keyboardDialog.show();
+        isCompleteCallback=false;
     }
 
     private void showComments() {
@@ -679,6 +682,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
                 @Override
                 public void onDismiss(DialogInterface dialog) {
                     mCommentDialog = null;
+                    isCompleteCallback=true;
                 }
             });
             mCommentDialog.setOnCommentTextUpdateListener(new CommentDialog.OnCommentTextUpdateListener() {
@@ -692,6 +696,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
             return;
         mCommentDialog.setCommentText(mSendText);
         mCommentDialog.show();
+        isCompleteCallback=false;
     }
 
     private void closeActivity() {
