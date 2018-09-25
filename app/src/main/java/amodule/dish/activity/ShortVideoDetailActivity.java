@@ -72,8 +72,8 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
     public static final String STA_ID = "a_video_details";
     //TODO 广告id
     public static final String[] AD_IDS = new String[]{
-            AdPlayIdConfig.SEARCH_LIST_1,
-            AdPlayIdConfig.SEARCH_LIST_2
+            AdPlayIdConfig.VIDEO_LIST_1,
+            AdPlayIdConfig.VIDEO_LIST_2
     };
 
     private final int UP_SCROLL = 1;
@@ -477,7 +477,7 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
     private void initAd() {
         final ArrayList<String> adIdList = new ArrayList<>();
         Collections.addAll(adIdList, AD_IDS);
-        int[] adPositionArr = {3, 9};
+        int[] adPositionArr = {3, 14};
         Map<String, Integer> adPositionMap = new HashMap<>();
         for (int i = 0, length = Math.min(adPositionArr.length, adIdList.size()); i < length; i++) {
             adPositionMap.put(adIdList.get(i),adPositionArr[i]);
@@ -498,6 +498,7 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
                         ShortVideoDetailADModule adModule = new ShortVideoDetailADModule();
                         adModule.adId = adId;
                         adModule.adPositionInData = adPositionMap.get(adId);
+                        
                         adModule.adType = adMap.get("type");
                         adModule.adRealPosition = Tools.parseIntOfThrow(adMap.get("index"));
                         //数据

@@ -402,6 +402,7 @@
                 android:gravity="center"
                 android:background="#4e4e4e"
                 android:text="查看详情"
+                android:visibility="gone"
                 android:textColor="#9A9A9A"
                 android:textSize="@dimen/sp_16"/>
 
@@ -411,7 +412,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:background="#FA273B"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:text="查看详情"
                 android:textColor="#FFFFFF"
                 android:textSize="@dimen/sp_16"/>

@@ -105,9 +105,9 @@ public class ShortVideoADItemView extends BaseItemView implements View.OnClickLi
         mLikeImg.setOnClickListener(this);
         mTitleText.setOnClickListener(this);
         mEmptyView.setOnClickListener(this);
-        mBottomCommentLayout.setOnClickListener(this);
-        mBottomGoodLayout.setOnClickListener(this);
-        mBottomShareLayout.setOnClickListener(this);
+//        mBottomCommentLayout.setOnClickListener(this);
+//        mBottomGoodLayout.setOnClickListener(this);
+//        mBottomShareLayout.setOnClickListener(this);
     }
 
     /** 开始播放入口 */
@@ -121,7 +121,7 @@ public class ShortVideoADItemView extends BaseItemView implements View.OnClickLi
         }
         animScale();
         //查看详情动画
-        postDelayed(this::anim, 3000);
+//        postDelayed(this::anim, 3000);
     }
 
     private void animScale() {
