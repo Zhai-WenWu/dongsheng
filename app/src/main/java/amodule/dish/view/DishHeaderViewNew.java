@@ -170,9 +170,9 @@ public class DishHeaderViewNew extends LinearLayout {
 //        try {
             String selfVideo = videoMap.get("video");
             String img = videoMap.get("img");
-            if(!TextUtils.isEmpty(oneImgUrl)){
-                img = oneImgUrl;
-            }
+//            if(!TextUtils.isEmpty(oneImgUrl)){
+//                img = oneImgUrl;
+//            }
             String type = videoMap.get("type");
             if(isAutoPaly)isAutoPaly = "2".equals(videoMap.get("isAutoPlay"));
 
