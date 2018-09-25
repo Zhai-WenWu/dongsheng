@@ -806,7 +806,11 @@ public class ToolsDevice {
         TimeZone tz = TimeZone.getDefault();
         String strTz = tz.getDisplayName(false, TimeZone.SHORT);
         return strTz;
+    }
 
+    public static int getCurrentTimeZoneInt(){
+        int offsetHour = TimeZone.getDefault().getRawOffset() / 3600000;
+        return offsetHour;
     }
 
 

@@ -165,6 +165,8 @@ public class FileManager extends UtilFile{
 	public static final String key_header_mode = "header_mode";
 	public static final String video_corp_show_hint = "videoCorp_show_hint";
 
+	public static final String xmlKey_device_statistics = "deviceStatistics";
+
 	public static String getSDLongDir(){
 		return getSDDir()+save_long+"/";
 	}

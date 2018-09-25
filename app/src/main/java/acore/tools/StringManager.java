@@ -307,6 +307,7 @@ public class StringManager extends UtilString {
     public final static String API_STATISTIC_S6 = "https://stat.xiangha.com/s6.gif"; //新首页统计
     public final static String API_STATISTIC_S7 = "https://stat.xiangha.com/s7.gif"; //页面统计时间
     public final static String API_STATISTIC_S8 = "https://stat.xiangha.com/s8.gif"; //页面统计时间
+    public final static String API_STATISTIC_S9 = "https://stat.xiangha.com/s9.gif"; //页面统计时间
 
     /*文章*/
     public final static String api_getArticleClass = apiUrl + "main7/article/getArticleClass"; //文章分类
