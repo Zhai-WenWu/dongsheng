@@ -23,8 +23,8 @@ public class ViewHolder3 extends XHBaseRvViewHolder {
     private ImageView mImageView1;
     private TextView mTextView1;
     private TextView mTextView2;
-    public ViewHolder3(@NonNull View itemView) {
-        super(itemView);
+    public ViewHolder3(@NonNull View itemView,View parent) {
+        super(itemView,parent);
         mItemView = itemView;
         if (mItemView == null)
             return;

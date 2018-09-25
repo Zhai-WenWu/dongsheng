@@ -16,11 +16,14 @@ import java.util.Map;
 
 import acore.logic.MessageTipController;
 import acore.logic.XHClick;
+import acore.logic.stat.intefaces.OnClickListenerStat;
 import amodule._common.utility.WidgetUtility;
 import amodule.main.StatisticData;
 import amodule.main.delegate.ISetMessageTip;
 import amodule.main.delegate.IStatistics;
 import amodule.user.activity.MyMessage;
+
+import static acore.logic.stat.StatConf.STAT_TAG;
 
 /**
  * Description :
@@ -28,7 +31,7 @@ import amodule.user.activity.MyMessage;
  * Created by mrtrying on 2018/1/5 11:18:36.
  * e_mail : ztanzeyu@gmail.com
  */
-public class MessageTipIcon extends RelativeLayout implements ISetMessageTip, View.OnClickListener, IStatistics{
+public class MessageTipIcon extends RelativeLayout implements ISetMessageTip, IStatistics{
 
     private TextView tipLessTen, tipMore;
 
@@ -53,8 +56,20 @@ public class MessageTipIcon extends RelativeLayout implements ISetMessageTip, Vi
         LayoutInflater.from(getContext()).inflate(R.layout.message_tip_icon_layout, this);
         tipLessTen = (TextView) findViewById(R.id.tv_tab_msg_num);
         tipMore = (TextView) findViewById(R.id.tv_tab_msg_tow_num);
-
-        setOnClickListener(this);
+        setTag(STAT_TAG,"消息");
+        setOnClickListener(new OnClickListenerStat() {
+            @Override
+            public void onClicked(View v) {
+                getContext().startActivity(new Intent(getContext(), MyMessage.class));
+                MessageTipController.newInstance().setQuanMessage(0);
+                setMessage(MessageTipController.newInstance().getMessageNum());
+                if (mStatisticMap != null && mStatisticMap.containsKey(type_click)){
+                    StatisticData data = mStatisticMap.get(type_click);
+                    if (data != null && !data.isEmpty())
+                        XHClick.mapStat(getContext(), data.getId(), data.getContentTwo(), data.getContentThree());
+                }
+            }
+        });
     }
 
     public void setMessage(int messgeTip) {
@@ -72,18 +87,6 @@ public class MessageTipIcon extends RelativeLayout implements ISetMessageTip, Vi
     @Override
     public void setMessageTip(int tipCourn) {
         setMessage(tipCourn);
-    }
-
-    @Override
-    public void onClick(View v) {
-        getContext().startActivity(new Intent(getContext(), MyMessage.class));
-        MessageTipController.newInstance().setQuanMessage(0);
-        setMessage(MessageTipController.newInstance().getMessageNum());
-        if (mStatisticMap != null && mStatisticMap.containsKey(type_click)){
-            StatisticData data = mStatisticMap.get(type_click);
-            if (data != null && !data.isEmpty())
-                XHClick.mapStat(getContext(), data.getId(), data.getContentTwo(), data.getContentThree());
-        }
     }
 
     @Override

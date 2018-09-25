@@ -29,6 +29,7 @@ import java.util.Map;
 
 import acore.logic.AppCommon;
 import acore.logic.XHClick;
+import acore.logic.stat.StatisticsManager;
 import acore.override.helper.XHActivityManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -40,6 +41,7 @@ import amodule._common.delegate.IHandlerClickEvent;
 import amodule._common.delegate.ISaveStatistic;
 import amodule._common.delegate.ISetAdController;
 import amodule._common.delegate.ISetAdID;
+import amodule._common.delegate.ISetIsCache;
 import amodule._common.delegate.ISetShowIndex;
 import amodule._common.delegate.ISetStatisticPage;
 import amodule._common.delegate.IStatictusData;
@@ -51,6 +53,8 @@ import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
 import third.ad.scrollerAd.XHAllAdControl;
 
+import static acore.logic.stat.StatisticsManager.STAT_DATA;
+
 /**
  * Description :
  * PackageName : amodule._common.widget
@@ -60,7 +64,7 @@ import third.ad.scrollerAd.XHAllAdControl;
  */
 
 public class BannerView extends Banner implements IBindMap, IStatictusData, ISaveStatistic, IHandlerClickEvent,ISetAdID
-        ,IStatisticCallback,ISetStatisticPage, ISetAdController, ISetShowIndex, IUpdatePadding {
+        ,IStatisticCallback,ISetStatisticPage, ISetAdController, ISetShowIndex, IUpdatePadding ,ISetIsCache{
     protected LayoutInflater mInflater;
     private ArrayList<String> mAdIDArray = new ArrayList<>();
     protected int showMinH, showMaxH;
@@ -70,6 +74,7 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
     protected int imageHeight = 0, imageWidth = 0, contentHeight, contentWidth = ViewGroup.LayoutParams.MATCH_PARENT;
     private StatisticCallback mStatisticCallback;
     protected int mShowIndex = -1;
+    protected boolean isCache;
 
     protected int mFixedPadding;
 
@@ -152,6 +157,7 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
                         "click", "", "", "", "", "");
             }
             statistic(position);
+            StatisticsManager.listClick(getContext().getClass().getSimpleName(),"Banner",String.valueOf(position + 1),"",dataMapTemp.get(STAT_DATA));
         });
 
         int paddingTop = computeTopPadding();
@@ -448,5 +454,10 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
     @Override
     public void updatePadding(int l, int t, int r, int b) {
         setPadding(l, t, r, b);
+    }
+
+    @Override
+    public void setCache(boolean isCache) {
+        this.isCache = isCache;
     }
 }

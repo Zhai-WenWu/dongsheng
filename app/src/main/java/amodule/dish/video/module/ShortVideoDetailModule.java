@@ -24,6 +24,7 @@ public class ShortVideoDetailModule {
     private TopicModel mTopicModel;
     private AddressModel mAddressModel;
     private amodule.dish.video.module.ShareModule mShareModule;
+    private String statJson;
 
     public String getCode() {
         return mCode;
@@ -151,5 +152,13 @@ public class ShortVideoDetailModule {
 
     public void setShareModule(ShareModule shareModule) {
         mShareModule = shareModule;
+    }
+
+    public void setStatJson(String statJson) {
+        this.statJson = statJson;
+    }
+
+    public String getStatJson() {
+        return statJson;
     }
 }

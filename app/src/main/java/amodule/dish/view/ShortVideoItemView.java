@@ -46,6 +46,8 @@ import acore.logic.AppCommon;
 import acore.logic.FavoriteHelper;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
+import acore.logic.stat.StatisticsManager;
+import acore.logic.stat.intefaces.OnClickListenerStat;
 import acore.override.helper.XHActivityManager;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
@@ -76,10 +78,13 @@ import aplug.basic.SubBitmapTarget;
 import aplug.player.ShortVideoPlayer;
 import third.share.activity.ShareActivityDialog;
 
+import static acore.logic.stat.StatConf.STAT_TAG;
+import static acore.logic.stat.StatisticsManager.STAT_DATA;
+
 /**
  * 短视频itemView
  */
-public class ShortVideoItemView extends BaseItemView implements View.OnClickListener, SeekBar.OnSeekBarChangeListener{
+public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBarChangeListener{
     private static final int INNER_PLAY_STATE_START = 1;
     private static final int INNER_PLAY_STATE_PLAYING = 2;
     private static final int INNER_PLAY_STATE_PAUSE = 3;
@@ -148,6 +153,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
     private OnPlayPauseClickListener mOnPlayPauseListener;
     private OnSeekBarTrackingTouchListener mOnSeekBarTrackingTouchListener;
     private int position;
+    private int playNum = 0;//播放数量
 
     private Handler mMainHandler;
 
@@ -214,19 +220,33 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
     }
 
     private void addListener() {
-        mBackImg.setOnClickListener(this);
-        mHeaderImg.setOnClickListener(this);
-        mUserName.setOnClickListener(this);
-        mAttentionImage.setOnClickListener(this);
-        mLikeImg.setOnClickListener(this);
-        mMoreImg.setOnClickListener(this);
-        mEmptyView.setOnClickListener(this);
-        mBottomCommentLayout.setOnClickListener(this);
-        mBottomGoodLayout.setOnClickListener(this);
-        mBottomShareLayout.setOnClickListener(this);
-        mBottomLayout.setOnClickListener(this);
-        mLayoutTopic.setOnClickListener(this);
-        mLayoutAddress.setOnClickListener(this);
+        mBackImg.setTag(STAT_TAG,"返回");
+        mBackImg.setOnClickListener(mOnClickListenerStat);
+        mHeaderImg.setTag(STAT_TAG,"用户头像");
+        mHeaderImg.setOnClickListener(mOnClickListenerStat);
+        mUserName.setTag(STAT_TAG,"用户昵称");
+        mUserName.setOnClickListener(mOnClickListenerStat);
+        mAttentionImage.setTag(STAT_TAG,"关注");
+        mAttentionImage.setOnClickListener(mOnClickListenerStat);
+        mLikeImg.setTag(STAT_TAG,"收藏");
+        mLikeImg.setOnClickListener(mOnClickListenerStat);
+        mMoreImg.setTag(STAT_TAG,"更多");
+        mMoreImg.setOnClickListener(mOnClickListenerStat);
+
+        mEmptyView.setOnClickListener(mOnClickListenerStat);
+
+        mBottomCommentLayout.setTag(STAT_TAG,"评论");
+        mBottomCommentLayout.setOnClickListener(mOnClickListenerStat);
+        mBottomGoodLayout.setTag(STAT_TAG,"点赞");
+        mBottomGoodLayout.setOnClickListener(mOnClickListenerStat);
+        mBottomShareLayout.setTag(STAT_TAG,"分享");
+        mBottomShareLayout.setOnClickListener(mOnClickListenerStat);
+
+        mBottomLayout.setOnClickListener(mOnClickListenerStat);
+        mLayoutTopic.setTag(STAT_TAG,"话题");
+        mLayoutTopic.setOnClickListener(mOnClickListenerStat);
+        mLayoutAddress.setTag(STAT_TAG,"地址");
+        mLayoutAddress.setOnClickListener(mOnClickListenerStat);
 
         mPlayerView.setStandardVideoAllCallBack(new StandardVideoAllCallBack() {
             @Override
@@ -277,6 +297,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
             public void onAutoComplete(String url, Object... objects) {
                 mInnerPlayState = INNER_PLAY_STATE_AUTO_COMPLETE;
                 changeThumbImageState(true);
+                playNum++;
                 if (mRepeatEnable) {
                     prepareAsync();
                 }
@@ -374,10 +395,23 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         mPlayerView.changePlayBtnState(true);
     }
 
+    private void statisticsVideoView() {
+        try{
+            String tag = getTag(STAT_TAG) != null ? (String) getTag(STAT_TAG) :getClass().getSimpleName();
+            float duration = mPlayerView.getDuration();
+            float tmelp = mPlayerView.getCurrentPositionWhenPlaying() / duration + playNum;
+            StatisticsManager.videoView(getContext().getClass().getSimpleName(),tag,String.valueOf(position + 1),
+                    String.format("%.2f",tmelp),mData.getStatJson());
+        }catch (Exception e){
+
+        }
+    }
+
     /**
      * 重置数据
      */
     public void releaseVideo(){
+        statisticsVideoView();
         mInnerPlayState = INNER_PLAY_STATE_STOP;
         mPlayerView.release();
         mPlayerView.changePlayBtnState(false);
@@ -400,6 +434,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         if (mData == null)
             return;
         this.position = position;
+        playNum=0;
         mUserName.setText(mData.getCustomerModel().getNickName());
         mIsSelf = TextUtils.equals(LoginManager.userInfo.get("code"), mData.getCustomerModel().getUserCode());
         if (mIsSelf) {
@@ -541,59 +576,61 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
                 });
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.layout_address:
-                if (!TextUtils.isEmpty(mAddressClickUrl)) {
-                    AppCommon.openUrl(mAddressClickUrl, true);
-                    XHClick.mapStat(getContext(), ShortVideoDetailActivity.STA_ID, "位置点击量", "");
-                }
-                break;
-            case R.id.layout_topic:
-                if (!TextUtils.isEmpty(mTopicClickUrl)) {
-                    AppCommon.openUrl(mTopicClickUrl, true);
-                    XHClick.mapStat(getContext(), ShortVideoDetailActivity.STA_ID, "话题点击量", "");
-                }
-                break;
-            case R.id.image_back:
-                closeActivity();
-                XHClick.mapStat(getContext(), ShortVideoDetailActivity.STA_ID, "返回", "");
-                break;
-            case R.id.image_user_header:
-            case R.id.text_user_name:
-                gotoUser();
-                break;
-            case R.id.img_attention:
-                attention();
-                break;
-            case R.id.image_like:
-                doFavorite();
-                break;
-            case R.id.image_more:
-                showBottomDialog();
-                break;
-            case R.id.view_empty:
-                handlePlay();
-                break;
-            case R.id.layout_bottom_share:
-                doShare();
-                XHClick.mapStat(getContext(), ShortVideoDetailActivity.STA_ID, "分享", "");
-                break;
-            case R.id.layout_bottom_good:
-                doGood();
-                XHClick.mapStat(getContext(), ShortVideoDetailActivity.STA_ID, "点赞", "");
-                break;
-            case R.id.layout_bottom_comment:
-                showComments();
-                XHClick.mapStat(getContext(), ShortVideoDetailActivity.STA_ID, "评论", "评论按钮点击量");
-                break;
-            case R.id.layout_bottom_info:
-                showCommentEdit();
-                XHClick.mapStat(getContext(), ShortVideoDetailActivity.STA_ID, "评论", "说点什么点击量");
-                break;
+    OnClickListenerStat mOnClickListenerStat = new OnClickListenerStat(this) {
+        @Override
+        public void onClicked(View v) {
+            switch (v.getId()) {
+                case R.id.layout_address:
+                    if (!TextUtils.isEmpty(mAddressClickUrl)) {
+                        AppCommon.openUrl(mAddressClickUrl, true);
+                        XHClick.mapStat(getContext(), ShortVideoDetailActivity.STA_ID, "位置点击量", "");
+                    }
+                    break;
+                case R.id.layout_topic:
+                    if (!TextUtils.isEmpty(mTopicClickUrl)) {
+                        AppCommon.openUrl(mTopicClickUrl, true);
+                        XHClick.mapStat(getContext(), ShortVideoDetailActivity.STA_ID, "话题点击量", "");
+                    }
+                    break;
+                case R.id.image_back:
+                    closeActivity();
+                    XHClick.mapStat(getContext(), ShortVideoDetailActivity.STA_ID, "返回", "");
+                    break;
+                case R.id.image_user_header:
+                case R.id.text_user_name:
+                    gotoUser();
+                    break;
+                case R.id.img_attention:
+                    attention();
+                    break;
+                case R.id.image_like:
+                    doFavorite();
+                    break;
+                case R.id.image_more:
+                    showBottomDialog();
+                    break;
+                case R.id.view_empty:
+                    handlePlay();
+                    break;
+                case R.id.layout_bottom_share:
+                    doShare();
+                    XHClick.mapStat(getContext(), ShortVideoDetailActivity.STA_ID, "分享", "");
+                    break;
+                case R.id.layout_bottom_good:
+                    doGood();
+                    XHClick.mapStat(getContext(), ShortVideoDetailActivity.STA_ID, "点赞", "");
+                    break;
+                case R.id.layout_bottom_comment:
+                    showComments();
+                    XHClick.mapStat(getContext(), ShortVideoDetailActivity.STA_ID, "评论", "评论按钮点击量");
+                    break;
+                case R.id.layout_bottom_info:
+                    showCommentEdit();
+                    XHClick.mapStat(getContext(), ShortVideoDetailActivity.STA_ID, "评论", "说点什么点击量");
+                    break;
+            }
         }
-    }
+    };
 
     private void showCommentEdit() {
         KeyboardDialog keyboardDialog = new KeyboardDialog(getContext());

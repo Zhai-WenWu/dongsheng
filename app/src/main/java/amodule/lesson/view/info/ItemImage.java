@@ -154,7 +154,7 @@ public class ItemImage extends LinearLayout implements IBindMap, IBindExtraArray
     @Override
     public void setExtraData(List<Map<String, String>> array) {
         if (mBottomExtraLayout != null) {
-            mBottomExtraLayout.setData(array, true);
+            mBottomExtraLayout.setData(array, true,false);
         }
     }
 

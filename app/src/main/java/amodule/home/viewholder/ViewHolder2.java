@@ -37,8 +37,8 @@ public class ViewHolder2 extends XHBaseRvViewHolder {
     private TextView mTextView4;
     private LinearLayout mLinearlayout1;
 
-    public ViewHolder2(@NonNull View itemView) {
-        super(itemView);
+    public ViewHolder2(@NonNull View itemView,View parent) {
+        super(itemView,parent);
         mItemView = itemView;
         if (mItemView == null)
             return;

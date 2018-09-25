@@ -20,6 +20,7 @@ import amodule.home.viewholder.ViewHolder1;
 
 public class HorizontalAdapter1 extends RvBaseAdapter<Map<String, String>> {
     private List<Map<String, String>> mDatas;
+    private boolean isCache;
     public HorizontalAdapter1(Context context, @Nullable List<Map<String, String>> data) {
         super(context, data);
         mDatas = data;
@@ -27,7 +28,12 @@ public class HorizontalAdapter1 extends RvBaseAdapter<Map<String, String>> {
 
     @Override
     public RvBaseViewHolder<Map<String, String>> onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder1(LayoutInflater.from(mContext).inflate(R.layout.recyclerview_item1, null));
+        return new ViewHolder1(LayoutInflater.from(mContext).inflate(R.layout.recyclerview_item1, null),parent){
+            @Override
+            public boolean canStat() {
+                return !isCache;
+            }
+        };
     }
 
     @Override
@@ -40,5 +46,9 @@ public class HorizontalAdapter1 extends RvBaseAdapter<Map<String, String>> {
     @Override
     public int getItemViewType(int position) {
         return 0;
+    }
+
+    public void setCache(boolean cache) {
+        isCache = cache;
     }
 }

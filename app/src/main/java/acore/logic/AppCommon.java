@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import acore.logic.stat.intefaces.OnClickListenerStat;
 import acore.override.XHApplication;
 import acore.override.activity.base.WebActivity;
 import acore.override.activity.mian.MainBaseActivity;
@@ -56,6 +57,7 @@ import xh.basic.tool.UtilString;
 import xh.windowview.BottomDialog;
 
 import static acore.logic.ConfigMannager.KEY_RANDPROMOTIONNEW;
+import static acore.logic.stat.StatConf.STAT_TAG;
 import static xh.basic.tool.UtilFile.readFile;
 import static xh.basic.tool.UtilFile.readFileBuffer;
 import static xh.basic.tool.UtilString.getListMapByJson;
@@ -787,9 +789,10 @@ public class AppCommon {
         } else {
             vipView.setVisibility(View.GONE);
         }
-        vipView.setOnClickListener(new View.OnClickListener() {
+        vipView.setTag(STAT_TAG,"VIP按钮");
+        vipView.setOnClickListener(new OnClickListenerStat() {
             @Override
-            public void onClick(View v) {
+            public void onClicked(View v) {
                 if (!TextUtils.isEmpty(eventId))
                     XHClick.mapStat(act, eventId, twoLevel, TextUtils.isEmpty(threadLevel) ? "会员皇冠" : threadLevel);
                 if (listener != null) listener.onClick(v);
@@ -848,9 +851,10 @@ public class AppCommon {
 
     public static void setAdHintClick(final Activity act, View adHintView, final XHAllAdControl xhAllAdControl, final int index, final String listIndex,
                                       final String eventID, final String twoLevel) {
-        adHintView.setOnClickListener(new View.OnClickListener() {
+        adHintView.setTag(STAT_TAG,"广告标签");
+        adHintView.setOnClickListener(new OnClickListenerStat() {
             @Override
-            public void onClick(View v) {
+            public void onClicked(View v) {
                 onAdHintClick(act, xhAllAdControl, index, listIndex, eventID, twoLevel);
             }
         });

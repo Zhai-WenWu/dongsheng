@@ -39,8 +39,8 @@ import third.location.LocationHelper;
  */
 public class StatisticsManager {
     public static final String TAG = "Unburied";
-    public static final String STAT_DATA = "statData";
-    public static final String IS_STAT = "isShow";
+    public static final String STAT_DATA = "statJson";
+    public static final String IS_STAT = "_isStatShow";
     public static final String TRUE_VALUE = "2";
     public static final String EVENT_STAY = "stay";
     public static final String EVENT_LIST_SHOW = "show";
@@ -105,7 +105,7 @@ public class StatisticsManager {
      * @param pos
      * @param s1
      */
-    public static void listShow(String p, String m, String pos, String s1, @Nullable Map<String, String> statData) {
+    public static void listShow(String p, String m, String pos, String s1, @Nullable String statData) {
 //        if (statData == null || statData.isEmpty()) {
 //            throw new IllegalArgumentException("statData is null.");
 //        }
@@ -120,11 +120,11 @@ public class StatisticsManager {
         saveData(EVENT_BTN_CLICK, p, m, pos, btn, s1, EMPTY, null);
     }
 
-    public static void listClick(String p, String m, String pos, String s1, @Nullable Map<String, String> statData) {
+    public static void listClick(String p, String m, String pos, String s1, @Nullable String statData) {
         saveData(EVENT_LIST_CLICK, p, m, pos, EMPTY, s1, EMPTY, statData);
     }
 
-    public static void videoView(String p, String m, String pos, String n1, @Nullable Map<String, String> statData) {
+    public static void videoView(String p, String m, String pos, String n1, @Nullable String statData) {
         saveData(EVENT_VIDEO_VIEW, p, m, pos, EMPTY, EMPTY, n1, statData);
     }
 
@@ -142,7 +142,7 @@ public class StatisticsManager {
      * @param n1  附属字段
      */
     public static void saveData(String e, String p, String m, String pos, String btn,
-                                String s1, String n1, @Nullable Map<String, String> statData) {
+                                String s1, String n1, String statData) {
         JSONObject jsonObject = new JSONObject();
         try {
             long t = System.currentTimeMillis() / 1000;
@@ -154,11 +154,7 @@ public class StatisticsManager {
             putValue(jsonObject, "btn", btn);
             putValue(jsonObject, "s1", s1);
             putValue(jsonObject, "n1", n1);
-            if (statData != null && !statData.isEmpty()) {
-                for (Map.Entry<String, String> entry : statData.entrySet()) {
-                    putValue(jsonObject, entry.getKey(), entry.getValue());
-                }
-            }
+            putValue(jsonObject, "statJson", statData);
             Log.i(TAG, "saveData: " + jsonObject);
             if (SpecialOrder.isOpenSwitchStatLayout(XHApplication.in())) {
                 DesktopLayout.of(XHApplication.in()).insertData(jsonObject.toString());

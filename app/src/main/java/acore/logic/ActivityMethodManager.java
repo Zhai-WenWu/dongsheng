@@ -1,5 +1,6 @@
 package acore.logic;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.text.TextUtils;
@@ -15,6 +16,7 @@ import com.xiangha.Welcome;
 import java.util.ArrayList;
 import java.util.Map;
 
+import acore.logic.stat.StatisticsManager;
 import acore.override.XHApplication;
 import acore.override.helper.XHActivityManager;
 import acore.tools.FileManager;
@@ -40,6 +42,8 @@ public class ActivityMethodManager {
     private HomeKeyListener mHomeWatcher;
     private ArrayList<IAutoRefresh> mAdControls = new ArrayList<>();
     private long lastOnResumeTime,intervalOnResumeTime;
+    private long onResumeTime = 0;
+
 
     public ActivityMethodManager(Activity mAct) {
         this.mAct = mAct;
@@ -56,6 +60,7 @@ public class ActivityMethodManager {
         if(Main.allMain != null){
             Main.allMain.initRunTime();
         }
+        onResumeTime = System.currentTimeMillis();
         if(lastOnResumeTime == 0){
             lastOnResumeTime = System.currentTimeMillis();
         }else{
@@ -145,7 +150,10 @@ public class ActivityMethodManager {
         }
     }
 
+    @SuppressLint("DefaultLocale")
     public void onPause() {
+        long stayTime = System.currentTimeMillis() - onResumeTime;
+        StatisticsManager.pageStay(mAct.getClass().getSimpleName(),String.format("%.2f",stayTime/1000f));
         //广告刷新定时器停止
         XHAdAutoRefresh.getInstance().stopTimer();
         MobclickAgent.onPause(mAct);

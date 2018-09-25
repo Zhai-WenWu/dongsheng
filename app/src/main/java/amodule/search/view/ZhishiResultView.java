@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
@@ -24,12 +25,19 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import acore.logic.AppCommon;
 import acore.logic.load.LoadManager;
+import acore.logic.stat.StatisticsManager;
+import acore.logic.stat.intefaces.OnItemClickListenerStat;
 import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
 import amodule.search.adapter.AdapterSearch;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
 import xh.basic.internet.UtilInternet;
+
+import static acore.logic.stat.StatConf.STAT_TAG;
+import static acore.logic.stat.StatisticsManager.IS_STAT;
+import static acore.logic.stat.StatisticsManager.STAT_DATA;
+import static acore.logic.stat.StatisticsManager.TRUE_VALUE;
 
 /**
  * Created by ：airfly on 2016/10/21 17:45.
@@ -83,12 +91,7 @@ public class ZhishiResultView extends RelativeLayout {
         mListData.clear();
         nousAdapter.notifyDataSetChanged();
 
-        mLoadManager.setLoading(mListview, nousAdapter, true, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getData();
-            }
-        });
+        mLoadManager.setLoading(mListview, nousAdapter, true, v -> getData());
         ((GlobalSearchView) mParentView).setSecondLevelView(this);
     }
 
@@ -97,10 +100,11 @@ public class ZhishiResultView extends RelativeLayout {
     }
 
     private void initView() {
-        mListview = (ListView) findViewById(R.id.v_scroll);
-        ll_noData = (LinearLayout) findViewById(R.id.v_no_data_search);
+        mListview =  findViewById(R.id.v_scroll);
+        mListview.setTag(STAT_TAG,"知识");
+        ll_noData =  findViewById(R.id.v_no_data_search);
         ll_noData.setVisibility(View.GONE);
-        returnTop = (ImageView) findViewById(R.id.return_top);
+        returnTop =  findViewById(R.id.return_top);
         returnTop.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -114,18 +118,39 @@ public class ZhishiResultView extends RelativeLayout {
             }
         });
 
-        mListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mListview.setOnItemClickListener(new OnItemClickListenerStat() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+            public void onItemClicked(AdapterView<?> parent, View view, int position, long id) {
                 Map<String, String> zhishiMap = mListData.get(position);
                 AppCommon.openUrl(mActivity, "nousInfo.app?code=" + zhishiMap.get("code"), true);
+            }
+
+            @Override
+            protected String getStatData(int position) {
+                Map<String, String> caidanMap = mListData.get(position);
+                return caidanMap.get(STAT_DATA);
+            }
+
+            @Override
+            protected void onStat(int position, String statJsonStr) {
+                StatisticsManager.listClick(p, m, String.valueOf(position + 1), searchKey,statJsonStr);
             }
         });
 
         nousAdapter = new AdapterSearch(mListview, mListData, R.layout.c_search_result_zhishi_item,
                 new String[]{"img", "title", "classifyName", "allClick","aboveLine","bottomLine","line"},
-                new int[]{R.id.iv_img_zhishi, R.id.tv_des_zhishi, R.id.tv_cate_zhishi, R.id.tv_observed_zhishi,R.id.above_line,R.id.v_zhishi_item_tail,R.id.line});
+                new int[]{R.id.iv_img_zhishi, R.id.tv_des_zhishi, R.id.tv_cate_zhishi, R.id.tv_observed_zhishi,R.id.above_line,R.id.v_zhishi_item_tail,R.id.line}){
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+                Map<String, String> data = mListData.get(position);
+                if (!TRUE_VALUE.equals(data.get(IS_STAT))) {
+                    data.put(IS_STAT,TRUE_VALUE);
+                    StatisticsManager.listShow(getContext().getClass().getSimpleName(), "菜单列表",  String.valueOf(position + 1), searchKey, data.get(STAT_DATA));
+                }
+                return view;
+            }
+        };
         nousAdapter.setViewBinder(new SimpleAdapter.ViewBinder() {
             @Override
             public boolean setViewValue(View view, Object data, String textRepresentation) {
@@ -170,6 +195,7 @@ public class ZhishiResultView extends RelativeLayout {
                             mapReturn.put("aboveLine", "hide");
                             mapReturn.put("bottomLine", "hide");
                             mapReturn.put("line", "show");
+                            mListData.add(mapReturn);
                             mListData.add(mapReturn);
                         }
                         loadPage = listReturn.size();

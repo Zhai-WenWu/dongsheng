@@ -26,6 +26,7 @@ import amodule._common.delegate.IBindMap;
 import amodule._common.delegate.IHandlerClickEvent;
 import amodule._common.delegate.IResetCallback;
 import amodule._common.delegate.ISaveStatistic;
+import amodule._common.delegate.ISetIsCache;
 import amodule._common.delegate.ISetShowIndex;
 import amodule._common.delegate.ISetStatisticPage;
 import amodule._common.delegate.IStatictusData;
@@ -40,6 +41,7 @@ import amodule.home.adapter.HorizontalAdapter2;
 import amodule.home.adapter.HorizontalAdapter3;
 import amodule.home.viewholder.XHBaseRvViewHolder;
 
+import static acore.logic.stat.StatConf.STAT_TAG;
 import static amodule._common.helper.WidgetDataHelper.KEY_PARAMETER;
 import static amodule._common.helper.WidgetDataHelper.KEY_STYLE;
 
@@ -53,7 +55,7 @@ import static amodule._common.helper.WidgetDataHelper.KEY_STYLE;
 
 public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,ISetStatisticPage,
         IStatictusData,ISaveStatistic,IHandlerClickEvent,IStatisticCallback,ITitleStaticCallback,
-        IResetCallback, ISetShowIndex, IUpdatePadding {
+        IResetCallback, ISetShowIndex, IUpdatePadding ,ISetIsCache{
 
     private RvListView mRecyclerView;
     private BaseSubTitleView mSubTitleView;
@@ -61,6 +63,7 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,I
     private StatisticCallback mStatisticCallback,mTitleStatisticCallback;
 
     private int mShowIndex = -1;
+    private boolean isCache;
     public HorizontalRecyclerView(Context context) {
         this(context,null);
     }
@@ -118,20 +121,24 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,I
                 case "6":
                     inflate(getContext(), R.layout.horizontal_recyclerview_layout1, this);
                     mRecyclerAdapter = new HorizontalAdapter1(getContext(), list);
+                    ((HorizontalAdapter1)mRecyclerAdapter).setCache(isCache);
                     break;
                 case "2":
                 case "4":
                 case "5":
                     inflate(getContext(), R.layout.horizontal_recyclerview_layout2, this);
                     mRecyclerAdapter = new HorizontalAdapter2(getContext(), list);
+                    ((HorizontalAdapter2)mRecyclerAdapter).setCache(isCache);
                     break;
                 case "3":
                     inflate(getContext(), R.layout.horizontal_recyclerview_layout1, this);
                     mRecyclerAdapter = new HorizontalAdapter3(getContext(), list);
+                    ((HorizontalAdapter3)mRecyclerAdapter).setCache(isCache);
                     break;
                 default:
                     inflate(getContext(), R.layout.horizontal_recyclerview_layout1, this);
                     mRecyclerAdapter = new HorizontalAdapter1(getContext(), list);
+                    ((HorizontalAdapter1)mRecyclerAdapter).setCache(isCache);
                     break;
             }
             mSubTitleView = (BaseSubTitleView) findViewById(R.id.subtitle_view);
@@ -142,6 +149,7 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,I
             moduleType = StringManager.getFirstMap(parameterMap.get("title")).get("text1");
 
             mRecyclerView = (RvListView) findViewById(R.id.recycler_view);
+            mRecyclerView.setTag(STAT_TAG,"");
             mRecyclerView.setFocusable(false);
             final LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
             mRecyclerView.setLayoutManager(layoutManager);
@@ -285,5 +293,11 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,I
     @Override
     public void updatePadding(int l, int t, int r, int b) {
         setPadding(l, t, r, b);
+    }
+
+
+    @Override
+    public void setCache(boolean isCache) {
+        this.isCache = isCache;
     }
 }

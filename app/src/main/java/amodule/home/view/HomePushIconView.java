@@ -29,6 +29,7 @@ import java.util.zip.Inflater;
 
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
+import acore.logic.stat.StatisticsManager;
 import acore.override.activity.base.BaseLoginActivity;
 import acore.tools.Tools;
 import acore.widget.rvlistview.RvListView;
@@ -100,6 +101,7 @@ public class HomePushIconView extends AppCompatImageView {
             if (!TextUtils.isEmpty(statictusID) && position < texts.length) {
                 XHClick.mapStat(getContext(), statictusID, texts[position], "");
             }
+            StatisticsManager.btnClick(getContext().getClass().getSimpleName(),"发布选项",texts[position]);
             mPopupWindow.dismiss();
             switch (position) {
                 case 0:

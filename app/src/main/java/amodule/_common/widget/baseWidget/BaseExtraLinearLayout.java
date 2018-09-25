@@ -18,6 +18,7 @@ import acore.tools.StringManager;
 import amodule._common.delegate.IBindMap;
 import amodule._common.delegate.IResetCallback;
 import amodule._common.delegate.ISaveStatistic;
+import amodule._common.delegate.ISetIsCache;
 import amodule._common.delegate.IStatictusData;
 import amodule._common.delegate.IStatisticCallback;
 import amodule._common.delegate.ITitleStaticCallback;
@@ -72,7 +73,7 @@ public class BaseExtraLinearLayout extends LinearLayout implements IStatisticCal
         }
     }
 
-    public void setData(List<Map<String, String>> array, boolean isOrder) {
+    public void setData(List<Map<String, String>> array, boolean isOrder,boolean isCache) {
         datas = array;
         this.isOrder = isOrder;
         if (null == datas || datas.isEmpty()) {
@@ -82,11 +83,11 @@ public class BaseExtraLinearLayout extends LinearLayout implements IStatisticCal
             removeAllViews();
         }
         if (shouldParentHandleView())
-            bindView(array, isOrder);
+            bindView(array, isOrder,isCache);
     }
 
-    private void bindView(List<Map<String, String>> array, boolean isOrder) {
-        Stream.of(array).forEach(data -> updateModuleView(data, isOrder));
+    private void bindView(List<Map<String, String>> array, boolean isOrder,boolean isCache) {
+        Stream.of(array).forEach(data -> updateModuleView(data, isOrder,isCache));
         requestLayout();
         setVisibility(getChildCount() > 0 ? VISIBLE : GONE);
     }
@@ -103,7 +104,7 @@ public class BaseExtraLinearLayout extends LinearLayout implements IStatisticCal
      * @param isOrder 是否按顺序添加
      */
 
-    protected void updateModuleView(Map<String, String> data, boolean isOrder) {
+    protected void updateModuleView(Map<String, String> data, boolean isOrder,boolean isCache) {
         String widgetType = data.get(KEY_WIDGET_TYPE);
         String widgetData = data.get(KEY_WIDGET_DATA);
         if(TextUtils.isEmpty(widgetData)){
@@ -123,6 +124,9 @@ public class BaseExtraLinearLayout extends LinearLayout implements IStatisticCal
                 }
                 if(view instanceof IStatictusData && mStatisticCallback != null){
                     ((IStatictusData)view).setStatictusData(mId,mTwoLevel,mThreeLevel);
+                }
+                if(view instanceof ISetIsCache){
+                    ((ISetIsCache) view).setCache(isCache);
                 }
                 if(view instanceof IBindMap && !TextUtils.isEmpty(widgetData)) {
                     ((IBindMap) view).setData(dataMap);

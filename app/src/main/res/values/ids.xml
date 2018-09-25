@@ -5,4 +5,6 @@
     <item name="icon_ad_gdt" type="id"/>
     <item name="icon_ad_baidu" type="id"/>
     <item name="icon_ad_api" type="id"/>
+
+    <item name="stat_tag" type="id"/>
 </resources>

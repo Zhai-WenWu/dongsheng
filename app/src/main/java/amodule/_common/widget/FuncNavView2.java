@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -16,6 +17,7 @@ import java.util.Map;
 
 import acore.logic.AppCommon;
 import acore.logic.XHClick;
+import acore.logic.stat.intefaces.OnClickListenerStat;
 import acore.override.helper.XHActivityManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -30,6 +32,8 @@ import amodule._common.delegate.StatisticCallback;
 import amodule._common.helper.WidgetDataHelper;
 import amodule._common.utility.WidgetUtility;
 import amodule.home.view.HomeFuncNavView2;
+
+import static acore.logic.stat.StatConf.STAT_TAG;
 
 /**
  * Description :
@@ -87,9 +91,13 @@ public class FuncNavView2 extends HomeFuncNavView2 implements IBindMap, IStatict
             if(!TextUtils.isEmpty(leftMap.get("img")))
                 Glide.with(getContext()).load(leftMap.get("img")).into(leftIcon);
             String leftUrl = leftMap.get("url");
-            mLeftView.setOnClickListener(v -> {
-                AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), leftUrl, true);
-                statistic(0,leftMap);
+            mLeftView.setTag(STAT_TAG,"导航2_左边");
+            mLeftView.setOnClickListener(new OnClickListenerStat() {
+                @Override
+                public void onClicked(View v) {
+                    AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), leftUrl, true);
+                    statistic(0,leftMap);
+                }
             });
         }
 
@@ -103,9 +111,13 @@ public class FuncNavView2 extends HomeFuncNavView2 implements IBindMap, IStatict
                 if(!TextUtils.isEmpty(rightMap.get("img")))
                     Glide.with(getContext()).load(rightMap.get("img")).into(rightIcon);
                 String rightUrl = rightMap.get("url");
-                mRightView.setOnClickListener(v -> {
-                    AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), rightUrl, true);
-                    statistic(1,rightMap);
+                mLeftView.setTag(STAT_TAG,"导航2_右边");
+                mRightView.setOnClickListener(new OnClickListenerStat(){
+                    @Override
+                    public void onClicked(View v) {
+                        AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), rightUrl, true);
+                        statistic(1,rightMap);
+                    }
                 });
             }
         }

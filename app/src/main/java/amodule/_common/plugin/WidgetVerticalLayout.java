@@ -20,6 +20,7 @@ import amodule._common.delegate.IResetCallback;
 import amodule._common.delegate.ISaveStatistic;
 import amodule._common.delegate.ISetAdController;
 import amodule._common.delegate.ISetAdID;
+import amodule._common.delegate.ISetIsCache;
 import amodule._common.delegate.ISetShowIndex;
 import amodule._common.delegate.ISetStatisticPage;
 import amodule._common.delegate.IStatictusData;
@@ -66,6 +67,8 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
     private StatisticCallback mStatisticCallback,mTitleStatisticCallback;
 
     private int mShowIndex = -1;
+
+    private boolean isCache = false;
 
     public WidgetVerticalLayout(Context context) {
         super(context);
@@ -127,6 +130,9 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
                 }
                 if (view instanceof ISetShowIndex) {
                     ((ISetShowIndex) view).setShowIndex(mShowIndex);
+                }
+                if(view instanceof ISetIsCache){
+                    ((ISetIsCache) view).setCache(isCache);
                 }
                 if (view instanceof IBindMap && !TextUtils.isEmpty(widgetData)) {
                     ((IBindMap) view).setData(dataMap);
@@ -217,7 +223,7 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
             addView(mExtraTop, 0);
         }
         mExtraTop.setStatictusData(id, twoLevel, threeLevel);
-        mExtraTop.setData(array, false);
+        mExtraTop.setData(array, false,isCache);
     }
 
     @Override
@@ -229,7 +235,7 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
             addView(mExtraBottom);
         }
         mExtraBottom.setStatictusData(id, twoLevel, threeLevel);
-        mExtraBottom.setData(array, true);
+        mExtraBottom.setData(array, true,isCache);
     }
 
     String id, twoLevel, threeLevel;
@@ -285,5 +291,9 @@ public class WidgetVerticalLayout extends AbsWidgetVerticalLayout<Map<String, St
     @Override
     public void setShowIndex(int showIndex) {
         mShowIndex = showIndex;
+    }
+
+    public void setCache(boolean cache) {
+        isCache = cache;
     }
 }

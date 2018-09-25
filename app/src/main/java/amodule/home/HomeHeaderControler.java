@@ -81,6 +81,7 @@ public class HomeHeaderControler implements ISaveStatistic, ISetAdController {
 
     public void setData(List<Map<String, String>> array, boolean isShowCache) {
         mDatas = array;
+        //isShowCache：true是缓存
         mIsShowCache = isShowCache;
         mSetttingRemoteData = !isShowCache;
         handleData();
@@ -179,6 +180,7 @@ public class HomeHeaderControler implements ISaveStatistic, ISetAdController {
                 mLayouts[index].setShowIndex(x);
                 x ++;
             }
+            mLayouts[index].setCache(isShowCache);
             mLayouts[index].setStatisticPage("home");
             mLayouts[index].setAdController(mAdController);
             mLayouts[index].setExtraDataCallback(new IExtraDataCallback() {

@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
@@ -24,6 +25,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import acore.logic.load.LoadManager;
+import acore.logic.stat.StatisticsManager;
+import acore.logic.stat.intefaces.OnItemClickListenerStat;
 import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
 import amodule.dish.activity.ListDish;
@@ -32,6 +35,10 @@ import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilString;
+
+import static acore.logic.stat.StatisticsManager.IS_STAT;
+import static acore.logic.stat.StatisticsManager.STAT_DATA;
+import static acore.logic.stat.StatisticsManager.TRUE_VALUE;
 
 /**
  * Created by ：airfly on 2016/10/21 11:02.
@@ -76,27 +83,24 @@ public class CaidanResultView extends RelativeLayout {
     }
 
     private void initView() {
-        mListview = (ListView) findViewById(R.id.v_scroll);
-        ll_noData = (LinearLayout) findViewById(R.id.v_no_data_search);
+        mListview =  findViewById(R.id.v_scroll);
+        ll_noData =  findViewById(R.id.v_no_data_search);
         ll_noData.setVisibility(View.GONE);
-        returnTop = (ImageView) findViewById(R.id.return_top);
-        returnTop.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                returnTop.clearAnimation();
-                RotateAnimation animation = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-                animation.setInterpolator(new LinearInterpolator());
-                animation.setDuration(500);
-                animation.setFillAfter(true);// 特效animation设置
-                returnTop.startAnimation(animation);
-                returnListTop();
-            }
+        returnTop =  findViewById(R.id.return_top);
+        returnTop.setOnClickListener(v -> {
+            returnTop.clearAnimation();
+            RotateAnimation animation = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+            animation.setInterpolator(new LinearInterpolator());
+            animation.setDuration(500);
+            animation.setFillAfter(true);// 特效animation设置
+            returnTop.startAnimation(animation);
+            returnListTop();
         });
 
-        mListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        mListview.setOnItemClickListener(new OnItemClickListenerStat() {
 
+            @Override
+            public void onItemClicked(AdapterView<?> parent, View view, int position, long id) {
                 Map<String, String> caidanMap = mListData.get(position);
                 Intent intent = new Intent(mActivity, ListDish.class);
                 intent.putExtra("name", caidanMap.get("name"));
@@ -104,13 +108,35 @@ public class CaidanResultView extends RelativeLayout {
                 intent.putExtra("g1", caidanMap.get("code"));
                 mActivity.startActivity(intent);
             }
+
+            @Override
+            protected String getStatData(int position) {
+                Map<String, String> caidanMap = mListData.get(position);
+                return caidanMap.get(STAT_DATA);
+            }
+
+            @Override
+            protected void onStat(int position, String statJsonStr) {
+                StatisticsManager.listClick(p, m, String.valueOf(position + 1), searchKey,statJsonStr);
+            }
         });
 
         mAdapter = new AdapterSearch(mListview, mListData,
                 R.layout.c_search_result_caidan_item,
                 new String[]{"img1", "img2", "name", "dishNum", "allClick"},
                 new int[]{R.id.iv_img_left_caidan, R.id.iv_img_right_caidan,
-                        R.id.tv_tag_caidan, R.id.tv_num_caidan, R.id.tv_observed_caidan});
+                        R.id.tv_tag_caidan, R.id.tv_num_caidan, R.id.tv_observed_caidan}){
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+                Map<String, String> data = mListData.get(position);
+                if (!TRUE_VALUE.equals(data.get(IS_STAT))) {
+                    data.put(IS_STAT,TRUE_VALUE);
+                    StatisticsManager.listShow(getContext().getClass().getSimpleName(), "菜单列表",  String.valueOf(position + 1), searchKey, data.get(STAT_DATA));
+                }
+                return view;
+            }
+        };
     }
 
     public void search(String key) {

@@ -13,6 +13,7 @@ import java.util.Map;
 
 import acore.logic.AppCommon;
 import acore.logic.XHClick;
+import acore.logic.stat.intefaces.OnClickListenerStat;
 import acore.tools.StringManager;
 import amodule._common.delegate.IStatisticCallback;
 import amodule._common.delegate.ITitleStaticCallback;
@@ -77,15 +78,25 @@ public class CommonSubTitleView extends BaseSubTitleView implements ITitleStatic
     }
 
     public void setTitle1ClickListener(OnClickListener listener) {
-        if (listener != null) {
-            mTitle1.setOnClickListener(listener);
-        }
+        mTitle1.setOnClickListener(new OnClickListenerStat() {
+            @Override
+            public void onClicked(View v) {
+                if (listener != null) {
+                    listener.onClick(v);
+                }
+            }
+        });
     }
 
     public void setTitle2ClickListener(OnClickListener listener) {
-        if (listener != null) {
-            mTitle2.setOnClickListener(listener);
-        }
+        mTitle2.setOnClickListener(new OnClickListenerStat() {
+            @Override
+            public void onClicked(View v) {
+                if (listener != null) {
+                    listener.onClick(v);
+                }
+            }
+        });
     }
 
     String id, twoLevel, threeLevel;

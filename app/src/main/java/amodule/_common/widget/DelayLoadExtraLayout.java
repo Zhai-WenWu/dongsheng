@@ -30,8 +30,8 @@ public class DelayLoadExtraLayout extends BaseExtraLinearLayout {
     }
 
     @Override
-    public void setData(List<Map<String, String>> array, boolean isOrder) {
-        super.setData(array, isOrder);
+    public void setData(List<Map<String, String>> array, boolean isOrder,boolean isCahe) {
+        super.setData(array, isOrder,isCahe);
     }
 
     public void setDelayLoadData(boolean delayed) {
@@ -57,7 +57,7 @@ public class DelayLoadExtraLayout extends BaseExtraLinearLayout {
 //        for (int i = 0; i < mNextShowCount && i < datas.size(); i++) {
         for (;!datas.isEmpty();) {
             Map<String,String> map = datas.remove(0);
-            updateModuleView(map,isOrder);
+            updateModuleView(map,isOrder,false);
         }
         return !datas.isEmpty();
     }

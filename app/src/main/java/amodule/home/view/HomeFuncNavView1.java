@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import acore.logic.AppCommon;
+import acore.logic.stat.intefaces.OnItemClickListenerRvStat;
 import acore.override.helper.XHActivityManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -28,6 +29,9 @@ import acore.widget.rvlistview.RvHorizatolListView;
 import acore.widget.rvlistview.RvListView;
 import amodule._common.utility.WidgetUtility;
 import amodule.home.adapter.HorizontalAdapterFuncNav1;
+
+import static acore.logic.stat.StatConf.STAT_TAG;
+import static acore.logic.stat.StatisticsManager.STAT_DATA;
 
 /**
  * Description :
@@ -104,7 +108,7 @@ public class HomeFuncNavView1 extends LinearLayout {
                 "xiangha://welcome?WeekDish.app",
                 "xiangha://welcome?xhds.home.app",
         };
-
+        listView.setTag(STAT_TAG,"导航1");
         for (int index = 0; index < iconArray.length; index++) {
             Map<String,String> map = new HashMap<>();
             map.put("text1",textArray[index]);
@@ -113,11 +117,18 @@ public class HomeFuncNavView1 extends LinearLayout {
             mapArrayList.add(map);
         }
         computeItemSpacing();
+        adapterFuncNav1.setCache(true);
         adapterFuncNav1.notifyDataSetChanged();
         setVisibility(VISIBLE);
-        listView.setOnItemClickListener(new RvListView.OnItemClickListener() {
+
+        listView.setOnItemClickListener(new OnItemClickListenerRvStat() {
             @Override
-            public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
+            protected String getStatData(int position) {
+                return null;
+            }
+
+            @Override
+            public void onItemClicked(View view, RecyclerView.ViewHolder holder, int position) {
                 if(position<mapArrayList.size()) {
                     AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), mapArrayList.get(position).get("url"), true);
                 }

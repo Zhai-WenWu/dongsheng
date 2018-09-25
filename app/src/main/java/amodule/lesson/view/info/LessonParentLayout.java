@@ -116,13 +116,13 @@ public abstract class LessonParentLayout extends LinearLayout implements IBindMa
 
     protected void setTopExtraData(Map<String, String> data) {
         if (mTopExtraLayout != null) {
-            mTopExtraLayout.setData(StringManager.getListMapByJson(data.get("top")), true);
+            mTopExtraLayout.setData(StringManager.getListMapByJson(data.get("top")), true,false);
         }
     }
 
     protected void setBottomExtraData(Map<String, String> data) {
         if (mBottomExtraLayout != null) {
-            mBottomExtraLayout.setData(StringManager.getListMapByJson(data.get("bottom")), true);
+            mBottomExtraLayout.setData(StringManager.getListMapByJson(data.get("bottom")), true,false);
         }
     }
 

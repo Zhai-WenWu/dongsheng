@@ -18,8 +18,11 @@ import android.widget.Toast;
 
 import com.xiangha.R;
 
+import acore.logic.stat.intefaces.OnClickListenerStat;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
+
+import static acore.logic.stat.StatConf.STAT_TAG;
 
 /**
  * PackageName : acore.widget
@@ -65,9 +68,10 @@ public class CommentBar extends RelativeLayout {
         commentEdittext = (EditText) findViewById(R.id.commend_write_et);
         sendingProgress = (ProgressBar) findViewById(R.id.comment_send_progress);
         sendComment = (TextView) findViewById(R.id.comment_send);
-        sendComment.setOnClickListener(new OnClickListener() {
+        sendComment.setTag(STAT_TAG,"发送");
+        sendComment.setOnClickListener(new OnClickListenerStat() {
             @Override
-            public void onClick(View v) {
+            public void onClicked(View v) {
                 publishComment();
             }
         });

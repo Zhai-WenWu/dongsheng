@@ -21,6 +21,7 @@ import java.util.Map;
 
 import acore.logic.AppCommon;
 import acore.logic.XHClick;
+import acore.logic.stat.intefaces.OnItemClickListenerRvStat;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.rvlistview.RvListView;
@@ -36,6 +37,8 @@ import aplug.web.ShowWeb;
 import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
 import third.ad.scrollerAd.XHAllAdControl;
 import third.umeng.OnlineConfigControler;
+
+import static acore.logic.stat.StatConf.STAT_TAG;
 
 /**
  * 首页view的控制
@@ -81,25 +84,34 @@ public class HomeViewControler implements ISetAdController {
 
         mHomeFeedHeaderControler = new HomeFeedHeaderControler(mActivity);
 
-        mTitleLayout = (HomeTitleLayout) mActivity.findViewById(R.id.home_title);
+        mTitleLayout = mActivity.findViewById(R.id.home_title);
         mTitleLayout.setStatictusData(MainHomePage.STATICTUS_ID_PULISH, "顶部topbar", "");
         mTitleLayout.postDelayed(() -> {
             mBuoy = new HomeBuoy(mActivity);
             mBuoy.setClickCallback(() -> XHClick.mapStat(mActivity, MainHomePage.STATICTUS_ID_HOMEPAGE, "首页右侧侧边栏浮动图标", ""));
         }, 4000);
 
-        mTipMessage = (TextView) mActivity.findViewById(R.id.tip_message);
+        mTipMessage = mActivity.findViewById(R.id.tip_message);
         initNetworkTip();
-        mRefreshLayout = (PtrClassicFrameLayout) mActivity.findViewById(R.id.refresh_list_view_frame);
+        mRefreshLayout = mActivity.findViewById(R.id.refresh_list_view_frame);
         mRefreshLayout.disableWhenHorizontalMove(true);
         mRefreshLayout.setLoadingMinTime(300);
-        recyclerView = (RvStaggeredGridView) mActivity.findViewById(R.id.recyclerView);
+        recyclerView = mActivity.findViewById(R.id.recyclerView);
+        recyclerView.setTag(STAT_TAG, "首页feed流");
         recyclerView.closeDefaultAnimator();
         recyclerView.addHeaderView(mHeaderView);
         recyclerView.addHeaderView(mHomeFeedHeaderControler.getLayout());
-        recyclerView.setOnItemClickListener((view, holder, position) -> {
-            if (view instanceof HomeItem) {
-                ((HomeItem) view).onClickEvent(view);
+        recyclerView.setOnItemClickListener(new OnItemClickListenerRvStat() {
+            @Override
+            protected String getStatData(int position) {
+                return mGetStatDataCallback != null ? mGetStatDataCallback.getStatData(position) : null;
+            }
+
+            @Override
+            public void onItemClicked(View view, RecyclerView.ViewHolder holder, int position) {
+                if (view instanceof HomeItem) {
+                    ((HomeItem) view).onClickEvent(view);
+                }
             }
         });
 
@@ -336,5 +348,15 @@ public class HomeViewControler implements ISetAdController {
     public void setAdData(Map<String, String> map, List<String> adIDs, boolean refresh) {
         mHeaderControler.setAdID(adIDs);
         mHeaderControler.setAdData(map, refresh);
+    }
+
+    private GetStatDataCallback mGetStatDataCallback;
+
+    public void setGetStatDataCallback(GetStatDataCallback getStatDataCallback) {
+        mGetStatDataCallback = getStatDataCallback;
+    }
+
+    public interface GetStatDataCallback {
+        String getStatData(int position);
     }
 }

@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="#FFFFFF"
-              android:orientation="vertical">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:orientation="vertical">
 
     <View
         android:id="@+id/above_line"
@@ -18,6 +20,7 @@
         android:layout_height="@dimen/dp_39"
         android:clickable="true"
         android:focusable="true"
+        tools:visibility="visible"
         android:visibility="gone">
 
         <TextView
@@ -72,17 +75,17 @@
             android:visibility="visible">
 
             <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
                 android:id="@+id/tv_des_zhishi"
-                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_10"
-                android:maxLines="2"
-                android:lineSpacingExtra="@dimen/dp_2"
                 android:ellipsize="end"
+                android:lineSpacingExtra="@dimen/dp_2"
+                android:maxLines="2"
                 android:text="健康知识"
                 android:textColor="#333333"
-                android:textSize="@dimen/sp_17"/>
+                android:textSize="@dimen/sp_17"
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/tv_cate_zhishi"

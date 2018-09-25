@@ -14,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SimpleAdapter;
 
+import acore.logic.stat.intefaces.OnClickListenerStat;
+
 @SuppressLint("UseSparseArrays")
 public class FlowLayout extends ViewGroup{
 	public FlowLayoutAdapter adapter;
@@ -77,9 +79,9 @@ public class FlowLayout extends ViewGroup{
 			clickView = rootView.findViewById(id);
 		}else
 			clickView = rootView;
-		clickView.setOnClickListener(new OnClickListener() {
+		clickView.setOnClickListener(new OnClickListenerStat(getContext(),getClass().getSimpleName(),"按钮"+(position + 1)) {
 			@Override
-			public void onClick(View v) {
+			public void onClicked(View v) {
 				listener.onClick(v, position);
 			}
 		});

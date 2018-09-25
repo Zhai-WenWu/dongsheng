@@ -4,11 +4,13 @@ import android.app.Activity;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.text.TextUtils;
+import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.List;
 import java.util.Map;
 
+import acore.logic.stat.RvMapViewHolderStat;
 import acore.widget.rvlistview.adapter.RvBaseAdapter;
 import acore.widget.rvlistview.holder.RvBaseViewHolder;
 import amodule.main.bean.HomeModuleBean;
@@ -48,6 +50,7 @@ public class HomeAdapter extends RvBaseAdapter<Map<String, String>> {
     public final static String LIST_TYPE_GRID = "2";
     public final static String LIST_TYPE_STAGGERED = "3";
     private String mListType = LIST_TYPE_LIST;//网格列表
+    boolean isCache;
 
     public HomeAdapter(Activity mActivity, @Nullable List<Map<String, String>> data, AdControlParent adControlParent) {
         super(mActivity, data);
@@ -63,23 +66,23 @@ public class HomeAdapter extends RvBaseAdapter<Map<String, String>> {
     public RvBaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
             case type_gridXHADImage:
-                return new GridXHADImageViewHolder(new HomeGridXHADItem(mContext));
+                return new GridXHADImageViewHolder(new HomeGridXHADItem(mContext),parent);
             case type_gridImage://网格
-                return new StaggeredGridImageViewHolder(new HomeStaggeredGridItem(mContext));
+                return new StaggeredGridImageViewHolder(new HomeStaggeredGridItem(mContext),parent);
             case type_gridADImage://网格广告
-                return new GridADImageViewHolder(new HomeGridADItem(mContext));
+                return new GridADImageViewHolder(new HomeGridADItem(mContext),parent);
             case type_tagImage://大图
-                return new ViewDishViewHolder(new HomeRecipeItem(mContext));
+                return new ViewDishViewHolder(new HomeRecipeItem(mContext),parent);
             case type_levelImage://蒙版
-                return new ViewAlbumViewHolder(new HomeAlbumItem(mContext));
+                return new ViewAlbumViewHolder(new HomeAlbumItem(mContext),parent);
             case type_threeImage://美食贴
-                return new ViewTiziViewHolder(new HomePostItem(mContext));
+                return new ViewTiziViewHolder(new HomePostItem(mContext),parent);
             case type_anyImage:
-                return new ViewAnyImgViewHolder(new HomeAnyImgStyleItem(mContext));
+                return new ViewAnyImgViewHolder(new HomeAnyImgStyleItem(mContext),parent);
             case type_rightImage://右图
             case type_noImage://无图
             default://找不到样式类型，指定默认-----无图样式
-                return new ViewTxtViewHolder(new HomeTxtItem(mContext));
+                return new ViewTxtViewHolder(new HomeTxtItem(mContext),parent);
         }
     }
 
@@ -129,38 +132,43 @@ public class HomeAdapter extends RvBaseAdapter<Map<String, String>> {
     /**
      * 专辑
      */
-    public class ViewAlbumViewHolder extends RvBaseViewHolder<Map<String, String>> {
+    public class ViewAlbumViewHolder extends RvMapViewHolderStat {
         HomeAlbumItem view;
 
-        public ViewAlbumViewHolder(HomeAlbumItem view) {
-            super(view);
+        public ViewAlbumViewHolder(HomeAlbumItem view,View parent) {
+            super(view,parent);
             this.view = view;
         }
 
         @Override
-        public void bindData(int position, @Nullable Map<String, String> data) {
+        public void overrideBindData(int position, @Nullable Map<String, String> data) {
             if (view != null) {
                 view.setHomeModuleBean(moduleBean);
                 view.setAdControl(mAdControlParent);
                 view.setData(data, position);
                 if (viewClickCallBack != null) view.setRefreshTag(viewClickCallBack);
             }
+        }
+
+        @Override
+        public boolean canStat() {
+            return !isCache;
         }
     }
 
     /**
      * 贴子
      */
-    public class ViewTiziViewHolder extends RvBaseViewHolder<Map<String, String>> {
+    public class ViewTiziViewHolder extends RvMapViewHolderStat {
         HomePostItem view;
 
-        public ViewTiziViewHolder(HomePostItem view) {
-            super(view);
+        public ViewTiziViewHolder(HomePostItem view,View parent) {
+            super(view,parent);
             this.view = view;
         }
 
         @Override
-        public void bindData(int position, @Nullable Map<String, String> data) {
+        public void overrideBindData(int position, @Nullable Map<String, String> data) {
             if (view != null) {
                 view.setHomeModuleBean(moduleBean);
                 view.setAdControl(mAdControlParent);
@@ -168,89 +176,109 @@ public class HomeAdapter extends RvBaseAdapter<Map<String, String>> {
                 if (viewClickCallBack != null)
                     view.setRefreshTag(viewClickCallBack);
             }
+        }
+
+        @Override
+        public boolean canStat() {
+            return !isCache;
         }
     }
 
     /**
      * 菜谱
      */
-    public class ViewDishViewHolder extends RvBaseViewHolder<Map<String, String>> {
+    public class ViewDishViewHolder extends RvMapViewHolderStat {
         HomeRecipeItem view;
 
-        public ViewDishViewHolder(HomeRecipeItem view) {
-            super(view);
+        public ViewDishViewHolder(HomeRecipeItem view,View parent) {
+            super(view,parent);
             this.view = view;
         }
 
         @Override
-        public void bindData(int position, @Nullable Map<String, String> data) {
+        public void overrideBindData(int position, @Nullable Map<String, String> data) {
             if (view != null) {
                 view.setHomeModuleBean(moduleBean);
                 view.setAdControl(mAdControlParent);
                 view.setData(data, position);
                 if (viewClickCallBack != null) view.setRefreshTag(viewClickCallBack);
             }
+        }
+
+        @Override
+        public boolean canStat() {
+            return !isCache;
         }
     }
 
     /**
      * 文章
      */
-    public class ViewTxtViewHolder extends RvBaseViewHolder<Map<String, String>> {
+    public class ViewTxtViewHolder extends RvMapViewHolderStat {
         HomeTxtItem view;
 
-        public ViewTxtViewHolder(HomeTxtItem view) {
-            super(view);
+        public ViewTxtViewHolder(HomeTxtItem view,View parent) {
+            super(view,parent);
             this.view = view;
         }
 
         @Override
-        public void bindData(int position, @Nullable Map<String, String> data) {
+        public void overrideBindData(int position, @Nullable Map<String, String> data) {
             if (view != null) {
                 view.setHomeModuleBean(moduleBean);
                 view.setAdControl(mAdControlParent);
                 view.setData(data, position);
                 if (viewClickCallBack != null) view.setRefreshTag(viewClickCallBack);
             }
+        }
+
+        @Override
+        public boolean canStat() {
+            return !isCache;
         }
     }
 
     /**
      * 任意图 限宽不限高
      */
-    public class ViewAnyImgViewHolder extends RvBaseViewHolder<Map<String, String>> {
+    public class ViewAnyImgViewHolder extends RvMapViewHolderStat {
         HomeAnyImgStyleItem view;
 
-        public ViewAnyImgViewHolder(HomeAnyImgStyleItem view) {
-            super(view);
+        public ViewAnyImgViewHolder(HomeAnyImgStyleItem view,View parent) {
+            super(view,parent);
             this.view = view;
         }
 
         @Override
-        public void bindData(int position, @Nullable Map<String, String> data) {
+        public void overrideBindData(int position, @Nullable Map<String, String> data) {
             if (view != null) {
                 view.setHomeModuleBean(moduleBean);
                 view.setAdControl(mAdControlParent);
                 view.setData(data, position);
                 if (viewClickCallBack != null) view.setRefreshTag(viewClickCallBack);
             }
+        }
+
+        @Override
+        public boolean canStat() {
+            return !isCache;
         }
     }
 
     /**
      * 错落网格
      */
-    public class StaggeredGridImageViewHolder extends RvBaseViewHolder<Map<String, String>> {
+    public class StaggeredGridImageViewHolder extends RvMapViewHolderStat {
         public HomeStaggeredGridItem view;
         public ConstraintLayout homeStaggeredGridItemContentLayout;
-        public StaggeredGridImageViewHolder(HomeStaggeredGridItem view) {
-            super(view);
+        public StaggeredGridImageViewHolder(HomeStaggeredGridItem view,View parent) {
+            super(view,parent);
             this.view = view;
             homeStaggeredGridItemContentLayout = view.getContentLayout();
         }
 
         @Override
-        public void bindData(int position, @Nullable Map<String, String> data) {
+        public void overrideBindData(int position, @Nullable Map<String, String> data) {
             if (view != null) {
                 view.setHomeModuleBean(moduleBean);
                 view.setAdControl(mAdControlParent);
@@ -258,22 +286,27 @@ public class HomeAdapter extends RvBaseAdapter<Map<String, String>> {
                 if (viewClickCallBack != null) view.setRefreshTag(viewClickCallBack);
             }
         }
+
+        @Override
+        public boolean canStat() {
+            return !isCache;
+        }
     }
 
     /**
      * 网格广告
      */
-    public class GridADImageViewHolder extends RvBaseViewHolder<Map<String, String>> {
+    public class GridADImageViewHolder extends RvMapViewHolderStat {
         public HomeGridADItem view;
         public ConstraintLayout homeGirdAdItemContentLayout;
-        public GridADImageViewHolder(HomeGridADItem view) {
-            super(view);
+        public GridADImageViewHolder(HomeGridADItem view,View parent) {
+            super(view,parent);
             this.view = view;
             homeGirdAdItemContentLayout = view.getContentLayout();
         }
 
         @Override
-        public void bindData(int position, @Nullable Map<String, String> data) {
+        public void overrideBindData(int position, @Nullable Map<String, String> data) {
             if (view != null) {
                 view.setHomeModuleBean(moduleBean);
                 view.setAdControl(mAdControlParent);
@@ -281,23 +314,28 @@ public class HomeAdapter extends RvBaseAdapter<Map<String, String>> {
                 if (viewClickCallBack != null)
                     view.setRefreshTag(viewClickCallBack);
             }
+        }
+
+        @Override
+        public boolean canStat() {
+            return !isCache;
         }
     }
 
     /**
      * 网格广告
      */
-    public class GridXHADImageViewHolder extends RvBaseViewHolder<Map<String, String>> {
+    public class GridXHADImageViewHolder extends RvMapViewHolderStat {
         public HomeGridXHADItem view;
         public ConstraintLayout homeGirdAdItemContentLayout;
-        public GridXHADImageViewHolder(HomeGridXHADItem view) {
-            super(view);
+        public GridXHADImageViewHolder(HomeGridXHADItem view,View parent) {
+            super(view,parent);
             this.view = view;
             homeGirdAdItemContentLayout = view.getContentLayout();
         }
 
         @Override
-        public void bindData(int position, @Nullable Map<String, String> data) {
+        public void overrideBindData(int position, @Nullable Map<String, String> data) {
             if (view != null) {
                 view.setHomeModuleBean(moduleBean);
                 view.setAdControl(mAdControlParent);
@@ -305,6 +343,11 @@ public class HomeAdapter extends RvBaseAdapter<Map<String, String>> {
                 if (viewClickCallBack != null)
                     view.setRefreshTag(viewClickCallBack);
             }
+        }
+
+        @Override
+        public boolean canStat() {
+            return !isCache;
         }
     }
 
@@ -317,5 +360,9 @@ public class HomeAdapter extends RvBaseAdapter<Map<String, String>> {
 
     public void setViewOnClickCallBack(ViewClickCallBack viewClickCallBack) {
         this.viewClickCallBack = viewClickCallBack;
+    }
+
+    public void setCache(boolean cache) {
+        isCache = cache;
     }
 }

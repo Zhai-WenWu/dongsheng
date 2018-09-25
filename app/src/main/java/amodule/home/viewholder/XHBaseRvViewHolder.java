@@ -15,6 +15,7 @@ import com.xiangha.R;
 
 import java.util.Map;
 
+import acore.logic.stat.RvMapViewHolderStat;
 import acore.tools.FileManager;
 import acore.tools.Tools;
 import acore.widget.rvlistview.holder.RvBaseViewHolder;
@@ -28,15 +29,24 @@ import static android.view.View.GONE;
  * Created by sll on 2017/11/23.
  */
 
-public class XHBaseRvViewHolder extends RvBaseViewHolder<Map<String, String>> {
+public class XHBaseRvViewHolder extends RvMapViewHolderStat {
 
     private Map<String, String> mDataMap;
-    public XHBaseRvViewHolder(@NonNull View itemView) {
-        super(itemView);
+
+    public XHBaseRvViewHolder(@NonNull View itemView,View parent) {
+        super(itemView, parent);
+    }
+
+    public XHBaseRvViewHolder(@NonNull View itemView, String m) {
+        super(itemView, m);
+    }
+
+    public XHBaseRvViewHolder(@NonNull View itemView, String m, String f1) {
+        super(itemView, m, f1);
     }
 
     @Override
-    public void bindData(int position, @Nullable Map<String, String> data) {
+    public void overrideBindData(int position, @Nullable Map<String, String> data) {
         mDataMap = data;
     }
 

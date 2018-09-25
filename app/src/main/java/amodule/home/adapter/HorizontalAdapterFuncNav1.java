@@ -31,6 +31,7 @@ import amodule.home.viewholder.XHBaseRvViewHolder;
  */
 public class HorizontalAdapterFuncNav1 extends RvBaseAdapter<Map<String, String>> {
     private List<Map<String, String>> mDatas;
+    private boolean isCache;
     public HorizontalAdapterFuncNav1( Context context, @Nullable List<Map<String, String>> data) {
         super(context, data);
         mDatas = data;
@@ -41,7 +42,7 @@ public class HorizontalAdapterFuncNav1 extends RvBaseAdapter<Map<String, String>
     }
     @Override
     public RvBaseViewHolder<Map<String, String>> onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(mContext).inflate(R.layout.widget_func_nav_1_item, null));
+        return new ViewHolder(LayoutInflater.from(mContext).inflate(R.layout.widget_func_nav_1_item, null),parent);
     }
 
     @Override
@@ -60,8 +61,8 @@ public class HorizontalAdapterFuncNav1 extends RvBaseAdapter<Map<String, String>
         private TextView textView;
         private ImageView imageView;
         private LinearLayout item_layout;
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
+        public ViewHolder(@NonNull View itemView,View parent) {
+            super(itemView,parent);
             textView = (TextView) itemView.findViewById(R.id.text_1);
             imageView = (ImageView) itemView.findViewById(R.id.icon);
             item_layout = (LinearLayout) itemView.findViewById(R.id.item_layout);
@@ -84,5 +85,14 @@ public class HorizontalAdapterFuncNav1 extends RvBaseAdapter<Map<String, String>
                 }
             }
         }
+
+        @Override
+        public boolean canStat() {
+            return !isCache;
+        }
+    }
+
+    public void setCache(boolean cache) {
+        isCache = cache;
     }
 }

@@ -714,6 +714,7 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
             shareModule.setTitle(shareMap.get("title"));
             shareModule.setImg(shareMap.get("img"));
             module.setShareModule(shareModule);
+            module.setStatJson(itemMap.get("statJson"));
             return module;
         }
     }

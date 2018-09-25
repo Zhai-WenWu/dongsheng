@@ -65,7 +65,7 @@ public class ItemTitle extends LinearLayout implements IBindMap,IBindExtraArrayM
     @Override
     public void setExtraData(List<Map<String, String>> array) {
         if(mExtraLinearLayout != null ){
-            mExtraLinearLayout.setData(array,true);
+            mExtraLinearLayout.setData(array,true,true);
         }
     }
 

@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.TimeZone;
 
 import acore.logic.AppCommon;
+import acore.logic.stat.intefaces.OnClickListenerStat;
 import acore.tools.StringManager;
 import amodule._common.helper.WidgetDataHelper;
 import amodule._common.utility.WidgetUtility;
@@ -197,14 +198,25 @@ public class CountDownSubTitleView extends BaseSubTitleView {
     }
 
     public void setTitle1ClickListener(OnClickListener listener) {
-        if (listener != null) {
-            mTitle1.setOnClickListener(listener);
-        }
+        mTitle1.setOnClickListener(new OnClickListenerStat() {
+            @Override
+            public void onClicked(View v) {
+                if (listener != null) {
+                    listener.onClick(v);
+                }
+            }
+        });
+
     }
 
     public void setTitle3ClickListener(OnClickListener listener) {
-        if (listener != null) {
-            mTitle3.setOnClickListener(listener);
-        }
+        mTitle3.setOnClickListener(new OnClickListenerStat() {
+            @Override
+            public void onClicked(View v) {
+                if (listener != null) {
+                    listener.onClick(v);
+                }
+            }
+        });
     }
 }

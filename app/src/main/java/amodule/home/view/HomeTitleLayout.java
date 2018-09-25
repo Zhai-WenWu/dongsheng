@@ -10,11 +10,13 @@ import android.widget.RelativeLayout;
 import com.xiangha.R;
 
 import acore.logic.XHClick;
+import acore.logic.stat.intefaces.OnClickListenerStat;
 import amodule._common.delegate.IStatictusData;
 import amodule.dish.activity.TimeDish;
 import amodule.main.view.MessageTipIcon;
 import amodule.search.avtivity.HomeSearch;
 
+import static acore.logic.stat.StatConf.STAT_TAG;
 import static amodule.main.activity.MainHomePage.STATICTUS_ID_PULISH;
 
 /**
@@ -25,7 +27,7 @@ import static amodule.main.activity.MainHomePage.STATICTUS_ID_PULISH;
  * E_mail : ztanzeyu@gmail.com
  */
 
-public class HomeTitleLayout extends RelativeLayout implements View.OnClickListener,IStatictusData {
+public class HomeTitleLayout extends RelativeLayout implements IStatictusData {
 
     HomePushIconView mPulishView;
     MessageTipIcon mMessageTipIcon;
@@ -51,27 +53,32 @@ public class HomeTitleLayout extends RelativeLayout implements View.OnClickListe
         mPulishView.setStatictusID(STATICTUS_ID_PULISH);
         mMessageTipIcon = (MessageTipIcon) findViewById(R.id.message_tip);
 
-        mPulishView.setOnClickListener(this);
-        findViewById(R.id.home_search_layout).setOnClickListener(this);
+        mPulishView.setTag(STAT_TAG,"加号");
+        mPulishView.setOnClickListener(mOnClickListenerStat);
+        RelativeLayout searchLayout = findViewById(R.id.home_search_layout);
+        searchLayout.setTag(STAT_TAG,"搜索");
+        searchLayout.setOnClickListener(mOnClickListenerStat);
 
     }
 
-    @Override
-    public void onClick(View v) {
-        if(v == null) return;
-        switch (v.getId()){
-            case R.id.home_publish_btn:
-                //统计
-                XHClick.mapStat(getContext(),id,twoLevel,"发布按钮");
-                mPulishView.showPulishMenu();
-                break;
-            case R.id.home_search_layout:
-                //统计
-                XHClick.mapStat(getContext(),id,twoLevel,"搜索框");
-                getContext().startActivity(new Intent(getContext(), HomeSearch.class));
-                break;
+    OnClickListenerStat mOnClickListenerStat = new OnClickListenerStat() {
+        @Override
+        public void onClicked(View v) {
+            if(v == null) return;
+            switch (v.getId()){
+                case R.id.home_publish_btn:
+                    //统计
+                    XHClick.mapStat(getContext(),id,twoLevel,"发布按钮");
+                    mPulishView.showPulishMenu();
+                    break;
+                case R.id.home_search_layout:
+                    //统计
+                    XHClick.mapStat(getContext(),id,twoLevel,"搜索框");
+                    getContext().startActivity(new Intent(getContext(), HomeSearch.class));
+                    break;
+            }
         }
-    }
+    };
 
     String id,twoLevel;
     @Override

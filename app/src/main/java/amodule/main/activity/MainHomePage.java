@@ -46,6 +46,7 @@ import third.ad.control.AdControlParent;
 import third.ad.tools.AdPlayIdConfig;
 
 import static acore.logic.ConfigMannager.KEY_LOGPOSTTIME;
+import static acore.logic.stat.StatisticsManager.STAT_DATA;
 
 /**
  * 首页
@@ -104,12 +105,8 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
     private void initialize() {
         //初始化 UI 控制
         mViewContrloer.onCreate();
-        mViewContrloer.getRvListView().setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return isRefreshingHeader;
-            }
-        });
+        mViewContrloer.getRvListView().setOnTouchListener((v, event) -> isRefreshingHeader);
+        mViewContrloer.setGetStatDataCallback(position -> mDataControler.getData().get(position).get(STAT_DATA));
         //初始化数据控制
         mDataControler = new HomeDataControler(this);
         mDataControler.setInsertADCallback((listDatas, isBack) -> {
@@ -278,6 +275,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
                                     ArrayList<Map<String, String>> listData = StringManager.getListMapByJson(data.get(WidgetDataHelper.KEY_LIST));
                                     if (mDataControler != null) {
                                         listData = insertAd(listData, false);
+                                        mHomeAdapter.setCache(isCache);
                                         mDataControler.addOuputSideData(listData);
                                         mDataControler.setNextUrl(data.get("nexturl"));
                                         notifyDataChanged();

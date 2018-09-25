@@ -20,6 +20,7 @@ import java.util.Map;
 
 import acore.logic.AppCommon;
 import acore.logic.XHClick;
+import acore.logic.stat.intefaces.OnItemClickListenerRvStat;
 import acore.override.helper.XHActivityManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -27,6 +28,7 @@ import acore.widget.rvlistview.RvListView;
 import amodule._common.delegate.IBindMap;
 import amodule._common.delegate.IHandlerClickEvent;
 import amodule._common.delegate.ISaveStatistic;
+import amodule._common.delegate.ISetIsCache;
 import amodule._common.delegate.ISetShowIndex;
 import amodule._common.delegate.IStatictusData;
 import amodule._common.delegate.IStatisticCallback;
@@ -35,6 +37,8 @@ import amodule._common.delegate.StatisticCallback;
 import amodule._common.helper.WidgetDataHelper;
 import amodule._common.utility.WidgetUtility;
 import amodule.home.view.HomeFuncNavView1;
+
+import static acore.logic.stat.StatisticsManager.STAT_DATA;
 
 /**
  * Description :
@@ -45,12 +49,12 @@ import amodule.home.view.HomeFuncNavView1;
  */
 
 public class FuncNavView1 extends HomeFuncNavView1 implements IBindMap,IStatictusData,
-        ISaveStatistic,IHandlerClickEvent,IStatisticCallback, ISetShowIndex, IUpdatePadding {
+        ISaveStatistic,IHandlerClickEvent,IStatisticCallback, ISetShowIndex, IUpdatePadding,ISetIsCache {
 
     private StatisticCallback mStatisticCallback;
 
     private int mShowIndex = -1;
-
+    private boolean isCache;
 
     public FuncNavView1(Context context) {
         super(context);
@@ -76,7 +80,7 @@ public class FuncNavView1 extends HomeFuncNavView1 implements IBindMap,IStatictu
             setVisibility(GONE);
             return;
         }
-
+        adapterFuncNav1.setCache(isCache);
         Map<String,String> dataMap = StringManager.getFirstMap(data.get("data"));
         ArrayList<Map<String, String>> arrayList = StringManager.getListMapByJson(dataMap.get("list"));
         if (arrayList.isEmpty()){
@@ -103,13 +107,18 @@ public class FuncNavView1 extends HomeFuncNavView1 implements IBindMap,IStatictu
         computeItemSpacing();
         adapterFuncNav1.notifyDataSetChanged();
         setVisibility(VISIBLE);
-        listView.setOnItemClickListener(new RvListView.OnItemClickListener() {
+        listView.setOnItemClickListener(new OnItemClickListenerRvStat() {
             @Override
-            public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
+            public void onItemClicked(View view, RecyclerView.ViewHolder holder, int position) {
                 if(position<mapArrayList.size()) {
                     AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), mapArrayList.get(position).get("url"), true);
                     statistic(position, mapArrayList.get(position));
                 }
+            }
+
+            @Override
+            protected String getStatData(int position) {
+                return mapArrayList.get(position).get(STAT_DATA);
             }
         });
     }
@@ -159,5 +168,10 @@ public class FuncNavView1 extends HomeFuncNavView1 implements IBindMap,IStatictu
     @Override
     public void updatePadding(int l, int t, int r, int b) {
         setPadding(l, t, r, b);
+    }
+
+    @Override
+    public void setCache(boolean cache) {
+        isCache = cache;
     }
 }
