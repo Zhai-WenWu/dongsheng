@@ -51,6 +51,7 @@ public class VideoPlayerController {
     //乐视的secretkey
     @SuppressWarnings("FieldCanBeLocal")
     private final String secretkey = "5e172624924a79f81d60cb2c28f66c4d";
+    public static boolean isShowVideoTip= true;//默认展示非wifi，
     private String mVideoUnique = "", mUserUnique = "";
     protected ImageViewVideo mImageView = null;
     private boolean mHasVideoInfo = false;
@@ -387,15 +388,25 @@ public class VideoPlayerController {
                 if(isAutoPaly){//当前wifi
                     removeTipView();
                 }else {
-                    if(!isWifi && isUserClick){
+                    if(isUserClick){
                         removeDishView();
                         hideVideoImage();
+                        if(isWifi){
+                            removeTipView();
+                            videoPlayer.startPlayLogic();
+                            if (mStatisticsPlayCountCallback != null) {
+                                mStatisticsPlayCountCallback.onStatistics();
+                            }
+                        }
                     }
                     return;
                 }
             }
             removeDishView();
             hideVideoImage();
+            if(!isWifi&&isShowVideoTip){
+                return;
+            }
             removeTipView();
             videoPlayer.startPlayLogic();
             if (mStatisticsPlayCountCallback != null) {
@@ -806,6 +817,7 @@ public class VideoPlayerController {
         @Override
         public void onClick(View v) {
             setShowMedia(true);
+            isShowVideoTip= false;
             setOnClick();
             new Thread(() -> FileManager.saveShared(mContext,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI,"1")).start();
         }

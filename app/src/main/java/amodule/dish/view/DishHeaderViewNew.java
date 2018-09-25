@@ -212,8 +212,8 @@ public class DishHeaderViewNew extends LinearLayout {
                     mVideoPlayerController.setShowAd(true);
                     AdType="1";
                 }
-                if (isAutoPaly && mVideoPlayerController != null && isShowActivity())
-                    mVideoPlayerController.setOnClick();
+//                if (isAutoPaly && mVideoPlayerController != null && isShowActivity())
+//                    mVideoPlayerController.setOnClick();
             }
         }, activity, "result_media");
         xhAllAdControl.registerRefreshCallback();

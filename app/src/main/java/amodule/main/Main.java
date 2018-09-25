@@ -344,6 +344,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
 
     public void onChangeSend(View view){
         AliyunCommon.getInstance().startRecord(this);
+        XHClick.onEvent(this,"a_index640","底部拍摄按钮点击量");
     }
 
     Handler mTimerHandler = null;
