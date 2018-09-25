@@ -72,8 +72,8 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
     public static final String STA_ID = "a_video_details";
     //TODO 广告id
     public static final String[] AD_IDS = new String[]{
-            AdPlayIdConfig.VIDEO_LIST_1,
-            AdPlayIdConfig.VIDEO_LIST_2
+            AdPlayIdConfig.SEARCH_LIST_1,
+            AdPlayIdConfig.SEARCH_LIST_2
     };
 
     private final int UP_SCROLL = 1;
