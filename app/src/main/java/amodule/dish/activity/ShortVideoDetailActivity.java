@@ -477,7 +477,7 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
     private void initAd() {
         final ArrayList<String> adIdList = new ArrayList<>();
         Collections.addAll(adIdList, AD_IDS);
-        int[] adPositionArr = {3, 14};
+        int[] adPositionArr = {3, 9};
         Map<String, Integer> adPositionMap = new HashMap<>();
         for (int i = 0, length = Math.min(adPositionArr.length, adIdList.size()); i < length; i++) {
             adPositionMap.put(adIdList.get(i),adPositionArr[i]);
