@@ -572,6 +572,7 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
                                 updateComment = true;
                                 mExtraModule.setCommentNum(firstLoadModule.getCommentNum());
                             }
+                            mExtraModule.setShareModule(firstLoadModule.getShareModule());
                             if (rvVericalVideoItemAdapter != null && TextUtils.equals(rvVericalVideoItemAdapter.getCurrentViewHolder().data.getCode(), mExtraModule.getCode())) {
                                 RvVericalVideoItemAdapter.ItemViewHolder currentHolder = rvVericalVideoItemAdapter.getCurrentViewHolder();
                                 if (updateFavorite) {
