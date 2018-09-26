@@ -103,7 +103,7 @@ public class StatisticsManager {
      * @param stayTime
      */
     public static void pageStay(String p, String stayTime) {
-        saveData(EVENT_STAY, p, EMPTY, EMPTY, EMPTY, EMPTY, stayTime, null);
+        saveData(EVENT_STAY, p, EMPTY, EMPTY, EMPTY, EMPTY, stayTime, EMPTY,null);
     }
 
     /**
@@ -116,7 +116,7 @@ public class StatisticsManager {
 //        if (statData == null || statData.isEmpty()) {
 //            throw new IllegalArgumentException("statData is null.");
 //        }
-        saveData(EVENT_LIST_SHOW, p, m, pos, EMPTY, s1, EMPTY, statData);
+        saveData(EVENT_LIST_SHOW, p, m, pos, EMPTY, s1, EMPTY,EMPTY, statData);
     }
 
     public static void btnClick(String p, String m, String btn) {
@@ -124,19 +124,19 @@ public class StatisticsManager {
     }
 
     public static void btnClick(String p, String m, String pos, String btn, String s1) {
-        saveData(EVENT_BTN_CLICK, p, m, pos, btn, s1, EMPTY, null);
+        saveData(EVENT_BTN_CLICK, p, m, pos, btn, s1, EMPTY, EMPTY,null);
     }
 
     public static void listClick(String p, String m, String pos, String s1, @Nullable String statData) {
-        saveData(EVENT_LIST_CLICK, p, m, pos, EMPTY, s1, EMPTY, statData);
+        saveData(EVENT_LIST_CLICK, p, m, pos, EMPTY, s1, EMPTY,EMPTY, statData);
     }
 
-    public static void videoView(String p, String m, String pos, String n1, @Nullable String statData) {
-        saveData(EVENT_VIDEO_VIEW, p, m, pos, EMPTY, EMPTY, n1, statData);
+    public static void videoView(String p, String m, String pos, String n1, String n2,@Nullable String statData) {
+        saveData(EVENT_VIDEO_VIEW, p, m, pos, EMPTY, EMPTY, n1, n2,statData);
     }
 
     public static void specialAction(String p, String m, String pos, String btn, String s1, String n1) {
-        saveData(EVENT_SPECIAL_ACTION, p, m, pos, btn, s1, n1, null);
+        saveData(EVENT_SPECIAL_ACTION, p, m, pos, btn, s1, n1, EMPTY,null);
     }
 
     /**
@@ -149,7 +149,7 @@ public class StatisticsManager {
      * @param n1  附属字段
      */
     public static void saveData(String e, String p, String m, String pos, String btn,
-                                String s1, String n1, String statData) {
+                                String s1, String n1, String n2,String statData) {
         JSONObject jsonObject = new JSONObject();
         try {
             long t = System.currentTimeMillis() / 1000;
@@ -161,6 +161,7 @@ public class StatisticsManager {
             putValue(jsonObject, "btn", btn);
             putValue(jsonObject, "s1", s1);
             putValue(jsonObject, "n1", n1);
+            putValue(jsonObject, "n2", n2);
             putValue(jsonObject, "statJson", statData);
             Log.i(TAG, "saveData: " + jsonObject);
             if (SpecialOrder.isOpenSwitchStatLayout(XHApplication.in())) {
@@ -189,7 +190,7 @@ public class StatisticsManager {
             if(data == null || data.isEmpty()){
                 return;
             }
-            String url = Tools.isDebug(XHApplication.in()) ? StringManager.API_CHECK_LOG : api;
+            String url = Tools.isDebug(XHApplication.in()) ? api.replace("xiangha","ixiangha") : api;
             handleParamsDevicePart();
             JSONArray jsonArray = new JSONArray();
             for (String value : data) {

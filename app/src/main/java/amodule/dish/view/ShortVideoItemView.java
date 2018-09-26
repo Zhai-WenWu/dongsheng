@@ -1,5 +1,6 @@
 package amodule.dish.view;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -395,13 +396,15 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
         mPlayerView.changePlayBtnState(true);
     }
 
+    @SuppressLint("DefaultLocale")
     private void statisticsVideoView() {
         try{
             String tag = getTag(STAT_TAG) != null ? (String) getTag(STAT_TAG) :getClass().getSimpleName();
             float duration = mPlayerView.getDuration();
             float tmelp = mPlayerView.getCurrentPositionWhenPlaying() / duration + playNum;
+            float total = playNum * duration + mPlayerView.getCurrentPositionWhenPlaying();
             StatisticsManager.videoView(getContext().getClass().getSimpleName(),tag,String.valueOf(position + 1),
-                    String.format("%.2f",tmelp),mData.getStatJson());
+                    String.format("%.2f",tmelp),String.format("%.2f",total),mData.getStatJson());
         }catch (Exception e){
 
         }
