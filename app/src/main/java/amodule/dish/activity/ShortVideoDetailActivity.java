@@ -70,7 +70,6 @@ import static acore.tools.ObserverManager.NOTIFY_SHARE;
 public class ShortVideoDetailActivity extends BaseAppCompatActivity implements IObserver {
 
     public static final String STA_ID = "a_video_details";
-    //TODO 广告id
     public static final String[] AD_IDS = new String[]{
             AdPlayIdConfig.VIDEO_LIST_1,
             AdPlayIdConfig.VIDEO_LIST_2
@@ -519,6 +518,7 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
                         adModule.adType = adMap.get("type");
                         adModule.adRealPosition = Tools.parseIntOfThrow(adMap.get("index"));
                         //数据
+                        adModule.setPlayMode("2");
                         adModule.setName(adMap.get("desc"));
                         adModule.setLikeNum(String.valueOf(Tools.getRandom(500,1001)));
                         adModule.setShareNum(String.valueOf(Tools.getRandom(50,201)));
