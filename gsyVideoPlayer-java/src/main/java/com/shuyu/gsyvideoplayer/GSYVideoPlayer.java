@@ -1319,7 +1319,7 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
         try {
             Log.d("tzy","release");
             releaseAllVideos();
-            unListenerNetWorkState();
+//            unListenerNetWorkState();
         }catch (Exception e){
 
         }
