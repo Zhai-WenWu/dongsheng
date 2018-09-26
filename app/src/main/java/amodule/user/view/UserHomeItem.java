@@ -51,8 +51,6 @@ public class UserHomeItem extends BaseItemView {
 
     protected void initView() {
         mLineTop = findViewById(R.id.line_top);
-
-
     }
 
     public void setAdControl(AdControlParent adControlParent) {
@@ -128,17 +126,26 @@ public class UserHomeItem extends BaseItemView {
         loadImage(url, view);
     }
 
-    public interface OnItemClickListener {
-        void onItemClick(UserHomeItem itemView, Map<String, String> dataMap);
-    }
-
     protected OnItemClickListener mOnItemClickListener;
     public void setOnItemClickListener(OnItemClickListener clickListener) {
         mOnItemClickListener = clickListener;
     }
 
+    protected OnDeleteClickCallback mDeleteClickListener;
+    public void setDeleteClickListener(OnDeleteClickCallback deleteClickListener) {
+        mDeleteClickListener = deleteClickListener;
+    }
+
     public void notifyUploadStatusChanged(String uploadType) {
 
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(UserHomeItem itemView, Map<String, String> dataMap);
+    }
+
+    public interface OnDeleteClickCallback{
+        void onDeleteClick(Map<String,String> data);
     }
 
 }

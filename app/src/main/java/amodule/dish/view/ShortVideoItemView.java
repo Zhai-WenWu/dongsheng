@@ -62,6 +62,7 @@ import amodule._common.conf.GlobalVariableConfig;
 import amodule.article.view.BottomDialog;
 import amodule.comment.CommentDialog;
 import amodule.dish.activity.ShortVideoDetailActivity;
+import amodule.dish.adapter.RvVericalVideoItemAdapter;
 import amodule.dish.video.module.ShortVideoDetailModule;
 import amodule.main.Main;
 import amodule.main.view.item.BaseItemView;
@@ -284,6 +285,9 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
             public void onAutoComplete(String url, Object... objects) {
                 mInnerPlayState = INNER_PLAY_STATE_AUTO_COMPLETE;
                 changeThumbImageState(true);
+                if( playCompleteCallBack != null && position >= 0){
+                    playCompleteCallBack.videoComplete(position);
+                }
                 if (mRepeatEnable) {
                     prepareAsync();
                 }
@@ -484,12 +488,18 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
         if (!TextUtils.isEmpty(title)) {
             mTitleText.setVisibility(View.VISIBLE);
             if (mData.isEssence()) {
-                IconTextSpan.Builder ib = new IconTextSpan.Builder(context);
-                ib.setBgColorInt(getResources().getColor(R.color.color_fa273b))
-                        .setTextColorInt(getResources().getColor(R.color.c_white_text)).setText("精选")
-                        .setRadius(2f).setRightMargin(3).setBgHeight(18f).setTextSize(12f);
-                SpannableStringBuilder ssb = new SpannableStringBuilder(" " + title);
-                ssb.setSpan(ib.build(), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                IconTextSpan.Builder ib = new IconTextSpan.Builder();
+                ib.setBgColorInt(getResources().getColor(R.color.color_fa273b));
+                ib.setTextColorInt(getResources().getColor(R.color.c_white_text));
+                ib.setText("精选");
+                ib.setRadius(2f);
+                ib.setRightMargin(3);
+                ib.setBgHeight(18f);
+                ib.setTextSize(12f);
+                StringBuffer sb = new StringBuffer(" ");
+                sb.append(title);
+                SpannableStringBuilder ssb = new SpannableStringBuilder(sb.toString());
+                ssb.setSpan(ib.build(getContext()), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 mTitleText.setText(ssb);
             } else {
                 mTitleText.setText(title);
@@ -1019,6 +1029,10 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
 
     public void setOnDeleteCallback(OnDeleteCallback deleteCallback) {
         mOnDeleteCallback = deleteCallback;
+    }
+    public RvVericalVideoItemAdapter.PlayCompleteCallBack playCompleteCallBack;
+    public void setPlayCompleteCallBack(RvVericalVideoItemAdapter.PlayCompleteCallBack completeCallBack){
+        this.playCompleteCallBack= completeCallBack;
     }
 }
 //1062

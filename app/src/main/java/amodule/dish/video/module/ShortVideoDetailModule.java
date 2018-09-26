@@ -10,22 +10,24 @@ import amodule.topic.model.VideoModel;
 
 public class ShortVideoDetailModule {
 
-    protected String mCode;
-    protected String mName;
-    protected boolean isEssence;
-    protected boolean isFav;
-    protected boolean isLike;
-    protected String mFavNum;
-    protected String mCommentNum;
-    protected String mLikeNum;
-    protected String mShareNum;
-    protected String mClickNum;
-    protected VideoModel mVideoModel;
-    protected ImageModel mImageModel;
-    protected CustomerModel mCustomerModel;
-    protected TopicModel mTopicModel;
-    protected AddressModel mAddressModel;
-    protected amodule.dish.video.module.ShareModule mShareModule;
+    private String mCode;
+    private String mName;
+    private boolean isEssence;
+    private boolean isFav;
+    private boolean isLike;
+    private String mFavNum;
+    private String playMode;
+    private String mCommentNum;
+    private String mLikeNum;
+    private String mShareNum;
+    private String mClickNum;
+    private VideoModel mVideoModel;
+    private ImageModel mImageModel;
+    private CustomerModel mCustomerModel;
+    private TopicModel mTopicModel;
+    private AddressModel mAddressModel;
+    private amodule.dish.video.module.ShareModule mShareModule;
+
 
     public String getCode() {
         return mCode;
@@ -182,5 +184,13 @@ public class ShortVideoDetailModule {
     public int hashCode() {
 
         return Objects.hash(mCode, mName, isEssence, isFav, isLike, mFavNum, mCommentNum, mLikeNum, mShareNum, mClickNum, mVideoModel, mImageModel, mCustomerModel, mTopicModel, mAddressModel, mShareModule);
+    }
+
+    public String getPlayMode() {
+        return playMode;
+    }
+
+    public void setPlayMode(String playMode) {
+        this.playMode = playMode;
     }
 }

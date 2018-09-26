@@ -88,7 +88,7 @@ public class HomeGridItem extends HomeItem {
             mTitle.setVisibility(View.VISIBLE);
             if (TextUtils.equals(mDataMap.get("isEssence"), "2")) {
 
-                IconTextSpan.Builder ib = new IconTextSpan.Builder(getContext());
+                IconTextSpan.Builder ib = new IconTextSpan.Builder();
                 ib.setBgColorInt(getResources().getColor(R.color.icon_text_bg));
                 ib.setTextColorInt(getResources().getColor(R.color.c_white_text));
                 ib.setText("精选");
@@ -99,7 +99,7 @@ public class HomeGridItem extends HomeItem {
                 StringBuffer sb = new StringBuffer(" ");
                 sb.append(title);
                 SpannableStringBuilder ssb = new SpannableStringBuilder(sb.toString());
-                ssb.setSpan(ib.build(), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                ssb.setSpan(ib.build(getContext()), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 mTitle.setText(ssb);
             } else {
                 mTitle.setText(title);

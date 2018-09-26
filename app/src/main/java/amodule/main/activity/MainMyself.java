@@ -490,6 +490,7 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
                     XHClick.mapStat(this, tongjiId, "导航", "贴子");
                     Intent intent_subject = new Intent(MainMyself.this, FriendHome.class);
                     intent_subject.putExtra("code", LoginManager.userInfo.get("code"));
+                    intent_subject.putExtra("index",1);
                     startActivity(intent_subject);
                     break;
                 case R.id.ll_dish:
@@ -498,7 +499,7 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
                     XHClick.mapStat(this, tongjiId, "导航", "菜谱");
                     Intent intent_dish = new Intent(MainMyself.this, FriendHome.class);
                     intent_dish.putExtra("code", LoginManager.userInfo.get("code"));
-                    intent_dish.putExtra("index",1);
+                    intent_dish.putExtra("index",2);
                     startActivity(intent_dish);
                     break;
                 case R.id.ll_flow:

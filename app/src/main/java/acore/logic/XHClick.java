@@ -561,11 +561,11 @@ public class XHClick {
     /**
      * 仅用于测试的.
      *
-     * @param context
+     * @param contextx
      */
     private static void showToast(Context context, String content) {
 //		Log.d("------统计------",content);
-        UtilLog.print(XHConf.log_tag_stat, "d", content);
+//        UtilLog.print(XHConf.log_tag_stat, "d", content);
 //		Tools.showToast(context, content);
     }
 
