@@ -259,6 +259,32 @@
                     android:text="encode_goto"/>
             </LinearLayout>
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="统计是否显示"
+                    android:textSize="@dimen/sp_20" />
+
+                <Switch
+                    android:id="@+id/stat_show_switch"
+                    android:layout_width="wrap_content"
+                    android:switchMinWidth="@dimen/dp_10"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dp_10"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:switchPadding="@dimen/dp_5"
+                    android:textOff="OFF"
+                    android:textOn="ON"
+                    android:thumbTextPadding="@dimen/dp_5" />
+
+            </RelativeLayout>
+
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>

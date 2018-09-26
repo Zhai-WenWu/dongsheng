@@ -30,6 +30,9 @@ import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
 import third.location.LocationHelper;
 
+import static acore.logic.stat.UnburiedStatisticsSQLite.GXHTJ;
+import static acore.logic.stat.UnburiedStatisticsSQLite.Normal;
+
 
 /**
  * Description :
@@ -84,11 +87,11 @@ public class StatisticsManager {
 
     /** 强制上床统计首页请求数据 */
     public static void forceSendStatisticsData() {
-        ArrayList<String> data = UnburiedStatisticsSQLite.instance().selectAllData();
-        if (data != null && data.size() > 0) {
-            sendStatisticsData(data);
-            UnburiedStatisticsSQLite.instance().deleteAllData();
-        }
+        final ArrayList<String> list = UnburiedStatisticsSQLite.instance().selectAllDataByType(Normal);
+        new Handler(Looper.getMainLooper()).post(() -> sendStatisticsData(list,StringManager.API_STATISTIC_S9));
+        final ArrayList<String> listGXHTJ = UnburiedStatisticsSQLite.instance().selectAllDataByType(GXHTJ);
+        new Handler(Looper.getMainLooper()).post(() -> sendStatisticsData(listGXHTJ,StringManager.API_STATISTIC_S9_GXH));
+        UnburiedStatisticsSQLite.instance().deleteAllData();
     }
 
     /**
@@ -160,24 +163,27 @@ public class StatisticsManager {
                 DesktopLayout.of(XHApplication.in()).insertData(jsonObject.toString());
             }
             //存数据库
-            UnburiedStatisticsSQLite.instance().insterData(jsonObject.toString());
+            String type = !TextUtils.isEmpty(statData) && statData.contains(GXHTJ) ? GXHTJ : Normal;
+            UnburiedStatisticsSQLite.instance().insterData(jsonObject.toString(),type);
         } catch (Exception exc) {
             exc.printStackTrace();
         }
 
         if (UnburiedStatisticsSQLite.instance().getDataCount() > MAX_DATA_COUNT) {
             //获取全部数据
-            final ArrayList<String> list = UnburiedStatisticsSQLite.instance().selectAllData();
+            final ArrayList<String> list = UnburiedStatisticsSQLite.instance().selectAllDataByType(Normal);
+            new Handler(Looper.getMainLooper()).post(() -> sendStatisticsData(list,StringManager.API_STATISTIC_S9));
+            final ArrayList<String> listGXHTJ = UnburiedStatisticsSQLite.instance().selectAllDataByType(GXHTJ);
+            new Handler(Looper.getMainLooper()).post(() -> sendStatisticsData(listGXHTJ,StringManager.API_STATISTIC_S9_GXH));
             //删除全部数据
             UnburiedStatisticsSQLite.instance().deleteAllData();
-            new Handler(Looper.getMainLooper()).post(() -> sendStatisticsData(list));
         }
     }
 
-    private static void sendStatisticsData(ArrayList<String> data) {
+    private static void sendStatisticsData(ArrayList<String> data,String api) {
         try {
             String url = Tools.isDebug(XHApplication.in())
-                    ? StringManager.API_STATISTIC_S9 : StringManager.API_STATISTIC_S9;
+                    ? StringManager.API_CHECK_LOG : api;
             handleParamsDevicePart();
             JSONArray jsonArray = new JSONArray();
             for (String value : data) {

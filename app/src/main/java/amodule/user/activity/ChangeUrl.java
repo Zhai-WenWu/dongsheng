@@ -22,6 +22,7 @@ import java.net.URLEncoder;
 
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
+import acore.logic.SpecialOrder;
 import acore.override.XHApplication;
 import acore.override.activity.base.BaseActivity;
 import acore.tools.ChannelUtil;
@@ -50,6 +51,8 @@ public class ChangeUrl extends BaseActivity {
 
     private EditText mMallPortEt;
     private Switch mMallSwitchBtn;
+
+    private Switch mStatShowBtn;
 
     private Switch mRequsetFailTipSwitch, ds_from_switch;
 
@@ -207,6 +210,7 @@ public class ChangeUrl extends BaseActivity {
                 FileManager.saveShared(ChangeUrl.this, FileManager.xmlFile_appInfo, FileManager.xmlKey_ds_from_show, isChecked ? "2" : "1");
             }
         });
+        mStatShowBtn.setOnCheckedChangeListener((buttonView, isChecked) -> SpecialOrder.switchStatLayoutVisibility(ChangeUrl.this));
 
         OnClickListener l = new OnClickListener() {
             @Override
@@ -258,6 +262,7 @@ public class ChangeUrl extends BaseActivity {
         mMallSwitchBtn = (Switch) findViewById(R.id.mall_switch);
         mRequsetFailTipSwitch = (Switch) findViewById(R.id.request_fail_tip_switch);
         ds_from_switch = (Switch) findViewById(R.id.ds_from_switch);
+        mStatShowBtn = findViewById(R.id.stat_show_switch);
         ((TextView) findViewById(R.id.text_channel)).setText("渠道号:  " + ChannelUtil.getChannel(this));
 
         mInputEdit = (EditText) findViewById(R.id.edit_text);
@@ -323,6 +328,8 @@ public class ChangeUrl extends BaseActivity {
         //电商来源提示
         String ds_form = FileManager.loadShared(this, FileManager.xmlFile_appInfo, FileManager.xmlKey_ds_from_show).toString();
         ds_from_switch.setChecked("2".equals(ds_form));
+        //统计数据提示框
+        mStatShowBtn.setChecked(SpecialOrder.isOpenSwitchStatLayout(this));
     }
 
     @Override

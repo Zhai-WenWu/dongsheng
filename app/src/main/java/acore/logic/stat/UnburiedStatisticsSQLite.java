@@ -21,6 +21,9 @@ public class UnburiedStatisticsSQLite extends SQLiteOpenHelper {
     private static final String DB_NAME = "unburiedStatistics.db";// 数据库名称
     private static final String TB_NAME = "commonData";// 数据库名称
     private static final String statistics_data = "statistics_data";
+    private static final String data_type = "data_type";
+    public static final String Normal = "normal";
+    public static final String GXHTJ = "#GXHTJ#";
 
     private static volatile UnburiedStatisticsSQLite instance = null;
 
@@ -42,7 +45,8 @@ public class UnburiedStatisticsSQLite extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("create table if not exists " + TB_NAME +
-                "(_id INTEGER PRIMARY KEY AUTOINCREMENT, " + statistics_data + " VARCHAR)");
+                "(_id INTEGER PRIMARY KEY AUTOINCREMENT, " + statistics_data + " VARCHAR," +
+                data_type + " VARCHAR)");
     }
 
     @Override
@@ -58,12 +62,13 @@ public class UnburiedStatisticsSQLite extends SQLiteOpenHelper {
      *
      * @return
      */
-    public synchronized long insterData(String data) {
+    public synchronized long insterData(String data,String type) {
         SQLiteDatabase db = null;
         try {
             db = getWritableDatabase();
             ContentValues values = new ContentValues();
             values.put(statistics_data, data);
+            values.put(data_type, type);
             return db.insert(TB_NAME, null, values);
         } finally {
             closeDB(db);
@@ -82,6 +87,23 @@ public class UnburiedStatisticsSQLite extends SQLiteOpenHelper {
         try {
             db = getReadableDatabase();
             cursor = db.rawQuery("select * from " + TB_NAME, null);
+            while (cursor.moveToNext()) {
+                arrayList.add(cursor.getString(cursor.getColumnIndex(statistics_data)));
+            }
+
+        } finally {
+            close(db, cursor);
+        }
+        return arrayList;
+    }
+
+    public ArrayList<String> selectAllDataByType(String type) {
+        ArrayList<String> arrayList = new ArrayList<>();
+        SQLiteDatabase db = null;
+        Cursor cursor = null;
+        try {
+            db = getReadableDatabase();
+            cursor = db.rawQuery("select * from " + TB_NAME + " where data_type=?", new String[]{type});
             while (cursor.moveToNext()) {
                 arrayList.add(cursor.getString(cursor.getColumnIndex(statistics_data)));
             }

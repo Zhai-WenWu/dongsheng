@@ -30,6 +30,7 @@ import java.util.List;
 
 import acore.logic.SpecialOrder;
 import acore.tools.Tools;
+import acore.tools.ToolsDevice;
 import acore.widget.rvlistview.RvListView;
 import acore.widget.rvlistview.adapter.RvBaseAdapter;
 import acore.widget.rvlistview.holder.RvBaseViewHolder;
@@ -174,7 +175,7 @@ public class DesktopLayout extends RelativeLayout {
                     textView.setTextColor(Color.parseColor("#FF004D"));
                 } else if (data.contains("\"" + EVENT_SPECIAL_ACTION + "\"")) {
                     textView.setTextColor(Color.parseColor("#ffffff"));
-                }else{
+                } else {
                     textView.setTextColor(Color.parseColor("#ffffff"));
                 }
                 JSONObject jsonObject = new JSONObject(data);
@@ -196,7 +197,7 @@ public class DesktopLayout extends RelativeLayout {
 
     /** 显示DesktopLayout */
     public void showDesk() {
-        if(!isShow && instance != null){
+        if (!isShow && instance != null) {
             isShow = true;
             mWindowManager.addView(instance, mLayout);
             instance.requestLayout();
@@ -205,7 +206,7 @@ public class DesktopLayout extends RelativeLayout {
 
     /** 关闭DesktopLayout */
     public void closeDesk() {
-        if(isShow && instance != null){
+        if (isShow && instance != null) {
             isShow = false;
             mWindowManager.removeView(instance);
         }
@@ -236,8 +237,8 @@ public class DesktopLayout extends RelativeLayout {
         mLayout.gravity = Gravity.TOP | Gravity.LEFT;
 
         // 设置窗体宽度和高度
-        mLayout.width = Tools.getDimen(getContext(), R.dimen.dp_215);
-        mLayout.height = Tools.getDimen(getContext(), R.dimen.dp_335);
+        mLayout.width = Tools.getDimen(getContext(), R.dimen.dp_240);
+        mLayout.height = (int) (ToolsDevice.getWindowPx(getContext()).heightPixels * 3 / 4f);
 
     }
 
