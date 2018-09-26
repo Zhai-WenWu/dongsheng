@@ -170,7 +170,7 @@ public class ShortVideoADItemView extends BaseItemView implements View.OnClickLi
         if(animatorSet != null){
             animatorSet.cancel();
         }
-        mSeeDetailButton.setVisibility(GONE);
+//        mSeeDetailButton.setVisibility(GONE);
         mThumbImg.setScaleX(1.5f);
         mThumbImg.setScaleY(1.5f);
     }
