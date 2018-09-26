@@ -486,9 +486,16 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
 
     boolean initAdOver = false;
     private void initAd() {
+        Bundle bundle = getIntent().getExtras();
+        if(bundle != null){
+            String sourcePage = bundle.getString("sourcePage");
+            if(!TextUtils.equals("1",sourcePage)){
+                return;
+            }
+        }
         final ArrayList<String> adIdList = new ArrayList<>();
         Collections.addAll(adIdList, AD_IDS);
-        int[] adPositionArr = {3, 9};
+        int[] adPositionArr = {3, 14};
         Map<String, Integer> adPositionMap = new HashMap<>();
         for (int i = 0, length = Math.min(adPositionArr.length, adIdList.size()); i < length; i++) {
             adPositionMap.put(adIdList.get(i),adPositionArr[i]);
