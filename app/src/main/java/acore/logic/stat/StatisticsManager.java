@@ -88,9 +88,13 @@ public class StatisticsManager {
     /** 强制上床统计首页请求数据 */
     public static void forceSendStatisticsData() {
         final ArrayList<String> list = UnburiedStatisticsSQLite.instance().selectAllDataByType(Normal);
-        new Handler(Looper.getMainLooper()).post(() -> sendStatisticsData(list,StringManager.API_STATISTIC_S9));
+        if(list != null && !list.isEmpty()){
+            new Handler(Looper.getMainLooper()).post(() -> sendStatisticsData(list,StringManager.API_STATISTIC_S9));
+        }
         final ArrayList<String> listGXHTJ = UnburiedStatisticsSQLite.instance().selectAllDataByType(GXHTJ);
-        new Handler(Looper.getMainLooper()).post(() -> sendStatisticsData(listGXHTJ,StringManager.API_STATISTIC_S9_GXH));
+        if(listGXHTJ != null && !listGXHTJ.isEmpty()){
+            new Handler(Looper.getMainLooper()).post(() -> sendStatisticsData(list,StringManager.API_STATISTIC_S9_GXH));
+        }
         UnburiedStatisticsSQLite.instance().deleteAllData();
     }
 
@@ -182,8 +186,10 @@ public class StatisticsManager {
 
     private static void sendStatisticsData(ArrayList<String> data,String api) {
         try {
-            String url = Tools.isDebug(XHApplication.in())
-                    ? StringManager.API_CHECK_LOG : api;
+            if(data == null || data.isEmpty()){
+                return;
+            }
+            String url = Tools.isDebug(XHApplication.in()) ? StringManager.API_CHECK_LOG : api;
             handleParamsDevicePart();
             JSONArray jsonArray = new JSONArray();
             for (String value : data) {
@@ -193,7 +199,7 @@ public class StatisticsManager {
             LinkedHashMap<String, String> params = new LinkedHashMap<>();
             params.put("log_json", statisticsJson.toString());
             if (SpecialOrder.isOpenSwitchStatLayout(XHApplication.in())) {
-                DesktopLayout.of(XHApplication.in()).insertData("----------已上传----------");
+                DesktopLayout.of(XHApplication.in()).insertData("--"+url+" 已上传--");
             }
             ReqInternet.in().doPost(url, params, new InternetCallback() {
                 @Override

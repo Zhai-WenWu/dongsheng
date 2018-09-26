@@ -210,6 +210,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
             initThrid();
             initOther();
             initRunTime();
+            StatisticsManager.sendLiveTime(Main.this);
             mainInitDataControl.initWelcomeOncreate();
             mainInitDataControl.initWelcomeAfter(Main.this);
         }
