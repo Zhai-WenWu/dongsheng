@@ -35,6 +35,8 @@ public class NetInfoModule {
     private Context mContext;
 
     private boolean mNoNetworkPermission = false;
+    private boolean isCreate=false;
+    private boolean isRegister=false;
 
 
     public NetInfoModule(Context context, NetChangeListener netChangeListener) {
@@ -43,6 +45,9 @@ public class NetInfoModule {
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         mConnectivityBroadcastReceiver = new ConnectivityBroadcastReceiver();
         mNetChangeListener = netChangeListener;
+        mConnectivityBroadcastReceiver.setRegistered(false);
+        isCreate=true;
+
     }
 
     public void onHostResume() {
@@ -72,14 +77,17 @@ public class NetInfoModule {
     }
 
     private void registerReceiver() {
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
-        mContext.registerReceiver(mConnectivityBroadcastReceiver, filter);
-        mConnectivityBroadcastReceiver.setRegistered(true);
+        if(mContext!=null && isCreate) {
+            IntentFilter filter = new IntentFilter();
+            filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+            mContext.registerReceiver(mConnectivityBroadcastReceiver, filter);
+            mConnectivityBroadcastReceiver.setRegistered(true);
+            isRegister = true;
+        }
     }
 
     private void unregisterReceiver() {
-        if (mConnectivityBroadcastReceiver.isRegistered()) {
+        if (mConnectivityBroadcastReceiver.isRegistered()&& mContext!=null && isCreate && isRegister) {
             mContext.unregisterReceiver(mConnectivityBroadcastReceiver);
             mConnectivityBroadcastReceiver.setRegistered(false);
         }
