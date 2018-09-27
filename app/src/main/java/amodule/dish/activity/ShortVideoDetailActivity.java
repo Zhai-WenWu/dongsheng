@@ -70,7 +70,6 @@ import static acore.tools.ObserverManager.NOTIFY_SHARE;
 public class ShortVideoDetailActivity extends BaseAppCompatActivity implements IObserver {
 
     public static final String STA_ID = "a_video_details";
-    //TODO 广告id
     public static final String[] AD_IDS = new String[]{
             AdPlayIdConfig.VIDEO_LIST_1,
             AdPlayIdConfig.VIDEO_LIST_2
@@ -240,6 +239,17 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
             if (mDatas != null) {
                 mAdapter.getCurrentViewHolder().stopVideo();
                 ShortVideoDetailActivity.this.finish();
+            }
+        });
+        mAdapter.setPlayCompleteCallBack(new RvVericalVideoItemAdapter.PlayCompleteCallBack() {
+            @Override
+            public void videoComplete(int position) {
+                if(position>=0&&position+1<mDatas.size()){
+                    String playMode= mDatas.get(position + 1).getPlayMode();
+                    if("1".equals(playMode)||("2".equals(playMode)&&"wifi".equals(ToolsDevice.getNetWorkType(ShortVideoDetailActivity.this)))) {
+                        recyclerView.smoothScrollToPosition(position + 1);
+                    }
+                }
             }
         });
         mAdapter.setOnADShowCallback((index, view, listIndex) -> mXHAllAdControl.onAdBind(index, view, listIndex));
@@ -479,7 +489,7 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
         if(bundle != null){
             String sourcePage = bundle.getString("sourcePage");
             if(!TextUtils.equals("1",sourcePage)){
-               return;
+                return;
             }
         }
         final ArrayList<String> adIdList = new ArrayList<>();
@@ -505,10 +515,10 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
                         ShortVideoDetailADModule adModule = new ShortVideoDetailADModule();
                         adModule.adId = adId;
                         adModule.adPositionInData = adPositionMap.get(adId);
-                        
                         adModule.adType = adMap.get("type");
                         adModule.adRealPosition = Tools.parseIntOfThrow(adMap.get("index"));
                         //数据
+                        adModule.setPlayMode("2");
                         adModule.setName(adMap.get("desc"));
                         adModule.setLikeNum(String.valueOf(Tools.getRandom(500,1001)));
                         adModule.setShareNum(String.valueOf(Tools.getRandom(50,201)));
@@ -730,6 +740,7 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
             ShortVideoDetailModule module = new ShortVideoDetailModule();
             module.setCode(itemMap.get("code"));
             module.setName(itemMap.get("name"));
+            module.setPlayMode(itemMap.get("playMode"));
             module.setEssence("2".equals(itemMap.get("isEssence")));
             module.setFav("2".equals(itemMap.get("isFav")));
             module.setLike("2".equals(itemMap.get("isLike")));

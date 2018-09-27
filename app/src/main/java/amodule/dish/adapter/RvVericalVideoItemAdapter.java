@@ -168,6 +168,7 @@ public class RvVericalVideoItemAdapter extends BaseAdapter<ShortVideoDetailModul
                     mOnDeleteCallback.onDelete(module, position1);
                 }
             });
+            shortVideoItemView.setPlayCompleteCallBack(playCompleteCallBack);
         }
 
         public int getPlayState() {
@@ -332,6 +333,13 @@ public class RvVericalVideoItemAdapter extends BaseAdapter<ShortVideoDetailModul
             return mCurrentViewHolder.getPlayState();
         }
         return -1;
+    }
+    public interface  PlayCompleteCallBack{
+        public void videoComplete(int position);//
+    }
+    public PlayCompleteCallBack playCompleteCallBack;
+    public void setPlayCompleteCallBack(PlayCompleteCallBack completeCallBack){
+        this.playCompleteCallBack= completeCallBack;
     }
 
     public void setADData(List<ShortVideoDetailADModule> ADData) {

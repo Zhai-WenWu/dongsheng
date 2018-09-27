@@ -102,7 +102,7 @@ public class ShortVideoADItemView extends BaseItemView implements View.OnClickLi
         mBackImg.setOnClickListener(this);
         mHeaderImg.setOnClickListener(this);
         mUserName.setOnClickListener(this);
-        mLikeImg.setOnClickListener(this);
+//        mLikeImg.setOnClickListener(this);
         mTitleText.setOnClickListener(this);
         mEmptyView.setOnClickListener(this);
 //        mBottomCommentLayout.setOnClickListener(this);

@@ -1319,6 +1319,7 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
         try {
             Log.d(TAG,"release");
             releaseAllVideos();
+            unListenerNetWorkState();
         }catch (Exception e){
 
         }
@@ -1360,7 +1361,7 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
      */
     protected void createNetWorkState() {
         if (mNetInfoModule == null) {
-            mNetInfoModule = new NetInfoModule(getActivityContext().getApplicationContext(), new NetInfoModule.NetChangeListener() {
+            mNetInfoModule = new NetInfoModule(getActivityContext(), new NetInfoModule.NetChangeListener() {
                 @Override
                 public void changed(String state) {
                     if (!mNetSate.equals(state)) {

@@ -64,6 +64,7 @@ public class VideoPlayerController {
     protected View view_Tip;
     private boolean isAutoPaly = false;//是否是wifi状态
     private boolean isShowMedia = false;//true：直接播放，false,可以被其他因素控制
+    private boolean isUserClick = false;
     public boolean isNetworkDisconnect = false;
     public int autoRetryCount = 0;
     public boolean isPortrait = false;
@@ -337,7 +338,7 @@ public class VideoPlayerController {
     public void setNewView(View view) {
         this.view_dish = view;
         initView(mContext);
-        isAutoPaly = "wifi".equals(ToolsDevice.getNetWorkSimpleType(mContext));
+//        isAutoPaly = "wifi".equals(ToolsDevice.getNetWorkSimpleType(mContext));
         if (mPraentViewGroup.getChildCount() > 0) {
             mPraentViewGroup.removeAllViews();
         }
@@ -345,7 +346,10 @@ public class VideoPlayerController {
         if(view_Tip != null)
             mPraentViewGroup.addView(view_Tip);
         mPraentViewGroup.addView(view_dish);
-        view_dish.setOnClickListener(v -> setOnClick());
+        view_dish.setOnClickListener(v -> {
+            isUserClick = true;
+            setOnClick();
+        });
     }
 
     /**
@@ -368,7 +372,8 @@ public class VideoPlayerController {
             return;
         }
         Log.i("tzy","广告点:::"+mHasVideoInfo);
-        isAutoPaly = "wifi".equals(ToolsDevice.getNetWorkSimpleType(mContext));
+//        isAutoPaly = "wifi".equals(ToolsDevice.getNetWorkSimpleType(mContext));
+        boolean isWifi = "wifi".equals(ToolsDevice.getNetWorkSimpleType(mContext));
         if (mHasVideoInfo) {
             Log.i("tzy","广告点:::isShowAd"+isShowAd);
             if(isShowAd){
@@ -381,9 +386,11 @@ public class VideoPlayerController {
                 Log.i("tzy","isAutoPaly:::"+isAutoPaly);
                 if(isAutoPaly){//当前wifi
                     removeTipView();
-                }else{
-                    removeDishView();
-                    hideVideoImage();
+                }else {
+                    if(!isWifi && isUserClick){
+                        removeDishView();
+                        hideVideoImage();
+                    }
                     return;
                 }
             }

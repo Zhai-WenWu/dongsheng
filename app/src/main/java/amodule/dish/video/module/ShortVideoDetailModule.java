@@ -16,6 +16,7 @@ public class ShortVideoDetailModule {
     protected boolean isFav;
     protected boolean isLike;
     protected String mFavNum;
+    protected String playMode;
     protected String mCommentNum;
     protected String mLikeNum;
     protected String mShareNum;
@@ -26,6 +27,7 @@ public class ShortVideoDetailModule {
     protected TopicModel mTopicModel;
     protected AddressModel mAddressModel;
     protected amodule.dish.video.module.ShareModule mShareModule;
+
 
     public String getCode() {
         return mCode;
@@ -182,5 +184,13 @@ public class ShortVideoDetailModule {
     public int hashCode() {
 
         return Objects.hash(mCode, mName, isEssence, isFav, isLike, mFavNum, mCommentNum, mLikeNum, mShareNum, mClickNum, mVideoModel, mImageModel, mCustomerModel, mTopicModel, mAddressModel, mShareModule);
+    }
+
+    public String getPlayMode() {
+        return playMode;
+    }
+
+    public void setPlayMode(String playMode) {
+        this.playMode = playMode;
     }
 }

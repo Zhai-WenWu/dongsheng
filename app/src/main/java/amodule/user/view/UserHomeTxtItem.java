@@ -44,8 +44,6 @@ public class UserHomeTxtItem extends UserHomeItem implements View.OnClickListene
 
     private String mUploadType = "";
 
-    protected OnDeleteClickCallback mDeleteClickListener;
-
     public UserHomeTxtItem(Context context) {
         super(context, R.layout.userhome_txtitem);
     }
@@ -330,11 +328,5 @@ public class UserHomeTxtItem extends UserHomeItem implements View.OnClickListene
         }
     }
 
-    public interface OnDeleteClickCallback{
-        void onDeleteClick(Map<String,String> data);
-    }
 
-    public void setDeleteClickListener(OnDeleteClickCallback deleteClickListener) {
-        mDeleteClickListener = deleteClickListener;
-    }
 }
