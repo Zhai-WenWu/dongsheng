@@ -401,10 +401,11 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
         try{
             String tag = getTag(STAT_TAG) != null ? (String) getTag(STAT_TAG) :getClass().getSimpleName();
             float duration = mPlayerView.getDuration();
-            float tmelp = duration == 0 ? 0 : mPlayerView.getCurrentPositionWhenPlaying() / duration + playNum;
-            float total = playNum * duration + mPlayerView.getCurrentPositionWhenPlaying();
+            float total = (playNum * duration + mPlayerView.getCurrentPositionWhenPlaying())/1000f;
+            float temp = duration <= 0 ? 0 : mPlayerView.getCurrentPositionWhenPlaying() / duration + playNum;
+            String n1 = temp <= 0 ? "0" : String.format("%.2f",temp);
             StatisticsManager.videoView(getContext().getClass().getSimpleName(),tag,String.valueOf(position + 1),
-                    String.format("%.2f",tmelp),String.format("%.2f",total),mData.getStatJson());
+                    n1,String.format("%.2f",total),mData.getStatJson());
         }catch (Exception e){
 
         }
@@ -414,7 +415,9 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
      * 重置数据
      */
     public void releaseVideo(){
-        statisticsVideoView();
+        if(INNER_PLAY_STATE_STOP != mInnerPlayState ){
+            statisticsVideoView();
+        }
         mInnerPlayState = INNER_PLAY_STATE_STOP;
         mPlayerView.release();
         mPlayerView.changePlayBtnState(false);
