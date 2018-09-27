@@ -93,7 +93,7 @@ public class StatisticsManager {
         }
         final ArrayList<String> listGXHTJ = UnburiedStatisticsSQLite.instance().selectAllDataByType(GXHTJ);
         if(listGXHTJ != null && !listGXHTJ.isEmpty()){
-            new Handler(Looper.getMainLooper()).post(() -> sendStatisticsData(list,StringManager.API_STATISTIC_S9_GXH));
+            new Handler(Looper.getMainLooper()).post(() -> sendStatisticsData(listGXHTJ,StringManager.API_STATISTIC_S9_GXH));
         }
         UnburiedStatisticsSQLite.instance().deleteAllData();
     }
@@ -190,7 +190,7 @@ public class StatisticsManager {
             if(data == null || data.isEmpty()){
                 return;
             }
-            String url = Tools.isDebug(XHApplication.in()) ? api.replace("xiangha","ixiangha") : api;
+            String url = Tools.isDebug(XHApplication.in()) ? api.replace("https://stat.xiangha.com","http://stat.ixiangha.com") : api;
             handleParamsDevicePart();
             JSONArray jsonArray = new JSONArray();
             for (String value : data) {

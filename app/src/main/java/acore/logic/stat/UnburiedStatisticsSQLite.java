@@ -21,7 +21,7 @@ public class UnburiedStatisticsSQLite extends SQLiteOpenHelper {
     private static final String DB_NAME = "unburiedStatistics.db";// 数据库名称
     private static final String TB_NAME = "commonData";// 数据库名称
     private static final String statistics_data = "statistics_data";
-    private static final String data_type = "data_type";
+    private static final String data_type = "statistics_data_type";
     public static final String Normal = "normal";
     public static final String GXHTJ = "#GXHTJ#";
 
@@ -103,7 +103,7 @@ public class UnburiedStatisticsSQLite extends SQLiteOpenHelper {
         Cursor cursor = null;
         try {
             db = getReadableDatabase();
-            cursor = db.rawQuery("select * from " + TB_NAME + " where data_type=?", new String[]{type});
+            cursor = db.rawQuery("select * from " + TB_NAME + " where " + data_type + "=?", new String[]{type});
             while (cursor.moveToNext()) {
                 arrayList.add(cursor.getString(cursor.getColumnIndex(statistics_data)));
             }

@@ -401,7 +401,7 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
         try{
             String tag = getTag(STAT_TAG) != null ? (String) getTag(STAT_TAG) :getClass().getSimpleName();
             float duration = mPlayerView.getDuration();
-            float tmelp = mPlayerView.getCurrentPositionWhenPlaying() / duration + playNum;
+            float tmelp = duration == 0 ? 0 : mPlayerView.getCurrentPositionWhenPlaying() / duration + playNum;
             float total = playNum * duration + mPlayerView.getCurrentPositionWhenPlaying();
             StatisticsManager.videoView(getContext().getClass().getSimpleName(),tag,String.valueOf(position + 1),
                     String.format("%.2f",tmelp),String.format("%.2f",total),mData.getStatJson());
@@ -1035,7 +1035,7 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
     }
 
     private void startStatistics(String url) {
-        ReqEncyptInternet.in().doGetEncypt(url, "code=" + mData.getCode(), new InternetCallback() {
+        ReqEncyptInternet.in().doGetEncypt(url, "code=" + mData.getCode() + "&rId="+mData.getrId(), new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
                 super.loaded(i, s, o);

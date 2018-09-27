@@ -25,6 +25,7 @@ public class ShortVideoDetailModule {
     private AddressModel mAddressModel;
     private amodule.dish.video.module.ShareModule mShareModule;
     private String statJson;
+    private String rId;
 
     public String getCode() {
         return mCode;
@@ -160,5 +161,13 @@ public class ShortVideoDetailModule {
 
     public String getStatJson() {
         return statJson;
+    }
+
+    public void setrId(String rId) {
+        this.rId = rId;
+    }
+
+    public String getrId() {
+        return rId;
     }
 }
