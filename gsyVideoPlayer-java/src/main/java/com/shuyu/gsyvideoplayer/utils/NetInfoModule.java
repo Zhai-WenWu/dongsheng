@@ -1,12 +1,14 @@
 
 package com.shuyu.gsyvideoplayer.utils;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.support.v4.net.ConnectivityManagerCompat;
 
 /**
@@ -78,6 +80,9 @@ public class NetInfoModule {
 
     private void registerReceiver() {
         if(mContext!=null && isCreate) {
+            if(Build.VERSION.SDK_INT>=17&&mContext instanceof Activity && ((Activity) mContext).isDestroyed()){
+                return;
+            }
             IntentFilter filter = new IntentFilter();
             filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
             mContext.registerReceiver(mConnectivityBroadcastReceiver, filter);
@@ -88,6 +93,9 @@ public class NetInfoModule {
 
     private void unregisterReceiver() {
         if (mConnectivityBroadcastReceiver.isRegistered()&& mContext!=null && isCreate && isRegister) {
+            if(Build.VERSION.SDK_INT>=17&&mContext instanceof Activity && ((Activity) mContext).isDestroyed()){
+                return;
+            }
             mContext.unregisterReceiver(mConnectivityBroadcastReceiver);
             mConnectivityBroadcastReceiver.setRegistered(false);
         }
