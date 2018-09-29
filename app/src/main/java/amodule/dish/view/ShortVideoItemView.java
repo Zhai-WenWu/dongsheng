@@ -1038,7 +1038,7 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
     }
 
     private void startStatistics(String url) {
-        ReqEncyptInternet.in().doGetEncypt(url, "code=" + mData.getCode() + "&rId="+mData.getrId(), new InternetCallback() {
+        ReqEncyptInternet.in().doGetEncypt(url, "statJson="+mData.getStatJson(), new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
                 super.loaded(i, s, o);

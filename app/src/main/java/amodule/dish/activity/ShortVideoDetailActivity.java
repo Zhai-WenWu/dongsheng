@@ -658,7 +658,6 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
             ShortVideoDetailModule module = new ShortVideoDetailModule();
             module.setCode(itemMap.get("code"));
             module.setName(itemMap.get("name"));
-            module.setrId(itemMap.get("rId"));
             module.setEssence("2".equals(itemMap.get("isEssence")));
             module.setFav("2".equals(itemMap.get("isFav")));
             module.setLike("2".equals(itemMap.get("isLike")));
