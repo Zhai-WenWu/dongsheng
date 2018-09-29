@@ -80,7 +80,6 @@ import aplug.player.ShortVideoPlayer;
 import third.share.activity.ShareActivityDialog;
 
 import static acore.logic.stat.StatConf.STAT_TAG;
-import static acore.logic.stat.StatisticsManager.STAT_DATA;
 
 /**
  * 短视频itemView
@@ -140,6 +139,7 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
     private boolean mNeedChangePauseToStartEnable;
     private boolean mPauseToStartEnable;
     private boolean mRepeatEnable;
+    private boolean mEffectStaticEnable;
     private boolean mStaticEnable;
     private String mVideoUrl;
     private String mTopicClickUrl;
@@ -357,12 +357,10 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
                 }
                 double playableTime = Double.parseDouble(mData.getVideoModel().getPlayableTime());
                 if ((totalTime == 0 ? 0 : currentTime * 1.0 / totalTime) >= playableTime) {
-                    if (!mStaticEnable) {
-                        mStaticEnable = true;
+                    if (!mEffectStaticEnable) {
+                        mEffectStaticEnable = true;
                         startStatistics(StringManager.API_SHORT_VIDEO_VIEW_VALIDATE);
                     }
-                } else {
-                    mStaticEnable = false;
                 }
             }
         });
@@ -376,7 +374,10 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
         mInnerPlayState = INNER_PLAY_STATE_START;
         mNeedChangePauseToStartEnable = true;
         mPlayerView.startPlayLogic();
-        startStatistics(StringManager.API_SHORT_VIDEO_ACCESS);
+        if(!mStaticEnable){
+            mStaticEnable = true;
+            startStatistics(StringManager.API_SHORT_VIDEO_ACCESS);
+        }
     }
     public void resumeVideo(){
         if (mPauseToStartEnable) {
@@ -418,6 +419,8 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
         if(INNER_PLAY_STATE_STOP != mInnerPlayState ){
             statisticsVideoView();
         }
+        mEffectStaticEnable = false;
+        mStaticEnable = false;
         mInnerPlayState = INNER_PLAY_STATE_STOP;
         mPlayerView.release();
         mPlayerView.changePlayBtnState(false);
