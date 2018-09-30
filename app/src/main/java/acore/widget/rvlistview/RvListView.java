@@ -564,7 +564,7 @@ public class RvListView extends RecyclerView {
                 viewHolder.itemView.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        int position = viewHolder.getAdapterPosition();
+                        int position = viewHolder.getAdapterPosition() - getPositionOffset();
                         if(position >=0)
                             mOnItemClickListener.onItemClick(v, viewHolder, position);
                     }
@@ -575,7 +575,7 @@ public class RvListView extends RecyclerView {
                 viewHolder.itemView.setOnLongClickListener(new OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
-                        int position = viewHolder.getAdapterPosition();
+                        int position = viewHolder.getAdapterPosition() - getPositionOffset();
                         if(position >= 0)
                             return mOnItemLongClickListener.onItemLongClick(v, viewHolder, position);
                         else
