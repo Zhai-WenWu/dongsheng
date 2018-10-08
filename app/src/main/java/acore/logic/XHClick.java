@@ -942,46 +942,46 @@ public class XHClick {
      * @param data        参数数据块
      */
     public static synchronized void newHomeStatictis(boolean isResetData, ArrayList<String> data) {
-        try {
-            String url = StringManager.API_STATISTIC_S6;
-            String baseData = getStatictisParams();
+//        try {
+//            String url = StringManager.API_STATISTIC_S6;
+//            String baseData = getStatictisParams();
 //            LinkedHashMap<String, String> map = new LinkedHashMap<>();
-            if (isResetData && (data == null || data.size() <= 0)) {
-                data = StatictisSQLiteDataBase.getInstance().selectAllData();
+//            if (isResetData && (data == null || data.size() <= 0)) {
+//                data = StatictisSQLiteDataBase.getInstance().selectAllData();
                 StatictisSQLiteDataBase.getInstance().deleteAllData();
-            }
-            Map<String, String> baseMap = UtilString.getMapByString(baseData, "&", "=");
-            JSONObject jsonObject = MapToJson(baseMap);
-            if (data != null && data.size() > 0) {
-                JSONArray jsonArray = new JSONArray();
-                int lenght = data.size();
-                for (int i = 0; i < lenght; i++) {
-                    if (!TextUtils.isEmpty(data.get(i))) {
-                        jsonArray.put(MapToJsonEncode(UtilString.getMapByString(data.get(i), "&", "=")));
-                    }
-                }
-                jsonObject.put("log_data", jsonArray);
-            } else {
-                return;
-            }
-            LinkedHashMap<String, String> map1 = new LinkedHashMap<>();
-            map1.put("log_json", jsonObject.toString());
-            Log.i("wyl", "log_json::::" + jsonObject.toString());
+//            }
+//            Map<String, String> baseMap = UtilString.getMapByString(baseData, "&", "=");
+//            JSONObject jsonObject = MapToJson(baseMap);
+//            if (data != null && data.size() > 0) {
+//                JSONArray jsonArray = new JSONArray();
+//                int lenght = data.size();
+//                for (int i = 0; i < lenght; i++) {
+//                    if (!TextUtils.isEmpty(data.get(i))) {
+//                        jsonArray.put(MapToJsonEncode(UtilString.getMapByString(data.get(i), "&", "=")));
+//                    }
+//                }
+//                jsonObject.put("log_data", jsonArray);
+//            } else {
+//                return;
+//            }
+//            LinkedHashMap<String, String> map1 = new LinkedHashMap<>();
+//            map1.put("log_json", jsonObject.toString());
+//            Log.i("wyl", "log_json::::" + jsonObject.toString());
 
-            ReqInternet.in().doPost(url, map1, new InternetCallback() {
-                @Override
-                public void loaded(int flag, String url, Object object) {
-                    if (flag >= ReqInternet.REQ_OK_STRING) {
-                        Log.i("wyl", "上传数据s6");
-                    } else {
-
-                    }
-
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//            ReqInternet.in().doPost(url, map1, new InternetCallback() {
+//                @Override
+//                public void loaded(int flag, String url, Object object) {
+//                    if (flag >= ReqInternet.REQ_OK_STRING) {
+//                        Log.i("wyl", "上传数据s6");
+//                    } else {
+//
+//                    }
+//
+//                }
+//            });
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     /**

@@ -527,6 +527,9 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                 doExit++;
                 Tools.showToast(this, "再点击一次退出应用");
                 new Handler().postDelayed(() -> doExit = 0, 1000 * 5);
+                if (act != null){
+                    XHClick.finishToSendPath(act);
+                }
             } else {
                 stopTimer();
                 colse_level = 0;
@@ -546,7 +549,6 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                 }
                 // 关闭时发送页面停留时间统计
                 if (act != null){
-                    XHClick.finishToSendPath(act);
                     new FullSrceenDB(act).clearExpireAllData();
                 }
                 // 关闭页面停留时间统计计时器
