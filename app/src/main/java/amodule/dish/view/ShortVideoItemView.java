@@ -416,7 +416,7 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
      * 重置数据
      */
     public void releaseVideo(){
-        if(INNER_PLAY_STATE_STOP != mInnerPlayState ){
+        if(INNER_PLAY_STATE_STOP != mInnerPlayState && mInnerPlayState != 0){
             statisticsVideoView();
         }
         mEffectStaticEnable = false;
