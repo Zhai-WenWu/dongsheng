@@ -25,7 +25,7 @@ public class ChannelUtil {
      */
     public static String getChannel(Context context){
         if (TextUtils.isEmpty(appChannel)) {
-            if(context == null) return "xiangha_sp";
+            if(context == null) return "xiangha";
             try {
                 //通过修改manifest中的umeng变量进行渠道修改，1、manifest文件放开UMENG_CHANNEL配置   2、注释XHApplication动态设置渠道名方式
 //                ApplicationInfo appInfo = context.getPackageManager().getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
@@ -38,7 +38,7 @@ public class ChannelUtil {
                 e.printStackTrace();
             }
         }
-       if(TextUtils.isEmpty(appChannel))return "xiangha_sp";
+       if(TextUtils.isEmpty(appChannel))return "xiangha";
         return appChannel;
     }
     /**
