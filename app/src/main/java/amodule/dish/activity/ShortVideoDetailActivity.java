@@ -111,7 +111,7 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
         setContentView(R.layout.layout_shortvideo_detail_activity);
         level = 2;
         if ("null".equals(ToolsDevice.getNetWorkSimpleType(XHApplication.in()))) {
-            Tools.showToast(this,"网络异常，请检查网络");
+            Tools.showToast(this, "网络异常，请检查网络");
             finish();
             return;
         }
@@ -139,7 +139,7 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
             topicCode = bundle.getString("topicCode");
             mDataController.start(code);
         }
-        ObserverManager.getInstance().registerObserver(this, NOTIFY_SHARE,NOTIFY_LOGIN);
+        ObserverManager.getInstance().registerObserver(this, NOTIFY_SHARE, NOTIFY_LOGIN);
         registerConnectionReceiver();
     }
 
@@ -152,7 +152,7 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
                 int pos = recyclerView.getChildAdapterPosition(view);
                 if (pos == 0 && !mFirstPlayStarted) {
                     mFirstPlayStarted = true;
-                    RvVericalVideoItemAdapter.ItemViewHolder viewHolder = (RvVericalVideoItemAdapter.ItemViewHolder)recyclerView.getChildViewHolder(view);
+                    RvVericalVideoItemAdapter.ItemViewHolder viewHolder = (RvVericalVideoItemAdapter.ItemViewHolder) recyclerView.getChildViewHolder(view);
                     mAdapter.setCurrentViewHolder(viewHolder);
                     String netState = ToolsDevice.getNetWorkSimpleType(XHApplication.in());
                     switch (netState) {
@@ -160,7 +160,7 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
                             viewHolder.startVideo();
                             break;
                         case "null":
-                            Tools.showToast(ShortVideoDetailActivity.this,"加载失败，请重试");
+                            Tools.showToast(ShortVideoDetailActivity.this, "加载失败，请重试");
                             break;
                         default:
                             if (canShowTipDialog()) {
@@ -182,7 +182,7 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                if(newState==RecyclerView.SCROLL_STATE_IDLE){
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     LinearLayoutManager llm = (LinearLayoutManager) recyclerView.getLayoutManager();
                     int pos = llm.findLastCompletelyVisibleItemPosition();
                     RvVericalVideoItemAdapter.ItemViewHolder currentHolder = (RvVericalVideoItemAdapter.ItemViewHolder) recyclerView.findViewHolderForAdapterPosition(pos);
@@ -192,7 +192,7 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
                     mAdapter.setCurrentViewHolder(currentHolder);
                     currentHolder.startVideo();
                     int orientationScroll = 0;
-                    if(currentHolder.getAdapterPosition() > adapterLastHolder.getAdapterPosition()){
+                    if (currentHolder.getAdapterPosition() > adapterLastHolder.getAdapterPosition()) {
                         orientationScroll = DOWN_SCROLL;
                     } else if (currentHolder.getAdapterPosition() < adapterLastHolder.getAdapterPosition()) {
                         orientationScroll = UP_SCROLL;
@@ -201,10 +201,11 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
                     if (currentHolder.getAdapterPosition() >= mDatas.size() - 1) {
                         mDataController.executeNextOption();
                     }
-                    if (orientationScroll !=0)
+                    if (orientationScroll != 0)
                         XHClick.mapStat(ShortVideoDetailActivity.this, STA_ID, "滑动", orientationScroll == DOWN_SCROLL ? "上滑" : "下滑");
                 }
             }
+
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
@@ -244,9 +245,9 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
         mAdapter.setPlayCompleteCallBack(new RvVericalVideoItemAdapter.PlayCompleteCallBack() {
             @Override
             public void videoComplete(int position) {
-                if(position>=0&&position+1<mDatas.size()){
-                    String playMode= mDatas.get(position + 1).getPlayMode();
-                    if("1".equals(playMode)||("2".equals(playMode)&&"wifi".equals(ToolsDevice.getNetWorkType(ShortVideoDetailActivity.this)))) {
+                if (position >= 0 && position + 1 < mDatas.size()) {
+                    String playMode = mDatas.get(position + 1).getPlayMode();
+                    if ("1".equals(playMode) || ("2".equals(playMode) && "wifi".equals(ToolsDevice.getNetWorkType(ShortVideoDetailActivity.this)))) {
                         recyclerView.smoothScrollToPosition(position + 1);
                     }
                 }
@@ -254,15 +255,15 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
         });
         mAdapter.setOnADShowCallback((index, view, listIndex) -> mXHAllAdControl.onAdBind(index, view, listIndex));
         mAdapter.setOnADClickCallback((view, index, listIndex) -> mXHAllAdControl.onAdClick(view, index, listIndex));
-        mAdapter.setOnAdHintClickListener((indexInData, promotionIndex) -> AppCommon.onAdHintClick(ShortVideoDetailActivity.this,mXHAllAdControl,indexInData, promotionIndex,STA_ID,"第" + promotionIndex + "位广告按钮"));
+        mAdapter.setOnAdHintClickListener((indexInData, promotionIndex) -> AppCommon.onAdHintClick(ShortVideoDetailActivity.this, mXHAllAdControl, indexInData, promotionIndex, STA_ID, "第" + promotionIndex + "位广告按钮"));
     }
 
     private void init() {
-        recyclerView= findViewById(R.id.recyclerView);
+        recyclerView = findViewById(R.id.recyclerView);
         ParticularPositionEnableSnapHelper pagerSnapHelper = new ParticularPositionEnableSnapHelper();
         pagerSnapHelper.attachToRecyclerView(recyclerView);
         mGuidanceLayout = findViewById(R.id.guidance_layout);
-        mAdapter = new RvVericalVideoItemAdapter(this,mDatas);
+        mAdapter = new RvVericalVideoItemAdapter(this, mDatas);
         mAdapter.setADData(mAdData);
         recyclerView.setItemViewCacheSize(4);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -276,7 +277,7 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
         mReceiver = new ConnectionChangeReceiver(new ConnectionChangeReceiver.ConnectionChangeListener() {
             @Override
             public void disconnect() {
-                Tools.showToast(ShortVideoDetailActivity.this,"加载失败，请重试");
+                Tools.showToast(ShortVideoDetailActivity.this, "加载失败，请重试");
             }
 
             @Override
@@ -446,7 +447,7 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
                     Map<String, String> dataMap = (Map<String, String>) data;
                     String videoCode = dataMap.get("callbackParams");
                     if (!TextUtils.isEmpty(videoCode)) {
-                        for (int i = 0; i < mDatas.size(); i ++) {
+                        for (int i = 0; i < mDatas.size(); i++) {
                             ShortVideoDetailModule module = mDatas.get(i);
                             if (module != null && TextUtils.equals(module.getCode(), videoCode)) {
                                 try {
@@ -459,14 +460,15 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
                                             break;
                                         }
                                     }
-                                } catch (Exception e) {}
+                                } catch (Exception e) {
+                                }
                             }
                         }
                     }
                 }
                 break;
             case NOTIFY_LOGIN:
-                if(!LoginManager.isShowAd()){
+                if (!LoginManager.isShowAd()) {
                     cleanAdData();
                 }
                 break;
@@ -484,11 +486,12 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
     }
 
     boolean initAdOver = false;
+
     private void initAd() {
         Bundle bundle = getIntent().getExtras();
-        if(bundle != null){
+        if (bundle != null) {
             String sourcePage = bundle.getString("sourcePage");
-            if(!TextUtils.equals("1",sourcePage)){
+            if (!TextUtils.equals("1", sourcePage)) {
                 return;
             }
         }
@@ -497,7 +500,7 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
         int[] adPositionArr = {3, 14};
         Map<String, Integer> adPositionMap = new HashMap<>();
         for (int i = 0, length = Math.min(adPositionArr.length, adIdList.size()); i < length; i++) {
-            adPositionMap.put(adIdList.get(i),adPositionArr[i]);
+            adPositionMap.put(adIdList.get(i), adPositionArr[i]);
         }
 
         mXHAllAdControl = new XHAllAdControl(adIdList, (isRefresh, map) -> {
@@ -505,11 +508,11 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
                 if (mAdData != null && !mAdData.isEmpty()) {
                     cleanAdData();
                 }
-                for(int i=0;i<adIdList.size();i++){
+                for (int i = 0; i < adIdList.size(); i++) {
                     String adId = adIdList.get(i);
-                    if(map.containsKey(adId) && !TextUtils.isEmpty(map.get(adId)) && adPositionMap.get(adId) != null
+                    if (map.containsKey(adId) && !TextUtils.isEmpty(map.get(adId)) && adPositionMap.get(adId) != null
                             && (!AdPlayIdConfig.hasShown(adId) || initAdOver)
-                            ){
+                            ) {
                         Map<String, String> adMap = StringManager.getFirstMap(map.get(adId));
                         Log.i("tzy", "initAd: " + adMap.toString());
                         ShortVideoDetailADModule adModule = new ShortVideoDetailADModule();
@@ -520,16 +523,16 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
                         //数据
                         adModule.setPlayMode("2");
                         adModule.setName(adMap.get("desc"));
-                        adModule.setLikeNum(String.valueOf(Tools.getRandom(500,1001)));
-                        adModule.setShareNum(String.valueOf(Tools.getRandom(50,201)));
-                        adModule.setCommentNum(String.valueOf(Tools.getRandom(50,151)));
+                        adModule.setLikeNum(String.valueOf(Tools.getRandom(500, 1001)));
+                        adModule.setShareNum(String.valueOf(Tools.getRandom(50, 201)));
+                        adModule.setCommentNum(String.valueOf(Tools.getRandom(50, 151)));
                         ImageModel imageModel = new ImageModel();
                         imageModel.setImageUrl(adMap.get("imgUrl"));
                         adModule.setImageModel(imageModel);
                         CustomerModel customerModel = new CustomerModel();
                         String title = adMap.get("title");
-                        if(title.length() > 8){
-                            title = title.substring(0,8) + "...";
+                        if (title.length() > 8) {
+                            title = title.substring(0, 8) + "...";
                         }
                         customerModel.setNickName(title);
                         customerModel.setHeaderImg(adMap.get("iconUrl"));
@@ -537,7 +540,7 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
                         mAdData.add(adModule);
                     }
                 }
-                if(mAdapter != null){
+                if (mAdapter != null) {
                     mAdapter.setADData(mAdData);
                 }
                 initAdOver = true;
@@ -576,7 +579,7 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
         private ArrayList<String> getNextPageCodes() {
             int lastPosition = mCodes.size() - 1;
             ArrayList<String> ret = new ArrayList<>();
-            for (int i = 0; i < COUNT_EACH_PAGE; i ++) {
+            for (int i = 0; i < COUNT_EACH_PAGE; i++) {
                 int getPos = mNextPageStartPosition + i;
                 if (getPos > lastPosition)
                     break;
@@ -593,10 +596,11 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
 
         /**
          * 加载详情
+         *
          * @param codes
          * @param loadMore
          */
-        private void loadVideoDetail(ArrayList<String> codes,boolean loadMore, boolean firstLoad) {
+        private void loadVideoDetail(ArrayList<String> codes, boolean loadMore, boolean firstLoad) {
             if (mDetailLoading.get() || codes == null || codes.isEmpty())
                 return;
             mDetailLoading.set(true);
@@ -642,6 +646,7 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
                                 updateComment = true;
                                 mExtraModule.setCommentNum(firstLoadModule.getCommentNum());
                             }
+                            mExtraModule.setShareModule(firstLoadModule.getShareModule());
                             if (mAdapter != null && TextUtils.equals(mAdapter.getCurrentViewHolder().data.getCode(), mExtraModule.getCode())) {
                                 RvVericalVideoItemAdapter.ItemViewHolder currentHolder = mAdapter.getCurrentViewHolder();
                                 if (updateFavorite) {
@@ -686,7 +691,8 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
         }
 
         /**
-         *加载ids
+         * 加载ids
+         *
          * @param lastCode
          * @param successRun
          * @param failedRun
@@ -702,7 +708,7 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
             sb.append("code=").append(lastCode).append("&");
             sb.append("sourcePage=").append(mSourcePage).append("&");
             sb.append("userCode=").append(TextUtils.isEmpty(mUserCode) ? "" : mUserCode);
-            if(!TextUtils.isEmpty(topicCode)){
+            if (!TextUtils.isEmpty(topicCode)) {
                 sb.append("&").append("topicCode=").append(topicCode);
             }
             ReqEncyptInternet.in().doGetEncypt(StringManager.API_SHORT_VIDEOCODES, sb.toString(), new InternetCallback() {
@@ -802,15 +808,15 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
     }
 
     private void insertADData(int insertPosStart) {
-        if(mAdData.isEmpty()){
+        if (mAdData.isEmpty()) {
             return;
         }
-        for(ShortVideoDetailModule module:mAdData){
+        for (ShortVideoDetailModule module : mAdData) {
             ShortVideoDetailADModule adModule = (ShortVideoDetailADModule) module;
-            if(adModule.adPositionInData >= 0 && adModule.adPositionInData < mDatas.size()
-                    &&adModule.adPositionInData >= insertPosStart){
-                if(!(mDatas.get(adModule.adPositionInData) instanceof ShortVideoDetailADModule)){
-                    mDatas.add(adModule.adPositionInData,module);
+            if (adModule.adPositionInData >= 0 && adModule.adPositionInData < mDatas.size()
+                    && adModule.adPositionInData >= insertPosStart) {
+                if (!(mDatas.get(adModule.adPositionInData) instanceof ShortVideoDetailADModule)) {
+                    mDatas.add(adModule.adPositionInData, module);
                 }
             }
         }

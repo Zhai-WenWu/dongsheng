@@ -149,6 +149,9 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
     private OnSeekBarTrackingTouchListener mOnSeekBarTrackingTouchListener;
     private int position;
 
+    private Handler mMainHandler;
+    private boolean isCompleteCallback=true;
+
     public ShortVideoItemView(Context context) {
         this(context, null);
     }
@@ -285,7 +288,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
             public void onAutoComplete(String url, Object... objects) {
                 mInnerPlayState = INNER_PLAY_STATE_AUTO_COMPLETE;
                 changeThumbImageState(true);
-                if( playCompleteCallBack != null && position >= 0){
+                if( isCompleteCallback&&playCompleteCallBack != null && position >= 0){
                     playCompleteCallBack.videoComplete(position);
                 }
                 if (mRepeatEnable) {
@@ -625,16 +628,27 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
     private void showCommentEdit() {
         KeyboardDialog keyboardDialog = new KeyboardDialog(getContext());
         keyboardDialog.setTextLength(50);
-        keyboardDialog.setOnSendClickListener(v -> {
-            keyboardDialog.cancel();
-            String text = keyboardDialog.getText();
-            if (TextUtils.isEmpty(text))
-                return;
-            sendComment(text);
+        keyboardDialog.setOnSendClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                keyboardDialog.cancel();
+                String text = keyboardDialog.getText();
+                if (TextUtils.isEmpty(text))
+                    return;
+                sendComment(text);
+            }
+        });
+        keyboardDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                mSendText = keyboardDialog.getText();
+                isCompleteCallback=true;
+            }
         });
         keyboardDialog.setOnDismissListener(dialog -> mSendText = keyboardDialog.getText());
         keyboardDialog.setContentStr(mSendText);
         keyboardDialog.show();
+        isCompleteCallback=false;
     }
 
     private void showComments() {
@@ -668,6 +682,28 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
                         commentNum--;
                         innerUpdateCommentNum(commentNum);
                     }
+                    mData.setCommentNum(commentsNum);
+                    if (mCommentNumText != null) {
+                        mCommentNumText.setText(commentsNum);
+                    }
+
+                    GlobalCommentModule module = new GlobalCommentModule();
+                    module.setFlagCode(mData.getCode());
+                    module.setCommentNum(mData.getCommentNum());
+                    GlobalVariableConfig.handleCommentModule(module);
+                }
+            });
+            mCommentDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    mCommentDialog = null;
+                    isCompleteCallback=true;
+                }
+            });
+            mCommentDialog.setOnCommentTextUpdateListener(new CommentDialog.OnCommentTextUpdateListener() {
+                @Override
+                public void onCommentTextUpdate(String newText) {
+                    mSendText = newText;
                 }
             });
             mCommentDialog.setOnDismissListener(dialog -> mCommentDialog = null);
@@ -677,6 +713,7 @@ public class ShortVideoItemView extends BaseItemView implements View.OnClickList
             return;
         mCommentDialog.setCommentText(mSendText);
         mCommentDialog.show();
+        isCompleteCallback=false;
     }
 
     private void closeActivity() {

@@ -170,9 +170,6 @@ public class DishHeaderViewNew extends LinearLayout {
 //        try {
             String selfVideo = videoMap.get("video");
             String img = videoMap.get("img");
-            if(!TextUtils.isEmpty(oneImgUrl)){
-                img = oneImgUrl;
-            }
             String type = videoMap.get("type");
             if(isAutoPaly)isAutoPaly = "2".equals(videoMap.get("isAutoPlay"));
 
@@ -212,8 +209,8 @@ public class DishHeaderViewNew extends LinearLayout {
                     mVideoPlayerController.setShowAd(true);
                     AdType="1";
                 }
-                if (isAutoPaly && mVideoPlayerController != null && isShowActivity())
-                    mVideoPlayerController.setOnClick();
+//                if (isAutoPaly && mVideoPlayerController != null && isShowActivity())
+//                    mVideoPlayerController.setOnClick();
             }
         }, activity, "result_media");
         xhAllAdControl.registerRefreshCallback();
