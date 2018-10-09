@@ -51,6 +51,8 @@ public class XHInternetCallBack extends InterCallback {
         mapCookie.put("xgCode" , XGPushServer.getXGToken(XHApplication.in()));
         mapCookie.put("lang" , ToolsDevice.getCurrentLanguage(XHApplication.in()));
         mapCookie.put("timeZone" , ToolsDevice.getCurrentTimeZone());
+        mapCookie.put("imei" , ToolsDevice.getIMEI(XHApplication.in()));
+        mapCookie.put("android_id" , ToolsDevice.getAndroidId(XHApplication.in()));
         handlerChangeData();
     }
     private static void handlerChangeData(){

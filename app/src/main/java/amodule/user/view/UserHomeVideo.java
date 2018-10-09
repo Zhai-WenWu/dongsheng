@@ -3,7 +3,6 @@
  */
 package amodule.user.view;
 
-import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,14 +28,11 @@ import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.logic.load.LoadManager;
-import acore.override.activity.base.BaseLoginActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
-import amodule.article.activity.edit.VideoEditActivity;
 import amodule.article.db.UploadArticleData;
 import amodule.article.db.UploadVideoSQLite;
 import amodule.dish.db.UploadDishData;
-import amodule.shortvideo.tools.ShortVideoPublishManager;
 import amodule.user.activity.FriendHome;
 import amodule.user.adapter.AdapterUserVideo;
 import aplug.basic.InternetCallback;
@@ -347,7 +343,7 @@ public class UserHomeVideo extends TabContentView {
                 }
             }
             datas.addAll(mNetDatas);
-            if (datas.size() == 0 && isMyselft) {
+            if (datas.size() == 0) {
                 RelativeLayout.LayoutParams emptyParams = (RelativeLayout.LayoutParams) mEmptyView.getLayoutParams();
                 emptyParams.topMargin = mHeadViewHeight;
                 mEmptyContainer.setVisibility(View.VISIBLE);
@@ -356,6 +352,7 @@ public class UserHomeVideo extends TabContentView {
                 adapter.notifyDataSetChanged();
                 theListView.setVisibility(View.VISIBLE);
             }
+            mGotoBtn.setVisibility(isMyselft?View.VISIBLE:View.GONE);
         });
     }
 

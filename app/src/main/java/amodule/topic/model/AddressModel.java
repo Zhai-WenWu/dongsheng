@@ -1,5 +1,7 @@
 package amodule.topic.model;
 
+import java.util.Objects;
+
 /**
  * 地址信息
  */
@@ -48,5 +50,23 @@ public class AddressModel {
 
     public void setGotoUrl(String gotoUrl) {
         mGotoUrl = gotoUrl;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AddressModel that = (AddressModel) o;
+        return Objects.equals(mCode, that.mCode) &&
+                Objects.equals(mAddress, that.mAddress) &&
+                Objects.equals(mColor, that.mColor) &&
+                Objects.equals(mBgColor, that.mBgColor) &&
+                Objects.equals(mGotoUrl, that.mGotoUrl);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(mCode, mAddress, mColor, mBgColor, mGotoUrl);
     }
 }

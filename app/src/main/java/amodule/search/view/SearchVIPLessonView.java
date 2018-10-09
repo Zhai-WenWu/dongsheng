@@ -98,7 +98,7 @@ public class SearchVIPLessonView extends BaseItemView implements View.OnClickLis
             String tagColor = tagMap.get("color");
             String tagBg = tagMap.get("bgColor");
             String title = mDataMap.get("title");
-            IconTextSpan.Builder builder = new IconTextSpan.Builder(getContext());
+            IconTextSpan.Builder builder = new IconTextSpan.Builder();
             builder.setBgColorInt(Color.parseColor(tagBg))
                     .setTextColorInt(Color.parseColor(tagColor))
                     .setTextSize(10F)
@@ -108,7 +108,7 @@ public class SearchVIPLessonView extends BaseItemView implements View.OnClickLis
                     .setRadius(1F);
             SpannableStringBuilder ssb = new SpannableStringBuilder();
             ssb.append(" ").append(title);
-            ssb.setSpan(builder.build(), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            ssb.setSpan(builder.build(getContext()), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             mTitleText.setText(ssb);
             String subTitle = mDataMap.get("subTitle");
             mInfoText.setText(subTitle);

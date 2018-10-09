@@ -163,5 +163,10 @@
 "show":"ad_show_index",
 "click":"ad_click_index",
 "twoData":"banner"
+},
+"sy_sp":{
+"show":"ad_show_index",
+"click":"ad_click_index",
+"twoData":"短视频详情页"
 }
 }

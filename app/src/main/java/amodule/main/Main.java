@@ -44,6 +44,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
 
+import acore.logic.ActivityMethodManager;
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.MessageTipController;
@@ -161,6 +162,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
     private void init(){
         WelcomeDialogstate=false;
         isShowWelcomeDialog=true;
+        ActivityMethodManager.isAppShow= true;
         mainInitDataControl = new MainInitDataControl();
         mainInitDataControl.setIHandleMessage(this);
         welcomeControls= LoginManager.isShowAd()?new WelcomeControls(this,callBack):
@@ -197,7 +199,6 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                 addQiYvListener();
                 if(mainInitDataControl!=null)mainInitDataControl.mainAfterUpload(Main.this);
                 FileManager.saveShared(Main.this,FileManager.app_welcome,VersionOp.getVerName(Main.this),"1");
-                ClingPresenter.getInstance().onCreate(Main.this, null);
             }
         }
         @Override
@@ -345,13 +346,13 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
 
     public void onChangeSend(View view){
         AliyunCommon.getInstance().startRecord(this);
+        XHClick.onEvent(this,"a_index640","底部拍摄按钮点击量");
     }
 
     Handler mTimerHandler = null;
     Runnable mRunnable = null;
     // 时刻取得导航提醒
     public void initRunTime() {
-        Log.i("tzy", "initRunTime: ");
         if(mTimerHandler == null){
             mTimerHandler = new Handler();
             execute();
@@ -373,7 +374,6 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
     }
 
     public void stopTimer() {
-        Log.i("tzy", "stopTimer: ");
         if (mTimerHandler != null) {
             mTimerHandler.removeCallbacks(mRunnable);
             mTimerHandler = null;
@@ -393,6 +393,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
         LogManager.printStartTime("zhangyujian", "main::onResume::");
         mainOnResumeState = true;
         mLocalActivityManager.dispatchResume();
+        ActivityMethodManager.isAppShow= true;
         if (colse_level == 0) {
             System.exit(0);
         }

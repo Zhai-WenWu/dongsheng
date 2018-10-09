@@ -139,9 +139,8 @@ public class IconTextSpan extends ReplacementSpan {
     public static class Builder {
         private static Params p;
 
-        public Builder(Context context) {
+        public Builder() {
             p = new Params();
-            p.mContext = context;
         }
 
         public Builder setBgColorInt(int bgColorInt) {
@@ -179,8 +178,8 @@ public class IconTextSpan extends ReplacementSpan {
             return this;
         }
 
-        public IconTextSpan build() {
-            IconTextSpan span = new IconTextSpan(p.mContext, p.mText, p.mTextSize);
+        public IconTextSpan build(Context context) {
+            IconTextSpan span = new IconTextSpan(context, p.mText, p.mTextSize);
             span.setBgColorInt(p.mBgColorInt);
             span.steRightMargin(p.mRightMargin);
             span.setTextColorInt(p.mTextColorInt);
@@ -191,7 +190,6 @@ public class IconTextSpan extends ReplacementSpan {
     }
 
     private static class Params {
-        private Context mContext;
         private int mBgColorInt; //Icon背景颜色
         private String mText;  //Icon内文字
         private float mBgHeight;  //Icon背景高度

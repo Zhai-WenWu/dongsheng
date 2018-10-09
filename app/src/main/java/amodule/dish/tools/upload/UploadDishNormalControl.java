@@ -242,7 +242,7 @@ public class UploadDishNormalControl extends UploadDishParrentControl implements
                 if(uploadCallback==null){
                     Intent intentMyDish = new Intent(mAct, FriendHome.class);
                     intentMyDish.putExtra("code",LoginManager.userInfo.get("code"));
-                    intentMyDish.putExtra("index",1);
+                    intentMyDish.putExtra("type","subject");
                     mAct.startActivity(intentMyDish);
                 }else{
                     uploadCallback.uploading(uploadDishData.getId());
