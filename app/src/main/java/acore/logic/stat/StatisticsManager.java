@@ -135,8 +135,8 @@ public class StatisticsManager {
         saveData(EVENT_VIDEO_VIEW, p, m, pos, EMPTY, EMPTY, n1, n2,statData);
     }
 
-    public static void specialAction(String p, String m, String pos, String btn, String s1, String n1) {
-        saveData(EVENT_SPECIAL_ACTION, p, m, pos, btn, s1, n1, EMPTY,null);
+    public static void specialAction(String p, String m, String pos, String btn, String s1, String n1,String statData) {
+        saveData(EVENT_SPECIAL_ACTION, p, m, pos, btn, s1, n1, EMPTY,statData);
     }
 
     /**
