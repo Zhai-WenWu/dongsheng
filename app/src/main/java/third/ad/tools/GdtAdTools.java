@@ -11,6 +11,7 @@ import android.widget.RelativeLayout;
 import com.qq.e.ads.banner.ADSize;
 import com.qq.e.ads.banner.AbstractBannerADListener;
 import com.qq.e.ads.banner.BannerView;
+import com.qq.e.ads.cfg.DownAPPConfirmPolicy;
 import com.qq.e.ads.nativ.NativeAD;
 import com.qq.e.ads.nativ.NativeADDataRef;
 import com.qq.e.ads.splash.SplashAD;
@@ -170,6 +171,7 @@ public class GdtAdTools {
                         }
                     }
                 });
+        nativeAD.setDownAPPConfirmPolicy(DownAPPConfirmPolicy.Default);
 //        Log.i("tzy", "GDT NactiveAD start load");
         nativeAD.loadAD(adCount);// 一次拉取的广告条数：范围1-30
     }
@@ -188,6 +190,7 @@ public class GdtAdTools {
         String desc = nativeADDataRef.getDesc();
         String iconUrl = nativeADDataRef.getIconUrl();
         String imageUrl = nativeADDataRef.getImgUrl();
+        nativeADDataRef.isAPP();
         if (null != view) {
             final OnClickListener clickListener = new OnClickListener() {
                 @Override
