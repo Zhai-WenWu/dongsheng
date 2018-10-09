@@ -701,7 +701,6 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
                 isCompleteCallback = true;
             }
         });
-        keyboardDialog.setOnDismissListener(dialog -> mSendText = keyboardDialog.getText());
         keyboardDialog.setContentStr(mSendText);
         keyboardDialog.show();
         isCompleteCallback = false;
@@ -753,8 +752,6 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
                     mSendText = newText;
                 }
             });
-            mCommentDialog.setOnDismissListener(dialog -> mCommentDialog = null);
-            mCommentDialog.setOnCommentTextUpdateListener(newText -> mSendText = newText);
         }
         if (mCommentDialog.isShowing())
             return;
