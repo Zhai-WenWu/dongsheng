@@ -63,6 +63,17 @@ public class AppHandlerAsyncPolling {
         }
     }
 
+    public void startPollingImmediately(PollingConfig pollingConfig) {
+        if (pollingConfig == null || mMap.containsKey(pollingConfig.getType()) || (mAsyncHandler != null && mAsyncHandler.hasMessages(pollingConfig.getType()))) {
+            return;
+        }
+        stopPolling(pollingConfig);
+        mMap.put(pollingConfig.getType(), pollingConfig);
+        if (mAsyncHandler != null) {
+            mAsyncHandler.sendEmptyMessage(pollingConfig.getType());
+        }
+    }
+
     public void stopPolling(PollingConfig pollingConfig) {
         if (pollingConfig == null || !mMap.containsKey(pollingConfig.getType())) {
             return;

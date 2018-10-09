@@ -172,7 +172,7 @@ public class MainInitDataControl {
         LocalPushManager.stopLocalPush(act);
 
         PollingConfig.COURSE_GUIDANCE.registerIHandleMessage(mIHandleMessage);
-        AppHandlerAsyncPolling.getInstance().startPolling(PollingConfig.COURSE_GUIDANCE);
+        AppHandlerAsyncPolling.getInstance().startPollingImmediately(PollingConfig.COURSE_GUIDANCE);
         Log.i("zhangyujian","iniMainAfter::时间:"+(endTime-startTime));
     }
 
