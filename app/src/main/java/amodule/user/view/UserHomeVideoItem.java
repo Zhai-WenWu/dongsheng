@@ -98,6 +98,7 @@ public class UserHomeVideoItem extends UserHomeItem {
             uplaodState.setVisibility(View.VISIBLE);
             deleteIcon.setVisibility(View.VISIBLE);
             descText.setVisibility(View.GONE);
+            findViewById(R.id.play_icon).setVisibility(GONE);
         } else {
             Map<String,String> imgMap = StringManager.getFirstMap(mDataMap.get("image"));
             String path = imgMap.get("url");
