@@ -752,7 +752,6 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
                     mSendText = newText;
                 }
             });
-            mCommentDialog.setOnCommentTextUpdateListener(newText -> mSendText = newText);
         }
         if (mCommentDialog.isShowing())
             return;
