@@ -84,6 +84,11 @@ public class GdtAdTools {
                             gdtListener.onADTick(l);
                         }
                     }
+
+                    @Override
+                    public void onADExposure() {
+
+                    }
                 }, 50000);
     }
 
