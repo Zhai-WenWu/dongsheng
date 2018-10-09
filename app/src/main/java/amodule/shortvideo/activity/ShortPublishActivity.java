@@ -33,6 +33,7 @@ import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.override.activity.base.BaseActivity;
+import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -51,6 +52,8 @@ import aplug.basic.ReqInternet;
 import third.aliyun.work.AliyunCommon;
 import third.location.LocationHelper;
 import third.qiyu.GlideImageLoader;
+
+import static acore.tools.ObserverManager.NOTIFY_SAVE_VIDEO_DRAF;
 
 /**
  * 视频发布页面
@@ -362,6 +365,7 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
                 break;
             case R.id.rightText://草稿
                 saveData();
+                ObserverManager.getInstance().notify(NOTIFY_SAVE_VIDEO_DRAF,null,null);
                 XHClick.onEvent(XHApplication.in(),"a_pre_release","存草稿");
                 break;
             case R.id.topic_more_linear://更多话题

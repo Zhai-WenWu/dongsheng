@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.text.TextUtils;
@@ -24,7 +25,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.aliyun.struct.common.CropKey;
 import com.aliyun.struct.common.ScaleMode;
@@ -44,12 +44,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
 
+import acore.logic.ActivityMethodManager;
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.MessageTipController;
 import acore.logic.VersionOp;
 import acore.logic.XHClick;
 import acore.logic.stat.StatisticsManager;
+import acore.logic.polling.AppHandlerAsyncPolling;
+import acore.logic.polling.IHandleMessage;
 import acore.notification.controller.NotificationSettingController;
 import acore.override.XHApplication;
 import acore.override.activity.mian.MainBaseActivity;
@@ -59,14 +62,11 @@ import acore.tools.IObserver;
 import acore.tools.LogManager;
 import acore.tools.ObserverManager;
 import acore.tools.PageStatisticsUtils;
+import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.XiangHaTabHost;
 import amodule._common.conf.GlobalVariableConfig;
 import amodule.article.activity.edit.VideoEditActivity;
-import amodule.article.db.UploadArticleData;
-import amodule.article.db.UploadArticleSQLite;
-import amodule.article.db.UploadVideoSQLite;
-import amodule.dish.db.UploadDishData;
 import amodule.dish.tools.OffDishToFavoriteControl;
 import amodule.dish.tools.UploadDishControl;
 import amodule.lesson.activity.LessonHome;
@@ -77,7 +77,9 @@ import amodule.main.activity.MainHomePage;
 import amodule.main.activity.MainMyself;
 import amodule.main.delegate.ISetMessageTip;
 import amodule.shortvideo.activity.ShortPublishActivity;
-import amodule.user.activity.login.LoginByAccout;
+import aplug.basic.InternetCallback;
+import aplug.basic.ReqEncyptInternet;
+import aplug.basic.ReqInternet;
 import aplug.shortvideo.ShortVideoInit;
 import third.ad.control.AdControlHomeDish;
 import third.ad.db.XHAdSqlite;
@@ -98,7 +100,7 @@ import static android.content.Intent.FLAG_ACTIVITY_NO_USER_ACTION;
 import static com.xiangha.R.id.iv_itemIsFine;
 
 @SuppressWarnings("deprecation")
-public class Main extends Activity implements OnClickListener, IObserver, ISetMessageTip {
+public class Main extends Activity implements OnClickListener, IObserver, ISetMessageTip, IHandleMessage{
     public static final String TAG = "xianghaTag";
 
     private String[] tabTitle = {"首页", "名厨菜","发布", "社区", "我的"};
@@ -161,7 +163,9 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
     private void init(){
         WelcomeDialogstate=false;
         isShowWelcomeDialog=true;
+        ActivityMethodManager.isAppShow= true;
         mainInitDataControl = new MainInitDataControl();
+        mainInitDataControl.setIHandleMessage(this);
         welcomeControls= LoginManager.isShowAd()?new WelcomeControls(this,callBack):
                 new WelcomeControls(this,1,callBack);
         LogManager.printStartTime("zhangyujian","main::oncreate::");
@@ -196,7 +200,6 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                 addQiYvListener();
                 if(mainInitDataControl!=null)mainInitDataControl.mainAfterUpload(Main.this);
                 FileManager.saveShared(Main.this,FileManager.app_welcome,VersionOp.getVerName(Main.this),"1");
-                ClingPresenter.getInstance().onCreate(Main.this, null);
             }
         }
         @Override
@@ -345,13 +348,13 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
 
     public void onChangeSend(View view){
         AliyunCommon.getInstance().startRecord(this);
+        XHClick.onEvent(this,"a_index640","底部拍摄按钮点击量");
     }
 
     Handler mTimerHandler = null;
     Runnable mRunnable = null;
     // 时刻取得导航提醒
     public void initRunTime() {
-        Log.i("tzy", "initRunTime: ");
         if(mTimerHandler == null){
             mTimerHandler = new Handler();
             execute();
@@ -373,7 +376,6 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
     }
 
     public void stopTimer() {
-        Log.i("tzy", "stopTimer: ");
         if (mTimerHandler != null) {
             mTimerHandler.removeCallbacks(mRunnable);
             mTimerHandler = null;
@@ -393,6 +395,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
         LogManager.printStartTime("zhangyujian", "main::onResume::");
         mainOnResumeState = true;
         mLocalActivityManager.dispatchResume();
+        ActivityMethodManager.isAppShow= true;
         if (colse_level == 0) {
             System.exit(0);
         }
@@ -554,7 +557,11 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                 // 关闭页面停留时间统计计时器
                 XHClick.closeHandler();
                 VersionOp.getInstance().onDesotry();
+<<<<<<< HEAD
                 StatisticsManager.closeHandler();
+=======
+                AppHandlerAsyncPolling.getInstance().destroyPolling();
+>>>>>>> master_develop_0913_course
                 System.exit(0);
                 UtilFile.saveShared(this, FileManager.MALL_STAT, FileManager.MALL_STAT, "");
             }
@@ -684,8 +691,9 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                 } else if (i == TAB_LESSON && allTab.containsKey(LessonHome.KEY) && tabHost.getCurrentTab() == i) {
                     //当所在页面正式你要刷新的页面,就直接刷新
                     LessonHome lesson = (LessonHome) allTab.get(LessonHome.KEY);
-                    if (lesson != null)
+                    if (lesson != null) {
                         lesson.refresh();
+                    }
 
                 } else if (i == TAB_SELF && allTab.containsKey(MainMyself.KEY)) {
                     //在onResume方法添加了刷新方法
@@ -709,10 +717,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
     }
 
     public View getTabView(int index) {
-        if (tabViews != null
-                && tabViews.length == 4
-                && index < 4
-                && index > -1) {
+        if (tabViews != null && index < tabViews.length && index >= 0) {
             return tabViews[index];
         }
         return null;
@@ -891,5 +896,44 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                 XHClick.onEvent(XHApplication.in(),eventID,twoLevel,threeLevel);
             }
         });
+    }
+
+    @Override
+    public void onHandleMessage(Message message) {
+        if (message == null) {
+            return;
+        }
+        int what = message.what;
+        switch (what) {
+            case 1://名厨菜提示圆点
+                ReqEncyptInternet.in().doGetEncypt(StringManager.API_COURSE_UPDATE, new InternetCallback() {
+                    @Override
+                    public void loaded(int i, String s, Object o) {
+                        if (i >= ReqInternet.REQ_OK_STRING) {
+                            String courseUpdateTime = StringManager.getFirstMap(o).get("courseUpdateTime");
+                            String courseUpdateTimeLocal = (String) FileManager.loadShared(XHApplication.in(), FileManager.xmlFile_appInfo, "courseUpdateTime");
+                            if (!TextUtils.equals(courseUpdateTime, courseUpdateTimeLocal)) {
+                                FileManager.saveShared(XHApplication.in(), FileManager.xmlFile_appInfo, "courseUpdateTime", courseUpdateTime);
+                                Main.this.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        setPointTipVisible(1, true);
+                                    }
+                                });
+                            }
+                        }
+                    }
+                });
+                break;
+        }
+    }
+
+    public void setPointTipVisible(int index, boolean show) {
+        if (Main.allMain == null)
+            return;
+        View view = Main.allMain.getTabView(index);
+        if (view != null) {
+            view.findViewById(R.id.new_info).setVisibility(show ? View.VISIBLE : View.GONE);
+        }
     }
 }

@@ -518,6 +518,22 @@ public class ToolsDevice {
         // LogManager.print("d", "imei:" +deviceID);
         return deviceID;
     }
+    /**
+     * 获取设备imei
+     * @param context
+     * @return
+     */
+    public static String getIMEI(Context context){
+        if(context != null){
+            TelephonyManager tManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            String deviceID= tManager.getDeviceId();
+            if(!TextUtils.isEmpty(deviceID)){
+                return deviceID;
+            }
+            return "11111111111";
+        }
+        return "11111111111";
+    }
 
     /**
      * 确保获取到得到香哈经过处理过的imei,储存一次

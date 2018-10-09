@@ -341,7 +341,7 @@ public class StringManager extends UtilString {
 
     /*个人主页列表*/
     public final static String API_USERHOME_ARTICLE = apiUrl + "main7/article/articleList";//文章列表
-    public final static String API_USERHOME_VIDEO = apiUrl + "main7/video/videoList";//视频列表
+    public final static String API_USERHOME_VIDEO = apiUrl + "main8/shortVideo/shortVideoList";//视频列表
     public final static String API_USERHOME_ANSWER = apiUrl + "main7/qa/qaList";//问答列表
 
     public final static String api_applyVideoPower = appWebUrl + "deal/applyVideoPower.html";//申请视频权限
@@ -416,6 +416,9 @@ public class StringManager extends UtilString {
     public final static String API_SHORTVIDEO_TOPICRECOM = apiUrl + "main8/shortVideo/topicRecom";//话题列表
     public final static String API_SHORTVIDEO_RELEASE = apiUrl + "main8/shortVideo/release";//视频发布
     public final static String API_SHORTVIDEO_TOPICCHECK = apiUrl + "main8/shortVideo/topicCheck";//视频发布
+
+    //名厨菜更新时间
+    public static final String API_COURSE_UPDATE = apiUrl + "main8/school/getRotationData";
 
     //替换url
     public final static String replaceUrl(String url) {

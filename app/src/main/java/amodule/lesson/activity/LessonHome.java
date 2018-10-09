@@ -143,7 +143,9 @@ public class LessonHome extends MainBaseActivity implements IObserver, ISetMessa
 
             @Override
             public void onSuccess(boolean refresh) {
-
+                if (refresh && Main.allMain != null) {
+                    Main.allMain.setPointTipVisible(1, false);
+                }
             }
 
             @Override

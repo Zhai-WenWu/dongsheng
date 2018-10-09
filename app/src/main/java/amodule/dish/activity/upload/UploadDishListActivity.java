@@ -457,7 +457,7 @@ public class UploadDishListActivity extends BaseActivity {
         } else {
             Intent intent = new Intent();
             intent.putExtra("code", LoginManager.userInfo.get("code"));
-            intent.putExtra("index", 1);
+            intent.putExtra("type", "subject");
             intent.setClass(this, FriendHome.class);
             startActivity(intent);
         }

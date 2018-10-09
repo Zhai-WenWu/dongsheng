@@ -3,7 +3,6 @@ package amodule.dish.view;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -41,6 +40,7 @@ import com.xiangha.R;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import acore.logic.AppCommon;
@@ -65,12 +65,14 @@ import amodule._common.conf.GlobalVariableConfig;
 import amodule.article.view.BottomDialog;
 import amodule.comment.CommentDialog;
 import amodule.dish.activity.ShortVideoDetailActivity;
+import amodule.dish.adapter.RvVericalVideoItemAdapter;
 import amodule.dish.video.module.ShortVideoDetailModule;
 import amodule.main.Main;
 import amodule.main.view.item.BaseItemView;
 import amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver;
 import amodule.user.activity.FriendHome;
 import amodule.user.activity.login.LoginByAccout;
+import aplug.basic.DefaultInternetCallback;
 import aplug.basic.InternetCallback;
 import aplug.basic.LoadImage;
 import aplug.basic.ReqEncyptInternet;
@@ -85,6 +87,7 @@ import static acore.logic.stat.StatConf.STAT_TAG;
  * 短视频itemView
  */
 public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBarChangeListener{
+
     private static final int INNER_PLAY_STATE_START = 1;
     private static final int INNER_PLAY_STATE_PLAYING = 2;
     private static final int INNER_PLAY_STATE_PAUSE = 3;
@@ -142,8 +145,6 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
     private boolean mEffectStaticEnable;
     private boolean mStaticEnable;
     private String mVideoUrl;
-    private String mTopicClickUrl;
-    private String mAddressClickUrl;
 
     private String mSendText;
 
@@ -157,18 +158,20 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
     private int playNum = 0;//播放数量
 
     private Handler mMainHandler;
+    private boolean isCompleteCallback=true;
 
     public ShortVideoItemView(Context context) {
-        this(context,null);
+        this(context, null);
     }
 
     public ShortVideoItemView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        this.context= context;
-        LayoutInflater.from(context).inflate(R.layout.item_short_video_view,this,true);
+        this.context = context;
+        LayoutInflater.from(context).inflate(R.layout.item_short_video_view, this, true);
         initView();
     }
-    public void initView(){
+
+    public void initView() {
         mThumbImg = findViewById(R.id.image_thumb);
         mThumbContainer = findViewById(R.id.thumb_container);
         mVideoLayout = findViewById(R.id.surface_container);
@@ -199,7 +202,7 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
         mGoodImg = mBottomGoodLayout.findViewById(R.id.image1);
         mGoodText = mBottomGoodLayout.findViewById(R.id.text1);
 
-        mPlayerView= findViewById(R.id.short_video);
+        mPlayerView = findViewById(R.id.short_video);
 
         mPlayerView.setShowFullAnimation(false);
         mPlayerView.setIsTouchWiget(false);
@@ -251,106 +254,124 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
 
         mPlayerView.setStandardVideoAllCallBack(new StandardVideoAllCallBack() {
             @Override
-            public void onClickStartThumb(String url, Object... objects) {}
+            public void onClickStartThumb(String url, Object... objects) {
+            }
+
             @Override
-            public void onClickBlank(String url, Object... objects) {}
+            public void onClickBlank(String url, Object... objects) {
+            }
+
             @Override
-            public void onClickBlankFullscreen(String url, Object... objects) {}
+            public void onClickBlankFullscreen(String url, Object... objects) {
+            }
+
             @Override
             public void onPrepared(String url, Object... objects) {
                 mPlayerView.changePlayBtnState(false);
-                switch (mInnerPlayState) {
-                    case INNER_PLAY_STATE_PAUSE:
-                        pauseVideo();
-                        break;
-                    case INNER_PLAY_STATE_STOP:
-                        releaseVideo();
-                        break;
-                    default:
-                        break;
-                }
+                switchPlayState();
             }
+
             @Override
-            public void onClickStartIcon(String url, Object... objects) {}
+            public void onClickStartIcon(String url, Object... objects) {
+            }
+
             @Override
-            public void onClickStartError(String url, Object... objects) {}
+            public void onClickStartError(String url, Object... objects) {
+            }
+
             @Override
             public void onClickStop(String url, Object... objects) {
                 mInnerPlayState = INNER_PLAY_STATE_STOP;
             }
 
             @Override
-            public void onClickStopFullscreen(String url, Object... objects) {}
+            public void onClickStopFullscreen(String url, Object... objects) {
+            }
+
             @Override
             public void onClickResume(String url, Object... objects) {
                 mInnerPlayState = INNER_PLAY_STATE_PLAYING;
             }
 
             @Override
-            public void onClickResumeFullscreen(String url, Object... objects) {}
+            public void onClickResumeFullscreen(String url, Object... objects) {
+            }
+
             @Override
             public void onClickSeekbar(String url, Object... objects) {
 
             }
+
             @Override
-            public void onClickSeekbarFullscreen(String url, Object... objects) {}
+            public void onClickSeekbarFullscreen(String url, Object... objects) {
+            }
+
             @Override
             public void onAutoComplete(String url, Object... objects) {
                 mInnerPlayState = INNER_PLAY_STATE_AUTO_COMPLETE;
                 changeThumbImageState(true);
                 playNum++;
+                if( isCompleteCallback&&playCompleteCallBack != null && position >= 0){
+                    playCompleteCallBack.videoComplete(position);
+                }
                 if (mRepeatEnable) {
                     prepareAsync();
                 }
             }
+
             @Override
-            public void onEnterFullscreen(String url, Object... objects) {}
+            public void onEnterFullscreen(String url, Object... objects) {
+            }
+
             @Override
-            public void onQuitFullscreen(String url, Object... objects) {}
+            public void onQuitFullscreen(String url, Object... objects) {
+            }
+
             @Override
-            public void onQuitSmallWidget(String url, Object... objects) {}
+            public void onQuitSmallWidget(String url, Object... objects) {
+            }
+
             @Override
-            public void onEnterSmallWidget(String url, Object... objects) {}
+            public void onEnterSmallWidget(String url, Object... objects) {
+            }
+
             @Override
-            public void onTouchScreenSeekVolume(String url, Object... objects) {}
+            public void onTouchScreenSeekVolume(String url, Object... objects) {
+            }
+
             @Override
-            public void onTouchScreenSeekPosition(String url, Object... objects) {}
+            public void onTouchScreenSeekPosition(String url, Object... objects) {
+            }
+
             @Override
-            public void onTouchScreenSeekLight(String url, Object... objects) {}
+            public void onTouchScreenSeekLight(String url, Object... objects) {
+            }
+
             @Override
             public void onPlayError(String url, Object... objects) {
                 changeThumbImageState(true);
             }
         });
 
-        mPlayerView.setOnProgressChangedCallback(new GSYVideoPlayer.OnProgressChangedCallback() {
-            @Override
-            public void onProgressChanged(int progress, int secProgress, int currentTime, int totalTime) {
+        mPlayerView.setOnProgressChangedCallback((progress, secProgress, currentTime, totalTime) -> {
 
 //                Log.e("TAG_Player", "onProgressChanged: progress = " + progress + "  currentTime = " + currentTime);
 
-                if (progress == 0 && currentTime == 0) {
-                    if (mNeedChangePauseToStartEnable) {
-                        mNeedChangePauseToStartEnable = false;
-                        mPauseToStartEnable = true;
-                    }
-                    return;
-                } else {
+            if (progress == 0 && currentTime == 0) {
+                if (mNeedChangePauseToStartEnable) {
                     mNeedChangePauseToStartEnable = false;
-                    mPauseToStartEnable = false;
+                    mPauseToStartEnable = true;
                 }
-                if (mPlayerView.playBtnVisible()) {
-                    mPlayerView.changePlayBtnState(false);
-                }
+                return;
+            } else {
+                mNeedChangePauseToStartEnable = false;
+                mPauseToStartEnable = false;
+            }
+            if (mPlayerView.playBtnVisible()) {
+                mPlayerView.changePlayBtnState(false);
+            }
 
-                switch (mInnerPlayState) {
-                    case INNER_PLAY_STATE_STOP:
-                        releaseVideo();
-                        break;
-                    case INNER_PLAY_STATE_PAUSE:
-                        pauseVideo();
-                        break;
-                }
+            switchPlayState();
 
                 if (thumbImageStateVisible() && currentTime >= 1) {
                     changeThumbImageState(false);
@@ -362,24 +383,39 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
                         startStatistics(StringManager.API_SHORT_VIDEO_VIEW_VALIDATE);
                     }
                 }
+            } else {
+                mStaticEnable = false;
             }
         });
 
     }
 
-    /**
-     * 开始播放入口
-     */
+    private void switchPlayState() {
+        switch (mInnerPlayState) {
+            case INNER_PLAY_STATE_PAUSE:
+                pauseVideo();
+                break;
+            case INNER_PLAY_STATE_STOP:
+                releaseVideo();
+                break;
+            default:
+                break;
+        }
+    }
+
+    /** 开始播放入口 */
     public void prepareAsync() {
         mInnerPlayState = INNER_PLAY_STATE_START;
         mNeedChangePauseToStartEnable = true;
+        mPlayerView.setUp(mVideoUrl, false, "");
         mPlayerView.startPlayLogic();
         if(!mStaticEnable){
             mStaticEnable = true;
             startStatistics(StringManager.API_SHORT_VIDEO_ACCESS);
         }
     }
-    public void resumeVideo(){
+
+    public void resumeVideo() {
         if (mPauseToStartEnable) {
             prepareAsync();
             return;
@@ -388,10 +424,9 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
         mPlayerView.onVideoResume();
         mPlayerView.changePlayBtnState(false);
     }
-    /**
-     * 暂停
-     */
-    public void pauseVideo(){
+
+    /** 暂停 */
+    public void pauseVideo() {
         mInnerPlayState = INNER_PLAY_STATE_PAUSE;
         mPlayerView.onVideoPause();
         mPlayerView.changePlayBtnState(true);
@@ -431,15 +466,18 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
         return mPlayerView.getCurrentState();
     }
 
-    public boolean isPlaying(){
-        return  mPlayerView.getCurrentState()==GSYVideoPlayer.CURRENT_STATE_PLAYING;
+    public boolean isPlaying() {
+        return mPlayerView.getCurrentState() == GSYVideoPlayer.CURRENT_STATE_PLAYING;
     }
+
     /**
      * 设置数据
+     *
      * @param module
      */
     public void setData(ShortVideoDetailModule module, int position) {
         mData = module;
+        this.position = position;
         if (mData == null)
             return;
         this.position = position;
@@ -460,8 +498,8 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
         //• 当视频高宽比小于等于 667/375 时，等宽，自适应高
         //• 当视频高宽比大于 667/375 时，按高铺满，自适应宽
         RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mThumbImg.getLayoutParams();
-        int vW = TextUtils.isEmpty(mData.getVideoModel().getVideoW()) ? 0 : Integer.parseInt(mData.getVideoModel().getVideoW());
-        int vH = TextUtils.isEmpty(mData.getVideoModel().getVideoH()) ? 0 : Integer.parseInt(mData.getVideoModel().getVideoH());
+        int vW = Tools.parseIntOfThrow(mData.getVideoModel().getVideoW(),0);
+        int vH = Tools.parseIntOfThrow(mData.getVideoModel().getVideoH(),0);
         int heightImg = 0;
         int widthImg = 0;
         if (vW == 0 || vH == 0) {
@@ -488,8 +526,9 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
         if (builder != null) {
             builder.into(mThumbImg);
         }
-        changeThumbImageState(true);
+        changeThumbImageState(mInnerPlayState == 0 || mInnerPlayState == INNER_PLAY_STATE_STOP|| mInnerPlayState == INNER_PLAY_STATE_PAUSE);
         mVideoUrl = mData.getVideoModel().getVideoUrlMap().get("defaultUrl");
+
         mCommentImg.setImageResource(R.drawable.short_video_detail_comment);
         mCommentNumText.setText(mData.getCommentNum());
         mGoodImg.setImageResource(R.drawable.bg_select_good);
@@ -502,7 +541,7 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
         if (!TextUtils.isEmpty(title)) {
             mTitleText.setVisibility(View.VISIBLE);
             if (mData.isEssence()) {
-                IconTextSpan.Builder ib = new IconTextSpan.Builder(context);
+                IconTextSpan.Builder ib = new IconTextSpan.Builder();
                 ib.setBgColorInt(getResources().getColor(R.color.color_fa273b));
                 ib.setTextColorInt(getResources().getColor(R.color.c_white_text));
                 ib.setText("精选");
@@ -513,7 +552,7 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
                 StringBuffer sb = new StringBuffer(" ");
                 sb.append(title);
                 SpannableStringBuilder ssb = new SpannableStringBuilder(sb.toString());
-                ssb.setSpan(ib.build(), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                ssb.setSpan(ib.build(getContext()), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 mTitleText.setText(ssb);
             } else {
                 mTitleText.setText(title);
@@ -521,7 +560,6 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
         } else {
             mTitleText.setVisibility(View.GONE);
         }
-        mTopicClickUrl = mData.getTopicModel().getGotoUrl();
         String topicTitle = mData.getTopicModel().getTitle();
         if (!TextUtils.isEmpty(topicTitle)) {
             mTopicText.setText(topicTitle);
@@ -529,15 +567,13 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
         } else {
             mLayoutTopic.setVisibility(View.GONE);
         }
-        mAddressClickUrl = mData.getAddressModel().getGotoUrl();
         String address = mData.getAddressModel().getAddress();
-        if(!TextUtils.isEmpty(address)){
+        if (!TextUtils.isEmpty(address)) {
             mAddressText.setText(address);
             mLayoutAddress.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             mLayoutAddress.setVisibility(View.GONE);
         }
-        mPlayerView.setUp(mVideoUrl, false, "");
     }
 
     public void setPos(int pos) {
@@ -658,10 +694,13 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
             @Override
             public void onDismiss(DialogInterface dialog) {
                 mSendText = keyboardDialog.getText();
+                isCompleteCallback=true;
             }
         });
+        keyboardDialog.setOnDismissListener(dialog -> mSendText = keyboardDialog.getText());
         keyboardDialog.setContentStr(mSendText);
         keyboardDialog.show();
+        isCompleteCallback=false;
     }
 
     private void showComments() {
@@ -679,32 +718,21 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
                 public void onSendSucc() {
                     if (mData == null)
                         return;
-                    String commentsNum = "";
-                    try {
-                        commentsNum = String.valueOf(Integer.parseInt(mData.getCommentNum()) + 1);
-                    } catch (Exception e) {
-                        commentsNum = mData.getCommentNum();
+                    int commentNum = Tools.parseIntOfThrow(mData.getCommentNum());
+                    if (commentNum >= 0) {
+                        commentNum++;
+                        innerUpdateCommentNum(commentNum);
                     }
-                    mData.setCommentNum(commentsNum);
-                    if (mCommentNumText != null) {
-                        mCommentNumText.setText(commentsNum);
-                    }
-
-                    GlobalCommentModule module = new GlobalCommentModule();
-                    module.setFlagCode(mData.getCode());
-                    module.setCommentNum(mData.getCommentNum());
-                    GlobalVariableConfig.handleCommentModule(module);
                 }
 
                 @Override
                 public void onDelSucc() {
                     if (mData == null)
                         return;
-                    String commentsNum = "";
-                    try {
-                        commentsNum = String.valueOf(Math.max(Integer.parseInt(mData.getCommentNum()) - 1, 0));
-                    } catch (Exception e) {
-                        commentsNum = mData.getCommentNum();
+                    int commentNum = Tools.parseIntOfThrow(mData.getCommentNum());
+                    if (commentNum >= 0) {
+                        commentNum--;
+                        innerUpdateCommentNum(commentNum);
                     }
                     mData.setCommentNum(commentsNum);
                     if (mCommentNumText != null) {
@@ -721,6 +749,7 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
                 @Override
                 public void onDismiss(DialogInterface dialog) {
                     mCommentDialog = null;
+                    isCompleteCallback=true;
                 }
             });
             mCommentDialog.setOnCommentTextUpdateListener(new CommentDialog.OnCommentTextUpdateListener() {
@@ -729,16 +758,19 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
                     mSendText = newText;
                 }
             });
+            mCommentDialog.setOnDismissListener(dialog -> mCommentDialog = null);
+            mCommentDialog.setOnCommentTextUpdateListener(newText -> mSendText = newText);
         }
         if (mCommentDialog.isShowing())
             return;
         mCommentDialog.setCommentText(mSendText);
         mCommentDialog.show();
+        isCompleteCallback=false;
     }
 
     private void closeActivity() {
-        if(context instanceof Activity) {
-            ((Activity)context).finish();
+        if (context instanceof Activity) {
+            ((Activity) context).finish();
         }
     }
 
@@ -800,7 +832,6 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
     }
 
     private void handlePlay() {
-
         switch (mPlayerView.getCurrentState()) {
             case GSYVideoPlayer.CURRENT_STATE_PLAYING:
                 pauseVideo();
@@ -833,12 +864,9 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
 
     private void showBottomDialog() {
         BottomDialog dialog = new BottomDialog(getContext());
-        dialog.addButton("删除", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-                openDeleteDialog();
-            }
+        dialog.addButton("删除", v -> {
+            dialog.dismiss();
+            openDeleteDialog();
         });
         dialog.show();
     }
@@ -848,19 +876,11 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
         dialogManager.createDialog(new ViewManager(dialogManager)
                 .setView(new TitleMessageView(getContext()).setText("确定删除这个视频吗？"))
                 .setView(new HButtonView(getContext()).setNegativeTextColor(Color.parseColor("#333333"))
-                        .setNegativeText("取消", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                dialogManager.cancel();
-                            }
-                        })
+                        .setNegativeText("取消", v -> dialogManager.cancel())
                         .setPositiveTextColor(Color.parseColor("#333333"))
-                        .setPositiveText("确定", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                dialogManager.cancel();
-                                delete(mData.getCode());
-                            }
+                        .setPositiveText("确定", v -> {
+                            dialogManager.cancel();
+                            delete(mData.getCode());
                         }))).show();
     }
 
@@ -896,19 +916,16 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
         if (mAttentionLoading.get())
             return;
         mAttentionLoading.set(true);
-        AppCommon.onAttentionClick(mData.getCustomerModel().getUserCode(), "follow", new Runnable() {
-            @Override
-            public void run() {
-                mAttentionLoading.set(false);
-                mAttentionImage.setVisibility(View.GONE);
+        AppCommon.onAttentionClick(mData.getCustomerModel().getUserCode(), "follow", () -> {
+            mAttentionLoading.set(false);
+            mAttentionImage.setVisibility(View.GONE);
 
-                GlobalAttentionModule module = new GlobalAttentionModule();
-                module.setAttentionUserCode(mData.getCustomerModel().getUserCode());
-                module.setAttention(true);
-                GlobalVariableConfig.handleAttentionModule(module);
-                if (mAttentionResultCallback != null) {
-                    mAttentionResultCallback.onResult(true);
-                }
+            GlobalAttentionModule module = new GlobalAttentionModule();
+            module.setAttentionUserCode(mData.getCustomerModel().getUserCode());
+            module.setAttention(true);
+            GlobalVariableConfig.handleAttentionModule(module);
+            if (mAttentionResultCallback != null) {
+                mAttentionResultCallback.onResult(true);
             }
         });
     }
@@ -916,7 +933,6 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
     public void gotoUser() {
         AppCommon.openUrl(mData.getCustomerModel().getGotoUrl(), true);
     }
-
 
     private void loadUserHeader(String url) {
         mHeaderImg.setTag(TAG_ID, url);
@@ -930,15 +946,10 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
             requestBuilder.into(new SubBitmapTarget() {
                 @Override
                 public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
-                    if (mMainHandler == null)
-                        mMainHandler = new Handler(Looper.getMainLooper());
-                    mMainHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (!mHeaderImg.getTag(TAG_ID).equals(url))
-                                return;
-                            mHeaderImg.setImageBitmap(bitmap);
-                        }
+                    mHeaderImg.post(() -> {
+                        if (!mHeaderImg.getTag(TAG_ID).equals(url))
+                            return;
+                        mHeaderImg.setImageBitmap(bitmap);
                     });
                 }
             });
@@ -960,9 +971,7 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
         mOnSeekBarTrackingTouchListener = onSeekBarTrackingTouchListener;
     }
 
-    /**
-     * 发评论
-     */
+    /** 发评论 */
     private void sendComment(String content) {
         if (!LoginManager.isLogin()) {
             getContext().startActivity(new Intent(getContext(), LoginByAccout.class));
@@ -994,22 +1003,33 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
                     public void loaded(int flag, String url, Object obj) {
                         if (flag >= ReqEncyptInternet.REQ_OK_STRING) {
                             mSendText = "";
-                            try {
-                                int commentNum = Integer.parseInt(mData.getCommentNum()) + 1;
-                                mData.setCommentNum(String.valueOf(commentNum));
-                                mCommentNumText.setText(mData.getCommentNum());
-
-                                GlobalCommentModule module = new GlobalCommentModule();
-                                module.setFlagCode(mData.getCode());
-                                module.setCommentNum(mData.getCommentNum());
-                                GlobalVariableConfig.handleCommentModule(module);
-                            } catch (Exception e) {}
+                            int commentNum = Tools.parseIntOfThrow(mData.getCommentNum());
+                            if (commentNum >= 0) {
+                                commentNum++;
+                                innerUpdateCommentNum(commentNum);
+                            }
                         } else {
                             Tools.showToast(getContext(), "评论失败，请重试");
                         }
                     }
                 });
     }
+
+    private void innerUpdateCommentNum(int commentNum) {
+        mData.setCommentNum(String.valueOf(commentNum));
+        if (mCommentNumText != null) {
+            mCommentNumText.setText(mData.getCommentNum());
+        }
+        innerUpdateCommentNumData();
+    }
+
+    private void innerUpdateCommentNumData() {
+        GlobalCommentModule module = new GlobalCommentModule();
+        module.setFlagCode(mData.getCode());
+        module.setCommentNum(mData.getCommentNum());
+        GlobalVariableConfig.handleCommentModule(module);
+    }
+
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
     }
@@ -1104,4 +1124,9 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
     public void setOnDeleteCallback(OnDeleteCallback deleteCallback) {
         mOnDeleteCallback = deleteCallback;
     }
+    public RvVericalVideoItemAdapter.PlayCompleteCallBack playCompleteCallBack;
+    public void setPlayCompleteCallBack(RvVericalVideoItemAdapter.PlayCompleteCallBack completeCallBack){
+        this.playCompleteCallBack= completeCallBack;
+    }
 }
+//1062

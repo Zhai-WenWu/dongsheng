@@ -42,6 +42,7 @@ import amodule.user.db.BrowseHistorySqlite;
 import amodule.user.db.HistoryData;
 import aplug.web.tools.WebviewManager;
 import aplug.web.view.XHWebView;
+import third.cling.control.ClingPresenter;
 import xh.basic.internet.UtilInternet;
 
 import static amodule.dish.activity.DetailDishWeb.tongjiId;
@@ -87,6 +88,9 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         initBundle();
         initView();
         initData();
+        if(Main.allMain!=null) {//投屏初始化，判断为null，因为现在业务可以直接开启该页面
+            ClingPresenter.getInstance().onCreate(Main.allMain, null);
+        }
     }
     /**
      * 处理页面初始数据

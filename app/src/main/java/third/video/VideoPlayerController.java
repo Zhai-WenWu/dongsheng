@@ -51,6 +51,7 @@ public class VideoPlayerController {
     //乐视的secretkey
     @SuppressWarnings("FieldCanBeLocal")
     private final String secretkey = "5e172624924a79f81d60cb2c28f66c4d";
+    public static boolean isShowVideoTip= true;//默认展示非wifi，
     private String mVideoUnique = "", mUserUnique = "";
     protected ImageViewVideo mImageView = null;
     private boolean mHasVideoInfo = false;
@@ -64,6 +65,7 @@ public class VideoPlayerController {
     protected View view_Tip;
     private boolean isAutoPaly = false;//是否是wifi状态
     private boolean isShowMedia = false;//true：直接播放，false,可以被其他因素控制
+    private boolean isUserClick = false;
     public boolean isNetworkDisconnect = false;
     public int autoRetryCount = 0;
     public boolean isPortrait = false;
@@ -337,7 +339,7 @@ public class VideoPlayerController {
     public void setNewView(View view) {
         this.view_dish = view;
         initView(mContext);
-        isAutoPaly = "wifi".equals(ToolsDevice.getNetWorkSimpleType(mContext));
+//        isAutoPaly = "wifi".equals(ToolsDevice.getNetWorkSimpleType(mContext));
         if (mPraentViewGroup.getChildCount() > 0) {
             mPraentViewGroup.removeAllViews();
         }
@@ -345,7 +347,10 @@ public class VideoPlayerController {
         if(view_Tip != null)
             mPraentViewGroup.addView(view_Tip);
         mPraentViewGroup.addView(view_dish);
-        view_dish.setOnClickListener(v -> setOnClick());
+        view_dish.setOnClickListener(v -> {
+            isUserClick = true;
+            setOnClick();
+        });
     }
 
     /**
@@ -368,7 +373,8 @@ public class VideoPlayerController {
             return;
         }
         Log.i("tzy","广告点:::"+mHasVideoInfo);
-        isAutoPaly = "wifi".equals(ToolsDevice.getNetWorkSimpleType(mContext));
+//        isAutoPaly = "wifi".equals(ToolsDevice.getNetWorkSimpleType(mContext));
+        boolean isWifi = "wifi".equals(ToolsDevice.getNetWorkSimpleType(mContext));
         if (mHasVideoInfo) {
             Log.i("tzy","广告点:::isShowAd"+isShowAd);
             if(isShowAd){
@@ -381,14 +387,26 @@ public class VideoPlayerController {
                 Log.i("tzy","isAutoPaly:::"+isAutoPaly);
                 if(isAutoPaly){//当前wifi
                     removeTipView();
-                }else{
-                    removeDishView();
-                    hideVideoImage();
+                }else {
+                    if(isUserClick){
+                        removeDishView();
+                        hideVideoImage();
+                        if(isWifi){
+                            removeTipView();
+                            videoPlayer.startPlayLogic();
+                            if (mStatisticsPlayCountCallback != null) {
+                                mStatisticsPlayCountCallback.onStatistics();
+                            }
+                        }
+                    }
                     return;
                 }
             }
             removeDishView();
             hideVideoImage();
+            if(!isWifi&&isShowVideoTip){
+                return;
+            }
             removeTipView();
             videoPlayer.startPlayLogic();
             if (mStatisticsPlayCountCallback != null) {
@@ -799,6 +817,7 @@ public class VideoPlayerController {
         @Override
         public void onClick(View v) {
             setShowMedia(true);
+            isShowVideoTip= false;
             setOnClick();
             new Thread(() -> FileManager.saveShared(mContext,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI,"1")).start();
         }

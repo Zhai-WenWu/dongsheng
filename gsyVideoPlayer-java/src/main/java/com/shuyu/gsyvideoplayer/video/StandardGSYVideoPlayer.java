@@ -206,7 +206,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
     @Override
     protected void createNetWorkState() {
         if (mNetInfoModule == null) {
-            mNetInfoModule = new NetInfoModule(getActivityContext().getApplicationContext(), new NetInfoModule.NetChangeListener() {
+            mNetInfoModule = new NetInfoModule(getActivityContext(), new NetInfoModule.NetChangeListener() {
                 @Override
                 public void changed(String state) {
                     if (!mNetSate.equals(state)) {

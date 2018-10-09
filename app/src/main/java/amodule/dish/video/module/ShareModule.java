@@ -1,5 +1,7 @@
 package amodule.dish.video.module;
 
+import java.util.Objects;
+
 public class ShareModule {
 
     private String mUrl;
@@ -37,5 +39,22 @@ public class ShareModule {
 
     public void setImg(String img) {
         mImg = img;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ShareModule that = (ShareModule) o;
+        return Objects.equals(mUrl, that.mUrl) &&
+                Objects.equals(mTitle, that.mTitle) &&
+                Objects.equals(mContent, that.mContent) &&
+                Objects.equals(mImg, that.mImg);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(mUrl, mTitle, mContent, mImg);
     }
 }

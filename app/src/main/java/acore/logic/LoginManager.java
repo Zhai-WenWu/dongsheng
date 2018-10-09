@@ -286,6 +286,8 @@ public class LoginManager {
 				userInfo.put("isGourmet", map.get("isGourmet"));
 				userInfo.put("tel", map.get("tel"));
 				userInfo.put("vip", map.get("vip"));
+				userInfo.put("recordTime", map.get("recordTime"));
+				userInfo.put("recordMinTime", map.get("recordMinTime"));
 				Map<String,String> vipMap = StringManager.getFirstMap(map.get("vip"));
 				userInfo.put("maturity_day", TextUtils.isEmpty(vipMap.get("maturity_day")) ? "" : vipMap.get("maturity_day"));
 				userInfo.put("email", TextUtils.isEmpty(map.get("email")) ? "" : map.get("email"));

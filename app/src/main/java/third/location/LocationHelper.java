@@ -199,7 +199,7 @@ public class LocationHelper {
                             }
                         }
                     }
-                    FileManager.saveShared(XHApplication.in(), FileManager.file_location, FileManager.file_location, aMapLocation.getLongitude() + "#" + aMapLocation.getLatitude() + "#" + (TextUtils.isEmpty(firstId) ? "" : firstId) + "#" + (TextUtils.isEmpty(secondId) ? "" : secondId));
+                    FileManager.saveShared(XHApplication.in(), FileManager.file_location, FileManager.file_location, aMapLocation.getLongitude() + "#" + aMapLocation.getLatitude());
                     XHInternetCallBack.setIsCookieChange(true);
                 }
             }

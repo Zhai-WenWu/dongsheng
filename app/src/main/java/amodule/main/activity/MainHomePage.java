@@ -75,7 +75,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
     protected long startTime = -1;//开始的时间戳
 
     private ConnectionChangeReceiver mReceiver;
-
+    private Handler handler = new Handler();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -251,7 +251,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
      * @return 回调
      */
     public InternetCallback getHeaderCallback(boolean isCache) {
-        new Handler().postDelayed(() -> mViewContrloer.refreshComplete(),5*1000);
+        handler.postDelayed(() -> mViewContrloer.refreshComplete(),5*1000);
         return new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
@@ -260,7 +260,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
                 mViewContrloer.refreshComplete();
                 LoadOver = true;
                 if (i >= ReqEncyptInternet.REQ_OK_STRING) {
-                    new Handler().postDelayed(() -> {
+                    handler.postDelayed(() -> {
                         if (mViewContrloer != null) {
                             ArrayList<Map<String, String>> list = StringManager.getListMapByJson(o);
                             if (list.size() > 2) {
@@ -373,6 +373,9 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
         if(mViewContrloer != null){
             mViewContrloer.setStatisticShowNum();
         }
+        if(handler!=null){
+            handler.removeCallbacksAndMessages(null);
+        }
     }
 
     @Override
@@ -448,5 +451,12 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
                 mHomeAdapter.notifyDataSetChanged();
             }
         }
+    }
+
+    /**
+     * 隐藏gif
+     */
+    public void handleNoGif(){
+        mHomeAdapter.notifyDataSetChanged();
     }
 }

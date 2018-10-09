@@ -316,7 +316,7 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
         }
         this.mUrl = url;
         this.mTitle = title;
-        Log.i("tzy","setUp");
+        Log.i(TAG,"setUp");
         setStateAndUi(CURRENT_STATE_NORMAL);
         createNetWorkState();
         listenerNetWorkState();
@@ -330,7 +330,7 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
      */
     protected void setStateAndUi(int state) {
         mCurrentState = state;
-        Log.i("tzy","video setStateAndUi :: mCurrentState = " + mCurrentState);
+        Log.i(TAG,"video setStateAndUi :: mCurrentState = " + mCurrentState);
         switch (mCurrentState) {
             case CURRENT_STATE_NORMAL:
                 if (isCurrentMediaListener()) {
@@ -461,7 +461,7 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
      * 开始状态视频播放
      */
     protected void prepareVideo() {
-        Log.d("tzy","prepareVideo");
+        Log.d(TAG,"prepareVideo");
         if (mGSYVideoManager.listener() != null) {
             mGSYVideoManager.listener().onCompletion();
         }
@@ -473,7 +473,7 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
         ((Activity) getContext()).getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         mBackUpPlayingBufferState = -1;
         mGSYVideoManager.prepare(mUrl, mMapHeadData, mLooping, mSpeed);
-        Log.i("tzy","prepareVideo");
+        Log.i(TAG,"prepareVideo");
         setStateAndUi(CURRENT_STATE_PREPAREING);
     }
 
@@ -490,7 +490,7 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            Log.d("tzy","onAudioFocusChangeListener");
+                            Log.d(TAG,"onAudioFocusChangeListener");
                             releaseAllVideos();
                         }
                     });
@@ -517,7 +517,7 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
      * 重置
      */
     public void onVideoReset() {
-        Log.i("tzy",this.getClass().getSimpleName() + "::onVideoReset");
+        Log.i(TAG,this.getClass().getSimpleName() + "::onVideoReset");
         setStateAndUi(CURRENT_STATE_NORMAL);
     }
 
@@ -526,7 +526,7 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
      */
     @Override
     public void onVideoPause() {
-        Log.i("tzy","onVideoPause");
+        Log.i(TAG,"onVideoPause");
         try{
             if (mGSYVideoManager.getMediaPlayer() != null
                     && mGSYVideoManager.getMediaPlayer().isPlaying()) {
@@ -548,21 +548,21 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
     public void onVideoResume() {
         try{
             mPauseTime = 0;
-            Log.i("tzy","onVideoResume");
+            Log.i(TAG,"onVideoResume");
 //            if (mCurrentState == CURRENT_STATE_PAUSE) {
             if (mGSYVideoManager.getMediaPlayer() != null
                     && !mGSYVideoManager.getMediaPlayer().isPlaying()) {
                 if (mCurrentPosition > 0 && mGSYVideoManager.getMediaPlayer() != null) {
                     setStateAndUi(CURRENT_STATE_PLAYING);
                     mGSYVideoManager.getMediaPlayer().seekTo(mCurrentPosition);
-                    Log.i("tzy","mCurrentPosition = " + mCurrentPosition);
+                    Log.i(TAG,"mCurrentPosition = " + mCurrentPosition);
                     mGSYVideoManager.getMediaPlayer().start();
                 }
             }
         }catch (Exception igored){
             onVideoReset();
             igored.printStackTrace();
-            Log.i("tzy","Exception = " + igored.getMessage());
+            Log.i(TAG,"Exception = " + igored.getMessage());
         }
     }
 
@@ -955,7 +955,7 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
         }
 
         startProgressTimer();
-        Log.i("tzy","onPrepared");
+        Log.i(TAG,"onPrepared");
         setStateAndUi(CURRENT_STATE_PLAYING);
 
         if (mVideoAllCallBack != null && isCurrentMediaListener()) {
@@ -1004,7 +1004,7 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
     @Override
     public void onCompletion() {
         //make me normal first
-        Log.i("tzy",this.getClass().getSimpleName() + "::onCompletion");
+        Log.i(TAG,this.getClass().getSimpleName() + "::onCompletion");
         setStateAndUi(CURRENT_STATE_NORMAL);
         if (mTextureViewContainer.getChildCount() > 0) {
             mTextureViewContainer.removeAllViews();
@@ -1073,11 +1073,11 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
 
     @Override
     public void onInfo(int what, int extra) {
-        Log.d("tzy","onInfo::what = " + what + " ; extra = " + extra);
+        Log.d(TAG,"onInfo::what = " + what + " ; extra = " + extra);
         if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START) {
             mBackUpPlayingBufferState = mCurrentState;
-            Log.i("tzy","onInfo::mBackUpPlayingBufferState = " + mBackUpPlayingBufferState);
-            Log.i("tzy","onInfo::mHadPlay = " + mHadPlay);
+            Log.i(TAG,"onInfo::mBackUpPlayingBufferState = " + mBackUpPlayingBufferState);
+            Log.i(TAG,"onInfo::mHadPlay = " + mHadPlay);
             //避免在onPrepared之前就进入了buffering，导致一只loading
             if (mHadPlay && mCurrentState != CURRENT_STATE_PREPAREING && mCurrentState > 0)
                 setStateAndUi(CURRENT_STATE_PLAYING_BUFFERING_START);
@@ -1301,7 +1301,7 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
      * 页面销毁了记得调用是否所有的video
      */
     public void releaseAllVideos() {
-        Log.d("tzy","releaseAllVideos");
+        Log.d(TAG,"releaseAllVideos");
         if (IF_RELEASE_WHEN_ON_PAUSE) {
             if (mGSYVideoManager.listener() != null) {
                 mGSYVideoManager.listener().onCompletion();
@@ -1317,7 +1317,7 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
      */
     public void release() {
         try {
-            Log.d("tzy","release");
+            Log.d(TAG,"release");
             releaseAllVideos();
         }catch (Exception e){
 
@@ -1360,7 +1360,7 @@ public abstract class GSYVideoPlayer extends GSYBaseVideoPlayer implements View.
      */
     protected void createNetWorkState() {
         if (mNetInfoModule == null) {
-            mNetInfoModule = new NetInfoModule(getActivityContext().getApplicationContext(), new NetInfoModule.NetChangeListener() {
+            mNetInfoModule = new NetInfoModule(getActivityContext(), new NetInfoModule.NetChangeListener() {
                 @Override
                 public void changed(String state) {
                     if (!mNetSate.equals(state)) {

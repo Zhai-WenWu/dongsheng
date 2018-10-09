@@ -36,6 +36,9 @@ import acore.logic.MessageTipController;
 import acore.logic.VersionOp;
 import acore.logic.XHClick;
 import acore.logic.ConfigMannager;
+import acore.logic.polling.AppHandlerAsyncPolling;
+import acore.logic.polling.IHandleMessage;
+import acore.logic.polling.PollingConfig;
 import acore.override.XHApplication;
 import acore.tools.ChannelUtil;
 import acore.tools.FileManager;
@@ -79,6 +82,8 @@ import static xh.basic.tool.UtilString.getListMapByJson;
  */
 public class MainInitDataControl {
     private int delayedTime = 7 * 1000;
+
+    private IHandleMessage mIHandleMessage;
 
     /**
      * welcome之前初始化
@@ -165,7 +170,14 @@ public class MainInitDataControl {
         OffDishToFavoriteControl.addCollection(act);
         PageStatisticsUtils.getInstance().getPageInfo(act.getApplicationContext());//初始化电商页面统计
         LocalPushManager.stopLocalPush(act);
+
+        PollingConfig.COURSE_GUIDANCE.registerIHandleMessage(mIHandleMessage);
+        AppHandlerAsyncPolling.getInstance().startPolling(PollingConfig.COURSE_GUIDANCE);
         Log.i("zhangyujian","iniMainAfter::时间:"+(endTime-startTime));
+    }
+
+    public void setIHandleMessage(IHandleMessage IHandleMessage) {
+        mIHandleMessage = IHandleMessage;
     }
 
     private void setXGTag() {
