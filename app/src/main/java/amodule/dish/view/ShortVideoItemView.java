@@ -747,6 +747,13 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
                     isCompleteCallback = true;
                 }
             });
+            mCommentDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialog) {
+                    mCommentDialog = null;
+                    isCompleteCallback = true;
+                }
+            });
             mCommentDialog.setOnCommentTextUpdateListener(new CommentDialog.OnCommentTextUpdateListener() {
                 @Override
                 public void onCommentTextUpdate(String newText) {
