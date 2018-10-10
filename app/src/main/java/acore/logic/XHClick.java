@@ -420,20 +420,21 @@ public class XHClick {
             @Override
             public void run() {
                 if (!path.equals(""))
+                    path = "";
                     //  发送请求的操作
-                    ReqInternet.in().doGet(StringManager.api_stat, new InternetCallback() {
-
-                        @Override
-                        public void loaded(int flag, String url, Object msg) {
-                            path = "";
-                        }
-
-                        @Override
-                        public Map<String, String> getReqHeader(Map<String, String> header, String url, Map<String, String> params) {
-                            header.put("Cookie", "path=" + path + ";");
-                            return super.getReqHeader(header, url, params);
-                        }
-                    });
+//                    ReqInternet.in().doGet(StringManager.api_stat, new InternetCallback() {
+//
+//                        @Override
+//                        public void loaded(int flag, String url, Object msg) {
+//                            path = "";
+//                        }
+//
+//                        @Override
+//                        public Map<String, String> getReqHeader(Map<String, String> header, String url, Map<String, String> params) {
+//                            header.put("Cookie", "path=" + path + ";");
+//                            return super.getReqHeader(header, url, params);
+//                        }
+//                    });
 
                 //循环计时器 每隔30秒执行一次
                 handler.postDelayed(runnable, CIRCULATION_TIME);
@@ -492,21 +493,22 @@ public class XHClick {
             showToast(allActivity, path);
         }
         if (!path.equals(""))
+            path = "";
             // 发送请求的操作
-            ReqInternet.in().doGet(StringManager.api_stat, new InternetCallback() {
-
-                @Override
-                public void loaded(int flag, String url, Object msg) {
-                    path = "";
-                    UtilLog.print(XHConf.log_tag_stat, "d", "GET:" + url + "成功");
-                }
-
-                @Override
-                public Map<String, String> getReqHeader(Map<String, String> header, String url, Map<String, String> params) {
-                    header.put("Cookie", "path=" + path + ";");
-                    return super.getReqHeader(header, url, params);
-                }
-            });
+//            ReqInternet.in().doGet(StringManager.api_stat, new InternetCallback() {
+//
+//                @Override
+//                public void loaded(int flag, String url, Object msg) {
+//                    path = "";
+//                    UtilLog.print(XHConf.log_tag_stat, "d", "GET:" + url + "成功");
+//                }
+//
+//                @Override
+//                public Map<String, String> getReqHeader(Map<String, String> header, String url, Map<String, String> params) {
+//                    header.put("Cookie", "path=" + path + ";");
+//                    return super.getReqHeader(header, url, params);
+//                }
+//            });
     }
 
     /**
@@ -531,20 +533,21 @@ public class XHClick {
         }
 
         if (!path.equals(""))
+            path = "";
             // 发送请求的操作
-            ReqInternet.in().doGet(StringManager.api_stat, new InternetCallback() {
-
-                @Override
-                public void loaded(int flag, String url, Object msg) {
-                    path = "";
-                }
-
-                @Override
-                public Map<String, String> getReqHeader(Map<String, String> header, String url, Map<String, String> params) {
-                    header.put("Cookie", "path=" + path + ";");
-                    return super.getReqHeader(header, url, params);
-                }
-            });
+//            ReqInternet.in().doGet(StringManager.api_stat, new InternetCallback() {
+//
+//                @Override
+//                public void loaded(int flag, String url, Object msg) {
+//                    path = "";
+//                }
+//
+//                @Override
+//                public Map<String, String> getReqHeader(Map<String, String> header, String url, Map<String, String> params) {
+//                    header.put("Cookie", "path=" + path + ";");
+//                    return super.getReqHeader(header, url, params);
+//                }
+//            });
     }
 
     /**
