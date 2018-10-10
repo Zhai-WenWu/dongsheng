@@ -561,7 +561,7 @@ public class XHClick {
     /**
      * 仅用于测试的.
      *
-     * @param contextx
+     * @param context
      */
     private static void showToast(Context context, String content) {
 //		Log.d("------统计------",content);
@@ -1092,44 +1092,44 @@ public class XHClick {
      * 上传页面统计
      */
     public synchronized static void handlerPageStatic() {
-        try {
-            String url = StringManager.API_STATISTIC_S8;
-            String baseData = getStatictisParams();
-            ArrayList<String> data = StatictisSQLiteDataBase.getInstance().selectPageAllData();
+//        try {
+//            String url = StringManager.API_STATISTIC_S8;
+//            String baseData = getStatictisParams();
+//            ArrayList<String> data = StatictisSQLiteDataBase.getInstance().selectPageAllData();
             StatictisSQLiteDataBase.getInstance().deletePageAllData();
 
-            Map<String, String> baseMap = UtilString.getMapByString(baseData, "&", "=");
-            JSONObject jsonObject = MapToJson(baseMap);
-            if (data != null && data.size() > 0) {
-                JSONArray jsonArray = new JSONArray();
-                int lenght = data.size();
-                for (int i = 0; i < lenght; i++) {
-                    if (!TextUtils.isEmpty(data.get(i))) {
-                        jsonArray.put(MapToJsonEncode(UtilString.getMapByString(data.get(i), "&", "=")));
-                    }
-                }
-                jsonObject.put("log_data", jsonArray);
-            } else {
-                return;
-            }
-            LinkedHashMap<String, String> map1 = new LinkedHashMap<>();
-            map1.put("log_json", jsonObject.toString());
-            Log.i("wyl", "log_json::::" + jsonObject.toString());
-
-            ReqInternet.in().doPost(url, map1, new InternetCallback() {
-                @Override
-                public void loaded(int flag, String url, Object object) {
-                    if (flag >= ReqInternet.REQ_OK_STRING) {
-                        Log.i("wyl", "上传数据s8");
-                    } else {
-
-                    }
-
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//            Map<String, String> baseMap = UtilString.getMapByString(baseData, "&", "=");
+//            JSONObject jsonObject = MapToJson(baseMap);
+//            if (data != null && data.size() > 0) {
+//                JSONArray jsonArray = new JSONArray();
+//                int lenght = data.size();
+//                for (int i = 0; i < lenght; i++) {
+//                    if (!TextUtils.isEmpty(data.get(i))) {
+//                        jsonArray.put(MapToJsonEncode(UtilString.getMapByString(data.get(i), "&", "=")));
+//                    }
+//                }
+//                jsonObject.put("log_data", jsonArray);
+//            } else {
+//                return;
+//            }
+//            LinkedHashMap<String, String> map1 = new LinkedHashMap<>();
+//            map1.put("log_json", jsonObject.toString());
+//            Log.i("wyl", "log_json::::" + jsonObject.toString());
+//
+//            ReqInternet.in().doPost(url, map1, new InternetCallback() {
+//                @Override
+//                public void loaded(int flag, String url, Object object) {
+//                    if (flag >= ReqInternet.REQ_OK_STRING) {
+//                        Log.i("wyl", "上传数据s8");
+//                    } else {
+//
+//                    }
+//
+//                }
+//            });
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     /**
