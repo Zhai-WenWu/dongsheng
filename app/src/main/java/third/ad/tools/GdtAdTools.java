@@ -190,7 +190,6 @@ public class GdtAdTools {
         String desc = nativeADDataRef.getDesc();
         String iconUrl = nativeADDataRef.getIconUrl();
         String imageUrl = nativeADDataRef.getImgUrl();
-        nativeADDataRef.isAPP();
         if (null != view) {
             final OnClickListener clickListener = new OnClickListener() {
                 @Override
