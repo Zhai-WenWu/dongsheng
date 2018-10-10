@@ -72,7 +72,7 @@
 
                         <include
                             android:id="@+id/rl_search_ad_gdt_no_history"
-                            layout="@layout/ad_banner_view"
+                            layout="@layout/ad_banner_imageview"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_margin="@dimen/dp_15"/>
