@@ -142,7 +142,6 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
     private AtomicBoolean mDelLoading;
     private boolean mNeedChangePauseToStartEnable;
     private boolean mPauseToStartEnable;
-    private boolean mRepeatEnable;
     private boolean mEffectStaticEnable;
     private boolean mStaticEnable;
     private String mVideoUrl;
@@ -220,7 +219,6 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
         mAttentionLoading = new AtomicBoolean(false);
         mFavLoading = new AtomicBoolean(false);
         mDelLoading = new AtomicBoolean(false);
-        mRepeatEnable = true;
         DisplayMetrics dm = ToolsDevice.getWindowPx(getContext());
         mScreenW = dm.widthPixels;
         mScreenH = dm.heightPixels;
@@ -317,9 +315,6 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
                 playNum++;
                 if (isCompleteCallback && playCompleteCallBack != null && position >= 0) {
                     playCompleteCallBack.videoComplete(position);
-                }
-                if (mRepeatEnable) {
-                    prepareAsync();
                 }
             }
 

@@ -247,8 +247,13 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
             public void videoComplete(int position) {
                 if (position >= 0 && position + 1 < mDatas.size()) {
                     String playMode = mDatas.get(position + 1).getPlayMode();
-                    if ("1".equals(playMode) || ("2".equals(playMode) && "wifi".equals(ToolsDevice.getNetWorkType(ShortVideoDetailActivity.this)))) {
+                    if ("2".equals(playMode) && "wifi".equals(ToolsDevice.getNetWorkType(ShortVideoDetailActivity.this))) {
                         recyclerView.smoothScrollToPosition(position + 1);
+                    }else if("1".equals(playMode)||"2".equals(playMode) && !"wifi".equals(ToolsDevice.getNetWorkType(ShortVideoDetailActivity.this))){
+                        RvVericalVideoItemAdapter.ItemViewHolder currentHolder = (RvVericalVideoItemAdapter.ItemViewHolder) recyclerView.findViewHolderForAdapterPosition(position);
+                        if(currentHolder!=null){
+                            currentHolder.startVideo();
+                        }
                     }
                 }
             }
