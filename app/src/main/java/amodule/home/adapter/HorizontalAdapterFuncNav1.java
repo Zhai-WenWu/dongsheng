@@ -88,7 +88,7 @@ public class HorizontalAdapterFuncNav1 extends RvBaseAdapter<Map<String, String>
 
         @Override
         public boolean canStat() {
-            return !isCache;
+            return false;
         }
     }
 
