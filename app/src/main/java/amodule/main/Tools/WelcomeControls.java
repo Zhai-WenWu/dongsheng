@@ -29,6 +29,7 @@ import acore.override.helper.XHActivityManager;
 import acore.tools.FileManager;
 import acore.tools.LogManager;
 import acore.tools.StringManager;
+import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.main.Main;
 import aplug.basic.InternetCallback;
@@ -62,6 +63,10 @@ public class WelcomeControls {
     private final long mAdIntervalTime = 1000;
     public WelcomeCallBack welcomeCallBack;
 
+    private int mOriginalWidth = 1700;
+    private int mOriginalHeight = 2060;
+    private View mWelcomeView;
+
     public WelcomeControls(@NonNull Activity act, WelcomeCallBack callBack) {
         this(act, DEFAULT_TIME, callBack);
     }
@@ -78,7 +83,24 @@ public class WelcomeControls {
         this.mAdTime = adShowTime;
         this.welcomeCallBack = callBack;
         LogManager.printStartTime("zhangyujian", "WelcomeControls：1111：：");
-        activity.findViewById(R.id.xh_welcome).setVisibility(View.VISIBLE);
+        mWelcomeView = activity.findViewById(R.id.xh_welcome);
+        int imageW, imageH;
+        int fixedW = Tools.getPhoneWidth();
+        int fixedH = Tools.getPhoneHeight() - activity.getResources().getDimensionPixelSize(R.dimen.dp_105);
+        double proportionFixed = fixedH / fixedW;
+        double proportionOriginal = mOriginalHeight / mOriginalWidth;
+        if (proportionFixed > proportionOriginal) {
+            imageW = fixedW;
+            imageH = fixedW * mOriginalHeight / mOriginalWidth;
+        } else {
+            imageH = fixedH;
+            imageW = fixedH * mOriginalWidth / mOriginalHeight;
+        }
+        ImageView welcomeImg = mWelcomeView.findViewById(R.id.image_self);
+        ViewGroup.LayoutParams params = welcomeImg.getLayoutParams();
+        params.width = imageW;
+        params.height = imageH;
+        mWelcomeView.setVisibility(View.VISIBLE);
     }
 
     public void startShow() {
