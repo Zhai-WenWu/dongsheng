@@ -190,7 +190,8 @@ public class StatisticsManager {
             if(data == null || data.isEmpty()){
                 return;
             }
-            String url = Tools.isDebug(XHApplication.in()) ? api.replace("https://stat.xiangha.com","http://stat.ixiangha.com") : api;
+            String url = Tools.isDebug(XHApplication.in()) && StringManager.domain.contains(".ixiangha.com")
+                    ? api.replace("https://stat.xiangha.com","http://stat.ixiangha.com") : api;
             handleParamsDevicePart();
             JSONArray jsonArray = new JSONArray();
             for (String value : data) {
