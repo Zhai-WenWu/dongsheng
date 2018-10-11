@@ -454,6 +454,8 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
         if (INNER_PLAY_STATE_STOP != mInnerPlayState && mInnerPlayState != 0) {
             statisticsVideoView();
         }
+        playNum = 0;
+        duration = 0;
         mEffectStaticEnable = false;
         mStaticEnable = false;
         mInnerPlayState = INNER_PLAY_STATE_STOP;
