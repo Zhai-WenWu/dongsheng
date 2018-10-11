@@ -7,6 +7,7 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -44,6 +45,7 @@ public class AutoScrollADView extends LinearLayout {
 	private boolean isStarted;
 
 	private String stiaticID = "";
+	private Handler handler= new Handler();
 
 	public AutoScrollADView(Context context) {
 		this(context, null);
@@ -84,7 +86,14 @@ public class AutoScrollADView extends LinearLayout {
 	public void start() {
 		if (!isStarted && mAdapter.getCount() > 1) {
 			isStarted = true;
-			postDelayed(mRunnable, mGap);//间隔mgap刷新一次UI
+//			postDelayed(mRunnable, mGap);//间隔mgap刷新一次UI
+			handler.postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					performSwitch();
+					handler.postDelayed(this, mGap);
+				}
+			}, mGap);
 		}
 	}
 

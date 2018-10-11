@@ -196,7 +196,6 @@ public class ZhishiResultView extends RelativeLayout {
                             mapReturn.put("bottomLine", "hide");
                             mapReturn.put("line", "show");
                             mListData.add(mapReturn);
-                            mListData.add(mapReturn);
                         }
                         loadPage = listReturn.size();
                         if (nousAdapter != null) {
