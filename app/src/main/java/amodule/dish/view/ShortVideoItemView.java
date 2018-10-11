@@ -153,6 +153,7 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
 
     private int mPos;
     private ShortVideoPlayer mPlayerView;
+    private float duration;
     private CommentDialog mCommentDialog;
 
     private OnPlayPauseClickListener mOnPlayPauseListener;
@@ -359,7 +360,7 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
         mPlayerView.setOnProgressChangedCallback((progress, secProgress, currentTime, totalTime) -> {
 
 //                Log.e("TAG_Player", "onProgressChanged: progress = " + progress + "  currentTime = " + currentTime);
-
+            duration = totalTime;
             if (progress == 0 && currentTime == 0) {
                 if (mNeedChangePauseToStartEnable) {
                     mNeedChangePauseToStartEnable = false;
@@ -438,7 +439,9 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
     private void statisticsVideoView() {
         try {
             String tag = getTag(STAT_TAG) != null ? (String) getTag(STAT_TAG) : getClass().getSimpleName();
-            float duration = mPlayerView.getDuration();
+            if(duration == 0){
+                duration = mPlayerView.getDuration();
+            }
             float total = (playNum * duration + mPlayerView.getCurrentPositionWhenPlaying()) / 1000f;
             float temp = duration <= 0 ? 0 : mPlayerView.getCurrentPositionWhenPlaying() / duration + playNum;
             String n1 = temp <= 0 ? "0" : String.format("%.2f", temp);
@@ -484,6 +487,7 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
             return;
         this.position = position;
         playNum = 0;
+        duration = 0;
         mUserName.setText(mData.getCustomerModel().getNickName());
         mIsSelf = TextUtils.equals(LoginManager.userInfo.get("code"), mData.getCustomerModel().getUserCode());
         if (mIsSelf) {
