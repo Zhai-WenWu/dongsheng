@@ -3,6 +3,7 @@ package amodule.search.view;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Looper;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import com.xiangha.R;
 
 import java.util.Map;
+import java.util.logging.Handler;
 
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
@@ -87,43 +89,48 @@ public class SearchVIPLessonView extends BaseItemView implements View.OnClickLis
     }
 
     private void onDataReady(Object o, LessonCallback callback) {
-        if (mDataMap != null)
-            mDataMap.clear();
-        if (o != null) {
-            setVisibility(View.VISIBLE);
-            mDataMap = StringManager.getFirstMap(o);
-            String tag = mDataMap.get("tag");
-            Map<String, String> tagMap = StringManager.getFirstMap(tag);
-            String tagTitle = tagMap.get("title");
-            String tagColor = tagMap.get("color");
-            String tagBg = tagMap.get("bgColor");
-            String title = mDataMap.get("title");
-            IconTextSpan.Builder builder = new IconTextSpan.Builder();
-            builder.setBgColorInt(Color.parseColor(tagBg))
-                    .setTextColorInt(Color.parseColor(tagColor))
-                    .setTextSize(10F)
-                    .setRightMargin(3F)
-                    .setText(tagTitle)
-                    .setBgHeight(16F)
-                    .setRadius(1F);
-            SpannableStringBuilder ssb = new SpannableStringBuilder();
-            ssb.append(" ").append(title);
-            ssb.setSpan(builder.build(getContext()), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            mTitleText.setText(ssb);
-            String subTitle = mDataMap.get("subTitle");
-            mInfoText.setText(subTitle);
-            String name = mDataMap.get("customer");
-            mNameText.setText(name);
-            mPlayImg.setVisibility(TextUtils.equals(mDataMap.get("isVideo"), "2") ? View.VISIBLE : View.GONE);
-            setViewImage(mLessonImg, mDataMap.get("img"));
-            if (callback != null)
-                callback.callback(mDataMap.get("code"));
-            XHClick.mapStat(getContext(), mStatisticsId, "顶部VIP内容展现量", "");
-        } else {
-            setVisibility(View.GONE);
-            if (callback != null)
-                callback.callback(null);
-        }
+        new android.os.Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                if (mDataMap != null)
+                    mDataMap.clear();
+                if (o != null) {
+                    setVisibility(View.VISIBLE);
+                    mDataMap = StringManager.getFirstMap(o);
+                    String tag = mDataMap.get("tag");
+                    Map<String, String> tagMap = StringManager.getFirstMap(tag);
+                    String tagTitle = tagMap.get("title");
+                    String tagColor = tagMap.get("color");
+                    String tagBg = tagMap.get("bgColor");
+                    String title = mDataMap.get("title");
+                    IconTextSpan.Builder builder = new IconTextSpan.Builder();
+                    builder.setBgColorInt(Color.parseColor(tagBg))
+                            .setTextColorInt(Color.parseColor(tagColor))
+                            .setTextSize(10F)
+                            .setRightMargin(3F)
+                            .setText(tagTitle)
+                            .setBgHeight(16F)
+                            .setRadius(1F);
+                    SpannableStringBuilder ssb = new SpannableStringBuilder();
+                    ssb.append(" ").append(title);
+                    ssb.setSpan(builder.build(getContext()), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    mTitleText.setText(ssb);
+                    String subTitle = mDataMap.get("subTitle");
+                    mInfoText.setText(subTitle);
+                    String name = mDataMap.get("customer");
+                    mNameText.setText(name);
+                    mPlayImg.setVisibility(TextUtils.equals(mDataMap.get("isVideo"), "2") ? View.VISIBLE : View.GONE);
+                    setViewImage(mLessonImg, mDataMap.get("img"));
+                    if (callback != null)
+                        callback.callback(mDataMap.get("code"));
+                    XHClick.mapStat(getContext(), mStatisticsId, "顶部VIP内容展现量", "");
+                } else {
+                    setVisibility(View.GONE);
+                    if (callback != null)
+                        callback.callback(null);
+                }
+            }
+        });
     }
 
     @Override
