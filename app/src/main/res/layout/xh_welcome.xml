@@ -20,7 +20,7 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="@dimen/dp_120"
-            android:src="@drawable/welcome_big"
+            tools:src="@drawable/welcome_big"
             android:visibility="visible" />
 
         <ImageView
