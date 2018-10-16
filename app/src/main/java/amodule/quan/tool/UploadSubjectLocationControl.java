@@ -50,6 +50,7 @@ public class UploadSubjectLocationControl {
 			tv_location.setTextColor(Color.parseColor(Tools.getColorStr(tv_location.getContext(),R.color.comment_color)));
 		}else{
 			LocationHelper.getInstance().registerLocationListener(locationCallBack);
+			LocationHelper.getInstance().startLocation();
 			location = "正在定位";
 			pb_location.setVisibility(View.VISIBLE);
 			iv_location.setVisibility(View.GONE);
