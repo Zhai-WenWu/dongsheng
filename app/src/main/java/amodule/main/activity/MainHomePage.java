@@ -280,6 +280,12 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
                                         mDataControler.setNextUrl(data.get("nexturl"));
                                         notifyDataChanged();
                                     }
+
+                                    Map<String,String> parameterMap = StringManager.getFirstMap(widgetData.get(WidgetDataHelper.KEY_PARAMETER));
+                                    parameterMap = StringManager.getFirstMap(parameterMap.get(WidgetDataHelper.KEY_TITLE));
+                                    if(mViewContrloer != null && !TextUtils.isEmpty(parameterMap.get("text1"))){
+                                        mViewContrloer.setFeedTitleText(parameterMap.get("text1"));
+                                    }
                                 }
                             } else {
                                 mViewContrloer.setHeaderData(list, isCache);
