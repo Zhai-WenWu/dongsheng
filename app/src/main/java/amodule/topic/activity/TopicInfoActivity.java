@@ -140,10 +140,10 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
         mFloatingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String name = mInfoMap.get("name");
-                if (TextUtils.isEmpty(mTopicCode) || mInfoMap == null || mInfoMap.isEmpty() || TextUtils.isEmpty(name))
+                if (TextUtils.isEmpty(mTopicCode) || mInfoMap == null ||
+                        mInfoMap.isEmpty() || TextUtils.isEmpty(mInfoMap.get("name")))
                     return;
-                AliyunCommon.getInstance().startRecord(TopicInfoActivity.this, mTopicCode, name);
+                AliyunCommon.getInstance().startRecord(TopicInfoActivity.this, mTopicCode, mInfoMap.get("name"));
             }
         });
     }
