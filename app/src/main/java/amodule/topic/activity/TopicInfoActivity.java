@@ -29,6 +29,8 @@ import acore.logic.XHClick;
 import acore.logic.load.LoadManager;
 import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.StringManager;
+import acore.tools.Tools;
+import acore.tools.ToolsDevice;
 import acore.widget.rvlistview.RvListView;
 import acore.widget.rvlistview.RvStaggeredGridView;
 import amodule._common.conf.GlobalAttentionModule;
