@@ -1144,8 +1144,7 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
         boolean todayOnce = !TextUtils.equals(dateStr,todayStr);
         FileManager.saveShared(getContext(),FileManager.xmlFile_appInfo,"watchVideo",todayStr);
         if(todayOnce){
-            //TODO 发送观看视频请求
-            Toast.makeText(context, "发送观看视频请求", Toast.LENGTH_SHORT).show();
+            ReqEncyptInternet.in().doEncypt(StringManager.api_addTask,"taskType=taskSeeShortVideo",new DefaultInternetCallback());
         }
     }
 }

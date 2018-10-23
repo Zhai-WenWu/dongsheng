@@ -26,6 +26,7 @@ import amodule.main.Main;
 import amodule.main.activity.MainHomePage;
 import amodule.other.listener.HomeKeyListener;
 import amodule.other.listener.HomeKeyListener.OnHomePressedListener;
+import aplug.basic.DefaultInternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import third.ad.XHAdAutoRefresh;
 import third.ad.tools.AdConfigTools;
@@ -147,7 +148,7 @@ public class ActivityMethodManager {
             if(PushManager.isNotificationEnabled(XHActivityManager.getInstance().getCurrentActivity())) {
                 XHClick.mapStat(XHApplication.in(), "a_push_guidelayer",
                         (String) FileManager.loadShared(XHApplication.in(),FileManager.app_notification,FileManager.push_setting_message), "开启成功");
-                //TODO 发送开启通知请求
+                ReqEncyptInternet.in().doEncypt(StringManager.api_addTask,"taskType=taskAutoNotify",new DefaultInternetCallback());
             }
         }
     }
