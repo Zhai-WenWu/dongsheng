@@ -358,6 +358,9 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
         mPlayerView.setOnProgressChangedCallback((progress, secProgress, currentTime, totalTime) -> {
 
 //                Log.e("TAG_Player", "onProgressChanged: progress = " + progress + "  currentTime = " + currentTime);
+            if(totalTime - currentTime > 0 && totalTime - currentTime <=5000){
+                todayWatchVideo();
+            }
             duration = totalTime;
             if (progress == 0 && currentTime == 0) {
                 if (mNeedChangePauseToStartEnable) {
@@ -585,7 +588,7 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
 
         String dateStr = (String) FileManager.loadShared(getContext(),FileManager.xmlFile_appInfo,"videoCommentGuide");
         String todayStr = Tools.getAssignTime("yyyyMMdd",0);
-        boolean todayOnce = TextUtils.equals(dateStr,todayStr);
+        boolean todayOnce = !TextUtils.equals(dateStr,todayStr);
         mGuideView.setVisibility(todayOnce?VISIBLE:GONE);
         FileManager.saveShared(getContext(),FileManager.xmlFile_appInfo,"videoCommentGuide",todayStr);
     }
@@ -1133,6 +1136,17 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
 
     public void setPlayCompleteCallBack(RvVericalVideoItemAdapter.PlayCompleteCallBack completeCallBack) {
         this.playCompleteCallBack = completeCallBack;
+    }
+
+    private void todayWatchVideo(){
+        String dateStr = (String) FileManager.loadShared(getContext(),FileManager.xmlFile_appInfo,"watchVideo");
+        String todayStr = Tools.getAssignTime("yyyyMMdd",0);
+        boolean todayOnce = !TextUtils.equals(dateStr,todayStr);
+        FileManager.saveShared(getContext(),FileManager.xmlFile_appInfo,"watchVideo",todayStr);
+        if(todayOnce){
+            //TODO 发送观看视频请求
+            Toast.makeText(context, "发送观看视频请求", Toast.LENGTH_SHORT).show();
+        }
     }
 }
 //1062
