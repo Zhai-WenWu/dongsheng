@@ -155,6 +155,8 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
     private float duration;
     private CommentDialog mCommentDialog;
 
+    private View mGuideView;
+
     private OnPlayPauseClickListener mOnPlayPauseListener;
     private OnSeekBarTrackingTouchListener mOnSeekBarTrackingTouchListener;
     private int position;
@@ -204,6 +206,7 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
         mBottomGoodLayout = findViewById(R.id.layout_bottom_good);
         mGoodImg = mBottomGoodLayout.findViewById(R.id.image1);
         mGoodText = mBottomGoodLayout.findViewById(R.id.text1);
+        mGuideView = findViewById(R.id.guide_view);
 
         mPlayerView = findViewById(R.id.short_video);
 
@@ -579,6 +582,12 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
         } else {
             mLayoutAddress.setVisibility(View.GONE);
         }
+
+        String dateStr = (String) FileManager.loadShared(getContext(),FileManager.xmlFile_appInfo,"videoCommentGuide");
+        String todayStr = Tools.getAssignTime("yyyyMMdd",0);
+        boolean todayOnce = TextUtils.equals(dateStr,todayStr);
+        mGuideView.setVisibility(todayOnce?VISIBLE:GONE);
+        FileManager.saveShared(getContext(),FileManager.xmlFile_appInfo,"videoCommentGuide",todayStr);
     }
 
     public void setPos(int pos) {
@@ -672,10 +681,12 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
                     break;
                 case R.id.layout_bottom_comment:
                     showComments();
+                    mGuideView.setVisibility(GONE);
                     XHClick.mapStat(getContext(), ShortVideoDetailActivity.STA_ID, "评论", "评论按钮点击量");
                     break;
                 case R.id.layout_bottom_info:
                     showCommentEdit();
+                    mGuideView.setVisibility(GONE);
                     XHClick.mapStat(getContext(), ShortVideoDetailActivity.STA_ID, "评论", "说点什么点击量");
                     break;
             }
