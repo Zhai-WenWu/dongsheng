@@ -25,10 +25,15 @@ import com.xh.view.TitleView;
 import com.xh.view.VButtonView;
 import com.xiangha.R;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Map;
 
 import acore.logic.AppCommon;
+import acore.logic.ConfigMannager;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.activity.mian.MainBaseActivity;
@@ -62,6 +67,8 @@ import third.mall.activity.MallMyFavorableActivity;
 import third.mall.activity.MyOrderActivity;
 import third.mall.alipay.MallPayActivity;
 import third.push.xg.XGPushServer;
+
+import static acore.logic.ConfigMannager.KEY_DEVICE_VIP_GUIDE;
 
 /**
  * @Description:
@@ -169,9 +176,9 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
 
     private void onBindStateDataReady(final boolean isTempVip, final boolean showDialog) {
         mYiYuanVIPView.setVisibility(isTempVip ? View.VISIBLE : View.GONE);
-        if (showDialog) {
-            showYiYuanDialog(true);
-        }
+        if(isTempVip)
+            showYiYuanDialog();
+
     }
 
     // 重置用户个人信息
@@ -618,9 +625,10 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
     private DialogManager generateDialog() {
         final DialogManager dialogManager = new DialogManager(MainMyself.this);
         dialogManager.createDialog(new ViewManager(dialogManager)
-                .setView(new TitleView(MainMyself.this).setText("权益迁移"))
+                .setView(new TitleView(MainMyself.this).setText("会员权限绑定提醒"))
                 .setView(new MessageView(MainMyself.this).setText(R.string.yiyuan_dialog_desc))
-                .setView(new VButtonView(MainMyself.this).setPositiveText(LoginManager.isLogin() ? R.string.vip_transfer_this : R.string.vip_transfer_xh, new OnClickListener() {
+//                .setView(new VButtonView(MainMyself.this).setPositiveText(LoginManager.isLogin() ? R.string.vip_transfer_this : R.string.vip_transfer_xh, new OnClickListener() {
+                .setView(new VButtonView(MainMyself.this).setPositiveText("立即绑定", new OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         dialogManager.cancel();
@@ -676,9 +684,9 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
         if (name != null) {
             switch (name) {
                 case ObserverManager.NOTIFY_LOGIN:
-                    if (data != null && data instanceof Boolean && (Boolean)data && LoginManager.isTempVip() && !LoginManager.isAutoBindYiYuanVIP()) {
-                        showYiYuanDialog(false);
-                    }
+//                    if (data != null && data instanceof Boolean && (Boolean)data && LoginManager.isTempVip() && !LoginManager.isAutoBindYiYuanVIP()) {
+//                        showYiYuanDialog(false);
+//                    }
                     break;
                 case ObserverManager.NOTIFY_YIYUAN_BIND:
                     if (data != null && data instanceof Map) {
@@ -702,21 +710,49 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
 
     /**
      * 显示权限迁移弹框
-     * @param fromServer 是否来自服务器控制的弹框
      */
-    private void showYiYuanDialog(boolean fromServer) {
+    private void showYiYuanDialog() {
         if (mYiYuanDialogShowing)
             return;
         mYiYuanDialogShowing = true;
-        if (fromServer)
-            FileManager.saveShared(MainMyself.this,FileManager.xmlFile_appInfo,"vipTransfer","2");
-        final DialogManager dialogManager = generateDialog();
-        dialogManager.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
+        String deviceVipGuideStr = ConfigMannager.getConfigByLocal(KEY_DEVICE_VIP_GUIDE);
+        Map<String,String> map = StringManager.getFirstMap(deviceVipGuideStr);
+        if(map.isEmpty() || !"2".equals(map.get("isShow"))){
+            mYiYuanDialogShowing = false;
+            return;
+        }
+        int intervalDay = Tools.parseIntOfThrow(map.get("interval"));
+        String currentDay = Tools.getAssignTime("yyyyMMdd",1000 * 60 * 60 *24);
+        String lastShowDay = (String) FileManager.loadShared(MainMyself.this,FileManager.xmlFile_appInfo,"deviceVipGuide");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        boolean isShow;
+        if(TextUtils.isEmpty(lastShowDay)){
+            isShow = true;
+        }else{
+            try {
+                Date currentDate = sdf.parse(currentDay);
+                Date lastShowDate = sdf.parse(lastShowDay);
+                isShow = (currentDate.getTime() - lastShowDate.getTime())/(1000 * 60 * 60 *24f) > intervalDay && intervalDay >= 0;
+            } catch (ParseException e) {
+                e.printStackTrace();
                 mYiYuanDialogShowing = false;
+                return;
             }
-        });
-        dialogManager.show();
+
+        }
+        if(isShow){
+            //show
+            FileManager.saveShared(MainMyself.this,FileManager.xmlFile_appInfo,"deviceVipGuide",currentDay);
+            final DialogManager dialogManager = generateDialog();
+            dialogManager.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    mYiYuanDialogShowing = false;
+                }
+            });
+            dialogManager.show();
+        }else{
+            mYiYuanDialogShowing = false;
+        }
     }
 }

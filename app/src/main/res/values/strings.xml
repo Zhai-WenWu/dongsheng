@@ -60,7 +60,7 @@
 
     <string name="publish_evalution_desc_hint">宝贝满足你的期待吗？说说你的使用心得，分享给想买的友友吧！</string>
     <string name="publish_evalution_share_text">分享到美食圈</string>
-    <string name="yiyuan_dialog_desc">您目前的会员权益仅能在本设备下使用，若卸载APP后可能导致会员权益的丢失~建议您将会员权益迁移至香哈账号哦~</string>
+    <string name="yiyuan_dialog_desc">为防止会员权益丢失，建议您将会员权益绑定至香哈账号？</string>
     <string name="yiyuan_succ_title">迁移成功</string>
     <string name="str_know">我知道了</string>
     <string name="yiyuan_succ_desc">恭喜您成功迁移权益，您可以通过登录账号跨设备享受会员权益。</string>

@@ -38,6 +38,7 @@ public class ConfigMannager {
     public static final String KEY_NETPROTOCOL= "netProtocol";
     public static final String KEY_APPPUSHTIMERANGE= "apppushtimerange";
     public static final String KEY_NEW_AD_CONFIG = "newAdConfig";
+    public static final String KEY_DEVICE_VIP_GUIDE = "deviceVipGuide";
 
     /**
      * 保存config
