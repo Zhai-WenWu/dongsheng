@@ -48,6 +48,7 @@ import acore.logic.ActivityMethodManager;
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.MessageTipController;
+import acore.logic.VersionControl;
 import acore.logic.VersionOp;
 import acore.logic.XHClick;
 import acore.logic.stat.StatisticsManager;
@@ -343,6 +344,8 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                 tabHost.addContent(i + "", new Intent(this, classes[i]));
             }
         }
+        boolean mineIsOnce = VersionControl.isCurrentVersionOnce(this,"MainMyself");
+        setPointTipVisible(TAB_SELF,mineIsOnce);
         initAliyunVideo();
     }
 
@@ -691,12 +694,12 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                     if (lesson != null) {
                         lesson.refresh();
                     }
-
-                } else if (i == TAB_SELF && allTab.containsKey(MainMyself.KEY)) {
-                    //在onResume方法添加了刷新方法
-//                    MainMyself mainMyself = (MainMyself) allTab.get(MainMyself.KEY);
-//                    mainMyself.scrollToTop();
-                    this.startActivity(new Intent(this,ShortPublishActivity.class));
+                } else if (i == TAB_SELF) {
+                    if(allTab.containsKey(MainMyself.KEY)){
+                        //在onResume方法添加了刷新方法
+                    }
+                    VersionControl.recordCurrentVersionOnce(this,"MainMyself");
+                    setPointTipVisible(TAB_SELF,false);
                 } else if (i == TAB_CIRCLE && allTab.containsKey(MainCircle.KEY) && i == nowTab) {
                     MainCircle circle = (MainCircle) allTab.get(MainCircle.KEY);
                     if (circle != null)
@@ -876,6 +879,8 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                 intent.putExtra(AliyunSnapVideoParam.MAX_VIDEO_DURATION, 20000);
                 intent.putExtra(AliyunSnapVideoParam.SORT_MODE, AliyunSnapVideoParam.SORT_MODE_MERGE);
                 intent.putExtra(AliyunSnapVideoParam.VIDEO_CODEC, VideoCodecs.H264_HARDWARE);
+                //TODO 添加引导
+                intent.putExtra(EditorActivity.EXTRA_SHOW_GUIDE,true);
                 startActivity(intent);
             }
         });
@@ -884,6 +889,8 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
             @Override
             public void startEditActivity(Bundle bundle) {
                 Log.i("xianghaTag","setStartEditActivityCallback");
+                //TODO 添加引导
+                bundle.putBoolean(EditorActivity.EXTRA_SHOW_GUIDE,true);
                 startActivity(new Intent(Main.this, EditorActivity.class).putExtras(bundle));
             }
         });
