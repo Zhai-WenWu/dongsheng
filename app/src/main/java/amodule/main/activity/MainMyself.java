@@ -722,7 +722,7 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
             return;
         }
         int intervalDay = Tools.parseIntOfThrow(map.get("interval"));
-        String currentDay = Tools.getAssignTime("yyyyMMdd",1000 * 60 * 60 *24);
+        String currentDay = Tools.getAssignTime("yyyyMMdd",0);
         String lastShowDay = (String) FileManager.loadShared(MainMyself.this,FileManager.xmlFile_appInfo,"deviceVipGuide");
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         boolean isShow;
