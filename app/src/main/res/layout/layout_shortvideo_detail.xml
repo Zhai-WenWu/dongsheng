@@ -509,40 +509,18 @@
                     app:layout_constraintEnd_toEndOf="parent" />
             </LinearLayout>
 
-            <RelativeLayout
+            <ImageView
                 android:id="@+id/guide_view"
+                android:src="@drawable/icon_comment_guide"
                 app:layout_constraintBottom_toTopOf="@+id/layout_bottom_comment"
                 app:layout_constraintRight_toRightOf="parent"
                 android:visibility="gone"
                 tools:visibility="visible"
+                android:scaleType="fitEnd"
                 android:layout_marginBottom="@dimen/dp_3"
                 android:layout_marginRight="@dimen/dp_12"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <acore.widget.TagTextView
-                    android:id="@+id/guide_text"
-                    android:text="评论得2积分"
-                    app:radius="@dimen/dp_10"
-                    app:backgroundColor="#FA273B"
-                    android:paddingLeft="@dimen/dp_6"
-                    android:paddingRight="@dimen/dp_6"
-                    android:textColor="#FFFFFFFF"
-                    android:includeFontPadding="false"
-                    android:gravity="center"
-                    android:textSize="@dimen/sp_10"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/dp_18"/>
-                
-                <ImageView
-                    android:layout_below="@id/guide_text"
-                    android:layout_alignRight="@id/guide_text"
-                    android:layout_marginRight="@dimen/dp_15"
-                    android:src="@drawable/icon_guide_arrow"
-                    android:layout_width="@dimen/dp_7"
-                    android:layout_height="@dimen/dp_3"/>
-
-            </RelativeLayout>
+                android:layout_height="@dimen/dp_20"/>
 
         </android.support.constraint.ConstraintLayout>
 
