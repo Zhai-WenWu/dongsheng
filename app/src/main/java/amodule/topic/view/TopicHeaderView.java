@@ -2,6 +2,7 @@ package amodule.topic.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.text.Spannable;
@@ -17,11 +18,20 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.BitmapRequestBuilder;
+import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.Target;
 import com.xiangha.R;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+
 import acore.tools.FileManager;
+import acore.tools.ImgManager;
 import amodule.topic.style.CustomClickableSpan;
 import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
@@ -71,33 +81,56 @@ public class TopicHeaderView extends RelativeLayout {
         }
         mUserFrontImg.setOnClickListener(listener);
         mUserFrontImg.setTag(R.string.tag, url);
-        BitmapRequestBuilder<GlideUrl, Bitmap> bitmapRequest = LoadImage.with(getContext())
-                .load(url)
-                .setSaveType(FileManager.save_cache)
-                .build();
-        if (bitmapRequest != null) {
-            bitmapRequest.into(new SubBitmapTarget() {
+        Glide.with(getContext()).load(url).downloadOnly(new SimpleTarget<File>() {
+            @Override
+            public void onLoadFailed(Exception e, Drawable drawable) {
+                super.onLoadFailed(e, drawable);
+                hideTopicImage();
+            }
 
-                @Override
-                public void onLoadFailed(Exception e, Drawable drawable) {
-                    super.onLoadFailed(e, drawable);
+            @Override
+            public void onResourceReady(File file, GlideAnimation<? super File> glideAnimation) {
+                try {
+                    InputStream is = new FileInputStream(file);
+                    Bitmap bitmap = BitmapFactory.decodeStream(is);
+                    mUserFrontImg.setVisibility(View.VISIBLE);
+                    mUserFrontImg.setImageBitmap(bitmap);
+                    bitmap = ImgManager.RSBlur(getContext(),bitmap,10);
+                    mUserRearImg.setImageBitmap(bitmap);
+                    mShadePanel.setVisibility(View.VISIBLE);
+                } catch (Exception e) {
+                    e.printStackTrace();
                     hideTopicImage();
                 }
-
-                @Override
-                public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
-                    if (bitmap != null && mUserFrontImg.getTag(R.string.tag) != null && mUserFrontImg.getTag(R.string.tag).equals(url)) {
-                        mUserFrontImg.setVisibility(View.VISIBLE);
-                        mUserFrontImg.setImageBitmap(bitmap);
-                        Bitmap bitmap1 = UtilImage.BoxBlurFilter(bitmap, 3, 3, 3);
-                        mUserRearImg.setImageBitmap(bitmap1);
-                        mShadePanel.setVisibility(View.VISIBLE);
-                    } else {
-                        hideTopicImage();
-                    }
-                }
-            });
-        }
+            }
+        });
+//        BitmapRequestBuilder<GlideUrl, Bitmap> bitmapRequest = LoadImage.with(getContext())
+//                .load(url)
+//                .setSaveType(FileManager.save_cache)
+//                .build();
+//        if (bitmapRequest != null) {
+//            bitmapRequest.into(new SubBitmapTarget() {
+//
+//                @Override
+//                public void onLoadFailed(Exception e, Drawable drawable) {
+//                    super.onLoadFailed(e, drawable);
+//                    hideTopicImage();
+//                }
+//
+//                @Override
+//                public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
+//                    if (bitmap != null && mUserFrontImg.getTag(R.string.tag) != null && mUserFrontImg.getTag(R.string.tag).equals(url)) {
+//                        mUserFrontImg.setVisibility(View.VISIBLE);
+//                        mUserFrontImg.setImageBitmap(bitmap);
+//                        Bitmap bitmap1 = UtilImage.BoxBlurFilter(bitmap, 3, 3, 3);
+//                        mUserRearImg.setImageBitmap(bitmap1);
+//                        mShadePanel.setVisibility(View.VISIBLE);
+//                    } else {
+//                        hideTopicImage();
+//                    }
+//                }
+//            });
+//        }
     }
 
     public void showTopicUser(String userName, OnClickListener listener) {
