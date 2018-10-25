@@ -327,13 +327,18 @@ public class WebviewManager {
         Map<String, String> cookieMap = StringManager.getFirstMap(cookieStr);
         CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.setAcceptCookie(true);
+        String cookieKeyTemp = StringManager.domain;
+        if(!TextUtils.equals(StringManager.domain,StringManager.defaultDomain)){
+            cookieKeyTemp = StringManager.appWebTitle+StringManager.domain;
+        }
+        String cookieKey = cookieKeyTemp;
         Stream.of(cookieMap)
                 .forEach(value -> {
                     String cookieValue = value.getKey() + "=" + value.getValue();
-                    cookieManager.setCookie(StringManager.domain, cookieValue);
+                    cookieManager.setCookie(cookieKey, cookieValue);
                 });
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            cookieManager.flush();
+//            cookieManager.flush();
         } else {
             CookieSyncManager.createInstance(XHApplication.in());
             CookieSyncManager.getInstance().sync();
