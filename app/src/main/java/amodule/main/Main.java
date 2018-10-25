@@ -889,7 +889,6 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
             @Override
             public void startEditActivity(Bundle bundle) {
                 Log.i("xianghaTag","setStartEditActivityCallback");
-                //TODO 添加引导
                 int shortVideoNum = Tools.parseIntOfThrow(LoginManager.userInfo.get("shortVideoNum"));
                 bundle.putBoolean(EditorActivity.EXTRA_SHOW_GUIDE,shortVideoNum == 0);
                 startActivity(new Intent(Main.this, EditorActivity.class).putExtras(bundle));

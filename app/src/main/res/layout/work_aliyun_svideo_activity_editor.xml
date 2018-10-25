@@ -110,14 +110,16 @@
             <RelativeLayout
                 android:id="@+id/guide_view"
                 android:visibility="visible"
-                android:layout_marginTop="@dimen/dp_15"
+                android:layout_marginTop="@dimen/dp_18"
                 android:layout_alignLeft="@id/aliyun_next"
+                android:layout_alignRight="@id/aliyun_next"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
                 <acore.widget.TagTextView
                     android:id="@+id/guide_text"
                     android:text="赚积分"
+                    android:layout_centerHorizontal="true"
                     app:radius="@dimen/dp_10"
                     app:backgroundColor="#FA273B"
                     android:paddingLeft="@dimen/dp_6"
@@ -125,14 +127,14 @@
                     android:textColor="#FFFFFFFF"
                     android:includeFontPadding="false"
                     android:gravity="center"
-                    android:textSize="@dimen/sp_11"
+                    android:textSize="@dimen/sp_10"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/dp_18"/>
+                    android:layout_height="@dimen/dp_15"/>
 
                 <ImageView
                     android:layout_below="@id/guide_text"
                     android:layout_alignLeft="@id/guide_text"
-                    android:layout_marginLeft="@dimen/dp_15"
+                    android:layout_marginLeft="@dimen/dp_10"
                     android:src="@drawable/icon_guide_arrow"
                     android:layout_width="@dimen/dp_7"
                     android:layout_height="@dimen/dp_3"/>
