@@ -148,7 +148,7 @@ public class ActivityMethodManager {
             if(PushManager.isNotificationEnabled(XHActivityManager.getInstance().getCurrentActivity())) {
                 XHClick.mapStat(XHApplication.in(), "a_push_guidelayer",
                         (String) FileManager.loadShared(XHApplication.in(),FileManager.app_notification,FileManager.push_setting_message), "开启成功");
-                ReqEncyptInternet.in().doEncypt(StringManager.api_addTask,"taskType=taskAutoNotify",new DefaultInternetCallback());
+                ReqEncyptInternet.in().doEncypt(StringManager.api_addTask,"channel=taskAutoNotify",new DefaultInternetCallback());
             }
         }
     }

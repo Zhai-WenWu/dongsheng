@@ -879,8 +879,8 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                 intent.putExtra(AliyunSnapVideoParam.MAX_VIDEO_DURATION, 20000);
                 intent.putExtra(AliyunSnapVideoParam.SORT_MODE, AliyunSnapVideoParam.SORT_MODE_MERGE);
                 intent.putExtra(AliyunSnapVideoParam.VIDEO_CODEC, VideoCodecs.H264_HARDWARE);
-                //TODO 添加引导
-                intent.putExtra(EditorActivity.EXTRA_SHOW_GUIDE,true);
+                int shortVideoNum = Tools.parseIntOfThrow(LoginManager.userInfo.get("shortVideoNum"));
+                intent.putExtra(EditorActivity.EXTRA_SHOW_GUIDE,shortVideoNum == 0);
                 startActivity(intent);
             }
         });
@@ -890,7 +890,8 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
             public void startEditActivity(Bundle bundle) {
                 Log.i("xianghaTag","setStartEditActivityCallback");
                 //TODO 添加引导
-                bundle.putBoolean(EditorActivity.EXTRA_SHOW_GUIDE,true);
+                int shortVideoNum = Tools.parseIntOfThrow(LoginManager.userInfo.get("shortVideoNum"));
+                bundle.putBoolean(EditorActivity.EXTRA_SHOW_GUIDE,shortVideoNum == 0);
                 startActivity(new Intent(Main.this, EditorActivity.class).putExtras(bundle));
             }
         });

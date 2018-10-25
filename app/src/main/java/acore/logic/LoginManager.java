@@ -292,6 +292,7 @@ public class LoginManager {
 				userInfo.put("maturity_day", TextUtils.isEmpty(vipMap.get("maturity_day")) ? "" : vipMap.get("maturity_day"));
 				userInfo.put("email", TextUtils.isEmpty(map.get("email")) ? "" : map.get("email"));
 				userInfo.put("regTime", TextUtils.isEmpty(map.get("regTime")) ? "" : map.get("regTime"));
+				userInfo.put("shortVideoNum",TextUtils.isEmpty(map.get("shortVideoNum"))?"":map.get("shortVideoNum"));
 				UtilLog.print("d", "是否是管理员: " + map.get("isManager"));
 				new UMPushServer(mAct).addAlias(map.get("code"));
 				if(map.containsKey("sex"))userInfo.put("sex",map.get("sex"));

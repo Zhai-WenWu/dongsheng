@@ -322,8 +322,7 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
                     followNum.setText(listMap.get("followNum"));
 
                     scoreNum.setText(listMap.get("scoreNum"));
-                    //TODO 是否有积分过期
-                    scoreIcon.setVisibility(View.VISIBLE);
+                    scoreIcon.setVisibility("2".equals(listMap.get("isHaveExpire"))?View.VISIBLE:View.GONE);
                     couponNum.setText(listMap.get("coupon"));
 
                     String vip = listMap.get("vip");

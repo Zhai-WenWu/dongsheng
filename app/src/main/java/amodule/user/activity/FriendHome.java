@@ -278,6 +278,7 @@ public class FriendHome extends BaseActivity implements IObserver {
                         Map<String, String> map = list.get(i);
                         if (TYPE_VIDEO.equals(map.get("type"))) {
                             mTabs.get(0).put("num", map.get("num"));
+                            LoginManager.userInfo.put("shortVideoNum",map.get("num"));
                         } else if (TYPE_ARTICLE.equals(map.get("type"))) {
                             mTabs.get(3).put("num", map.get("num"));
                         }

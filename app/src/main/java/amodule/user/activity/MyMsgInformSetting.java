@@ -117,7 +117,7 @@ public class MyMsgInformSetting extends BaseActivity implements View.OnClickList
 			mResumeFromClickBtn = false;
 			XHClick.mapStat(this, "a_set_push", "关闭状态下，点击“设置”去开启", mNewMsgOpen ? "开启成功" : "开启失败");
 			if(mNewMsgOpen){
-				ReqEncyptInternet.in().doEncypt(StringManager.api_addTask,"taskType=taskAutoNotify",new DefaultInternetCallback());
+				ReqEncyptInternet.in().doEncypt(StringManager.api_addTask,"channel=taskAutoNotify",new DefaultInternetCallback());
 			}
 		}
 	}
