@@ -13,8 +13,7 @@
         <RelativeLayout
             android:id="@+id/title_layout"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/topbar_height"
-            android:background="@color/ysf_black_333333">
+            android:layout_height="@dimen/topbar_height">
 
             <ImageView
                 android:id="@+id/back_img"

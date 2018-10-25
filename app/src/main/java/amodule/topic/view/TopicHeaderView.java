@@ -37,6 +37,7 @@ public class TopicHeaderView extends RelativeLayout {
     private ImageView mTopicAttention;
     private TextView mTopicInfo;
     private TextView mTopicNum;
+    private View mShadePanel;
     public TopicHeaderView(Context context) {
         super(context);
         initView(context);
@@ -60,6 +61,7 @@ public class TopicHeaderView extends RelativeLayout {
         mTopicAttention = findViewById(R.id.topic_attention);
         mTopicInfo = findViewById(R.id.topic_info);
         mTopicNum = findViewById(R.id.topic_num);
+        mShadePanel = findViewById(R.id.shade);
     }
 
     public void showUserImage(String url, OnClickListener listener) {
@@ -89,6 +91,7 @@ public class TopicHeaderView extends RelativeLayout {
                         mUserFrontImg.setImageBitmap(bitmap);
                         Bitmap bitmap1 = UtilImage.BoxBlurFilter(bitmap, 3, 3, 3);
                         mUserRearImg.setImageBitmap(bitmap1);
+                        mShadePanel.setVisibility(View.VISIBLE);
                     } else {
                         hideTopicImage();
                     }
