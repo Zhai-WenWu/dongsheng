@@ -1142,9 +1142,17 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
         String dateStr = (String) FileManager.loadShared(getContext(),FileManager.xmlFile_appInfo,"watchVideo");
         String todayStr = Tools.getAssignTime("yyyyMMdd",0);
         boolean todayOnce = !TextUtils.equals(dateStr,todayStr);
-        FileManager.saveShared(getContext(),FileManager.xmlFile_appInfo,"watchVideo",todayStr);
         if(todayOnce){
-            ReqEncyptInternet.in().doEncypt(StringManager.api_addTask,"channel=taskSeeShortVideo&type_id="+mData.getCode(),new DefaultInternetCallback());
+            ReqEncyptInternet.in().doEncypt(StringManager.api_addTask,"channel=taskSeeShortVideo&type_id="+mData.getCode(),
+                    new DefaultInternetCallback(){
+                        @Override
+                        public void loaded(int i, String s, Object o) {
+                            super.loaded(i, s, o);
+                            if(i>=ReqEncyptInternet.REQ_OK_STRING){
+                                FileManager.saveShared(getContext(),FileManager.xmlFile_appInfo,"watchVideo",todayStr);
+                            }
+                        }
+                    });
         }
     }
 }
