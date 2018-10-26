@@ -67,6 +67,7 @@ public class FileManager extends UtilFile{
 	public static final String xmlFile_userInfo = "common";
 	public static final String xmlFile_wake = "wake2";
 	public static final String xmlFile_appInfo = "appInfo2";
+	public static final String xmlFile_task = "task";
 	public static final String xmlFile_appUrl = "appUrl";
 	public static final String xmlFile_localPushTag = "localPushTag";
 	public static final String xmlFile_adIsShow = "adIsShow";

@@ -90,6 +90,7 @@ public class StringManager extends UtilString {
     public final static String api_getWebRule = apiUrl + urlSection.get("home5") + "getWebRule";
 
     public final static String api_scoreStore = appWebUrl + "app5/scoreStore";//积分商城
+    public final static String api_dailyTask = appWebUrl + "app5/dailyTask";//每日任务
     public final static String api_scoreList = appWebUrl + "app5/scoreList";//积分乐园《是否带有Tab选择靠服务器的版本判断》
     public final static String api_integralInfo = appWebUrl + "app5/customerScore";//积份规则
     public final static String api_exchangeList = appWebUrl + "app5/orderList";//兑换记录

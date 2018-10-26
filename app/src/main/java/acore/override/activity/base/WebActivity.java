@@ -153,12 +153,13 @@ public class WebActivity extends BaseActivity {
 	protected static void setCookie(String theUrl){
 		if (TextUtils.isEmpty(theUrl))
 			return;
-		if(theUrl.indexOf(MallStringManager.domain)>-1||theUrl.indexOf(StringManager.domain) > -1){
+		if(theUrl.contains(MallStringManager.domain) || theUrl.contains(StringManager.domain)
+				|| theUrl.contains(".ixiangha.com")){
 			Map<String,String> mapCookie= XHInternetCallBack.getCookieMap();
-			String cookieKey="";
-			if(theUrl.indexOf(MallStringManager.domain)>-1){
+			String cookieKey=theUrl;
+			if(theUrl.contains(MallStringManager.domain)){
 				cookieKey=MallStringManager.mall_web_apiUrl.replace(MallStringManager.appWebTitle, "");
-			}else if(theUrl.indexOf(StringManager.domain) > -1){
+			}else if(theUrl.contains(StringManager.domain)){
 				cookieKey=StringManager.domain;
 				if(!TextUtils.equals(StringManager.domain,StringManager.defaultDomain)){
 					cookieKey = StringManager.appWebTitle+StringManager.domain;

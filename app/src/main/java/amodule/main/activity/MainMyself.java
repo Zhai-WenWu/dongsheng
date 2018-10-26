@@ -528,9 +528,8 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
                 case R.id.ll_score:
                     XHClick.track(getApplicationContext(), "点击我的页面的积分");
                     XHClick.mapStat(this, tongjiId,"列表", "积分商城");
-//			AppCommon.openUrl(this, StringManager.api_scoreStore + "?code=" + LoginManager.userInfo.get("code"), true);
-                    Intent scoreStore = new Intent(MainMyself.this, ScoreStore.class);
-                    startActivity(scoreStore);
+                    String url = "FullScreenWeb.app?url=" + StringManager.api_scoreStore;
+			        AppCommon.openUrl(url, true);
                     break;
                 case R.id.ll_coupon:
                     XHClick.mapStat(this, tongjiId,"列表", "优惠券");
@@ -565,11 +564,11 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
                     XHClick.mapStat(this, tongjiId, "权限迁移按钮", "");
                     break;
                 case "taskCenter"://任务中心
-                    //TODO
                     VersionControl.recordCurrentVersionOnce(this,"taskCenter");
                     gourp2.getChildAt(2).findViewById(R.id.my_new_info).setVisibility(View.GONE);
                     gourp2.getChildAt(2).findViewById(R.id.ico_right_myself).setVisibility(View.VISIBLE);
-                    Toast.makeText(this, "任务中心", Toast.LENGTH_SHORT).show();
+                    String url = "FullScreenWeb.app?url=" + StringManager.api_dailyTask;
+                    AppCommon.openUrl(url,false);
                     break;
                 case "qa"://我的问答
                     FileManager.saveShared(this,FileManager.xmlFile_appInfo,"isShowQA","2");

@@ -17,6 +17,7 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -358,7 +359,9 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
         mPlayerView.setOnProgressChangedCallback((progress, secProgress, currentTime, totalTime) -> {
 
 //                Log.e("TAG_Player", "onProgressChanged: progress = " + progress + "  currentTime = " + currentTime);
-            if(totalTime - currentTime > 0 && totalTime - currentTime <=5000){
+            Log.i("tzy", "addListener: currentTime"+currentTime);
+            if(totalTime - currentTime > 0 && totalTime - currentTime <= 5000){
+                Log.i("tzy", "addListener: 看过视频了");
                 todayWatchVideo();
             }
             duration = totalTime;
@@ -409,6 +412,7 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
 
     /** 开始播放入口 */
     public void prepareAsync() {
+//        isRequesting = false;
         mInnerPlayState = INNER_PLAY_STATE_START;
         mNeedChangePauseToStartEnable = true;
         mPlayerView.setUp(mVideoUrl, false, "");
@@ -1138,8 +1142,14 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
         this.playCompleteCallBack = completeCallBack;
     }
 
+    boolean isRequesting = false;
     private void todayWatchVideo(){
-        String dateStr = (String) FileManager.loadShared(getContext(),FileManager.xmlFile_appInfo,"watchVideo");
+        if(isRequesting || !LoginManager.isLogin()){
+            return;
+        }
+        isRequesting = true;
+        final String key = "watchVideo_" + LoginManager.userInfo.get("code");
+        String dateStr = (String) FileManager.loadShared(getContext(),FileManager.xmlFile_task,key);
         String todayStr = Tools.getAssignTime("yyyyMMdd",0);
         boolean todayOnce = !TextUtils.equals(dateStr,todayStr);
         if(todayOnce){
@@ -1149,7 +1159,7 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
                         public void loaded(int i, String s, Object o) {
                             super.loaded(i, s, o);
                             if(i>=ReqEncyptInternet.REQ_OK_STRING){
-                                FileManager.saveShared(getContext(),FileManager.xmlFile_appInfo,"watchVideo",todayStr);
+                                FileManager.saveShared(getContext(),FileManager.xmlFile_task,key,todayStr);
                             }
                         }
                     });
