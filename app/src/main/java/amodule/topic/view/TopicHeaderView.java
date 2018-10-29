@@ -29,6 +29,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+
 import acore.tools.FileManager;
 import acore.tools.ImgManager;
 import amodule.topic.style.CustomClickableSpan;
@@ -46,6 +50,7 @@ public class TopicHeaderView extends RelativeLayout {
     private ImageView mTopicAttention;
     private TextView mTopicInfo;
     private TextView mTopicNum;
+    private View mShadePanel;
     public TopicHeaderView(Context context) {
         super(context);
         initView(context);
@@ -69,6 +74,7 @@ public class TopicHeaderView extends RelativeLayout {
         mTopicAttention = findViewById(R.id.topic_attention);
         mTopicInfo = findViewById(R.id.topic_info);
         mTopicNum = findViewById(R.id.topic_num);
+        mShadePanel = findViewById(R.id.shade);
     }
 
     public void showUserImage(String url, OnClickListener listener) {
@@ -79,6 +85,12 @@ public class TopicHeaderView extends RelativeLayout {
         mUserFrontImg.setOnClickListener(listener);
         mUserFrontImg.setTag(R.string.tag, url);
         Glide.with(getContext()).load(url).downloadOnly(new SimpleTarget<File>() {
+            @Override
+            public void onLoadFailed(Exception e, Drawable drawable) {
+                super.onLoadFailed(e, drawable);
+                hideTopicImage();
+            }
+        Glide.with(getContext()).load(url).downloadOnly(new SimpleTarget<File>() {
 
             @Override
             public void onLoadFailed(Exception e, Drawable drawable) {
@@ -86,6 +98,49 @@ public class TopicHeaderView extends RelativeLayout {
                 hideTopicImage();
             }
 
+            @Override
+            public void onResourceReady(File file, GlideAnimation<? super File> glideAnimation) {
+                try {
+                    InputStream is = new FileInputStream(file);
+                    Bitmap bitmap = BitmapFactory.decodeStream(is);
+                    mUserFrontImg.setVisibility(View.VISIBLE);
+                    mUserFrontImg.setImageBitmap(bitmap);
+                    bitmap = ImgManager.RSBlur(getContext(),bitmap,10);
+                    mUserRearImg.setImageBitmap(bitmap);
+                    mShadePanel.setVisibility(View.VISIBLE);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    hideTopicImage();
+                }
+            }
+        });
+//        BitmapRequestBuilder<GlideUrl, Bitmap> bitmapRequest = LoadImage.with(getContext())
+//                .load(url)
+//                .setSaveType(FileManager.save_cache)
+//                .build();
+//        if (bitmapRequest != null) {
+//            bitmapRequest.into(new SubBitmapTarget() {
+//
+//                @Override
+//                public void onLoadFailed(Exception e, Drawable drawable) {
+//                    super.onLoadFailed(e, drawable);
+//                    hideTopicImage();
+//                }
+//
+//                @Override
+//                public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
+//                    if (bitmap != null && mUserFrontImg.getTag(R.string.tag) != null && mUserFrontImg.getTag(R.string.tag).equals(url)) {
+//                        mUserFrontImg.setVisibility(View.VISIBLE);
+//                        mUserFrontImg.setImageBitmap(bitmap);
+//                        Bitmap bitmap1 = UtilImage.BoxBlurFilter(bitmap, 3, 3, 3);
+//                        mUserRearImg.setImageBitmap(bitmap1);
+//                        mShadePanel.setVisibility(View.VISIBLE);
+//                    } else {
+//                        hideTopicImage();
+//                    }
+//                }
+//            });
+//        }
             @Override
             public void onResourceReady(File file, GlideAnimation<? super File> glideAnimation) {
                 try {
