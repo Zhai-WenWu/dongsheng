@@ -235,13 +235,6 @@ public abstract class InternetCallback extends XHInternetCallBack {
 			}
 		}
 
-		try {
-//			String ua = "imei=" + ToolsDevice.getXhIMEI(XHApplication.in()) + ";";
-//			ua += "device=" + ToolsDevice.getDevice(XHApplication.in()) + ";";
-//			ua += "AndroidId=" + ToolsDevice.getAndroidId(XHApplication.in()) + ";";
-//			header.put("ua", ua);
-		}catch (Exception e){e.printStackTrace();}
-
 		if (!header.containsKey("Connection"))
 			header.put("Connection", "keep-alive");
 		if (!header.containsKey("Charset"))

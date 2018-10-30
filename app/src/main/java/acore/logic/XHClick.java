@@ -16,7 +16,6 @@ import com.umeng.analytics.dplus.UMADplus;
 import com.umeng.message.UTrack;
 import com.umeng.message.entity.UMessage;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -30,7 +29,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
 
@@ -49,7 +47,6 @@ import third.push.model.NotificationData;
 import third.push.model.NotificationEvent;
 import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilLog;
-import xh.basic.tool.UtilString;
 
 import static acore.tools.ToolsDevice.getWindowPx;
 
@@ -993,7 +990,7 @@ public class XHClick {
      * @return
      */
     private static String getStatictisParams() {
-        String params = "xh_code=" + ToolsDevice.getXhIMEI(XHApplication.in());
+        String params = "xh_code=" + ToolsDevice.getXhCode(XHApplication.in());
         if (LoginManager.userInfo.containsKey("userCode")) {
             params += "&user_code=" + LoginManager.userInfo.get("userCode") + ";";
         }

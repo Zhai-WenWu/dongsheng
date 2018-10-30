@@ -1,13 +1,11 @@
 package aplug.basic;
 
-import android.content.Context;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.umeng.message.PushAgent;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentSkipListMap;
 
@@ -44,7 +42,7 @@ public class XHInternetCallBack extends InterCallback {
                 + ToolsDevice.getAvailMemory(XHApplication.in()) + "#" + ToolsDevice.getPackageName(XHApplication.in()) + "#"
                 + StringManager.appID + "#" + LoadManager.tok + ";";
         mapCookie.put("device",device);
-        mapCookie.put("xhCode", ToolsDevice.getXhIMEI(XHApplication.in()));//有疑问，测试处理
+        mapCookie.put("xhCode", ToolsDevice.getXhCode(XHApplication.in()));//有疑问，测试处理
         try{
             mapCookie.put("umCode", PushAgent.getInstance(XHApplication.in()).getRegistrationId());
         }catch (Exception e){e.printStackTrace();}

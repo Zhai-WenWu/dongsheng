@@ -228,7 +228,7 @@ public class StatisticsManager {
         try {
             if (TextUtils.isEmpty(deviceJson) || statisticsJson.length() <= 0) {
                 //设备唯一标示
-                statisticsJson.put("devCode", ToolsDevice.getXhIMEI(XHApplication.in()));
+                statisticsJson.put("devCode", ToolsDevice.getXhCode(XHApplication.in()));
                 //客户端系统
                 statisticsJson.put("sys", "and");
                 //手机型号

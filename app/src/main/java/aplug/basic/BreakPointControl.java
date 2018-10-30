@@ -228,7 +228,7 @@ public class BreakPointControl {
     public String createKey(String filePath,String temp){
         StringBuffer buffer = new StringBuffer();
         buffer.append(BreakPointUploadManager.getInstance().getKey(type))
-                .append(Md5Util.encode(filePath + ToolsDevice.getXhIMEI(context) + new File(filePath).lastModified()))
+                .append(Md5Util.encode(filePath + ToolsDevice.getXhCode(context) + new File(filePath).lastModified()))
                 .append(temp);
         return buffer.toString();
     }

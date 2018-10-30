@@ -62,7 +62,7 @@ public class XHApiMonitor {
 				+ ToolsDevice.getAvailMemory(context) + "#" + ToolsDevice.getPackageName(context) + 
 				"#"+StringManager.appID+"#" + LoadManager.tok;
 		map.put("requestDevice", requestDevice);
-		map.put("requestXhcode", ToolsDevice.getXhIMEI(context));
+		map.put("requestXhcode", ToolsDevice.getXhCode(context));
 		map.put("requestCookie", requsetCookie.replace(" ", "_"));
 		map.put("requestUrl", requestUrl);
 		map.put("requestType", requestType);

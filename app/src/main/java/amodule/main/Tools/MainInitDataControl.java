@@ -126,7 +126,7 @@ public class MainInitDataControl {
 
                 //待处理问题。
 //                HomeToutiaoAdControl.getInstance().getAdData(activity);
-                ToolsDevice.saveXhIMEI(activity);
+                ToolsDevice.saveXhCode(activity);
             }
         }.start();
         ConfigMannager.saveConfigData(XHApplication.in());

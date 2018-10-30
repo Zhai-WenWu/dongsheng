@@ -15,7 +15,6 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
-import android.os.Environment;
 import android.provider.Settings.Secure;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
@@ -32,8 +31,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -45,7 +42,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Properties;
 import java.util.TimeZone;
 
 import acore.logic.VersionOp;
@@ -392,20 +388,6 @@ public class ToolsDevice {
     }
 
     /**
-     * 获取手机IMEI
-     * @param context
-     * @return
-     */
-    public static String getPhoneIMEI(Context context) {
-        TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        String deviceId = telephonyManager.getDeviceId();
-        if (deviceId != null) {
-            return deviceId;
-        } else
-            return "111111111111111";
-    }
-
-    /**
      * 获取手机android_id
      * @param context
      * @return
@@ -499,7 +481,7 @@ public class ToolsDevice {
     /**
      * 为了去重,用此方法得到香哈经过处理过的imei,标示用户
      **/
-    public static String getXhIMEI(Context context) {
+    public static String getXhCode(Context context) {
         String deviceID = null;
         // 获取设备码
         if (context != null) {
@@ -538,16 +520,16 @@ public class ToolsDevice {
     /**
      * 确保获取到得到香哈经过处理过的imei,储存一次
      */
-    public synchronized static void saveXhIMEI(final Context context) {
+    public synchronized static void saveXhCode(final Context context) {
         if (UtilFile.ifFileModifyByCompletePath(UtilFile.getDataDir() + FileManager.file_IMEI, -1) == null) {
-            String imei = getXhIMEI(context);
+            String imei = getXhCode(context);
             if (!imei.equals("11111111111")) {
                 new Thread() {
 
                     @Override
                     public void run() {
                         super.run();
-                        UtilFile.saveFileToCompletePath(UtilFile.getDataDir() + FileManager.file_IMEI, getXhIMEI(context), false);
+                        UtilFile.saveFileToCompletePath(UtilFile.getDataDir() + FileManager.file_IMEI, getXhCode(context), false);
                     }
                 }.start();
             }
@@ -569,7 +551,7 @@ public class ToolsDevice {
             jsonResult.put("SIMNO", tManager.getSimSerialNumber());
             // 对设备码进行加密
             jsonResult.put("IMSI", tManager.getSubscriberId());
-            jsonResult.put("IMEI", getXhIMEI(context));
+            jsonResult.put("IMEI", getXhCode(context));
             try {
                 Class<?> c = Class.forName("android.os.SystemProperties");
                 Method get = c.getMethod("get", String.class);
