@@ -24,7 +24,7 @@ dependencies {
     compile(name: 'XH_Basic3.0-release', ext: 'aar')
     compile(name: 'XH_DownLoad-release', ext: 'aar')
     compile(name: 'XH_EmojiUtil-debug', ext: 'aar')
-    compile(name: 'xh_popdialog-release', ext: 'aar')
+    compile(name: 'xh_popdialog_1.1', ext: 'aar')
     compile(name: 'XH_WindowView-release', ext: 'aar')
     compile(name: 'SMSSDK-3.0.0', ext: 'aar')
     compile(name: 'xh_dialog-release', ext: 'aar')

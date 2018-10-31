@@ -276,7 +276,6 @@ public class StatisticsManager {
      *
      * @throws JSONException
      */
-
     private static void putValue(JSONObject jsonObject, String key, String value) throws JSONException {
         value = checkString(value);
         if (jsonObject != null
