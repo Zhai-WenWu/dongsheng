@@ -432,6 +432,9 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         needSaveDishInfo.put("favorites",map.get("favorites"));
         needSaveDishInfo.put("customer", map.get("customer"));
         needSaveDishInfo.put("info", map.get("info"));
+        Map<String,String> videoMap = StringManager.getFirstMap(map.get("video"));
+        String videoDuration = videoMap.get("duration");
+        needSaveDishInfo.put("duration", TextUtils.isEmpty(videoDuration)?"":videoDuration);
         saveHistoryToDB();
     }
 

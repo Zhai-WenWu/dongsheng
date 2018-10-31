@@ -730,7 +730,7 @@
         <!-- global search start -->
         <activity
             android:name="amodule.search.avtivity.HomeSearch"
-            android:configChanges="orientation|keyboardHidden"
+            android:configChanges="orientation|keyboardHidden|screenLayout"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
             android:theme="@style/AppMainTheme"

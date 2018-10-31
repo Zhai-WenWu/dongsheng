@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Looper;
+import android.support.constraint.ConstraintLayout;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
@@ -12,19 +13,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.xiangha.R;
 
 import java.util.Map;
-import java.util.logging.Handler;
 
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.helper.XHActivityManager;
 import acore.tools.StringManager;
+import acore.tools.Tools;
 import acore.widget.IconTextSpan;
+import acore.widget.TagTextView;
 import amodule.main.view.item.BaseItemView;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
@@ -33,13 +36,12 @@ import xh.basic.internet.UtilInternet;
 
 public class SearchVIPLessonView extends BaseItemView implements View.OnClickListener {
 
-    private ImageView mBackgroundImg;
     private ImageView mLessonImg;
-    private ImageView mPlayImg;
     private TextView mTitleText;
     private TextView mInfoText;
     private TextView mNameText;
-    private Button mPlayBtn;
+    private TagTextView mVideoDuration;
+    private RelativeLayout mShadowLayout;
 
     private Map<String, String> mDataMap;
 
@@ -60,14 +62,16 @@ public class SearchVIPLessonView extends BaseItemView implements View.OnClickLis
 
     private void initView(Context context) {
         LayoutInflater.from(context).inflate(R.layout.layout_search_viplesson, this);
-        mBackgroundImg = (ImageView) findViewById(R.id.lesson_back_img);
         mLessonImg = (ImageView) findViewById(R.id.lesson_img);
-        mPlayImg = (ImageView) findViewById(R.id.lesson_play_img);
         mTitleText = (TextView) findViewById(R.id.lesson_title);
         mInfoText = (TextView) findViewById(R.id.lesson_info);
         mNameText = (TextView) findViewById(R.id.lesson_name);
-        mPlayBtn = (Button) findViewById(R.id.lesson_play_btn);
-        mPlayBtn.setClickable(false);
+        mVideoDuration = findViewById(R.id.video_duration);
+        mShadowLayout = findViewById(R.id.shadow_layout);
+        ConstraintLayout layout = findViewById(R.id.shadow_parent);
+        int dp_20 = Tools.getDimen(getContext(), R.dimen.dp_20);
+        layout.setPadding(dp_20-mShadowLayout.getPaddingLeft(),dp_20/2-mShadowLayout.getPaddingTop(),
+                dp_20-mShadowLayout.getPaddingRight(),dp_20-mShadowLayout.getPaddingBottom());
         setOnClickListener(this);
         setVisibility(View.GONE);
     }
@@ -96,9 +100,10 @@ public class SearchVIPLessonView extends BaseItemView implements View.OnClickLis
                     mDataMap.clear();
                 if (o != null) {
                     mDataMap = StringManager.getFirstMap(o);
+                }
+                if(mDataMap!= null && !mDataMap.isEmpty()){
                     String tag = mDataMap.get("tag");
                     Map<String, String> tagMap = StringManager.getFirstMap(tag);
-                    String tagTitle = tagMap.get("title");
                     String tagColor = tagMap.get("color");
                     String tagBg = tagMap.get("bgColor");
                     String title = mDataMap.get("title");
@@ -106,33 +111,26 @@ public class SearchVIPLessonView extends BaseItemView implements View.OnClickLis
                         callback.callback(null);
                         return;
                     }
-                    if (tagTitle == null) {
-                        tagTitle = "";
-                    }
                     if (title == null) {
                         title = "";
                     }
-                    IconTextSpan.Builder builder = new IconTextSpan.Builder();
-                    builder.setBgColorInt(Color.parseColor(tagBg))
-                            .setTextColorInt(Color.parseColor(tagColor))
-                            .setTextSize(10F)
-                            .setRightMargin(3F)
-                            .setText(tagTitle)
-                            .setBgHeight(16F)
-                            .setRadius(1F);
-                    setVisibility(View.VISIBLE);
-                    SpannableStringBuilder ssb = new SpannableStringBuilder();
-                    ssb.append(" ").append(title);
-                    ssb.setSpan(builder.build(getContext()), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    mTitleText.setText(ssb);
+                    mTitleText.setText(title);
                     String subTitle = mDataMap.get("subTitle");
                     mInfoText.setText(subTitle);
                     String name = mDataMap.get("customer");
                     mNameText.setText(name);
-                    mPlayImg.setVisibility(TextUtils.equals(mDataMap.get("isVideo"), "2") ? View.VISIBLE : View.GONE);
                     setViewImage(mLessonImg, mDataMap.get("img"));
+                    Map<String,String> videoMap = StringManager.getFirstMap(mDataMap.get("video"));
+                    String videoDuration = videoMap.get("duration");
+                    if(!TextUtils.isEmpty(videoDuration)){
+                        mVideoDuration.setText(videoDuration);
+                        mVideoDuration.setVisibility(VISIBLE);
+                    }else{
+                        mVideoDuration.setVisibility(GONE);
+                    }
                     if (callback != null)
                         callback.callback(mDataMap.get("code"));
+                    setVisibility(View.VISIBLE);
                     XHClick.mapStat(getContext(), mStatisticsId, "顶部VIP内容展现量", "");
                 } else {
                     setVisibility(View.GONE);

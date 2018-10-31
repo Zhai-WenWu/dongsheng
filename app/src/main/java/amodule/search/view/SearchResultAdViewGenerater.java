@@ -40,10 +40,10 @@ public class SearchResultAdViewGenerater {
                                                    Map<String, String> dataMap) {
         RelativeLayout view = createOtherAdView(mActivity, dataMap);
         if (view != null) {
-            View adHint = view.findViewById(R.id.ad_hint);
-            AppCommon.setAdHintClick(mActivity,adHint,adControl,Integer.valueOf(dataMap.get("index")),"0","a_searesult_adver","顶部广告");
+//            View adHint = view.findViewById(R.id.ad_hint);
+//            AppCommon.setAdHintClick(mActivity,adHint,adControl,Integer.valueOf(dataMap.get("index")),"0","a_searesult_adver","顶部广告");
             setViewListener(adControl, view, dataMap, "0");
-            adHint.setVisibility("1".equals(dataMap.get("adType")) ? View.GONE : View.VISIBLE);
+//            adHint.setVisibility("1".equals(dataMap.get("adType")) ? View.GONE : View.VISIBLE);
             view.setVisibility(View.VISIBLE);
         }
         return view;
@@ -143,9 +143,6 @@ public class SearchResultAdViewGenerater {
             ImageViewVideo cover_img = (ImageViewVideo) adView.findViewById(R.id.iv_adCover);
             TextView tv_ad_name = (TextView) adView.findViewById(R.id.tv_ad_name);
             TextView tv_ad_decrip = (TextView) adView.findViewById(R.id.tv_ad_decrip);
-            TextView tv_ad_observed = (TextView) adView.findViewById(R.id.tv_ad_observed);
-            //暂时不显示，后期开放广告真实浏览数
-            tv_ad_observed.setVisibility(View.GONE);
             ImageView icon_gdt = (ImageView) adView.findViewById(ID_AD_ICON_GDT);
             View view = adView.findViewById(R.id.tv_ad_tag);
             if(view != null){
@@ -156,17 +153,12 @@ public class SearchResultAdViewGenerater {
             }
             setViewImage(cover_img, TextUtils.isEmpty(imageUrl) ? iconUrl : imageUrl);
 
-            if (TextUtils.isEmpty(title)) {
-                setViewText(tv_ad_decrip, desc);
-                setViewText(tv_ad_name, desc);
+            if (TextUtils.isEmpty(desc)) {
+                setViewText(tv_ad_name, title);
             } else {
                 setViewText(tv_ad_name, desc);
-                setViewText(tv_ad_decrip, title);
             }
 
-//            if(TextUtils.isEmpty(allClick))
-//                allClick = "5189";
-//            setViewText(tv_ad_observed, allClick + "浏览");
         }
     }
 
