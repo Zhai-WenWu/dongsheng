@@ -29,7 +29,6 @@ import java.util.Map;
 
 import acore.logic.AppCommon;
 import acore.logic.XHClick;
-import acore.tools.PageStatisticsUtils;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import aplug.basic.ReqInternet;
@@ -47,7 +46,6 @@ import third.mall.override.MallBaseActivity;
 import third.mall.view.MallButtonView;
 import third.mall.view.MallButtonView.InterfaceViewCallback;
 import third.mall.widget.ListViewForScrollView;
-import third.mall.widget.MyGridView;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilString;
 

@@ -50,9 +50,9 @@ import acore.logic.LoginManager;
 import acore.logic.MessageTipController;
 import acore.logic.VersionOp;
 import acore.logic.XHClick;
-import acore.logic.stat.StatisticsManager;
 import acore.logic.polling.AppHandlerAsyncPolling;
 import acore.logic.polling.IHandleMessage;
+import acore.logic.stat.StatisticsManager;
 import acore.notification.controller.NotificationSettingController;
 import acore.override.XHApplication;
 import acore.override.activity.mian.MainBaseActivity;
@@ -61,7 +61,6 @@ import acore.tools.FileManager;
 import acore.tools.IObserver;
 import acore.tools.LogManager;
 import acore.tools.ObserverManager;
-import acore.tools.PageStatisticsUtils;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.XiangHaTabHost;
@@ -189,8 +188,6 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                 isShowWelcomeDialog = false;
 
                 OffDishToFavoriteControl.addCollection(Main.this);
-                //初始化电商页面统计
-                PageStatisticsUtils.getInstance().getPageInfo(getApplicationContext());
                 //处理
                 if (LoginManager.isLogin()) {
                     initQiYvUnreadCount();
@@ -607,7 +604,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
         }
         if (nowTab == 0 && index != 0) {//当前是首页，切换到其他页面
             if (allTab.containsKey(MainHomePage.KEY)) {
-                XHClick.newHomeStatictis(true, null);
+
             }
         } else if (nowTab != 0 && index == 0) {//当前是其他页面，切换到首页
             if (allTab.containsKey(MainHomePage.KEY)) {

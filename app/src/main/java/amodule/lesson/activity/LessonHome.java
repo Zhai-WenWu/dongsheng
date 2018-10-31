@@ -189,7 +189,6 @@ public class LessonHome extends MainBaseActivity implements IObserver, ISetMessa
     protected void onResume() {
         super.onResume();
         mViewController.onResume();
-        setRecommedTime(System.currentTimeMillis());
     }
 
     @Override
@@ -217,23 +216,11 @@ public class LessonHome extends MainBaseActivity implements IObserver, ISetMessa
         }
     }
 
-    protected long startTime = -1;//开始的时间戳
     /** 统计推荐列表使用时间 */
     private void saveStatistic() {
         if(mViewController != null){
             mViewController.saveStatisticData("VipHome");
         }
-        long nowTime = System.currentTimeMillis();
-        if (startTime > 0) {
-            Log.i("zyj", "stop::" + String.valueOf((nowTime - startTime) / 1000));
-            XHClick.saveStatictisFile("VipHome", "", "", "", "", "stop", String.valueOf((nowTime - startTime) / 1000), "", "", "", "");
-            //置数据
-            setRecommedTime(0);
-        }
-    }
-
-    public void setRecommedTime(long time) {
-        this.startTime = time;
     }
 
     @Override

@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import acore.override.adapter.AdapterSimple;
-import acore.tools.PageStatisticsUtils;
 import acore.tools.Tools;
 import third.mall.aplug.MallClickContorl;
 import third.mall.aplug.MallInternetCallback;

@@ -72,7 +72,6 @@ public class ListDish extends BaseActivity {
     private String shareName = "";
     private String data_type = "";//推荐列表过来的数据
     private String module_type = "";//推荐列表过来的数据
-    private Long startTime;//统计使用的时间
     private ArrayList<String> adIds;
     private XHAllAdControl xhAllAdControl;
     private static final Integer[] AD_INSTERT_INDEX = new Integer[]{3, 9, 16, 24, 32, 40, 48, 56, 64, 72};//插入广告的位置。
@@ -88,7 +87,6 @@ public class ListDish extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle bundle = this.getIntent().getExtras();
-        startTime = System.currentTimeMillis();
         if (bundle != null) {
             type = bundle.getString("type");
             g1 = bundle.getString("g1");
@@ -190,10 +188,6 @@ public class ListDish extends BaseActivity {
         super.onDestroy();
         arrayList.clear();
         System.gc();
-        long nowTime = System.currentTimeMillis();
-        if (startTime > 0 && (nowTime - startTime) > 0 && !TextUtils.isEmpty(data_type) && !TextUtils.isEmpty(module_type)) {
-            XHClick.saveStatictisFile("ListDish", module_type, data_type, g1, "", "stop", String.valueOf((nowTime - startTime) / 1000), "", "", "", "");
-        }
         ObserverManager.getInstance().unRegisterObserver(mIObserver);
     }
 

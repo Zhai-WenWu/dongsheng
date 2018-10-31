@@ -152,10 +152,6 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
             }
             String url = dataMapTemp.get("url");
             AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), url, true);
-            if(!TextUtils.isEmpty(page)){
-                XHClick.saveStatictisFile(page, "homeBannerScroll", dataMapTemp.get("type"), "", "",
-                        "click", "", "", "", "", "");
-            }
             statistic(position);
             StatisticsManager.listClick(getContext().getClass().getSimpleName(),"Banner",String.valueOf(position + 1),"",dataMapTemp.get(STAT_DATA));
         });

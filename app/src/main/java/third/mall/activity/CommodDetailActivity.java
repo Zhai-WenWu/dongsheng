@@ -117,7 +117,6 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
 
     private String data_type = "";//推荐列表过来的数据
     private String module_type = "";
-    private Long startTime;//统计使用的时间
 
     private TextView title, title_detail;
     private String titleState = "1";//目前状态，1：标题，2：详情
@@ -164,7 +163,6 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
         initView();
         initData();
         XHClick.track(this, "浏览商品");
-        startTime = System.currentTimeMillis();
     }
 
     /**
@@ -1016,10 +1014,6 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
 
     @Override
     protected void onDestroy() {
-        long nowTime = System.currentTimeMillis();
-        if (startTime > 0 && (nowTime - startTime) > 0 && !TextUtils.isEmpty(data_type) && !TextUtils.isEmpty(module_type)) {
-            XHClick.saveStatictisFile("CommodDetail", module_type, data_type, code, "", "stop", String.valueOf((nowTime - startTime) / 1000), "", "", "", "");
-        }
         super.onDestroy();
         if (mVideoPlayerController != null)
             mVideoPlayerController.onDestroy();

@@ -42,7 +42,6 @@ import acore.logic.polling.PollingConfig;
 import acore.override.XHApplication;
 import acore.tools.ChannelUtil;
 import acore.tools.FileManager;
-import acore.tools.PageStatisticsUtils;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.answer.activity.AnswerEditActivity;
@@ -129,6 +128,7 @@ public class MainInitDataControl {
                 //待处理问题。
 //                HomeToutiaoAdControl.getInstance().getAdData(activity);
                 ToolsDevice.saveXhIMEI(activity);
+                activity.deleteDatabase("statictis.db");
             }
         }.start();
         ConfigMannager.saveConfigData(XHApplication.in(), new InternetCallback() {
@@ -178,7 +178,6 @@ public class MainInitDataControl {
         QiYvHelper.getInstance().initSDK(act);
 
         OffDishToFavoriteControl.addCollection(act);
-        PageStatisticsUtils.getInstance().getPageInfo(act.getApplicationContext());//初始化电商页面统计
         LocalPushManager.stopLocalPush(act);
 
         PollingConfig.COURSE_GUIDANCE.registerIHandleMessage(mIHandleMessage);

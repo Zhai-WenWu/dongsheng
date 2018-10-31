@@ -16,7 +16,6 @@ import com.xiangha.R;
 import java.util.ArrayList;
 import java.util.Map;
 
-import acore.tools.PageStatisticsUtils;
 import acore.tools.Tools;
 import third.mall.adapter.AdapterAddressChange;
 import third.mall.aplug.MallClickContorl;

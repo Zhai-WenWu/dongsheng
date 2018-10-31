@@ -112,7 +112,6 @@ public class ArticleDetailActivity extends BaseActivity {
 
     private String data_type = "";//推荐列表过来的数据
     private String module_type = "";
-    private Long startTime;//统计使用的时间
     private boolean webviewLoadOver = false;
     private boolean isFav = false;
     private String title = "";
@@ -128,7 +127,6 @@ public class ArticleDetailActivity extends BaseActivity {
             data_type = bundle.getString("data_type");
             module_type = bundle.getString("module_type");
         }
-        startTime = System.currentTimeMillis();
         init();
     }
 
@@ -155,12 +153,8 @@ public class ArticleDetailActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        if (mArticleCommentBar != null) mArticleCommentBar = null;
-        //统计
-        long nowTime = System.currentTimeMillis();
-        if (startTime > 0 && (nowTime - startTime) > 0 && !TextUtils.isEmpty(data_type) && !TextUtils.isEmpty(module_type)) {
-            XHClick.saveStatictisFile("ArticleDetail", module_type, data_type, code, "", "stop", String.valueOf((nowTime - startTime) / 1000), "", "", "", "");
-        }
+        if (mArticleCommentBar != null)
+            mArticleCommentBar = null;
         ObserverManager.getInstance().unRegisterObserver(mIObserver);
         super.onDestroy();
     }

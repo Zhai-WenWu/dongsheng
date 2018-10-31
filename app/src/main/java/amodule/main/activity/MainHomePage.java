@@ -73,8 +73,6 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
 
     boolean mRecommendFirstLoad = true;
 
-    protected long startTime = -1;//开始的时间戳
-
     private ConnectionChangeReceiver mReceiver;
     private Handler handler = new Handler();
     @Override
@@ -384,7 +382,6 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
             mDataControler.isNeedRefresh(false);
         }
         onResumeFake();
-        setRecommedTime(System.currentTimeMillis());
         if (mNeedRefCurrFm) {
             mNeedRefCurrFm = false;
             refresh();
@@ -399,7 +396,6 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
     @Override
     protected void onPause() {
         super.onPause();
-        setRecommedStatistic();
         if(mViewContrloer != null){
             mViewContrloer.setStatisticShowNum();
         }
@@ -460,21 +456,6 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
 
     private void onResumeFake() {
         SpecialWebControl.initSpecialWeb(this, rl, "index", "", "");
-    }
-
-    /** 统计推荐列表使用时间 */
-    private void setRecommedStatistic() {
-        long nowTime = System.currentTimeMillis();
-        if (startTime > 0) {
-            Log.i("zyj", "stop::" + String.valueOf((nowTime - startTime) / 1000));
-            XHClick.saveStatictisFile("home", recommedType_statictus, "", "", "", "stop", String.valueOf((nowTime - startTime) / 1000), "", "", "", "");
-            //置数据
-            setRecommedTime(0);
-        }
-    }
-
-    public void setRecommedTime(long time) {
-        this.startTime = time;
     }
 
     @Override

@@ -12,12 +12,10 @@ import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.IWXAPIEventHandler;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
-import acore.tools.PageStatisticsUtils;
+import acore.logic.PayCallback;
 import third.mall.activity.OrderStateActivity;
 import third.mall.activity.PaySuccedActvity;
 import third.mall.aplug.MallCommon;
-import acore.logic.PayCallback;
-import third.mall.override.MallBaseActivity;
 
 /**
  * 微信支付回调页面

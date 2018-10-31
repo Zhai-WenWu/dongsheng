@@ -36,7 +36,6 @@ import acore.logic.load.LoadManager;
 import acore.notification.controller.NotificationSettingController;
 import acore.override.XHApplication;
 import acore.tools.LogManager;
-import acore.tools.PageStatisticsUtils;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.PopWindowDialog;
@@ -293,7 +292,6 @@ public class BaseActivity extends AppCompatActivity {
 	@Override
 	protected void onPause() {
 		super.onPause();
-		PageStatisticsUtils.getInstance().onPausePage(this,resumeTime,System.currentTimeMillis());
 		if(mActMagager != null){
 			mActMagager.onPause();
 		}

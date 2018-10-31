@@ -28,7 +28,6 @@ import java.util.Map;
 
 import acore.logic.XHClick;
 import acore.tools.FileManager;
-import acore.tools.PageStatisticsUtils;
 import acore.tools.Tools;
 import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
@@ -36,7 +35,6 @@ import third.mall.activity.ShoppingOrderActivity;
 import third.mall.aplug.MallInternetCallback;
 import third.mall.aplug.MallReqInternet;
 import third.mall.aplug.MallStringManager;
-import third.mall.override.MallBaseActivity;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilImage;
 import xh.basic.tool.UtilString;
