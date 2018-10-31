@@ -29,6 +29,7 @@ import acore.widget.rvlistview.RvStaggeredGridView;
 import amodule._common.delegate.ISetAdController;
 import amodule._common.helper.WidgetDataHelper;
 import amodule._common.utility.WidgetUtility;
+import amodule.home.module.HomeVipGuideModule;
 import amodule.home.view.HomeBuoy;
 import amodule.home.view.HomeTitleLayout;
 import amodule.main.activity.MainHomePage;
@@ -328,6 +329,14 @@ public class HomeViewControler implements ISetAdController {
         if (mTitleLayout != null) {
             mTitleLayout.setMessage(messageTipCount);
         }
+    }
+
+    public void setHomeVipBannerModule(HomeVipGuideModule module) {
+        mHeaderControler.setVipGuideData(module);
+    }
+
+    public void setHomeVipBannerViewVisible(boolean visible) {
+        mHeaderControler.setVipGuideVisible(visible);
     }
 
     /*--------------------------------------------- Get&Set ---------------------------------------------*/

@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 
@@ -15,9 +14,7 @@ import com.xiangha.R;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Random;
 
 import acore.broadcast.ConnectionChangeReceiver;
 import acore.logic.ConfigMannager;
@@ -30,12 +27,12 @@ import acore.tools.IObserver;
 import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
-import amodule._common.conf.FavoriteTypeEnum;
-import amodule._common.conf.GlobalFavoriteModule;
 import amodule._common.conf.GlobalVariableConfig;
 import amodule._common.helper.WidgetDataHelper;
 import amodule.home.HomeDataControler;
 import amodule.home.HomeViewControler;
+import amodule.home.delegate.IVipGuideModuleCallback;
+import amodule.home.module.HomeVipGuideModule;
 import amodule.main.Main;
 import amodule.main.adapter.HomeAdapter;
 import amodule.main.delegate.ISetMessageTip;
@@ -47,6 +44,10 @@ import third.ad.tools.AdPlayIdConfig;
 
 import static acore.logic.ConfigMannager.KEY_LOGPOSTTIME;
 import static acore.logic.stat.StatisticsManager.STAT_DATA;
+import static acore.tools.ObserverManager.NOTIFY_AUTO_LOGIN;
+import static acore.tools.ObserverManager.NOTIFY_LOGIN;
+import static acore.tools.ObserverManager.NOTIFY_LOGOUT;
+import static acore.tools.ObserverManager.NOTIFY_VIPSTATE_CHANGED;
 
 /**
  * 首页
@@ -90,7 +91,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
 
         initPostTime();
         //注册通知
-        ObserverManager.getInstance().registerObserver(this, ObserverManager.NOTIFY_VIPSTATE_CHANGED);
+        ObserverManager.getInstance().registerObserver(this, NOTIFY_VIPSTATE_CHANGED, NOTIFY_LOGIN, NOTIFY_LOGOUT,NOTIFY_AUTO_LOGIN);
         registerConnectionReceiver();
     }
 
@@ -202,6 +203,29 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
         }
         loadCacheData();
         mViewContrloer.setTipMessage();
+    }
+
+    public void handleVipGuideStatus() {
+        setVipGuide();
+    }
+
+    private void setVipGuide() {
+        MainHomePage.this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (mDataControler != null) {
+                    mDataControler.getHomeVipGuideModule(new IVipGuideModuleCallback() {
+                        @Override
+                        public void onModuleCallback(HomeVipGuideModule module) {
+                            if (mViewContrloer != null) {
+                                mViewContrloer.setHomeVipBannerModule(module);
+                                mViewContrloer.setHomeVipBannerViewVisible(module != null);
+                            }
+                        }
+                    });
+                }
+            }
+        });
     }
 
     @Override
@@ -399,9 +423,15 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
     public void notify(String name, Object sender, Object data) {
         if (!TextUtils.isEmpty(name)) {
             switch (name) {
-                case ObserverManager.NOTIFY_VIPSTATE_CHANGED://VIP 状态发生改变需要刷新
+                case NOTIFY_VIPSTATE_CHANGED://VIP 状态发生改变需要刷新
                     Log.i("tzy", "VIP 状态发生改变需要刷新");
                     mNeedRefCurrFm = true;
+                    setVipGuide();
+                    break;
+                case NOTIFY_AUTO_LOGIN:
+                case NOTIFY_LOGIN:
+                case NOTIFY_LOGOUT:
+                    setVipGuide();
                     break;
             }
         }
@@ -414,6 +444,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
         mViewContrloer.autoRefresh();
         GlobalVariableConfig.clearFavoriteModules();
         GlobalVariableConfig.clearAttentionModules();
+        setVipGuide();
     }
 
     private void innerRefresh() {

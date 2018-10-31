@@ -62,9 +62,11 @@ import amodule.dish.db.UploadDishSqlite;
 import amodule.dish.tools.OffDishToFavoriteControl;
 import amodule.dish.tools.UploadDishControl;
 import amodule.main.Main;
+import amodule.main.activity.MainHomePage;
 import amodule.quan.db.SubjectData;
 import amodule.quan.db.SubjectSqlite;
 import amodule.search.db.MatchWordsDbUtil;
+import aplug.basic.InternetCallback;
 import aplug.basic.XHInternetCallBack;
 import aplug.web.tools.XHTemplateManager;
 import third.ad.tools.AdConfigTools;
@@ -129,7 +131,15 @@ public class MainInitDataControl {
                 ToolsDevice.saveXhIMEI(activity);
             }
         }.start();
-        ConfigMannager.saveConfigData(XHApplication.in());
+        ConfigMannager.saveConfigData(XHApplication.in(), new InternetCallback() {
+            @Override
+            public void loaded(int i, String s, Object o) {
+                if (Main.allMain != null && Main.allMain.getCurrentTab() == Main.TAB_HOME && Main.allMain.allTab != null && Main.allMain.allTab.containsKey(MainHomePage.KEY)) {
+                    MainHomePage mainIndex = (MainHomePage) Main.allMain.allTab.get(MainHomePage.KEY);
+                    mainIndex.handleVipGuideStatus();
+                }
+            }
+        });
         long endTime2=System.currentTimeMillis();
         Log.i("zhangyujian","initWelcomeAfter::时间:"+(endTime2-startTime));
 
