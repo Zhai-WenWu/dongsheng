@@ -23,8 +23,8 @@
     </amodule.dish.view.DishRelatedRecommendView>
 
 
-    <LinearLayout
-        android:id="@+id/a_dish_detail_new_xiangguan_layout"
+    <RelativeLayout
+        android:id="@+id/a_dish_detail_new_xiangguan"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -61,7 +61,7 @@
             android:textColor="@color/comment_color"
             android:textSize="@dimen/sp_16" />
 
-    </LinearLayout>
+    </RelativeLayout>
 
     <HorizontalScrollView
         android:id="@+id/a_dish_detail_new_xiangguan_scroll"
