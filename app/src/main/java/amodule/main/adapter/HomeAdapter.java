@@ -320,6 +320,11 @@ public class HomeAdapter extends RvBaseAdapter<Map<String, String>> {
         public boolean canStat() {
             return !isCache;
         }
+
+        @Override
+        protected void onStat(int position, Map<String, String> data) {
+            //TODO show统计
+        }
     }
 
     /**

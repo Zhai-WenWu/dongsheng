@@ -23,6 +23,7 @@ import java.util.Map;
 
 import acore.logic.VersionOp;
 import acore.logic.XHClick;
+import acore.logic.stat.StatModel;
 import acore.logic.stat.StatisticsManager;
 import acore.logic.stat.intefaces.OnClickListenerStat;
 import acore.notification.BuildProperties;
@@ -92,7 +93,7 @@ public class NotificationSettingController {
             dialogManager.createDialog(viewManager);
             dialogManager.show();
 
-            StatisticsManager.specialAction(p,MODULE_NAME,"",SHOW,"","","");
+            StatisticsManager.saveData(StatModel.createSpecialActionModel(p,MODULE_NAME,"",SHOW,"","",""));
             FileManager.saveShared(XHApplication.in(),FileManager.app_notification, key + VersionOp.getVerName(XHApplication.in()),"2");
             clearUnUseKey();
         }
@@ -270,6 +271,6 @@ public class NotificationSettingController {
     }
 
     public static void statOpenSuccess(String p){
-        StatisticsManager.specialAction(p,MODULE_NAME,"",SUCCESS,"","","");
+        StatisticsManager.saveData(StatModel.createSpecialActionModel(p,MODULE_NAME,"",SUCCESS,"","",""));
     }
 }

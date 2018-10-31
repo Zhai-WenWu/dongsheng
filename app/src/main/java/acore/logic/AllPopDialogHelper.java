@@ -24,6 +24,7 @@ import com.xiangha.R;
 
 import java.util.Map;
 
+import acore.logic.stat.StatModel;
 import acore.logic.stat.StatisticsManager;
 import acore.notification.controller.NotificationSettingController;
 import acore.override.XHApplication;
@@ -200,14 +201,14 @@ public class AllPopDialogHelper {
         allPopDialogControler.setOnFullScreenStatusCallback(new FullSrceenDialogControl.OnFullScreenStatusCallback() {
             @Override
             public void onPreShow(FullScreenModule module) {
-                StatisticsManager.specialAction(XHActivityManager.getInstance().getCurrentActivity().getClass().getName(),"","",
-                        "DropDownBox_ShouldHaveBeenShown","","",module.getStatJson());
+                StatisticsManager.saveData(StatModel.createSpecialActionModel(XHActivityManager.getInstance().getCurrentActivity().getClass().getName(),"","",
+                        "DropDownBox_ShouldHaveBeenShown","","",module.getStatJson()));
             }
 
             @Override
             public void onShow(FullScreenModule module) {
-                StatisticsManager.specialAction(XHActivityManager.getInstance().getCurrentActivity().getClass().getName(),"","",
-                        "DropDownBox_ActuallySucceedShow","","",module.getStatJson());
+                StatisticsManager.saveData(StatModel.createSpecialActionModel(XHActivityManager.getInstance().getCurrentActivity().getClass().getName(),"","",
+                        "DropDownBox_ActuallySucceedShow","","",module.getStatJson()));
                 log("FullScreen :: 展示");
                 FileManager.saveShared(XHActivityManager.getInstance().getCurrentActivity(),INERVAL_XML,KEY_INERVAL_COUNT,"0");
                 XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), "ad_show_index", "全屏", "xh");//统计
@@ -215,8 +216,8 @@ public class AllPopDialogHelper {
 
             @Override
             public void onClickImage(FullScreenModule module) {
-                StatisticsManager.specialAction(XHActivityManager.getInstance().getCurrentActivity().getClass().getName(),"","",
-                        "DropDownBox_Click","","",module.getStatJson());
+                StatisticsManager.saveData(StatModel.createSpecialActionModel(XHActivityManager.getInstance().getCurrentActivity().getClass().getName(),"","",
+                        "DropDownBox_Click","","",module.getStatJson()));
                 log("FullScreen :: 点击图片");
                 XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), "ad_click_index", "全屏", "xh");//统计
                 AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), module.getUrl(), true);
@@ -224,8 +225,8 @@ public class AllPopDialogHelper {
 
             @Override
             public void onClickClose(FullScreenModule module) {
-                StatisticsManager.specialAction(XHActivityManager.getInstance().getCurrentActivity().getClass().getName(),"","",
-                        "DropDownBox_Close","","",module.getStatJson());
+                StatisticsManager.saveData(StatModel.createSpecialActionModel(XHActivityManager.getInstance().getCurrentActivity().getClass().getName(),"","",
+                        "DropDownBox_Close","","",module.getStatJson()));
                 log("FullScreen :: 点击关闭");
                 XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), "a_fullcereen_ad", "手动关闭", "");
             }

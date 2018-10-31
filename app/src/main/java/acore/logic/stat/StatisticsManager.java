@@ -45,13 +45,6 @@ public class StatisticsManager {
     public static final String STAT_DATA = "statJson";
     public static final String IS_STAT = "_isStatShow";
     public static final String TRUE_VALUE = "2";
-    public static final String EVENT_STAY = "stay";
-    public static final String EVENT_LIST_SHOW = "show";
-    public static final String EVENT_BTN_CLICK = "btnC";
-    public static final String EVENT_LIST_CLICK = "listC";
-    public static final String EVENT_VIDEO_VIEW = "vv";
-    public static final String EVENT_SPECIAL_ACTION = "action";
-    public static final String EMPTY = "";
     static final int MAX_DATA_COUNT = 500;
 
     private static Handler handlerStatistics;//s6统计
@@ -59,7 +52,6 @@ public class StatisticsManager {
     public static int STATISTICS_TIME = 10 * 1000;
 
     public static JSONObject statisticsJson = new JSONObject();
-
 
     /**
      * 发送请求.在某一个类中开启(在Main中开启和关闭),循环执行.
@@ -98,77 +90,31 @@ public class StatisticsManager {
         UnburiedStatisticsSQLite.instance().deleteAllData();
     }
 
-    /**
-     * @param p
-     * @param stayTime
-     */
-    public static void pageStay(String p, String stayTime) {
-        saveData(EVENT_STAY, p, EMPTY, EMPTY, EMPTY, EMPTY, stayTime, EMPTY,null);
-    }
-
-    /**
-     * @param p
-     * @param m
-     * @param pos
-     * @param s1
-     */
-    public static void listShow(String p, String m, String pos, String s1, @Nullable String statData) {
-//        if (statData == null || statData.isEmpty()) {
-//            throw new IllegalArgumentException("statData is null.");
-//        }
-        saveData(EVENT_LIST_SHOW, p, m, pos, EMPTY, s1, EMPTY,EMPTY, statData);
-    }
-
-    public static void btnClick(String p, String m, String btn) {
-        btnClick(p, m, "0", btn, EMPTY);
-    }
-
-    public static void btnClick(String p, String m, String pos, String btn, String s1) {
-        saveData(EVENT_BTN_CLICK, p, m, pos, btn, s1, EMPTY, EMPTY,null);
-    }
-
-    public static void listClick(String p, String m, String pos, String s1, @Nullable String statData) {
-        saveData(EVENT_LIST_CLICK, p, m, pos, EMPTY, s1, EMPTY,EMPTY, statData);
-    }
-
-    public static void videoView(String p, String m, String pos, String n1, String n2,@Nullable String statData) {
-        saveData(EVENT_VIDEO_VIEW, p, m, pos, EMPTY, EMPTY, n1, n2,statData);
-    }
-
-    public static void specialAction(String p, String m, String pos, String btn, String s1, String n1,String statData) {
-        saveData(EVENT_SPECIAL_ACTION, p, m, pos, btn, s1, n1, EMPTY,statData);
-    }
-
-    /**
-     * @param e   事件
-     * @param p   页面名称
-     * @param m   模块名称
-     * @param pos 位置
-     * @param btn 按钮名称
-     * @param s1  附属字段
-     * @param n1  附属字段
-     */
-    public static void saveData(String e, String p, String m, String pos, String btn,
-                                String s1, String n1, String n2,String statData) {
+    public static void saveData(StatModel model){
+        if (model == null){
+            return;
+        }
         JSONObject jsonObject = new JSONObject();
         try {
             long t = System.currentTimeMillis() / 1000;
             putValue(jsonObject, "t", String.valueOf(t));
-            putValue(jsonObject, "e", e);
-            putValue(jsonObject, "p", p);
-            putValue(jsonObject, "m", m);
-            putValue(jsonObject, "pos", pos);
-            putValue(jsonObject, "btn", btn);
-            putValue(jsonObject, "s1", s1);
-            putValue(jsonObject, "n1", n1);
-            putValue(jsonObject, "n2", n2);
-            putValue(jsonObject, "statJson", statData);
+            putValue(jsonObject, "e", model.e);
+            putValue(jsonObject, "p", model.p);
+            putValue(jsonObject, "m", model.m);
+            putValue(jsonObject, "statJson", model.statJson);
+            putValue(jsonObject, "pos", model.pos);
+            putValue(jsonObject, "btn", model.btn);
+            putValue(jsonObject, "s1", model.s1);
+            putValue(jsonObject, "s2", model.s2);
+            putValue(jsonObject, "s3", model.s3);
+            putValue(jsonObject, "n1", model.n1);
+            putValue(jsonObject, "n2", model.n2);
             Log.i(TAG, "saveData: " + jsonObject);
             if (SpecialOrder.isOpenSwitchStatLayout(XHApplication.in())) {
                 DesktopLayout.of(XHApplication.in()).insertData(jsonObject.toString());
             }
             //存数据库
-            String type = !TextUtils.isEmpty(statData) && statData.contains(GXHTJ) ? GXHTJ : Normal;
+            String type = !TextUtils.isEmpty(model.statJson) && model.statJson.contains(GXHTJ) ? GXHTJ : Normal;
             UnburiedStatisticsSQLite.instance().insterData(jsonObject.toString(),type);
         } catch (Exception exc) {
             exc.printStackTrace();
