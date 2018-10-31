@@ -237,8 +237,8 @@ public class DesktopLayout extends RelativeLayout {
         mLayout.gravity = Gravity.TOP | Gravity.LEFT;
 
         // 设置窗体宽度和高度
-        mLayout.width = Tools.getDimen(getContext(), R.dimen.dp_240);
-        mLayout.height = (int) (ToolsDevice.getWindowPx(getContext()).heightPixels * 3 / 4f);
+        mLayout.width = (int) (ToolsDevice.getWindowPx(getContext()).widthPixels * 1 / 4f);
+        mLayout.height = (int) (ToolsDevice.getWindowPx(getContext()).heightPixels * 1 / 4f);
 
     }
 
