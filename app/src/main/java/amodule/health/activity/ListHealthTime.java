@@ -301,7 +301,7 @@ public class ListHealthTime extends BaseActivity {
 				loadManager.hideProgressBar();
 				timeAdapter.notifyDataSetChanged();
 				findViewById(R.id.scrollView1).setVisibility(View.VISIBLE);
-				loadManager.loadOver(flag, 1,true);
+				loadManager.loadOver(flag);
 			}
 		});
 	}

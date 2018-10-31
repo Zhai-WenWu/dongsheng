@@ -28,7 +28,6 @@ import acore.logic.load.LoadManager;
 import acore.notification.controller.NotificationSettingController;
 import acore.override.XHApplication;
 import acore.tools.LogManager;
-import acore.tools.PageStatisticsUtils;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.PopWindowDialog;
@@ -281,7 +280,6 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        PageStatisticsUtils.getInstance().onPausePage(this,resumeTime,System.currentTimeMillis());
         if (mActMagager != null){
             mActMagager.onPause();
         }
@@ -384,7 +382,6 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     public void startActivity(Intent intent) {
         intent.addFlags(FLAG_ACTIVITY_NO_USER_ACTION);
         super.startActivity(intent);
-        NotificationSettingController.removePermissionSetView();
         // 设置切换动画，从右边进入，左边退出
         overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
     }
@@ -393,7 +390,6 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     public void startActivityForResult(Intent intent, int requestCode) {
         intent.addFlags(FLAG_ACTIVITY_NO_USER_ACTION);
         super.startActivityForResult(intent, requestCode);
-        NotificationSettingController.removePermissionSetView();
         // 设置切换动画，从右边进入，左边退出
         overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
     }

@@ -382,7 +382,7 @@ public class CircleFragment extends Fragment {
         String url = StringManager.api_circleSubjectList + "?cid=" + mPlateData.getCid() + "&mid=" + mPlateData.getMid();
         String param = "&page=" + mCurrentPage + "&pageTime=" + mPageTime;
         //更新加载按钮状态
-        mLoadManager.changeMoreBtn(mListview, ReqInternet.REQ_OK_STRING, -1, -1, mCurrentPage, isRefresh);
+        mLoadManager.loading(mListview,  isRefresh);
         if (isRefresh) {
             mLoadManager.hideProgressBar();
         }
@@ -471,7 +471,7 @@ public class CircleFragment extends Fragment {
                     mAdapter = (AdapterCircle) mListview.getAdapter();
                     mAdapter.notifyDataSetChanged();
                 }
-                mCurrentPage = mLoadManager.changeMoreBtn(mListview, flag, LoadManager.FOOTTIME_PAGE, loadCount, mCurrentPage, isRefresh);
+                mLoadManager.loadOver(flag,mListview, loadCount);
                 //判断是否刷新
                 if (isRefresh) {
                     refreshComplate();

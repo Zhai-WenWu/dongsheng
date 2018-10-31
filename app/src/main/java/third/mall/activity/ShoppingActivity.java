@@ -233,7 +233,7 @@ public class ShoppingActivity extends MallBaseActivity implements OnClickListene
 	 * @param state
 	 */
 	public void setRequest(final boolean state){
-		loadManager.changeMoreBtn(UtilInternet.REQ_OK_STRING, -1, -1, currentPage,list.size()==0);
+		loadManager.loading(shopping_list,list.isEmpty());
 		url = MallStringManager.mall_getCartInfo_v3;
 		for (int i = 0,size= list_statistic.size(); i < size; i++) {
 			if(i==0){
@@ -246,7 +246,7 @@ public class ShoppingActivity extends MallBaseActivity implements OnClickListene
 			public void loadstat(int flag, String url, Object msg, Object... stat) {
 
 				int loadCount = 0;
-				loadManager.loadOver(flag, 1,true);
+				loadManager.loadOver(flag);
 				if(flag>=UtilInternet.REQ_OK_STRING){
 					if(state){
 						list.clear();
@@ -314,7 +314,7 @@ public class ShoppingActivity extends MallBaseActivity implements OnClickListene
 								if(state>=UtilInternet.REQ_OK_STRING){
 									setRequest(false);
 								}else if(state==UtilInternet.REQ_CODE_ERROR){
-									loadManager.loadOver(state, 1,true);
+									loadManager.loadOver(state);
 								}
 							}
 						});
@@ -323,9 +323,7 @@ public class ShoppingActivity extends MallBaseActivity implements OnClickListene
 				loadManager.hideProgressBar();
 				shopping_list.setVisibility(View.VISIBLE);
 				//处理只显示一个页面
-				currentPage = loadManager.changeMoreBtn(flag, loadCount+loadCount, loadCount, currentPage,list.size()==0);
-//				shopping_list.onRefreshComplete();
-
+				loadManager.loadOver(flag,shopping_list,loadCount);
 			}
 		});
 	}

@@ -47,14 +47,11 @@ public class LoadManager {
 	public LoadMoreManager mLoadMore;
 	public DialogManager mProgressDialog = null;
 	public static String tok = "";
-	public static int FOOTTIME_PAGE = -2;//特殊的值，用于标示时间戳翻页。
 
-	private String[] mLoadMoreTextArray = {
-			"- 学名厨做菜, 用香哈 -",
-							/*"— 学名厨做菜 —",
-							"------------ 爱生活，尽在香哈新煮意 ------------",
-							"------------ 爱生活，爱香哈 ------------",
-							" ------------ 香哈，让生活更美好 ------------"*/};
+    public final String LOADING = "加载中...";
+    public final String LOADED = "点击加载更多";
+    public final String LOADFAILED = "加载失败，点击重试";
+    public final String LOADOVER = "- 学名厨做菜, 用香哈 -";
 
 	public LoadManager(Context context, RelativeLayout layout) {
 		mContext = context;
@@ -78,13 +75,10 @@ public class LoadManager {
 	 */
 	public void setLoading(final View.OnClickListener clicker, boolean isBlanker) {
 		if (isBlanker) showProgressBar();
-		mLoadProgress.setFailClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				hideLoadFaildBar();
-				showProgressBar();
-				clicker.onClick(v);
-			}
+		mLoadProgress.setFailClickListener(v -> {
+			hideLoadFaildBar();
+			showProgressBar();
+			clicker.onClick(v);
 		});
 		if (LoadManager.tok != null && LoadManager.tok.length() != 0) {
 			clicker.onClick(null);
@@ -94,7 +88,12 @@ public class LoadManager {
 				@Override
 				public void loaded(int flag, String url, Object returnObj) {
 					LogManager.print("d", "重新获取tok____" + LoadManager.tok);
-					clicker.onClick(null);
+					hideProgressBar();
+					if(flag >= ReqInternet.REQ_OK_STRING){
+						clicker.onClick(null);
+//					}else{
+//						showLoadFaildBar();
+					}
 				}
 			});
 		}
@@ -105,7 +104,7 @@ public class LoadManager {
 	 *
 	 * @param callback 加载事件
 	 */
-	public void setLoading(final String name, final InternetCallback callback) {
+	public void setLoading(final InternetCallback callback) {
 		if (XGPushConfig.getToken(mContext).length() >= 40) {
 			callback.loaded(ReqInternet.REQ_OK_STRING, "", null);
 		} else if (FileManager.loadShared(mContext, FileManager.xmlFile_appInfo, FileManager.xmlKey_XGToken).toString().length() >= 40) {
@@ -122,12 +121,9 @@ public class LoadManager {
 			} else {
 				LogManager.reportError("信鸽注册_errCode_" + errCode, null);
 				Tools.showToast(mContext, "请打开网络连接，再重试~");
-				mLoadProgress.setFailClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						hideLoadFaildBar();
-						setLoading(name, callback);
-					}
+				mLoadProgress.setFailClickListener(v -> {
+					hideLoadFaildBar();
+					setLoading(callback);
 				});
 			}
 		}
@@ -172,7 +168,7 @@ public class LoadManager {
 	 * @param hasMore 是否加载更多页
 	 * @param clicker 加载事件
 	 */
-	public void setLoading(@NonNull RvListView rvListView, @NonNull RvBaseAdapter adapter, @NonNull boolean hasMore, @NonNull View.OnClickListener clicker) {
+	public void setLoading(RvListView rvListView, @NonNull RvBaseAdapter adapter, boolean hasMore, @NonNull View.OnClickListener clicker) {
 		if(rvListView!=null && rvListView.getAdapter()==null){
 			rvListView.setAdapter( adapter);
 			if(hasMore){
@@ -362,11 +358,11 @@ public class LoadManager {
 	public void setLoading(PtrClassicFrameLayout refreshLayout, RvListView listView, RvBaseAdapter adapter,
 						   boolean hasMore, boolean showProgressbar, final OnClickListener refreshListener, final OnClickListener loadMoreListener){
 		refreshLayout.setPtrHandler(new PtrDefaultHandler() {
-			@Override
-			public void onRefreshBegin(PtrFrameLayout frame) {
-				refreshListener.onClick(null);
-			}
-		});
+            @Override
+            public void onRefreshBegin(PtrFrameLayout frame) {
+                refreshListener.onClick(null);
+            }
+        });
 		if (listView.getAdapter() == null) {
 			listView.setAdapter(adapter);
 			if (hasMore) {
@@ -399,124 +395,85 @@ public class LoadManager {
 		setLoading(clicker);
 	}
 
-	/**
-	 * * 设置加载更多按钮的状态,一个页面若有一个个loadMare则无需传key，直接取就行
-	 *
-	 * @param flag
-	 * @param everyPageNum ：每一页的行数
-	 * @param actPageNum   ：当前下载的行数
-	 * @param nowPage      ：现在页数
-	 * @param isBlankSpace : 当前页面是否是在空白页的基础上加载的
-	 *
-	 * @return
-	 *
-	 * @return：现在的页数
-	 */
-	public int changeMoreBtn(int flag, int everyPageNum, int actPageNum, int nowPage, boolean isBlankSpace) {
-		return changeMoreBtn(null, flag, everyPageNum, actPageNum, nowPage, isBlankSpace);
-	}
+    public void loading(Object key, boolean isBlankSpace) {
+        hideLoadFaildBar();
+        Button loadMoreBtn = getSingleLoadMore(key);
+        if (isBlankSpace) {
+            showProgressBar();
+            if (loadMoreBtn != null) {
+                loadMoreBtn.setVisibility(View.GONE);
+            }
+        } else {
+            hideProgressBar();
+            if (loadMoreBtn != null) {
+                loadMoreBtn.setText(LOADING);
+                loadMoreBtn.setEnabled(false);
+                loadMoreBtn.setVisibility(View.VISIBLE);
+            }
+        }
+    }
 
-	/**
-	 * ,一个页面若有多个loadMare则需要传入对应的key拿到对应的loadMore
-	 *
-	 * @param key
-	 * @param flag
-	 * @param everyPageNum
-	 * @param actPageNum
-	 * @param nowPage
-	 * @param isBlankSpace
-	 *
-	 * @return
-	 */
-	public int changeMoreBtn(Object key, int flag, int everyPageNum, int actPageNum, int nowPage, boolean isBlankSpace) {
-		return changeMoreBtn(key,flag,everyPageNum,actPageNum,nowPage,isBlankSpace,mLoadMoreTextArray[0]);
-	}
+    public void loaded(Object key) {
+        hideProgressBar();
+        Button loadMoreBtn = getSingleLoadMore(key);
+        if (loadMoreBtn != null) {
+            loadMoreBtn.setText(LOADED);
+            loadMoreBtn.setEnabled(true);
+            loadMoreBtn.setVisibility(View.VISIBLE);
+        }
+    }
 
-	/**
-	 * ,一个页面若有多个loadMare则需要传入对应的key拿到对应的loadMore
-	 *
-	 * @param key
-	 * @param flag
-	 * @param everyPageNum
-	 * @param actPageNum
-	 * @param nowPage
-	 * @param isBlankSpace
-	 *
-	 * @return
-	 */
-	public int changeMoreBtn(Object key, int flag, int everyPageNum, int actPageNum, int nowPage, boolean isBlankSpace,String nodataHint) {
+    public void loadNoData(Object key,String hint){
+		hideProgressBar();
 		Button loadMoreBtn = getSingleLoadMore(key);
-		if (loadMoreBtn == null) {
-			return 0;
+		if (loadMoreBtn != null) {
+			loadMoreBtn.setText(LOADOVER);
+			loadMoreBtn.setEnabled(false);
+			loadMoreBtn.setVisibility(View.VISIBLE);
 		}
-		loadMoreBtn.setVisibility(View.VISIBLE);
-		if (flag >= ReqInternet.REQ_OK_STRING) {
-			if (isBlankSpace) {
-				showProgressBar();
-				hideLoadFaildBar();
-			}
-			// 激活加载更多时
-			if (actPageNum == -1 && everyPageNum == -1) {
-				if (nowPage <= 1)
-					loadMoreBtn.setVisibility(View.GONE);
-				else
-					loadMoreBtn.setText("加载中...");
-				loadMoreBtn.setEnabled(false);
-				return nowPage;
-			}
-			// 加载完毕
-			else if ((actPageNum > 0) ||
-					(everyPageNum == LoadManager.FOOTTIME_PAGE && actPageNum > 0)) {
-				loadMoreBtn.setText("点击加载更多");
-				loadMoreBtn.setEnabled(true);
-			} else {
-				loadMoreBtn.setText(nodataHint);
-				loadMoreBtn.setEnabled(false);
-			}
-			if (actPageNum <= 0 && nowPage == 1)
-				loadMoreBtn.setVisibility(View.GONE);
-		}
-		return loadOver(key, flag, nowPage, isBlankSpace);
 	}
 
-	/**
-	 * 加载完毕
-	 *
-	 * @param flag
-	 * @param nowPage
-	 * @param isBlankSpace ：当前页面是否是百页，也就是页面有没有数据
-	 *
-	 * @return
-	 */
-	public int loadOver(int flag, int nowPage, boolean isBlankSpace) {
-		return loadOver(null, flag, nowPage, isBlankSpace);
-	}
-
-	public int loadOver(Object key, int flag, int nowPage, boolean isBlankSpace) {
+	public void loadEmpty(Object key){
 		Button loadMoreBtn = getSingleLoadMore(key);
-		if (flag >= ReqInternet.REQ_OK_STRING) {
-			hideProgressBar();
-			hideLoadFaildBar();
+		if (loadMoreBtn != null) {
+			loadMoreBtn.setVisibility(View.GONE);
 		}
-		// 加载失败
-		else if (nowPage == 1) {
-			XHConf.net_timeout += 1000;
-			if (loadMoreBtn != null)
-				loadMoreBtn.setEnabled(true);
-			if (isShowingProgressBar()) {
-				hideProgressBar();
-				if (isBlankSpace) {
-					showLoadFaildBar();
-				}
+	}
+
+	public void loadFailed(Object key){
+        hideProgressBar();
+        Button loadMoreBtn = getSingleLoadMore(key);
+        if (loadMoreBtn != null) {
+            loadMoreBtn.setText(LOADFAILED);
+            loadMoreBtn.setEnabled(false);
+            loadMoreBtn.setVisibility(View.VISIBLE);
+        }
+    }
+	public void loadOver(int flag) {
+		loadOver(flag,null);
+	}
+	public void loadOver(int flag,Object key) {
+		loadOver(flag,key,0);
+	}
+
+    public void loadOver(int flag,Object key,int currentDataSize) {
+        loadOver(flag, key, currentDataSize,LOADOVER);
+    }
+
+	public void loadOver(int flag,Object key, int currentDataSize, String hint) {
+        if(flag >= ReqInternet.REQ_OK_STRING){
+            if(currentDataSize <= 0){
+                loadNoData(key,hint);
+            }else{
+                loaded(key);
+            }
+            hideLoadFaildBar();
+        }else{
+        	if(key == null){
+            	showLoadFaildBar();
 			}
-			nowPage--;
-		} else if (loadMoreBtn != null) {
-			hideProgressBar();
-			loadMoreBtn.setText("加载失败，点击重试");
-			loadMoreBtn.setEnabled(true);
-			nowPage--;
-		}
-		return nowPage;
+            loadFailed(key);
+        }
 	}
 
 	public Button getSingleLoadMore(Object key) {
@@ -589,18 +546,13 @@ public class LoadManager {
 	}
 
 	public void setLoadFaildBarClick(final OnClickListener click) {
-		mLoadProgress.setFailClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				hideLoadFaildBar();
-				click.onClick(v);
-			}
+		mLoadProgress.setFailClickListener(v -> {
+			hideLoadFaildBar();
+			click.onClick(v);
 		});
 	}
 
-	/**
-	 * view onscroll事件滚动回调
-	 */
+	/** view onscroll事件滚动回调 */
 	public interface ViewScrollCallBack{
 		public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount);
 		public void onScrollStateChanged(AbsListView arg0,int scrollState);

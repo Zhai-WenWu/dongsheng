@@ -85,7 +85,7 @@ public class StatisticsManager {
             handlerStatistics.removeCallbacks(runnableStatistics);
     }
 
-    /** 强制上床统计首页请求数据 */
+    /** 强制上传统计首页请求数据 */
     public static void forceSendStatisticsData() {
         final ArrayList<String> list = UnburiedStatisticsSQLite.instance().selectAllDataByType(Normal);
         if(list != null && !list.isEmpty()){

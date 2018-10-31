@@ -15,7 +15,6 @@ import com.xiangha.R;
 import java.util.Map;
 
 import acore.logic.XHClick;
-import acore.tools.PageStatisticsUtils;
 import acore.tools.Tools;
 import aplug.basic.ReqInternet;
 import third.mall.activity.CommodDetailActivity;
@@ -24,7 +23,6 @@ import third.mall.aplug.MallInternetCallback;
 import third.mall.aplug.MallReqInternet;
 import third.mall.aplug.MallStringManager;
 import third.mall.bean.ProductBean;
-import third.mall.override.MallBaseActivity;
 import xh.basic.internet.UtilInternet;
 
 import static com.xiangha.R.id.shopping_item_commod_rela;

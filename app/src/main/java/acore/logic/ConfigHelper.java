@@ -4,17 +4,18 @@ import android.support.annotation.Nullable;
 
 import java.util.Map;
 
+import acore.tools.StringManager;
+
 public class ConfigHelper {
     private static volatile ConfigHelper mInstance;
     private static Map<String, String> mConfigMap;
     private ConfigHelper() {}
 
-    public static ConfigHelper getInstance() {
+    public static synchronized ConfigHelper getInstance() {
         if (mInstance == null) {
             synchronized (ConfigHelper.class) {
                 if (mInstance == null) {
                     mInstance = new ConfigHelper();
-                    mConfigMap = ConfigMannager.getConfigMapByLocal();
                     return mInstance;
                 }
             }
@@ -23,15 +24,29 @@ public class ConfigHelper {
     }
 
     @Nullable
-    public Map<String, String> getConfigMap() {
+    public synchronized Map<String, String> getConfigMap() {
+        if (mConfigMap == null || mConfigMap.isEmpty()) {
+            synchronized (ConfigHelper.class) {
+                mConfigMap = ConfigMannager.getConfigMapByLocal();
+                return mConfigMap;
+            }
+        }
         return mConfigMap;
     }
 
     @Nullable
     public String getConfigValueByKey(String key) {
-        if (key == null || mConfigMap == null || mConfigMap.isEmpty()) {
+        Map<String, String> confMap = getConfigMap();
+        if (key == null || confMap == null || confMap.isEmpty()) {
             return null;
         }
-        return mConfigMap.get(key);
+        return confMap.get(key);
+    }
+
+    public void updateConfigData(String str) {
+        if (mConfigMap != null) {
+            mConfigMap.clear();
+        }
+        mConfigMap = StringManager.getFirstMap(str);
     }
 }

@@ -13,6 +13,14 @@
         android:layout_height="match_parent"/>
 
     <ImageView
+        android:id="@+id/tag_icon"
+        android:layout_marginTop="@dimen/dp_3"
+        android:layout_marginLeft="@dimen/dp_3"
+        android:visibility="gone"
+        android:layout_width="@dimen/dp_29"
+        android:layout_height="@dimen/dp_17"/>
+
+    <ImageView
         android:id="@+id/delete_icon"
         android:layout_width="@dimen/dp_25"
         android:layout_height="@dimen/dp_25"

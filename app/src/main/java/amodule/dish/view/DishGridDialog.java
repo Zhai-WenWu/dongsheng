@@ -47,7 +47,7 @@ import static acore.tools.StringManager.api_getVideoList;
  */
 
 public class DishGridDialog extends Dialog {
-
+    public static int FOOTTIME_PAGE = -2;//特殊的值，用于标示时间戳翻页。
     LoadMoreManager mLoadMore;
     RvGridView mGridView;
     private AdapterGridDish mAdapter;
@@ -269,7 +269,7 @@ public class DishGridDialog extends Dialog {
             }
             // 加载完毕
             else if ((actPageNum > 0) ||
-                    (everyPageNum == LoadManager.FOOTTIME_PAGE && actPageNum > 0)) {
+                    (everyPageNum == FOOTTIME_PAGE && actPageNum > 0)) {
                 loadMoreBtn.setText("点击加载更多");
                 loadMoreBtn.setEnabled(true);
             } else {

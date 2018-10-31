@@ -39,7 +39,6 @@ import aplug.web.view.TemplateWebView;
 import aplug.web.view.XHWebView;
 import third.video.VideoPlayerController;
 
-import static amodule.dish.activity.DetailDishWeb.startTime;
 import static amodule.dish.activity.DetailDishWeb.tongjiId;
 import static java.lang.System.currentTimeMillis;
 
@@ -109,7 +108,6 @@ public class DishActivityViewControlNew {
      * view的初始化
      */
     private void initView(TemplateWebView.OnTemplateCallBack onTemplateCallBack){
-        Log.i("zyj","H5______initView::"+(System.currentTimeMillis()-startTime));
         titleHeight = Tools.getDimen(mAct,R.dimen.topbar_height);
         initTitle();
         //头部view处理
@@ -257,7 +255,6 @@ public class DishActivityViewControlNew {
      * @param permissionMap
      */
     public void analyzeDishInfoData(String dishInfo, Map<String, String> permissionMap) {
-        Log.i("zyj","analyzeDishInfoData::" + (System.currentTimeMillis() - startTime));
         saveDishInfo(dishInfo);
         ArrayList<Map<String, String>> list = StringManager.getListMapByJson(dishInfo);
         if(list.size() == 0) return;
@@ -483,7 +480,6 @@ public class DishActivityViewControlNew {
     public void handlerDishWebviewData(){
 //        if(!isLoadWebViewData) {
             Log.i("wyl","24");
-            Log.i("zyj","H5______handlerDishWebviewData::"+(System.currentTimeMillis()-startTime));
             String[] temp= XHTemplateManager.TEMPLATE_MATCHING.get(XHTemplateManager.XHDISHLAYOUT);
             ArrayList<String> strLists= new ArrayList<>();
             for(String str:temp){

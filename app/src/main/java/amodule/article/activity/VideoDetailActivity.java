@@ -127,7 +127,6 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
 
     private String data_type = "";//推荐列表过来的数据
     private String module_type = "";
-    private Long startTime;//统计使用的时间
     public boolean isPortrait = false;
     private boolean isRelateDataOk = false;
     int statusBarH = 0;
@@ -195,10 +194,6 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        long nowTime = System.currentTimeMillis();
-        if (startTime > 0 && (nowTime - startTime) > 0 && !TextUtils.isEmpty(data_type) && !TextUtils.isEmpty(module_type)) {
-            XHClick.saveStatictisFile("VideoDetail", module_type, data_type, code, "", "stop", String.valueOf((nowTime - startTime) / 1000), "", "", "", "");
-        }
         if (mHaederLayout != null)
             mHaederLayout.onDestroy();
         if(handlerScreen!=null){
@@ -216,7 +211,6 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
             data_type = bundle.getString("data_type");
             module_type = bundle.getString("module_type");
         }
-        startTime = System.currentTimeMillis();
     }
 
     private void initView() {

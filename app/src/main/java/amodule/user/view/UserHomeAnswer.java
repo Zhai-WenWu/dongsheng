@@ -165,7 +165,7 @@ public class UserHomeAnswer extends TabContentView {
 	}
 
 	private void loadFromServer() {
-		loadManager.changeMoreBtn(theListView,UtilInternet.REQ_OK_STRING, -1, -1, currentPage,datas.size() == 0);
+		loadManager.loading(theListView,datas.size() == 0);
 		if (isRefresh) {
 			mNetDataReady = false;
 			if(isMyselft)
@@ -233,7 +233,7 @@ public class UserHomeAnswer extends TabContentView {
 				}
 				if (everyPage == 0)
 					everyPage = loadCount;
-				currentPage = loadManager.changeMoreBtn(theListView,flag, everyPage, loadCount, currentPage,datas.size() == 0);
+				loadManager.loadOver(flag,theListView, loadCount);
 				if (flag < UtilInternet.REQ_OK_STRING) {
 					Tools.showToast(mAct, returnObj.toString());
 					return;

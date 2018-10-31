@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import acore.logic.AppCommon;
+import acore.logic.ConfigMannager;
 import acore.logic.XHClick;
 import acore.logic.stat.intefaces.OnItemClickListenerRvStat;
 import acore.override.helper.XHActivityManager;
@@ -38,6 +39,7 @@ import amodule._common.helper.WidgetDataHelper;
 import amodule._common.utility.WidgetUtility;
 import amodule.home.view.HomeFuncNavView1;
 
+import static acore.logic.ConfigMannager.KEY_HOME_FUN_NAV_STAT;
 import static acore.logic.stat.StatisticsManager.STAT_DATA;
 
 /**
@@ -125,13 +127,19 @@ public class FuncNavView1 extends HomeFuncNavView1 implements IBindMap,IStatictu
 
 
     private void statistic(int index,Map<String, String> data) {
-        XHClick.saveStatictisFile("home", "homeSmallNav", data.get("type"), "", "",
-                "click", "", "", "", data.get("text1"), "");
+        final String key = data.get("text1");
+        String statData = ConfigMannager.getConfigByLocal(KEY_HOME_FUN_NAV_STAT);
+        Map<String,String> statMap = StringManager.getFirstMap(statData);
+        if(!TextUtils.isEmpty(key) && !TextUtils.isEmpty(statMap.get(key))){
+            Log.i("tzy", "statistic: " + statMap.get(key));
+            XHClick.mapStat(getContext(),statMap.get(key),"","");
+            return;
+        }
         if(mStatisticCallback != null){
-            mStatisticCallback.onStatistic(id,twoLevel,data.get("text1"),index);
+            mStatisticCallback.onStatistic(id,twoLevel,key,index);
         }else{
             if(!TextUtils.isEmpty(id) && !TextUtils.isEmpty(twoLevel)){
-                XHClick.mapStat(getContext(),id,twoLevel,data.get("text1"));
+                XHClick.mapStat(getContext(),id,twoLevel,key);
             }
         }
     }

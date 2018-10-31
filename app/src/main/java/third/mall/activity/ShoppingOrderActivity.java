@@ -29,7 +29,6 @@ import java.util.Map;
 
 import acore.logic.XHClick;
 import acore.tools.FileManager;
-import acore.tools.PageStatisticsUtils;
 import acore.tools.Tools;
 import third.mall.adapter.AdapterShoppingOrder;
 import third.mall.adapter.AdapterShoppingOrder.OrderChangeCallBack;
@@ -234,7 +233,7 @@ public class ShoppingOrderActivity extends MallBaseActivity implements OnClickLi
 			@Override
 			public void loadstat(int flag, String url, Object msg, Object... stat) {
 				loadManager.showProgressBar();
-				loadManager.loadOver(flag, 1, true);
+				loadManager.loadOver(flag);
 				if (flag >= UtilInternet.REQ_OK_STRING) {
 					if(stat!=null&&stat.length>0&& !TextUtils.isEmpty((String)stat[0])){
 						mall_stat_statistic=(String) stat[0];
@@ -254,7 +253,7 @@ public class ShoppingOrderActivity extends MallBaseActivity implements OnClickLi
 								if (state >= UtilInternet.REQ_OK_STRING) {
 									setRequestAddress();
 								} else if (state == UtilInternet.REQ_CODE_ERROR) {
-									loadManager.loadOver(state, 1, true);
+									loadManager.loadOver(state);
 								}
 							}
 						});
@@ -450,7 +449,7 @@ public class ShoppingOrderActivity extends MallBaseActivity implements OnClickLi
 										if (state >= UtilInternet.REQ_OK_STRING) {
 											setCreateOrderByCart();
 										} else if (state == UtilInternet.REQ_CODE_ERROR) {
-											loadManager.loadOver(state, 1, true);
+											loadManager.loadOver(state);
 										}
 									}
 								});

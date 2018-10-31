@@ -29,6 +29,7 @@ import acore.widget.rvlistview.RvStaggeredGridView;
 import amodule._common.delegate.ISetAdController;
 import amodule._common.helper.WidgetDataHelper;
 import amodule._common.utility.WidgetUtility;
+import amodule.home.module.HomeVipGuideModule;
 import amodule.home.view.HomeBuoy;
 import amodule.home.view.HomeTitleLayout;
 import amodule.main.activity.MainHomePage;
@@ -64,8 +65,6 @@ public class HomeViewControler implements ISetAdController {
     private TextView mTipMessage;
 
     private View mNetworkTip;
-
-    private int scrollDataIndex = -1;//滚动数据的位置
 
     @SuppressLint("InflateParams")
     public HomeViewControler(MainHomePage activity) {
@@ -191,22 +190,6 @@ public class HomeViewControler implements ISetAdController {
         if (mHeaderControler != null) {
             mHeaderControler.saveStatisticData("home");
         }
-        int[] lastPositions = null;
-        StaggeredGridLayoutManager staggeredGridLayoutManager
-                = (StaggeredGridLayoutManager) recyclerView.getLayoutManager();
-        if (lastPositions == null) {
-            lastPositions = new int[staggeredGridLayoutManager.getSpanCount()];
-        }
-        staggeredGridLayoutManager.findLastVisibleItemPositions(lastPositions);
-        int lastVisibleItemPosition = Tools.findMax(lastPositions);
-        if (scrollDataIndex < (lastVisibleItemPosition - 1)) {
-            scrollDataIndex = (lastVisibleItemPosition - 1);
-        }
-        //列表
-        if (scrollDataIndex > 0) {
-            XHClick.saveStatictisFile("home", MainHomePage.recommedType_statictus, "", "", String.valueOf(scrollDataIndex), "list", "", "", "", "", "");
-            scrollDataIndex = -1;
-        }
     }
 
     public void setTipMessage() {
@@ -328,6 +311,14 @@ public class HomeViewControler implements ISetAdController {
         if (mTitleLayout != null) {
             mTitleLayout.setMessage(messageTipCount);
         }
+    }
+
+    public void setHomeVipBannerModule(HomeVipGuideModule module) {
+        mHeaderControler.setVipGuideData(module);
+    }
+
+    public void setHomeVipBannerViewVisible(boolean visible) {
+        mHeaderControler.setVipGuideVisible(visible);
     }
 
     /*--------------------------------------------- Get&Set ---------------------------------------------*/

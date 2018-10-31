@@ -62,7 +62,6 @@ public class  ShowWeb extends WebActivity implements IObserver {
 	private RelativeLayout shopping_layout;
 	private TextView mall_news_num,mall_news_num_two;
 	private JsAppCommon jsAppCommon;
-	private long startTime=0;
 	private String data_type="";
 	private String code="";//code--首页使用功能
 	private String module_type="";
@@ -101,7 +100,6 @@ public class  ShowWeb extends WebActivity implements IObserver {
 		// 正常调用
 		if (bundle != null) {
 			url = bundle.getString("url");
-			startTime=System.currentTimeMillis();
 			data_type = bundle.getString("data_type");
 			code= bundle.getString("code");
 			module_type= bundle.getString("module_type");
@@ -379,10 +377,6 @@ public class  ShowWeb extends WebActivity implements IObserver {
 
 	@Override
     protected void onDestroy() {
-        long nowTime = System.currentTimeMillis();
-        if (startTime > 0 && (nowTime - startTime) > 0 && !TextUtils.isEmpty(data_type) && !TextUtils.isEmpty(module_type)) {
-            XHClick.saveStatictisFile("ShowWeb", module_type, data_type, code, "", "stop", String.valueOf((nowTime - startTime) / 1000), "", "", "", "");
-        }
 		ObserverManager.getInstance().unRegisterObserver(this);
         super.onDestroy();
     }

@@ -103,8 +103,8 @@ public class CircleRobSofa extends BaseAppCompatActivity implements OnClickListe
 			mPageTime = "";
 		}
 		mCurrentPage ++;
+		loadManager.loading(mListView,isRefresh);
 		String url = StringManager.api_circleSafaList + "?cid=" + mCid + "&page=" + mCurrentPage + "&pageTime=" + mPageTime;
-		loadManager.changeMoreBtn(ReqInternet.REQ_OK_STRING, -1, -1, mCurrentPage,isRefresh);
 		ReqInternet.in().doGet(url, new InternetCallback() {
 			@Override
 			public void loaded(int flag, String url, Object msg) {
@@ -151,7 +151,7 @@ public class CircleRobSofa extends BaseAppCompatActivity implements OnClickListe
 					mEveryPageNum = loadCount;
 				}
 				mAdapter.notifyDataSetChanged();
-				mCurrentPage = loadManager.changeMoreBtn(flag, mEveryPageNum, loadCount, mCurrentPage,isRefresh);
+				loadManager.loadOver(flag,mListView,loadCount);
 				setRefreshIconVisibility(mCurrentPage);
 				mListView.onRefreshComplete();
 				if (isRefresh)

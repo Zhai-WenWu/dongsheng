@@ -37,6 +37,8 @@ import amodule.user.activity.login.LoginByAccout;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilString;
 
+import static xh.basic.internet.UtilInternet.REQ_OK_STRING;
+
 @SuppressLint("InflateParams")
 public class OfflineDishNew extends BaseActivity {
     private ListView listView = null;
@@ -134,7 +136,7 @@ public class OfflineDishNew extends BaseActivity {
                                         arrayList.clear();
                                         adapter.notifyDataSetChanged();
                                         loadManager.hideProgressBar();
-                                        loadManager.changeMoreBtn(UtilInternet.REQ_OK_STRING, 10, 0,1,true);
+                                        loadManager.loadEmpty(listView);
                                         rightBtn.setVisibility(View.GONE);
                                         findViewById(R.id.dish_offline_noData).setVisibility(View.VISIBLE);
                                         if(AppCommon.nextDownDish > 0 && AppCommon.nextDownDish < AppCommon.maxDownDish){
@@ -238,7 +240,7 @@ public class OfflineDishNew extends BaseActivity {
         loadPage = listMapByJson.size();
         adapter.notifyDataSetChanged();
         if (everyPage == 0) everyPage = 10;
-        currentPage = loadManager.changeMoreBtn(UtilInternet.REQ_OK_STRING, everyPage, loadPage,currentPage,isBlankSpace);
+        loadManager.loadOver(REQ_OK_STRING,listMapByJson,loadPage);
         loadManager.hideProgressBar();
         if (arrayList.size() == 0) {
             rightBtn.setVisibility(View.GONE);

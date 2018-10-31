@@ -57,7 +57,6 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
     private String module_type = "";
     private String img = "";//预加载图片
     public String code, dishTitle, state,dishName;//页面开启状态所必须的数据。
-    public static long startTime = 0;
     private Handler handlerScreen;
     private ListView listview;
     private DetailDishViewManager detailDishViewManager;//view控制器
@@ -84,7 +83,6 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        startTime= System.currentTimeMillis();
         initBundle();
         initView();
         initData();
@@ -97,7 +95,6 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
      */
     private void initBundle() {
         Bundle bundle = getIntent().getExtras();
-        startTime = System.currentTimeMillis();
         if (bundle != null) {
             code = bundle.getString("code");
             dishTitle = bundle.getString("name");
@@ -319,10 +316,6 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         //反注册。
         ObserverManager.getInstance().unRegisterObserver(this);
         if(detailDishViewManager!=null)detailDishViewManager.onDestroy();
-        long nowTime=System.currentTimeMillis();
-        if(startTime>0&&(nowTime-startTime)>0&&!TextUtils.isEmpty(data_type)&&!TextUtils.isEmpty(module_type)){
-            XHClick.saveStatictisFile("DetailDish",module_type,data_type,code,"","stop",String.valueOf((nowTime-startTime)/1000),"","","","");
-        }
         if(handlerScreen!=null){
             handlerScreen.removeCallbacksAndMessages(null);
             handlerScreen=null;

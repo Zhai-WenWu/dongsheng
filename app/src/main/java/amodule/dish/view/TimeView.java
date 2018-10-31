@@ -102,7 +102,7 @@ public class TimeView {
     @SuppressLint("NewApi")
     public void loadData() {
         currentPage++;
-        loadManager.changeMoreBtn(mListView, UtilInternet.REQ_OK_STRING, -1, -1, currentPage, arrayList.size() == 0);
+        loadManager.loading(mListView,arrayList.size() == 0);
         String url = null;
         if (type.equals("recommend"))
             url = StringManager.api_getDishList + "?type=" + type + "&page=" + currentPage;
@@ -164,7 +164,7 @@ public class TimeView {
                     adapter.notifyDataSetChanged();
                 }
                 if (everyPage == 0) everyPage = loadPage;
-                currentPage = loadManager.changeMoreBtn(mListView, flag, everyPage, loadPage, currentPage, arrayList.size() == 0);
+                loadManager.loadOver(flag,mListView,loadPage);
                 // 如果总数据为空,显示没有消息
                 if (flag >= UtilInternet.REQ_OK_STRING && arrayList.size() == 0) {
                     view.findViewById(R.id.dish_menu_noData).setVisibility(View.VISIBLE);

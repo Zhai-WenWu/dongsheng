@@ -253,7 +253,6 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
                     }
                 }
                 Log.i("zhangyujian", "点击：" + mDataMap.get("code") + ":::" + mTransferUrl);
-                XHClick.saveStatictisFile("home", getModleViewType(), mDataMap.get("type"), mDataMap.get("code"), "", "click", "", "", String.valueOf(mPosition + 1), "", "");
             }
             if (mTransferUrl.contains("dishInfo.app")
                     && !TextUtils.isEmpty(mDataMap.get("type"))
@@ -332,15 +331,6 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
         //设置数据
         if (mDataMap != null) {
             initData();
-            //统计---只展示一次，isShow 2已经显示
-            if (mModuleBean != null
-                    && MainHomePage.recommedType.equals(mModuleBean.getType())
-                    && !TextUtils.isEmpty(mDataMap.get("code"))
-                    && (!mDataMap.containsKey("isShowStatistic") || "1".equals(mDataMap.get("isShowStatistic")))) {//保证推荐模块类型
-                Log.i("zhangyujian", "展示曝光数据::" + mDataMap.get("name") + "::::" + mDataMap.get("type") + "::position:::" + position);
-                XHClick.saveStatictisFile("home", getModleViewType(), mDataMap.get("type"), mDataMap.get("code"), "", "show", "", "", String.valueOf(mPosition + 1), "", "");
-                mDataMap.put("isShowStatistic", "2");
-            }
         }
     }
 

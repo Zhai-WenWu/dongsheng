@@ -10,17 +10,27 @@ import android.util.Log;
 
 import com.annimon.stream.Stream;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import acore.logic.ActivityMethodManager;
+import acore.logic.ConfigHelper;
+import acore.logic.ConfigMannager;
+import acore.logic.LoginManager;
 import acore.override.XHApplication;
 import acore.override.helper.XHActivityManager;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
+import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule._common.delegate.ILoadAdData;
+import amodule.home.delegate.IVipGuideModuleCallback;
+import amodule.home.module.HomeVipGuideModule;
 import amodule.main.activity.MainHomePage;
 import amodule.main.bean.HomeModuleBean;
 import aplug.basic.InternetCallback;
@@ -34,7 +44,7 @@ import static third.ad.control.AdControlHomeDish.tag_yu;
 /**
  * 数据控制器
  */
-public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, ILoadAdData{
+public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, ILoadAdData {
 
     private XHAllAdControl mViewAdControl;
 
@@ -66,11 +76,11 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
 
     //注册刷新回调
     private void registerRefreshCallback() {
-        if(mActivity == null){
+        if (mActivity == null) {
             return;
         }
         ActivityMethodManager activityMethodManager = mActivity.getActMagager();
-        if(activityMethodManager != null){
+        if (activityMethodManager != null) {
             activityMethodManager.registerADController(this);
         }
         mAdControl.setRefreshCallback(() -> {
@@ -221,7 +231,9 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
         }
     }
 
-    /** 处理广告在主线程中处理 */
+    /**
+     * 处理广告在主线程中处理
+     */
     private void handlerMainThreadUIAD() {
         new Handler(Looper.getMainLooper()).post(() -> {
             mData = mAdControl.getNewAdData(mData, false);
@@ -253,14 +265,15 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
     public ArrayList<Map<String, String>> getData() {
         return mData;
     }
-    public void addOuputSideData(ArrayList<Map<String, String>> datas){
+
+    public void addOuputSideData(ArrayList<Map<String, String>> datas) {
         if (mInsertADCallback != null) {
             datas = mInsertADCallback.insertAD(datas, false);
             mData.addAll(datas);
         }
     }
 
-    public int getDataSize(){
+    public int getDataSize() {
         return mData != null ? mData.size() : 0;
     }
 
@@ -296,7 +309,9 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
     public void loadAdData(@NonNull ArrayList<String> listIds, @NonNull XHAllAdControl.XHBackIdsDataCallBack xhBackIdsDataCallBack, @NonNull Activity act, String StatisticKey) {
         if (ToolsDevice.isNetworkAvailable(act)) {
             mViewAdControl = new XHAllAdControl(listIds, (isRefresh, map) ->
-            {xhBackIdsDataCallBack.callBack(isRefresh, map);},
+            {
+                xhBackIdsDataCallBack.callBack(isRefresh, map);
+            },
                     XHActivityManager.getInstance().getCurrentActivity(),
                     StatisticKey);
 
@@ -305,12 +320,148 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
 
     @Override
     public void autoRefreshSelfAD() {
-        if(mAdControl != null){
+        if (mAdControl != null) {
             mAdControl.autoRefreshSelfAD();
         }
         if (mViewAdControl != null) {
             mViewAdControl.autoRefreshSelfAD();
         }
+    }
+
+    /**
+     * 获取首页VIP Banner数据
+     *
+     * @return
+     */
+    public void getHomeVipGuideModule(IVipGuideModuleCallback callback) {
+        String vipGuideStatus = ConfigHelper.getInstance().getConfigValueByKey(ConfigMannager.KEY_VIP_GUIDE_STATUS);
+        Map<String, String> vipGuideConfigMap = null;
+        if(TextUtils.isEmpty(vipGuideStatus)){
+            vipGuideConfigMap = StringManager.getFirstMap(FileManager.getFromAssets(XHApplication.in(),"vipBanner"));
+        } else {
+            vipGuideConfigMap = StringManager.getFirstMap(vipGuideStatus);
+        }
+        if(vipGuideConfigMap.isEmpty() || !TextUtils.equals("2",vipGuideConfigMap.get("isShow"))){
+            handleVipGuideCallback(callback, null);
+            return;
+        }
+        int minWillPast = Tools.parseIntOfThrow(vipGuideConfigMap.get("minWillPast"),7);
+        int minOverPasted = Tools.parseIntOfThrow(vipGuideConfigMap.get("minOverPasted"),60);
+
+        int days = 0;
+        String vipMaturityTime = LoginManager.getVipMaturityTime();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            if (vipMaturityTime != null) {
+                Date dateFirst = sdf.parse(vipMaturityTime);
+                Date dateSecond = new Date();
+                days = Tools.getIntervalDaysFromTwoDate(dateFirst, dateSecond);
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        //unOpen 未开通，willPasted 即将过期，minPasted 过期60天内，maxPasted 过期>60天
+        if (LoginManager.isVIP()) {
+            if (LoginManager.isLogin()) {
+                if (days >= 0 && days <= minWillPast) {//用户会员未到期，即将到期
+                    HomeVipGuideModule module = transformHomeVipGuideModule(vipGuideConfigMap.get("willPasted"),"2");
+                    module.setTitle(String.format(module.getTitle(), days));
+                    handleVipGuideCallback(callback, module);
+                } else {
+                    handleVipGuideCallback(callback, null);
+                }
+            } else {//未登录，设备会员
+                Map<String, String> finalGuideConfigData = vipGuideConfigMap;
+                LoginManager.initYiYuanBindState(XHApplication.in(), new Runnable() {
+                    @Override
+                    public void run() {
+                        int intervalDays = getTempVipIntervalDays();
+                        if (intervalDays >= 0 && intervalDays <= minWillPast) {
+                            HomeVipGuideModule module = transformHomeVipGuideModule(finalGuideConfigData.get("willPasted"), "2");
+                            module.setTitle(String.format(module.getTitle(), intervalDays));
+                            handleVipGuideCallback(callback, module);
+                        } else {
+                            handleVipGuideCallback(callback, null);
+                        }
+                    }
+                });
+            }
+        } else {//非会员
+            HomeVipGuideModule module = null;
+            if (days < 0 && Math.abs(days) <= minOverPasted) {//登录用户，已过期
+                module = transformHomeVipGuideModule(vipGuideConfigMap.get("minPasted"),"3");
+                if(module != null && module.getTitle() != null){
+                    module.setTitle(String.format(module.getTitle(), String.valueOf(Math.abs(days))));
+                }
+            } else if (days < 0 && Math.abs(days) > minOverPasted) {//登录用户，已过期
+                module = transformHomeVipGuideModule(vipGuideConfigMap.get("maxPasted"),"3");
+            } else {//已登录或者未登录的  1.是设备会员，2.不是设备会员，
+                Map<String, String> finalVipGuideConfigMap = vipGuideConfigMap;
+                if (LoginManager.isLogin()) {//已登录，未注册过会员
+                    module = transformHomeVipGuideModule(finalVipGuideConfigMap.get("unOpen"),"1");
+                } else {//未登录，设备会员和非设备会员
+                    LoginManager.initYiYuanBindState(XHApplication.in(), new Runnable() {
+                        @Override
+                        public void run() {
+                            if (LoginManager.isTempVip()) {
+                                int intervalDays = getTempVipIntervalDays();
+                                if (intervalDays >= 0 && intervalDays <= minWillPast) {
+                                    HomeVipGuideModule module = transformHomeVipGuideModule(finalVipGuideConfigMap.get("willPasted"), "2");
+                                    module.setTitle(String.format(module.getTitle(), intervalDays));
+                                    handleVipGuideCallback(callback, module);
+                                } else {
+                                    handleVipGuideCallback(callback, null);
+                                }
+                            } else {
+                                HomeVipGuideModule module = transformHomeVipGuideModule(finalVipGuideConfigMap.get("unOpen"), "1");
+                                handleVipGuideCallback(callback, module);
+                            }
+                        }
+                    });
+                    return;
+                }
+            }
+            handleVipGuideCallback(callback,module);
+        }
+
+    }
+
+    private int getTempVipIntervalDays() {
+        //单位：秒
+        String tempVipDay = (String) FileManager.loadShared(XHApplication.in(), FileManager.xmlFile_appInfo, "maturity_temp_time");
+        long tvd = Tools.parseLongOfThrow(tempVipDay) * 1000;
+        long currTime = System.currentTimeMillis();
+        int intervalDays = 0;
+        if (tvd > currTime) {
+            intervalDays = (int) Math.ceil((tvd - currTime) * 1.00 / (1000 * 60 * 60 * 24));
+        } else {
+            intervalDays = (int) Math.floor((tvd - currTime) * 1.00 / (1000 * 60 * 60 * 24));
+        }
+        return intervalDays;
+    }
+
+    private void handleVipGuideCallback(IVipGuideModuleCallback callback, @Nullable HomeVipGuideModule module) {
+        if (callback != null) {
+            callback.onModuleCallback(module);
+        }
+    }
+
+    @Nullable
+    private HomeVipGuideModule transformHomeVipGuideModule(String dataStr, String status){
+        if(TextUtils.isEmpty(dataStr)){
+            return null;
+        }
+        Map<String,String> map = StringManager.getFirstMap(dataStr);
+        if(map.isEmpty()){
+            return null;
+        }
+        HomeVipGuideModule module = new HomeVipGuideModule();
+        module.setVipMaturityStatus(status);
+        module.setTitle(map.get("title"));
+        module.setSubtitle(map.get("subTitle"));
+        module.setDesc(map.get("btnTitle"));
+        module.setGotoUrl(map.get("clickUrl"));
+        return module;
     }
 
     /*--------------------------------------------- Interface ---------------------------------------------*/

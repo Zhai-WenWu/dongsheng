@@ -138,7 +138,7 @@ public class FriendQuan extends BaseActivity {
 			loadCount++;
 		}
 		adapterFriend.notifyDataSetChanged();
-		currentPageFriend = loadManager.changeMoreBtn(UtilInternet.REQ_OK_STRING, everyPageFriend, loadCount, currentPageFriend,dataFriend.size() == 0);
+		loadManager.loadOver(50,listFriend,loadCount);
 	}
 
 	private void refershNetworkData(String getUrl) {
@@ -171,7 +171,7 @@ public class FriendQuan extends BaseActivity {
 					// 如果是重新加载的,选中第一个tab.
 					listFriend.setSelection(1);
 				}
-				currentPageFriend = loadManager.changeMoreBtn(flag, everyPageFriend, loadCount, currentPageFriend,dataFriend.size() == 0);
+				loadManager.loadOver(flag,listFriend,loadCount);
 				listFriend.onRefreshComplete();
 			}
 		});

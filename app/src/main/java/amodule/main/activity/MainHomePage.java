@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 
@@ -15,9 +14,7 @@ import com.xiangha.R;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Random;
 
 import acore.broadcast.ConnectionChangeReceiver;
 import acore.logic.ConfigMannager;
@@ -30,12 +27,12 @@ import acore.tools.IObserver;
 import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
-import amodule._common.conf.FavoriteTypeEnum;
-import amodule._common.conf.GlobalFavoriteModule;
 import amodule._common.conf.GlobalVariableConfig;
 import amodule._common.helper.WidgetDataHelper;
 import amodule.home.HomeDataControler;
 import amodule.home.HomeViewControler;
+import amodule.home.delegate.IVipGuideModuleCallback;
+import amodule.home.module.HomeVipGuideModule;
 import amodule.main.Main;
 import amodule.main.adapter.HomeAdapter;
 import amodule.main.delegate.ISetMessageTip;
@@ -47,6 +44,10 @@ import third.ad.tools.AdPlayIdConfig;
 
 import static acore.logic.ConfigMannager.KEY_LOGPOSTTIME;
 import static acore.logic.stat.StatisticsManager.STAT_DATA;
+import static acore.tools.ObserverManager.NOTIFY_AUTO_LOGIN;
+import static acore.tools.ObserverManager.NOTIFY_LOGIN;
+import static acore.tools.ObserverManager.NOTIFY_LOGOUT;
+import static acore.tools.ObserverManager.NOTIFY_VIPSTATE_CHANGED;
 
 /**
  * 首页
@@ -72,8 +73,6 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
 
     boolean mRecommendFirstLoad = true;
 
-    protected long startTime = -1;//开始的时间戳
-
     private ConnectionChangeReceiver mReceiver;
     private Handler handler = new Handler();
     @Override
@@ -90,7 +89,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
 
         initPostTime();
         //注册通知
-        ObserverManager.getInstance().registerObserver(this, ObserverManager.NOTIFY_VIPSTATE_CHANGED);
+        ObserverManager.getInstance().registerObserver(this, NOTIFY_VIPSTATE_CHANGED, NOTIFY_LOGIN, NOTIFY_LOGOUT,NOTIFY_AUTO_LOGIN);
         registerConnectionReceiver();
     }
 
@@ -204,6 +203,29 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
         mViewContrloer.setTipMessage();
     }
 
+    public void handleVipGuideStatus() {
+        setVipGuide();
+    }
+
+    private void setVipGuide() {
+        MainHomePage.this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (mDataControler != null) {
+                    mDataControler.getHomeVipGuideModule(new IVipGuideModuleCallback() {
+                        @Override
+                        public void onModuleCallback(HomeVipGuideModule module) {
+                            if (mViewContrloer != null) {
+                                mViewContrloer.setHomeVipBannerModule(module);
+                                mViewContrloer.setHomeVipBannerViewVisible(module != null);
+                            }
+                        }
+                    });
+                }
+            }
+        });
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -280,6 +302,12 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
                                         mDataControler.setNextUrl(data.get("nexturl"));
                                         notifyDataChanged();
                                     }
+
+                                    Map<String,String> parameterMap = StringManager.getFirstMap(widgetData.get(WidgetDataHelper.KEY_PARAMETER));
+                                    parameterMap = StringManager.getFirstMap(parameterMap.get(WidgetDataHelper.KEY_TITLE));
+                                    if(mViewContrloer != null && !TextUtils.isEmpty(parameterMap.get("text1"))){
+                                        mViewContrloer.setFeedTitleText(parameterMap.get("text1"));
+                                    }
                                 }
                             } else {
                                 mViewContrloer.setHeaderData(list, isCache);
@@ -312,7 +340,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
         mDataControler.loadServiceFeedData(firstLoad, new HomeDataControler.OnLoadDataCallback() {
             @Override
             public void onPrepare() {
-                loadManager.changeMoreBtn(mViewContrloer.getRvListView(), ReqInternet.REQ_OK_STRING, -1, -1, LoadOver ? 2 : 1, !LoadOver);
+                loadManager.loading(mViewContrloer.getRvListView(),  !LoadOver);
                 Button loadmore = loadManager.getSingleLoadMore(mViewContrloer.getRvListView());
                 if (null != loadmore) {
                     loadmore.setVisibility(View.VISIBLE);
@@ -324,7 +352,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
                 loadManager.hideProgressBar();
                 mViewContrloer.setFeedheaderVisibility(!mDataControler.getData().isEmpty());
                 if (ToolsDevice.isNetworkAvailable(MainHomePage.this)) {
-                    loadManager.changeMoreBtn(mViewContrloer.getRvListView(), flag, LoadManager.FOOTTIME_PAGE, loadCount, 0, false);
+                    loadManager.loadOver(flag,mViewContrloer.getRvListView(), loadCount);
                 } else {
 
                 }
@@ -337,10 +365,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
             @Override
             public void onFailed() {
                 if (!ToolsDevice.isNetworkAvailable(MainHomePage.this)) {
-                    loadManager.changeMoreBtn(mViewContrloer.getRvListView(),
-                            ReqInternet.REQ_OK_STRING,
-                            LoadManager.FOOTTIME_PAGE,
-                            -1, 0, false);
+                    loadManager.loadOver(0,mViewContrloer.getRvListView(), 1);
                 }
             }
         });
@@ -354,7 +379,6 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
             mDataControler.isNeedRefresh(false);
         }
         onResumeFake();
-        setRecommedTime(System.currentTimeMillis());
         if (mNeedRefCurrFm) {
             mNeedRefCurrFm = false;
             refresh();
@@ -369,7 +393,6 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
     @Override
     protected void onPause() {
         super.onPause();
-        setRecommedStatistic();
         if(mViewContrloer != null){
             mViewContrloer.setStatisticShowNum();
         }
@@ -393,9 +416,15 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
     public void notify(String name, Object sender, Object data) {
         if (!TextUtils.isEmpty(name)) {
             switch (name) {
-                case ObserverManager.NOTIFY_VIPSTATE_CHANGED://VIP 状态发生改变需要刷新
+                case NOTIFY_VIPSTATE_CHANGED://VIP 状态发生改变需要刷新
                     Log.i("tzy", "VIP 状态发生改变需要刷新");
                     mNeedRefCurrFm = true;
+                    setVipGuide();
+                    break;
+                case NOTIFY_AUTO_LOGIN:
+                case NOTIFY_LOGIN:
+                case NOTIFY_LOGOUT:
+                    setVipGuide();
                     break;
             }
         }
@@ -408,6 +437,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
         mViewContrloer.autoRefresh();
         GlobalVariableConfig.clearFavoriteModules();
         GlobalVariableConfig.clearAttentionModules();
+        setVipGuide();
     }
 
     private void innerRefresh() {
@@ -423,21 +453,6 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
 
     private void onResumeFake() {
         SpecialWebControl.initSpecialWeb(this, rl, "index", "", "");
-    }
-
-    /** 统计推荐列表使用时间 */
-    private void setRecommedStatistic() {
-        long nowTime = System.currentTimeMillis();
-        if (startTime > 0) {
-            Log.i("zyj", "stop::" + String.valueOf((nowTime - startTime) / 1000));
-            XHClick.saveStatictisFile("home", recommedType_statictus, "", "", "", "stop", String.valueOf((nowTime - startTime) / 1000), "", "", "", "");
-            //置数据
-            setRecommedTime(0);
-        }
-    }
-
-    public void setRecommedTime(long time) {
-        this.startTime = time;
     }
 
     @Override
