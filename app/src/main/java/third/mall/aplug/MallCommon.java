@@ -280,7 +280,7 @@ public class MallCommon {
 			public void loadstat(int flag, String url, Object msg, Object... stat) {
 
 				if(loadManager!=null)
-					loadManager.loadOver(flag, 1, true);
+					loadManager.loadOver(flag);
 				if(flag>=ReqInternet.REQ_OK_STRING){
 					ArrayList<Map<String, String>> listMapByJson = UtilString.getListMapByJson(msg);
 					String num= listMapByJson.get(0).get("new_product");

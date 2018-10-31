@@ -775,7 +775,7 @@ public class ArticleDetailActivity extends BaseActivity {
                     analysRelateData(listMap);
                     mArticleAdContrler.handlerAdData(allDataListMap);
                     detailAdapter.notifyDataSetChanged();
-                    loadManager.changeMoreBtn(flag, 10, 0, 3, false);
+                    loadManager.loadOver(flag,listView);
                     listView.removeFooterView(loadManager.getSingleLoadMore(listView));
                 }
             }

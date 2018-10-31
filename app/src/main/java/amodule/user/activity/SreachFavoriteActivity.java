@@ -162,7 +162,7 @@ public class SreachFavoriteActivity extends BaseActivity implements View.OnClick
         LinkedHashMap<String, String> params = new LinkedHashMap<>();
         params.put("page", String.valueOf(currentpage));
         params.put("name", searchWord);
-        loadManager.changeMoreBtn(ReqInternet.REQ_OK_STRING, -1, -1, currentpage, false);
+        loadManager.loading(mRvListview,false);
         ReqEncyptInternet.in().doEncypt(StringManager.API_COLLECTIONLIST, params, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object msg) {
@@ -184,7 +184,7 @@ public class SreachFavoriteActivity extends BaseActivity implements View.OnClick
                 if (isRefresh)
                     mRefreshLayout.refreshComplete();
                 handlerNoData();
-                loadManager.changeMoreBtn(flag, everyPage, loadCount, currentpage, mSearchData.isEmpty());
+                loadManager.loadOver(flag,mRvListview,loadCount);
             }
         });
     }

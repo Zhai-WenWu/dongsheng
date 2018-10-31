@@ -571,7 +571,7 @@ public class ShowSubject extends BaseAppCompatActivity {
 		}
 		// 获取加载页面
 		int currentPage = isForward ? currentUpPage : currentDownPage;
-		loadManager.changeMoreBtn(UtilInternet.REQ_OK_STRING, -1, -1, currentPage, listDataSubjectInfo.size() == 0);
+		loadManager.loading(listSubject,listDataSubjectInfo.size()==0);
 		String getUrl = StringManager.api_circlegetInfo + "?code=" + subCode + "&page=" + currentPage;
 		ReqInternet.in().doGet(getUrl, new InternetCallback() {
 			@Override
@@ -619,7 +619,7 @@ public class ShowSubject extends BaseAppCompatActivity {
 				if (relEveryPage == 0) {
 					relEveryPage = loadCount;
 				}
-				currentDownPage = loadManager.changeMoreBtn(flag, relEveryPage, loadCount, currentDownPage, listDataSubjectInfo.size() == 0);
+				loadManager.loadOver(flag,listSubject,loadCount);
 				listSubject.onRefreshComplete();
 			}
 		});

@@ -98,7 +98,7 @@ public class CircleFind extends BaseActivity{
 		} else {
 			currentPage++;
 		}
-		loadManager.changeMoreBtn(UtilInternet.REQ_OK_STRING, -1, -1, currentPage,listData.size() == 0);
+		loadManager.loading(mLvSur,listData.size() == 0);
 		String getUrl = StringManager.api_circleFind + "?page=" + currentPage;
 		ReqInternet.in().doGet(getUrl, new InternetCallback() {
 			@Override
@@ -122,7 +122,7 @@ public class CircleFind extends BaseActivity{
 				}
 //				if (everyPage == 0)
 //					everyPage = loadCount;
-				currentPage = loadManager.changeMoreBtn(flag, everyPage, loadCount, currentPage,listData.size() == 0);
+				loadManager.loadOver(flag,mLvSur, loadCount);
 				mLvSur.onRefreshComplete();
 				if(loadMore != null){
 					if(!loadMore.isEnabled()){

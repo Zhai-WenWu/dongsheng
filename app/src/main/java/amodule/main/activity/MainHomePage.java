@@ -340,7 +340,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
         mDataControler.loadServiceFeedData(firstLoad, new HomeDataControler.OnLoadDataCallback() {
             @Override
             public void onPrepare() {
-                loadManager.changeMoreBtn(mViewContrloer.getRvListView(), ReqInternet.REQ_OK_STRING, -1, -1, LoadOver ? 2 : 1, !LoadOver);
+                loadManager.loading(mViewContrloer.getRvListView(),  !LoadOver);
                 Button loadmore = loadManager.getSingleLoadMore(mViewContrloer.getRvListView());
                 if (null != loadmore) {
                     loadmore.setVisibility(View.VISIBLE);
@@ -352,7 +352,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
                 loadManager.hideProgressBar();
                 mViewContrloer.setFeedheaderVisibility(!mDataControler.getData().isEmpty());
                 if (ToolsDevice.isNetworkAvailable(MainHomePage.this)) {
-                    loadManager.changeMoreBtn(mViewContrloer.getRvListView(), flag, LoadManager.FOOTTIME_PAGE, loadCount, 0, false);
+                    loadManager.loadOver(flag,mViewContrloer.getRvListView(), loadCount);
                 } else {
 
                 }
@@ -365,10 +365,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
             @Override
             public void onFailed() {
                 if (!ToolsDevice.isNetworkAvailable(MainHomePage.this)) {
-                    loadManager.changeMoreBtn(mViewContrloer.getRvListView(),
-                            ReqInternet.REQ_OK_STRING,
-                            LoadManager.FOOTTIME_PAGE,
-                            -1, 0, false);
+                    loadManager.loadOver(0,mViewContrloer.getRvListView(), 1);
                 }
             }
         });

@@ -180,7 +180,7 @@ public class CircleHome extends BaseAppCompatActivity implements OnClickListener
                     // 失败处理
 
                 }
-                loadManager.loadOver(flag, 1, true);
+                loadManager.loadOver(flag);
             }
         });
     }

@@ -80,15 +80,10 @@ public class Feedback extends BaseActivity implements OnClickListener {
         Token = XGPushServer.getXGToken(this);
         initActivity("香哈小秘书", 2, 0, R.layout.c_view_bar_title, R.layout.a_xh_feedback);
         // 设置加载
-        loadManager.setLoading("香哈小秘书", new InternetCallback() {
+        loadManager.setLoading(new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
-                loadManager.setLoading(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        init();
-                    }
-                });
+                loadManager.setLoading(v -> init());
             }
         });
 

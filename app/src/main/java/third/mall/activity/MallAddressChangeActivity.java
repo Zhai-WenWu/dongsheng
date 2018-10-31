@@ -99,13 +99,13 @@ public class MallAddressChangeActivity extends MallBaseActivity implements OnCli
 	
 	private void setRequest(final boolean isFirst){
 		ListData.clear();
-		loadManager.changeMoreBtn(UtilInternet.REQ_OK_STRING, -1, -1, 1,ListData.size()==0);
+		loadManager.loading(address_list,ListData.isEmpty());
 		url=MallStringManager.mall_getShippingAddress;
 		MallReqInternet.in().doGet(url, new MallInternetCallback() {
 			@Override
 			public void loadstat(int flag, String url, Object msg, Object... stat) {
 
-				loadManager.loadOver(flag, 1,true);
+				loadManager.loadOver(flag);
 				if(flag>=UtilInternet.REQ_OK_STRING){
 					if(stat!=null&&stat.length>0&& !TextUtils.isEmpty((String)stat[0])){
 						mall_stat_statistic=(String) stat[0];
@@ -137,7 +137,7 @@ public class MallAddressChangeActivity extends MallBaseActivity implements OnCli
 								if(state>=UtilInternet.REQ_OK_STRING){
 									setRequest(false);
 								}else if(state==UtilInternet.REQ_CODE_ERROR){
-									loadManager.loadOver(state, 1,true);
+									loadManager.loadOver(state);
 								}
 							}
 						});

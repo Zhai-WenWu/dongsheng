@@ -314,7 +314,7 @@ public class ListDish extends BaseActivity {
             requestFavoriteState();
         }
         currentPage++;
-        loadManager.changeMoreBtn(UtilInternet.REQ_OK_STRING, -1, -1, currentPage, arrayList.size() == 0);
+        loadManager.loading(listView,arrayList.size() == 0);
         String url = null;
         if (type.equals("recommend"))
             url = StringManager.api_getDishList + "?type=" + type + "&page=" + currentPage;
@@ -431,7 +431,7 @@ public class ListDish extends BaseActivity {
                     adapter.notifyDataSetChanged();
                 }
                 if (everyPage == 0) everyPage = loadPage;
-                currentPage = loadManager.changeMoreBtn(flag, everyPage, loadPage, currentPage, arrayList.size() == 0);
+                loadManager.loadOver(flag,listView,loadPage);
                 // 如果总数据为空,显示没有消息
                 if (flag >= UtilInternet.REQ_OK_STRING && arrayList.size() == 0) {
                     findViewById(R.id.dish_menu_noData).setVisibility(View.VISIBLE);

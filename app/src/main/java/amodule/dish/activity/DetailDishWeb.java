@@ -244,11 +244,11 @@ public class DetailDishWeb extends BaseAppCompatActivity implements IObserver {
                             handlerOtherTieData();//不隐藏。
                         }
                     } else {
-                        loadManager.loadOver(flag, 1, true);
+                        loadManager.loadOver(flag);
                     }
                 }
                 if(ToolsDevice.isNetworkAvailable(XHApplication.in())|| !LoadImage.SAVE_LONG.equals(imgLevel)){
-                    loadManager.loadOver(flag, 1, true);
+                    loadManager.loadOver(flag);
                 }else loadManager.hideProgressBar();
                 loadOver = true;
             }

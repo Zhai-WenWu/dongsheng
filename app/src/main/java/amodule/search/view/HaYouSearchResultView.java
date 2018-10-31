@@ -120,7 +120,7 @@ public class HaYouSearchResultView extends RelativeLayout {
     private void getData() {
         mActivity.loadManager.showProgressBar();
         currentPage++;
-        loadManager.changeMoreBtn(listView, UtilInternet.REQ_OK_STRING, -1, -1, currentPage, arrayList.size() == 0);
+        loadManager.loading(listView, arrayList.size() == 0);
         String url = StringManager.api_soList + "?type=customer&s=" + searchKey + "&page=" + currentPage;
         ReqInternet.in().doGet(url, new InternetCallback() {
             @Override
@@ -158,7 +158,7 @@ public class HaYouSearchResultView extends RelativeLayout {
                     listView.setVisibility(View.GONE);
                 }
 
-                currentPage = loadManager.changeMoreBtn(listView, flag, everyPage, loadPage, currentPage, arrayList.size() == 0);
+                loadManager.loadOver(flag,listView, loadPage);
             }
         });
     }

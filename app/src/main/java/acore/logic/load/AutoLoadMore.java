@@ -1,6 +1,7 @@
 package acore.logic.load;
 
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +15,8 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ListView;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import acore.tools.Tools;
 import acore.widget.DownRefreshList;
 import acore.widget.DownRefreshList.OnRefreshListener;
@@ -21,6 +24,8 @@ import acore.widget.LayoutScroll;
 import acore.widget.ScrollLinearListLayout;
 import acore.widget.rvlistview.RvListView;
 import aplug.stickheaderlayout.PlaceHoderHeaderLayout;
+
+import static android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
 
 public class AutoLoadMore {
 
@@ -44,7 +49,7 @@ public class AutoLoadMore {
 				} else {
 					view.setTag ("atTop");
 				}
-				if (scrollState == OnScrollListener.SCROLL_STATE_IDLE && gridView.getAdapter () != null) {
+				if (scrollState == SCROLL_STATE_IDLE && gridView.getAdapter () != null) {
 					if (loadMore.getText ().equals ("没有更多咯") && !lastPage) {
 						Tools.showToast (view.getContext (), "没有更多咯");
 						lastPage = true;
@@ -81,32 +86,7 @@ public class AutoLoadMore {
 			list.removeFooterView(loadMore);
 		}
 		list.addFooterView (loadMore);
-		list.setOnScrollListener (new OnScrollListener () {
-			int visibleLast = -1;
-			boolean alowLoad = true;
-
-			@Override
-			public void onScroll (AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-				visibleLast = firstVisibleItem + visibleItemCount;
-			}
-
-			@Override
-			public void onScrollStateChanged (AbsListView arg0, int scrollState) {
-				if (scrollState == OnScrollListener.SCROLL_STATE_IDLE && list.getAdapter () != null && list.getAdapter ().getCount () - 4 <= visibleLast && loadMore.isEnabled ()) {
-					// 避免疯狂加载
-					if (alowLoad) {
-						alowLoad = false;
-						clicker.onClick (loadMore);
-						new Handler ().postDelayed (new Runnable () {
-							@Override
-							public void run () {
-								alowLoad = true;
-							}
-						}, 500);
-					}
-				}
-			}
-		});
+		list.setOnScrollListener(getListViewScrollListener(loadMore, clicker, true,null));
 	}
 
 	/**
@@ -121,38 +101,7 @@ public class AutoLoadMore {
 			list.removeFooterView(loadMore);
 		}
 		list.addFooterView (loadMore);
-		list.setOnScrollListener (new OnScrollListener () {
-			int visibleLast = -1;
-			boolean alowLoad = true;
-
-			@Override
-			public void onScroll (AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-				visibleLast = firstVisibleItem + visibleItemCount;
-				if (scrollListener != null) {
-					scrollListener.onScroll (view, firstVisibleItem, visibleItemCount, totalItemCount);
-				}
-			}
-
-			@Override
-			public void onScrollStateChanged (AbsListView arg0, int scrollState) {
-				if (scrollState == OnScrollListener.SCROLL_STATE_IDLE && list.getAdapter () != null && list.getAdapter ().getCount () - 4 <= visibleLast && loadMore.isEnabled ()) {
-					// 避免疯狂加载
-					if (alowLoad) {
-						alowLoad = false;
-						clicker.onClick (loadMore);
-						new Handler ().postDelayed (new Runnable () {
-							@Override
-							public void run () {
-								alowLoad = true;
-							}
-						}, 500);
-					}
-				}
-				if (scrollListener != null) {
-					scrollListener.onScrollStateChanged (arg0, scrollState);
-				}
-			}
-		});
+		list.setOnScrollListener(getListViewScrollListener(loadMore, clicker, true,null));
 	}
 
 	/**
@@ -169,29 +118,34 @@ public class AutoLoadMore {
 		}
 		list.addFooterView (loadMore);
 		placeHoderHeaderLayout.setOnListScrollListener (new OnListScrollListener () {
+			int previousVisibleFirst = -1;
 			int visibleLast = -1;
-			boolean alowLoad = true;
+			int totalCount = 0;
+			AtomicBoolean allow = new AtomicBoolean(true);
+			int currentState;
 
 			@Override
 			public void onScroll (AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 				visibleLast = firstVisibleItem + visibleItemCount;
+				if (!allow.get()) {
+					allow.set(totalCount != view.getAdapter().getCount());
+				}
+				if (allow.get()) {
+					if (view.getAdapter() != null && view.getAdapter().getCount() - 4 <= visibleLast
+							&& (currentState != SCROLL_STATE_IDLE || true)) {
+						allow.set(false);
+						totalCount = view.getAdapter().getCount();
+						if (clicker != null) {
+							clicker.onClick(loadMore);
+						}
+					}
+				}
+				previousVisibleFirst = firstVisibleItem;
 			}
 
 			@Override
 			public void onScrollStateChanged (AbsListView arg0, int scrollState) {
-				if (scrollState == OnScrollListener.SCROLL_STATE_IDLE && list.getAdapter () != null && list.getAdapter ().getCount () - 4 <= visibleLast && loadMore.isEnabled ()) {
-					// 避免疯狂加载
-					if (alowLoad) {
-						alowLoad = false;
-						clicker.onClick (loadMore);
-						new Handler ().postDelayed (new Runnable () {
-							@Override
-							public void run () {
-								alowLoad = true;
-							}
-						}, 500);
-					}
-				}
+
 			}
 		});
 	}
@@ -209,35 +163,47 @@ public class AutoLoadMore {
 			list.removeFooterView(loadMore);
 		}
 		list.addFooterView (loadMore);
-		scrollLinearListLayout.addOnScrollListener (new AbsListView.OnScrollListener () {
+		scrollLinearListLayout.addOnScrollListener(getListViewScrollListener(loadMore, clicker, true,null));
+	}
+
+	@NonNull
+	private static OnScrollListener getListViewScrollListener(Button loadMore, OnClickListener clicker, boolean isAuto,OnScrollListener onScrollListener) {
+		return new OnScrollListener() {
+			int previousVisibleFirst = -1;
 			int visibleLast = -1;
-			boolean alowLoad = true;
+			int totalCount = 0;
+			AtomicBoolean allow = new AtomicBoolean(true);
+			int currentState;
 
 			@Override
 			public void onScroll (AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+				if(onScrollListener != null){
+					onScrollListener.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
+				}
 				visibleLast = firstVisibleItem + visibleItemCount;
+				if (!allow.get()) {
+					allow.set(totalCount != view.getAdapter().getCount());
+				}
+				if (allow.get()) {
+					if (view.getAdapter() != null && view.getAdapter().getCount() - 4 <= visibleLast
+							&& (currentState != SCROLL_STATE_IDLE || isAuto)) {
+						allow.set(false);
+						totalCount = view.getAdapter().getCount();
+						if (clicker != null) {
+							clicker.onClick(loadMore);
+						}
+					}
+				}
+				previousVisibleFirst = firstVisibleItem;
 			}
 
 			@Override
 			public void onScrollStateChanged (AbsListView arg0, int scrollState) {
-				if (scrollState == OnScrollListener.SCROLL_STATE_IDLE
-						&& list.getAdapter () != null
-						&& list.getAdapter ().getCount () - 4 <= visibleLast
-						&& loadMore.isEnabled ()) {
-					// 避免疯狂加载
-					if (alowLoad) {
-						alowLoad = false;
-						clicker.onClick (loadMore);
-						new Handler ().postDelayed (new Runnable () {
-							@Override
-							public void run () {
-								alowLoad = true;
-							}
-						}, 500);
-					}
+				if(onScrollListener != null){
+					onScrollListener.onScrollStateChanged(arg0, scrollState);
 				}
 			}
-		});
+		};
 	}
 
 	/**
@@ -368,7 +334,7 @@ public class AutoLoadMore {
 					scrollHeight = scrollLayout.getHeight ();
 					bottomHeight = backLayout.getHeight ();
 				}
-				if (scrollState == OnScrollListener.SCROLL_STATE_IDLE &&
+				if (scrollState == SCROLL_STATE_IDLE &&
 						list.getAdapter () != null &&
 						list.getAdapter ().getCount () - 4 <= visibleLast &&
 						loadMore.isEnabled ()) {
@@ -437,7 +403,7 @@ public class AutoLoadMore {
 			@Override
 			public void onScrollStateChanged (AbsListView arg0, int scrollState) {
 				if(viewScrollCallBack!=null)viewScrollCallBack.onScrollStateChanged(arg0,scrollState);
-				if (loadMore != null && scrollState == OnScrollListener.SCROLL_STATE_IDLE &&
+				if (loadMore != null && scrollState == SCROLL_STATE_IDLE &&
 						list.getAdapter () != null &&
 						list.getAdapter ().getCount () - 4 <= visibleLast &&
 						loadMore.isEnabled ()) {
@@ -462,77 +428,37 @@ public class AutoLoadMore {
 		final RecyclerView.LayoutManager layoutManager = listView.getLayoutManager();
 		final RecyclerView.Adapter adapter = listView.getAdapter();
 		listView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-			boolean alowLoad = true;
+			int visibleLast = -1;
+			int totalCount;
+			boolean allow = true;
 			@Override
 			public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
 				super.onScrollStateChanged(recyclerView, newState);
-
-				if(layoutManager instanceof LinearLayoutManager) {
-					int lastVisibleItemPosition = ((LinearLayoutManager)layoutManager).findLastVisibleItemPosition();
-					if (loadMore != null
-							&& newState == RecyclerView.SCROLL_STATE_IDLE
-							&& lastVisibleItemPosition + 1 >= adapter.getItemCount() - 4
-							&& loadMore.isEnabled()) {
-						if (alowLoad) {
-							alowLoad = false;
-							clicker.onClick(loadMore);
-							new Handler().postDelayed(new Runnable() {
-								@Override
-								public void run() {
-									alowLoad = true;
-								}
-							}, 500);
-						}
-					}
-				}else if(layoutManager instanceof StaggeredGridLayoutManager){//瀑布流处理---还要再次调整
-					int[] lastPositions = null;
-					StaggeredGridLayoutManager staggeredGridLayoutManager
-							= (StaggeredGridLayoutManager) layoutManager;
-					if (lastPositions == null) {
-						lastPositions = new int[staggeredGridLayoutManager.getSpanCount()];
-					}
-					staggeredGridLayoutManager.findLastVisibleItemPositions(lastPositions);
-					int lastVisibleItemPosition = Tools.findMax(lastPositions);
-					int visibleItemCount = layoutManager.getChildCount();
-					int totalItemCount = layoutManager.getItemCount();
-					if((visibleItemCount > 0 && newState == RecyclerView.SCROLL_STATE_IDLE &&
-							(lastVisibleItemPosition) >= totalItemCount - 1)&&loadMore != null&&loadMore.isEnabled()){
-						if (alowLoad) {
-							alowLoad = false;
-							clicker.onClick(loadMore);
-							new Handler().postDelayed(new Runnable() {
-								@Override
-								public void run() {
-									alowLoad = true;
-								}
-							}, 500);
-						}
-					}
-				}else if(layoutManager instanceof GridLayoutManager){//网格布局
-					int lastVisibleItemPosition = ((GridLayoutManager) layoutManager).findLastVisibleItemPosition();
-					int visibleItemCount = layoutManager.getChildCount();
-					int totalItemCount = layoutManager.getItemCount();
-					if((visibleItemCount > 0 && newState == RecyclerView.SCROLL_STATE_IDLE &&
-							(lastVisibleItemPosition) >= totalItemCount - 1)&&loadMore != null&&loadMore.isEnabled()){
-						if (alowLoad) {
-							alowLoad = false;
-							clicker.onClick(loadMore);
-							new Handler().postDelayed(new Runnable() {
-								@Override
-								public void run() {
-									alowLoad = true;
-								}
-							}, 500);
-						}
-					}
-				}
 			}
 
 			@Override
 			public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
 				super.onScrolled(recyclerView, dx, dy);
-
-
+				RecyclerView.LayoutManager mLayoutManager = recyclerView.getLayoutManager();
+				if (mLayoutManager instanceof LinearLayoutManager) {
+					visibleLast = ((LinearLayoutManager) mLayoutManager).findLastVisibleItemPosition();
+				} else if (mLayoutManager instanceof StaggeredGridLayoutManager) {
+					int[] lastItemArr = ((StaggeredGridLayoutManager) mLayoutManager).findLastVisibleItemPositions(null);
+					if (lastItemArr.length > 0) {
+						visibleLast = lastItemArr[lastItemArr.length - 1];
+					}
+				}
+				if (!allow) {
+					allow = totalCount != recyclerView.getAdapter().getItemCount();
+				}
+				if (recyclerView.getAdapter() != null && recyclerView.getAdapter().getItemCount() - 4 <= visibleLast
+						&& allow) {
+					allow = false;
+					totalCount = recyclerView.getAdapter().getItemCount();
+					if (clicker != null) {
+						clicker.onClick(loadMore);
+					}
+				}
 			}
 		});
 	}

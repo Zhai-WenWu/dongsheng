@@ -210,7 +210,7 @@ public class OrderStateActivity extends MallBaseActivity implements OnClickListe
 			@Override
 			public void loadstat(int flag, String url, Object msg, Object... stat) {
 
-				loadManager.loadOver(flag, 1,true);
+				loadManager.loadOver(flag);
 				if(flag>=UtilInternet.REQ_OK_STRING){
 					if(stat!=null&&stat.length>0&& !TextUtils.isEmpty((String)stat[0])){
 						mall_stat_statistic=(String) stat[0];
@@ -252,7 +252,7 @@ public class OrderStateActivity extends MallBaseActivity implements OnClickListe
 								if(state>=UtilInternet.REQ_OK_STRING){
 									setRequest();
 								}else if(state==UtilInternet.REQ_CODE_ERROR){
-									loadManager.loadOver(state, 1,true);
+									loadManager.loadOver(state);
 								}
 							}
 						});

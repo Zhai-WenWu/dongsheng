@@ -108,7 +108,7 @@ public class MainCircle extends MainBaseActivity implements View.OnClickListener
                         initPlate(circleInfo.get("indexRecTabQuan"));
                     }
                 }
-                loadManager.loadOver(flag, 1, true);
+                loadManager.loadOver(flag);
             }
         });
     }

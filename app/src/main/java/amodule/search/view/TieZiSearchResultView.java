@@ -125,7 +125,7 @@ public class TieZiSearchResultView extends RelativeLayout {
 
         mCurrentPage++;
         //更新加载按钮状态
-        loadManager.changeMoreBtn(mListview, ReqInternet.REQ_OK_STRING, -1, -1, mCurrentPage, mCurrentPage == 1);
+        loadManager.loading(mListview, mCurrentPage == 1);
         new SearchDataImp().getTieziResult(context, searchKey, mCurrentPage, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object msg) {
@@ -164,7 +164,7 @@ public class TieZiSearchResultView extends RelativeLayout {
                 }
                 isSearching.set(false);
                 everyPage = everyPage == 0 ? loadPage : everyPage;
-                mCurrentPage = loadManager.changeMoreBtn(mListview, flag, everyPage, loadPage, mCurrentPage, mListData.size()==0);
+                loadManager.loadOver(flag,mListview, loadPage);
             }
         });
     }

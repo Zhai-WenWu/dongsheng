@@ -66,7 +66,7 @@ public class GoodDish extends BaseActivity implements OnClickListener{
 
 	private void loadDishData(){
 		mCurrentPage++;
-		loadManager.changeMoreBtn(ReqInternet.REQ_OK_STRING, -1	, -1, mCurrentPage,false);
+		loadManager.loading(listview_today,false);
 		String params= "?type=1&page="+mCurrentPage;
 		ReqInternet.in().doGet(StringManager.api_homeTodayGood+params, new InternetCallback() {
 			
@@ -100,7 +100,7 @@ public class GoodDish extends BaseActivity implements OnClickListener{
 					mEveryPageNum = loadCount;
 				}
 				adapter.notifyDataSetChanged();
-				mCurrentPage = loadManager.changeMoreBtn(flag, mEveryPageNum, loadCount, mCurrentPage,false);
+				loadManager.loadOver(flag,listview_today,loadCount);
 			}
 		});
 	}

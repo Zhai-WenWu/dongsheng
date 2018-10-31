@@ -46,7 +46,7 @@ public class HistorySubjectView extends HistoryView{
 			public boolean handleMessage(Message msg) {
 				switch (msg.what) {
 					case LOAD_OVER:
-						mLoadManager.changeMoreBtn(mListView, ReqInternet.REQ_OK_STRING, 10, msg.arg1, currentPage, true);
+						mLoadManager.loadOver(50,mListView, msg.arg1);
 						mAdapter.notifyDataSetChanged();
 						mRoot.findViewById(R.id.noData_layout).setVisibility(mData.size() == 0 ? View.VISIBLE : View.GONE);
 						mListView.setVisibility(mData.size() == 0 ? View.GONE : View.VISIBLE);

@@ -194,7 +194,7 @@ public class MallOrderFragment extends MallBaseFragment implements OnClickListen
 			currentPage=1;
 		else
 			currentPage++;
-		loadManager.changeMoreBtn(UtilInternet.REQ_OK_STRING, -1, -1, currentPage,listData.size()==0);
+		loadManager.loading(getListView(),listData.isEmpty());
 		String url = MallStringManager.mall_api_listOrder_v3 + "?type=" + id + "&pn=" + currentPage + "&" + common.setStatistic(icon_but);
 		MallReqInternet.in().doGet(url, new MallInternetCallback() {
 
@@ -202,7 +202,7 @@ public class MallOrderFragment extends MallBaseFragment implements OnClickListen
 			public void loadstat(int flag, String url, Object msg, Object... stat) {
 
 				int loadCount = 0;
-				loadManager.loadOver(flag, 1,true);
+				loadManager.loadOver(flag);
 				if(flag>=UtilInternet.REQ_OK_STRING){
 					if(isStart){
 						listData.clear();
@@ -240,7 +240,7 @@ public class MallOrderFragment extends MallBaseFragment implements OnClickListen
 								if(state>=UtilInternet.REQ_OK_STRING){
 									setRequest(true);
 								}else if(state==UtilInternet.REQ_CODE_ERROR){
-									loadManager.loadOver(state, 1,true);
+									loadManager.loadOver(state);
 								}
 							}
 						});
@@ -249,7 +249,7 @@ public class MallOrderFragment extends MallBaseFragment implements OnClickListen
 				loadManager.hideProgressBar();
 				if(everypage==0)
 					everypage= loadCount;
-				currentPage = loadManager.changeMoreBtn(flag, loadCount, loadCount, currentPage,listData.size()==0);
+				loadManager.loadOver(flag,getListView(),loadCount);
 				order_list.onRefreshComplete();
 			
 			}

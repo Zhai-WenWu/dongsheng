@@ -384,7 +384,7 @@ public class CommodDetailActivity extends MallBaseActivity implements OnClickLis
 
             @Override
             public void loadstat(int flag, String url, Object msg, Object... stat) {
-                loadManager.loadOver(flag, 1, true);
+                loadManager.loadOver(flag);
                 if (flag >= UtilInternet.REQ_OK_STRING) {
                     ArrayList<Map<String, String>> listMapByJson = UtilString.getListMapByJson(msg);
                     parseInfo(listMapByJson);

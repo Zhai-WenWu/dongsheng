@@ -90,7 +90,7 @@ public class FollowSubject extends BaseActivity {
         mCurrentPage++;
         String url = StringManager.api_getFollowSubjectList + "?dishCode=" + dishCode + "&page=" + mCurrentPage;
         // 更新加载按钮状态
-        loadManager.changeMoreBtn(circle_list, ReqInternet.REQ_OK_STRING, -1, -1, mCurrentPage, isRefresh);
+        loadManager.loading(circle_list, isRefresh);
         if (isRefresh) {
             loadManager.hideProgressBar();
         }
@@ -130,7 +130,7 @@ public class FollowSubject extends BaseActivity {
                     mEveryPageNum = loadCount;
                 }
                 mAdapter.notifyDataSetChanged();
-                mCurrentPage = loadManager.changeMoreBtn(flag, mEveryPageNum, loadCount, mCurrentPage, isRefresh);
+                loadManager.loadOver(flag,circle_list,loadCount);
                 circle_list.onRefreshComplete();
                 if (isRefresh)
                     circle_list.setSelection(1);

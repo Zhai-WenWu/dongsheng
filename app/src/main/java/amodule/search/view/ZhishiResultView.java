@@ -174,7 +174,7 @@ public class ZhishiResultView extends RelativeLayout {
         isSearching.set(true);
         mCurrentPage++;
         //更新加载按钮状态
-        mLoadManager.changeMoreBtn(mListview, ReqInternet.REQ_OK_STRING, -1, -1, mCurrentPage, mListData.size() == 0);
+        mLoadManager.loading(mListview, mListData.size() == 0);
         String url = StringManager.api_soList + "?type=zhishi&s=" + searchKey + "&page=" + mCurrentPage;
         ReqInternet.in().doGet(url, new InternetCallback() {
             @Override
@@ -217,7 +217,7 @@ public class ZhishiResultView extends RelativeLayout {
                 }
                 isSearching.set(false);
                 everyPage = everyPage == 0 ? loadPage : everyPage;
-                mCurrentPage = mLoadManager.changeMoreBtn(mListview, flag, everyPage, loadPage, mCurrentPage, mListData.size() == 0);
+                mLoadManager.loadOver(flag,mListview, loadPage);
             }
         });
     }

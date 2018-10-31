@@ -237,7 +237,7 @@ public class MyMessage extends BaseAppCompatActivity implements OnClickListener,
         String getUrl = StringManager.api_message + "?type=" + (clickFlag ? "all" : "asc") + "&page=" + currentPage;
         if(!TextUtils.isEmpty(pageTime))
             getUrl += "&pageTime=" + pageTime;
-        loadManager.changeMoreBtn(UtilInternet.REQ_OK_STRING, -1, -1, currentPage, listDataMessage.size() == 0);
+        loadManager.loading(listMessage,listDataMessage.isEmpty());
         ReqInternet.in().doGet(getUrl, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
@@ -314,7 +314,7 @@ public class MyMessage extends BaseAppCompatActivity implements OnClickListener,
                 listMessage.setVisibility(View.VISIBLE);
                 if (everyPage == 0)
                     everyPage = loadCount;
-                currentPage = loadManager.changeMoreBtn(flag, everyPage, loadCount, currentPage, noLoginLayout.getVisibility() != View.VISIBLE && listDataMessage.size() == 0);
+                loadManager.loadOver(flag,listMessage,loadCount);
                 if (currentPage == 1)
                     adapter.notifyDataSetInvalidated();
                 else

@@ -224,7 +224,7 @@ public class QAReportActivity extends BaseActivity {
     private void onDataReady(int flag, ArrayList<Map<String, String>> mapDatas) {
         mLoaded = true;
         if (mapDatas == null || mapDatas.size() < 1) {
-            loadManager.loadOver(flag, 1, true);
+            loadManager.loadOver(flag);
             return;
         }
         loadManager.hideProgressBar();

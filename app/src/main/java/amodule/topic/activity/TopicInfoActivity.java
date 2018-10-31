@@ -255,7 +255,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
             mPage = 0;
         }
         ++mPage;
-        loadManager.changeMoreBtn(mStaggeredGridView, ReqInternet.REQ_OK_STRING, -1, -1, 2, false);
+        loadManager.loading(mStaggeredGridView,  false);
         ReqEncyptInternet.in().doGetEncypt(StringManager.API_TOPIC_LIST, "code=" + mTopicCode + "&page=" + mPage, new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
@@ -302,7 +302,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                     --mPage;
                 }
                 if (loadManager != null) {
-                    loadManager.changeMoreBtn(mStaggeredGridView, i, LoadManager.FOOTTIME_PAGE, refresh ? mDatas.size() : currentPageCount, 0, refresh);
+                    loadManager.loadOver(i,mStaggeredGridView, currentPageCount);
                 }
                 if (!mTopicInfoLoading) {
                     loadManager.hideProgressBar();
