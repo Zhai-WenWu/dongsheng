@@ -126,8 +126,6 @@ public class FuncNavView2 extends HomeFuncNavView2 implements IBindMap, IStatict
     }
 
     private void statistic(int index,Map<String, String> rightMap) {
-        XHClick.saveStatictisFile("home", "homeBigNav", rightMap.get("type"), "", "",
-                "click", "", "", "", rightMap.get("text1"), "");
         if(mStatisticCallback != null){
             mStatisticCallback.onStatistic(id,twoLevel,rightMap.get("text1"),index);
         }else{

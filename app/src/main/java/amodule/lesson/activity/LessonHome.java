@@ -116,7 +116,7 @@ public class LessonHome extends MainBaseActivity implements IObserver, ISetMessa
         mDataController.setOnLoadDataCallback(new LessonHomeDataController.OnLoadDataCallback() {
             @Override
             public void onPrepare(boolean refersh) {
-                loadManager.changeMoreBtn(mViewController.getRvListView(), ReqInternet.REQ_OK_STRING, -1, -1, LoadOver ? 2 : 1, !LoadOver);
+                loadManager.loading(mViewController.getRvListView(), !LoadOver);
                 if (refersh) {
                     loadManager.hideProgressBar();
                     mViewController.returnListTop();
@@ -134,8 +134,7 @@ public class LessonHome extends MainBaseActivity implements IObserver, ISetMessa
                 }
                 loadManager.hideProgressBar();
                 if (ToolsDevice.isNetworkAvailable(LessonHome.this)) {
-                    loadManager.changeMoreBtn(mViewController.getRvListView(), flag, LoadManager.FOOTTIME_PAGE,
-                            refersh ? mDataController.getData().size() : loadCount, 0, refersh);
+                    loadManager.loadOver(flag,mViewController.getRvListView(),loadCount);
                 } else {
 
                 }
@@ -151,10 +150,7 @@ public class LessonHome extends MainBaseActivity implements IObserver, ISetMessa
             @Override
             public void onFailed(boolean refresh) {
                 if (!ToolsDevice.isNetworkAvailable(LessonHome.this)) {
-                    loadManager.changeMoreBtn(mViewController.getRvListView(),
-                            ReqInternet.REQ_OK_STRING,
-                            LoadManager.FOOTTIME_PAGE,
-                            -1, 0, refresh);
+                    loadManager.loadOver(0,mViewController.getRvListView(),1);
                 }
             }
         });
@@ -189,7 +185,6 @@ public class LessonHome extends MainBaseActivity implements IObserver, ISetMessa
     protected void onResume() {
         super.onResume();
         mViewController.onResume();
-        setRecommedTime(System.currentTimeMillis());
     }
 
     @Override
@@ -217,23 +212,11 @@ public class LessonHome extends MainBaseActivity implements IObserver, ISetMessa
         }
     }
 
-    protected long startTime = -1;//开始的时间戳
     /** 统计推荐列表使用时间 */
     private void saveStatistic() {
         if(mViewController != null){
             mViewController.saveStatisticData("VipHome");
         }
-        long nowTime = System.currentTimeMillis();
-        if (startTime > 0) {
-            Log.i("zyj", "stop::" + String.valueOf((nowTime - startTime) / 1000));
-            XHClick.saveStatictisFile("VipHome", "", "", "", "", "stop", String.valueOf((nowTime - startTime) / 1000), "", "", "", "");
-            //置数据
-            setRecommedTime(0);
-        }
-    }
-
-    public void setRecommedTime(long time) {
-        this.startTime = time;
     }
 
     @Override

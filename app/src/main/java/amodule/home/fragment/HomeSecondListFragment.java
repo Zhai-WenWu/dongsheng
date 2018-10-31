@@ -251,7 +251,7 @@ public class HomeSecondListFragment extends Fragment {
         String url= StringManager.API_RECOMMEND;
 
         //更新加载按钮状态
-        mLoadManager.changeMoreBtn(mRv, ReqInternet.REQ_OK_STRING, -1, -1, mLoadOver?2:1, (mListData == null || mListData.isEmpty()) && mIsVisible);
+        mLoadManager.loading(mRv,  (mListData == null || mListData.isEmpty()) && mIsVisible);
         mLoadOver = true;
         if (refresh)
             mCompelClearData = true;
@@ -306,7 +306,7 @@ public class HomeSecondListFragment extends Fragment {
                     }
                 }
                 mLoadManager.hideProgressBar();
-                mLoadManager.changeMoreBtn(mRv, flag, LoadManager.FOOTTIME_PAGE, refresh?mListData.size():loadCount, 0, refresh && mIsVisible);
+                mLoadManager.loadOver(flag,mRv,loadCount);
                 if(refresh){
                     mPtrFrameLayout.refreshComplete();
                 }

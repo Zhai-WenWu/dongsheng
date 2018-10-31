@@ -229,7 +229,7 @@ public class CircleUser extends BaseActivity implements OnClickListener{
 		} else {
 			currentPage++;
 		}
-		loadManager.changeMoreBtn(UtilInternet.REQ_OK_STRING, -1, -1, currentPage,mListData.size() == 0);
+		loadManager.loading(mLvSur,mListData.size()==0);
 		String getUrl = StringManager.api_circleCustomerList + "?cid=" + mCid + "&page=" + currentPage;
 		ReqInternet.in().doGet(getUrl, new InternetCallback() {
 			@Override
@@ -317,7 +317,7 @@ public class CircleUser extends BaseActivity implements OnClickListener{
 				}
 				if (everyPage == 0)
 					everyPage = loadCount;
-				currentPage = loadManager.changeMoreBtn(flag, everyPage, loadCount, currentPage,mListData.size() == 0);
+				loadManager.loadOver(flag,mLvSur,loadCount);
 				mLvSur.onRefreshComplete();
 				if(loadMore != null){
 					if(!loadMore.isEnabled()){

@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import acore.override.adapter.AdapterSimple;
-import acore.tools.PageStatisticsUtils;
 import acore.tools.Tools;
 import third.mall.aplug.MallClickContorl;
 import third.mall.aplug.MallInternetCallback;
@@ -134,7 +133,7 @@ public class SelectAddressActivity extends MallBaseActivity implements OnClickLi
 			public void loadstat(int flag, String url, Object msg, Object... stat) {
 				listMapByJson_all.clear();
 				state=false;
-				loadManager.loadOver(flag, 1,true);
+				loadManager.loadOver(flag);
 				if(flag>=UtilInternet.REQ_OK_STRING){
 					if(stat!=null&&stat.length>0&& !TextUtils.isEmpty((String)stat[0])){
 						mall_stat_statistic=(String) stat[0];

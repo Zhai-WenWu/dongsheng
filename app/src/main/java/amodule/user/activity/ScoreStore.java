@@ -199,7 +199,7 @@ public class ScoreStore extends BaseActivity implements OnClickListener {
 		else {
 			currentPage++;
 		}
-		loadManager.changeMoreBtn(UtilInternet.REQ_OK_STRING, -1, -1, currentPage, isBlankSpace);
+		loadManager.loading(lv_sur,isBlankSpace);
 		String getUrl = StringManager.api_getProductList + "?page=" + currentPage;
 		ReqInternet.in().doGet(getUrl, new InternetCallback() {
 			@Override
@@ -219,7 +219,7 @@ public class ScoreStore extends BaseActivity implements OnClickListener {
 				handler.sendEmptyMessage(MSG_MYSUBJECT_OK);
 				if (everyPage == 0)
 					everyPage = loadCount;
-				currentPage = loadManager.changeMoreBtn(flag, everyPage, loadCount, currentPage, isBlankSpace);
+				loadManager.loadOver(flag,lv_sur,loadCount);
 				Button loadMore = loadManager.getSingleLoadMore(null);
 				if (loadMore != null) {
 					if (!loadMore.isEnabled()) {

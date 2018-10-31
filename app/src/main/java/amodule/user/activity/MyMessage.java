@@ -39,6 +39,8 @@ import aplug.feedback.activity.Feedback;
 import third.qiyu.QiYvHelper;
 import xh.basic.internet.UtilInternet;
 
+import static acore.notification.controller.NotificationSettingController.pushSetMessage;
+import static acore.notification.controller.NotificationSettingController.push_show_message;
 import static acore.tools.ObserverManager.NOTIFY_LOGIN;
 import static acore.tools.ObserverManager.NOTIFY_LOGOUT;
 import static acore.tools.ObserverManager.NOTIFY_MESSAGE_REFRESH;
@@ -71,7 +73,7 @@ public class MyMessage extends BaseAppCompatActivity implements OnClickListener,
         handller.postDelayed(new Runnable() {
             @Override
             public void run() {
-                NotificationSettingController.showNotification(0, FileManager.push_show_message,NotificationSettingController.pushSetMessage);
+                NotificationSettingController.showNotification(push_show_message,pushSetMessage);
             }
         },1000*3);
     }
@@ -235,7 +237,7 @@ public class MyMessage extends BaseAppCompatActivity implements OnClickListener,
         String getUrl = StringManager.api_message + "?type=" + (clickFlag ? "all" : "asc") + "&page=" + currentPage;
         if(!TextUtils.isEmpty(pageTime))
             getUrl += "&pageTime=" + pageTime;
-        loadManager.changeMoreBtn(UtilInternet.REQ_OK_STRING, -1, -1, currentPage, listDataMessage.size() == 0);
+        loadManager.loading(listMessage,listDataMessage.isEmpty());
         ReqInternet.in().doGet(getUrl, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
@@ -312,7 +314,7 @@ public class MyMessage extends BaseAppCompatActivity implements OnClickListener,
                 listMessage.setVisibility(View.VISIBLE);
                 if (everyPage == 0)
                     everyPage = loadCount;
-                currentPage = loadManager.changeMoreBtn(flag, everyPage, loadCount, currentPage, noLoginLayout.getVisibility() != View.VISIBLE && listDataMessage.size() == 0);
+                loadManager.loadOver(flag,listMessage,loadCount);
                 if (currentPage == 1)
                     adapter.notifyDataSetInvalidated();
                 else

@@ -498,7 +498,7 @@ public class CircleMainFragment extends Fragment {
         setQuanmCurrentPage();
 
         //更新加载按钮状态
-        mLoadManager.changeMoreBtn(mListView, ReqInternet.REQ_OK_STRING, -1, -1, mCurrentPage, isRefresh);
+        mLoadManager.loading(mListView,  isRefresh);
         if (isRefresh) {
             mLoadManager.hideProgressBar();
         }
@@ -593,7 +593,7 @@ public class CircleMainFragment extends Fragment {
 //                    mAdapter.notifyDataSetChanged();
                     safeNotifyItemRangeChanged();
                 }
-                mCurrentPage = mLoadManager.changeMoreBtn(mListView, flag, LoadManager.FOOTTIME_PAGE, loadCount, mCurrentPage, isRefresh);
+                mLoadManager.loadOver(flag,mListView,loadCount);
                 //判断是否刷新
                 if (isRefresh) {
                     //添加置顶和公告data

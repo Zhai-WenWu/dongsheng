@@ -275,7 +275,7 @@ public class FragmentNous {
             currentPage = 1;
         } else
             currentPage++;
-        mAct.loadManager.changeMoreBtn(UtilInternet.REQ_OK_STRING, -1, -1, currentPage, listDataNous.size() == 0);
+        mAct.loadManager.loading(listNous, listDataNous.size() == 0);
         String getUrl;
         if (url.equals("")) {
             getUrl = StringManager.api_nousList + "?type=new" + "&page=" + currentPage;
@@ -330,7 +330,7 @@ public class FragmentNous {
                 }
                 if (everyPage == 0)
                     everyPage = loadCount;
-                currentPage = loadManager.changeMoreBtn(listNous, flag, everyPage, loadCount, currentPage, listDataNous.size() == 0);
+                loadManager.loadOver(flag,listNous,loadCount);
                 listNous.setVisibility(View.VISIBLE);
                 listNous.onRefreshComplete();
             }

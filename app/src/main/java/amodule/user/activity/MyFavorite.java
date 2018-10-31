@@ -136,7 +136,7 @@ public class MyFavorite extends BaseAppCompatActivity implements View.OnClickLis
         if (!TextUtils.isEmpty(pageTime)) {
             params.put("pageTime", pageTime);
         }
-        loadManager.changeMoreBtn(ReqInternet.REQ_OK_STRING, -1, -1, currentpage, mData.isEmpty());
+        loadManager.loading(rvListview,mData.isEmpty());
         ReqEncyptInternet.in().doEncypt(StringManager.API_COLLECTIONLIST, params, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object msg) {
@@ -164,7 +164,7 @@ public class MyFavorite extends BaseAppCompatActivity implements View.OnClickLis
                 if (isRefresh) {
                     refreshLayout.refreshComplete();
                 }
-                loadManager.changeMoreBtn(flag, everyPage, loadCount, currentpage, mData.isEmpty());
+                loadManager.loadOver(flag,rvListview,loadCount);
                 handlerNoDataLayout();
             }
         });

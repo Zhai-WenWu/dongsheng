@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import acore.logic.XHClick;
-import acore.tools.PageStatisticsUtils;
 import acore.tools.Tools;
 import amodule.main.Main;
 import aplug.basic.ReqInternet;

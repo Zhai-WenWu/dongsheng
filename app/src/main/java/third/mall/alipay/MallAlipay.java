@@ -19,7 +19,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 
-import acore.tools.PageStatisticsUtils;
+import acore.logic.PayCallback;
 import acore.tools.Tools;
 import third.mall.activity.OrderStateActivity;
 import third.mall.activity.PaySuccedActvity;
@@ -27,8 +27,6 @@ import third.mall.aplug.MallCommon;
 import third.mall.aplug.MallInternetCallback;
 import third.mall.aplug.MallReqInternet;
 import third.mall.aplug.MallStringManager;
-import acore.logic.PayCallback;
-import third.mall.override.MallBaseActivity;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilString;
 

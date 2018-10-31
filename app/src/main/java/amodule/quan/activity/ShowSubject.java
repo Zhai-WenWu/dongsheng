@@ -109,7 +109,6 @@ public class ShowSubject extends BaseAppCompatActivity {
 
 	private String data_type = "";//推荐列表过来的数据
 	private String module_type="";
-	private Long startTime;//统计使用的时间
 
 	boolean isBack = false;
 	boolean isOnceStart = true;
@@ -124,7 +123,6 @@ public class ShowSubject extends BaseAppCompatActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		getWindow().setFormat(PixelFormat.TRANSLUCENT);
 		super.onCreate(savedInstanceState);
-		startTime = System.currentTimeMillis();
 		initActivity("", 2, 0, 0, R.layout.a_quan_subject);
 		Bundle bundle = this.getIntent().getExtras();
 		if (bundle != null) {
@@ -573,7 +571,7 @@ public class ShowSubject extends BaseAppCompatActivity {
 		}
 		// 获取加载页面
 		int currentPage = isForward ? currentUpPage : currentDownPage;
-		loadManager.changeMoreBtn(UtilInternet.REQ_OK_STRING, -1, -1, currentPage, listDataSubjectInfo.size() == 0);
+		loadManager.loading(listSubject,listDataSubjectInfo.size()==0);
 		String getUrl = StringManager.api_circlegetInfo + "?code=" + subCode + "&page=" + currentPage;
 		ReqInternet.in().doGet(getUrl, new InternetCallback() {
 			@Override
@@ -621,7 +619,7 @@ public class ShowSubject extends BaseAppCompatActivity {
 				if (relEveryPage == 0) {
 					relEveryPage = loadCount;
 				}
-				currentDownPage = loadManager.changeMoreBtn(flag, relEveryPage, loadCount, currentDownPage, listDataSubjectInfo.size() == 0);
+				loadManager.loadOver(flag,listSubject,loadCount);
 				listSubject.onRefreshComplete();
 			}
 		});
@@ -1132,10 +1130,6 @@ public class ShowSubject extends BaseAppCompatActivity {
 
 	@Override
 	public void finish() {
-		long nowTime=System.currentTimeMillis();
-		if(startTime>0&&(nowTime-startTime)>0&&!TextUtils.isEmpty(data_type)&&!TextUtils.isEmpty(module_type)){
-			XHClick.saveStatictisFile("ShowSubject",module_type,data_type,subCode,"","stop",String.valueOf((nowTime-startTime)/1000),"","","","");
-		}
 		super.finish();
 	}
 }

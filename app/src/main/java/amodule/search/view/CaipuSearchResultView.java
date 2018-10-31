@@ -34,6 +34,7 @@ import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilString;
 
 import static com.xiangha.R.id.v_no_data_search;
+import static xh.basic.internet.UtilInternet.REQ_OK_STRING;
 
 /**
  * Created by ：airfly on 2016/10/14 15:21.
@@ -244,7 +245,7 @@ public class CaipuSearchResultView extends LinearLayout {
         currentCaipuPage++;
         isFirstPage = currentCaipuPage == 1;
 
-        loadManager.changeMoreBtn(list_search_result, ReqInternet.REQ_OK_STRING, -1, -1, currentCaipuPage, isFirstPage);
+        loadManager.loading(list_search_result,  isFirstPage);
         if (isRefreash.get()) {
             loadManager.hideProgressBar();
             isRefreash.set(false);
@@ -253,7 +254,7 @@ public class CaipuSearchResultView extends LinearLayout {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
                 mDishDataReady = true;
-                if (flag >= ReqInternet.REQ_OK_STRING) {
+                if (flag >= REQ_OK_STRING) {
                     if (currentCaipuPage == 1) {
                         mListCaipuData.clear();
                         mListShicaiData.clear();
@@ -321,7 +322,7 @@ public class CaipuSearchResultView extends LinearLayout {
                             adNum = adapterCaipuSearch.refresh(isFirstPage, mListCaipuData, mListShicaiData, mListCaidanData, mListZhishiData);
                         }
                     });
-                    currentCaipuPage = loadManager.changeMoreBtn(list_search_result, ReqInternet.REQ_OK_STRING, LoadManager.FOOTTIME_PAGE, loadCount, currentCaipuPage, isFirstPage);
+                    loadManager.loadOver(REQ_OK_STRING,list_search_result, loadCount);
                 }
             } else {
                 if (!isFirstPage) {
@@ -338,7 +339,7 @@ public class CaipuSearchResultView extends LinearLayout {
         new SearchDataImp().getCaidanResult(context, searchKey, currentCaiDanPage, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
-                if (flag >= UtilInternet.REQ_OK_STRING) { // 表示成功
+                if (flag >= REQ_OK_STRING) { // 表示成功
                     if (currentCaiDanPage == 1) {
                         mListCaidanData.clear();
                     }
@@ -386,7 +387,7 @@ public class CaipuSearchResultView extends LinearLayout {
         new SearchDataImp().getZhishiResult(context, searchKey, currentZhishiPage, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
-                if (flag >= UtilInternet.REQ_OK_STRING) {
+                if (flag >= REQ_OK_STRING) {
                     if (currentZhishiPage == 1) {
                         mListZhishiData.clear();
                     }
@@ -450,8 +451,7 @@ public class CaipuSearchResultView extends LinearLayout {
                 adNum = adapterCaipuSearch.refresh(true, mListCaipuData, mListShicaiData, mListCaidanData, mListZhishiData);
             }
         });
-        currentCaipuPage = loadManager.changeMoreBtn(list_search_result, firstCaipuLoadFlag, LoadManager.FOOTTIME_PAGE,
-                mListCaidanData.size() + mListCaipuData.size() + mListShicaiData.size() + mListZhishiData.size() + adNum, currentCaipuPage, true);
+        loadManager.loadOver(50,list_search_result, 1);
         if (mListCaipuData.size() < 1)
             setLoadMoreBtn();
         refresh_list_view_frame.refreshComplete();

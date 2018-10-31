@@ -1,6 +1,5 @@
 package acore.notification.controller;
 
-import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -8,18 +7,24 @@ import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
 import android.text.TextUtils;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
+import com.annimon.stream.Stream;
 import com.popdialog.util.PushManager;
+import com.xh.manager.DialogManager;
+import com.xh.manager.ViewManager;
+import com.xh.view.HButtonView;
+import com.xh.view.TitleMessageView;
+import com.xh.view.TitleView;
 import com.xiangha.BuildConfig;
-import com.xiangha.R;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import acore.logic.VersionOp;
 import acore.logic.XHClick;
+import acore.logic.stat.StatisticsManager;
+import acore.logic.stat.intefaces.OnClickListenerStat;
 import acore.notification.BuildProperties;
 import acore.override.XHApplication;
 import acore.override.helper.XHActivityManager;
@@ -31,72 +36,78 @@ import acore.tools.ToolsDevice;
  */
 
 public class NotificationSettingController {
+    private static final String  MODULE_NAME = "GuidetoOpenPushDialog";
+    private static final String  SHOW = "GuidetoOpenPushDialog_show";
+    private static final String  SUCCESS = "GuidetoOpenPushDialog_success";
 
-    public static final String pushSetMessage="开启通知及时和哈友交流美食,90%的哈友已开启";
-    public static final String pushSetReview="开启通知及时接收哈友的评论消息,93%的哈友已开启";
-    public static final String pushSetFeedBack="开启通知及时接收小秘书回复,更好地解决你的问题";
-    public static final String pushSetSubject="开启通知及时接收哈友的评论消息,86%的哈友已开启";
-    private static RelativeLayout relativeLayout = null;
-    private static View viewSet=null;
+    public static final String push_show_home = "push_show_home";
+    public static final String push_show_message = "push_show_message";
+    public static final String push_show_reciew = "push_show_reciew";
+    public static final String push_show_feedBack = "push_show_feedBack";
+    public static final String push_show_subject = "push_show_subject";
+
+    public static final String pushSetHome="不错过每个精品美食推荐、哈友评论等精彩内容";
+    public static final String pushSetMessage="哈友评论你后会及时获得通知";
+    public static final String pushSetReview="哈友评论你后会及时获得通知";
+    public static final String pushSetFeedBack="及时接收小秘书回复，更好地解决你的问题";
+    public static final String pushSetSubject="哈友评论你后会及时获得通知";
+
     /**
      * all版本控制只显示一次
-     * @param marginBottom
      */
-    public static void showNotification(int marginBottom, String key, String message){
-        if(relativeLayout!=null||viewSet!=null){
-            relativeLayout=null;
-            viewSet=null;
-        }
+    public static void showNotification(String key, String message){
         if(XHActivityManager.getInstance().getCurrentActivity()==null|| PushManager.isNotificationEnabled(XHActivityManager.getInstance().getCurrentActivity()))return;
-        if(TextUtils.isEmpty((CharSequence) FileManager.loadShared(XHApplication.in(),FileManager.app_notification, key))){
-            showNotificationPermissionSetView(marginBottom, message,key);
-            FileManager.saveShared(XHApplication.in(),FileManager.app_notification,key,"2");
+        if(TextUtils.isEmpty((CharSequence) FileManager.loadShared(XHApplication.in(),FileManager.app_notification, key + VersionOp.getVerName(XHApplication.in())))){
+            showNotificationPermissionDialog(message,key);
+//            FileManager.saveShared(XHApplication.in(),FileManager.app_notification,key,"2");
         }
     }
 
-    private static void showNotificationPermissionSetView(int marginBottom, String message, String key){
-        if(XHActivityManager.getInstance().getCurrentActivity()!=null){
-            Activity activity = XHActivityManager.getInstance().getCurrentActivity();
-            if(activity.findViewById(R.id.activityLayout)==null)return;
-            showPermissionSetView(activity, (RelativeLayout) activity.findViewById(R.id.activityLayout),marginBottom,message,key);
-        }
-    }
-    private static void showPermissionSetView(Context context, RelativeLayout rl, int marginBottom, String message, String key){
-        if(context==null||rl==null)return;
-        View view=LayoutInflater.from(context).inflate(R.layout.view_notification_set,null);
-        RelativeLayout.LayoutParams lp=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT);//两个参数分别是layout_width,layout_height
-        lp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-//        lp.setMargins(0,0,0,marginBottom);
-        view.setLayoutParams(lp);
-        view.setPadding(0,0,0,marginBottom);
-        if(!TextUtils.isEmpty(message))((TextView)view.findViewById(R.id.show_text)).setText(message);
-        view.findViewById(R.id.view_close).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(view!=null&&rl!=null)rl.removeView(view);
-                if(!TextUtils.isEmpty(key))XHClick.mapStat(context,"a_push_guidelayer",getStatisticKey(key),"点击关闭");
-            }});
-        view.findViewById(R.id.show_rl).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openNotificationSettings();
-                FileManager.saveShared(XHApplication.in(),FileManager.app_notification,FileManager.push_setting_state,"2");
-                if(view!=null&&rl!=null)rl.removeView(view);
-                FileManager.saveShared(XHApplication.in(),FileManager.app_notification,FileManager.push_setting_message,getStatisticKey(key));
-                if(!TextUtils.isEmpty(key))XHClick.mapStat(context,"a_push_guidelayer",getStatisticKey(key),"点击浮条");
-            }});
+    private static void showNotificationPermissionDialog(String message, String key){
+        if (XHActivityManager.getInstance().getCurrentActivity() != null) {
+            String p = XHActivityManager.getInstance().getCurrentActivity().getClass().getSimpleName();
+            final DialogManager dialogManager = new DialogManager(XHActivityManager.getInstance().getCurrentActivity());
+            ViewManager viewManager = new ViewManager(dialogManager);
+            viewManager.setView(new TitleView(XHApplication.in()).setText("开启消息通知"))
+                    .setView(new TitleMessageView(XHApplication.in()).setText(message))
+                    .setView(new HButtonView(XHApplication.in())
+                            .setNegativeText("取消", new OnClickListenerStat(MODULE_NAME) {
+                                @Override
+                                public void onClicked(View v) {
+                                    dialogManager.cancel();
+                                    if(!TextUtils.isEmpty(key))
+                                        XHClick.mapStat(XHApplication.in(),"a_push_guidelayer",getStatisticKey(key),"点击关闭");
+                                }
+                            }).setPositiveText("立即开启", new OnClickListenerStat(MODULE_NAME) {
 
-        rl.addView(view);
-        relativeLayout =rl;
-        viewSet=view;
-        FileManager.saveShared(context,FileManager.app_notification, VersionOp.getVerName(context),"2");
-    }
-    public static void removePermissionSetView(){
-        if(relativeLayout!=null&&viewSet!=null){
-            relativeLayout.removeView(viewSet);
-            relativeLayout=null;
-            viewSet=null;
+                                @Override
+                                public void onClicked(View v) {
+                                    dialogManager.cancel();
+                                    openNotificationSettings();
+                                    FileManager.saveShared(XHApplication.in(),FileManager.app_notification,FileManager.push_setting_state,"2");
+                                    FileManager.saveShared(XHApplication.in(),FileManager.app_notification,FileManager.push_setting_message,getStatisticKey(key));
+                                    if(!TextUtils.isEmpty(key))XHClick.mapStat(XHApplication.in(),"a_push_guidelayer",getStatisticKey(key),"点击浮条");
+                                }
+                            }));
+            dialogManager.createDialog(viewManager);
+            dialogManager.show();
+
+            StatisticsManager.specialAction(p,MODULE_NAME,"",SHOW,"","","");
+            FileManager.saveShared(XHApplication.in(),FileManager.app_notification, key + VersionOp.getVerName(XHApplication.in()),"2");
+            clearUnUseKey();
         }
+    }
+
+    private static void clearUnUseKey() {
+        Map<String,String> map = (Map<String, String>) FileManager.loadShared(XHApplication.in(),FileManager.app_notification,"");
+        Map<String,String> current = new HashMap<>();
+        Stream.of(map)
+                .filter(value -> value.getKey().contains(VersionOp.getVerName(XHApplication.in())))
+                .forEach(value -> current.put(value.getKey(),value.getValue()));
+        //清空
+        FileManager.delShared(XHApplication.in(),FileManager.app_notification,"");
+        //重新保存
+        FileManager.saveShared(XHApplication.in(),FileManager.app_notification,current);
     }
 
     public static void openNotificationSettings() {
@@ -127,16 +138,29 @@ public class NotificationSettingController {
                     openVIVONotificationSettings();
                     break;
                 default:
-                    openSettings();
+                    try {
+                        toSetting();
+                    } catch (Exception e1) {
+                        e1.printStackTrace();
+                        openSettings();
+                    }
                     break;
             }
         }
     }
 
-    public static void openSettings() {
+    private static void openSettings() {
         Intent intent = new Intent(Settings.ACTION_SETTINGS);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         XHActivityManager.getInstance().getCurrentActivity().startActivity(intent);
+    }
+
+    private static void toSetting() {
+        Intent localIntent = new Intent();
+        localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        localIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+        localIntent.setData(Uri.fromParts("package", XHActivityManager.getInstance().getCurrentActivity().getPackageName(), null));
+        XHActivityManager.getInstance().getCurrentActivity().startActivity(localIntent);
     }
 
     private static void openEMUINotificationSettings() {
@@ -153,7 +177,7 @@ public class NotificationSettingController {
         if (TextUtils.isEmpty(name))
             return;
         Context context = XHActivityManager.getInstance().getCurrentActivity();
-        Intent intent = null;
+        Intent intent;
         switch (name) {
             case "V5":
                 intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, getPackageUri());
@@ -205,7 +229,10 @@ public class NotificationSettingController {
     private static void openAndroidSystemNotificationSettings() {
         Context context = XHActivityManager.getInstance().getCurrentActivity();
         Intent intent = new Intent();
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+            intent.putExtra(Settings.EXTRA_APP_PACKAGE, context.getPackageName());
+        } else if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             intent.setAction("android.settings.APP_NOTIFICATION_SETTINGS");
             intent.putExtra("app_package", context.getPackageName());
             intent.putExtra("app_uid", context.getApplicationInfo().uid);
@@ -224,20 +251,25 @@ public class NotificationSettingController {
     private static Uri getPackageUri() {
         return Uri.parse("package:" + XHApplication.in().getPackageName());
     }
-    public static String getStatisticKey(String name){
+
+    private static String getStatisticKey(String name){
         if(name.equals(VersionOp.getVerName(XHApplication.in()))){
             return "首页浮条点击";
         }
         switch (name){
-            case FileManager.push_show_message:
+            case push_show_message:
                 return "进行消息页面后浮条点击";
-            case FileManager.push_show_subject:
+            case push_show_subject:
                 return "成功发帖子后浮条点击";
-            case FileManager.push_show_reciew:
+            case push_show_reciew:
                 return "发送评论成功后浮条点击";
-            case FileManager.push_show_feedBack:
+            case push_show_feedBack:
                 return "发送小秘书后浮条点击";
         }
         return "";
+    }
+
+    public static void statOpenSuccess(String p){
+        StatisticsManager.specialAction(p,MODULE_NAME,"",SUCCESS,"","","");
     }
 }

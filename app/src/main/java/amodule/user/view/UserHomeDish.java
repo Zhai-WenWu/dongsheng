@@ -244,7 +244,7 @@ public class UserHomeDish extends TabContentView {
     }
 
     private void loadFromServer() {
-        loadManager.changeMoreBtn(theListView, UtilInternet.REQ_OK_STRING, -1, -1, currentPage, isBlankSpace);
+        loadManager.loading(theListView, isBlankSpace);
         String getUrl = StringManager.api_getDishByCode + "?code=" + userCode + "&page=" + currentPage;
         ReqInternet.in().doGet(getUrl, new InternetCallback() {
             @Override
@@ -332,7 +332,7 @@ public class UserHomeDish extends TabContentView {
                 }
                 if (everyPage == 0)
                     everyPage = loadPage;
-                currentPage = loadManager.changeMoreBtn(theListView, flag, everyPage, loadPage, currentPage, isBlankSpace);
+                loadManager.loadOver(flag,theListView,loadPage);
                 // 如果总数据为空,显示没有菜谱
                 if (flag >= UtilInternet.REQ_OK_STRING && listDataMyDish.size() == 0 && draftSize == 0) {
                     LinearLayout tabMainMyself = (LinearLayout) mAct.findViewById(R.id.a_user_home_title_tab);
@@ -340,6 +340,7 @@ public class UserHomeDish extends TabContentView {
                     RelativeLayout.LayoutParams emptyParams = (RelativeLayout.LayoutParams) empty.getLayoutParams();
                     emptyParams.topMargin = tabMainMyself.getTop() + tabMainMyself.getHeight();
                     empty.setVisibility(View.VISIBLE);
+                    theListView.setVisibility(View.GONE);
                 }
                 // 如果总数据为空,显示没有菜谱
 //				if (flag >= UtilInternet.REQ_OK_STRING && listDataMyDish.size() == 0) {

@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 
 import acore.override.activity.base.BaseActivity;
-import acore.tools.PageStatisticsUtils;
 import third.mall.aplug.MallCommon;
 
 /**
@@ -25,16 +24,5 @@ public class MallBaseActivity extends BaseActivity{
             nowFrom=dsFrom;
             MallCommon.setStatictisFrom(dsFrom);
         }
-    }
-
-    /**
-     *处理当前from
-     */
-    public void handlerFrom(){
-        String pageName= PageStatisticsUtils.getInstance().getPageName(this);
-        nowFrom=TextUtils.isEmpty(dsFrom)?pageName:dsFrom+PAGE_LOGO+pageName;
-    }
-    public String getNowFrom(){
-        return nowFrom;
     }
 }

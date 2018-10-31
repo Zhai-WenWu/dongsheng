@@ -17,10 +17,13 @@ import com.xh.view.MessageView;
 import com.xh.view.TitleView;
 import com.xiangha.R;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import acore.override.XHApplication;
 import acore.override.activity.base.WebActivity;
@@ -68,6 +71,7 @@ public class LoginManager {
     private static boolean mIsInitGourmetData = false;
     private static boolean mIsTempVip = false;
     private static boolean mIsInitTempVipData = false;
+    private static AtomicBoolean mInitIsLogin = new AtomicBoolean(false);
 
     /**
      * 自动登录
@@ -93,6 +97,7 @@ public class LoginManager {
                         saveUserInfo(act, returnObj);
                         //设置用户其他
                         setUserOther(act, returnObj);
+                        ObserverManager.getInstance().notify(ObserverManager.NOTIFY_AUTO_LOGIN, null, true);
                         MessageTipController.newInstance().getCommonData(null);
                     } else
                         logout(act);
@@ -105,6 +110,7 @@ public class LoginManager {
             setUserOther(act, null);
             //电商
             MallCommon.setDsToken(act);
+            ObserverManager.getInstance().notify(ObserverManager.NOTIFY_AUTO_LOGIN, null, true);
             MessageTipController.newInstance().getCommonData(null);
         }
 	}
@@ -290,6 +296,8 @@ public class LoginManager {
 				userInfo.put("recordMinTime", map.get("recordMinTime"));
 				Map<String,String> vipMap = StringManager.getFirstMap(map.get("vip"));
 				userInfo.put("maturity_day", TextUtils.isEmpty(vipMap.get("maturity_day")) ? "" : vipMap.get("maturity_day"));
+				userInfo.put("expired_day", TextUtils.isEmpty(vipMap.get("expired_day")) ? "" : vipMap.get("expired_day"));
+				userInfo.put("maturity_time", TextUtils.isEmpty(vipMap.get("maturity_time")) ? "" : vipMap.get("maturity_time"));
 				userInfo.put("email", TextUtils.isEmpty(map.get("email")) ? "" : map.get("email"));
 				userInfo.put("regTime", TextUtils.isEmpty(map.get("regTime")) ? "" : map.get("regTime"));
 				UtilLog.print("d", "是否是管理员: " + map.get("isManager"));
@@ -300,6 +308,22 @@ public class LoginManager {
 			}
 		}
 	}
+
+	public static int getExpiredDay() {
+	    if (userInfo == null || TextUtils.isEmpty(userInfo.get("expired_day"))) {
+	        return -1;
+        }
+        try {
+	        return Integer.parseInt(userInfo.get("expired_day"));
+        } catch (Exception e) {
+	        return -1;
+        }
+    }
+
+    public static String getVipMaturityTime() {
+	    return userInfo == null ? null : userInfo.get("maturity_time");
+    }
+
     //设置用户其他
     private static void setUserOther(final Activity mAct, Object returnObj) {
         ArrayList<Map<String, String>> returnList = getListMapByJson(returnObj);
@@ -483,10 +507,12 @@ public class LoginManager {
     public static void saveTempVipMaturityDay(String maturityTimeStr){
         if(TextUtils.isEmpty(maturityTimeStr)){
             FileManager.saveShared(XHApplication.in(),FileManager.xmlFile_appInfo,"maturity_day","");
+            FileManager.saveShared(XHApplication.in(),FileManager.xmlFile_appInfo,"maturity_temp_time","");
             return;
         }
         int maturityDay = (int) ((Long.parseLong(maturityTimeStr)*1000-System.currentTimeMillis()) / (24 * 60 * 60 * 1000f));
         FileManager.saveShared(XHApplication.in(),FileManager.xmlFile_appInfo,"maturity_day",String.valueOf(maturityDay));
+        FileManager.saveShared(XHApplication.in(),FileManager.xmlFile_appInfo,"maturity_temp_time",maturityTimeStr);
     }
 
     public static int getTempVipMaturityDay(){
@@ -495,6 +521,15 @@ public class LoginManager {
             return Integer.parseInt(obj.toString());
         }
         return -1;
+    }
+
+    public static String getTempVipMaturityTime() {
+        String tempTime = (String) FileManager.loadShared(XHApplication.in(),FileManager.xmlFile_appInfo,"maturity_temp_time");
+        if (TextUtils.isEmpty(tempTime) || "null".equals(tempTime)) {
+            return null;
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        return sdf.format(new Date(Long.parseLong(tempTime) * 1000));
     }
 
     public static boolean isBindMobilePhone(){
@@ -642,7 +677,15 @@ public class LoginManager {
      * 判断是否登录
      * @return
      */
-    public static boolean isLogin() {
+    public static synchronized boolean isLogin() {
+        if (!mInitIsLogin.get()) {
+            synchronized (LoginManager.class) {
+                if (!mInitIsLogin.get()) {
+                    mInitIsLogin.set(true);
+                    userInfo = (Map<String, String>) UtilFile.loadShared(XHApplication.in(), FileManager.xmlFile_userInfo, "");
+                }
+            }
+        }
         return userInfo != null && userInfo.size() > 0;
     }
 

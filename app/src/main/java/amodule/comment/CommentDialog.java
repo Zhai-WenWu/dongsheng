@@ -511,7 +511,7 @@ public class CommentDialog extends Dialog implements View.OnClickListener {
             dropPage = downDropPage;
         }
 
-        mLoadManager.changeMoreBtn(UtilInternet.REQ_OK_STRING, -1, -1, currentPage, listArray.size() == 0);
+        mLoadManager.loading(downRefreshList,listArray.size() == 0);
         String params = "type=" + type + "&code=" + code;
         if(!TextUtils.isEmpty(gotoCommentId))
             params +=  "&commentId=" + gotoCommentId;
@@ -582,7 +582,7 @@ public class CommentDialog extends Dialog implements View.OnClickListener {
                     }
                     changeDataChange();
                 }
-                currentPage = mLoadManager.changeMoreBtn(downRefreshList, flag, everyPage, loadCount, currentPage, listArray.size() == 0,"没有更多评论啦");
+                mLoadManager.loadOver(flag,downRefreshList, loadCount,"没有更多评论啦");
             }
         });
     }

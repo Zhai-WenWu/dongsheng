@@ -67,7 +67,7 @@ public class BaseLoginActivity extends BaseActivity {
     public static final String PHONE_TAG = "a_login520";
     public final static String TAG_ACCOCUT = "a_security520";
 
-    public static final String SMS_SDK_VERSION = "3.0.0";
+    public static final String SMS_SDK_VERSION = "3.2.1";
     public String text = "正在登录";
     protected int mGetCountryId = 100;
     protected static final int SET_USER_IMG = 5000;
