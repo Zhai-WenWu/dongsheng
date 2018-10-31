@@ -48,7 +48,7 @@ import static xh.basic.tool.UtilString.getListMapByJson;
 
 public class DishRecommedAndAdView extends ItemBaseView implements View.OnClickListener{
     private LinearLayout userDishLayout;
-    private LinearLayout mRecomentLayout;
+    private RelativeLayout mRecomentLayout;
     private TextView mRecommentNum,mRelevantTv;
     private String code,mDishName;
     public DishRecommedAndAdView(Context context) {
@@ -66,7 +66,7 @@ public class DishRecommedAndAdView extends ItemBaseView implements View.OnClickL
     @Override
     public void init() {
         super.init();
-        mRecomentLayout = (LinearLayout) findViewById(R.id.a_dish_detail_new_xiangguan_layout);
+        mRecomentLayout = (RelativeLayout) findViewById(R.id.a_dish_detail_new_xiangguan);
         userDishLayout = (LinearLayout)findViewById(R.id.a_dish_detail_new_xiangguan_scroll_linear);
 
         mRecommentNum = (TextView)findViewById(R.id.a_dish_detail_new_tv_num);
@@ -245,7 +245,7 @@ public class DishRecommedAndAdView extends ItemBaseView implements View.OnClickL
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.a_dish_detail_new_xiangguan_layout: //点击相关作品
+            case R.id.a_dish_detail_new_xiangguan: //点击相关作品
                 Intent intent = new Intent(context, FollowSubject.class);
                 intent.putExtra("dishCode",code);
                 intent.putExtra("title",mDishName);
