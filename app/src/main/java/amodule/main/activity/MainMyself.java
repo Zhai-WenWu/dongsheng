@@ -234,9 +234,9 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
             findViewById(R.id.my_money_hint).setVisibility(View.VISIBLE);
         }
 
-        qaInfo = (TextView) gourp2.getChildAt(2).findViewById(R.id.text_right_myself);
-        qaNewHint = (TextView) gourp2.getChildAt(2).findViewById(R.id.my_new_info);
-        qaIcon = (ImageView) gourp2.getChildAt(2).findViewById(R.id.ico_right_myself);
+        qaInfo = (TextView) gourp2.getChildAt(4).findViewById(R.id.text_right_myself);
+        qaNewHint = (TextView) gourp2.getChildAt(4).findViewById(R.id.my_new_info);
+        qaIcon = (ImageView) gourp2.getChildAt(4).findViewById(R.id.ico_right_myself);
         if (isShowQA == null || TextUtils.isEmpty(String.valueOf(isShowQA))) {
             notifyQAItemChanged(0, true, false);
         }

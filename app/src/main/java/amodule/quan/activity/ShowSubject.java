@@ -904,8 +904,10 @@ public class ShowSubject extends BaseAppCompatActivity {
 
 					@SuppressWarnings ("unchecked") Map<String, String> lzMap = (Map<String, String>) msg.obj;
 					String returnObj = lzMap.get("returnObj");
-					ArrayList<Map<String, String>> floorsInfo = UtilString.getListMapByJson(returnObj);
-					Map<String, String> floorsmap = floorsInfo.get(0);
+					Map<String, String> floorsmap = StringManager.getFirstMap(returnObj);
+					if(floorsmap.isEmpty()){
+						return;
+					}
 
 					// // 当回复的是每页加载的楼层数的倍数加一,不创建假界面,直接加载下一页
 					// if ((Integer.parseInt(floorsmap.get("num"))) % 6 != 0

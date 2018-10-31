@@ -189,7 +189,7 @@ public class QiYvHelper {
             deviceCode.put("index", 6);
             deviceCode.put("key", "device_code");
             deviceCode.put("label", "设备码");
-            deviceCode.put("value", ToolsDevice.getXhIMEI(XHApplication.in()));
+            deviceCode.put("value", ToolsDevice.getXhCode(XHApplication.in()));
             dataArray.put(deviceCode);
 
         } catch (Exception e) {

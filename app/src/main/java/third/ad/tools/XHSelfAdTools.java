@@ -1,17 +1,14 @@
 package third.ad.tools;
 
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.annimon.stream.Stream;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import acore.logic.ConfigHelper;
-import acore.logic.ConfigMannager;
 import acore.override.XHApplication;
 import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
@@ -46,7 +43,7 @@ public class XHSelfAdTools {
                         Map<String, String> paramsMap = StringManager.getFirstMap(value);
                         mParamsShow = TextUtils.equals(paramsMap.get("isShow"), "2");
                         mParamsDatas = StringManager.getListMapByJson(paramsMap.get("data"));
-                        mIMEI =  ToolsDevice.getXhIMEI(XHApplication.in());
+                        mIMEI =  ToolsDevice.getXhCode(XHApplication.in());
                     }
                 }
             }

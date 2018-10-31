@@ -4,16 +4,11 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
-import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +24,9 @@ import acore.logic.XHClick;
 import acore.logic.load.LoadManager;
 import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.StringManager;
+import acore.tools.Tools;
+import acore.tools.ToolsDevice;
+import acore.tools.Tools;
 import acore.widget.rvlistview.RvListView;
 import acore.widget.rvlistview.RvStaggeredGridView;
 import amodule._common.conf.GlobalAttentionModule;
@@ -75,6 +73,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initActivity("", 2, 0, 0, R.layout.topic_info_layout);
+        initStatusBar();
         initView();
         initData();
         if (!checkCondition()) {
@@ -83,6 +82,11 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
             return;
         }
         startLoadData();
+    }
+
+    private void initStatusBar() {
+        String colors = Tools.getColorStr(this, R.color.ysf_black_333333);
+        Tools.setStatusBarColor(this, Color.parseColor(colors));
     }
 
     private void initData() {
@@ -140,10 +144,10 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
         mFloatingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String name = mInfoMap.get("name");
-                if (TextUtils.isEmpty(mTopicCode) || mInfoMap == null || mInfoMap.isEmpty() || TextUtils.isEmpty(name))
+                if (TextUtils.isEmpty(mTopicCode) || mInfoMap == null ||
+                        mInfoMap.isEmpty() || TextUtils.isEmpty(mInfoMap.get("name")))
                     return;
-                AliyunCommon.getInstance().startRecord(TopicInfoActivity.this, mTopicCode, name);
+                AliyunCommon.getInstance().startRecord(TopicInfoActivity.this, mTopicCode, mInfoMap.get("name"));
             }
         });
     }
