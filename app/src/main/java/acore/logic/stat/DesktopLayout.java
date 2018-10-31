@@ -35,12 +35,12 @@ import acore.widget.rvlistview.RvListView;
 import acore.widget.rvlistview.adapter.RvBaseAdapter;
 import acore.widget.rvlistview.holder.RvBaseViewHolder;
 
-import static acore.logic.stat.StatisticsManager.EVENT_BTN_CLICK;
-import static acore.logic.stat.StatisticsManager.EVENT_LIST_CLICK;
-import static acore.logic.stat.StatisticsManager.EVENT_LIST_SHOW;
-import static acore.logic.stat.StatisticsManager.EVENT_SPECIAL_ACTION;
-import static acore.logic.stat.StatisticsManager.EVENT_STAY;
-import static acore.logic.stat.StatisticsManager.EVENT_VIDEO_VIEW;
+import static acore.logic.stat.StatModel.EVENT_BTN_CLICK;
+import static acore.logic.stat.StatModel.EVENT_LIST_CLICK;
+import static acore.logic.stat.StatModel.EVENT_LIST_SHOW;
+import static acore.logic.stat.StatModel.EVENT_SPECIAL_ACTION;
+import static acore.logic.stat.StatModel.EVENT_STAY;
+import static acore.logic.stat.StatModel.EVENT_VIDEO_VIEW;
 
 /**
  * Description :

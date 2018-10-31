@@ -48,6 +48,7 @@ import acore.logic.AppCommon;
 import acore.logic.FavoriteHelper;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
+import acore.logic.stat.StatModel;
 import acore.logic.stat.StatisticsManager;
 import acore.logic.stat.intefaces.OnClickListenerStat;
 import acore.override.helper.XHActivityManager;
@@ -440,8 +441,8 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
             float total = (playNum * duration + mPlayerView.getCurrentPositionWhenPlaying()) / 1000f;
             float temp = duration <= 0 ? 0 : mPlayerView.getCurrentPositionWhenPlaying() / duration + playNum;
             String n1 = temp <= 0 ? "0" : String.format("%.2f", temp);
-            StatisticsManager.videoView(getContext().getClass().getSimpleName(), tag, String.valueOf(position + 1),
-                    n1, String.format("%.2f", total), mData.getStatJson());
+            StatisticsManager.saveData(StatModel.createVideoViewModel(getContext().getClass().getSimpleName(), tag, String.valueOf(position + 1),
+                    n1, String.format("%.2f", total), mData.getStatJson()));
         } catch (Exception e) {
 
         }

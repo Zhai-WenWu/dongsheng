@@ -65,7 +65,7 @@ public abstract class RvBaseViewHolderStat<T> extends RvBaseViewHolder<T> {
 
     protected void onStat(int position, T data) {
         if (!TextUtils.isEmpty(p) && canStat()) {
-            StatisticsManager.listShow(p, m,  String.valueOf(position + 1), f1, getStatJson(data));
+            StatisticsManager.saveData(StatModel.createListShowModel(p, m,  String.valueOf(position + 1), f1, getStatJson(data)));
         }
     }
 

@@ -16,6 +16,7 @@ import com.xiangha.Welcome;
 import java.util.ArrayList;
 import java.util.Map;
 
+import acore.logic.stat.StatModel;
 import acore.logic.stat.StatisticsManager;
 import acore.notification.controller.NotificationSettingController;
 import acore.override.XHApplication;
@@ -157,7 +158,7 @@ public class ActivityMethodManager {
     @SuppressLint("DefaultLocale")
     public void onPause() {
         long stayTime = System.currentTimeMillis() - onResumeTime;
-        StatisticsManager.pageStay(mAct.getClass().getSimpleName(),String.format("%.2f",stayTime/1000f));
+        StatisticsManager.saveData(StatModel.createPageStayModel(mAct.getClass().getSimpleName(),String.format("%.2f",stayTime/1000f)));
         //广告刷新定时器停止
         XHAdAutoRefresh.getInstance().stopTimer();
         MobclickAgent.onPause(mAct);

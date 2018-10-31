@@ -33,6 +33,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import acore.logic.AppCommon;
 import acore.logic.XHClick;
+import acore.logic.stat.StatModel;
 import acore.logic.stat.StatisticsManager;
 import acore.override.activity.base.BaseActivity;
 import acore.tools.FileManager;
@@ -344,7 +345,7 @@ public class AdapterCaipuSearch extends BaseAdapter {
                     .putExtra("img", handleImg(caipuMap));
             mActivity.startActivity(intent);
             //点击统计
-            StatisticsManager.listClick(mActivity.getClass().getSimpleName(), MODULE_NAME, String.valueOf(pos + 1), searchKey, caipuMap.get(STAT_DATA));
+            StatisticsManager.saveData(StatModel.createListClickModel(mActivity.getClass().getSimpleName(), MODULE_NAME, String.valueOf(pos + 1), searchKey, caipuMap.get(STAT_DATA)));
         });
 
         String videoImg = caipuMap.get("sizeImg");
@@ -354,7 +355,7 @@ public class AdapterCaipuSearch extends BaseAdapter {
         //展示统计
         if (!TextUtils.equals(TRUE_VALUE, caipuMap.get(IS_STAT))) {
             caipuMap.put(IS_STAT, TRUE_VALUE);
-            StatisticsManager.listShow(mActivity.getClass().getSimpleName(), MODULE_NAME, String.valueOf(pos + 1), searchKey, caipuMap.get(STAT_DATA));
+            StatisticsManager.saveData(StatModel.createListShowModel(mActivity.getClass().getSimpleName(), MODULE_NAME, String.valueOf(pos + 1), searchKey, caipuMap.get(STAT_DATA)));
         }
         return convertView;
     }
@@ -420,12 +421,12 @@ public class AdapterCaipuSearch extends BaseAdapter {
         rl_zhishi_info.setOnClickListener(v -> {
             XHClick.mapStat(mActivity, "a_search_result", "菜谱结果页", "点击知识");
             AppCommon.openUrl(mActivity, "nousInfo.app?code=" + zhishiMap.get("code"), true);
-            StatisticsManager.listClick(mActivity.getClass().getSimpleName(), MODULE_NAME, String.valueOf(pos + 1), searchKey, zhishiMap.get(STAT_DATA));
+            StatisticsManager.saveData(StatModel.createListClickModel(mActivity.getClass().getSimpleName(), MODULE_NAME, String.valueOf(pos + 1), searchKey, zhishiMap.get(STAT_DATA)));
         });
         //展示统计
         if (!TextUtils.equals(TRUE_VALUE, zhishiMap.get(IS_STAT))) {
             zhishiMap.put(IS_STAT, TRUE_VALUE);
-            StatisticsManager.listShow(mActivity.getClass().getSimpleName(), MODULE_NAME, String.valueOf(pos + 1), searchKey, zhishiMap.get(STAT_DATA));
+            StatisticsManager.saveData(StatModel.createListShowModel(mActivity.getClass().getSimpleName(), MODULE_NAME, String.valueOf(pos + 1), searchKey, zhishiMap.get(STAT_DATA)));
         }
         return view;
     }
@@ -471,12 +472,12 @@ public class AdapterCaipuSearch extends BaseAdapter {
             intent.putExtra("g1", caidanMap.get("code"));
             mActivity.startActivity(intent);
             XHClick.mapStat(mActivity, "a_search_result", "菜谱结果页", "点击菜单");
-            StatisticsManager.listClick(mActivity.getClass().getSimpleName(), MODULE_NAME, String.valueOf(pos + 1), searchKey, caidanMap.get(STAT_DATA));
+            StatisticsManager.saveData(StatModel.createListClickModel(mActivity.getClass().getSimpleName(), MODULE_NAME, String.valueOf(pos + 1), searchKey, caidanMap.get(STAT_DATA)));
         });
 //展示统计
         if (!TextUtils.equals(TRUE_VALUE, caidanMap.get(IS_STAT))) {
             caidanMap.put(IS_STAT, TRUE_VALUE);
-            StatisticsManager.listShow(mActivity.getClass().getSimpleName(), MODULE_NAME, String.valueOf(pos + 1), searchKey, caidanMap.get(STAT_DATA));
+            StatisticsManager.saveData(StatModel.createListShowModel(mActivity.getClass().getSimpleName(), MODULE_NAME, String.valueOf(pos + 1), searchKey, caidanMap.get(STAT_DATA)));
         }
         return view;
     }
@@ -509,12 +510,12 @@ public class AdapterCaipuSearch extends BaseAdapter {
             intent.putExtra("page", "0");
             mActivity.startActivity(intent);
             XHClick.mapStat(mActivity, "a_search_result", "菜谱结果页", "点击食材");
-            StatisticsManager.listClick(mActivity.getClass().getSimpleName(), MODULE_NAME, String.valueOf(pos + 1), searchKey, shicaiMap.get(STAT_DATA));
+            StatisticsManager.saveData(StatModel.createListClickModel(mActivity.getClass().getSimpleName(), MODULE_NAME, String.valueOf(pos + 1), searchKey, shicaiMap.get(STAT_DATA)));
         });
         //展示统计
         if (!TextUtils.equals(TRUE_VALUE, shicaiMap.get(IS_STAT))) {
             shicaiMap.put(IS_STAT, TRUE_VALUE);
-            StatisticsManager.listShow(mActivity.getClass().getSimpleName(), MODULE_NAME, String.valueOf(pos + 1), searchKey, shicaiMap.get(STAT_DATA));
+            StatisticsManager.saveData(StatModel.createListShowModel(mActivity.getClass().getSimpleName(), MODULE_NAME, String.valueOf(pos + 1), searchKey, shicaiMap.get(STAT_DATA)));
         }
         return view;
     }

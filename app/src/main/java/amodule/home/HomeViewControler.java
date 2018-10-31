@@ -2,12 +2,10 @@ package amodule.home;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -101,6 +99,7 @@ public class HomeViewControler implements ISetAdController {
         recyclerView.addHeaderView(mHeaderView);
         recyclerView.addHeaderView(mHomeFeedHeaderControler.getLayout());
         recyclerView.setOnItemClickListener(new OnItemClickListenerRvStat() {
+            boolean canStat = true;
             @Override
             protected String getStatData(int position) {
                 return mGetStatDataCallback != null ? mGetStatDataCallback.getStatData(position) : null;
@@ -110,7 +109,17 @@ public class HomeViewControler implements ISetAdController {
             public void onItemClicked(View view, RecyclerView.ViewHolder holder, int position) {
                 if (view instanceof HomeItem) {
                     ((HomeItem) view).onClickEvent(view);
+                    canStat = !((HomeItem) view).mIsAd;
+                    if(!canStat){
+                        //TODO click统计
+                        //((HomeItem) view).onStat
+                    }
                 }
+            }
+
+            @Override
+            protected boolean canStat() {
+                return canStat;
             }
         });
 
