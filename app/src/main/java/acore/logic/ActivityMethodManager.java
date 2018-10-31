@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import acore.logic.stat.StatisticsManager;
+import acore.notification.controller.NotificationSettingController;
 import acore.override.XHApplication;
 import acore.override.helper.XHActivityManager;
 import acore.tools.FileManager;
@@ -145,8 +146,11 @@ public class ActivityMethodManager {
                 &&"2".equals(FileManager.loadShared(XHApplication.in(),FileManager.app_notification,FileManager.push_setting_state))){
             FileManager.saveShared(XHApplication.in(),FileManager.app_notification,FileManager.push_setting_state,"");
             if(PushManager.isNotificationEnabled(XHActivityManager.getInstance().getCurrentActivity())) {
-                XHClick.mapStat(XHApplication.in(), "a_push_guidelayer",
-                        (String) FileManager.loadShared(XHApplication.in(),FileManager.app_notification,FileManager.push_setting_message), "开启成功");
+                String key = (String) FileManager.loadShared(XHApplication.in(),FileManager.app_notification,FileManager.push_setting_message);
+                XHClick.mapStat(XHApplication.in(), "a_push_guidelayer",key,"开启成功");
+                if(mAct != null){
+                    NotificationSettingController.statOpenSuccess(mAct.getClass().getSimpleName());
+                }
             }
         }
     }

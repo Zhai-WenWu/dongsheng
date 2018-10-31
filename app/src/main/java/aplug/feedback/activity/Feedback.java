@@ -39,6 +39,9 @@ import third.push.xg.XGPushServer;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilString;
 
+import static acore.notification.controller.NotificationSettingController.pushSetFeedBack;
+import static acore.notification.controller.NotificationSettingController.push_show_feedBack;
+
 /**
  *
  * @author zeyue_t
@@ -347,7 +350,7 @@ public class Feedback extends BaseActivity implements OnClickListener {
                 }
             });
             //处理弹框
-            NotificationSettingController.showNotification(Tools.getDimen(this,R.dimen.dp_44), FileManager.push_show_feedBack,NotificationSettingController.pushSetFeedBack);
+            NotificationSettingController.showNotification(push_show_feedBack,pushSetFeedBack);
         } else
             Tools.showToast(this, "请输入反馈内容");
     }

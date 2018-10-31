@@ -386,7 +386,6 @@ public class BaseActivity extends AppCompatActivity {
 	public void startActivity(Intent intent) {
 		intent.addFlags(FLAG_ACTIVITY_NO_USER_ACTION);
 		super.startActivity(intent);
-		NotificationSettingController.removePermissionSetView();
 		// 设置切换动画，从右边进入，左边退出
 			overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
 	}
@@ -395,7 +394,6 @@ public class BaseActivity extends AppCompatActivity {
 	public void startActivityForResult(Intent intent, int requestCode) {
 		intent.addFlags(FLAG_ACTIVITY_NO_USER_ACTION);
 		super.startActivityForResult(intent, requestCode);
-		NotificationSettingController.removePermissionSetView();
 		// 设置切换动画，从右边进入，左边退出
 			overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
 	}

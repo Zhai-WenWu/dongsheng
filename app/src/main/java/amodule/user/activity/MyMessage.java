@@ -39,6 +39,8 @@ import aplug.feedback.activity.Feedback;
 import third.qiyu.QiYvHelper;
 import xh.basic.internet.UtilInternet;
 
+import static acore.notification.controller.NotificationSettingController.pushSetMessage;
+import static acore.notification.controller.NotificationSettingController.push_show_message;
 import static acore.tools.ObserverManager.NOTIFY_LOGIN;
 import static acore.tools.ObserverManager.NOTIFY_LOGOUT;
 import static acore.tools.ObserverManager.NOTIFY_MESSAGE_REFRESH;
@@ -71,7 +73,7 @@ public class MyMessage extends BaseAppCompatActivity implements OnClickListener,
         handller.postDelayed(new Runnable() {
             @Override
             public void run() {
-                NotificationSettingController.showNotification(0, FileManager.push_show_message,NotificationSettingController.pushSetMessage);
+                NotificationSettingController.showNotification(push_show_message,pushSetMessage);
             }
         },1000*3);
     }

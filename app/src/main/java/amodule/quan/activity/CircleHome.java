@@ -47,6 +47,9 @@ import aplug.basic.ReqInternet;
 import third.share.BarShare;
 import third.share.tools.ShareTools;
 
+import static acore.notification.controller.NotificationSettingController.pushSetSubject;
+import static acore.notification.controller.NotificationSettingController.push_show_subject;
+
 /**
  * 圈子首页 该界面 launchMode 为 singleTask
  *
@@ -312,7 +315,7 @@ public class CircleHome extends BaseAppCompatActivity implements OnClickListener
             }
             // 通知Fragment刷新
             updateFragment(subjectData, false);
-            NotificationSettingController.showNotification(0, FileManager.push_show_subject,NotificationSettingController.pushSetSubject);
+            NotificationSettingController.showNotification(push_show_subject,pushSetSubject);
         }
 
 

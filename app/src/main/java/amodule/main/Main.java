@@ -620,9 +620,6 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
         } else {
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         }
-        if(nowTab!=index){
-            NotificationSettingController.removePermissionSetView();
-        }
     }
 
     public int getCurrentTab() {

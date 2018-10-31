@@ -41,6 +41,8 @@ import third.ad.tools.AdConfigTools;
 import static acore.logic.ConfigMannager.KEY_DIVERSION;
 import static acore.logic.ConfigMannager.KEY_GOODCOMMENT;
 import static acore.logic.ConfigMannager.KEY_PUSHJSON;
+import static acore.notification.controller.NotificationSettingController.pushSetHome;
+import static acore.notification.controller.NotificationSettingController.push_show_home;
 import static com.popdialog.AllPopDialogControler.log;
 import static third.ad.tools.AdPlayIdConfig.FULL_SRCEEN_ACTIVITY;
 
@@ -291,8 +293,11 @@ public class AllPopDialogHelper {
 //                XHClick.mapStat(XHApplication.in(), "a_push", "否", "");
 //            }
 //        });
-        allPopDialogControler.setOnPushDialogStatisticsCallback(b -> {
-            if(b)NotificationSettingController.showNotification(0, VersionOp.getVerName(XHApplication.in()),"");
+        allPopDialogControler.setOnPushDialogStatisticsCallback(new AllPopDialogControler.PushViewShowCallBack() {
+            @Override
+            public void viewShowState(boolean b) {
+                if(b)NotificationSettingController.showNotification(push_show_home,pushSetHome);
+            }
         });
     }
 
