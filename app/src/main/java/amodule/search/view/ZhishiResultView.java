@@ -25,6 +25,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import acore.logic.AppCommon;
 import acore.logic.load.LoadManager;
+import acore.logic.stat.StatModel;
 import acore.logic.stat.StatisticsManager;
 import acore.logic.stat.intefaces.OnItemClickListenerStat;
 import acore.override.activity.base.BaseActivity;
@@ -133,7 +134,7 @@ public class ZhishiResultView extends RelativeLayout {
 
             @Override
             protected void onStat(int position, String statJsonStr) {
-                StatisticsManager.listClick(p, m, String.valueOf(position + 1), searchKey,statJsonStr);
+                StatisticsManager.saveData(StatModel.createListClickModel(p, m, String.valueOf(position + 1), searchKey,statJsonStr));
             }
         });
 
@@ -146,7 +147,7 @@ public class ZhishiResultView extends RelativeLayout {
                 Map<String, String> data = mListData.get(position);
                 if (!TRUE_VALUE.equals(data.get(IS_STAT))) {
                     data.put(IS_STAT,TRUE_VALUE);
-                    StatisticsManager.listShow(getContext().getClass().getSimpleName(), "菜单列表",  String.valueOf(position + 1), searchKey, data.get(STAT_DATA));
+                    StatisticsManager.saveData(StatModel.createListShowModel(getContext().getClass().getSimpleName(), "菜单列表",  String.valueOf(position + 1), searchKey, data.get(STAT_DATA)));
                 }
                 return view;
             }

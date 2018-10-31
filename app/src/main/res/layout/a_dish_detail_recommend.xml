@@ -23,13 +23,14 @@
     </amodule.dish.view.DishRelatedRecommendView>
 
 
-    <RelativeLayout
-        android:id="@+id/a_dish_detail_new_xiangguan"
+    <LinearLayout
+        android:id="@+id/a_dish_detail_new_xiangguan_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:layout_below="@+id/related_recommend"
         android:layout_marginBottom="@dimen/dp_15"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <View
             android:id="@+id/qa_line"
@@ -60,7 +61,7 @@
             android:textColor="@color/comment_color"
             android:textSize="@dimen/sp_16" />
 
-    </RelativeLayout>
+    </LinearLayout>
 
     <HorizontalScrollView
         android:id="@+id/a_dish_detail_new_xiangguan_scroll"

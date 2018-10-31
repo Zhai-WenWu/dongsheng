@@ -71,7 +71,7 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
 
     protected AdControlParent mAdControlParent;
 
-    protected boolean mIsAd;
+    public boolean mIsAd;
     protected boolean mIsTop;
 
     protected String mTransferUrl;
