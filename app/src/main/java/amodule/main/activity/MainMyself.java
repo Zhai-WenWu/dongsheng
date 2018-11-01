@@ -528,7 +528,7 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
                 case R.id.ll_score:
                     XHClick.track(getApplicationContext(), "点击我的页面的积分");
                     XHClick.mapStat(this, tongjiId,"列表", "积分商城");
-                    String url = "FullScreenWeb.app?url=" + StringManager.api_scoreStore;
+                    String url = "FullScreenWeb.app?url=" + StringManager.replaceUrl(StringManager.api_scoreStore);
 			        AppCommon.openUrl(url, true);
                     break;
                 case R.id.ll_coupon:
@@ -567,7 +567,7 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
                     VersionControl.recordCurrentVersionOnce(this,"taskCenter");
                     gourp2.getChildAt(2).findViewById(R.id.my_new_info).setVisibility(View.GONE);
                     gourp2.getChildAt(2).findViewById(R.id.ico_right_myself).setVisibility(View.VISIBLE);
-                    String url = "FullScreenWeb.app?url=" + StringManager.api_dailyTask;
+                    String url = "FullScreenWeb.app?url=" + StringManager.replaceUrl(StringManager.api_dailyTask);
                     AppCommon.openUrl(url,false);
                     break;
                 case "qa"://我的问答

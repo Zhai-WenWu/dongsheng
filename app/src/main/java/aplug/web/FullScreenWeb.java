@@ -41,7 +41,7 @@ public class FullScreenWeb extends WebActivity implements IObserver {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         super.onCreate(savedInstanceState);
 //        ToolsDevice.modifyStateTextColor(this);
-        initActivity("",0,0,0,R.layout.a_full_screen_web);
+        initActivity("",2,0,0,R.layout.a_full_screen_web);
         Bundle bundle = this.getIntent().getExtras();
         // 正常调用
         if (bundle != null) {
