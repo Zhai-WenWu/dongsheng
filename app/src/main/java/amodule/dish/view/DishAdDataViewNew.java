@@ -111,14 +111,14 @@ public class DishAdDataViewNew extends ItemBaseView {
                 });
         Log.i("zyj", "展示广告");
         //设置文字
-        TextView title = (TextView) findViewById(R.id.ad_name);
-        title.setText(map.get("title"));
+//        TextView title = (TextView) findViewById(R.id.ad_name);
+//        title.setText(map.get("title"));
         TextView text = (TextView) findViewById(R.id.ad_big_pic_text);
         text.setText(handlerAdText(map));
         //曝光数据
         exposureAdData();
         //广告小标
-        setAdHintClick(R.id.ad_big_pic_flag, !"1".equals(map.get("adType")));
+//        setAdHintClick(R.id.ad_big_pic_flag, !"1".equals(map.get("adType")));
         //添加到parent
         addViewToPraent(R.id.ad_big_pic_layout, parentView);
 

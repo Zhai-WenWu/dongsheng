@@ -1,6 +1,7 @@
 package amodule.search.view;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
@@ -8,6 +9,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -16,7 +18,6 @@ import android.widget.RelativeLayout;
 import com.xiangha.R;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -25,13 +26,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 import acore.logic.load.LoadManager;
 import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
+import acore.tools.Tools;
 import amodule.search.adapter.AdapterCaipuSearch;
 import amodule.search.data.SearchDataImp;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
 import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
-import xh.basic.internet.UtilInternet;
-import xh.basic.tool.UtilString;
 
 import static com.xiangha.R.id.v_no_data_search;
 import static xh.basic.internet.UtilInternet.REQ_OK_STRING;
@@ -48,23 +48,15 @@ public class CaipuSearchResultView extends LinearLayout {
     private LinearLayout ll_noData;
     private String searchKey;
 
-
     private int currentCaipuPage;
-    private int currentCaiDanPage;
-    private int currentZhishiPage;
     private LoadManager loadManager;
     private CopyOnWriteArrayList<Map<String, String>> mListCaipuData = new CopyOnWriteArrayList<>();
     private CopyOnWriteArrayList<Map<String, String>> mListShicaiData = new CopyOnWriteArrayList<>();
-    private CopyOnWriteArrayList<Map<String, String>> mListCaidanData = new CopyOnWriteArrayList<>();
-    private CopyOnWriteArrayList<Map<String, String>> mListZhishiData = new CopyOnWriteArrayList<>();
     private PtrClassicFrameLayout refresh_list_view_frame;
     private ListView list_search_result;
     private boolean isFirstPage;
-    private CaidanResultView caidan_result;
     private AdapterCaipuSearch adapterCaipuSearch;
-    private ZhishiResultView zhishi_result;
     private SearchVIPLessonView mLessonView;
-    private AdapterCaipuSearch.CaipuSearchResultCallback caipuSearchResultCallback;
     private int firstCaipuLoadFlag;
     private View mParentView;
     private int adNum;
@@ -89,7 +81,6 @@ public class CaipuSearchResultView extends LinearLayout {
         this.context = context;
     }
 
-
     public void init(BaseActivity activity, View parentView) {
         mActivity = activity;
         mParentView = parentView;
@@ -97,65 +88,31 @@ public class CaipuSearchResultView extends LinearLayout {
         initView();
     }
 
-
     private void initView() {
 
-        refresh_list_view_frame = (PtrClassicFrameLayout) findViewById(R.id.refresh_list_view_frame);
+        refresh_list_view_frame = findViewById(R.id.refresh_list_view_frame);
         refresh_list_view_frame.setVisibility(View.VISIBLE);
-        list_search_result = (ListView) findViewById(R.id.list_search_result);
-        ll_noData = (LinearLayout) findViewById(v_no_data_search);
+        list_search_result = findViewById(R.id.list_search_result);
+        ll_noData = findViewById(v_no_data_search);
         ll_noData.setVisibility(View.GONE);
+        list_search_result.setVisibility(INVISIBLE);
         list_search_result.setDivider(null);
         mLessonView = new SearchVIPLessonView(context);
+        View view = new View(getContext());
+        view.setBackgroundColor(Color.WHITE);
+        view.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT,Tools.getDimen(getContext(),R.dimen.dp_10)));
+        list_search_result.addHeaderView(view);
         RelativeLayout header = new RelativeLayout(context);
         header.addView(mLessonView);
         list_search_result.addHeaderView(header);
 
-        initCaidanResultView();
-        initZhishiResultView();
-
-        createCallback();
-        adapterCaipuSearch = new AdapterCaipuSearch(mActivity, list_search_result, caipuSearchResultCallback);
+        adapterCaipuSearch = new AdapterCaipuSearch(mActivity, list_search_result);
     }
 
 
     private void initData() {
         loadManager = mActivity.loadManager;
-        actIn = new AtomicInteger(3);
-    }
-
-
-    private void initCaidanResultView() {
-        caidan_result = (CaidanResultView) findViewById(R.id.caidan_result);
-        caidan_result.init(mActivity, mParentView);
-        caidan_result.setVisibility(View.GONE);
-    }
-
-    private void initZhishiResultView() {
-        zhishi_result = (ZhishiResultView) findViewById(R.id.zhishi_result);
-        zhishi_result.init(mActivity, mParentView);
-        zhishi_result.setVisibility(View.GONE);
-    }
-
-
-    private void createCallback() {
-        caipuSearchResultCallback = new AdapterCaipuSearch.CaipuSearchResultCallback() {
-            @Override
-            public void searchMoreZhishi() {
-
-                zhishi_result.search(searchKey);
-                zhishi_result.setVisibility(View.VISIBLE);
-                refresh_list_view_frame.setVisibility(View.INVISIBLE);
-            }
-
-            @Override
-            public void searchMoreCaidan() {
-
-                caidan_result.search(searchKey);
-                caidan_result.setVisibility(View.VISIBLE);
-                refresh_list_view_frame.setVisibility(View.INVISIBLE);
-            }
-        };
+        actIn = new AtomicInteger(2);
     }
 
     public void showCaipuSearchResultView() {
@@ -163,7 +120,6 @@ public class CaipuSearchResultView extends LinearLayout {
             refresh_list_view_frame.setVisibility(View.VISIBLE);
         }
     }
-
 
     public void search(String key) {
         adapterCaipuSearch.refreshAdData();
@@ -180,8 +136,6 @@ public class CaipuSearchResultView extends LinearLayout {
                         isRefreash.set(true);
                         searchVIPLesson();
                         searchCaipu();
-                        searchCaiDan();
-                        searchZhiShi();
                     }
                 }, new View.OnClickListener() {
                     @Override
@@ -192,8 +146,6 @@ public class CaipuSearchResultView extends LinearLayout {
 
                 });
         searchVIPLesson();
-        searchCaiDan();
-        searchZhiShi();
     }
 
     public void onClearcSearchWord() {
@@ -202,7 +154,7 @@ public class CaipuSearchResultView extends LinearLayout {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
-                adapterCaipuSearch.refresh(false, mListCaipuData, mListShicaiData, mListCaidanData, mListZhishiData);
+                adapterCaipuSearch.refresh(false, mListCaipuData, mListShicaiData);
                 adNum = 0;
             }
         });
@@ -216,25 +168,19 @@ public class CaipuSearchResultView extends LinearLayout {
         mLessonCode = "";
         mListCaipuData.clear();
         mListShicaiData.clear();
-        mListCaidanData.clear();
-        mListZhishiData.clear();
         currentCaipuPage = 0;
-        currentCaiDanPage = 0;
-        currentZhishiPage = 0;
-        actIn = new AtomicInteger(3);
+        actIn = new AtomicInteger(2);
         ll_noData.setVisibility(View.GONE);
         adapterCaipuSearch.clearAdList();
         adapterCaipuSearch.notifyDataSetChanged();
     }
 
     private void searchVIPLesson() {
-        mLessonView.searchLesson(searchKey, new SearchVIPLessonView.LessonCallback() {
-            @Override
-            public void callback(String code) {
-                mLessonCode = code;
-                mLessonDataReady = true;
-                onLessonAndDishDataReady();
-            }
+        mLessonView.searchLesson(searchKey, code -> {
+            mLessonCode = code;
+            mLessonDataReady = true;
+            onLessonAndDishDataReady();
+            onDownFirstPageComplete();
         });
     }
 
@@ -258,15 +204,12 @@ public class CaipuSearchResultView extends LinearLayout {
                     if (currentCaipuPage == 1) {
                         mListCaipuData.clear();
                         mListShicaiData.clear();
+                        firstCaipuLoadFlag = flag;
                     }
                     mDishStrMap = StringManager.getFirstMap(returnObj);
                     onLessonAndDishDataReady();
-                } else {
-                }
-
-                if (isFirstPage) {
-                    firstCaipuLoadFlag = flag;
                     onDownFirstPageComplete();
+                } else {
                 }
             }
         });
@@ -283,10 +226,20 @@ public class CaipuSearchResultView extends LinearLayout {
                     Map<String, String> map1 = tempList.get(k);
                     if (map1.containsKey("customers")) {
                         Map<String, String> customer = StringManager.getFirstMap(map1.get("customers"));
-                        map1.put("cusNickName", customer.get("nickName"));
+                        String nickName = customer.get("nickName");
+                        if(!TextUtils.isEmpty(nickName) && nickName.length()>=8){
+                            nickName = nickName.substring(0,7) + "...";
+                        }
+                        map1.put("cusNickName", nickName);
                         map1.put("cusImg", customer.get("img"));
                         map1.put("cusCode", customer.get("code"));
                         map1.remove("customers");
+                    }
+                    if(map1.containsKey("video")){
+                        Map<String, String> video = StringManager.getFirstMap(map1.get("video"));
+                        if(!video.isEmpty() && video.containsKey("duration")){
+                            map1.put("duration", video.get("duration"));
+                        }
                     }
                     map1.put("allClick", map1.get("allClick") + "浏览");
                     map1.put("favorites", map1.get("favorites") + "收藏");
@@ -305,21 +258,20 @@ public class CaipuSearchResultView extends LinearLayout {
                     String shicaiStr = mDishStrMap.get("theIngre");
                     ArrayList<Map<String, String>> tempList2 = StringManager.getListMapByJson(shicaiStr);
                     for (Map<String, String> map2 : tempList2) {
-                        map2.put("allClick", map2.get("allClick") + "浏览");
-                        map2.put("name", map2.get("name") + "百科");
+                        map2.put("name", map2.get("name"));
                     }
                     mListShicaiData.addAll(tempList2);
                 }
 
                 if (!isFirstPage) {
-                    int loadCount = mListCaidanData.size() + mListCaipuData.size() + mListShicaiData.size() + mListZhishiData.size() + adNum;
+                    int loadCount =mListCaipuData.size() + mListShicaiData.size() + adNum;
                     if (adapterCaipuSearch == null) {
                         adapterCaipuSearch = (AdapterCaipuSearch) list_search_result.getAdapter();
                     }
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
                         public void run() {
-                            adNum = adapterCaipuSearch.refresh(isFirstPage, mListCaipuData, mListShicaiData, mListCaidanData, mListZhishiData);
+                            adNum = adapterCaipuSearch.refresh(isFirstPage, mListCaipuData, mListShicaiData);
                         }
                     });
                     loadManager.loadOver(REQ_OK_STRING,list_search_result, loadCount);
@@ -333,110 +285,19 @@ public class CaipuSearchResultView extends LinearLayout {
         }
     }
 
-    private void searchCaiDan() {
-
-        currentCaiDanPage++;
-        new SearchDataImp().getCaidanResult(context, searchKey, currentCaiDanPage, new InternetCallback() {
-            @Override
-            public void loaded(int flag, String url, Object returnObj) {
-                if (flag >= REQ_OK_STRING) { // 表示成功
-                    if (currentCaiDanPage == 1) {
-                        mListCaidanData.clear();
-                    }
-                    ArrayList<Map<String, String>> listReturn = UtilString.getListMapByJson(returnObj);
-                    HashMap<String, String> tempMap = new HashMap<>();
-                    if (listReturn != null && listReturn.size() > 0) {
-                        Map<String, String> map = listReturn.get(0);
-                        if (map != null && map.size() > 0) {
-                            tempMap.putAll(map);
-                            if (map.containsKey("caidan") && !map.get("caidan").equals("null")) {
-                                listReturn = UtilString.getListMapByJson(map.get("caidan"));
-                                for (Map<String, String> returnMap : listReturn) {
-                                    ArrayList<Map<String, String>> imgs = UtilString.getListMapByJson(returnMap.get("imgs"));
-                                    for (int index = 0; index < 2; index++) {
-                                        if (index < imgs.size()) {
-                                            tempMap.put("img" + (index + 1), imgs.get(index).get(""));
-                                        } else {
-                                            tempMap.put("img" + (index + 1), "hide");
-                                        }
-                                    }
-
-                                    tempMap.putAll(returnMap);
-
-                                    tempMap.put("allClick", tempMap.get("allClick") + "浏览");
-                                    tempMap.put("dishNum", tempMap.get("dishNum") + "道菜");
-                                    tempMap.remove("caidan");
-                                    mListCaidanData.add(tempMap);
-                                }
-                            }
-
-                        }
-
-                    }
-                }
-                if (currentCaiDanPage == 1) {
-                    onDownFirstPageComplete();
-                }
-            }
-        });
-    }
-
-    private void searchZhiShi() {
-
-        currentZhishiPage++;
-        new SearchDataImp().getZhishiResult(context, searchKey, currentZhishiPage, new InternetCallback() {
-            @Override
-            public void loaded(int flag, String url, Object returnObj) {
-                if (flag >= REQ_OK_STRING) {
-                    if (currentZhishiPage == 1) {
-                        mListZhishiData.clear();
-                    }
-                    // 解析数据
-                    ArrayList<Map<String, String>> list = UtilString.getListMapByJson(returnObj);
-                    if (list != null && list.size() > 0) {
-                        Map<String, String> map = list.get(0);
-                        HashMap<String, String> tempMap = new HashMap<String, String>();
-                        if (map != null && map.size() > 0) {
-                            tempMap.putAll(map);
-                        }
-
-                        ArrayList<Map<String, String>> list3 = UtilString.getListMapByJson(map.get("nous"));
-                        for (int i = 0; i < list3.size(); i++) {
-                            tempMap.put("img", list3.get(i).get("img"));
-                            tempMap.put("title", list3.get(i).get("title"));
-                            tempMap.put("content", list3.get(i).get("content"));
-                            tempMap.put("allClick", list3.get(i).get("allClick") + "浏览");
-                            tempMap.put("code", list3.get(i).get("code"));
-                            tempMap.put("classifyName", list3.get(i).get("classifyName"));
-                            tempMap.remove("nous");
-                            mListZhishiData.add(tempMap);
-                        }
-
-                    }
-                }
-                if (currentZhishiPage == 1) {
-                    onDownFirstPageComplete();
-                }
-
-            }
-        });
-    }
-
-
     private void onDownFirstPageComplete() {
         if (actIn.decrementAndGet() != 0)
             return;
-
         loadManager.hideProgressBar();
         loadManager.hideLoadFaildBar();
         if (mListCaipuData.size() == 0
-                && mListShicaiData.size() == 0
-                && mListCaidanData.size() == 0
-                && mListZhishiData.size() == 0) {
+                && mListShicaiData.size() == 0) {
             ll_noData.setVisibility(View.VISIBLE);
+            list_search_result.setVisibility(INVISIBLE);
             return;
         } else {
             ll_noData.setVisibility(View.GONE);
+            list_search_result.setVisibility(VISIBLE);
         }
 
         if (adapterCaipuSearch == null) {
@@ -448,7 +309,7 @@ public class CaipuSearchResultView extends LinearLayout {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
-                adNum = adapterCaipuSearch.refresh(true, mListCaipuData, mListShicaiData, mListCaidanData, mListZhishiData);
+                adNum = adapterCaipuSearch.refresh(true, mListCaipuData, mListShicaiData);
             }
         });
         loadManager.loadOver(50,list_search_result, 1);
