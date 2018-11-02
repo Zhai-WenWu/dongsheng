@@ -728,7 +728,8 @@ public class FriendHome extends BaseActivity implements IObserver {
             tv.setText(num1 + "");
         else
             tv.setText(0 + "");
-        if(LoginManager.isSlef(userCode)){
+        if(LoginManager.isSlef(userCode)
+                || (LoginManager.isLogin() && TextUtils.isEmpty(userCode))){
             LoginManager.userInfo.put("shortVideoNum",tv.getText().toString());
         }
         TextView tv2 = view2.findViewById(R.id.tab_data);
