@@ -10,4 +10,5 @@ import com.xiangha.R;
  */
 public class StatConf {
     public static final int STAT_TAG = R.id.stat_tag;
+    public static final String STAT_F = "statF";
 }

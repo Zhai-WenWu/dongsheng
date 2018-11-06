@@ -101,13 +101,12 @@
 
         <TextView
             android:id="@+id/tv_caipu_name"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_3"
             android:ellipsize="end"
             android:lineSpacingExtra="@dimen/dp_3"
             android:lines="1"
-            android:maxWidth="@dimen/dp_150"
             android:textColor="#333333"
             android:textSize="@dimen/sp_17"
             android:textStyle="bold"

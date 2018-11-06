@@ -22,6 +22,7 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.MsgScrollView;
 import amodule.article.view.ReportItem;
+import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import xh.basic.internet.UtilInternet;
@@ -68,14 +69,23 @@ public class ReportActivity extends BaseActivity {
         addListener();
     }
 
+    boolean isToLogin = false;
     @Override
     protected void onResume() {
         super.onResume();
-        if (!LoginManager.isLogin()
-                || (!TextUtils.isEmpty(LoginManager.userInfo.get("code"))
+        if(!LoginManager.isLogin()){
+            if(isToLogin){
+                ReportActivity.this.finish();
+                return;
+            }
+            isToLogin = true;
+            Intent intent = new Intent(this,LoginByAccout.class);
+            this.startActivity(intent);
+            return;
+        }else if((!TextUtils.isEmpty(LoginManager.userInfo.get("code"))
                         && !TextUtils.isEmpty(mUserCode)
-                        && mUserCode.equals(LoginManager.userInfo.get("code")))) {
-            finish();
+                        && mUserCode.equals(LoginManager.userInfo.get("code")))){
+            ReportActivity.this.finish();
             return;
         }
         if (!mLoaded) {

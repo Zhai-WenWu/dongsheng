@@ -244,10 +244,11 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
         });
         mAdapter.setPlayCompleteCallBack(new RvVericalVideoItemAdapter.PlayCompleteCallBack() {
             @Override
-            public void videoComplete(int position) {
+            public void videoComplete(int position,boolean hasDialogShow) {
                 if (position >= 0 && position + 1 < mDatas.size()) {
                     String playMode = mDatas.get(position + 1).getPlayMode();
-                    if ("2".equals(playMode) && "wifi".equals(ToolsDevice.getNetWorkType(ShortVideoDetailActivity.this))) {
+                    if ("2".equals(playMode) && "wifi".equals(ToolsDevice.getNetWorkType(ShortVideoDetailActivity.this))
+                            && hasDialogShow) {
                         recyclerView.smoothScrollToPosition(position + 1);
                     }else if("1".equals(playMode)||"2".equals(playMode) && !"wifi".equals(ToolsDevice.getNetWorkType(ShortVideoDetailActivity.this))){
                         RvVericalVideoItemAdapter.ItemViewHolder currentHolder = (RvVericalVideoItemAdapter.ItemViewHolder) recyclerView.findViewHolderForAdapterPosition(position);

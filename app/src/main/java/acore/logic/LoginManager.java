@@ -320,7 +320,7 @@ public class LoginManager {
         }
     }
 
-    public static String getVipMaturityTime() {
+    public static synchronized String getVipMaturityTime() {
 	    return userInfo == null ? null : userInfo.get("maturity_time");
     }
 
@@ -465,8 +465,8 @@ public class LoginManager {
         return false;
     }
 
-    public static boolean isVIPLocal(Context context){
-        Map<String,String> userInfo = (Map<String, String>) FileManager.loadShared(context, FileManager.xmlFile_userInfo, "");
+    public static boolean isVIPLocal(){
+        Map<String,String> userInfo = (Map<String, String>) FileManager.loadShared(XHApplication.in(), FileManager.xmlFile_userInfo, "");
         Map<String,String> vipMap = StringManager.getFirstMap(userInfo.get("vip"));
         if("2".equals(vipMap.get("isVip"))){
             return true;

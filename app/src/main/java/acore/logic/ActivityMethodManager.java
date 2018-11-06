@@ -16,6 +16,7 @@ import com.xiangha.Welcome;
 import java.util.ArrayList;
 import java.util.Map;
 
+import acore.logic.stat.StatConf;
 import acore.logic.stat.StatModel;
 import acore.logic.stat.StatisticsManager;
 import acore.notification.controller.NotificationSettingController;
@@ -45,6 +46,7 @@ public class ActivityMethodManager {
     private ArrayList<IAutoRefresh> mAdControls = new ArrayList<>();
     private long lastOnResumeTime,intervalOnResumeTime;
     private long onResumeTime = 0;
+    private String mStatF;
 
     public static boolean isAppShow=false;
 
@@ -54,6 +56,13 @@ public class ActivityMethodManager {
         PushAgent.getInstance(mAct).onAppStart();
         /*随机广告*/
         randPromotion();
+        initStatData();
+    }
+
+    private void initStatData() {
+        if (mAct != null && mAct.getIntent() != null) {
+            mStatF = mAct.getIntent().getStringExtra(StatConf.STAT_F);
+        }
     }
 
     public void onRestart(){
@@ -158,7 +167,7 @@ public class ActivityMethodManager {
     @SuppressLint("DefaultLocale")
     public void onPause() {
         long stayTime = System.currentTimeMillis() - onResumeTime;
-        StatisticsManager.saveData(StatModel.createPageStayModel(mAct.getClass().getSimpleName(),String.format("%.2f",stayTime/1000f)));
+        StatisticsManager.saveData(StatModel.createPageStayModel(mAct.getClass().getSimpleName(),String.format("%.2f",stayTime/1000f), TextUtils.isEmpty(mStatF) ? StatModel.EMPTY : mStatF));
         //广告刷新定时器停止
         XHAdAutoRefresh.getInstance().stopTimer();
         MobclickAgent.onPause(mAct);

@@ -485,11 +485,11 @@ public class BaseLoginActivity extends BaseActivity {
             public void loaded(int flag, String url, Object returnObj) {
                 loadManager.hideProgressBar();
                 if (flag >= ReqInternet.REQ_OK_STRING) {
-                    callback.onSuccess();
                     LoginManager.loginSuccess((Activity) context, returnObj);
+                    callback.onSuccess();
                 } else {
-                    callback.onFalse(flag);
                     LoginManager.loginFail(returnObj);
+                    callback.onFalse(flag);
                     Log.i("modifySecret", returnObj.toString());
                 }
                 loadManager.hideProgressBar();

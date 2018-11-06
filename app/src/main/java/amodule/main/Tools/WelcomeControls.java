@@ -97,7 +97,6 @@ public class WelcomeControls {
             imageW = fixedH * mOriginalWidth / mOriginalHeight;
         }
         ImageView welcomeImg = mWelcomeView.findViewById(R.id.image_self);
-        Glide.with(activity).load(R.drawable.welcome_big).dontAnimate().into(welcomeImg);
         ViewGroup.LayoutParams params = welcomeImg.getLayoutParams();
         params.width = imageW;
         params.height = imageH;

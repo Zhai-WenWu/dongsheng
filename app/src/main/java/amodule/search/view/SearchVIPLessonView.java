@@ -77,8 +77,9 @@ public class SearchVIPLessonView extends BaseItemView implements View.OnClickLis
     }
 
     public void searchLesson(String searchKey, LessonCallback callback) {
-        if (TextUtils.isEmpty(searchKey))
+        if (TextUtils.isEmpty(searchKey)){
             return;
+        }
         String params = "keywords=" + searchKey;
         ReqEncyptInternet.in().doEncypt(StringManager.API_SEARCH_COURSE_DISH, params, new InternetCallback() {
             @Override
@@ -93,52 +94,47 @@ public class SearchVIPLessonView extends BaseItemView implements View.OnClickLis
     }
 
     private void onDataReady(Object o, LessonCallback callback) {
-        new android.os.Handler(Looper.getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                if (mDataMap != null)
-                    mDataMap.clear();
-                if (o != null) {
-                    mDataMap = StringManager.getFirstMap(o);
-                }
-                if(mDataMap!= null && !mDataMap.isEmpty()){
-                    String tag = mDataMap.get("tag");
-                    Map<String, String> tagMap = StringManager.getFirstMap(tag);
-                    String tagColor = tagMap.get("color");
-                    String tagBg = tagMap.get("bgColor");
-                    String title = mDataMap.get("title");
-                    if (tagBg == null || tagColor == null && callback != null) {
-                        callback.callback(null);
-                        return;
-                    }
-                    if (title == null) {
-                        title = "";
-                    }
-                    mTitleText.setText(title);
-                    String subTitle = mDataMap.get("subTitle");
-                    mInfoText.setText(subTitle);
-                    String name = mDataMap.get("customer");
-                    mNameText.setText(name);
-                    setViewImage(mLessonImg, mDataMap.get("img"));
-                    Map<String,String> videoMap = StringManager.getFirstMap(mDataMap.get("video"));
-                    String videoDuration = videoMap.get("duration");
-                    if(!TextUtils.isEmpty(videoDuration)){
-                        mVideoDuration.setText(videoDuration);
-                        mVideoDuration.setVisibility(VISIBLE);
-                    }else{
-                        mVideoDuration.setVisibility(GONE);
-                    }
-                    if (callback != null)
-                        callback.callback(mDataMap.get("code"));
-                    setVisibility(View.VISIBLE);
-                    XHClick.mapStat(getContext(), mStatisticsId, "顶部VIP内容展现量", "");
-                } else {
-                    setVisibility(View.GONE);
-                    if (callback != null)
-                        callback.callback(null);
-                }
+        if (mDataMap != null)
+            mDataMap.clear();
+        if (o != null) {
+            mDataMap = StringManager.getFirstMap(o);
+        }
+        if(mDataMap!= null && !mDataMap.isEmpty()){
+            String tag = mDataMap.get("tag");
+            Map<String, String> tagMap = StringManager.getFirstMap(tag);
+            String tagColor = tagMap.get("color");
+            String tagBg = tagMap.get("bgColor");
+            String title = mDataMap.get("title");
+            if (tagBg == null || tagColor == null && callback != null) {
+                callback.callback(null);
+                return;
             }
-        });
+            if (title == null) {
+                title = "";
+            }
+            mTitleText.setText(title);
+            String subTitle = mDataMap.get("subTitle");
+            mInfoText.setText(subTitle);
+            String name = mDataMap.get("customer");
+            mNameText.setText(name);
+            setViewImage(mLessonImg, mDataMap.get("img"));
+            Map<String,String> videoMap = StringManager.getFirstMap(mDataMap.get("video"));
+            String videoDuration = videoMap.get("duration");
+            if(!TextUtils.isEmpty(videoDuration)){
+                mVideoDuration.setText(videoDuration);
+                mVideoDuration.setVisibility(VISIBLE);
+            }else{
+                mVideoDuration.setVisibility(GONE);
+            }
+            if (callback != null)
+                callback.callback(mDataMap.get("code"));
+            setVisibility(View.VISIBLE);
+            XHClick.mapStat(getContext(), mStatisticsId, "顶部VIP内容展现量", "");
+        } else {
+            setVisibility(View.GONE);
+            if (callback != null)
+                callback.callback(null);
+        }
     }
 
     @Override

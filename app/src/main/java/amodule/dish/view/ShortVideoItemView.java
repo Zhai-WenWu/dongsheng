@@ -314,8 +314,8 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
                 mInnerPlayState = INNER_PLAY_STATE_AUTO_COMPLETE;
                 changeThumbImageState(true);
                 playNum++;
-                if (isCompleteCallback && playCompleteCallBack != null && position >= 0) {
-                    playCompleteCallBack.videoComplete(position);
+                if (playCompleteCallBack != null && position >= 0) {
+                    playCompleteCallBack.videoComplete(position,isCompleteCallback);
                 }
             }
 
@@ -406,6 +406,10 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
     public void prepareAsync() {
         mInnerPlayState = INNER_PLAY_STATE_START;
         mNeedChangePauseToStartEnable = true;
+        if (TextUtils.isEmpty(mVideoUrl)) {
+            releaseVideo();
+            return;
+        }
         mPlayerView.setUp(mVideoUrl, false, "");
         mPlayerView.startPlayLogic();
         if (!mStaticEnable) {

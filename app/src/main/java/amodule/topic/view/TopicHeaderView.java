@@ -100,7 +100,9 @@ public class TopicHeaderView extends RelativeLayout {
                     mUserFrontImg.setVisibility(View.VISIBLE);
                     mUserFrontImg.setImageBitmap(bitmap);
                     bitmap = ImgManager.RSBlur(getContext(),bitmap,10);
-                    mUserRearImg.setImageBitmap(bitmap);
+                    if(bitmap != null){
+                        mUserRearImg.setImageBitmap(bitmap);
+                    }
                     mShadePanel.setVisibility(View.VISIBLE);
                 } catch (Exception e) {
                     e.printStackTrace();

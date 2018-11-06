@@ -1,5 +1,6 @@
 package com.quze.videorecordlib;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -7,6 +8,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -18,7 +20,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.PermissionChecker;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -82,7 +88,7 @@ import static com.quze.videorecordlib.util.CameraUtil.CAMERA_FACING_FRONT;
  * status bar and navigation/system bar) with user interaction.
  */
 public class VideoRecorder extends AppCompatActivity implements View.OnClickListener, View.OnTouchListener,
-        ScaleGestureDetector.OnScaleGestureListener, GestureDetector.OnGestureListener {
+        ScaleGestureDetector.OnScaleGestureListener, GestureDetector.OnGestureListener ,ActivityCompat.OnRequestPermissionsResultCallback {
 
     public static final String EXTRA_BASE_OUTPUT_PATH = "baseOutputPath";
 
@@ -162,6 +168,8 @@ public class VideoRecorder extends AppCompatActivity implements View.OnClickList
     public double latitude = Double.MAX_VALUE;
     public double longitude = Double.MAX_VALUE;
 
+    public static String[] permissions = {Manifest.permission.CAMERA,Manifest.permission.RECORD_AUDIO};
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -174,6 +182,29 @@ public class VideoRecorder extends AppCompatActivity implements View.OnClickList
         initMsc();
         getLocation();
         VideoRecorderCommon.instance().addActivity(this);
+        checkPermission();
+    }
+
+    private boolean checkPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            for(int i =0 ;i<permissions.length;i++) {
+                if (PermissionChecker.checkSelfPermission(this, permissions[i]) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(VideoRecorder.this,new String[]{permissions[i]}, i);
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if((grantResults.length <= 0 || grantResults[0] != PackageManager.PERMISSION_GRANTED)
+                && ( requestCode == 0 || requestCode == 1)){
+            Toast.makeText(this,"请给予相应的权限",Toast.LENGTH_SHORT).show();
+            finish();
+        }
     }
 
     private void getLocation() {

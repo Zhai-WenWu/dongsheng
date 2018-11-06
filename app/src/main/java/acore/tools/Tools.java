@@ -140,7 +140,7 @@ public class Tools {
      * @throws ParseException
      */
     public static String dealTime(String lastTime, String currentTime, String dateFormat, String time) throws ParseException {
-        if (time.equals("hide"))
+        if (TextUtils.isEmpty(time) || time.equals("hide"))
             return time;
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat);
         Date currentDate = simpleDateFormat.parse(currentTime);

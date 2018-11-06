@@ -10,7 +10,6 @@ import android.util.Log;
 
 import com.annimon.stream.Stream;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -349,23 +348,25 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
         int minOverPasted = Tools.parseIntOfThrow(vipGuideConfigMap.get("minOverPasted"),60);
 
         int days = 0;
-        String vipMaturityTime = LoginManager.getVipMaturityTime();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            if (vipMaturityTime != null) {
-                Date dateFirst = sdf.parse(vipMaturityTime);
-                Date dateSecond = new Date();
-                days = Tools.getIntervalDaysFromTwoDate(dateFirst, dateSecond);
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
         //unOpen 未开通，willPasted 即将过期，minPasted 过期60天内，maxPasted 过期>60天
         if (LoginManager.isVIP()) {
             if (LoginManager.isLogin()) {
+                days = getInnerMaturityDays();
+                if(days == Integer.MAX_VALUE){
+                    handleVipGuideCallback(callback,null);
+                    return;
+                }
                 if (days >= 0 && days <= minWillPast) {//用户会员未到期，即将到期
                     HomeVipGuideModule module = transformHomeVipGuideModule(vipGuideConfigMap.get("willPasted"),"2");
-                    module.setTitle(String.format(module.getTitle(), days));
+                    String title = null;
+                    if (days != 0) {
+                        title = String.format(module.getTitle(), days);
+                    } else {
+                        if (!TextUtils.isEmpty(module.getTitle())) {
+                            title = module.getTitle().replace("%d", "今");
+                        }
+                    }
+                    module.setTitle(title);
                     handleVipGuideCallback(callback, module);
                 } else {
                     handleVipGuideCallback(callback, null);
@@ -386,8 +387,13 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
                     }
                 });
             }
-        } else {//非会员
+        } else {//非会员，可能是已过期的
+            days = getInnerMaturityDays();
             HomeVipGuideModule module = null;
+            if(days == Integer.MAX_VALUE && LoginManager.isLogin()){
+                handleVipGuideCallback(callback,null);
+                return;
+            }
             if (days < 0 && Math.abs(days) <= minOverPasted) {//登录用户，已过期
                 module = transformHomeVipGuideModule(vipGuideConfigMap.get("minPasted"),"3");
                 if(module != null && module.getTitle() != null){
@@ -423,7 +429,24 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
             }
             handleVipGuideCallback(callback,module);
         }
+    }
 
+    private int getInnerMaturityDays() {
+        int days = 0;
+        String vipMaturityTime = LoginManager.getVipMaturityTime();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            if (vipMaturityTime != null) {
+                Date dateFirst = sdf.parse(vipMaturityTime);
+                Date dateSecond = new Date();
+                days = Tools.getIntervalDaysFromTwoDate(dateFirst, dateSecond);
+            }else{
+                days = Integer.MAX_VALUE;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return days;
     }
 
     private int getTempVipIntervalDays() {

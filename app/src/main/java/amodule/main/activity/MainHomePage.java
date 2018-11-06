@@ -69,9 +69,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
     //是否加载
     volatile boolean LoadOver = false;
 
-    boolean mRecommendFirstLoadEnable = false;
-
-    boolean mRecommendFirstLoad = true;
+    boolean mRecommendFirstLoad = false;
 
     private ConnectionChangeReceiver mReceiver;
     private Handler handler = new Handler();
@@ -187,10 +185,8 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
                             mViewContrloer.refreshBuoy();
                     },
                     v -> {
-                        if (mRecommendFirstLoadEnable) {
-                            EntryptData(mRecommendFirstLoad);
-                        } else {
-                            mRecommendFirstLoadEnable = true;
+                        if (mRecommendFirstLoad) {
+                            EntryptData(false);
                         }
                     }
             );
@@ -278,7 +274,6 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
             @Override
             public void loaded(int i, String s, Object o) {
                 loadManager.hideProgressBar();
-                mRecommendFirstLoad = true;
                 mViewContrloer.refreshComplete();
                 LoadOver = true;
                 if (i >= ReqEncyptInternet.REQ_OK_STRING) {
@@ -286,9 +281,6 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
                         if (mViewContrloer != null) {
                             ArrayList<Map<String, String>> list = StringManager.getListMapByJson(o);
                             if (list.size() > 2) {
-                                if (mDataControler != null) {
-                                    mDataControler.clearData();
-                                }
                                 Map<String, String> recommendList = list.remove(list.size() - 1);
                                 mViewContrloer.setHeaderData(list, isCache);
                                 if (recommendList != null && !recommendList.isEmpty()) {
@@ -296,13 +288,18 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
                                     Map<String, String> data = StringManager.getFirstMap(widgetData.get(WidgetDataHelper.KEY_DATA));
                                     ArrayList<Map<String, String>> listData = StringManager.getListMapByJson(data.get(WidgetDataHelper.KEY_LIST));
                                     if (mDataControler != null) {
-                                        listData = insertAd(listData, false);
                                         mHomeAdapter.setCache(isCache);
-                                        mDataControler.addOuputSideData(listData);
+                                        if(!listData.isEmpty()){
+                                            if (!isCache) {
+                                                mDataControler.clearData();
+                                            }
+                                            listData = insertAd(listData, false);
+                                            mDataControler.addOuputSideData(listData);
+                                        }
                                         mDataControler.setNextUrl(data.get("nexturl"));
                                         notifyDataChanged();
                                     }
-
+                                    //設置title
                                     Map<String,String> parameterMap = StringManager.getFirstMap(widgetData.get(WidgetDataHelper.KEY_PARAMETER));
                                     parameterMap = StringManager.getFirstMap(parameterMap.get(WidgetDataHelper.KEY_TITLE));
                                     if(mViewContrloer != null && !TextUtils.isEmpty(parameterMap.get("text1"))){
@@ -311,6 +308,12 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
                                 }
                             } else {
                                 mViewContrloer.setHeaderData(list, isCache);
+                            }
+                        }
+                        if(!isCache){
+                            mRecommendFirstLoad = true;
+                            if(mDataControler != null){
+                                EntryptData(false);
                             }
                         }
                     },300);
@@ -322,7 +325,6 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
                     loadTopData();
                 }
                 isRefreshingHeader = false;
-
             }
         };
     }
@@ -336,7 +338,6 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
 //        Log.i("tzy_data", "EntryptData::" + refresh);
         //已经load
         LoadOver = true;
-        mRecommendFirstLoad = false;
         mDataControler.loadServiceFeedData(firstLoad, new HomeDataControler.OnLoadDataCallback() {
             @Override
             public void onPrepare() {
@@ -437,7 +438,6 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
         mViewContrloer.autoRefresh();
         GlobalVariableConfig.clearFavoriteModules();
         GlobalVariableConfig.clearAttentionModules();
-        setVipGuide();
     }
 
     private void innerRefresh() {
@@ -449,6 +449,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
             mViewContrloer.returnListTop();
         }
         loadRemoteData();
+        setVipGuide();
     }
 
     private void onResumeFake() {

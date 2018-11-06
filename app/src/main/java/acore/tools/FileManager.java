@@ -41,7 +41,6 @@ public class FileManager extends UtilFile{
 	public static final String file_appData = "appNewData" + file_up_version;
 	public static final String file_myquan = "myquan";
 	public static final String file_XGToken = "token";
-	public static final String file_indexData = "indexNewXiangHa_v3";
 	public static final String file_constitution = "constitution.xh";
 	public static final String file_buyBurden = "buyBurden.xh";
 	public static final String file_searchHis = "searchHis.xh";

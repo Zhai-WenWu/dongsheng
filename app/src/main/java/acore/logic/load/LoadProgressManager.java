@@ -1,5 +1,9 @@
 package acore.logic.load;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
@@ -9,8 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
@@ -31,9 +34,7 @@ public class LoadProgressManager {
 	private LinearLayout mLoadFailLayout;
 	private RelativeLayout mProgressBar;
 	private View mProgressShadow;
-	private TextView mLoadFailBtn;
-	private ImageView loadingView;
-	private Animation anim;
+	private ObjectAnimator loadingAnim;
 	private int topHeight;
 	
 	public LoadProgressManager(Context context , RelativeLayout layout){
@@ -44,10 +45,10 @@ public class LoadProgressManager {
 	
 	/**
 	 * 初始化progress
-	 * @param context
+	 * @param context 上下文
 	 * @param layout
 	 */
-	@SuppressLint("InflateParams")
+	@SuppressLint({"InflateParams", "WrongConstant"})
 	private void initProgress(Context context , RelativeLayout layout){
 		LayoutInflater inflater = LayoutInflater.from(context);
 		RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
@@ -62,8 +63,18 @@ public class LoadProgressManager {
 		lp.addRule(RelativeLayout.CENTER_IN_PARENT);
 		mProgressBar.setLayoutParams(lp);
 		//设置加载中动画
-		loadingView = (ImageView)mProgressBar.findViewById(R.id.loadingIv);
-		anim = AnimationUtils.loadAnimation(context, R.anim.loading_anim);
+		ImageView loadingView = mProgressBar.findViewById(R.id.loadingIv);
+		loadingAnim = ObjectAnimator.ofFloat(loadingView,"rotation",0f,359f);
+		loadingAnim.setRepeatCount(ValueAnimator.INFINITE);
+		loadingAnim.setRepeatMode(ValueAnimator.INFINITE);
+		loadingAnim.setInterpolator(new LinearInterpolator());
+		loadingAnim.addListener(new AnimatorListenerAdapter() {
+			@Override
+			public void onAnimationCancel(Animator animation) {
+				super.onAnimationCancel(animation);
+				loadingAnim.setFloatValues(0f);
+			}
+		});
 
 		hideProgressBar();
 		layout.addView(mProgressBar);
@@ -71,7 +82,7 @@ public class LoadProgressManager {
 	
 	/**
 	 * 初始化loadFailLayout
-	 * @param context
+	 * @param context 上下文
 	 * @param layout
 	 */
 	private void initLoadFailLayout(Context context , RelativeLayout layout){
@@ -79,10 +90,10 @@ public class LoadProgressManager {
 		mLoadFailLayout.setOrientation(LinearLayout.VERTICAL);
 		ImageView loadFaildImg = new ImageView(context);
 		TextView loadFailTv = new TextView(context);
-		mLoadFailBtn = new TextView(context);
+		TextView loadFailBtn = new TextView(context);
 		mLoadFailLayout.addView(loadFaildImg);
 		mLoadFailLayout.addView(loadFailTv);
-		mLoadFailLayout.addView(mLoadFailBtn);
+		mLoadFailLayout.addView(loadFailBtn);
 		
 		RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		lp.setMargins(0,topHeight,0,0);
@@ -99,7 +110,7 @@ public class LoadProgressManager {
 		loadFaildParams.setMargins(0, 0, 0, ToolsDevice.dp2px(context, 14));
 		loadFailTv.setLayoutParams(loadFaildParams);
 		loadFaildParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		mLoadFailBtn.setLayoutParams(loadFaildParams);
+		loadFailBtn.setLayoutParams(loadFaildParams);
 		
 		loadFaildImg.setScaleType(ScaleType.CENTER_INSIDE);
 		loadFaildImg.setBackgroundResource(R.drawable.z_loading_failed);
@@ -111,15 +122,15 @@ public class LoadProgressManager {
 		gradientDrawable.setCornerRadius(Tools.getDimen(context,R.dimen.dp_4));
 		String color = Tools.getColorStr(context,R.color.comment_color);
 		gradientDrawable.setStroke(Tools.getDimen(context,R.dimen.dp_0_5), Color.parseColor(color));
-		mLoadFailBtn.setBackgroundDrawable(gradientDrawable);
-		mLoadFailBtn.setClickable(false);
-		mLoadFailBtn.setGravity(Gravity.CENTER);
-		mLoadFailBtn.setText("重新加载");
-		mLoadFailBtn.setTextColor(Color.parseColor(color));
-		mLoadFailBtn.setTextSize(Tools.getDimenSp(context, R.dimen.sp_14));
+		loadFailBtn.setBackgroundDrawable(gradientDrawable);
+		loadFailBtn.setClickable(false);
+		loadFailBtn.setGravity(Gravity.CENTER);
+		loadFailBtn.setText("重新加载");
+		loadFailBtn.setTextColor(Color.parseColor(color));
+		loadFailBtn.setTextSize(Tools.getDimenSp(context, R.dimen.sp_14));
 		int lrDp = Tools.getDimen(context,R.dimen.dp_20);
 		int tbDp = Tools.getDimen(context,R.dimen.dp_7);
-		mLoadFailBtn.setPadding(lrDp, tbDp, lrDp, tbDp);
+		loadFailBtn.setPadding(lrDp, tbDp, lrDp, tbDp);
 		hideLoadFailBar();
 		layout.addView(mLoadFailLayout);
 	}
@@ -143,7 +154,7 @@ public class LoadProgressManager {
 	
 	public void showProgressBar(){
 		if(mProgressBar != null){
-			loadingView.startAnimation(anim);
+			loadingAnim.start();
 			mProgressBar.setVisibility(View.VISIBLE);
 		}
 	}
@@ -151,7 +162,7 @@ public class LoadProgressManager {
 	public void hideProgressBar(){
 		if(mProgressBar != null){
 			mProgressBar.setVisibility(View.GONE);
-			loadingView.clearAnimation();
+			loadingAnim.cancel();
 		}
 	}
 	

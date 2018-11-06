@@ -17,6 +17,7 @@ import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.ImageView;
@@ -214,42 +215,50 @@ public class ImgManager extends UtilImage {
         return coverBitmap;
     }
 
+    @Nullable
     public static Bitmap RSBlur(Context context,Bitmap source,int radius){
         return RSBlur(context,source,radius,1/8f);
     }
 
+    @Nullable
     public static Bitmap RSBlur(Context context,Bitmap source,int radius,float scale){
+        if(source == null){
+            return null;
+        }
+        try{
+            Log.i("tzy","origin size:"+source.getWidth()+"*"+source.getHeight());
+            int width = Math.round(source.getWidth() * scale);
+            int height = Math.round(source.getHeight() * scale);
 
-        Log.i("tzy","origin size:"+source.getWidth()+"*"+source.getHeight());
-        int width = Math.round(source.getWidth() * scale);
-        int height = Math.round(source.getHeight() * scale);
+            Bitmap inputBmp = Bitmap.createScaledBitmap(source,width,height,false);
 
-        Bitmap inputBmp = Bitmap.createScaledBitmap(source,width,height,false);
+            RenderScript renderScript =  RenderScript.create(context);
 
-        RenderScript renderScript =  RenderScript.create(context);
+            Log.i("tzy","scale size:"+inputBmp.getWidth()+"*"+inputBmp.getHeight());
 
-        Log.i("tzy","scale size:"+inputBmp.getWidth()+"*"+inputBmp.getHeight());
+            // Allocate memory for Renderscript to work with
 
-        // Allocate memory for Renderscript to work with
+            final Allocation input = Allocation.createFromBitmap(renderScript,inputBmp);
+            final Allocation output = Allocation.createTyped(renderScript,input.getType());
 
-        final Allocation input = Allocation.createFromBitmap(renderScript,inputBmp);
-        final Allocation output = Allocation.createTyped(renderScript,input.getType());
+            // Load up an instance of the specific script that we want to use.
+            ScriptIntrinsicBlur scriptIntrinsicBlur = ScriptIntrinsicBlur.create(renderScript, Element.U8_4(renderScript));
+            scriptIntrinsicBlur.setInput(input);
 
-        // Load up an instance of the specific script that we want to use.
-        ScriptIntrinsicBlur scriptIntrinsicBlur = ScriptIntrinsicBlur.create(renderScript, Element.U8_4(renderScript));
-        scriptIntrinsicBlur.setInput(input);
+            // Set the blur radius
+            scriptIntrinsicBlur.setRadius(radius);
 
-        // Set the blur radius
-        scriptIntrinsicBlur.setRadius(radius);
+            // Start the ScriptIntrinisicBlur
+            scriptIntrinsicBlur.forEach(output);
 
-        // Start the ScriptIntrinisicBlur
-        scriptIntrinsicBlur.forEach(output);
-
-        // Copy the output to the blurred bitmap
-        output.copyTo(inputBmp);
+            // Copy the output to the blurred bitmap
+            output.copyTo(inputBmp);
 
 
-        renderScript.destroy();
-        return inputBmp;
+            renderScript.destroy();
+            return inputBmp;
+        }catch (Exception e){
+            return source;
+        }
     }
 }

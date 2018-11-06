@@ -2,6 +2,7 @@ package amodule.main.view.item;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.text.TextUtils;
@@ -11,14 +12,24 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.BitmapRequestBuilder;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.xiangha.R;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.Map;
 
+import acore.override.XHApplication;
 import acore.tools.FileManager;
+import acore.tools.ImgManager;
 import acore.tools.StringManager;
 import aplug.basic.BlurBitmapTransformation;
 import aplug.basic.LoadImage;
+import aplug.basic.RSBlurBitmapTransformation;
 import aplug.basic.SubAnimTarget;
 
 public class HomeGridADItem extends HomeItem {
@@ -95,10 +106,23 @@ public class HomeGridADItem extends HomeItem {
                         }
                     });
                 }
-                BitmapRequestBuilder builder1 = LoadImage.with(getContext()).load(imgUrl).setSaveType(FileManager.save_cache).setPlaceholderId(R.drawable.i_nopic).setErrorId(R.drawable.i_nopic).build().transform(new BlurBitmapTransformation(getContext(), 16, 16, 2));
-                if (builder1 != null) {
-                    builder1.into(mImgBlur);
-                }
+                mImgBlur.setImageResource(R.drawable.i_nopic);
+                Glide.with(getContext()).load(imgUrl).downloadOnly(new SimpleTarget<File>() {
+                    @Override
+                    public void onResourceReady(File file, GlideAnimation<? super File> glideAnimation) {
+                        try {
+                            InputStream is = new FileInputStream(file);
+                            Bitmap bitmap = BitmapFactory.decodeStream(is);
+                            Bitmap blurBitmap = ImgManager.RSBlur(XHApplication.in(),bitmap,16);
+                            if(blurBitmap != null && !TextUtils.isEmpty(imgUrl) && imgUrl.equals(mImgBlur.getTag(TAG_ID))){
+                                mImgBlur.setImageBitmap(blurBitmap);
+                            }
+                            mImgBlur.setVisibility(View.VISIBLE);
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
             }
         }
         String iconUrl = dataMap.get("iconUrl");

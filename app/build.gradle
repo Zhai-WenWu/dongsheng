@@ -52,6 +52,7 @@ dependencies {
     implementation 'pub.devrel:easypermissions:0.2.1'
     implementation 'org.greenrobot:eventbus:3.1.1'
     implementation 'com.aliyun.dpa:oss-android-sdk:2.4.4'
+    //不要升级百度地图SDK
     implementation 'com.amap.api:location:4.2.0'
     implementation 'com.amap.api:search:6.1.0'
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.15'
@@ -64,8 +65,8 @@ android {
         applicationId "com.xiangha"
         minSdkVersion 19
         targetSdkVersion 21
-        versionCode 300
-        versionName "6.6.0.1"
+        versionCode 303
+        versionName "6.6.3.1"
         // dex突破65535的限制
         multiDexEnabled true
         ndk {

@@ -30,7 +30,6 @@ import acore.tools.Tools;
 import amodule.search.adapter.AdapterCaipuSearch;
 import amodule.search.data.SearchDataImp;
 import aplug.basic.InternetCallback;
-import aplug.basic.ReqInternet;
 import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
 
 import static com.xiangha.R.id.v_no_data_search;
@@ -54,18 +53,13 @@ public class CaipuSearchResultView extends LinearLayout {
     private CopyOnWriteArrayList<Map<String, String>> mListShicaiData = new CopyOnWriteArrayList<>();
     private PtrClassicFrameLayout refresh_list_view_frame;
     private ListView list_search_result;
-    private boolean isFirstPage;
     private AdapterCaipuSearch adapterCaipuSearch;
     private SearchVIPLessonView mLessonView;
-    private int firstCaipuLoadFlag;
-    private View mParentView;
     private int adNum;
     private AtomicBoolean isRefreash = new AtomicBoolean(false);
 
-    private boolean mLessonDataReady = false;
-    private boolean mDishDataReady = false;
     private String mLessonCode;
-    private Map<String, String> mDishStrMap;
+//    private Map<String, String> mDishStrMap;
 
     public CaipuSearchResultView(Context context) {
         this(context, null);
@@ -83,7 +77,6 @@ public class CaipuSearchResultView extends LinearLayout {
 
     public void init(BaseActivity activity, View parentView) {
         mActivity = activity;
-        mParentView = parentView;
         initData();
         initView();
     }
@@ -162,9 +155,6 @@ public class CaipuSearchResultView extends LinearLayout {
 
 
     private void clearSearchResult() {
-        mDishDataReady = false;
-        mLessonDataReady = false;
-        mDishStrMap = null;
         mLessonCode = "";
         mListCaipuData.clear();
         mListShicaiData.clear();
@@ -178,8 +168,7 @@ public class CaipuSearchResultView extends LinearLayout {
     private void searchVIPLesson() {
         mLessonView.searchLesson(searchKey, code -> {
             mLessonCode = code;
-            mLessonDataReady = true;
-            onLessonAndDishDataReady();
+            removeLessonDish();
             onDownFirstPageComplete();
         });
     }
@@ -189,99 +178,98 @@ public class CaipuSearchResultView extends LinearLayout {
         Log.e("TAG", "searchCaipu: -----------");
 
         currentCaipuPage++;
-        isFirstPage = currentCaipuPage == 1;
 
-        loadManager.loading(list_search_result,  isFirstPage);
+        loadManager.loading(list_search_result, currentCaipuPage == 1);
         if (isRefreash.get()) {
             loadManager.hideProgressBar();
             isRefreash.set(false);
         }
         new SearchDataImp().getCaipuAndShicaiResult(context, searchKey, currentCaipuPage, new InternetCallback() {
+            final boolean currentIsRefresh = currentCaipuPage == 1;
             @Override
             public void loaded(int flag, String url, Object returnObj) {
-                mDishDataReady = true;
                 if (flag >= REQ_OK_STRING) {
                     if (currentCaipuPage == 1) {
                         mListCaipuData.clear();
                         mListShicaiData.clear();
-                        firstCaipuLoadFlag = flag;
                     }
-                    mDishStrMap = StringManager.getFirstMap(returnObj);
-                    onLessonAndDishDataReady();
-                    onDownFirstPageComplete();
-                } else {
+                    readyDishData(currentIsRefresh, StringManager.getFirstMap(returnObj));
+                    if (currentIsRefresh) {
+                        onDownFirstPageComplete();
+                    }
                 }
             }
         });
-
     }
 
-    private void onLessonAndDishDataReady() {
-        if (mLessonDataReady && mDishDataReady) {
-            if (mDishStrMap != null && mDishStrMap.containsKey("dishs")) {
-                String caipuStr = mDishStrMap.get("dishs");
-                ArrayList<Map<String, String>> tempList = StringManager.getListMapByJson(caipuStr);
-                int invalideIndex = -1;
-                for (int k = 0; k < tempList.size(); k++) {
-                    Map<String, String> map1 = tempList.get(k);
-                    if (map1.containsKey("customers")) {
-                        Map<String, String> customer = StringManager.getFirstMap(map1.get("customers"));
-                        String nickName = customer.get("nickName");
-                        if(!TextUtils.isEmpty(nickName) && nickName.length()>=8){
-                            nickName = nickName.substring(0,7) + "...";
-                        }
-                        map1.put("cusNickName", nickName);
-                        map1.put("cusImg", customer.get("img"));
-                        map1.put("cusCode", customer.get("code"));
-                        map1.remove("customers");
-                    }
-                    if(map1.containsKey("video")){
-                        Map<String, String> video = StringManager.getFirstMap(map1.get("video"));
-                        if(!video.isEmpty() && video.containsKey("duration")){
-                            map1.put("duration", video.get("duration"));
-                        }
-                    }
-                    map1.put("allClick", map1.get("allClick") + "浏览");
-                    map1.put("favorites", map1.get("favorites") + "收藏");
-                    if (isFirstPage && TextUtils.equals(mLessonCode, map1.get("code")) && invalideIndex == -1) {
-                        invalideIndex = k;
-                    }
-                }
-                if (invalideIndex != -1) {
-                    tempList.remove(invalideIndex);
-                }
-                mListCaipuData.addAll(tempList);
+    private void removeLessonDish(){
+        if(TextUtils.isEmpty(mLessonCode)){
+            return;
+        }
+        for(int i=0;i<mListCaipuData.size();i++){
+            if(TextUtils.equals(mLessonCode,mListCaipuData.get(i).get("code"))){
+                mListCaipuData.remove(i);
+                return;
+            }
+        }
+    }
 
-                if (isFirstPage
-                        && mDishStrMap != null
-                        && mDishStrMap.containsKey("theIngre")) {
-                    String shicaiStr = mDishStrMap.get("theIngre");
-                    ArrayList<Map<String, String>> tempList2 = StringManager.getListMapByJson(shicaiStr);
-                    for (Map<String, String> map2 : tempList2) {
-                        map2.put("name", map2.get("name"));
+    private void readyDishData(boolean isRefresh, Map<String, String> dishMap) {
+        if (dishMap != null && dishMap.containsKey("dishs")) {
+            String caipuStr = dishMap.get("dishs");
+            ArrayList<Map<String, String>> tempList = StringManager.getListMapByJson(caipuStr);
+            for (int k = 0; k < tempList.size(); k++) {
+                Map<String, String> map1 = tempList.get(k);
+                if (map1.containsKey("customers")) {
+                    Map<String, String> customer = StringManager.getFirstMap(map1.get("customers"));
+                    String nickName = customer.get("nickName");
+                    if (!TextUtils.isEmpty(nickName) && nickName.length() >= 8) {
+                        nickName = nickName.substring(0, 7) + "...";
                     }
-                    mListShicaiData.addAll(tempList2);
+                    map1.put("cusNickName", nickName);
+                    map1.put("cusImg", customer.get("img"));
+                    map1.put("cusCode", customer.get("code"));
+                    map1.remove("customers");
                 }
-
-                if (!isFirstPage) {
-                    int loadCount =mListCaipuData.size() + mListShicaiData.size() + adNum;
-                    if (adapterCaipuSearch == null) {
-                        adapterCaipuSearch = (AdapterCaipuSearch) list_search_result.getAdapter();
+                if (map1.containsKey("video")) {
+                    Map<String, String> video = StringManager.getFirstMap(map1.get("video"));
+                    if (!video.isEmpty() && video.containsKey("duration")) {
+                        map1.put("duration", video.get("duration"));
                     }
-                    new Handler(Looper.getMainLooper()).post(new Runnable() {
-                        @Override
-                        public void run() {
-                            adNum = adapterCaipuSearch.refresh(isFirstPage, mListCaipuData, mListShicaiData);
-                        }
-                    });
-                    loadManager.loadOver(REQ_OK_STRING,list_search_result, loadCount);
                 }
-            } else {
-                if (!isFirstPage) {
-                    setLoadMoreBtn();
+                map1.put("allClick", map1.get("allClick") + "浏览");
+                map1.put("favorites", map1.get("favorites") + "收藏");
+            }
+            mListCaipuData.addAll(tempList);
+            removeLessonDish();
+            if (isRefresh
+                    && dishMap != null
+                    && dishMap.containsKey("theIngre")) {
+                String shicaiStr = dishMap.get("theIngre");
+                ArrayList<Map<String, String>> tempList2 = StringManager.getListMapByJson(shicaiStr);
+                for (Map<String, String> map2 : tempList2) {
+                    map2.put("name", map2.get("name"));
                 }
+                mListShicaiData.addAll(tempList2);
             }
 
+            if (!isRefresh) {
+                int loadCount = mListCaipuData.size() + mListShicaiData.size() + adNum;
+                if (adapterCaipuSearch == null) {
+                    adapterCaipuSearch = (AdapterCaipuSearch) list_search_result.getAdapter();
+                }
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        adNum = adapterCaipuSearch.refresh(isRefresh, mListCaipuData, mListShicaiData);
+                    }
+                });
+                loadManager.loadOver(REQ_OK_STRING, list_search_result, loadCount);
+            }
+        } else {
+            if (!isRefresh) {
+                setLoadMoreBtn();
+            }
         }
     }
 
