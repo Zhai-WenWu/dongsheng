@@ -143,10 +143,6 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
             }
             return;
         }
-        if(lastClickTime != 0 && System.currentTimeMillis() - lastClickTime < 700){
-            lastClickTime = System.currentTimeMillis();
-            return;
-        }
         if (!handleClickEvent(v)) {
             if (isDishData()) {
                 String dishStr = "dishInfo=" + URLEncoder.encode(appendDishData());
@@ -236,8 +232,6 @@ public class HomeItem extends BaseItemView implements BaseItemView.OnItemClickLi
     public void setRefreshTag(HomeAdapter.ViewClickCallBack callBack) {
         this.mRefreshCallBack = callBack;
     }
-
-    long lastClickTime = 0;
 
     /**
      * 处理Item点击事件外的其他事件。
