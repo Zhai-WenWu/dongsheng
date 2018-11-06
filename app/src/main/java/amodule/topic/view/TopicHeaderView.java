@@ -1,6 +1,7 @@
 package amodule.topic.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -13,15 +14,20 @@ import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.Target;
 import com.xiangha.R;
 
 import java.io.File;
@@ -35,6 +41,7 @@ import java.io.InputStream;
 
 import acore.tools.FileManager;
 import acore.tools.ImgManager;
+import amodule.topic.activity.SearchTopicActivity;
 import amodule.topic.style.CustomClickableSpan;
 import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
@@ -70,11 +77,20 @@ public class TopicHeaderView extends RelativeLayout {
         LayoutInflater.from(context).inflate(R.layout.topic_header_layout, this, true);
         mUserRearImg = findViewById(R.id.user_rear_img);
         mUserFrontImg = findViewById(R.id.user_front_img);
+        ImageView topicImage = findViewById(R.id.topic_image);
         mTopicUser = findViewById(R.id.topic_user);
         mTopicAttention = findViewById(R.id.topic_attention);
         mTopicInfo = findViewById(R.id.topic_info);
         mTopicNum = findViewById(R.id.topic_num);
         mShadePanel = findViewById(R.id.shade);
+        topicImage.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                context.startActivity(new Intent(context, SearchTopicActivity.class));
+            }
+        });
+//        String imageUrl = "https://s3.cdn.xiangha.com/img/201809/1211/s/5b9885523976a.png/NTAweDA";
+//        Glide.with(context).load(imageUrl).into(topicImage);
     }
 
     public void showUserImage(String url, OnClickListener listener) {

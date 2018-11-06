@@ -45,6 +45,7 @@ public class FileManager extends UtilFile{
 	public static final String file_constitution = "constitution.xh";
 	public static final String file_buyBurden = "buyBurden.xh";
 	public static final String file_searchHis = "searchHis.xh";
+	public static final String file_topicSearchHis = "fileTopicSearchHis.xh";
 	public static final String file_historyCode = "historyCode.xh";
 	public static final String file_healthQuestion = "healthQuestion";
 	public static final String file_healthResult = "healthResult.xh";

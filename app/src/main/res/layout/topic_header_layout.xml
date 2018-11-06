@@ -79,6 +79,13 @@
             android:layout_marginRight="@dimen/dp_20"
             android:layout_marginBottom="@dimen/dp_26"
             android:layout_below="@+id/topic_num"/>
+
+        <ImageView
+            android:id="@+id/topic_image"
+            android:layout_width="match_parent"
+            android:layout_alignParentBottom="true"
+            android:src="@drawable/home_search_icon"
+            android:layout_height="wrap_content" />
     </RelativeLayout>
 
 </RelativeLayout>
