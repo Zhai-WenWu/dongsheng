@@ -402,6 +402,10 @@ public class StringManager extends UtilString {
     public final static String API_TOPIC_INFO = apiUrl + "main8/shortVideo/topicInfo";//简介
     public final static String API_TOPIC_LIST = apiUrl + "main8/shortVideo/topicShortVideoList";//列表
 
+    //话题搜索页
+    public final static String API_TOPIC_RECOM = apiUrl + "main8/shortVideo/topicRecom";//热门话题推荐
+    public final static String API_TOPIC_SEARCH = apiUrl + "main8/shortVideo/topicSearch";//话题搜索
+
     //短视频有效浏览统计
     public final static String API_SHORT_VIDEO_VIEW_VALIDATE = apiUrl + "main8/shortVideo/shortVideoEffecStat";
     //短视频访问统计
