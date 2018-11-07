@@ -9,6 +9,7 @@ import com.xiangha.R;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import acore.widget.rvlistview.adapter.RvBaseAdapter;
 import acore.widget.rvlistview.holder.RvBaseViewHolder;
@@ -16,16 +17,16 @@ import amodule.topic.holder.RecommentTopicItemHolder;
 import amodule.topic.holder.TopicItemHolder;
 import amodule.topic.model.TopicItemModel;
 
-public class RecommentTopicAdapter extends RvBaseAdapter<String> {
+public class RecommentTopicAdapter extends RvBaseAdapter<Map<String, String>> {
 
 
-    public RecommentTopicAdapter(Context context, @Nullable List<String> data) {
+    public RecommentTopicAdapter(Context context, @Nullable List<Map<String, String>> data) {
         super(context, data);
     }
 
     @Override
-    public RvBaseViewHolder<String> onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new RecommentTopicItemHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.recomment_topic_list_item_layout, null));
+    public RvBaseViewHolder<Map<String, String>> onCreateViewHolder(ViewGroup parent, int viewType) {
+        return new RecommentTopicItemHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.recomment_topic_list_item_layout, parent,false));
     }
 
     @Override

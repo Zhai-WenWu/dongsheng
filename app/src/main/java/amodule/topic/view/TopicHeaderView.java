@@ -58,6 +58,7 @@ public class TopicHeaderView extends RelativeLayout {
     private TextView mTopicInfo;
     private TextView mTopicNum;
     private View mShadePanel;
+
     public TopicHeaderView(Context context) {
         super(context);
         initView(context);
@@ -77,18 +78,11 @@ public class TopicHeaderView extends RelativeLayout {
         LayoutInflater.from(context).inflate(R.layout.topic_header_layout, this, true);
         mUserRearImg = findViewById(R.id.user_rear_img);
         mUserFrontImg = findViewById(R.id.user_front_img);
-        ImageView topicImage = findViewById(R.id.topic_image);
         mTopicUser = findViewById(R.id.topic_user);
         mTopicAttention = findViewById(R.id.topic_attention);
         mTopicInfo = findViewById(R.id.topic_info);
         mTopicNum = findViewById(R.id.topic_num);
         mShadePanel = findViewById(R.id.shade);
-        topicImage.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                context.startActivity(new Intent(context, SearchTopicActivity.class));
-            }
-        });
 //        String imageUrl = "https://s3.cdn.xiangha.com/img/201809/1211/s/5b9885523976a.png/NTAweDA";
 //        Glide.with(context).load(imageUrl).into(topicImage);
     }
@@ -115,7 +109,7 @@ public class TopicHeaderView extends RelativeLayout {
                     Bitmap bitmap = BitmapFactory.decodeStream(is);
                     mUserFrontImg.setVisibility(View.VISIBLE);
                     mUserFrontImg.setImageBitmap(bitmap);
-                    bitmap = ImgManager.RSBlur(getContext(),bitmap,10);
+                    bitmap = ImgManager.RSBlur(getContext(), bitmap, 10);
                     mUserRearImg.setImageBitmap(bitmap);
                     mShadePanel.setVisibility(View.VISIBLE);
                 } catch (Exception e) {
@@ -146,7 +140,7 @@ public class TopicHeaderView extends RelativeLayout {
         requestLayout();
     }
 
-    public void showTopicAttention(boolean attentioned, OnClickListener listener){
+    public void showTopicAttention(boolean attentioned, OnClickListener listener) {
         mTopicAttention.setVisibility(View.VISIBLE);
         mTopicAttention.setOnClickListener(listener);
         mTopicAttention.setEnabled(!attentioned);

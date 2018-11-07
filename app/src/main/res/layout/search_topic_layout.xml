@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
+    android:id="@+id/activityLayout"
     android:orientation="vertical">
 
     <include
@@ -16,6 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_30"
         android:layout_marginEnd="@dimen/dp_20"
+        android:layout_below="@+id/title_view"
         android:layout_marginStart="@dimen/dp_20"
         android:layout_marginTop="@dimen/dp_7"
         android:background="@drawable/bg_search_edit"
@@ -51,6 +53,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/ed_search_layout_main"
         android:layout_marginEnd="@dimen/dp_20"
         android:layout_marginStart="@dimen/dp_20">
 
@@ -145,17 +148,6 @@
                 android:textColor="@color/c_gray_999999"
                 android:textSize="@dimen/dp_17" />
 
-            <cn.srain.cube.views.ptr.PtrClassicFrameLayout
-                xmlns:cube_ptr="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/refresh_list_view_frame"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/white"
-                cube_ptr:ptr_duration_to_close="200"
-                cube_ptr:ptr_duration_to_close_header="500"
-                cube_ptr:ptr_pull_to_fresh="false"
-                cube_ptr:ptr_ratio_of_header_height_to_refresh="1"
-                cube_ptr:ptr_resistance="1.7">
 
                 <acore.widget.rvlistview.RvListView
                     android:layout_marginTop="@dimen/dp_10"
@@ -169,10 +161,9 @@
                     android:paddingLeft="0dp"
                     android:paddingRight="0dp"/>
 
-            </cn.srain.cube.views.ptr.PtrClassicFrameLayout>
 
 
         </FrameLayout>
     </FrameLayout>
 
-</LinearLayout>
+</RelativeLayout>
