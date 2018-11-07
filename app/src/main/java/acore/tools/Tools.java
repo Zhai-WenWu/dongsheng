@@ -17,7 +17,8 @@ import android.media.AudioManager;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
-import android.support.v4.view.ViewCompat;
+import android.support.annotation.ColorInt;
+import android.support.v4.graphics.ColorUtils;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
@@ -139,7 +140,7 @@ public class Tools {
      * @throws ParseException
      */
     public static String dealTime(String lastTime, String currentTime, String dateFormat, String time) throws ParseException {
-        if (time.equals("hide"))
+        if (TextUtils.isEmpty(time) || time.equals("hide"))
             return time;
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat);
         Date currentDate = simpleDateFormat.parse(currentTime);
@@ -544,14 +545,14 @@ public class Tools {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 //After LOLLIPOP not translucent status bar
                 window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-                window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+                window.getDecorView().setSystemUiVisibility(isLightColor(statusColor) ? View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR : View.SYSTEM_UI_FLAG_VISIBLE);
                 //Then call setStatusBarColor.
                 window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
                 window.setStatusBarColor(statusColor);
                 //set child View not fill the system window
                 View mChildView = mContentView.getChildAt(0);
                 if (mChildView != null) {
-                    ViewCompat.setFitsSystemWindows(mChildView, true);
+                    mChildView.setFitsSystemWindows(true);
                 }
             } else {
                 ViewGroup mDecorView = (ViewGroup) window.getDecorView();
@@ -566,7 +567,7 @@ public class Tools {
                     //add margin
                     View mContentChild = mContentView.getChildAt(0);
                     if (mContentChild != null) {
-                        ViewCompat.setFitsSystemWindows(mContentChild, false);
+                        mContentChild.setFitsSystemWindows(false);
                         FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mContentChild.getLayoutParams();
                         lp.topMargin += statusBarHeight;
                         mContentChild.setLayoutParams(lp);
@@ -582,6 +583,10 @@ public class Tools {
                 }
             }
         }
+    }
+
+    public static boolean isLightColor(@ColorInt int color) {
+        return ColorUtils.calculateLuminance(color) >= 0.5;
     }
 
     public static boolean isSupportSpeciaVideoSize(boolean isFacingFont) {
@@ -875,7 +880,7 @@ public class Tools {
     }
 
     public static void setMute(Context context) {
-        AudioManager audioManager = (AudioManager) context.getSystemService("audio");
+        AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         int mCurrSoundNum = audioManager.getStreamVolume(3);
         audioManager.setStreamVolume(3, 0, 0);
     }
@@ -948,6 +953,22 @@ public class Tools {
         return result;
     }
 
+    public static long parseLongOfThrow(String strValue){
+        return parseLongOfThrow(strValue,-1L);
+    }
+
+    public static long parseLongOfThrow(String strValue, long defaultValue) {
+        long result = defaultValue;
+        try {
+            if (!TextUtils.isEmpty(strValue)) {
+                result = Long.parseLong(strValue);
+            }
+        } catch (Exception ignored) {
+            ignored.printStackTrace();
+        }
+        return result;
+    }
+
     public static float parseFloatOfThrow(String strValue, float defaultValue) {
         float result = defaultValue;
         try {
@@ -1003,5 +1024,12 @@ public class Tools {
             }
         }
         return min;
+    }
+
+    public static int getIntervalDaysFromTwoDate(Date firstDate, Date secondDate) {
+        if (firstDate.after(secondDate)) {
+            return (int) Math.ceil((firstDate.getTime() - secondDate.getTime()) * 1.00 / (1000 * 60 * 60 * 24));
+        }
+        return (int) Math.floor((firstDate.getTime() - secondDate.getTime()) * 1.00 / (1000 * 60 * 60 * 24));
     }
 }

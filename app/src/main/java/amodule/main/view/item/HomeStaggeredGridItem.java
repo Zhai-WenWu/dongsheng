@@ -159,6 +159,7 @@ public class HomeStaggeredGridItem extends HomeItem {
         csgif.connect(gifImageView.getId(), ConstraintSet.BOTTOM, R.id.guideline, ConstraintSet.TOP);
         csgif.applyTo(mContentLayout);
         gifImageView.setVisibility(View.GONE);
+        mImg.setImageResource(R.drawable.i_nopic);
         if (!TextUtils.isEmpty(mDataMap.get("parseResourceData_gif"))) {
             gifImageView.setTag(TAG_ID, mDataMap.get("parseResourceData_gif"));
             if(ActivityMethodManager.isAppShow) {
@@ -230,6 +231,7 @@ public class HomeStaggeredGridItem extends HomeItem {
         String img = mDataMap.get("parseResourceData_img");
         mImg.setTag(TAG_ID, img);
         mImg.setImageResource(R.drawable.i_nopic);
+        mImg.setVisibility(VISIBLE);
         BitmapRequestBuilder builder = LoadImage.with(getContext()).load(img).setSaveType(FileManager.save_cache).setPlaceholderId(R.drawable.i_nopic).setErrorId(R.drawable.i_nopic).build();
         if (builder != null) {
             builder.into(mImg);
@@ -239,6 +241,7 @@ public class HomeStaggeredGridItem extends HomeItem {
     public ConstraintLayout getContentLayout() {
         return mContentLayout;
     }
+    @SuppressLint("HandlerLeak")
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {

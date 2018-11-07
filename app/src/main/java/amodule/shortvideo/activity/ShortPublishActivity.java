@@ -222,10 +222,15 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
                     ArrayList<Map<String,String>>  mapArrayList = StringManager.getListMapByJson(msg);
                     int size= mapArrayList.size();
                     if(!mapArrayList.isEmpty()){
+                        int selectIndex = -1;
                         for(int i=0;i<size;i++){
                             Map<String,String> map=mapArrayList.get(i);
                             map.put("hot",mapArrayList.get(i).get("name"));
                             topicList.add(map);
+                            if(!TextUtils.isEmpty(topicCode) && TextUtils.equals(topicCode,map.get("code"))
+                                    && selectIndex == -1){
+                                selectIndex = i;
+                            }
                         }
                         hot_table.addTags(topicList, new MultiTagView.MutilTagViewCallBack() {
                             @Override
@@ -235,7 +240,8 @@ public class ShortPublishActivity extends BaseActivity implements View.OnClickLi
                                 uiTopic(topicList.get(tagIndexr).get("name"));
                                 XHClick.onEvent(XHApplication.in(),"a_pre_release","添加话题","推荐话题");
                             }
-                        });
+                        },selectIndex);
+
                     }
 
                 }

@@ -137,7 +137,7 @@ public class FansFollwersFragment {
 		} else {
 			currentPage++;
 		}
-		loadManager.changeMoreBtn(listView,UtilInternet.REQ_OK_STRING, -1, -1, currentPage,listData.size() == 0);
+		loadManager.loading(listView,listData.size() == 0);
 		String getUrl = StringManager.api_getUSerData + "?" + (TextUtils.isEmpty(userCode) ? "" : "code="+userCode+ "&" ) + "type=" + type + "&page=" + currentPage;
 		ReqInternet.in().doGet(getUrl, new InternetCallback() {
 			@Override
@@ -170,7 +170,7 @@ public class FansFollwersFragment {
 				}
 				if (everyPage == 0)
 					everyPage = loadCount;
-				currentPage = loadManager.changeMoreBtn(listView,flag, everyPage, loadCount, currentPage,listData.size() == 0);
+				loadManager.loadOver(flag,listView,loadCount);
 				listView.onRefreshComplete();
 				if(flag > 1)
 					if(listData.size()!=0){

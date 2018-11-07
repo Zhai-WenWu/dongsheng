@@ -47,6 +47,10 @@ import aplug.basic.ReqInternet;
 import third.share.BarShare;
 import third.share.tools.ShareTools;
 
+import static acore.notification.controller.NotificationSettingController.pushSetSubject;
+import static acore.notification.controller.NotificationSettingController.push_show_subject;
+import static amodule.quan.db.SubjectData.UPLOAD_SUCCESS;
+
 /**
  * 圈子首页 该界面 launchMode 为 singleTask
  *
@@ -177,7 +181,7 @@ public class CircleHome extends BaseAppCompatActivity implements OnClickListener
                     // 失败处理
 
                 }
-                loadManager.loadOver(flag, 1, true);
+                loadManager.loadOver(flag);
             }
         });
     }
@@ -296,7 +300,7 @@ public class CircleHome extends BaseAppCompatActivity implements OnClickListener
             if (flag >= ReqInternet.REQ_OK_STRING) {
                 // 发布成功
                 // 修改数据状态
-                updateSubjectDataArray(subjectData, SubjectData.UPLOAD_SUCCESS);
+                updateSubjectDataArray(subjectData, UPLOAD_SUCCESS);
                 //发布成功删除本地视频
                 if(subjectData != null
                         && !TextUtils.isEmpty(subjectData.getVideo())
@@ -312,7 +316,7 @@ public class CircleHome extends BaseAppCompatActivity implements OnClickListener
             }
             // 通知Fragment刷新
             updateFragment(subjectData, false);
-            NotificationSettingController.showNotification(0, FileManager.push_show_subject,NotificationSettingController.pushSetSubject);
+            NotificationSettingController.showNotification(push_show_subject,pushSetSubject);
         }
 
 
@@ -374,10 +378,14 @@ public class CircleHome extends BaseAppCompatActivity implements OnClickListener
         subjectData.setUploadState(state);
         int index = contains(subjectData);
         if (NO_EXIST == index) {
-            mSubjectDataArray.add(subjectData);
+            if(state != UPLOAD_SUCCESS){
+                mSubjectDataArray.add(subjectData);
+            }
         } else {
             mSubjectDataArray.remove(index);
-            mSubjectDataArray.add(index, subjectData);
+            if(state != UPLOAD_SUCCESS){
+                mSubjectDataArray.add(index, subjectData);
+            }
         }
     }
 
@@ -427,7 +435,7 @@ public class CircleHome extends BaseAppCompatActivity implements OnClickListener
     public void removeAllSuccessSubject(String mid) {
         for (int index = 0; index < mSubjectDataArray.size(); index++) {
             SubjectData data = mSubjectDataArray.get(index);
-            if (data == null || (SubjectData.UPLOAD_SUCCESS == data.getUploadState()
+            if (data == null || (UPLOAD_SUCCESS == data.getUploadState()
                     && (mid == null || TextUtils.isEmpty(data.getMid()) || data.getMid().equals(mid)))) {
                 mSubjectDataArray.remove(index--);
             }

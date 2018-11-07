@@ -70,8 +70,21 @@ public class XHScrollerGdt extends XHScrollerAdParent {
                     public void addAdView(String title, String desc, String iconUrl,
                                           String imageUrl, View.OnClickListener clickListener) {
 //                        Log.i("tzy", "GDT NactiveAD onHandlerData");
-                        if (!TextUtils.isEmpty(title) && !TextUtils.isEmpty(imageUrl)) {
+                        if((!TextUtils.isEmpty(title) || !TextUtils.isEmpty(desc))
+                                && (!TextUtils.isEmpty(imageUrl) || !TextUtils.isEmpty(iconUrl))
+                                ){
                             Map<String, String> map = new HashMap<>();
+                            if(TextUtils.isEmpty(title)){
+                                map.put("title",desc);
+                                map.put("desc",desc);
+                            }else if(TextUtils.isEmpty(desc)){
+                                map.put("title",title);
+                                map.put("desc",title);
+                            }else{
+                                //交换title和desc
+                                map.put("title",title.length() > desc.length() ? desc : title);
+                                map.put("desc",title.length() > desc.length()?title:desc);
+                            }
                             map.put("title", title);
                             map.put("desc", desc);
                             map.put("iconUrl", iconUrl);

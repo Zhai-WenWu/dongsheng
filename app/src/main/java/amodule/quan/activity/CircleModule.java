@@ -114,7 +114,7 @@ public class CircleModule extends BaseActivity implements OnClickListener {
 		String url = StringManager.api_circleSubjectList + "?cid=" + cid + "&mid=" + mid;
 		String param = "&page=" + mCurrentPage + "&pageTime=" + mPageTime;
 		// 更新加载按钮状态
-		loadManager.changeMoreBtn(circle_list, ReqInternet.REQ_OK_STRING, -1, -1, mCurrentPage, isRefresh);
+		loadManager.loading(circle_list,  isRefresh);
 		if (isRefresh) {
 			loadManager.hideProgressBar();
 		}
@@ -175,7 +175,7 @@ public class CircleModule extends BaseActivity implements OnClickListener {
 					mEveryPageNum = loadCount;
 				}
 				mAdapter.notifyDataSetChanged();
-				mCurrentPage = loadManager.changeMoreBtn(flag, mEveryPageNum, loadCount, mCurrentPage, isRefresh);
+				loadManager.loadOver(flag,circle_list,loadCount);
 				setRefreshIconVisibility(mCurrentPage);
 				circle_list.onRefreshComplete();
 				if (isRefresh)

@@ -12,7 +12,7 @@ import acore.widget.rcwidget.helper.RCAttrs;
 import acore.widget.rcwidget.helper.RCHelper;
 
 @SuppressLint("AppCompatCustomView")
-public class RCImageView extends ImageView implements RCAttrs, Checkable {
+public class RCImageView extends ImageView implements Checkable, RCAttrs {
 
     RCHelper mRCHelper;
 
@@ -107,14 +107,14 @@ public class RCImageView extends ImageView implements RCAttrs, Checkable {
     }
 
     public void setBottomLeftRadius(int bottomLeftRadius) {
-        mRCHelper.radii[4] = bottomLeftRadius;
-        mRCHelper.radii[5] = bottomLeftRadius;
+        mRCHelper.radii[6] = bottomLeftRadius;
+        mRCHelper.radii[7] = bottomLeftRadius;
         invalidate();
     }
 
     public void setBottomRightRadius(int bottomRightRadius) {
-        mRCHelper.radii[6] = bottomRightRadius;
-        mRCHelper.radii[7] = bottomRightRadius;
+        mRCHelper.radii[4] = bottomRightRadius;
+        mRCHelper.radii[5] = bottomRightRadius;
         invalidate();
     }
 

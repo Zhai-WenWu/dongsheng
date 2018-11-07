@@ -16,7 +16,10 @@ import com.xiangha.Welcome;
 import java.util.ArrayList;
 import java.util.Map;
 
+import acore.logic.stat.StatConf;
+import acore.logic.stat.StatModel;
 import acore.logic.stat.StatisticsManager;
+import acore.notification.controller.NotificationSettingController;
 import acore.override.XHApplication;
 import acore.override.helper.XHActivityManager;
 import acore.tools.FileManager;
@@ -43,6 +46,7 @@ public class ActivityMethodManager {
     private ArrayList<IAutoRefresh> mAdControls = new ArrayList<>();
     private long lastOnResumeTime,intervalOnResumeTime;
     private long onResumeTime = 0;
+    private String mStatF;
 
     public static boolean isAppShow=false;
 
@@ -52,6 +56,13 @@ public class ActivityMethodManager {
         PushAgent.getInstance(mAct).onAppStart();
         /*随机广告*/
         randPromotion();
+        initStatData();
+    }
+
+    private void initStatData() {
+        if (mAct != null && mAct.getIntent() != null) {
+            mStatF = mAct.getIntent().getStringExtra(StatConf.STAT_F);
+        }
     }
 
     public void onRestart(){
@@ -73,7 +84,6 @@ public class ActivityMethodManager {
         //Log.i("FRJ", "colse_level:" + colse_level);
         MobclickAgent.onResume(mAct);
         StatService.onResume(mAct);//mta腾讯统计
-        XHClick.getStartTime(mAct);
         // 应用到后台时如果数据被清理，需要重新自动登录
         if (LoginManager.userInfo.size() == 0) {
             Map<String, String> userInfoMap = (Map<String, String>) UtilFile.loadShared(mAct, FileManager.xmlFile_userInfo, "");
@@ -145,8 +155,11 @@ public class ActivityMethodManager {
                 &&"2".equals(FileManager.loadShared(XHApplication.in(),FileManager.app_notification,FileManager.push_setting_state))){
             FileManager.saveShared(XHApplication.in(),FileManager.app_notification,FileManager.push_setting_state,"");
             if(PushManager.isNotificationEnabled(XHActivityManager.getInstance().getCurrentActivity())) {
-                XHClick.mapStat(XHApplication.in(), "a_push_guidelayer",
-                        (String) FileManager.loadShared(XHApplication.in(),FileManager.app_notification,FileManager.push_setting_message), "开启成功");
+                String key = (String) FileManager.loadShared(XHApplication.in(),FileManager.app_notification,FileManager.push_setting_message);
+                XHClick.mapStat(XHApplication.in(), "a_push_guidelayer",key,"开启成功");
+                if(mAct != null){
+                    NotificationSettingController.statOpenSuccess(mAct.getClass().getSimpleName());
+                }
             }
         }
     }
@@ -154,12 +167,11 @@ public class ActivityMethodManager {
     @SuppressLint("DefaultLocale")
     public void onPause() {
         long stayTime = System.currentTimeMillis() - onResumeTime;
-        StatisticsManager.pageStay(mAct.getClass().getSimpleName(),String.format("%.2f",stayTime/1000f));
+        StatisticsManager.saveData(StatModel.createPageStayModel(mAct.getClass().getSimpleName(),String.format("%.2f",stayTime/1000f), TextUtils.isEmpty(mStatF) ? StatModel.EMPTY : mStatF));
         //广告刷新定时器停止
         XHAdAutoRefresh.getInstance().stopTimer();
         MobclickAgent.onPause(mAct);
         StatService.onPause(mAct);//mta腾讯统计
-        XHClick.getStopTime(mAct);
         XHClick.sendBrowseCodes(mAct);
         if (mHomeWatcher != null)
             mHomeWatcher.stopWatch();
@@ -193,7 +205,6 @@ public class ActivityMethodManager {
                     //刷新广告配置数据
                     AdConfigTools.getInstance().getAdConfigInfo();
                     // 进行点击Home键的处理
-                    XHClick.HomeKeyListener(mAct);
                     Log.i("zhangyujian","HomeKeyListener111");
                     if (WelcomeAdTools.getInstance().isOpenSecond()) {
                     Log.i("zhangyujian","onHomePressed");

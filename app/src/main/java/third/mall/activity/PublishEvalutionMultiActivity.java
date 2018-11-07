@@ -124,7 +124,7 @@ public class PublishEvalutionMultiActivity extends MallBaseActivity {
 
     private void loadData() {
         loadManager.showProgressBar();
-        loadManager.changeMoreBtn(MallReqInternet.REQ_OK_STRING,-1,-1,1,true);
+        loadManager.loading(commodList,true);
         StringBuilder params = new StringBuilder(MallStringManager.mall_toComment)
                 .append("?order_id=")
                 .append(order_id);
@@ -143,7 +143,7 @@ public class PublishEvalutionMultiActivity extends MallBaseActivity {
 
                             setPulishStatus();
                         }
-                        loadManager.changeMoreBtn(flag,commodData.size(),0,2,false);
+                        loadManager.loadOver(flag,commodList,commodData.size());
                         commodList.setVisibility(commodData.size() > 0 ? View.VISIBLE : View.GONE);
                     }
                 });

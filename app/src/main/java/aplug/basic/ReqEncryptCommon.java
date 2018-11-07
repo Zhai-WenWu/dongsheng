@@ -44,7 +44,7 @@ public class ReqEncryptCommon {
     public String getToken(){
         //香哈code
         try {
-            String xhcode = ToolsDevice.getXhIMEI(XHApplication.in());
+            String xhcode = ToolsDevice.getXhCode(XHApplication.in());
             return encrypt(xhcode,password); // 加密
         }catch (Exception e){
             e.printStackTrace();

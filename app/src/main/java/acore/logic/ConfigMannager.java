@@ -38,19 +38,33 @@ public class ConfigMannager {
     public static final String KEY_NETPROTOCOL= "netProtocol";
     public static final String KEY_APPPUSHTIMERANGE= "apppushtimerange";
     public static final String KEY_NEW_AD_CONFIG = "newAdConfig";
+    public static final String KEY_VIP_GUIDE_STATUS = "vipGuideStatus";
+    public static final String KEY_HOME_FUN_NAV_STAT = "homeFunNavStat";
     public static final String KEY_DEVICE_VIP_GUIDE = "deviceVipGuide";
 
     /**
      * 保存config
      */
     public static void saveConfigData(Context context) {
+        saveConfigData(context, null);
+    }
+
+    public static void saveConfigData(Context context, InternetCallback callback) {
         ReqInternet.in().doGet(StringManager.api_getConf, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, final Object msg) {
                 if (flag >= ReqInternet.REQ_OK_STRING) {
+                    new Thread(() -> {
+                        ConfigHelper.getInstance().updateConfigData(msg.toString());
+                        FileManager.saveFileToCompletePath(getConfigPath(), msg.toString(), false);
+                        if (callback != null) {
+                            callback.loaded(flag, url, msg);
+                        }
+                    }).start();
                     //更新视频数据
-                    new Thread(() -> FileManager.saveFileToCompletePath(getConfigPath(), msg.toString(), false)).start();
                     AdVideoConfigTool.of().updateAdVideoData(msg.toString());
+                } else if (callback != null) {
+                    callback.loaded(flag, url, msg);
                 }
             }
         });

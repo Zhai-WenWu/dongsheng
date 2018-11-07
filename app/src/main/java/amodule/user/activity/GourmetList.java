@@ -227,7 +227,7 @@ public class GourmetList extends BaseActivity {
 	private void getData() {
 		// 添加加载更多
 		currentPage++;
-		loadManager.changeMoreBtn(UtilInternet.REQ_OK_STRING, -1, -1, currentPage,leftData.size() == 0);
+		loadManager.loading(rightListView,leftData.size()==0);
 		String url = leftData.get(index).get("url") + "&page=" + currentPage;
 		ReqInternet.in().doGet(url, new InternetCallback() {
 			@Override
@@ -259,7 +259,7 @@ public class GourmetList extends BaseActivity {
 				}
 				if (everyPage == 0)	
 					everyPage = loadCount;
-				currentPage = loadManager.changeMoreBtn(flag, everyPage, loadCount, currentPage,leftData.size() == 0);
+				loadManager.loadOver(flag,rightListView,loadCount);
 			}
 		});
 	}

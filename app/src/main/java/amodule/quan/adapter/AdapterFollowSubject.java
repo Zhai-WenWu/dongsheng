@@ -12,7 +12,6 @@ import java.util.Map;
 
 import acore.logic.XHClick;
 import acore.override.adapter.AdapterSimple;
-import amodule.quan.tool.HomeAdvertControl;
 import amodule.quan.view.NormalContentView;
 import amodule.quan.view.NormarlContentItemImageVideoView;
 import amodule.quan.view.RecommendFriendView;

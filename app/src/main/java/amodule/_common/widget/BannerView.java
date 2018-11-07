@@ -29,6 +29,7 @@ import java.util.Map;
 
 import acore.logic.AppCommon;
 import acore.logic.XHClick;
+import acore.logic.stat.StatModel;
 import acore.logic.stat.StatisticsManager;
 import acore.override.helper.XHActivityManager;
 import acore.tools.StringManager;
@@ -152,12 +153,8 @@ public class BannerView extends Banner implements IBindMap, IStatictusData, ISav
             }
             String url = dataMapTemp.get("url");
             AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), url, true);
-            if(!TextUtils.isEmpty(page)){
-                XHClick.saveStatictisFile(page, "homeBannerScroll", dataMapTemp.get("type"), "", "",
-                        "click", "", "", "", "", "");
-            }
             statistic(position);
-            StatisticsManager.listClick(getContext().getClass().getSimpleName(),"Banner",String.valueOf(position + 1),"",dataMapTemp.get(STAT_DATA));
+            StatisticsManager.saveData(StatModel.createListClickModel(getContext().getClass().getSimpleName(),"Banner",String.valueOf(position + 1),"",dataMapTemp.get(STAT_DATA)));
         });
 
         int paddingTop = computeTopPadding();

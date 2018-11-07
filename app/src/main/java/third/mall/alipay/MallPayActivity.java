@@ -148,7 +148,7 @@ public class MallPayActivity extends MallBaseActivity implements OnClickListener
 								if(state>=UtilInternet.REQ_OK_STRING){
 									initData();
 								}else if(state==UtilInternet.REQ_CODE_ERROR){
-									loadManager.loadOver(state, 1,true);
+									loadManager.loadOver(state);
 								}
 							}
 						});

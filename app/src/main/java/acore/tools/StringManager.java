@@ -64,10 +64,6 @@ public class StringManager extends UtilString {
     public final static String appID = "1";
     //第三方下载链接（应用宝）
     public final static String third_downLoadUrl = "http://a.app.qq.com/o/simple.jsp?pkgname=com.xiangha";
-    //崩溃
-    public final static String api_uploadCrashLog = "https://crash.xiangha.com/report";
-    //统计
-//    public final static String api_stat = "https://stat.xiangha.com/s2.gif";
     //用户手机应用列表
     public final static String api_uploadFavorLog = "https://favor.xiangha.com/list";
     //用户发贴发菜谱用户日志
@@ -75,11 +71,8 @@ public class StringManager extends UtilString {
     //获取广告信息
     public final static String api_adData_old = apiUrl + "main6/ads/getBasicList";
     public final static String api_adData = apiUrl + "main7/open/getAdConfig";
-    public final static String api_indexDataNew = apiUrl + urlSection.get("main6") + "baseData";
     public final static String api_appData = apiUrl + urlSection.get("home5") + "getAppData";
     public final static String api_activityList = apiUrl + urlSection.get("home5") + "getActivityList";
-    public final static String api_Activity = apiUrl + urlSection.get("home5") + "getActivity";
-    public final static String api_localPushData = apiUrl + urlSection.get("home5") + "getPushInfo";
     public final static String api_statisticShare = apiUrl + urlSection.get("home5") + "addShareStatistic";
 
     public final static String api_getSurpriseActivity = apiUrl + urlSection.get("home5") + "getSurpriseActivity";
@@ -99,8 +92,6 @@ public class StringManager extends UtilString {
     public final static String api_joinHand = appWebUrl + "joinHand/index";//合作
     public final static String api_jifenDraw = appWebUrl + "app5/jifenDraw";//抽奖
     public final static String api_aboutus = apiUrl + urlSection.get("home5") + "aboutus";//关于我们
-    public final static String api_toConfirn = apiUrl + "main6/channel/toConfirnNew";  //倒流
-    public final static String api_toGoodContent = apiUrl + "main6/channel/toGoodContent";//好评弹框
     //	/** 香哈协议 */
     public static final String api_agreementXiangha = appWebUrl + "deal/xiangha.html";
     /**
@@ -116,7 +107,6 @@ public class StringManager extends UtilString {
     public final static String api_commonData = apiUrl + urlSection.get("home5") + "commonData";
     public final static String api_soList = apiUrl + urlSection.get("so5") + "getSoData";
     public final static String api_soIndex = apiUrl + urlSection.get("so5") + "getSoIndex";
-    public final static String api_getHotSo = apiUrl + urlSection.get("home5") + "getHotSo";
     public final static String api_getHotWords = apiUrl + urlSection.get("search2") + "getHotWords";
     public final static String api_getCaipu = apiUrl + urlSection.get("search2") + "byCaipu";
     public final static String api_getTiezi = apiUrl + urlSection.get("search2") + "byQuan";
@@ -304,9 +294,6 @@ public class StringManager extends UtilString {
     /***
      * 推荐列表的统计
      */
-//    public final static String API_STATISTIC_S6 = "https://stat.xiangha.com/s6.gif"; //新首页统计
-//    public final static String API_STATISTIC_S7 = "https://stat.xiangha.com/s7.gif"; //页面统计时间
-//    public final static String API_STATISTIC_S8 = "https://stat.xiangha.com/s8.gif"; //页面统计时间
     public final static String API_STATISTIC_S9 = "https://stat.xiangha.com/s9.gif"; //无埋点统计
     public final static String API_STATISTIC_S9_GXH = "https://stat.xiangha.com/s9_gxh.gif"; //无埋点统计
     public final static String API_CHECK_LOG = apiUrl + "Main7/Open/checkLog";

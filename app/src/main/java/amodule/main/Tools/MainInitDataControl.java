@@ -42,7 +42,6 @@ import acore.logic.polling.PollingConfig;
 import acore.override.XHApplication;
 import acore.tools.ChannelUtil;
 import acore.tools.FileManager;
-import acore.tools.PageStatisticsUtils;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.answer.activity.AnswerEditActivity;
@@ -62,9 +61,11 @@ import amodule.dish.db.UploadDishSqlite;
 import amodule.dish.tools.OffDishToFavoriteControl;
 import amodule.dish.tools.UploadDishControl;
 import amodule.main.Main;
+import amodule.main.activity.MainHomePage;
 import amodule.quan.db.SubjectData;
 import amodule.quan.db.SubjectSqlite;
 import amodule.search.db.MatchWordsDbUtil;
+import aplug.basic.InternetCallback;
 import aplug.basic.XHInternetCallBack;
 import aplug.web.tools.XHTemplateManager;
 import third.ad.tools.AdConfigTools;
@@ -126,10 +127,19 @@ public class MainInitDataControl {
 
                 //待处理问题。
 //                HomeToutiaoAdControl.getInstance().getAdData(activity);
-                ToolsDevice.saveXhIMEI(activity);
+                ToolsDevice.saveXhCode(activity);
+                activity.deleteDatabase("statictis.db");
             }
         }.start();
-        ConfigMannager.saveConfigData(XHApplication.in());
+        ConfigMannager.saveConfigData(XHApplication.in(), new InternetCallback() {
+            @Override
+            public void loaded(int i, String s, Object o) {
+                if (Main.allMain != null && Main.allMain.getCurrentTab() == Main.TAB_HOME && Main.allMain.allTab != null && Main.allMain.allTab.containsKey(MainHomePage.KEY)) {
+                    MainHomePage mainIndex = (MainHomePage) Main.allMain.allTab.get(MainHomePage.KEY);
+                    mainIndex.handleVipGuideStatus();
+                }
+            }
+        });
         long endTime2=System.currentTimeMillis();
         Log.i("zhangyujian","initWelcomeAfter::时间:"+(endTime2-startTime));
 
@@ -168,7 +178,6 @@ public class MainInitDataControl {
         QiYvHelper.getInstance().initSDK(act);
 
         OffDishToFavoriteControl.addCollection(act);
-        PageStatisticsUtils.getInstance().getPageInfo(act.getApplicationContext());//初始化电商页面统计
         LocalPushManager.stopLocalPush(act);
 
         PollingConfig.COURSE_GUIDANCE.registerIHandleMessage(mIHandleMessage);
@@ -222,10 +231,8 @@ public class MainInitDataControl {
         //获取随机推广数据
         AppCommon.saveRandPromotionData(act);
         if(act!=null && XHADView.getInstence(act)!=null) {
-            final long currentTime = System.currentTimeMillis();
             XHADView.getInstence(act).setCanShowCallback(() -> Main.allMain != null
-                    && Main.allMain.getCurrentTab() == 0
-                    && System.currentTimeMillis() - currentTime <= 10000);
+                    && Main.allMain.getCurrentTab() == 0);
         }
         new AllPopDialogHelper(act).start();
 

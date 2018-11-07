@@ -79,33 +79,23 @@ public class HomeNous extends BaseActivity {
 		if (viewpager != null) {
 			switch (viewpager.getCurrentItem()) {
 				case 0:
-					XHClick.getViewPageItemStartTime("HomeNous_jinXuan");
 					//统计知识页面访问情况(计算事件)
-//				XHClick.onEventValue(this, "pageNous", "pageNous", "精选", 1);
 					XHClick.mapStat(this, "a_nouse", "导航", "精选", 1);
 					break;
 				case 1:
-					XHClick.getViewPageItemStartTime("HomeNous_jianKangYangSheng");
 					//统计知识页面访问情况(计算事件)
-//				XHClick.onEventValue(getApplicationContext(), "pageNous", "pageNous", "健康养生", 1);
 					XHClick.mapStat(this, "a_nouse", "导航", "健康养生", 1);
 					break;
 				case 2:
-					XHClick.getViewPageItemStartTime("HomeNous_penRenJiQiao");
 					//统计知识页面访问情况(计算事件)
-//				XHClick.onEventValue(getApplicationContext(), "pageNous", "pageNous", "烹饪技巧", 1);
 					XHClick.mapStat(this, "a_nouse", "导航", "烹饪技巧", 1);
 					break;
 				case 3:
-					XHClick.getViewPageItemStartTime("HomeNous_meiShiJinXuan");
 					//统计知识页面访问情况(计算事件)
-//				XHClick.onEventValue(getApplicationContext(), "pageNous", "pageNous", "美食精选", 1);
 					XHClick.mapStat(this, "a_nouse", "导航", "美食精选", 1);
 					break;
 				case 4:
-					XHClick.getViewPageItemStartTime("HomeNous_meiShiZaTan");
 					//统计知识页面访问情况(计算事件)
-//				XHClick.onEventValue(getApplicationContext(), "pageNous", "pageNous", "美食杂谈", 1);
 					XHClick.mapStat(this, "a_nouse", "导航", "美食杂谈", 1);
 					break;
 				default:
@@ -117,8 +107,6 @@ public class HomeNous extends BaseActivity {
 
 	@Override
 	protected void onPause() {
-		//页面item停留时间统计
-		XHClick.getViewPageItemStopTime();
 		super.onPause();
 	}
 
@@ -299,9 +287,7 @@ public class HomeNous extends BaseActivity {
 					FragmentNous fragment = fragmentNousList.get(position);
 					if (!fragment.LoadOver) {
 						fragment.init();
-					}                //页面停留时间统计
-					XHClick.getViewPageItemStopTime();
-					XHClick.getViewPageItemStartTime("HomeNous_jinXuan");
+					}
 					//统计知识页面访问情况(计算事件)
 					XHClick.onEventValue(getApplicationContext(), "pageNous", "pageNous", "精选", 1);
 					break;
@@ -310,9 +296,6 @@ public class HomeNous extends BaseActivity {
 					if (!fragment1.LoadOver) {
 						fragment1.init();
 					}
-					//页面停留时间统计
-					XHClick.getViewPageItemStopTime();
-					XHClick.getViewPageItemStartTime("HomeNous_jianKangYangSheng");
 					//统计知识页面访问情况(计算事件)
 					XHClick.onEventValue(getApplicationContext(), "pageNous", "pageNous", "健康养生", 1);
 					break;
@@ -321,9 +304,6 @@ public class HomeNous extends BaseActivity {
 					if (!fragment2.LoadOver) {
 						fragment2.init();
 					}
-					//页面停留时间统计
-					XHClick.getViewPageItemStopTime();
-					XHClick.getViewPageItemStartTime("HomeNous_penRenJiQiao");
 					//统计知识页面访问情况(计算事件)
 					XHClick.onEventValue(getApplicationContext(), "pageNous", "pageNous", "烹饪技巧", 1);
 					break;
@@ -332,9 +312,6 @@ public class HomeNous extends BaseActivity {
 					if (!fragment3.LoadOver) {
 						fragment3.init();
 					}
-					//页面停留时间统计
-					XHClick.getViewPageItemStopTime();
-					XHClick.getViewPageItemStartTime("HomeNous_meiShiJinXuan");
 					//统计知识页面访问情况(计算事件)
 					XHClick.onEventValue(getApplicationContext(), "pageNous", "pageNous", "美食精选", 1);
 					break;
@@ -343,9 +320,6 @@ public class HomeNous extends BaseActivity {
 					if (!fragment4.LoadOver) {
 						fragment4.init();
 					}
-					//页面停留时间统计
-					XHClick.getViewPageItemStopTime();
-					XHClick.getViewPageItemStartTime("HomeNous_meiShiZaTan");
 					//统计知识页面访问情况(计算事件)
 					XHClick.onEventValue(getApplicationContext(), "pageNous", "pageNous", "美食杂谈", 1);
 					break;

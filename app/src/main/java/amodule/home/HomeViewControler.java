@@ -2,12 +2,10 @@ package amodule.home;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -29,6 +27,7 @@ import acore.widget.rvlistview.RvStaggeredGridView;
 import amodule._common.delegate.ISetAdController;
 import amodule._common.helper.WidgetDataHelper;
 import amodule._common.utility.WidgetUtility;
+import amodule.home.module.HomeVipGuideModule;
 import amodule.home.view.HomeBuoy;
 import amodule.home.view.HomeTitleLayout;
 import amodule.main.activity.MainHomePage;
@@ -65,8 +64,6 @@ public class HomeViewControler implements ISetAdController {
 
     private View mNetworkTip;
 
-    private int scrollDataIndex = -1;//滚动数据的位置
-
     @SuppressLint("InflateParams")
     public HomeViewControler(MainHomePage activity) {
         this.mActivity = activity;
@@ -102,6 +99,7 @@ public class HomeViewControler implements ISetAdController {
         recyclerView.addHeaderView(mHeaderView);
         recyclerView.addHeaderView(mHomeFeedHeaderControler.getLayout());
         recyclerView.setOnItemClickListener(new OnItemClickListenerRvStat() {
+            boolean canStat = true;
             @Override
             protected String getStatData(int position) {
                 return mGetStatDataCallback != null ? mGetStatDataCallback.getStatData(position) : null;
@@ -111,7 +109,17 @@ public class HomeViewControler implements ISetAdController {
             public void onItemClicked(View view, RecyclerView.ViewHolder holder, int position) {
                 if (view instanceof HomeItem) {
                     ((HomeItem) view).onClickEvent(view);
+                    canStat = !((HomeItem) view).mIsAd;
+                    if(!canStat){
+                        //TODO click统计
+                        //((HomeItem) view).onStat
+                    }
                 }
+            }
+
+            @Override
+            protected boolean canStat() {
+                return canStat;
             }
         });
 
@@ -190,22 +198,6 @@ public class HomeViewControler implements ISetAdController {
         //头部统计数据存储
         if (mHeaderControler != null) {
             mHeaderControler.saveStatisticData("home");
-        }
-        int[] lastPositions = null;
-        StaggeredGridLayoutManager staggeredGridLayoutManager
-                = (StaggeredGridLayoutManager) recyclerView.getLayoutManager();
-        if (lastPositions == null) {
-            lastPositions = new int[staggeredGridLayoutManager.getSpanCount()];
-        }
-        staggeredGridLayoutManager.findLastVisibleItemPositions(lastPositions);
-        int lastVisibleItemPosition = Tools.findMax(lastPositions);
-        if (scrollDataIndex < (lastVisibleItemPosition - 1)) {
-            scrollDataIndex = (lastVisibleItemPosition - 1);
-        }
-        //列表
-        if (scrollDataIndex > 0) {
-            XHClick.saveStatictisFile("home", MainHomePage.recommedType_statictus, "", "", String.valueOf(scrollDataIndex), "list", "", "", "", "", "");
-            scrollDataIndex = -1;
         }
     }
 
@@ -328,6 +320,14 @@ public class HomeViewControler implements ISetAdController {
         if (mTitleLayout != null) {
             mTitleLayout.setMessage(messageTipCount);
         }
+    }
+
+    public void setHomeVipBannerModule(HomeVipGuideModule module) {
+        mHeaderControler.setVipGuideData(module);
+    }
+
+    public void setHomeVipBannerViewVisible(boolean visible) {
+        mHeaderControler.setVipGuideVisible(visible);
     }
 
     /*--------------------------------------------- Get&Set ---------------------------------------------*/

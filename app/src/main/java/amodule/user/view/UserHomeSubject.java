@@ -259,7 +259,7 @@ public class UserHomeSubject extends TabContentView {
 	}
 
 	private void loadFromServer() {
-		loadManager.changeMoreBtn(theListView,UtilInternet.REQ_OK_STRING, -1, -1, currentPage,listDataMySb.size() == 0);
+		loadManager.loading(theListView,listDataMySb.size() == 0);
 		String getUrl = StringManager.api_getPostByCode + "?code=" + userCode + "&page=" + currentPage;
 		ReqInternet.in().doGet(getUrl, new InternetCallback() {
 			@Override
@@ -279,7 +279,7 @@ public class UserHomeSubject extends TabContentView {
 		}
 		if (everyPage == 0)
 			everyPage = loadCount;
-		currentPage = loadManager.changeMoreBtn(theListView,flag, everyPage, loadCount, currentPage,listDataMySb.size() == 0);
+		loadManager.loadOver(flag,theListView, loadCount);
 	}
 
 	/**

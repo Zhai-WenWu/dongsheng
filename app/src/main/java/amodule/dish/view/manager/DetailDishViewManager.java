@@ -428,11 +428,13 @@ public class DetailDishViewManager {
      */
     public void handleRelatedRecommendView(ArrayList<Map<String, String>> list) {
         if (dishRelatedRecommendView != null) {
-            if (list == null || list.isEmpty())
+            if (list == null || list.isEmpty()) {
                 dishRelatedRecommendView.setVisibility(View.GONE);
-            else {
+                dishRecommedAndAdView.setVisibility(View.GONE);
+            }else {
                 dishRelatedRecommendView.setVisibility(View.VISIBLE);
                 dishRelatedRecommendView.setData(list);
+                dishRecommedAndAdView.setVisibility(View.VISIBLE);
             }
         }
     }

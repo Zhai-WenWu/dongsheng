@@ -63,7 +63,7 @@ public class UploadDishNormalControl extends UploadDishParrentControl implements
     @Override
     protected void initView() {
         //初始化的时候添加用户提示dialog
-        mAct.loadManager.loadOver(uploadDishData==null? UtilInternet.REQ_FAILD:UtilInternet.REQ_OK_STRING, 1, true);
+        mAct.loadManager.loadOver(uploadDishData==null? UtilInternet.REQ_FAILD:UtilInternet.REQ_OK_STRING);
         if(uploadDishData==null) return;
         if(uploadDishData.getUploadTimeCode() <= 0){
             uploadDishData.setUploadTimeCode(System.currentTimeMillis());

@@ -172,7 +172,7 @@ public class WebviewManager {
                             public void run() {
                                 if (webview.getProgress() < 90) {
                                     if (!state) {
-                                        loadManager.loadOver(UtilInternet.REQ_OK_STRING, 1, true);
+                                        loadManager.loadOver(UtilInternet.REQ_OK_STRING);
                                     }
                                 }
                             }
@@ -197,7 +197,7 @@ public class WebviewManager {
                     //读取title设置title
                     view.loadUrl("javascript:window.appCommon.setTitle(document.title);");
                 }
-                loadManager.loadOver(UtilInternet.REQ_OK_STRING, 1, true);
+                loadManager.loadOver(UtilInternet.REQ_OK_STRING);
                 if (timer != null) {
                     timer.cancel();
                     timer.purge();

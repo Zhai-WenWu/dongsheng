@@ -19,7 +19,6 @@ import acore.logic.XHClick;
 import acore.logic.load.LoadManager;
 import acore.override.XHApplication;
 import acore.override.activity.base.BaseActivity;
-import acore.tools.PageStatisticsUtils;
 import amodule.main.Main;
 import third.mall.aplug.MallCommon;
 
@@ -101,7 +100,6 @@ public class MainBaseActivity extends AppCompatActivity {
 	@Override
 	protected void onPause() {
 		super.onPause();
-		PageStatisticsUtils.getInstance().onPausePage(this,resumeTime,System.currentTimeMillis());
 		if (mActMagager != null){
 			mActMagager.onPause();
 		}

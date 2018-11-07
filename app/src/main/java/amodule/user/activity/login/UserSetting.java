@@ -78,7 +78,7 @@ public class UserSetting extends BaseLoginActivity implements OnClickListener {
             public void handleMessage(Message msg) {
                 switch (msg.what) {
                     case ONREFRESH:
-                        loadManager.setLoading("", new InternetCallback() {
+                        loadManager.setLoading(new InternetCallback() {
                             @Override
                             public void loaded(int flag, String url, Object returnObj) {
                                 loadManager.setLoading(new OnClickListener() {

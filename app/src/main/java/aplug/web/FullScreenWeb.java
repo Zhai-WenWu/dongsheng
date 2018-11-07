@@ -33,7 +33,6 @@ public class FullScreenWeb extends WebActivity implements IObserver {
     private String code = "";
     private String data_type = "";//推荐列表过来的数据
     private String module_type = "";
-    private Long startTime;//统计使用的时间
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +40,7 @@ public class FullScreenWeb extends WebActivity implements IObserver {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         super.onCreate(savedInstanceState);
 //        ToolsDevice.modifyStateTextColor(this);
-        initActivity("",0,0,0,R.layout.a_full_screen_web);
+        initActivity("",2,0,0,R.layout.a_full_screen_web);
         Bundle bundle = this.getIntent().getExtras();
         // 正常调用
         if (bundle != null) {
@@ -52,7 +51,6 @@ public class FullScreenWeb extends WebActivity implements IObserver {
             data_type = bundle.getString("data_type");
             module_type = bundle.getString("module_type");
         }
-        startTime = System.currentTimeMillis();
 
         webViewManager = new WebviewManager(this,loadManager,true);
         webview = webViewManager.createWebView(R.id.XHWebview);
@@ -95,10 +93,6 @@ public class FullScreenWeb extends WebActivity implements IObserver {
 
     @Override
     protected void onDestroy() {
-        long nowTime = System.currentTimeMillis();
-        if (startTime > 0 && (nowTime - startTime) > 0 && !TextUtils.isEmpty(data_type) && !TextUtils.isEmpty(module_type)) {
-            XHClick.saveStatictisFile("FullScreenWeb", module_type, data_type, code, "", "stop", String.valueOf((nowTime - startTime) / 1000), "", "", "", "");
-        }
         super.onDestroy();
 
         ObserverManager.getInstance().unRegisterObserver(this);

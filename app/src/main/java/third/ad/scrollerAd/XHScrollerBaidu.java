@@ -67,18 +67,20 @@ public class XHScrollerBaidu extends XHScrollerAdParent {
         BaiduAdTools.newInstance().getNativeData(nativeResponse, new BaiduAdTools.OnHandlerDataCallback() {
             @Override
             public void onHandlerData(String title, String desc, String iconUrl, String imageUrl,boolean isBigPic) {
-                if(!TextUtils.isEmpty(title)
-                        && !TextUtils.isEmpty(desc)
+                if((!TextUtils.isEmpty(title) || !TextUtils.isEmpty(desc))
                         && (!TextUtils.isEmpty(imageUrl) || !TextUtils.isEmpty(iconUrl))
                         ){
                     Map<String,String> map= new HashMap<>();
-                    if(title.length() > desc.length()){
-                        //交换title和desc
+                    if(TextUtils.isEmpty(title)){
                         map.put("title",desc);
+                        map.put("desc",desc);
+                    }else if(TextUtils.isEmpty(desc)){
+                        map.put("title",title);
                         map.put("desc",title);
                     }else{
-                        map.put("title",title);
-                        map.put("desc",desc);
+                        //交换title和desc
+                        map.put("title",title.length() > desc.length() ? desc : title);
+                        map.put("desc",title.length() > desc.length() ? title : desc);
                     }
                     map.put("iconUrl",iconUrl);
                     //如果imageUrl为空，则使用iconurl

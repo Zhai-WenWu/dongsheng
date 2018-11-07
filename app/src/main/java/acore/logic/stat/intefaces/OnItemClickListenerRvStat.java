@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import acore.logic.stat.StatModel;
 import acore.logic.stat.StatisticsManager;
 import acore.override.XHApplication;
 import acore.tools.Tools;
@@ -62,7 +63,7 @@ public abstract class OnItemClickListenerRvStat implements RvListView.OnItemClic
 
     protected void onStat(int position, String statJsonStr) {
         if (!TextUtils.isEmpty(p) && canStat()) {
-            StatisticsManager.listClick(p, m, String.valueOf(position + 1), "",statJsonStr);
+            StatisticsManager.saveData(StatModel.createListClickModel(p, m, String.valueOf(position + 1), "",statJsonStr));
         }
     }
 

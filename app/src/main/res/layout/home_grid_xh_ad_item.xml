@@ -38,6 +38,7 @@
         android:visibility="gone"/>
 
     <ImageView
+        android:id="@+id/shadow_img"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_100"
         app:layout_constraintBottom_toBottomOf="@+id/img_blur"

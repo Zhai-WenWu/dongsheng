@@ -67,7 +67,7 @@ public class BaseLoginActivity extends BaseActivity {
     public static final String PHONE_TAG = "a_login520";
     public final static String TAG_ACCOCUT = "a_security520";
 
-    public static final String SMS_SDK_VERSION = "3.0.0";
+    public static final String SMS_SDK_VERSION = "3.2.1";
     public String text = "正在登录";
     protected int mGetCountryId = 100;
     protected static final int SET_USER_IMG = 5000;
@@ -485,11 +485,11 @@ public class BaseLoginActivity extends BaseActivity {
             public void loaded(int flag, String url, Object returnObj) {
                 loadManager.hideProgressBar();
                 if (flag >= ReqInternet.REQ_OK_STRING) {
-                    callback.onSuccess();
                     LoginManager.loginSuccess((Activity) context, returnObj);
+                    callback.onSuccess();
                 } else {
-                    callback.onFalse(flag);
                     LoginManager.loginFail(returnObj);
+                    callback.onFalse(flag);
                     Log.i("modifySecret", returnObj.toString());
                 }
                 loadManager.hideProgressBar();
