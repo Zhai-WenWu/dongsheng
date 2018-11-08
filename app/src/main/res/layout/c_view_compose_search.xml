@@ -34,16 +34,4 @@
         android:layout_height="match_parent"
         android:gravity="center_horizontal"/>
 
-    <amodule.search.view.CaidanResultView
-        android:id="@+id/caidan_result"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"/>
-
-    <amodule.search.view.ZhishiResultView
-        android:id="@+id/zhishi_result"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"/>
-
 </FrameLayout>

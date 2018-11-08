@@ -50,7 +50,7 @@ public class HomeSearch extends BaseActivity {
     private void initView() {
 
         initTitle();
-        globalSearchView = (GlobalSearchView) findViewById(R.id.bar_search_global);
+        globalSearchView = findViewById(R.id.bar_search_global);
         globalSearchView.init(this,searchKey, limitSearchType);
     }
 
@@ -69,19 +69,13 @@ public class HomeSearch extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        SearchResultAdDataProvider.getInstance().getXhAllAdControl().releaseView();
         System.gc();
     }
 
-
     @Override
     public void onBackPressed() {
-
-        if (!globalSearchView.hideSecondLevelView()) {
-            super.onBackPressed();
-        }
+        super.onBackPressed();
     }
-
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {

@@ -50,7 +50,6 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
     private List<View> viewList = new ArrayList<>();
     private HaYouSearchResultView hayouView;
     private TieZiSearchResultView tieziView;
-    private View secondLevelView;
     private EditText edSearch;
     private ImageView iv_history;
     private ImageView clear_global;
@@ -88,10 +87,10 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
      * 初始化View
      */
     private void initView() {
-        edSearch = (EditText) findViewById(R.id.ed_search_word);
-        clear_global = (ImageView) findViewById(R.id.btn_ed_clear_global);
-         search_speeach = (ImageView) findViewById(R.id.a_global_search_speeach);
-        iv_history = (ImageView) findViewById(R.id.history);
+        edSearch = findViewById(R.id.ed_search_word);
+        clear_global = findViewById(R.id.btn_ed_clear_global);
+         search_speeach = findViewById(R.id.a_global_search_speeach);
+        iv_history = findViewById(R.id.history);
         UploadDishSpeechTools speechTools = UploadDishSpeechTools.createUploadDishSpeechTools();
         speechTools.initSpeech(mActivity);
         showClearBtn(false);
@@ -108,14 +107,14 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
     }
 
     private void initHayouView() {
-        hayouView = (HaYouSearchResultView) findViewById(R.id.v_hayou_search);
+        hayouView = findViewById(R.id.v_hayou_search);
         hayouView.setVisibility(View.GONE);
         hayouView.init(mActivity);
         viewList.add(hayouView);
     }
 
     private void initTieZiView() {
-        tieziView = (TieZiSearchResultView) findViewById(R.id.v_tiezi_search);
+        tieziView = findViewById(R.id.v_tiezi_search);
         tieziView.setVisibility(View.GONE);
         tieziView.init(mActivity);
         viewList.add(tieziView);
@@ -123,15 +122,14 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
 
     private void initCaipuView() {
 
-        caipuView = (CaipuSearchResultView) findViewById(R.id.v_result_search);
+        caipuView = findViewById(R.id.v_result_search);
         caipuView.setVisibility(View.GONE);
         caipuView.init(mActivity, this);
         viewList.add(caipuView);
     }
 
     private void initMatchwordsView() {
-
-        matchwordsView = (MatchWordsView) findViewById(R.id.v_matchwords_search);
+        matchwordsView = findViewById(R.id.v_matchwords_search);
         matchwordsView.setVisibility(View.GONE);
         viewList.add(matchwordsView);
 
@@ -149,7 +147,7 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
 
     private void initDefaultSearchView() {
 
-        defaultView = (DefaultSearchView) findViewById(R.id.v_default_search);
+        defaultView = findViewById(R.id.v_default_search);
         defaultView.setVisibility(View.VISIBLE);
         viewList.add(defaultView);
         DefaultViewCallback defaultViewCallback = new DefaultViewCallback() {
@@ -192,11 +190,6 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
         edSearch.setOnFocusChangeListener(new OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if ( secondLevelView != null) {
-                    setHintInfo();
-                    showClearBtn(hasFocus && !TextUtils.isEmpty(searchKey));
-                    return;
-                }
                 resetEdHint();
                 if (hasFocus) {
                     if (TextUtils.isEmpty(searchKey)) {
@@ -271,11 +264,7 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
 
                 String temp = s.toString().trim();
 
-                if (secondLevelView != null) {
-                    secondLevelSearch(secondLevelView, temp);
-                    return;
-                }
-                    caipuView.onClearcSearchWord();
+                caipuView.onClearcSearchWord();
                 if (TextUtils.isEmpty(temp)) {
                     showSpeciView(SearchConstant.VIEW_DEFAULT_SEARCH);
                 } else {
@@ -365,12 +354,8 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
                 setSearchMsg("", searchType);
                 findViewById(R.id.btn_ed_clear_global).setVisibility(View.GONE);
                 clearEditViewFocus(true);
-                if (secondLevelView != null) {
-                    return;
-                } else {
-                    showSpeciView(SearchConstant.VIEW_DEFAULT_SEARCH);
-                    XHClick.track(defaultView.getContext(), "浏览搜索默认页");
-                }
+                showSpeciView(SearchConstant.VIEW_DEFAULT_SEARCH);
+                XHClick.track(defaultView.getContext(), "浏览搜索默认页");
                 break;
             //语音输入
             case R.id.a_global_search_speeach:
@@ -386,7 +371,6 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
     private void showSpeciView(int viewFlag) {
 
         View tempView = null;
-        hideSecondLevelView();
         switch (viewFlag) {
             case SearchConstant.VIEW_DEFAULT_SEARCH:
                 tempView = defaultView;
@@ -401,7 +385,6 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
                 tempView = hayouView;
                 break;
             case SearchConstant.VIEW_TIEZI_RESULT:
-
                 tempView = tieziView;
                 break;
             default:
@@ -412,28 +395,11 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
         }
     }
 
-    private void secondLevelSearch(View secondLevelView, String key) {
-        if (!TextUtils.isEmpty(key)) {
-            if (secondLevelView instanceof CaidanResultView) {
-                CaidanResultView caidan_result = (CaidanResultView) secondLevelView;
-                caidan_result.search(key);
-            } else if (secondLevelView instanceof ZhishiResultView) {
-                ZhishiResultView zhishi_result = (ZhishiResultView) secondLevelView;
-                zhishi_result.search(key);
-            }
-        }
-
-    }
-
     private void setHintInfo() {
         if (SearchConstant.SEARCH_HAYOU == searchType) {
             edSearch.setHint("搜哈友");
         } else if (SearchConstant.SEARCH_MEISHITIE == searchType) {
             edSearch.setHint("搜贴子");
-        } else if (secondLevelView instanceof CaidanResultView) {
-            edSearch.setHint("搜菜单");
-        } else if (secondLevelView instanceof ZhishiResultView) {
-            edSearch.setHint("搜知识");
         }
     }
 
@@ -465,30 +431,5 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
     private void resetEdHint() {
         edSearch.setHint("搜菜谱、食材等");
     }
-
-    public void setSecondLevelView(View view) {
-        if (view != null) {
-            secondLevelView = view;
-            iv_history.setVisibility(View.GONE);
-            setHintInfo();
-        }
-    }
-
-    //判断当前页面上是否有二级页面，如果有隐藏二级界面
-    public boolean hideSecondLevelView() {
-        boolean flag = false;
-        if (secondLevelView != null &&
-                secondLevelView instanceof ZhishiResultView
-                || secondLevelView instanceof CaidanResultView) {
-            secondLevelView.setVisibility(View.GONE);
-            secondLevelView = null;
-            iv_history.setVisibility(View.VISIBLE);
-            caipuView.showCaipuSearchResultView();
-            resetEdHint();
-            flag = true;
-        }
-        return flag;
-    }
-
 
 }
