@@ -13,8 +13,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.BitmapRequestBuilder;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.xiangha.R;
@@ -28,7 +26,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import acore.logic.XHClick;
 import acore.logic.stat.StatModel;
@@ -68,8 +65,6 @@ public class AdapterCaipuSearch extends BaseAdapter {
     private String searchKey;
     private int adNum;
     private XHAllAdControl xhAllAdControl;
-    private AtomicBoolean topAdHasData = new AtomicBoolean(false);
-
 
     public AdapterCaipuSearch(BaseActivity mActivity, ViewGroup mParent) {
         this.mActivity = mActivity;
@@ -447,27 +442,22 @@ public class AdapterCaipuSearch extends BaseAdapter {
 
     private View createAdView(int pos) {
         View view = null;
-        if (pos == 0) {
-            if (adDdata.get(0) != null)
-                view = SearchResultAdViewGenerater.generateTopAdView(mActivity, xhAllAdControl, adDdata.get(0));
-        } else {
-            int adIndex = -1;
-            int[] adPos = new int[]{2, 8, 15, 23, 32, 42};
-            for (int i = 0; i < adPos.length; i++) {
-                if (pos == adPos[i]) {
-                    adIndex = i;
-                    break;
-                }
+        int adIndex = -1;
+        int[] adPos = new int[]{0,4,10,17,25,34,44};
+        for (int i = 0; i < adPos.length; i++) {
+            if (pos == adPos[i]) {
+                adIndex = i;
+                break;
             }
-            if (adIndex > -1 && adDdata != null && adIndex < adDdata.size()) {
-                if (adDdata.get(adIndex) != null) {
-                    final Map<String, String> dataMap = adDdata.get(adIndex);
-                    view = SearchResultAdViewGenerater.generateListAdView(mActivity, xhAllAdControl, dataMap, adIndex);
-                    if (listPosUsed.contains(pos + 1)) {
-                        view.findViewById(R.id.v_ad_item_tail).setVisibility(View.VISIBLE);
-                    } else {
-                        view.findViewById(R.id.v_ad_item_tail).setVisibility(View.GONE);
-                    }
+        }
+        if (adIndex > -1 && adDdata != null && adIndex < adDdata.size()) {
+            if (adDdata.get(adIndex) != null) {
+                final Map<String, String> dataMap = adDdata.get(adIndex);
+                view = SearchResultAdViewGenerater.generateListAdView(mActivity, xhAllAdControl, dataMap, adIndex);
+                if (listPosUsed.contains(pos + 1)) {
+                    view.findViewById(R.id.v_ad_item_tail).setVisibility(View.VISIBLE);
+                } else {
+                    view.findViewById(R.id.v_ad_item_tail).setVisibility(View.GONE);
                 }
             }
         }
@@ -492,33 +482,8 @@ public class AdapterCaipuSearch extends BaseAdapter {
      */
     private int generateAdPos(boolean isRefresh) {
         adPosList.clear();
-        int adPos[] = new int[]{2, 8, 15, 23, 32, 42};
-        if ((mListShicaiData == null || mListShicaiData.size() == 0) && topAdHasData.get()) {
-            if (adDdata.size() > 0) {
-                if (!adDdata.get(0).isEmpty()) {
-                    if (isRefresh && adDdata.size() > 1) {
-                        adDdata.remove(1);
-                    }
-                    adPos = new int[]{0, 8, 15, 23, 32, 42};
-                } else {
-                    if (topAdHasData.get()) {
-                        topAdHasData.set(false);
-                    }
-                    if (isRefresh && adDdata.size() > 0) {
-                        adDdata.remove(0);
-                    }
-                    adPos = new int[]{2, 8, 15, 23, 32, 42};
-                }
-            }
-        } else {
-            if (topAdHasData.get()) {
-                topAdHasData.set(false);
-            }
-            if (isRefresh && adDdata.size() > 0) {
-                adDdata.remove(0);
-            }
-            adPos = new int[]{2, 8, 15, 23, 32, 42};
-        }
+        //0,4,10,17,25,34,44
+        int adPos[] = new int[]{0,4,10,17,25,34,44};
 //        Log.i("tzy", "generateAdPos: adDdata.size()=" + adDdata.size());
         for (int i = 0; i < adDdata.size() && i < adPos.length; i++) {
             if (adDdata.get(i) != null && !adDdata.get(i).isEmpty()) {
@@ -563,7 +528,6 @@ public class AdapterCaipuSearch extends BaseAdapter {
             mSearchResultAdDataProvider = new SearchResultAdDataProvider(mActivity);
         }
         xhAllAdControl = mSearchResultAdDataProvider.getXhAllAdControl();
-        topAdHasData = mSearchResultAdDataProvider.HasTopAdData();
         if (adDdata.isEmpty() || isRefresh) {
             adDdata.clear();
             adDdata.addAll(mSearchResultAdDataProvider.getAdDataList());
