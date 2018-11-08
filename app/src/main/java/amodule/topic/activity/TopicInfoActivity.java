@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,11 +22,8 @@ import java.util.Map;
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
-import acore.logic.load.LoadManager;
 import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.StringManager;
-import acore.tools.Tools;
-import acore.tools.ToolsDevice;
 import acore.tools.Tools;
 import acore.widget.rvlistview.RvListView;
 import acore.widget.rvlistview.RvStaggeredGridView;
@@ -42,7 +40,6 @@ import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
-import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
 import third.aliyun.work.AliyunCommon;
 
 public class TopicInfoActivity extends BaseAppCompatActivity {
@@ -52,7 +49,6 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
 
     private TextView mTitle;
     private ImageView mBackImg;
-    private PtrClassicFrameLayout mRefreshLayout;
     private RvStaggeredGridView mStaggeredGridView;
     private ImageView mFloatingButton;
     private TopicHeaderView mTopicHeaderView;
@@ -81,7 +77,8 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
             finish();
             return;
         }
-        startLoadData();
+//        startLoadData();
+        loadTopicInfo(false);
     }
 
     private void initStatusBar() {
@@ -96,6 +93,8 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
         }
         mDatas = new ArrayList<>();
         mTopicInfoStaggeredAdapter = new TopicInfoStaggeredAdapter(this, mDatas);
+        mStaggeredGridView.setAdapter(mTopicInfoStaggeredAdapter);
+        loadTopicList(false);
     }
 
     private void initView() {
@@ -104,18 +103,44 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
         mBackImg.setOnClickListener(v -> {
             TopicInfoActivity.this.finish();
         });
-        mRefreshLayout = findViewById(R.id.refresh_list_view_frame);
-        mRefreshLayout.disableWhenHorizontalMove(true);
-        mRefreshLayout.setLoadingMinTime(300);
+//        mRefreshLayout = findViewById(R.id.refresh_list_view_frame);
+        mTopicHeaderView = findViewById(R.id.view_topic_header);
+//        mRefreshLayout.disableWhenHorizontalMove(true);
+//        mRefreshLayout.setLoadingMinTime(300);
         mStaggeredGridView = findViewById(R.id.staggered_view);
         mStaggeredGridView.closeDefaultAnimator();
         mFloatingButton = findViewById(R.id.floating_btn);
-        mTopicHeaderView = new TopicHeaderView(this);
-        mStaggeredGridView.addHeaderView(mTopicHeaderView);
+        FrameLayout mHotView = findViewById(R.id.fl_hot);
+        FrameLayout mNewView = findViewById(R.id.fl_new);
+        TextView mHotTabTv = findViewById(R.id.tv_hot_tab);
+        View mHotTabBottomView = findViewById(R.id.view_hot_tab_bottom);
+        TextView mNewTabTV = findViewById(R.id.tv_new_tab);
+        View mNewTabBottom = findViewById(R.id.view_new_tab_bottom);
+
+        mHotView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mHotTabTv.setTextColor(getResources().getColor(R.color.white));
+                mHotTabBottomView.setVisibility(View.VISIBLE);
+                mNewTabTV.setTextColor(getResources().getColor(R.color.c_777777));
+                mNewTabBottom.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        mNewView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mHotTabTv.setTextColor(getResources().getColor(R.color.c_777777));
+                mHotTabBottomView.setVisibility(View.INVISIBLE);
+                mNewTabTV.setTextColor(getResources().getColor(R.color.white));
+                mNewTabBottom.setVisibility(View.VISIBLE);
+            }
+        });
+
         mStaggeredGridView.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
             public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-                StaggeredGridLayoutManager.LayoutParams params =(StaggeredGridLayoutManager.LayoutParams) view.getLayoutParams();
+                StaggeredGridLayoutManager.LayoutParams params = (StaggeredGridLayoutManager.LayoutParams) view.getLayoutParams();
                 int position = parent.getChildAdapterPosition(view);
                 int viewType = parent.getAdapter().getItemViewType(position);
                 switch (viewType) {
@@ -164,16 +189,16 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
     }
 
     private void startLoadData() {
-        loadManager.setLoading(mRefreshLayout, mStaggeredGridView, mTopicInfoStaggeredAdapter, true, v -> {
-                    loadTopicInfo(true);
-                    loadTopicList(true);
-                }, v -> {
-                    if (!mTopicInfoLoadStarted) {
-                        loadTopicInfo(false);
-                    }
-                    loadTopicList(false);
-                }
-        );
+//        loadManager.setLoading( mStaggeredGridView, mTopicInfoStaggeredAdapter, true, v -> {
+//                    loadTopicInfo(true);
+//                    loadTopicList(true);
+//                }, v -> {
+//                    if (!mTopicInfoLoadStarted) {
+//                        loadTopicInfo(false);
+//                    }
+//                }
+//        );
+
     }
 
     private void loadTopicInfo(boolean refresh) {
@@ -190,9 +215,9 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                     if (loadManager != null) {
                         loadManager.hideProgressBar();
                     }
-                    if (mRefreshLayout != null && refresh) {
-                        mRefreshLayout.refreshComplete();
-                    }
+//                    if (mRefreshLayout != null && refresh) {
+//                        mRefreshLayout.refreshComplete();
+//                    }
                 }
                 if (i >= ReqInternet.REQ_OK_STRING) {
                     mInfoMap = StringManager.getFirstMap(o);
@@ -259,7 +284,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
             mPage = 0;
         }
         ++mPage;
-        loadManager.loading(mStaggeredGridView,  false);
+//        loadManager.loading(mStaggeredGridView, false);
         ReqEncyptInternet.in().doGetEncypt(StringManager.API_TOPIC_LIST, "code=" + mTopicCode + "&page=" + mPage, new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
@@ -274,7 +299,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                     }
                     List<Map<String, String>> datas = StringManager.getListMapByJson(o);
                     currentPageCount = datas.size();
-                    for (Map<String, String> data : datas){
+                    for (Map<String, String> data : datas) {
                         //只处理了当前用到的数据，其他数据未处理，如有需要再添加设置
                         TopicItemModel topicItemModel = new TopicItemModel();
                         topicItemModel.setVideoCode(data.get("code"));
@@ -306,13 +331,13 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                     --mPage;
                 }
                 if (loadManager != null) {
-                    loadManager.loadOver(i,mStaggeredGridView, currentPageCount);
+                    loadManager.loadOver(i, mStaggeredGridView, currentPageCount);
                 }
                 if (!mTopicInfoLoading) {
-                    loadManager.hideProgressBar();
-                    if (mRefreshLayout != null && refresh) {
-                        mRefreshLayout.refreshComplete();
-                    }
+//                    loadManager.hideProgressBar();
+//                    if (mRefreshLayout != null && refresh) {
+//                        mRefreshLayout.refreshComplete();
+//                    }
                 }
             }
         });

@@ -116,7 +116,7 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
     private ImageView mMoreImg;
     private View mEmptyView;
     private ConstraintLayout mInfoLayout;
-    private LinearLayout mLayoutTopic;
+    private RelativeLayout mLayoutTopic;
     private LinearLayout mLayoutAddress;
     private TextView mTopicText;
     private TextView mAddressText;
@@ -163,6 +163,7 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
 
     private Handler mMainHandler;
     private boolean isCompleteCallback = true;
+    private TextView mHavePrizeText;
 
     public ShortVideoItemView(Context context) {
         this(context, null);
@@ -192,6 +193,7 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
         mLayoutAddress = findViewById(R.id.layout_address_inner);
         mAddressText = findViewById(R.id.text_address);
         mTopicText = findViewById(R.id.text_topic);
+        mHavePrizeText = findViewById(R.id.tv_have_prize);
         mTitleText = findViewById(R.id.text_title);
         mBottomLayout = findViewById(R.id.layout_bottom_info);
         mBottomProgress = findViewById(R.id.bottom_progressbar);

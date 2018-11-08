@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -52,9 +53,6 @@ public class TopicHeaderView extends RelativeLayout {
     private CustomClickableSpan mCustomClickableSpan;
 
     private ImageView mUserRearImg;
-    private ImageView mUserFrontImg;
-    private TextView mTopicUser;
-    private ImageView mTopicAttention;
     private TextView mTopicInfo;
     private TextView mTopicNum;
     private View mShadePanel;
@@ -77,11 +75,10 @@ public class TopicHeaderView extends RelativeLayout {
     private void initView(Context context) {
         LayoutInflater.from(context).inflate(R.layout.topic_header_layout, this, true);
         mUserRearImg = findViewById(R.id.user_rear_img);
-        mUserFrontImg = findViewById(R.id.user_front_img);
-        mTopicUser = findViewById(R.id.topic_user);
-        mTopicAttention = findViewById(R.id.topic_attention);
         mTopicInfo = findViewById(R.id.topic_info);
         mTopicNum = findViewById(R.id.topic_num);
+        TextView mBottomLinkTv = findViewById(R.id.tv_bottom_link);
+        mBottomLinkTv.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG); //下划线
         mShadePanel = findViewById(R.id.shade);
 //        String imageUrl = "https://s3.cdn.xiangha.com/img/201809/1211/s/5b9885523976a.png/NTAweDA";
 //        Glide.with(context).load(imageUrl).into(topicImage);
@@ -89,17 +86,17 @@ public class TopicHeaderView extends RelativeLayout {
 
     public void showUserImage(String url, OnClickListener listener) {
         if (TextUtils.isEmpty(url)) {
-            hideTopicImage();
+//            hideTopicImage();
             return;
         }
-        mUserFrontImg.setOnClickListener(listener);
-        mUserFrontImg.setTag(R.string.tag, url);
+//        mUserFrontImg.setOnClickListener(listener);
+//        mUserFrontImg.setTag(R.string.tag, url);
         Glide.with(getContext()).load(url).downloadOnly(new SimpleTarget<File>() {
 
             @Override
             public void onLoadFailed(Exception e, Drawable drawable) {
                 super.onLoadFailed(e, drawable);
-                hideTopicImage();
+//                hideTopicImage();
             }
 
             @Override
@@ -107,14 +104,14 @@ public class TopicHeaderView extends RelativeLayout {
                 try {
                     InputStream is = new FileInputStream(file);
                     Bitmap bitmap = BitmapFactory.decodeStream(is);
-                    mUserFrontImg.setVisibility(View.VISIBLE);
-                    mUserFrontImg.setImageBitmap(bitmap);
+//                    mUserFrontImg.setVisibility(View.VISIBLE);
+//                    mUserFrontImg.setImageBitmap(bitmap);
                     bitmap = ImgManager.RSBlur(getContext(), bitmap, 10);
                     mUserRearImg.setImageBitmap(bitmap);
                     mShadePanel.setVisibility(View.VISIBLE);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    hideTopicImage();
+//                    hideTopicImage();
                 }
             }
         });
@@ -122,10 +119,10 @@ public class TopicHeaderView extends RelativeLayout {
 
     public void showTopicUser(String userName, OnClickListener listener) {
         if (TextUtils.isEmpty(userName)) {
-            hideTopicUser();
+//            hideTopicUser();
             return;
         }
-        mTopicUser.setVisibility(View.VISIBLE);
+//        mTopicUser.setVisibility(View.VISIBLE);
         SpannableStringBuilder ssb = new SpannableStringBuilder(userName);
         if (mCustomClickableSpan == null) {
             mCustomClickableSpan = new CustomClickableSpan();
@@ -135,20 +132,20 @@ public class TopicHeaderView extends RelativeLayout {
         mCustomClickableSpan.setOnClickListener(listener);
         ssb.setSpan(mCustomClickableSpan, 0, userName.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         ssb.append(" 创建的话题");
-        mTopicUser.setMovementMethod(LinkMovementMethod.getInstance());
-        mTopicUser.setText(ssb);
+//        mTopicUser.setMovementMethod(LinkMovementMethod.getInstance());
+//        mTopicUser.setText(ssb);
         requestLayout();
     }
 
     public void showTopicAttention(boolean attentioned, OnClickListener listener) {
-        mTopicAttention.setVisibility(View.VISIBLE);
-        mTopicAttention.setOnClickListener(listener);
-        mTopicAttention.setEnabled(!attentioned);
+//        mTopicAttention.setVisibility(View.VISIBLE);
+//        mTopicAttention.setOnClickListener(listener);
+//        mTopicAttention.setEnabled(!attentioned);
         requestLayout();
     }
 
     public void setAttentionEnable(boolean enable) {
-        mTopicAttention.setEnabled(enable);
+//        mTopicAttention.setEnabled(enable);
         requestLayout();
     }
 
@@ -175,17 +172,17 @@ public class TopicHeaderView extends RelativeLayout {
         requestLayout();
     }
 
-    public void hideTopicImage() {
-        mUserFrontImg.setVisibility(View.GONE);
-    }
-
-    public void hideTopicUser() {
-        mTopicUser.setVisibility(View.GONE);
-    }
-
-    public void hideTopicAttention() {
-        mTopicAttention.setVisibility(View.GONE);
-    }
+//    public void hideTopicImage() {
+//        mUserFrontImg.setVisibility(View.GONE);
+//    }
+//
+//    public void hideTopicUser() {
+//        mTopicUser.setVisibility(View.GONE);
+//    }
+//
+//    public void hideTopicAttention() {
+//        mTopicAttention.setVisibility(View.GONE);
+//    }
 
     public void hideTopicInfo() {
         mTopicInfo.setVisibility(View.GONE);

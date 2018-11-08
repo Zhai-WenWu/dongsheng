@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="@color/black"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tv_tab_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="最新"
+        android:layout_gravity="center"
+        android:textColor="@color/c_777777"
+        android:textSize="@dimen/sp_16" />
+
+    <View
+        android:id="@+id/view_tab_bottom"
+        android:layout_width="@dimen/dp_18"
+        android:layout_height="3dp"
+        android:visibility="gone"
+        android:layout_gravity="center_horizontal|bottom"
+        android:background="@color/color_fa273b" />
+
+</FrameLayout>
