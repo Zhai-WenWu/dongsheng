@@ -99,6 +99,7 @@ public class ShortVideoADItemView extends BaseItemView implements View.OnClickLi
     private void addListener() {
         findViewById(R.id.see_detail_Layout).setOnClickListener(this);
         madTag.setOnClickListener(this);
+        mThumbImg.setOnClickListener(this);
         mBackImg.setOnClickListener(this);
         mHeaderImg.setOnClickListener(this);
         mUserName.setOnClickListener(this);
