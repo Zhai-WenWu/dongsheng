@@ -1,5 +1,6 @@
 package amodule.home.view;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
@@ -69,6 +70,7 @@ public class HomeTitleLayout extends RelativeLayout implements IStatictusData {
         searchLayout.setOnClickListener(mOnClickListenerStat);
 
         postDelayed(() -> new SearchDataImp().getRandomHotWord(new InternetCallback() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void loaded(int i, String s, Object o) {
                 String word = (String) o;

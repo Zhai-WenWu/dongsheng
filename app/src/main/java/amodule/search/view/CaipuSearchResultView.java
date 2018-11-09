@@ -19,6 +19,7 @@ import android.widget.RelativeLayout;
 import com.xiangha.R;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -35,6 +36,7 @@ import amodule.search.data.SearchDataImp;
 import aplug.basic.InternetCallback;
 import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
 
+import static amodule.search.avtivity.HomeSearch.EXTRA_JSONDATA;
 import static com.xiangha.R.id.v_no_data_search;
 import static xh.basic.internet.UtilInternet.REQ_OK_STRING;
 
@@ -104,16 +106,6 @@ public class CaipuSearchResultView extends LinearLayout {
         list_search_result.addHeaderView(header);
 
         adapterCaipuSearch = new AdapterCaipuSearch(mActivity, list_search_result);
-
-        mSearchHorizonLayout.setOnItemClickListener(new SearchHorizonAdapter.OnItemClickListener() {
-            @Override
-            public void onClick(View v, Map<String, String> data) {
-                //TODO
-                Intent intent = new Intent(getContext(),HomeSearch.class);
-                intent.putExtra("s",data.get("text"));
-                getContext().startActivity(intent);
-            }
-        });
     }
 
     private void initData() {
@@ -124,7 +116,6 @@ public class CaipuSearchResultView extends LinearLayout {
     public void search(String key) {
         adapterCaipuSearch.refreshAdData();
         clearSearchResult();
-        mSearchHorizonLayout.setSearchWord(key);
         searchKey = key;
         adapterCaipuSearch.setSearchKey(searchKey);
         loadManager.setLoading(refresh_list_view_frame, list_search_result, adapterCaipuSearch, true,
@@ -150,6 +141,49 @@ public class CaipuSearchResultView extends LinearLayout {
             adapterCaipuSearch.refresh(false, mListCaipuData, mListShicaiData);
             adNum = 0;
         });
+    }
+
+    /**
+     *
+     * @param jsonData json数据
+     * @return 返回数组，0是显示的搜索文字，1是真是的搜索词
+     */
+    public String[] handleSearchWord(String jsonData){
+        String[] searchWords = {"",""};
+        List<Map<String,String>> strList = StringManager.getListMapByJson(jsonData);
+        mSearchHorizonLayout.setWordList(strList);
+        StringBuffer sb = new StringBuffer();
+        for(int i=0;i<strList.size();i++){
+            Map<String,String> map = strList.get(i);
+            String word = map.get("name");
+            if(TextUtils.isEmpty(word)){
+                continue;
+            }
+            sb.append(map.get("name"));
+            if(i!=strList.size() - 1){
+                sb.append(" ");
+            }
+        }
+        searchWords[0] = sb.toString();
+        String word1="",word2="";
+        for(int i=0;i<strList.size();i++){
+            Map<String,String> map = strList.get(i);
+            String type = map.get("type");
+            String word = map.get("name");
+            if(TextUtils.isEmpty(word)){
+                continue;
+            }
+            if(TextUtils.equals("3",type)){
+                searchWords[1] = word;
+                return searchWords;
+            }else if(TextUtils.isEmpty(type) || TextUtils.equals("2",type)){
+                word1 = word;
+            }else if(TextUtils.equals("1",type)){
+                word2 = word;
+            }
+        }
+        searchWords[1] = word1 + " " + word2;
+        return searchWords;
     }
 
 

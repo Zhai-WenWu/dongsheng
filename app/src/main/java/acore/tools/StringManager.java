@@ -386,6 +386,7 @@ public class StringManager extends UtilString {
     public final static String API_DISH_RECOMMEND = apiUrl + "main6/caipu/info";//菜谱详情页的相关推荐
 
     public final static String API_SEARCH_COURSE_DISH = apiUrl + "main8/search/byCourseDish";//搜索名厨课菜谱
+    public final static String API_SEARCH_RECOM_LABEL = apiUrl + "main8/search/recomLabel";//搜索名厨课菜谱
     //短视频详情页
     public final static String API_SHORT_VIDEOCODES = apiUrl + "main7/video/videoCodeList";
     public final static String api_getVideoInfo = apiUrl + "main8/shortVideo/shortVideoInfo"; //视频详情

@@ -2,6 +2,7 @@ package amodule.search.avtivity;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -20,8 +21,10 @@ import amodule.search.view.GlobalSearchView;
 public class HomeSearch extends BaseActivity {
 
     public static final String STATISTICS_ID = "a_search430";
+    public static final String EXTRA_JSONDATA = "jsonData";
     private int limitSearchType;
     private String searchKey;
+    private String jsonData;
     private GlobalSearchView globalSearchView;
 
 
@@ -34,7 +37,7 @@ public class HomeSearch extends BaseActivity {
         initData();
         initView();
 //        SearchResultAdDataProvider.getInstance().getAdData();
-        Log.i("tzy","onCreate :: time = " + (System.currentTimeMillis() - startTime) + "ms.");
+        Log.i("tzy", "onCreate :: time = " + (System.currentTimeMillis() - startTime) + "ms.");
     }
 
     private void initData() {
@@ -42,16 +45,21 @@ public class HomeSearch extends BaseActivity {
         if (bundle != null) {
             limitSearchType = bundle.getInt(SearchConstant.SEARCH_TYPE, SearchConstant.SEARCH_CAIPU);
             searchKey = bundle.getString("s");
+            jsonData = bundle.getString(EXTRA_JSONDATA);
         }
 
-        Log.i("渠道号"," "+ ChannelUtil.getChannel(this));
+        Log.i("渠道号", " " + ChannelUtil.getChannel(this));
     }
 
     private void initView() {
 
         initTitle();
         globalSearchView = findViewById(R.id.bar_search_global);
-        globalSearchView.init(this,searchKey, limitSearchType);
+        if (TextUtils.isEmpty(jsonData)) {
+            globalSearchView.init(this, searchKey, limitSearchType);
+        } else {
+            globalSearchView.init(this, jsonData);
+        }
     }
 
     private void initTitle() {

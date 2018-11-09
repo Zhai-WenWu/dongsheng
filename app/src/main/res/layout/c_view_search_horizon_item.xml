@@ -14,6 +14,7 @@
         android:background="@drawable/bg_search_horizon_item"
         android:gravity="center"
         android:includeFontPadding="false"
+        android:textSize="@dimen/sp_13"
         android:paddingLeft="@dimen/dp_12"
         android:paddingRight="@dimen/dp_12"
         tools:text="排骨"/>

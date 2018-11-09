@@ -55,20 +55,19 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="@dimen/dp_15"
+        android:layout_marginLeft="@dimen/dp_10"
         android:layout_toLeftOf="@+id/btn_search_global"
         android:layout_toRightOf="@+id/btn_back"
         android:background="@drawable/bg_home_search">
 
         <ImageView
             android:id="@+id/a_home_search_icon"
-            android:layout_width="@dimen/dp_14"
-            android:layout_height="@dimen/dp_14"
+            android:layout_width="@dimen/dp_13"
+            android:layout_height="@dimen/dp_13"
             android:layout_centerVertical="true"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/dp_8"
-            android:scaleType="centerCrop"
-            android:src="@drawable/z_home_real_search_icon"/>
+            android:layout_marginLeft="@dimen/dp_12"
+            android:src="@drawable/home_search_icon"/>
 
         <EditText
             android:id="@+id/ed_search_word"

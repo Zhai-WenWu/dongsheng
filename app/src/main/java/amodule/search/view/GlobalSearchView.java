@@ -18,11 +18,14 @@ import com.annimon.stream.Stream;
 import com.xiangha.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;
 import acore.tools.ChannelUtil;
+import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.dish.db.DataOperate;
@@ -43,6 +46,8 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
     private Context context;
     private boolean isBack = false;
     private String searchKey = "";
+    private String jsonData = "";
+    private boolean once = true;
     private int searchType;
     private MatchWordsView matchwordsView;
     private DefaultSearchView defaultView;
@@ -76,11 +81,31 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
         initView();
 
         if (!TextUtils.isEmpty(searchWord)) {
+            setHorizon(searchWord);
             setSearchMsg(searchWord, searchType);
             search();
         }else {
             XHClick.track(defaultView.getContext(), "浏览搜索默认页");
         }
+    }
+
+    private void setHorizon(String searchWord) {
+        Map<String,String> map = new HashMap<>();
+        map.put("name",searchWord);
+        caipuView.handleSearchWord(StringManager.getJsonByMap(map).toString());
+    }
+
+    public void init(BaseActivity activity, String jsonData){
+        mActivity = activity;
+        this.searchType = SearchConstant.SEARCH_CAIPU;
+        this.jsonData = jsonData;
+
+        initView();
+
+        String[] searchWords = caipuView.handleSearchWord(jsonData);
+        searchKey = searchWords[1];
+        edSearch.setText(searchWords[0]);
+        search();
     }
 
     /**
@@ -268,7 +293,11 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
                 if (TextUtils.isEmpty(temp)) {
                     showSpeciView(SearchConstant.VIEW_DEFAULT_SEARCH);
                 } else {
-                    searchKey = temp;
+                    if(TextUtils.isEmpty(jsonData)){
+                        searchKey = temp;
+                    }else{
+                        jsonData = "";
+                    }
                     showSpeciView(SearchConstant.VIEW_MATCH_WORDS);
                     matchwordsView.getMatchWords(searchKey);
                 }
@@ -305,8 +334,12 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
         DataOperate.saveSearchWord(key);
         switch (type) {
             case SearchConstant.SEARCH_CAIPU:
+                if(once){
+                    once = false;
+                }else{
+                    setHorizon(key);
+                }
                 showView(caipuView);
-
                 caipuView.search(key);
                 XHClick.mapStat(mActivity, "a_search_input", "搜菜谱", isMatchWords?"点击联想词":"直接搜索");
                 break;

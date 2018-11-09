@@ -50,7 +50,7 @@ public class SearchHorizonAdapter extends RvBaseAdapter<Map<String,String>> {
         public void bindData(int position, @Nullable Map<String, String> data) {
             itemView.setOnClickListener(v -> handleItemClick(v,data));
             TextView textView = findViewById(R.id.text);
-            textView.setText(data.get("text"));
+            textView.setText(data.get("name"));
         }
     }
 
