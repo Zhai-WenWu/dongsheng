@@ -15,6 +15,8 @@ import android.widget.Toast;
 
 import com.xiangha.R;
 
+import org.eclipse.jetty.util.log.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +48,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
     public static final String STA_ID = "a_topic_gather";
 
     public static final String TOPIC_CODE = "topicCode";
+    public static final String ACTIVIT_TYPE = "activityType";
 
     private TextView mTitle;
     private ImageView mBackImg;
@@ -54,6 +57,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
     private TopicHeaderView mTopicHeaderView;
 
     private String mTopicCode;
+    private String mActivityType;
 
     private int mPage;
     private Map<String, String> mInfoMap;
@@ -90,7 +94,9 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
         Intent i = getIntent();
         if (i != null) {
             mTopicCode = i.getStringExtra(TOPIC_CODE);
+            mActivityType = i.getStringExtra(ACTIVIT_TYPE);
         }
+
         mDatas = new ArrayList<>();
         mTopicInfoStaggeredAdapter = new TopicInfoStaggeredAdapter(this, mDatas);
         mStaggeredGridView.setAdapter(mTopicInfoStaggeredAdapter);
@@ -101,7 +107,8 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
         mTitle = findViewById(R.id.title);
         mBackImg = findViewById(R.id.back_img);
         mBackImg.setOnClickListener(v -> {
-            TopicInfoActivity.this.finish();
+//            TopicInfoActivity.this.finish();
+            startActivity(new Intent(TopicInfoActivity.this,SearchTopicActivity.class));
         });
 //        mRefreshLayout = findViewById(R.id.refresh_list_view_frame);
         mTopicHeaderView = findViewById(R.id.view_topic_header);
@@ -207,72 +214,87 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
         }
         mTopicInfoLoading = true;
         mTopicInfoLoadStarted = true;
-        ReqEncyptInternet.in().doGetEncypt(StringManager.API_TOPIC_INFO, "code=" + mTopicCode, new InternetCallback() {
-            @Override
-            public void loaded(int i, String s, Object o) {
-                mTopicInfoLoading = false;
-                if (!mTopicListLoading) {
-                    if (loadManager != null) {
-                        loadManager.hideProgressBar();
-                    }
-//                    if (mRefreshLayout != null && refresh) {
-//                        mRefreshLayout.refreshComplete();
-//                    }
-                }
-                if (i >= ReqInternet.REQ_OK_STRING) {
-                    mInfoMap = StringManager.getFirstMap(o);
-                    String name = mInfoMap.get("name");
-                    if (!TextUtils.isEmpty(name)) {
-                        mTitle.setText(name);
-                    }
-                    mAuthorMap = StringManager.getFirstMap(mInfoMap.get("author"));
-                    mTopicHeaderView.showUserImage(mAuthorMap.get("img"), new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            gotoUser();
-                            XHClick.mapStat(TopicInfoActivity.this, ShortVideoDetailActivity.STA_ID, "用户内容", "头像");
+        String json = "{\n" +
+                "    \"code\": \"5050\",\n" +
+                "    \"name\": \"木有活动\",\n" +
+                "    \"num\": \"0\",\n" +
+                "    \"content\": \"\",\n" +
+                "    \"activityInfo\": [],\n" +
+                "    \"users\": {\n" +
+                "      \"text\": \"社交达人\",\n" +
+                "      \"info\": [\n" +
+                "        {\n" +
+                "          \"code\": \"10191\",\n" +
+                "          \"nickName\": \"古月云X\",\n" +
+                "          \"url\": \"userIndex.app?code=10191&type=video\"\n" +
+                "        },\n" +
+                "        {\n" +
+                "          \"code\": \"20070\",\n" +
+                "          \"nickName\": \"thlfdwoghakky\",\n" +
+                "          \"url\": \"userIndex.app?code=20070&type=video\"\n" +
+                "        },\n" +
+                "        {\n" +
+                "          \"code\": \"29949\",\n" +
+                "          \"nickName\": \"阿杰阿杰3阿杰3阿杰33\",\n" +
+                "          \"url\": \"userIndex.app?code=29949&type=video\"\n" +
+                "        }\n" +
+                "      ]\n" +
+                "    },\n" +
+                "    \"link\": {\n" +
+                "      \"text\": \"点击此查看详情>>\",\n" +
+                "      \"url\": \"www.xiangha.com\"\n" +
+                "    }\n" +
+                "  },\n" +
+                "  \"append\": [],\n" +
+                "  \"power\": {},\n" +
+                "  \"extra\": {\n" +
+                "    \"execTime\": \"0.0451\",\n" +
+                "    \"serverTime\": 1541579444,\n" +
+                "    \"params\": {\n" +
+                "      \"ss\": \"/Main8/shortVideo/topicInfoV1\",\n" +
+                "      \"code\": \"5050\",\n" +
+                "      \"debug\": \"4d5c01842f37d90651f9693783c6564279fed6f4\"\n" +
+                "    }\n" +
+                "  }";
 
-                        }
-                    });
-                    mTopicHeaderView.showTopicUser(mAuthorMap.get("nickName"), new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            gotoUser();
-                            XHClick.mapStat(TopicInfoActivity.this, ShortVideoDetailActivity.STA_ID, "用户内容", "昵称");
-                        }
-                    });
-                    mTopicHeaderView.showTopicAttention(TextUtils.equals(mAuthorMap.get("isFollow"), "2"), new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            XHClick.mapStat(TopicInfoActivity.this, ShortVideoDetailActivity.STA_ID, "用户内容", "关注");
-                            if (!LoginManager.isLogin()) {
-                                TopicInfoActivity.this.startActivity(new Intent(TopicInfoActivity.this, LoginByAccout.class));
-                                return;
-                            }
-                            AppCommon.onAttentionClick(mAuthorMap.get("code"), "follow", new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (mTopicHeaderView != null)
-                                        mTopicHeaderView.setAttentionEnable(false);
-                                    GlobalAttentionModule module = new GlobalAttentionModule();
-                                    module.setAttentionUserCode(mAuthorMap.get("code"));
-                                    module.setAttention(true);
-                                    GlobalVariableConfig.handleAttentionModule(module);
-                                }
-                            });
-                        }
-                    });
-                    mTopicHeaderView.showTopicInfo(mInfoMap.get("content"));
-                    mTopicHeaderView.showTopicNum(mInfoMap.get("num"));
-                } else {
-                    mInfoMap = null;
-                    mTopicHeaderView.setVisibility(View.GONE);
-                }
-                if (mTopicInfoStaggeredAdapter != null) {
-                    mTopicInfoStaggeredAdapter.notifyDataSetChanged();
-                }
-            }
-        });
+        mInfoMap = StringManager.getFirstMap(json);
+        String name = mInfoMap.get("name");
+        if (!TextUtils.isEmpty(name)) {
+            mTitle.setText(name);
+        }
+        mTopicHeaderView.showTopicData("0",mInfoMap);
+        mTopicHeaderView.setVisibility(View.VISIBLE);
+
+//        ReqEncyptInternet.in().doGetEncypt(StringManager.API_TOPIC_INFOV1, "code=" + mTopicCode, new InternetCallback() {
+//            @Override
+//            public void loaded(int i, String s, Object o) {
+//                mTopicInfoLoading = false;
+//                if (!mTopicListLoading) {
+//                    if (loadManager != null) {
+//                        loadManager.hideProgressBar();
+//                    }
+////                    if (mRefreshLayout != null && refresh) {
+////                        mRefreshLayout.refreshComplete();
+////                    }
+//                }
+//                if (i >= ReqInternet.REQ_OK_STRING) {
+//                    mInfoMap = StringManager.getFirstMap(o);
+//                    String name = mInfoMap.get("name");
+//                    if (!TextUtils.isEmpty(name)) {
+//                        mTitle.setText(name);
+//                    }
+////                    mAuthorMap = StringManager.getFirstMap(mInfoMap.get("author"));
+//                    mTopicHeaderView.showTopicData(mActivityType,mInfoMap);
+//                    mTopicHeaderView.setVisibility(View.VISIBLE);
+//                } else {
+//                    mInfoMap = null;
+//                    mTopicHeaderView.setVisibility(View.GONE);
+//                }
+//                if (mTopicInfoStaggeredAdapter != null) {
+//                    mTopicInfoStaggeredAdapter.notifyDataSetChanged();
+//                }
+//            }
+//        });
     }
 
     private void loadTopicList(boolean refresh) {

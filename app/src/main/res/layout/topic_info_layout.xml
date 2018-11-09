@@ -20,6 +20,7 @@
             <!--头部内容-->
             <amodule.topic.view.TopicHeaderView
                 android:id="@+id/view_topic_header"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_scrollFlags="scroll" />
