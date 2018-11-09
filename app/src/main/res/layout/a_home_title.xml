@@ -20,27 +20,24 @@
         android:layout_toRightOf="@+id/message_tip"
         android:background="@drawable/bg_home_search">
 
-        <LinearLayout
+        <ImageView
+            android:id="@+id/icon_search"
+            android:layout_width="@dimen/dp_13"
+            android:layout_height="@dimen/dp_13"
+            android:layout_marginLeft="@dimen/dp_8"
+            android:layout_centerVertical="true"
+            android:src="@drawable/home_search_icon"/>
+
+        <TextView
+            android:id="@+id/text_search"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/icon_search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="@dimen/dp_13"
-                android:layout_height="@dimen/dp_13"
-                android:src="@drawable/home_search_icon"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/dp_4"
-                android:text="搜菜谱、食材"
-                android:textColor="#777"
-                android:textSize="@dimen/sp_13"/>
-
-        </LinearLayout>
+            android:layout_marginLeft="@dimen/dp_5"
+            android:text="搜菜谱、食材"
+            android:textColor="#777"
+            android:textSize="@dimen/sp_13"/>
 
     </RelativeLayout>
 

@@ -13,6 +13,7 @@ import java.util.Map;
 
 import acore.tools.FileManager;
 import acore.tools.StringManager;
+import acore.tools.Tools;
 import amodule.search.bean.WordBean;
 import amodule.search.db.WordsSqlite;
 import aplug.basic.InternetCallback;
@@ -69,6 +70,26 @@ public class SearchDataImp implements SearchData {
 
         if (callBack == null) return;
         ReqInternet.in().doGet(StringManager.api_getHotWords, callBack);
+    }
+
+    public void getRandomHotWord(final InternetCallback callBack){
+        getHotWords(null, new InternetCallback() {
+            @Override
+            public void loaded(int i, String s, Object o) {
+                String word = "";
+                if(i >= ReqInternet.REQ_OK_STRING){
+                    List<Map<String,String>> words = StringManager.getListMapByJson(o);
+                    if(!words.isEmpty()){
+                        int random = Tools.getRandom(0,words.size());
+                        String wordTemp =  words.get(random).get("");
+                        word = wordTemp != null ? wordTemp : "";
+                    }
+                }
+                if(callBack != null){
+                    callBack.loaded(ReqInternet.REQ_OK_STRING,s,word);
+                }
+            }
+        });
     }
 
     @Override

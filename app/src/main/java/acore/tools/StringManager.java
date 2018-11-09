@@ -555,4 +555,11 @@ public class StringManager extends UtilString {
     public static String getVipUrl(boolean hasOpen) {
         return appWebUrl + "vip/myvip?fullScreen=2" + (hasOpen ? "&payset=2" : ""); //会员中心
     }
+
+    public static String subOverString(String str,int length){
+        if(TextUtils.isEmpty(str) || length <= 0){
+            return "";
+        }
+        return str.length() > length ? str.substring(0,length) + "..." : str;
+    }
 }
