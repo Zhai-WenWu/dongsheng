@@ -50,6 +50,8 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
     public static final String TOPIC_CODE = "topicCode";
     public static final String ACTIVIT_TYPE = "activityType";
 
+    public static final int TAB_NEW=1;
+
     private TextView mTitle;
     private ImageView mBackImg;
     private RvStaggeredGridView mStaggeredGridView;
@@ -107,8 +109,6 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
         mTitle = findViewById(R.id.title);
         mBackImg = findViewById(R.id.back_img);
         mBackImg.setOnClickListener(v -> {
-//            TopicInfoActivity.this.finish();
-            startActivity(new Intent(TopicInfoActivity.this,SearchTopicActivity.class));
         });
 //        mRefreshLayout = findViewById(R.id.refresh_list_view_frame);
         mTopicHeaderView = findViewById(R.id.view_topic_header);
@@ -216,40 +216,16 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
         mTopicInfoLoadStarted = true;
         String json = "{\n" +
                 "    \"code\": \"5050\",\n" +
-                "    \"name\": \"木有活动\",\n" +
-                "    \"num\": \"0\",\n" +
-                "    \"content\": \"\",\n" +
-                "    \"activityInfo\": [],\n" +
-                "    \"users\": {\n" +
-                "      \"text\": \"社交达人\",\n" +
-                "      \"info\": [\n" +
-                "        {\n" +
-                "          \"code\": \"10191\",\n" +
-                "          \"nickName\": \"古月云X\",\n" +
-                "          \"url\": \"userIndex.app?code=10191&type=video\"\n" +
-                "        },\n" +
-                "        {\n" +
-                "          \"code\": \"20070\",\n" +
-                "          \"nickName\": \"thlfdwoghakky\",\n" +
-                "          \"url\": \"userIndex.app?code=20070&type=video\"\n" +
-                "        },\n" +
-                "        {\n" +
-                "          \"code\": \"29949\",\n" +
-                "          \"nickName\": \"阿杰阿杰3阿杰3阿杰33\",\n" +
-                "          \"url\": \"userIndex.app?code=29949&type=video\"\n" +
-                "        }\n" +
-                "      ]\n" +
-                "    },\n" +
-                "    \"link\": {\n" +
-                "      \"text\": \"点击此查看详情>>\",\n" +
-                "      \"url\": \"www.xiangha.com\"\n" +
+                "    \"activityInfo\": {\n" +
+                "      \"text\": \"\",\n" +
+                "      \"url\": \"http://s1.cdn.xiangha.com/caipu/201206/1923/192357379779.jpg/MHgw\"\n" +
                 "    }\n" +
                 "  },\n" +
                 "  \"append\": [],\n" +
                 "  \"power\": {},\n" +
                 "  \"extra\": {\n" +
-                "    \"execTime\": \"0.0451\",\n" +
-                "    \"serverTime\": 1541579444,\n" +
+                "    \"execTime\": \"0.0059\",\n" +
+                "    \"serverTime\": 1541579809,\n" +
                 "    \"params\": {\n" +
                 "      \"ss\": \"/Main8/shortVideo/topicInfoV1\",\n" +
                 "      \"code\": \"5050\",\n" +
@@ -262,7 +238,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
         if (!TextUtils.isEmpty(name)) {
             mTitle.setText(name);
         }
-        mTopicHeaderView.showTopicData("0",mInfoMap);
+        mTopicHeaderView.showTopicData("2",mInfoMap);
         mTopicHeaderView.setVisibility(View.VISIBLE);
 
 //        ReqEncyptInternet.in().doGetEncypt(StringManager.API_TOPIC_INFOV1, "code=" + mTopicCode, new InternetCallback() {

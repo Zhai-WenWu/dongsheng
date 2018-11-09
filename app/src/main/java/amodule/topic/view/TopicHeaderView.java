@@ -1,10 +1,12 @@
 package amodule.topic.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.util.ArrayMap;
@@ -29,10 +31,14 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Map;
 
+import acore.logic.AppCommon;
+import acore.override.helper.XHActivityManager;
 import acore.tools.ImgManager;
 import acore.tools.StringManager;
+import amodule.dish.activity.ListDish;
 import amodule.search.view.MultiTagView;
 import amodule.topic.style.CustomClickableSpan;
+import amodule.user.activity.FriendHome;
 import aplug.basic.LoadImage;
 
 public class TopicHeaderView extends RelativeLayout {
@@ -87,103 +93,50 @@ public class TopicHeaderView extends RelativeLayout {
         mSocialiteTable.setPressColor("#00000000");
         mSocialiteTable.setNormalCorlor("#00000000");
 
-//        String imageUrl = "https://s3.cdn.xiangha.com/img/201809/1211/s/5b9885523976a.png/NTAweDA";
-//        Glide.with(context).load(imageUrl).into(topicImage);
-
-        //判断哪种活动类型
-//        switch (mActivityType) {
-//            case "0":
-//                mActivityLayout.setVisibility(GONE);
-//                mBottomLinkTv.setText("点击此查看活动详情");
-//                break;
-//            case "1":
-//                mBottomLinkTv.setText("点击参加活动");
-//                break;
-//            case "2":
-//                mShadePanel.setVisibility(GONE);
-//                containerLayout.setVisibility(GONE);
-//                break;
-//        }
-
     }
 
-    public void showUserImage(String url) {
-        if (TextUtils.isEmpty(url)) {
-//            hideTopicImage();
-            return;
+    public void initData(Map<String, String> infoMap) {
+//        LoadImage.with(mContext).load(infoMap.get("image")).build().into(mUserRearImg);
+
+        //参与人数
+        mNum = infoMap.get("num");
+        if (!TextUtils.isEmpty(mNum)) {
+            SpannableStringBuilder ss = new SpannableStringBuilder();
+            ss.append(mNum).append("人参与");
+            mTopicNum.setText(ss);
+        } else {
+            mTopicNum.setVisibility(GONE);
         }
-//        mUserFrontImg.setOnClickListener(listener);
-//        mUserFrontImg.setTag(R.string.tag, url);
-        Glide.with(getContext()).load(url).downloadOnly(new SimpleTarget<File>() {
 
-            @Override
-            public void onLoadFailed(Exception e, Drawable drawable) {
-                super.onLoadFailed(e, drawable);
-//                hideTopicImage();
-            }
+        //话题content
+        mContent = infoMap.get("content");
+        if (!TextUtils.isEmpty(mContent)) {
+            mTopicInfo.setText(mContent);
+        } else {
+            mTopicInfo.setVisibility(GONE);
+        }
 
+        //社交达人
+        user = StringManager.getFirstMap(infoMap.get("users"));
+        userList = StringManager.getListMapByJson(user.get("info"));
+        userNameList = new ArrayList<>();
+        for (int i = 0; i < userList.size(); i++) {
+            ArrayMap<String, String> map = new ArrayMap<>();
+            map.put("hot", "@" + userList.get(i).get("nickName") + "、");
+            userNameList.add(map);
+        }
+
+        mSocialiteTable.addTags(userNameList, new MultiTagView.MutilTagViewCallBack() {
             @Override
-            public void onResourceReady(File file, GlideAnimation<? super File> glideAnimation) {
-                try {
-                    InputStream is = new FileInputStream(file);
-                    Bitmap bitmap = BitmapFactory.decodeStream(is);
-//                    mUserFrontImg.setVisibility(View.VISIBLE);
-//                    mUserFrontImg.setImageBitmap(bitmap);
-                    bitmap = ImgManager.RSBlur(getContext(), bitmap, 10);
-                    mUserRearImg.setImageBitmap(bitmap);
-                    mShadePanel.setVisibility(View.VISIBLE);
-                } catch (Exception e) {
-                    e.printStackTrace();
-//                    hideTopicImage();
-                }
+            public void onClick(int tagIndexr) {
+                Intent intent = new Intent(mContext, FriendHome.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("code", userList.get(tagIndexr).get("code"));
+                intent.putExtras(bundle);
+                mContext.startActivity(intent);
             }
         });
-    }
 
-
-    public void setAttentionEnable(boolean enable) {
-//        mTopicAttention.setEnabled(enable);
-        requestLayout();
-    }
-
-    public void showTopicInfo(String info) {
-        if (TextUtils.isEmpty(info)) {
-            hideTopicInfo();
-            return;
-        }
-        mTopicInfo.setVisibility(View.VISIBLE);
-        mTopicInfo.setText(info);
-        requestLayout();
-    }
-
-    public void showTopicNum(String numStr) {
-        if (TextUtils.isEmpty(numStr)) {
-            hideTopicNum();
-            return;
-        }
-        mTopicNum.setVisibility(View.VISIBLE);
-
-        requestLayout();
-    }
-
-//    public void hideTopicImage() {
-//        mUserFrontImg.setVisibility(View.GONE);
-//    }
-//
-//    public void hideTopicUser() {
-//        mTopicUser.setVisibility(View.GONE);
-//    }
-//
-//    public void hideTopicAttention() {
-//        mTopicAttention.setVisibility(View.GONE);
-//    }
-
-    public void hideTopicInfo() {
-        mTopicInfo.setVisibility(View.GONE);
-    }
-
-    public void hideTopicNum() {
-        mTopicNum.setVisibility(View.GONE);
     }
 
     public void showTopicData(String mActivityType, Map<String, String> infoMap) {
@@ -191,25 +144,8 @@ public class TopicHeaderView extends RelativeLayout {
 
             case "0":
                 mActivityLayout.setVisibility(GONE);
-//                LoadImage.with(mContext).load(infoMap.get("image")).build().into(mUserRearImg);
 
-                //参与人数
-                mNum = infoMap.get("num");
-                if (!TextUtils.isEmpty(mNum)) {
-                    SpannableStringBuilder ss = new SpannableStringBuilder();
-                    ss.append(mNum).append("人参与");
-                    mTopicNum.setText(ss);
-                } else {
-                    mTopicNum.setVisibility(GONE);
-                }
-
-                //话题content
-                mContent = infoMap.get("content");
-                if (!TextUtils.isEmpty(mContent)) {
-                    mTopicInfo.setText(mContent);
-                } else {
-                    mTopicInfo.setVisibility(GONE);
-                }
+                initData(infoMap);
 
                 //底部查看活动详情链接
                 mLink = StringManager.getFirstMap(infoMap.get("link"));
@@ -225,45 +161,18 @@ public class TopicHeaderView extends RelativeLayout {
                     mBottomLinkTv.setVisibility(GONE);
                 }
 
-                //社交达人
-                user = StringManager.getFirstMap(infoMap.get("users"));
-                userList = StringManager.getListMapByJson(user.get("info"));
-                userNameList = new ArrayList<>();
-                for (int i = 0; i < userList.size(); i++) {
-                    ArrayMap<String, String> map = new ArrayMap<>();
-                    map.put("hot", "@" + userList.get(i).get("nickName") + "、");
-                    userNameList.add(map);
-                }
-
-                mSocialiteTable.addTags(userNameList, new MultiTagView.MutilTagViewCallBack() {
+                mBottomLinkTv.setOnClickListener(new OnClickListener() {
                     @Override
-                    public void onClick(int tagIndexr) {
-
+                    public void onClick(View v) {
+                        AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), mLink.get("url"), true);
                     }
                 });
 
                 break;
             case "1":
                 mBottomLinkTv.setText("点击参加活动");
-                LoadImage.with(mContext).load(infoMap.get("image")).build().into(mUserRearImg);
 
-                //参与人数
-                mNum = infoMap.get("num");
-                if (!TextUtils.isEmpty(mNum)) {
-                    SpannableStringBuilder ss = new SpannableStringBuilder();
-                    ss.append(mNum).append("人参与");
-                    mTopicNum.setText(ss);
-                } else {
-                    mTopicNum.setVisibility(GONE);
-                }
-
-                //话题content
-                mContent = infoMap.get("content");
-                if (!TextUtils.isEmpty(mContent)) {
-                    mTopicInfo.setText(mContent);
-                } else {
-                    mTopicInfo.setVisibility(GONE);
-                }
+                initData(infoMap);
 
                 //详情链接
                 mLink = StringManager.getFirstMap(infoMap.get("link"));
@@ -274,25 +183,14 @@ public class TopicHeaderView extends RelativeLayout {
                     } else {
                         mActivityTv.setText("点击此查看活动详情");
                     }
-
                 } else {
                     mActivityLayout.setVisibility(GONE);
                 }
 
-                //社交达人
-                user = StringManager.getFirstMap(infoMap.get("users"));
-                userList = StringManager.getListMapByJson(user.get("info"));
-                userNameList = new ArrayList<>();
-                for (int i = 0; i < userList.size(); i++) {
-                    ArrayMap<String, String> map = new ArrayMap<>();
-                    map.put("hot", "@" + userList.get(i).get("nickName") + "、");
-                    userNameList.add(map);
-                }
-
-                mSocialiteTable.addTags(userNameList, new MultiTagView.MutilTagViewCallBack() {
+                mActivityLayout.setOnClickListener(new OnClickListener() {
                     @Override
-                    public void onClick(int tagIndexr) {
-
+                    public void onClick(View v) {
+                        AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), mLink.get("url"), true);
                     }
                 });
 
@@ -303,19 +201,9 @@ public class TopicHeaderView extends RelativeLayout {
                 Map<String, String> activityInfo = StringManager.getFirstMap(infoMap.get("activityInfo"));
                 String url = activityInfo.get("url");
                 ViewGroup.LayoutParams layoutParams = mUserRearImg.getLayoutParams();
-                Glide.with(mContext)
-                        .load(url)
-                        .asBitmap()//强制Glide返回一个Bitmap对象
-                        .into(new SimpleTarget<Bitmap>() {
-                            @Override
-                            public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
-                                int width = bitmap.getWidth();
-                                int height = bitmap.getHeight();
-                                layoutParams.height = height;
-                                mUserRearImg.setLayoutParams(layoutParams);
-                                mUserRearImg.setImageBitmap(bitmap);
-                            }
-                        });
+//                layoutParams.height = activityInfo.get("imageheight");
+                mUserRearImg.setLayoutParams(layoutParams);
+                LoadImage.with(mContext).load(url).build().into(mUserRearImg);
                 break;
         }
 
