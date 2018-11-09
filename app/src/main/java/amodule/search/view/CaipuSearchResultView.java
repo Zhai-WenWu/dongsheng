@@ -1,6 +1,7 @@
 package amodule.search.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
@@ -28,6 +29,8 @@ import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import amodule.search.adapter.AdapterCaipuSearch;
+import amodule.search.adapter.SearchHorizonAdapter;
+import amodule.search.avtivity.HomeSearch;
 import amodule.search.data.SearchDataImp;
 import aplug.basic.InternetCallback;
 import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
@@ -55,6 +58,7 @@ public class CaipuSearchResultView extends LinearLayout {
     private ListView list_search_result;
     private AdapterCaipuSearch adapterCaipuSearch;
     private SearchVIPLessonView mLessonView;
+    private SearchHorizonLayout mSearchHorizonLayout;
     private int adNum;
     private AtomicBoolean isRefreash = new AtomicBoolean(false);
 
@@ -82,7 +86,7 @@ public class CaipuSearchResultView extends LinearLayout {
     }
 
     private void initView() {
-
+        mSearchHorizonLayout = findViewById(R.id.search_horizon_layout);
         refresh_list_view_frame = findViewById(R.id.refresh_list_view_frame);
         refresh_list_view_frame.setVisibility(View.VISIBLE);
         list_search_result = findViewById(R.id.list_search_result);
@@ -100,43 +104,41 @@ public class CaipuSearchResultView extends LinearLayout {
         list_search_result.addHeaderView(header);
 
         adapterCaipuSearch = new AdapterCaipuSearch(mActivity, list_search_result);
-    }
 
+        mSearchHorizonLayout.setOnItemClickListener(new SearchHorizonAdapter.OnItemClickListener() {
+            @Override
+            public void onClick(View v, Map<String, String> data) {
+                //TODO
+                Intent intent = new Intent(getContext(),HomeSearch.class);
+                intent.putExtra("s",data.get("text"));
+                getContext().startActivity(intent);
+            }
+        });
+    }
 
     private void initData() {
         loadManager = mActivity.loadManager;
         actIn = new AtomicInteger(2);
     }
 
-    public void showCaipuSearchResultView() {
-        if (refresh_list_view_frame != null) {
-            refresh_list_view_frame.setVisibility(View.VISIBLE);
-        }
-    }
-
     public void search(String key) {
         adapterCaipuSearch.refreshAdData();
         clearSearchResult();
+        mSearchHorizonLayout.setSearchWord(key);
         searchKey = key;
         adapterCaipuSearch.setSearchKey(searchKey);
-        loadManager.setLoading(refresh_list_view_frame, list_search_result, adapterCaipuSearch,
-                true, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        adapterCaipuSearch.refreshAdData();
+        loadManager.setLoading(refresh_list_view_frame, list_search_result, adapterCaipuSearch, true,
+                v -> {
+                    adapterCaipuSearch.refreshAdData();
 
-                        clearSearchResult();
-                        isRefreash.set(true);
-                        searchVIPLesson();
-                        searchCaipu();
-                    }
-                }, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        isRefreash.set(false);
-                        searchCaipu();
-                    }
-
+                    clearSearchResult();
+                    isRefreash.set(true);
+                    searchVIPLesson();
+                    searchCaipu();
+                },
+                v -> {
+                    isRefreash.set(false);
+                    searchCaipu();
                 });
         searchVIPLesson();
     }
@@ -144,12 +146,9 @@ public class CaipuSearchResultView extends LinearLayout {
     public void onClearcSearchWord() {
 
         clearSearchResult();
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                adapterCaipuSearch.refresh(false, mListCaipuData, mListShicaiData);
-                adNum = 0;
-            }
+        new Handler(Looper.getMainLooper()).post(() -> {
+            adapterCaipuSearch.refresh(false, mListCaipuData, mListShicaiData);
+            adNum = 0;
         });
     }
 
