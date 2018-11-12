@@ -35,7 +35,7 @@
         android:layout_below="@+id/dredge_vip_text"
         android:layout_centerHorizontal="true"
         android:visibility="visible"
-        android:layout_marginTop="@dimen/dp_15"
+        android:layout_marginTop="@dimen/dp_14"
         android:orientation="horizontal">
 
         <TextView
@@ -49,7 +49,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="点击登录>"
-            android:textColor="#D39E54"
+            android:textColor="#E2B355"
             android:textSize="@dimen/sp_14"/>
     </LinearLayout>
 
