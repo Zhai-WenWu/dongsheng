@@ -19,9 +19,7 @@ import com.tencent.bugly.crashreport.CrashReport;
 import com.xh.manager.DialogManager;
 import com.xh.manager.ViewManager;
 import com.xh.view.HButtonView;
-import com.xh.view.MessageView;
 import com.xh.view.TitleMessageView;
-import com.xh.view.TitleView;
 import com.xiangha.R;
 
 import org.json.JSONObject;
@@ -34,7 +32,6 @@ import acore.logic.XHClick;
 import acore.logic.login.AccountInfoBean;
 import acore.logic.login.LoginCheck;
 import acore.tools.LogManager;
-import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.SyntaxTools;
 import acore.tools.Tools;
@@ -51,6 +48,7 @@ import amodule.user.activity.login.LoginbyEmail;
 import amodule.user.activity.login.LostSecret;
 import amodule.user.activity.login.SetPersonalInfo;
 import amodule.user.activity.login.SetSecretActivity;
+import amodule.vip.DeviceVipManager;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
@@ -185,8 +183,6 @@ public class BaseLoginActivity extends BaseActivity {
                         err_count_secret = 0;
                         LoginManager.loginSuccess(mAct, returnObj.toString());
                         callback.onSuccess();
-                        if (LoginManager.isAutoBindYiYuanVIP())
-                            LoginManager.bindYiYuanVIP(mAct);
                         if (EMAIL_LOGIN_TYPE.equals(loginType) || PHONE_LOGIN_TYPE.equals(loginType)) {
                             if (TextUtils.isEmpty(zoneCode)) {
                                 LoginCheck.saveLastLoginAccoutInfo(mAct, AccountInfoBean.ACCOUT_MAILBOX, "", "", phoneNum);
@@ -656,7 +652,8 @@ public class BaseLoginActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        LoginManager.setAutoBindYiYuanVIP(false);
+        DeviceVipManager.setAutoBindDeviceVip(false);
+//        DeviceVipManager.setShowBindVipDialogEnable(true);
         try{
             if (eventHandler != null){
                 SMSSDK.unregisterEventHandler(eventHandler);

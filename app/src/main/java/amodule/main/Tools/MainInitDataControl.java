@@ -65,6 +65,7 @@ import amodule.main.activity.MainHomePage;
 import amodule.quan.db.SubjectData;
 import amodule.quan.db.SubjectSqlite;
 import amodule.search.db.MatchWordsDbUtil;
+import amodule.vip.DeviceVipManager;
 import aplug.basic.InternetCallback;
 import aplug.basic.XHInternetCallBack;
 import aplug.web.tools.XHTemplateManager;
@@ -206,7 +207,7 @@ public class MainInitDataControl {
     public void initMainOnResume(final Activity act){
         Log.i("zhangyujian","initMainOnResume");
 
-        LoginManager.initYiYuanBindState(act, null);
+        DeviceVipManager.initDeviceVipBindState(act, null);
 
         long startTime= System.currentTimeMillis();
 

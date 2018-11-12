@@ -49,6 +49,7 @@ import amodule.dish.view.DishRecommedAndAdView;
 import amodule.dish.view.DishRelatedRecommendView;
 import amodule.dish.view.DishTitleViewControl;
 import amodule.dish.view.DishVipView;
+import amodule.vip.DeviceVipManager;
 import third.video.VideoPlayerController;
 
 import static acore.logic.ConfigMannager.KEY_CAIPUVIP;
@@ -222,11 +223,11 @@ public class DetailDishViewManager {
                 configMap.put("title",configMap.get("renewTitle"));
             isShowByUser = !LoginManager.isVIP() || isFastExpiry;
         }else{
-            boolean isFastExpiry = LoginManager.getTempVipMaturityDay() <= delayDay
-                    && LoginManager.getTempVipMaturityDay() >= 0;
+            boolean isFastExpiry = DeviceVipManager.getDeviceVipMaturityDay() <= delayDay
+                    && DeviceVipManager.getDeviceVipMaturityDay() >= 0;
             if(isFastExpiry)
                 configMap.put("title",configMap.get("renewTitle"));
-            isShowByUser = !LoginManager.isTempVip() || isFastExpiry;
+            isShowByUser = !DeviceVipManager.isDeviceVip() || isFastExpiry;
         }
         configMap.put("isShow", isShowByConfig && isShowByUser ? "2" : "1");
         handlerVipView(configMap);

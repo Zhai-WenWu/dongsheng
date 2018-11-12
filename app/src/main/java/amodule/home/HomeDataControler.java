@@ -32,6 +32,7 @@ import amodule.home.delegate.IVipGuideModuleCallback;
 import amodule.home.module.HomeVipGuideModule;
 import amodule.main.activity.MainHomePage;
 import amodule.main.bean.HomeModuleBean;
+import amodule.vip.DeviceVipManager;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
@@ -373,9 +374,9 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
                 }
             } else {//未登录，设备会员
                 Map<String, String> finalGuideConfigData = vipGuideConfigMap;
-                LoginManager.initYiYuanBindState(XHApplication.in(), new Runnable() {
+                DeviceVipManager.initDeviceVipBindState(XHApplication.in(), new LoginManager.VipStateCallback() {
                     @Override
-                    public void run() {
+                    public void callback(boolean isVip) {
                         int intervalDays = getTempVipIntervalDays();
                         if (intervalDays >= 0 && intervalDays <= minWillPast) {
                             HomeVipGuideModule module = transformHomeVipGuideModule(finalGuideConfigData.get("willPasted"), "2");
@@ -406,10 +407,10 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
                 if (LoginManager.isLogin()) {//已登录，未注册过会员
                     module = transformHomeVipGuideModule(finalVipGuideConfigMap.get("unOpen"),"1");
                 } else {//未登录，设备会员和非设备会员
-                    LoginManager.initYiYuanBindState(XHApplication.in(), new Runnable() {
+                    DeviceVipManager.initDeviceVipBindState(XHApplication.in(), new LoginManager.VipStateCallback() {
                         @Override
-                        public void run() {
-                            if (LoginManager.isTempVip()) {
+                        public void callback(boolean isVip) {
+                            if (isVip) {
                                 int intervalDays = getTempVipIntervalDays();
                                 if (intervalDays >= 0 && intervalDays <= minWillPast) {
                                     HomeVipGuideModule module = transformHomeVipGuideModule(finalVipGuideConfigMap.get("willPasted"), "2");

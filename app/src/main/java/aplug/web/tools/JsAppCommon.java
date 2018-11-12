@@ -49,8 +49,10 @@ import amodule.other.activity.PlayVideo;
 import amodule.quan.activity.upload.UploadSubjectNew;
 import amodule.user.activity.ChooseDish;
 import amodule.user.activity.login.LoginByAccout;
+import amodule.user.activity.login.LoginByBindPhone;
 import amodule.user.db.BrowseHistorySqlite;
 import amodule.user.db.HistoryData;
+import amodule.vip.DeviceVipManager;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
@@ -653,7 +655,6 @@ public class JsAppCommon extends JsBase {
      */
     @JavascriptInterface
     public void login() {
-//		Tools.showToast(mAct,"login");
         handler.post(new Runnable() {
             @Override
             public void run() {
@@ -1038,9 +1039,9 @@ public class JsAppCommon extends JsBase {
         ReqEncyptInternet.in().doEncypt(url, "", new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
-                LoginManager.initYiYuanBindState(mAct, new Runnable() {//一元
+                DeviceVipManager.initDeviceVipBindState(mAct, new LoginManager.VipStateCallback() {//一元
                     @Override
-                    public void run() {
+                    public void callback(boolean isVip) {
                         LoginManager.setVipStateChanged();
                     }
                 });
@@ -1299,10 +1300,11 @@ public class JsAppCommon extends JsBase {
             @Override
             public void run() {
                 if (LoginManager.isLogin()) {
-                    LoginManager.bindYiYuanVIP(mAct);
+                    DeviceVipManager.bindYiYuanVIP(mAct);
                 } else {
-                    LoginManager.setAutoBindYiYuanVIP(true);
-                    login();
+                    DeviceVipManager.setAutoBindDeviceVip(true);
+                    Intent intent = new Intent(mAct, LoginByBindPhone.class);
+                    mAct.startActivity(intent);
                 }
             }
         });

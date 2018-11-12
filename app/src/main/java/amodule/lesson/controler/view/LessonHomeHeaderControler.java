@@ -12,6 +12,7 @@ import acore.logic.XHClick;
 import amodule._common.delegate.ISaveStatistic;
 import amodule._common.delegate.StatisticCallback;
 import amodule._common.plugin.WidgetVerticalLayout;
+import amodule.vip.DeviceVipManager;
 
 /**
  * Description :
@@ -43,7 +44,7 @@ public class LessonHomeHeaderControler implements ISaveStatistic {
         final int length = Math.min(array.size(), mLayouts.length);
         for (int index = 0; index < length; index++) {
             Map<String, String> map = array.get(index);
-            final String ID = LoginManager.isVIP() || LoginManager.isTempVip() ? ids[index] : "non" + ids[index];
+            final String ID = LoginManager.isVIP() || DeviceVipManager.isDeviceVip() ? ids[index] : "non" + ids[index];
             final int i = index;
             if (index == 1 || index == 2) {
                 mLayouts[index].setTitleStaticCallback(

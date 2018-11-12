@@ -889,6 +889,15 @@
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustPan" />
+
+        <activity
+            android:name="amodule.user.activity.login.LoginByBindPhone"
+            android:configChanges="orientation|keyboardHidden"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/titleTheme"
+            android:windowSoftInputMode="adjustPan" />
+
         <activity
             android:name="amodule.user.activity.login.LoginByPassword"
             android:configChanges="orientation|keyboardHidden"
