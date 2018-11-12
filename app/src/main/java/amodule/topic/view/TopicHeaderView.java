@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.popdialog.util.ToolsDevice;
 import com.xiangha.R;
 
 import java.io.File;
@@ -37,9 +38,11 @@ import acore.tools.ImgManager;
 import acore.tools.StringManager;
 import amodule.dish.activity.ListDish;
 import amodule.search.view.MultiTagView;
+import amodule.topic.activity.TopicInfoActivity;
 import amodule.topic.style.CustomClickableSpan;
 import amodule.user.activity.FriendHome;
 import aplug.basic.LoadImage;
+import third.aliyun.work.AliyunCommon;
 
 public class TopicHeaderView extends RelativeLayout {
 
@@ -49,9 +52,9 @@ public class TopicHeaderView extends RelativeLayout {
     private TextView mTopicInfo;
     private TextView mTopicNum;
     private View mShadePanel;
-    private LinearLayout mActivityLayout;
     private TextView mBottomLinkTv;
     private Map<String, String> mLink;
+    private Map<String, String> mActivityInfo;
     private String mContent;
     private String mNum;
     private TextView mActivityTv;
@@ -61,6 +64,7 @@ public class TopicHeaderView extends RelativeLayout {
     private ArrayList<Map<String, String>> userList;
     private ArrayList<Map<String, String>> userNameList;
     private Map<String, String> user;
+    private TextView tv_socialite;
 
     public TopicHeaderView(Context context) {
         super(context);
@@ -86,17 +90,17 @@ public class TopicHeaderView extends RelativeLayout {
         mBottomLinkTv = findViewById(R.id.tv_bottom_link);
         mBottomLinkTv.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG); //下划线
         mShadePanel = findViewById(R.id.shade);
-        mActivityLayout = findViewById(R.id.ll_activity_btn);
         mActivityTv = findViewById(R.id.activity_btn);
         containerLayout = findViewById(R.id.rl_container);
         mSocialiteTable = findViewById(R.id.socialite_table);
+        tv_socialite = findViewById(R.id.tv_socialite);
         mSocialiteTable.setPressColor("#00000000");
         mSocialiteTable.setNormalCorlor("#00000000");
 
     }
 
     public void initData(Map<String, String> infoMap) {
-//        LoadImage.with(mContext).load(infoMap.get("image")).build().into(mUserRearImg);
+        LoadImage.with(mContext).load(infoMap.get("image")).build().into(mUserRearImg);
 
         //参与人数
         mNum = infoMap.get("num");
@@ -120,77 +124,93 @@ public class TopicHeaderView extends RelativeLayout {
         user = StringManager.getFirstMap(infoMap.get("users"));
         userList = StringManager.getListMapByJson(user.get("info"));
         userNameList = new ArrayList<>();
-        for (int i = 0; i < userList.size(); i++) {
-            ArrayMap<String, String> map = new ArrayMap<>();
-            map.put("hot", "@" + userList.get(i).get("nickName") + "、");
-            userNameList.add(map);
+        int size = userList.size();
+        if (size > 0) {
+
+
+            for (int i = 0; i < size; i++) {
+                ArrayMap<String, String> map = new ArrayMap<>();
+
+                if (size == 1) {
+                    map.put("hot", "@" + userList.get(i).get("nickName"));//@一个人没顿号
+                } else {
+                    if (i < size - 1) {
+                        map.put("hot", "@" + userList.get(i).get("nickName") + "、");
+                    } else {
+                        map.put("hot", "@" + userList.get(i).get("nickName"));//最后一个人没顿号
+                    }
+                }
+                userNameList.add(map);
+            }
+
+            mSocialiteTable.addTags(userNameList, new MultiTagView.MutilTagViewCallBack() {
+                @Override
+                public void onClick(int tagIndexr) {
+                    Intent intent = new Intent(mContext, FriendHome.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("code", userList.get(tagIndexr).get("code"));
+                    intent.putExtras(bundle);
+                    mContext.startActivity(intent);
+                }
+            });
+        } else {
+            mSocialiteTable.setVisibility(GONE);
+            tv_socialite.setVisibility(GONE);
         }
 
-        mSocialiteTable.addTags(userNameList, new MultiTagView.MutilTagViewCallBack() {
+        //底部查看活动详情链接
+        mLink = StringManager.getFirstMap(infoMap.get("link"));
+        if (mLink != null) {
+            String text = mLink.get("text");
+            if (!TextUtils.isEmpty(text)) {
+                mBottomLinkTv.setText(mLink.get("text"));
+            } else {
+                mBottomLinkTv.setVisibility(GONE);
+            }
+
+        } else {
+            mBottomLinkTv.setVisibility(GONE);
+        }
+
+        mBottomLinkTv.setOnClickListener(new OnClickListener() {
             @Override
-            public void onClick(int tagIndexr) {
-                Intent intent = new Intent(mContext, FriendHome.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("code", userList.get(tagIndexr).get("code"));
-                intent.putExtras(bundle);
-                mContext.startActivity(intent);
+            public void onClick(View v) {
+                AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), mLink.get("url"), true);
             }
         });
 
     }
 
-    public void showTopicData(String mActivityType, Map<String, String> infoMap) {
+    public void showTopicData(String mActivityType, String mTopicCode, Map<String, String> infoMap) {
         switch (mActivityType) {
 
             case "0":
-                mActivityLayout.setVisibility(GONE);
-
+                mActivityTv.setVisibility(GONE);
                 initData(infoMap);
-
-                //底部查看活动详情链接
-                mLink = StringManager.getFirstMap(infoMap.get("link"));
-                if (mLink != null) {
-                    String text = mLink.get("text");
-                    if (!TextUtils.isEmpty(text)) {
-                        mBottomLinkTv.setText(mLink.get("text"));
-                    } else {
-                        mBottomLinkTv.setText("点击此查看活动详情");
-                    }
-
-                } else {
-                    mBottomLinkTv.setVisibility(GONE);
-                }
-
-                mBottomLinkTv.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), mLink.get("url"), true);
-                    }
-                });
 
                 break;
             case "1":
-                mBottomLinkTv.setText("点击参加活动");
-
                 initData(infoMap);
 
+                setWrapContentNotOfBackground(mActivityTv);
+
                 //详情链接
-                mLink = StringManager.getFirstMap(infoMap.get("link"));
-                if (mLink != null) {
-                    String text = mLink.get("text");
+                mActivityInfo = StringManager.getFirstMap(infoMap.get("activityInfo"));
+                if (mActivityInfo != null) {
+                    String text = mActivityInfo.get("text");
                     if (!TextUtils.isEmpty(text)) {
-                        mActivityTv.setText(mLink.get("text"));
+                        mActivityTv.setText(mActivityInfo.get("text"));
                     } else {
-                        mActivityTv.setText("点击此查看活动详情");
+                        mActivityTv.setVisibility(GONE);
                     }
                 } else {
-                    mActivityLayout.setVisibility(GONE);
+                    mActivityTv.setVisibility(GONE);
                 }
 
-                mActivityLayout.setOnClickListener(new OnClickListener() {
+                mActivityTv.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), mLink.get("url"), true);
+                        AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), mActivityInfo.get("url"), true);
                     }
                 });
 
@@ -200,12 +220,34 @@ public class TopicHeaderView extends RelativeLayout {
                 containerLayout.setVisibility(GONE);
                 Map<String, String> activityInfo = StringManager.getFirstMap(infoMap.get("activityInfo"));
                 String url = activityInfo.get("url");
+                String imageWidth = activityInfo.get("imageWidth");
+                String imageHeight = activityInfo.get("imageHeight");
+                int w = Integer.parseInt("500");
+                int h = Integer.parseInt("750");
+                int widthPixels = ToolsDevice.getWindowPx(mContext).widthPixels;
+
                 ViewGroup.LayoutParams layoutParams = mUserRearImg.getLayoutParams();
-//                layoutParams.height = activityInfo.get("imageheight");
+                float f =(float) widthPixels / w;
+                layoutParams.height = (int) (f * h);
                 mUserRearImg.setLayoutParams(layoutParams);
                 LoadImage.with(mContext).load(url).build().into(mUserRearImg);
                 break;
         }
 
+    }
+
+    public void setWrapContentNotOfBackground(View view) {
+        Drawable drawable = view.getBackground();
+        view.setBackground(null);
+
+        view.post(() -> {
+            int width = view.getWidth();
+            int height = view.getHeight();
+
+            view.setBackground(drawable);
+            ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+            layoutParams.width = width;
+            layoutParams.height = height;
+        });
     }
 }

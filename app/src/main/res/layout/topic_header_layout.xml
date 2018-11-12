@@ -30,41 +30,27 @@
         android:paddingStart="@dimen/dp_20"
         android:paddingTop="@dimen/dp_59">
 
-        <LinearLayout
-            android:id="@+id/ll_activity_btn"
+
+        <TextView
+            android:id="@+id/activity_btn"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/dp_44"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="@dimen/dp_15"
-            android:background="@drawable/bg_round3_ffab01"
             android:gravity="center"
-            android:orientation="horizontal"
+            android:background="@drawable/topic_join_activity_btn_bg"
             android:paddingEnd="@dimen/dp_32"
-            android:paddingStart="@dimen/dp_32">
+            android:paddingStart="@dimen/dp_32"
+            android:text="奖10000现金，详情"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_18" />
 
-
-            <TextView
-                android:id="@+id/activity_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="奖10000现金，详情"
-                android:textColor="@color/white"
-                android:textSize="@dimen/sp_18" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dp_7"
-                android:src="@drawable/topic_activity_btn_right" />
-
-
-        </LinearLayout>
 
         <TextView
             android:id="@+id/topic_num"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/ll_activity_btn"
+            android:layout_below="@id/activity_btn"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="@dimen/dp_15"
             android:text="0人参与"
@@ -96,12 +82,12 @@
             android:id="@+id/socialite_table"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/topic_info"
+            android:layout_marginBottom="@dimen/dp_15"
             android:layout_marginTop="-2dp"
             android:layout_toEndOf="@+id/tv_socialite"
-            android:layout_marginBottom="@dimen/dp_15"
-            android:layout_below="@+id/topic_info"
-            app:tagPadding="0dp"
             app:tagMarginTop="0dp"
+            app:tagPadding="0dp"
             app:tagTextColor="@color/white" />
 
         <TextView

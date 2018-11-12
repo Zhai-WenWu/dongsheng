@@ -38,6 +38,8 @@ import com.xh.view.HButtonView;
 import com.xh.view.TitleMessageView;
 import com.xiangha.R;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -404,7 +406,9 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
         }
     }
 
-    /** 开始播放入口 */
+    /**
+     * 开始播放入口
+     */
     public void prepareAsync() {
         mInnerPlayState = INNER_PLAY_STATE_START;
         mNeedChangePauseToStartEnable = true;
@@ -426,7 +430,9 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
         mPlayerView.changePlayBtnState(false);
     }
 
-    /** 暂停 */
+    /**
+     * 暂停
+     */
     public void pauseVideo() {
         mInnerPlayState = INNER_PLAY_STATE_PAUSE;
         mPlayerView.onVideoPause();
@@ -437,7 +443,7 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
     private void statisticsVideoView() {
         try {
             String tag = getTag(STAT_TAG) != null ? (String) getTag(STAT_TAG) : getClass().getSimpleName();
-            if(duration == 0){
+            if (duration == 0) {
                 duration = mPlayerView.getDuration();
             }
             float total = (playNum * duration + mPlayerView.getCurrentPositionWhenPlaying()) / 1000f;
@@ -568,9 +574,15 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
         }
         mTopicClickUrl = mData.getTopicModel().getGotoUrl();
         String topicTitle = mData.getTopicModel().getTitle();
+        String activityType = mData.getTopicModel().getActivityType();
         if (!TextUtils.isEmpty(topicTitle)) {
             mTopicText.setText(topicTitle);
             mLayoutTopic.setVisibility(View.VISIBLE);
+            if (!TextUtils.isEmpty(activityType)) {
+                if (activityType.equals("1") || activityType.equals("2")) {
+                    mHavePrizeText.setVisibility(VISIBLE);
+                }
+            }
         } else {
             mLayoutTopic.setVisibility(View.GONE);
         }
@@ -967,7 +979,9 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
         mOnSeekBarTrackingTouchListener = onSeekBarTrackingTouchListener;
     }
 
-    /** 发评论 */
+    /**
+     * 发评论
+     */
     private void sendComment(String content) {
         if (!LoginManager.isLogin()) {
             getContext().startActivity(new Intent(getContext(), LoginByAccout.class));

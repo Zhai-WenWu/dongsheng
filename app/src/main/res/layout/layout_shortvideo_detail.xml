@@ -345,6 +345,7 @@
                 android:layout_width="@dimen/dp_40"
                 android:layout_height="@dimen/dp_18"
                 android:gravity="center"
+                android:visibility="gone"
                 android:background="@drawable/bg_round9_fa273b"
                 android:layout_alignEnd="@+id/ll_topic"
                 android:text="有奖"

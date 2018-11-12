@@ -789,6 +789,7 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
             TopicModel topicModel = new TopicModel();
             topicModel.setCode(topicMap.get("code"));
             topicModel.setTitle(topicMap.get("title"));
+            topicModel.setActivityType(topicMap.get("activityType"));
             topicModel.setColor(topicMap.get("color"));
             topicModel.setBgColor(topicMap.get("bgColor"));
             topicModel.setGotoUrl(topicMap.get("url"));

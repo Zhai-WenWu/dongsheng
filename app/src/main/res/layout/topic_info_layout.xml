@@ -169,8 +169,8 @@
 
     <ImageView
         android:id="@+id/floating_btn"
-        android:layout_width="@dimen/dp_60"
-        android:layout_height="@dimen/dp_60"
+        android:layout_width="@dimen/dp_100"
+        android:layout_height="@dimen/dp_42"
         android:layout_gravity="center_horizontal|bottom"
         android:layout_marginBottom="@dimen/dp_60"
         android:scaleType="centerCrop"
