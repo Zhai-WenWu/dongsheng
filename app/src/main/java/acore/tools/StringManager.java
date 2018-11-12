@@ -400,6 +400,7 @@ public class StringManager extends UtilString {
 
     //话题详情页
     public final static String API_TOPIC_INFO = apiUrl + "main8/shortVideo/topicInfo";//简介
+    public final static String API_TOPIC_INFOV1 = apiUrl + "main8/shortVideo/topicInfoV1";//简介
     public final static String API_TOPIC_LIST = apiUrl + "main8/shortVideo/topicShortVideoList";//列表
 
     //话题搜索页

@@ -8,6 +8,7 @@ public class TopicItemModel {
     private String mVideoCode;//视频code
     private String mVideoName;//视频名称、描述
     private boolean mIsEssence;//是否精选
+    private boolean mIsHot;//是否热度排序
     private boolean mIsFav;//是否收藏
     private boolean mIsLike;//是否点赞
     private String mFavNum;//收藏量
@@ -20,6 +21,14 @@ public class TopicItemModel {
     private CustomerModel mCustomerModel;
     private AddressModel mAddressModel;
     private LabelModel mLabelModel;
+
+    public boolean getIsHot() {
+        return mIsHot;
+    }
+
+    public void setIsHot(boolean mIsHot) {
+        this.mIsHot = mIsHot;
+    }
 
     public String getVideoCode() {
         return mVideoCode;

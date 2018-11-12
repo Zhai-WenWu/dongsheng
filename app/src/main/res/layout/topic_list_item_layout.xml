@@ -24,4 +24,12 @@
         android:textSize="@dimen/sp_11"
         android:visibility="gone"/>
 
+    <ImageView
+        android:id="@+id/iv_hot_ranking"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/dp_9"
+        android:visibility="gone"
+        android:src="@drawable/topic_item_no1"/>
+
 </android.support.constraint.ConstraintLayout>

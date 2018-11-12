@@ -37,6 +37,8 @@ public class TopicItemHolder extends RvBaseViewHolder<TopicItemModel> implements
 
     private ImageView mImg;
     private TextView mLabel;
+    private ImageView mRanking;
+
     public TopicItemHolder(@NonNull View topicItemView) {
         super(topicItemView);
         int originalW = 124;
@@ -52,6 +54,7 @@ public class TopicItemHolder extends RvBaseViewHolder<TopicItemModel> implements
     private void initView() {
         mImg = itemView.findViewById(R.id.img);
         mLabel = itemView.findViewById(R.id.label);
+        mRanking = itemView.findViewById(R.id.iv_hot_ranking);
         itemView.setOnClickListener(this);
     }
 
@@ -71,6 +74,23 @@ public class TopicItemHolder extends RvBaseViewHolder<TopicItemModel> implements
             } else {
                 mLabel.setVisibility(View.GONE);
             }
+
+            if (data.getIsHot() && position < 3) {
+                mLabel.setVisibility(View.GONE);
+                mRanking.setVisibility(View.VISIBLE);
+                switch (position) {
+                    case 0:
+                        mRanking.setImageResource(R.drawable.topic_item_no1);
+                        break;
+                    case 1:
+                        mRanking.setImageResource(R.drawable.topic_item_no2);
+                        break;
+                    case 2:
+                        mRanking.setImageResource(R.drawable.topic_item_no3);
+                        break;
+                }
+            }
+
             ImageModel imageModel = data.getImageModel();
             VideoModel videoModel = data.getVideoModel();
             if (imageModel != null && !TextUtils.isEmpty(imageModel.getImageUrl())) {

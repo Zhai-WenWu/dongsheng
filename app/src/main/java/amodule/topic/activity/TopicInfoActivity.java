@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,45 +20,40 @@ import java.util.List;
 import java.util.Map;
 
 import acore.logic.AppCommon;
-import acore.logic.LoginManager;
-import acore.logic.XHClick;
-import acore.logic.load.LoadManager;
 import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
-import acore.tools.ToolsDevice;
-import acore.tools.Tools;
 import acore.widget.rvlistview.RvListView;
 import acore.widget.rvlistview.RvStaggeredGridView;
-import amodule._common.conf.GlobalAttentionModule;
-import amodule._common.conf.GlobalVariableConfig;
-import amodule.dish.activity.ShortVideoDetailActivity;
 import amodule.topic.adapter.TopicInfoStaggeredAdapter;
 import amodule.topic.model.ImageModel;
 import amodule.topic.model.LabelModel;
 import amodule.topic.model.TopicItemModel;
 import amodule.topic.model.VideoModel;
 import amodule.topic.view.TopicHeaderView;
-import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
-import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
 import third.aliyun.work.AliyunCommon;
 
 public class TopicInfoActivity extends BaseAppCompatActivity {
     public static final String STA_ID = "a_topic_gather";
 
-    public static final String TOPIC_CODE = "topicCode";
+    private static final String TOPIC_CODE = "topicCode";
+    private static final String ACTIVIT_TYPE = "activityType";
+
+    private final String HOT = "hot";
+    private final String NEW = "new";
+    private String mTab = "hot";
 
     private TextView mTitle;
     private ImageView mBackImg;
-    private PtrClassicFrameLayout mRefreshLayout;
     private RvStaggeredGridView mStaggeredGridView;
     private ImageView mFloatingButton;
     private TopicHeaderView mTopicHeaderView;
 
     private String mTopicCode;
+    private String mActivityType;
 
     private int mPage;
     private Map<String, String> mInfoMap;
@@ -67,7 +63,8 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
     private boolean mTopicListLoading;
 
     private TopicInfoStaggeredAdapter mTopicInfoStaggeredAdapter;
-    private ArrayList<TopicItemModel> mDatas;
+    private ArrayList<TopicItemModel> mHotDatas;
+    private ArrayList<TopicItemModel> mNewDatas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +78,8 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
             finish();
             return;
         }
-        startLoadData();
+//        startLoadData();
+        loadTopicInfo(false);
     }
 
     private void initStatusBar() {
@@ -93,29 +91,72 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
         Intent i = getIntent();
         if (i != null) {
             mTopicCode = i.getStringExtra(TOPIC_CODE);
+            mActivityType = i.getStringExtra(ACTIVIT_TYPE);
         }
-        mDatas = new ArrayList<>();
-        mTopicInfoStaggeredAdapter = new TopicInfoStaggeredAdapter(this, mDatas);
+
+        mHotDatas = new ArrayList<>();
+        mNewDatas = new ArrayList<>();
+        mTopicInfoStaggeredAdapter = new TopicInfoStaggeredAdapter(this, mHotDatas);
+        mStaggeredGridView.setAdapter(mTopicInfoStaggeredAdapter);
+        loadTopicList(false);
     }
 
     private void initView() {
         mTitle = findViewById(R.id.title);
         mBackImg = findViewById(R.id.back_img);
         mBackImg.setOnClickListener(v -> {
-            TopicInfoActivity.this.finish();
         });
-        mRefreshLayout = findViewById(R.id.refresh_list_view_frame);
-        mRefreshLayout.disableWhenHorizontalMove(true);
-        mRefreshLayout.setLoadingMinTime(300);
+//        mRefreshLayout = findViewById(R.id.refresh_list_view_frame);
+        mTopicHeaderView = findViewById(R.id.view_topic_header);
+//        mRefreshLayout.disableWhenHorizontalMove(true);
+//        mRefreshLayout.setLoadingMinTime(300);
         mStaggeredGridView = findViewById(R.id.staggered_view);
         mStaggeredGridView.closeDefaultAnimator();
         mFloatingButton = findViewById(R.id.floating_btn);
-        mTopicHeaderView = new TopicHeaderView(this);
-        mStaggeredGridView.addHeaderView(mTopicHeaderView);
+        FrameLayout mHotView = findViewById(R.id.fl_hot);
+        FrameLayout mNewView = findViewById(R.id.fl_new);
+        TextView mHotTabTv = findViewById(R.id.tv_hot_tab);
+        View mHotTabBottomView = findViewById(R.id.view_hot_tab_bottom);
+        TextView mNewTabTV = findViewById(R.id.tv_new_tab);
+        View mNewTabBottom = findViewById(R.id.view_new_tab_bottom);
+
+        mHotView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mHotTabTv.setTextColor(getResources().getColor(R.color.white));
+                mHotTabBottomView.setVisibility(View.VISIBLE);
+                mNewTabTV.setTextColor(getResources().getColor(R.color.c_777777));
+                mNewTabBottom.setVisibility(View.INVISIBLE);
+
+                mTab = HOT;
+                mTopicInfoStaggeredAdapter.setData(mHotDatas);
+                mTopicInfoStaggeredAdapter.notifyDataSetChanged();
+            }
+        });
+
+        mNewView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mHotTabTv.setTextColor(getResources().getColor(R.color.c_777777));
+                mHotTabBottomView.setVisibility(View.INVISIBLE);
+                mNewTabTV.setTextColor(getResources().getColor(R.color.white));
+                mNewTabBottom.setVisibility(View.VISIBLE);
+
+                mTab = NEW;
+
+                if (mNewDatas.size() == 0) {
+                    loadTopicList(false);
+                }
+
+                mTopicInfoStaggeredAdapter.setData(mNewDatas);
+                mTopicInfoStaggeredAdapter.notifyDataSetChanged();
+            }
+        });
+
         mStaggeredGridView.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
             public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-                StaggeredGridLayoutManager.LayoutParams params =(StaggeredGridLayoutManager.LayoutParams) view.getLayoutParams();
+                StaggeredGridLayoutManager.LayoutParams params = (StaggeredGridLayoutManager.LayoutParams) view.getLayoutParams();
                 int position = parent.getChildAdapterPosition(view);
                 int viewType = parent.getAdapter().getItemViewType(position);
                 switch (viewType) {
@@ -164,25 +205,141 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
     }
 
     private void startLoadData() {
-        loadManager.setLoading(mRefreshLayout, mStaggeredGridView, mTopicInfoStaggeredAdapter, true, v -> {
-                    loadTopicInfo(true);
-                    loadTopicList(true);
-                }, v -> {
-                    if (!mTopicInfoLoadStarted) {
-                        loadTopicInfo(false);
-                    }
-                    loadTopicList(false);
-                }
-        );
+//        loadManager.setLoading( mStaggeredGridView, mTopicInfoStaggeredAdapter, true, v -> {
+//                    loadTopicInfo(true);
+//                    loadTopicList(true);
+//                }, v -> {
+//                    if (!mTopicInfoLoadStarted) {
+//                        loadTopicInfo(false);
+//                    }
+//                }
+//        );
+
     }
 
     private void loadTopicInfo(boolean refresh) {
         if (mTopicInfoLoading) {
             return;
         }
-        mTopicInfoLoading = true;
-        mTopicInfoLoadStarted = true;
-        ReqEncyptInternet.in().doGetEncypt(StringManager.API_TOPIC_INFO, "code=" + mTopicCode, new InternetCallback() {
+//        mTopicInfoLoading = true;
+//        mTopicInfoLoadStarted = true;
+//        String json2 = "{\n" +
+//                "    \"code\": \"5050\",\n" +
+//                "    \"activityInfo\": {\n" +
+//                "      \"text\": \"\",\n" +
+//                "      \"url\": \"http://s1.cdn.xiangha.com/caipu/201206/1923/192357379779.jpg/MHgw\"\n" +
+//                "    }\n" +
+//                "  },\n" +
+//                "  \"append\": [],\n" +
+//                "  \"power\": {},\n" +
+//                "  \"extra\": {\n" +
+//                "    \"execTime\": \"0.0059\",\n" +
+//                "    \"serverTime\": 1541579809,\n" +
+//                "    \"params\": {\n" +
+//                "      \"ss\": \"/Main8/shortVideo/topicInfoV1\",\n" +
+//                "      \"code\": \"5050\",\n" +
+//                "      \"debug\": \"4d5c01842f37d90651f9693783c6564279fed6f4\"\n" +
+//                "    }\n" +
+//                "  }";
+//
+//        String json1 = "{\n" +
+//                "    \"code\": \"5050\",\n" +
+//                "    \"name\": \"测试1\",\n" +
+//                "    \"num\": \"0\",\n" +
+//                "    \"content\": \"\",\n" +
+//                "    \"activityInfo\": {\n" +
+//                "      \"text\": \"有奖竞猜\",\n" +
+//                "      \"url\": \"http://appweb.ixiangha.com:9808/Activity/topicActivity?code=5050\"\n" +
+//                "    },\n" +
+//                "    \"users\": {\n" +
+//                "      \"text\": \"社交达人\",\n" +
+//                "      \"info\": [\n" +
+//                "        {\n" +
+//                "          \"code\": \"10191\",\n" +
+//                "          \"nickName\": \"古月云X\",\n" +
+//                "          \"url\": \"userIndex.app?code=10191&type=video\"\n" +
+//                "        },\n" +
+//                "        {\n" +
+//                "          \"code\": \"20070\",\n" +
+//                "          \"nickName\": \"thlakky\",\n" +
+//                "          \"url\": \"userIndex.app?code=20070&type=video\"\n" +
+//                "        },\n" +
+//                "        {\n" +
+//                "          \"code\": \"29949\",\n" +
+//                "          \"nickName\": \"阿杰3\",\n" +
+//                "          \"url\": \"userIndex.app?code=29949&type=video\"\n" +
+//                "        }\n" +
+//                "      ]\n" +
+//                "    },\n" +
+//                "    \"link\": {\n" +
+//                "      \"text\": \"点击此查看详情>>\",\n" +
+//                "      \"url\": \"www.xiangha.com\"\n" +
+//                "    }\n" +
+//                "  },\n" +
+//                "  \"append\": [],\n" +
+//                "  \"power\": {},\n" +
+//                "  \"extra\": {\n" +
+//                "    \"execTime\": \"0.3636\",\n" +
+//                "    \"serverTime\": 1541577726,\n" +
+//                "    \"params\": {\n" +
+//                "      \"ss\": \"/Main8/shortVideo/topicInfoV1\",\n" +
+//                "      \"code\": \"5050\",\n" +
+//                "      \"debug\": \"4d5c01842f37d90651f9693783c6564279fed6f4\"\n" +
+//                "    }\n" +
+//                "  }";
+//
+//        String json0= "{\n" +
+//                "    \"code\": \"5050\",\n" +
+//                "    \"name\": \"木有活动\",\n" +
+//                "    \"num\": \"0\",\n" +
+//                "    \"content\": \"\",\n" +
+//                "    \"activityInfo\": [],\n" +
+//                "    \"users\": {\n" +
+//                "      \"text\": \"社交达人\",\n" +
+//                "      \"info\": [\n" +
+//                "        {\n" +
+//                "          \"code\": \"10191\",\n" +
+//                "          \"nickName\": \"古月云X\",\n" +
+//                "          \"url\": \"userIndex.app?code=10191&type=video\"\n" +
+//                "        },\n" +
+//                "        {\n" +
+//                "          \"code\": \"20070\",\n" +
+//                "          \"nickName\": \"thlakky\",\n" +
+//                "          \"url\": \"userIndex.app?code=20070&type=video\"\n" +
+//                "        },\n" +
+//                "        {\n" +
+//                "          \"code\": \"29949\",\n" +
+//                "          \"nickName\": \"阿杰3\",\n" +
+//                "          \"url\": \"userIndex.app?code=29949&type=video\"\n" +
+//                "        }\n" +
+//                "      ]\n" +
+//                "    },\n" +
+//                "    \"link\": {\n" +
+//                "      \"text\": \"点击此查看详情>>\",\n" +
+//                "      \"url\": \"www.xiangha.com\"\n" +
+//                "    }\n" +
+//                "  },\n" +
+//                "  \"append\": [],\n" +
+//                "  \"power\": {},\n" +
+//                "  \"extra\": {\n" +
+//                "    \"execTime\": \"0.0451\",\n" +
+//                "    \"serverTime\": 1541579444,\n" +
+//                "    \"params\": {\n" +
+//                "      \"ss\": \"/Main8/shortVideo/topicInfoV1\",\n" +
+//                "      \"code\": \"5050\",\n" +
+//                "      \"debug\": \"4d5c01842f37d90651f9693783c6564279fed6f4\"\n" +
+//                "    }\n" +
+//                "  }";
+//
+//        mInfoMap = StringManager.getFirstMap(json2);
+//        String name = mInfoMap.get("name");
+//        if (!TextUtils.isEmpty(name)) {
+//            mTitle.setText(name);
+//        }
+//        mTopicHeaderView.showTopicData("2", mTopicCode, mInfoMap);
+//        mTopicHeaderView.setVisibility(View.VISIBLE);
+
+        ReqEncyptInternet.in().doGetEncypt(StringManager.API_TOPIC_INFOV1, "code=" + mTopicCode, new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
                 mTopicInfoLoading = false;
@@ -190,9 +347,9 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                     if (loadManager != null) {
                         loadManager.hideProgressBar();
                     }
-                    if (mRefreshLayout != null && refresh) {
-                        mRefreshLayout.refreshComplete();
-                    }
+//                    if (mRefreshLayout != null && refresh) {
+//                        mRefreshLayout.refreshComplete();
+//                    }
                 }
                 if (i >= ReqInternet.REQ_OK_STRING) {
                     mInfoMap = StringManager.getFirstMap(o);
@@ -200,45 +357,9 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                     if (!TextUtils.isEmpty(name)) {
                         mTitle.setText(name);
                     }
-                    mAuthorMap = StringManager.getFirstMap(mInfoMap.get("author"));
-                    mTopicHeaderView.showUserImage(mAuthorMap.get("img"), new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            gotoUser();
-                            XHClick.mapStat(TopicInfoActivity.this, ShortVideoDetailActivity.STA_ID, "用户内容", "头像");
-
-                        }
-                    });
-                    mTopicHeaderView.showTopicUser(mAuthorMap.get("nickName"), new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            gotoUser();
-                            XHClick.mapStat(TopicInfoActivity.this, ShortVideoDetailActivity.STA_ID, "用户内容", "昵称");
-                        }
-                    });
-                    mTopicHeaderView.showTopicAttention(TextUtils.equals(mAuthorMap.get("isFollow"), "2"), new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            XHClick.mapStat(TopicInfoActivity.this, ShortVideoDetailActivity.STA_ID, "用户内容", "关注");
-                            if (!LoginManager.isLogin()) {
-                                TopicInfoActivity.this.startActivity(new Intent(TopicInfoActivity.this, LoginByAccout.class));
-                                return;
-                            }
-                            AppCommon.onAttentionClick(mAuthorMap.get("code"), "follow", new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (mTopicHeaderView != null)
-                                        mTopicHeaderView.setAttentionEnable(false);
-                                    GlobalAttentionModule module = new GlobalAttentionModule();
-                                    module.setAttentionUserCode(mAuthorMap.get("code"));
-                                    module.setAttention(true);
-                                    GlobalVariableConfig.handleAttentionModule(module);
-                                }
-                            });
-                        }
-                    });
-                    mTopicHeaderView.showTopicInfo(mInfoMap.get("content"));
-                    mTopicHeaderView.showTopicNum(mInfoMap.get("num"));
+//                    mAuthorMap = StringManager.getFirstMap(mInfoMap.get("author"));
+                    mTopicHeaderView.showTopicData(mActivityType, mTopicCode, mInfoMap);
+                    mTopicHeaderView.setVisibility(View.VISIBLE);
                 } else {
                     mInfoMap = null;
                     mTopicHeaderView.setVisibility(View.GONE);
@@ -258,23 +379,30 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
         if (refresh) {
             mPage = 0;
         }
-        ++mPage;
-        loadManager.loading(mStaggeredGridView,  false);
-        ReqEncyptInternet.in().doGetEncypt(StringManager.API_TOPIC_LIST, "code=" + mTopicCode + "&page=" + mPage, new InternetCallback() {
+//        ++mPage;
+//        loadManager.loading(mStaggeredGridView, false);
+        ReqEncyptInternet.in().doGetEncypt(StringManager.API_TOPIC_LIST, "code=" + mTopicCode + "&page=" + mPage + "&tab=" + mTab, new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
                 mTopicListLoading = false;
                 int currentPageCount = -1;
                 if (i >= ReqInternet.REQ_OK_STRING) {
                     if (refresh) {
-                        mDatas.clear();
+                        switch (mTab) {
+                            case HOT:
+                                mHotDatas.clear();
+                                break;
+                            case NEW:
+                                mNewDatas.clear();
+                                break;
+                        }
                         if (mTopicInfoStaggeredAdapter != null) {
                             mTopicInfoStaggeredAdapter.notifyDataSetChanged();
                         }
                     }
                     List<Map<String, String>> datas = StringManager.getListMapByJson(o);
                     currentPageCount = datas.size();
-                    for (Map<String, String> data : datas){
+                    for (Map<String, String> data : datas) {
                         //只处理了当前用到的数据，其他数据未处理，如有需要再添加设置
                         TopicItemModel topicItemModel = new TopicItemModel();
                         topicItemModel.setVideoCode(data.get("code"));
@@ -297,22 +425,38 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                         labelModel.setColor(labelMap.get("color"));
                         labelModel.setBgColor(labelMap.get("bgColor"));
                         topicItemModel.setLabelModel(labelModel);
-                        mDatas.add(topicItemModel);
+                        switch (mTab) {
+                            case HOT:
+                                topicItemModel.setIsHot(true);
+                                mHotDatas.add(topicItemModel);
+                                break;
+                            case NEW:
+                                topicItemModel.setIsHot(false);
+                                mNewDatas.add(topicItemModel);
+                                break;
+                        }
                     }
                     if (mTopicInfoStaggeredAdapter != null) {
-                        mTopicInfoStaggeredAdapter.notifyItemRangeChanged(0, mDatas.size());
+                        switch (mTab) {
+                            case HOT:
+                                mTopicInfoStaggeredAdapter.notifyItemRangeChanged(0, mHotDatas.size());
+                                break;
+                            case NEW:
+                                mTopicInfoStaggeredAdapter.notifyItemRangeChanged(0, mNewDatas.size());
+                                break;
+                        }
                     }
                 } else {
                     --mPage;
                 }
                 if (loadManager != null) {
-                    loadManager.loadOver(i,mStaggeredGridView, currentPageCount);
+                    loadManager.loadOver(i, mStaggeredGridView, currentPageCount);
                 }
                 if (!mTopicInfoLoading) {
-                    loadManager.hideProgressBar();
-                    if (mRefreshLayout != null && refresh) {
-                        mRefreshLayout.refreshComplete();
-                    }
+//                    loadManager.hideProgressBar();
+//                    if (mRefreshLayout != null && refresh) {
+//                        mRefreshLayout.refreshComplete();
+//                    }
                 }
             }
         });
