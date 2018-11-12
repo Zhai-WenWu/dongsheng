@@ -41,7 +41,6 @@ import amodule.user.activity.BrowseHistory;
 
 public class GlobalSearchView extends LinearLayout implements View.OnClickListener {
 
-
     private BaseActivity mActivity;
     private Context context;
     private boolean isBack = false;
@@ -51,15 +50,14 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
     private int searchType;
     private MatchWordsView matchwordsView;
     private DefaultSearchView defaultView;
-    private CaipuSearchResultView caipuView;
     private List<View> viewList = new ArrayList<>();
+    private CaipuSearchResultView caipuView;
     private HaYouSearchResultView hayouView;
     private TieZiSearchResultView tieziView;
     private EditText edSearch;
     private ImageView iv_history;
     private ImageView clear_global;
     private ImageView search_speeach;
-
 
     public GlobalSearchView(Context context) {
         this(context, null);
@@ -75,6 +73,13 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
         this.context = context;
     }
 
+    /**
+     * 初始化正常搜索
+     *
+     * @param activity
+     * @param searchWord
+     * @param searchType
+     */
     public void init(BaseActivity activity, String searchWord, int searchType) {
         mActivity = activity;
         this.searchType = searchType;
@@ -84,18 +89,29 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
             setHorizon(searchWord);
             setSearchMsg(searchWord, searchType);
             search();
-        }else {
+        } else {
             XHClick.track(defaultView.getContext(), "浏览搜索默认页");
         }
     }
 
+    /**
+     * 处理搜索词的匹配参数
+     *
+     * @param searchWord
+     */
     private void setHorizon(String searchWord) {
-        Map<String,String> map = new HashMap<>();
-        map.put("name",searchWord);
+        Map<String, String> map = new HashMap<>();
+        map.put("name", searchWord);
         caipuView.handleSearchWord(StringManager.getJsonByMap(map).toString());
     }
 
-    public void init(BaseActivity activity, String jsonData){
+    /**
+     * 初始化匹配数据
+     *
+     * @param activity
+     * @param jsonData
+     */
+    public void init(BaseActivity activity, String jsonData) {
         mActivity = activity;
         this.searchType = SearchConstant.SEARCH_CAIPU;
         this.jsonData = jsonData;
@@ -108,13 +124,11 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
         search();
     }
 
-    /**
-     * 初始化View
-     */
+    /** 初始化View */
     private void initView() {
         edSearch = findViewById(R.id.ed_search_word);
         clear_global = findViewById(R.id.btn_ed_clear_global);
-         search_speeach = findViewById(R.id.a_global_search_speeach);
+        search_speeach = findViewById(R.id.a_global_search_speeach);
         iv_history = findViewById(R.id.history);
         UploadDishSpeechTools speechTools = UploadDishSpeechTools.createUploadDishSpeechTools();
         speechTools.initSpeech(mActivity);
@@ -127,17 +141,19 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
         setHintInfo();
         setListener();
         edSearch.requestFocus();
-        ToolsDevice.keyboardControl(true,mActivity,edSearch);
+        ToolsDevice.keyboardControl(true, mActivity, edSearch);
 
     }
 
-    private void initHayouView() {
-        hayouView = findViewById(R.id.v_hayou_search);
-        hayouView.setVisibility(View.GONE);
-        hayouView.init(mActivity);
-        viewList.add(hayouView);
+    /** 初始化菜谱搜索列表 */
+    private void initCaipuView() {
+        caipuView = findViewById(R.id.v_result_search);
+        caipuView.setVisibility(View.GONE);
+        caipuView.init(mActivity, this);
+        viewList.add(caipuView);
     }
 
+    /** 初始化帖子搜索列表 */
     private void initTieZiView() {
         tieziView = findViewById(R.id.v_tiezi_search);
         tieziView.setVisibility(View.GONE);
@@ -145,14 +161,15 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
         viewList.add(tieziView);
     }
 
-    private void initCaipuView() {
-
-        caipuView = findViewById(R.id.v_result_search);
-        caipuView.setVisibility(View.GONE);
-        caipuView.init(mActivity, this);
-        viewList.add(caipuView);
+    /** 初始化哈友搜索列表 */
+    private void initHayouView() {
+        hayouView = findViewById(R.id.v_hayou_search);
+        hayouView.setVisibility(View.GONE);
+        hayouView.init(mActivity);
+        viewList.add(hayouView);
     }
 
+    /** 初始化匹配词 */
     private void initMatchwordsView() {
         matchwordsView = findViewById(R.id.v_matchwords_search);
         matchwordsView.setVisibility(View.GONE);
@@ -169,7 +186,7 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
         matchwordsView.init(mActivity, matchWordsCallback);
     }
 
-
+    /** 初始化匹配词 */
     private void initDefaultSearchView() {
 
         defaultView = findViewById(R.id.v_default_search);
@@ -293,9 +310,9 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
                 if (TextUtils.isEmpty(temp)) {
                     showSpeciView(SearchConstant.VIEW_DEFAULT_SEARCH);
                 } else {
-                    if(TextUtils.isEmpty(jsonData)){
+                    if (TextUtils.isEmpty(jsonData)) {
                         searchKey = temp;
-                    }else{
+                    } else {
                         jsonData = "";
                     }
                     showSpeciView(SearchConstant.VIEW_MATCH_WORDS);
@@ -323,25 +340,25 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
         if (TextUtils.isEmpty(key))
             return;
 
-        if("xiangha".equals(searchKey)){
-            Toast.makeText(context, ChannelUtil.getChannel(context),Toast.LENGTH_SHORT).show();
+        if ("xiangha".equals(searchKey)) {
+            Toast.makeText(context, ChannelUtil.getChannel(context), Toast.LENGTH_SHORT).show();
             return;
         }
 
         edSearch.clearFocus();
-        ToolsDevice.keyboardControl(false,mActivity,edSearch);
+        ToolsDevice.keyboardControl(false, mActivity, edSearch);
 
         DataOperate.saveSearchWord(key);
         switch (type) {
             case SearchConstant.SEARCH_CAIPU:
-                if(once){
+                if (once) {
                     once = false;
-                }else{
+                } else {
                     setHorizon(key);
                 }
                 showView(caipuView);
                 caipuView.search(key);
-                XHClick.mapStat(mActivity, "a_search_input", "搜菜谱", isMatchWords?"点击联想词":"直接搜索");
+                XHClick.mapStat(mActivity, "a_search_input", "搜菜谱", isMatchWords ? "点击联想词" : "直接搜索");
                 break;
             case SearchConstant.SEARCH_HAYOU:
                 showView(hayouView);
@@ -436,11 +453,10 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
         }
     }
 
-    private void showClearBtn(boolean isShow){
-        clear_global.setVisibility(isShow?View.VISIBLE:GONE);
-        search_speeach.setVisibility(isShow?View.GONE:VISIBLE);
+    private void showClearBtn(boolean isShow) {
+        clear_global.setVisibility(isShow ? View.VISIBLE : GONE);
+        search_speeach.setVisibility(isShow ? View.GONE : VISIBLE);
     }
-
 
     private void showView(View view) {
 
@@ -450,7 +466,6 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
         iv_history.setVisibility((view == caipuView || view == tieziView) ? VISIBLE : INVISIBLE);
 
         if (view == defaultView) {
-//            XHClick.track(defaultView.getContext(), "浏览搜索默认页");
             defaultView.refresh();
         }
     }
