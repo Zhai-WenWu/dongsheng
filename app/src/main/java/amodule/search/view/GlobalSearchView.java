@@ -76,9 +76,9 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
     /**
      * 初始化正常搜索
      *
-     * @param activity
-     * @param searchWord
-     * @param searchType
+     * @param activity 页面
+     * @param searchWord 搜索词
+     * @param searchType 搜索类型
      */
     public void init(BaseActivity activity, String searchWord, int searchType) {
         mActivity = activity;
@@ -97,7 +97,7 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
     /**
      * 处理搜索词的匹配参数
      *
-     * @param searchWord
+     * @param searchWord 匹配搜索词
      */
     private void setHorizon(String searchWord) {
         Map<String, String> map = new HashMap<>();
@@ -108,8 +108,8 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
     /**
      * 初始化匹配数据
      *
-     * @param activity
-     * @param jsonData
+     * @param activity 页面
+     * @param jsonData json数据
      */
     public void init(BaseActivity activity, String jsonData) {
         mActivity = activity;
@@ -149,7 +149,7 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
     private void initCaipuView() {
         caipuView = findViewById(R.id.v_result_search);
         caipuView.setVisibility(View.GONE);
-        caipuView.init(mActivity, this);
+        caipuView.init(mActivity);
         viewList.add(caipuView);
     }
 
@@ -229,58 +229,51 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
         findViewById(R.id.btn_search_global).setOnClickListener(this);
         findViewById(R.id.btn_back).setOnClickListener(this);
         // 聚焦,显示搜索历史
-        edSearch.setOnFocusChangeListener(new OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                resetEdHint();
-                if (hasFocus) {
-                    if (TextUtils.isEmpty(searchKey)) {
-                        showView(defaultView);
-                        defaultView.setHistoryVisiable(true);
-                        showClearBtn(false);
-                    } else {
-                        XHClick.track(matchwordsView.getContext(), "浏览搜索输入页");
-                        showSpeciView(SearchConstant.VIEW_MATCH_WORDS);
-                        matchwordsView.getMatchWords(searchKey);
-                        showClearBtn(true);
-                    }
-                    clearEditViewFocus(false);
-                    XHClick.mapStat(mActivity, "a_search_input", "点搜索框-总", "");
-                } else {
+        edSearch.setOnFocusChangeListener((v, hasFocus) -> {
+            resetEdHint();
+            if (hasFocus) {
+                if (TextUtils.isEmpty(searchKey)) {
+                    showView(defaultView);
+                    defaultView.setHistoryVisiable(true);
                     showClearBtn(false);
+                } else {
+                    XHClick.track(matchwordsView.getContext(), "浏览搜索输入页");
+                    showSpeciView(SearchConstant.VIEW_MATCH_WORDS);
+                    matchwordsView.getMatchWords(searchKey);
+                    showClearBtn(true);
                 }
+                clearEditViewFocus(false);
+                XHClick.mapStat(mActivity, "a_search_input", "点搜索框-总", "");
+            } else {
+                showClearBtn(false);
             }
         });
         // 控制返回键和回车键
-        edSearch.setOnKeyListener(new OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                switch (keyCode) {
-                    case KeyEvent.KEYCODE_BACK:
-                        if (!mActivity.keyBoard_visible) {
-                            if (isBack) {
-                                isBack = false;
-//                                ((HomeSearch) mActivity).scrollLayout.allow = true;
-                                defaultView.setHistoryVisiable(findViewById(R.id.bar_search_bottom).getVisibility() != View.VISIBLE);
-                                clearEditViewFocus(true);
-                            } else
-                                isBack = true;
-                            return true;
-                        }
-                    case KeyEvent.KEYCODE_ENTER:
-                    case KeyEvent.ACTION_DOWN:
-                        String str = edSearch.getText().toString();
-                        if (str.trim().length() == 0) {
-                            Tools.showToast(getContext(), "请输入查询关键字");
-                            mActivity.loadManager.hideProgressBar();
-                            return true;
-                        }
-                        searchKey = str;
-                        search();
+        edSearch.setOnKeyListener((v, keyCode, event) -> {
+            switch (keyCode) {
+                case KeyEvent.KEYCODE_BACK:
+                    if (!mActivity.keyBoard_visible) {
+                        if (isBack) {
+                            isBack = false;
+                            defaultView.setHistoryVisiable(findViewById(R.id.bar_search_bottom).getVisibility() != View.VISIBLE);
+                            clearEditViewFocus(true);
+                        } else
+                            isBack = true;
                         return true;
-                    default:
-                        return false;
-                }
+                    }
+                case KeyEvent.KEYCODE_ENTER:
+                case KeyEvent.ACTION_DOWN:
+                    String str = edSearch.getText().toString();
+                    if (str.trim().length() == 0) {
+                        Tools.showToast(getContext(), "请输入查询关键字");
+                        mActivity.loadManager.hideProgressBar();
+                        return true;
+                    }
+                    searchKey = str;
+                    search();
+                    return true;
+                default:
+                    return false;
             }
         });
 
@@ -306,7 +299,7 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
 
                 String temp = s.toString().trim();
 
-                caipuView.onClearcSearchWord();
+                caipuView.onClearSearchWord();
                 if (TextUtils.isEmpty(temp)) {
                     showSpeciView(SearchConstant.VIEW_DEFAULT_SEARCH);
                 } else {
