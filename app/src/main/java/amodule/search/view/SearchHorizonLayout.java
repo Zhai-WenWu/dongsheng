@@ -11,9 +11,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import com.annimon.stream.Stream;
-import com.annimon.stream.function.Consumer;
-import com.annimon.stream.function.Predicate;
 import com.xiangha.R;
 
 import org.json.JSONArray;
@@ -21,7 +18,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -52,8 +48,6 @@ public class SearchHorizonLayout extends RelativeLayout {
     private List<Map<String, String>> changeDataList = new ArrayList<>();
     private int currentType = TYPE_WORD;
 
-    private SearchHorizonAdapter.OnItemClickListener mOnItemClickListener;
-
     public SearchHorizonLayout(Context context) {
         super(context);
         initialize(context);
@@ -80,15 +74,6 @@ public class SearchHorizonLayout extends RelativeLayout {
 
         setListener();
 
-        //TODO
-//        for(int i=0;i<7;i++){
-//            Map<String,String> map = new HashMap<>();
-//            map.put("name","糖醋排骨");
-//            wordsList.add(map);
-//        }
-//        mData.addAll(wordsList);
-//        mAdapter.notifyDataSetChanged();
-//        setVisibility(VISIBLE);
     }
 
     private void setListener() {
@@ -114,26 +99,23 @@ public class SearchHorizonLayout extends RelativeLayout {
                     break;
             }
         });
-        mAdapter.setOnItemClickListener(new SearchHorizonAdapter.OnItemClickListener() {
-            @Override
-            public void onClick(View v, Map<String, String> data) {
-                JSONArray jsonArray = new JSONArray();
+        mAdapter.setOnItemClickListener((v, data) -> {
+            JSONArray jsonArray = new JSONArray();
 
-                JSONObject jsonObject = new JSONObject();
-                try {
-                    if(!TextUtils.equals("2",data.get("type")) && !strList.isEmpty()){
-                        jsonArray = StringManager.getJsonByArrayList((ArrayList<Map<String, String>>) strList);
-                    }
-                    jsonObject.put("name",data.get("name"));
-                    jsonObject.put("type",data.get("type"));
-                    jsonArray.put(jsonObject);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+            JSONObject jsonObject = new JSONObject();
+            try {
+                if(!TextUtils.equals("2",data.get("type")) && !strList.isEmpty()){
+                    jsonArray = StringManager.getJsonByArrayList((ArrayList<Map<String, String>>) strList);
                 }
-                Intent intent = new Intent(getContext(),HomeSearch.class);
-                intent.putExtra(EXTRA_JSONDATA,jsonArray.toString());
-                getContext().startActivity(intent);
+                jsonObject.put("name",data.get("name"));
+                jsonObject.put("type",data.get("type"));
+                jsonArray.put(jsonObject);
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
+            Intent intent = new Intent(getContext(),HomeSearch.class);
+            intent.putExtra(EXTRA_JSONDATA,jsonArray.toString());
+            getContext().startActivity(intent);
         });
     }
 
@@ -169,6 +151,7 @@ public class SearchHorizonLayout extends RelativeLayout {
                     mData.clear();
                     mData.addAll(wordsList);
                     mAdapter.notifyDataSetChanged();
+                    mRecyclerView.scrollToPosition(0);
 
                     changeDataList = StringManager.getListMapByJson(resultMap.get("changeData"));
                     if (changeDataList.isEmpty() || !TextUtils.equals("2", resultMap.get("hasChange"))) {
@@ -176,6 +159,7 @@ public class SearchHorizonLayout extends RelativeLayout {
                     } else {
                         showRefreshIcon();
                     }
+                    setVisibility(VISIBLE);
                 } else {
                     setVisibility(GONE);
                 }

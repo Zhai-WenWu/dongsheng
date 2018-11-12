@@ -79,7 +79,7 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
         mActivity = activity;
         this.searchType = searchType;
         initView();
-
+        once = false;
         if (!TextUtils.isEmpty(searchWord)) {
             setHorizon(searchWord);
             setSearchMsg(searchWord, searchType);
