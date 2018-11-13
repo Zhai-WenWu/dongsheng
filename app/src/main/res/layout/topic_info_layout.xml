@@ -9,7 +9,8 @@
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/black">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:layout_width="match_parent"
@@ -20,9 +21,9 @@
             <!--头部内容-->
             <amodule.topic.view.TopicHeaderView
                 android:id="@+id/view_topic_header"
-                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 app:layout_scrollFlags="scroll" />
 
             <android.support.v7.widget.Toolbar
@@ -51,6 +52,7 @@
                     <LinearLayout
                         android:id="@+id/title_container"
                         android:layout_width="match_parent"
+
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
                         android:layout_toLeftOf="@+id/empty_title"
@@ -71,7 +73,8 @@
                             android:clickable="true"
                             android:gravity="center"
                             android:textColor="@color/white"
-                            android:textSize="@dimen/sp_18" />
+                            android:textSize="@dimen/sp_18"
+                            android:textStyle="bold" />
 
                     </LinearLayout>
 
@@ -95,8 +98,8 @@
             <FrameLayout
                 android:id="@+id/fl_hot"
                 android:layout_width="wrap_content"
-                android:layout_weight="1"
                 android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:background="@color/black">
 
                 <TextView
@@ -113,15 +116,15 @@
                     android:layout_width="@dimen/dp_18"
                     android:layout_height="3dp"
                     android:layout_gravity="center_horizontal|bottom"
-                    android:background="@color/color_fa273b"/>
+                    android:background="@drawable/bg_round9_fa273b" />
 
             </FrameLayout>
 
             <FrameLayout
                 android:id="@+id/fl_new"
                 android:layout_width="wrap_content"
-                android:layout_weight="1"
                 android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:background="@color/black">
 
                 <TextView
@@ -138,7 +141,7 @@
                     android:layout_width="@dimen/dp_18"
                     android:layout_height="3dp"
                     android:layout_gravity="center_horizontal|bottom"
-                    android:background="@color/color_fa273b"
+                    android:background="@drawable/bg_round9_fa273b"
                     android:visibility="gone" />
 
             </FrameLayout>
@@ -169,11 +172,11 @@
 
     <ImageView
         android:id="@+id/floating_btn"
-        android:layout_width="@dimen/dp_100"
-        android:layout_height="@dimen/dp_42"
+        android:layout_width="@dimen/dp_114"
+        android:layout_height="@dimen/dp_56"
         android:layout_gravity="center_horizontal|bottom"
         android:layout_marginBottom="@dimen/dp_60"
-        android:scaleType="centerCrop"
+        android:scaleType="fitXY"
         android:src="@drawable/img_joinin"
         app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior" />
 

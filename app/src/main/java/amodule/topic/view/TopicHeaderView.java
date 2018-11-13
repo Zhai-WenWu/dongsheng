@@ -11,6 +11,7 @@ import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.util.ArrayMap;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.popdialog.util.ToolsDevice;
 import com.xiangha.R;
+
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -41,6 +43,7 @@ import amodule.search.view.MultiTagView;
 import amodule.topic.activity.TopicInfoActivity;
 import amodule.topic.style.CustomClickableSpan;
 import amodule.user.activity.FriendHome;
+import anet.channel.util.StringUtils;
 import aplug.basic.LoadImage;
 import third.aliyun.work.AliyunCommon;
 
@@ -100,7 +103,24 @@ public class TopicHeaderView extends RelativeLayout {
     }
 
     public void initData(Map<String, String> infoMap) {
-        LoadImage.with(mContext).load(infoMap.get("image")).build().into(mUserRearImg);
+        String image = infoMap.get("image");
+        if (!TextUtils.isEmpty(image) && image != "null") {
+            LoadImage.with(mContext).load(image).build().into(mUserRearImg);
+            Glide.with(mContext).load(image).downloadOnly(new SimpleTarget<File>() {
+                @Override
+                public void onResourceReady(File file, GlideAnimation<? super File> glideAnimation) {
+                    try {
+                        InputStream is = new FileInputStream(file);
+                        Bitmap bitmap = BitmapFactory.decodeStream(is);
+                        bitmap = ImgManager.RSBlur(getContext(), bitmap, 10);
+                        mUserRearImg.setImageBitmap(bitmap);
+                        mShadePanel.setVisibility(View.VISIBLE);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
 
         //参与人数
         mNum = infoMap.get("num");
@@ -227,7 +247,7 @@ public class TopicHeaderView extends RelativeLayout {
                 int widthPixels = ToolsDevice.getWindowPx(mContext).widthPixels;
 
                 ViewGroup.LayoutParams layoutParams = mUserRearImg.getLayoutParams();
-                float f =(float) widthPixels / w;
+                float f = (float) widthPixels / w;
                 layoutParams.height = (int) (f * h);
                 mUserRearImg.setLayoutParams(layoutParams);
                 LoadImage.with(mContext).load(url).build().into(mUserRearImg);
@@ -243,7 +263,9 @@ public class TopicHeaderView extends RelativeLayout {
         view.post(() -> {
             int width = view.getWidth();
             int height = view.getHeight();
-
+            if (width <= 240) {
+                width = 240;
+            }
             view.setBackground(drawable);
             ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
             layoutParams.width = width;

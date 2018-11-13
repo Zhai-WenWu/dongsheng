@@ -118,7 +118,7 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
     private ImageView mMoreImg;
     private View mEmptyView;
     private ConstraintLayout mInfoLayout;
-    private RelativeLayout mLayoutTopic;
+    private LinearLayout mLayoutTopic;
     private LinearLayout mLayoutAddress;
     private TextView mTopicText;
     private TextView mAddressText;
