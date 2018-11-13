@@ -56,6 +56,7 @@ import acore.logic.stat.StatisticsManager;
 import acore.override.XHApplication;
 import acore.override.activity.mian.MainBaseActivity;
 import acore.tools.ChannelUtil;
+import acore.tools.ColorUtil;
 import acore.tools.FileManager;
 import acore.observer.IObserver;
 import acore.tools.LogManager;
@@ -307,7 +308,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
     @SuppressLint("HandlerLeak")
     private void initUI() {
         String colors = Tools.getColorStr(Main.this, R.color.common_top_bg);
-        Tools.setStatusBarColor(Main.this, Color.parseColor(colors));
+        Tools.setStatusBarColor(Main.this, ColorUtil.parseColor(colors));
 
         tabHost = findViewById(R.id.xiangha_tabhost);
         tabHost.setup(mLocalActivityManager);

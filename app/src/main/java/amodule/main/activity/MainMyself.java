@@ -32,6 +32,7 @@ import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.activity.mian.MainBaseActivity;
+import acore.tools.ColorUtil;
 import acore.tools.FileManager;
 import acore.observer.IObserver;
 import acore.tools.LogManager;
@@ -331,7 +332,7 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
                                 vipIcon.setVisibility(View.GONE);
                                 String vipDataColor = vipMap.get("color");
                                 if(!TextUtils.isEmpty(vipDataColor)){
-                                    vipInfo.setTextColor(Color.parseColor(vipDataColor));
+                                    vipInfo.setTextColor(ColorUtil.parseColor(vipDataColor));
                                 }
                             }
                         }

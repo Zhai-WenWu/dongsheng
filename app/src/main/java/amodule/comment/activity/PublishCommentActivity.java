@@ -47,8 +47,7 @@ public class PublishCommentActivity extends BaseActivity{
     private void initView() {
         mPublishContrler = new PublishCommentControler(this);
 
-        String color = Tools.getColorStr(this, R.color.common_top_bg);
-        Tools.setStatusBarColor(this, Color.parseColor(color));
+        Tools.setStatusBarColor(this, getResources().getColor(R.color.common_top_bg));
 
         TextView title = (TextView) findViewById(R.id.title);
         title.setText("评论");

@@ -135,8 +135,6 @@ public class DetailDishWeb extends BaseAppCompatActivity implements IObserver {
         if(Tools.isShowTitle()){
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
-//        String colors = Tools.getColorStr(this, R.color.common_top_bg);
-//        Tools.setStatusBarColor(this, Color.parseColor(colors));
 
         setCommonStyle();
         dishActivityViewControl= new DishActivityViewControlNew(this);

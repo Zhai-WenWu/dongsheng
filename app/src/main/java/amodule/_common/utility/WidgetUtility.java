@@ -13,6 +13,7 @@ import java.util.Map;
 
 import acore.logic.XHClick;
 import acore.override.helper.XHActivityManager;
+import acore.tools.ColorUtil;
 import acore.tools.StringManager;
 import aplug.web.FullScreenWeb;
 import aplug.web.ShowWeb;
@@ -77,18 +78,4 @@ public class WidgetUtility {
         }
     }
 
-    /**
-     * 解析颜色
-     * @param colorStr
-     * @return 不符合规则的返回透明色
-     */
-    public static int parseColor(String colorStr){
-        int color = Color.parseColor("#00FFFFFE");
-        if(!TextUtils.isEmpty(colorStr)
-                && colorStr.startsWith("#")
-                && (colorStr.length() == 7 || colorStr.length() == 9)){
-            color = Color.parseColor(colorStr);
-        }
-        return color;
-    }
 }

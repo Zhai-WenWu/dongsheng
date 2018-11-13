@@ -17,6 +17,7 @@ import acore.override.activity.base.BaseAppCompatActivity;
 import acore.override.helper.XHActivityManager;
 import acore.observer.IObserver;
 import acore.observer.ObserverManager;
+import acore.tools.ColorUtil;
 import amodule._common.helper.WidgetDataHelper;
 import amodule.lesson.controler.data.LessonListDataController;
 import amodule.lesson.controler.view.LessonListViewController;
@@ -109,7 +110,7 @@ public class LessonListPage extends BaseAppCompatActivity implements IObserver {
                 if (TextUtils.isEmpty(title) || TextUtils.isEmpty(textColor) || TextUtils.isEmpty(bgColor)) {
                     return;
                 }
-                mViewController.setVIPButton(title, Color.parseColor(textColor), Color.parseColor(bgColor));
+                mViewController.setVIPButton(title, ColorUtil.parseColor(textColor), ColorUtil.parseColor(bgColor));
                 mViewController.setVIPButtonClickListener(v -> {
                     String url = mVipDataController.getUrl();
                     if (!TextUtils.isEmpty(url))

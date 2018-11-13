@@ -45,6 +45,7 @@ import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.activity.base.BaseAppCompatActivity;
 import acore.observer.IObserver;
+import acore.tools.ColorUtil;
 import acore.tools.LogManager;
 import acore.observer.ObserverManager;
 import acore.tools.StringManager;
@@ -280,8 +281,6 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) leftImage.getLayoutParams();
         layoutParams.setMargins(Tools.getDimen(this, R.dimen.dp_15), 0, 0, 0);
         leftImage.setLayoutParams(layoutParams);
-//        RelativeLayout titleBar = (RelativeLayout) view.findViewById(R.id.relativeLayout_global);
-//        titleBar.setBackgroundColor(Color.parseColor("#00FFFFFE"));
 
         view.findViewById(R.id.back).setOnClickListener(
                 new View.OnClickListener() {
@@ -486,7 +485,7 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
                         mCommentBar.setVisibility(isCommentShow?View.VISIBLE:View.GONE);
                     }
                     //
-                    allTitleRelaPort.setBackgroundColor(Color.parseColor(isPortrait && viewBottom <= topbarHeight + statusBarH ? comTopBgColor : "#00000000"));
+                    allTitleRelaPort.setBackgroundColor(ColorUtil.parseColor(isPortrait && viewBottom <= topbarHeight + statusBarH ? comTopBgColor : "#00000000"));
                 }
             }
         });
@@ -762,9 +761,9 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
     private void handlerPortrait(){
         findViewById(R.id.relativeLayout_global).setVisibility(View.GONE);
         allTitleRelaPort.setVisibility(View.VISIBLE);
-        allTitleRelaPort.setBackgroundColor(Color.parseColor("#00000000"));
+        allTitleRelaPort.setBackgroundColor(Color.TRANSPARENT);
         View view = findViewById(R.id.relativeLayout_global_transparent);
-        view.setBackgroundColor(Color.parseColor("#00FFFFFE"));
+        view.setBackgroundColor(Color.TRANSPARENT);
         initTitle(allTitleRelaPort);
         if(Tools.isShowTitle()){
             Window window = this.getWindow();

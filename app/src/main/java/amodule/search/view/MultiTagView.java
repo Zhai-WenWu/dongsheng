@@ -112,7 +112,7 @@ public class MultiTagView extends LinearLayout {
         }
         final TextView button = new TextView(mContext);
         button.setText(tag.content);
-        button.setTextColor(isSelect?Color.parseColor("#999999"):getResources().getColor(android.R.color.black));
+        button.setTextColor(isSelect?Color.parseColor("#999999"):Color.BLACK);
         button.setTextSize(14);
 //        StateRoundRectDrawable drawable = new StateRoundRectDrawable(Color.parseColor("#000000"), Color.parseColor("#BAA8A8"));
         setButtonBackground(button, tagTndex == currentSelectIndex ? selectBackgroundColor : unselectBackgroundColor);

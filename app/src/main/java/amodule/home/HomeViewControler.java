@@ -20,6 +20,7 @@ import java.util.Map;
 import acore.logic.AppCommon;
 import acore.logic.XHClick;
 import acore.logic.stat.intefaces.OnItemClickListenerRvStat;
+import acore.tools.ColorUtil;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.rvlistview.RvListView;
@@ -223,10 +224,10 @@ public class HomeViewControler implements ISetAdController {
         mTipMessage.setText(textValue);
         //设置背景颜色
         String bgColorValue = data.get("backColor");
-        mTipMessage.setBackgroundColor(WidgetUtility.parseColor(bgColorValue));
+        mTipMessage.setBackgroundColor(ColorUtil.parseColor(bgColorValue));
         //设置文本颜色
         String textColorValue = data.get("textColor");
-        mTipMessage.setTextColor(WidgetUtility.parseColor(textColorValue));
+        mTipMessage.setTextColor(ColorUtil.parseColor(textColorValue));
         mTipMessage.setOnClickListener(v -> openUri(data.get("type"), data.get("clickUrl")));
         mTipMessage.setVisibility(View.VISIBLE);
         //隐藏
