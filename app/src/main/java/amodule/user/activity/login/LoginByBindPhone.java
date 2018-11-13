@@ -16,6 +16,7 @@ import acore.logic.XHClick;
 import acore.logic.login.LoginCheck;
 import acore.logic.stat.StatModel;
 import acore.logic.stat.StatisticsManager;
+import acore.override.XHApplication;
 import acore.override.activity.base.BaseLoginActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -177,6 +178,10 @@ public class LoginByBindPhone extends BaseLoginActivity implements View.OnClickL
         btn_next_step.init("登录并绑定", new NextStepView.NextStepViewCallback() {
             @Override
             public void onClickCenterBtn() {
+                if (!ToolsDevice.getNetActiveState(XHApplication.in())) {
+                    Toast.makeText(mAct, "网络错误，请检查网络或重试", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Serializable serializable = getIntent().getSerializableExtra(DeviceVipStatModel.TAG);
                 XHClick.mapStat(LoginByBindPhone.this, PHONE_TAG, "手机验证码登录", "输入验证码，点击登录");
                 String errorType = LoginCheck.checkPhoneFormatWell(LoginByBindPhone.this, phone_info.getZoneCode(),

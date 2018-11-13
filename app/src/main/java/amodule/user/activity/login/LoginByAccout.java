@@ -14,6 +14,7 @@ import com.xiangha.R;
 import acore.logic.AppCommon;
 import acore.logic.XHClick;
 import acore.logic.login.LoginCheck;
+import acore.override.XHApplication;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -201,6 +202,10 @@ public class LoginByAccout extends ThirdLoginBaseActivity implements View.OnClic
         btn_next_step.init("登录", new NextStepView.NextStepViewCallback() {
             @Override
             public void onClickCenterBtn() {
+                if (!ToolsDevice.getNetActiveState(XHApplication.in())) {
+                    Toast.makeText(mAct, "网络错误，请检查网络或重试", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 XHClick.mapStat(LoginByAccout.this, PHONE_TAG, "手机验证码登录", "输入验证码，点击登录");
                 String errorType = LoginCheck.checkPhoneFormatWell(LoginByAccout.this, phone_info.getZoneCode(),
                         phone_info.getPhoneNum());

@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.xh.manager.DialogManager;
 import com.xh.manager.ViewManager;
@@ -15,6 +16,7 @@ import com.xh.view.TitleMessageView;
 import com.xiangha.R;
 
 import acore.logic.XHClick;
+import acore.override.XHApplication;
 import acore.override.activity.base.BaseLoginActivity;
 import acore.tools.ToolsDevice;
 import amodule.user.view.IdentifyInputView;
@@ -181,6 +183,10 @@ public class InputIdentifyCode extends BaseLoginActivity implements View.OnClick
         btn_next_step.init("下一步",  new NextStepView.NextStepViewCallback() {
             @Override
             public void onClickCenterBtn() {
+                if (!ToolsDevice.getNetActiveState(XHApplication.in())) {
+                    Toast.makeText(mAct, "网络错误，请检查网络或重试", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 if (ORIGIN_REGISTER.equals(origin)) {
                     XHClick.mapStat(InputIdentifyCode.this, PHONE_TAG, "注册", "验证码页，点击下一步");
                 } else if (ORIGIN_BIND_PHONE_NUM.equals(origin)) {

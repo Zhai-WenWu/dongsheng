@@ -17,6 +17,7 @@ import com.xiangha.R;
 
 import acore.logic.XHClick;
 import acore.logic.login.LoginCheck;
+import acore.override.XHApplication;
 import acore.override.activity.base.BaseLoginActivity;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -148,6 +149,10 @@ public class LostSecret extends BaseLoginActivity {
         btn_next_step.init(nextStepStr, new NextStepView.NextStepViewCallback() {
             @Override
             public void onClickCenterBtn() {
+                if (!ToolsDevice.getNetActiveState(XHApplication.in())) {
+                    Toast.makeText(mAct, "网络错误，请检查网络或重试", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 if (getIsBindPhone() || ORIGIN_MODIFY_PSW.equals(origin)) {
                     XHClick.mapStat(LostSecret.this, TAG_ACCOCUT, "绑定手机号", "验证码页，点下一步");
                 } else if (ORIGIN_FIND_PSW.equals(origin)) {

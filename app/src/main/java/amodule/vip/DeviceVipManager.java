@@ -202,7 +202,7 @@ public class DeviceVipManager {
      * @return true 显示绑定弹框
      */
     public static boolean checkShowDeviceVipDialog () {
-        if (mBindVipDialogShowing || !isDeviceVip() || !LoginManager.isLogin())
+        if (mBindVipDialogShowing || !isDeviceVip())
             return false;
         mBindVipDialogShowing = true;
         String deviceVipGuideStr = ConfigMannager.getConfigByLocal(KEY_DEVICE_VIP_GUIDE);
