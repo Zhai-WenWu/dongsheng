@@ -35,6 +35,8 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import acore.logic.AppCommon;
+import acore.logic.stat.StatModel;
+import acore.logic.stat.StatisticsManager;
 import acore.override.helper.XHActivityManager;
 import acore.tools.ImgManager;
 import acore.tools.StringManager;
@@ -166,6 +168,7 @@ public class TopicHeaderView extends RelativeLayout {
             mSocialiteTable.addTags(userNameList, new MultiTagView.MutilTagViewCallBack() {
                 @Override
                 public void onClick(int tagIndexr) {
+                    StatisticsManager.saveData(StatModel.createBtnClickDetailModel("TopicInfoActivity","TopicInfoActivity","new_topic_gather",infoMap.get("name"),"@好友"));
                     Intent intent = new Intent(mContext, FriendHome.class);
                     Bundle bundle = new Bundle();
                     bundle.putString("code", userList.get(tagIndexr).get("code"));
@@ -195,6 +198,7 @@ public class TopicHeaderView extends RelativeLayout {
         mBottomLinkTv.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                StatisticsManager.saveData(StatModel.createBtnClickDetailModel("TopicInfoActivity","TopicInfoActivity","new_topic_gather",infoMap.get("name"),"链接"));
                 AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), mLink.get("url"), true);
             }
         });
@@ -230,6 +234,7 @@ public class TopicHeaderView extends RelativeLayout {
                 mActivityTv.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        StatisticsManager.saveData(StatModel.createBtnClickDetailModel("TopicInfoActivity","TopicInfoActivity","new_topic_gather",infoMap.get("name"),"活动按钮"));
                         AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), mActivityInfo.get("url"), true);
                     }
                 });

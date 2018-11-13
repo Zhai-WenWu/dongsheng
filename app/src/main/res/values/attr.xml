@@ -114,6 +114,7 @@
 
     <declare-styleable name="MultiTagView">
         <attr name="parentMargin" format="dimension"/>
+        <attr name="tagTextBold" format="boolean"/>
         <attr name="buttonAddColor" format="color"/>
         <attr name="buttonAddClickColor" format="color"/>
         <attr name="tagTextColor" format="color"/>

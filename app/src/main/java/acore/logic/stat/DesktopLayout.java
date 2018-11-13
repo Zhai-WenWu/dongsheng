@@ -49,7 +49,8 @@ import static acore.logic.stat.StatModel.EVENT_VIDEO_VIEW;
  * e_mail : ztanzeyu@gmail.com
  */
 public class DesktopLayout extends RelativeLayout {
-    @SuppressLint("StaticFieldLeak") private volatile static DesktopLayout instance;
+    @SuppressLint("StaticFieldLeak")
+    private volatile static DesktopLayout instance;
     private RvListView rvListView;
     private StatisticsAdapter adapter;
     private List<String> data = new ArrayList<>();
@@ -196,7 +197,9 @@ public class DesktopLayout extends RelativeLayout {
     int top;
     boolean isShow = false;
 
-    /** 显示DesktopLayout */
+    /**
+     * 显示DesktopLayout
+     */
     public void showDesk() {
         if (!isShow && instance != null) {
             isShow = true;
@@ -205,7 +208,9 @@ public class DesktopLayout extends RelativeLayout {
         }
     }
 
-    /** 关闭DesktopLayout */
+    /**
+     * 关闭DesktopLayout
+     */
     public void closeDesk() {
         if (isShow && instance != null) {
             isShow = false;
@@ -238,7 +243,7 @@ public class DesktopLayout extends RelativeLayout {
         mLayout.gravity = Gravity.TOP | Gravity.LEFT;
 
         // 设置窗体宽度和高度
-        mLayout.width = (int) (ToolsDevice.getWindowPx(getContext()).widthPixels * 1 / 3f);
+        mLayout.width = (int) (ToolsDevice.getWindowPx(getContext()).widthPixels * 1 / 2f - 10);
         mLayout.height = (int) (ToolsDevice.getWindowPx(getContext()).heightPixels * 1 / 3f);
 
     }
