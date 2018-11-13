@@ -59,7 +59,6 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
     private TextView mPriceText;
     private ImageView mBlackBtn;
     private RelativeLayout mAskDesc;
-    private RelativeLayout mAnoContainer;
 
     private String mAskPrice;//提问价格
     private String mWebUrl;//打开Web支付页面
@@ -134,8 +133,8 @@ public class AskEditActivity extends BaseEditActivity implements AskAnswerUpload
         mPriceText = (TextView) findViewById(R.id.price_text);
         mBlackBtn = (ImageView) findViewById(R.id.black_btn);
         mAskDesc = (RelativeLayout) findViewById(R.id.ask_desc);
-        mAnoContainer = (RelativeLayout) findViewById(R.id.anonymity_container);
-        mAnoContainer.setVisibility(mIsAskMore ? View.GONE : View.VISIBLE);
+        RelativeLayout anoContainer = findViewById(R.id.anonymity_container);
+        anoContainer.setVisibility(mIsAskMore ? View.GONE : View.VISIBLE);
         setListener();
         registnetworkListener();
         getLocalData();
