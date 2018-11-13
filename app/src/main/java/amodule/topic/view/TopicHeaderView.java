@@ -263,8 +263,8 @@ public class TopicHeaderView extends RelativeLayout {
         view.post(() -> {
             int width = view.getWidth();
             int height = view.getHeight();
-            if (width <= 240) {
-                width = 240;
+            if (width <= 480) {
+                width = 480;
             }
             view.setBackground(drawable);
             ViewGroup.LayoutParams layoutParams = view.getLayoutParams();

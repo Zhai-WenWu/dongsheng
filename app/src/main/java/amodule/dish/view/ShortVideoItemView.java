@@ -585,6 +585,7 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
             }
         } else {
             mLayoutTopic.setVisibility(View.GONE);
+            mHavePrizeText.setVisibility(View.GONE);
         }
         mAddressClickUrl = mData.getAddressModel().getGotoUrl();
         String address = mData.getAddressModel().getAddress();

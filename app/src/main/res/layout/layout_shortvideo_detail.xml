@@ -393,8 +393,9 @@
                 android:layout_marginBottom="@dimen/dp_11"
                 android:background="@drawable/bg_round9_fa273b"
                 android:gravity="center"
+                android:visibility="gone"
                 android:layout_toEndOf="@+id/layout_topic"
-                android:layout_marginStart="-15dp"
+                android:layout_marginStart="@dimen/dp__15"
                 android:text="有奖"
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_12" />
