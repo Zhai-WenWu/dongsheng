@@ -90,13 +90,10 @@ import static amodule.article.adapter.ArticleDetailAdapter.Type_recommed;
 
 public class VideoDetailActivity extends BaseAppCompatActivity {
 
-    private ImageView rightButton,rightButtonFav, integralTip;
+    private ImageView rightButton,rightButtonFav;
     private RelativeLayout dredgeVipLayout;
     private RelativeLayout allTitleRelaPort;
-    private RelativeLayout mShareWechat;
-    private RelativeLayout mShareComments;
     private TextView dredgeVipImmediately;
-//    private PtrClassicFrameLayout refreshLayout;
     private ListView listView;
     /** 头部view */
     private VideoAllHeaderView mHaederLayout;
@@ -116,7 +113,6 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
     private String lastPermission = "";
     private boolean isAuthor;
     private Map<String, String> customerData;
-    private boolean hasPermission = true;
 
     private String commentNum = "0";
     private boolean isKeyboradShow = false;
@@ -126,8 +122,6 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
     private boolean isFav = false,loadFavState = false;
     private String title = "";
 
-    private String data_type = "";//推荐列表过来的数据
-    private String module_type = "";
     public boolean isPortrait = false;
     private boolean isRelateDataOk = false;
     int statusBarH = 0;
@@ -138,12 +132,7 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
         //保持高亮
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         handlerScreen=new Handler();
-        handlerScreen.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-            }
-        },5 * 60 * 1000);
+        handlerScreen.postDelayed(() -> getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON),5 * 60 * 1000);
         //sufureView页面闪烁
         getWindow().setFormat(PixelFormat.TRANSLUCENT);
         initBundle();
@@ -209,8 +198,6 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
         Bundle bundle = this.getIntent().getExtras();
         if (bundle != null) {
             code = bundle.getString("code");
-            data_type = bundle.getString("data_type");
-            module_type = bundle.getString("module_type");
         }
     }
 
@@ -219,8 +206,8 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
         //处理状态栏引发的问题
         initStatusBar();
         //初始化title
-        RelativeLayout allTitleRela = (RelativeLayout) findViewById(R.id.relativeLayout_global);
-        allTitleRelaPort = (RelativeLayout) findViewById(R.id.all_title_rela_transparent);
+        RelativeLayout allTitleRela = findViewById(R.id.relativeLayout_global);
+        allTitleRelaPort = findViewById(R.id.all_title_rela_transparent);
         initTitle(allTitleRela);
         //初始化listview
         initListView();
@@ -272,8 +259,8 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
 
     /** 初始化title */
     private void initTitle(View view) {
-        mShareWechat = (RelativeLayout) view.findViewById(R.id.share_wechat);
-        mShareComments = (RelativeLayout) view.findViewById(R.id.share_wechatcomments);
+        RelativeLayout shareWechat = (RelativeLayout) view.findViewById(R.id.share_wechat);
+        RelativeLayout shareComments = (RelativeLayout) view.findViewById(R.id.share_wechatcomments);
         rightButton = (ImageView) view.findViewById(R.id.rightImgBtn2);
         rightButtonFav = (ImageView) view.findViewById(R.id.rightImgBtn1);
         rightButtonFav.setVisibility(View.VISIBLE);
@@ -314,8 +301,8 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
                 }
             }
         };
-        mShareWechat.setOnClickListener(listener);
-        mShareComments.setOnClickListener(listener);
+        shareWechat.setOnClickListener(listener);
+        shareComments.setOnClickListener(listener);
         if(loadFavState){
             rightButtonFav.setImageResource(isFav ? R.drawable.z_caipu_xiangqing_topbar_ico_fav_active : R.drawable.z_caipu_xiangqing_topbar_ico_fav);
         }

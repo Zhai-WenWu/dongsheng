@@ -40,9 +40,9 @@ import acore.logic.FavoriteHelper;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.logic.load.AutoLoadMore;
-import acore.override.activity.base.BaseActivity;
 import acore.observer.IObserver;
 import acore.observer.ObserverManager;
+import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -84,9 +84,7 @@ public class ArticleDetailActivity extends BaseActivity {
     private LinearLayout linearLayoutOne;
     private LinearLayout linearLayoutTwo;
     private LinearLayout linearLayoutThree;
-    private RelativeLayout mShareWechat;
-    private RelativeLayout mShareComments;
-    private ImageView rightButton, rightButtonFav, integralTip;
+    private ImageView rightButton, rightButtonFav;
     private PtrClassicFrameLayout refreshLayout;
     private ArticleContentBottomView articleContentBottomView;
     private ArticleHeaderView headerView;
@@ -204,51 +202,33 @@ public class ArticleDetailActivity extends BaseActivity {
 
     /** 初始化title */
     private void initTitle() {
-        mShareWechat = (RelativeLayout) findViewById(R.id.share_wechat);
-        mShareComments = (RelativeLayout) findViewById(R.id.share_wechatcomments);
-        rightButton = (ImageView) findViewById(R.id.rightImgBtn2);
-        rightButtonFav = (ImageView) findViewById(R.id.rightImgBtn1);
-        rightButtonFav.setVisibility(View.VISIBLE);
-        ImageView leftImage = (ImageView) findViewById(R.id.leftImgBtn);
+        findViewById(R.id.back).setOnClickListener(v -> onBackPressed());
+        ImageView leftImage = findViewById(R.id.leftImgBtn);
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) leftImage.getLayoutParams();
         layoutParams.setMargins(Tools.getDimen(this, R.dimen.dp_15), 0, 0, 0);
         leftImage.setLayoutParams(layoutParams);
 
-        findViewById(R.id.back).setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        onBackPressed();
-                    }
-                });
-
-        rightButtonFav.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(LoginManager.isLogin())
-                    handlerFavorite();
-                else
-                    startActivity(new Intent(ArticleDetailActivity.this,LoginByAccout.class));
-            }
+        RelativeLayout shareWechat = findViewById(R.id.share_wechat);
+        shareWechat.setOnClickListener(v -> {
+            openShareSingle(ShareTools.WEI_XIN);
+            statistics("微信分享点击", "");
         });
 
-        View.OnClickListener listener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switch (v.getId()) {
-                    case R.id.share_wechat:
-                        openShareSingle(ShareTools.WEI_XIN);
-                        statistics("微信分享点击", "");
-                        break;
-                    case R.id.share_wechatcomments:
-                        openShareSingle(ShareTools.WEI_QUAN);
-                        statistics("朋友圈分享点击", "");
-                        break;
-                }
-            }
-        };
-        mShareWechat.setOnClickListener(listener);
-        mShareComments.setOnClickListener(listener);
+        RelativeLayout shareComments = findViewById(R.id.share_wechatcomments);
+        shareComments.setOnClickListener(v -> {
+            openShareSingle(ShareTools.WEI_QUAN);
+            statistics("朋友圈分享点击", "");
+        });
+
+        rightButton = findViewById(R.id.rightImgBtn2);
+        rightButtonFav = findViewById(R.id.rightImgBtn1);
+        rightButtonFav.setVisibility(View.VISIBLE);
+        rightButtonFav.setOnClickListener(v -> {
+            if(LoginManager.isLogin())
+                handlerFavorite();
+            else
+                startActivity(new Intent(ArticleDetailActivity.this,LoginByAccout.class));
+        });
     }
 
     private void openShareSingle(String platform) {
