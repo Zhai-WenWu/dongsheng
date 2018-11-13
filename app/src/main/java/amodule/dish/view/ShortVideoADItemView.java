@@ -35,7 +35,6 @@ import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
 
 import static third.ad.scrollerAd.XHScrollerAdParent.ADKEY_GDT;
-import static third.ad.scrollerAd.XHScrollerAdParent.TAG_GDT;
 
 /**
  * 短视频itemView
@@ -47,16 +46,8 @@ public class ShortVideoADItemView extends BaseItemView implements View.OnClickLi
     private ImageView mBackImg;
     private ImageView mHeaderImg;
     private TextView mUserName;
-    private ImageView mLikeImg;
     private View mEmptyView;
     private TextView mTitleText;
-    private View mBottomCommentLayout;
-    private View mBottomShareLayout;
-    private View mBottomGoodLayout;
-    private TextView mCommentNumText;
-    private TextView mShareNum;
-    private ImageView mGoodImg;
-    private TextView mGoodText;
     private TextView mSeeDetailButton;
     private ImageView madTag;
 
@@ -81,16 +72,8 @@ public class ShortVideoADItemView extends BaseItemView implements View.OnClickLi
         mBackImg = findViewById(R.id.image_back);
         mHeaderImg = findViewById(R.id.image_user_header);
         mUserName = findViewById(R.id.text_user_name);
-        mLikeImg = findViewById(R.id.image_like);
         mEmptyView = findViewById(R.id.view_empty);
         mTitleText = findViewById(R.id.text_title);
-        mBottomCommentLayout = findViewById(R.id.layout_bottom_comment);
-        mCommentNumText = mBottomCommentLayout.findViewById(R.id.text3);
-        mBottomShareLayout = findViewById(R.id.layout_bottom_share);
-        mShareNum = mBottomShareLayout.findViewById(R.id.text2);
-        mBottomGoodLayout = findViewById(R.id.layout_bottom_good);
-        mGoodImg = mBottomGoodLayout.findViewById(R.id.image1);
-        mGoodText = mBottomGoodLayout.findViewById(R.id.text1);
         madTag = findViewById(R.id.view_ad_tag);
 
         addListener();
@@ -103,12 +86,8 @@ public class ShortVideoADItemView extends BaseItemView implements View.OnClickLi
         mBackImg.setOnClickListener(this);
         mHeaderImg.setOnClickListener(this);
         mUserName.setOnClickListener(this);
-//        mLikeImg.setOnClickListener(this);
         mTitleText.setOnClickListener(this);
         mEmptyView.setOnClickListener(this);
-//        mBottomCommentLayout.setOnClickListener(this);
-//        mBottomGoodLayout.setOnClickListener(this);
-//        mBottomShareLayout.setOnClickListener(this);
     }
 
     /** 开始播放入口 */
@@ -191,8 +170,6 @@ public class ShortVideoADItemView extends BaseItemView implements View.OnClickLi
         if (mData == null)
             return;
         mUserName.setText(mData.getCustomerModel().getNickName());
-        mLikeImg.setSelected(mData.isFav());
-        mLikeImg.setVisibility(View.VISIBLE);
 
         loadUserHeader(mData.getCustomerModel().getHeaderImg());
         BitmapRequestBuilder builder = LoadImage.with(getContext())
@@ -202,14 +179,6 @@ public class ShortVideoADItemView extends BaseItemView implements View.OnClickLi
         if (builder != null) {
             builder.into(mThumbImg);
         }
-
-        mCommentNumText.setText(mData.getCommentNum());
-
-        mGoodImg.setSelected(mData.isLike());
-        mGoodText.setText(mData.getLikeNum());
-
-        mShareNum.setText(mData.getShareNum());
-
         mTitleText.setText("");
         String title = mData.getName();
         if (!TextUtils.isEmpty(title)) {

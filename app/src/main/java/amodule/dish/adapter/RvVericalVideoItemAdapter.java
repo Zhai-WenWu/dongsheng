@@ -251,8 +251,6 @@ public class RvVericalVideoItemAdapter extends BaseAdapter<ShortVideoDetailModul
         public void startVideo() {
             Log.i("tzy", "startVideo:");
             shortVideoItemView.prepareAsync();
-            //广告展示统计
-            AdPlayIdConfig.shown(this.data.adId);
             //真实刷新数据
             refreshData();
         }
