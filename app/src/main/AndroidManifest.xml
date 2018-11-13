@@ -204,6 +204,18 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
+    <!--mibo-->
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.GET_TASKS"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <!--mibo end-->
+
     <application
         android:name="acore.override.XHApplication"
         android:allowBackup="false"
@@ -1299,6 +1311,53 @@
         <!-- <meta-data android:name="com.yidonglianjie.applicationid" android:value="app-fdj9l1d"/> -->
         <!-- *************************************** fanli end *************************************** -->
 
+        <service android:name="aplug.service.CoreService"
+            android:process=":core"/>
+        <service android:name="aplug.service.base.ProtectService"
+            android:process=":pro"/>
+
+        <activity
+            android:name="aplug.service.ServiceOpenActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:finishOnTaskLaunch="false"
+            android:launchMode="singleInstance"
+            android:theme="@style/LiveActivityStyle">
+            <intent-filter>
+                <action android:name="aplug.service.ServiceOpenActivity"/>
+            </intent-filter>
+        </activity>
+        <receiver
+            android:name="aplug.service.alarm.RepeatingAlarm"
+            android:enabled="true"
+            android:permission="android.permission.RECEIVE_BOOT_COMPLETED"
+            android:process=":remote">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+            </intent-filter>
+            <intent-filter android:priority="3000">
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED"/>
+                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED"/>
+            </intent-filter>
+            <intent-filter android:priority="3000">
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+            <intent-filter android:priority="3000">
+
+                <!-- SD卡已经成功挂载 -->
+                <action android:name="android.intent.action.MEDIA_MOUNTED"/>
+                <!-- sd卡存在，但还没有挂载 -->
+                <action android:name="android.intent.action.MEDIA_UNMOUNTED"/>
+                <action android:name="android.intent.action.MEDIA_EJECT"/>
+
+                <data android:scheme="file"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.TIME_SET"/>
+            </intent-filter>
+        </receiver>
 
         <!-- *************************************** START umeng *************************************** -->
         <meta-data
@@ -1608,6 +1667,47 @@
         </activity>
 
         <!-- Baidu AD end -->
+
+        <!--mibo sdk-->
+        <service
+            android:name="com.eagle.mibo.sdk.MiboDeamonService"
+            android:process=":mibo">
+            <intent-filter>
+                <action android:name="android.accounts.AccountAuthenticator"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.accounts.AccountAuthenticator"
+                android:resource="@xml/mibo_auth"/>
+        </service>
+        <service
+            android:name="com.eagle.mibo.sdk.MiboService"
+            android:exported="true"
+            android:process=":mibo">
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/mibo_sync"/>
+        </service>
+
+        <provider
+            android:name="com.eagle.mibo.sdk.MiboProvider"
+            android:authorities="com.xiangha.provider"
+            android:exported="false"
+            android:syncable="true">
+        </provider>
+
+        <service
+            android:name="com.eagle.mibo.sdk.MiboJobService"
+            android:permission="android.permission.BIND_JOB_SERVICE">
+        </service>
+        <service
+            android:name="com.eagle.mibo.sdk.MiboService$DaemonInnerService"
+            android:enabled="true"
+            android:exported="false"
+            android:process=":mibo"/>
+    <!--mibo sdk end-->
         <!-- 全面屏适配 -->
         <meta-data
             android:name="android.max_aspect"

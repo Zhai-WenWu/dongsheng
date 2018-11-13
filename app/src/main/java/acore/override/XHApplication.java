@@ -11,6 +11,7 @@ import android.util.Log;
 import com.aliyun.common.httpfinal.QupaiHttpFinal;
 import com.baidu.mobads.AdView;
 import com.baidu.mobads.AppActivity;
+import com.eagle.mibo.sdk.Mibo;
 import com.mob.MobApplication;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.analytics.MobclickAgent;
@@ -29,6 +30,7 @@ import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import aplug.basic.LoadImage;
 import aplug.basic.XHConf;
+import aplug.service.CoreService;
 import third.location.LocationHelper;
 import third.push.umeng.UMPushServer;
 
@@ -78,6 +80,7 @@ public class XHApplication extends MobApplication {
         if (processName != null && processName.equals(ToolsDevice.getPackageName(this))) {//多进程多初始化，只对xiangha进程进行初始化
             initData();
         }
+        Mibo.init(this,CoreService.class.getName(),CoreService.ACTION_KEEPSERVICE, 2*60*1000L);
         LogManager.printStartTime("zhangyujian","XhApplication::oncreate::");
     }
 

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 请将packagename替换为您应用的包名 -->
+<sync-adapter
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:accountType="com.eagle.mibo.account"
+    android:allowParallelSyncs="true"
+    android:contentAuthority="com.xiangha.provider"
+    android:isAlwaysSyncable="true"
+    android:supportsUploading="false"
+    android:userVisible="true"/>
