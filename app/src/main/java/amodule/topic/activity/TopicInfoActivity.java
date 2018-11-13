@@ -103,9 +103,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
         mHotDatas = new ArrayList<>();
         mNewDatas = new ArrayList<>();
         mTopicInfoStaggeredAdapter = new TopicInfoStaggeredAdapter(this, mHotDatas);
-        mStaggeredGridView.setAdapter(mTopicInfoStaggeredAdapter);
         loadTopicList();
-        ;
     }
 
     private void initView() {
@@ -137,6 +135,8 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                 StatisticsManager.saveData(StatModel.createBtnClickDetailModel("TopicInfoActivity", "TopicInfoActivity", "new_topic_gather", title, "最热"));
 
                 mTab = HOT;
+
+                mStaggeredGridView.scrollToPosition(0);
                 mTopicInfoStaggeredAdapter.setData(mHotDatas);
                 mTopicInfoStaggeredAdapter.notifyDataSetChanged();
             }
@@ -155,9 +155,10 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                 mTab = NEW;
 
                 if (mNewDatas.size() == 0) {
-                    loadTopicInfo();
+                    loadTopicList();
                 }
 
+                mStaggeredGridView.scrollToPosition(0);
                 mTopicInfoStaggeredAdapter.setData(mNewDatas);
                 mTopicInfoStaggeredAdapter.notifyDataSetChanged();
             }
@@ -270,7 +271,11 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                 break;
         }
 
-        loadManager.loading(mStaggeredGridView, false);
+        if (mHotDatas.size() > 0) {
+            loadManager.loading(mStaggeredGridView, false);
+        } else {
+            loadManager.loading(mStaggeredGridView, true);
+        }
         ReqEncyptInternet.in().doGetEncypt(StringManager.API_TOPIC_LIST, "code=" + mTopicCode + "&page=" + mPage + "&tab=" + mTab, new InternetCallback() {
             final String tab = mTab;
 
@@ -278,6 +283,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
             public void loaded(int i, String s, Object o) {
 //                mTopicListLoading = false;
                 int currentPageCount = -1;
+                loadManager.loaded(mStaggeredGridView);
                 if (i >= ReqInternet.REQ_OK_STRING) {
                     List<Map<String, String>> datas = StringManager.getListMapByJson(o);
                     currentPageCount = datas.size();
@@ -304,6 +310,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                         labelModel.setColor(labelMap.get("color"));
                         labelModel.setBgColor(labelMap.get("bgColor"));
                         topicItemModel.setLabelModel(labelModel);
+                        topicItemModel.setStatJson(data.get("statJson"));
                         switch (tab) {
                             case HOT:
                                 topicItemModel.setIsHot(true);
