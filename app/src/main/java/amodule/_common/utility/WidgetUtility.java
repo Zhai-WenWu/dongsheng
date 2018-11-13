@@ -1,23 +1,10 @@
 package amodule._common.utility;
 
-import android.content.Intent;
-import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import java.util.Map;
-
-import acore.logic.XHClick;
-import acore.override.helper.XHActivityManager;
-import acore.tools.ColorUtil;
-import acore.tools.StringManager;
-import aplug.web.FullScreenWeb;
-import aplug.web.ShowWeb;
-import third.mall.activity.CommodDetailActivity;
 
 /**
  * Created by sll on 2017/11/17.
