@@ -50,12 +50,12 @@ import amodule.user.activity.Setting;
 import amodule.user.activity.login.LoginByAccout;
 import amodule.user.activity.login.LoginByBindPhone;
 import amodule.vip.DeviceVipManager;
+import amodule.vip.DeviceVipStatModel;
 import aplug.basic.InternetCallback;
 import aplug.basic.LoadImage;
 import aplug.basic.ReqInternet;
 import aplug.basic.XHConf;
 import aplug.feedback.activity.Feedback;
-import third.cling.service.manager.DeviceManager;
 import third.mall.activity.MallMyFavorableActivity;
 import third.mall.activity.MyOrderActivity;
 import third.mall.alipay.MallPayActivity;
@@ -71,16 +71,15 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
     public static final String KEY = "MainMyself";
     // 布局
     private ImageView headerBg;
-    private LinearLayout gourp1, gourp2,gourp3;
+    private LinearLayout gourp1, gourp2, gourp3;
     private String[] name1 = {"我的订单"},
             name2 = {"我的会员", "设备已开通会员，需绑定手机号", "我的收藏", "浏览历史", "我的问答"},
-            name3 = {"邀请好友", "反馈帮助","设置"};
+            name3 = {"邀请好友", "反馈帮助", "设置"};
     private String[] clickTag1 = {"order"},
             clickTag2 = {"vip", "yiyuan", "myFavorite", "hitstory", "qa"},
-            clickTag3 = {"invitation", "helpe","setting"};
+            clickTag3 = {"invitation", "helpe", "setting"};
 
     private final String tongjiId = "a_mine";
-    private final String tongjiId2 = "devicevip_binding";
 
     //我的问答
     private View mQAItemView;
@@ -90,14 +89,14 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
     private View mYiYuanVIPView;
 
     //头部控件
-    private TextView goManagerInfo,name,myself_please_login, moneyHint, bindAccount, tempVipName;
-    private ImageView myself_iv,myself_lv,iv_userType,isVipImg, tempVipImg;
+    private TextView goManagerInfo, name, myself_please_login, moneyHint, bindAccount, tempVipName;
+    private ImageView myself_iv, myself_lv, iv_userType, isVipImg, tempVipImg;
 
-    private TextView dishNum,subjectNum, followNum;
-    private TextView moneyNum,scoreNum, couponNum;
-    private TagTextView my_renzheng,my_vip;
+    private TextView dishNum, subjectNum, followNum;
+    private TextView moneyNum, scoreNum, couponNum;
+    private TagTextView my_renzheng, my_vip;
 
-    private TextView vipInfo,vipNewHint, qaInfo, qaNewHint;
+    private TextView vipInfo, vipNewHint, qaInfo, qaNewHint;
     private ImageView vipIcon, qaIcon;
 
     private boolean mIsOnResuming;
@@ -112,17 +111,15 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
         String colors = Tools.getColorStr(this, R.color.common_top_bg_back);
         Tools.setStatusBarColor(this, Color.parseColor(colors));
         if (DeviceVipManager.checkShowDeviceVipDialog()) {
-            DeviceVipManager.showBindVipDialog();
-//            StatisticsManager.saveData(StatModel.createSpecialActionModel(MainMyself.class.getSimpleName(), ,"",SHOW,"","",""));
-            XHClick.mapStat(MainMyself.this, tongjiId2, "bangdingchenggongcishu", "我的页面顶部立即绑定");
+            DeviceVipManager.showBindVipDialog(null);
         }
-        XHClick.track(this,"浏览我的页面");
+        XHClick.track(this, "浏览我的页面");
         ObserverManager.getInstance().registerObserver(this, ObserverManager.NOTIFY_YIYUAN_BIND);
     }
 
     private void setActivity() {
-        if(Main.allMain != null && Main.allMain.allTab != null
-                && !Main.allMain.allTab.containsKey(KEY)){
+        if (Main.allMain != null && Main.allMain.allTab != null
+                && !Main.allMain.allTab.containsKey(KEY)) {
             Main.allMain.allTab.put(KEY, this);//这个Key值不变
         }
     }
@@ -143,7 +140,7 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
         }
         loadManager.hideProgressBar();
         //去我的订单
-        if(MallPayActivity.pay_state){
+        if (MallPayActivity.pay_state) {
             onListEventCommon("order");
         }
     }
@@ -205,6 +202,7 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
         moneyNum.setText("0");
         scoreNum.setText("0");
         couponNum.setText("0");
+        vipIcon.setVisibility(TextUtils.equals((CharSequence) FileManager.loadShared(this, FileManager.xmlFile_appInfo, "isShowVip"), "2") ? View.VISIBLE : View.GONE);
         vipInfo.setVisibility(View.GONE);
         resetVipAndLoginTopViewStatus();
         iv_userType.setVisibility(View.INVISIBLE);
@@ -231,39 +229,39 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
         tempVipImg = findViewById(R.id.temp_vip_icon);
         View subjectView = findViewById(R.id.ll_subject);
         subjectNum = subjectView.findViewById(R.id.num);
-        ((TextView)subjectView.findViewById(R.id.text)).setText("美食记");
+        ((TextView) subjectView.findViewById(R.id.text)).setText("美食记");
         View dishView = findViewById(R.id.ll_dish);
         dishNum = dishView.findViewById(R.id.num);
-        ((TextView)dishView.findViewById(R.id.text)).setText("菜谱");
+        ((TextView) dishView.findViewById(R.id.text)).setText("菜谱");
         View followView = findViewById(R.id.ll_flow);
         followNum = followView.findViewById(R.id.num);
-        ((TextView)followView.findViewById(R.id.text)).setText("关注");
+        ((TextView) followView.findViewById(R.id.text)).setText("关注");
         View moneyView = findViewById(R.id.ll_money);
         moneyNum = moneyView.findViewById(R.id.num);
-        ((TextView)moneyView.findViewById(R.id.text)).setText("我的香豆");
+        ((TextView) moneyView.findViewById(R.id.text)).setText("我的香豆");
         moneyHint = moneyView.findViewById(R.id.hint);
         View scoreView = findViewById(R.id.ll_score);
         scoreNum = scoreView.findViewById(R.id.num);
-        ((TextView)scoreView.findViewById(R.id.text)).setText("我的积分");
+        ((TextView) scoreView.findViewById(R.id.text)).setText("我的积分");
         View couponView = findViewById(R.id.ll_coupon);
         couponNum = couponView.findViewById(R.id.num);
-        ((TextView)couponView.findViewById(R.id.text)).setText("优惠券");
+        ((TextView) couponView.findViewById(R.id.text)).setText("优惠券");
 
         gourp1 = findViewById(R.id.myself_gourp1);
         gourp2 = findViewById(R.id.myself_gourp2);
         gourp3 = findViewById(R.id.myself_gourp3);
 
         LayoutInflater layoutInfater = LayoutInflater.from(this);
-        itemInfalter(layoutInfater,gourp1 , name1,clickTag1);
-        itemInfalter(layoutInfater,gourp2 , name2,clickTag2);
-        itemInfalter(layoutInfater,gourp3 , name3,clickTag3);
+        itemInfalter(layoutInfater, gourp1, name1, clickTag1);
+        itemInfalter(layoutInfater, gourp2, name2, clickTag2);
+        itemInfalter(layoutInfater, gourp3, name3, clickTag3);
 
-        Object isShowVip = FileManager.loadShared(this,FileManager.xmlFile_appInfo,"isShowVip");
-        Object isShowMoney = FileManager.loadShared(this,FileManager.xmlFile_appInfo,"isShowMoney");
-        Object isShowOpinion = FileManager.loadShared(this,FileManager.xmlFile_appInfo,"isShowOpinion");
+        Object isShowVip = FileManager.loadShared(this, FileManager.xmlFile_appInfo, "isShowVip");
+        Object isShowMoney = FileManager.loadShared(this, FileManager.xmlFile_appInfo, "isShowMoney");
+        Object isShowOpinion = FileManager.loadShared(this, FileManager.xmlFile_appInfo, "isShowOpinion");
         Object isShowQA = FileManager.loadShared(this, FileManager.xmlFile_appInfo, "isShowQA");
 
-        if(isShowMoney == null || TextUtils.isEmpty(String.valueOf(isShowMoney))){
+        if (isShowMoney == null || TextUtils.isEmpty(String.valueOf(isShowMoney))) {
             moneyHint.setVisibility(View.VISIBLE);
         }
 
@@ -277,7 +275,7 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
         vipInfo = (TextView) gourp2.getChildAt(0).findViewById(R.id.text_right_myself);
         vipIcon = (ImageView) gourp2.getChildAt(0).findViewById(R.id.ico_right_myself);
         vipNewHint = (TextView) gourp2.getChildAt(0).findViewById(R.id.my_new_info);
-        if(isShowVip == null || TextUtils.isEmpty(String.valueOf(isShowVip))){
+        if (isShowVip == null || TextUtils.isEmpty(String.valueOf(isShowVip))) {
             vipNewHint.setVisibility(View.VISIBLE);
             vipIcon.setVisibility(View.GONE);
         }
@@ -344,12 +342,12 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
                 if (flag >= ReqInternet.REQ_OK_STRING) {
                     // loadManager.showProgressBar();
                     // 解析数据
-                    LoginManager.setDataUser(MainMyself.this,returnObj);
+                    LoginManager.setDataUser(MainMyself.this, returnObj);
                     Map<String, String> listMap = StringManager.getListMapByJson(returnObj).get(0);
                     // 设置离线菜单MAX数量
-                    if(!TextUtils.isEmpty(listMap.get("downDish")))
+                    if (!TextUtils.isEmpty(listMap.get("downDish")))
                         DataOperate.setDownDishLimit(MainMyself.this, Integer.valueOf(listMap.get("downDish")));
-                    if(!TextUtils.isEmpty(listMap.get("nextDownDish")))
+                    if (!TextUtils.isEmpty(listMap.get("nextDownDish")))
                         AppCommon.nextDownDish = Integer.parseInt(listMap.get("nextDownDish"));
                     name.setText(listMap.get("nickName"));
                     name.setVisibility(View.VISIBLE);
@@ -362,21 +360,22 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
                     couponNum.setText(listMap.get("coupon"));
 
                     String vip = listMap.get("vip");
-                    if(!TextUtils.isEmpty(vip)) {
-                        ArrayList<Map<String,String>> vipArray = StringManager.getListMapByJson(vip);
-                        if(vipArray.size()>0) {
-                            Map<String,String> vipMap = vipArray.get(0);
+                    if (!TextUtils.isEmpty(vip)) {
+                        ArrayList<Map<String, String>> vipArray = StringManager.getListMapByJson(vip);
+                        if (vipArray.size() > 0) {
+                            Map<String, String> vipMap = vipArray.get(0);
                             moneyNum.setText(vipMap.get("xiangdou"));
                             String vipData = vipMap.get("text");
                             if (TextUtils.isEmpty(vipData)) {
                                 vipInfo.setVisibility(View.GONE);
-                                if(vipNewHint.getVisibility() != View.VISIBLE) vipNewHint.setVisibility(View.VISIBLE);
+                                if (vipNewHint.getVisibility() != View.VISIBLE)
+                                    vipNewHint.setVisibility(View.VISIBLE);
                             } else {
                                 vipInfo.setText(vipData);
                                 vipInfo.setVisibility(View.VISIBLE);
                                 vipIcon.setVisibility(View.GONE);
                                 String vipDataColor = vipMap.get("color");
-                                if(!TextUtils.isEmpty(vipDataColor)){
+                                if (!TextUtils.isEmpty(vipDataColor)) {
                                     vipInfo.setTextColor(Color.parseColor(vipDataColor));
                                 }
                             }
@@ -384,12 +383,12 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
                     }
                     String lv = listMap.get("lv");
                     AppCommon.setLvImage(TextUtils.isEmpty(lv) ? 0 : Integer.valueOf(lv), myself_lv);
-                    boolean isVip = AppCommon.setVip(MainMyself.this,isVipImg,listMap.get("vip"),tongjiId,"头部", AppCommon.VipFrom.MY_SELF);
-                    if(isVip){
+                    boolean isVip = AppCommon.setVip(MainMyself.this, isVipImg, listMap.get("vip"), tongjiId, "头部", AppCommon.VipFrom.MY_SELF);
+                    if (isVip) {
                         my_vip.setText("会员续费");
                         my_vip.setSideColor(getResources().getColor(R.color.comment_color));
                         my_vip.setTextColor(getResources().getColor(R.color.comment_color));
-                    }else{
+                    } else {
                         isVipImg.setVisibility(View.VISIBLE);
                         isVipImg.setImageResource(R.drawable.i_user_home_unvip);
 
@@ -399,13 +398,13 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
                     }
                     my_vip.setVisibility(View.VISIBLE);
 
-                    if (listMap.get("isGourmet") != null){
+                    if (listMap.get("isGourmet") != null) {
                         boolean isGourmet = AppCommon.setUserTypeImage(Integer.valueOf(listMap.get("isGourmet")), iv_userType);
-                        if(isGourmet){
+                        if (isGourmet) {
                             my_renzheng.setText("已经认证");
                             my_renzheng.setSideColor(getResources().getColor(R.color.comment_color));
                             my_renzheng.setTextColor(getResources().getColor(R.color.comment_color));
-                        }else{
+                        } else {
                             my_renzheng.setText("申请认证");
                             my_renzheng.setTextColor(getResources().getColor(R.color.common_top_text));
                             my_renzheng.setSideColor(getResources().getColor(R.color.common_top_text));
@@ -422,10 +421,10 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
                     }
                     setTempVipViewVisible(false);
                     setLoginViewVisible(false);
-                }else if(flag == ReqInternet.REQ_CODE_ERROR){
+                } else if (flag == ReqInternet.REQ_CODE_ERROR) {
                     LoginManager.logout(MainMyself.this);
                     resetData();
-                }else {
+                } else {
                     if (LoginManager.userInfo.get("userCode") == null || LoginManager.userInfo.get("userCode") == "") {
                         LoginManager.logout(MainMyself.this);
                         resetData();
@@ -437,10 +436,10 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
         });
     }
 
-    private void itemInfalter(LayoutInflater layoutInfater,LinearLayout parent, String[] groupNames,String[] clickTags) {
+    private void itemInfalter(LayoutInflater layoutInfater, LinearLayout parent, String[] groupNames, String[] clickTags) {
         for (int i = 0; i < groupNames.length; i++) {
             String tag = clickTags[i];
-            View itemView =  layoutInfater.inflate(R.layout.a_common_myself_item, null);
+            View itemView = layoutInfater.inflate(R.layout.a_common_myself_item, null);
             itemView.setTag(tag);
             itemView.setOnClickListener(this);
             TextView text = itemView.findViewById(R.id.text_myself);
@@ -491,9 +490,10 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
                 case R.id.header_bg:
                     if (DeviceVipManager.isDeviceVip()) {
                         Intent intent1 = new Intent(MainMyself.this, LoginByBindPhone.class);
+                        DeviceVipStatModel model = new DeviceVipStatModel("我的页面头部立即绑定_成功", "我的页面头部立即绑定_失败");
+                        intent1.putExtra(DeviceVipStatModel.TAG, model);
                         startActivity(intent1);
                         StatisticsManager.saveData(StatModel.createBtnClickModel(MainMyself.class.getSimpleName(), "头部", "绑定账号"));
-                        XHClick.mapStat(MainMyself.this, tongjiId2, "bangdingchenggongcishu", "我的页面顶部立即绑定");
                     }
                     break;
             }
@@ -529,7 +529,7 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
                     XHClick.mapStat(this, tongjiId, "导航", "贴子");
                     Intent intent_subject = new Intent(MainMyself.this, FriendHome.class);
                     intent_subject.putExtra("code", LoginManager.userInfo.get("code"));
-                    intent_subject.putExtra("index",1);
+                    intent_subject.putExtra("index", 1);
                     startActivity(intent_subject);
                     break;
                 case R.id.ll_dish:
@@ -538,39 +538,39 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
                     XHClick.mapStat(this, tongjiId, "导航", "菜谱");
                     Intent intent_dish = new Intent(MainMyself.this, FriendHome.class);
                     intent_dish.putExtra("code", LoginManager.userInfo.get("code"));
-                    intent_dish.putExtra("index",2);
+                    intent_dish.putExtra("index", 2);
                     startActivity(intent_dish);
                     break;
                 case R.id.ll_flow:
                     // 统计
                     XHClick.mapStat(this, tongjiId, "导航", "关注");
                     Intent intent_flow = new Intent(MainMyself.this, FansAndFollwers.class);
-                    intent_flow.putExtra("page","2");
+                    intent_flow.putExtra("page", "2");
                     startActivity(intent_flow);
                     break;
                 case R.id.ll_money:
-                    XHClick.mapStat(this, tongjiId,"列表", "我的钱包");
-                    AppCommon.openUrl(MainMyself.this,StringManager.api_money,true);
-                    FileManager.saveShared(this,FileManager.xmlFile_appInfo,"isShowMoney","2");
+                    XHClick.mapStat(this, tongjiId, "列表", "我的钱包");
+                    AppCommon.openUrl(MainMyself.this, StringManager.api_money, true);
+                    FileManager.saveShared(this, FileManager.xmlFile_appInfo, "isShowMoney", "2");
                     moneyHint.setVisibility(View.GONE);
                     break;
                 case R.id.ll_score:
                     XHClick.track(getApplicationContext(), "点击我的页面的积分");
-                    XHClick.mapStat(this, tongjiId,"列表", "积分商城");
+                    XHClick.mapStat(this, tongjiId, "列表", "积分商城");
 //			AppCommon.openUrl(this, StringManager.api_scoreStore + "?code=" + LoginManager.userInfo.get("code"), true);
                     Intent scoreStore = new Intent(MainMyself.this, ScoreStore.class);
                     startActivity(scoreStore);
                     break;
                 case R.id.ll_coupon:
-                    XHClick.mapStat(this, tongjiId,"列表", "优惠券");
-                    Intent intent_coupon = new Intent(this,MallMyFavorableActivity.class);
+                    XHClick.mapStat(this, tongjiId, "列表", "优惠券");
+                    Intent intent_coupon = new Intent(this, MallMyFavorableActivity.class);
                     startActivity(intent_coupon);
                     break;
             }
         }
     }
 
-    private void onListEventCommon(String clickTag){
+    private void onListEventCommon(String clickTag) {
         boolean isOption = false;
         if (LoginManager.userInfo.size() == 0) {
             switch (clickTag) {
@@ -586,26 +586,28 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
             }
         }
 
-        if(!isOption){
+        if (!isOption) {
             switch (clickTag) {
                 case "yiyuan"://权益迁移
                     if (LoginManager.isLogin()) {
-                        DeviceVipManager.bindYiYuanVIP(MainMyself.this);
+                        DeviceVipStatModel model = new DeviceVipStatModel("已登录_我的页面会员下方立即绑定_成功", "已登录_我的页面会员下方立即绑定_失败");
+                        DeviceVipManager.bindYiYuanVIP(MainMyself.this, model);
                     } else {
                         DeviceVipManager.setAutoBindDeviceVip(true);
                         Intent intent = new Intent(MainMyself.this, LoginByBindPhone.class);
+                        DeviceVipStatModel model = new DeviceVipStatModel("未登录_我的页面会员下方立即绑定_成功", "未登录_我的页面会员下方立即绑定_失败");
+                        intent.putExtra(DeviceVipStatModel.TAG, model);
                         startActivity(intent);
                     }
-                    StatisticsManager.saveData(StatModel.createBtnClickModel(MainMyself.class.getSimpleName(), "下方提示", "立即绑定"));
-                    XHClick.mapStat(MainMyself.this, tongjiId2, "bangdingchenggongcishu", "我的页面我的会员下方提示");
+                    StatisticsManager.saveData(StatModel.createBtnClickModel(MainMyself.class.getSimpleName(), "会员绑定提示", "立即绑定"));
                     break;
                 case "qa"://我的问答
-                    FileManager.saveShared(this,FileManager.xmlFile_appInfo,"isShowQA","2");
-                    notifyQAItemChanged (0, false, true);
+                    FileManager.saveShared(this, FileManager.xmlFile_appInfo, "isShowQA", "2");
+                    notifyQAItemChanged(0, false, true);
                     startActivity(new Intent(MainMyself.this, QAMsgListActivity.class));
                     break;
                 case "hitstory"://浏览记录
-                    XHClick.mapStat(this, tongjiId,"列表","看过");
+                    XHClick.mapStat(this, tongjiId, "列表", "看过");
                     gourp2.getChildAt(3).findViewById(R.id.my_new_info).setVisibility(View.GONE);
                     gourp2.getChildAt(3).findViewById(R.id.ico_right_myself).setVisibility(View.VISIBLE);
                     Intent intent_history = new Intent(MainMyself.this, BrowseHistory.class);
@@ -614,24 +616,25 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
                 case "download"://离线菜谱
                     // 统计
                     XHClick.track(getApplicationContext(), "点击我的页面的下载");
-                    XHClick.mapStat(this, tongjiId,"列表","下载");
+                    XHClick.mapStat(this, tongjiId, "列表", "下载");
                     Intent intent_off = new Intent(MainMyself.this, OfflineDish.class);
                     startActivity(intent_off);
                     break;
                 case "order":
-                    XHClick.mapStat(this, tongjiId,"列表", "订单");
-                    Intent intent_order = new Intent(this,MyOrderActivity.class);
+                    XHClick.mapStat(this, tongjiId, "列表", "订单");
+                    Intent intent_order = new Intent(this, MyOrderActivity.class);
                     startActivity(intent_order);
                     break;
                 case "vip": //会员
-                    XHClick.mapStat(this, tongjiId,"列表", "我的会员");
-                    AppCommon.openUrl(MainMyself.this, StringManager.getVipUrl(false) + "&vipFrom=我的页面我的会员按钮",true);
-                    FileManager.saveShared(this,FileManager.xmlFile_appInfo,"isShowVip","2");
+                    XHClick.mapStat(this, tongjiId, "列表", "我的会员");
+                    AppCommon.openUrl(MainMyself.this, StringManager.getVipUrl(false) + "&vipFrom=我的页面我的会员按钮", true);
+                    FileManager.saveShared(this, FileManager.xmlFile_appInfo, "isShowVip", "2");
                     vipNewHint.setVisibility(View.GONE);
-                    if(vipInfo.getVisibility() != View.VISIBLE) vipIcon.setVisibility(View.VISIBLE);
+                    if (vipInfo.getVisibility() != View.VISIBLE)
+                        vipIcon.setVisibility(View.VISIBLE);
                     break;
                 case "helpe"://意见反馈
-                    FileManager.saveShared(this,FileManager.xmlFile_appInfo,"isShowOpinion","2");
+                    FileManager.saveShared(this, FileManager.xmlFile_appInfo, "isShowOpinion", "2");
                     gourp3.getChildAt(1).findViewById(R.id.my_new_info).setVisibility(View.GONE);
                     gourp3.getChildAt(1).findViewById(R.id.ico_right_myself).setVisibility(View.VISIBLE);
                     Intent intent2 = new Intent(MainMyself.this, Feedback.class);
@@ -641,7 +644,7 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
                     XHClick.track(getApplicationContext(), "点击我的页面的设置");
                     XHClick.mapStat(this, tongjiId, "设置", "");
                     Intent intent_setting = new Intent(MainMyself.this, Setting.class);
-                    intent_setting.putExtra("isGoManagerInfo",goManagerInfo.getVisibility() == View.VISIBLE);
+                    intent_setting.putExtra("isGoManagerInfo", goManagerInfo.getVisibility() == View.VISIBLE);
                     startActivity(intent_setting);
                     break;
                 case "invitation":
@@ -671,11 +674,11 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
                 .setPlaceholderId(R.drawable.z_me_head)
                 .setErrorId(R.drawable.z_me_head)
                 .build();
-        if(bitmapRequest != null)
+        if (bitmapRequest != null)
             bitmapRequest.into(v);
     }
 
-    private void notifyQAItemChanged (int numInfo, boolean showNewHint, boolean showIcon) {
+    private void notifyQAItemChanged(int numInfo, boolean showNewHint, boolean showIcon) {
         if (qaInfo == null || qaNewHint == null || qaIcon == null)
             return;
         qaInfo.setVisibility(numInfo > 0 ? View.VISIBLE : View.GONE);

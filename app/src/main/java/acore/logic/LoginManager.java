@@ -26,6 +26,9 @@ import amodule.user.activity.MyManagerInfo;
 import amodule.user.activity.Setting;
 import amodule.user.activity.login.UserSetting;
 import amodule.vip.DeviceVipManager;
+import amodule.vip.DeviceVipStatModel;
+import amodule.vip.IDeviceVipStat;
+import amodule.vip.IStat;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
 import aplug.web.tools.JsAppCommon;
@@ -102,7 +105,7 @@ public class LoginManager {
     /**
      * 登录成功
      */
-    public static void loginSuccess(final Activity mAct, Object returnObj, boolean isThirdAuth) {
+    public static void loginSuccess(final Activity mAct, Object returnObj, boolean isThirdAuth, IStat statImpl) {
         if (mAct != null)
             XHClick.track(mAct, "登录成功");
         if (mAct != null)
@@ -131,16 +134,20 @@ public class LoginManager {
             Main.colse_level = 4;
             mAct.finish();
         }
-
+        DeviceVipStatModel model = null;
+        if (statImpl == null) {
+            model = new DeviceVipStatModel("各处登录成功后提示弹框_成功", "各处登录成功后提示弹框_失败");
+        }
+        IDeviceVipStat s = (statImpl != null) ? ((statImpl instanceof IDeviceVipStat) ? (IDeviceVipStat) statImpl : null) : model;
         if (DeviceVipManager.isAutoBindDevideVip()) {
-            DeviceVipManager.bindYiYuanVIP(mAct);
+            DeviceVipManager.bindYiYuanVIP(mAct, s);
         } else if (DeviceVipManager.isDeviceVip()) {
-            DeviceVipManager.showBindVipDialog();
+            DeviceVipManager.showBindVipDialog(s);
         }
     }
 
-    public static void loginSuccess(final Activity mAct, Object returnObj) {
-        loginSuccess(mAct, returnObj, false);
+    public static void loginSuccess(final Activity mAct, Object returnObj, IStat statImpl) {
+        loginSuccess(mAct, returnObj, false, statImpl);
         ObserverManager.getInstance().notify(ObserverManager.NOTIFY_LOGIN, null, true);
         setVipStateChanged();
     }
@@ -149,8 +156,10 @@ public class LoginManager {
      * 登录失败
      * @param obj 失败后返回的数据
      */
-    public static void loginFail(Object obj) {
-        ObserverManager.getInstance().notify(ObserverManager.NOTIFY_LOGIN, null, false);
+    public static void loginFail(int flag, Object obj) {
+        if (flag >= ReqInternet.REQ_OK_STRING) {
+            ObserverManager.getInstance().notify(ObserverManager.NOTIFY_LOGIN, null, false);
+        }
     }
 
     /**

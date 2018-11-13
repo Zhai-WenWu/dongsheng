@@ -9,9 +9,13 @@ import android.widget.Toast;
 
 import com.xiangha.R;
 
+import java.io.Serializable;
+
 import acore.logic.AppCommon;
 import acore.logic.XHClick;
 import acore.logic.login.LoginCheck;
+import acore.logic.stat.StatModel;
+import acore.logic.stat.StatisticsManager;
 import acore.override.activity.base.BaseLoginActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -20,6 +24,8 @@ import amodule.user.view.IdentifyInputView;
 import amodule.user.view.NextStepView;
 import amodule.user.view.PhoneNumInputView;
 import amodule.user.view.SpeechaIdentifyInputView;
+import amodule.vip.DeviceVipStatModel;
+import amodule.vip.IStat;
 
 public class LoginByBindPhone extends BaseLoginActivity implements View.OnClickListener {
 
@@ -168,13 +174,18 @@ public class LoginByBindPhone extends BaseLoginActivity implements View.OnClickL
             }
         });
 
-        btn_next_step.init("登录", new NextStepView.NextStepViewCallback() {
+        btn_next_step.init("登录并绑定", new NextStepView.NextStepViewCallback() {
             @Override
             public void onClickCenterBtn() {
+                Serializable serializable = getIntent().getSerializableExtra(DeviceVipStatModel.TAG);
                 XHClick.mapStat(LoginByBindPhone.this, PHONE_TAG, "手机验证码登录", "输入验证码，点击登录");
                 String errorType = LoginCheck.checkPhoneFormatWell(LoginByBindPhone.this, phone_info.getZoneCode(),
                         phone_info.getPhoneNum());
                 if (LoginCheck.WELL_TYPE.equals(errorType)) {
+                    IStat statImpl = null;
+                    if (serializable != null && serializable instanceof IStat) {
+                        statImpl = (IStat) serializable;
+                    }
                     logInByIdentify(LoginByBindPhone.this, phone_info.getZoneCode(),
                             phone_info.getPhoneNum(), login_identify.getIdentify(),
                             new BaseLoginCallback() {
@@ -191,12 +202,17 @@ public class LoginByBindPhone extends BaseLoginActivity implements View.OnClickL
                                     XHClick.mapStat(LoginByBindPhone.this, PHONE_TAG, "手机验证码登录",
                                             "登录失败");
                                 }
-                            });
+                            }, statImpl);
                 } else if (LoginCheck.NOT_11_NUM.equals(errorType)) {
                     XHClick.mapStat(LoginByBindPhone.this, PHONE_TAG, "手机验证码登录", "失败原因：手机号不是11位");
                 } else if (LoginCheck.ERROR_FORMAT.equals(errorType)) {
                     XHClick.mapStat(LoginByBindPhone.this, PHONE_TAG, "手机验证码登录", "失败原因：手机号格式错误");
                 }
+                if (serializable != null && serializable instanceof DeviceVipStatModel) {//与设备会员绑定相关
+                    DeviceVipStatModel model = new DeviceVipStatModel("登录并绑定按钮点击次数", null);
+                    XHClick.mapStat(LoginByBindPhone.this, model.getEventID(), model.getTwoLevelVipBindPage(), model.getThreeLevel1());
+                }
+                StatisticsManager.saveData(StatModel.createBtnClickModel(LoginByBindPhone.class.getSimpleName(), "登录绑定", "登录并绑定"));
             }
         });
 
@@ -241,6 +257,12 @@ public class LoginByBindPhone extends BaseLoginActivity implements View.OnClickL
         super.onBackPressed();
         Toast.makeText(this, "绑定失败", Toast.LENGTH_SHORT).show();
         XHClick.mapStat(this, PHONE_TAG, "手机验证码登录", "点击返回");
+        Serializable serializable = getIntent().getSerializableExtra(DeviceVipStatModel.TAG);
+        if (serializable != null && serializable instanceof DeviceVipStatModel) {//与设备会员绑定相关
+            DeviceVipStatModel model = new DeviceVipStatModel("返回按钮_绑定失败toast次数", null);
+            XHClick.mapStat(this, model.getEventID(), model.getTwoLevelVipBindPage(), model.getThreeLevel1());
+        }
+        StatisticsManager.saveData(StatModel.createBtnClickModel(getClass().getSimpleName(), "登录绑定", "返回建"));
     }
 
     @Override

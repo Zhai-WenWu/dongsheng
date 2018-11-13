@@ -53,6 +53,7 @@ import amodule.user.activity.login.LoginByBindPhone;
 import amodule.user.db.BrowseHistorySqlite;
 import amodule.user.db.HistoryData;
 import amodule.vip.DeviceVipManager;
+import amodule.vip.DeviceVipStatModel;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
@@ -1300,10 +1301,13 @@ public class JsAppCommon extends JsBase {
             @Override
             public void run() {
                 if (LoginManager.isLogin()) {
-                    DeviceVipManager.bindYiYuanVIP(mAct);
+                    DeviceVipStatModel model = new DeviceVipStatModel("已登录_我的会员页面顶部或购买成功提示_成功", "已登录_我的会员页面顶部或购买成功提示_失败");
+                    DeviceVipManager.bindYiYuanVIP(mAct, model);
                 } else {
                     DeviceVipManager.setAutoBindDeviceVip(true);
                     Intent intent = new Intent(mAct, LoginByBindPhone.class);
+                    DeviceVipStatModel model = new DeviceVipStatModel("未登录_我的会员页面顶部或购买成功提示_成功", "未登录_我的会员页面顶部提示_失败");
+                    intent.putExtra(DeviceVipStatModel.TAG, model);
                     mAct.startActivity(intent);
                 }
             }

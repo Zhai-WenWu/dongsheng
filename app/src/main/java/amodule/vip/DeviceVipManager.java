@@ -27,13 +27,14 @@ import java.util.Map;
 import acore.logic.ConfigMannager;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
+import acore.logic.stat.StatModel;
+import acore.logic.stat.StatisticsManager;
 import acore.override.XHApplication;
 import acore.override.helper.XHActivityManager;
 import acore.tools.FileManager;
 import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
-import amodule.user.activity.login.LoginByAccout;
 import amodule.user.activity.login.LoginByBindPhone;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
@@ -46,7 +47,6 @@ public class DeviceVipManager {
     private static boolean mIsDeviceVip = false;
     private static boolean mIsInitDeviceVipData = false;
     private static boolean mAutoBindDeviceVip;
-//    private static boolean mShowBindVipDialogEnable = true;
     private static boolean mBindVipDialogShowing;
 
     /**
@@ -64,14 +64,6 @@ public class DeviceVipManager {
     public static boolean isAutoBindDevideVip() {
         return mAutoBindDeviceVip;
     }
-
-//    public static void setShowBindVipDialogEnable(boolean showEnable) {
-//        mShowBindVipDialogEnable = showEnable;
-//    }
-//
-//    public static boolean isShowBindVipDialogEnable() {
-//        return mShowBindVipDialogEnable;
-//    }
 
     /**
      *是否是临时vip
@@ -134,7 +126,7 @@ public class DeviceVipManager {
      * 绑定vip
      * @param context
      */
-    public static void bindYiYuanVIP(final Context context) {
+    public static void bindYiYuanVIP(final Context context, IDeviceVipStat statImpl) {
         mAutoBindDeviceVip = false;
         ReqEncyptInternet.in().doEncypt(StringManager.api_yiyuan_binduser, "", new InternetCallback() {
             @Override
@@ -150,6 +142,11 @@ public class DeviceVipManager {
                             }
                         }, 200);
                         ObserverManager.getInstance().notify(ObserverManager.NOTIFY_YIYUAN_BIND, null, state);
+                        if (statImpl != null && statImpl instanceof DeviceVipStatModel) {
+                            DeviceVipStatModel statModel = (DeviceVipStatModel) statImpl;
+                            XHClick.mapStat(context, statModel.getEventID(), statModel.getTwoLevelBindSuccess(), statModel.getThreeLevel1());
+                        }
+                        return;
                     } else {
                         //绑定失败
                         Toast.makeText(context, "绑定失败", Toast.LENGTH_SHORT).show();
@@ -159,6 +156,10 @@ public class DeviceVipManager {
                     //绑定失败
                     Toast.makeText(context, "绑定失败", Toast.LENGTH_SHORT).show();
                     ObserverManager.getInstance().notify(ObserverManager.NOTIFY_YIYUAN_BIND, null, null);
+                }
+                if (statImpl != null && statImpl instanceof DeviceVipStatModel) {
+                    DeviceVipStatModel statModel = (DeviceVipStatModel) statImpl;
+                    XHClick.mapStat(context, statModel.getEventID(), statModel.getTwoLevelBindSuccess(), statModel.getThreeLevel2());
                 }
             }
         });
@@ -235,7 +236,7 @@ public class DeviceVipManager {
         return isShow;
     }
 
-    public static void showBindVipDialog() {
+    public static void showBindVipDialog(IDeviceVipStat statImpl) {
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -244,9 +245,10 @@ public class DeviceVipManager {
                     return;
                 }
                 if (context.isFinishing() || context.isDestroyed()) {
-                    showBindVipDialog();
+                    showBindVipDialog(statImpl);
                     return;
                 }
+                DeviceVipStatModel model1 = new DeviceVipStatModel("立即绑定点击次数", "以后再说点击次数");
                 final DialogManager dialogManager = new DialogManager(context);
                 dialogManager.createDialog(new ViewManager(dialogManager)
                         .setView(new TitleView(context).setText("会员权益绑定提醒"))
@@ -256,25 +258,25 @@ public class DeviceVipManager {
                             public void onClick(View v) {
                                 dialogManager.cancel();
                                 if (LoginManager.isLogin()) {
-                                    DeviceVipManager.bindYiYuanVIP(context);
-                                    XHClick.mapStat(context, "a_vip_thismove", "转移到本账号", "");
+                                    DeviceVipManager.bindYiYuanVIP(context, statImpl);
                                 } else {
                                     DeviceVipManager.setAutoBindDeviceVip(true);
                                     Intent intent = new Intent(context, LoginByBindPhone.class);
+                                    if (statImpl != null && statImpl instanceof DeviceVipStatModel) {
+                                        intent.putExtra(DeviceVipStatModel.TAG, (DeviceVipStatModel)statImpl);
+                                    }
                                     context.startActivity(intent);
-                                    XHClick.mapStat(context, "a_vip_newmove", "转移到香哈账号", "");
                                 }
+                                XHClick.mapStat(context, model1.getEventID(), model1.getTwoLevelBindDialog(), model1.getThreeLevel1());
+                                StatisticsManager.saveData(StatModel.createBtnClickModel(context.getClass().getSimpleName(), "会员绑定弹框", "立即绑定"));
                             }
                         }).setPositiveTextColor(Color.parseColor("#007aff")).setPositiveTextBold(true)
                                 .setNegativeText("以后再说", new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
                                         dialogManager.cancel();
-                                        if (LoginManager.isLogin()) {
-                                            XHClick.mapStat(context, "a_vip_thismove","取消", "");
-                                        } else {
-                                            XHClick.mapStat(context, "a_vip_newmove","取消", "");
-                                        }
+                                        XHClick.mapStat(context, model1.getEventID(), model1.getTwoLevelBindDialog(), model1.getThreeLevel2());
+                                        StatisticsManager.saveData(StatModel.createBtnClickModel(context.getClass().getSimpleName(), "会员绑定弹框", "以后再说"));
                                     }
                                 }).setNegativeTextColor(Color.parseColor("#007aff")))).setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
@@ -297,7 +299,9 @@ public class DeviceVipManager {
                     @Override
                     public void onClick(View v) {
                         dialogManager.cancel();
-                        XHClick.mapStat(currContext, "a_vip_movesuccess", "点击我知道了按钮", "");
+                        DeviceVipStatModel model = new DeviceVipStatModel("我知道了点击次数", null);
+                        XHClick.mapStat(currContext, model.getEventID(), model.getTwoLevelBindSuccTipDialog(), model.getThreeLevel1());
+                        StatisticsManager.saveData(StatModel.createBtnClickModel(currContext.getClass().getSimpleName(), "绑定成功", currContext.getResources().getString(R.string.str_know)));
                     }
                 }).setNegativeTextColor(Color.parseColor("#007aff")))).show();
     }

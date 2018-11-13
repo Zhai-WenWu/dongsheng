@@ -174,7 +174,7 @@ public class LostSecret extends BaseLoginActivity {
                                         XHClick.mapStat(LostSecret.this, PHONE_TAG, "注册", "注册失败");
                                     }
                                 }
-                            });
+                            }, null);
                 } else if (getIsBindPhone()) { //绑定手机号,说明之前是第三方登录的，没有账号密码，所以绑定手机号成功之后，设置一下密码
                     bindPhone(LostSecret.this, zoneCode, phoneNum, login_identify.getIdentify(),
                             new BaseLoginCallback() {

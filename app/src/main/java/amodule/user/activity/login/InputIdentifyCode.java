@@ -209,7 +209,7 @@ public class InputIdentifyCode extends BaseLoginActivity implements View.OnClick
                                         XHClick.mapStat(InputIdentifyCode.this, PHONE_TAG, "注册", "注册失败");
                                     }
                                 }
-                            });
+                            }, null);
                 } else if (ORIGIN_BIND_PHONE_NUM.equals(origin) || ORIGIN_BIND_FROM_WEB.equals(origin)) {
 
                     bindPhone(InputIdentifyCode.this, zoneCode, phoneNum,

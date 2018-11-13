@@ -136,7 +136,7 @@ public class SetSecretActivity extends BaseLoginActivity {
                                                     public void onFalse(int flag) {
                                                         XHClick.mapStat(SetSecretActivity.this, PHONE_TAG, "忘记密码", "登录失败");
                                                     }
-                                                });
+                                                }, null);
                                     } else if (ORIGIN_BIND_PHONE_NUM.equals(path_from)) {
                                         Toast.makeText(SetSecretActivity.this, "绑定成功", Toast.LENGTH_SHORT).show();
                                         backToForward();
@@ -171,7 +171,7 @@ public class SetSecretActivity extends BaseLoginActivity {
                                     }
 
                                 }
-                            });
+                            }, null);
                 }
             }
         });

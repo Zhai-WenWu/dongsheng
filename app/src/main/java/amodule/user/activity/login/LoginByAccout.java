@@ -221,7 +221,7 @@ public class LoginByAccout extends ThirdLoginBaseActivity implements View.OnClic
                                     XHClick.mapStat(LoginByAccout.this, PHONE_TAG, "手机验证码登录",
                                             "登录失败");
                                 }
-                            });
+                            }, null);
                 } else if (LoginCheck.NOT_11_NUM.equals(errorType)) {
                     XHClick.mapStat(LoginByAccout.this, PHONE_TAG, "手机验证码登录", "失败原因：手机号不是11位");
                 } else if (LoginCheck.ERROR_FORMAT.equals(errorType)) {
