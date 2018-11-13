@@ -54,7 +54,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="@dimen/dp_15"
             android:text="0人参与"
-            android:textColor="@color/c_gray_dddddd"
+            android:textColor="@color/white"
             android:textSize="@dimen/sp_15"
             android:textStyle="bold" />
 
@@ -75,6 +75,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/topic_info"
             android:layout_marginBottom="@dimen/dp_15"
+            android:textStyle="bold"
             android:text="社交达人："
             android:textColor="@color/white"
             android:textSize="@dimen/sp_15" />

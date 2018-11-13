@@ -255,7 +255,7 @@ public class TopicHeaderView extends RelativeLayout {
                 float f = (float) widthPixels / w;
                 layoutParams.height = (int) (f * h);
                 mUserRearImg.setLayoutParams(layoutParams);
-                LoadImage.with(mContext).load(url).build().into(mUserRearImg);
+                LoadImage.with(mContext).load(url).setPlaceholderId(R.color.transparent).build().into(mUserRearImg);
                 break;
         }
 

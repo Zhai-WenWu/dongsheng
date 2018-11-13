@@ -21,6 +21,7 @@ import org.eclipse.jetty.util.security.Constraint;
 
 import acore.logic.AppCommon;
 import acore.logic.XHClick;
+import acore.logic.stat.RvBaseViewHolderStat;
 import acore.tools.FileManager;
 import acore.tools.ToolsDevice;
 import acore.widget.rvlistview.holder.RvBaseViewHolder;
@@ -32,7 +33,7 @@ import amodule.topic.model.TopicItemModel;
 import amodule.topic.model.VideoModel;
 import aplug.basic.LoadImage;
 
-public class TopicItemHolder extends RvBaseViewHolder<TopicItemModel> implements View.OnClickListener {
+public class TopicItemHolder extends RvBaseViewHolderStat<TopicItemModel> implements View.OnClickListener {
     private TopicItemModel mTopicItemModel;
 
     private ImageView mImg;
@@ -40,7 +41,7 @@ public class TopicItemHolder extends RvBaseViewHolder<TopicItemModel> implements
     private ImageView mRanking;
 
     public TopicItemHolder(@NonNull View topicItemView) {
-        super(topicItemView);
+        super(topicItemView,topicItemView.getContext().getClass().getSimpleName());
         int originalW = 124;
         int originalH = 165;
         int screenW = ToolsDevice.getWindowPx(itemView.getContext()).widthPixels;
@@ -59,7 +60,22 @@ public class TopicItemHolder extends RvBaseViewHolder<TopicItemModel> implements
     }
 
     @Override
-    public void bindData(int position, @Nullable TopicItemModel data) {
+    public boolean isShown(TopicItemModel data) {
+        return data.getIsShow();
+    }
+
+    @Override
+    public void hasShown(TopicItemModel data) {
+        data.setIsShow(true);
+    }
+
+    @Override
+    public String getStatJson(TopicItemModel data) {
+        return data.getStatJson();
+    }
+
+    @Override
+    public void overrideBindData(int position, @Nullable TopicItemModel data) {
         mTopicItemModel = data;
         if (data != null) {
             LabelModel labelModel = data.getLabelModel();
@@ -89,6 +105,8 @@ public class TopicItemHolder extends RvBaseViewHolder<TopicItemModel> implements
                         mRanking.setImageResource(R.drawable.topic_item_no3);
                         break;
                 }
+            }else {
+                mRanking.setVisibility(View.GONE);
             }
 
             ImageModel imageModel = data.getImageModel();

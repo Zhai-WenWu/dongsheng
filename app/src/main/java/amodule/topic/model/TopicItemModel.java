@@ -21,6 +21,25 @@ public class TopicItemModel {
     private CustomerModel mCustomerModel;
     private AddressModel mAddressModel;
     private LabelModel mLabelModel;
+    private boolean isShow;
+    //statJson	String	{"type":"7","code":"647470"}
+    private String statJson;
+
+    public String getStatJson() {
+        return statJson;
+    }
+
+    public void setStatJson(String statJson) {
+        this.statJson = statJson;
+    }
+
+    public boolean getIsShow() {
+        return isShow;
+    }
+
+    public void setIsShow(boolean show) {
+        isShow = show;
+    }
 
     public boolean getIsHot() {
         return mIsHot;

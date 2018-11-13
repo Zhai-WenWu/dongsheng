@@ -156,22 +156,16 @@
         </android.support.design.widget.AppBarLayout>
 
         <!--fillViewport属性不写可能会造成NestedScrollView撑不开造成ViewPager无法显示-->
-        <android.support.v4.widget.NestedScrollView
+
+        <acore.widget.rvlistview.RvStaggeredGridView
+            android:id="@+id/staggered_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:fillViewport="true"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            android:overScrollMode="never"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            app:spanCount="3" />
 
-
-            <acore.widget.rvlistview.RvStaggeredGridView
-                android:id="@+id/staggered_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:overScrollMode="never"
-                app:spanCount="3" />
-
-
-        </android.support.v4.widget.NestedScrollView>
 
         <ImageView
             android:id="@+id/floating_btn"
