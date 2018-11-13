@@ -27,8 +27,8 @@ import java.util.Map;
 
 import acore.logic.XHClick;
 import acore.tools.FileManager;
-import acore.tools.IObserver;
-import acore.tools.ObserverManager;
+import acore.observer.IObserver;
+import acore.observer.ObserverManager;
 import acore.tools.Tools;
 import acore.widget.LayoutScroll;
 import acore.widget.PagerSlidingTabStrip;

@@ -35,7 +35,7 @@ import acore.override.helper.XHActivityManager;
 import acore.tools.Base64Utils;
 import acore.tools.FileManager;
 import acore.tools.LogManager;
-import acore.tools.ObserverManager;
+import acore.observer.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;

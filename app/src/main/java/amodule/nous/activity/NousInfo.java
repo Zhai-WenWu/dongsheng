@@ -1,27 +1,19 @@
 package amodule.nous.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-import com.xiangha.R;
-
 import org.json.JSONObject;
 
 import java.util.Map;
 
-import acore.logic.FavoriteHelper;
-import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
-import acore.tools.IObserver;
-import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import amodule.main.Main;
-import amodule.user.activity.login.LoginByAccout;
 import amodule.user.db.BrowseHistorySqlite;
 import amodule.user.db.HistoryData;
 import aplug.basic.InternetCallback;

@@ -5,8 +5,8 @@ import android.text.TextUtils;
 
 import java.util.Map;
 
-import acore.tools.IObserver;
-import acore.tools.ObserverManager;
+import acore.observer.IObserver;
+import acore.observer.ObserverManager;
 
 /**
  * 全屏weview,只提供再次回来后自动刷新功能

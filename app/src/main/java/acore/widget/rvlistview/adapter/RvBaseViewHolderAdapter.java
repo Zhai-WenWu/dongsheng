@@ -1,4 +1,4 @@
-package acore.widget;
+package acore.widget.rvlistview.adapter;
 
 import android.content.Context;
 import android.support.annotation.Nullable;

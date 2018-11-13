@@ -12,8 +12,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import acore.tools.FileManager;
-import acore.tools.IObserver;
-import acore.tools.ObserverManager;
+import acore.observer.IObserver;
+import acore.observer.ObserverManager;
 import amodule.main.view.SharePopupWindow;
 import third.share.activity.ShareNewActivity;
 import third.share.tools.ShareTools;

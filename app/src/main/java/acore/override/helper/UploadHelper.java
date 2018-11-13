@@ -20,7 +20,7 @@ import acore.override.data.UploadData;
 import acore.tools.LogManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
-import acore.tools.UploadImg;
+import amodule.upload.UploadImg;
 import amodule.main.Main;
 import amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver;
 import amodule.user.activity.FriendHome;

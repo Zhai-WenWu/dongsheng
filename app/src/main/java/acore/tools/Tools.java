@@ -343,29 +343,6 @@ public class Tools {
     }
 
     /**
-     * @param context
-     *
-     * @return 获取手机内存和CPU频率以及系统版本
-     */
-    public static boolean getPhoneInformation(Context context) {
-        //添加手机的判断
-        int version = android.os.Build.VERSION.SDK_INT;
-        String availMemory = "";
-//		if (context != null) {
-//			availMemory = ToolsDevice.getAvailMemory(context);//获取手机当前可用内存
-//		}
-        availMemory = ToolsDevice.getTotalMemory();//获取系统总内存
-        int parseInt = 0;
-        if (!TextUtils.isEmpty(availMemory)) {
-            parseInt = Integer.parseInt(availMemory);
-        }
-//		String curCpuFreq = CpuManager.getCurCpuFreq();
-        int maxCpuFreq = CPUTool.getMaxCpuFreq();
-//		int minCpuFreq = CPUTool.getMinCpuFreq();
-        return version >= 17 && parseInt >= 1000 && maxCpuFreq > 1000000;
-    }
-
-    /**
      * 将imageview转成bitmap
      *
      * @param imageView

@@ -15,14 +15,13 @@ import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.activity.base.BaseAppCompatActivity;
 import acore.override.helper.XHActivityManager;
-import acore.tools.IObserver;
-import acore.tools.ObserverManager;
+import acore.observer.IObserver;
+import acore.observer.ObserverManager;
 import amodule._common.helper.WidgetDataHelper;
 import amodule.lesson.controler.data.LessonListDataController;
 import amodule.lesson.controler.view.LessonListViewController;
 import amodule.lesson.listener.IDataListener;
 import amodule.vip.VipDataController;
-import aplug.basic.ReqEncyptInternet;
 
 public class LessonListPage extends BaseAppCompatActivity implements IObserver {
 

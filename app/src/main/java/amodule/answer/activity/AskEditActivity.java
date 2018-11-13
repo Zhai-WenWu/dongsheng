@@ -30,7 +30,7 @@ import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.tools.LogManager;
-import acore.tools.ObserverManager;
+import acore.observer.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;

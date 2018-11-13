@@ -1,6 +1,4 @@
-package acore.tools;
-
-import android.util.Log;
+package amodule.upload;
 
 import org.json.JSONObject;
 
@@ -8,7 +6,6 @@ import acore.override.helper.XHActivityManager;
 import amodule.upload.callback.UploadListNetCallBack;
 import aplug.basic.BreakPointControl;
 import aplug.basic.BreakPointUploadManager;
-import aplug.basic.InternetCallback;
 
 /**
  * 此处上传图片类型对数据

@@ -6,11 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 
-import com.qq.e.ads.banner.ADSize;
-import com.qq.e.ads.banner.AbstractBannerADListener;
-import com.qq.e.ads.banner.BannerView;
 import com.qq.e.ads.cfg.DownAPPConfirmPolicy;
 import com.qq.e.ads.nativ.NativeAD;
 import com.qq.e.ads.nativ.NativeADDataRef;
@@ -19,8 +15,6 @@ import com.qq.e.ads.splash.SplashADListener;
 import com.qq.e.comm.util.AdError;
 
 import java.util.List;
-
-import acore.widget.ScrollLinearListLayout;
 
 public class GdtAdTools {
 

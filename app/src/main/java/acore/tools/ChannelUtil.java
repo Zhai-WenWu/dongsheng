@@ -27,11 +27,6 @@ public class ChannelUtil {
         if (TextUtils.isEmpty(appChannel)) {
             if(context == null) return "xiangha";
             try {
-                //通过修改manifest中的umeng变量进行渠道修改，1、manifest文件放开UMENG_CHANNEL配置   2、注释XHApplication动态设置渠道名方式
-//                ApplicationInfo appInfo = context.getPackageManager().getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
-//				appChannel = appInfo.metaData.getString("UMENG_CHANNEL");
-                //通过美团打包读取文件名进行渠道修改
-//                appChannel = ChannelUtil.getChannel(context);
                 //通过walle方式获取渠道
                 appChannel = WalleChannelReader.getChannel(context.getApplicationContext());
             } catch (Exception e) {
@@ -41,6 +36,7 @@ public class ChannelUtil {
        if(TextUtils.isEmpty(appChannel))return "xiangha";
         return appChannel;
     }
+
     /**
      * 返回市场。  如果获取失败返回defaultChannel
      * @param context
@@ -56,6 +52,7 @@ public class ChannelUtil {
         //全部获取失败
         return defaultChannel;
     }
+
     /**
      * 从apk中获取版本信息
      * @param context

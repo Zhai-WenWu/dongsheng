@@ -37,8 +37,8 @@ import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.FileManager;
-import acore.tools.IObserver;
-import acore.tools.ObserverManager;
+import acore.observer.IObserver;
+import acore.observer.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -64,8 +64,8 @@ import aplug.basic.ReqInternet;
 import third.ad.scrollerAd.XHAllAdControl;
 import third.ad.tools.AdPlayIdConfig;
 
-import static acore.tools.ObserverManager.NOTIFY_LOGIN;
-import static acore.tools.ObserverManager.NOTIFY_SHARE;
+import static acore.observer.ObserverManager.NOTIFY_LOGIN;
+import static acore.observer.ObserverManager.NOTIFY_SHARE;
 
 public class ShortVideoDetailActivity extends BaseAppCompatActivity implements IObserver {
 
