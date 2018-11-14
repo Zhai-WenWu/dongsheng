@@ -11,7 +11,6 @@ import android.util.Log;
 import com.aliyun.common.httpfinal.QupaiHttpFinal;
 import com.baidu.mobads.AdView;
 import com.baidu.mobads.AppActivity;
-import com.eagle.mibo.sdk.Mibo;
 import com.mob.MobApplication;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.analytics.MobclickAgent;
@@ -33,6 +32,7 @@ import aplug.basic.XHConf;
 import aplug.service.CoreService;
 import third.location.LocationHelper;
 import third.push.umeng.UMPushServer;
+import third.push.xg.XGPushServer;
 
 import static acore.logic.ConfigMannager.KEY_BAIDUAPPID;
 import static acore.logic.ConfigMannager.KEY_MIBO_SDK;
@@ -75,22 +75,14 @@ public class XHApplication extends MobApplication {
 
         //初始化umeng推送
         initUmengPush();
+        new XGPushServer(this).initPush();
 
         String processName = Tools.getProcessName(this);
         Log.i("zhangyujian", "进程名字::" + processName);
         if (processName != null && processName.equals(ToolsDevice.getPackageName(this))) {//多进程多初始化，只对xiangha进程进行初始化
             initData();
-            initMibo();
         }
         LogManager.printStartTime("zhangyujian","XhApplication::oncreate::");
-    }
-
-    private void initMibo() {
-        String miboData = ConfigMannager.getConfigByLocal(KEY_MIBO_SDK);
-        if(TextUtils.equals("2",StringManager.getFirstMap(miboData).get("isOpen"))){
-            Log.i("tzy", "onCreate: Mibo.init");
-            Mibo.init(this,CoreService.class.getName(),CoreService.ACTION_KEEPSERVICE, 2*60*1000L);
-        }
     }
 
     /**

@@ -18,9 +18,9 @@ public class ServiceManager {
 	/** 正常进程轮询时间 */
 	public static final int NORMAL_POLLING = 3 * 1000;//3s
 	/** 业务进程轮询时间 */
-	public static final int CORE_POLLING = 5  * 1000;//5min
+	public static final int CORE_POLLING = 5 * 60 * 1000;//5min
 	/** 守护进程唤醒闹钟时间间隔 */
-	public static final int ALARM_INTERVAL = 1000;// 30min
+	public static final int ALARM_INTERVAL = 30 * 60 * 1000;// 30min
 	public static final int ACTIVITY_LIFE_MIN = 2;// 2min
 	public static final int ACTIVITY_LIFE_MAX = 5;// 5min
 

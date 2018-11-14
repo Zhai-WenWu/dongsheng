@@ -204,18 +204,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-    <!--mibo-->
-    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
-    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.BLUETOOTH"/>
-    <uses-permission android:name="android.permission.GET_TASKS"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <!--mibo end-->
-
     <application
         android:name="acore.override.XHApplication"
         android:allowBackup="false"
@@ -1668,46 +1656,6 @@
 
         <!-- Baidu AD end -->
 
-        <!--mibo sdk-->
-        <service
-            android:name="com.eagle.mibo.sdk.MiboDeamonService"
-            android:process=":mibo">
-            <intent-filter>
-                <action android:name="android.accounts.AccountAuthenticator"/>
-            </intent-filter>
-            <meta-data
-                android:name="android.accounts.AccountAuthenticator"
-                android:resource="@xml/mibo_auth"/>
-        </service>
-        <service
-            android:name="com.eagle.mibo.sdk.MiboService"
-            android:exported="true"
-            android:process=":mibo">
-            <intent-filter>
-                <action android:name="android.content.SyncAdapter"/>
-            </intent-filter>
-            <meta-data
-                android:name="android.content.SyncAdapter"
-                android:resource="@xml/mibo_sync"/>
-        </service>
-
-        <provider
-            android:name="com.eagle.mibo.sdk.MiboProvider"
-            android:authorities="com.xiangha.provider"
-            android:exported="false"
-            android:syncable="true">
-        </provider>
-
-        <service
-            android:name="com.eagle.mibo.sdk.MiboJobService"
-            android:permission="android.permission.BIND_JOB_SERVICE">
-        </service>
-        <service
-            android:name="com.eagle.mibo.sdk.MiboService$DaemonInnerService"
-            android:enabled="true"
-            android:exported="false"
-            android:process=":mibo"/>
-    <!--mibo sdk end-->
         <!-- 全面屏适配 -->
         <meta-data
             android:name="android.max_aspect"

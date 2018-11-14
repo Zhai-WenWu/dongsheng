@@ -3,6 +3,7 @@ package aplug.service;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.Window;
@@ -26,6 +27,7 @@ public class ServiceOpenActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Log.i("tzy", "ServiceOpenActivity: ");
 		Window window = getWindow();
 		window.setGravity(Gravity.LEFT | Gravity.TOP);
 		WindowManager.LayoutParams params = window.getAttributes();
