@@ -65,7 +65,7 @@
     <string name="devicevip_bind_fail_title">绑定失败</string>
     <string name="devicevip_bind_fail_desc">在【我的】页面，请尽快绑定手机号，以保障你的账号安全~</string>
     <string name="str_know">我知道了</string>
-    <string name="devicevip_succ_desc">恭喜你绑定成功，后续可通过手机号登录使用香哈会员权益</string>
+    <string name="devicevip_succ_desc">恭喜你绑定成功，快去学做名厨菜吧~</string>
     <string name="devicevip_bind_title">权益迁移</string>
     <string name="vip_transfer_this">转移到本账号</string>
     <string name="vip_transfer_xh">转移到香哈账号</string>
