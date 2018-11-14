@@ -35,6 +35,7 @@ import third.location.LocationHelper;
 import third.push.umeng.UMPushServer;
 
 import static acore.logic.ConfigMannager.KEY_BAIDUAPPID;
+import static acore.logic.ConfigMannager.KEY_MIBO_SDK;
 
 public class XHApplication extends MobApplication {
     /**包名*/
@@ -79,9 +80,17 @@ public class XHApplication extends MobApplication {
         Log.i("zhangyujian", "进程名字::" + processName);
         if (processName != null && processName.equals(ToolsDevice.getPackageName(this))) {//多进程多初始化，只对xiangha进程进行初始化
             initData();
+            initMibo();
         }
-        Mibo.init(this,CoreService.class.getName(),CoreService.ACTION_KEEPSERVICE, 2*60*1000L);
         LogManager.printStartTime("zhangyujian","XhApplication::oncreate::");
+    }
+
+    private void initMibo() {
+        String miboData = ConfigMannager.getConfigByLocal(KEY_MIBO_SDK);
+        if(TextUtils.equals("2",StringManager.getFirstMap(miboData).get("isOpen"))){
+            Log.i("tzy", "onCreate: Mibo.init");
+            Mibo.init(this,CoreService.class.getName(),CoreService.ACTION_KEEPSERVICE, 2*60*1000L);
+        }
     }
 
     /**
