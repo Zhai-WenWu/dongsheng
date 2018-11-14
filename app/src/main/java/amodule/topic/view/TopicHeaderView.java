@@ -107,7 +107,6 @@ public class TopicHeaderView extends RelativeLayout {
     public void initData(Map<String, String> infoMap) {
         String image = infoMap.get("image");
         if (!TextUtils.isEmpty(image) && image != "null") {
-            LoadImage.with(mContext).load(image).build().into(mUserRearImg);
             Glide.with(mContext).load(image).downloadOnly(new SimpleTarget<File>() {
                 @Override
                 public void onResourceReady(File file, GlideAnimation<? super File> glideAnimation) {
