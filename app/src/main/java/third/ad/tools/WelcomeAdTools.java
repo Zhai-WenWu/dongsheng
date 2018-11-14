@@ -25,7 +25,6 @@ import acore.override.XHApplication;
 import acore.override.helper.XHActivityManager;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
-import amodule.main.view.WelcomeDialog;
 import third.ad.db.XHAdSqlite;
 import third.ad.db.bean.AdBean;
 import third.ad.db.bean.XHSelfNativeData;
@@ -46,32 +45,13 @@ import static third.ad.tools.AdPlayIdConfig.WELCOME;
 public class WelcomeAdTools {
 
     private static volatile WelcomeAdTools mInstance = null;
+    private static final String CONFIGKEY = "kaipingAgainConfig";
 
-    private static final String CONFIGKEY = "splashconfig";
-    /**
-     * 表示开启
-     */
-    private static final int OPEN = 2;
+
     /**
      * 切换最短时间
      */
-    private int splashmins = 60;
-    /**
-     * 切换最长时间
-     */
-    private int splashmaxs = 5 * 60;
-    /**
-     * 是否二次开启
-     */
-    private int open = OPEN;
-    /**
-     * 开启时间
-     */
-    private int duretimes = WelcomeDialog.DEFAULT_TIME;
-    /**
-     * 展示次数，0表示无限次
-     */
-    private int shownum = 0;
+    private int splashmins = 80;
 
     //广告处理
     private ArrayList<Map<String, String>> mAdData = new ArrayList<>();
@@ -89,23 +69,12 @@ public class WelcomeAdTools {
     private boolean isTwoShow = false;
 
     private WelcomeAdTools() {
-        //获取广告数据
-        Log.i("tzy", "WelcomeAdTools create.");
-        //获取参数
         String splashConfigDataStr = ConfigMannager.getConfigByLocal(CONFIGKEY);
         if (TextUtils.isEmpty(splashConfigDataStr)) {
             return;
         }
         Map<String, String> data = StringManager.getFirstMap(splashConfigDataStr);
-        String[] keys = {"splashmins", "splashmaxs", "open", "duretimes", "shownum"};
-        int[] values = {splashmins, splashmaxs, open, duretimes, shownum};
-        for (int index = 0; index < keys.length; index++) {
-            if (data.containsKey(keys[index])
-                    && !TextUtils.isEmpty(data.get(keys[index]))) {
-                values[index] = Integer.parseInt(data.get(keys[index]));
-            }
-        }
-
+        splashmins = Integer.parseInt(data.get("againTime"));
     }
 
     public static synchronized WelcomeAdTools getInstance() {
@@ -128,8 +97,6 @@ public class WelcomeAdTools {
      */
     public void handlerAdData(final boolean isCache, AdNoDataCallBack CallBack, boolean isTwoShow) {
         this.isTwoShow = isTwoShow;
-//        list_ad.clear();
-//        ad_data.clear();
         mAdData.clear();
         index_ad = 0;
         this.mAdNoDataCallBack = CallBack;
@@ -396,22 +363,6 @@ public class WelcomeAdTools {
 
     public int getSplashmins() {
         return splashmins;
-    }
-
-    public int getSplashmaxs() {
-        return splashmaxs;
-    }
-
-    public boolean isOpenSecond() {
-        return OPEN == open && LoginManager.isShowAd();
-    }
-
-    public int getDuretimes() {
-        return duretimes;
-    }
-
-    public int getShownum() {
-        return shownum;
     }
 
     public interface AdNoDataCallBack {
