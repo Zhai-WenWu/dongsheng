@@ -66,6 +66,7 @@ public class WelcomeControls {
     private int mOriginalWidth = 1700;
     private int mOriginalHeight = 2060;
     private View mWelcomeView;
+    private boolean isShowSkipContainer = false;
 
     public WelcomeControls(@NonNull Activity act, WelcomeCallBack callBack) {
         this(act, DEFAULT_TIME, callBack);
@@ -312,8 +313,11 @@ public class WelcomeControls {
                 });
     }
 
-
     private void showSkipContainer() {
+        if(isShowSkipContainer){
+            return;
+        }
+        isShowSkipContainer = true;
         activity.findViewById(R.id.ad_linear).setVisibility(View.VISIBLE);
         activity.findViewById(R.id.line_1).setVisibility(canShowVipLead ? View.VISIBLE : View.GONE);
         textLead.setVisibility(canShowVipLead ? View.VISIBLE : View.GONE);
