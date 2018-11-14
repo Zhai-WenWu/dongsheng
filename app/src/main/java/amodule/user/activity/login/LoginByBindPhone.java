@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.xiangha.R;
@@ -116,7 +118,7 @@ public class LoginByBindPhone extends BaseLoginActivity implements View.OnClickL
                     if ("86".equals(zoneCode)) {
                         isFirst = false;
                         speechaIdentifyInputView.setVisibility(View.VISIBLE);
-                        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) btn_next_step.getLayoutParams();
+                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) btn_next_step.getLayoutParams();
                         layoutParams.setMargins(0, Tools.getDimen(mAct, R.dimen.dp_36), 0, 0);
                         speechaIdentifyInputView.setState(true);
                     }

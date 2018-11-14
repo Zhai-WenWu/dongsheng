@@ -105,9 +105,9 @@ public class ActivityMethodManager {
                 long currentTime = System.currentTimeMillis();
                 final long MIN = WelcomeAdTools.getInstance().getSplashmins() * 1000;
                 final long MAX = WelcomeAdTools.getInstance().getSplashmaxs() * 1000;
-                long 时间差值 = currentTime - switchTime;
-                Log.i("tzy","" + 时间差值);
-                if (时间差值 >= MIN){
+                long intervalTime = currentTime - switchTime;
+                Log.i("tzy","" + intervalTime);
+                if (intervalTime >= MIN){
                         //&& 时间差值 <= MAX) {
                     //获取已启动次数
                     String currentCountStr = FileManager.loadShared(mAct, FileManager.xmlFile_appInfo, "splashOpenSecond").toString();
