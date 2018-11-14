@@ -1320,6 +1320,12 @@
             android:enabled="true"
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED"
             android:process=":remote">
+            <intent-filter android:priority="3000">
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
+                <action android:name="android.intent.action.PACKAGE_REPLACED" />
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+                <data android:scheme="package"/>
+            </intent-filter>
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
             </intent-filter>
@@ -1334,6 +1340,9 @@
             </intent-filter>
             <intent-filter android:priority="3000">
 
+                <action android:name="android.intent.action.MEDIA_SCANNER_STARTED"/>
+                <action android:name="android.intent.action.MEDIA_SCANNER_FINISHED"/>
+                <action android:name="android.intent.action.MEDIA_SCANNER_SCAN_FILE"/>
                 <!-- SD卡已经成功挂载 -->
                 <action android:name="android.intent.action.MEDIA_MOUNTED"/>
                 <!-- sd卡存在，但还没有挂载 -->
