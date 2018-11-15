@@ -96,7 +96,7 @@ public class RSAUtils {
 		Signature signature = Signature.getInstance(SIGNATURE_ALGORITHM);
 		signature.initSign(privateK);
 		signature.update(data);
-		return String.valueOf(Base64.encode(signature.sign(), Base64.DEFAULT));
+		return new String(Base64.encode(signature.sign(), Base64.DEFAULT));
 	}
 
 	/**
@@ -245,7 +245,7 @@ public class RSAUtils {
 			byte[] encryptedData = out.toByteArray();
 			out.reset();
 			if(!TextUtils.isEmpty(encrypted))encrypted+="_";
-			encrypted+=String.valueOf(Base64.encode(encryptedData, Base64.DEFAULT));
+			encrypted+= new String(Base64.encode(encryptedData, Base64.DEFAULT));
 			i++;
 			offSet = i * MAX_ENCRYPT_BLOCK;
 		}
@@ -305,7 +305,7 @@ public class RSAUtils {
 	 */
 	public static String getPrivateKey(Map<String, Object> keyMap) throws Exception {
 		Key key = (Key) keyMap.get(PRIVATE_KEY);
-		return String.valueOf(Base64.encode(key.getEncoded(), Base64.DEFAULT));
+		return new String(Base64.encode(key.getEncoded(), Base64.DEFAULT));
 	}
 
 	/**
@@ -320,7 +320,7 @@ public class RSAUtils {
 	 */
 	public static String getPublicKey(Map<String, Object> keyMap) throws Exception {
 		Key key = (Key) keyMap.get(PUBLIC_KEY);
-		return String.valueOf(Base64.encode(key.getEncoded(), Base64.DEFAULT));
+		return new String(Base64.encode(key.getEncoded(), Base64.DEFAULT));
 	}
 
 }
