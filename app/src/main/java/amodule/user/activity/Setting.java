@@ -25,7 +25,6 @@ import com.xh.view.HButtonView;
 import com.xh.view.TitleMessageView;
 import com.xiangha.R;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -396,10 +395,10 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
 
     private void setCacheSize() {
         new Thread(() -> {
-            long fileSize = FileManager.getFileOrFolerSize(FileManager.getDataDir() + FileManager.file_appData);
-            fileSize += FileManager.getFileOrFolerSize(UtilFile.getSDDir() + LoadImage.SAVE_CACHE);
+            long fileSize = FileManager.getFileOrFolderSize(FileManager.getDataDir() + FileManager.file_appData);
+            fileSize += FileManager.getFileOrFolderSize(UtilFile.getSDDir() + LoadImage.SAVE_CACHE);
             cacheSize = fileSize;
-            Setting.this.runOnUiThread(() -> view_clear_cace.setRightText(FileManager.FormetFileSize(cacheSize,SIZETYPE_MB)));
+            Setting.this.runOnUiThread(() -> view_clear_cace.setRightText(FileManager.formatFileSize(cacheSize,SIZETYPE_MB)));
         }).start();
     }
 

@@ -2,6 +2,7 @@ package amodule.nous.view;
 
 import android.annotation.SuppressLint;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -19,12 +20,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import acore.logic.load.LoadManager;
 import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
-import acore.tools.SyntaxTools;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.DownRefreshList;
@@ -92,7 +91,7 @@ public class FragmentNous {
                         }
                     }
                     adCount = adArray.size();
-                    SyntaxTools.runOnUiThread(new Runnable() {
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
                         public void run() {
                             setDataNous();

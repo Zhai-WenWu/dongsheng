@@ -65,7 +65,7 @@ import static xh.basic.tool.UtilString.getListMapByJson;
 public class AppCommon {
 
     public static int buyBurdenNum = 0; // 离线清单条数
-    public static int follwersNum = -1; // 关注人数
+    public static int follwersNum = -1; // 关注人数ø
 
     public static int nextDownDish = -1;
     public static int maxDownDish = 10000;
@@ -849,7 +849,7 @@ public class AppCommon {
                                             }
                                             if (totalWeight < 1) {
                                                 //清空之前的数据
-                                                FileManager.scynSaveFile(FileManager.getDataDir() + FileManager.file_randPromotionConfig, text, false);
+                                                FileManager.asyncSaveFile(FileManager.getDataDir() + FileManager.file_randPromotionConfig, text, false);
                                                 return ;
                                             }
                                             java.util.Random r = new java.util.Random();
@@ -864,7 +864,7 @@ public class AppCommon {
                                                 }
                                                 tempWeight += weight;
                                             }
-                                            FileManager.scynSaveFile(FileManager.getDataDir() + FileManager.file_randPromotionConfig, text, false);
+                                            FileManager.asyncSaveFile(FileManager.getDataDir() + FileManager.file_randPromotionConfig, text, false);
                                         }
                                     }
 

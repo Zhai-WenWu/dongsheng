@@ -14,24 +14,18 @@ import android.text.TextUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.List;
 import java.util.Locale;
 
 import acore.logic.VersionOp;
 import acore.override.XHApplication;
 import xh.basic.tool.UtilFile;
-import xh.basic.tool.UtilLog;
 
 public class FileManager extends UtilFile{
 	public static final String save_cache = "cache";
@@ -257,7 +251,7 @@ public class FileManager extends UtilFile{
 	 * @param content 内容
 	 * @param append 是否可以追加
 	 */
-	public static void scynSaveFile(final String filePath,final String content,final boolean append){
+	public static void asyncSaveFile(final String filePath, final String content, final boolean append){
 		new Thread(() -> saveFileToCompletePath(filePath,content,append)).start();
 	}
 
@@ -267,11 +261,11 @@ public class FileManager extends UtilFile{
 	 * @param content 内容
 	 * @param append 是否可以追加
 	 */
-	public static void scynSaveFile(final String filePath, final InputStream content, final boolean append){
+	public static void asyncSaveFile(final String filePath, final InputStream content, final boolean append){
 		new Thread(() -> saveFileToCompletePath(filePath,content,append)).start();
 	}
 
-	public static void scynSaveSharePreference(Context context, String xmlName, @NonNull String key, @NonNull String value) {
+	public static void saveSharePreference(Context context, String xmlName, @NonNull String key, @NonNull String value) {
 		if(context == null || TextUtils.isEmpty(xmlName)) return;
 		SharedPreferences preferences = context.getSharedPreferences(xmlName, 0);
 		Editor editor = preferences.edit();
@@ -284,7 +278,7 @@ public class FileManager extends UtilFile{
 	public static final int SIZETYPE_MB = 3;//获取文件大小单位为MB的double值
 	public static final int SIZETYPE_GB = 4;//获取文件大小单位为GB的double值
 
-	public static long getFileOrFolerSize(String filePath){
+	public static long getFileOrFolderSize(String filePath){
 		if(TextUtils.isEmpty(filePath)) return 0;
 		File file = new File(filePath);
 		long size = 0;
@@ -300,7 +294,7 @@ public class FileManager extends UtilFile{
 		return size;
 	}
 
-	public static String getFileOrFolerSize(String filePath,int sizeType){
+	public static String getFileOrFolderSize(String filePath, int sizeType){
 		if(TextUtils.isEmpty(filePath)) return "";
 		File file = new File(filePath);
 		long size = 0;
@@ -313,11 +307,11 @@ public class FileManager extends UtilFile{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return FormetFileSize(size,sizeType);
+		return formatFileSize(size,sizeType);
 	}
 
 	public static String getAutoFileOrFilesSize(String filePath){
-		return getFileOrFolerSize(filePath,0);
+		return getFileOrFolderSize(filePath,0);
 	}
 
 	public static long getFileSize2(String filePath) throws IOException {
@@ -365,7 +359,7 @@ public class FileManager extends UtilFile{
 	 * @param sizeType
 	 * @return
 	 */
-	public static String FormetFileSize(long fileS, int sizeType) {
+	public static String formatFileSize(long fileS, int sizeType) {
 		DecimalFormat df = new DecimalFormat("#.00");
 		String fileSizeString = "0B";
 		switch (sizeType) {
@@ -382,7 +376,7 @@ public class FileManager extends UtilFile{
 				fileSizeString = Double.valueOf(df.format((double) fileS / 1073741824)) + "GB";
 				break;
 			default:
-				fileSizeString = FormetFileSize(fileS);
+				fileSizeString = formatFileSize(fileS);
 				break;
 		}
 		return fileSizeString;
@@ -394,7 +388,7 @@ public class FileManager extends UtilFile{
 	 * @param fileS
 	 * @return
 	 */
-	public static String FormetFileSize(long fileS) {
+	public static String formatFileSize(long fileS) {
 		DecimalFormat df = new DecimalFormat("#.00");
 		String fileSizeString = "";
 		String wrongSize = "0B";

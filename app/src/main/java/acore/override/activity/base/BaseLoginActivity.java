@@ -33,7 +33,6 @@ import acore.logic.login.AccountInfoBean;
 import acore.logic.login.LoginCheck;
 import acore.tools.LogManager;
 import acore.tools.StringManager;
-import acore.tools.SyntaxTools;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.main.Main;
@@ -376,7 +375,7 @@ public class BaseLoginActivity extends BaseActivity {
         eventHandler = new EventHandler() {
             @Override
             public void afterEvent(final int event, final int result, final Object data) {
-                SyntaxTools.runOnUiThread(new Runnable() {
+                BaseLoginActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         if (result == SMSSDK.RESULT_COMPLETE) {

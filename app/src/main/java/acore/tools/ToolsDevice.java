@@ -560,13 +560,6 @@ public class ToolsDevice {
             } catch (Exception ignored) {
                 ignored.printStackTrace();
             }
-//            WifiManager wifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-//
-//            if (wifi != null) {
-//                WifiInfo info = wifi.getConnectionInfo();
-//                deviceID = info.getMacAddress();
-//                jsonResult.put("MAC", deviceID);
-//            }
             jsonResult.put("MAC", "");
             // jsonResult.put("RANDOM",
             // SharePreferenceUtils.getSharePreferencesValue("random"));
