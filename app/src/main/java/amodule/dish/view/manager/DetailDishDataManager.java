@@ -270,7 +270,7 @@ public class DetailDishDataManager {
     }
 
     public void reqRelatedRecommend() {
-        String params = "code=" + dishCode + "&pg=2";
+        String params = "code=" + dishCode;
         ReqEncyptInternet.in().doGet(StringManager.API_DISH_RECOMMEND + "?" + params, new InternetCallback() {
             @Override
             public void loaded(int flag, String s, Object o) {
