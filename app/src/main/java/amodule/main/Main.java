@@ -53,14 +53,14 @@ import acore.logic.XHClick;
 import acore.logic.polling.AppHandlerAsyncPolling;
 import acore.logic.polling.IHandleMessage;
 import acore.logic.stat.StatisticsManager;
+import acore.observer.IObserver;
+import acore.observer.ObserverManager;
 import acore.override.XHApplication;
 import acore.override.activity.mian.MainBaseActivity;
-import acore.tools.ChannelUtil;
+import acore.tools.ChannelManager;
 import acore.tools.ColorUtil;
 import acore.tools.FileManager;
-import acore.observer.IObserver;
 import acore.tools.LogManager;
-import acore.observer.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.XiangHaTabHost;
@@ -261,7 +261,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
         //VIP：A1DGHJVJ938H
         StatConfig.setAppKey(LoginManager.isVIPLocal()?"A1DGHJVJ938H":"Aqc1150004142");
         StatConfig.setDebugEnable(false);
-        StatConfig.setInstallChannel(this, ChannelUtil.getChannel(this));
+        StatConfig.setInstallChannel(this, ChannelManager.getInstance().getChannel(this));
         StatConfig.setSendPeriodMinutes(1);//设置发送策略：每一分钟发送一次
         StatService.setContext(this.getApplication());
     }

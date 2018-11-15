@@ -11,7 +11,7 @@ import android.widget.EditText;
 import com.xiangha.R;
 
 import acore.override.activity.base.BaseActivity;
-import acore.tools.ChannelUtil;
+import acore.tools.ChannelManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.search.data.SearchConstant;
@@ -43,8 +43,6 @@ public class HomeSearch extends BaseActivity {
             limitSearchType = bundle.getInt(SearchConstant.SEARCH_TYPE, SearchConstant.SEARCH_CAIPU);
             searchKey = bundle.getString("s");
         }
-
-        Log.i("渠道号"," "+ ChannelUtil.getChannel(this));
     }
 
     private void initView() {

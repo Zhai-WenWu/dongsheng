@@ -28,7 +28,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import acore.override.XHApplication;
 import acore.override.activity.base.WebActivity;
 import acore.override.helper.XHActivityManager;
-import acore.tools.ChannelUtil;
+import acore.tools.ChannelManager;
 import acore.tools.FileManager;
 import acore.observer.ObserverManager;
 import acore.tools.StringManager;
@@ -413,7 +413,7 @@ public class LoginManager {
      */
     private synchronized static boolean isVIVOShowAd() {
         boolean ret = true;
-        if("developer.vivo.com.cn".equals(ChannelUtil.getChannel(XHApplication.in()))) {
+        if("developer.vivo.com.cn".equals(ChannelManager.getInstance().getChannel(XHApplication.in()))) {
             String showAD = ConfigMannager.getConfigByLocal(KEY_VIVOAD);//release 2表示显示发布，显示广告，1不显示广告
             if (showAD != null && !TextUtils.isEmpty(showAD) && "1".equals(StringManager.getFirstMap(showAD).get("release"))) {
                 ret = false;

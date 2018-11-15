@@ -127,7 +127,7 @@ public class ToolsDevice {
         mtype = mtype.replace("#", "_");
         String mVersion = android.os.Build.VERSION.RELEASE; // android版本号
         DisplayMetrics metric = getWindowPx(context);
-        String channalID = ChannelUtil.getChannel(context);
+        String channalID = ChannelManager.getInstance().getChannel(context);
         String plantForm = context.getResources().getString(R.string.plantForm);
         return "and" + "#" + mtype + "#" + mVersion + "#" + VersionOp.getVerName(context) + "#" + metric.widthPixels + "#" + metric.heightPixels + "#" + channalID + "#";
     }

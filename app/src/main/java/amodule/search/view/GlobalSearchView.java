@@ -22,7 +22,7 @@ import java.util.List;
 
 import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;
-import acore.tools.ChannelUtil;
+import acore.tools.ChannelManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.dish.db.DataOperate;
@@ -306,7 +306,7 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
             return;
 
         if("xiangha".equals(searchKey)){
-            Toast.makeText(context, ChannelUtil.getChannel(context),Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, ChannelManager.getInstance().getChannel(context),Toast.LENGTH_SHORT).show();
             return;
         }
 

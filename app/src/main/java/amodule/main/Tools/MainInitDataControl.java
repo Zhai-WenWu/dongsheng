@@ -31,16 +31,16 @@ import java.util.Map;
 
 import acore.logic.AllPopDialogHelper;
 import acore.logic.AppCommon;
+import acore.logic.ConfigMannager;
 import acore.logic.LoginManager;
 import acore.logic.MessageTipController;
 import acore.logic.VersionOp;
 import acore.logic.XHClick;
-import acore.logic.ConfigMannager;
 import acore.logic.polling.AppHandlerAsyncPolling;
 import acore.logic.polling.IHandleMessage;
 import acore.logic.polling.PollingConfig;
 import acore.override.XHApplication;
-import acore.tools.ChannelUtil;
+import acore.tools.ChannelManager;
 import acore.tools.FileManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -249,7 +249,7 @@ public class MainInitDataControl {
         new Thread(() -> {
             Object userCountStatics = FileManager.loadShared(XHApplication.in(), FileManager.xmlFile_appInfo, "userCount");
             if (!"2".equals(userCountStatics)) {
-                String channel = ChannelUtil.getChannel(XHApplication.in());
+                String channel = ChannelManager.getInstance().getChannel(XHApplication.in());
                 if (channel.contains(".")) {
                     String[] channels = channel.split("\\.");
                     channel = channels[channels.length - 1];

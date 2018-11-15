@@ -25,7 +25,7 @@ import acore.logic.LoginManager;
 import acore.logic.SpecialOrder;
 import acore.override.XHApplication;
 import acore.override.activity.base.BaseActivity;
-import acore.tools.ChannelUtil;
+import acore.tools.ChannelManager;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -70,7 +70,7 @@ public class ChangeUrl extends BaseActivity {
         initData();
         loadManager.hideProgressBar();
         if (LoginManager.isLogin() && LoginManager.isManager()) {
-            Tools.showToast(XHApplication.in(), ChannelUtil.getChannel(this));
+            Tools.showToast(XHApplication.in(), ChannelManager.getInstance().getChannel(this));
         }
     }
 
@@ -263,7 +263,7 @@ public class ChangeUrl extends BaseActivity {
         mRequsetFailTipSwitch = (Switch) findViewById(R.id.request_fail_tip_switch);
         ds_from_switch = (Switch) findViewById(R.id.ds_from_switch);
         mStatShowBtn = findViewById(R.id.stat_show_switch);
-        ((TextView) findViewById(R.id.text_channel)).setText("渠道号:  " + ChannelUtil.getChannel(this));
+        ((TextView) findViewById(R.id.text_channel)).setText("渠道号:  " + ChannelManager.getInstance().getChannel(this));
 
         mInputEdit = (EditText) findViewById(R.id.edit_text);
         mGotoBtn = (Button) findViewById(R.id.goto_btn);
