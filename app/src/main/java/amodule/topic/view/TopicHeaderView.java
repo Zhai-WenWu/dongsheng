@@ -15,6 +15,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -49,6 +53,8 @@ import anet.channel.util.StringUtils;
 import aplug.basic.LoadImage;
 import third.aliyun.work.AliyunCommon;
 
+import static com.umeng.a.j.f;
+
 public class TopicHeaderView extends RelativeLayout {
 
     private CustomClickableSpan mCustomClickableSpan;
@@ -69,6 +75,8 @@ public class TopicHeaderView extends RelativeLayout {
     private ArrayList<Map<String, String>> userList;
     private ArrayList<Map<String, String>> userNameList;
     private Map<String, String> user;
+    private WebView mUserRearWeb;
+    private ViewStub mLongImgViewstub;
 
     public TopicHeaderView(Context context) {
         super(context);
@@ -97,6 +105,7 @@ public class TopicHeaderView extends RelativeLayout {
         mActivityTv = findViewById(R.id.activity_btn);
         containerLayout = findViewById(R.id.rl_container);
         mSocialiteTable = findViewById(R.id.socialite_table);
+        mLongImgViewstub = findViewById(R.id.long_img_viewstub);
         mSocialiteTable.setPressColor("#00000000");
         mSocialiteTable.setNormalCorlor("#00000000");
         mSocialiteTable.setFromTopic(true);
@@ -250,12 +259,27 @@ public class TopicHeaderView extends RelativeLayout {
                 int w = Integer.parseInt(imageWidth);
                 int h = Integer.parseInt(imageHeight);
                 int widthPixels = ToolsDevice.getWindowPx(mContext).widthPixels;
-
-                ViewGroup.LayoutParams layoutParams = mUserRearImg.getLayoutParams();
                 float f = (float) widthPixels / w;
-                layoutParams.height = (int) (f * h);
-                mUserRearImg.setLayoutParams(layoutParams);
-                LoadImage.with(mContext).load(url).setPlaceholderId(R.color.transparent).build().into(mUserRearImg);
+                int viewHeight = (int) (f * h);
+
+                if (viewHeight > 4000) {
+                    if (mLongImgViewstub.getParent() != null) {
+                        mLongImgViewstub.inflate();
+                    }
+                    mUserRearWeb = findViewById(R.id.user_rear_web);
+                    ViewGroup.LayoutParams webLayoutParams = mUserRearWeb.getLayoutParams();
+                    webLayoutParams.height = viewHeight;
+                    mUserRearWeb.setLayoutParams(webLayoutParams);
+                    mUserRearWeb.setInitialScale((int) (ToolsDevice.getWindowPx(mContext).widthPixels / 500f * 100));
+                    mUserRearWeb.loadUrl(url);
+                } else {
+                    ViewGroup.LayoutParams layoutParams = mUserRearImg.getLayoutParams();
+                    layoutParams.height = viewHeight;
+                    mUserRearImg.setLayoutParams(layoutParams);
+                    LoadImage.with(mContext).load(url).setPlaceholderId(R.color.transparent).build().into(mUserRearImg);
+                }
+
+
                 break;
         }
 

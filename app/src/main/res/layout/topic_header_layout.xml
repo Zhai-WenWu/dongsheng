@@ -13,6 +13,14 @@
         android:layout_alignTop="@+id/rl_container"
         android:scaleType="centerCrop" />
 
+    <ViewStub
+        android:id="@+id/long_img_viewstub"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout="@layout/topic_long_image_viewstub"
+        android:layout_alignBottom="@+id/rl_container"
+        android:layout_alignTop="@+id/rl_container" />
+
     <View
         android:id="@+id/shade"
         android:layout_width="match_parent"
