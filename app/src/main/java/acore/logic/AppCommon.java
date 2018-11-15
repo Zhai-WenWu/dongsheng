@@ -54,7 +54,7 @@ import aplug.web.ShowWeb;
 import third.ad.scrollerAd.XHAllAdControl;
 import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilString;
-import xh.windowview.BottomDialog;
+import com.xh.windowview.BottomDialog;
 
 import static acore.logic.ConfigMannager.KEY_RANDPROMOTIONNEW;
 import static acore.logic.stat.StatConf.STAT_TAG;
