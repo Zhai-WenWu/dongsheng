@@ -424,8 +424,7 @@ public class NewClassify extends BaseActivity {
             }
             if (map.containsKey(adid)) {
                 BannerAd bannerAd = new BannerAd(NewClassify.this, xhAllAdControl, imageView);
-                bannerAd.marginLeft = ToolsDevice.dp2px(NewClassify.this, 60);
-                bannerAd.marginRight = ToolsDevice.dp2px(NewClassify.this, 60);
+                bannerAd.marginLeft = bannerAd.marginRight = ToolsDevice.dp2px(NewClassify.this, 60);
                 map = StringManager.getFirstMap(map.get(adid));
                 bannerAd.onShowAd(map);
                 xhAllAdControl.onAdBind(0, imageView, "");

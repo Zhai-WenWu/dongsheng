@@ -363,8 +363,7 @@ public class ClassifyHealthFragment extends Fragment {
         xhAllAdControl.start((isRefresh,map) -> {
             if (map.containsKey(finalAdPlayId)) {
                 BannerAd bannerAd = new BannerAd(mActivity, xhAllAdControl, mImageView);
-                bannerAd.marginLeft = ToolsDevice.dp2px(mActivity, 60);
-                bannerAd.marginRight = ToolsDevice.dp2px(mActivity, 60);
+                bannerAd.marginLeft = bannerAd.marginRight = ToolsDevice.dp2px(mActivity, 60);
                 map = StringManager.getFirstMap(map.get(finalAdPlayId));
                 bannerAd.onShowAd(map);
                 if(TextUtils.equals(mXhIndex,mSelectIndex)){

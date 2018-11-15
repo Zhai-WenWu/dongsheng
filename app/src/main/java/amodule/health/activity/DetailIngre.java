@@ -19,6 +19,7 @@ import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -196,7 +197,10 @@ public class DetailIngre extends BaseActivity {
         xhAllAdControl = new XHAllAdControl(list, this, "other_restain");
         xhAllAdControl.start((isRefresh, map) -> {
             if (map.containsKey(DETAIL_INGRE)) {
+                ViewGroup vg = ll_info.findViewById(R.id.ingre_detial_ad_layout);
                 bannerAdBurden = new BannerAd(DetailIngre.this, xhAllAdControl, mImageView);
+                bannerAdBurden.marginLeft = ((ViewGroup) vg.getParent()).getPaddingLeft();
+                bannerAdBurden.marginRight = ((ViewGroup) vg.getParent()).getPaddingRight();
                 map = StringManager.getFirstMap(map.get(DETAIL_INGRE));
                 bannerAdBurden.onShowAd(map);
             }
