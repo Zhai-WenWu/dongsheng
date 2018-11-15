@@ -19,7 +19,6 @@ dependencies {
     compile fileTree(include: '*.jar', dir: 'libs')
     //百度市场要求加的自动更新sdk
 //            compile(name: 'BDIntegrationSDK_LibProject-debug', ext: 'aar')
-    //    compile(name: 'PhotoView-release', ext: 'aar')
     compile(name: 'photoview-release-2.0.0', ext: 'aar')
     compile(name: 'PushSDK-debug', ext: 'aar')
     compile(name: 'XH_Basic3.0-release', ext: 'aar')

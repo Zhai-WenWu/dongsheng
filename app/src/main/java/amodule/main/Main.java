@@ -92,7 +92,6 @@ import third.push.localpush.LocalPushDataManager;
 import third.push.localpush.LocalPushManager;
 import third.push.xg.XGTagManager;
 import third.qiyu.QiYvHelper;
-import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilLog;
 
 import static android.content.Intent.FLAG_ACTIVITY_NO_USER_ACTION;
@@ -557,7 +556,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                 StatisticsManager.closeHandler();
                 AppHandlerAsyncPolling.getInstance().destroyPolling();
                 System.exit(0);
-                UtilFile.saveShared(this, FileManager.MALL_STAT, FileManager.MALL_STAT, "");
+                FileManager.saveShared(this, FileManager.MALL_STAT, FileManager.MALL_STAT, "");
             }
         } else {
             // 先设置MainIndex界面的搜索列表不显示
@@ -767,9 +766,9 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
             QiYvHelper.getInstance().destroyQiYvHelper();
         ClingPresenter.getInstance().onDestroy(this);
         GlobalVariableConfig.restoreConf();
-        String notifyStatistics = (String) UtilFile.loadShared(this, FileManager.notification_permission, "statistics");
+        String notifyStatistics = (String) FileManager.loadShared(this, FileManager.notification_permission, "statistics");
         if (!TextUtils.equals(notifyStatistics, "2")) {
-            UtilFile.saveShared(this, FileManager.notification_permission, "statistics", "2");
+            FileManager.saveShared(this, FileManager.notification_permission, "statistics", "2");
             boolean open = PushManager.isNotificationEnabled(XHApplication.in());
             XHClick.mapStat(XHApplication.in(), "a_open_push", open ? "开启了系统通知权限" : "未开启系统通知权限", "");
         }

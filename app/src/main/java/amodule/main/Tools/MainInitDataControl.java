@@ -73,7 +73,6 @@ import third.mall.aplug.MallCommon;
 import third.push.localpush.LocalPushManager;
 import third.push.xg.XGTagManager;
 import third.qiyu.QiYvHelper;
-import xh.basic.tool.UtilFile;
 
 import static java.lang.System.currentTimeMillis;
 import static xh.basic.tool.UtilString.getListMapByJson;
@@ -193,9 +192,9 @@ public class MainInitDataControl {
         XGTagManager manager = new XGTagManager();
         if (!LoginManager.isLogin())
             manager.addXGTag(XGTagManager.APP_NEW);
-        String official = (String) UtilFile.loadShared(XHApplication.in(), FileManager.xg_config, FileManager.xg_config_official);
+        String official = (String) FileManager.loadShared(XHApplication.in(), FileManager.xg_config, FileManager.xg_config_official);
         if (TextUtils.isEmpty(official)) {
-            UtilFile.saveShared(XHApplication.in(), FileManager.xg_config, FileManager.xg_config_official, "official");
+            FileManager.saveShared(XHApplication.in(), FileManager.xg_config, FileManager.xg_config_official, "official");
             manager.addXGTag(XGTagManager.OFFICIAL);
         }
     }
@@ -282,13 +281,13 @@ public class MainInitDataControl {
                 // 存储device
                 Map<String, String> map = new HashMap<String, String>();
                 map.put(FileManager.xmlKey_device, ToolsDevice.getPhoneDevice(context));
-                UtilFile.saveShared(context, FileManager.xmlFile_appInfo, map);
+                FileManager.saveShared(context, FileManager.xmlFile_appInfo, map);
                 XHInternetCallBack.clearCookie();
 
                 // 存储启动时间
                 map = new HashMap<>();
                 map.put(FileManager.xmlKey_startTime, currentTimeMillis() + "");
-                UtilFile.saveShared(context, FileManager.xmlFile_appInfo, map);
+                FileManager.saveShared(context, FileManager.xmlFile_appInfo, map);
                 //修改所有上传中的普通菜谱状态
                 UploadDishControl.getInstance().updataAllUploadingDish(context.getApplicationContext());
 
@@ -311,16 +310,16 @@ public class MainInitDataControl {
             public void run() {
                 super.run();
                 // 删除老版文件
-                if (UtilFile.ifFileModifyByCompletePath(UtilFile.getDataDir() + "indexData.xh", -1) != null) {
-                    UtilFile.delDirectoryOrFile(UtilFile.getDataDir() + "indexData.xh");
-                    UtilFile.delDirectoryOrFile(UtilFile.getSDDir() + "dish");
+                if (FileManager.ifFileModifyByCompletePath(FileManager.getDataDir() + "indexData.xh", -1) != null) {
+                    FileManager.delete(FileManager.getDataDir() + "indexData.xh");
+                    FileManager.delete(FileManager.getSDDir() + "dish");
                 }
                 // 改老版的购物单文件到数据库中
-                final String json = UtilFile.readFile(UtilFile.getDataDir() + FileManager.file_buyBurden);
+                final String json = FileManager.readFile(FileManager.getDataDir() + FileManager.file_buyBurden);
                 if (json.length() > 0) {
                     new Thread(() -> {
                         saveDataInDB(json,context);
-                        UtilFile.delDirectoryOrFile(UtilFile.getDataDir() + FileManager.file_buyBurden);
+                        FileManager.delete(FileManager.getDataDir() + FileManager.file_buyBurden);
                     }).start();
                 }
                 // 245版32以后，数据库字段更新
@@ -340,7 +339,7 @@ public class MainInitDataControl {
                     }
                 }
                 //清理sd的xiangha文件夹，老版有杂物
-                UtilFile.delDirectoryOrFile(UtilFile.getSDDir());
+                FileManager.delete(FileManager.getSDDir());
             }
         }.start();
     }

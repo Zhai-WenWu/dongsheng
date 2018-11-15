@@ -14,7 +14,6 @@ import acore.tools.FileManager;
 import acore.tools.ImgManager;
 import acore.tools.Tools;
 import aplug.basic.LoadImage;
-import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilString;
 
 public class DataOperate {
@@ -121,7 +120,7 @@ public class DataOperate {
 	 */
 	public static void saveSearchWord(String searchWord) {
 		if (searchWord != null && searchWord.trim().length() > 0){
-			String his = UtilFile.readFile(UtilFile.getDataDir() + FileManager.file_searchHis);
+			String his = FileManager.readFile(FileManager.getDataDir() + FileManager.file_searchHis);
 			if (his.length() == 0) {
 				his = NWELINE;
 			}
@@ -144,7 +143,7 @@ public class DataOperate {
 					his += NWELINE;
 				}
 			}
-			UtilFile.saveFileToCompletePath(UtilFile.getDataDir() + FileManager.file_searchHis, his, false);
+			FileManager.saveFileToCompletePath(FileManager.getDataDir() + FileManager.file_searchHis, his, false);
 		}
 	}
 	
@@ -153,7 +152,7 @@ public class DataOperate {
 	 */
 	public static void saveHistoryCode(String searchWord) {
 		if (searchWord != null && searchWord.trim().length() > 0){
-			String his = UtilFile.readFile(UtilFile.getDataDir() + FileManager.file_historyCode);
+			String his = FileManager.readFile(FileManager.getDataDir() + FileManager.file_historyCode);
 			if (his.length() == 0) {
 				his = NWELINE;
 			}
@@ -176,7 +175,7 @@ public class DataOperate {
 					his += NWELINE;
 				}
 			}
-			UtilFile.saveFileToCompletePath(UtilFile.getDataDir() + FileManager.file_historyCode, his, false);
+			FileManager.saveFileToCompletePath(FileManager.getDataDir() + FileManager.file_historyCode, his, false);
 		}
 	}
 	
@@ -222,7 +221,7 @@ public class DataOperate {
 	public static int getDownDishLimit(Context context){
 		if(!LoginManager.isLogin())
 			return MAX_DOWN_DISH;
-		String limit=UtilFile.loadShared(context, FileManager.xmlFile_appInfo, FileManager.xmlKey_downDishLimit).toString();
+		String limit=FileManager.loadShared(context, FileManager.xmlFile_appInfo, FileManager.xmlKey_downDishLimit).toString();
 		if(limit.length()==0) return MAX_DOWN_DISH;
 		else return Integer.parseInt(limit);
 	}
@@ -235,7 +234,7 @@ public class DataOperate {
 		if(limit>getDownDishLimit(context)){
 			Map<String, String> map=new HashMap<String, String>();
 			map.put(FileManager.xmlKey_downDishLimit, limit+"");
-			UtilFile.saveShared(context, FileManager.xmlFile_appInfo, map);
+			FileManager.saveShared(context, FileManager.xmlFile_appInfo, map);
 			return true;
 		}
 		else return false;

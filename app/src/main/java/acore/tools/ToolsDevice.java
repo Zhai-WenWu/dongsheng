@@ -49,7 +49,6 @@ import acore.notification.BuildProperties;
 import acore.override.XHApplication;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
-import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilLog;
 
 public class ToolsDevice {
@@ -342,7 +341,7 @@ public class ToolsDevice {
      * @return
      */
     public static String getUserApp(Context context, String userCode) {
-        String time = (String) UtilFile.loadShared(context, FileManager.xmlFile_appInfo, FileManager.xmlKey_upFavorTime);
+        String time = (String) FileManager.loadShared(context, FileManager.xmlFile_appInfo, FileManager.xmlKey_upFavorTime);
         String currentTime = new SimpleDateFormat("yyyyMMdd").format(new Date());
         if (!"".equals(time)&&!TextUtils.isEmpty(currentTime) && (Long.valueOf(currentTime) - Long.valueOf(time) < 7)) {
             return "";
@@ -350,7 +349,7 @@ public class ToolsDevice {
         //存储启动时间
         Map<String, String> map = new HashMap<>();
         map.put(FileManager.xmlKey_upFavorTime, currentTime);
-        UtilFile.saveShared(context, FileManager.xmlFile_appInfo, map);
+        FileManager.saveShared(context, FileManager.xmlFile_appInfo, map);
         UtilLog.print("i", "oldTime:" + time + " currentTime:" + currentTime);
 
         JSONArray jsonArray = new JSONArray();
@@ -490,7 +489,7 @@ public class ToolsDevice {
             deviceID = StringManager.stringToMD5(deviceID);
 //			LogManager.print("d", "---------imei:" +deviceID);
         } else {
-            deviceID = UtilFile.readFile(UtilFile.getDataDir() + FileManager.file_IMEI);
+            deviceID = FileManager.readFile(FileManager.getDataDir() + FileManager.file_IMEI);
             deviceID = deviceID.replaceAll("\r\n", "");
             UtilLog.print("d", "------file---imei:" + deviceID);
         }
@@ -521,7 +520,7 @@ public class ToolsDevice {
      * 确保获取到得到香哈经过处理过的imei,储存一次
      */
     public synchronized static void saveXhCode(final Context context) {
-        if (UtilFile.ifFileModifyByCompletePath(UtilFile.getDataDir() + FileManager.file_IMEI, -1) == null) {
+        if (FileManager.ifFileModifyByCompletePath(FileManager.getDataDir() + FileManager.file_IMEI, -1) == null) {
             String imei = getXhCode(context);
             if (!imei.equals("11111111111")) {
                 new Thread() {
@@ -529,7 +528,7 @@ public class ToolsDevice {
                     @Override
                     public void run() {
                         super.run();
-                        UtilFile.saveFileToCompletePath(UtilFile.getDataDir() + FileManager.file_IMEI, getXhCode(context), false);
+                        FileManager.saveFileToCompletePath(FileManager.getDataDir() + FileManager.file_IMEI, getXhCode(context), false);
                     }
                 }.start();
             }
@@ -589,7 +588,7 @@ public class ToolsDevice {
     public static String getDevice(Context context) {
         if (context != null) {
             // 系统#手机型号#系统版本#应用版本#宽#高#渠道号#
-            String device = UtilFile.loadShared(context, FileManager.xmlFile_appInfo, FileManager.xmlKey_device).toString();
+            String device = FileManager.loadShared(context, FileManager.xmlFile_appInfo, FileManager.xmlKey_device).toString();
             if (device.length() < 5) {
                 return ToolsDevice.getPhoneDevice(XHApplication.in());
             }

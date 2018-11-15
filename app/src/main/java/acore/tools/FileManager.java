@@ -1,23 +1,24 @@
-/**
- * @author Jerry
- * 2012-12-30 上午10:17:48
- * Copyright: Copyright (c) xiangha.com 2011
- */
 package acore.tools;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.graphics.Bitmap;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -26,6 +27,8 @@ import java.util.Locale;
 import acore.logic.VersionOp;
 import acore.override.XHApplication;
 import xh.basic.tool.UtilFile;
+import xh.basic.tool.UtilImage;
+import xh.basic.tool.UtilLog;
 
 public class FileManager extends UtilFile{
 	public static final String save_cache = "cache";
@@ -60,7 +63,6 @@ public class FileManager extends UtilFile{
 	public static final String xmlKey_mall_domain = "mall_domain";
 	public static final String xmlKey_request_tip = "requesttip";
 	public static final String xmlKey_device = "device";
-	public static final String xmlKey_device_statictis = "device_statictis";
 	public static final String xmlKey_downDishLimit = "downDishLimit";
 	public static final String xmlKey_upFavorTime = "upFavorTime";
 	public static final String xmlKey_startTime = "startTime";
@@ -120,8 +122,56 @@ public class FileManager extends UtilFile{
 	public static final String xhmKey_shortVideoGuidanceShow = "shortVideoGuidanceShow";
 	public static final String key_header_mode = "header_mode";
 	public static final String video_corp_show_hint = "videoCorp_show_hint";
-
 	public static final String xmlKey_device_statistics = "deviceStatistics";
+
+	private FileManager() {
+		throw new UnsupportedOperationException("u can't instantiate me...");
+	}
+
+	/**
+	 * 删除SD卡上时间较早的文件
+	 * @param completePath 完整路径
+	 * @param keep 文件夹内只保留
+	 *            (keep~keep*2)个文件
+	 */
+	public static void delDirectoryOrFile(String completePath, int keep) {
+		if(isSpace(completePath)){
+			return ;
+		}
+		File file = new File(completePath);
+		if (file.isDirectory()) {
+			File[] files = file.listFiles();
+			if (files != null && files.length - keep * 2 > 0) {
+				if (keep > 0) {
+					System.setProperty("java.util.Arrays.useLegacyMergeSort", "true");
+					try {
+						Arrays.sort(files, new Comparator<Object>() {
+							@Override
+							public int compare(Object object1, Object object2) {
+								File file1 = (File) object1;
+								File file2 = (File) object2;
+								long result = file1.lastModified() - file2.lastModified();
+								if (result < 0) {
+									return -1;
+								} else if (result > 0) {
+									return 1;
+								} else {
+									return 0;
+								}
+							}
+						});
+					} catch (Exception e) {
+						UtilLog.reportError("文件排序错误", e);
+					}
+				}
+				for (int i = 0; i < files.length - keep; i++) {
+					files[i].delete();
+				}
+			}
+		} else if (file.isFile()) {
+			file.delete();
+		}
+	}
 
 	public static String getSDLongDir(){
 		return getSDDir()+save_long+"/";
@@ -244,6 +294,36 @@ public class FileManager extends UtilFile{
             return tmpFile;
         }
     }
+
+	/**
+	 * 保存图片到sd卡
+	 * @param bitmap
+	 * @param completePath : 完整路径
+	 * @param format
+	 */
+	public static void saveImgToCompletePath(Bitmap bitmap, String completePath, Bitmap.CompressFormat format) {
+		if(isSpace(completePath)){
+			return;
+		}
+		File file = new File(completePath);
+		try {
+			File parentFile = file.getParentFile();
+			if(parentFile == null){
+				throw new NullPointerException("path = " + completePath);
+			}
+			if (!parentFile.exists())
+				parentFile.mkdirs();
+			BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
+			bitmap.compress(format, 100, bos);
+		} catch (Exception e) {
+			byte[] theByte = UtilImage.bitmapToByte(bitmap, format, 0);
+			if (theByte != null) {
+				saveFileToCompletePath(getSDDir() + file.getAbsolutePath(), new ByteArrayInputStream(theByte),
+						false);
+			}
+			e.printStackTrace();
+		}
+	}
 	 
     /**
 	 * 异步保存文件，子线程中
@@ -406,6 +486,5 @@ public class FileManager extends UtilFile{
 		}
 		return fileSizeString;
 	}
-
 
 }

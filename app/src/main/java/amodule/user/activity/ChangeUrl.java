@@ -30,7 +30,6 @@ import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import third.mall.aplug.MallStringManager;
-import xh.basic.tool.UtilFile;
 
 public class ChangeUrl extends BaseActivity {
 
@@ -93,9 +92,9 @@ public class ChangeUrl extends BaseActivity {
                     }
                     String newDomain = mXHDomain + tempPort;
                     StringManager.changeUrl(mProtocol, newDomain);
-                    UtilFile.saveShared(ChangeUrl.this, FileManager.xmlFile_appInfo, FileManager.xmlKey_domain, newDomain);
+                    FileManager.saveShared(ChangeUrl.this, FileManager.xmlFile_appInfo, FileManager.xmlKey_domain, newDomain);
                 }
-                UtilFile.saveShared(ChangeUrl.this, FileManager.xmlFile_appInfo, FileManager.xmlKey_protocol, mProtocol);
+                FileManager.saveShared(ChangeUrl.this, FileManager.xmlFile_appInfo, FileManager.xmlKey_protocol, mProtocol);
                 String tempMallData = mMallDomain + mMallPort;
                 if (!tempMallData.equals(mInitMallData) || protocolChanged) {//电商
                     if (!TextUtils.isEmpty(mMallDomain) && mMallTestDomain.equals(mMallDomain) && TextUtils.isEmpty(mMallPort)) {
@@ -108,7 +107,7 @@ public class ChangeUrl extends BaseActivity {
                     }
                     String newDomain = mMallDomain + tempPort;
                     MallStringManager.changeUrl(mProtocol, newDomain);
-                    UtilFile.saveShared(ChangeUrl.this, FileManager.xmlFile_appInfo, FileManager.xmlKey_mall_domain, newDomain);
+                    FileManager.saveShared(ChangeUrl.this, FileManager.xmlFile_appInfo, FileManager.xmlKey_mall_domain, newDomain);
                 }
                 ChangeUrl.this.finish();
             }
@@ -272,7 +271,7 @@ public class ChangeUrl extends BaseActivity {
     }
 
     private void initData() {
-        String protocol = (String) UtilFile.loadShared(ChangeUrl.this, FileManager.xmlFile_appInfo, FileManager.xmlKey_protocol);
+        String protocol = (String) FileManager.loadShared(ChangeUrl.this, FileManager.xmlFile_appInfo, FileManager.xmlKey_protocol);
         if (!TextUtils.isEmpty(protocol)) {
             mInitProtocol = protocol;
             if (protocol.contains("http://"))
@@ -281,7 +280,7 @@ public class ChangeUrl extends BaseActivity {
                 mProtocolBtn1.setChecked(true);
         } else
             mProtocolBtn1.setChecked(true);
-        String xhDomain = (String) UtilFile.loadShared(ChangeUrl.this, FileManager.xmlFile_appInfo, FileManager.xmlKey_domain);
+        String xhDomain = (String) FileManager.loadShared(ChangeUrl.this, FileManager.xmlFile_appInfo, FileManager.xmlKey_domain);
         if (!TextUtils.isEmpty(xhDomain)) {
             if (xhDomain.contains(mXHTestDomain + ":")) {
                 String str[] = xhDomain.split(":");
@@ -302,7 +301,7 @@ public class ChangeUrl extends BaseActivity {
             mXHSwitchBtn.setChecked(false);
         }
         mInitXHData = mProtocol + mXHDomain + mXHPort;
-        String mallDomain = (String) UtilFile.loadShared(ChangeUrl.this, FileManager.xmlFile_appInfo, FileManager.xmlKey_mall_domain);
+        String mallDomain = (String) FileManager.loadShared(ChangeUrl.this, FileManager.xmlFile_appInfo, FileManager.xmlKey_mall_domain);
         if (!TextUtils.isEmpty(mallDomain)) {
             if (mallDomain.contains(mMallTestDomain + ":")) {
                 String str[] = mallDomain.split(":");

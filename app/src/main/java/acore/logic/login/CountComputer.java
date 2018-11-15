@@ -3,8 +3,8 @@ package acore.logic.login;
 import android.content.Context;
 import android.text.TextUtils;
 
+import acore.tools.FileManager;
 import acore.tools.ToolsDevice;
-import xh.basic.tool.UtilFile;
 
 /**
  * Created by ：fei_teng on 2017/2/15 14:54.
@@ -18,7 +18,7 @@ public class CountComputer {
     public static int getTipCount(Context context) {
 
         int tipCount = 0;
-        String tipStr = (String) UtilFile.loadShared(context, TIP_REMIND, ToolsDevice.getVerName(context));
+        String tipStr = (String) FileManager.loadShared(context, TIP_REMIND, ToolsDevice.getVerName(context));
         if (!TextUtils.isEmpty(tipStr)) {
             tipCount = Integer.valueOf(tipStr);
         }
@@ -28,6 +28,6 @@ public class CountComputer {
     public static void saveTipCount(Context context) {
 
         int tipCount = getTipCount(context);
-        UtilFile.saveShared(context, TIP_REMIND, ToolsDevice.getVerName(context), tipCount + 1 + "");
+        FileManager.saveShared(context, TIP_REMIND, ToolsDevice.getVerName(context), tipCount + 1 + "");
     }
 }

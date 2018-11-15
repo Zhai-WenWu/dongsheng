@@ -49,7 +49,6 @@ import aplug.basic.ReqInternet;
 import aplug.web.ApiShowWeb;
 import third.push.xg.XGPushServer;
 import xh.basic.internet.UtilInternet;
-import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilString;
 
 import static acore.tools.FileManager.SIZETYPE_MB;
@@ -187,7 +186,7 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
 
 
     private void initData() {
-        Map<String, String> userInfo = (Map<String, String>) UtilFile.loadShared(mAct, FileManager.xmlFile_userInfo, "");
+        Map<String, String> userInfo = (Map<String, String>) FileManager.loadShared(mAct, FileManager.xmlFile_userInfo, "");
         nickName = userInfo.get("nickName");
         img = userInfo.get("img");
         tel = userInfo.get("tel");
@@ -396,7 +395,7 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
     private void setCacheSize() {
         new Thread(() -> {
             long fileSize = FileManager.getFileOrFolderSize(FileManager.getDataDir() + FileManager.file_appData);
-            fileSize += FileManager.getFileOrFolderSize(UtilFile.getSDDir() + LoadImage.SAVE_CACHE);
+            fileSize += FileManager.getFileOrFolderSize(FileManager.getSDDir() + LoadImage.SAVE_CACHE);
             cacheSize = fileSize;
             Setting.this.runOnUiThread(() -> view_clear_cace.setRightText(FileManager.formatFileSize(cacheSize,SIZETYPE_MB)));
         }).start();
@@ -456,8 +455,8 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                UtilFile.delDirectoryOrFile(FileManager.getDataDir() + FileManager.file_appData);
-                UtilFile.delDirectoryOrFile(UtilFile.getSDDir() + LoadImage.SAVE_CACHE);
+                FileManager.delete(FileManager.getDataDir() + FileManager.file_appData);
+                FileManager.delete(FileManager.getSDDir() + LoadImage.SAVE_CACHE);
                 FullScreenManager.saveWelcomeInfo(Setting.this,null,null);
                 Setting.this.runOnUiThread(new Runnable() {
                     @Override

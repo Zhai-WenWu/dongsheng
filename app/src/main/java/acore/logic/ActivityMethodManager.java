@@ -34,7 +34,6 @@ import third.ad.XHAdAutoRefresh;
 import third.ad.tools.AdConfigTools;
 import third.ad.tools.WelcomeAdTools;
 import third.mall.aplug.MallCommon;
-import xh.basic.tool.UtilFile;
 
 import static acore.logic.ConfigMannager.KEY_RANDPROMOTION;
 import static amodule.main.Main.colse_level;
@@ -86,7 +85,7 @@ public class ActivityMethodManager {
         StatService.onResume(mAct);//mta腾讯统计
         // 应用到后台时如果数据被清理，需要重新自动登录
         if (LoginManager.userInfo.size() == 0) {
-            Map<String, String> userInfoMap = (Map<String, String>) UtilFile.loadShared(mAct, FileManager.xmlFile_userInfo, "");
+            Map<String, String> userInfoMap = (Map<String, String>) FileManager.loadShared(mAct, FileManager.xmlFile_userInfo, "");
             if (userInfoMap.get("userCode") != null && userInfoMap.get("userCode").length() > 1) {
                 LoginManager.loginByAuto(mAct);
                 MallCommon.getSaveMall(mAct);//处理电商

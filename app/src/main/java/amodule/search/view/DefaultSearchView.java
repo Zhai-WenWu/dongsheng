@@ -277,7 +277,7 @@ public class DefaultSearchView extends LinearLayout implements View.OnClickListe
         switch (v.getId()) {
             // 清除搜索历史
             case R.id.search_his_clean_img:
-                FileManager.delDirectoryOrFile(UtilFile.getDataDir() + FileManager.file_searchHis);
+                FileManager.delete(UtilFile.getDataDir() + FileManager.file_searchHis);
                 XHClick.mapStat(mActivity, "a_search_default", "搜索历史", "清除历史");
                 Log.i("tzy", "清除历史");
                 listSearchHistory.clear();
