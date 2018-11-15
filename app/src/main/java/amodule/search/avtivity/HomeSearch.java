@@ -15,6 +15,7 @@ import acore.override.activity.base.BaseActivity;
 import acore.tools.ChannelUtil;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
+import amodule.main.Main;
 import amodule.search.data.SearchConstant;
 import amodule.search.view.GlobalSearchView;
 
@@ -22,6 +23,7 @@ public class HomeSearch extends BaseActivity {
 
     public static final String STATISTICS_ID = "a_search430";
     public static final String EXTRA_JSONDATA = "jsonData";
+    public static int startCount = 0;
     private int limitSearchType;
     private String searchKey;
     private String jsonData;
@@ -32,6 +34,8 @@ public class HomeSearch extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
+        startCount++;
+        Log.i("tzy", "HomeSearch::onCreate: " + startCount);
         long startTime = System.currentTimeMillis();
         initActivity("", 2, 0, 0, R.layout.a_search_global);
         initData();
@@ -46,6 +50,9 @@ public class HomeSearch extends BaseActivity {
             limitSearchType = bundle.getInt(SearchConstant.SEARCH_TYPE, SearchConstant.SEARCH_CAIPU);
             searchKey = bundle.getString("s");
             jsonData = bundle.getString(EXTRA_JSONDATA);
+        }
+        if(startCount != 1){
+            level = 3;
         }
 
         Log.i("渠道号", " " + ChannelUtil.getChannel(this));
@@ -77,12 +84,24 @@ public class HomeSearch extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        startCount--;
+        Log.i("tzy", "HomeSearch::onDestroy: " + startCount);
         System.gc();
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+    }
+
+    @Override
+    public void finish() {
+        if(startCount >= 7){
+            Main.colse_level = 3;
+        }
+        Log.i("tzy", "HomeSearch::finish: " + startCount);
+        Log.i("tzy", "HomeSearch::finish:colse_level=" + Main.colse_level);
+        super.finish();
     }
 
     @Override
