@@ -247,8 +247,8 @@ public class TopicHeaderView extends RelativeLayout {
                 String url = activityInfo.get("url");
                 String imageWidth = activityInfo.get("imageWidth");
                 String imageHeight = activityInfo.get("imageHeight");
-                int w = Integer.parseInt("500");
-                int h = Integer.parseInt("750");
+                int w = Integer.parseInt(imageWidth);
+                int h = Integer.parseInt(imageHeight);
                 int widthPixels = ToolsDevice.getWindowPx(mContext).widthPixels;
 
                 ViewGroup.LayoutParams layoutParams = mUserRearImg.getLayoutParams();

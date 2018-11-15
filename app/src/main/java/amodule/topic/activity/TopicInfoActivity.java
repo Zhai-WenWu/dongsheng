@@ -97,7 +97,6 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
         Intent i = getIntent();
         if (i != null) {
             mTopicCode = i.getStringExtra(TOPIC_CODE);
-            mActivityType = i.getStringExtra(ACTIVIT_TYPE);
         }
 
         mHotDatas = new ArrayList<>();
@@ -242,7 +241,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                         mTitleLayout.setVisibility(View.GONE);
                     }
                     mAuthorMap = StringManager.getFirstMap(mInfoMap.get("author"));
-                    mTopicHeaderView.showTopicData(mActivityType, mTopicCode, mInfoMap);
+                    mTopicHeaderView.showTopicData(mInfoMap.get("activityType"), mTopicCode, mInfoMap);
                     mTopicHeaderView.setVisibility(View.VISIBLE);
                 } else {
                     mInfoMap = null;
