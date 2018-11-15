@@ -1,4 +1,5 @@
 package acore.logic;
+
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -28,14 +30,13 @@ import java.util.Map;
 import java.util.Random;
 
 import acore.logic.stat.intefaces.OnClickListenerStat;
+import acore.observer.ObserverManager;
 import acore.override.XHApplication;
 import acore.override.activity.base.WebActivity;
 import acore.override.activity.mian.MainBaseActivity;
 import acore.override.helper.XHActivityManager;
-import acore.tools.Base64Utils;
 import acore.tools.FileManager;
 import acore.tools.LogManager;
-import acore.observer.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -837,7 +838,7 @@ public class AppCommon {
                                                     dataStr = dataStr.replace(replaceValue,"");
                                                 }
                                             }
-                                            byte[] dataByte = Base64Utils.decode(dataStr);
+                                            byte[] dataByte = Base64.decode(dataStr.getBytes(), Base64.DEFAULT);
                                             dataStr = new String(dataByte);
                                             ArrayList<Map<String,String>> dataArr = StringManager.getListMapByJson(dataStr);
                                             int totalWeight=0;
