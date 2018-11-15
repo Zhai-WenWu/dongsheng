@@ -40,6 +40,7 @@
             android:gravity="center"
             android:paddingEnd="@dimen/dp_32"
             android:paddingStart="@dimen/dp_32"
+            android:singleLine="true"
             android:text="详情"
             android:textColor="@color/white"
             android:textSize="@dimen/sp_18"
