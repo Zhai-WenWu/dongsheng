@@ -42,7 +42,7 @@ public class MultiTagView extends LinearLayout {
     private String[] tagColors;
     private String buttonAddColor;
     private String buttonAddClickColor;
-    private int tagTextColor ;
+    private int tagTextColor;
     private String tagClickColor;
     private int tagPading;
     private int tagMargin;
@@ -62,6 +62,7 @@ public class MultiTagView extends LinearLayout {
 
     private MutilTagViewCallBack callback;
     private boolean tagTextBold;
+    private boolean mFromTopic;
 
     public MultiTagView(Context context) {
         this(context, null);
@@ -90,7 +91,7 @@ public class MultiTagView extends LinearLayout {
         setParentMargin(a.getDimensionPixelSize(R.styleable.MultiTagView_parentMargin, 12));
         setButtonAddColor(a.getString(R.styleable.MultiTagView_buttonAddColor));
         setButtonAddClickColor(a.getString(R.styleable.MultiTagView_buttonAddClickColor));
-        setTagTextColor(a.getColor(R.styleable.MultiTagView_tagTextColor,getResources().getColor(R.color.black)));
+        setTagTextColor(a.getColor(R.styleable.MultiTagView_tagTextColor, getResources().getColor(R.color.black)));
         setTagClickColor(a.getString(R.styleable.MultiTagView_tagClickColor));
 //        setTagPading(a.getDimensionPixelSize(R.styleable.MultiTagView_tagPadding, DEFAULT_TAG_PADDING));
         setTagPaddingTop(a.getDimensionPixelSize(R.styleable.MultiTagView_tagPaddingTop, DEFAULT_TAG_PADDING_TOP));
@@ -98,7 +99,7 @@ public class MultiTagView extends LinearLayout {
         setTagPaddingRight(a.getDimensionPixelSize(R.styleable.MultiTagView_tagPadding, DEFAULT_TAG_PADDING));
         setTagPaddingLeft(a.getDimensionPixelSize(R.styleable.MultiTagView_tagPadding, DEFAULT_TAG_PADDING));
         setTagMarginTop(a.getDimensionPixelSize(R.styleable.MultiTagView_tagMarginTop, DEFAULT_LAYOUT_MARGIN_TOP));
-        setTagTextBold(a.getBoolean(R.styleable.MultiTagView_tagTextBold,false));
+        setTagTextBold(a.getBoolean(R.styleable.MultiTagView_tagTextBold, false));
         setDeleteDrawable(a.getDrawable(R.styleable.MultiTagView_deleteDrawable));
         init();
         a.recycle();
@@ -124,10 +125,11 @@ public class MultiTagView extends LinearLayout {
         final TextView button = new TextView(mContext);
         button.setText(tag.content);
         button.setTextColor(isSelect ? Color.parseColor("#999999") : getTagTextColor());
-        button.setTextSize(14);
-        if (getTagTextBold()){
+        if (mFromTopic && tagTndex > 0) {
+            button.setTextColor(Color.parseColor("#FFBE03"));
             button.getPaint().setFakeBoldText(true);
         }
+        button.setTextSize(14);
 //        StateRoundRectDrawable drawable = new StateRoundRectDrawable(Color.parseColor("#000000"), Color.parseColor("#BAA8A8"));
         StateRoundRectDrawable drawable = new StateRoundRectDrawable(Color.parseColor(normalCorlor), Color.parseColor(pressColor));
         drawable.setDefautRadius(dip2px(2));
@@ -386,7 +388,7 @@ public class MultiTagView extends LinearLayout {
 
 
     private void setTagTextBold(boolean tagTextBold) {
-        this.tagTextBold=tagTextBold;
+        this.tagTextBold = tagTextBold;
     }
 
     public boolean getTagTextBold() {
@@ -415,6 +417,10 @@ public class MultiTagView extends LinearLayout {
 
     public void setDeleteDrawable(Drawable deleteDrawable) {
         this.deleteDrawable = deleteDrawable;
+    }
+
+    public void setFromTopic(boolean fromTopic) {
+        this.mFromTopic = fromTopic;
     }
 
 

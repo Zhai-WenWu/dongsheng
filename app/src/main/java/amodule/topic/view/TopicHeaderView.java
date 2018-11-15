@@ -69,7 +69,6 @@ public class TopicHeaderView extends RelativeLayout {
     private ArrayList<Map<String, String>> userList;
     private ArrayList<Map<String, String>> userNameList;
     private Map<String, String> user;
-    private TextView tv_socialite;
 
     public TopicHeaderView(Context context) {
         super(context);
@@ -98,9 +97,9 @@ public class TopicHeaderView extends RelativeLayout {
         mActivityTv = findViewById(R.id.activity_btn);
         containerLayout = findViewById(R.id.rl_container);
         mSocialiteTable = findViewById(R.id.socialite_table);
-        tv_socialite = findViewById(R.id.tv_socialite);
         mSocialiteTable.setPressColor("#00000000");
         mSocialiteTable.setNormalCorlor("#00000000");
+        mSocialiteTable.setFromTopic(true);
 
     }
 
@@ -145,13 +144,14 @@ public class TopicHeaderView extends RelativeLayout {
         user = StringManager.getFirstMap(infoMap.get("users"));
         userList = StringManager.getListMapByJson(user.get("info"));
         userNameList = new ArrayList<>();
+        ArrayMap<String, String> textMap = new ArrayMap<>();
+        textMap.put("hot", user.get("text") + "：");
+        userNameList.add(textMap);
+
         int size = userList.size();
         if (size > 0) {
-
-
             for (int i = 0; i < size; i++) {
                 ArrayMap<String, String> map = new ArrayMap<>();
-
                 if (size == 1) {
                     map.put("hot", "@" + userList.get(i).get("nickName"));//@一个人没顿号
                 } else {
@@ -167,17 +167,18 @@ public class TopicHeaderView extends RelativeLayout {
             mSocialiteTable.addTags(userNameList, new MultiTagView.MutilTagViewCallBack() {
                 @Override
                 public void onClick(int tagIndexr) {
-                    StatisticsManager.saveData(StatModel.createBtnClickDetailModel("TopicInfoActivity","TopicInfoActivity","new_topic_gather",infoMap.get("name"),"@好友"));
-                    Intent intent = new Intent(mContext, FriendHome.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putString("code", userList.get(tagIndexr).get("code"));
-                    intent.putExtras(bundle);
-                    mContext.startActivity(intent);
+                    if (tagIndexr > 0) {
+                        StatisticsManager.saveData(StatModel.createBtnClickDetailModel("TopicInfoActivity", "TopicInfoActivity", "new_topic_gather", infoMap.get("name"), "@好友"));
+                        Intent intent = new Intent(mContext, FriendHome.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putString("code", userList.get(tagIndexr - 1).get("code"));
+                        intent.putExtras(bundle);
+                        mContext.startActivity(intent);
+                    }
                 }
             });
         } else {
             mSocialiteTable.setVisibility(GONE);
-            tv_socialite.setVisibility(GONE);
         }
 
         //底部查看活动详情链接
@@ -197,7 +198,7 @@ public class TopicHeaderView extends RelativeLayout {
         mBottomLinkTv.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                StatisticsManager.saveData(StatModel.createBtnClickDetailModel("TopicInfoActivity","TopicInfoActivity","new_topic_gather",infoMap.get("name"),"链接"));
+                StatisticsManager.saveData(StatModel.createBtnClickDetailModel("TopicInfoActivity", "TopicInfoActivity", "new_topic_gather", infoMap.get("name"), "链接"));
                 AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), mLink.get("url"), true);
             }
         });
@@ -233,7 +234,7 @@ public class TopicHeaderView extends RelativeLayout {
                 mActivityTv.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        StatisticsManager.saveData(StatModel.createBtnClickDetailModel("TopicInfoActivity","TopicInfoActivity","new_topic_gather",infoMap.get("name"),"活动按钮"));
+                        StatisticsManager.saveData(StatModel.createBtnClickDetailModel("TopicInfoActivity", "TopicInfoActivity", "new_topic_gather", infoMap.get("name"), "活动按钮"));
                         AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), mActivityInfo.get("url"), true);
                     }
                 });
