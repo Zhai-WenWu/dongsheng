@@ -581,6 +581,8 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
             if (!TextUtils.isEmpty(activityType)) {
                 if (activityType.equals("1") || activityType.equals("2")) {
                     mHavePrizeText.setVisibility(VISIBLE);
+                }else {
+                    mHavePrizeText.setVisibility(GONE);
                 }
             }
         } else {
