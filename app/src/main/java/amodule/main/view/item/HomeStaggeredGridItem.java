@@ -140,24 +140,8 @@ public class HomeStaggeredGridItem extends HomeItem {
             realImgHeight = mImgMaxHeight;
         }
 
-        ConstraintSet cs = new ConstraintSet();
-        cs.constrainWidth(mImg.getId(), ConstraintSet.MATCH_CONSTRAINT);
-        cs.constrainHeight(mImg.getId(), realImgHeight);
-        cs.constrainMinHeight(mImg.getId(), mImgMinHeight);
-        cs.connect(mImg.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
-        cs.connect(mImg.getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END);
-        cs.connect(mImg.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
-        cs.connect(mImg.getId(), ConstraintSet.BOTTOM, R.id.guideline, ConstraintSet.TOP);
-        cs.applyTo(mContentLayout);
-        ConstraintSet csgif = new ConstraintSet();
-        csgif.constrainWidth(gifImageView.getId(), ConstraintSet.MATCH_CONSTRAINT);
-        csgif.constrainHeight(gifImageView.getId(), realImgHeight);
-        csgif.constrainMinHeight(gifImageView.getId(), mImgMinHeight);
-        csgif.connect(gifImageView.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
-        csgif.connect(gifImageView.getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END);
-        csgif.connect(gifImageView.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
-        csgif.connect(gifImageView.getId(), ConstraintSet.BOTTOM, R.id.guideline, ConstraintSet.TOP);
-        csgif.applyTo(mContentLayout);
+        applyViewToLayout(mImg, realImgHeight, mContentLayout);
+        applyViewToLayout(gifImageView, realImgHeight, mContentLayout);
         gifImageView.setVisibility(View.GONE);
         mImg.setImageResource(R.drawable.i_nopic);
         if (!TextUtils.isEmpty(mDataMap.get("parseResourceData_gif"))) {
@@ -236,6 +220,18 @@ public class HomeStaggeredGridItem extends HomeItem {
         if (builder != null) {
             builder.into(mImg);
         }
+    }
+
+    private void applyViewToLayout(View targetView, int targetViewHeight, ConstraintLayout targetLayout) {
+        ConstraintSet cs = new ConstraintSet();
+        cs.constrainWidth(targetView.getId(), ConstraintSet.MATCH_CONSTRAINT);
+        cs.constrainHeight(targetView.getId(), targetViewHeight);
+        cs.constrainMinHeight(targetView.getId(), mImgMinHeight);
+        cs.connect(targetView.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
+        cs.connect(targetView.getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END);
+        cs.connect(targetView.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
+        cs.connect(targetView.getId(), ConstraintSet.BOTTOM, R.id.title, ConstraintSet.TOP);
+        cs.applyTo(mContentLayout);
     }
 
     public ConstraintLayout getContentLayout() {

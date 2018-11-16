@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_230"
         android:scaleType="centerCrop"
-        app:layout_constraintBottom_toTopOf="@+id/guideline"/>
+        app:layout_constraintBottom_toTopOf="@+id/title"/>
 
     <ImageView
         android:id="@+id/img"
@@ -49,6 +49,7 @@
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingTop="@dimen/dp_6"
         android:layout_marginBottom="@dimen/dp_8"
         android:layout_marginEnd="@dimen/dp_8"
         android:layout_marginStart="@dimen/dp_8"
@@ -56,10 +57,10 @@
         android:gravity="center_vertical"
         android:lineSpacingExtra="@dimen/dp_1"
         android:maxLines="2"
-        android:textColor="@color/c_white_text"
+        android:textColor="@color/common_text"
         android:textSize="@dimen/sp_16"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/img_blur" />
+        app:layout_constraintBottom_toTopOf="@+id/guideline" />
 
     <acore.widget.rcwidget.RCImageView
         android:id="@+id/ad_header_img"
@@ -88,8 +89,8 @@
         android:includeFontPadding="false"
         app:layout_constraintStart_toEndOf="@+id/ad_header_img"
         app:layout_constraintEnd_toStartOf="@+id/ad_tag"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline"/>
+        app:layout_constraintBottom_toBottomOf="@+id/ad_header_img"
+        app:layout_constraintTop_toTopOf="@+id/ad_header_img"/>
 
     <ImageView
         android:id="@+id/ad_tag"
@@ -100,8 +101,8 @@
         android:layout_marginEnd="@dimen/dp_7"
         android:scaleType="fitCenter"
         android:src="@drawable/home_item_adicon"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline"
+        app:layout_constraintBottom_toBottomOf="@+id/ad_header_img"
+        app:layout_constraintTop_toTopOf="@+id/ad_header_img"
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <android.support.constraint.Guideline
