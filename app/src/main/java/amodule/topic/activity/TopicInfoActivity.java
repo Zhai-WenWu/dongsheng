@@ -4,10 +4,12 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -27,6 +29,7 @@ import acore.logic.stat.StatisticsManager;
 import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
+import acore.tools.ToolsDevice;
 import acore.widget.rvlistview.RvListView;
 import acore.widget.rvlistview.RvStaggeredGridView;
 import amodule.topic.adapter.TopicInfoStaggeredAdapter;
@@ -247,11 +250,36 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                     mInfoMap = null;
                     mTopicHeaderView.setVisibility(View.GONE);
                 }
+                                                                                                                                                                                                                                              setJoinBtnVisible();
                 if (mTopicInfoStaggeredAdapter != null) {
                     mTopicInfoStaggeredAdapter.notifyDataSetChanged();
                 }
             }
         });
+    }
+
+    private void setJoinBtnVisible() {
+        //控制参与按钮的显示隐藏
+        final int[] location1 = new int[2];
+        int screenW = ToolsDevice.getWindowPx(this).widthPixels;
+        int screenH = ToolsDevice.getWindowPx(this).heightPixels;
+        int itemW = screenW / 3;
+        int itemH = itemW * 165 / 124;
+        int H = screenH - itemH;
+        AppBarLayout mAppBarLayout = findViewById(R.id.app_bar);
+
+        mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                mStaggeredGridView.getLocationOnScreen(location1);
+                if (location1[1] <= H) {
+                    mFloatingButton.setVisibility(View.VISIBLE);
+                } else {
+                    mFloatingButton.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+
     }
 
     private void loadTopicList() {

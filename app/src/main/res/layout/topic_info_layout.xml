@@ -173,6 +173,7 @@
             android:layout_height="@dimen/dp_56"
             android:layout_gravity="center_horizontal|bottom"
             android:layout_marginBottom="@dimen/dp_60"
+            android:visibility="invisible"
             android:scaleType="fitXY"
             android:src="@drawable/img_joinin"
             app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior" />
