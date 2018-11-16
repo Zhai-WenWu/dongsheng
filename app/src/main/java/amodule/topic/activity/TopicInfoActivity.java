@@ -250,7 +250,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                     mInfoMap = null;
                     mTopicHeaderView.setVisibility(View.GONE);
                 }
-                                                                                                                                                                                                                                              setJoinBtnVisible();
+                setJoinBtnVisible();
                 if (mTopicInfoStaggeredAdapter != null) {
                     mTopicInfoStaggeredAdapter.notifyDataSetChanged();
                 }
@@ -261,11 +261,22 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
     private void setJoinBtnVisible() {
         //控制参与按钮的显示隐藏
         final int[] location1 = new int[2];
+//        int screenW = ToolsDevice.getWindowPx(this).widthPixels;
+//        int screenH = ToolsDevice.getWindowPx(this).heightPixels;
+//        int itemW = screenW / 3;
+//        int itemH = itemW * 165 / 124;
+//        int H = screenH - itemH;
+
+
+        int originalW = 124;
+        int originalH = 165;
         int screenW = ToolsDevice.getWindowPx(this).widthPixels;
         int screenH = ToolsDevice.getWindowPx(this).heightPixels;
-        int itemW = screenW / 3;
-        int itemH = itemW * 165 / 124;
-        int H = screenH - itemH;
+        int newW = (screenW - this.getResources().getDimensionPixelSize(R.dimen.dp_2)) / 3;
+        int newH = newW * originalH / originalW;
+        int H = screenH - newH;
+
+
         AppBarLayout mAppBarLayout = findViewById(R.id.app_bar);
 
         mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {

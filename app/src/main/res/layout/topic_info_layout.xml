@@ -2,12 +2,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/activityLayout"
     android:layout_width="match_parent"
+    android:background="@color/ysf_black_333333"
     android:layout_height="match_parent">
 
     <android.support.design.widget.CoordinatorLayout xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/ysf_black_333333">
+        android:layout_height="match_parent">
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/app_bar"
@@ -102,8 +102,7 @@
                     android:id="@+id/fl_hot"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@color/black">
+                    android:layout_weight="1">
 
                     <TextView
                         android:id="@+id/tv_hot_tab"
@@ -127,8 +126,7 @@
                     android:id="@+id/fl_new"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@color/black">
+                    android:layout_weight="1">
 
                     <TextView
                         android:id="@+id/tv_new_tab"
