@@ -109,6 +109,7 @@ public class CaipuSearchResultView extends LinearLayout {
     public void search(String key) {
         mAdapter.refreshAdData();
         clearSearchResult();
+        boolean needSearch = !TextUtils.isEmpty(searchKey);
         searchKey = key;
         mAdapter.setSearchKey(searchKey);
         loadManager.setLoading(mRefreshLayout, mSearchList, mAdapter, true,
@@ -125,6 +126,10 @@ public class CaipuSearchResultView extends LinearLayout {
                     searchDish();
                 });
         searchVIPLesson();
+        if(needSearch){
+            isRefreash.set(false);
+            searchDish();
+        }
     }
 
     public void onClearSearchWord() {
@@ -186,6 +191,7 @@ public class CaipuSearchResultView extends LinearLayout {
         currentCaipuPage = 0;
         actIn = new AtomicInteger(2);
         ll_noData.setVisibility(View.GONE);
+        mSearchList.setVisibility(INVISIBLE);
         mAdapter.clearAdList();
         mAdapter.notifyDataSetChanged();
     }
@@ -213,6 +219,7 @@ public class CaipuSearchResultView extends LinearLayout {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
                 if (flag >= REQ_OK_STRING) {
+                    loadManager.loaded(mSearchList);
                     if (currentCaipuPage == 1) {
                         mListCaipuData.clear();
                         mListShicaiData.clear();
@@ -319,7 +326,7 @@ public class CaipuSearchResultView extends LinearLayout {
     }
 
     private void refreshData(boolean b) {
-        new Handler(Looper.getMainLooper()).post(() -> adNum = mAdapter.refresh(b, mListCaipuData, mListShicaiData));
+        adNum = mAdapter.refresh(b, mListCaipuData, mListShicaiData);
     }
 
     private void setLoadMoreBtn() {
