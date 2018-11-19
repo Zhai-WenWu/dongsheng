@@ -40,7 +40,6 @@ public class ConfigMannager {
     public static final String KEY_NEW_AD_CONFIG = "newAdConfig";
     public static final String KEY_VIP_GUIDE_STATUS = "vipGuideStatus";
     public static final String KEY_HOME_FUN_NAV_STAT = "homeFunNavStat";
-    public static final String KEY_MIBO_SDK = "mibosdk";
 
     /**
      * 保存config

@@ -35,7 +35,6 @@ import third.push.umeng.UMPushServer;
 import third.push.xg.XGPushServer;
 
 import static acore.logic.ConfigMannager.KEY_BAIDUAPPID;
-import static acore.logic.ConfigMannager.KEY_MIBO_SDK;
 
 public class XHApplication extends MobApplication {
     /**包名*/
