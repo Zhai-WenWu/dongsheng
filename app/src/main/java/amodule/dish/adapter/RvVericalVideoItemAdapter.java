@@ -213,6 +213,10 @@ public class RvVericalVideoItemAdapter extends BaseAdapter<ShortVideoDetailModul
             shortVideoItemView.updateCommentNum();
         }
 
+        public void updateActivityType() {
+            shortVideoItemView.updateActivityType();
+        }
+
         public void updateAttentionState() {
             shortVideoItemView.updateAttentionState();
         }

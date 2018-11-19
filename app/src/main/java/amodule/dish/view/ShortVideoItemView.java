@@ -574,21 +574,13 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
         }
         mTopicClickUrl = mData.getTopicModel().getGotoUrl();
         String topicTitle = mData.getTopicModel().getTitle();
-        String activityType = mData.getTopicModel().getActivityType();
         if (!TextUtils.isEmpty(topicTitle)) {
             mTopicText.setText(topicTitle);
             mLayoutTopic.setVisibility(View.VISIBLE);
-            if (!TextUtils.isEmpty(activityType)) {
-                if (activityType.equals("1") || activityType.equals("2")) {
-                    mHavePrizeText.setVisibility(VISIBLE);
-                }else {
-                    mHavePrizeText.setVisibility(GONE);
-                }
-            }
         } else {
             mLayoutTopic.setVisibility(View.GONE);
-            mHavePrizeText.setVisibility(View.GONE);
         }
+        setActivityIcon();
         mAddressClickUrl = mData.getAddressModel().getGotoUrl();
         String address = mData.getAddressModel().getAddress();
         if (!TextUtils.isEmpty(address)) {
@@ -597,6 +589,11 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
         } else {
             mLayoutAddress.setVisibility(View.GONE);
         }
+    }
+
+    private void setActivityIcon() {
+        String activityType = mData.getTopicModel().getActivityType();
+        mHavePrizeText.setVisibility("1".equals(activityType) || "2".equals(activityType) ? VISIBLE : GONE);
     }
 
     public void setPos(int pos) {
@@ -1106,6 +1103,10 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
 
     public void updateCommentNum() {
         mCommentNumText.setText(mData.getCommentNum());
+    }
+
+    public void updateActivityType() {
+        setActivityIcon();
     }
 
     public interface AttentionResultCallback {
