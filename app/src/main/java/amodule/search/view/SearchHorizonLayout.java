@@ -90,6 +90,7 @@ public class SearchHorizonLayout extends RelativeLayout {
                         mData.clear();
                         mData.addAll(changeDataList);
                         mAdapter.notifyDataSetChanged();
+                        mRecyclerView.scrollToPosition(0);
                     }
                     break;
                 case TYPE_DISH:
@@ -98,6 +99,7 @@ public class SearchHorizonLayout extends RelativeLayout {
                         mData.clear();
                         mData.addAll(wordsList);
                         mAdapter.notifyDataSetChanged();
+                        mRecyclerView.scrollToPosition(0);
                     }
                     break;
                 default:

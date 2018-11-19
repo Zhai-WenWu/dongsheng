@@ -32,7 +32,6 @@ import amodule.search.data.SearchDataImp;
 import aplug.basic.InternetCallback;
 import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
 
-import static com.xiangha.R.id.v_no_data_search;
 import static xh.basic.internet.UtilInternet.REQ_OK_STRING;
 
 /**
@@ -86,7 +85,7 @@ public class CaipuSearchResultView extends LinearLayout {
         mRefreshLayout = findViewById(R.id.refresh_list_view_frame);
         mRefreshLayout.setVisibility(View.VISIBLE);
         mSearchList = findViewById(R.id.list_search_result);
-        ll_noData = findViewById(v_no_data_search);
+        ll_noData = findViewById(R.id.v_no_data_search);
         ll_noData.setVisibility(View.GONE);
         mSearchList.setVisibility(INVISIBLE);
         mSearchList.setDivider(null);
