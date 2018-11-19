@@ -253,7 +253,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                 }
 
 
-                if (tabPosition < lastItemPosition&&tabItemView!=null) {
+                if (tabPosition < lastItemPosition && tabItemView != null) {
                     tabItemView.getLocationOnScreen(locationDong);
                     mTabLayout.getLocationOnScreen(locationJing);
                     if (locationDong[1] <= locationJing[1]) {
@@ -499,7 +499,8 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                 if (i >= ReqInternet.REQ_OK_STRING) {
                     List<Map<String, String>> datas = StringManager.getListMapByJson(o);
                     currentPageCount = datas.size();
-                    for (Map<String, String> data : datas) {
+                    for (int j = 0; j < datas.size(); j++){
+                        Map<String, String> data = datas.get(j);
                         //只处理了当前用到的数据，其他数据未处理，如有需要再添加设置
                         TopicItemModel topicItemModel = new TopicItemModel();
                         topicItemModel.setVideoCode(data.get("code"));
@@ -527,6 +528,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                         switch (tab) {
                             case HOT:
                                 topicItemModel.setIsHot(true);
+                                topicItemModel.setHotNo(j);
                                 mHotDatas.add(topicItemModel);
                                 break;
                             case NEW:

@@ -31,6 +31,15 @@ public class TopicItemModel {
     //statJson	String	{"type":"7","code":"647470"}
     private String statJson;
     private int mTabTag;
+    private int mHotNo;
+
+    public int getHotNo() {
+        return mHotNo;
+    }
+
+    public void setHotNo(int mHotNo) {
+        this.mHotNo = mHotNo;
+    }
 
     public Bitmap getBitmap() {
         return mBitmap;
