@@ -121,12 +121,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
         mHotDatas = new ArrayList<>();
         mNewDatas = new ArrayList<>();
         mDatas = new ArrayList<>();
-        TopicItemModel model = new TopicItemModel();
-        model.setItemType(TopicInfoStaggeredAdapter.ITEM_TAB);
-        mDatas.add(model);
         mTopicInfoStaggeredAdapter = new TopicInfoStaggeredAdapter(TopicInfoActivity.this, mDatas);
-        mStaggeredGridView.setAdapter(mTopicInfoStaggeredAdapter);
-        mTopicInfoStaggeredAdapter.notifyDataSetChanged();
         tabPosition = 0;
         loadTopicList();
     }
@@ -195,15 +190,6 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
             @Override
             public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
                 GridLayoutManager.LayoutParams params = (GridLayoutManager.LayoutParams) view.getLayoutParams();
-                int position = parent.getChildAdapterPosition(view);
-                int viewType = parent.getAdapter().getItemViewType(position);
-                switch (viewType) {
-                    case RvListView.VIEW_TYPE_EMPTY:
-                    case RvListView.VIEW_TYPE_FOOTER:
-                    case RvListView.VIEW_TYPE_HEADER:
-                        super.getItemOffsets(outRect, view, parent, state);
-                        return;
-                }
                 switch (params.getSpanIndex()) {
                     case 0:
                         outRect.set(0, dp2px(R.dimen.dp_0_5), dp2px(R.dimen.dp_0_5), dp2px(R.dimen.dp_0_5));
@@ -215,7 +201,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                         outRect.set(dp2px(R.dimen.dp_0_5), dp2px(R.dimen.dp_0_5), 0, dp2px(R.dimen.dp_0_5));
                         break;
                     default:
-                        outRect.set(0, 0, 0, 0);
+                        super.getItemOffsets(outRect, view, parent, state);
                         break;
                 }
             }
@@ -314,6 +300,10 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
     }
 
     private void startLoadData() {
+        TopicItemModel model = new TopicItemModel();
+        model.setItemType(TopicInfoStaggeredAdapter.ITEM_TAB);
+        mDatas.add(model);
+        mTopicInfoStaggeredAdapter.notifyDataSetChanged();
         loadManager.setLoading(mStaggeredGridView, mTopicInfoStaggeredAdapter, true, v -> {
                     loadTopicList();
                 }

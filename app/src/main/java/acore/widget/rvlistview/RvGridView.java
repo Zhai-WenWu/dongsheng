@@ -63,7 +63,7 @@ public class RvGridView extends RvListView {
             if(VIEW_TYPE_HEADER == mAdapter.getItemViewType(position)
                     ||VIEW_TYPE_FOOTER == mAdapter.getItemViewType(position)
                     ||VIEW_TYPE_EMPTY == mAdapter.getItemViewType(position)
-                    || (mIsFillRowCallback != null && mIsFillRowCallback.isFillRowCallback(position))){
+                    || (mIsFillRowCallback != null && mIsFillRowCallback.isFillRowCallback(position - mAdapter.getPositionOffset()))){
                 return spanCount;
             }
         }
