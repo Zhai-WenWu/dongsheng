@@ -363,11 +363,12 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                                                 @Override
                                                 public void run() {
                                                     if (bitmaps != null && mDatas != null) {
-                                                        for (Bitmap bit : bitmaps) {
+                                                        for (int i = 0; i < bitmaps.size(); i ++) {
+                                                            Bitmap bitmap = bitmaps.get(i);
                                                             TopicItemModel model = new TopicItemModel();
-                                                            model.setBitmap(bit);
+                                                            model.setBitmap(bitmap);
                                                             model.setItemType(TopicInfoStaggeredAdapter.ITEM_ACTIVITY_IMG);
-                                                            mDatas.add(model);
+                                                            mDatas.add(i, model);
                                                         }
                                                         if (mTopicInfoStaggeredAdapter != null) {
                                                             mTopicInfoStaggeredAdapter.notifyDataSetChanged();
