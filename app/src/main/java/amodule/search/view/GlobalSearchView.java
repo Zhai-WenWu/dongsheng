@@ -385,7 +385,7 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
             case R.id.btn_search_global:
                 String str = edSearch.getText().toString();
                 if (str.trim().length() == 0) {
-                    Tools.showToast(mActivity, "请输入查询关键字");
+                    Tools.showToast(mActivity, "请输入您想要的");
                     mActivity.loadManager.hideProgressBar();
                     return;
                 }
