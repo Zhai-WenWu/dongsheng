@@ -36,7 +36,7 @@ public class TopicTabHolder extends RvBaseViewHolder<TopicItemModel> {
 
     @Override
     public void bindData(int position, @Nullable TopicItemModel data) {
-this.mData = data;
+        this.mData = data;
 
         mHotView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -46,7 +46,7 @@ this.mData = data;
                 mNewTabTV.setTextColor(XHApplication.in().getResources().getColor(R.color.c_777777));
                 mNewTabBottomView.setVisibility(View.INVISIBLE);
                 data.setTabTag(data.TAB_HOT);
-                itemView.setOnClickListener(this);
+                onTabClick.onClick(data);
             }
         });
 
@@ -58,8 +58,7 @@ this.mData = data;
                 mNewTabTV.setTextColor(XHApplication.in().getResources().getColor(R.color.white));
                 mNewTabBottomView.setVisibility(View.VISIBLE);
                 data.setTabTag(data.TAB_NEW);
-                itemView.setOnClickListener(this);
-
+                onTabClick.onClick(data);
             }
         });
     }
@@ -79,5 +78,14 @@ this.mData = data;
         mNewTabTV.setTextColor(XHApplication.in().getResources().getColor(R.color.white));
         mNewTabBottomView.setVisibility(View.VISIBLE);
         mData.setTabTag(mData.TAB_NEW);
+    }
+
+    OnTabClick onTabClick;
+    public interface OnTabClick{
+        void onClick(TopicItemModel data);
+    }
+
+    public void setOnTabClick(OnTabClick onTabClick) {
+        this.onTabClick = onTabClick;
     }
 }

@@ -124,6 +124,16 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
         mNewDatas = new ArrayList<>();
         mDatas = new ArrayList<>();
         mTopicInfoStaggeredAdapter = new TopicInfoStaggeredAdapter(TopicInfoActivity.this, mDatas);
+        topicTabHolder = mTopicInfoStaggeredAdapter.getTopicTabHolder();
+        if (topicTabHolder != null) {
+            topicTabHolder.setOnTabClick(new TopicTabHolder.OnTabClick() {
+                @Override
+                public void onClick(TopicItemModel data) {
+                    setTabClick(data);
+                }
+            });
+        }
+
         tabPosition = 0;
         loadTopicList();
     }
@@ -159,7 +169,9 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
             public void onClick(View v) {
                 onTabClick(TopicItemModel.TAB_HOT);
                 topicTabHolder = mTopicInfoStaggeredAdapter.getTopicTabHolder();
-                topicTabHolder.setHotClick();
+                if (topicTabHolder != null) {
+                    topicTabHolder.setHotClick();
+                }
             }
         });
 
@@ -168,16 +180,17 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
             public void onClick(View v) {
                 onTabClick(TopicItemModel.TAB_NEW);
                 topicTabHolder = mTopicInfoStaggeredAdapter.getTopicTabHolder();
-                topicTabHolder.setNewClick();
+                if (topicTabHolder != null) {
+                    topicTabHolder.setNewClick();
+                }
             }
         });
-
 
         mStaggeredGridView.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
             public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
                 GridLayoutManager.LayoutParams params = (GridLayoutManager.LayoutParams) view.getLayoutParams();
-                if(params.getSpanSize() == mStaggeredGridView.getSpanCount()){
+                if (params.getSpanSize() == mStaggeredGridView.getSpanCount()) {
                     super.getItemOffsets(outRect, view, parent, state);
                     return;
                 }
@@ -217,6 +230,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
 
         mStaggeredGridView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
+            private View tabItemView;
             private int lastItemPosition;
 
             @Override
@@ -234,9 +248,12 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
 
                 //tab可见
                 topicTabHolder = mTopicInfoStaggeredAdapter.getTopicTabHolder();
-                View tabItemView = topicTabHolder.itemView;
+                if (topicTabHolder != null) {
+                    tabItemView = topicTabHolder.itemView;
+                }
 
-                if (tabPosition < lastItemPosition) {
+
+                if (tabPosition < lastItemPosition&&tabItemView!=null) {
                     tabItemView.getLocationOnScreen(locationDong);
                     mTabLayout.getLocationOnScreen(locationJing);
                     if (locationDong[1] <= locationJing[1]) {
