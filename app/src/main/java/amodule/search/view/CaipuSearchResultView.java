@@ -126,10 +126,10 @@ public class CaipuSearchResultView extends LinearLayout {
                     searchDish();
                 });
         searchVIPLesson();
-        if(needSearch){
-            isRefreash.set(false);
-            searchDish();
-        }
+//        if(needSearch){
+//            isRefreash.set(false);
+//            searchDish();
+//        }
     }
 
     public void onClearSearchWord() {

@@ -29,10 +29,8 @@ import acore.widget.ScrollLinearListLayout;
 import acore.widget.rvlistview.RvListView;
 import acore.widget.rvlistview.adapter.RvBaseAdapter;
 import amodule.answer.view.UploadingView;
-import amodule.quan.adapter.AdapterCircle;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
-import aplug.basic.XHConf;
 import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
 import cn.srain.cube.views.ptr.PtrDefaultHandler;
 import cn.srain.cube.views.ptr.PtrFrameLayout;
@@ -296,9 +294,7 @@ public class LoadManager {
 			}
 			listView.setAdapter(adapter);
 		}
-		if(!hasMore){
-			setLoading(loadMoreListener);
-		}
+		setLoading(loadMoreListener);
 	}
 
 	/**
@@ -327,9 +323,7 @@ public class LoadManager {
 
 			}
 		}
-		if(!hasMore){
-			setLoading(loadMoreListener);
-		}
+		setLoading(loadMoreListener);
 	}
 
 	public void setLoading(PtrClassicFrameLayout refreshLayout, RvListView listView, RvBaseAdapter adapter,
@@ -374,9 +368,7 @@ public class LoadManager {
 			}
 			listView.setAdapter(adapter);
 		}
-		if(!hasMore){
-			setLoading(clicker);
-		}
+		setLoading(clicker);
 	}
 
     public void loading(Object key, boolean isBlankSpace) {
