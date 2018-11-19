@@ -72,7 +72,6 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
     private int mHotPage;
     private int mNewPage;
     private Map<String, String> mInfoMap;
-    private Map<String, String> mAuthorMap;
     private boolean mTopicListLoading;
 
     private TopicInfoStaggeredAdapter mTopicInfoStaggeredAdapter;
@@ -129,7 +128,6 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
         mTopicInfoStaggeredAdapter.setOnTabClick(this::setTabClick);
 
         tabPosition = 0;
-        loadTopicList();
     }
 
     private void initView() {
@@ -231,6 +229,8 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
+                mDistance += dy;
+
                 RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
                 //判断是当前layoutManager是否为LinearLayoutManager
                 // 只有LinearLayoutManager才有查找第一个和最后一个可见view位置的方法
@@ -276,15 +276,11 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                 }
 
                 //title渐变
-                mDistance += dy;
                 float alpha = (float) mDistance / headerHeight;
                 if (alpha > 0 && alpha < 1) {
                     titleBg.setAlpha((float) alpha);
                 }
-                if (alpha == 0) {
-                    titleBg.setAlpha(0);
-                }
-                if (locationDong[1] <= locationJing[1]) {
+                if (locationDong[1] <= locationJing[1]&&tabPosition < lastItemPosition) {
                     titleBg.setAlpha(1);
                 }
 
@@ -348,7 +344,6 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                 mNewTabBottomView.setVisibility(View.INVISIBLE);
                 StatisticsManager.saveData(StatModel.createBtnClickDetailModel("TopicInfoActivity", "TopicInfoActivity", "new_topic_gather", title, "最热"));
                 mTab = HOT;
-                mStaggeredGridView.scrollToPosition(tabPosition);
                 onTabChanged(mTab);
                 break;
             case TopicItemModel.TAB_NEW:
@@ -361,7 +356,6 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                 if (mNewDatas.size() == 0) {
                     loadTopicList();
                 }
-                mStaggeredGridView.scrollToPosition(tabPosition);
                 onTabChanged(mTab);
                 break;
         }
@@ -454,7 +448,8 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                                 break;
                         }
                     }
-                    mAuthorMap = StringManager.getFirstMap(mInfoMap.get("author"));
+
+                    loadTopicList();
                 }
                 if (mTopicInfoStaggeredAdapter != null) {
                     mTopicInfoStaggeredAdapter.notifyDataSetChanged();
@@ -497,7 +492,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                     List<Map<String, String>> datas = StringManager.getListMapByJson(o);
                     currentPageCount = datas.size();
                     ArrayList<TopicItemModel> tmepData = new ArrayList<>();
-                    for (int j = 0; j < datas.size(); j++){
+                    for (int j = 0; j < datas.size(); j++) {
                         Map<String, String> data = datas.get(j);
                         //只处理了当前用到的数据，其他数据未处理，如有需要再添加设置
                         TopicItemModel topicItemModel = new TopicItemModel();
@@ -526,7 +521,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                         switch (tab) {
                             case HOT:
                                 topicItemModel.setIsHot(true);
-                                topicItemModel.setHotNo(currentPage == 1 && j < 3 ? j+1 : 0);
+                                topicItemModel.setHotNo(currentPage == 1 && j < 3 ? j + 1 : 0);
                                 break;
                             case NEW:
                                 topicItemModel.setIsHot(false);
@@ -534,7 +529,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                         }
                         tmepData.add(topicItemModel);
                     }
-                    updateData(tab,tmepData);
+                    updateData(tab, tmepData);
                 } else {
                     switch (tab) {
                         case HOT:
@@ -564,7 +559,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                     mNewDatas.addAll(tmepData);
                     break;
             }
-            if (mTopicInfoStaggeredAdapter != null && TextUtils.equals(mTab,tab)) {
+            if (mTopicInfoStaggeredAdapter != null && TextUtils.equals(mTab, tab)) {
                 mDatas.addAll(tmepData);
                 mTopicInfoStaggeredAdapter.notifyDataSetChanged();
             }
@@ -589,9 +584,11 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                     mDatas.addAll(mNewDatas);
                     break;
             }
-            if (mTopicInfoStaggeredAdapter != null && TextUtils.equals(mTab,currentTab)) {
+            if (mTopicInfoStaggeredAdapter != null && TextUtils.equals(mTab, currentTab)) {
                 mTopicInfoStaggeredAdapter.notifyDataSetChanged();
             }
         }
+
+        mStaggeredGridView.scrollToPosition(tabPosition);
     }
 }

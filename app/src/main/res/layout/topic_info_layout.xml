@@ -26,6 +26,7 @@
                 android:id="@+id/title_bg"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:alpha="0"
                 android:background="@color/black" />
 
             <ImageView
@@ -87,10 +88,10 @@
         android:id="@+id/floating_btn"
         android:layout_width="@dimen/dp_114"
         android:layout_height="@dimen/dp_56"
+        android:visibility="invisible"
         android:layout_gravity="center_horizontal|bottom"
         android:layout_marginBottom="@dimen/dp_60"
         android:scaleType="centerCrop"
-        android:src="@drawable/img_joinin"
-        app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior" />
+        android:src="@drawable/img_joinin" />
 
 </android.support.design.widget.CoordinatorLayout>
