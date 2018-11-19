@@ -437,8 +437,9 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                 mTab = NEW;
                 if (mNewDatas.size() == 0) {
                     loadTopicList();
+                } else {
+                    onTabChanged(mTab);
                 }
-                onTabChanged(mTab);
                 break;
         }
     }
@@ -690,7 +691,5 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                 mTopicInfoStaggeredAdapter.notifyDataSetChanged();
             }
         }
-
-        mStaggeredGridView.scrollToPosition(tabPosition);
     }
 }
