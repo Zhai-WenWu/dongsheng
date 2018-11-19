@@ -134,6 +134,7 @@ public class SearchHorizonLayout extends RelativeLayout {
             setVisibility(GONE);
             return;
         }
+        setVisibility(GONE);
         this.strList.clear();
         this.strList.addAll(strList);
         //拼接参数

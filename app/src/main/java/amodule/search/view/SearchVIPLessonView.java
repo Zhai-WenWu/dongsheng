@@ -2,16 +2,11 @@ package amodule.search.view;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.os.Looper;
 import android.support.constraint.ConstraintLayout;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -26,7 +21,6 @@ import acore.logic.XHClick;
 import acore.override.helper.XHActivityManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
-import acore.widget.IconTextSpan;
 import acore.widget.TagTextView;
 import amodule.main.view.item.BaseItemView;
 import aplug.basic.InternetCallback;
@@ -80,6 +74,7 @@ public class SearchVIPLessonView extends BaseItemView implements View.OnClickLis
         if (TextUtils.isEmpty(searchKey)){
             return;
         }
+        setVisibility(View.GONE);
         String params = "keywords=" + searchKey;
         ReqEncyptInternet.in().doEncypt(StringManager.API_SEARCH_COURSE_DISH, params, new InternetCallback() {
             @Override

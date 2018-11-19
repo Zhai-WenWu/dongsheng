@@ -77,7 +77,7 @@ public class HomeTitleLayout extends RelativeLayout implements IStatictusData {
                 if(!TextUtils.isEmpty(word)){
                     searchWord = word;
                     TextView textView = findViewById(R.id.text_search);
-                    textView.setText("大家正在搜：" + word);
+                    textView.setText("大家正在搜: " + word);
                 }
             }
         }),2000);
