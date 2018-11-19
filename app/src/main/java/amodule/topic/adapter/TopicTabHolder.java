@@ -12,18 +12,26 @@ import acore.widget.rvlistview.holder.RvBaseViewHolder;
 import amodule.topic.model.TopicItemModel;
 
 class TopicTabHolder extends RvBaseViewHolder<TopicItemModel> {
+
+    private FrameLayout mHotView;
+    private FrameLayout mNewView;
+    private TextView mHotTabTv;
+    private View mHotTabBottomView;
+    private TextView mNewTabTV;
+    private View mNewTabBottomView;
+
     public TopicTabHolder(View inflate) {
         super(inflate);
+        mHotView = findViewById(R.id.fl_hot);
+        mNewView = findViewById(R.id.fl_new);
+        mHotTabTv = findViewById(R.id.tv_hot_tab);
+        mHotTabBottomView = findViewById(R.id.view_hot_tab_bottom);
+        mNewTabTV = findViewById(R.id.tv_new_tab);
+        mNewTabBottomView = findViewById(R.id.view_new_tab_bottom);
     }
 
     @Override
     public void bindData(int position, @Nullable TopicItemModel data) {
-        FrameLayout mHotView = findViewById(R.id.fl_hot);
-        FrameLayout mNewView = findViewById(R.id.fl_new);
-        TextView mHotTabTv = findViewById(R.id.tv_hot_tab);
-        View mHotTabBottomView = findViewById(R.id.view_hot_tab_bottom);
-        TextView mNewTabTV = findViewById(R.id.tv_new_tab);
-        View mNewTabBottomView = findViewById(R.id.view_new_tab_bottom);
         mHotView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

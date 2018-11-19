@@ -1,5 +1,7 @@
 package amodule.topic.model;
 
+import android.graphics.Bitmap;
+
 /**
  * 话题列表item数据
  */
@@ -7,9 +9,6 @@ public class TopicItemModel {
 
     public int TAB_HOT = 1;
     public int TAB_NEW = 2;
-    public int ITEM_ACTIVITY_IMG = 3;
-    public int ITEM_TAB = 4;
-    public int ITEM_TOPIC_VID = 5;
     private String mVideoCode;//视频code
     private String mVideoName;//视频名称、描述
     private boolean mIsEssence;//是否精选
@@ -26,11 +25,20 @@ public class TopicItemModel {
     private CustomerModel mCustomerModel;
     private AddressModel mAddressModel;
     private LabelModel mLabelModel;
+    private Bitmap mBitmap;
     private boolean isShow;
     private int mItemType;//1,活动二图片2,tab3,视频列表
     //statJson	String	{"type":"7","code":"647470"}
     private String statJson;
     private int mTabTag;
+
+    public Bitmap getBitmap() {
+        return mBitmap;
+    }
+
+    public void setBitmap(Bitmap bitmap) {
+        mBitmap = bitmap;
+    }
 
     public String getStatJson() {
         return statJson;

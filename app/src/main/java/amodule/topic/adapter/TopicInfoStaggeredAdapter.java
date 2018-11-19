@@ -17,6 +17,9 @@ import amodule.topic.model.TopicItemModel;
 
 public class TopicInfoStaggeredAdapter extends RvBaseAdapter<TopicItemModel> {
 
+    public static final int ITEM_ACTIVITY_IMG = 1;
+    public static final int ITEM_TAB = 2;
+    public static final int ITEM_TOPIC_VID = 3;
     public TopicInfoStaggeredAdapter(Context context, @Nullable ArrayList<TopicItemModel> data) {
         super(context, data);
     }
@@ -25,12 +28,15 @@ public class TopicInfoStaggeredAdapter extends RvBaseAdapter<TopicItemModel> {
     public RvBaseViewHolder<TopicItemModel> onCreateViewHolder(ViewGroup parent, int viewType) {
         RvBaseViewHolder viewHolder = null;
         switch (viewType) {
-            case 3://图片头部
-                viewHolder = new ActivityIconHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.topic_list_item_layout, null));
-            case 4://tab
+            case ITEM_ACTIVITY_IMG://图片头部
+                viewHolder = new ActivityIconHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.topic_image_layout_item, null));
+                break;
+            case ITEM_TAB://tab
                 viewHolder = new TopicTabHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.topic_tab_layout, null));
-            case 5://视频
+                break;
+            case ITEM_TOPIC_VID://视频
                 viewHolder = new TopicItemHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.topic_list_item_layout, null));
+                break;
         }
         return viewHolder;
     }

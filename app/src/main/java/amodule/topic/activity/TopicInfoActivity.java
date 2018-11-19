@@ -1,6 +1,7 @@
 package amodule.topic.activity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ import acore.logic.AppCommon;
 import acore.logic.stat.StatModel;
 import acore.logic.stat.StatisticsManager;
 import acore.override.activity.base.BaseAppCompatActivity;
+import acore.tools.ImgManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -38,6 +40,7 @@ import amodule.topic.adapter.TopicInfoStaggeredAdapter;
 import amodule.topic.model.ImageModel;
 import amodule.topic.model.LabelModel;
 import amodule.topic.model.TopicItemModel;
+import amodule.topic.model.TopicModel;
 import amodule.topic.model.VideoModel;
 import amodule.topic.view.TopicHeaderView;
 import aplug.basic.InternetCallback;
@@ -74,9 +77,9 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
     private TopicInfoStaggeredAdapter mTopicInfoStaggeredAdapter;
     private ArrayList<TopicItemModel> mHotDatas;
     private ArrayList<TopicItemModel> mNewDatas;
+    private ArrayList<TopicItemModel> mDatas;
     private LinearLayout mTitleLayout;
     private String title;
-    private TopicItemModel topicItemModelTab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +94,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
             return;
         }
         loadTopicInfo();
-//        startLoadData();
+        startLoadData();
     }
 
     private void initStatusBar() {
@@ -107,12 +110,13 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
 
         mHotDatas = new ArrayList<>();
         mNewDatas = new ArrayList<>();
-        //添加tab条目
-        topicItemModelTab = new TopicItemModel();
-        topicItemModelTab.setItemType(topicItemModelTab.ITEM_TAB);
-//        mTopicInfoStaggeredAdapter.addData(topicItemModelTab);
-        mHotDatas.add(topicItemModelTab);
-        mNewDatas.add(topicItemModelTab);
+        mDatas = new ArrayList<>();
+        TopicItemModel model = new TopicItemModel();
+        model.setItemType(TopicInfoStaggeredAdapter.ITEM_TAB);
+        mDatas.add(model);
+        mTopicInfoStaggeredAdapter = new TopicInfoStaggeredAdapter(TopicInfoActivity.this, mDatas);
+        mStaggeredGridView.setAdapter(mTopicInfoStaggeredAdapter);
+        mTopicInfoStaggeredAdapter.notifyDataSetChanged();
         loadTopicList();
     }
 
@@ -129,7 +133,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
             public boolean isFillRowCallback(int position) {
                 int itemViewType = mTopicInfoStaggeredAdapter.getItemViewType(position);
                 return mTopicInfoStaggeredAdapter != null
-                        && (itemViewType == topicItemModelTab.ITEM_TAB || itemViewType == topicItemModelTab.ITEM_ACTIVITY_IMG);
+                        && (itemViewType == TopicInfoStaggeredAdapter.ITEM_TAB || itemViewType == TopicInfoStaggeredAdapter.ITEM_ACTIVITY_IMG);
             }
         });
         mFloatingButton = findViewById(R.id.floating_btn);
@@ -226,7 +230,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
             public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
                 TopicItemModel topicItemModel = mTopicInfoStaggeredAdapter.getData().get(position);
                 int itemType = topicItemModel.getItemType();
-                if (itemType == topicItemModel.ITEM_TAB) {
+                if (itemType == TopicInfoStaggeredAdapter.ITEM_TAB) {
                     setTabClick(topicItemModel);
                 }
             }
@@ -280,14 +284,51 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                     } else {
                         mTitleLayout.setVisibility(View.GONE);
                     }
+                    String activityType = mInfoMap.get("activityType");
+                    if (activityType != null) {
+                        switch (activityType) {
+                            case "0":
+                            case "1":
+                                mTopicHeaderView = new TopicHeaderView(TopicInfoActivity.this);
+                                mStaggeredGridView.addHeaderView(mTopicHeaderView);
+                                mTopicHeaderView.showTopicData(activityType, mTopicCode, mInfoMap);
+                                mTopicHeaderView.setVisibility(View.VISIBLE);
+                                break;
+                            case "2":
+                                Map<String, String> activityInfoMap = StringManager.getFirstMap(mInfoMap.get("activityInfo"));
+                                if (!activityInfoMap.isEmpty()) {
+                                    String url = activityInfoMap.get("url");
+                                    if (TextUtils.isEmpty(url)) {
+                                        return;
+                                    }
+                                    int imageWidth = Tools.parseIntOfThrow(activityInfoMap.get("imageWidth"), 100);
+                                    int imageHeight = Tools.parseIntOfThrow(activityInfoMap.get("imageHeight"), 100);
+                                    ImgManager.tailorImageByUrl(TopicInfoActivity.this, url, imageWidth, imageHeight, 400, new ImgManager.OnResourceCallback() {
+                                        @Override
+                                        public void onResource(ArrayList<Bitmap> bitmaps) {
+                                            TopicInfoActivity.this.runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    if (bitmaps != null && mDatas != null) {
+                                                        for (Bitmap bit : bitmaps) {
+                                                            TopicItemModel model = new TopicItemModel();
+                                                            model.setBitmap(bit);
+                                                            model.setItemType(TopicInfoStaggeredAdapter.ITEM_ACTIVITY_IMG);
+                                                            mDatas.add(model);
+                                                        }
+                                                        if (mTopicInfoStaggeredAdapter != null) {
+                                                            mTopicInfoStaggeredAdapter.notifyDataSetChanged();
+                                                        }
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+                                break;
+                        }
+                    }
                     mAuthorMap = StringManager.getFirstMap(mInfoMap.get("author"));
-                    mTopicHeaderView = new TopicHeaderView(TopicInfoActivity.this);
-                    mStaggeredGridView.addHeaderView(mTopicHeaderView);
-                    mTopicHeaderView.showTopicData(mInfoMap.get("activityType"), mTopicCode, mInfoMap);
-                    mTopicHeaderView.setVisibility(View.VISIBLE);
-                } else {
-                    mInfoMap = null;
-                    mTopicHeaderView.setVisibility(View.GONE);
                 }
                 setJoinBtnVisible();
                 if (mTopicInfoStaggeredAdapter != null) {
@@ -386,31 +427,36 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                         labelModel.setColor(labelMap.get("color"));
                         labelModel.setBgColor(labelMap.get("bgColor"));
                         topicItemModel.setLabelModel(labelModel);
-                        topicItemModel.setItemType(topicItemModel.ITEM_TOPIC_VID);
+                        topicItemModel.setItemType(TopicInfoStaggeredAdapter.ITEM_TOPIC_VID);
                         topicItemModel.setStatJson(data.get("statJson"));
                         switch (tab) {
                             case HOT:
                                 topicItemModel.setIsHot(true);
                                 mHotDatas.add(topicItemModel);
-//                                mTopicInfoStaggeredAdapter.setData(mHotDatas);
-                                mTopicInfoStaggeredAdapter = new TopicInfoStaggeredAdapter(TopicInfoActivity.this, mHotDatas);
-                                startLoadData();
                                 break;
                             case NEW:
                                 topicItemModel.setIsHot(false);
                                 mNewDatas.add(topicItemModel);
-                                mTopicInfoStaggeredAdapter.setData(mNewDatas);
                                 break;
                         }
                     }
-                    if (mTopicInfoStaggeredAdapter != null && mTab == tab) {
+                    if (mDatas != null) {
                         switch (tab) {
                             case HOT:
-                                mTopicInfoStaggeredAdapter.notifyItemRangeChanged(0, mHotDatas.size());
+                                if (mNewDatas != null) {
+                                    mDatas.removeAll(mNewDatas);
+                                }
+                                mDatas.addAll(mHotDatas);
                                 break;
                             case NEW:
-                                mTopicInfoStaggeredAdapter.notifyItemRangeChanged(0, mNewDatas.size());
+                                if (mHotDatas != null) {
+                                    mDatas.removeAll(mHotDatas);
+                                }
+                                mDatas.addAll(mNewDatas);
                                 break;
+                        }
+                        if (mTopicInfoStaggeredAdapter != null && mTab == tab) {
+                            mTopicInfoStaggeredAdapter.notifyDataSetChanged();
                         }
                     }
                 } else {
