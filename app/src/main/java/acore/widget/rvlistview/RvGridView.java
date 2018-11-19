@@ -78,4 +78,11 @@ public class RvGridView extends RvListView {
         boolean isFillRowCallback(int position);
     }
 
+    public int getSpanCount() {
+        return spanCount;
+    }
+
+    public void setSpanCount(int spanCount) {
+        this.spanCount = spanCount;
+    }
 }

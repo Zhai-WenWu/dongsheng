@@ -190,6 +190,10 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
             @Override
             public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
                 GridLayoutManager.LayoutParams params = (GridLayoutManager.LayoutParams) view.getLayoutParams();
+                if(params.getSpanSize() == mStaggeredGridView.getSpanCount()){
+                    super.getItemOffsets(outRect, view, parent, state);
+                    return;
+                }
                 switch (params.getSpanIndex()) {
                     case 0:
                         outRect.set(0, dp2px(R.dimen.dp_0_5), dp2px(R.dimen.dp_0_5), dp2px(R.dimen.dp_0_5));
