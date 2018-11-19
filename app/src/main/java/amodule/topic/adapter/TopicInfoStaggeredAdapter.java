@@ -23,11 +23,22 @@ public class TopicInfoStaggeredAdapter extends RvBaseAdapter<TopicItemModel> {
 
     @Override
     public RvBaseViewHolder<TopicItemModel> onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new TopicItemHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.topic_list_item_layout, null));
+        RvBaseViewHolder viewHolder = null;
+        switch (viewType) {
+            case 3://图片头部
+                viewHolder = new ActivityIconHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.topic_list_item_layout, null));
+            case 4://tab
+                viewHolder = new TopicTabHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.topic_tab_layout, null));
+            case 5://视频
+                viewHolder = new TopicItemHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.topic_list_item_layout, null));
+        }
+        return viewHolder;
     }
 
     @Override
     public int getItemViewType(int position) {
-        return 0;
+        if (mData == null || mData.size() == 0)
+            return -1;
+        return mData.get(position).getItemType();
     }
 }

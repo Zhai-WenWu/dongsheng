@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
@@ -30,6 +31,7 @@ import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
+import acore.widget.rvlistview.RvGridView;
 import acore.widget.rvlistview.RvListView;
 import acore.widget.rvlistview.RvStaggeredGridView;
 import amodule.topic.adapter.TopicInfoStaggeredAdapter;
@@ -55,7 +57,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
 
     private TextView mTitle;
     private ImageView mBackImg;
-    private RvStaggeredGridView mStaggeredGridView;
+    private RvGridView mStaggeredGridView;
     private ImageView mFloatingButton;
     private TopicHeaderView mTopicHeaderView;
 
@@ -74,6 +76,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
     private ArrayList<TopicItemModel> mNewDatas;
     private LinearLayout mTitleLayout;
     private String title;
+    private TopicItemModel topicItemModelTab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +91,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
             return;
         }
         loadTopicInfo();
-        startLoadData();
+//        startLoadData();
     }
 
     private void initStatusBar() {
@@ -104,7 +107,12 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
 
         mHotDatas = new ArrayList<>();
         mNewDatas = new ArrayList<>();
-        mTopicInfoStaggeredAdapter = new TopicInfoStaggeredAdapter(this, mHotDatas);
+        //添加tab条目
+        topicItemModelTab = new TopicItemModel();
+        topicItemModelTab.setItemType(topicItemModelTab.ITEM_TAB);
+//        mTopicInfoStaggeredAdapter.addData(topicItemModelTab);
+        mHotDatas.add(topicItemModelTab);
+        mNewDatas.add(topicItemModelTab);
         loadTopicList();
     }
 
@@ -114,62 +122,69 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
         mBackImg.setOnClickListener(v -> {
             finish();
         });
-        mTopicHeaderView = findViewById(R.id.view_topic_header);
         mStaggeredGridView = findViewById(R.id.staggered_view);
         mStaggeredGridView.closeDefaultAnimator();
+        mStaggeredGridView.setIsFillRowCallback(new RvGridView.IsFillRowCallback() {
+            @Override
+            public boolean isFillRowCallback(int position) {
+                int itemViewType = mTopicInfoStaggeredAdapter.getItemViewType(position);
+                return mTopicInfoStaggeredAdapter != null
+                        && (itemViewType == topicItemModelTab.ITEM_TAB || itemViewType == topicItemModelTab.ITEM_ACTIVITY_IMG);
+            }
+        });
         mFloatingButton = findViewById(R.id.floating_btn);
-        FrameLayout mHotView = findViewById(R.id.fl_hot);
-        FrameLayout mNewView = findViewById(R.id.fl_new);
-        TextView mHotTabTv = findViewById(R.id.tv_hot_tab);
-        View mHotTabBottomView = findViewById(R.id.view_hot_tab_bottom);
-        TextView mNewTabTV = findViewById(R.id.tv_new_tab);
-        View mNewTabBottom = findViewById(R.id.view_new_tab_bottom);
+//        FrameLayout mHotView = findViewById(R.id.fl_hot);
+//        FrameLayout mNewView = findViewById(R.id.fl_new);
+//        TextView mHotTabTv = findViewById(R.id.tv_hot_tab);
+//        View mHotTabBottomView = findViewById(R.id.view_hot_tab_bottom);
+//        TextView mNewTabTV = findViewById(R.id.tv_new_tab);
+//        View mNewTabBottomView = findViewById(R.id.view_new_tab_bottom);
         mTitleLayout = findViewById(R.id.title_container);
 
-        mHotView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mHotTabTv.setTextColor(getResources().getColor(R.color.white));
-                mHotTabBottomView.setVisibility(View.VISIBLE);
-                mNewTabTV.setTextColor(getResources().getColor(R.color.c_777777));
-                mNewTabBottom.setVisibility(View.INVISIBLE);
-
-                StatisticsManager.saveData(StatModel.createBtnClickDetailModel("TopicInfoActivity", "TopicInfoActivity", "new_topic_gather", title, "最热"));
-
-                mTab = HOT;
-
-                mStaggeredGridView.scrollToPosition(0);
-                mTopicInfoStaggeredAdapter.setData(mHotDatas);
-                mTopicInfoStaggeredAdapter.notifyDataSetChanged();
-            }
-        });
-
-        mNewView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mHotTabTv.setTextColor(getResources().getColor(R.color.c_777777));
-                mHotTabBottomView.setVisibility(View.INVISIBLE);
-                mNewTabTV.setTextColor(getResources().getColor(R.color.white));
-                mNewTabBottom.setVisibility(View.VISIBLE);
-
-                StatisticsManager.saveData(StatModel.createBtnClickDetailModel("TopicInfoActivity", "TopicInfoActivity", "new_topic_gather", title, "最新"));
-
-                mTab = NEW;
-
-                if (mNewDatas.size() == 0) {
-                    loadTopicList();
-                }
-
-                mStaggeredGridView.scrollToPosition(0);
-                mTopicInfoStaggeredAdapter.setData(mNewDatas);
-                mTopicInfoStaggeredAdapter.notifyDataSetChanged();
-            }
-        });
+//        mHotView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                mHotTabTv.setTextColor(getResources().getColor(R.color.white));
+//                mHotTabBottomView.setVisibility(View.VISIBLE);
+//                mNewTabTV.setTextColor(getResources().getColor(R.color.c_777777));
+//                mNewTabBottomView.setVisibility(View.INVISIBLE);
+//
+//                StatisticsManager.saveData(StatModel.createBtnClickDetailModel("TopicInfoActivity", "TopicInfoActivity", "new_topic_gather", title, "最热"));
+//
+//                mTab = HOT;
+//
+//                mStaggeredGridView.scrollToPosition(0);
+//                mTopicInfoStaggeredAdapter.setData(mHotDatas);
+//                mTopicInfoStaggeredAdapter.notifyDataSetChanged();
+//            }
+//        });
+//
+//        mNewView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                mHotTabTv.setTextColor(getResources().getColor(R.color.c_777777));
+//                mHotTabBottomView.setVisibility(View.INVISIBLE);
+//                mNewTabTV.setTextColor(getResources().getColor(R.color.white));
+//                mNewTabBottomView.setVisibility(View.VISIBLE);
+//
+//                StatisticsManager.saveData(StatModel.createBtnClickDetailModel("TopicInfoActivity", "TopicInfoActivity", "new_topic_gather", title, "最新"));
+//
+//                mTab = NEW;
+//
+//                if (mNewDatas.size() == 0) {
+//                    loadTopicList();
+//                }
+//
+//                mStaggeredGridView.scrollToPosition(0);
+//                mTopicInfoStaggeredAdapter.setData(mNewDatas);
+//                mTopicInfoStaggeredAdapter.notifyDataSetChanged();
+//            }
+//        });
 
         mStaggeredGridView.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
             public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-                StaggeredGridLayoutManager.LayoutParams params = (StaggeredGridLayoutManager.LayoutParams) view.getLayoutParams();
+                GridLayoutManager.LayoutParams params = (GridLayoutManager.LayoutParams) view.getLayoutParams();
                 int position = parent.getChildAdapterPosition(view);
                 int viewType = parent.getAdapter().getItemViewType(position);
                 switch (viewType) {
@@ -205,6 +220,29 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                 AliyunCommon.getInstance().startRecord(TopicInfoActivity.this, mTopicCode, mInfoMap.get("name"));
             }
         });
+
+        mStaggeredGridView.setOnItemClickListener(new RvListView.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
+                TopicItemModel topicItemModel = mTopicInfoStaggeredAdapter.getData().get(position);
+                int itemType = topicItemModel.getItemType();
+                if (itemType == topicItemModel.ITEM_TAB) {
+                    setTabClick(topicItemModel);
+                }
+            }
+        });
+    }
+
+    public void setTabClick(TopicItemModel topicItemModel) {
+        if (topicItemModel.getTabTag() == topicItemModel.TAB_HOT) {
+            mTopicInfoStaggeredAdapter.notifyItemRangeChanged(2, mHotDatas.size());
+        } else if (topicItemModel.getTabTag() == topicItemModel.TAB_HOT) {
+            if (mNewDatas.size() == 0) {
+                loadTopicList();
+            } else {
+                mTopicInfoStaggeredAdapter.notifyItemRangeChanged(2, mNewDatas.size());
+            }
+        }
     }
 
     private int dp2px(int dimenId) {
@@ -223,7 +261,6 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                     loadTopicList();
                 }
         );
-
     }
 
     private void loadTopicInfo() {
@@ -244,6 +281,8 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                         mTitleLayout.setVisibility(View.GONE);
                     }
                     mAuthorMap = StringManager.getFirstMap(mInfoMap.get("author"));
+                    mTopicHeaderView = new TopicHeaderView(TopicInfoActivity.this);
+                    mStaggeredGridView.addHeaderView(mTopicHeaderView);
                     mTopicHeaderView.showTopicData(mInfoMap.get("activityType"), mTopicCode, mInfoMap);
                     mTopicHeaderView.setVisibility(View.VISIBLE);
                 } else {
@@ -277,19 +316,18 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
         int H = screenH - newH;
 
 
-        AppBarLayout mAppBarLayout = findViewById(R.id.app_bar);
-
-        mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                mStaggeredGridView.getLocationOnScreen(location1);
-                if (location1[1] <= H) {
-                    mFloatingButton.setVisibility(View.VISIBLE);
-                } else {
-                    mFloatingButton.setVisibility(View.INVISIBLE);
-                }
-            }
-        });
+//
+//        mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+//            @Override
+//            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+//                mStaggeredGridView.getLocationOnScreen(location1);
+//                if (location1[1] <= H) {
+//                    mFloatingButton.setVisibility(View.VISIBLE);
+//                } else {
+//                    mFloatingButton.setVisibility(View.INVISIBLE);
+//                }
+//            }
+//        });
 
     }
 
@@ -348,15 +386,20 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                         labelModel.setColor(labelMap.get("color"));
                         labelModel.setBgColor(labelMap.get("bgColor"));
                         topicItemModel.setLabelModel(labelModel);
+                        topicItemModel.setItemType(topicItemModel.ITEM_TOPIC_VID);
                         topicItemModel.setStatJson(data.get("statJson"));
                         switch (tab) {
                             case HOT:
                                 topicItemModel.setIsHot(true);
                                 mHotDatas.add(topicItemModel);
+//                                mTopicInfoStaggeredAdapter.setData(mHotDatas);
+                                mTopicInfoStaggeredAdapter = new TopicInfoStaggeredAdapter(TopicInfoActivity.this, mHotDatas);
+                                startLoadData();
                                 break;
                             case NEW:
                                 topicItemModel.setIsHot(false);
                                 mNewDatas.add(topicItemModel);
+                                mTopicInfoStaggeredAdapter.setData(mNewDatas);
                                 break;
                         }
                     }
