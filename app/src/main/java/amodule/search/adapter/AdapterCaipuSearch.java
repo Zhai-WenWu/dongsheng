@@ -445,7 +445,7 @@ public class AdapterCaipuSearch extends BaseAdapter {
     }
 
     private int[] getAdPos() {
-        int[] adPos = new int[]{0,4,10,17,25,34,44};
+        int[] adPos = new int[]{0,4,10,17,25,34,43};
         if(mListIngreData != null && !mListIngreData.isEmpty()){
             for(int i=0;i<adPos.length;i++){
                 adPos[i]++;
