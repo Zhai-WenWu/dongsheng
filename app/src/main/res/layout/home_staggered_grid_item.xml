@@ -15,7 +15,7 @@
         android:layout_height="0dp"
         android:scaleType="centerCrop"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/guideline"
+        app:layout_constraintBottom_toTopOf="@+id/title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
     <pl.droidsonroids.gif.GifImageView
@@ -24,7 +24,7 @@
         android:layout_height="0dp"
         android:scaleType="centerCrop"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/guideline"
+        app:layout_constraintBottom_toTopOf="@+id/title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
 
@@ -40,6 +40,7 @@
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingTop="@dimen/dp_6"
         android:layout_marginBottom="@dimen/dp_8"
         android:layout_marginEnd="@dimen/dp_8"
         android:layout_marginStart="@dimen/dp_8"
@@ -47,10 +48,10 @@
         android:gravity="center_vertical"
         android:lineSpacingExtra="@dimen/dp_1"
         android:maxLines="2"
-        android:textColor="@color/c_white_text"
+        android:textColor="@color/common_text"
         android:textSize="@dimen/sp_16"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@id/img" />
+        app:layout_constraintBottom_toTopOf="@+id/guideline"/>
 
     <acore.widget.rcwidget.RCImageView
         android:id="@+id/user_header_img"
@@ -79,8 +80,8 @@
         android:textSize="@dimen/sp_12"
         app:layout_constraintStart_toEndOf="@+id/user_header_img"
         app:layout_constraintEnd_toStartOf="@+id/img_fav"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline"/>
+        app:layout_constraintBottom_toBottomOf="@+id/user_header_img"
+        app:layout_constraintTop_toTopOf="@+id/user_header_img"/>
 
     <ImageView
         android:id="@+id/img_fav"
@@ -94,8 +95,8 @@
         android:paddingRight="@dimen/dp_4"
         android:scaleType="fitCenter"
         android:src="@drawable/icon_home_good_def"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline"
+        app:layout_constraintBottom_toBottomOf="@+id/user_header_img"
+        app:layout_constraintTop_toTopOf="@+id/user_header_img"
         app:layout_constraintEnd_toStartOf="@+id/num_tv"/>
 
     <TextView
@@ -109,8 +110,8 @@
         android:textColor="#bbbbbb"
         android:textSize="@dimen/sp_12"
         android:includeFontPadding="false"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline"
+        app:layout_constraintBottom_toBottomOf="@+id/user_header_img"
+        app:layout_constraintTop_toTopOf="@+id/user_header_img"
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <android.support.constraint.Guideline
