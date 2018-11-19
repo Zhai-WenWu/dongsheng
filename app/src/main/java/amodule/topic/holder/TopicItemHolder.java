@@ -81,17 +81,17 @@ public class TopicItemHolder extends RvBaseViewHolderStat<TopicItemModel> {
 
             if (data.getIsHot()) {
                 switch (data.getHotNo()) {
-                    case 0:
+                    case 1:
                         mRanking.setImageResource(R.drawable.topic_item_no1);
                         mLabel.setVisibility(View.GONE);
                         mRanking.setVisibility(View.VISIBLE);
                         break;
-                    case 1:
+                    case 2:
                         mRanking.setImageResource(R.drawable.topic_item_no2);
                         mLabel.setVisibility(View.GONE);
                         mRanking.setVisibility(View.VISIBLE);
                         break;
-                    case 2:
+                    case 3:
                         mRanking.setImageResource(R.drawable.topic_item_no3);
                         mLabel.setVisibility(View.GONE);
                         mRanking.setVisibility(View.VISIBLE);

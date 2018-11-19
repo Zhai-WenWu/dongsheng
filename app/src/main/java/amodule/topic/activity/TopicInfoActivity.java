@@ -484,6 +484,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
         }
         ReqEncyptInternet.in().doGetEncypt(StringManager.API_TOPIC_LIST, "code=" + mTopicCode + "&page=" + mPage + "&tab=" + mTab, new InternetCallback() {
             final String tab = mTab;
+            final int currentPage = mPage;
 
             @Override
             public void loaded(int i, String s, Object o) {
@@ -522,7 +523,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                         switch (tab) {
                             case HOT:
                                 topicItemModel.setIsHot(true);
-                                topicItemModel.setHotNo(j);
+                                topicItemModel.setHotNo(currentPage == 1 && j < 3 ? j+1 : 0);
                                 mHotDatas.add(topicItemModel);
                                 break;
                             case NEW:
