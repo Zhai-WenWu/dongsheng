@@ -50,7 +50,7 @@
         android:maxLines="2"
         android:textColor="@color/common_text"
         android:textSize="@dimen/sp_16"
-        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/img"
         app:layout_constraintBottom_toTopOf="@+id/guideline"/>
 
     <acore.widget.rcwidget.RCImageView
@@ -75,7 +75,7 @@
         android:layout_marginEnd="@dimen/dp_2"
         android:ellipsize="end"
         android:lines="1"
-        android:textColor="#bbbbbb"
+        android:textColor="@color/common_text"
         android:includeFontPadding="false"
         android:textSize="@dimen/sp_12"
         app:layout_constraintStart_toEndOf="@+id/user_header_img"

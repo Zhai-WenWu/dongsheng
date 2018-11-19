@@ -102,7 +102,6 @@ public class BaiduAdTools {
         String desc = nativeResponse.getDesc();
         String iconUrl = nativeResponse.getIconUrl();
         String imageUrl = nativeResponse.getImageUrl();
-//        boolean isBigPic = nativeResponse.getMainPicWidth() >= 720;
         boolean isBigPic = nativeResponse.isDownloadApp();
         callback.onHandlerData(title,desc,iconUrl,imageUrl,isBigPic);
     }
