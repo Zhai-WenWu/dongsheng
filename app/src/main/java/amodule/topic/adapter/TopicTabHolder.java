@@ -11,7 +11,7 @@ import acore.override.XHApplication;
 import acore.widget.rvlistview.holder.RvBaseViewHolder;
 import amodule.topic.model.TopicItemModel;
 
-class TopicTabHolder extends RvBaseViewHolder<TopicItemModel> {
+public class TopicTabHolder extends RvBaseViewHolder<TopicItemModel> {
 
     private FrameLayout mHotView;
     private FrameLayout mNewView;
@@ -19,6 +19,7 @@ class TopicTabHolder extends RvBaseViewHolder<TopicItemModel> {
     private View mHotTabBottomView;
     private TextView mNewTabTV;
     private View mNewTabBottomView;
+    private TopicItemModel mData;
 
     public TopicTabHolder(View inflate) {
         super(inflate);
@@ -32,6 +33,8 @@ class TopicTabHolder extends RvBaseViewHolder<TopicItemModel> {
 
     @Override
     public void bindData(int position, @Nullable TopicItemModel data) {
+this.mData = data;
+
         mHotView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -39,7 +42,6 @@ class TopicTabHolder extends RvBaseViewHolder<TopicItemModel> {
                 mHotTabBottomView.setVisibility(View.VISIBLE);
                 mNewTabTV.setTextColor(XHApplication.in().getResources().getColor(R.color.c_777777));
                 mNewTabBottomView.setVisibility(View.INVISIBLE);
-
                 data.setTabTag(data.TAB_HOT);
                 itemView.setOnClickListener(this);
             }
@@ -57,5 +59,22 @@ class TopicTabHolder extends RvBaseViewHolder<TopicItemModel> {
 
             }
         });
+    }
+
+    public void setHotClick() {
+        mHotTabTv.setTextColor(XHApplication.in().getResources().getColor(R.color.white));
+        mHotTabBottomView.setVisibility(View.VISIBLE);
+        mNewTabTV.setTextColor(XHApplication.in().getResources().getColor(R.color.c_777777));
+        mNewTabBottomView.setVisibility(View.INVISIBLE);
+
+        mData.setTabTag(mData.TAB_HOT);
+    }
+
+    public void setNewClick() {
+        mHotTabTv.setTextColor(XHApplication.in().getResources().getColor(R.color.c_777777));
+        mHotTabBottomView.setVisibility(View.INVISIBLE);
+        mNewTabTV.setTextColor(XHApplication.in().getResources().getColor(R.color.white));
+        mNewTabBottomView.setVisibility(View.VISIBLE);
+        mData.setTabTag(mData.TAB_NEW);
     }
 }

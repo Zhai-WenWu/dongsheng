@@ -7,8 +7,8 @@ import android.graphics.Bitmap;
  */
 public class TopicItemModel {
 
-    public int TAB_HOT = 1;
-    public int TAB_NEW = 2;
+    public static final int TAB_HOT = 1;
+    public static final int TAB_NEW = 2;
     private String mVideoCode;//视频code
     private String mVideoName;//视频名称、描述
     private boolean mIsEssence;//是否精选
