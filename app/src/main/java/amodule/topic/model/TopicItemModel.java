@@ -37,7 +37,7 @@ public class TopicItemModel {
     }
 
     public void setBitmap(Bitmap bitmap) {
-        mBitmap = bitmap;
+        this.mBitmap = bitmap;
     }
 
     public String getStatJson() {

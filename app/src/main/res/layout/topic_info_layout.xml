@@ -10,10 +10,23 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <acore.widget.rvlistview.RvGridView
+            android:id="@+id/staggered_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:overScrollMode="never"
+            app:spanCount="3" />
+
         <RelativeLayout
             android:id="@+id/title_layout"
             android:layout_width="match_parent"
             android:layout_height="@dimen/topbar_height">
+
+            <View
+                android:id="@+id/title_bg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/black" />
 
             <ImageView
                 android:id="@+id/back_img"
@@ -60,13 +73,13 @@
                 android:layout_marginRight="@dimen/dp_15" />
         </RelativeLayout>
 
-        <acore.widget.rvlistview.RvGridView
-            android:id="@+id/staggered_view"
+        <include
+            android:id="@+id/tab_layout"
+            layout="@layout/topic_tab_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/dp_44"
             android:layout_below="@+id/title_layout"
-            android:overScrollMode="never"
-            app:spanCount="3" />
+            android:visibility="invisible" />
 
     </RelativeLayout>
 

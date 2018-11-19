@@ -3,6 +3,7 @@ package amodule.topic.adapter;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.xiangha.R;
@@ -20,6 +21,8 @@ public class TopicInfoStaggeredAdapter extends RvBaseAdapter<TopicItemModel> {
     public static final int ITEM_ACTIVITY_IMG = 1;
     public static final int ITEM_TAB = 2;
     public static final int ITEM_TOPIC_VID = 3;
+    private View mTabItemView;
+
     public TopicInfoStaggeredAdapter(Context context, @Nullable ArrayList<TopicItemModel> data) {
         super(context, data);
     }
@@ -33,6 +36,7 @@ public class TopicInfoStaggeredAdapter extends RvBaseAdapter<TopicItemModel> {
                 break;
             case ITEM_TAB://tab
                 viewHolder = new TopicTabHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.topic_tab_layout, null));
+                mTabItemView = viewHolder.itemView;
                 break;
             case ITEM_TOPIC_VID://视频
                 viewHolder = new TopicItemHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.topic_list_item_layout, null));
@@ -46,5 +50,9 @@ public class TopicInfoStaggeredAdapter extends RvBaseAdapter<TopicItemModel> {
         if (mData == null || mData.size() == 0)
             return -1;
         return mData.get(position).getItemType();
+    }
+
+    public View getTabItemView() {
+        return mTabItemView;
     }
 }
