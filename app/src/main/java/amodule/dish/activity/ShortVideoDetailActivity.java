@@ -651,6 +651,11 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
                                 updateComment = true;
                                 mExtraModule.setCommentNum(firstLoadModule.getCommentNum());
                             }
+                            boolean updateActivityType = false;
+                            if (!TextUtils.equals(mExtraModule.getTopicModel().getActivityType(), firstLoadModule.getTopicModel().getActivityType())) {
+                                updateActivityType = true;
+                                mExtraModule.getTopicModel().setActivityType(firstLoadModule.getTopicModel().getActivityType());
+                            }
                             mExtraModule.setShareModule(firstLoadModule.getShareModule());
                             if (mAdapter != null && TextUtils.equals(mAdapter.getCurrentViewHolder().data.getCode(), mExtraModule.getCode())) {
                                 RvVericalVideoItemAdapter.ItemViewHolder currentHolder = mAdapter.getCurrentViewHolder();
@@ -667,7 +672,9 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
                                 if (updateComment) {
                                     currentHolder.updateCommentNum();
                                 }
-
+                                if (updateActivityType) {
+                                    currentHolder.updateActivityType();
+                                }
                             }
                         } else {
                             int insertPosStart = mDatas.size();
