@@ -46,7 +46,7 @@ public class TopicTabHolder extends RvBaseViewHolder<TopicItemModel> {
                 mNewTabTV.setTextColor(XHApplication.in().getResources().getColor(R.color.c_777777));
                 mNewTabBottomView.setVisibility(View.INVISIBLE);
                 data.setTabTag(data.TAB_HOT);
-                onTabClick.onClick(data);
+                handleTabClick(data);
             }
         });
 
@@ -58,9 +58,15 @@ public class TopicTabHolder extends RvBaseViewHolder<TopicItemModel> {
                 mNewTabTV.setTextColor(XHApplication.in().getResources().getColor(R.color.white));
                 mNewTabBottomView.setVisibility(View.VISIBLE);
                 data.setTabTag(data.TAB_NEW);
-                onTabClick.onClick(data);
+                handleTabClick(data);
             }
         });
+    }
+
+    private void handleTabClick(@Nullable TopicItemModel data) {
+        if(onTabClick != null){
+            onTabClick.onClick(data);
+        }
     }
 
     public void setHotClick() {
