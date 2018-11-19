@@ -89,7 +89,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
     private int mDistance;
     private int imageHeight;
     private String activityType;
-    private int headerHeight = 480;
+    private int headerHeight;
     private FrameLayout mHotView;
     private FrameLayout mNewView;
     private TextView mHotTabTv;
@@ -289,11 +289,11 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                     titleBg.setAlpha(1);
                 }
 
-                //参与
-                int screenH = ToolsDevice.getWindowPx(TopicInfoActivity.this).heightPixels;
-                int itemW = screenW / 3;
-                int itemH = itemW * 165 / 124;
-                int H = screenH - itemH;
+//                //参与
+//                int screenH = ToolsDevice.getWindowPx(TopicInfoActivity.this).heightPixels;
+//                int itemW = screenW / 3;
+//                int itemH = itemW * 165 / 124;
+//                int H = screenH - itemH;
 
 //                if (tabPosition < lastItemPosition) {
 //                    if (locationDong[1] <= H) {
@@ -311,23 +311,34 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                 super.onScrollStateChanged(recyclerView, newState);
                 ismHiddenActionstart = false;
                 Log.i("newState", newState + "");
+                int height = 0;
+                if (mTopicHeaderView!=null){
+                     height = mTopicHeaderView.getHeight();
+                }
 
-                //参与
                 int screenW = ToolsDevice.getWindowPx(TopicInfoActivity.this).widthPixels;
                 int screenH = ToolsDevice.getWindowPx(TopicInfoActivity.this).heightPixels;
                 int itemW = screenW / 3;
                 int itemH = itemW * 165 / 124;
-                int H = screenH - itemH;
-
-                boolean isShow = locationDong[1] <= H;
-//                if (locationDong[1] <= H) {
-//                    mFloatingButton.setVisibility(View.VISIBLE);
-//                } else {
-//                    mFloatingButton.setVisibility(View.INVISIBLE);
-//                }
-                if(!isShow){
+                if (mDistance<(headerHeight+height+mTabLayout.getHeight()+itemH-screenH)){
                     return;
                 }
+                //参与
+//                int screenW = ToolsDevice.getWindowPx(TopicInfoActivity.this).widthPixels;
+//                int screenH = ToolsDevice.getWindowPx(TopicInfoActivity.this).heightPixels;
+//                int itemW = screenW / 3;
+//                int itemH = itemW * 165 / 124;
+//                int H = screenH - itemH;
+//
+//                boolean isShow = locationDong[1] <= H;
+////                if (locationDong[1] <= H) {
+////                    mFloatingButton.setVisibility(View.VISIBLE);
+////                } else {
+////                    mFloatingButton.setVisibility(View.INVISIBLE);
+////                }
+
+
+
                 if (newState == 1) {
 
                     if (mFloatingButton.getVisibility() != View.VISIBLE)
