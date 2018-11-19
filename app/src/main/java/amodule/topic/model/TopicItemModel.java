@@ -26,6 +26,7 @@ public class TopicItemModel {
     private AddressModel mAddressModel;
     private LabelModel mLabelModel;
     private Bitmap mBitmap;
+    private int imageWidth,imageHieght;
     private boolean isShow;
     private int mItemType;//1,活动二图片2,tab3,视频列表
     //statJson	String	{"type":"7","code":"647470"}
@@ -207,5 +208,21 @@ public class TopicItemModel {
 
     public int getTabTag() {
         return mTabTag;
+    }
+
+    public int getImageWidth() {
+        return imageWidth;
+    }
+
+    public void setImageWidth(int imageWidth) {
+        this.imageWidth = imageWidth;
+    }
+
+    public int getImageHieght() {
+        return imageHieght;
+    }
+
+    public void setImageHieght(int imageHieght) {
+        this.imageHieght = imageHieght;
     }
 }

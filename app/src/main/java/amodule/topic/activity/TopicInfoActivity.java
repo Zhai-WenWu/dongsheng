@@ -2,8 +2,10 @@ package amodule.topic.activity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
@@ -452,6 +454,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
         );
     }
 
+    boolean infoIsOver = false;
     private void loadTopicInfo() {
 
         ReqEncyptInternet.in().doGetEncypt(StringManager.API_TOPIC_INFOV1, "code=" + mTopicCode, new InternetCallback() {
@@ -489,6 +492,22 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                                     }
                                     int imageWidth = Tools.parseIntOfThrow(activityInfoMap.get("imageWidth"), 100);
                                     imageHeight = Tools.parseIntOfThrow(activityInfoMap.get("imageHeight"), 100);
+                                    final int size = imageHeight/400 + (imageHeight % 400 > 0 ? 1 : 0);
+                                    tabPosition = size;
+                                    mTopicInfoStaggeredAdapter.setTabIndex(tabPosition);
+                                    final int realImageWidth = ToolsDevice.getWindowPx(TopicInfoActivity.this).widthPixels;
+                                    final int realImageHieght = (int) (realImageWidth / imageWidth * 400f);
+                                    for (int index = 0; index < size; index++) {
+                                        TopicItemModel model = new TopicItemModel();
+                                        model.setBitmap(null);
+                                        model.setImageWidth(realImageWidth);
+                                        model.setImageHieght(realImageHieght);
+                                        model.setItemType(TopicInfoStaggeredAdapter.ITEM_ACTIVITY_IMG);
+                                        mDatas.add(index, model);
+                                    }
+                                    if (mTopicInfoStaggeredAdapter != null) {
+                                        mTopicInfoStaggeredAdapter.notifyDataSetChanged();
+                                    }
                                     ImgManager.tailorImageByUrl(TopicInfoActivity.this, url, imageWidth, imageHeight, 400, new ImgManager.OnResourceCallback() {
                                         @Override
                                         public void onResource(ArrayList<Bitmap> bitmaps) {
@@ -496,6 +515,9 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                                                 @Override
                                                 public void run() {
                                                     if (bitmaps != null && mDatas != null) {
+                                                        for(int i = size - 1 ; i >= 0 ; i--){
+                                                            mDatas.remove(i);
+                                                        }
                                                         tabPosition = bitmaps.size();
                                                         mTopicInfoStaggeredAdapter.setTabIndex(tabPosition);
                                                         for (int i = 0; i < bitmaps.size(); i++) {
@@ -517,7 +539,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                                 break;
                         }
                     }
-
+                    infoIsOver = true;
                     loadTopicList();
                 }
                 if (mTopicInfoStaggeredAdapter != null) {
@@ -528,9 +550,9 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
     }
 
     private void loadTopicList() {
-//        if (mTopicListLoading) {
-//            return;
-//        }
+        if (!infoIsOver) {
+            return;
+        }
 //        mTopicListLoading = true;
         switch (mTab) {
             case HOT:
