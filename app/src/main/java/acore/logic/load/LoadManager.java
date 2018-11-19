@@ -296,7 +296,9 @@ public class LoadManager {
 			}
 			listView.setAdapter(adapter);
 		}
-		setLoading(loadMoreListener);
+		if(!hasMore){
+			setLoading(loadMoreListener);
+		}
 	}
 
 	/**
@@ -325,7 +327,9 @@ public class LoadManager {
 
 			}
 		}
-		setLoading(loadMoreListener);
+		if(!hasMore){
+			setLoading(loadMoreListener);
+		}
 	}
 
 	public void setLoading(PtrClassicFrameLayout refreshLayout, RvListView listView, RvBaseAdapter adapter,
@@ -370,7 +374,9 @@ public class LoadManager {
 			}
 			listView.setAdapter(adapter);
 		}
-		setLoading(clicker);
+		if(!hasMore){
+			setLoading(clicker);
+		}
 	}
 
     public void loading(Object key, boolean isBlankSpace) {
