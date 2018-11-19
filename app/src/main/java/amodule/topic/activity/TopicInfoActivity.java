@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,6 +22,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.xiangha.R;
+
+import org.eclipse.jetty.util.log.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,6 +84,12 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
     private ArrayList<TopicItemModel> mDatas;
     private LinearLayout mTitleLayout;
     private String title;
+    private TopicItemModel topicItemModelTab;
+    private int tabPosition;
+    private int mDistance;
+    private int imageHeight;
+    private String activityType;
+    private int headerHeight = 480;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,11 +127,13 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
         mTopicInfoStaggeredAdapter = new TopicInfoStaggeredAdapter(TopicInfoActivity.this, mDatas);
         mStaggeredGridView.setAdapter(mTopicInfoStaggeredAdapter);
         mTopicInfoStaggeredAdapter.notifyDataSetChanged();
+        tabPosition = 0;
         loadTopicList();
     }
 
     private void initView() {
         mTitle = findViewById(R.id.title);
+        View mTabLayout = findViewById(R.id.tab_layout);
         mBackImg = findViewById(R.id.back_img);
         mBackImg.setOnClickListener(v -> {
             finish();
@@ -137,12 +149,6 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
             }
         });
         mFloatingButton = findViewById(R.id.floating_btn);
-//        FrameLayout mHotView = findViewById(R.id.fl_hot);
-//        FrameLayout mNewView = findViewById(R.id.fl_new);
-//        TextView mHotTabTv = findViewById(R.id.tv_hot_tab);
-//        View mHotTabBottomView = findViewById(R.id.view_hot_tab_bottom);
-//        TextView mNewTabTV = findViewById(R.id.tv_new_tab);
-//        View mNewTabBottomView = findViewById(R.id.view_new_tab_bottom);
         mTitleLayout = findViewById(R.id.title_container);
 
 //        mHotView.setOnClickListener(new View.OnClickListener() {
@@ -225,6 +231,51 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
             }
         });
 
+
+        int[] locationDong = new int[2];
+        int[] locationJing = new int[2];
+        mDistance = 0;
+
+        View titleBg = findViewById(R.id.title_bg);
+
+        mStaggeredGridView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                View tabItemView = mTopicInfoStaggeredAdapter.getTabItemView();
+                if (tabItemView != null) {
+                    tabItemView.getLocationOnScreen(locationDong);
+                }
+                mTabLayout.getLocationOnScreen(locationJing);
+
+                if (locationDong[1] <= locationJing[1]) {
+                    mTabLayout.setVisibility(View.VISIBLE);
+                } else {
+                    mTabLayout.setVisibility(View.GONE);
+                }
+
+                if (activityType != null) {
+                    if (activityType.equals("2")) {
+                        headerHeight = imageHeight;
+                    } else {
+                        headerHeight = mTopicHeaderView.getHeight();
+                    }
+                }
+
+                mDistance += dy;
+                float alpha = (float) mDistance / headerHeight;
+                if (alpha > 0 && alpha < 1) {
+                    titleBg.setAlpha((float) alpha);
+                }
+                if (alpha == 0) {
+                    titleBg.setAlpha(0);
+                }
+                if (alpha >= 1) {
+                    titleBg.setAlpha(1);
+                }
+            }
+        });
+
         mStaggeredGridView.setOnItemClickListener(new RvListView.OnItemClickListener() {
             @Override
             public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
@@ -232,6 +283,8 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                 int itemType = topicItemModel.getItemType();
                 if (itemType == TopicInfoStaggeredAdapter.ITEM_TAB) {
                     setTabClick(topicItemModel);
+                } else if (itemType == TopicInfoStaggeredAdapter.ITEM_TOPIC_VID) {
+
                 }
             }
         });
@@ -284,7 +337,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                     } else {
                         mTitleLayout.setVisibility(View.GONE);
                     }
-                    String activityType = mInfoMap.get("activityType");
+                    activityType = mInfoMap.get("activityType");
                     if (activityType != null) {
                         switch (activityType) {
                             case "0":
@@ -302,7 +355,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                                         return;
                                     }
                                     int imageWidth = Tools.parseIntOfThrow(activityInfoMap.get("imageWidth"), 100);
-                                    int imageHeight = Tools.parseIntOfThrow(activityInfoMap.get("imageHeight"), 100);
+                                    imageHeight = Tools.parseIntOfThrow(activityInfoMap.get("imageHeight"), 100);
                                     ImgManager.tailorImageByUrl(TopicInfoActivity.this, url, imageWidth, imageHeight, 400, new ImgManager.OnResourceCallback() {
                                         @Override
                                         public void onResource(ArrayList<Bitmap> bitmaps) {
