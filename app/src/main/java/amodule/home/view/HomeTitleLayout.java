@@ -99,6 +99,7 @@ public class HomeTitleLayout extends RelativeLayout implements IStatictusData {
                     Intent intent = new Intent(getContext(), HomeSearch.class);
                     if(!TextUtils.isEmpty(searchWord)){
                         intent.putExtra("s",searchWord);
+                        intent.putExtra(HomeSearch.EXTRA_IS_NOW_SEARCH,"1");
                     }
                     getContext().startActivity(intent);
                     break;

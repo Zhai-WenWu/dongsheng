@@ -81,6 +81,10 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
      * @param searchType 搜索类型
      */
     public void init(BaseActivity activity, String searchWord, int searchType) {
+        init(activity, searchWord, searchType,true);
+    }
+
+    public void init(BaseActivity activity, String searchWord, int searchType,boolean isNowSearch) {
         mActivity = activity;
         this.searchType = searchType;
         initView();
@@ -88,7 +92,9 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
         if (!TextUtils.isEmpty(searchWord)) {
             setHorizon(searchWord);
             setSearchMsg(searchWord, searchType);
-            search();
+            if(isNowSearch){
+                search();
+            }
         } else {
             XHClick.track(defaultView.getContext(), "浏览搜索默认页");
         }

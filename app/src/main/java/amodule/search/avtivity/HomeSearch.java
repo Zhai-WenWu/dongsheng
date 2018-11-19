@@ -23,10 +23,12 @@ public class HomeSearch extends BaseActivity {
 
     public static final String STATISTICS_ID = "a_search430";
     public static final String EXTRA_JSONDATA = "jsonData";
+    public static final String EXTRA_IS_NOW_SEARCH = "isNowSearch";
     public static int startCount = 0;
     private int limitSearchType;
     private String searchKey;
     private String jsonData;
+    private boolean isNowSearch = false;
     private GlobalSearchView globalSearchView;
 
 
@@ -50,6 +52,7 @@ public class HomeSearch extends BaseActivity {
             limitSearchType = bundle.getInt(SearchConstant.SEARCH_TYPE, SearchConstant.SEARCH_CAIPU);
             searchKey = bundle.getString("s");
             jsonData = bundle.getString(EXTRA_JSONDATA);
+            isNowSearch = TextUtils.equals("2",bundle.getString(EXTRA_IS_NOW_SEARCH));
         }
         if(startCount != 1){
             level = 3;
@@ -63,7 +66,7 @@ public class HomeSearch extends BaseActivity {
         initTitle();
         globalSearchView = findViewById(R.id.bar_search_global);
         if (TextUtils.isEmpty(jsonData)) {
-            globalSearchView.init(this, searchKey, limitSearchType);
+            globalSearchView.init(this, searchKey, limitSearchType,isNowSearch);
         } else {
             globalSearchView.init(this, jsonData);
         }
