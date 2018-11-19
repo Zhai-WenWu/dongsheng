@@ -110,9 +110,9 @@ public class SearchHorizonLayout extends RelativeLayout {
 
             JSONObject jsonObject = new JSONObject();
             try {
-                if (!TextUtils.equals("2", data.get("type")) && !strList.isEmpty()) {
+//                if (!TextUtils.equals("2", data.get("type")) && !strList.isEmpty()) {
                     jsonArray = StringManager.getJsonByArrayList((ArrayList<Map<String, String>>) strList);
-                }
+//                }
                 jsonObject.put("name", data.get("name"));
                 jsonObject.put("type", data.get("type"));
                 jsonArray.put(jsonObject);

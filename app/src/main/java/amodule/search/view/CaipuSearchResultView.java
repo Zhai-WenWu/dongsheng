@@ -146,19 +146,19 @@ public class CaipuSearchResultView extends LinearLayout {
         String[] searchWords = {"", ""};
         List<Map<String, String>> strList = StringManager.getListMapByJson(jsonData);
         mSearchHorizonLayout.setWordList(strList);
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < strList.size(); i++) {
-            Map<String, String> map = strList.get(i);
-            String word = map.get("name");
-            if (TextUtils.isEmpty(word)) {
-                continue;
-            }
-            sb.append(map.get("name"));
-            if (i != strList.size() - 1) {
-                sb.append(" ");
-            }
-        }
-        searchWords[0] = sb.toString();
+//        StringBuilder sb = new StringBuilder();
+//        for (int i = 0; i < strList.size(); i++) {
+//            Map<String, String> map = strList.get(i);
+//            String word = map.get("name");
+//            if (TextUtils.isEmpty(word)) {
+//                continue;
+//            }
+//            sb.append(map.get("name"));
+//            if (i != strList.size() - 1) {
+//                sb.append(" ");
+//            }
+//        }
+//        searchWords[0] = sb.toString();
         String word1 = "", word2 = "";
         for (int i = 0; i < strList.size(); i++) {
             Map<String, String> map = strList.get(i);
@@ -176,7 +176,7 @@ public class CaipuSearchResultView extends LinearLayout {
                 word2 = word;
             }
         }
-        searchWords[1] = word1 + " " + word2;
+        searchWords[0] = searchWords[1] = word1 + " " + word2;
         return searchWords;
     }
 
