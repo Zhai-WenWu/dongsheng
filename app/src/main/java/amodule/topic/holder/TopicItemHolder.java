@@ -30,7 +30,7 @@ public class TopicItemHolder extends RvBaseViewHolderStat<TopicItemModel> {
     private ImageView mRanking;
 
     public TopicItemHolder(@NonNull View topicItemView) {
-        super(topicItemView,topicItemView.getContext().getClass().getSimpleName());
+        super(topicItemView, topicItemView.getContext().getClass().getSimpleName());
         int originalW = 124;
         int originalH = 165;
         int screenW = ToolsDevice.getWindowPx(itemView.getContext()).widthPixels;
@@ -96,8 +96,11 @@ public class TopicItemHolder extends RvBaseViewHolderStat<TopicItemModel> {
                         mLabel.setVisibility(View.GONE);
                         mRanking.setVisibility(View.VISIBLE);
                         break;
+                    default:
+                        mRanking.setVisibility(View.GONE);
+                        break;
                 }
-            }else {
+            } else {
                 mRanking.setVisibility(View.GONE);
             }
 
