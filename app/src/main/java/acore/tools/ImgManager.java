@@ -1,8 +1,14 @@
 package acore.tools;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilImage;
@@ -13,6 +19,8 @@ import acore.override.XHApplication;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.BitmapRegionDecoder;
+import android.graphics.Rect;
 import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
@@ -23,6 +31,7 @@ import android.widget.ImageView;
 
 import aplug.basic.LoadImage;
 
+import com.bumptech.glide.Glide;
 import com.xiangha.R;
 
 public class ImgManager extends UtilImage {
@@ -251,5 +260,76 @@ public class ImgManager extends UtilImage {
 
         renderScript.destroy();
         return inputBmp;
+    }
+
+
+    public static void tailorImageByUrl(Context context, String url, int imgWidth, int imgHeight, int tailorHeight, OnResourceCallback callback) {
+        if (context == null || TextUtils.isEmpty(url) || tailorHeight <= 0) {
+            if (callback != null) {
+                callback.onResource(null);
+            }
+            return;
+        }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    File file = Glide.with(context).load(url).downloadOnly(imgWidth, imgHeight).get();
+                    if (callback != null) {
+                        callback.onResource(tailorImage(file, tailorHeight));
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+    private static ArrayList<Bitmap> tailorImage(File file, int tailorHeight) {
+        if (file == null && !file.exists()) {
+            return null;
+        }
+        ArrayList<Bitmap> bitmaps = new ArrayList<>();
+        BufferedInputStream bis = null;
+        try {
+            bis = new BufferedInputStream(new FileInputStream(file), 1024);
+            BitmapRegionDecoder brd = BitmapRegionDecoder.newInstance(bis, true);
+            final int imgWidth = brd.getWidth();
+            final int imgHeight = brd.getHeight();
+            final int count = (int) Math.ceil(imgHeight * 1.00 / tailorHeight);
+            BitmapFactory.Options bfo = new BitmapFactory.Options();
+            Rect rect = new Rect();
+            int top = 0;
+            int bottom = 0;
+            for (int i = 0; i < count; i ++) {
+                top = tailorHeight * i;
+                bottom = top + tailorHeight;
+                bottom = bottom >  imgHeight ? imgHeight : bottom;
+                rect.set(0, top, imgWidth, bottom);
+                Bitmap bitmap = brd.decodeRegion(rect, bfo);
+                if (bitmaps == null) {
+                    bitmaps = new ArrayList<>();
+                }
+                bitmaps.add(bitmap);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (bis != null) {
+                try {
+                    bis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return bitmaps;
+    }
+
+    public interface OnResourceCallback {
+        void onResource (ArrayList<Bitmap> bitmaps);
     }
 }
