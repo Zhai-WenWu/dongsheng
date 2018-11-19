@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -494,6 +496,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                 if (i >= ReqInternet.REQ_OK_STRING) {
                     List<Map<String, String>> datas = StringManager.getListMapByJson(o);
                     currentPageCount = datas.size();
+                    ArrayList<TopicItemModel> tmepData = new ArrayList<>();
                     for (int j = 0; j < datas.size(); j++){
                         Map<String, String> data = datas.get(j);
                         //只处理了当前用到的数据，其他数据未处理，如有需要再添加设置
@@ -524,15 +527,14 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                             case HOT:
                                 topicItemModel.setIsHot(true);
                                 topicItemModel.setHotNo(currentPage == 1 && j < 3 ? j+1 : 0);
-                                mHotDatas.add(topicItemModel);
                                 break;
                             case NEW:
                                 topicItemModel.setIsHot(false);
-                                mNewDatas.add(topicItemModel);
                                 break;
                         }
+                        tmepData.add(topicItemModel);
                     }
-                    onTabChanged(tab);
+                    updateData(tab,tmepData);
                 } else {
                     switch (tab) {
                         case HOT:
@@ -548,6 +550,25 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                 }
             }
         });
+    }
+
+    private void updateData(String tab, @NonNull ArrayList<TopicItemModel> tmepData) {
+        if (TextUtils.isEmpty(tab))
+            return;
+        if (mDatas != null) {
+            switch (tab) {
+                case HOT:
+                    mHotDatas.addAll(tmepData);
+                    break;
+                case NEW:
+                    mNewDatas.addAll(tmepData);
+                    break;
+            }
+            if (mTopicInfoStaggeredAdapter != null && TextUtils.equals(mTab,tab)) {
+                mDatas.addAll(tmepData);
+                mTopicInfoStaggeredAdapter.notifyDataSetChanged();
+            }
+        }
     }
 
     private void onTabChanged(String currentTab) {
@@ -568,7 +589,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                     mDatas.addAll(mNewDatas);
                     break;
             }
-            if (mTopicInfoStaggeredAdapter != null && mTab == currentTab) {
+            if (mTopicInfoStaggeredAdapter != null && TextUtils.equals(mTab,currentTab)) {
                 mTopicInfoStaggeredAdapter.notifyDataSetChanged();
             }
         }
