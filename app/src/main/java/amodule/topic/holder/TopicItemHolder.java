@@ -5,35 +5,24 @@ import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
-import android.support.constraint.ConstraintSet;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.BitmapRequestBuilder;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.xiangha.R;
 
-import org.eclipse.jetty.util.security.Constraint;
-
-import acore.logic.AppCommon;
-import acore.logic.XHClick;
 import acore.logic.stat.RvBaseViewHolderStat;
 import acore.tools.FileManager;
 import acore.tools.ToolsDevice;
-import acore.widget.rvlistview.holder.RvBaseViewHolder;
-import amodule.dish.activity.ShortVideoDetailActivity;
-import amodule.topic.activity.TopicInfoActivity;
 import amodule.topic.model.ImageModel;
 import amodule.topic.model.LabelModel;
 import amodule.topic.model.TopicItemModel;
 import amodule.topic.model.VideoModel;
 import aplug.basic.LoadImage;
 
-public class TopicItemHolder extends RvBaseViewHolderStat<TopicItemModel> implements View.OnClickListener {
+public class TopicItemHolder extends RvBaseViewHolderStat<TopicItemModel> {
     private TopicItemModel mTopicItemModel;
 
     private ImageView mImg;
@@ -56,7 +45,6 @@ public class TopicItemHolder extends RvBaseViewHolderStat<TopicItemModel> implem
         mImg = itemView.findViewById(R.id.img);
         mLabel = itemView.findViewById(R.id.label);
         mRanking = itemView.findViewById(R.id.iv_hot_ranking);
-        itemView.setOnClickListener(this);
     }
 
     @Override
@@ -138,14 +126,6 @@ public class TopicItemHolder extends RvBaseViewHolderStat<TopicItemModel> implem
                 .build();
         if (builder != null) {
             builder.into(view);
-        }
-    }
-
-    @Override
-    public void onClick(View v) {
-        if (mTopicItemModel != null) {
-            AppCommon.openUrl(mTopicItemModel.getGotoUrl(), true);
-            XHClick.mapStat(itemView.getContext(), ShortVideoDetailActivity.STA_ID, "用户内容", "内容详情点击量");
         }
     }
 }

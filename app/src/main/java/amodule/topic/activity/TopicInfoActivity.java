@@ -5,31 +5,23 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.xiangha.R;
-
-import org.eclipse.jetty.util.log.Log;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import acore.logic.AppCommon;
+import acore.logic.XHClick;
 import acore.logic.stat.StatModel;
 import acore.logic.stat.StatisticsManager;
 import acore.override.activity.base.BaseAppCompatActivity;
@@ -39,12 +31,11 @@ import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.rvlistview.RvGridView;
 import acore.widget.rvlistview.RvListView;
-import acore.widget.rvlistview.RvStaggeredGridView;
+import amodule.dish.activity.ShortVideoDetailActivity;
 import amodule.topic.adapter.TopicInfoStaggeredAdapter;
 import amodule.topic.model.ImageModel;
 import amodule.topic.model.LabelModel;
 import amodule.topic.model.TopicItemModel;
-import amodule.topic.model.TopicModel;
 import amodule.topic.model.VideoModel;
 import amodule.topic.view.TopicHeaderView;
 import aplug.basic.InternetCallback;
@@ -274,7 +265,11 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                 if (itemType == TopicInfoStaggeredAdapter.ITEM_TAB) {
                     setTabClick(topicItemModel);
                 } else if (itemType == TopicInfoStaggeredAdapter.ITEM_TOPIC_VID) {
-
+                    TopicItemModel model = mDatas.get(position);
+                    if (model != null) {
+                        AppCommon.openUrl(model.getGotoUrl(), true);
+                        XHClick.mapStat(view.getContext(), ShortVideoDetailActivity.STA_ID, "用户内容", "内容详情点击量");
+                    }
                 }
             }
         });
