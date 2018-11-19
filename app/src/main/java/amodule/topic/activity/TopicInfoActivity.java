@@ -27,13 +27,13 @@ import acore.logic.XHClick;
 import acore.logic.stat.StatModel;
 import acore.logic.stat.StatisticsManager;
 import acore.override.XHApplication;
+import acore.logic.stat.intefaces.OnItemClickListenerRvStat;
 import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.ImgManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.rvlistview.RvGridView;
-import acore.widget.rvlistview.RvListView;
 import amodule.dish.activity.ShortVideoDetailActivity;
 import amodule.topic.adapter.TopicInfoStaggeredAdapter;
 import amodule.topic.adapter.TopicTabHolder;
@@ -295,9 +295,9 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
             }
         });
 
-        mStaggeredGridView.setOnItemClickListener(new RvListView.OnItemClickListener() {
+        mStaggeredGridView.setOnItemClickListener(new OnItemClickListenerRvStat() {
             @Override
-            public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
+            public void onItemClicked(View view, RecyclerView.ViewHolder holder, int position) {
                 TopicItemModel topicItemModel = mTopicInfoStaggeredAdapter.getData().get(position);
                 int itemType = topicItemModel.getItemType();
                 if (itemType == TopicInfoStaggeredAdapter.ITEM_TAB) {
@@ -309,6 +309,17 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                         XHClick.mapStat(view.getContext(), ShortVideoDetailActivity.STA_ID, "用户内容", "内容详情点击量");
                     }
                 }
+            }
+
+            @Override
+            protected void onStat(int position, String statJsonStr) {
+                //统计网格列表中显示的位置
+                super.onStat(position - (tabPosition + 1), statJsonStr);
+            }
+
+            @Override
+            protected String getStatData(int position) {//实际对应的数据
+                return mTopicInfoStaggeredAdapter.getData().get(position).getStatJson();
             }
         });
     }
