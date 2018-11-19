@@ -7,6 +7,7 @@ import android.widget.ImageView;
 
 import com.xiangha.R;
 
+import acore.tools.Tools;
 import acore.widget.rvlistview.holder.RvBaseViewHolder;
 import amodule.topic.model.TopicItemModel;
 
@@ -15,16 +16,21 @@ import amodule.topic.model.TopicItemModel;
  */
 class ActivityIconHolder extends RvBaseViewHolder<TopicItemModel> {
     private ImageView mImageView;
+    private int mScreenW;
     public ActivityIconHolder(View inflate) {
         super(inflate);
         mImageView = findViewById(R.id.image);
+        mScreenW = Tools.getPhoneWidth();
     }
 
     @Override
     public void bindData(int position, @Nullable TopicItemModel data) {
         Bitmap bitmap = data.getBitmap();
         if (bitmap != null) {
-            mImageView.setImageBitmap(bitmap);
+            int bitmapW = bitmap.getWidth();
+            int bitmapH = bitmap.getHeight();
+            int dstH = mScreenW * bitmapH / bitmapW;
+            mImageView.setImageBitmap(Bitmap.createScaledBitmap(bitmap, mScreenW, dstH, true));
         }
     }
 }

@@ -2,6 +2,7 @@ package amodule.topic.adapter;
 
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -29,6 +30,8 @@ public class TopicTabHolder extends RvBaseViewHolder<TopicItemModel> {
         mHotTabBottomView = findViewById(R.id.view_hot_tab_bottom);
         mNewTabTV = findViewById(R.id.tv_new_tab);
         mNewTabBottomView = findViewById(R.id.view_new_tab_bottom);
+        ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, inflate.getResources().getDimensionPixelSize(R.dimen.dp_44));
+        inflate.setLayoutParams(lp);
     }
 
     @Override

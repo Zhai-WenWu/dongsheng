@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import acore.logic.AppCommon;
+import acore.logic.XHClick;
 import acore.logic.stat.StatModel;
 import acore.logic.stat.StatisticsManager;
 import acore.override.XHApplication;
@@ -32,6 +34,7 @@ import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.rvlistview.RvGridView;
 import acore.widget.rvlistview.RvListView;
+import amodule.dish.activity.ShortVideoDetailActivity;
 import amodule.topic.adapter.TopicInfoStaggeredAdapter;
 import amodule.topic.adapter.TopicTabHolder;
 import amodule.topic.model.ImageModel;
@@ -120,10 +123,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
         mHotDatas = new ArrayList<>();
         mNewDatas = new ArrayList<>();
         mDatas = new ArrayList<>();
-        TopicItemModel model = new TopicItemModel();
-        mDatas.add(model);
         mTopicInfoStaggeredAdapter = new TopicInfoStaggeredAdapter(TopicInfoActivity.this, mDatas);
-        mTopicInfoStaggeredAdapter.notifyDataSetChanged();
         tabPosition = 0;
         loadTopicList();
     }
@@ -177,14 +177,9 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
             @Override
             public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
                 GridLayoutManager.LayoutParams params = (GridLayoutManager.LayoutParams) view.getLayoutParams();
-                int position = parent.getChildAdapterPosition(view);
-                int viewType = parent.getAdapter().getItemViewType(position);
-                switch (viewType) {
-                    case RvListView.VIEW_TYPE_EMPTY:
-                    case RvListView.VIEW_TYPE_FOOTER:
-                    case RvListView.VIEW_TYPE_HEADER:
-                        super.getItemOffsets(outRect, view, parent, state);
-                        return;
+                if(params.getSpanSize() == mStaggeredGridView.getSpanCount()){
+                    super.getItemOffsets(outRect, view, parent, state);
+                    return;
                 }
                 switch (params.getSpanIndex()) {
                     case 0:
@@ -197,7 +192,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                         outRect.set(dp2px(R.dimen.dp_0_5), dp2px(R.dimen.dp_0_5), 0, dp2px(R.dimen.dp_0_5));
                         break;
                     default:
-                        outRect.set(0, 0, 0, 0);
+                        super.getItemOffsets(outRect, view, parent, state);
                         break;
                 }
             }
@@ -308,7 +303,11 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                 if (itemType == TopicInfoStaggeredAdapter.ITEM_TAB) {
                     setTabClick(topicItemModel);
                 } else if (itemType == TopicInfoStaggeredAdapter.ITEM_TOPIC_VID) {
-
+                    TopicItemModel model = mDatas.get(position);
+                    if (model != null) {
+                        AppCommon.openUrl(model.getGotoUrl(), true);
+                        XHClick.mapStat(view.getContext(), ShortVideoDetailActivity.STA_ID, "用户内容", "内容详情点击量");
+                    }
                 }
             }
         });
@@ -358,6 +357,10 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
     }
 
     private void startLoadData() {
+        TopicItemModel model = new TopicItemModel();
+        model.setItemType(TopicInfoStaggeredAdapter.ITEM_TAB);
+        mDatas.add(model);
+        mTopicInfoStaggeredAdapter.notifyDataSetChanged();
         loadManager.setLoading(mStaggeredGridView, mTopicInfoStaggeredAdapter, true, v -> {
                     loadTopicList();
                 }
