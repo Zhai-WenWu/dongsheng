@@ -6,12 +6,14 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -222,6 +224,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
 
         mStaggeredGridView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
+            private boolean ismHiddenActionstart;
             private View tabItemView;
             private int lastItemPosition;
 
@@ -280,7 +283,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                 if (alpha > 0 && alpha < 1) {
                     titleBg.setAlpha((float) alpha);
                 }
-                if (locationDong[1] <= locationJing[1]&&tabPosition < lastItemPosition) {
+                if (locationDong[1] <= locationJing[1] && tabPosition < lastItemPosition) {
                     titleBg.setAlpha(1);
                 }
 
@@ -290,15 +293,81 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                 int itemH = itemW * 165 / 124;
                 int H = screenH - itemH;
 
-                if (tabPosition < lastItemPosition) {
-                    if (locationDong[1] <= H) {
-                        mFloatingButton.setVisibility(View.VISIBLE);
-                    } else {
-                        mFloatingButton.setVisibility(View.INVISIBLE);
-                    }
-                } else {
-                    mFloatingButton.setVisibility(View.INVISIBLE);
+//                if (tabPosition < lastItemPosition) {
+//                    if (locationDong[1] <= H) {
+//                        mFloatingButton.setVisibility(View.VISIBLE);
+//                    } else {
+//                        mFloatingButton.setVisibility(View.INVISIBLE);
+//                    }
+//                } else {
+//                    mFloatingButton.setVisibility(View.INVISIBLE);
+//                }
+            }
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                ismHiddenActionstart = false;
+                Log.i("newState", newState + "");
+
+                //参与
+                int screenW = ToolsDevice.getWindowPx(TopicInfoActivity.this).widthPixels;
+                int screenH = ToolsDevice.getWindowPx(TopicInfoActivity.this).heightPixels;
+                int itemW = screenW / 3;
+                int itemH = itemW * 165 / 124;
+                int H = screenH - itemH;
+
+                boolean isShow = locationDong[1] <= H;
+//                if (locationDong[1] <= H) {
+//                    mFloatingButton.setVisibility(View.VISIBLE);
+//                } else {
+//                    mFloatingButton.setVisibility(View.INVISIBLE);
+//                }
+                if(!isShow){
+                    return;
                 }
+                if (newState == 1) {
+
+                    if (mFloatingButton.getVisibility() != View.VISIBLE)
+                        return;
+                    if (ismHiddenActionstart)
+                        return;
+                    TranslateAnimation mHiddenAction = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
+                            Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
+                            0.0f, Animation.RELATIVE_TO_SELF, 1.0f);
+                    mHiddenAction.setDuration(100);
+                    mFloatingButton.clearAnimation();
+                    mFloatingButton.setAnimation(mHiddenAction);
+                    mHiddenAction.setAnimationListener(new Animation.AnimationListener() {
+                        @Override
+                        public void onAnimationStart(Animation animation) {
+                            ismHiddenActionstart = true;
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animation animation) {
+                            mFloatingButton.setVisibility(View.GONE);
+                            ismHiddenActionstart = false;
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animation animation) {
+
+                        }
+                    });
+                } else if (newState == 0) {
+                    if (mFloatingButton.getVisibility() == View.VISIBLE)
+                        return;
+                    mFloatingButton.setVisibility(View.VISIBLE);
+                    TranslateAnimation mShowAction = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
+                            Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
+                            1.0f, Animation.RELATIVE_TO_SELF, 0.0f);
+                    mShowAction.setDuration(100);
+                    mFloatingButton.clearAnimation();
+                    mFloatingButton.setAnimation(mShowAction);
+                }
+
+
             }
         });
 
