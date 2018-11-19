@@ -1,6 +1,7 @@
 package amodule.topic.adapter;
 
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.ImageView;
@@ -31,6 +32,11 @@ class ActivityIconHolder extends RvBaseViewHolder<TopicItemModel> {
             int bitmapH = bitmap.getHeight();
             int dstH = mScreenW * bitmapH / bitmapW;
             mImageView.setImageBitmap(Bitmap.createScaledBitmap(bitmap, mScreenW, dstH, true));
+        }else{
+            BitmapDrawable bitmapDrawable = (BitmapDrawable) mImageView.getResources().getDrawable(R.drawable.i_nopic);
+            Bitmap bitmap2 = bitmapDrawable.getBitmap();
+            int dstH = mScreenW * data.getImageHieght() / data.getImageWidth();
+            mImageView.setImageBitmap(Bitmap.createScaledBitmap(bitmap2, mScreenW, dstH, true));
         }
     }
 }
