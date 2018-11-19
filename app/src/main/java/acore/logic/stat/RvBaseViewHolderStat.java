@@ -44,7 +44,6 @@ public abstract class RvBaseViewHolderStat<T> extends RvBaseViewHolder<T> {
 
     protected void statData(int position, @Nullable T data) {
         if (!isShown(data)) {
-            hasShown(data);
             onPreStat(itemView);
             onStat(position,data);
         }
@@ -65,6 +64,7 @@ public abstract class RvBaseViewHolderStat<T> extends RvBaseViewHolder<T> {
 
     protected void onStat(int position, T data) {
         if (!TextUtils.isEmpty(p) && canStat()) {
+            hasShown(data);
             StatisticsManager.saveData(StatModel.createListShowModel(p, m,  String.valueOf(position + 1), f1, getStatJson(data)));
         }
     }

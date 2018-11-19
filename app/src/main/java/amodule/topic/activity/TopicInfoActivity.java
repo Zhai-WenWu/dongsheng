@@ -124,15 +124,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
         mNewDatas = new ArrayList<>();
         mDatas = new ArrayList<>();
         mTopicInfoStaggeredAdapter = new TopicInfoStaggeredAdapter(TopicInfoActivity.this, mDatas);
-        topicTabHolder = mTopicInfoStaggeredAdapter.getTopicTabHolder();
-        if (topicTabHolder != null) {
-            topicTabHolder.setOnTabClick(new TopicTabHolder.OnTabClick() {
-                @Override
-                public void onClick(TopicItemModel data) {
-                    setTabClick(data);
-                }
-            });
-        }
+        mTopicInfoStaggeredAdapter.setOnTabClick(this::setTabClick);
 
         tabPosition = 0;
         loadTopicList();
@@ -421,6 +413,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                                 mStaggeredGridView.addHeaderView(mTopicHeaderView);
                                 mTopicHeaderView.showTopicData(activityType, mTopicCode, mInfoMap);
                                 mTopicHeaderView.setVisibility(View.VISIBLE);
+                                mTopicInfoStaggeredAdapter.setTabIndex(tabPosition);
                                 break;
                             case "2":
                                 Map<String, String> activityInfoMap = StringManager.getFirstMap(mInfoMap.get("activityInfo"));
@@ -439,6 +432,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                                                 public void run() {
                                                     if (bitmaps != null && mDatas != null) {
                                                         tabPosition = bitmaps.size();
+                                                        mTopicInfoStaggeredAdapter.setTabIndex(tabPosition);
                                                         for (int i = 0; i < bitmaps.size(); i++) {
                                                             Bitmap bitmap = bitmaps.get(i);
                                                             TopicItemModel model = new TopicItemModel();
