@@ -67,6 +67,7 @@ import amodule.quan.db.SubjectSqlite;
 import amodule.search.db.MatchWordsDbUtil;
 import aplug.basic.InternetCallback;
 import aplug.basic.XHInternetCallBack;
+import aplug.service.base.ServiceManager;
 import aplug.web.tools.XHTemplateManager;
 import third.ad.tools.AdConfigTools;
 import third.mall.aplug.MallCommon;
@@ -140,6 +141,7 @@ public class MainInitDataControl {
                 }
             }
         });
+        ServiceManager.startProtectService(XHApplication.in());
         long endTime2=System.currentTimeMillis();
         Log.i("zhangyujian","initWelcomeAfter::时间:"+(endTime2-startTime));
 
