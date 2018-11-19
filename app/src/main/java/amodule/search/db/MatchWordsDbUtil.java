@@ -18,6 +18,7 @@ import acore.tools.FileManager;
 import acore.tools.StringManager;
 import amodule.search.bean.WordBean;
 import aplug.basic.InternetCallback;
+import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import xh.basic.internet.UtilInternet;
 
@@ -38,7 +39,7 @@ public class MatchWordsDbUtil {
             createTime = createTimeStr;
         }
         String url = StringManager.api_matchWords + "?createTime=" + createTime;
-        ReqInternet.in().doGet(url, new InternetCallback() {
+        ReqEncyptInternet.in().doGetEncypt(url, new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
                 if (i >= UtilInternet.REQ_OK_STRING) {

@@ -57,7 +57,6 @@ public class StringManager extends UtilString {
         urlSection.put("other6", "main6/other/");
         urlSection.put("caipu6", "main6/caipu/");
         urlSection.put("vip6", "main6/vip/");
-        urlSection.put("search2", "main6/search/");
         urlSection.put("auth6", "main6/userAuth/");
     }
 
@@ -107,11 +106,11 @@ public class StringManager extends UtilString {
     public final static String api_commonData = apiUrl + urlSection.get("home5") + "commonData";
     public final static String api_soList = apiUrl + urlSection.get("so5") + "getSoData";
     public final static String api_soIndex = apiUrl + urlSection.get("so5") + "getSoIndex";
-    public final static String api_getHotWords = apiUrl + urlSection.get("search2") + "getHotWords";
-    public final static String api_getCaipu = apiUrl + urlSection.get("search2") + "byCaipu";
-    public final static String api_getTiezi = apiUrl + urlSection.get("search2") + "byQuan";
-    public final static String api_matchWords = apiUrl + urlSection.get("search2") + "getAssociational";
+    public final static String api_getTiezi = apiUrl + "main6/search/byQuan";
 
+    public final static String api_getCaipu = apiUrl + "main8/search/byCaipu";
+    public final static String api_getHotWords = apiUrl + "main8/search/getHotWords";
+    public final static String api_matchWords = apiUrl + "main8/search/getAssociational";
 
     public final static String api_ingreInfo = apiUrl + urlSection.get("shicai5") + "getIngreInfo";
     public final static String api_getUserDishAll = apiUrl + urlSection.get("home5") + "getUserDishAll";

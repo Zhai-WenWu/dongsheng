@@ -17,6 +17,7 @@ import acore.tools.Tools;
 import amodule.search.bean.WordBean;
 import amodule.search.db.WordsSqlite;
 import aplug.basic.InternetCallback;
+import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import xh.basic.tool.UtilFile;
 
@@ -69,7 +70,7 @@ public class SearchDataImp implements SearchData {
     public void getHotWords(Context context, final InternetCallback callBack) {
 
         if (callBack == null) return;
-        ReqInternet.in().doGet(StringManager.api_getHotWords, callBack);
+        ReqEncyptInternet.in().doGetEncypt(StringManager.api_getHotWords, callBack);
     }
 
     public void getRandomHotWord(final InternetCallback callBack){
@@ -95,22 +96,24 @@ public class SearchDataImp implements SearchData {
     @Override
     public void getCaipuAndShicaiResult(Context context, String key, int currentPage, InternetCallback callBack) {
         if (callBack == null) return;
-        String getUrl = StringManager.api_getCaipu + "?type=caipu&keywords=" + key + "&page=" + currentPage;
-        ReqInternet.in().doGet(getUrl, callBack);
+        String getUrl = StringManager.api_getCaipu + "?keywords=" + key + "&page=" + currentPage;
+        ReqEncyptInternet.in().doGetEncypt(getUrl, callBack);
     }
 
     @Override
     public void getCaidanResult(Context context, String key, int currentPage, InternetCallback callBack) {
         if (callBack == null) return;
-        String getUrl = StringManager.api_getCaipu + "?type=caidan&keywords=" + key + "&page=" + currentPage;
-        ReqInternet.in().doGet(getUrl, callBack);
+        //接口不使用
+//        String getUrl = StringManager.api_getCaipu + "?type=caidan&keywords=" + key + "&page=" + currentPage;
+//        ReqInternet.in().doGet(getUrl, callBack);
     }
 
     @Override
     public void getZhishiResult(Context context, String key, int currentPage, InternetCallback callBack) {
         if (callBack == null) return;
-        String getUrl = StringManager.api_getCaipu + "?type=zhishi&keywords=" + key + "&page=" + currentPage;
-        ReqInternet.in().doGet(getUrl, callBack);
+        //接口不使用
+//        String getUrl = StringManager.api_getCaipu + "?type=zhishi&keywords=" + key + "&page=" + currentPage;
+//        ReqInternet.in().doGet(getUrl, callBack);
     }
 
     @Override
