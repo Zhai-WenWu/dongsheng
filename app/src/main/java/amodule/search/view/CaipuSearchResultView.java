@@ -167,7 +167,7 @@ public class CaipuSearchResultView extends LinearLayout {
                 continue;
             }
             if (TextUtils.equals("3", type)) {
-                searchWords[1] = word;
+                searchWords[0] = searchWords[1] = word;
                 return searchWords;
             } else if (TextUtils.isEmpty(type) || TextUtils.equals("2", type)) {
                 word1 = word;
