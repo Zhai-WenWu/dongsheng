@@ -236,6 +236,9 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
 
                 mDistance += dy;
 
+                if(!mStaggeredGridView.canScrollVertically(-1)){
+                    mDistance=0;
+                }
                 RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
                 //判断是当前layoutManager是否为LinearLayoutManager
                 // 只有LinearLayoutManager才有查找第一个和最后一个可见view位置的方法
@@ -285,25 +288,10 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                 if (alpha > 0 && alpha < 1) {
                     titleBg.setAlpha((float) alpha);
                 }
-                if (locationDong[1] <= locationJing[1] && tabPosition < lastItemPosition) {
-                    titleBg.setAlpha(1);
-                }
-
-//                //参与
-//                int screenH = ToolsDevice.getWindowPx(TopicInfoActivity.this).heightPixels;
-//                int itemW = screenW / 3;
-//                int itemH = itemW * 165 / 124;
-//                int H = screenH - itemH;
-
-//                if (tabPosition < lastItemPosition) {
-//                    if (locationDong[1] <= H) {
-//                        mFloatingButton.setVisibility(View.VISIBLE);
-//                    } else {
-//                        mFloatingButton.setVisibility(View.INVISIBLE);
-//                    }
-//                } else {
-//                    mFloatingButton.setVisibility(View.INVISIBLE);
+//                if (locationDong[1] <= locationJing[1] && tabPosition < lastItemPosition) {
+//                    titleBg.setAlpha(1);
 //                }
+
             }
 
             @Override
@@ -311,16 +299,12 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                 super.onScrollStateChanged(recyclerView, newState);
                 ismHiddenActionstart = false;
                 Log.i("newState", newState + "");
-                int height = 0;
-                if (mTopicHeaderView!=null){
-                     height = mTopicHeaderView.getHeight();
-                }
 
                 int screenW = ToolsDevice.getWindowPx(TopicInfoActivity.this).widthPixels;
                 int screenH = ToolsDevice.getWindowPx(TopicInfoActivity.this).heightPixels;
                 int itemW = screenW / 3;
                 int itemH = itemW * 165 / 124;
-                if (mDistance<(headerHeight+height+mTabLayout.getHeight()+itemH-screenH)){
+                if (mDistance < (headerHeight  + mTabLayout.getHeight() + itemH - screenH)) {
                     return;
                 }
                 //参与
@@ -336,7 +320,6 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
 ////                } else {
 ////                    mFloatingButton.setVisibility(View.INVISIBLE);
 ////                }
-
 
 
                 if (newState == 1) {
@@ -466,6 +449,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
     }
 
     boolean infoIsOver = false;
+
     private void loadTopicInfo() {
 
         ReqEncyptInternet.in().doGetEncypt(StringManager.API_TOPIC_INFOV1, "code=" + mTopicCode, new InternetCallback() {
@@ -503,7 +487,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                                     }
                                     int imageWidth = Tools.parseIntOfThrow(activityInfoMap.get("imageWidth"), 100);
                                     imageHeight = Tools.parseIntOfThrow(activityInfoMap.get("imageHeight"), 100);
-                                    final int size = imageHeight/400 + (imageHeight % 400 > 0 ? 1 : 0);
+                                    final int size = imageHeight / 400 + (imageHeight % 400 > 0 ? 1 : 0);
                                     tabPosition = size;
                                     mTopicInfoStaggeredAdapter.setTabIndex(tabPosition);
                                     final int realImageWidth = ToolsDevice.getWindowPx(TopicInfoActivity.this).widthPixels;
@@ -526,7 +510,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                                                 @Override
                                                 public void run() {
                                                     if (bitmaps != null && mDatas != null) {
-                                                        for(int i = size - 1 ; i >= 0 ; i--){
+                                                        for (int i = size - 1; i >= 0; i--) {
                                                             mDatas.remove(i);
                                                         }
                                                         tabPosition = bitmaps.size();
@@ -691,6 +675,10 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
             }
         }
 
-        mStaggeredGridView.scrollToPosition(tabPosition);
+        if (mTopicHeaderView != null) {
+            mStaggeredGridView.smoothScrollToPosition(1);
+        } else {
+            mStaggeredGridView.smoothScrollToPosition(tabPosition);
+        }
     }
 }

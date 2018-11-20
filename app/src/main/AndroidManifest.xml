@@ -1203,7 +1203,7 @@
             android:configChanges="orientation|keyboardHidden|screenLayout"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Design.NoActionBar"
+            android:theme="@style/titleTheme"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name="amodule.topic.activity.SearchTopicActivity"
