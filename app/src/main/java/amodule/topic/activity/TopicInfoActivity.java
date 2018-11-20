@@ -97,6 +97,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
     private TextView mNewTabTV;
     private View mNewTabBottomView;
     private TopicTabHolder topicTabHolder;
+    private View mTabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,7 +137,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
 
     private void initView() {
         mTitle = findViewById(R.id.title);
-        View mTabLayout = findViewById(R.id.tab_layout);
+        mTabLayout = findViewById(R.id.tab_layout);
         mHotView = mTabLayout.findViewById(R.id.fl_hot);
         mNewView = mTabLayout.findViewById(R.id.fl_new);
         mHotTabTv = mTabLayout.findViewById(R.id.tv_hot_tab);
@@ -256,9 +257,24 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                     tabItemView = topicTabHolder.itemView;
                 }
 
-                if (activityType != null && headerHeight == 0) {
+
+//                if (tabPosition < lastItemPosition && tabItemView != null) {
+//                    tabItemView.getLocationOnScreen(locationDong);
+//                    mTabLayout.getLocationOnScreen(locationJing);
+//                    if (locationDong[1] <= locationJing[1]) {
+//                        mTabLayout.setVisibility(View.VISIBLE);
+//                    } else {
+//                        mTabLayout.setVisibility(View.GONE);
+//                    }
+//                } else {
+//                    mTabLayout.setVisibility(View.GONE);
+//                }
+
+                int screenW = ToolsDevice.getWindowPx(TopicInfoActivity.this).widthPixels;
+                if (activityType != null) {
                     if (activityType.equals("2")) {
                         Map<String, String> activityInfo = StringManager.getFirstMap(mInfoMap.get("activityInfo"));
+                        String url = activityInfo.get("url");
                         String imageWidth = activityInfo.get("imageWidth");
                         String imageHeight = activityInfo.get("imageHeight");
                         int w = Integer.parseInt(imageWidth);
@@ -269,24 +285,38 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                         headerHeight = mTopicHeaderView.getHeight();
                     }
                 }
-
+                int offsetHeight = headerHeight - Tools.getDimen(TopicInfoActivity.this,R.dimen.dp_49);
+                Log.i("tzy", "onScrolled: offsetHeight = " + offsetHeight);
                 //title渐变
-                float alpha = (float) mDistance / headerHeight;
-                if (alpha > 0 && alpha < 1) {
-                    titleBg.setAlpha((float) alpha);
-                    mTabLayout.setVisibility(View.GONE);
-                } else if (alpha >= 1) {
-                    titleBg.setAlpha(1);
-                    mTabLayout.setVisibility(View.VISIBLE);
-                }
+                float alpha = offsetHeight > 0 ? (mDistance <= offsetHeight ? (float) mDistance / offsetHeight : 1) : 0;
+                Log.i("tzy", "onScrolled: alpha = " + alpha);
+                titleBg.setAlpha(alpha);
+                mTabLayout.setVisibility(alpha == 1 ? View.VISIBLE : View.GONE);
+//                if (locationDong[1] <= locationJing[1] && tabPosition < lastItemPosition) {
+//                    titleBg.setAlpha(1);
+//                }
 
+//                //参与
+//                int screenH = ToolsDevice.getWindowPx(TopicInfoActivity.this).heightPixels;
+//                int itemW = screenW / 3;
+//                int itemH = itemW * 165 / 124;
+//                int H = screenH - itemH;
+
+//                if (tabPosition < lastItemPosition) {
+//                    if (locationDong[1] <= H) {
+//                        mFloatingButton.setVisibility(View.VISIBLE);
+//                    } else {
+//                        mFloatingButton.setVisibility(View.INVISIBLE);
+//                    }
+//                } else {
+//                    mFloatingButton.setVisibility(View.INVISIBLE);
+//                }
             }
 
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 ismHiddenActionstart = false;
-                Log.i("newState", newState + "");
 
                 if (mDistance < (headerHeight + mTabLayout.getHeight() + itemH - screenH)) {
                     return;
@@ -307,7 +337,6 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
 
 
                 if (newState == 1) {
-
                     if (mFloatingButton.getVisibility() != View.VISIBLE)
                         return;
                     if (ismHiddenActionstart)
@@ -393,7 +422,11 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                 mNewTabBottomView.setVisibility(View.INVISIBLE);
                 StatisticsManager.saveData(StatModel.createBtnClickDetailModel("TopicInfoActivity", "TopicInfoActivity", "new_topic_gather", title, "最热"));
                 mTab = HOT;
-                onTabChanged(mTab);
+                if (mHotDatas.isEmpty()) {
+                    loadTopicList(true);
+                } else {
+                    onTabChanged(mTab);
+                }
                 break;
             case TopicItemModel.TAB_NEW:
                 mHotTabTv.setTextColor(XHApplication.in().getResources().getColor(R.color.c_777777));
@@ -402,7 +435,11 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                 mNewTabBottomView.setVisibility(View.VISIBLE);
                 StatisticsManager.saveData(StatModel.createBtnClickDetailModel("TopicInfoActivity", "TopicInfoActivity", "new_topic_gather", title, "最新"));
                 mTab = NEW;
-                onTabChanged(mTab);
+                if (mNewDatas.isEmpty()) {
+                    loadTopicList(true);
+                } else {
+                    onTabChanged(mTab);
+                }
                 break;
         }
     }
@@ -423,10 +460,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
         model.setItemType(TopicInfoStaggeredAdapter.ITEM_TAB);
         mDatas.add(model);
         mTopicInfoStaggeredAdapter.notifyDataSetChanged();
-        loadManager.setLoading(mStaggeredGridView, mTopicInfoStaggeredAdapter, true, v -> {
-                    loadTopicList();
-                }
-        );
+        loadManager.setLoading(mStaggeredGridView, mTopicInfoStaggeredAdapter, true, v -> loadTopicList(false));
     }
 
     boolean infoIsOver = false;
@@ -437,9 +471,6 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
 
             @Override
             public void loaded(int i, String s, Object o) {
-//                if (loadManager != null) {
-//                    loadManager.hideProgressBar();
-//                }
                 if (i >= ReqInternet.REQ_OK_STRING) {
                     mInfoMap = StringManager.getFirstMap(o);
                     title = mInfoMap.get("name");
@@ -516,11 +547,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                         }
                     }
                     infoIsOver = true;
-                    mTab = NEW;
-                    loadTopicList();
-                    mTab = HOT;
-                    loadTopicList();
-
+                    loadTopicList(false);
                 }
                 if (mTopicInfoStaggeredAdapter != null) {
                     mTopicInfoStaggeredAdapter.notifyDataSetChanged();
@@ -529,7 +556,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
         });
     }
 
-    private void loadTopicList() {
+    private void loadTopicList(final boolean isChangeTab) {
         if (!infoIsOver) {
             return;
         }
@@ -553,6 +580,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
         ReqEncyptInternet.in().doGetEncypt(StringManager.API_TOPIC_LIST, "code=" + mTopicCode + "&page=" + mPage + "&tab=" + mTab, new InternetCallback() {
             final String tab = mTab;
             final int currentPage = mPage;
+            final boolean isCurrentChangeTab = isChangeTab;
 
             @Override
             public void loaded(int i, String s, Object o) {
@@ -600,7 +628,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                         }
                         tmepData.add(topicItemModel);
                     }
-                    updateData(tab, tmepData);
+                    updateData(isCurrentChangeTab,tab, tmepData);
                 } else {
                     switch (tab) {
                         case HOT:
@@ -618,15 +646,21 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
         });
     }
 
-    private void updateData(String tab, @NonNull ArrayList<TopicItemModel> tmepData) {
+    private void updateData(boolean isCurrentChangeTab,String tab, @NonNull ArrayList<TopicItemModel> tmepData) {
         if (TextUtils.isEmpty(tab))
             return;
         if (mDatas != null) {
             switch (tab) {
                 case HOT:
+                    if (mNewDatas != null && isCurrentChangeTab) {
+                        mDatas.removeAll(mNewDatas);
+                    }
                     mHotDatas.addAll(tmepData);
                     break;
                 case NEW:
+                    if (mHotDatas != null && isCurrentChangeTab) {
+                        mDatas.removeAll(mHotDatas);
+                    }
                     mNewDatas.addAll(tmepData);
                     break;
             }
@@ -647,12 +681,20 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                         mDatas.removeAll(mNewDatas);
                     }
                     mDatas.addAll(mHotDatas);
+                    if(mHotDatas.isEmpty()){
+                        mHotTabBottomView.setVisibility(View.GONE);
+                        mFloatingButton.setVisibility(View.GONE);
+                    }
                     break;
                 case NEW:
                     if (mHotDatas != null) {
                         mDatas.removeAll(mHotDatas);
                     }
                     mDatas.addAll(mNewDatas);
+                    if(mNewDatas.isEmpty()){
+                        mHotTabBottomView.setVisibility(View.GONE);
+                        mFloatingButton.setVisibility(View.GONE);
+                    }
                     break;
             }
             if (mTopicInfoStaggeredAdapter != null && TextUtils.equals(mTab, currentTab)) {
