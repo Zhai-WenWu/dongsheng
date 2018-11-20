@@ -14,11 +14,13 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -102,8 +104,12 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initActivity("", 2, 0, 0, R.layout.topic_info_layout);
-        initStatusBar();
+//        initActivity("", 2, 0, 0, R.layout.topic_info_layout);
+        setContentView(R.layout.topic_info_layout);
+        level = 2;
+        setCommonStyle();
+//        initStatusBar();
+        initTitle();
         initView();
         initData();
         if (!checkCondition()) {
@@ -113,11 +119,23 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
         }
         loadTopicInfo();
         startLoadData();
+
     }
 
-    private void initStatusBar() {
-        String colors = Tools.getColorStr(this, R.color.ysf_black_333333);
-        Tools.setStatusBarColor(this, Color.parseColor(colors));
+    private void initTitle() {
+        if(Tools.isShowTitle()) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            int topbarHeight = Tools.getDimen(this, R.dimen.topbar_height);
+            int statusBarHeight = Tools.getStatusBarHeight(this);
+
+            RelativeLayout rela_bar_title = findViewById(R.id.title_all_rela);
+            RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, topbarHeight + statusBarHeight);
+            rela_bar_title.setLayoutParams(layout);
+            RelativeLayout bar_title = findViewById(R.id.title_layout);
+            layout = (RelativeLayout.LayoutParams) bar_title.getLayoutParams();
+            layout.setMargins(0, statusBarHeight, 0, 0);
+            bar_title.setLayoutParams(layout);
+        }
     }
 
     private void initData() {
@@ -284,7 +302,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                         headerHeight = mTopicHeaderView.getHeight();
                     }
                 }
-                int offsetHeight = headerHeight - Tools.getDimen(TopicInfoActivity.this,R.dimen.dp_49);
+                int offsetHeight = headerHeight - Tools.getDimen(TopicInfoActivity.this,R.dimen.dp_49) - Tools.getStatusBarHeight(TopicInfoActivity.this);
                 Log.i("tzy", "onScrolled: offsetHeight = " + offsetHeight);
                 //title渐变
                 float alpha = offsetHeight > 0 ? (mDistance <= offsetHeight ? (float) mDistance / offsetHeight : 1) : 0;
