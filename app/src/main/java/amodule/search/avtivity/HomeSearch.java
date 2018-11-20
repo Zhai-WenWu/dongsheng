@@ -25,6 +25,7 @@ public class HomeSearch extends BaseActivity {
     public static final String EXTRA_JSONDATA = "jsonData";
     public static final String EXTRA_IS_NOW_SEARCH = "isNowSearch";
     public static int startCount = 0;
+    public static boolean isShowDefault;
     private int limitSearchType;
     private String searchKey;
     private String jsonData;
@@ -85,6 +86,15 @@ public class HomeSearch extends BaseActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        if(level == 2 && isShowDefault){
+            isShowDefault = false;
+            globalSearchView.showDefaultSearchView();
+        }
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         startCount--;
@@ -99,8 +109,9 @@ public class HomeSearch extends BaseActivity {
 
     @Override
     public void finish() {
-        if(startCount >= 7){
+        if(startCount > 7){
             Main.colse_level = 3;
+            isShowDefault = true;
         }
         Log.i("tzy", "HomeSearch::finish: " + startCount);
         Log.i("tzy", "HomeSearch::finish:colse_level=" + Main.colse_level);

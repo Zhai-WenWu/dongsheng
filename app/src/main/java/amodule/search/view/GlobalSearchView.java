@@ -90,9 +90,9 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
         initView();
         once = false;
         if (!TextUtils.isEmpty(searchWord)) {
-            setHorizon(searchWord);
             setSearchMsg(searchWord, searchType);
             if(isNowSearch){
+                setHorizon(searchWord);
                 search();
             }
         } else {
@@ -218,6 +218,10 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
         };
 
         defaultView.init(mActivity, defaultViewCallback, searchType);
+    }
+
+    public void showDefaultSearchView(){
+        edSearch.requestFocus();
     }
 
     private void clearEditViewFocus(boolean isClearFocus) {
