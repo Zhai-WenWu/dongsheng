@@ -184,7 +184,8 @@ public class AppCommon {
         if (intent == null) {
             bundle.putString("url", StringManager.replaceUrl(url));
             if (Main.colse_level <= 2) {
-                if (!(act instanceof MainBaseActivity))
+                if (!(act instanceof MainBaseActivity)
+                        && !(act instanceof Main))
                     act.finish();
                 return;
             }
