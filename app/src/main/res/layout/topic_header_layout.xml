@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:paddingEnd="@dimen/dp_20"
         android:paddingStart="@dimen/dp_20"
-        android:paddingTop="@dimen/dp_59">
+        android:paddingTop="@dimen/dp_79">
 
 
         <TextView
