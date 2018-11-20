@@ -242,6 +242,10 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
         mDistance = 0;
 
         View titleBg = findViewById(R.id.title_bg);
+        int screenW = ToolsDevice.getWindowPx(TopicInfoActivity.this).widthPixels;
+        int screenH = ToolsDevice.getWindowPx(TopicInfoActivity.this).heightPixels;
+        int itemW = screenW / 3;
+        int itemH = itemW * 165 / 124;
 
         mStaggeredGridView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
@@ -253,11 +257,8 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 mDistance += dy;
-//                mDistance = mStaggeredGridView.getLayoutManager().computeVerticalScrollOffset(null);
-                Log.i("tzy", "onScrolled: " + mDistance);
-
-                if(!mStaggeredGridView.canScrollVertically(-1)){
-                    mDistance=0;
+                if (!mStaggeredGridView.canScrollVertically(-1)) {
+                    mDistance = 0;
                 }
                 RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
                 //判断是当前layoutManager是否为LinearLayoutManager
@@ -335,11 +336,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                 super.onScrollStateChanged(recyclerView, newState);
                 ismHiddenActionstart = false;
 
-                int screenW = ToolsDevice.getWindowPx(TopicInfoActivity.this).widthPixels;
-                int screenH = ToolsDevice.getWindowPx(TopicInfoActivity.this).heightPixels;
-                int itemW = screenW / 3;
-                int itemH = itemW * 165 / 124;
-                if (mDistance < (headerHeight  + mTabLayout.getHeight() + itemH - screenH)) {
+                if (mDistance < (headerHeight + mTabLayout.getHeight() + itemH - screenH)) {
                     return;
                 }
                 //参与
@@ -355,7 +352,6 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
 ////                } else {
 ////                    mFloatingButton.setVisibility(View.INVISIBLE);
 ////                }
-
 
 
                 if (newState == 1) {
@@ -486,6 +482,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
     }
 
     boolean infoIsOver = false;
+
     private void loadTopicInfo() {
 
         ReqEncyptInternet.in().doGetEncypt(StringManager.API_TOPIC_INFOV1, "code=" + mTopicCode, new InternetCallback() {
@@ -520,7 +517,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                                     }
                                     int imageWidth = Tools.parseIntOfThrow(activityInfoMap.get("imageWidth"), 100);
                                     imageHeight = Tools.parseIntOfThrow(activityInfoMap.get("imageHeight"), 100);
-                                    final int size = imageHeight/400 + (imageHeight % 400 > 0 ? 1 : 0);
+                                    final int size = imageHeight / 400 + (imageHeight % 400 > 0 ? 1 : 0);
                                     tabPosition = size;
                                     mTopicInfoStaggeredAdapter.setTabIndex(tabPosition);
                                     final int realImageWidth = ToolsDevice.getWindowPx(TopicInfoActivity.this).widthPixels;
@@ -543,7 +540,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                                                 @Override
                                                 public void run() {
                                                     if (bitmaps != null && mDatas != null) {
-                                                        for(int i = size - 1 ; i >= 0 ; i--){
+                                                        for (int i = size - 1; i >= 0; i--) {
                                                             mDatas.remove(i);
                                                         }
                                                         tabPosition = bitmaps.size();
