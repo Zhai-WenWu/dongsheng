@@ -4,12 +4,14 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -52,6 +54,9 @@ import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import third.aliyun.work.AliyunCommon;
 
+/**
+ *
+ */
 public class TopicInfoActivity extends BaseAppCompatActivity {
     public static final String STA_ID = "a_topic_gather";
 
@@ -686,6 +691,10 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
         }
     }
 
+
+    /**
+     * tab点击滑动距离控制
+     */
     private void scrollToTabBottom() {
         LinearLayoutManager llm = (LinearLayoutManager) mStaggeredGridView.getLayoutManager();
         int scroll = rela_bar_title.getHeight();
@@ -694,6 +703,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
         } else {
             llm.scrollToPositionWithOffset(tabPosition, scroll);
         }
+        mStaggeredGridView.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_CANCEL, 0, 0, 0));
         titleBg.setAlpha(1);
         mDistance = offsetHeight;
     }
