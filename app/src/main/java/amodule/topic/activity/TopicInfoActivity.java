@@ -106,6 +106,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
     private int offsetHeight;
     private boolean isClickRealTab;
     private View titleBg;
+    private int tabNewClick;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -428,6 +429,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                 }
                 break;
             case TopicItemModel.TAB_NEW:
+                tabNewClick++;
                 mHotTabTv.setTextColor(XHApplication.in().getResources().getColor(R.color.c_777777));
                 mHotTabBottomView.setVisibility(View.INVISIBLE);
                 mNewTabTV.setTextColor(XHApplication.in().getResources().getColor(R.color.white));
@@ -651,6 +653,11 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
         });
     }
 
+    /**
+     * @param isCurrentChangeTab
+     * @param tab
+     * @param tmepData
+     */
     private void updateData(boolean isCurrentChangeTab, String tab, @NonNull ArrayList<TopicItemModel> tmepData) {
         if (TextUtils.isEmpty(tab))
             return;
@@ -672,8 +679,23 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
             if (mTopicInfoStaggeredAdapter != null && TextUtils.equals(mTab, tab)) {
                 mDatas.addAll(tmepData);
                 mTopicInfoStaggeredAdapter.notifyDataSetChanged();
+                if (tab == NEW && tabNewClick == 1) {
+                    scrollToTabBottom();
+                }
             }
         }
+    }
+
+    private void scrollToTabBottom() {
+        LinearLayoutManager llm = (LinearLayoutManager) mStaggeredGridView.getLayoutManager();
+        int scroll = rela_bar_title.getHeight();
+        if (mTopicHeaderView != null) {
+            llm.scrollToPositionWithOffset(1, scroll);
+        } else {
+            llm.scrollToPositionWithOffset(tabPosition, scroll);
+        }
+        titleBg.setAlpha(1);
+        mDistance = offsetHeight;
     }
 
     private void onTabChanged(String currentTab) {
@@ -686,7 +708,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                         mDatas.removeAll(mNewDatas);
                     }
                     mDatas.addAll(mHotDatas);
-                    if(mHotDatas.isEmpty()){
+                    if (mHotDatas.isEmpty()) {
                         mHotTabBottomView.setVisibility(View.GONE);
                         mFloatingButton.setVisibility(View.GONE);
                     }
@@ -696,7 +718,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                         mDatas.removeAll(mHotDatas);
                     }
                     mDatas.addAll(mNewDatas);
-                    if(mNewDatas.isEmpty()){
+                    if (mNewDatas.isEmpty()) {
                         mHotTabBottomView.setVisibility(View.GONE);
                         mFloatingButton.setVisibility(View.GONE);
                     }
@@ -707,16 +729,8 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
             }
         }
 
-        if (isClickRealTab){
-            LinearLayoutManager llm = (LinearLayoutManager) mStaggeredGridView.getLayoutManager();
-            int scroll = rela_bar_title.getHeight();
-            if (mTopicHeaderView != null) {
-                llm.scrollToPositionWithOffset(1, scroll);
-            } else {
-                llm.scrollToPositionWithOffset(tabPosition, scroll);
-            }
-            titleBg.setAlpha(1);
-            mDistance = offsetHeight;
+        if (isClickRealTab) {
+            scrollToTabBottom();
         }
     }
 }
