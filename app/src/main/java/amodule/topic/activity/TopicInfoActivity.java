@@ -98,6 +98,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
     private View mNewTabBottomView;
     private TopicTabHolder topicTabHolder;
     private View mTabLayout;
+    private boolean topImgIsReal = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -257,21 +258,8 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                     tabItemView = topicTabHolder.itemView;
                 }
 
-
-//                if (tabPosition < lastItemPosition && tabItemView != null) {
-//                    tabItemView.getLocationOnScreen(locationDong);
-//                    mTabLayout.getLocationOnScreen(locationJing);
-//                    if (locationDong[1] <= locationJing[1]) {
-//                        mTabLayout.setVisibility(View.VISIBLE);
-//                    } else {
-//                        mTabLayout.setVisibility(View.GONE);
-//                    }
-//                } else {
-//                    mTabLayout.setVisibility(View.GONE);
-//                }
-
                 int screenW = ToolsDevice.getWindowPx(TopicInfoActivity.this).widthPixels;
-                if (activityType != null) {
+                if (activityType != null && topImgIsReal && headerHeight == 0) {
                     if (activityType.equals("2")) {
                         Map<String, String> activityInfo = StringManager.getFirstMap(mInfoMap.get("activityInfo"));
                         String url = activityInfo.get("url");
@@ -285,32 +273,13 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                         headerHeight = mTopicHeaderView.getHeight();
                     }
                 }
-                int offsetHeight = headerHeight - Tools.getDimen(TopicInfoActivity.this,R.dimen.dp_49);
+                int offsetHeight = headerHeight - Tools.getDimen(TopicInfoActivity.this, R.dimen.dp_49);
                 Log.i("tzy", "onScrolled: offsetHeight = " + offsetHeight);
                 //title渐变
                 float alpha = offsetHeight > 0 ? (mDistance <= offsetHeight ? (float) mDistance / offsetHeight : 1) : 0;
                 Log.i("tzy", "onScrolled: alpha = " + alpha);
                 titleBg.setAlpha(alpha);
                 mTabLayout.setVisibility(alpha == 1 ? View.VISIBLE : View.GONE);
-//                if (locationDong[1] <= locationJing[1] && tabPosition < lastItemPosition) {
-//                    titleBg.setAlpha(1);
-//                }
-
-//                //参与
-//                int screenH = ToolsDevice.getWindowPx(TopicInfoActivity.this).heightPixels;
-//                int itemW = screenW / 3;
-//                int itemH = itemW * 165 / 124;
-//                int H = screenH - itemH;
-
-//                if (tabPosition < lastItemPosition) {
-//                    if (locationDong[1] <= H) {
-//                        mFloatingButton.setVisibility(View.VISIBLE);
-//                    } else {
-//                        mFloatingButton.setVisibility(View.INVISIBLE);
-//                    }
-//                } else {
-//                    mFloatingButton.setVisibility(View.INVISIBLE);
-//                }
             }
 
             @Override
@@ -321,20 +290,6 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                 if (mDistance < (headerHeight + mTabLayout.getHeight() + itemH - screenH)) {
                     return;
                 }
-                //参与
-//                int screenW = ToolsDevice.getWindowPx(TopicInfoActivity.this).widthPixels;
-//                int screenH = ToolsDevice.getWindowPx(TopicInfoActivity.this).heightPixels;
-//                int itemW = screenW / 3;
-//                int itemH = itemW * 165 / 124;
-//                int H = screenH - itemH;
-//
-//                boolean isShow = locationDong[1] <= H;
-////                if (locationDong[1] <= H) {
-////                    mFloatingButton.setVisibility(View.VISIBLE);
-////                } else {
-////                    mFloatingButton.setVisibility(View.INVISIBLE);
-////                }
-
 
                 if (newState == 1) {
                     if (mFloatingButton.getVisibility() != View.VISIBLE)
@@ -344,7 +299,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                     TranslateAnimation mHiddenAction = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
                             Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
                             0.0f, Animation.RELATIVE_TO_SELF, 1.0f);
-                    mHiddenAction.setDuration(100);
+                    mHiddenAction.setDuration(250);
                     mFloatingButton.clearAnimation();
                     mFloatingButton.setAnimation(mHiddenAction);
                     mHiddenAction.setAnimationListener(new Animation.AnimationListener() {
@@ -371,7 +326,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                     TranslateAnimation mShowAction = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
                             Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
                             1.0f, Animation.RELATIVE_TO_SELF, 0.0f);
-                    mShowAction.setDuration(100);
+                    mShowAction.setDuration(250);
                     mFloatingButton.clearAnimation();
                     mFloatingButton.setAnimation(mShowAction);
                 }
@@ -513,6 +468,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                                         mDatas.add(index, model);
                                     }
                                     if (mTopicInfoStaggeredAdapter != null) {
+                                        topImgIsReal = false;
                                         mTopicInfoStaggeredAdapter.notifyDataSetChanged();
                                     }
                                     ImgManager.tailorImageByUrl(TopicInfoActivity.this, url, imageWidth, imageHeight, 400, new ImgManager.OnResourceCallback() {
@@ -535,6 +491,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                                                             mDatas.add(i, model);
                                                         }
                                                         if (mTopicInfoStaggeredAdapter != null) {
+                                                            topImgIsReal = true;
                                                             mTopicInfoStaggeredAdapter.notifyDataSetChanged();
                                                         }
                                                     }
@@ -628,7 +585,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                         }
                         tmepData.add(topicItemModel);
                     }
-                    updateData(isCurrentChangeTab,tab, tmepData);
+                    updateData(isCurrentChangeTab, tab, tmepData);
                 } else {
                     switch (tab) {
                         case HOT:
@@ -646,7 +603,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
         });
     }
 
-    private void updateData(boolean isCurrentChangeTab,String tab, @NonNull ArrayList<TopicItemModel> tmepData) {
+    private void updateData(boolean isCurrentChangeTab, String tab, @NonNull ArrayList<TopicItemModel> tmepData) {
         if (TextUtils.isEmpty(tab))
             return;
         if (mDatas != null) {
@@ -681,7 +638,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                         mDatas.removeAll(mNewDatas);
                     }
                     mDatas.addAll(mHotDatas);
-                    if(mHotDatas.isEmpty()){
+                    if (mHotDatas.isEmpty()) {
                         mHotTabBottomView.setVisibility(View.GONE);
                         mFloatingButton.setVisibility(View.GONE);
                     }
@@ -691,7 +648,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                         mDatas.removeAll(mHotDatas);
                     }
                     mDatas.addAll(mNewDatas);
-                    if(mNewDatas.isEmpty()){
+                    if (mNewDatas.isEmpty()) {
                         mHotTabBottomView.setVisibility(View.GONE);
                         mFloatingButton.setVisibility(View.GONE);
                     }
