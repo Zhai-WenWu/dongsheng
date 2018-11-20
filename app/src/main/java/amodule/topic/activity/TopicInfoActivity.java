@@ -2,10 +2,7 @@ package amodule.topic.activity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
@@ -34,8 +31,8 @@ import acore.logic.AppCommon;
 import acore.logic.XHClick;
 import acore.logic.stat.StatModel;
 import acore.logic.stat.StatisticsManager;
-import acore.override.XHApplication;
 import acore.logic.stat.intefaces.OnItemClickListenerRvStat;
+import acore.override.XHApplication;
 import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.ImgManager;
 import acore.tools.StringManager;
@@ -87,6 +84,9 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
     private LinearLayout mTitleLayout;
     private String title;
     private TopicItemModel topicItemModelTab;
+    /**
+     * tab条目索引
+     */
     private int tabPosition;
     private int mDistance;
     private int imageHeight;
@@ -101,6 +101,11 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
     private TopicTabHolder topicTabHolder;
     private View mTabLayout;
     private boolean topImgIsReal = true;
+    private int statusBarHeight;
+    private RelativeLayout rela_bar_title;
+    private int offsetHeight;
+    private boolean isClickRealTab;
+    private View titleBg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,13 +128,16 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
 
     }
 
+    /**
+     * 状态栏隐藏
+     */
     private void initTitle() {
-        if(Tools.isShowTitle()) {
+        if (Tools.isShowTitle()) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             int topbarHeight = Tools.getDimen(this, R.dimen.topbar_height);
-            int statusBarHeight = Tools.getStatusBarHeight(this);
+            statusBarHeight = Tools.getStatusBarHeight(this);
 
-            RelativeLayout rela_bar_title = findViewById(R.id.title_all_rela);
+            rela_bar_title = findViewById(R.id.title_all_rela);
             RelativeLayout.LayoutParams layout = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, topbarHeight + statusBarHeight);
             rela_bar_title.setLayoutParams(layout);
             RelativeLayout bar_title = findViewById(R.id.title_layout);
@@ -144,7 +152,6 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
         if (i != null) {
             mTopicCode = i.getStringExtra(TOPIC_CODE);
         }
-
         mHotDatas = new ArrayList<>();
         mNewDatas = new ArrayList<>();
         mDatas = new ArrayList<>();
@@ -226,6 +233,8 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                 }
             }
         });
+
+        //底部按钮点击事件
         mFloatingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -242,7 +251,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
         int[] locationJing = new int[2];
         mDistance = 0;
 
-        View titleBg = findViewById(R.id.title_bg);
+        titleBg = findViewById(R.id.title_bg);
         int screenW = ToolsDevice.getWindowPx(TopicInfoActivity.this).widthPixels;
         int screenH = ToolsDevice.getWindowPx(TopicInfoActivity.this).heightPixels;
         int itemW = screenW / 3;
@@ -289,7 +298,8 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
 //                    mTabLayout.setVisibility(View.GONE);
 //                }
 
-                int screenW = ToolsDevice.getWindowPx(TopicInfoActivity.this).widthPixels;
+
+                //计算header高度
                 if (activityType != null && topImgIsReal && headerHeight == 0) {
                     if (activityType.equals("2")) {
                         Map<String, String> activityInfo = StringManager.getFirstMap(mInfoMap.get("activityInfo"));
@@ -304,13 +314,14 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                         headerHeight = mTopicHeaderView.getHeight();
                     }
                 }
-                int offsetHeight = headerHeight - Tools.getDimen(TopicInfoActivity.this,R.dimen.dp_49) - Tools.getStatusBarHeight(TopicInfoActivity.this);
+                offsetHeight = headerHeight - Tools.getDimen(TopicInfoActivity.this, R.dimen.dp_49) - Tools.getStatusBarHeight(TopicInfoActivity.this);
                 Log.i("tzy", "onScrolled: offsetHeight = " + offsetHeight);
                 //title渐变
                 float alpha = offsetHeight > 0 ? (mDistance <= offsetHeight ? (float) mDistance / offsetHeight : 1) : 0;
                 Log.i("tzy", "onScrolled: alpha = " + alpha);
                 titleBg.setAlpha(alpha);
                 mTabLayout.setVisibility(alpha == 1 ? View.VISIBLE : View.GONE);
+                isClickRealTab = (alpha == 1 ? true : false);
             }
 
             @Override
@@ -318,10 +329,12 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                 super.onScrollStateChanged(recyclerView, newState);
                 ismHiddenActionstart = false;
 
+                //底部按钮动画实现
                 if (mDistance < (headerHeight + mTabLayout.getHeight() + itemH - screenH)) {
                     return;
                 }
 
+                //静止——>滑动
                 if (newState == 1) {
                     if (mFloatingButton.getVisibility() != View.VISIBLE)
                         return;
@@ -350,7 +363,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
 
                         }
                     });
-                } else if (newState == 0) {
+                } else if (newState == 0) {//滑动——>静止
                     if (mFloatingButton.getVisibility() == View.VISIBLE)
                         return;
                     mFloatingButton.setVisibility(View.VISIBLE);
@@ -451,6 +464,9 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
 
     boolean infoIsOver = false;
 
+    /**
+     * 头部数据加载
+     */
     private void loadTopicInfo() {
 
         ReqEncyptInternet.in().doGetEncypt(StringManager.API_TOPIC_INFOV1, "code=" + mTopicCode, new InternetCallback() {
@@ -542,6 +558,9 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
         });
     }
 
+    /**
+     * @param isChangeTab 话题视频列表加载
+     */
     private void loadTopicList(final boolean isChangeTab) {
         if (!infoIsOver) {
             return;
@@ -614,7 +633,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                         }
                         tmepData.add(topicItemModel);
                     }
-                    updateData(isCurrentChangeTab,tab, tmepData);
+                    updateData(isCurrentChangeTab, tab, tmepData);
                 } else {
                     switch (tab) {
                         case HOT:
@@ -632,7 +651,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
         });
     }
 
-    private void updateData(boolean isCurrentChangeTab,String tab, @NonNull ArrayList<TopicItemModel> tmepData) {
+    private void updateData(boolean isCurrentChangeTab, String tab, @NonNull ArrayList<TopicItemModel> tmepData) {
         if (TextUtils.isEmpty(tab))
             return;
         if (mDatas != null) {
@@ -688,10 +707,16 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
             }
         }
 
-        if (mTopicHeaderView != null) {
-            mStaggeredGridView.smoothScrollToPosition(1);
-        } else {
-            mStaggeredGridView.smoothScrollToPosition(tabPosition);
+        if (isClickRealTab){
+            LinearLayoutManager llm = (LinearLayoutManager) mStaggeredGridView.getLayoutManager();
+            int scroll = rela_bar_title.getHeight();
+            if (mTopicHeaderView != null) {
+                llm.scrollToPositionWithOffset(1, scroll);
+            } else {
+                llm.scrollToPositionWithOffset(tabPosition, scroll);
+            }
+            titleBg.setAlpha(1);
+            mDistance = offsetHeight;
         }
     }
 }
