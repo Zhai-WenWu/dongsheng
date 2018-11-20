@@ -44,6 +44,7 @@ import acore.logic.stat.StatisticsManager;
 import acore.override.helper.XHActivityManager;
 import acore.tools.ImgManager;
 import acore.tools.StringManager;
+import acore.tools.Tools;
 import amodule.dish.activity.ListDish;
 import amodule.search.view.MultiTagView;
 import amodule.topic.activity.TopicInfoActivity;
@@ -104,6 +105,7 @@ public class TopicHeaderView extends RelativeLayout {
         mShadePanel = findViewById(R.id.shade);
         mActivityTv = findViewById(R.id.activity_btn);
         containerLayout = findViewById(R.id.rl_container);
+        containerLayout.setPadding(containerLayout.getPaddingLeft(),containerLayout.getPaddingTop() + Tools.getStatusBarHeight(getContext()),containerLayout.getPaddingRight(),containerLayout.getPaddingBottom());
         mSocialiteTable = findViewById(R.id.socialite_table);
         mLongImgViewstub = findViewById(R.id.long_img_viewstub);
         mSocialiteTable.setPressColor("#00000000");
