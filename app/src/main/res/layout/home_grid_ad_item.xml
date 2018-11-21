@@ -26,7 +26,7 @@
         android:layout_height="@dimen/dp_14"
         app:layout_constraintEnd_toEndOf="@+id/img"
         app:layout_constraintBottom_toBottomOf="@+id/img"
-        android:src="@drawable/icon_ad_gdt"
+        android:src="@drawable/icon_ad_gdt_3"
         android:scaleType="fitEnd"
         android:visibility="gone"/>
 
