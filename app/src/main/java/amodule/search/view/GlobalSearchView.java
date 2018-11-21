@@ -318,22 +318,25 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                if(!TextUtils.equals(edSearch.getHint(),DEFAULT_HINT)){
+                    resetEdHint();
+                }
                 String temp = s.toString().trim();
+                if (TextUtils.isEmpty(jsonData)) {
+                    searchKey = temp;
+                } else {
+                    jsonData = "";
+                }
 
                 caipuView.onClearSearchWord();
                 if (TextUtils.isEmpty(temp)) {
                     showSpeciView(SearchConstant.VIEW_DEFAULT_SEARCH);
                 } else {
-                    if (TextUtils.isEmpty(jsonData)) {
-                        searchKey = temp;
-                    } else {
-                        jsonData = "";
-                    }
                     showSpeciView(SearchConstant.VIEW_MATCH_WORDS);
                     matchwordsView.getMatchWords(searchKey);
                 }
@@ -500,7 +503,7 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
     }
 
     private void resetEdHint() {
-        edSearch.setHint(currentHint);
+        edSearch.setHint(DEFAULT_HINT);
     }
 
 }

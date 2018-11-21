@@ -66,7 +66,8 @@ android {
         minSdkVersion 19
         targetSdkVersion 21
         versionCode 306
-        versionName "6.6.6.2"
+        versionName "6.6.6.3"
+
         // dex突破65535的限制
         multiDexEnabled true
         ndk {
