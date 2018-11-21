@@ -7,10 +7,13 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import acore.logic.ConfigHelper;
 import acore.logic.stat.RvMapViewHolderStat;
+import acore.tools.StringManager;
 import acore.widget.rvlistview.adapter.RvBaseAdapter;
 import acore.widget.rvlistview.holder.RvBaseViewHolder;
 import amodule.main.bean.HomeModuleBean;
@@ -52,10 +55,13 @@ public class HomeAdapter extends RvBaseAdapter<Map<String, String>> {
     private String mListType = LIST_TYPE_LIST;//网格列表
     boolean isCache;
 
+    private ArrayList<Map<String, String>> mGdtHeightImgIds;
+
     public HomeAdapter(Activity mActivity, @Nullable List<Map<String, String>> data, AdControlParent adControlParent) {
         super(mActivity, data);
         this.mAct = mActivity;
         mAdControlParent = adControlParent;
+        mGdtHeightImgIds = StringManager.getListMapByJson(ConfigHelper.getInstance().getConfigValueByKey("heightPhotoId"));
     }
 
     public void setHomeModuleBean(HomeModuleBean homeModuleBean) {
@@ -308,6 +314,7 @@ public class HomeAdapter extends RvBaseAdapter<Map<String, String>> {
         @Override
         public void overrideBindData(int position, @Nullable Map<String, String> data) {
             if (view != null) {
+                view.setHeightImg(mGdtHeightImgIds.contains(data.get("adid")));
                 view.setHomeModuleBean(moduleBean);
                 view.setAdControl(mAdControlParent);
                 view.setData(data, position);
