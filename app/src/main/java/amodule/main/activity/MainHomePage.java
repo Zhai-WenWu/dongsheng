@@ -21,7 +21,6 @@ import acore.logic.ConfigMannager;
 import acore.logic.MessageTipController;
 import acore.logic.SpecialWebControl;
 import acore.logic.XHClick;
-import acore.logic.load.LoadManager;
 import acore.override.activity.mian.MainBaseActivity;
 import acore.tools.IObserver;
 import acore.tools.ObserverManager;
@@ -38,7 +37,6 @@ import amodule.main.adapter.HomeAdapter;
 import amodule.main.delegate.ISetMessageTip;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
-import aplug.basic.ReqInternet;
 import third.ad.control.AdControlParent;
 import third.ad.tools.AdPlayIdConfig;
 
@@ -135,21 +133,21 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
             @Override
             public void disconnect() {
                 if (null != mViewContrloer) {
-                    mViewContrloer.showNetworkTip();
+                    mViewContrloer.netWorkDisconnect();
                 }
             }
 
             @Override
             public void wifi() {
                 if (null != mViewContrloer) {
-                    mViewContrloer.hindNetworkTip();
+                    mViewContrloer.netWorkConnect();
                 }
             }
 
             @Override
             public void mobile() {
                 if (null != mViewContrloer) {
-                    mViewContrloer.hindNetworkTip();
+                    mViewContrloer.netWorkConnect();
                 }
             }
         });

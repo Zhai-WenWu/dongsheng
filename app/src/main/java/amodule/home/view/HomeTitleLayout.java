@@ -43,6 +43,7 @@ public class HomeTitleLayout extends RelativeLayout implements IStatictusData {
     OnClickActivityIconListener mOnClickActivityIconListener;
 
     String searchWord;
+    boolean isLoading;
 
     public HomeTitleLayout(Context context) {
         this(context,null);
@@ -69,10 +70,19 @@ public class HomeTitleLayout extends RelativeLayout implements IStatictusData {
         searchLayout.setTag(STAT_TAG,"搜索");
         searchLayout.setOnClickListener(mOnClickListenerStat);
 
-        postDelayed(() -> new SearchDataImp().getRandomHotWord(new InternetCallback() {
+        postDelayed(this::getHotWord,2000);
+    }
+
+    public void getHotWord() {
+        if(!TextUtils.isEmpty(searchWord) || isLoading){
+            return;
+        }
+        isLoading = true;
+        new SearchDataImp().getRandomHotWord(new InternetCallback() {
             @SuppressLint("SetTextI18n")
             @Override
             public void loaded(int i, String s, Object o) {
+                isLoading = false;
                 String word = (String) o;
                 if(!TextUtils.isEmpty(word)){
                     searchWord = word;
@@ -80,7 +90,7 @@ public class HomeTitleLayout extends RelativeLayout implements IStatictusData {
                     textView.setText("大家正在搜: " + word);
                 }
             }
-        }),2000);
+        });
     }
 
     OnClickListenerStat mOnClickListenerStat = new OnClickListenerStat() {

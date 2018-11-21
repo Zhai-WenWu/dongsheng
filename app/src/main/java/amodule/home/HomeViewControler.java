@@ -330,6 +330,17 @@ public class HomeViewControler implements ISetAdController {
         mHeaderControler.setVipGuideVisible(visible);
     }
 
+    public void netWorkConnect(){
+        hindNetworkTip();
+        if(mTitleLayout != null){
+            mTitleLayout.getHotWord();
+        }
+    }
+
+    public void netWorkDisconnect(){
+        showNetworkTip();
+    }
+
     /*--------------------------------------------- Get&Set ---------------------------------------------*/
 
     public RvListView getRvListView() {

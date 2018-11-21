@@ -6,6 +6,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,6 +59,9 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
     private ImageView iv_history;
     private ImageView clear_global;
     private ImageView search_speeach;
+    private final String NO_SEARCH_TEXT_HINT = "请输入您想要的";
+    private final String DEFAULT_HINT = "搜菜谱、食材等";
+    private String currentHint = DEFAULT_HINT;
 
     public GlobalSearchView(Context context) {
         this(context, null);
@@ -90,10 +94,15 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
         initView();
         once = false;
         if (!TextUtils.isEmpty(searchWord)) {
-            setSearchMsg(searchWord, searchType);
             if(isNowSearch){
+                setSearchMsg(searchWord, searchType);
                 setHorizon(searchWord);
                 search();
+            }else{
+                this.searchKey = searchWord;
+                this.searchType = searchType;
+                currentHint = searchWord;
+                edSearch.setHint(searchKey);
             }
         } else {
             XHClick.track(defaultView.getContext(), "浏览搜索默认页");
@@ -206,11 +215,13 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
 
             @Override
             public void onSearchMsgChanged(String searchKey, int type) {
+                Log.i("tzy", "onSearchMsgChanged: searchKey="+searchKey);
                 setSearchMsg(searchKey, type);
             }
 
             @Override
             public void toSearch(String searchKey, int searchType) {
+                Log.i("tzy", "toSearch: searchKey="+searchKey);
                 setSearchMsg(searchKey, searchType);
                 search(false);
             }
@@ -240,6 +251,7 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
         findViewById(R.id.btn_back).setOnClickListener(this);
         // 聚焦,显示搜索历史
         edSearch.setOnFocusChangeListener((v, hasFocus) -> {
+            //TODO
             resetEdHint();
             if (hasFocus) {
                 if (TextUtils.isEmpty(searchKey)) {
@@ -274,12 +286,16 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
                 case KeyEvent.KEYCODE_ENTER:
                 case KeyEvent.ACTION_DOWN:
                     String str = edSearch.getText().toString();
-                    if (str.trim().length() == 0) {
-                        Tools.showToast(getContext(), "请输入查询关键字");
-                        mActivity.loadManager.hideProgressBar();
-                        return true;
+                    if (str.trim().length() == 0){
+                        if(TextUtils.equals(edSearch.getHint(),DEFAULT_HINT)){
+                            Tools.showToast(getContext(), NO_SEARCH_TEXT_HINT);
+                            mActivity.loadManager.hideProgressBar();
+                            return true;
+                        }
+                    }else{
+                        searchKey = str;
                     }
-                    searchKey = str;
+                    setSearchMsg(searchKey, searchType);
                     search();
                     return true;
                 default:
@@ -395,11 +411,15 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
             case R.id.btn_search_global:
                 String str = edSearch.getText().toString();
                 if (str.trim().length() == 0) {
-                    Tools.showToast(mActivity, "请输入您想要的");
-                    mActivity.loadManager.hideProgressBar();
-                    return;
+                    if(TextUtils.equals(edSearch.getHint(),DEFAULT_HINT)){
+                        Tools.showToast(getContext(), NO_SEARCH_TEXT_HINT);
+                        mActivity.loadManager.hideProgressBar();
+                        return;
+                    }
+                }else{
+                    searchKey = str;
                 }
-                setSearchMsg(str, searchType);
+                setSearchMsg(searchKey, searchType);
                 search();
                 break;
             // 清除搜索词
@@ -480,7 +500,7 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
     }
 
     private void resetEdHint() {
-        edSearch.setHint("搜菜谱、食材等");
+        edSearch.setHint(currentHint);
     }
 
 }
