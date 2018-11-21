@@ -159,6 +159,9 @@ public class WebActivity extends BaseActivity {
 			String cookieKey=theUrl;
 			if(theUrl.contains(MallStringManager.domain)){
 				cookieKey=MallStringManager.mall_web_apiUrl.replace(MallStringManager.appWebTitle, "");
+				if(!TextUtils.equals(MallStringManager.domain,MallStringManager.defaultDomain)){
+					cookieKey = "m" + MallStringManager.domain;
+				}
 			}else if(theUrl.contains(StringManager.domain)){
 				cookieKey=StringManager.domain;
 				if(!TextUtils.equals(StringManager.domain,StringManager.defaultDomain)){
