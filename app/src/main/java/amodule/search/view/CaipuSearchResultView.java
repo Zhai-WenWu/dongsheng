@@ -58,8 +58,6 @@ public class CaipuSearchResultView extends LinearLayout {
     private int adNum;
     private AtomicBoolean isRefreash = new AtomicBoolean(false);
 
-    private String mLessonCode;
-
     public CaipuSearchResultView(Context context) {
         this(context, null);
     }
@@ -185,7 +183,6 @@ public class CaipuSearchResultView extends LinearLayout {
     }
 
     private void clearSearchResult() {
-        mLessonCode = "";
         mListCaipuData.clear();
         mListShicaiData.clear();
         currentCaipuPage = 0;
@@ -197,11 +194,7 @@ public class CaipuSearchResultView extends LinearLayout {
     }
 
     private void searchVIPLesson() {
-        mLessonView.searchLesson(searchKey, code -> {
-            mLessonCode = code;
-            removeLessonDish();
-            onDownFirstPageComplete();
-        });
+        mLessonView.searchLesson(searchKey, this::onDownFirstPageComplete);
     }
 
     private void searchDish() {
@@ -233,18 +226,6 @@ public class CaipuSearchResultView extends LinearLayout {
         });
     }
 
-    private void removeLessonDish() {
-        if (TextUtils.isEmpty(mLessonCode)) {
-            return;
-        }
-        for (int i = 0; i < mListCaipuData.size(); i++) {
-            if (TextUtils.equals(mLessonCode, mListCaipuData.get(i).get("code"))) {
-                mListCaipuData.remove(i);
-                return;
-            }
-        }
-    }
-
     private void readyDishData(boolean isRefresh, Map<String, String> dishMap) {
         if (dishMap != null && dishMap.containsKey("dishs")) {
             String caipuStr = dishMap.get("dishs");
@@ -272,7 +253,6 @@ public class CaipuSearchResultView extends LinearLayout {
                 map1.put("favorites", map1.get("favorites") + "收藏");
             }
             mListCaipuData.addAll(tempList);
-            removeLessonDish();
             if (isRefresh && dishMap.containsKey("theIngre")) {
                 String shicaiStr = dishMap.get("theIngre");
                 ArrayList<Map<String, String>> tempList2 = StringManager.getListMapByJson(shicaiStr);
