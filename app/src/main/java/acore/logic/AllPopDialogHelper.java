@@ -103,6 +103,18 @@ public class AllPopDialogHelper {
                         int interval = TextUtils.isEmpty(intervalValue) ? 0 : Integer.parseInt(intervalValue);
                         log(intervalCountValue);
                         data = map.get("list");
+                        data = "{\n" +
+                                "\t\t\t\t\t\"actId\": \"163\",\n" +
+                                "\t\t\t\t\t\"name\": \"\\u9999\\u54c8\\u725b\\u8089\\u9999\\u83c7\\u9171-1109\",\n" +
+                                "\t\t\t\t\t\"img\": \"https:\\/\\/s1.cdn.xiangha.com\\/activity\\/201811\\/1320\\/5beac7bde9819.png\\/MHgw\",\n" +
+                                "\t\t\t\t\t\"url\": \"xhds.product.info.app?product_code=64441&ds_from=\\u5f39\\u5c4f\\u6ee129\\u5143\\u65e0\\u8d60\\u54c1\",\n" +
+                                "\t\t\t\t\t\"priority\": \"2\",\n" +
+                                "\t\t\t\t\t\"showNum\": \"2\",\n" +
+                                "\t\t\t\t\t\"reset\": \"1541779818\",\n" +
+                                "\t\t\t\t\t\"addTime\": 1540539782,\n" +
+                                "\t\t\t\t\t\"showTime\": \"0\",\n" +
+                                "\t\t\t\t\t\"statJson\": \"{\\\"type\\\":\\\"10\\\",\\\"code\\\":\\\"163\\\"}\"\n" +
+                                "\t\t\t\t}";
                         log(data);
                         if(callback != null){
                             callback.loadFullScreenData(intervalCount > interval?data:"");
