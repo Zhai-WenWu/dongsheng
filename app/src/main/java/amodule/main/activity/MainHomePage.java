@@ -115,6 +115,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
         mDataControler.setEntryptDataCallback(this::EntryptData);
         //初始化adapter
         mHomeAdapter = new HomeAdapter(this, mDataControler.getData(), mDataControler.getAdControl());
+        mHomeAdapter.setRecyclerViewPaddingLR(mViewContrloer.getRvListView().getPaddingLeft(), mViewContrloer.getRvListView().getPaddingRight());
         mHomeAdapter.setHomeModuleBean(mDataControler.getHomeModuleBean());
         mHomeAdapter.setViewOnClickCallBack(isOnClick -> refresh());
         mHomeAdapter.setListType(HomeAdapter.LIST_TYPE_STAGGERED);

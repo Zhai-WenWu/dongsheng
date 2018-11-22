@@ -5,15 +5,14 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
-import android.support.constraint.ConstraintLayout;
-import android.support.constraint.ConstraintSet;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.aliyun.common.utils.MD5Util;
@@ -31,7 +30,6 @@ import acore.logic.ActivityMethodManager;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
-import acore.tools.ToolsDevice;
 import acore.widget.IconTextSpan;
 import aplug.basic.InternetCallback;
 import aplug.basic.LoadImage;
@@ -39,12 +37,11 @@ import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import pl.droidsonroids.gif.GifDrawable;
 import pl.droidsonroids.gif.GifImageView;
-import third.mall.wx.MD5;
 
 public class HomeStaggeredGridItem extends HomeItem {
 
 //    private ConstraintLayout mRootLayout;
-    private ConstraintLayout mContentLayout;
+    private RelativeLayout mContentLayout;
     private ImageView mImg;
     private GifImageView gifImageView;
     private TextView mTitle,num_tv;
@@ -139,9 +136,10 @@ public class HomeStaggeredGridItem extends HomeItem {
         } else if (realImgHeight > mImgMaxHeight) {
             realImgHeight = mImgMaxHeight;
         }
-
-        applyViewToLayout(mImg, realImgHeight, mContentLayout);
-        applyViewToLayout(gifImageView, realImgHeight, mContentLayout);
+        ViewGroup.LayoutParams imgRlp = mImg.getLayoutParams();
+        imgRlp.height = realImgHeight;
+        ViewGroup.LayoutParams gifRlp = gifImageView.getLayoutParams();
+        gifRlp.height = realImgHeight;
         gifImageView.setVisibility(View.GONE);
         mImg.setImageResource(R.drawable.i_nopic);
         if (!TextUtils.isEmpty(mDataMap.get("parseResourceData_gif"))) {
@@ -160,7 +158,6 @@ public class HomeStaggeredGridItem extends HomeItem {
                 gifImageView.setVisibility(View.GONE);
                 handleImg();
             }
-//            Glide.with(getContext()).load(mDataMap.get("parseResourceData_gif")).asGif().centerCrop().placeholder(R.drawable.i_nopic).diskCacheStrategy(DiskCacheStrategy.SOURCE).into(mImg);
         } else {
             handleImg();
         }
@@ -222,21 +219,6 @@ public class HomeStaggeredGridItem extends HomeItem {
         }
     }
 
-    private void applyViewToLayout(View targetView, int targetViewHeight, ConstraintLayout targetLayout) {
-        ConstraintSet cs = new ConstraintSet();
-        cs.constrainWidth(targetView.getId(), ConstraintSet.MATCH_CONSTRAINT);
-        cs.constrainHeight(targetView.getId(), targetViewHeight);
-        cs.constrainMinHeight(targetView.getId(), mImgMinHeight);
-        cs.connect(targetView.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
-        cs.connect(targetView.getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END);
-        cs.connect(targetView.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
-        cs.connect(targetView.getId(), ConstraintSet.BOTTOM, R.id.title, ConstraintSet.TOP);
-        cs.applyTo(mContentLayout);
-    }
-
-    public ConstraintLayout getContentLayout() {
-        return mContentLayout;
-    }
     @SuppressLint("HandlerLeak")
     private Handler handler = new Handler(){
         @Override
