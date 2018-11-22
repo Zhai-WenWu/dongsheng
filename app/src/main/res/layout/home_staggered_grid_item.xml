@@ -26,7 +26,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/dp_6"
-        android:layout_marginBottom="@dimen/dp_8"
         android:layout_marginEnd="@dimen/dp_8"
         android:layout_marginStart="@dimen/dp_8"
         android:ellipsize="end"
@@ -44,6 +43,7 @@
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:layout_below="@+id/title"
+        android:layout_marginTop="@dimen/dp_8"
         android:layout_marginBottom="@dimen/dp_10">
 
         <acore.widget.rcwidget.RCImageView
