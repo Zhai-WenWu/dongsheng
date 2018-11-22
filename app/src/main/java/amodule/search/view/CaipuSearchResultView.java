@@ -82,6 +82,7 @@ public class CaipuSearchResultView extends LinearLayout {
         mSearchHorizonLayout = findViewById(R.id.search_horizon_layout);
         mRefreshLayout = findViewById(R.id.refresh_list_view_frame);
         mRefreshLayout.setVisibility(View.VISIBLE);
+        mRefreshLayout.disableWhenHorizontalMove(true);
         mSearchList = findViewById(R.id.list_search_result);
         ll_noData = findViewById(R.id.v_no_data_search);
         ll_noData.setVisibility(View.GONE);
@@ -93,7 +94,7 @@ public class CaipuSearchResultView extends LinearLayout {
         mSearchList.addHeaderView(view);
         RelativeLayout header = new RelativeLayout(context);
         mLessonView = new SearchVIPLessonView(context);
-        header.addView(mLessonView);
+        header.addView(mLessonView,new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.WRAP_CONTENT));
         mSearchList.addHeaderView(header);
 
         mAdapter = new AdapterCaipuSearch(mActivity, mSearchList);
