@@ -146,8 +146,8 @@ public class WelcomeControls {
 
     private void initAd() {
         if ("true".equals(FileManager.loadShared(activity, FileManager.xmlFile_appInfo, "once").toString())) {
-            mAdTime = 3;
-            return;
+            mAdTime = DEFAULT_TIME;
+//            return;
         }
         //设置广点通广告回调
         WelcomeAdTools.getInstance().setmGdtCallback(

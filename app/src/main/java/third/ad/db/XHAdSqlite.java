@@ -200,6 +200,29 @@ public class XHAdSqlite extends SQLiteOpenHelper {
         }
     }
 
+    public boolean adConfigIsEmpty(){
+        return isEmpty(TABLE_ADCONFIG);
+    }
+
+    public boolean isEmpty(String tableName){
+        boolean isEmpty = true;
+        if(!TextUtils.isEmpty(tableName)){
+            SQLiteDatabase database = null;
+            Cursor cursor = null;
+            try{
+                database = getReadableDatabase();
+                cursor = database.rawQuery("select * from " + tableName,null);
+                isEmpty = cursor.getCount() <= 0;
+            }catch (Exception e){
+                e.printStackTrace();
+            }finally {
+                closeCursor(cursor);
+                closeDatabase(database);
+            }
+        }
+        return isEmpty;
+    }
+
     @Nullable
     private AdBean getAdByADId(String tableName,String adid){
         if(TextUtils.isEmpty(tableName) || TextUtils.isEmpty(adid)){

@@ -165,6 +165,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
         ActivityMethodManager.isAppShow= true;
         mainInitDataControl = new MainInitDataControl();
         mainInitDataControl.setIHandleMessage(this);
+        Log.i("isShowAd", "Main:init: ");
         welcomeControls= LoginManager.isShowAd()?new WelcomeControls(this,callBack):
                 new WelcomeControls(this,1,callBack);
         LogManager.printStartTime("zhangyujian","main::oncreate::");

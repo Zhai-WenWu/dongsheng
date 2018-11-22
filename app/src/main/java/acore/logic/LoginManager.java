@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.webkit.CookieManager;
 
@@ -404,6 +405,7 @@ public class LoginManager {
             return mIsShowAd;
         }
         mIsShowAd = !(isVIP() || isGourmet());
+        Log.i("isShowAd", "isShowAd: " + mIsShowAd);
         return mIsShowAd;
     }
 

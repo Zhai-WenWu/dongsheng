@@ -307,13 +307,10 @@ public class HomeDataControler implements ActivityMethodManager.IAutoRefresh, IL
     @Override
     public void loadAdData(@NonNull ArrayList<String> listIds, @NonNull XHAllAdControl.XHBackIdsDataCallBack xhBackIdsDataCallBack, @NonNull Activity act, String StatisticKey) {
         if (ToolsDevice.isNetworkAvailable(act)) {
-            mViewAdControl = new XHAllAdControl(listIds, (isRefresh, map) ->
-            {
-                xhBackIdsDataCallBack.callBack(isRefresh, map);
-            },
+            mViewAdControl = new XHAllAdControl(listIds,
+                    xhBackIdsDataCallBack,
                     XHActivityManager.getInstance().getCurrentActivity(),
                     StatisticKey);
-
         }
     }
 

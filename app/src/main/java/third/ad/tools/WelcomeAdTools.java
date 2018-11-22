@@ -135,8 +135,7 @@ public class WelcomeAdTools {
         this.mAdNoDataCallBack = CallBack;
 
         Log.i("tzy", "WelcomeAdTools handlerAdData.");
-        XHAdSqlite adSqlite = XHAdSqlite.newInstance(XHApplication.in());
-        AdBean adBean = adSqlite.getAdConfig(WELCOME);
+        AdBean adBean = AdConfigTools.getInstance().getAdConfig(WELCOME);
         if (adBean == null) {
             String splashConfigValue = FileManager.readFile(FileManager.getDataDir() + "ad");
             Map<String, String> splashConfig = StringManager.getFirstMap(splashConfigValue);
