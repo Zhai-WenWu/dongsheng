@@ -17,6 +17,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -140,19 +141,27 @@ public class SearchHorizonLayout extends RelativeLayout {
         this.strList.clear();
         this.strList.addAll(strList);
         //拼接参数
-        StringBuffer sb = new StringBuffer();
+        int lastIndex = 0;
+        String strType1 = "";
+        LinkedHashMap<String,String> params = new LinkedHashMap<>();
         for (int i = 0; i < strList.size(); i++) {
             Map<String, String> map = strList.get(i);
             if (!TextUtils.isEmpty(map.get("name"))) {
-                sb.append("soData[").append(i).append("]")
-                        .append("=").append(map.get("name"));
-                if (i != strList.size() - 1) {
-                    sb.append("&");
+                if(!TextUtils.equals("1",map.get("type"))){
+                    params.put("soData[" + i + "]",map.get("name"));
+                    lastIndex = i;
+                }else{
+                    strType1 = map.get("name");
                 }
             }
         }
+        if(!TextUtils.isEmpty(strType1)){
+            String lastKey = "soData[" + lastIndex + "]";
+            params.put(lastKey,params.get(lastKey) + " " + strType1);
+        }
+
         //请求匹配词数据
-        ReqEncyptInternet.in().doGetEncypt(API_SEARCH_RECOM_LABEL + "?" + sb.toString(), new InternetCallback() {
+        ReqEncyptInternet.in().doGetEncypt(API_SEARCH_RECOM_LABEL,params, new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
                 if (i <= ReqInternet.REQ_OK_STRING) {

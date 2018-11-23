@@ -194,8 +194,32 @@ public class CaipuSearchResultView extends LinearLayout {
         mAdapter.notifyDataSetChanged();
     }
 
+    private List<String> mCodeArray = new ArrayList<>();
     private void searchVIPLesson() {
-        mLessonView.searchLesson(searchKey, this::onDownFirstPageComplete);
+        mLessonView.searchLesson(searchKey, new SearchVIPLessonView.LessonCallback() {
+            @Override
+            public void callback(List<String> codeArray) {
+                mCodeArray.clear();
+                mCodeArray.addAll(codeArray);
+                removeLessonDish(mListCaipuData);
+                onDownFirstPageComplete();
+            }
+        });
+    }
+
+    private void removeLessonDish(List<Map<String, String>> data) {
+        if (mCodeArray.isEmpty()) {
+            return;
+        }
+        for (int i = 0; i < data.size(); i++) {
+            for(String code:mCodeArray){
+                if (TextUtils.equals(code, data.get(i).get("code"))) {
+                    data.remove(i);
+                    i--;
+                    break;
+                }
+            }
+        }
     }
 
     private void searchDish() {
@@ -253,6 +277,7 @@ public class CaipuSearchResultView extends LinearLayout {
                 map1.put("allClick", map1.get("allClick") + "浏览");
                 map1.put("favorites", map1.get("favorites") + "收藏");
             }
+            removeLessonDish(tempList);
             mListCaipuData.addAll(tempList);
             if (isRefresh && dishMap.containsKey("theIngre")) {
                 String shicaiStr = dishMap.get("theIngre");

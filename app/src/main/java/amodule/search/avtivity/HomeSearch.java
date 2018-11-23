@@ -53,7 +53,7 @@ public class HomeSearch extends BaseActivity {
             limitSearchType = bundle.getInt(SearchConstant.SEARCH_TYPE, SearchConstant.SEARCH_CAIPU);
             searchKey = bundle.getString("s");
             jsonData = bundle.getString(EXTRA_JSONDATA);
-            isNowSearch = TextUtils.equals("2",bundle.getString(EXTRA_IS_NOW_SEARCH));
+            isNowSearch = !TextUtils.equals("1",bundle.getString(EXTRA_IS_NOW_SEARCH));
         }
         if(startCount != 1){
             level = 3;

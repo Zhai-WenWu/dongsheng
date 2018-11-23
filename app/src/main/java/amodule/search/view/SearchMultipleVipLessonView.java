@@ -50,10 +50,12 @@ public class SearchMultipleVipLessonView extends BaseItemView {
         LayoutInflater.from(context).inflate(R.layout.item_multiple_search_viplesson, this);
         mLessonImg = findViewById(R.id.lesson_img);
         View shadowView = findViewById(R.id.shadow_layout);
-        int imageSize = (int) ((ToolsDevice.getWindowPx(context).widthPixels - Tools.getDimen(context, R.dimen.dp_50)) / 2f);
-        mLessonImg.getLayoutParams().width = mLessonImg.getLayoutParams().height = imageSize;
-        int itemWidth = imageSize + shadowView.getPaddingLeft() + shadowView.getPaddingRight();
-        int itemHeight = (int) (imageSize /324f*443 + shadowView.getPaddingTop() + shadowView.getPaddingBottom());
+        int imageWidth = (int) ((ToolsDevice.getWindowPx(context).widthPixels - Tools.getDimen(context, R.dimen.dp_50)) / 2f);
+        int imageHeight = (int) (imageWidth /324f*248);
+        mLessonImg.getLayoutParams().width = imageWidth;
+        mLessonImg.getLayoutParams().height = imageHeight;
+        int itemWidth = imageWidth + shadowView.getPaddingLeft() + shadowView.getPaddingRight();
+        int itemHeight = (int) (imageWidth / 324f * 361 + shadowView.getPaddingTop() + shadowView.getPaddingBottom());
         setLayoutParams(new ViewGroup.LayoutParams(itemWidth,itemHeight));
         mTitleText = findViewById(R.id.lesson_title);
         mNameText = findViewById(R.id.lesson_name);
@@ -69,7 +71,7 @@ public class SearchMultipleVipLessonView extends BaseItemView {
             setViewText(mTitleText, mDataMap.get("name"));
             setViewText(mInfoText, mDataMap.get("subTitle"));
             lesson_icon_oval.setVisibility(mInfoText.getVisibility());
-            setViewText(mNameText, mDataMap.get("nickName"));
+            setViewText(mNameText, StringManager.subOverString(mDataMap.get("nickName"),5));
             setViewImage(mLessonImg, mDataMap.get("img"));
             Map<String, String> videoMap = StringManager.getFirstMap(mDataMap.get("video"));
             setViewTextAndVisibility(mVideoDuration, videoMap.get("duration"));

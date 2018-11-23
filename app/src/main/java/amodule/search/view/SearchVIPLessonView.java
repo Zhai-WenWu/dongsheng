@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.annimon.stream.Stream;
 import com.annimon.stream.function.Consumer;
+import com.annimon.stream.function.Predicate;
 import com.xiangha.R;
 
 import java.util.ArrayList;
@@ -141,6 +142,7 @@ public class SearchVIPLessonView extends RelativeLayout {
     private void onDataReady(Object o, LessonCallback callback) {
         //清空数据
         mData.clear();
+        List<String> codeArray = new ArrayList<>();
         if (o != null) {
             //处理数据
             Map<String, String> resultMap = StringManager.getFirstMap(o);
@@ -160,6 +162,9 @@ public class SearchVIPLessonView extends RelativeLayout {
                 Map<String, String> customer = StringManager.getFirstMap(value.get("customer"));
                 value.put("nickName", customer.get("nickName"));
             });
+            Stream.of(mData)
+                    .filter(value -> mData.size() <= 2 || mData.indexOf(value) < 2)
+                    .forEach(value -> codeArray.add(value.get("code")));
         }
         //刷新
         mAdapter.notifyDataSetChanged();
@@ -172,7 +177,7 @@ public class SearchVIPLessonView extends RelativeLayout {
         }
         //
         if (callback != null) {
-            callback.callback();
+            callback.callback(codeArray);
         }
     }
 
@@ -187,6 +192,6 @@ public class SearchVIPLessonView extends RelativeLayout {
     }
 
     public interface LessonCallback {
-        void callback();
+        void callback(List<String> codeArray);
     }
 }
