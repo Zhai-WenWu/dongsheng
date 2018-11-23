@@ -10,7 +10,6 @@ import com.annimon.stream.Stream;
 import com.popdialog.util.PushManager;
 import com.tencent.stat.StatService;
 import com.umeng.analytics.MobclickAgent;
-import com.umeng.message.PushAgent;
 import com.xiangha.Welcome;
 
 import java.util.ArrayList;
@@ -52,8 +51,6 @@ public class ActivityMethodManager {
 
     public ActivityMethodManager(Activity mAct) {
         this.mAct = mAct;
-        //用于标记umeng推送记录数据
-        PushAgent.getInstance(mAct).onAppStart();
         /*随机广告*/
         randPromotion();
         initStatData();

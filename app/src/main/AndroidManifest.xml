@@ -1443,93 +1443,21 @@
 
 
         <!-- PUSH start -->
-        <!-- umeng push -->
-        <meta-data
-            android:name="UMENG_MESSAGE_SECRET"
-            android:value="35d47e62d87d5038bc9f85b9f62a370a"></meta-data>
-
-        <service android:name="third.push.umeng.UMPushService" />
-        <service android:name="third.push.PushPraserService" />
-        <!-- umeng push -->
         <!-- START 信鸽 -->
         <receiver android:name="third.push.broadcast.DismissNotificationBroadcast" />
+        <receiver
+            android:name="third.push.xg.XGMessageReceiver"
+            android:exported="true" >
+            <intent-filter>
+                <!-- 接收消息透传 -->
+                <action android:name="com.tencent.android.tpush.action.PUSH_MESSAGE" />
+                <!-- 监听注册、反注册、设置/删除标签、通知被点击等处理结果 -->
+                <action android:name="com.tencent.android.tpush.action.FEEDBACK" />
+            </intent-filter>
 
-        <!-- 【必须】 (2.30及以上版新增)展示通知的activity -->
-        <!-- 【注意】 如果被打开的activity是启动模式为SingleTop，SingleTask或SingleInstance，请根据通知的异常自查列表第8点处理 -->
-        <!-- 【必须】 信鸽service -->
-        <!-- <service -->
-        <!-- android:name="com.tencent.android.tpush.service.XGPushServiceV3" -->
-        <!-- android:exported="true" -->
-        <!-- android:persistent="true" -->
-        <!-- android:process=":xg_service_v3"/> -->
-
-
-        <!-- &lt;!&ndash; 【必须】 提高service的存活率 &ndash;&gt; -->
-        <!-- <service -->
-        <!-- android:name="com.tencent.android.tpush.rpc.XGRemoteService" -->
-        <!-- android:exported="true"> -->
-        <!-- <intent-filter> -->
-
-
-        <!-- &lt;!&ndash; 【必须】 请修改为当前APP包名 .PUSH_ACTION, 如demo的包名为：com.qq.xgdemo &ndash;&gt; -->
-        <!-- <action android:name="com.xiangha.PUSH_ACTION"/> -->
-        <!-- </intent-filter> -->
-        <!-- </service> -->
-        <!-- <service -->
-        <!-- android:name="com.tencent.android.tpush.service.XGDaemonService" -->
-        <!-- android:process=":xg_service_v3"/> -->
-
-
-        <!-- &lt;!&ndash; 【必须】 【注意】authorities修改为 包名.AUTH_XGPUSH, 如demo的包名为：com.qq.xgdemo &ndash;&gt; -->
-        <!-- <provider -->
-        <!-- android:name="com.tencent.android.tpush.XGPushProvider" -->
-        <!-- android:authorities="com.xiangha.AUTH_XGPUSH" -->
-        <!-- android:exported="true"/> -->
-        <!-- &lt;!&ndash; 【必须】 【注意】authorities修改为 包名.TPUSH_PROVIDER, 如demo的包名为：com.qq.xgdemo &ndash;&gt; -->
-        <!-- <provider -->
-        <!-- android:name="com.tencent.android.tpush.SettingsContentProvider" -->
-        <!-- android:authorities="com.xiangha.TPUSH_PROVIDER" -->
-        <!-- android:exported="false"/> -->
-        <!-- &lt;!&ndash; 【必须】 【注意】authorities修改为 包名.TENCENT.MID.V3, 如demo的包名为：com.qq.xgdemo &ndash;&gt; -->
-        <!-- <provider -->
-        <!-- android:name="com.tencent.mid.api.MidProvider" -->
-        <!-- android:authorities="com.xiangha.TENCENT.MID.V3" -->
-        <!-- android:exported="true"/> -->
-
-
-        <!-- &lt;!&ndash; 【可选】APP实现的Receiver，用于接收消息透传和操作结果的回调，请根据需要添加 &ndash;&gt; -->
-        <!-- &lt;!&ndash; YOUR_PACKAGE_PATH.CustomPushReceiver需要改为自己的Receiver： &ndash;&gt; -->
-        <!-- <receiver -->
-        <!-- android:name="third.push.xg.XGMessageReceiver" -->
-        <!-- android:exported="false"> -->
-        <!-- <intent-filter> -->
-
-
-        <!-- &lt;!&ndash; 接收消息透传 &ndash;&gt; -->
-        <!-- <action android:name="com.tencent.android.tpush.action.PUSH_MESSAGE"/> -->
-        <!-- &lt;!&ndash; 监听注册、反注册、设置/删除标签、通知被点击等处理结果 &ndash;&gt; -->
-        <!-- <action android:name="com.tencent.android.tpush.action.FEEDBACK"/> -->
-        <!-- </intent-filter> -->
-        <!-- </receiver> -->
-
-
-        <!-- &lt;!&ndash; 【必须】 请修改为APP的AccessId，“21”开头的10位数字，中间没空格 &ndash;&gt; -->
-        <!-- <meta-data -->
-        <!-- android:name="XG_V2_ACCESS_ID" -->
-        <!-- android:value="2100052954"/> -->
-        <!-- &lt;!&ndash; 【必须】 请修改为APP的AccessKey，“A”开头的12位字符串，中间没空格 &ndash;&gt; -->
-        <!-- <meta-data -->
-        <!-- android:name="XG_V2_ACCESS_KEY" -->
-        <!-- android:value="AP4P4XS384JC"/> -->
-        <!-- <meta-data -->
-        <!-- android:name="XG_V2_SECRET_KEY" -->
-        <!-- android:value="a5de78b3fc7c2ac8b5a8ef85d36ad334"/> -->
-        <!-- &lt;!&ndash; END 信鸽 &ndash;&gt; -->
-        <!-- &lt;!&ndash; PUSH end &ndash;&gt; -->
-
+        </receiver>
 
         <!-- end -->
-
 
         <!-- alipay sdk begin -->
         <activity

@@ -44,17 +44,7 @@ public class XGPushServer {
 		if(TextUtils.isEmpty(userID)){
 			userID = "*";
 		}
-		XGPushConfig.enableDebug(mContext, false);
-//		try {
-//		StatConfig.setAppKey(mContext, "Z5F1L87AHYA");
-//		// 开启信鸽Pro
-//		XGPro.enableXGPro(mContext, false);
-//		// 开启MTA debug，发布时一定要删除本行或设置为false
-//		StatConfig.setDebugEnable(true);
-//	} catch (Exception err) {
-//		Log.e("TPush", "开启信鸽Pro失败", err);
-//		Toast.makeText(mContext, "开启信鸽Pro失败", Toast.LENGTH_SHRT).show();
-//	}
+		XGPushConfig.enableDebug(mContext, true);
 		XGPushManager.registerPush(mContext.getApplicationContext(), userID, new XGIOperateCallback() {
 
 			@Override
@@ -69,6 +59,10 @@ public class XGPushServer {
 				registerFail(obj, errCode, msg);
 			}
 		});
+		XGPushConfig.enableOtherPush(mContext, true);
+		XGPushConfig.setHuaweiDebug(true);
+		XGPushConfig.setMiPushAppId(mContext, "2882303761517138495");
+		XGPushConfig.setMiPushAppKey(mContext, "5711713867495");
 		return returnFlag;
 	}
 

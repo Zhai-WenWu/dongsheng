@@ -61,7 +61,7 @@ public class XGLocalPushServer {
             String content = "今天的晚餐准备好了，快去看看吧~";
             String url = "dishList.app?type=typeRecommend&g1=3";
             // 设置key,value
-            HashMap<String, String> map = new HashMap<>();
+            HashMap<String, Object> map = new HashMap<>();
             map.put("t", XHClick.NOTIFY_SELF + "");
             map.put("d", url);
             selfAwakening(context, firstday + i * 6, title, content, map);
@@ -91,7 +91,7 @@ public class XGLocalPushServer {
      * @param day     延迟天数
      * @param content 通知内容
      */
-    private void selfAwakening(Context context, int day, String title, String content, HashMap<String, String> map) {
+    private void selfAwakening(Context context, int day, String title, String content, HashMap<String, Object> map) {
         XGLocalMessage local_msg = new XGLocalMessage();
         // 设置本地消息类型，1:通知，2:消息
         local_msg.setType(2);

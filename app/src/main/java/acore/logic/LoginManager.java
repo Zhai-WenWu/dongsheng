@@ -47,7 +47,6 @@ import aplug.web.tools.WebviewManager;
 import third.mall.aplug.MallCommon;
 import third.mall.aplug.MallReqInternet;
 import third.mall.aplug.MallStringManager;
-import third.push.umeng.UMPushServer;
 import third.push.xg.XGPushServer;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilFile;
@@ -186,8 +185,6 @@ public class LoginManager {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
                 if (flag >= UtilInternet.REQ_OK_STRING) {
-                    //xm解绑
-                    new UMPushServer(mAct).addAlias(userInfo.get("code"));
                     //清除数据
                     userInfo = new HashMap<>();
                     UtilFile.delShared(mAct, FileManager.xmlFile_userInfo, "");
@@ -301,7 +298,6 @@ public class LoginManager {
 				userInfo.put("email", TextUtils.isEmpty(map.get("email")) ? "" : map.get("email"));
 				userInfo.put("regTime", TextUtils.isEmpty(map.get("regTime")) ? "" : map.get("regTime"));
 				UtilLog.print("d", "是否是管理员: " + map.get("isManager"));
-				new UMPushServer(mAct).addAlias(map.get("code"));
 				if(map.containsKey("sex"))userInfo.put("sex",map.get("sex"));
 				//储存用户信息
 				UtilFile.saveShared(mAct, FileManager.xmlFile_userInfo, userInfo);

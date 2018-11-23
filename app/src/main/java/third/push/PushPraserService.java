@@ -47,7 +47,6 @@ import third.push.xg.XGLocalPushServer;
 public class PushPraserService extends Service{
 	public static final String PUSH_ID = "notify_come_count";
 	public static final String TYPE_XG = "xg";
-	public static final String TYPE_UMENG = "umeng";
 	public static int msgCountSubject = 0;
 
 	@Override
@@ -64,12 +63,7 @@ public class PushPraserService extends Service{
 			String custom = intent.getStringExtra("custom");
 			Log.i("tzy", "onStartCommand: " + custom);
 			String channel = intent.getStringExtra("channel");
-			//判断是否是umeng推送
-			String message = null;
-			if(TYPE_UMENG.equals(channel)){
-				message = intent.getStringExtra("message");
-			}
-			parsePushData(getBaseContext(),title,text,custom,channel,message);
+			parsePushData(getBaseContext(),title,text,custom,channel);
 		}
 		ServiceManager.startProtectService(XHApplication.in());
 		return super.onStartCommand(intent, flags, startId);
@@ -83,7 +77,7 @@ public class PushPraserService extends Service{
 	 * @param extrajson
      * @param channel : 推送类型：信鸽、umeng
      */
-	public void parsePushData(Context context,String alertTitle, String msgAlert, String extrajson, String channel,String message) {
+	public void parsePushData(Context context,String alertTitle, String msgAlert, String extrajson, String channel) {
 		ArrayList<Map<String, String>> msgt = StringManager.getListMapByJson(extrajson);
 		if (msgt.size() > 0) {
 			Map<String, String> msgMap = msgt.get(0);
@@ -105,9 +99,6 @@ public class PushPraserService extends Service{
 			data.setTitle(alertTitle);
 			data.setIconResId(R.drawable.ic_launcher);
 			data.setChannel(channel);
-			if(TYPE_UMENG.equals(channel) && !TextUtils.isEmpty(message)){
-				data.setUmengMessage(message);
-			}
 
 			UUID uuid = UUID.randomUUID();
 			int notificationId = (int) uuid.getLeastSignificantBits();

@@ -12,6 +12,7 @@ import com.aliyun.common.httpfinal.QupaiHttpFinal;
 import com.baidu.mobads.AdView;
 import com.baidu.mobads.AppActivity;
 import com.mob.MobApplication;
+import com.tencent.android.otherPush.StubAppUtils;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.analytics.MobclickAgent;
 import com.xiangha.R;
@@ -30,7 +31,7 @@ import acore.tools.ToolsDevice;
 import aplug.basic.LoadImage;
 import aplug.basic.XHConf;
 import third.location.LocationHelper;
-import third.push.umeng.UMPushServer;
+import third.push.xg.XGPushServer;
 
 import static acore.logic.ConfigMannager.KEY_BAIDUAPPID;
 
@@ -50,6 +51,7 @@ public class XHApplication extends MobApplication {
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         MultiDex.install(this);
+        StubAppUtils.attachBaseContext(base);
     }
     @Override
     public void onCreate() {
@@ -70,8 +72,8 @@ public class XHApplication extends MobApplication {
         }
         LogManager.printStartTime("zhangyujian","XhApplication::222222.oncreate::");
 
-        //初始化umeng推送
-        initUmengPush();
+        //初始化xg推送
+        new XGPushServer(mAppApplication).initPush();
 
         String processName = Tools.getProcessName(this);
         Log.i("zhangyujian", "进程名字::" + processName);
@@ -150,14 +152,6 @@ public class XHApplication extends MobApplication {
         mAppApplication = null;
         super.onTerminate();
         //整体摧毁的时候调用这个方法
-    }
-
-    private void initUmengPush() {
-        try {
-            new UMPushServer(this).register();
-        } catch (Exception e) {
-            //防止
-        }
     }
 
     private void startLocation() {

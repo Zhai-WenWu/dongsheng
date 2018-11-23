@@ -22,7 +22,6 @@ public class NotificationData {
 	public String title = "";
 	public String content = "";
 	public String channel = "";
-	public String umengMessage = "";
 	public Class<?> startAvtiviyWhenClick = null;
 
 	public long notificationTime;
@@ -113,14 +112,6 @@ public class NotificationData {
 
 	public void setChannel(String channel) {
 		this.channel = channel;
-	}
-
-	public String getUmengMessage() {
-		return umengMessage;
-	}
-
-	public void setUmengMessage(String umengMessage) {
-		this.umengMessage = umengMessage;
 	}
 
 	public void setImgUrl(String imgUrl) {

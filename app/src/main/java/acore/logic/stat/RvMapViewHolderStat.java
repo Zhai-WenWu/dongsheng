@@ -1,15 +1,10 @@
 package acore.logic.stat;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
 
-import com.umeng.message.proguard.T;
-
 import java.util.Map;
-
-import acore.widget.rvlistview.holder.RvBaseViewHolder;
 
 import static acore.logic.stat.StatisticsManager.IS_STAT;
 import static acore.logic.stat.StatisticsManager.STAT_DATA;

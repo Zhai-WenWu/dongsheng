@@ -128,10 +128,6 @@ public class LocalPushManager {
         intent.putExtra("from", "notify");
         intent.setAction(Intent.ACTION_VIEW);
         intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK);
-        //添加umeng统计数据
-        if (!TextUtils.isEmpty(data.umengMessage)) {
-            intent.putExtra("umengMessage", data.umengMessage);
-        }
         //开启点击统计
         intent.putExtra(XHClick.KEY_NOTIFY_CLICK, 1);
         UUID uuid = UUID.randomUUID();

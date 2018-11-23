@@ -9,8 +9,6 @@ import android.text.TextUtils;
 import com.tencent.stat.StatService;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.analytics.dplus.UMADplus;
-import com.umeng.message.UTrack;
-import com.umeng.message.entity.UMessage;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -303,15 +301,8 @@ public class XHClick {
         Context context = XHApplication.in();
         statisticsNotify(context, data, NotificationEvent.EVENT_CLICK);
         String message = intent.getStringExtra("umengMessage");
-        if (!TextUtils.isEmpty(message)) {
-            try {
-                UMessage msg = new UMessage(new JSONObject(message));
-                UTrack.getInstance(context).setClearPrevMessage(true);
-                UTrack.getInstance(context).trackMsgClick(msg);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
+        //TODO 消息推送点击统计
+
     }
 
     /**
