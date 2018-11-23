@@ -14,6 +14,7 @@ configurations {
 }
 dependencies {
     //添加广点通广告
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     compile fileTree(include: '*.jar', dir: 'libsAddGd')
     compile fileTree(include: '*.jar', dir: 'libsAdBaidu')
     compile fileTree(include: '*.jar', dir: 'libs')
