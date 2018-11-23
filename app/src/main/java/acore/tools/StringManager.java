@@ -69,7 +69,8 @@ public class StringManager extends UtilString {
     //用户发贴发菜谱用户日志
     public final static String api_uploadUserLog = "https://crash.xiangha.com/crash/report2";
     //获取广告信息
-    public final static String api_adData_old = apiUrl + "main6/ads/getBasicList";
+    public final static String api_adData_old = apiUrl + "main8/open/getOpenScreenList";
+    public final static String api_reportNumber = apiUrl + "main8/open/reportNumber";
     public final static String api_adData = apiUrl + "main7/open/getAdConfig";
     public final static String api_appData = apiUrl + urlSection.get("home5") + "getAppData";
     public final static String api_activityList = apiUrl + urlSection.get("home5") + "getActivityList";

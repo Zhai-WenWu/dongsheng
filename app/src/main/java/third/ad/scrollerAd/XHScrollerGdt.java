@@ -91,6 +91,7 @@ public class XHScrollerGdt extends XHScrollerAdParent {
                             map.put("imgUrl", imageUrl);
                             map.put("type", XHScrollerAdParent.ADKEY_GDT);
                             map.put("hide", "1");//2隐藏，1显示
+                            map.put("adid", adid);
                             if (TextUtils.isEmpty(imageUrl)) {
                                 xhAdDataCallBack.onFail(XHScrollerAdParent.ADKEY_GDT);
                             } else {
