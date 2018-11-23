@@ -22,22 +22,20 @@ import com.xh.manager.ViewManager;
 import com.xh.view.HButtonView;
 import com.xh.view.TitleMessageView;
 
-import org.eclipse.jetty.util.StringUtil;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import acore.logic.AllPopDialogHelper;
 import acore.logic.AppCommon;
+import acore.logic.ConfigMannager;
 import acore.logic.LoginManager;
 import acore.logic.MessageTipController;
 import acore.logic.VersionOp;
 import acore.logic.XHClick;
-import acore.logic.ConfigMannager;
 import acore.logic.polling.AppHandlerAsyncPolling;
 import acore.logic.polling.IHandleMessage;
 import acore.logic.polling.PollingConfig;
@@ -76,7 +74,6 @@ import third.mall.aplug.MallCommon;
 import third.push.localpush.LocalPushManager;
 import third.push.xg.XGTagManager;
 import third.qiyu.QiYvHelper;
-import xh.basic.tool.UtilFile;
 
 import static java.lang.System.currentTimeMillis;
 import static xh.basic.tool.UtilString.getListMapByJson;
@@ -203,9 +200,9 @@ public class MainInitDataControl {
         XGTagManager manager = new XGTagManager();
         if (!LoginManager.isLogin())
             manager.addXGTag(XGTagManager.APP_NEW);
-        String official = (String) UtilFile.loadShared(XHApplication.in(), FileManager.xg_config, FileManager.xg_config_official);
+        String official = (String) FileManager.loadShared(XHApplication.in(), FileManager.xg_config, FileManager.xg_config_official);
         if (TextUtils.isEmpty(official)) {
-            UtilFile.saveShared(XHApplication.in(), FileManager.xg_config, FileManager.xg_config_official, "official");
+            FileManager.saveShared(XHApplication.in(), FileManager.xg_config, FileManager.xg_config_official, "official");
             manager.addXGTag(XGTagManager.OFFICIAL);
         }
     }
@@ -249,7 +246,7 @@ public class MainInitDataControl {
 
         //判断弹屏旧数据库是否存在
         if (act != null && act.getDatabasePath("fullsrceen.db").exists()) {
-            UtilFile.delDirectoryOrFile(act.getDatabasePath("fullsrceen.db").getPath());
+            FileManager.delDirectoryOrFile(act.getDatabasePath("fullsrceen.db").getPath());
         }
 
         new AllPopDialogHelper(act).start();
@@ -304,13 +301,13 @@ public class MainInitDataControl {
                 // 存储device
                 Map<String, String> map = new HashMap<String, String>();
                 map.put(FileManager.xmlKey_device, ToolsDevice.getPhoneDevice(context));
-                UtilFile.saveShared(context, FileManager.xmlFile_appInfo, map);
+                FileManager.saveShared(context, FileManager.xmlFile_appInfo, map);
                 XHInternetCallBack.clearCookie();
 
                 // 存储启动时间
                 map = new HashMap<>();
                 map.put(FileManager.xmlKey_startTime, currentTimeMillis() + "");
-                UtilFile.saveShared(context, FileManager.xmlFile_appInfo, map);
+                FileManager.saveShared(context, FileManager.xmlFile_appInfo, map);
                 //修改所有上传中的普通菜谱状态
                 UploadDishControl.getInstance().updataAllUploadingDish(context.getApplicationContext());
 
@@ -335,16 +332,16 @@ public class MainInitDataControl {
             public void run() {
                 super.run();
                 // 删除老版文件
-                if (UtilFile.ifFileModifyByCompletePath(UtilFile.getDataDir() + "indexData.xh", -1) != null) {
-                    UtilFile.delDirectoryOrFile(UtilFile.getDataDir() + "indexData.xh");
-                    UtilFile.delDirectoryOrFile(UtilFile.getSDDir() + "dish");
+                if (FileManager.ifFileModifyByCompletePath(FileManager.getDataDir() + "indexData.xh", -1) != null) {
+                    FileManager.delDirectoryOrFile(FileManager.getDataDir() + "indexData.xh");
+                    FileManager.delDirectoryOrFile(FileManager.getSDDir() + "dish");
                 }
                 // 改老版的购物单文件到数据库中
-                final String json = UtilFile.readFile(UtilFile.getDataDir() + FileManager.file_buyBurden);
+                final String json = FileManager.readFile(FileManager.getDataDir() + FileManager.file_buyBurden);
                 if (json.length() > 0) {
                     new Thread(() -> {
                         saveDataInDB(json, context);
-                        UtilFile.delDirectoryOrFile(UtilFile.getDataDir() + FileManager.file_buyBurden);
+                        FileManager.delDirectoryOrFile(FileManager.getDataDir() + FileManager.file_buyBurden);
                     }).start();
                 }
                 // 245版32以后，数据库字段更新
@@ -364,7 +361,7 @@ public class MainInitDataControl {
                     }
                 }
                 //清理sd的xiangha文件夹，老版有杂物
-                UtilFile.delDirectoryOrFile(UtilFile.getSDDir());
+                FileManager.delDirectoryOrFile(FileManager.getSDDir());
             }
         }.start();
     }
