@@ -26,6 +26,7 @@ import acore.tools.ToolsDevice;
 import third.ad.scrollerAd.XHAllAdControl;
 import third.ad.tools.AdPlayIdConfig;
 
+import static third.ad.scrollerAd.XHScrollerAdParent.ADKEY_BAIDU;
 import static third.ad.scrollerAd.XHScrollerAdParent.ADKEY_GDT;
 import static third.ad.scrollerAd.XHScrollerAdParent.ID_AD_ICON_GDT;
 
@@ -121,14 +122,32 @@ public class DishAdDataViewNew extends ItemBaseView {
 //        setAdHintClick(R.id.ad_big_pic_flag, !"1".equals(map.get("adType")));
         //添加到parent
         addViewToPraent(R.id.ad_big_pic_layout, parentView);
-
-        setIconVisibility(ID_AD_ICON_GDT, ADKEY_GDT.equals(map.get("type")));
+        setIconVisibility(ID_AD_ICON_GDT, map.get("type"));
     }
 
-    private void setIconVisibility(int id, boolean isVisibility) {
+    private void setIconVisibility(int id, String adType) {
         View view = findViewById(id);
         if (view != null) {
-            view.setVisibility(isVisibility ? VISIBLE : GONE);
+            if (adType == null) {
+                view.setVisibility(View.GONE);
+                return;
+            }
+            switch (adType) {
+                case ADKEY_BAIDU:
+                    if (view instanceof ImageView) {
+                        ((ImageView)view).setImageResource(R.drawable.icon_video_ad);
+                    }
+                    break;
+                case ADKEY_GDT:
+                    if (view instanceof ImageView) {
+                        ((ImageView)view).setImageResource(R.drawable.icon_ad_gdt_rct);
+                    }
+                    break;
+                default:
+                    view.setVisibility(View.GONE);
+                    return;
+            }
+            view.setVisibility(ADKEY_GDT.equals(adType) || ADKEY_BAIDU.equals(adType) ? VISIBLE : GONE);
         }
     }
 
