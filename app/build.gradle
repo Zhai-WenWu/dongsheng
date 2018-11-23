@@ -56,7 +56,15 @@ dependencies {
     implementation 'com.amap.api:location:4.2.0'
     implementation 'com.amap.api:search:6.1.0'
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.15'
-
+    //XG
+    compile 'com.tencent.xinge:xinge:4.0.3-Release'
+    compile 'com.tencent.xinge:xinge:4.0.3-otherpush-Release'
+    //jg包
+    compile 'com.tencent.jg:jg:1.1'
+    //wup包
+    compile 'com.tencent.wup:wup:1.0.0.E-release'
+    //mid包
+    compile 'com.tencent.mid:mid:4.0.7'
 }
 android {
     compileSdkVersion 27
@@ -71,8 +79,13 @@ android {
         multiDexEnabled true
         ndk {
             //APP的build.gradle设置支持的SO库架构
-            moduleName "gsyVideoPlayer-java"
+//            moduleName "gsyVideoPlayer-java"
             abiFilters 'armeabi-v7a'
+            //xg
+            manifestPlaceholders = [
+                    XG_ACCESS_ID : "2100052954",
+                    XG_ACCESS_KEY: "AP4P4XS384JC",
+            ]
         }
 //        jackOptions {
 //            enabled true
