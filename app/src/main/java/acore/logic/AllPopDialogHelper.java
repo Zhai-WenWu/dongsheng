@@ -202,6 +202,7 @@ public class AllPopDialogHelper {
                 StatisticsManager.saveData(StatModel.createSpecialActionModel(XHActivityManager.getInstance().getCurrentActivity().getClass().getName(), "", "",
                         "DropDownBox_ActuallySucceedShow", "", "", module.getStatJson()));
                 log("FullScreen :: 展示");
+                AdConfigTools.getInstance().reportAdclick("3",module.getLogJson());
                 FileManager.saveShared(XHActivityManager.getInstance().getCurrentActivity(), INERVAL_XML, KEY_INERVAL_COUNT, "0");
                 XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), "ad_show_index", "全屏", "xh");//统计
             }
@@ -211,6 +212,7 @@ public class AllPopDialogHelper {
                 StatisticsManager.saveData(StatModel.createSpecialActionModel(XHActivityManager.getInstance().getCurrentActivity().getClass().getName(), "", "",
                         "DropDownBox_Click", "", "", module.getStatJson()));
                 log("FullScreen :: 点击图片");
+                AdConfigTools.getInstance().reportAdclick("2",module.getLogJson());
                 XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), "ad_click_index", "全屏", "xh");//统计
                 AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), module.getUrl(), true);
             }
@@ -220,6 +222,7 @@ public class AllPopDialogHelper {
                 StatisticsManager.saveData(StatModel.createSpecialActionModel(XHActivityManager.getInstance().getCurrentActivity().getClass().getName(), "", "",
                         "DropDownBox_Close", "", "", module.getStatJson()));
                 log("FullScreen :: 点击关闭");
+                AdConfigTools.getInstance().reportAdclick("1",module.getLogJson());
                 XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), "a_fullcereen_ad", "手动关闭", "");
             }
         });
