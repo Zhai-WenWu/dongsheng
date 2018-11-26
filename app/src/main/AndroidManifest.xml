@@ -1625,7 +1625,7 @@
         <activity
             android:name="amodule.other.activity.ClientDebug"
             android:label="@string/title_activity_client_debug"
-            android:theme="@style/AppBaseTheme">
+            android:theme="@style/titleTheme">
         </activity>
     </application>
 

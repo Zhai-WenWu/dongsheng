@@ -395,10 +395,9 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
                 openQAArbitration();
             }
         });
-        view_client_debug.init("Client Debug", "", false, true, new LeftAndRightTextView.LeftAndRightTextViewCallback() {
+        view_client_debug.init("Debug", "", true, true, new LeftAndRightTextView.LeftAndRightTextViewCallback() {
             @Override
             public void onClick() {
-                Toast.makeText(mAct, "Client Debug", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(mAct,ClientDebug.class));
             }
         });
@@ -416,7 +415,7 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
      * @return
      */
     private boolean isShowClientDebug(){
-        if(LoginManager.isLogin()){
+        if(!LoginManager.isLogin()){
             return false;
         }
         String currentUserCode = LoginManager.userInfo.get("code");
