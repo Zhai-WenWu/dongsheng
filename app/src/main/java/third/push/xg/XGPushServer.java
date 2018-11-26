@@ -3,6 +3,7 @@ package third.push.xg;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.tencent.android.tpush.XGIOperateCallback;
 import com.tencent.android.tpush.XGPushConfig;
@@ -13,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import acore.logic.XHClick;
+import acore.tools.ChannelUtil;
 import acore.tools.FileManager;
 import acore.tools.LogManager;
 
@@ -23,6 +25,7 @@ import acore.tools.LogManager;
  */
 @SuppressLint("SimpleDateFormat")
 public class XGPushServer {
+	public static final String TAG = "XINGE";
 	public Context mContext;
 	public static String returnFlag = "";
 
@@ -45,10 +48,12 @@ public class XGPushServer {
 			userID = "*";
 		}
 		XGPushConfig.enableDebug(mContext, true);
-		XGPushManager.registerPush(mContext.getApplicationContext(), userID, new XGIOperateCallback() {
+		XGPushConfig.setInstallChannel(mContext,ChannelUtil.getChannel(mContext));
+		XGPushManager.registerPush(mContext.getApplicationContext(), new XGIOperateCallback() {
 
 			@Override
 			public void onSuccess(Object obj, int flag) {
+				Log.i(TAG, "onSuccess: token=" + obj);
 				XHClick.onEvent(mContext,"xg_register","成功");
 				saveXGToken(obj);
 			}
