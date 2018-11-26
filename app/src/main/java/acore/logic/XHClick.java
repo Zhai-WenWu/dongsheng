@@ -7,13 +7,9 @@ import android.os.Looper;
 import android.text.TextUtils;
 
 import com.tencent.android.tpush.XGPushManager;
-import com.tencent.android.tpush.XGPushTextMessage;
 import com.tencent.stat.StatService;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.analytics.dplus.UMADplus;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -35,7 +31,6 @@ import aplug.basic.ReqInternet;
 import aplug.basic.XHConf;
 import third.push.model.NotificationData;
 import third.push.model.NotificationEvent;
-import third.push.xg.XGPushServer;
 import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilLog;
 
@@ -319,8 +314,8 @@ public class XHClick {
         switch (data.type) {
             // 显示通知，不存在消息列表中
             case NOTIFY_A:
-//                onEvent(context, "notifyA_" + eventAct, data.channel, data.value + "");
-//                LogManager.print("d", "notifyA_" + eventAct + data.channel, data.value + "");
+                onEvent(context, "notifyA_" + eventAct, "xg", data.value + "");
+                LogManager.print("d", "notifyA_" + eventAct , data.value + "");
                 break;
             // 自我唤醒通知
             case NOTIFY_SELF:
