@@ -2,6 +2,7 @@ package third.push.model;
 
 import android.text.TextUtils;
 
+import com.tencent.android.tpush.XGPushTextMessage;
 import com.xiangha.R;
 
 /**
@@ -21,7 +22,6 @@ public class NotificationData {
 	public String ticktext = "";
 	public String title = "";
 	public String content = "";
-	public String channel = "";
 	public Class<?> startAvtiviyWhenClick = null;
 
 	public long notificationTime;
@@ -106,14 +106,6 @@ public class NotificationData {
 		this.startAvtiviyWhenClick = startAvtiviyWhenClick;
 	}
 
-	public String getChannel() {
-		return channel;
-	}
-
-	public void setChannel(String channel) {
-		this.channel = channel;
-	}
-
 	public void setImgUrl(String imgUrl) {
 		this.imgUrl = imgUrl;
 	}
@@ -125,4 +117,5 @@ public class NotificationData {
 	public boolean hasImage() {
 		return !TextUtils.isEmpty(imgUrl) && imgUrl.startsWith("http");
 	}
+
 }

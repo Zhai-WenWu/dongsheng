@@ -4,6 +4,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import com.tencent.android.tpush.XGPushManager;
+import com.tencent.android.tpush.XGPushTextMessage;
+
 import acore.logic.XHClick;
 import third.push.model.NotificationData;
 import third.push.model.NotificationEvent;
@@ -20,11 +23,8 @@ public class DismissNotificationBroadcast extends BroadcastReceiver {
         data.type = intent.getIntExtra("type",0);
         data.value = intent.getStringExtra("value");
         data.url = intent.getStringExtra("url");
-        data.channel = intent.getStringExtra("channel");
         XHClick.statisticsNotify(context, data, NotificationEvent.EVENT_DISMISS);
-        //umeng统计
-        String message = intent.getStringExtra("umengMessage");
-        //TODO 统计通知消失
+        //统计通知消失
     }
 
 }

@@ -121,7 +121,6 @@ public class LocalPushManager {
             intent.putExtra("type", data.type);
             intent.putExtra("url", data.url);
             intent.putExtra("value", data.value);
-            intent.putExtra("channel", data.channel);
             intent.setClass(context, Main.class);
             LogManager.reportError("推送通知无法解析，默认开欢迎页：" + data.url, null);
         }

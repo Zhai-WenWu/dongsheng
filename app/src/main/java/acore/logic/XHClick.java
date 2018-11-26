@@ -6,6 +6,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 
+import com.tencent.android.tpush.XGPushManager;
+import com.tencent.android.tpush.XGPushTextMessage;
 import com.tencent.stat.StatService;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.analytics.dplus.UMADplus;
@@ -24,6 +26,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import acore.override.XHApplication;
+import acore.override.helper.XHActivityManager;
 import acore.tools.LogManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -32,6 +35,7 @@ import aplug.basic.ReqInternet;
 import aplug.basic.XHConf;
 import third.push.model.NotificationData;
 import third.push.model.NotificationEvent;
+import third.push.xg.XGPushServer;
 import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilLog;
 
@@ -45,9 +49,6 @@ public class XHClick {
     public static int HOME_STATICTIS_TIME = 10 * 1000;
     public static int PAGE_STATICTIS_TIME = 5 * 60 * 1000;//页面停留时间修改
     public static final int NOTIFY_A = 1;
-    public static final int NOTIFY_B = 2;
-    public static final int NOTIFY_C = 3;
-    public static final int NOTIFY_D = 4;
     public static final int NOTIFY_SELF = 5;
 
     private static Handler handlerPageStatictis;//s7统计
@@ -297,12 +298,10 @@ public class XHClick {
         data.type = intent.getIntExtra("type", 0);
         data.value = intent.getStringExtra("value");
         data.url = intent.getStringExtra("url");
-        data.channel = intent.getStringExtra("channel");
         Context context = XHApplication.in();
         statisticsNotify(context, data, NotificationEvent.EVENT_CLICK);
-        String message = intent.getStringExtra("umengMessage");
-        //TODO 消息推送点击统计
-
+        //消息推送点击统计
+        XGPushManager.onActivityStarted(XHActivityManager.getInstance().getCurrentActivity());
     }
 
     /**
@@ -320,20 +319,8 @@ public class XHClick {
         switch (data.type) {
             // 显示通知，不存在消息列表中
             case NOTIFY_A:
-                onEvent(context, "notifyA_" + eventAct, data.channel, data.value + "");
-                LogManager.print("d", "notifyA_" + eventAct + data.channel, data.value + "");
-                break;
-            // 显示通知，存在消息列表中
-            case NOTIFY_B:
-                onEvent(context, "notifyB_" + eventAct, data.channel, data.value + "");
-                break;
-            // 显示通知，存在消息列表中，使用app不通知
-            case NOTIFY_C:
-                onEvent(context, "notifyC_" + eventAct, data.channel, data.value + "");
-                break;
-            // 显示通知，不存在消息列表中，未启动时通知
-            case NOTIFY_D:
-                onEvent(context, "notifyD_" + eventAct, data.channel, data.value + "");
+//                onEvent(context, "notifyA_" + eventAct, data.channel, data.value + "");
+//                LogManager.print("d", "notifyA_" + eventAct + data.channel, data.value + "");
                 break;
             // 自我唤醒通知
             case NOTIFY_SELF:

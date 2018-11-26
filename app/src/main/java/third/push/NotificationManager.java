@@ -148,7 +148,6 @@ public class NotificationManager {
             intent.putExtra("type", data.type);
             intent.putExtra("url", data.url);
             intent.putExtra("value", data.value);
-            intent.putExtra("channel", data.channel);
             intent.setClass(context, Main.class);
             LogManager.reportError("推送通知无法解析，默认开欢迎页：" + data.url, null);
         }
@@ -175,7 +174,6 @@ public class NotificationManager {
         deleteIntent.putExtra("type", data.type);
         deleteIntent.putExtra("url", data.url);
         deleteIntent.putExtra("value", data.value);
-        deleteIntent.putExtra("channel", data.channel);
         PendingIntent deletePendingIntent = PendingIntent.getBroadcast(context,
                 (int) (System.currentTimeMillis() + 1),
                 deleteIntent, PendingIntent.FLAG_CANCEL_CURRENT);
