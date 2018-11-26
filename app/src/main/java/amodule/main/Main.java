@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -96,6 +97,7 @@ import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilLog;
 
 import static android.content.Intent.FLAG_ACTIVITY_NO_USER_ACTION;
+import static com.popdialog.db.FullSrceenDB.DB_NAME;
 import static com.xiangha.R.id.iv_itemIsFine;
 
 @SuppressWarnings("deprecation")
@@ -549,7 +551,11 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                 }
                 // 关闭时发送页面停留时间统计
                 if (act != null){
-                    new FullSrceenDB(act).clearExpireAllData();
+                    try{
+                        new FullSrceenDB(act).clearExpireAllData();
+                    }catch (Exception e){
+                        FileManager.delDirectoryOrFile(Environment.getDataDirectory() + "/data/com.xiangha/databases/" + DB_NAME);
+                    }
                 }
                 // 关闭页面停留时间统计计时器
                 XHClick.closeHandler();
