@@ -72,9 +72,6 @@ public class XHApplication extends MobApplication {
         }
         LogManager.printStartTime("zhangyujian","XhApplication::222222.oncreate::");
 
-        //初始化xg推送
-        new XGPushServer(mAppApplication).initPush();
-
         String processName = Tools.getProcessName(this);
         Log.i("zhangyujian", "进程名字::" + processName);
         if (processName != null && processName.equals(ToolsDevice.getPackageName(this))) {//多进程多初始化，只对xiangha进程进行初始化
@@ -88,6 +85,10 @@ public class XHApplication extends MobApplication {
      * ---150毫秒耗时
      */
     private void initData() {
+
+        //初始化xg推送
+        new XGPushServer(mAppApplication).initPush();
+
         //设置umeng的appId,和渠道名
         String channel = ChannelUtil.getChannel(this);
         MobclickAgent.UMAnalyticsConfig config = new MobclickAgent.UMAnalyticsConfig(this, "545aeac6fd98c565c20004ad", channel);
