@@ -100,7 +100,7 @@ public class PushPraserService extends Service{
 			data.setContent(msgAlert);
 			data.setTicktext(msgAlert);
 			data.setTitle(alertTitle);
-			data.setIconResId(R.drawable.ic_launcher);
+			data.setIconResId(R.drawable.ic_notification);
 			data.setChannel(channel);
 			if(TYPE_UMENG.equals(channel) && !TextUtils.isEmpty(message)){
 				data.setUmengMessage(message);
