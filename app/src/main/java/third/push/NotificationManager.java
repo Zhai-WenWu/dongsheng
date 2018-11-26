@@ -76,10 +76,7 @@ public class NotificationManager {
             }
         }
         //统计
-        if (data.type == XHClick.NOTIFY_A
-                || data.type == XHClick.NOTIFY_SELF) {
-            XHClick.statisticsPush(context, XHClick.STATE_CREATENOTIFY, Build.VERSION.SDK_INT);
-        }
+        XHClick.statisticsPush(context, XHClick.STATE_CREATENOTIFY, Build.VERSION.SDK_INT);
         boolean headerUp = checkAppForeground();
         if (data.hasImage())
             showNotifyWithImg(context, data, headerUp);
