@@ -1,6 +1,7 @@
 package amodule.search.view;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -71,7 +72,8 @@ public class SearchMultipleVipLessonView extends BaseItemView {
             setViewText(mTitleText, mDataMap.get("name"));
             setViewText(mInfoText, mDataMap.get("subTitle"));
             lesson_icon_oval.setVisibility(mInfoText.getVisibility());
-            setViewText(mNameText, StringManager.subOverString(mDataMap.get("nickName"),5));
+            String nickName = mDataMap.get("nickName");
+            setViewText(mNameText, !TextUtils.isEmpty(nickName) && nickName.length() > 5 ? nickName.substring(0,5) : nickName);
             setViewImage(mLessonImg, mDataMap.get("img"));
             Map<String, String> videoMap = StringManager.getFirstMap(mDataMap.get("video"));
             setViewTextAndVisibility(mVideoDuration, videoMap.get("duration"));
