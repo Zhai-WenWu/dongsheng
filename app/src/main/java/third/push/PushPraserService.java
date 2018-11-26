@@ -103,10 +103,17 @@ public class PushPraserService {
             String newMSG = (String) FileManager.loadShared(context, FileManager.msgInform, FileManager.newMSG);
             //当t == XHClick.NOTIFY_SELF 时是自我唤醒,必须走.
             if (data.type == XHClick.NOTIFY_SELF || TextUtils.equals(newMSG,"") || "1".equals(newMSG)) {
-                // A：一般用于推送活动、头条  C：一般是美食贴消息
                 switch (data.type) {
-                    // 显示通知，不存在消息列表中
-                    case XHClick.NOTIFY_A:
+                    //本地推送
+                    case XHClick.NOTIFY_SELF:
+                        if (data.url.contains("nous")) {
+                            new XGLocalPushServer(context).saveLocalPushRecord(context, FileManager.xmlKey_localZhishi);
+                        }
+                        data.setStartAvtiviyWhenClick(Main.class);
+                        new NotificationManager().notificationActivity(context, data);
+                        break;
+                    // 显示通知
+                    default:
                         //判断应用是否开着
                         if (context != null && ToolsDevice.isAppInPhone(context, context.getPackageName()) < 2) {
                             new NotificationManager().notificationActivity(context, data);
@@ -125,14 +132,6 @@ public class PushPraserService {
                         } else {
                             new NotificationManager().notificationActivity(context, data);
                         }
-                        break;
-                    // 自我唤醒
-                    case XHClick.NOTIFY_SELF:
-                        if (data.url.contains("nous")) {
-                            new XGLocalPushServer(context).saveLocalPushRecord(context, FileManager.xmlKey_localZhishi);
-                        }
-                        data.setStartAvtiviyWhenClick(Main.class);
-                        new NotificationManager().notificationActivity(context, data);
                         break;
                 }
             }
