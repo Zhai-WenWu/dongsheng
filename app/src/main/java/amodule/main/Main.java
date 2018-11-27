@@ -32,7 +32,6 @@ import com.aliyun.struct.common.VideoQuality;
 import com.aliyun.struct.encoder.VideoCodecs;
 import com.aliyun.struct.snap.AliyunSnapVideoParam;
 import com.annimon.stream.Stream;
-import com.popdialog.db.FullSrceenDB;
 import com.popdialog.util.GoodCommentManager;
 import com.popdialog.util.PushManager;
 import com.quze.videorecordlib.VideoRecorderCommon;
@@ -48,12 +47,12 @@ import acore.logic.ActivityMethodManager;
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.MessageTipController;
+import acore.logic.VersionControl;
 import acore.logic.VersionOp;
 import acore.logic.XHClick;
 import acore.logic.polling.AppHandlerAsyncPolling;
 import acore.logic.polling.IHandleMessage;
 import acore.logic.stat.StatisticsManager;
-import acore.notification.controller.NotificationSettingController;
 import acore.override.XHApplication;
 import acore.override.activity.mian.MainBaseActivity;
 import acore.tools.ChannelUtil;
@@ -340,6 +339,8 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                 tabHost.addContent(i + "", new Intent(this, classes[i]));
             }
         }
+        boolean mineIsOnce = VersionControl.isCurrentVersionOnce(this,"MainMyself");
+        setPointTipVisible(TAB_SELF,mineIsOnce);
         initAliyunVideo();
     }
 
@@ -548,9 +549,9 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                 } catch (Exception e) {
                 }
                 // 关闭时发送页面停留时间统计
-                if (act != null){
-                    new FullSrceenDB(act).clearExpireAllData();
-                }
+//                if (act != null){
+//                    new FullSrceenDB(act).clearExpireAllData();
+//                }
                 // 关闭页面停留时间统计计时器
                 XHClick.closeHandler();
                 VersionOp.getInstance().onDesotry();
@@ -686,10 +687,12 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                         lesson.refresh();
                     }
 
-                } else if (i == TAB_SELF && allTab.containsKey(MainMyself.KEY)) {
-                    //在onResume方法添加了刷新方法
-//                    MainMyself mainMyself = (MainMyself) allTab.get(MainMyself.KEY);
-//                    mainMyself.scrollToTop();
+                } else if (i == TAB_SELF) {
+                    if(allTab.containsKey(MainMyself.KEY)){
+                        //在onResume方法添加了刷新方法
+                    }
+                    VersionControl.recordCurrentVersionOnce(this,"MainMyself");
+                    setPointTipVisible(TAB_SELF,false);
                 } else if (i == TAB_CIRCLE && allTab.containsKey(MainCircle.KEY) && i == nowTab) {
                     MainCircle circle = (MainCircle) allTab.get(MainCircle.KEY);
                     if (circle != null)
@@ -869,6 +872,8 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                 intent.putExtra(AliyunSnapVideoParam.MAX_VIDEO_DURATION, 20000);
                 intent.putExtra(AliyunSnapVideoParam.SORT_MODE, AliyunSnapVideoParam.SORT_MODE_MERGE);
                 intent.putExtra(AliyunSnapVideoParam.VIDEO_CODEC, VideoCodecs.H264_HARDWARE);
+                int shortVideoNum = Tools.parseIntOfThrow(LoginManager.userInfo.get("shortVideoNum"));
+                intent.putExtra(EditorActivity.EXTRA_SHOW_GUIDE,shortVideoNum == 0);
                 startActivity(intent);
             }
         });
@@ -877,6 +882,8 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
             @Override
             public void startEditActivity(Bundle bundle) {
                 Log.i("xianghaTag","setStartEditActivityCallback");
+                int shortVideoNum = Tools.parseIntOfThrow(LoginManager.userInfo.get("shortVideoNum"));
+                bundle.putBoolean(EditorActivity.EXTRA_SHOW_GUIDE,shortVideoNum == 0);
                 startActivity(new Intent(Main.this, EditorActivity.class).putExtras(bundle));
             }
         });

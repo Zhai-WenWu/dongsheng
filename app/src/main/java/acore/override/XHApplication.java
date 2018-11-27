@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.multidex.MultiDex;
 import android.text.TextUtils;
 import android.util.Log;
+import android.webkit.WebView;
 
 import com.aliyun.common.httpfinal.QupaiHttpFinal;
 import com.baidu.mobads.AdView;
@@ -59,6 +60,7 @@ public class XHApplication extends MobApplication {
 
         startTime = System.currentTimeMillis();
         loadLibs();
+        WebView.setWebContentsDebuggingEnabled(Tools.isDebug(this));
         QupaiHttpFinal.getInstance().initOkHttpFinal();
         LogManager.printStartTime("zhangyujian","XhApplication::11111.oncreate::");
         boolean isOnce = TextUtils.isEmpty(FileManager.loadShared(this,FileManager.xmlFile_appInfo,"once").toString());
