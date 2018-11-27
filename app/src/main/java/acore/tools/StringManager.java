@@ -359,7 +359,7 @@ public class StringManager extends UtilString {
     public final static String API_SET_FAVORITE_STATUS = apiUrl + "main8/favorites/setFavorites";//设置收藏状态
 
     //菜谱详情页面
-    public final static String API_GETDISHBURDENBYCODE = apiUrl + "main7/dish/getDishBurdenByCode";//用料信息
+    public final static String API_GETDISHBURDENBYCODE = apiUrl + "main8/dish/getDishBurdenByCode";//用料信息
     public final static String API_GETBELOWBURDENBANNER = apiUrl + "main7/dish/getBelowBurdenBanner";//用料下方banner
 
     public final static String API_MAIN8_SHARE_CONF = apiUrl + "main8/dish/getDishShareByCode";//获取菜谱分享配置
@@ -386,7 +386,7 @@ public class StringManager extends UtilString {
 
     public final static String API_AD_GETADDATA = apiUrl + "main7/open/getAdData";//获取广告数据
 
-    public final static String API_DISH_RECOMMEND = apiUrl + "main6/caipu/info";//菜谱详情页的相关推荐
+    public final static String API_DISH_RECOMMEND = apiUrl + "main8/dish/getDishRecomByCode";//菜谱详情页的相关推荐
 
     public final static String API_SEARCH_COURSE_DISH = apiUrl + "main8/search/byCourseDish";//搜索名厨课菜谱
     //短视频详情页
