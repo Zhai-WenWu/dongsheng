@@ -19,12 +19,14 @@ dependencies {
     compile fileTree(include: '*.jar', dir: 'libs')
     //百度市场要求加的自动更新sdk
 //            compile(name: 'BDIntegrationSDK_LibProject-debug', ext: 'aar')
+    //    compile(name: 'PhotoView-release', ext: 'aar')
     compile(name: 'photoview-release-2.0.0', ext: 'aar')
     compile(name: 'PushSDK-debug', ext: 'aar')
     compile(name: 'XH_Basic3.0-release', ext: 'aar')
     compile(name: 'XH_DownLoad-release', ext: 'aar')
     compile(name: 'XH_EmojiUtil-debug', ext: 'aar')
     compile(name: 'xh_popdialog_1.1', ext: 'aar')
+    compile(name: 'XH_WindowView-release', ext: 'aar')
     compile(name: 'xh_dialog-release', ext: 'aar')
     //    compile 'com.github.chrisbanes:photoview:latest.release'
     compile 'com.android.support:recyclerview-v7:' + rootProject.supportLibVersion
@@ -64,7 +66,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 21
         versionCode 306
-        versionName "6.6.6.1"
+        versionName "6.6.7.1"
         // dex突破65535的限制
         multiDexEnabled true
         ndk {

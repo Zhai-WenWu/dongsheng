@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.webkit.CookieManager;
 
@@ -299,6 +300,7 @@ public class LoginManager {
 				userInfo.put("maturity_time", TextUtils.isEmpty(vipMap.get("maturity_time")) ? "" : vipMap.get("maturity_time"));
 				userInfo.put("email", TextUtils.isEmpty(map.get("email")) ? "" : map.get("email"));
 				userInfo.put("regTime", TextUtils.isEmpty(map.get("regTime")) ? "" : map.get("regTime"));
+				userInfo.put("shortVideoNum",TextUtils.isEmpty(map.get("shortVideoNum"))?"":map.get("shortVideoNum"));
 				UtilLog.print("d", "是否是管理员: " + map.get("isManager"));
 				new UMPushServer(mAct).addAlias(map.get("code"));
 				if(map.containsKey("sex"))userInfo.put("sex",map.get("sex"));
@@ -403,6 +405,7 @@ public class LoginManager {
             return mIsShowAd;
         }
         mIsShowAd = !(isVIP() || isGourmet());
+        Log.i("isShowAd", "isShowAd: " + mIsShowAd);
         return mIsShowAd;
     }
 

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -32,7 +33,6 @@ import com.aliyun.struct.common.VideoQuality;
 import com.aliyun.struct.encoder.VideoCodecs;
 import com.aliyun.struct.snap.AliyunSnapVideoParam;
 import com.annimon.stream.Stream;
-import com.popdialog.db.FullSrceenDB;
 import com.popdialog.util.GoodCommentManager;
 import com.popdialog.util.PushManager;
 import com.quze.videorecordlib.VideoRecorderCommon;
@@ -48,6 +48,7 @@ import acore.logic.ActivityMethodManager;
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.MessageTipController;
+import acore.logic.VersionControl;
 import acore.logic.VersionOp;
 import acore.logic.XHClick;
 import acore.logic.polling.AppHandlerAsyncPolling;
@@ -95,6 +96,7 @@ import third.qiyu.QiYvHelper;
 import xh.basic.tool.UtilLog;
 
 import static android.content.Intent.FLAG_ACTIVITY_NO_USER_ACTION;
+import static com.popdialog.db.FullSrceenDB.DB_NAME;
 import static com.xiangha.R.id.iv_itemIsFine;
 
 @SuppressWarnings("deprecation")
@@ -164,6 +166,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
         ActivityMethodManager.isAppShow= true;
         mainInitDataControl = new MainInitDataControl();
         mainInitDataControl.setIHandleMessage(this);
+        Log.i("isShowAd", "Main:init: ");
         welcomeControls= LoginManager.isShowAd()?new WelcomeControls(this,callBack):
                 new WelcomeControls(this,1,callBack);
         LogManager.printStartTime("zhangyujian","main::oncreate::");
@@ -339,6 +342,8 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                 tabHost.addContent(i + "", new Intent(this, classes[i]));
             }
         }
+        boolean mineIsOnce = VersionControl.isCurrentVersionOnce(this,"MainMyself");
+        setPointTipVisible(TAB_SELF,mineIsOnce);
         initAliyunVideo();
     }
 
@@ -548,7 +553,11 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                 }
                 // 关闭时发送页面停留时间统计
                 if (act != null){
-                    new FullSrceenDB(act).clearExpireAllData();
+                    try{
+                        new FullSrceenDB(act).clearExpireAllData();
+                    }catch (Exception e){
+                        FileManager.delDirectoryOrFile(Environment.getDataDirectory() + "/data/com.xiangha/databases/" + DB_NAME);
+                    }
                 }
                 // 关闭页面停留时间统计计时器
                 XHClick.closeHandler();
@@ -685,10 +694,12 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                         lesson.refresh();
                     }
 
-                } else if (i == TAB_SELF && allTab.containsKey(MainMyself.KEY)) {
-                    //在onResume方法添加了刷新方法
-//                    MainMyself mainMyself = (MainMyself) allTab.get(MainMyself.KEY);
-//                    mainMyself.scrollToTop();
+                } else if (i == TAB_SELF) {
+                    if(allTab.containsKey(MainMyself.KEY)){
+                        //在onResume方法添加了刷新方法
+                    }
+                    VersionControl.recordCurrentVersionOnce(this,"MainMyself");
+                    setPointTipVisible(TAB_SELF,false);
                 } else if (i == TAB_CIRCLE && allTab.containsKey(MainCircle.KEY) && i == nowTab) {
                     MainCircle circle = (MainCircle) allTab.get(MainCircle.KEY);
                     if (circle != null)
@@ -868,6 +879,8 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                 intent.putExtra(AliyunSnapVideoParam.MAX_VIDEO_DURATION, 20000);
                 intent.putExtra(AliyunSnapVideoParam.SORT_MODE, AliyunSnapVideoParam.SORT_MODE_MERGE);
                 intent.putExtra(AliyunSnapVideoParam.VIDEO_CODEC, VideoCodecs.H264_HARDWARE);
+                int shortVideoNum = Tools.parseIntOfThrow(LoginManager.userInfo.get("shortVideoNum"));
+                intent.putExtra(EditorActivity.EXTRA_SHOW_GUIDE,shortVideoNum == 0);
                 startActivity(intent);
             }
         });
@@ -876,6 +889,8 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
             @Override
             public void startEditActivity(Bundle bundle) {
                 Log.i("xianghaTag","setStartEditActivityCallback");
+                int shortVideoNum = Tools.parseIntOfThrow(LoginManager.userInfo.get("shortVideoNum"));
+                bundle.putBoolean(EditorActivity.EXTRA_SHOW_GUIDE,shortVideoNum == 0);
                 startActivity(new Intent(Main.this, EditorActivity.class).putExtras(bundle));
             }
         });

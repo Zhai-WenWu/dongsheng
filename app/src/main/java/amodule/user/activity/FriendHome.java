@@ -278,6 +278,9 @@ public class FriendHome extends BaseActivity implements IObserver {
                         Map<String, String> map = list.get(i);
                         if (TYPE_VIDEO.equals(map.get("type"))) {
                             mTabs.get(0).put("num", map.get("num"));
+                            if(LoginManager.isSlef(userCode)){
+                                LoginManager.userInfo.put("shortVideoNum",map.get("num"));
+                            }
                         } else if (TYPE_ARTICLE.equals(map.get("type"))) {
                             mTabs.get(3).put("num", map.get("num"));
                         }
@@ -725,6 +728,10 @@ public class FriendHome extends BaseActivity implements IObserver {
             tv.setText(num1 + "");
         else
             tv.setText(0 + "");
+        if(LoginManager.isSlef(userCode)
+                || (LoginManager.isLogin() && TextUtils.isEmpty(userCode))){
+            LoginManager.userInfo.put("shortVideoNum",tv.getText().toString());
+        }
         TextView tv2 = view2.findViewById(R.id.tab_data);
         int num2 = Integer.parseInt(tv2.getText().toString());
         if (isDel)

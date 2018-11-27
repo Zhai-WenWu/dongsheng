@@ -48,7 +48,7 @@ public class DishVipView extends ItemBaseView {
         int roundRadius = Tools.getDimen(context,R.dimen.dp_3); // 8dp 圆角半径
 //        int strokeColor = Color.parseColor("#2E3135");//边框颜色
         String bgColor = handlerColorValue(maps.get("bgColor"));
-        int fillColor = Color.parseColor(TextUtils.isEmpty(bgColor) ? "#f23030" : bgColor);//内部填充颜色
+        int fillColor = Color.parseColor(TextUtils.isEmpty(bgColor) ? "#e2b355" : bgColor);//内部填充颜色
 
         GradientDrawable gd = new GradientDrawable();//创建drawable
         gd.setColor(fillColor);

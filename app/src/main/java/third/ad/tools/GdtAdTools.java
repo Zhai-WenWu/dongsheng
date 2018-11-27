@@ -135,7 +135,7 @@ public class GdtAdTools {
                 new NativeAD.NativeAdListener() {
                     @Override
                     public void onADLoaded(List<NativeADDataRef> list) {
-                        Log.i("tzy", "GDT NactiveAD loaded");
+//                        Log.i("tzy", "GDT NactiveAD loaded");
                         if (null != callback) {
                             callback.onNativeLoad(list);
                         }

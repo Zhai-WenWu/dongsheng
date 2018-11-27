@@ -35,7 +35,6 @@ import cn.srain.cube.views.ptr.PtrDefaultHandler;
 import cn.srain.cube.views.ptr.PtrFrameLayout;
 import third.ad.BannerAd;
 import third.ad.scrollerAd.XHAllAdControl;
-import third.ad.tools.AdPlayIdConfig;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilString;
@@ -321,9 +320,13 @@ public class DefaultSearchView extends LinearLayout implements View.OnClickListe
                 return;
             }
             BannerAd bannerAdBurden = new BannerAd(mActivity, xhAllAdControl, imageViewHasHis);
+            bannerAdBurden.marginLeft = ((MarginLayoutParams)adBannerHasHis.getLayoutParams()).leftMargin;
+            bannerAdBurden.marginRight = ((MarginLayoutParams)adBannerHasHis.getLayoutParams()).rightMargin;
             map = StringManager.getFirstMap(map.get(SEARCH_DEFAULT));
             bannerAdBurden.onShowAd(map);
             bannerAdBurden = new BannerAd(mActivity, xhAllAdControl, imageViewNoHis);
+            bannerAdBurden.marginLeft = ((MarginLayoutParams)adBannerNoHis.getLayoutParams()).leftMargin;
+            bannerAdBurden.marginRight = ((MarginLayoutParams)adBannerNoHis.getLayoutParams()).rightMargin;
             bannerAdBurden.onShowAd(map);
             xhAllAdControl.onAdBind(0, imageViewHasHis, "");
         });
