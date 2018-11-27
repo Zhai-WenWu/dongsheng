@@ -187,9 +187,6 @@ public class TopicHeaderView extends RelativeLayout {
                         mContext.startActivity(intent);
                     }
                     mShadePanel.setVisibility(View.VISIBLE);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    hideTopicImage();
                 }
             });
         } else {

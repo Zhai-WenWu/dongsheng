@@ -33,6 +33,7 @@ import com.aliyun.struct.common.VideoQuality;
 import com.aliyun.struct.encoder.VideoCodecs;
 import com.aliyun.struct.snap.AliyunSnapVideoParam;
 import com.annimon.stream.Stream;
+import com.popdialog.db.FullSrceenDB;
 import com.popdialog.util.GoodCommentManager;
 import com.popdialog.util.PushManager;
 import com.quze.videorecordlib.VideoRecorderCommon;
@@ -556,7 +557,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                     try{
                         new FullSrceenDB(act).clearExpireAllData();
                     }catch (Exception e){
-                        FileManager.delDirectoryOrFile(Environment.getDataDirectory() + "/data/com.xiangha/databases/" + DB_NAME);
+                        FileManager.delete(Environment.getDataDirectory() + "/data/com.xiangha/databases/" + DB_NAME);
                     }
                 }
                 // 关闭页面停留时间统计计时器

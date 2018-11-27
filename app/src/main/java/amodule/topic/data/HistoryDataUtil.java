@@ -114,7 +114,7 @@ public class HistoryDataUtil {
     }
 
     public static void deleteHistoryWord() {
-        FileManager.delDirectoryOrFile(UtilFile.getDataDir() + FileManager.file_topicSearchHis);
-        FileManager.delDirectoryOrFile(UtilFile.getDataDir() + FileManager.file_topicSearchCode);
+        FileManager.delete(UtilFile.getDataDir() + FileManager.file_topicSearchHis);
+        FileManager.delete(UtilFile.getDataDir() + FileManager.file_topicSearchCode);
     }
 }

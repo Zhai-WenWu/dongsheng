@@ -37,23 +37,6 @@ import com.xiangha.R;
 public class ImgManager extends UtilImage {
 
     /**
-     * 判断图片是否长宽成比
-     *
-     * @param path  : 图片路径
-     * @param scale : 比例
-     *
-     * @return
-     */
-    public static boolean isQualified(String path, int scale) {
-        // 配置bitmap，防止内存溢出
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(path, options);
-        int wi = options.outWidth;
-        return !(wi / hei >= scale || hei / wi >= scale);
-    }
-
-    /**
      * 删除长期存储图片
      *
      * @param imgUrl

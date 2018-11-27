@@ -65,11 +65,13 @@ import amodule.main.activity.MainHomePage;
 import amodule.quan.db.SubjectData;
 import amodule.quan.db.SubjectSqlite;
 import amodule.search.db.MatchWordsDbUtil;
+import amodule.vip.DeviceVipManager;
 import aplug.basic.InternetCallback;
 import aplug.basic.XHInternetCallBack;
 import aplug.service.base.ServiceManager;
 import aplug.web.tools.XHTemplateManager;
 import third.ad.tools.AdConfigTools;
+import third.cling.service.manager.DeviceManager;
 import third.mall.aplug.MallCommon;
 import third.push.localpush.LocalPushManager;
 import third.push.xg.XGTagManager;
@@ -215,7 +217,7 @@ public class MainInitDataControl {
     public void initMainOnResume(final Activity act) {
         Log.i("zhangyujian", "initMainOnResume");
 
-        LoginManager.initYiYuanBindState(act, null);
+        DeviceVipManager.initDeviceVipBindState(act, null);
 
         long startTime = System.currentTimeMillis();
 
@@ -242,11 +244,6 @@ public class MainInitDataControl {
         if (act != null && XHADView.getInstence(act) != null) {
             XHADView.getInstence(act).setCanShowCallback(() -> Main.allMain != null
                     && Main.allMain.getCurrentTab() == 0);
-        }
-
-        //判断弹屏旧数据库是否存在
-        if (act != null && act.getDatabasePath("fullsrceen.db").exists()) {
-            FileManager.delDirectoryOrFile(act.getDatabasePath("fullsrceen.db").getPath());
         }
 
         new AllPopDialogHelper(act).start();

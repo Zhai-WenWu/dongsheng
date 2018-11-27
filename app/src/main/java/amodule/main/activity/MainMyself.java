@@ -100,7 +100,7 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
     private TagTextView my_renzheng, my_vip;
 
     private TextView vipInfo, vipNewHint, qaInfo, qaNewHint;
-    private ImageView vipIcon, qaIcon;
+    private ImageView vipIcon, qaIcon, scoreIcon;
 
     private boolean mIsOnResuming;
 
@@ -246,6 +246,7 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
         View scoreView = findViewById(R.id.ll_score);
         scoreNum = scoreView.findViewById(R.id.num);
         ((TextView) scoreView.findViewById(R.id.text)).setText("我的积分");
+        scoreIcon = scoreView.findViewById(R.id.score_icon);
         View couponView = findViewById(R.id.ll_coupon);
         couponNum = couponView.findViewById(R.id.num);
         ((TextView) couponView.findViewById(R.id.text)).setText("优惠券");
@@ -266,12 +267,6 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
 
         if (isShowMoney == null || TextUtils.isEmpty(String.valueOf(isShowMoney))) {
             moneyHint.setVisibility(View.VISIBLE);
-        }
-
-        boolean taskCenterIsOnce = VersionControl.isCurrentVersionOnce(this,"taskCenter");
-        if(taskCenterIsOnce){
-            gourp2.getChildAt(2).findViewById(R.id.my_new_info).setVisibility(View.VISIBLE);
-            gourp2.getChildAt(2).findViewById(R.id.ico_right_myself).setVisibility(View.GONE);
         }
 
         boolean taskCenterIsOnce = VersionControl.isCurrentVersionOnce(this,"taskCenter");
@@ -616,13 +611,6 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
                         startActivity(intent);
                     }
                     StatisticsManager.saveData(StatModel.createBtnClickModel(MainMyself.class.getSimpleName(), "会员绑定提示", "立即绑定"));
-                    break;
-                case "taskCenter"://任务中心
-                    VersionControl.recordCurrentVersionOnce(this,"taskCenter");
-                    gourp2.getChildAt(2).findViewById(R.id.my_new_info).setVisibility(View.GONE);
-                    gourp2.getChildAt(2).findViewById(R.id.ico_right_myself).setVisibility(View.VISIBLE);
-                    String url = "FullScreenWeb.app?url=" + StringManager.replaceUrl(StringManager.api_dailyTask);
-                    AppCommon.openUrl(url,false);
                     break;
                 case "taskCenter"://任务中心
                     VersionControl.recordCurrentVersionOnce(this,"taskCenter");

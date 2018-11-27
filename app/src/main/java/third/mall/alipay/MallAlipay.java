@@ -20,6 +20,8 @@ import java.util.Map;
 import java.util.Random;
 
 import acore.logic.PayCallback;
+import acore.override.XHApplication;
+import acore.override.helper.XHActivityManager;
 import acore.tools.Tools;
 import third.mall.activity.OrderStateActivity;
 import third.mall.activity.PaySuccedActvity;

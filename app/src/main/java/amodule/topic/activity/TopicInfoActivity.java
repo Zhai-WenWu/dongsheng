@@ -36,6 +36,7 @@ import acore.logic.stat.StatisticsManager;
 import acore.logic.stat.intefaces.OnItemClickListenerRvStat;
 import acore.override.XHApplication;
 import acore.override.activity.base.BaseAppCompatActivity;
+import acore.tools.ColorUtil;
 import acore.tools.ImgManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -155,7 +156,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
 
     private void initStatusBar() {
         String colors = Tools.getColorStr(this, R.color.ysf_black_333333);
-        Tools.setStatusBarColor(this, Color.parseColor(colors));
+        Tools.setStatusBarColor(this, ColorUtil.parseColor(colors));
     }
 
     private void initData() {

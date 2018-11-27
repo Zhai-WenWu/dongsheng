@@ -12,7 +12,7 @@ import android.widget.EditText;
 import com.xiangha.R;
 
 import acore.override.activity.base.BaseActivity;
-import acore.tools.ChannelUtil;
+import acore.tools.ChannelManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.main.Main;
@@ -59,7 +59,7 @@ public class HomeSearch extends BaseActivity {
             level = 3;
         }
 
-        Log.i("渠道号", " " + ChannelUtil.getChannel(this));
+        Log.i("渠道号", " " + ChannelManager.getInstance().getChannel(this));
     }
 
     private void initView() {

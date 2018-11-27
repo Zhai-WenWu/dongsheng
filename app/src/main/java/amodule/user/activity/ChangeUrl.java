@@ -212,7 +212,6 @@ public class ChangeUrl extends BaseActivity {
         mMallSwitchBtn = (Switch) findViewById(R.id.mall_switch);
         mRequsetFailTipSwitch = (Switch) findViewById(R.id.request_fail_tip_switch);
         ds_from_switch = (Switch) findViewById(R.id.ds_from_switch);
-        mStatShowBtn = findViewById(R.id.stat_show_switch);
         ((TextView) findViewById(R.id.text_channel)).setText("渠道号:  " + ChannelManager.getInstance().getChannel(this));
 
     }

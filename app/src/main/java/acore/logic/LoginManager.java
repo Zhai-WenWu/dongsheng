@@ -496,24 +496,6 @@ public class LoginManager {
         return sdf.format(new Date(Long.parseLong(tempTime) * 1000));
     }
 
-    public static String getTempVipMaturityTime() {
-        String tempTime = (String) FileManager.loadShared(XHApplication.in(),FileManager.xmlFile_appInfo,"maturity_temp_time");
-        if (TextUtils.isEmpty(tempTime) || "null".equals(tempTime)) {
-            return null;
-        }
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        return sdf.format(new Date(Long.parseLong(tempTime) * 1000));
-    }
-
-    public static String getTempVipMaturityTime() {
-        String tempTime = (String) FileManager.loadShared(XHApplication.in(),FileManager.xmlFile_appInfo,"maturity_temp_time");
-        if (TextUtils.isEmpty(tempTime) || "null".equals(tempTime)) {
-            return null;
-        }
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        return sdf.format(new Date(Long.parseLong(tempTime) * 1000));
-    }
-
     public static boolean isBindMobilePhone(){
         return userInfo != null
                 && userInfo.containsKey("tel")

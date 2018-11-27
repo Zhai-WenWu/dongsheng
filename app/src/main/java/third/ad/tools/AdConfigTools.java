@@ -74,17 +74,6 @@ public class AdConfigTools extends BaseAdConfigTools {
         });
     }
 
-    public void reportAdclick(String action, String logJson) {
-        ReqEncyptInternet.in().doPostEncypt(StringManager.api_reportNumber, "&log_json=" + logJson + "&action=" + action, new InternetCallback() {
-            @Override
-            public void loaded(int flag, String url, Object returnObj) {
-                if (flag >= ReqInternet.REQ_OK_STRING) {
-                    Log.i("zww_ad_click", "上报成功：" + action);
-                }
-            }
-        });
-    }
-
     public AdBean getAdConfig(String adPlayId) {
         XHAdSqlite adSqlite = XHAdSqlite.newInstance(XHApplication.in());
         return adSqlite.getAdConfig(adPlayId);

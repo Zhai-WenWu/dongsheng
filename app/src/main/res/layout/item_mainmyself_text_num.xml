@@ -46,4 +46,16 @@
         android:textSize="@dimen/sp_10"
         android:visibility="gone" />
 
+    <ImageView
+        android:id="@+id/score_icon"
+        android:src="@drawable/icon_pasted"
+        app:layout_constraintTop_toTopOf="@id/text"
+        app:layout_constraintLeft_toRightOf="@id/text"
+        android:layout_marginLeft="@dimen/dp_1"
+        android:layout_marginTop="@dimen/dp_2"
+        android:layout_width="@dimen/dp_28"
+        android:layout_height="@dimen/dp_14"
+        android:visibility="gone"
+        tools:visibility="visible"/>
+
 </android.support.constraint.ConstraintLayout>
