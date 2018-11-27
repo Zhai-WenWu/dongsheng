@@ -36,7 +36,6 @@ import acore.logic.stat.StatisticsManager;
 import acore.logic.stat.intefaces.OnItemClickListenerRvStat;
 import acore.override.XHApplication;
 import acore.override.activity.base.BaseAppCompatActivity;
-import acore.tools.ColorUtil;
 import acore.tools.ImgManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -112,7 +111,6 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
     private int offsetHeight;
     private boolean isClickRealTab;
     private View titleBg;
-    private int tabNewClick;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,11 +150,6 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
             layout.setMargins(0, statusBarHeight, 0, 0);
             bar_title.setLayoutParams(layout);
         }
-    }
-
-    private void initStatusBar() {
-        String colors = Tools.getColorStr(this, R.color.ysf_black_333333);
-        Tools.setStatusBarColor(this, ColorUtil.parseColor(colors));
     }
 
     private void initData() {
@@ -440,7 +433,6 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                 }
                 break;
             case TopicItemModel.TAB_NEW:
-                tabNewClick++;
                 mHotTabTv.setTextColor(XHApplication.in().getResources().getColor(R.color.c_777777));
                 mHotTabBottomView.setVisibility(View.INVISIBLE);
                 mNewTabTV.setTextColor(XHApplication.in().getResources().getColor(R.color.white));
@@ -448,6 +440,9 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                 StatisticsManager.saveData(StatModel.createBtnClickDetailModel("TopicInfoActivity", "TopicInfoActivity", "new_topic_gather", title, "最新"));
                 mTab = NEW;
                 if (mNewDatas.isEmpty()) {
+                    if (isClickRealTab) {
+                        scrollToTabBottom();
+                    }
                     loadTopicList(true);
                 } else {
                     onTabChanged(mTab);
@@ -583,18 +578,23 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
             case HOT:
                 ++mHotPage;
                 mPage = mHotPage;
+                if (mHotDatas.size() > 0) {
+                    loadManager.loading(mStaggeredGridView, false);
+                } else {
+                    loadManager.loading(mStaggeredGridView, true);
+                }
                 break;
             case NEW:
                 ++mNewPage;
                 mPage = mNewPage;
+                if (mNewDatas.size() > 0) {
+                    loadManager.loading(mStaggeredGridView, false);
+                } else {
+                    loadManager.loading(mStaggeredGridView, true);
+                }
                 break;
         }
 
-        if (mHotDatas.size() > 0) {
-            loadManager.loading(mStaggeredGridView, false);
-        } else {
-            loadManager.loading(mStaggeredGridView, true);
-        }
         ReqEncyptInternet.in().doGetEncypt(StringManager.API_TOPIC_LIST, "code=" + mTopicCode + "&page=" + mPage + "&tab=" + mTab, new InternetCallback() {
             final String tab = mTab;
             final int currentPage = mPage;
@@ -690,9 +690,6 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
             if (mTopicInfoStaggeredAdapter != null && TextUtils.equals(mTab, tab)) {
                 mDatas.addAll(tmepData);
                 mTopicInfoStaggeredAdapter.notifyDataSetChanged();
-                if (tab == NEW && tabNewClick == 1) {
-                    scrollToTabBottom();
-                }
             }
         }
     }
