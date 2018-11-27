@@ -69,7 +69,8 @@ public class StringManager extends UtilString {
     //用户发贴发菜谱用户日志
     public final static String api_uploadUserLog = "https://crash.xiangha.com/crash/report2";
     //获取广告信息
-    public final static String api_adData_old = apiUrl + "main6/ads/getBasicList";
+    public final static String api_adData_old = apiUrl + "main8/open/getOpenScreenList";
+    public final static String api_reportNumber = apiUrl + "main8/open/reportNumber";
     public final static String api_adData = apiUrl + "main7/open/getAdConfig";
     public final static String api_appData = apiUrl + urlSection.get("home5") + "getAppData";
     public final static String api_activityList = apiUrl + urlSection.get("home5") + "getActivityList";
@@ -83,6 +84,7 @@ public class StringManager extends UtilString {
     public final static String api_getWebRule = apiUrl + urlSection.get("home5") + "getWebRule";
 
     public final static String api_scoreStore = appWebUrl + "app5/scoreStore";//积分商城
+    public final static String api_dailyTask = appWebUrl + "app5/dailyTask";//每日任务
     public final static String api_scoreList = appWebUrl + "app5/scoreList";//积分乐园《是否带有Tab选择靠服务器的版本判断》
     public final static String api_integralInfo = appWebUrl + "app5/customerScore";//积份规则
     public final static String api_exchangeList = appWebUrl + "app5/orderList";//兑换记录
@@ -276,6 +278,7 @@ public class StringManager extends UtilString {
     public final static String api_checkPhoneRegisterState = apiUrl + urlSection.get("auth6") + "checkPhoneIsRegistered"; //手机号是否注册
     public final static String api_checkEmailRegisterState = apiUrl + urlSection.get("auth6") + "checkEmailIsRegistered"; //邮箱是否注册
     public final static String api_modifyPhone = apiUrl + urlSection.get("user6") + "modifyPhone"; //注册手机号
+    public final static String api_addTask = apiUrl + "main7/user/addTask";
     public final static String api_sendVoiceVerify = apiUrl + "main7/voiceVerify/send"; //获取语音验证码
 
     /***

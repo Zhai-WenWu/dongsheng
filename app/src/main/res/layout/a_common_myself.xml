@@ -336,26 +336,42 @@
                             android:text="0"/>
 
                     </RelativeLayout>
-                    <LinearLayout
+                    <RelativeLayout
                         android:id="@+id/ll_score"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:gravity="center"
-                        android:orientation="vertical">
+                        android:gravity="center">
 
                         <TextView
+                            android:id="@+id/my_score_text"
                             style="@style/myTab2Text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:gravity="center"
                             android:text="我的积分"/>
+
+                        <ImageView
+                            android:id="@+id/my_score_icon"
+                            android:src="@drawable/icon_pasted"
+                            android:layout_toRightOf="@id/my_score_text"
+                            android:layout_marginLeft="@dimen/dp_1"
+                            android:layout_marginTop="@dimen/dp_2"
+                            android:layout_width="@dimen/dp_28"
+                            android:layout_height="@dimen/dp_14"
+                            android:visibility="gone"
+                            tools:visibility="visible"/>
+
                         <TextView
                             android:id="@+id/my_score"
                             style="@style/myTab2Title"
-                            android:layout_width="wrap_content"
+                            android:layout_below="@+id/my_score_text"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:gravity="center"
                             android:text="0"/>
-                    </LinearLayout>
+                    </RelativeLayout>
                     <LinearLayout
                         android:id="@+id/ll_coupon"
                         android:layout_width="0dp"
