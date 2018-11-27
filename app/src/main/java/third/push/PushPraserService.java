@@ -18,6 +18,7 @@ import java.util.UUID;
 
 import acore.logic.MessageTipController;
 import acore.logic.XHClick;
+import acore.override.XHApplication;
 import acore.override.helper.XHActivityManager;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
@@ -25,6 +26,7 @@ import acore.tools.ToolsDevice;
 import amodule.main.Main;
 import amodule.user.datacontroller.MsgSettingDataController;
 import aplug.feedback.activity.Feedback;
+import aplug.service.base.ServiceManager;
 import third.push.model.NotificationData;
 import third.push.model.NotificationEvent;
 import third.push.xg.XGLocalPushServer;
@@ -69,6 +71,7 @@ public class PushPraserService extends Service{
 			}
 			parsePushData(getBaseContext(),title,text,custom,channel,message);
 		}
+		ServiceManager.startProtectService(XHApplication.in());
 		return super.onStartCommand(intent, flags, startId);
 	}
 

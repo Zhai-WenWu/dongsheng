@@ -79,7 +79,6 @@ public class LocationHelper {
             mLocationClient = new AMapLocationClient(XHApplication.in());
             mLocationClient.setLocationOption(mLocationClientOption);
             mLocationClient.setLocationListener(aMapLocation -> {
-                Log.i("tzy", "startLocation: aMapLocation");
                 mCurrentLocation = aMapLocation;
                 GeocodeSearch geocodeSearch = new GeocodeSearch(XHApplication.in());
                 geocodeSearch.setOnGeocodeSearchListener(new GeocodeSearch.OnGeocodeSearchListener() {
@@ -115,7 +114,6 @@ public class LocationHelper {
             });
         }
         mLocationClient.stopLocation();
-        Log.i("tzy", "startLocation: ");
         mLocationClient.startLocation();
     }
 

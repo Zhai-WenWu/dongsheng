@@ -29,6 +29,7 @@ import amodule.main.Main;
 import amodule.main.activity.MainHomePage;
 import amodule.other.listener.HomeKeyListener;
 import amodule.other.listener.HomeKeyListener.OnHomePressedListener;
+import aplug.basic.DefaultInternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import third.ad.XHAdAutoRefresh;
 import third.ad.tools.AdConfigTools;
