@@ -32,6 +32,7 @@ import com.aliyun.struct.common.VideoQuality;
 import com.aliyun.struct.encoder.VideoCodecs;
 import com.aliyun.struct.snap.AliyunSnapVideoParam;
 import com.annimon.stream.Stream;
+import com.popdialog.db.FullSrceenDB;
 import com.popdialog.util.GoodCommentManager;
 import com.popdialog.util.PushManager;
 import com.quze.videorecordlib.VideoRecorderCommon;
@@ -53,6 +54,7 @@ import acore.logic.XHClick;
 import acore.logic.polling.AppHandlerAsyncPolling;
 import acore.logic.polling.IHandleMessage;
 import acore.logic.stat.StatisticsManager;
+import acore.notification.controller.NotificationSettingController;
 import acore.override.XHApplication;
 import acore.override.activity.mian.MainBaseActivity;
 import acore.tools.ChannelUtil;
@@ -549,9 +551,9 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                 } catch (Exception e) {
                 }
                 // 关闭时发送页面停留时间统计
-//                if (act != null){
-//                    new FullSrceenDB(act).clearExpireAllData();
-//                }
+                if (act != null){
+                    new FullSrceenDB(act).clearExpireAllData();
+                }
                 // 关闭页面停留时间统计计时器
                 XHClick.closeHandler();
                 VersionOp.getInstance().onDesotry();

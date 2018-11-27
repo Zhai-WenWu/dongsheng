@@ -22,6 +22,7 @@ import com.xh.manager.ViewManager;
 import com.xh.view.HButtonView;
 import com.xh.view.TitleMessageView;
 
+import org.eclipse.jetty.util.StringUtil;
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -236,6 +237,13 @@ public class MainInitDataControl {
             XHADView.getInstence(act).setCanShowCallback(() -> Main.allMain != null
                     && Main.allMain.getCurrentTab() == 0);
         }
+
+        //判断旧数据库是否存在
+        String path = act.getDatabasePath("fullsrceen.db").getPath();
+        if (!TextUtils.isEmpty(path)){
+            act.deleteDatabase("fullsrceen.db");
+        }
+
         new AllPopDialogHelper(act).start();
 
         new Thread(this::setXGTag).start();

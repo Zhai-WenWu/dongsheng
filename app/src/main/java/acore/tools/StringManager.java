@@ -69,8 +69,7 @@ public class StringManager extends UtilString {
     //用户发贴发菜谱用户日志
     public final static String api_uploadUserLog = "https://crash.xiangha.com/crash/report2";
     //获取广告信息
-    public final static String api_adData_old = apiUrl + "main8/open/getOpenScreenList";
-    public final static String api_reportNumber = apiUrl + "main8/open/reportNumber";
+    public final static String api_adData_old = apiUrl + "main6/ads/getBasicList";
     public final static String api_adData = apiUrl + "main7/open/getAdConfig";
     public final static String api_appData = apiUrl + urlSection.get("home5") + "getAppData";
     public final static String api_activityList = apiUrl + urlSection.get("home5") + "getActivityList";
@@ -84,7 +83,6 @@ public class StringManager extends UtilString {
     public final static String api_getWebRule = apiUrl + urlSection.get("home5") + "getWebRule";
 
     public final static String api_scoreStore = appWebUrl + "app5/scoreStore";//积分商城
-    public final static String api_dailyTask = appWebUrl + "app5/dailyTask";//每日任务
     public final static String api_scoreList = appWebUrl + "app5/scoreList";//积分乐园《是否带有Tab选择靠服务器的版本判断》
     public final static String api_integralInfo = appWebUrl + "app5/customerScore";//积份规则
     public final static String api_exchangeList = appWebUrl + "app5/orderList";//兑换记录
@@ -278,7 +276,6 @@ public class StringManager extends UtilString {
     public final static String api_checkPhoneRegisterState = apiUrl + urlSection.get("auth6") + "checkPhoneIsRegistered"; //手机号是否注册
     public final static String api_checkEmailRegisterState = apiUrl + urlSection.get("auth6") + "checkEmailIsRegistered"; //邮箱是否注册
     public final static String api_modifyPhone = apiUrl + urlSection.get("user6") + "modifyPhone"; //注册手机号
-    public final static String api_addTask = apiUrl + "main7/user/addTask";
     public final static String api_sendVoiceVerify = apiUrl + "main7/voiceVerify/send"; //获取语音验证码
 
     /***
@@ -359,7 +356,7 @@ public class StringManager extends UtilString {
     public final static String API_SET_FAVORITE_STATUS = apiUrl + "main8/favorites/setFavorites";//设置收藏状态
 
     //菜谱详情页面
-    public final static String API_GETDISHBURDENBYCODE = apiUrl + "main8/dish/getDishBurdenByCode";//用料信息
+    public final static String API_GETDISHBURDENBYCODE = apiUrl + "main7/dish/getDishBurdenByCode";//用料信息
     public final static String API_GETBELOWBURDENBANNER = apiUrl + "main7/dish/getBelowBurdenBanner";//用料下方banner
 
     public final static String API_MAIN8_SHARE_CONF = apiUrl + "main8/dish/getDishShareByCode";//获取菜谱分享配置
@@ -386,7 +383,7 @@ public class StringManager extends UtilString {
 
     public final static String API_AD_GETADDATA = apiUrl + "main7/open/getAdData";//获取广告数据
 
-    public final static String API_DISH_RECOMMEND = apiUrl + "main8/dish/getDishRecomByCode";//菜谱详情页的相关推荐
+    public final static String API_DISH_RECOMMEND = apiUrl + "main6/caipu/info";//菜谱详情页的相关推荐
 
     public final static String API_SEARCH_COURSE_DISH = apiUrl + "main8/search/byCourseDish";//搜索名厨课菜谱
     //短视频详情页
