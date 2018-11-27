@@ -154,22 +154,6 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,I
             final LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
             mRecyclerView.setLayoutManager(layoutManager);
             mRecyclerView.setAdapter(mRecyclerAdapter);
-            mRecyclerAdapter.setOnItemShow(new RvBaseAdapter.OnItemShow<Map<String,String>>() {
-                @Override
-                public void onItemShow(Map<String,String> data, int position) {
-//                    Log.i("XHClick", "onItemShow: ");
-                    if(!TextUtils.isEmpty(page) && data != null && !data.isEmpty()
-                            && !"2".equals(data.get("isShowStatistic"))){
-                        XHClick.saveStatictisFile(page, getModeType(), data.get("type"), data.get("code"),
-                                "", "show", "", "", String.valueOf(position + 1), "", "");
-                        data.put("isShowStatistic","2");
-                    }
-                    isScrollData = true;
-                    if (scrollDataIndex < position + 1) {
-                        scrollDataIndex = position + 1;
-                    }
-                }
-            });
             mRecyclerView.setOnItemClickListener((view, holder, position) -> {
                 if (holder != null && holder instanceof XHBaseRvViewHolder) {
                     XHBaseRvViewHolder viewHolder = (XHBaseRvViewHolder) holder;
@@ -205,9 +189,6 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,I
 
     private void statistic(int position,Map<String, String> data) {
 //        Log.i("XHClick", "click: ");
-        if(!TextUtils.isEmpty(page)){
-            XHClick.saveStatictisFile(page, getModeType(), data.get("type"), data.get("code"), "", "click", "", "", String.valueOf(position + 1), "", "");
-        }
         if(mStatisticCallback != null){
             if(mSubTitleView.getData() != null){
                 Map<String,String> map = StringManager.getFirstMap(mSubTitleView.getData().get("title"));
@@ -222,9 +203,6 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,I
             }
         }
     }
-
-    protected boolean isScrollData = false;//是否滚动数据
-    protected int scrollDataIndex = -1;//滚动数据的位置
 
     private int getPxByDp(int resId) {
         return getResources().getDimensionPixelSize(resId);
@@ -246,10 +224,6 @@ public class HorizontalRecyclerView extends RelativeLayout implements IBindMap,I
     @Override
     public void saveStatisticData(String page) {
         //列表
-        if (scrollDataIndex > 0 && !TextUtils.isEmpty(page)) {
-            XHClick.saveStatictisFile(page, getModeType(), "", "", String.valueOf(scrollDataIndex), "list", "", "", "", "", "");
-            scrollDataIndex = -1;
-        }
     }
 
     @NonNull

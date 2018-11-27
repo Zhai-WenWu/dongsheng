@@ -19,6 +19,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import acore.logic.AppCommon;
 import acore.logic.XHClick;
 import acore.tools.StringManager;
 import amodule._common.delegate.IExtraDataCallback;
@@ -27,7 +28,9 @@ import amodule._common.delegate.ISetAdController;
 import amodule._common.delegate.StatisticCallback;
 import amodule._common.plugin.WidgetVerticalLayout;
 import amodule._common.utility.WidgetUtility;
+import amodule.home.module.HomeVipGuideModule;
 import amodule.main.activity.MainHomePage;
+import amodule.main.view.VipGuideBannerView;
 import third.ad.scrollerAd.XHAllAdControl;
 
 import static amodule._common.helper.WidgetDataHelper.KEY_BOTTOM;
@@ -51,6 +54,9 @@ public class HomeHeaderControler implements ISaveStatistic, ISetAdController {
     private LinearLayout mFeedLayout;
 
     private TextView mFeedTitle;
+
+    private VipGuideBannerView mVipGuideBannerView;
+    private HomeVipGuideModule mVipGuideModule;
 
     private WidgetVerticalLayout[] mLayouts = new WidgetVerticalLayout[2];
 
@@ -338,5 +344,31 @@ public class HomeHeaderControler implements ISaveStatistic, ISetAdController {
     @Override
     public void setAdController(XHAllAdControl controller) {
         mAdController = controller;
+    }
+
+    public void setVipGuideData(HomeVipGuideModule module) {
+        mVipGuideModule = module;
+        if (module != null) {
+            if (mVipGuideBannerView == null) {
+                mVipGuideBannerView = mFeedHeaderView.findViewById(R.id.vipguide_viewstub);
+                mVipGuideBannerView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mVipGuideModule != null) {
+                            AppCommon.openUrl(mVipGuideModule.getGotoUrl(), true);
+                        }
+                    }
+                });
+            }
+            mVipGuideBannerView.setSubtitle(module.getSubtitle());
+            mVipGuideBannerView.setTitle(module.getTitle());
+            mVipGuideBannerView.setDesc(module.getDesc());
+        }
+    }
+
+    public void setVipGuideVisible(boolean visible) {
+        if (mVipGuideBannerView != null) {
+            mVipGuideBannerView.setVisibility(visible ? View.VISIBLE : View.GONE);
+        }
     }
 }

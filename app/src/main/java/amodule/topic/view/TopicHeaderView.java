@@ -22,12 +22,15 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.target.Target;
 import com.xiangha.R;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
+
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 
 import acore.tools.FileManager;
@@ -82,6 +85,7 @@ public class TopicHeaderView extends RelativeLayout {
         mUserFrontImg.setOnClickListener(listener);
         mUserFrontImg.setTag(R.string.tag, url);
         Glide.with(getContext()).load(url).downloadOnly(new SimpleTarget<File>() {
+
             @Override
             public void onLoadFailed(Exception e, Drawable drawable) {
                 super.onLoadFailed(e, drawable);
@@ -96,7 +100,9 @@ public class TopicHeaderView extends RelativeLayout {
                     mUserFrontImg.setVisibility(View.VISIBLE);
                     mUserFrontImg.setImageBitmap(bitmap);
                     bitmap = ImgManager.RSBlur(getContext(),bitmap,10);
-                    mUserRearImg.setImageBitmap(bitmap);
+                    if(bitmap != null){
+                        mUserRearImg.setImageBitmap(bitmap);
+                    }
                     mShadePanel.setVisibility(View.VISIBLE);
                 } catch (Exception e) {
                     e.printStackTrace();

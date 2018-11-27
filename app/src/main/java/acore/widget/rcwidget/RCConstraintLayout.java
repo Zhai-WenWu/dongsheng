@@ -103,14 +103,14 @@ public class RCConstraintLayout extends ConstraintLayout implements RCAttrs, Che
     }
 
     public void setBottomLeftRadius(int bottomLeftRadius) {
-        mRCHelper.radii[4] = bottomLeftRadius;
-        mRCHelper.radii[5] = bottomLeftRadius;
+        mRCHelper.radii[6] = bottomLeftRadius;
+        mRCHelper.radii[7] = bottomLeftRadius;
         invalidate();
     }
 
     public void setBottomRightRadius(int bottomRightRadius) {
-        mRCHelper.radii[6] = bottomRightRadius;
-        mRCHelper.radii[7] = bottomRightRadius;
+        mRCHelper.radii[4] = bottomRightRadius;
+        mRCHelper.radii[5] = bottomRightRadius;
         invalidate();
     }
 

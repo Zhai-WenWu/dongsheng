@@ -238,7 +238,7 @@ public class BuyCommodActivity extends MallBaseActivity implements OnClickListen
 			public void loadstat(int flag, String url, Object msg, Object... stat) {
 				two_state++;
 				loadManager.showProgressBar();
-				loadManager.loadOver(flag, 1, true);
+				loadManager.loadOver(flag);
 				if (flag >= UtilInternet.REQ_OK_STRING) {
 					ArrayList<Map<String, String>> listMapByJson = UtilString.getListMapByJson(msg);
 					parsrInfoData(listMapByJson);
@@ -278,7 +278,7 @@ public class BuyCommodActivity extends MallBaseActivity implements OnClickListen
 					if (state >= UtilInternet.REQ_OK_STRING) {
 						setRequest();
 					} else if (state == UtilInternet.REQ_CODE_ERROR) {
-						loadManager.loadOver(state, 1, true);
+						loadManager.loadOver(state);
 					}
 				}
 			});
@@ -356,7 +356,7 @@ public class BuyCommodActivity extends MallBaseActivity implements OnClickListen
 										if (state >= UtilInternet.REQ_OK_STRING) {
 											createOrder();
 										} else if (state == UtilInternet.REQ_CODE_ERROR) {
-											loadManager.loadOver(state, 1, true);
+											loadManager.loadOver(state);
 										}
 									}
 								});
@@ -412,7 +412,7 @@ public class BuyCommodActivity extends MallBaseActivity implements OnClickListen
 			@Override
 			public void loadstat(int flag, String url, Object msg, Object... stat) {
 				loadManager.showProgressBar();
-				loadManager.loadOver(flag, 1, true);
+				loadManager.loadOver(flag);
 				if (flag >= UtilInternet.REQ_OK_STRING) {
 					two_state++;
 					ArrayList<Map<String, String>> listMapByJson = UtilString.getListMapByJson(msg);
@@ -430,7 +430,7 @@ public class BuyCommodActivity extends MallBaseActivity implements OnClickListen
 								if (state >= UtilInternet.REQ_OK_STRING) {
 									setRequestAddress();
 								} else if (state == UtilInternet.REQ_CODE_ERROR) {
-									loadManager.loadOver(state, 1, true);
+									loadManager.loadOver(state);
 								}
 							}
 						});

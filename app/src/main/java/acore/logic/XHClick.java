@@ -2,13 +2,9 @@ package acore.logic;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
-import android.util.Log;
 
 import com.tencent.stat.StatService;
 import com.umeng.analytics.MobclickAgent;
@@ -16,32 +12,23 @@ import com.umeng.analytics.dplus.UMADplus;
 import com.umeng.message.UTrack;
 import com.umeng.message.entity.UMessage;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import acore.logic.load.LoadManager;
 import acore.override.XHApplication;
-import acore.tools.ChannelUtil;
-import acore.tools.FileManager;
 import acore.tools.LogManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
-import acore.tools.ToolsDevice;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
 import aplug.basic.XHConf;
@@ -49,9 +36,6 @@ import third.push.model.NotificationData;
 import third.push.model.NotificationEvent;
 import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilLog;
-import xh.basic.tool.UtilString;
-
-import static acore.tools.ToolsDevice.getWindowPx;
 
 /**
  * @Description:
@@ -60,7 +44,6 @@ import static acore.tools.ToolsDevice.getWindowPx;
  * @date: 2015年3月10日 上午10:59:36
  */
 public class XHClick {
-    public static final int CIRCULATION_TIME = 30000;
     public static int HOME_STATICTIS_TIME = 10 * 1000;
     public static int PAGE_STATICTIS_TIME = 5 * 60 * 1000;//页面停留时间修改
     public static final int NOTIFY_A = 1;
@@ -69,69 +52,13 @@ public class XHClick {
     public static final int NOTIFY_D = 4;
     public static final int NOTIFY_SELF = 5;
 
-    private static long startTime;//开始的时间戳
-    private static long stopTime;//结束的时间戳
-    private static String path = "";//记录页面停留时间的字符串
-    private static Handler handler;//s2
-    private static Runnable runnable;
-    private static Handler handlerStatictis;//s6统计
     private static Handler handlerPageStatictis;//s7统计
-    private static Runnable runnableStatictis;
     private static Runnable runnablePageStatictis;
-
-    private static long viewPageStartTime;//viewpage 子tab的页面停留时间(开始的时间戳)
-    private static long viewPageStopTime;//viewpage 子tab的页面停留时间(结束的时间戳)
-//	private static String itemName = "";//viewpager 子tab的页面名称.(名称用拼音表示)
 
     /**
      * 评价按钮
      */
     public static final String comcomment_icon = "comcomment_icon";
-
-
-    /**
-     * 开启viewpager的页面开启时间
-     *
-     * @param name item页面的名称
-     */
-    public static void getViewPageItemStartTime(String name) {
-        viewPageStartTime = System.currentTimeMillis();
-        path += name + ">";
-    }
-
-    /**
-     * 获取viewpager中的item页面停止时间
-     */
-    public static void getViewPageItemStopTime() {
-        viewPageStopTime = System.currentTimeMillis();
-        getViewPageItemLiveTime();
-    }
-
-    /**
-     * 计算出viewpager中的item页面停留的时间
-     */
-    private static void getViewPageItemLiveTime() {
-        double liveTime = (viewPageStopTime - viewPageStartTime) / 1000.0;
-        //设置只保留一位小数
-        NumberFormat nf = new DecimalFormat("0.0");
-        try {
-            liveTime = Double.parseDouble(nf.format(liveTime).trim());
-        } catch (Exception e) {
-        }
-        //调用统计停留时间的方法
-        ViewPageItemLiveTime(liveTime);
-    }
-
-    /**
-     * 统计时间,并添加入path中发送服务端
-     *
-     * @param liveTime 页面停留时间
-     */
-    private static void ViewPageItemLiveTime(double liveTime) {
-        if (liveTime > 9999)
-            liveTime = 9999.9;
-        path += liveTime + ",";
-    }
 
     /**
      * 层级事件统计
@@ -186,7 +113,6 @@ public class XHClick {
             MobclickAgent.onEventValue(context, eventID, map, value);
             onMtaEvent(context, eventID, map_key, map_value);//mta统计
         }
-        showToast(context, "统计_计算_" + eventID + "：" + map_key + "，" + map_value + "，" + value);
     }
 
     /**
@@ -203,7 +129,6 @@ public class XHClick {
             map.put(map_key, map_value);
             MobclickAgent.onEvent(context, eventID, map);
         }
-        showToast(context, "统计_计数_" + eventID + "：" + map_key + "，" + map_value);
     }
 
     /**
@@ -222,18 +147,6 @@ public class XHClick {
     }
 
     /**
-     * 百度统计
-     *
-     * @param context
-     * @param eventID
-     * @param twoLevel
-     * @param threeLevel
-     */
-    private static void onbaiduEvent(Context context, String eventID, String twoLevel, String threeLevel) {
-//        com.baidu.mobstat.StatService.onEvent(context,eventID,twoLevel);
-    }
-
-    /**
      * 计数事件统计	(无map)
      *
      * @param context 上下文
@@ -246,7 +159,6 @@ public class XHClick {
             StatService.trackCustomEvent(context, eventID, value);
 //            com.baidu.mobstat.StatService.onEvent(context,eventID,value);
         }
-        showToast(context, "统计_计算_" + eventID + "：" + value);
     }
 
     /**
@@ -269,7 +181,6 @@ public class XHClick {
      * @param eventName
      */
     public static void track(Context context, final String eventName) {
-        showToast(context, "统计_普通属性_" + eventName);
         if (isStatistics(context)) {
             UMADplus.track(context, eventName);
         }
@@ -284,7 +195,6 @@ public class XHClick {
      * @param value
      */
     public static void track(Context context, String eventName, String key, Object value) {
-        showToast(context, "统计_普通属性_" + eventName + "_" + key + "_" + value);
         if (isStatistics(context)) {
             if (TextUtils.isEmpty(key) || value == null) {
                 track(context, eventName);
@@ -343,124 +253,14 @@ public class XHClick {
     }
 
     /**
-     * 获得activity页面开始时间戳
-     */
-    public static void getStartTime(Context context) {
-        startTime = System.currentTimeMillis();
-        if (context != null) {
-            Class<?> cls = context.getClass();
-            if (cls.getSimpleName().equals("MainQuan") || cls.getSimpleName().equals("HomeNous")) {
-                return;
-            } else {
-                path += cls.getSimpleName() + ">";
-            }
-            showToast(context, path);
-        }
-    }
-
-    /**
-     * 获取activity页面关闭时间戳
-     * 必须要先调用getStartTime()的方法,不然获取的停留时间是错误的且为负值
-     * 调用该方法后,程序会自动计算你获取的startTime 和 stopTime 的事件差.计算出停留的秒数.
-     */
-    public static void getStopTime(Context activity) {
-        stopTime = System.currentTimeMillis();
-        if (activity != null) {
-            //调用页面停留时间计算方法
-            getLiveTime(activity);
-        }
-    }
-
-    /**
-     * 获得页面停留的时间
-     *
-     * @param activity
-     */
-    private static void getLiveTime(Context activity) {
-        double liveTime = (stopTime - startTime) / 1000.0;
-        //设置只保留一位小数
-        NumberFormat nf = new DecimalFormat("0.0");
-        try {
-            liveTime = Double.parseDouble(nf.format(liveTime).trim());
-        } catch (Exception e) {
-        }
-        //调用统计停留时间的方法
-        ActivityLiveTime(activity, liveTime);
-    }
-
-    /**
-     * 获取页面存活时间的字符串
-     * 以    { "页面的class名"+"_"+停留时间   }来记录.以","分隔.
-     *
-     * @param allActivity
-     * @param liveTime
-     */
-    private static void ActivityLiveTime(Context allActivity, double liveTime) {
-        if (allActivity != null) {
-            Class<?> cls = allActivity.getClass();
-            if (liveTime > 9999)
-                liveTime = 9999.9;
-            //分页面的统计
-            if (cls.getSimpleName().equals("MainQuan")
-                    || cls.getSimpleName().equals("HomeNous")) {
-                return;
-            } else {
-                path += liveTime + ",";
-            }
-            showToast(allActivity, path);
-        }
-    }
-
-    /**
      * 发送请求.在某一个类中开启(在Main中开启和关闭),循环执行.
      */
     public static void sendLiveTime(final Context context) {
-        handler = new Handler(Looper.getMainLooper());
-        runnable = new Runnable() {
-            @Override
-            public void run() {
-                if (!path.equals(""))
-                    path = "";
-                    //  发送请求的操作
-//                    ReqInternet.in().doGet(StringManager.api_stat, new InternetCallback() {
-//
-//                        @Override
-//                        public void loaded(int flag, String url, Object msg) {
-//                            path = "";
-//                        }
-//
-//                        @Override
-//                        public Map<String, String> getReqHeader(Map<String, String> header, String url, Map<String, String> params) {
-//                            header.put("Cookie", "path=" + path + ";");
-//                            return super.getReqHeader(header, url, params);
-//                        }
-//                    });
-
-                //循环计时器 每隔30秒执行一次
-                handler.postDelayed(runnable, CIRCULATION_TIME);
-            }
-        };
-        //启动计时器 30秒后执行
-        handler.postDelayed(runnable, CIRCULATION_TIME);
-        //********首页统计10秒循环统计
-        handlerStatictis = new Handler(Looper.getMainLooper());
-        runnableStatictis = new Runnable() {
-            @Override
-            public void run() {
-                //循环统计feed流数据
-                loopHandlerStatictis();
-                //循环倒计时--10秒统计
-                handlerStatictis.postDelayed(runnableStatictis, HOME_STATICTIS_TIME);
-            }
-        };
-        handlerStatictis.postDelayed(runnableStatictis, HOME_STATICTIS_TIME);
         //********页面时间统计
         handlerPageStatictis = new Handler(Looper.getMainLooper());
         runnablePageStatictis = new Runnable() {
             @Override
             public void run() {
-                //循环统计页面流数据
-                handlerPageStatic();
                 //循环倒计时--10分钟统计
                 handlerPageStatictis.postDelayed(runnablePageStatictis, PAGE_STATICTIS_TIME);
             }
@@ -475,79 +275,7 @@ public class XHClick {
      * @param allActivity
      */
     public static void finishToSendPath(Context allActivity) {
-        newHomeStatictis(true, null);
-        handlerPageStatic();
         registerUserUseTimeSuperProperty(allActivity);
-        stopTime = System.currentTimeMillis();
-        double liveTime = (stopTime - startTime) / 1000.0;
-        //设置只保留一位小数
-        NumberFormat nf = new DecimalFormat("0.0 ");
-        try {
-            liveTime = Double.parseDouble(nf.format(liveTime).trim());
-        } catch (Exception e) {
-        }
-        if (allActivity != null) {
-            if (liveTime > 9999)
-                liveTime = 9999.9;
-            path += liveTime + ",";
-            showToast(allActivity, path);
-        }
-        if (!path.equals(""))
-            path = "";
-            // 发送请求的操作
-//            ReqInternet.in().doGet(StringManager.api_stat, new InternetCallback() {
-//
-//                @Override
-//                public void loaded(int flag, String url, Object msg) {
-//                    path = "";
-//                    UtilLog.print(XHConf.log_tag_stat, "d", "GET:" + url + "成功");
-//                }
-//
-//                @Override
-//                public Map<String, String> getReqHeader(Map<String, String> header, String url, Map<String, String> params) {
-//                    header.put("Cookie", "path=" + path + ";");
-//                    return super.getReqHeader(header, url, params);
-//                }
-//            });
-    }
-
-    /**
-     * 当按下home按钮的时候监听到,发送请求
-     */
-    public static void HomeKeyListener(Context allActivity) {
-        newHomeStatictis(true, null);
-        handlerPageStatic();
-        stopTime = System.currentTimeMillis();
-        double liveTime = (stopTime - startTime) / 1000.0;
-        //设置只保留一位小数
-        NumberFormat nf = new DecimalFormat("0.0 ");
-        try {
-            liveTime = Double.parseDouble(nf.format(liveTime).trim());
-        } catch (Exception e) {
-        }
-        if (allActivity != null) {
-            if (liveTime > 9999)
-                liveTime = 9999.9;
-            path += liveTime + ",";
-            showToast(allActivity, path);
-        }
-
-        if (!path.equals(""))
-            path = "";
-            // 发送请求的操作
-//            ReqInternet.in().doGet(StringManager.api_stat, new InternetCallback() {
-//
-//                @Override
-//                public void loaded(int flag, String url, Object msg) {
-//                    path = "";
-//                }
-//
-//                @Override
-//                public Map<String, String> getReqHeader(Map<String, String> header, String url, Map<String, String> params) {
-//                    header.put("Cookie", "path=" + path + ";");
-//                    return super.getReqHeader(header, url, params);
-//                }
-//            });
     }
 
     /**
@@ -555,21 +283,9 @@ public class XHClick {
      * 在软件退出时执行此方法
      */
     public static void closeHandler() {
-        if (handler != null && runnable != null)
-            handler.removeCallbacks(runnable);
-        if (handlerStatictis != null && runnableStatictis != null)
-            handlerStatictis.removeCallbacks(runnableStatictis);
-    }
-
-    /**
-     * 仅用于测试的.
-     *
-     * @param context
-     */
-    private static void showToast(Context context, String content) {
-//		Log.d("------统计------",content);
-//        UtilLog.print(XHConf.log_tag_stat, "d", content);
-//		Tools.showToast(context, content);
+        if(handlerPageStatictis != null && runnablePageStatictis != null){
+            handlerPageStatictis.removeCallbacks(runnablePageStatictis);
+        }
     }
 
     public static final String KEY_NOTIFY_CLICK = "notify_click";
@@ -794,7 +510,6 @@ public class XHClick {
                         valueTime = "2年以上";
                     if (!TextUtils.isEmpty(valueTime)) {
                         UMADplus.registerSuperProperty(context, "注册时间", valueTime);
-                        showToast(context, "注册时间：" + valueTime);
                     }
                 }
             } catch (ParseException e) {
@@ -848,7 +563,6 @@ public class XHClick {
                         valueTime = "2年以上";
                     if (!TextUtils.isEmpty(valueTime)) {
                         UMADplus.registerSuperProperty(context, "使用时间", valueTime);
-                        showToast(context, "使用时间：" + valueTime);
                     }
                 }
             }
@@ -882,7 +596,6 @@ public class XHClick {
                     map.put("days", 1 + "");
                     UtilFile.saveShared(context, "super_property", map);
                     UMADplus.registerSuperProperty(context, "自然月内启动app天数", "1天");
-                    showToast(context, "自然月内启动app天数：" + "1天");
                 } else if (Integer.parseInt(monthTime) != month) {
                     Map<String, String> map = new HashMap<String, String>();
                     map.put("month", month + "");
@@ -890,7 +603,6 @@ public class XHClick {
                     map.put("days", 1 + "");
                     UtilFile.saveShared(context, "super_property", map);
                     UMADplus.registerSuperProperty(context, "自然月内启动app天数", "1天");
-                    showToast(context, "自然月内启动app天数：" + "1天");
                 } else {
                     String daysStr = "";
                     int dayValue = Integer.parseInt(days) + day != Integer.parseInt(lastDay) ? 1 : 0;
@@ -912,7 +624,6 @@ public class XHClick {
                         daysStr = "22-31天";
                     if (!TextUtils.isEmpty(daysStr)) {
                         UMADplus.registerSuperProperty(context, "自然月内启动app天数", daysStr);
-                        showToast(context, "自然月内启动app天数：" + daysStr);
                     }
                 }
             } else {
@@ -923,278 +634,7 @@ public class XHClick {
                 map.put("days", 1 + "");
                 UtilFile.saveShared(context, "super_property", map);
                 UMADplus.registerSuperProperty(context, "自然月内启动app天数", "1天");
-                showToast(context, "自然月内启动app天数：" + "1天");
             }
         }
-    }
-
-    /**
-     * 轮训统计首页请求数据
-     */
-    private static void loopHandlerStatictis() {
-        ArrayList<String> data = StatictisSQLiteDataBase.getInstance().selectAllData();
-        if (data != null && data.size() > 0) {
-            newHomeStatictis(true, null);
-        }
-    }
-
-    /**
-     * 首页统计
-     *
-     * @param isResetData 是否要重置参数数据
-     * @param data        参数数据块
-     */
-    public static synchronized void newHomeStatictis(boolean isResetData, ArrayList<String> data) {
-//        try {
-//            String url = StringManager.API_STATISTIC_S6;
-//            String baseData = getStatictisParams();
-//            LinkedHashMap<String, String> map = new LinkedHashMap<>();
-//            if (isResetData && (data == null || data.size() <= 0)) {
-//                data = StatictisSQLiteDataBase.getInstance().selectAllData();
-                StatictisSQLiteDataBase.getInstance().deleteAllData();
-//            }
-//            Map<String, String> baseMap = UtilString.getMapByString(baseData, "&", "=");
-//            JSONObject jsonObject = MapToJson(baseMap);
-//            if (data != null && data.size() > 0) {
-//                JSONArray jsonArray = new JSONArray();
-//                int lenght = data.size();
-//                for (int i = 0; i < lenght; i++) {
-//                    if (!TextUtils.isEmpty(data.get(i))) {
-//                        jsonArray.put(MapToJsonEncode(UtilString.getMapByString(data.get(i), "&", "=")));
-//                    }
-//                }
-//                jsonObject.put("log_data", jsonArray);
-//            } else {
-//                return;
-//            }
-//            LinkedHashMap<String, String> map1 = new LinkedHashMap<>();
-//            map1.put("log_json", jsonObject.toString());
-//            Log.i("wyl", "log_json::::" + jsonObject.toString());
-
-//            ReqInternet.in().doPost(url, map1, new InternetCallback() {
-//                @Override
-//                public void loaded(int flag, String url, Object object) {
-//                    if (flag >= ReqInternet.REQ_OK_STRING) {
-//                        Log.i("wyl", "上传数据s6");
-//                    } else {
-//
-//                    }
-//
-//                }
-//            });
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-    }
-
-    /**
-     * 处理统计基础数据
-     *
-     * @return
-     */
-    private static String getStatictisParams() {
-        String params = "xh_code=" + ToolsDevice.getXhIMEI(XHApplication.in());
-        if (LoginManager.userInfo.containsKey("userCode")) {
-            params += "&user_code=" + LoginManager.userInfo.get("userCode") + ";";
-        }
-        String device = UtilFile.loadShared(XHApplication.in(), FileManager.xmlFile_appInfo, FileManager.xmlKey_device_statictis).toString();
-        if (!TextUtils.isEmpty(device)) {
-            params += "&" + device;
-        } else {
-            String devices = "";
-            devices += "system=and";
-//			String mtype = android.os.Build.MODEL; // 手机型号---出现中文不使用该字段
-//			mtype = mtype.replace("#", "_");
-//			devices += "&model=" + mtype;
-            devices += "&model=";
-            String mVersion = android.os.Build.VERSION.RELEASE; // android版本号
-            devices += "&system_version=" + mVersion;
-            devices += "&app_version=" + VersionOp.getVerName(XHApplication.in());
-            DisplayMetrics metric = getWindowPx(XHApplication.in());
-            devices += "&phone_res=" + metric.widthPixels + "*" + metric.heightPixels;
-            String channalID = ChannelUtil.getChannel(XHApplication.in());
-            devices += "&channel=" + channalID;
-            UtilFile.saveShared(XHApplication.in(), FileManager.xmlFile_appInfo, FileManager.xmlKey_device_statictis, devices);
-            params += "&" + devices;
-        }
-
-        params += "&net_state=" + ToolsDevice.getNetWorkType(XHApplication.in());
-        params += "&memory=" + ToolsDevice.getAvailMemory(XHApplication.in());
-        params += "&package_name=" + ToolsDevice.getPackageName(XHApplication.in());
-        params += "&app_id=" + StringManager.appID;
-        params += "&token=" + LoadManager.tok;
-        return params;
-    }
-
-    /**
-     * 新的统计策略
-     *
-     * @param page_title  页面名称
-     * @param mode_type   模块名称，list header, foot
-     * @param data_type   数据类型 目前:图文菜谱，视频菜谱，美食贴专辑，涨知识
-     * @param item_code   个体标识 code唯一标示
-     * @param show_num    显示数量 数量，浏览数据数量
-     * @param event       事件 动作事件 info(详情),up（上翻）,down（下翻）,click（点击）list()
-     * @param stop_time   停留时间(s)
-     * @param uri_name    页面路由标识,请求数据的接口
-     * @param position    当前在列表的位置
-     * @param button_name 按钮名称
-     * @param deep        页面深度
-     */
-    public synchronized static void saveStatictisFile(String page_title, String mode_type, String data_type, String item_code,
-                                                      String show_num, String event, String stop_time, String uri_name,
-                                                      String position, String button_name, String deep) {
-        try {
-
-            //对数据进行存储
-            long time = System.currentTimeMillis();
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            String app_time = formatter.format(time);
-//            Log.i("zhangyujian","数据时间::"+app_time+":::"+event);
-            String params = "";
-            params += "app_time=" + checkString(app_time);
-            params += "&page_title=" + checkString(page_title);
-            params += "&mode_type=" + checkString(mode_type);
-            params += "&data_type=" + checkString(data_type);
-            params += "&item_code=" + checkString(item_code);
-            params += "&show_num=" + checkString(show_num);
-            params += "&event=" + checkString(event);
-            params += "&stop_time=" + checkString(stop_time);
-            params += "&uri_name=" + checkString(uri_name);
-            params += "&position=" + checkString(position);
-            params += "&button_name=" + checkString(button_name);
-            params += "&deep=" + checkString(deep);
-//            Log.i("zhangyujian","加载数据：：："+params);
-            //默认插入数据
-            StatictisSQLiteDataBase.getInstance().insterData(params);
-            Log.i("wyl", "位置：::" + StatictisSQLiteDataBase.getInstance().getDataNum());
-            if (StatictisSQLiteDataBase.getInstance().getDataNum() >= 100) {
-                //获取全部数据
-                final ArrayList<String> list = StatictisSQLiteDataBase.getInstance().selectAllData();
-                //删除全部数据
-                StatictisSQLiteDataBase.getInstance().deleteAllData();
-                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                    @Override
-                    public void run() {
-                        newHomeStatictis(false, list);
-                    }
-                });
-
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @NonNull
-    private static String checkString(String value) {
-        return (value != null && !"null".equals(value)) ? value : "";
-    }
-
-    /**
-     * 上传页面统计
-     */
-    public synchronized static void handlerPageStatic() {
-//        try {
-//            String url = StringManager.API_STATISTIC_S8;
-//            String baseData = getStatictisParams();
-//            ArrayList<String> data = StatictisSQLiteDataBase.getInstance().selectPageAllData();
-            StatictisSQLiteDataBase.getInstance().deletePageAllData();
-
-//            Map<String, String> baseMap = UtilString.getMapByString(baseData, "&", "=");
-//            JSONObject jsonObject = MapToJson(baseMap);
-//            if (data != null && data.size() > 0) {
-//                JSONArray jsonArray = new JSONArray();
-//                int lenght = data.size();
-//                for (int i = 0; i < lenght; i++) {
-//                    if (!TextUtils.isEmpty(data.get(i))) {
-//                        jsonArray.put(MapToJsonEncode(UtilString.getMapByString(data.get(i), "&", "=")));
-//                    }
-//                }
-//                jsonObject.put("log_data", jsonArray);
-//            } else {
-//                return;
-//            }
-//            LinkedHashMap<String, String> map1 = new LinkedHashMap<>();
-//            map1.put("log_json", jsonObject.toString());
-//            Log.i("wyl", "log_json::::" + jsonObject.toString());
-//
-//            ReqInternet.in().doPost(url, map1, new InternetCallback() {
-//                @Override
-//                public void loaded(int flag, String url, Object object) {
-//                    if (flag >= ReqInternet.REQ_OK_STRING) {
-//                        Log.i("wyl", "上传数据s8");
-//                    } else {
-//
-//                    }
-//
-//                }
-//            });
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-    }
-
-    /**
-     * page停留时间统计。
-     * @param page_title
-     * @param stop_time
-     */
-    public synchronized static void savePageStatictis(String page_title,String stop_time){
-        //对数据进行存储
-        long time = System.currentTimeMillis();
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String app_time = formatter.format(time);
-        String params = "";
-        params += "app_time=" + checkString(app_time);
-        params += "&page_title=" + checkString(page_title);
-        params += "&stop_time=" + checkString(stop_time);
-        params += "&event=stop" ;
-        StatictisSQLiteDataBase.getInstance().insterPageData(params);
-    }
-
-    /**
-     * map转json
-     *
-     * @param maps
-     * @return
-     */
-    public static JSONObject MapToJson(Map<String, String> maps) {
-
-        JSONObject jsonObject = new JSONObject();
-        if (maps == null || maps.size() <= 0) return jsonObject;
-
-        Iterator<Map.Entry<String, String>> enty = maps.entrySet().iterator();
-        try {
-            while (enty.hasNext()) {
-                Map.Entry<String, String> entry = enty.next();
-                jsonObject.put(entry.getKey(), entry.getValue());
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return jsonObject;
-    }
-    /**
-     * map转json
-     *
-     * @param maps
-     * @return
-     */
-    public static JSONObject MapToJsonEncode(Map<String, String> maps) {
-
-        JSONObject jsonObject = new JSONObject();
-        if (maps == null || maps.size() <= 0) return jsonObject;
-
-        Iterator<Map.Entry<String, String>> enty = maps.entrySet().iterator();
-        try {
-            while (enty.hasNext()) {
-                Map.Entry<String, String> entry = enty.next();
-                jsonObject.put(entry.getKey(), Uri.encode(entry.getValue()));
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return jsonObject;
     }
 }

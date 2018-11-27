@@ -26,7 +26,7 @@
         android:gravity="center"
         android:text="开通VIP"
         android:textColor="#FFF"
-        android:textSize="@dimen/sp_15"/>
+        android:textSize="@dimen/sp_14"/>
 
     <LinearLayout
         android:id="@+id/login_layout"
@@ -49,7 +49,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="点击登录>"
-            android:textColor="#D39E54"
+            android:textColor="#E2B355"
             android:textSize="@dimen/sp_14"/>
     </LinearLayout>
 

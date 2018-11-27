@@ -65,7 +65,6 @@ public class DetailDishWeb extends BaseAppCompatActivity implements IObserver {
     private String lastPermission = "";
     private boolean loadOver = false;
 
-    public static long startTime= 0;
     private String data_type="";
     private String module_type="";
     private int height;
@@ -79,7 +78,6 @@ public class DetailDishWeb extends BaseAppCompatActivity implements IObserver {
         super.onCreate(savedInstanceState);
         //处理广告
         Bundle bundle = getIntent().getExtras();
-        startTime= System.currentTimeMillis();
         // 正常调用
         if (bundle != null) {
             dishTitle = bundle.getString("name");
@@ -246,11 +244,11 @@ public class DetailDishWeb extends BaseAppCompatActivity implements IObserver {
                             handlerOtherTieData();//不隐藏。
                         }
                     } else {
-                        loadManager.loadOver(flag, 1, true);
+                        loadManager.loadOver(flag);
                     }
                 }
                 if(ToolsDevice.isNetworkAvailable(XHApplication.in())|| !LoadImage.SAVE_LONG.equals(imgLevel)){
-                    loadManager.loadOver(flag, 1, true);
+                    loadManager.loadOver(flag);
                 }else loadManager.hideProgressBar();
                 loadOver = true;
             }
@@ -332,7 +330,6 @@ public class DetailDishWeb extends BaseAppCompatActivity implements IObserver {
 
     @Override
     protected void onResume() {
-        Log.i("zyj","onResume::"+(System.currentTimeMillis()-startTime));
         Log.i("tzy","onResume()");
         mFavePopWindowDialog=dishActivityViewControl.getDishTitleViewControl().getPopWindowDialog();
         super.onResume();
@@ -362,10 +359,6 @@ public class DetailDishWeb extends BaseAppCompatActivity implements IObserver {
         if(dishActivityViewControl != null){
             dishActivityViewControl.onDestroy();
             dishActivityViewControl=null;
-        }
-        long nowTime=System.currentTimeMillis();
-        if(startTime>0&&(nowTime-startTime)>0&&!TextUtils.isEmpty(data_type)&&!TextUtils.isEmpty(module_type)){
-            XHClick.saveStatictisFile("DetailDishWeb",module_type,data_type,code,"","stop",String.valueOf((nowTime-startTime)/1000),"","","","");
         }
         if(handlerScreen!=null){
             handlerScreen.removeCallbacksAndMessages(null);
@@ -397,7 +390,6 @@ public class DetailDishWeb extends BaseAppCompatActivity implements IObserver {
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        Log.i("zyj","onWindowFocusChanged::"+(System.currentTimeMillis()-startTime));
     }
 
     /**

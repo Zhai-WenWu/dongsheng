@@ -66,7 +66,7 @@ public class DishRecommedAndAdView extends ItemBaseView implements View.OnClickL
     @Override
     public void init() {
         super.init();
-        mRecomentLayout = (RelativeLayout)findViewById(R.id.a_dish_detail_new_xiangguan);
+        mRecomentLayout = (RelativeLayout) findViewById(R.id.a_dish_detail_new_xiangguan);
         userDishLayout = (LinearLayout)findViewById(R.id.a_dish_detail_new_xiangguan_scroll_linear);
 
         mRecommentNum = (TextView)findViewById(R.id.a_dish_detail_new_tv_num);

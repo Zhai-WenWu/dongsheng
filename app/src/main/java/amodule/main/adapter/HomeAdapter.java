@@ -7,10 +7,13 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import acore.logic.ConfigHelper;
 import acore.logic.stat.RvMapViewHolderStat;
+import acore.tools.StringManager;
 import acore.widget.rvlistview.adapter.RvBaseAdapter;
 import acore.widget.rvlistview.holder.RvBaseViewHolder;
 import amodule.main.bean.HomeModuleBean;
@@ -52,10 +55,23 @@ public class HomeAdapter extends RvBaseAdapter<Map<String, String>> {
     private String mListType = LIST_TYPE_LIST;//网格列表
     boolean isCache;
 
+    private ArrayList<String> mGdtHeightImgIds;
+    private int mRecyclerViewPaddingL, mRecyclerViewPaddingR;
+
     public HomeAdapter(Activity mActivity, @Nullable List<Map<String, String>> data, AdControlParent adControlParent) {
         super(mActivity, data);
         this.mAct = mActivity;
         mAdControlParent = adControlParent;
+        ArrayList<Map<String, String>> heightids = StringManager.getListMapByJson(ConfigHelper.getInstance().getConfigValueByKey("heightPhotoId"));
+        mGdtHeightImgIds = new ArrayList<>();
+        for (Map<String, String> map : heightids) {
+            mGdtHeightImgIds.add(map.get(""));
+        }
+    }
+
+    public void setRecyclerViewPaddingLR(int paddingL, int paddingR) {
+        mRecyclerViewPaddingL = paddingL;
+        mRecyclerViewPaddingR = paddingR;
     }
 
     public void setHomeModuleBean(HomeModuleBean homeModuleBean) {
@@ -270,11 +286,9 @@ public class HomeAdapter extends RvBaseAdapter<Map<String, String>> {
      */
     public class StaggeredGridImageViewHolder extends RvMapViewHolderStat {
         public HomeStaggeredGridItem view;
-        public ConstraintLayout homeStaggeredGridItemContentLayout;
         public StaggeredGridImageViewHolder(HomeStaggeredGridItem view,View parent) {
             super(view,parent);
             this.view = view;
-            homeStaggeredGridItemContentLayout = view.getContentLayout();
         }
 
         @Override
@@ -298,16 +312,16 @@ public class HomeAdapter extends RvBaseAdapter<Map<String, String>> {
      */
     public class GridADImageViewHolder extends RvMapViewHolderStat {
         public HomeGridADItem view;
-        public ConstraintLayout homeGirdAdItemContentLayout;
         public GridADImageViewHolder(HomeGridADItem view,View parent) {
             super(view,parent);
             this.view = view;
-            homeGirdAdItemContentLayout = view.getContentLayout();
         }
 
         @Override
         public void overrideBindData(int position, @Nullable Map<String, String> data) {
             if (view != null) {
+                view.setGdtHeightImg(mGdtHeightImgIds.contains(data.get("adid")));
+                view.setParentPaddingLR(mRecyclerViewPaddingL, mRecyclerViewPaddingR);
                 view.setHomeModuleBean(moduleBean);
                 view.setAdControl(mAdControlParent);
                 view.setData(data, position);
@@ -319,6 +333,11 @@ public class HomeAdapter extends RvBaseAdapter<Map<String, String>> {
         @Override
         public boolean canStat() {
             return !isCache;
+        }
+
+        @Override
+        protected void onStat(int position, Map<String, String> data) {
+            //TODO show统计
         }
     }
 

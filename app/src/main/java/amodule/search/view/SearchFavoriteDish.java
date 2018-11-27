@@ -89,7 +89,7 @@ public class SearchFavoriteDish extends SearchFavorite{
 		}else{
 			currentPage++;
 		}
-		mAct.loadManager.changeMoreBtn(UtilInternet.REQ_OK_STRING, -1, -1, currentPage,dishVideo.size() == 0);
+		mAct.loadManager.loading(data_list,dishVideo.size()==0);
 		String getUrl = StringManager.api_soFavorite + "type=dish&cusCode=" + LoginManager.userInfo.get("code") + "&page=" + currentPage + "&c=" + mSearchContent;
 		ReqInternet.in().doGet(getUrl, new InternetCallback() {
 			@Override
@@ -137,7 +137,7 @@ public class SearchFavoriteDish extends SearchFavorite{
 				}
 				if (everyPage == 0)
 					everyPage = loadCount;
-				currentPage = mAct.loadManager.changeMoreBtn(flag, everyPage, loadCount, currentPage,dishVideo.size() == 0);
+				mAct.loadManager.loadOver(flag,data_list,loadCount);
 			}
 		});
 	}

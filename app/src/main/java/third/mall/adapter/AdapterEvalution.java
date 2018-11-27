@@ -11,10 +11,8 @@ import java.util.List;
 import java.util.Map;
 
 import acore.logic.XHClick;
-import acore.tools.PageStatisticsUtils;
 import third.mall.activity.PublishEvalutionMultiActivity;
 import third.mall.activity.PublishEvalutionSingleActivity;
-import third.mall.override.MallBaseActivity;
 import third.mall.view.CommodEvalutionItem;
 
 /**

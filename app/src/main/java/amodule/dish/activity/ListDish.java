@@ -72,7 +72,6 @@ public class ListDish extends BaseActivity {
     private String shareName = "";
     private String data_type = "";//推荐列表过来的数据
     private String module_type = "";//推荐列表过来的数据
-    private Long startTime;//统计使用的时间
     private ArrayList<String> adIds;
     private XHAllAdControl xhAllAdControl;
     private static final Integer[] AD_INSTERT_INDEX = new Integer[]{3, 9, 16, 24, 32, 40, 48, 56, 64, 72};//插入广告的位置。
@@ -88,7 +87,6 @@ public class ListDish extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle bundle = this.getIntent().getExtras();
-        startTime = System.currentTimeMillis();
         if (bundle != null) {
             type = bundle.getString("type");
             g1 = bundle.getString("g1");
@@ -190,10 +188,6 @@ public class ListDish extends BaseActivity {
         super.onDestroy();
         arrayList.clear();
         System.gc();
-        long nowTime = System.currentTimeMillis();
-        if (startTime > 0 && (nowTime - startTime) > 0 && !TextUtils.isEmpty(data_type) && !TextUtils.isEmpty(module_type)) {
-            XHClick.saveStatictisFile("ListDish", module_type, data_type, g1, "", "stop", String.valueOf((nowTime - startTime) / 1000), "", "", "", "");
-        }
         ObserverManager.getInstance().unRegisterObserver(mIObserver);
     }
 
@@ -320,7 +314,7 @@ public class ListDish extends BaseActivity {
             requestFavoriteState();
         }
         currentPage++;
-        loadManager.changeMoreBtn(UtilInternet.REQ_OK_STRING, -1, -1, currentPage, arrayList.size() == 0);
+        loadManager.loading(listView,arrayList.size() == 0);
         String url = null;
         if (type.equals("recommend"))
             url = StringManager.api_getDishList + "?type=" + type + "&page=" + currentPage;
@@ -437,7 +431,7 @@ public class ListDish extends BaseActivity {
                     adapter.notifyDataSetChanged();
                 }
                 if (everyPage == 0) everyPage = loadPage;
-                currentPage = loadManager.changeMoreBtn(flag, everyPage, loadPage, currentPage, arrayList.size() == 0);
+                loadManager.loadOver(flag,listView,loadPage);
                 // 如果总数据为空,显示没有消息
                 if (flag >= UtilInternet.REQ_OK_STRING && arrayList.size() == 0) {
                     findViewById(R.id.dish_menu_noData).setVisibility(View.VISIBLE);

@@ -396,8 +396,7 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
 
     private void setCacheSize() {
         new Thread(() -> {
-            long fileSize = FileManager.getFileOrFolerSize(FileManager.getDataDir() + FileManager.file_indexData);
-            fileSize += FileManager.getFileOrFolerSize(FileManager.getDataDir() + FileManager.file_appData);
+            long fileSize = FileManager.getFileOrFolerSize(FileManager.getDataDir() + FileManager.file_appData);
             fileSize += FileManager.getFileOrFolerSize(UtilFile.getSDDir() + LoadImage.SAVE_CACHE);
             cacheSize = fileSize;
             Setting.this.runOnUiThread(() -> view_clear_cace.setRightText(FileManager.FormetFileSize(cacheSize,SIZETYPE_MB)));

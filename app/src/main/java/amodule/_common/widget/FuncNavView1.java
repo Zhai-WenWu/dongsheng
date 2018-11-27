@@ -127,8 +127,6 @@ public class FuncNavView1 extends HomeFuncNavView1 implements IBindMap,IStatictu
 
 
     private void statistic(int index,Map<String, String> data) {
-        XHClick.saveStatictisFile("home", "homeSmallNav", data.get("type"), "", "",
-                "click", "", "", "", data.get("text1"), "");
         final String key = data.get("text1");
         String statData = ConfigMannager.getConfigByLocal(KEY_HOME_FUN_NAV_STAT);
         Map<String,String> statMap = StringManager.getFirstMap(statData);

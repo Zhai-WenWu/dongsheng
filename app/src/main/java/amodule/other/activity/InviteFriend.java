@@ -231,7 +231,7 @@ public class InviteFriend extends BaseActivity {
 		ReqInternet.in().doGet(url, new InternetCallback() {
 			@Override
 			public void loaded(int flag, String url, Object returnObj) {
-				loadManager.loadOver(flag, 1,true);
+				loadManager.loadOver(flag);
 				if (flag >= UtilInternet.REQ_OK_STRING) {
 					llContent.setVisibility(View.VISIBLE);
 					Bitmap shareImg = getQRImage(returnObj.toString());

@@ -81,7 +81,7 @@ public class VideoClassifyDish extends BaseActivity {
 		else {
 			currentPage ++;
 		}
-		loadManager.changeMoreBtn(UtilInternet.REQ_OK_STRING, -1, -1, currentPage,listDataMySuro.size() == 0);
+		loadManager.loading(lv_sur,listDataMySuro.size() == 0);
 		String getUrl = StringManager.api_getVideoClassifyDish + "?code=" + code + "&page=" + currentPage;
 		ReqInternet.in().doGet(getUrl, new InternetCallback() {
 			@Override
@@ -98,7 +98,7 @@ public class VideoClassifyDish extends BaseActivity {
 				}
 				if (everyPage == 0)
 					everyPage = loadCount;
-				currentPage = loadManager.changeMoreBtn(flag, everyPage, loadCount, currentPage,listDataMySuro.size() == 0);
+				loadManager.loadOver(flag,lv_sur,loadCount);
 				lv_sur.onRefreshComplete();
 			}
 		});

@@ -183,7 +183,7 @@ public class XHApplication extends MobApplication {
                 //正式APP id = "1150004142";
                 String appId = Tools.isDebug(context) ?  "4146e8557a" : "1150004142";
                 CrashReport.initCrashReport(context, appId , Tools.isDebug(context), strategy);
-                CrashReport.setUserId(ToolsDevice.getXhIMEI(context));
+                CrashReport.setUserId(ToolsDevice.getXhCode(context));
             }
         }).start();
     }

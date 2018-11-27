@@ -50,6 +50,8 @@ import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilLog;
 import xh.basic.tool.UtilString;
 
+import static acore.notification.controller.NotificationSettingController.pushSetReview;
+import static acore.notification.controller.NotificationSettingController.push_show_reciew;
 import static amodule.quan.activity.FriendQuan.REQUEST_CODE_QUAN_FRIEND;
 import static android.app.Activity.RESULT_OK;
 
@@ -269,7 +271,7 @@ public class BarSubjectReply2 extends RelativeLayout implements OnClickListener{
 						progressBar.setVisibility(View.GONE);
 						btn_reply.setText("发送");
 					}
-					NotificationSettingController.showNotification(Tools.getDimen(mAct,R.dimen.dp_45), FileManager.push_show_reciew, NotificationSettingController.pushSetReview);
+					NotificationSettingController.showNotification(push_show_reciew, pushSetReview);
 				}
 
 			});

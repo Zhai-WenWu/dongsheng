@@ -70,7 +70,7 @@ public class LessonListPage extends BaseAppCompatActivity implements IObserver {
         mDataController.setOnDataListener(new IDataListener<List<Map<String, String>>>() {
             @Override
             public void onGetData(List<Map<String, String>> maps, boolean refresh) {
-                loadManager.changeMoreBtn(ReqEncyptInternet.REQ_OK_STRING, -1, -1, mDataController.getCurrentPage(), maps == null || maps.size() == 0);
+                loadManager.loading(mViewController.getListView(),maps == null || maps.size() == 0);
             }
 
             @Override
@@ -87,7 +87,7 @@ public class LessonListPage extends BaseAppCompatActivity implements IObserver {
                         mViewController.refreshComplete();
                     }
                 }
-                loadManager.changeMoreBtn(flag, mDataController.getEveryPageCount(), mDataController.getLoadCount(), mDataController.getCurrentPage(), false);
+                loadManager.loadOver(flag,mViewController.getListView(),mDataController.getLoadCount());
             }
         });
         mViewController.setContentStatisticCallback((id, twoLevel, threeLevel, position) -> {

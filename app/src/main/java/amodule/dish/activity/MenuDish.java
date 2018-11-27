@@ -119,7 +119,7 @@ public class MenuDish extends BaseActivity {
 		currentPage++;
 		if(currentPage==1)
 			listView.setVisibility(View.GONE);
-		loadManager.changeMoreBtn(UtilInternet.REQ_OK_STRING, -1, -1, currentPage,arrayList.size() == 0);
+		loadManager.loading(listView,arrayList.size() == 0);
 		String url = StringManager.api_getMenuData + "?type=list&page=" + currentPage;
 		ReqInternet.in().doGet(url, new InternetCallback() {
 
@@ -151,7 +151,7 @@ public class MenuDish extends BaseActivity {
 					menuAdapter.notifyDataSetChanged();
 				}
 				if (everyPage == 0) everyPage = loadPage;
-				currentPage = loadManager.changeMoreBtn(flag, everyPage, loadPage, currentPage,arrayList.size() == 0);
+				loadManager.loadOver(flag,listView,loadPage);
 				if(arrayList.size()>0){
 					listView.setVisibility(View.VISIBLE);
 				}else if(arrayList.size()<=0&&currentPage==1){ 

@@ -56,9 +56,6 @@
         <attr name="defaultPaddingTop" format="dimension"></attr>
         <attr name="defaultPaddingBottom" format="dimension"></attr>
     </declare-styleable>
-    <declare-styleable name="StickHeaderLayout">
-        <attr name="scrollViewId" format="reference" />
-    </declare-styleable>
     <declare-styleable name="PagerSlidingTabStrip">
         <attr name="pstsIndicatorColor" format="color" />
         <attr name="pstsIndicatorHeight" format="dimension" />

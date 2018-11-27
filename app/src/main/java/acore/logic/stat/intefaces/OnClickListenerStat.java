@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import acore.logic.stat.StatModel;
 import acore.logic.stat.StatisticsManager;
 import acore.override.XHApplication;
 import acore.tools.Tools;
@@ -61,7 +62,7 @@ public abstract class OnClickListenerStat implements View.OnClickListener, OnCli
             this.m = getValueByView((View) v.getParent());
         }
         if (!TextUtils.isEmpty(p) && canStat()) {
-            StatisticsManager.btnClick(p, m, getValueByView(v));
+            StatisticsManager.saveData(StatModel.createBtnClickModel(p, m, getValueByView(v)));
         }
     }
 

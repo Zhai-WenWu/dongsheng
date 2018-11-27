@@ -86,7 +86,6 @@ public class AutoScrollADView extends LinearLayout {
 	public void start() {
 		if (!isStarted && mAdapter.getCount() > 1) {
 			isStarted = true;
-//			postDelayed(mRunnable, mGap);//间隔mgap刷新一次UI
 			handler.postDelayed(new Runnable() {
 				@Override
 				public void run() {
@@ -101,8 +100,6 @@ public class AutoScrollADView extends LinearLayout {
 	 * 暂停滚动
 	 */
 	public void stop() {
-		//移除handle更新
-		removeCallbacks(mRunnable);
 		//暂停线程
 		isStarted = false;
 	}
@@ -187,16 +184,6 @@ public class AutoScrollADView extends LinearLayout {
 		});
 		set.setDuration(mAnimDuration);//持续时间
 		set.start();//开启动画
-	}
-
-	private AnimRunnable mRunnable = new AnimRunnable();
-
-	private class AnimRunnable implements Runnable {
-		@Override
-		public void run() {
-			performSwitch();
-			postDelayed(this, mGap);
-		}
 	}
 
 	/** 销毁View的时候调用 */

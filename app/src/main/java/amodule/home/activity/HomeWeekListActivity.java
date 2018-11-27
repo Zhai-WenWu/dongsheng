@@ -171,7 +171,7 @@ public class HomeWeekListActivity extends BaseAppCompatActivity {
         String url= StringManager.API_RECOMMEND;
 
         //更新加载按钮状态
-        loadManager.changeMoreBtn(mRv, ReqInternet.REQ_OK_STRING, -1, -1, mLoadOver?2:1, mListData == null || mListData.isEmpty());
+        loadManager.loading(mRv, mListData == null || mListData.isEmpty());
         mLoadOver = true;
         if (refresh) {
             mCompelClearData = true;
@@ -232,7 +232,7 @@ public class HomeWeekListActivity extends BaseAppCompatActivity {
                     }
                 }
                 loadManager.hideProgressBar();
-                loadManager.changeMoreBtn(mRv, flag, LoadManager.FOOTTIME_PAGE, refresh?mListData.size():loadCount, 0, refresh);
+                loadManager.loadOver(flag,mRv,loadCount);
                 if(refresh){
                     mPtrFrameLayout.refreshComplete();
                 }

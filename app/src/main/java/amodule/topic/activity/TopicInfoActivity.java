@@ -25,6 +25,8 @@ import acore.logic.load.LoadManager;
 import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
+import acore.tools.ToolsDevice;
+import acore.tools.Tools;
 import acore.widget.rvlistview.RvListView;
 import acore.widget.rvlistview.RvStaggeredGridView;
 import amodule._common.conf.GlobalAttentionModule;
@@ -142,10 +144,10 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
         mFloatingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String name = mInfoMap.get("name");
-                if (TextUtils.isEmpty(mTopicCode) || mInfoMap == null || mInfoMap.isEmpty() || TextUtils.isEmpty(name))
+                if (TextUtils.isEmpty(mTopicCode) || mInfoMap == null ||
+                        mInfoMap.isEmpty() || TextUtils.isEmpty(mInfoMap.get("name")))
                     return;
-                AliyunCommon.getInstance().startRecord(TopicInfoActivity.this, mTopicCode, name);
+                AliyunCommon.getInstance().startRecord(TopicInfoActivity.this, mTopicCode, mInfoMap.get("name"));
             }
         });
     }
@@ -257,7 +259,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
             mPage = 0;
         }
         ++mPage;
-        loadManager.changeMoreBtn(mStaggeredGridView, ReqInternet.REQ_OK_STRING, -1, -1, 2, false);
+        loadManager.loading(mStaggeredGridView,  false);
         ReqEncyptInternet.in().doGetEncypt(StringManager.API_TOPIC_LIST, "code=" + mTopicCode + "&page=" + mPage, new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
@@ -304,7 +306,7 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
                     --mPage;
                 }
                 if (loadManager != null) {
-                    loadManager.changeMoreBtn(mStaggeredGridView, i, LoadManager.FOOTTIME_PAGE, refresh ? mDatas.size() : currentPageCount, 0, refresh);
+                    loadManager.loadOver(i,mStaggeredGridView, currentPageCount);
                 }
                 if (!mTopicInfoLoading) {
                     loadManager.hideProgressBar();

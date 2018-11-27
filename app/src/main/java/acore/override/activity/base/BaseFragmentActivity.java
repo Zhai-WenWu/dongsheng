@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
@@ -24,10 +23,8 @@ import acore.logic.ActivityMethodManager;
 import acore.logic.load.LoadManager;
 import acore.override.XHApplication;
 import acore.tools.LogManager;
-import acore.tools.PageStatisticsUtils;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
-import amodule.main.Main;
 import amodule.main.view.CommonBottomView;
 import amodule.main.view.CommonBottonControl;
 import third.share.BarShare;
@@ -192,7 +189,6 @@ public class BaseFragmentActivity extends FragmentActivity {
 	@Override
 	protected void onPause() {
 		super.onPause();
-		PageStatisticsUtils.getInstance().onPausePage(this,resumeTime,System.currentTimeMillis());
 		if (mActMagager != null){
 			mActMagager.onPause();
 		}

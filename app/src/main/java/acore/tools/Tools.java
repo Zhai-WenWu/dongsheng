@@ -140,7 +140,7 @@ public class Tools {
      * @throws ParseException
      */
     public static String dealTime(String lastTime, String currentTime, String dateFormat, String time) throws ParseException {
-        if (time.equals("hide"))
+        if (TextUtils.isEmpty(time) || time.equals("hide"))
             return time;
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat);
         Date currentDate = simpleDateFormat.parse(currentTime);
@@ -953,6 +953,22 @@ public class Tools {
         return result;
     }
 
+    public static long parseLongOfThrow(String strValue){
+        return parseLongOfThrow(strValue,-1L);
+    }
+
+    public static long parseLongOfThrow(String strValue, long defaultValue) {
+        long result = defaultValue;
+        try {
+            if (!TextUtils.isEmpty(strValue)) {
+                result = Long.parseLong(strValue);
+            }
+        } catch (Exception ignored) {
+            ignored.printStackTrace();
+        }
+        return result;
+    }
+
     public static float parseFloatOfThrow(String strValue, float defaultValue) {
         float result = defaultValue;
         try {
@@ -1008,5 +1024,12 @@ public class Tools {
             }
         }
         return min;
+    }
+
+    public static int getIntervalDaysFromTwoDate(Date firstDate, Date secondDate) {
+        if (firstDate.after(secondDate)) {
+            return (int) Math.ceil((firstDate.getTime() - secondDate.getTime()) * 1.00 / (1000 * 60 * 60 * 24));
+        }
+        return (int) Math.floor((firstDate.getTime() - secondDate.getTime()) * 1.00 / (1000 * 60 * 60 * 24));
     }
 }

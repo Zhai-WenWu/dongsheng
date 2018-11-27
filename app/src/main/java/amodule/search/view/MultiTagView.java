@@ -9,7 +9,6 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.View;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -57,6 +56,7 @@ public class MultiTagView extends LinearLayout {
     private boolean showAddButton;
     private int elementsInRow;
     FrameLayout frameLayout;
+    int currentSelectIndex=-1;
 
     private MutilTagViewCallBack callback;
 
@@ -103,7 +103,8 @@ public class MultiTagView extends LinearLayout {
         tagClickable = true;
     }
 
-
+    private String selectBackgroundColor = "#ffd914";
+    private String unselectBackgroundColor = "#f7f7f7";
     public boolean isaddView= true;
     private void addTag(final Tag tag, final int tagTndex) {
         if(MultiTagView.this.getChildCount()>=lineNum+1||!isaddView){
@@ -114,13 +115,7 @@ public class MultiTagView extends LinearLayout {
         button.setTextColor(isSelect?Color.parseColor("#999999"):getResources().getColor(android.R.color.black));
         button.setTextSize(14);
 //        StateRoundRectDrawable drawable = new StateRoundRectDrawable(Color.parseColor("#000000"), Color.parseColor("#BAA8A8"));
-        StateRoundRectDrawable drawable = new StateRoundRectDrawable(Color.parseColor("#f7f7f7"), Color.parseColor("#BAA8A8"));
-        drawable.setDefautRadius(dip2px(2));
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
-            button.setBackground(drawable);
-        } else {
-            button.setBackgroundDrawable(drawable);
-        }
+        setButtonBackground(button, tagTndex == currentSelectIndex ? selectBackgroundColor : unselectBackgroundColor);
         button.setPadding(dip2px(DEFAULT_TAG_PADDING), dip2px(DEFAULT_TAG_PADDING_TOP),
                 dip2px(DEFAULT_TAG_PADDING), dip2px(DEFAULT_TAG_PADDING_buttom));
         button.setOnClickListener(new OnClickListener() {
@@ -130,6 +125,7 @@ public class MultiTagView extends LinearLayout {
                     return;
                 callback.onClick(tagTndex);
                 if(isSelect) {
+                    currentSelectIndex = tagTndex;
                     int layoutCount = MultiTagView.this.getChildCount();
                     for (int j = 0; j < layoutCount; j++) {
                         if (MultiTagView.this.getChildAt(j) instanceof LinearLayout) {
@@ -138,7 +134,7 @@ public class MultiTagView extends LinearLayout {
                             if (count > 0) {
                                 for (int i = 0; i < count; i++) {
                                     if (temp.getChildAt(i) instanceof FrameLayout) {
-                                        StateRoundRectDrawable drawable = new StateRoundRectDrawable(Color.parseColor("#f7f7f7"), Color.parseColor("#BAA8A8"));
+                                        StateRoundRectDrawable drawable = new StateRoundRectDrawable(Color.parseColor(unselectBackgroundColor), Color.parseColor("#BAA8A8"));
                                         drawable.setDefautRadius(dip2px(2));
                                         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
                                             ((FrameLayout) temp.getChildAt(i)).getChildAt(0).setBackground(drawable);
@@ -150,13 +146,7 @@ public class MultiTagView extends LinearLayout {
                             }
                         }
                     }
-                    StateRoundRectDrawable drawable = new StateRoundRectDrawable(Color.parseColor("#ffd914"), Color.parseColor("#BAA8A8"));
-                    drawable.setDefautRadius(dip2px(2));
-                    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
-                        button.setBackground(drawable);
-                    } else {
-                        button.setBackgroundDrawable(drawable);
-                    }
+                    setButtonBackground(button, selectBackgroundColor);
 //                    button.setBackgroundColor(Color.parseColor("#ffd914"));
                 }
 
@@ -191,6 +181,16 @@ public class MultiTagView extends LinearLayout {
         mLayoutItem.addView(frameLayout, layoutParams);
     }
 
+    private void setButtonBackground(TextView button, String s) {
+        StateRoundRectDrawable drawable = new StateRoundRectDrawable(Color.parseColor(s), Color.parseColor("#BAA8A8"));
+        drawable.setDefautRadius(dip2px(2));
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
+            button.setBackground(drawable);
+        } else {
+            button.setBackgroundDrawable(drawable);
+        }
+    }
+
     private void refresh() {
         removeAllViews();
         mLayoutItem = new LinearLayout(mContext);
@@ -210,16 +210,12 @@ public class MultiTagView extends LinearLayout {
         refresh();
     }
 
-//    public void addTags(ArrayList<String> arrayList) {
-//        for (String s : arrayList) {
-//            Tag tag = new Tag(tags.size(), s);
-//            tags.add(tag);
-//        }
-//        refresh();
-//    }
-
-
     public void addTags(ArrayList<Map<String, String>> hotWords,MutilTagViewCallBack callback) {
+        addTags(hotWords, callback,currentSelectIndex);
+    }
+
+    public void addTags(ArrayList<Map<String, String>> hotWords,MutilTagViewCallBack callback,int selectIndex) {
+        this.currentSelectIndex = selectIndex;
         this.callback = callback;
         for (Map<String, String> m : hotWords) {
             Tag tag = new Tag(hotWords.size(), m.get("hot"));

@@ -268,7 +268,7 @@ public class AddressActivity extends MallBaseActivity implements OnClickListener
 								if(state>=UtilInternet.REQ_OK_STRING){
 									setAddRequest(detail, name, mobile);
 								}else if(state==UtilInternet.REQ_CODE_ERROR){
-									loadManager.loadOver(state, 1,true);
+									loadManager.loadOver(state);
 								}
 							}
 						});
@@ -307,7 +307,7 @@ public class AddressActivity extends MallBaseActivity implements OnClickListener
 								if(state>=UtilInternet.REQ_OK_STRING){
 									setSetRequest(detail, name, mobile);
 								}else if(state==UtilInternet.REQ_CODE_ERROR){
-									loadManager.loadOver(state, 1,true);
+									loadManager.loadOver(state);
 								}
 							}
 						});
@@ -328,7 +328,7 @@ public class AddressActivity extends MallBaseActivity implements OnClickListener
 			@Override
 			public void loadstat(int flag, String url, Object msg, Object... stat) {
 				if(!TextUtils.isEmpty(address_id))
-					loadManager.loadOver(flag, 1,true);
+					loadManager.loadOver(flag);
 				if(flag>=UtilInternet.REQ_OK_STRING){
 					if(stat!=null&&stat.length>0&& !TextUtils.isEmpty((String)stat[0])){
 						mall_stat_statistic=(String) stat[0];
@@ -347,7 +347,7 @@ public class AddressActivity extends MallBaseActivity implements OnClickListener
 								if(state>=UtilInternet.REQ_OK_STRING){
 									setGetRequest();
 								}else if(state==UtilInternet.REQ_CODE_ERROR){
-									loadManager.loadOver(state, 1,true);
+									loadManager.loadOver(state);
 								}
 							}
 						});
@@ -460,7 +460,7 @@ public class AddressActivity extends MallBaseActivity implements OnClickListener
 								if(state>=UtilInternet.REQ_OK_STRING){
 									delAddress();
 								}else if(state==UtilInternet.REQ_CODE_ERROR){
-									loadManager.loadOver(state, 1,true);
+									loadManager.loadOver(state);
 								}
 							}
 						});

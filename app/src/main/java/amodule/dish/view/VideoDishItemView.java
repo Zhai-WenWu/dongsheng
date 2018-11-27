@@ -136,7 +136,7 @@ public class VideoDishItemView {
 		else {
 			currentPage ++;
 		}
-		mAct.loadManager.changeMoreBtn(UtilInternet.REQ_OK_STRING, -1, -1, currentPage,listDataMySuro.size() == 0);
+		mAct.loadManager.loading(listDish,listDataMySuro.size() == 0);
 		String getUrl = StringManager.api_getVideoClassifyDish + "?code=" + mCode + "&page=" + currentPage;
 		ReqInternet.in().doGet(getUrl, new InternetCallback() {
 			@Override
@@ -168,7 +168,7 @@ public class VideoDishItemView {
 				}
 				if (everyPage == 0)
 					everyPage = loadCount;
-				currentPage = mAct.loadManager.changeMoreBtn(listDish,flag, everyPage, loadCount, currentPage,listDataMySuro.size() == 0);
+				mAct.loadManager.loadOver(flag,listDish,loadCount);
 				listDish.onRefreshComplete();
 			}
 		});

@@ -149,7 +149,7 @@ public class TemplateWebView extends XHWebView{
                     view.loadUrl("javascript:window.appCommon.setTitle(document.title);");
                 }
                 if(loadManager!=null)
-                loadManager.loadOver(UtilInternet.REQ_OK_STRING, 1, true);
+                loadManager.loadOver(UtilInternet.REQ_OK_STRING);
 //                // 获取焦点已让webview能打开键盘，评论页输入框不在webview，所以不获取焦点
 //                if (url.indexOf("subjectComment.php") == -1) {
 //                    view.requestFocus();

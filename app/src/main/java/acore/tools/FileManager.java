@@ -41,15 +41,12 @@ public class FileManager extends UtilFile{
 	public static final String file_appData = "appNewData" + file_up_version;
 	public static final String file_myquan = "myquan";
 	public static final String file_XGToken = "token";
-	public static final String file_indexData = "indexNewXiangHa_v3";
-	public static final String file_welcome = "welcomeData";
 	public static final String file_constitution = "constitution.xh";
 	public static final String file_buyBurden = "buyBurden.xh";
 	public static final String file_searchHis = "searchHis.xh";
 	public static final String file_historyCode = "historyCode.xh";
 	public static final String file_healthQuestion = "healthQuestion";
 	public static final String file_healthResult = "healthResult.xh";
-	public static final String file_nousLocalPushData = "nousLocalPushData";
 	public static final String file_urlRule = "urlRule";
 	public static final String file_allCircle = "allCircle";
 	//我的页面，内置数据
@@ -58,44 +55,28 @@ public class FileManager extends UtilFile{
 	public static final String file_config = "config";
 	//随机推广
 	public static final String file_randPromotionConfig = "randPromotionConfig";
-	//搜索默认页，热搜词
-	public static final String file_hotwords = "hotWords";
-	//菜谱模板
-	public static final String file_dishMould = "dishMould";
-	public static final String file_dishMouldVersion = "dishMouldVersion";
-
 	public static final String xmlFile_userInfo = "common";
-	public static final String xmlFile_wake = "wake2";
 	public static final String xmlFile_appInfo = "appInfo2";
 	public static final String xmlFile_task = "task";
 	public static final String xmlFile_appUrl = "appUrl";
 	public static final String xmlFile_localPushTag = "localPushTag";
 	public static final String xmlFile_adIsShow = "adIsShow";
 	public static final String xmlKey_XGToken = "token";
-	public static final String xmlKey_showNum = "showNum";
 	public static final String xmlKey_protocol = "protocol";
 	public static final String xmlKey_domain = "domain";
 	public static final String xmlKey_growingioopen = "growingioopen";
 	public static final String xmlKey_mall_domain = "mall_domain";
 	public static final String xmlKey_request_tip = "requesttip";
-	public static final String xmlKey_isIndexData = "isIndexData";
 	public static final String xmlKey_device = "device";
 	public static final String xmlKey_device_statictis = "device_statictis";
-	public static final String xmlKey_firstStart_v2 = "firstStart_v2";
 	public static final String xmlKey_downDishLimit = "downDishLimit";
 	public static final String xmlKey_upFavorTime = "upFavorTime";
-	public static final String xmlKey_crashTime = "crashTime";
-	public static final String xmlKey_notifycationId = "notifycationId";
 	public static final String xmlKey_startTime = "startTime";
 	public static final String xmlKey_localZhishi = "localZhishi";
 	public static final String xmlKey_localIntentRequestCode = "localIntentRequestCode";
-	public static final String xmlKey_localCaidan = "localCaidan";
-	public static final String xmlKey_confirnCount = "confirnCount";
-	public static final String xmlKey_confirnLastShowTime = "confirnLastShowTime";
 	public static final String xmlKey_locationIsShow = "locationIsShow";
 	public static final String xmlKey_uploadDishSetingIsShow = "uploadDishSetingIsShow";
 	public static final String xmlKey_appKillTime = "appKillTime";
-	public static final String xmlKey_favoriteGuidanceShow = "favoriteGuidanceShow";
 	public static final String xmlKey_homeGuidanceShow = "homeGuidanceShow";
 
 	public static final String xmlFile_shareShowPop = "ShareShowPop"; //发菜谱时弹分享弹框，今天提升了几次
@@ -122,19 +103,6 @@ public class FileManager extends UtilFile{
 	public static final String MALL_ADDRESS="mall_address";//临时地址
 	public static final String MALL_SEARCH_HISTORY="mall_search_history";//搜索历史记录
 	public static final String CIRCLE_HOME_SHOWDIALOG="circle_home_showDialog";//社区页面展示dialog
-	public static final String MAIN_HOME_GUIDANCEPAGE="main_home_guidancepage";//MainHome引导页
-	//好评弹框
-	public static final String GOODCOMMENT_INFO="goodcomment_info";//好评信息
-	public static final String GOODCOMMENT_TIME="goodcomment_time";//点击去好评时时间
-	public static final String GOODCOMMENT_SHOW_TIME_NUM="goodcomment_show_time_num";//好评出现次数，当出现过2次，则3个月之内不再显示
-	public static final String GOODCOMMENT_SHOW_NUM="goodcomment_show_num";//好评弹框显示次数,当在线开关变化后，此数据清空
-	public static final String GOODCOMMENT_SHOW_TIME="goodcomment_show_time";//好评弹框上次显示时间
-	public static final String GOODCOMMENT_SHOW_NUM_ALL="goodcomment_show_num_all";//好评弹框显示总次数
-	public static final String GOODCOMMENT_TYPE="goodcomment_type";//好评弹框类型
-	//推送
-	public static final String PUSH_INFO="push_info";//推送文件名
-	public static final String PUSH_TIME="push_time";//上次弹推送的时间
-	public static final String PUSH_TAG="push_tag";//上次弹推送的时间
 
 	public static final String BREAKPOINT_UPLOAD_DATA="breakpoint_upload_data";//上传列表数据
 
@@ -147,16 +115,11 @@ public class FileManager extends UtilFile{
 	public static final  String MATCH_WORDS = "match_words"; //热搜词库
 	public static final  String MATCH_WORDS_CREATE_TIME = "match_words_create_time"; //热搜词库，创建时间
 	public static final  String SHOW_NO_WIFI = "show_no_wifi";
-	public static final  String STATICTIS_S6 = "statictis_s6";//s6统计数据体
 	public static final  String file_homeTopModle = "homeTopModle" + VersionOp.getVerName(XHApplication.in());//首页一级导航的内置数据
 	public static final String xmlKey_ds_from_show = "ds_from_show";
 	public static final String dish_caipu_hint = "dish_caipu_hint";
 	public static final String app_welcome = "app_welcome";
 	public static final String app_notification = "app_notification";
-	public static final String push_show_message = "push_show_message";
-	public static final String push_show_reciew = "push_show_reciew";
-	public static final String push_show_feedBack = "push_show_feedBack";
-	public static final String push_show_subject = "push_show_subject";
 	public static final String push_setting_state = "push_setting_state";
 	public static final String push_setting_message = "push_setting_message";
 	public static final String xg_config = "xg_config";

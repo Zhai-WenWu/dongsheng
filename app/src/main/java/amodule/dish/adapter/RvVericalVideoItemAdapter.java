@@ -335,7 +335,7 @@ public class RvVericalVideoItemAdapter extends BaseAdapter<ShortVideoDetailModul
         return -1;
     }
     public interface  PlayCompleteCallBack{
-        public void videoComplete(int position);//
+        public void videoComplete(int position,boolean hasDialogShow);//
     }
     public PlayCompleteCallBack playCompleteCallBack;
     public void setPlayCompleteCallBack(PlayCompleteCallBack completeCallBack){

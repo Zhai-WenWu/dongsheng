@@ -134,12 +134,8 @@ public class UploadDishListActivity extends BaseActivity {
         } else {
             allStartOrPause(false);
         }
-
-        loadManager.changeMoreBtn(ReqInternet.REQ_OK_STRING, -1, -1, 1, true);
-        loadManager.setLoading(mListview, mAdpater, false, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            }
+        loadManager.loading(mListview,true);
+        loadManager.setLoading(mListview, mAdpater, false, v -> {
         });
         loadManager.hideProgressBar();
     }

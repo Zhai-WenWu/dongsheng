@@ -15,10 +15,8 @@ import com.xiangha.R;
 import java.util.Map;
 
 import acore.override.activity.base.BaseActivity;
-import acore.tools.PageStatisticsUtils;
 import third.mall.activity.AddressActivity;
 import third.mall.activity.ShoppingOrderActivity;
-import third.mall.override.MallBaseActivity;
 
 /**
  * 地址选择ItemView

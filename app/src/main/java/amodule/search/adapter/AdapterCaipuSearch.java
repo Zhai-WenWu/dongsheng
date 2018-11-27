@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.BitmapRequestBuilder;
@@ -31,15 +30,11 @@ import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import acore.logic.AppCommon;
 import acore.logic.XHClick;
+import acore.logic.stat.StatModel;
 import acore.logic.stat.StatisticsManager;
 import acore.override.activity.base.BaseActivity;
-import acore.tools.FileManager;
-import acore.tools.Tools;
-import acore.widget.ImageViewVideo;
 import amodule.dish.activity.DetailDish;
-import amodule.dish.activity.ListDish;
 import amodule.health.activity.DetailIngre;
 import amodule.search.view.SearchResultAdDataProvider;
 import amodule.search.view.SearchResultAdViewGenerater;
@@ -58,19 +53,12 @@ public class AdapterCaipuSearch extends BaseAdapter {
     private SearchResultAdDataProvider mSearchResultAdDataProvider;
     private CopyOnWriteArrayList<Map<String, String>> mListCaipuData = new CopyOnWriteArrayList<>();
     private CopyOnWriteArrayList<Map<String, String>> mListShicaiData = new CopyOnWriteArrayList<>();
-    private CopyOnWriteArrayList<Map<String, String>> mListCaidanData = new CopyOnWriteArrayList<>();
-    private CopyOnWriteArrayList<Map<String, String>> mListZhishiData = new CopyOnWriteArrayList<>();
     private int shicaiInsertPos;
-    private int caidanInsertPos;
-    private int zhishiInsertPos;
     private final CopyOnWriteArrayList<Map<String, String>> adDdata = new CopyOnWriteArrayList<>();
-    private CaipuSearchResultCallback callback;
 
     private int imgResource = R.drawable.i_nopic;
-    private int roundImgPixels = 0, imgWidth = 0, imgHeight = 0,// 以像素为单位
-            roundType = 1; // 1为全圆角，2上半部分圆角
+    private int imgWidth = 0, imgHeight = 0;// 以像素为单位
     private boolean imgZoom = false; // 是否允许图片拉伸来适应设置的宽或高
-    private String imgLevel = FileManager.save_cache; // 图片保存等级
     private ImageView.ScaleType scaleType = ImageView.ScaleType.CENTER_CROP;
     private View mParent;
     private static final int TAG_ID = R.string.tag;
@@ -83,10 +71,9 @@ public class AdapterCaipuSearch extends BaseAdapter {
     private AtomicBoolean topAdHasData = new AtomicBoolean(false);
 
 
-    public AdapterCaipuSearch(BaseActivity mActivty, ViewGroup mParent, CaipuSearchResultCallback callback) {
-        this.mActivity = mActivty;
+    public AdapterCaipuSearch(BaseActivity mActivity, ViewGroup mParent) {
+        this.mActivity = mActivity;
         this.mParent = mParent;
-        this.callback = callback;
         listPosUsed = new InsertPosList();
         if (mSearchResultAdDataProvider == null) {
             mSearchResultAdDataProvider = new SearchResultAdDataProvider(mActivity);
@@ -100,11 +87,7 @@ public class AdapterCaipuSearch extends BaseAdapter {
                 listCaipuData.addAll(mListCaipuData);
                 CopyOnWriteArrayList<Map<String, String>> listShicaiData = new CopyOnWriteArrayList<>();
                 listShicaiData.addAll(mListShicaiData);
-                CopyOnWriteArrayList<Map<String, String>> listCaidanData = new CopyOnWriteArrayList<>();
-                listCaidanData.addAll(mListCaidanData);
-                CopyOnWriteArrayList<Map<String, String>> listZhishiData = new CopyOnWriteArrayList<>();
-                listZhishiData.addAll(mListZhishiData);
-                refresh(true, listCaipuData, listShicaiData, listCaidanData, listZhishiData);
+                refresh(true, listCaipuData, listShicaiData);
             }
         });
     }
@@ -121,25 +104,17 @@ public class AdapterCaipuSearch extends BaseAdapter {
      * @param isRefresh
      * @param listCaipuData
      * @param listShicaiData
-     * @param listCaidanData
-     * @param listZhishiData
      *
      * @return
      */
     public synchronized int refresh(boolean isRefresh, CopyOnWriteArrayList<Map<String, String>> listCaipuData,
-                                    CopyOnWriteArrayList<Map<String, String>> listShicaiData,
-                                    CopyOnWriteArrayList<Map<String, String>> listCaidanData,
-                                    CopyOnWriteArrayList<Map<String, String>> listZhishiData) {
+                                    CopyOnWriteArrayList<Map<String, String>> listShicaiData) {
         int adCanInsert = 0;
         this.mListCaipuData.clear();
         this.mListShicaiData.clear();
-        this.mListCaidanData.clear();
-        this.mListZhishiData.clear();
 
         mListCaipuData.addAll(listCaipuData);
         mListShicaiData.addAll(listShicaiData);
-        mListCaidanData.addAll(listCaidanData);
-        mListZhishiData.addAll(listZhishiData);
 
         getAdDataInfo(isRefresh);
         if ((adDdata != null && adDdata.size() > 0)
@@ -155,8 +130,6 @@ public class AdapterCaipuSearch extends BaseAdapter {
     private void computeInsertPos() {
 
         shicaiInsertPos = -1;
-        caidanInsertPos = -1;
-        zhishiInsertPos = -1;
         listPosUsed.clear();
 
         for (int pos : adPosList) {
@@ -165,27 +138,6 @@ public class AdapterCaipuSearch extends BaseAdapter {
 
         if (mListShicaiData != null && mListShicaiData.size() > 0) {
             shicaiInsertPos = addToInsertList(0);
-        }
-
-        if (mListCaidanData != null && mListCaidanData.size() > 0) {
-            caidanInsertPos = Integer.valueOf(mListCaidanData.get(0).get("showPosition")) - 1;
-        }
-        if (mListZhishiData != null && mListZhishiData.size() > 0) {
-            zhishiInsertPos = Integer.valueOf(mListZhishiData.get(0).get("showPosition")) - 1;
-        }
-
-        if (caidanInsertPos > 0 && zhishiInsertPos > 0) {
-            if (caidanInsertPos == zhishiInsertPos) {
-                zhishiInsertPos++;
-            }
-        }
-
-        if (caidanInsertPos < zhishiInsertPos) {
-            caidanInsertPos = addToInsertList(caidanInsertPos);
-            zhishiInsertPos = addToInsertList(zhishiInsertPos);
-        } else {
-            zhishiInsertPos = addToInsertList(zhishiInsertPos);
-            caidanInsertPos = addToInsertList(caidanInsertPos);
         }
     }
 
@@ -233,7 +185,7 @@ public class AdapterCaipuSearch extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return mListCaidanData.size() + mListCaipuData.size() + mListShicaiData.size() + mListZhishiData.size() + adNum;
+        return mListCaipuData.size() + mListShicaiData.size() + adNum;
     }
 
     @Override
@@ -254,10 +206,6 @@ public class AdapterCaipuSearch extends BaseAdapter {
             view = createAdView(pos);
         } else if (shicaiInsertPos > -1 && pos == shicaiInsertPos) {
             view = createShicaiView(pos);
-        } else if (caidanInsertPos > -1 && pos == caidanInsertPos) {
-            view = createCaidanView(pos);
-        } else if (zhishiInsertPos > -1 && pos == zhishiInsertPos) {
-            view = createZhishiView(pos);
         } else {
             view = createCaipuView(pos, getCaipuDataIndex(pos), convertView);
         }
@@ -296,44 +244,32 @@ public class AdapterCaipuSearch extends BaseAdapter {
         if (null == convertView || convertView.getTag() == null) {
             viewHolder = new CaipuViewHolder();
             convertView = LayoutInflater.from(mActivity).inflate(R.layout.c_search_result_caipu_item, null);
-            viewHolder.iv_caipuCover = (ImageViewVideo) convertView.findViewById(R.id.iv_caipuCover);
+            viewHolder.iv_caipuCover = convertView.findViewById(R.id.iv_caipuCover);
             viewHolder.tv_caipu_name = (TextView) convertView.findViewById(R.id.tv_caipu_name);
             viewHolder.tv_caipu_decrip = (TextView) convertView.findViewById(R.id.tv_caipu_decrip);
             viewHolder.tv_caipu_firsttime = (TextView) convertView.findViewById(R.id.tv_caipu_firsttime);
             viewHolder.tv_caipu_observed = (TextView) convertView.findViewById(R.id.tv_caipu_observed);
             viewHolder.tv_caipu_collected = (TextView) convertView.findViewById(R.id.tv_caipu_collected);
             viewHolder.tv_caipu_origin = (TextView) convertView.findViewById(R.id.tv_caipu_origin);
-            viewHolder.iv_itemIsFine = (TextView) convertView.findViewById(R.id.iv_itemIsFine);
-            viewHolder.v_caipu_item_tail = convertView.findViewById(R.id.v_caipu_item_tail);
-            viewHolder.v_bottom_line = convertView.findViewById(R.id.v_bottom_line);
+            viewHolder.tv_duration = (TextView) convertView.findViewById(R.id.video_duration);
             viewHolder.vip = (ImageView) convertView.findViewById(R.id.search_vip);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (CaipuViewHolder) convertView.getTag();
         }
 
-        viewHolder.iv_caipuCover.playImgWH = Tools.getDimen(mParent.getContext(), R.dimen.dp_34);
-        viewHolder.iv_caipuCover.parseItemImg(scaleType, caipuMap.get("img"), caipuMap.get("hasVideo"), true, imgResource, imgLevel);
-        setViewText(viewHolder.tv_caipu_name, caipuMap.get("name"));
-        setViewText(viewHolder.tv_caipu_decrip, caipuMap.get("burdens"));
+        // 图片保存等级
+        setViewImage(viewHolder.iv_caipuCover,caipuMap.get("img"));
+        setViewText(viewHolder.tv_caipu_name, caipuMap.get("name"),View.INVISIBLE);
+        setViewText(viewHolder.tv_caipu_decrip, caipuMap.get("burdens"),View.INVISIBLE);
         setViewText(viewHolder.tv_caipu_firsttime, caipuMap.get("dishAddTime"));
         setViewText(viewHolder.tv_caipu_observed, caipuMap.get("allClick"));
         setViewText(viewHolder.tv_caipu_collected, caipuMap.get("favorites"));
-        setViewText(viewHolder.tv_caipu_origin, caipuMap.get("cusNickName"));
+        setViewText(viewHolder.tv_caipu_origin, caipuMap.get("cusNickName"),View.INVISIBLE);
+        setViewText(viewHolder.tv_duration, caipuMap.get("duration"));
 
         boolean vipShow = "2".equals(caipuMap.get("isVip"));
         viewHolder.vip.setVisibility(vipShow ? View.VISIBLE : View.GONE);
-        viewHolder.iv_itemIsFine.setVisibility(("2").equals(caipuMap.get("isFine")) ? View.VISIBLE : View.GONE);
-        viewHolder.v_bottom_line.setVisibility(viewHolder.v_caipu_item_tail.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
-
-        viewHolder.v_caipu_item_tail.setVisibility(View.GONE);
-        for (int index : listPosUsed) {
-            if (index == pos + 1
-                    && !adPosList.contains(pos + 1)) {
-                viewHolder.v_caipu_item_tail.setVisibility(View.VISIBLE);
-                break;
-            }
-        }
 
         convertView.setOnClickListener(v -> {
             XHClick.mapStat(mActivity, "a_search_result", "菜谱结果页", "点击菜谱");
@@ -344,17 +280,13 @@ public class AdapterCaipuSearch extends BaseAdapter {
                     .putExtra("img", handleImg(caipuMap));
             mActivity.startActivity(intent);
             //点击统计
-            StatisticsManager.listClick(mActivity.getClass().getSimpleName(), MODULE_NAME, String.valueOf(pos + 1), searchKey, caipuMap.get(STAT_DATA));
+            StatisticsManager.saveData(StatModel.createListClickModel(mActivity.getClass().getSimpleName(), MODULE_NAME, String.valueOf(pos + 1), searchKey, caipuMap.get(STAT_DATA)));
         });
 
-        String videoImg = caipuMap.get("sizeImg");
-        if (!TextUtils.isEmpty(videoImg)) {
-            Glide.with(convertView.getContext()).load(videoImg).diskCacheStrategy(DiskCacheStrategy.SOURCE).preload();
-        }
         //展示统计
         if (!TextUtils.equals(TRUE_VALUE, caipuMap.get(IS_STAT))) {
             caipuMap.put(IS_STAT, TRUE_VALUE);
-            StatisticsManager.listShow(mActivity.getClass().getSimpleName(), MODULE_NAME, String.valueOf(pos + 1), searchKey, caipuMap.get(STAT_DATA));
+            StatisticsManager.saveData(StatModel.createListShowModel(mActivity.getClass().getSimpleName(), MODULE_NAME, String.valueOf(pos + 1), searchKey, caipuMap.get(STAT_DATA)));
         }
         return convertView;
     }
@@ -390,97 +322,6 @@ public class AdapterCaipuSearch extends BaseAdapter {
         return img;
     }
 
-    private View createZhishiView(int pos) {
-        if (mListZhishiData == null || mListZhishiData.size() < 1)
-            return null;
-        View view = LayoutInflater.from(mActivity).inflate(R.layout.c_search_result_zhishi_item, null);
-        final Map<String, String> zhishiMap = mListZhishiData.get(0);
-        ImageView iv_img_zhishi = view.findViewById(R.id.iv_img_zhishi);
-        TextView tv_des_zhishi = view.findViewById(R.id.tv_des_zhishi);
-        TextView tv_cate_zhishi = view.findViewById(R.id.tv_cate_zhishi);
-        TextView tv_observed_candan = view.findViewById(R.id.tv_observed_zhishi);
-        RelativeLayout rl_zhishi_info = view.findViewById(R.id.rl_zhishi_info);
-        RelativeLayout rl_zhishi_more_item = view.findViewById(R.id.rl_zhishi_more_item);
-
-        setViewImage(iv_img_zhishi, zhishiMap.get("img"));
-        setViewText(tv_des_zhishi, zhishiMap.get("title"));
-        setViewText(tv_cate_zhishi, zhishiMap.get("classifyName"));
-        setViewText(tv_observed_candan, zhishiMap.get("allClick"));
-        if ("2".equals(zhishiMap.get("hasMore"))) {
-            rl_zhishi_more_item.setVisibility(View.VISIBLE);
-            rl_zhishi_more_item.setOnClickListener(v -> {
-                if (callback != null) {
-                    XHClick.mapStat(mActivity, "a_search_result", "菜谱结果页", "点击更多知识");
-                    callback.searchMoreZhishi();
-                }
-            });
-        } else {
-            rl_zhishi_more_item.setVisibility(View.GONE);
-        }
-        rl_zhishi_info.setOnClickListener(v -> {
-            XHClick.mapStat(mActivity, "a_search_result", "菜谱结果页", "点击知识");
-            AppCommon.openUrl(mActivity, "nousInfo.app?code=" + zhishiMap.get("code"), true);
-            StatisticsManager.listClick(mActivity.getClass().getSimpleName(), MODULE_NAME, String.valueOf(pos + 1), searchKey, zhishiMap.get(STAT_DATA));
-        });
-        //展示统计
-        if (!TextUtils.equals(TRUE_VALUE, zhishiMap.get(IS_STAT))) {
-            zhishiMap.put(IS_STAT, TRUE_VALUE);
-            StatisticsManager.listShow(mActivity.getClass().getSimpleName(), MODULE_NAME, String.valueOf(pos + 1), searchKey, zhishiMap.get(STAT_DATA));
-        }
-        return view;
-    }
-
-
-    private View createCaidanView(int pos) {
-        View view = null;
-        if (mListCaidanData == null || mListCaidanData.size() < 1)
-            return view;
-        final Map<String, String> caidanMap = mListCaidanData.get(0);
-        view = LayoutInflater.from(mActivity).inflate(R.layout.c_search_result_caidan_item, null);
-        ImageView iv_img_left_caidan = (ImageView) view.findViewById(R.id.iv_img_left_caidan);
-        ImageView iv_img_right_caidan = (ImageView) view.findViewById(R.id.iv_img_right_caidan);
-        TextView tv_tag_caidan = (TextView) view.findViewById(R.id.tv_tag_caidan);
-        TextView tv_num_caidan = (TextView) view.findViewById(R.id.tv_num_caidan);
-        TextView tv_observed_caidan = (TextView) view.findViewById(R.id.tv_observed_caidan);
-        RelativeLayout rl_caidan_more_item = (RelativeLayout) view.findViewById(R.id.rl_caidan_more_item);
-        RelativeLayout rl_caidan_info = (RelativeLayout) view.findViewById(R.id.rl_caidan_info);
-
-
-        setViewImage(iv_img_left_caidan, caidanMap.get("img1"));
-        setViewImage(iv_img_right_caidan, caidanMap.get("img2"));
-        setViewText(tv_tag_caidan, caidanMap.get("name"));
-        setViewText(tv_num_caidan, caidanMap.get("dishNum"));
-        setViewText(tv_observed_caidan, caidanMap.get("allClick"));
-
-        if ("2".equals(caidanMap.get("hasMore"))) {
-            rl_caidan_more_item.setVisibility(View.VISIBLE);
-            rl_caidan_more_item.setOnClickListener(v -> {
-                if (callback != null) {
-                    callback.searchMoreCaidan();
-                    XHClick.mapStat(mActivity, "a_search_result", "菜谱结果页", "点击更多菜单");
-                }
-
-            });
-        } else {
-            rl_caidan_more_item.setVisibility(View.GONE);
-        }
-        rl_caidan_info.setOnClickListener(v -> {
-            Intent intent = new Intent(mActivity, ListDish.class);
-            intent.putExtra("name", caidanMap.get("name"));
-            intent.putExtra("type", "caidan");
-            intent.putExtra("g1", caidanMap.get("code"));
-            mActivity.startActivity(intent);
-            XHClick.mapStat(mActivity, "a_search_result", "菜谱结果页", "点击菜单");
-            StatisticsManager.listClick(mActivity.getClass().getSimpleName(), MODULE_NAME, String.valueOf(pos + 1), searchKey, caidanMap.get(STAT_DATA));
-        });
-//展示统计
-        if (!TextUtils.equals(TRUE_VALUE, caidanMap.get(IS_STAT))) {
-            caidanMap.put(IS_STAT, TRUE_VALUE);
-            StatisticsManager.listShow(mActivity.getClass().getSimpleName(), MODULE_NAME, String.valueOf(pos + 1), searchKey, caidanMap.get(STAT_DATA));
-        }
-        return view;
-    }
-
     private View createShicaiView(int pos) {
         View view = null;
         if (mListShicaiData == null || mListShicaiData.size() < 1)
@@ -490,11 +331,9 @@ public class AdapterCaipuSearch extends BaseAdapter {
 
         ImageView cover_img = (ImageView) view.findViewById(R.id.iv_shicaiCover);
         TextView tv_shicai_name = (TextView) view.findViewById(R.id.tv_shicai_name);
-        TextView tv_shicai_decrip = (TextView) view.findViewById(R.id.tv_shicai_decrip);
 
         setViewImage(cover_img, shicaiMap.get("imgShow"));
         setViewText(tv_shicai_name, shicaiMap.get("name"));
-        setViewText(tv_shicai_decrip, shicaiMap.get("info"));
 
         View tagView3 = view.findViewById(R.id.iv_shicai_tag3);
         if (null != tagView3)
@@ -504,24 +343,28 @@ public class AdapterCaipuSearch extends BaseAdapter {
             if (TextUtils.isEmpty(shicaiMap.get("name")))
                 return;
             Intent intent = new Intent(mActivity, DetailIngre.class);
-            intent.putExtra("name", shicaiMap.get("name").replace("百科", ""));
+            intent.putExtra("name", shicaiMap.get("name"));
             intent.putExtra("code", shicaiMap.get("code"));
             intent.putExtra("page", "0");
             mActivity.startActivity(intent);
             XHClick.mapStat(mActivity, "a_search_result", "菜谱结果页", "点击食材");
-            StatisticsManager.listClick(mActivity.getClass().getSimpleName(), MODULE_NAME, String.valueOf(pos + 1), searchKey, shicaiMap.get(STAT_DATA));
+            StatisticsManager.saveData(StatModel.createListClickModel(mActivity.getClass().getSimpleName(), MODULE_NAME, String.valueOf(pos + 1), searchKey, shicaiMap.get(STAT_DATA)));
         });
         //展示统计
         if (!TextUtils.equals(TRUE_VALUE, shicaiMap.get(IS_STAT))) {
             shicaiMap.put(IS_STAT, TRUE_VALUE);
-            StatisticsManager.listShow(mActivity.getClass().getSimpleName(), MODULE_NAME, String.valueOf(pos + 1), searchKey, shicaiMap.get(STAT_DATA));
+            StatisticsManager.saveData(StatModel.createListShowModel(mActivity.getClass().getSimpleName(), MODULE_NAME, String.valueOf(pos + 1), searchKey, shicaiMap.get(STAT_DATA)));
         }
         return view;
     }
 
     private void setViewText(TextView v, String text) {
+        setViewText(v, text,View.GONE);
+    }
+
+    private void setViewText(TextView v, String text,int visibility) {
         if (text == null || text.length() == 0 || text.equals("hide"))
-            v.setVisibility(View.GONE);
+            v.setVisibility(visibility);
         else {
             v.setVisibility(View.VISIBLE);
             v.setText(text.trim());
@@ -534,15 +377,13 @@ public class AdapterCaipuSearch extends BaseAdapter {
         if (value.indexOf("http") == 0) {
             if (value.length() < 10)
                 return;
-            v.setImageResource(roundImgPixels == 0 ? imgResource : R.drawable.bg_round_user_icon);
+            v.setImageResource(imgResource);
             v.setScaleType(ImageView.ScaleType.CENTER_CROP);
             v.setTag(TAG_ID, value);
             BitmapRequestBuilder<GlideUrl, Bitmap> bitmapRequest = LoadImage.with(mParent.getContext())
                     .load(value)
-                    .setImageRound(roundImgPixels)
-                    .setPlaceholderId(roundImgPixels == 0 ? imgResource : R.drawable.bg_round_user_icon)
-                    .setErrorId(roundImgPixels == 0 ? imgResource : R.drawable.bg_round_user_icon)
-                    .setSaveType(imgLevel)
+                    .setPlaceholderId(imgResource)
+                    .setErrorId(imgResource)
                     .build();
             if (bitmapRequest != null) {
                 bitmapRequest.into(getTarget(v, value));
@@ -552,7 +393,6 @@ public class AdapterCaipuSearch extends BaseAdapter {
         else if (value.indexOf("ico") == 0) {
             InputStream is = v.getResources().openRawResource(Integer.parseInt(value.replace("ico", "")));
             Bitmap bitmap = UtilImage.inputStreamTobitmap(is);
-            bitmap = UtilImage.toRoundCorner(v.getResources(), bitmap, roundType, roundImgPixels);
             UtilImage.setImgViewByWH(v, bitmap, imgWidth, imgHeight, imgZoom);
         }
         // 隐藏
@@ -565,12 +405,10 @@ public class AdapterCaipuSearch extends BaseAdapter {
             v.setTag(TAG_ID, value);
             BitmapRequestBuilder<GlideUrl, Bitmap> bitmapRequest = LoadImage.with(mParent.getContext())
                     .load(value)
-                    .setImageRound(roundImgPixels)
-                    .setSaveType(imgLevel)
                     .build();
             if (bitmapRequest != null) {
-                bitmapRequest.placeholder(roundImgPixels == 0 ? imgResource : R.drawable.bg_round_user_icon)
-                        .error(roundImgPixels == 0 ? imgResource : R.drawable.bg_round_user_icon)
+                bitmapRequest.placeholder(imgResource)
+                        .error(imgResource)
                         .into(getTarget(v, value));
             }
         }
@@ -587,8 +425,8 @@ public class AdapterCaipuSearch extends BaseAdapter {
                 if (img != null && bitmap != null) {
                     // 图片圆角和宽高适应
                     v.setScaleType(scaleType);
-
-                    UtilImage.setImgViewByWH(v, bitmap, imgWidth, imgHeight, imgZoom);
+                    v.setImageBitmap(bitmap);
+//                    UtilImage.setImgViewByWH(v, bitmap, imgWidth, imgHeight, imgZoom);
                 }
             }
         };
@@ -596,16 +434,14 @@ public class AdapterCaipuSearch extends BaseAdapter {
 
 
     class CaipuViewHolder {
-        ImageViewVideo iv_caipuCover;
+        ImageView iv_caipuCover;
         TextView tv_caipu_name;
         TextView tv_caipu_decrip;
         TextView tv_caipu_firsttime;
         TextView tv_caipu_observed;
         TextView tv_caipu_collected;
         TextView tv_caipu_origin;
-        TextView iv_itemIsFine;
-        View v_caipu_item_tail;
-        View v_bottom_line;
+        TextView tv_duration;
         ImageView vip;
     }
 
@@ -648,13 +484,6 @@ public class AdapterCaipuSearch extends BaseAdapter {
             return 0;
         }
     }
-
-    public interface CaipuSearchResultCallback {
-        void searchMoreZhishi();
-
-        void searchMoreCaidan();
-    }
-
 
     /**
      * 计算能插入几个广告&初始化
@@ -705,7 +534,7 @@ public class AdapterCaipuSearch extends BaseAdapter {
 
     private int computeAdNumCanInsert(List<Integer> origin) {
         int adNum = 0;
-        int num = mListCaipuData.size() + mListShicaiData.size() + mListCaidanData.size() + mListZhishiData.size();
+        int num = mListCaipuData.size() + mListShicaiData.size();
         if (num == 0)
             return 0;
         for (int i = 0; i < origin.size(); i++) {

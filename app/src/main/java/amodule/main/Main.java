@@ -32,7 +32,6 @@ import com.aliyun.struct.common.VideoQuality;
 import com.aliyun.struct.encoder.VideoCodecs;
 import com.aliyun.struct.snap.AliyunSnapVideoParam;
 import com.annimon.stream.Stream;
-import com.popdialog.db.FullSrceenDB;
 import com.popdialog.util.GoodCommentManager;
 import com.popdialog.util.PushManager;
 import com.quze.videorecordlib.VideoRecorderCommon;
@@ -51,10 +50,9 @@ import acore.logic.MessageTipController;
 import acore.logic.VersionControl;
 import acore.logic.VersionOp;
 import acore.logic.XHClick;
-import acore.logic.stat.StatisticsManager;
 import acore.logic.polling.AppHandlerAsyncPolling;
 import acore.logic.polling.IHandleMessage;
-import acore.notification.controller.NotificationSettingController;
+import acore.logic.stat.StatisticsManager;
 import acore.override.XHApplication;
 import acore.override.activity.mian.MainBaseActivity;
 import acore.tools.ChannelUtil;
@@ -62,7 +60,6 @@ import acore.tools.FileManager;
 import acore.tools.IObserver;
 import acore.tools.LogManager;
 import acore.tools.ObserverManager;
-import acore.tools.PageStatisticsUtils;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.XiangHaTabHost;
@@ -190,8 +187,6 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                 isShowWelcomeDialog = false;
 
                 OffDishToFavoriteControl.addCollection(Main.this);
-                //初始化电商页面统计
-                PageStatisticsUtils.getInstance().getPageInfo(getApplicationContext());
                 //处理
                 if (LoginManager.isLogin()) {
                     initQiYvUnreadCount();
@@ -263,7 +258,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
     private void initMTA() {
         //原始：Aqc1150004142
         //VIP：A1DGHJVJ938H
-        StatConfig.setAppKey(LoginManager.isVIPLocal(XHApplication.in())?"A1DGHJVJ938H":"Aqc1150004142");
+        StatConfig.setAppKey(LoginManager.isVIPLocal()?"A1DGHJVJ938H":"Aqc1150004142");
         StatConfig.setDebugEnable(false);
         StatConfig.setInstallChannel(this, ChannelUtil.getChannel(this));
         StatConfig.setSendPeriodMinutes(1);//设置发送策略：每一分钟发送一次
@@ -554,9 +549,9 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                 } catch (Exception e) {
                 }
                 // 关闭时发送页面停留时间统计
-                if (act != null){
-                    new FullSrceenDB(act).clearExpireAllData();
-                }
+//                if (act != null){
+//                    new FullSrceenDB(act).clearExpireAllData();
+//                }
                 // 关闭页面停留时间统计计时器
                 XHClick.closeHandler();
                 VersionOp.getInstance().onDesotry();
@@ -610,7 +605,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
         }
         if (nowTab == 0 && index != 0) {//当前是首页，切换到其他页面
             if (allTab.containsKey(MainHomePage.KEY)) {
-                XHClick.newHomeStatictis(true, null);
+
             }
         } else if (nowTab != 0 && index == 0) {//当前是其他页面，切换到首页
             if (allTab.containsKey(MainHomePage.KEY)) {
@@ -622,9 +617,6 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         } else {
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        }
-        if(nowTab!=index){
-            NotificationSettingController.removePermissionSetView();
         }
     }
 
@@ -694,6 +686,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                     if (lesson != null) {
                         lesson.refresh();
                     }
+
                 } else if (i == TAB_SELF) {
                     if(allTab.containsKey(MainMyself.KEY)){
                         //在onResume方法添加了刷新方法

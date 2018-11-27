@@ -12,6 +12,7 @@ import org.android.agoo.xiaomi.MiPushRegistar;
 
 import acore.logic.XHClick;
 import acore.override.XHApplication;
+import aplug.service.alarm.PushAlarm;
 
 /**
  * PackageName : third.push.xm
@@ -25,6 +26,7 @@ public class UMPushServer {
 	public UMPushServer(Context context){
 		this.mContext = context;
 		mPushAgent = PushAgent.getInstance(context);
+		PushAlarm.startTimingWake(context);
 	}
 
 	public void register(){

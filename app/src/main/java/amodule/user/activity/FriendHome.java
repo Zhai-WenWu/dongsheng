@@ -314,7 +314,7 @@ public class FriendHome extends BaseActivity implements IObserver {
 
     private void onLoaded(int flag) {
         if (mFirstLoaded && mSecondLoaded)
-            loadManager.loadOver(flag, 1, mTabs == null || mTabs.size() == 0);
+            loadManager.loadOver(flag);
     }
 
     private void onDataFailure(InternetCallback callback, int flag, Object returnObj) {

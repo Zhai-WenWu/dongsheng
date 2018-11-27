@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'walle'
+apply from: 'mobsdk.gradle'
 
 repositories {
     flatDir {
@@ -24,9 +25,8 @@ dependencies {
     compile(name: 'XH_Basic3.0-release', ext: 'aar')
     compile(name: 'XH_DownLoad-release', ext: 'aar')
     compile(name: 'XH_EmojiUtil-debug', ext: 'aar')
-    compile(name: 'xh_popdialog-release', ext: 'aar')
+    compile(name: 'xh_popdialog_1.1', ext: 'aar')
     compile(name: 'XH_WindowView-release', ext: 'aar')
-    compile(name: 'SMSSDK-3.0.0', ext: 'aar')
     compile(name: 'xh_dialog-release', ext: 'aar')
     //    compile 'com.github.chrisbanes:photoview:latest.release'
     compile 'com.android.support:recyclerview-v7:' + rootProject.supportLibVersion
@@ -65,8 +65,8 @@ android {
         applicationId "com.xiangha"
         minSdkVersion 19
         targetSdkVersion 21
-        versionCode 306
-        versionName "7.1.0.1"
+        versionCode 300
+        versionName "6.6.0"
         // dex突破65535的限制
         multiDexEnabled true
         ndk {

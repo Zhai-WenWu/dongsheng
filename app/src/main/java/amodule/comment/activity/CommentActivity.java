@@ -451,8 +451,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
             }
             dropPage = downDropPage;
         }
-
-        loadManager.changeMoreBtn(UtilInternet.REQ_OK_STRING, -1, -1, currentPage, listArray.size() == 0);
+        loadManager.loading(downRefreshList,listArray.size() == 0);
         String params = "type=" + type + "&code=" + code;
         if(!TextUtils.isEmpty(gotoCommentId))
             params +=  "&commentId=" + gotoCommentId;
@@ -523,7 +522,7 @@ public class CommentActivity extends BaseActivity implements View.OnClickListene
                     }
                     changeDataChange();
                 }
-                currentPage = loadManager.changeMoreBtn(downRefreshList, flag, everyPage, loadCount, currentPage, listArray.size() == 0,"没有更多评论啦");
+                loadManager.loadOver(flag,downRefreshList, loadCount, "没有更多评论啦");
             }
         });
     }
