@@ -2,11 +2,10 @@ package acore.logic;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Build;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.TextUtils;
+import android.webkit.CookieManager;
+import android.util.Log;
 import android.view.View;
 import android.webkit.CookieManager;
 
@@ -28,9 +27,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import acore.override.XHApplication;
 import acore.override.activity.base.WebActivity;
 import acore.override.helper.XHActivityManager;
-import acore.tools.ChannelUtil;
+import acore.tools.ChannelManager;
 import acore.tools.FileManager;
-import acore.tools.ObserverManager;
+import acore.observer.ObserverManager;
 import acore.tools.StringManager;
 import amodule.answer.db.AskAnswerSQLite;
 import amodule.dish.db.DataOperate;
@@ -39,8 +38,11 @@ import amodule.main.activity.MainChangeSend;
 import amodule.user.activity.MyManagerInfo;
 import amodule.user.activity.Setting;
 import amodule.user.activity.login.UserSetting;
+import amodule.vip.DeviceVipManager;
+import amodule.vip.DeviceVipStatModel;
+import amodule.vip.IDeviceVipStat;
+import amodule.vip.IStat;
 import aplug.basic.InternetCallback;
-import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import aplug.web.tools.JsAppCommon;
 import aplug.web.tools.WebviewManager;
@@ -50,7 +52,6 @@ import third.mall.aplug.MallStringManager;
 import third.push.umeng.UMPushServer;
 import third.push.xg.XGPushServer;
 import xh.basic.internet.UtilInternet;
-import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilLog;
 
 import static acore.logic.ConfigMannager.KEY_VIVOAD;
@@ -69,8 +70,6 @@ public class LoginManager {
     private static boolean mIsShowAd = true;
     private static boolean mIsGourmet = false;
     private static boolean mIsInitGourmetData = false;
-    private static boolean mIsTempVip = false;
-    private static boolean mIsInitTempVipData = false;
     private static AtomicBoolean mInitIsLogin = new AtomicBoolean(false);
 
     /**
@@ -79,7 +78,7 @@ public class LoginManager {
     @SuppressWarnings("unchecked")
     public static void loginByAuto(final Activity act) {
         //获取用户本地信息
-        userInfo = (Map<String, String>) UtilFile.loadShared(act, FileManager.xmlFile_userInfo, "");
+        userInfo = (Map<String, String>) FileManager.loadShared(act, FileManager.xmlFile_userInfo, "");
         int length = userInfo.size();
         if(length == 0){
             //			logout(act);
@@ -118,7 +117,7 @@ public class LoginManager {
     /**
      * 登录成功
      */
-    public static void loginSuccess(final Activity mAct, Object returnObj, boolean isThirdAuth) {
+    public static void loginSuccess(final Activity mAct, Object returnObj, boolean isThirdAuth, IStat statImpl) {
         if (mAct != null)
             XHClick.track(mAct, "登录成功");
         if (mAct != null)
@@ -147,11 +146,20 @@ public class LoginManager {
             Main.colse_level = 4;
             mAct.finish();
         }
-
+        DeviceVipStatModel model = null;
+        if (statImpl == null) {
+            model = new DeviceVipStatModel("各处登录成功后提示弹框_成功", "各处登录成功后提示弹框_失败");
+        }
+        IDeviceVipStat s = (statImpl != null) ? ((statImpl instanceof IDeviceVipStat) ? (IDeviceVipStat) statImpl : null) : model;
+        if (DeviceVipManager.isAutoBindDevideVip()) {
+            DeviceVipManager.bindYiYuanVIP(mAct, s);
+        } else if (DeviceVipManager.isDeviceVip()) {
+            DeviceVipManager.showBindVipDialog(s);
+        }
     }
 
-    public static void loginSuccess(final Activity mAct, Object returnObj) {
-        loginSuccess(mAct, returnObj, false);
+    public static void loginSuccess(final Activity mAct, Object returnObj, IStat statImpl) {
+        loginSuccess(mAct, returnObj, false, statImpl);
         ObserverManager.getInstance().notify(ObserverManager.NOTIFY_LOGIN, null, true);
         setVipStateChanged();
     }
@@ -160,8 +168,10 @@ public class LoginManager {
      * 登录失败
      * @param obj 失败后返回的数据
      */
-    public static void loginFail(Object obj) {
-        ObserverManager.getInstance().notify(ObserverManager.NOTIFY_LOGIN, null, false);
+    public static void loginFail(int flag, Object obj) {
+        if (flag >= ReqInternet.REQ_OK_STRING) {
+            ObserverManager.getInstance().notify(ObserverManager.NOTIFY_LOGIN, null, false);
+        }
     }
 
     /**
@@ -190,7 +200,7 @@ public class LoginManager {
                     new UMPushServer(mAct).addAlias(userInfo.get("code"));
                     //清除数据
                     userInfo = new HashMap<>();
-                    UtilFile.delShared(mAct, FileManager.xmlFile_userInfo, "");
+                    FileManager.delShared(mAct, FileManager.xmlFile_userInfo, "");
                     //清空消息数角标
                     MessageTipController.newInstance().setQuanMessage(0);
                     MessageTipController.newInstance().setQiyvMessage(0);
@@ -265,7 +275,7 @@ public class LoginManager {
      */
     public static void modifyUserInfo(Context context, String key, String value) {
         userInfo.put(key, value);
-        UtilFile.saveShared(context, FileManager.xmlFile_userInfo, userInfo);
+        FileManager.saveShared(context, FileManager.xmlFile_userInfo, userInfo);
     }
 
 	/**
@@ -300,11 +310,12 @@ public class LoginManager {
 				userInfo.put("maturity_time", TextUtils.isEmpty(vipMap.get("maturity_time")) ? "" : vipMap.get("maturity_time"));
 				userInfo.put("email", TextUtils.isEmpty(map.get("email")) ? "" : map.get("email"));
 				userInfo.put("regTime", TextUtils.isEmpty(map.get("regTime")) ? "" : map.get("regTime"));
+				userInfo.put("shortVideoNum",TextUtils.isEmpty(map.get("shortVideoNum"))?"":map.get("shortVideoNum"));
 				UtilLog.print("d", "是否是管理员: " + map.get("isManager"));
 				new UMPushServer(mAct).addAlias(map.get("code"));
 				if(map.containsKey("sex"))userInfo.put("sex",map.get("sex"));
 				//储存用户信息
-				UtilFile.saveShared(mAct, FileManager.xmlFile_userInfo, userInfo);
+				FileManager.saveShared(mAct, FileManager.xmlFile_userInfo, userInfo);
 			}
 		}
 	}
@@ -320,7 +331,7 @@ public class LoginManager {
         }
     }
 
-    public static String getVipMaturityTime() {
+    public static synchronized String getVipMaturityTime() {
 	    return userInfo == null ? null : userInfo.get("maturity_time");
     }
 
@@ -404,6 +415,7 @@ public class LoginManager {
             return mIsShowAd;
         }
         mIsShowAd = !(isVIP() || isGourmet());
+        Log.i("isShowAd", "isShowAd: " + mIsShowAd);
         return mIsShowAd;
     }
 
@@ -413,7 +425,7 @@ public class LoginManager {
      */
     private synchronized static boolean isVIVOShowAd() {
         boolean ret = true;
-        if("developer.vivo.com.cn".equals(ChannelUtil.getChannel(XHApplication.in()))) {
+        if("developer.vivo.com.cn".equals(ChannelManager.getInstance().getChannel(XHApplication.in()))) {
             String showAD = ConfigMannager.getConfigByLocal(KEY_VIVOAD);//release 2表示显示发布，显示广告，1不显示广告
             if (showAD != null && !TextUtils.isEmpty(showAD) && "1".equals(StringManager.getFirstMap(showAD).get("release"))) {
                 ret = false;
@@ -453,7 +465,7 @@ public class LoginManager {
         if(LoginManager.isLogin()){
             return isUserVip();
         }else {
-           return isTempVip();
+           return DeviceVipManager.isDeviceVip();
         }
     }
 
@@ -465,62 +477,32 @@ public class LoginManager {
         return false;
     }
 
-    public static boolean isVIPLocal(Context context){
-        Map<String,String> userInfo = (Map<String, String>) FileManager.loadShared(context, FileManager.xmlFile_userInfo, "");
+    public static boolean isVIPLocal(){
+        Map<String,String> userInfo = (Map<String, String>) FileManager.loadShared(XHApplication.in(), FileManager.xmlFile_userInfo, "");
         Map<String,String> vipMap = StringManager.getFirstMap(userInfo.get("vip"));
         if("2".equals(vipMap.get("isVip"))){
             return true;
         }else{
-            return isTempVip();
+            return DeviceVipManager.isDeviceVip();
         }
     }
 
-    /**
-     *是否是临时vip
-     *
-     * 此方法只有在特殊时候需要单独判断是否临时会员的时候才能在外部调用；
-     * 目前外部用到的地方：
-     *      1.DishSkillView：点击事件中的判断
-     *      2.DetailDishViewManager：菜谱详情页用于判断是否显示VIP相关的View
-     *      3.MainMyself：我的页面
-     *          （1）：初始化页面时，会员迁移View的显隐
-     *          （2）：登录成功时，会员迁移弹框的显示
-     * @return
-     */
-    public synchronized static boolean isTempVip() {
-        if (!mIsInitTempVipData) {//进入APP时初始化到内存
-            mIsTempVip = "2".equals(FileManager.loadShared(XHApplication.in(), FileManager.xmlFile_appInfo, "isTempVip"));
-            mIsInitTempVipData = true;
+    public static String getTempVipMaturityTime() {
+        String tempTime = (String) FileManager.loadShared(XHApplication.in(),FileManager.xmlFile_appInfo,"maturity_temp_time");
+        if (TextUtils.isEmpty(tempTime) || "null".equals(tempTime)) {
+            return null;
         }
-        return mIsTempVip;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        return sdf.format(new Date(Long.parseLong(tempTime) * 1000));
     }
 
-    /**
-     * 设置是否是临时vip
-     * @param tempVip
-     */
-    public static void setTempVip(final boolean tempVip) {
-        mIsTempVip = tempVip;
-        FileManager.saveShared(XHApplication.in(),FileManager.xmlFile_appInfo,"isTempVip",tempVip ? "2" : "");
-    }
-
-    public static void saveTempVipMaturityDay(String maturityTimeStr){
-        if(TextUtils.isEmpty(maturityTimeStr)){
-            FileManager.saveShared(XHApplication.in(),FileManager.xmlFile_appInfo,"maturity_day","");
-            FileManager.saveShared(XHApplication.in(),FileManager.xmlFile_appInfo,"maturity_temp_time","");
-            return;
+    public static String getTempVipMaturityTime() {
+        String tempTime = (String) FileManager.loadShared(XHApplication.in(),FileManager.xmlFile_appInfo,"maturity_temp_time");
+        if (TextUtils.isEmpty(tempTime) || "null".equals(tempTime)) {
+            return null;
         }
-        int maturityDay = (int) ((Long.parseLong(maturityTimeStr)*1000-System.currentTimeMillis()) / (24 * 60 * 60 * 1000f));
-        FileManager.saveShared(XHApplication.in(),FileManager.xmlFile_appInfo,"maturity_day",String.valueOf(maturityDay));
-        FileManager.saveShared(XHApplication.in(),FileManager.xmlFile_appInfo,"maturity_temp_time",maturityTimeStr);
-    }
-
-    public static int getTempVipMaturityDay(){
-        Object obj = FileManager.loadShared(XHApplication.in(),FileManager.xmlFile_appInfo,"maturity_day");
-        if(null != obj && !TextUtils.isEmpty(obj.toString())){
-            return Integer.parseInt(obj.toString());
-        }
-        return -1;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        return sdf.format(new Date(Long.parseLong(tempTime) * 1000));
     }
 
     public static String getTempVipMaturityTime() {
@@ -682,7 +664,7 @@ public class LoginManager {
             synchronized (LoginManager.class) {
                 if (!mInitIsLogin.get()) {
                     mInitIsLogin.set(true);
-                    userInfo = (Map<String, String>) UtilFile.loadShared(XHApplication.in(), FileManager.xmlFile_userInfo, "");
+                    userInfo = (Map<String, String>) FileManager.loadShared(XHApplication.in(), FileManager.xmlFile_userInfo, "");
                 }
             }
         }
@@ -696,7 +678,7 @@ public class LoginManager {
 
     public static String getUserRegTime (Context context) {
         String regTime = "";
-        Object obj = UtilFile.loadShared(context, FileManager.xmlFile_userInfo, "regTime");
+        Object obj = FileManager.loadShared(context, FileManager.xmlFile_userInfo, "regTime");
         if (obj != null)
             regTime = obj.toString();
         return regTime;
@@ -712,103 +694,6 @@ public class LoginManager {
         return -1;
     }
 
-    private static boolean mAutoBindYiYuanVIP;
-
-    /**
-     * 设置自动绑定vip
-     * @param auto
-     */
-    public static void setAutoBindYiYuanVIP(boolean auto) {
-        mAutoBindYiYuanVIP = auto;
-    }
-
-    /**
-     * vip是否绑定
-     * @return
-     */
-    public static boolean isAutoBindYiYuanVIP() {
-        return mAutoBindYiYuanVIP;
-    }
-
-    /**
-     * 绑定vip
-     * @param context
-     */
-    public static void bindYiYuanVIP(final Context context) {
-        mAutoBindYiYuanVIP = false;
-        ReqEncyptInternet.in().doEncypt(StringManager.api_yiyuan_binduser, "", new InternetCallback() {
-            @Override
-            public void loaded(int i, String s, Object o) {
-                if (i >= UtilInternet.REQ_OK_STRING) {
-                    Map<String, String> state = StringManager.getFirstMap(o);
-                    if ("2".equals(state.get("state"))) {
-                        setTempVip(false);
-                        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                final Context currContext = XHActivityManager.getInstance().getCurrentActivity();
-                                final DialogManager dialogManager = new DialogManager(currContext);
-                                dialogManager.createDialog(new ViewManager(dialogManager)
-                                        .setView(new TitleView(currContext).setText(R.string.yiyuan_succ_title))
-                                .setView(new MessageView(currContext).setText(R.string.yiyuan_succ_desc))
-                                .setView(new HButtonView(currContext).setNegativeText(R.string.str_know, new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        dialogManager.cancel();
-                                        XHClick.mapStat(currContext, "a_vip_movesuccess", "点击我知道了按钮", "");
-                                    }
-                                }).setNegativeTextColor(Color.parseColor("#007aff")))).show();
-                            }
-                        }, 200);
-                        ObserverManager.getInstance().notify(ObserverManager.NOTIFY_YIYUAN_BIND, null, state);
-                    } else {
-                        //绑定失败
-                        ObserverManager.getInstance().notify(ObserverManager.NOTIFY_YIYUAN_BIND, null, state);
-                    }
-                } else {
-                    //绑定失败
-                    ObserverManager.getInstance().notify(ObserverManager.NOTIFY_YIYUAN_BIND, null, null);
-                }
-            }
-        });
-    }
-
-    /**
-     * 初始化临时会员绑定状态
-     * @param context
-     * @param callback
-     */
-    public static void initYiYuanBindState(Context context, final Runnable callback) {
-        ReqEncyptInternet.in().doEncypt(StringManager.api_yiyuan_bindstate, "", new InternetCallback() {
-            @Override
-            public void loaded(int i, String s, Object obj) {
-                Map<String, String> data = StringManager.getFirstMap(obj);
-                Object vipTransfer = FileManager.loadShared(context, FileManager.xmlFile_appInfo, "vipTransfer");
-                boolean isTempVip = "2".equals(data.get("isBindingVip"));
-                LoginManager.setTempVip(isTempVip);
-                Map<String, String> dataContentMap = StringManager.getFirstMap(data.get("data"));
-                Map<String, String> vipContentMap = StringManager.getFirstMap(dataContentMap.get("vip"));
-                String vipFirstTime = vipContentMap.get("first_time");
-                String vipLastTime = vipContentMap.get("last_time");
-                String vipMaturityTime = vipContentMap.get("maturity_time");
-                saveTempVipMaturityDay(vipMaturityTime);
-                if (TextUtils.isEmpty(vipFirstTime) || TextUtils.isEmpty(vipLastTime) || TextUtils.isEmpty(vipMaturityTime)) {
-                    if (callback != null)
-                        callback.run();
-                    return;
-                }
-                //单位都是秒
-                long lastTime = Long.parseLong(vipLastTime);
-                long maturityTime = Long.parseLong(vipMaturityTime);
-                long dialogTime = lastTime + 20 * 24 * 60 * 60;
-                long currTime = System.currentTimeMillis() / 1000;
-                FileManager.saveShared(context, FileManager.xmlFile_appInfo, "shouldShowDialog", (isTempVip && !"2".equals(vipTransfer) && dialogTime <= maturityTime && currTime >= dialogTime && currTime <= maturityTime) ? "2" : "");
-                if (callback != null)
-                    callback.run();
-            }
-        });
-    }
-
     /**
      * 设置vip状态改变
      */
@@ -820,6 +705,10 @@ public class LoginManager {
             FileManager.saveShared(XHApplication.in(), FileManager.xmlFile_appInfo, "vipState", currVipState ? "2" : "1");
             ObserverManager.getInstance().notify(ObserverManager.NOTIFY_VIPSTATE_CHANGED, null, null);
         }
+    }
+
+    public interface VipStateCallback {
+        void callback(boolean isVip);
     }
 
 }

@@ -173,9 +173,9 @@ public class HistoryDishView extends HistoryView {
     protected AdapterSimple getAdapter() {
         mAdapter = new AdapterSimple(mListView, mData,
                 R.layout.c_search_result_caipu_item,
-                new String[]{"img","name", "burdens", "isFine", "nickName", "allClick", "exclusive"},
-                new int[]{R.id.iv_caipuCover,R.id.tv_caipu_name, R.id.tv_caipu_decrip, R.id.iv_itemIsFine,
-                        R.id.tv_caipu_origin, R.id.tv_caipu_observed, R.id.iv_itemIsSolo});
+                new String[]{"img","name", "burdens", "nickName", "allClick", "exclusive","duration"},
+                new int[]{R.id.iv_caipuCover,R.id.tv_caipu_name, R.id.tv_caipu_decrip,
+                        R.id.tv_caipu_origin, R.id.tv_caipu_observed, R.id.iv_itemIsSolo,R.id.video_duration});
         mAdapter.urlKey = "imgShow";
         mAdapter.videoImgId = R.id.itemImg1;
         mAdapter.playImgWH = Tools.getDimen(mContext, R.dimen.dp_34);
@@ -218,8 +218,12 @@ public class HistoryDishView extends HistoryView {
                 List<Map<String, String>> data = sqlite.loadByPage(BrowseHistorySqlite.TB_DISH_NAME, ++currentPage);
                 for (int index = 0; index < data.size(); index++) {
                     Map<String, String> map = data.get(index);
+                    String nickName = map.get("nickName");
+                    if(!TextUtils.isEmpty(nickName) && nickName.length()>=8){
+                        nickName = nickName.substring(0,7) + "...";
+                    }
+                    map.put("nickName",nickName);
                     map.put("imgShow", map.get("img"));
-                    map.put("isFine", map.get("isFine").equals("2") ? "精" : "hide");
                     map.put("isMakeImg", map.get("isMakeImg").equals("2") ? "步骤图" : "hide");
                     map.put("allClick", map.get("allClick") + "浏览      " + map.get("favorites") + "收藏");
                     if (!map.containsKey("hasVideo")) {

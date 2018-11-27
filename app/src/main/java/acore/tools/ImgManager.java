@@ -10,7 +10,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
-import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilImage;
 import xh.basic.tool.UtilLog;
 import xh.basic.tool.UtilString;
@@ -25,6 +24,7 @@ import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.ImageView;
@@ -50,8 +50,6 @@ public class ImgManager extends UtilImage {
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(path, options);
         int wi = options.outWidth;
-        int hei = options.outHeight;
-        // //Log.i("FRJ","wi:" + wi + "  hei:" + hei);
         return !(wi / hei >= scale || hei / wi >= scale);
     }
 
@@ -64,7 +62,7 @@ public class ImgManager extends UtilImage {
         if (imgUrl.length() == 0)
             return;
         String name = UtilString.toMD5(imgUrl, false);
-        UtilFile.delDirectoryOrFile(UtilFile.getSDDir() + LoadImage.SAVE_LONG + "/" + name, 0);
+        FileManager.delDirectoryOrFile(FileManager.getSDDir() + LoadImage.SAVE_LONG + "/" + name, 0);
     }
 
     /**
@@ -78,7 +76,7 @@ public class ImgManager extends UtilImage {
             return;
         String name = UtilString.toMD5(imgUrl, false);
         // 图片不存在则下载
-        if (UtilFile.ifFileModifyByCompletePath(UtilFile.getSDDir() + type + "/" + name, -1) == null) {
+        if (FileManager.ifFileModifyByCompletePath(FileManager.getSDDir() + type + "/" + name, -1) == null) {
             LoadImage.with(XHApplication.in())
                     .load(imgUrl)
                     .setSaveType(type)
@@ -102,8 +100,8 @@ public class ImgManager extends UtilImage {
         if (TextUtils.isEmpty(imgUrl) || null == imageView)
             return;
         String name = UtilString.toMD5(imgUrl, false);
-        final String imagePath = UtilFile.getSDDir() + type + "/" + name;
-        if (UtilFile.ifFileModifyByCompletePath(imagePath, -1) == null) {
+        final String imagePath = FileManager.getSDDir() + type + "/" + name;
+        if (FileManager.ifFileModifyByCompletePath(imagePath, -1) == null) {
             LoadImage.with(XHApplication.in())
                     .load(imgUrl)
                     .setSaveType(type)
@@ -223,6 +221,7 @@ public class ImgManager extends UtilImage {
         return coverBitmap;
     }
 
+    @Nullable
     public static Bitmap RSBlur(Context context,Bitmap source,int radius){
         return RSBlur(context,source,radius,1/8f);
     }

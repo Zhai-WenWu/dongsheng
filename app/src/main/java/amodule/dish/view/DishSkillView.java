@@ -20,6 +20,7 @@ import acore.override.helper.XHActivityManager;
 import acore.override.view.ItemBaseView;
 import acore.tools.Tools;
 import amodule.dish.activity.DetailDish;
+import amodule.vip.DeviceVipManager;
 import aplug.basic.SubBitmapTarget;
 import xh.basic.tool.UtilImage;
 
@@ -59,7 +60,7 @@ public class DishSkillView extends ItemBaseView{
         this.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!LoginManager.isLogin()&&!LoginManager.isTempVip()){
+                if(!LoginManager.isLogin()&&!DeviceVipManager.isDeviceVip()){
                     if(data.containsKey("iconType")&&"2".equals(data.get("iconType"))){
                         String url="xiangha://welcome?VipWebView.app?url=https%3A%2F%2Fappweb.xiangha.com%2Fvip%2Fmyvip%3Fpayset%3D2%26fullScreen%3D2%26vipFrom%3D%E9%A6%99%E5%93%88%E8%AF%BE%E7%A8%8B%E8%AF%A6%E6%83%85%E9%A1%B5%E7%AB%8B%E5%88%BB%E6%8B%A5%E6%9C%89%E7%89%B9%E6%9D%83%E6%8C%89%E9%92%AE";
                         if(XHActivityManager.getInstance().getCurrentActivity() != null)

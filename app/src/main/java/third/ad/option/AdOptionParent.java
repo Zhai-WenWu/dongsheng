@@ -130,6 +130,7 @@ public abstract class AdOptionParent implements ActivityMethodManager.IAutoRefre
                                     newMap.put("controlTag", controlTag); //给当前广告Control添加标记
                                     newMap.put("controlState", controlState); //给当前广告Control,down 下加载,up 上刷新
                                     newMap.put("timeTag", String.valueOf(System.currentTimeMillis()));
+                                    newMap.put("adid", adMap.get("adid"));
                                     adArray.add(newMap);
                                     Log("adArray.add  ad——ids:" + AD_IDS[i]);
                                 } else {

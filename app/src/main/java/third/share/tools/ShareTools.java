@@ -36,8 +36,9 @@ import java.util.Map;
 
 import acore.logic.XHClick;
 import acore.override.XHApplication;
+import acore.tools.FileManager;
 import acore.tools.ImgManager;
-import acore.tools.ObserverManager;
+import acore.observer.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -51,7 +52,6 @@ import cn.sharesdk.tencent.qq.QQ;
 import cn.sharesdk.tencent.qzone.QZone;
 import cn.sharesdk.wechat.friends.Wechat;
 import cn.sharesdk.wechat.moments.WechatMoments;
-import xh.basic.tool.UtilFile;
 
 public class ShareTools {
     private static ShareTools shareTools = null;
@@ -265,7 +265,7 @@ public class ShareTools {
     }
 
     public String drawableToPath(String dbName) {
-        String dbPath = UtilFile.getSDDir() + "long/" + dbName;
+        String dbPath = FileManager.getSDDir() + "long/" + dbName;
         File file = new File(dbPath);
         if (file.exists()) {
             return file.getAbsolutePath();
@@ -277,11 +277,8 @@ public class ShareTools {
 
     public String saveDrawable(Bitmap btm, String name) {
         InputStream ips = ImgManager.bitmapToInputStream(btm, 0);
-        File file = UtilFile.saveFileToCompletePath(UtilFile.getSDDir() + name, ips, false);
-        if (file == null) {
-            return null;
-        }
-        return file.getAbsolutePath();
+        final String filePath = FileManager.getSDDir() + name;
+        return FileManager.saveFileToCompletePath(filePath, ips, false) ? filePath : null;
     }
 
     public void showShare() {

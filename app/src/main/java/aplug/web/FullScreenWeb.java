@@ -11,11 +11,10 @@ import com.xiangha.R;
 import java.util.Map;
 
 import acore.logic.AppCommon;
-import acore.logic.XHClick;
 import acore.override.activity.base.WebActivity;
 import acore.override.helper.XHActivityManager;
-import acore.tools.IObserver;
-import acore.tools.ObserverManager;
+import acore.observer.IObserver;
+import acore.observer.ObserverManager;
 import aplug.web.tools.JSAction;
 import aplug.web.tools.JsAppCommon;
 import aplug.web.tools.WebviewManager;
@@ -40,7 +39,7 @@ public class FullScreenWeb extends WebActivity implements IObserver {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         super.onCreate(savedInstanceState);
 //        ToolsDevice.modifyStateTextColor(this);
-        initActivity("",0,0,0,R.layout.a_full_screen_web);
+        initActivity("",2,0,0,R.layout.a_full_screen_web);
         Bundle bundle = this.getIntent().getExtras();
         // 正常调用
         if (bundle != null) {

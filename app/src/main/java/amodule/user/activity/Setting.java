@@ -14,7 +14,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-
 import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.popdialog.util.FullScreenManager;
@@ -25,7 +24,6 @@ import com.xh.view.HButtonView;
 import com.xh.view.TitleMessageView;
 import com.xiangha.R;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -40,6 +38,7 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.main.Main;
+import amodule.other.activity.ClientDebug;
 import amodule.other.activity.Comment;
 import amodule.user.activity.login.AccoutActivity;
 import amodule.user.activity.login.UserSetting;
@@ -50,7 +49,6 @@ import aplug.basic.ReqInternet;
 import aplug.web.ApiShowWeb;
 import third.push.xg.XGPushServer;
 import xh.basic.internet.UtilInternet;
-import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilString;
 
 import static acore.tools.FileManager.SIZETYPE_MB;
@@ -77,6 +75,7 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
     private LeftAndRightTextView view_platform;
     private LeftAndRightTextView view_qa_arbitration;
     private LeftAndRightTextView view_activity;
+    private LeftAndRightTextView view_client_debug;
     private LeftAndRightTextView view_clear_cace;
     private LeftAndRightTextView view_check_update;
     private LinearLayout ll_internal_used;
@@ -140,6 +139,7 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
         view_platform = (LeftAndRightTextView) findViewById(R.id.view_platform);
         view_qa_arbitration = (LeftAndRightTextView) findViewById(R.id.view_qa_arbitration);
         view_activity = (LeftAndRightTextView) findViewById(R.id.view_activity);
+        view_client_debug = (LeftAndRightTextView) findViewById(R.id.view_client_debug);
 
         tv_version = (TextView) findViewById(R.id.tv_version);
         tv_version.setText("版本号:" + ToolsDevice.getVerName(this));
@@ -188,7 +188,7 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
 
 
     private void initData() {
-        Map<String, String> userInfo = (Map<String, String>) UtilFile.loadShared(mAct, FileManager.xmlFile_userInfo, "");
+        Map<String, String> userInfo = (Map<String, String>) FileManager.loadShared(mAct, FileManager.xmlFile_userInfo, "");
         nickName = userInfo.get("nickName");
         img = userInfo.get("img");
         tel = userInfo.get("tel");
@@ -250,8 +250,9 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
     private void showItemGrop() {
 
         //如果 是debug 或者 是管理员，就显示‘后台’和端口切换
-        if (Tools.isDebug(this) || LoginManager.isManager()) {
+        if (Tools.isDebug(this) || LoginManager.isManager() || isShowClientDebug()) {
             ll_internal_used.setVisibility(View.VISIBLE);
+            view_client_debug.setVisibility(isShowClientDebug() ? View.VISIBLE : View.GONE);
         } else {
             ll_internal_used.setVisibility(View.GONE);
         }
@@ -385,6 +386,12 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
                 openQAArbitration();
             }
         });
+        view_client_debug.init("Debug", "", true, true, new LeftAndRightTextView.LeftAndRightTextViewCallback() {
+            @Override
+            public void onClick() {
+                startActivity(new Intent(mAct,ClientDebug.class));
+            }
+        });
         view_activity.init("活动", "", false, true, new LeftAndRightTextView.LeftAndRightTextViewCallback() {
             @Override
             public void onClick() {
@@ -392,15 +399,37 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
             }
 
         });
+
+    }
+
+    /**
+     * @return
+     */
+    private boolean isShowClientDebug(){
+        if(!LoginManager.isLogin()){
+            return false;
+        }
+        String currentUserCode = LoginManager.userInfo.get("code");
+        if(TextUtils.isEmpty(currentUserCode)){
+            return false;
+        }
+        String[] canDebugCodeArray = {"547050520741", "100602334991", "72228625021", "42737350684",
+                "48977470607", "6393152531", "1949369181", "809959148911", "49282607107",
+                "813991925811", "72228625021", "10191"};
+        for(String code:canDebugCodeArray){
+            if(TextUtils.equals(code,currentUserCode)){
+                return true;
+            }
+        }
+        return false;
     }
 
     private void setCacheSize() {
         new Thread(() -> {
-            long fileSize = FileManager.getFileOrFolerSize(FileManager.getDataDir() + FileManager.file_indexData);
-            fileSize += FileManager.getFileOrFolerSize(FileManager.getDataDir() + FileManager.file_appData);
-            fileSize += FileManager.getFileOrFolerSize(UtilFile.getSDDir() + LoadImage.SAVE_CACHE);
+            long fileSize = FileManager.getFileOrFolderSize(FileManager.getDataDir() + FileManager.file_appData);
+            fileSize += FileManager.getFileOrFolderSize(FileManager.getSDDir() + LoadImage.SAVE_CACHE);
             cacheSize = fileSize;
-            Setting.this.runOnUiThread(() -> view_clear_cace.setRightText(FileManager.FormetFileSize(cacheSize,SIZETYPE_MB)));
+            Setting.this.runOnUiThread(() -> view_clear_cace.setRightText(FileManager.formatFileSize(cacheSize,SIZETYPE_MB)));
         }).start();
     }
 
@@ -458,8 +487,8 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                UtilFile.delDirectoryOrFile(FileManager.getDataDir() + FileManager.file_appData);
-                UtilFile.delDirectoryOrFile(UtilFile.getSDDir() + LoadImage.SAVE_CACHE);
+                FileManager.delete(FileManager.getDataDir() + FileManager.file_appData);
+                FileManager.delete(FileManager.getSDDir() + LoadImage.SAVE_CACHE);
                 FullScreenManager.saveWelcomeInfo(Setting.this,null,null);
                 Setting.this.runOnUiThread(new Runnable() {
                     @Override

@@ -294,7 +294,6 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/dp_10"
         android:paddingLeft="@dimen/dp_20"
-        android:paddingRight="@dimen/dp_20"
         app:layout_constraintBottom_toTopOf="@+id/line_bottom"
         app:layout_constraintBottom_toBottomOf="parent">
 
@@ -432,7 +431,9 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_marginBottom="@dimen/dp_30"
+                android:layout_marginRight="@dimen/dp_20"
                 android:gravity="center_horizontal"
+                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintBottom_toTopOf="@+id/layout_bottom_share">
                 <ImageView
                     android:id="@+id/image1"
@@ -466,7 +467,9 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:gravity="center_horizontal"
+                app:layout_constraintRight_toRightOf="parent"
                 android:layout_marginBottom="@dimen/dp_30"
+                android:layout_marginRight="@dimen/dp_20"
                 app:layout_constraintBottom_toTopOf="@+id/layout_bottom_comment">
                 <ImageView
                     android:id="@+id/image2"
@@ -500,6 +503,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:gravity="center_horizontal"
+                android:layout_marginRight="@dimen/dp_20"
+                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent">
                 <ImageView
                     android:id="@+id/image3"
@@ -526,6 +531,19 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent" />
             </LinearLayout>
+
+            <ImageView
+                android:id="@+id/guide_view"
+                android:src="@drawable/icon_comment_guide"
+                app:layout_constraintBottom_toTopOf="@+id/layout_bottom_comment"
+                app:layout_constraintRight_toRightOf="parent"
+                android:visibility="gone"
+                tools:visibility="visible"
+                android:scaleType="fitEnd"
+                android:layout_marginBottom="@dimen/dp_3"
+                android:layout_marginRight="@dimen/dp_12"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dp_20"/>
 
         </android.support.constraint.ConstraintLayout>
 

@@ -6,6 +6,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -21,9 +22,7 @@ import acore.tools.Tools;
 import acore.widget.DownRefreshList;
 import acore.widget.DownRefreshList.OnRefreshListener;
 import acore.widget.LayoutScroll;
-import acore.widget.ScrollLinearListLayout;
 import acore.widget.rvlistview.RvListView;
-import aplug.stickheaderlayout.PlaceHoderHeaderLayout;
 
 import static android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
 
@@ -104,72 +103,11 @@ public class AutoLoadMore {
 		list.setOnScrollListener(getListViewScrollListener(loadMore, clicker, true,null));
 	}
 
-	/**
-	 * 适用于PlaceHoderHeaderLayout的loadMore设置
-	 *
-	 * @param placeHoderHeaderLayout
-	 * @param list
-	 * @param loadMore
-	 * @param clicker
-	 */
-	public static void setAutoMoreListen (PlaceHoderHeaderLayout placeHoderHeaderLayout, final ListView list, final Button loadMore, final OnClickListener clicker) {
-		if(list.getFooterViewsCount() > 0){
-			list.removeFooterView(loadMore);
-		}
-		list.addFooterView (loadMore);
-		placeHoderHeaderLayout.setOnListScrollListener (new OnListScrollListener () {
-			int previousVisibleFirst = -1;
-			int visibleLast = -1;
-			int totalCount = 0;
-			AtomicBoolean allow = new AtomicBoolean(true);
-			int currentState;
-
-			@Override
-			public void onScroll (AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-				visibleLast = firstVisibleItem + visibleItemCount;
-				if (!allow.get()) {
-					allow.set(totalCount != view.getAdapter().getCount());
-				}
-				if (allow.get()) {
-					if (view.getAdapter() != null && view.getAdapter().getCount() - 4 <= visibleLast
-							&& (currentState != SCROLL_STATE_IDLE || true)) {
-						allow.set(false);
-						totalCount = view.getAdapter().getCount();
-						if (clicker != null) {
-							clicker.onClick(loadMore);
-						}
-					}
-				}
-				previousVisibleFirst = firstVisibleItem;
-			}
-
-			@Override
-			public void onScrollStateChanged (AbsListView arg0, int scrollState) {
-
-			}
-		});
-	}
-
-	/**
-	 * 适用于ScrollLinearListLayout的loadMore设置
-	 *
-	 * @param scrollLinearListLayout
-	 * @param list
-	 * @param loadMore
-	 * @param clicker
-	 */
-	public static void setAutoMoreListen (ScrollLinearListLayout scrollLinearListLayout, final ListView list, final Button loadMore, final OnClickListener clicker) {
-		if(list.getFooterViewsCount() > 0){
-			list.removeFooterView(loadMore);
-		}
-		list.addFooterView (loadMore);
-		scrollLinearListLayout.addOnScrollListener(getListViewScrollListener(loadMore, clicker, true,null));
-	}
-
 	@NonNull
 	private static OnScrollListener getListViewScrollListener(Button loadMore, OnClickListener clicker, boolean isAuto,OnScrollListener onScrollListener) {
 		return new OnScrollListener() {
 			int previousVisibleFirst = -1;
+			long previousTime=System.currentTimeMillis();
 			int visibleLast = -1;
 			int totalCount = 0;
 			AtomicBoolean allow = new AtomicBoolean(true);
@@ -186,8 +124,11 @@ public class AutoLoadMore {
 				}
 				if (allow.get()) {
 					if (view.getAdapter() != null && view.getAdapter().getCount() - 4 <= visibleLast
-							&& (currentState != SCROLL_STATE_IDLE || isAuto)) {
+							&& (currentState != SCROLL_STATE_IDLE || isAuto)
+							&& (System.currentTimeMillis() - previousTime > 400)) {
+						Log.i("tzy", "onScroll: " + (System.currentTimeMillis() - previousTime));
 						allow.set(false);
+						previousTime = System.currentTimeMillis();
 						totalCount = view.getAdapter().getCount();
 						if (clicker != null) {
 							clicker.onClick(loadMore);
@@ -431,6 +372,7 @@ public class AutoLoadMore {
 			int visibleLast = -1;
 			int totalCount;
 			boolean allow = true;
+			long previousTime = System.currentTimeMillis();
 			@Override
 			public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
 				super.onScrollStateChanged(recyclerView, newState);
@@ -452,7 +394,8 @@ public class AutoLoadMore {
 					allow = totalCount != recyclerView.getAdapter().getItemCount();
 				}
 				if (recyclerView.getAdapter() != null && recyclerView.getAdapter().getItemCount() - 4 <= visibleLast
-						&& allow) {
+						&& allow &&(System.currentTimeMillis()-previousTime>500)) {
+					previousTime = System.currentTimeMillis();
 					allow = false;
 					totalCount = recyclerView.getAdapter().getItemCount();
 					if (clicker != null) {

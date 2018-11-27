@@ -255,8 +255,6 @@ public class RvVericalVideoItemAdapter extends BaseAdapter<ShortVideoDetailModul
         public void startVideo() {
             Log.i("tzy", "startVideo:");
             shortVideoItemView.prepareAsync();
-            //广告展示统计
-            AdPlayIdConfig.shown(this.data.adId);
             //真实刷新数据
             refreshData();
         }
@@ -339,7 +337,7 @@ public class RvVericalVideoItemAdapter extends BaseAdapter<ShortVideoDetailModul
         return -1;
     }
     public interface  PlayCompleteCallBack{
-        public void videoComplete(int position);//
+        public void videoComplete(int position,boolean hasDialogShow);//
     }
     public PlayCompleteCallBack playCompleteCallBack;
     public void setPlayCompleteCallBack(PlayCompleteCallBack completeCallBack){

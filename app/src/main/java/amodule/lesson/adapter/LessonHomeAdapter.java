@@ -53,7 +53,7 @@ public class LessonHomeAdapter extends RvBaseAdapter<Map<String,String>> {
 
         @Override
         public void bindData(int position, @Nullable Map<String, String> data) {
-            final String ID = LoginManager.isVIP() || LoginManager.isTempVip() ? "vip_homepage" : "nonvip_homepage";
+            final String ID = LoginManager.isVIP() ? "vip_homepage" : "nonvip_homepage";
             String title = StringManager.getFirstMap(data.get(WidgetDataHelper.KEY_PARAMETER)).get("title");
             final String titleTwoLevel = StringManager.getFirstMap(title).get("text1");
             view.setStatisticPage("VipHome");

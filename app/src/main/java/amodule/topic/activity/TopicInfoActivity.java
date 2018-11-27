@@ -153,6 +153,11 @@ public class TopicInfoActivity extends BaseAppCompatActivity {
         }
     }
 
+    private void initStatusBar() {
+        String colors = Tools.getColorStr(this, R.color.ysf_black_333333);
+        Tools.setStatusBarColor(this, Color.parseColor(colors));
+    }
+
     private void initData() {
         Intent i = getIntent();
         if (i != null) {

@@ -13,9 +13,11 @@ import java.util.Map;
 
 import acore.tools.FileManager;
 import acore.tools.StringManager;
+import acore.tools.Tools;
 import amodule.search.bean.WordBean;
 import amodule.search.db.WordsSqlite;
 import aplug.basic.InternetCallback;
+import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import xh.basic.tool.UtilFile;
 
@@ -68,28 +70,50 @@ public class SearchDataImp implements SearchData {
     public void getHotWords(Context context, final InternetCallback callBack) {
 
         if (callBack == null) return;
-        ReqInternet.in().doGet(StringManager.api_getHotWords, callBack);
+        ReqEncyptInternet.in().doGetEncypt(StringManager.api_getHotWords, callBack);
+    }
+
+    public void getRandomHotWord(final InternetCallback callBack){
+        getHotWords(null, new InternetCallback() {
+            @Override
+            public void loaded(int i, String s, Object o) {
+                String word = "";
+                if(i >= ReqInternet.REQ_OK_STRING){
+                    List<Map<String,String>> words = StringManager.getListMapByJson(o);
+                    if(!words.isEmpty()){
+                        int random = Tools.getRandom(0,words.size());
+                        String wordTemp =  words.get(random).get("");
+                        word = wordTemp != null ? wordTemp : "";
+                    }
+                }
+                if(callBack != null){
+                    callBack.loaded(ReqInternet.REQ_OK_STRING,s,word);
+                }
+            }
+        });
     }
 
     @Override
     public void getCaipuAndShicaiResult(Context context, String key, int currentPage, InternetCallback callBack) {
         if (callBack == null) return;
-        String getUrl = StringManager.api_getCaipu + "?type=caipu&keywords=" + key + "&page=" + currentPage;
-        ReqInternet.in().doGet(getUrl, callBack);
+        String getUrl = StringManager.api_getCaipu + "?keywords=" + key + "&page=" + currentPage;
+        ReqEncyptInternet.in().doGetEncypt(getUrl, callBack);
     }
 
     @Override
     public void getCaidanResult(Context context, String key, int currentPage, InternetCallback callBack) {
         if (callBack == null) return;
-        String getUrl = StringManager.api_getCaipu + "?type=caidan&keywords=" + key + "&page=" + currentPage;
-        ReqInternet.in().doGet(getUrl, callBack);
+        //接口不使用
+//        String getUrl = StringManager.api_getCaipu + "?type=caidan&keywords=" + key + "&page=" + currentPage;
+//        ReqInternet.in().doGet(getUrl, callBack);
     }
 
     @Override
     public void getZhishiResult(Context context, String key, int currentPage, InternetCallback callBack) {
         if (callBack == null) return;
-        String getUrl = StringManager.api_getCaipu + "?type=zhishi&keywords=" + key + "&page=" + currentPage;
-        ReqInternet.in().doGet(getUrl, callBack);
+        //接口不使用
+//        String getUrl = StringManager.api_getCaipu + "?type=zhishi&keywords=" + key + "&page=" + currentPage;
+//        ReqInternet.in().doGet(getUrl, callBack);
     }
 
     @Override

@@ -76,7 +76,7 @@ public class BaiduAdTools {
         BaiduNative baiduNative = new BaiduNative(context, adid, new BaiduNative.BaiduNativeNetworkListener() {
             @Override
             public void onNativeLoad(List<NativeResponse> list) {
-                Log.i("tzy", "onNativeLoad: ");
+//                Log.i("tzy", "onNativeLoad: ");
                 if(null != callback)
                     callback.onNativeLoad(list);
             }
@@ -102,7 +102,6 @@ public class BaiduAdTools {
         String desc = nativeResponse.getDesc();
         String iconUrl = nativeResponse.getIconUrl();
         String imageUrl = nativeResponse.getImageUrl();
-//        boolean isBigPic = nativeResponse.getMainPicWidth() >= 720;
         boolean isBigPic = nativeResponse.isDownloadApp();
         callback.onHandlerData(title,desc,iconUrl,imageUrl,isBigPic);
     }

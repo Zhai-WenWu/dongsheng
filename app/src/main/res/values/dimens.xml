@@ -530,5 +530,6 @@
     <dimen name="sp_29">29sp</dimen>
     <dimen name="sp_29.5">29.5sp</dimen>
     <dimen name="sp_30">30sp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 
 </resources>

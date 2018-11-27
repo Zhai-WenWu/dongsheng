@@ -6,14 +6,8 @@ import android.app.ActivityManager;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.hardware.Camera;
-import android.media.AudioManager;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
@@ -27,7 +21,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -56,7 +49,6 @@ import acore.logic.VersionOp;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
 import aplug.recordervideo.tools.SortComparator;
-import third.mall.tool.ToolView;
 import xh.basic.tool.UtilLog;
 
 import static acore.override.XHApplication.ONLINE_PACKAGE_NAME;
@@ -140,7 +132,7 @@ public class Tools {
      * @throws ParseException
      */
     public static String dealTime(String lastTime, String currentTime, String dateFormat, String time) throws ParseException {
-        if (time.equals("hide"))
+        if (TextUtils.isEmpty(time) || time.equals("hide"))
             return time;
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat);
         Date currentDate = simpleDateFormat.parse(currentTime);
@@ -342,63 +334,8 @@ public class Tools {
         return list2JsonArray(data).toString();
     }
 
-    /**
-     * @param context
-     *
-     * @return 获取手机内存和CPU频率以及系统版本
-     */
-    public static boolean getPhoneInformation(Context context) {
-        //添加手机的判断
-        int version = android.os.Build.VERSION.SDK_INT;
-        String availMemory = "";
-//		if (context != null) {
-//			availMemory = ToolsDevice.getAvailMemory(context);//获取手机当前可用内存
-//		}
-        availMemory = ToolsDevice.getTotalMemory();//获取系统总内存
-        int parseInt = 0;
-        if (!TextUtils.isEmpty(availMemory)) {
-            parseInt = Integer.parseInt(availMemory);
-        }
-//		String curCpuFreq = CpuManager.getCurCpuFreq();
-        int maxCpuFreq = CPUTool.getMaxCpuFreq();
-//		int minCpuFreq = CPUTool.getMinCpuFreq();
-        return version >= 17 && parseInt >= 1000 && maxCpuFreq > 1000000;
-    }
-
-    /**
-     * 将imageview转成bitmap
-     *
-     * @param imageView
-     *
-     * @return
-     */
-    public static Bitmap getBitmap(ImageView imageView) {
-        Drawable drawable = imageView.getDrawable();
-        BitmapDrawable bd = (BitmapDrawable) drawable;
-        return bd.getBitmap();
-    }
-
     public static int getRandom(int star, int end) {
         return (int) (star + (Math.random() * (end + 1 - star)));
-    }
-
-    /**
-     * 算出真实的useracode
-     *
-     * @param user
-     *
-     * @return
-     */
-    public static String getUserCode(String user) {
-        int usedata = Integer.parseInt(user);
-        String data = "";
-        if (usedata % 10 == 0)
-            data = 8 + "";
-        else
-            data = user.substring(user.length() - 1, user.length());
-        String u = data + user + user.substring(0, 1);
-        long code = Long.parseLong(u) * 89 + 312;
-        return code + "";
     }
 
     /**
@@ -764,23 +701,6 @@ public class Tools {
     }
 
     /**
-     * @param context
-     * @param tvWidth : textView的宽
-     * @param tvSize
-     *
-     * @return
-     */
-    public static int getTextNumbers(Context context, int tvWidth, int tvSize) {
-//        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-//        int tv_distance = (int) context.getResources().getDimension(R.dimen.dp_18);
-//        int waith = wm.getDefaultDisplay().getWidth();
-//        int tv_waith = waith - margin;
-        int tv_pad = ToolView.dip2px(context, 1.0f);
-        /* 判断是否等于0 */
-        return tvSize + tv_pad > 0 ? (tvWidth + tv_pad) / (tvSize + tv_pad) : 0;
-    }
-
-    /**
      * 程序是否在前台运行
      *
      * @return
@@ -851,40 +771,6 @@ public class Tools {
         return jsonObject;
     }
 
-    public static String getTimeDifferent(long nowTime, long time) {
-        String timeShow = "";
-        if (nowTime <= 0 || time <= 0) {
-            return "问题时间";
-        }
-        long timeDifferent = nowTime - time;
-        if (timeDifferent < 60) {//秒
-            timeShow = "刚刚";
-        } else if (timeDifferent < 60 * 60) {//分钟
-            int num = (int) (timeDifferent / (60));
-            timeShow = num + "分钟前";
-        } else if (timeDifferent < 60 * 60 * 24) {//小时
-            int num = (int) (timeDifferent / (60 * 60));
-            timeShow = num + "小时前";
-        } else if (timeDifferent < 60 * 60 * 48) {//昨天
-            timeShow = "昨天";
-        } else if (timeDifferent < 60 * 60 * 24 * 30) {//几天
-            int num = (int) (timeDifferent / (60 * 60 * 24));
-            timeShow = num + "天前";
-        } else if (timeDifferent < 60 * 60 * 24 * 30 * 12) {//几月
-            int num = (int) (timeDifferent / (60 * 60 * 24 * 30));
-            timeShow = num + "月前";
-        } else {
-            timeShow = "很久前";
-        }
-        return timeShow;
-    }
-
-    public static void setMute(Context context) {
-        AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-        int mCurrSoundNum = audioManager.getStreamVolume(3);
-        audioManager.setStreamVolume(3, 0, 0);
-    }
-
     /**
      * 获取Context所在进程的名称
      *
@@ -917,24 +803,6 @@ public class Tools {
         final ClipboardManager manager = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clip = ClipData.newPlainText("simple text copy", str);
         manager.setPrimaryClip(clip);
-    }
-
-    /*获取Context所在进程的名称
-
-    pkgName 包名
-    *
-    * */
-    public static boolean isPkgInstalled(String pkgName, Context context) {
-        PackageInfo packageInfo = null;
-        try {
-
-            packageInfo = context.getPackageManager().getPackageInfo(pkgName, 0);
-        } catch (PackageManager.NameNotFoundException e) {
-
-            packageInfo = null;
-            e.printStackTrace();
-        }
-        return packageInfo != null;
     }
 
     public static int parseIntOfThrow(String strValue){

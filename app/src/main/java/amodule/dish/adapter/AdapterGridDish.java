@@ -78,6 +78,9 @@ public class AdapterGridDish extends RvBaseAdapter<Map<String, String>> {
 
         //获取icon id
         private int getIconRes(String isShow){
+            if(isShow == null){
+                return 0;
+            }
             switch(isShow){
                 case "1":
                     return R.drawable.icon_dish_try_see;

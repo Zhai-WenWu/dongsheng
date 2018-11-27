@@ -1,20 +1,28 @@
 package amodule.home.view;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.xiangha.R;
 
+import org.seamless.util.Text;
+
 import acore.logic.XHClick;
 import acore.logic.stat.intefaces.OnClickListenerStat;
+import acore.tools.StringManager;
 import amodule._common.delegate.IStatictusData;
 import amodule.dish.activity.TimeDish;
 import amodule.main.view.MessageTipIcon;
 import amodule.search.avtivity.HomeSearch;
+import amodule.search.data.SearchDataImp;
+import aplug.basic.InternetCallback;
 
 import static acore.logic.stat.StatConf.STAT_TAG;
 import static amodule.main.activity.MainHomePage.STATICTUS_ID_PULISH;
@@ -34,6 +42,9 @@ public class HomeTitleLayout extends RelativeLayout implements IStatictusData {
 
     OnClickActivityIconListener mOnClickActivityIconListener;
 
+    String searchWord;
+    boolean isLoading;
+
     public HomeTitleLayout(Context context) {
         this(context,null);
     }
@@ -49,9 +60,9 @@ public class HomeTitleLayout extends RelativeLayout implements IStatictusData {
 
     private void initialize() {
         LayoutInflater.from(getContext()).inflate(R.layout.a_home_title,this,true);
-        mPulishView = (HomePushIconView) findViewById(R.id.home_publish_btn);
+        mPulishView = findViewById(R.id.home_publish_btn);
         mPulishView.setStatictusID(STATICTUS_ID_PULISH);
-        mMessageTipIcon = (MessageTipIcon) findViewById(R.id.message_tip);
+        mMessageTipIcon = findViewById(R.id.message_tip);
 
         mPulishView.setTag(STAT_TAG,"加号");
         mPulishView.setOnClickListener(mOnClickListenerStat);
@@ -59,6 +70,27 @@ public class HomeTitleLayout extends RelativeLayout implements IStatictusData {
         searchLayout.setTag(STAT_TAG,"搜索");
         searchLayout.setOnClickListener(mOnClickListenerStat);
 
+        postDelayed(this::getHotWord,2000);
+    }
+
+    public void getHotWord() {
+        if(!TextUtils.isEmpty(searchWord) || isLoading){
+            return;
+        }
+        isLoading = true;
+        new SearchDataImp().getRandomHotWord(new InternetCallback() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void loaded(int i, String s, Object o) {
+                isLoading = false;
+                String word = (String) o;
+                if(!TextUtils.isEmpty(word)){
+                    searchWord = word;
+                    TextView textView = findViewById(R.id.text_search);
+                    textView.setText("大家正在搜: " + word);
+                }
+            }
+        });
     }
 
     OnClickListenerStat mOnClickListenerStat = new OnClickListenerStat() {
@@ -74,7 +106,12 @@ public class HomeTitleLayout extends RelativeLayout implements IStatictusData {
                 case R.id.home_search_layout:
                     //统计
                     XHClick.mapStat(getContext(),id,twoLevel,"搜索框");
-                    getContext().startActivity(new Intent(getContext(), HomeSearch.class));
+                    Intent intent = new Intent(getContext(), HomeSearch.class);
+                    if(!TextUtils.isEmpty(searchWord)){
+                        intent.putExtra("s",searchWord);
+                        intent.putExtra(HomeSearch.EXTRA_IS_NOW_SEARCH,"1");
+                    }
+                    getContext().startActivity(intent);
                     break;
             }
         }

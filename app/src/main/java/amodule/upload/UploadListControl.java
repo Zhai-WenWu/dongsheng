@@ -10,7 +10,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import acore.override.XHApplication;
-import acore.tools.UploadImg;
 import amodule.upload.bean.UploadItemData;
 import amodule.upload.bean.UploadPoolData;
 import amodule.upload.callback.UploadListNetCallBack;

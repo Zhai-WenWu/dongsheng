@@ -33,7 +33,7 @@ import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.override.activity.base.BaseActivity;
-import acore.tools.ObserverManager;
+import acore.observer.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -82,7 +82,6 @@ public class BaseEditActivity extends BaseActivity {
     protected String mType = "5";//类型：5-菜谱问答
     protected String mQATitle = "";//问答相关问题的标题
 
-    private TextView mTitle;
     private TextView mUpload;
     protected EditText mEditText;
     private LinearLayout mImgsContainer;
@@ -127,14 +126,14 @@ public class BaseEditActivity extends BaseActivity {
 
     protected void initView(String title, int contentResId) {
         initActivity(title, 2, 0, 0, contentResId);
-        mTitle = (TextView) findViewById(R.id.title);
+        TextView title1 = findViewById(R.id.title);
         mUpload = (TextView) findViewById(R.id.upload);
         mEditText = (EditText) findViewById(R.id.edittext);
         mImgsContainer = (LinearLayout) findViewById(R.id.imgs);
         mCountText = (TextView) findViewById(R.id.count_text);
         mVideoImgBtn = (ImageView) findViewById(R.id.video_select_btn);
         mPhotoImgBtn = (ImageView) findViewById(R.id.img_select_btn);
-        mTitle.setText(title);
+        title1.setText(title);
         mUpload.setText("发布");
         mUpload.setEnabled(false);
         mUpload.setVisibility(View.VISIBLE);

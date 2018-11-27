@@ -25,15 +25,11 @@ import acore.tools.LogManager;
 import acore.tools.Tools;
 import acore.widget.DownRefreshList;
 import acore.widget.LayoutScroll;
-import acore.widget.ScrollLinearListLayout;
 import acore.widget.rvlistview.RvListView;
 import acore.widget.rvlistview.adapter.RvBaseAdapter;
 import amodule.answer.view.UploadingView;
-import amodule.quan.adapter.AdapterCircle;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
-import aplug.basic.XHConf;
-import aplug.stickheaderlayout.PlaceHoderHeaderLayout;
 import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
 import cn.srain.cube.views.ptr.PtrDefaultHandler;
 import cn.srain.cube.views.ptr.PtrFrameLayout;
@@ -272,27 +268,6 @@ public class LoadManager {
 		}
 		setLoading(clicker, isBlanck);
 	}
-	/**
-	 * 专门提供于PlaceHoderHeaderLayout使用的加载
-	 * 传入PlaceHoderHeaderLayout对象设置自动加载
-	 *
-	 * @param placeHoderHeaderLayout
-	 * @param listView
-	 * @param adapter
-	 * @param hasMore
-	 * @param clicker
-	 */
-	public void setLoading(PlaceHoderHeaderLayout placeHoderHeaderLayout, ListView listView,
-								   AdapterCircle adapter, boolean hasMore, OnClickListener clicker) {
-		if (listView.getAdapter() == null) {
-			if (hasMore) {
-				Button loadMore = mLoadMore.newLoadMoreBtn(listView, clicker);
-				AutoLoadMore.setAutoMoreListen(placeHoderHeaderLayout, listView, loadMore, clicker);
-			}
-			listView.setAdapter(adapter);
-		}
-		setLoading(clicker);
-	}
 
 	/**
 	 * 使用下拉刷新框架的加载
@@ -371,28 +346,6 @@ public class LoadManager {
 			}
 		}
 		setLoading(loadMoreListener, showProgressbar);
-	}
-
-	/**
-	 * 专门提供于ScrollLinearListLayout使用的加载
-	 * 传入ScrollLinearListLayout对象设置自动加载
-	 *
-	 * @param scrollLinearListLayout
-	 * @param listView
-	 * @param adapter
-	 * @param hasMore
-	 * @param clicker
-	 */
-	public void setLoading(ScrollLinearListLayout scrollLinearListLayout, ListView listView,
-						   BaseAdapter adapter, boolean hasMore, OnClickListener clicker) {
-		if (listView.getAdapter() == null) {
-			if (hasMore) {
-				Button loadMore = mLoadMore.newLoadMoreBtn(listView, clicker);
-				AutoLoadMore.setAutoMoreListen(scrollLinearListLayout, listView, loadMore, clicker);
-			}
-			listView.setAdapter(adapter);
-		}
-		setLoading(clicker);
 	}
 
     public void loading(Object key, boolean isBlankSpace) {

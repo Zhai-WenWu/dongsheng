@@ -16,6 +16,7 @@ import com.xiangha.Welcome;
 import java.util.ArrayList;
 import java.util.Map;
 
+import acore.logic.stat.StatConf;
 import acore.logic.stat.StatModel;
 import acore.logic.stat.StatisticsManager;
 import acore.notification.controller.NotificationSettingController;
@@ -28,12 +29,12 @@ import amodule.main.Main;
 import amodule.main.activity.MainHomePage;
 import amodule.other.listener.HomeKeyListener;
 import amodule.other.listener.HomeKeyListener.OnHomePressedListener;
+import aplug.basic.DefaultInternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import third.ad.XHAdAutoRefresh;
 import third.ad.tools.AdConfigTools;
 import third.ad.tools.WelcomeAdTools;
 import third.mall.aplug.MallCommon;
-import xh.basic.tool.UtilFile;
 
 import static acore.logic.ConfigMannager.KEY_RANDPROMOTION;
 import static amodule.main.Main.colse_level;
@@ -45,6 +46,7 @@ public class ActivityMethodManager {
     private ArrayList<IAutoRefresh> mAdControls = new ArrayList<>();
     private long lastOnResumeTime,intervalOnResumeTime;
     private long onResumeTime = 0;
+    private String mStatF;
 
     public static boolean isAppShow=false;
 
@@ -54,6 +56,13 @@ public class ActivityMethodManager {
         PushAgent.getInstance(mAct).onAppStart();
         /*随机广告*/
         randPromotion();
+        initStatData();
+    }
+
+    private void initStatData() {
+        if (mAct != null && mAct.getIntent() != null) {
+            mStatF = mAct.getIntent().getStringExtra(StatConf.STAT_F);
+        }
     }
 
     public void onRestart(){
@@ -77,7 +86,7 @@ public class ActivityMethodManager {
         StatService.onResume(mAct);//mta腾讯统计
         // 应用到后台时如果数据被清理，需要重新自动登录
         if (LoginManager.userInfo.size() == 0) {
-            Map<String, String> userInfoMap = (Map<String, String>) UtilFile.loadShared(mAct, FileManager.xmlFile_userInfo, "");
+            Map<String, String> userInfoMap = (Map<String, String>) FileManager.loadShared(mAct, FileManager.xmlFile_userInfo, "");
             if (userInfoMap.get("userCode") != null && userInfoMap.get("userCode").length() > 1) {
                 LoginManager.loginByAuto(mAct);
                 MallCommon.getSaveMall(mAct);//处理电商
@@ -85,43 +94,21 @@ public class ActivityMethodManager {
         }
 
         //判断是否显示
-        if (WelcomeAdTools.getInstance().isOpenSecond()) {
-            String switchTimeStr = FileManager.loadShared(mAct, FileManager.xmlFile_appInfo, "switchTime").toString();
-        Log.i("tzy","switchTimeStr");
-            if (!TextUtils.isEmpty(switchTimeStr)) {
-                //清空切换时间
-                FileManager.saveShared(mAct, FileManager.xmlFile_appInfo, "switchTime", "");
-
-                long switchTime = Long.parseLong(switchTimeStr);
-                long currentTime = System.currentTimeMillis();
-                final long MIN = WelcomeAdTools.getInstance().getSplashmins() * 1000;
-                final long MAX = WelcomeAdTools.getInstance().getSplashmaxs() * 1000;
-                long 时间差值 = currentTime - switchTime;
-                Log.i("tzy","" + 时间差值);
-                if (时间差值 >= MIN){
-                        //&& 时间差值 <= MAX) {
-                    //获取已启动次数
-                    String currentCountStr = FileManager.loadShared(mAct, FileManager.xmlFile_appInfo, "splashOpenSecond").toString();
-                    int currentCount = 0;
-                    if (!TextUtils.isEmpty(currentCountStr)) {
-                        currentCount = Integer.parseInt(currentCountStr);
-                    }
-                    Log.i("tzy","已启动次数 ： " + currentCount);
-                    final int showCount = WelcomeAdTools.getInstance().getShownum();
-                    Log.i("tzy","启动MAX次数 ： " + showCount);
-//                    if (0 >= showCount || currentCount <= showCount) {
-                        int adShowTime = WelcomeAdTools.getInstance().getDuretimes();
-                        if(!Main.isShowWelcomeDialog) {
-//                            new WelcomeDialog(mAct, adShowTime).show();
-                            Log.i("zhangyujian","二次开屏");
-                            //请求广告位
-                            AdConfigTools.getInstance().getAdConfigInfo();
-                            mAct.startActivity(new Intent(mAct, Welcome.class));
-                        }
-                        //更新开启次数
-                        FileManager.saveShared(mAct, FileManager.xmlFile_appInfo, "splashOpenSecond", String.valueOf(++currentCount));
-//                    }
-                }
+        String switchTimeStr = FileManager.loadShared(mAct, FileManager.xmlFile_appInfo, "switchTime").toString();
+        Log.i("tzy", "switchTimeStr");
+        if (!TextUtils.isEmpty(switchTimeStr)) {
+            //清空切换时间
+            FileManager.saveShared(mAct, FileManager.xmlFile_appInfo, "switchTime", "");
+            long switchTime = Long.parseLong(switchTimeStr);
+            long currentTime = System.currentTimeMillis();
+            final long MIN = WelcomeAdTools.getInstance().getSplashmins() * 1000;
+            long intervalTime = currentTime - switchTime;
+            Log.i("tzy", "" + intervalTime);
+            if (intervalTime >= MIN && !Main.isShowWelcomeDialog) {
+                Log.i("tzy", "二次开屏");
+                //请求广告位
+                AdConfigTools.getInstance().getAdConfigInfo();
+                mAct.startActivity(new Intent(mAct, Welcome.class));
             }
         }
 
@@ -158,7 +145,7 @@ public class ActivityMethodManager {
     @SuppressLint("DefaultLocale")
     public void onPause() {
         long stayTime = System.currentTimeMillis() - onResumeTime;
-        StatisticsManager.saveData(StatModel.createPageStayModel(mAct.getClass().getSimpleName(),String.format("%.2f",stayTime/1000f)));
+        StatisticsManager.saveData(StatModel.createPageStayModel(mAct.getClass().getSimpleName(),String.format("%.2f",stayTime/1000f), TextUtils.isEmpty(mStatF) ? StatModel.EMPTY : mStatF));
         //广告刷新定时器停止
         XHAdAutoRefresh.getInstance().stopTimer();
         MobclickAgent.onPause(mAct);
@@ -196,12 +183,9 @@ public class ActivityMethodManager {
                     //刷新广告配置数据
                     AdConfigTools.getInstance().getAdConfigInfo();
                     // 进行点击Home键的处理
-                    Log.i("zhangyujian","HomeKeyListener111");
-                    if (WelcomeAdTools.getInstance().isOpenSecond()) {
-                    Log.i("zhangyujian","onHomePressed");
-                        FileManager.saveShared(mAct, FileManager.xmlFile_appInfo, "switchTime", String.valueOf(System.currentTimeMillis()));
-                        WelcomeAdTools.getInstance().handlerAdData(true);
-                    }
+                    Log.i("zhangyujian", "HomeKeyListener111");
+                    FileManager.saveShared(mAct, FileManager.xmlFile_appInfo, "switchTime", String.valueOf(System.currentTimeMillis()));
+                    WelcomeAdTools.getInstance().handlerAdData(true);
                     if(ActivityMethodManager.isAppShow) {
                         ActivityMethodManager.isAppShow = false;
                         if(Main.allMain!=null&&Main.allMain.allTab.get(MainHomePage.KEY)!=null){

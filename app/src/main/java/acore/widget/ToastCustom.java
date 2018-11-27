@@ -52,16 +52,18 @@ public class ToastCustom {
 			View view = inflater.inflate(mViewId, null);
 			TextView tv = (TextView)view.findViewById(R.id.pop_tv);
 			String showText;
-			if(mArrayData.get(i).containsKey("message")) showText = mArrayData.get(i).get("message");
-			else showText = mArrayData.get(i).get("");
+			if(mArrayData.get(i).containsKey("message"))
+				showText = mArrayData.get(i).get("message");
+			else
+				showText = mArrayData.get(i).get("");
 			tv.setText(showText);
 			
 			layoutParams = new WindowManager.LayoutParams();
 	//        //设置window的type
-			if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N)
+//			if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N)
 				layoutParams.type = WindowManager.LayoutParams.TYPE_PHONE;
-			else
-				layoutParams.type = WindowManager.LayoutParams.TYPE_TOAST;
+//			else
+//				layoutParams.type = WindowManager.LayoutParams.TYPE_TOAST;
 	        layoutParams.format = PixelFormat.RGBA_8888;
 	        //设置浮动窗口不可聚焦
 	        layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;

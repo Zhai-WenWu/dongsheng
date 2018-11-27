@@ -9,7 +9,6 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.View;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -115,9 +114,9 @@ public class MultiTagView extends LinearLayout {
         tagClickable = true;
     }
 
-
-    public boolean isaddView = true;
-
+    private String selectBackgroundColor = "#ffd914";
+    private String unselectBackgroundColor = "#f7f7f7";
+    public boolean isaddView= true;
     private void addTag(final Tag tag, final int tagTndex) {
         if (MultiTagView.this.getChildCount() >= lineNum + 1 || !isaddView) {
             return;
@@ -206,6 +205,16 @@ public class MultiTagView extends LinearLayout {
             elementsInRow = 1;
         }
         mLayoutItem.addView(frameLayout, layoutParams);
+    }
+
+    private void setButtonBackground(TextView button, String s) {
+        StateRoundRectDrawable drawable = new StateRoundRectDrawable(Color.parseColor(s), Color.parseColor("#BAA8A8"));
+        drawable.setDefautRadius(dip2px(2));
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) {
+            button.setBackground(drawable);
+        } else {
+            button.setBackgroundDrawable(drawable);
+        }
     }
 
     private void refresh() {

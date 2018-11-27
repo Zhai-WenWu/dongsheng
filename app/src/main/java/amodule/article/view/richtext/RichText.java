@@ -961,7 +961,7 @@ public class RichText extends EditText implements TextWatcher {
             return;
         }
         //此处确定需要添加link操作
-        addLinkMapToArray(link, getText().subSequence(start, end).toString());
+        addLinkMapToArray(link, getText() == null || getText().length() == 0 ? link : getText().subSequence(start, end).toString());
 
         linkInvalid(start, end);
         getEditableText().setSpan(new RichURLSpan(link, linkColor, linkUnderline), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);

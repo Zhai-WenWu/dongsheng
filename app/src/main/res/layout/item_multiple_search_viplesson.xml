@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/shadow_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_home_content_shadow">
+
+    <acore.widget.rcwidget.RCConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FFFFFF"
+        app:clip_background="true"
+        app:round_corner="@dimen/dp_5">
+
+        <acore.widget.rcwidget.RCImageView
+            android:id="@+id/lesson_img"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/i_nopic"
+            android:scaleType="centerCrop"
+            app:clip_background="true"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:round_corner_top_left="@dimen/dp_5"
+            app:round_corner_top_right="@dimen/dp_5"/>
+
+        <acore.widget.TagTextView
+            android:id="@+id/video_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_16"
+            android:layout_marginRight="@dimen/dp_2"
+            android:layout_marginBottom="@dimen/dp_2"
+            android:drawableLeft="@drawable/icon_play"
+            android:drawablePadding="@dimen/dp_3"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:paddingLeft="@dimen/dp_5"
+            android:paddingRight="@dimen/dp_5"
+            android:textColor="#FFFFFF"
+            android:textSize="@dimen/dp_10"
+            app:backgroundColor="#70000000"
+            app:drawableLeftHeight="@dimen/dp_6"
+            app:drawableLeftWidth="@dimen/dp_5"
+            app:layout_constraintBottom_toBottomOf="@+id/lesson_img"
+            app:layout_constraintRight_toRightOf="@+id/lesson_img"
+            app:radius="@dimen/dp_10"
+            tools:text="1:20"/>
+
+        <RelativeLayout
+            android:id="@+id/lesson_title_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/lesson_img">
+
+            <TextView
+                android:id="@+id/lesson_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:includeFontPadding="true"
+                android:lines="1"
+                android:textColor="@color/common_text"
+                android:textSize="@dimen/sp_17"
+                android:textStyle="bold"
+                tools:text="鱼香茄子"/>
+
+            <TextView
+                android:id="@+id/lesson_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/lesson_title"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:lines="1"
+                android:textColor="#FF999999"
+                android:textSize="@dimen/sp_12"
+                tools:text="涛哥"/>
+
+            <ImageView
+                android:id="@+id/lesson_icon_oval"
+                android:src="@drawable/icon_oval"
+                android:layout_toRightOf="@+id/lesson_name"
+                android:layout_alignTop="@+id/lesson_name"
+                android:layout_alignBottom="@+id/lesson_name"
+                android:layout_marginLeft="@dimen/dp_3"
+                android:layout_width="@dimen/dp_2"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/lesson_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/lesson_name"
+                android:layout_marginLeft="@dimen/dp_8"
+                android:layout_toRightOf="@+id/lesson_name"
+                android:lines="1"
+                android:textColor="#FF999999"
+                android:textSize="@dimen/sp_12"
+                tools:text="8977人学"
+                />
+
+        </RelativeLayout>
+
+
+    </acore.widget.rcwidget.RCConstraintLayout>
+
+</RelativeLayout>

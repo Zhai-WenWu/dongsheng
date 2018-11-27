@@ -3,20 +3,16 @@ package acore.tools;
 import android.text.TextUtils;
 import android.util.Log;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import aplug.basic.XHConf;
-import xh.basic.internet.UtilInternet;
-import xh.basic.tool.UtilFile;
-import xh.basic.tool.UtilLog;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import acore.override.XHApplication;
-import aplug.basic.InternetCallback;
-import aplug.basic.ReqInternet;
+import aplug.basic.XHConf;
+import xh.basic.tool.UtilLog;
 
 public class LogManager extends UtilLog {
 	/**

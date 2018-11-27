@@ -19,15 +19,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.SpecialWebControl;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.FileManager;
-import acore.tools.IObserver;
-import acore.tools.ObserverManager;
+import acore.observer.IObserver;
+import acore.observer.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import amodule.dish.adapter.AdapterDishNew;
@@ -432,6 +431,9 @@ public class DetailDish extends BaseAppCompatActivity implements IObserver {
         needSaveDishInfo.put("favorites",map.get("favorites"));
         needSaveDishInfo.put("customer", map.get("customer"));
         needSaveDishInfo.put("info", map.get("info"));
+        Map<String,String> videoMap = StringManager.getFirstMap(map.get("video"));
+        String videoDuration = videoMap.get("duration");
+        needSaveDishInfo.put("duration", TextUtils.isEmpty(videoDuration)?"":videoDuration);
         saveHistoryToDB();
     }
 

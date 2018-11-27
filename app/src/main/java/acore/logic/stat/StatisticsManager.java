@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -21,7 +20,7 @@ import java.util.Map;
 import acore.logic.LoginManager;
 import acore.logic.SpecialOrder;
 import acore.override.XHApplication;
-import acore.tools.ChannelUtil;
+import acore.tools.ChannelManager;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -189,7 +188,7 @@ public class StatisticsManager {
                 DisplayMetrics metric = ToolsDevice.getWindowPx(XHApplication.in());
                 statisticsJson.put("pRes", metric.widthPixels + "*" + metric.heightPixels);
                 //渠道
-                statisticsJson.put("channel", ChannelUtil.getChannel(XHApplication.in()));
+                statisticsJson.put("channel", ChannelManager.getInstance().getChannel(XHApplication.in()));
                 //包名称
                 statisticsJson.put("pack", ToolsDevice.getPackageName(XHApplication.in()));
                 //时区
