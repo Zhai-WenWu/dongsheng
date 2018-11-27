@@ -52,6 +52,7 @@ import aplug.basic.XHConf;
 import aplug.web.FullScreenWeb;
 import aplug.web.ShowWeb;
 import third.ad.scrollerAd.XHAllAdControl;
+import third.aliyun.work.AliyunCommon;
 import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilString;
 import xh.windowview.BottomDialog;
@@ -175,7 +176,20 @@ public class AppCommon {
                 act.startActivity(intentLink);
             }catch (Exception ignored){}
             return;
-
+        }else if(url.startsWith("RecordVideo.app")){
+            String[] urls = url.split("/?");
+            if(urls.length == 2){
+                Map<String,String> params = StringManager.getMapByString(urls[1],"&","=");
+                String topicCode = params.get("topicCode");
+                String topicName = params.get("topicName");
+                if(!TextUtils.isEmpty(topicCode)
+                        && !TextUtils.isEmpty(topicName)){
+                    AliyunCommon.getInstance().startRecord(act,topicCode,topicName);
+                    return;
+                }
+            }
+            AliyunCommon.getInstance().startRecord(act);
+            return;
         }
 
         //解析生成 intent
@@ -184,7 +198,8 @@ public class AppCommon {
         if (intent == null) {
             bundle.putString("url", StringManager.replaceUrl(url));
             if (Main.colse_level <= 2) {
-                if (!(act instanceof MainBaseActivity))
+                if (!(act instanceof MainBaseActivity)
+                        && !(act instanceof Main))
                     act.finish();
                 return;
             }

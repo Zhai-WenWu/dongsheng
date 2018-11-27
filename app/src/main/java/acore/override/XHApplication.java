@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.multidex.MultiDex;
 import android.text.TextUtils;
 import android.util.Log;
+import android.webkit.WebView;
 
 import com.aliyun.common.httpfinal.QupaiHttpFinal;
 import com.baidu.mobads.AdView;
@@ -29,8 +30,10 @@ import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import aplug.basic.LoadImage;
 import aplug.basic.XHConf;
+import aplug.service.CoreService;
 import third.location.LocationHelper;
 import third.push.umeng.UMPushServer;
+import third.push.xg.XGPushServer;
 
 import static acore.logic.ConfigMannager.KEY_BAIDUAPPID;
 
@@ -57,6 +60,7 @@ public class XHApplication extends MobApplication {
 
         startTime = System.currentTimeMillis();
         loadLibs();
+        WebView.setWebContentsDebuggingEnabled(Tools.isDebug(this));
         QupaiHttpFinal.getInstance().initOkHttpFinal();
         LogManager.printStartTime("zhangyujian","XhApplication::11111.oncreate::");
         boolean isOnce = TextUtils.isEmpty(FileManager.loadShared(this,FileManager.xmlFile_appInfo,"once").toString());
@@ -72,6 +76,7 @@ public class XHApplication extends MobApplication {
 
         //初始化umeng推送
         initUmengPush();
+        new XGPushServer(this).initPush();
 
         String processName = Tools.getProcessName(this);
         Log.i("zhangyujian", "进程名字::" + processName);

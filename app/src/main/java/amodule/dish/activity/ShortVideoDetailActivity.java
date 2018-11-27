@@ -491,8 +491,6 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
         mAdapter.notifyDataSetChanged();
     }
 
-    boolean initAdOver = false;
-
     private void initAd() {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
@@ -516,9 +514,7 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
                 }
                 for (int i = 0; i < adIdList.size(); i++) {
                     String adId = adIdList.get(i);
-                    if (map.containsKey(adId) && !TextUtils.isEmpty(map.get(adId)) && adPositionMap.get(adId) != null
-                            && (!AdPlayIdConfig.hasShown(adId) || initAdOver)
-                            ) {
+                    if (map.containsKey(adId) && !TextUtils.isEmpty(map.get(adId)) && adPositionMap.get(adId) != null) {
                         Map<String, String> adMap = StringManager.getFirstMap(map.get(adId));
                         Log.i("tzy", "initAd: " + adMap.toString());
                         ShortVideoDetailADModule adModule = new ShortVideoDetailADModule();
@@ -549,7 +545,6 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
                 if (mAdapter != null) {
                     mAdapter.setADData(mAdData);
                 }
-                initAdOver = true;
             }
         }, this, "search_list", false);
     }
