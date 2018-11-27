@@ -44,11 +44,11 @@ public class AdConfigTools extends BaseAdConfigTools {
             public void loaded(int flag, String url, Object returnObj) {
                 if (flag >= ReqInternet.REQ_OK_STRING) {
                     //更新全屏广告数据
-//                    Map<String, String> map = StringManager.getFirstMap(returnObj);
-//                    if (map.containsKey(FULL_SRCEEN_ACTIVITY)) {
-//                        final String path = FileManager.getDataDir() + FULL_SRCEEN_ACTIVITY + ".xh";
-//                        FileManager.saveFileToCompletePath(path, map.get(FULL_SRCEEN_ACTIVITY), false);
-//                    }
+                    Map<String, String> map = StringManager.getFirstMap(returnObj);
+                    if (map.containsKey(FULL_SRCEEN_ACTIVITY)) {
+                        final String path = FileManager.getDataDir() + FULL_SRCEEN_ACTIVITY + ".xh";
+                        FileManager.saveFileToCompletePath(path, map.get(FULL_SRCEEN_ACTIVITY), false);
+                    }
                     isLoadOver = true;
                     if (callback != null) {
                         callback.loaded(ReqInternet.REQ_OK_STRING, url, returnObj);
