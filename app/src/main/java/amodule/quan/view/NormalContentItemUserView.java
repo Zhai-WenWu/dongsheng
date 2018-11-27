@@ -38,7 +38,7 @@ import amodule.user.view.UserIconView;
 import aplug.basic.InternetCallback;
 import third.mall.tool.ToolView;
 import xh.basic.tool.UtilString;
-import xh.windowview.BottomDialog;
+import com.xh.windowview.BottomDialog;
 
 /**
  * NormarlContentView---用户相关

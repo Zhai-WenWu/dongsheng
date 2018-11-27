@@ -25,8 +25,12 @@ import java.util.Map;
 
 import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;
+<<<<<<< HEAD
 import acore.tools.ChannelUtil;
 import acore.tools.StringManager;
+=======
+import acore.tools.ChannelManager;
+>>>>>>> master_develop_0913
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.dish.db.DataOperate;
@@ -362,8 +366,13 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
         if (TextUtils.isEmpty(key))
             return;
 
+<<<<<<< HEAD
         if ("xiangha".equals(searchKey)) {
             Toast.makeText(context, ChannelUtil.getChannel(context), Toast.LENGTH_SHORT).show();
+=======
+        if("xiangha".equals(searchKey)){
+            Toast.makeText(context, ChannelManager.getInstance().getChannel(context),Toast.LENGTH_SHORT).show();
+>>>>>>> master_develop_0913
             return;
         }
 
@@ -506,4 +515,24 @@ public class GlobalSearchView extends LinearLayout implements View.OnClickListen
         edSearch.setHint(DEFAULT_HINT);
     }
 
+<<<<<<< HEAD
+=======
+    //判断当前页面上是否有二级页面，如果有隐藏二级界面
+    public boolean hideSecondLevelView() {
+        boolean flag = false;
+        if (secondLevelView != null &&
+                secondLevelView instanceof ZhishiResultView
+                || secondLevelView instanceof CaidanResultView) {
+            secondLevelView.setVisibility(View.GONE);
+            secondLevelView = null;
+            iv_history.setVisibility(View.VISIBLE);
+            caipuView.showCaipuSearchResultView();
+            resetEdHint();
+            flag = true;
+        }
+        return flag;
+    }
+
+
+>>>>>>> master_develop_0913
 }

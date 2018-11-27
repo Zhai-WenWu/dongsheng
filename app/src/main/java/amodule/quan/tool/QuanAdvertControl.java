@@ -2,6 +2,8 @@ package amodule.quan.tool;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
@@ -20,7 +22,6 @@ import java.util.Random;
 import acore.logic.ActivityMethodManager;
 import acore.logic.LoginManager;
 import acore.tools.StringManager;
-import acore.tools.SyntaxTools;
 import amodule.quan.adapter.AdapterCircle;
 import third.ad.scrollerAd.XHAllAdControl;
 import third.ad.tools.AdPlayIdConfig;
@@ -275,7 +276,7 @@ public class QuanAdvertControl implements ActivityMethodManager.IAutoRefresh {
                         }
                     }
                     if (mAdList.size() > 0) {
-                        SyntaxTools.runOnUiThread(new Runnable() {
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
                             @Override
                             public void run() {
                                 callBack.dataBack(isRefresh);

@@ -22,8 +22,8 @@ import acore.logic.MessageTipController;
 import acore.logic.SpecialWebControl;
 import acore.logic.XHClick;
 import acore.override.activity.mian.MainBaseActivity;
-import acore.tools.IObserver;
-import acore.tools.ObserverManager;
+import acore.observer.IObserver;
+import acore.observer.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
 import amodule._common.conf.GlobalVariableConfig;
@@ -42,10 +42,10 @@ import third.ad.tools.AdPlayIdConfig;
 
 import static acore.logic.ConfigMannager.KEY_LOGPOSTTIME;
 import static acore.logic.stat.StatisticsManager.STAT_DATA;
-import static acore.tools.ObserverManager.NOTIFY_AUTO_LOGIN;
-import static acore.tools.ObserverManager.NOTIFY_LOGIN;
-import static acore.tools.ObserverManager.NOTIFY_LOGOUT;
-import static acore.tools.ObserverManager.NOTIFY_VIPSTATE_CHANGED;
+import static acore.observer.ObserverManager.NOTIFY_AUTO_LOGIN;
+import static acore.observer.ObserverManager.NOTIFY_LOGIN;
+import static acore.observer.ObserverManager.NOTIFY_LOGOUT;
+import static acore.observer.ObserverManager.NOTIFY_VIPSTATE_CHANGED;
 
 /**
  * 首页
@@ -113,6 +113,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
         mDataControler.setEntryptDataCallback(this::EntryptData);
         //初始化adapter
         mHomeAdapter = new HomeAdapter(this, mDataControler.getData(), mDataControler.getAdControl());
+        mHomeAdapter.setRecyclerViewPaddingLR(mViewContrloer.getRvListView().getPaddingLeft(), mViewContrloer.getRvListView().getPaddingRight());
         mHomeAdapter.setHomeModuleBean(mDataControler.getHomeModuleBean());
         mHomeAdapter.setViewOnClickCallBack(isOnClick -> refresh());
         mHomeAdapter.setListType(HomeAdapter.LIST_TYPE_STAGGERED);

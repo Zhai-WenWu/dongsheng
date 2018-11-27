@@ -9,7 +9,7 @@ import android.widget.Toast;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import acore.tools.ObserverManager;
+import acore.observer.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -17,7 +17,7 @@ import amodule._common.conf.FavoriteTypeEnum;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 
-import static acore.tools.ObserverManager.NOTIFY_FAVORITE;
+import static acore.observer.ObserverManager.NOTIFY_FAVORITE;
 
 /**
  * Description : 收藏功能辅助类

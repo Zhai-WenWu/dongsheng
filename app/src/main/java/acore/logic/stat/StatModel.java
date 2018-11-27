@@ -61,7 +61,7 @@ public class StatModel implements Serializable {
     }
 
     public static StatModel createSpecialActionModel(String p, String m, String pos, String btn, String s1, String n1, String statJson) {
-        return new StatModel(EVENT_VIDEO_VIEW, p, m, statJson, pos, btn, s1, EMPTY, EMPTY, n1, EMPTY);
+        return new StatModel(EVENT_SPECIAL_ACTION, p, m, statJson, pos, btn, s1, EMPTY, EMPTY, n1, EMPTY);
     }
 
     public static StatModel createADShowModel(String p,String m,String statJson,String s2,String s3,String n1,String n2){

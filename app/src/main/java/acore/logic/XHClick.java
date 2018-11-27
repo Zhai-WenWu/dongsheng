@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import acore.override.XHApplication;
+import acore.tools.FileManager;
 import acore.tools.LogManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
@@ -34,7 +35,6 @@ import aplug.basic.ReqInternet;
 import aplug.basic.XHConf;
 import third.push.model.NotificationData;
 import third.push.model.NotificationEvent;
-import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilLog;
 
 /**
@@ -525,12 +525,12 @@ public class XHClick {
      */
     public static void saveFirstStartTime(Context context) {
         if (context != null) {
-            Object firstStartObj = UtilFile.loadShared(context, "super_property", "firstStartTime");
+            Object firstStartObj = FileManager.loadShared(context, "super_property", "firstStartTime");
             if (firstStartObj != null && !TextUtils.isEmpty(firstStartObj.toString()))
                 return;
             Map<String, String> map = new HashMap<String, String>();
             map.put("firstStartTime", System.currentTimeMillis() + "");
-            UtilFile.saveShared(context, "super_property", map);
+            FileManager.saveShared(context, "super_property", map);
         }
     }
 
@@ -541,7 +541,7 @@ public class XHClick {
      */
     public static void registerUserUseTimeSuperProperty(Context context) {
         if (context != null) {
-            Object object = UtilFile.loadShared(context, "super_property", "firstStartTime");
+            Object object = FileManager.loadShared(context, "super_property", "firstStartTime");
             if (object != null) {
                 String firstUseTime = object.toString();
                 if (!TextUtils.isEmpty(firstUseTime)) {
@@ -579,10 +579,10 @@ public class XHClick {
             int year = Calendar.getInstance().get(Calendar.YEAR);
             int month = Calendar.getInstance().get(Calendar.MONTH);
             int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
-            Object yearObj = UtilFile.loadShared(context, "super_property", "year");
-            Object monthObj = UtilFile.loadShared(context, "super_property", "month");
-            Object lastDayObj = UtilFile.loadShared(context, "super_property", "lastDay");
-            Object daysObj = UtilFile.loadShared(context, "super_property", "days");
+            Object yearObj = FileManager.loadShared(context, "super_property", "year");
+            Object monthObj = FileManager.loadShared(context, "super_property", "month");
+            Object lastDayObj = FileManager.loadShared(context, "super_property", "lastDay");
+            Object daysObj = FileManager.loadShared(context, "super_property", "days");
             if (!TextUtils.isEmpty(monthObj + "") && !TextUtils.isEmpty(lastDayObj + "") && !TextUtils.isEmpty(daysObj + "") && !TextUtils.isEmpty(yearObj + "")) {
                 String yearTime = yearObj.toString();
                 String monthTime = monthObj.toString();
@@ -594,14 +594,14 @@ public class XHClick {
                     map.put("month", month + "");
                     map.put("lastDay", day + "");
                     map.put("days", 1 + "");
-                    UtilFile.saveShared(context, "super_property", map);
+                    FileManager.saveShared(context, "super_property", map);
                     UMADplus.registerSuperProperty(context, "自然月内启动app天数", "1天");
                 } else if (Integer.parseInt(monthTime) != month) {
                     Map<String, String> map = new HashMap<String, String>();
                     map.put("month", month + "");
                     map.put("lastDay", day + "");
                     map.put("days", 1 + "");
-                    UtilFile.saveShared(context, "super_property", map);
+                    FileManager.saveShared(context, "super_property", map);
                     UMADplus.registerSuperProperty(context, "自然月内启动app天数", "1天");
                 } else {
                     String daysStr = "";
@@ -609,7 +609,7 @@ public class XHClick {
                     Map<String, String> map = new HashMap<String, String>();
                     map.put("lastDay", day + "");
                     map.put("days", String.valueOf(dayValue));
-                    UtilFile.saveShared(context, "super_property", map);
+                    FileManager.saveShared(context, "super_property", map);
                     if (dayValue == 1)
                         daysStr = "1天";
                     else if (dayValue > 1 && dayValue <= 3)
@@ -632,7 +632,7 @@ public class XHClick {
                 map.put("month", month + "");
                 map.put("lastDay", day + "");
                 map.put("days", 1 + "");
-                UtilFile.saveShared(context, "super_property", map);
+                FileManager.saveShared(context, "super_property", map);
                 UMADplus.registerSuperProperty(context, "自然月内启动app天数", "1天");
             }
         }

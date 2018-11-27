@@ -1,4 +1,5 @@
 package acore.logic;
+
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -28,14 +30,13 @@ import java.util.Map;
 import java.util.Random;
 
 import acore.logic.stat.intefaces.OnClickListenerStat;
+import acore.observer.ObserverManager;
 import acore.override.XHApplication;
 import acore.override.activity.base.WebActivity;
 import acore.override.activity.mian.MainBaseActivity;
 import acore.override.helper.XHActivityManager;
-import acore.tools.Base64Utils;
 import acore.tools.FileManager;
 import acore.tools.LogManager;
-import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -52,19 +53,18 @@ import aplug.basic.XHConf;
 import aplug.web.FullScreenWeb;
 import aplug.web.ShowWeb;
 import third.ad.scrollerAd.XHAllAdControl;
+import third.aliyun.work.AliyunCommon;
 import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilString;
-import xh.windowview.BottomDialog;
+import com.xh.windowview.BottomDialog;
 
 import static acore.logic.ConfigMannager.KEY_RANDPROMOTIONNEW;
 import static acore.logic.stat.StatConf.STAT_TAG;
-import static xh.basic.tool.UtilFile.readFile;
-import static xh.basic.tool.UtilFile.readFileBuffer;
 import static xh.basic.tool.UtilString.getListMapByJson;
 public class AppCommon {
 
     public static int buyBurdenNum = 0; // 离线清单条数
-    public static int follwersNum = -1; // 关注人数
+    public static int follwersNum = -1; // 关注人数ø
 
     public static int nextDownDish = -1;
     public static int maxDownDish = 10000;
@@ -175,7 +175,20 @@ public class AppCommon {
                 act.startActivity(intentLink);
             }catch (Exception ignored){}
             return;
-
+        }else if(url.startsWith("RecordVideo.app")){
+            String[] urls = url.split("/?");
+            if(urls.length == 2){
+                Map<String,String> params = StringManager.getMapByString(urls[1],"&","=");
+                String topicCode = params.get("topicCode");
+                String topicName = params.get("topicName");
+                if(!TextUtils.isEmpty(topicCode)
+                        && !TextUtils.isEmpty(topicName)){
+                    AliyunCommon.getInstance().startRecord(act,topicCode,topicName);
+                    return;
+                }
+            }
+            AliyunCommon.getInstance().startRecord(act);
+            return;
         }
 
         //解析生成 intent
@@ -184,7 +197,8 @@ public class AppCommon {
         if (intent == null) {
             bundle.putString("url", StringManager.replaceUrl(url));
             if (Main.colse_level <= 2) {
-                if (!(act instanceof MainBaseActivity))
+                if (!(act instanceof MainBaseActivity)
+                        && !(act instanceof Main))
                     act.finish();
                 return;
             }
@@ -412,7 +426,7 @@ public class AppCommon {
     public static String getAppData(Context context, String key) {
         String jsonStr = "";
         final String appDataPath = FileManager.getDataDir() + FileManager.file_appData;
-        String appDataStr = readFileBuffer(appDataPath);
+        String appDataStr = FileManager.readFile(appDataPath);
         List<Map<String, String>> dataArray = getListMapByJson(appDataStr);
         if (dataArray == null || dataArray.size() == 0) {
             appDataStr = FileManager.getFromAssets(context, FileManager.file_appData);
@@ -530,13 +544,13 @@ public class AppCommon {
 
     public static boolean getTodayTastHintIsShow(Context con) {
         boolean isShowTaskInfo = false;
-        if (UtilFile.loadShared(con, "score_store", "user_task") == "") {
+        if (FileManager.loadShared(con, "score_store", "user_task") == "") {
             isShowTaskInfo = true;
         } else {
             int year = Tools.getDate("year");
             int month = Tools.getDate("month");
             int date = Tools.getDate("date");
-            String user_taks = (String) UtilFile.loadShared(con, "score_store", "user_task");
+            String user_taks = (String) FileManager.loadShared(con, "score_store", "user_task");
             String[] user_taks_data = user_taks.split("_");
             if (user_taks_data.length == 3) {
                 if (Integer.parseInt(user_taks_data[0]) < year) {
@@ -559,8 +573,8 @@ public class AppCommon {
             if (LoginManager.userInfo.containsKey("crowd") && LoginManager.userInfo.get("crowd") != null)
                 return LoginManager.userInfo.get("crowd");
         } else {
-            if (UtilFile.ifFileModifyByCompletePath(UtilFile.getDataDir() + FileManager.file_healthResult, -1) != null) {// 本地是否有测试结果
-                return readFile(UtilFile.getDataDir() + FileManager.file_healthResult).trim();
+            if (FileManager.ifFileModifyByCompletePath(FileManager.getDataDir() + FileManager.file_healthResult, -1) != null) {// 本地是否有测试结果
+                return FileManager.readFile(FileManager.getDataDir() + FileManager.file_healthResult).trim();
             }
         }
         return "";
@@ -576,7 +590,7 @@ public class AppCommon {
 //		}
 //		if(FileManager.ifFileModifyByCompletePath(urlRulePath, 6 * 60) == null){
         String uptime = "";
-        String urlRuleJson = readFile(urlRulePath);
+        String urlRuleJson = FileManager.readFile(urlRulePath);
         if (!TextUtils.isEmpty(urlRuleJson)) {
             List<Map<String, String>> data = getListMapByJson(urlRuleJson);
             if (data.size() > 0) {
@@ -597,7 +611,7 @@ public class AppCommon {
                                 @Override
                                 public void run() {
                                     super.run();
-                                    FileManager.delDirectoryOrFile(urlRulePath);
+                                    FileManager.delete(urlRulePath);
                                     FileManager.saveFileToCompletePath(urlRulePath, msg.toString(), false);
                                     if(urlRuleMap != null)
                                         urlRuleMap.clear();
@@ -616,7 +630,7 @@ public class AppCommon {
     public static Map<String, String> geturlRule(Context context) {
         if (urlRuleMap == null || urlRuleMap.isEmpty()) {
             final String urlRulePath = FileManager.getDataDir() + FileManager.file_urlRule;
-            String urlRuleJson = readFile(urlRulePath);
+            String urlRuleJson = FileManager.readFile(urlRulePath);
             if (TextUtils.isEmpty(urlRuleJson)) {
                 urlRuleJson = FileManager.getFromAssets(context, FileManager.file_urlRule);
             }
@@ -632,7 +646,7 @@ public class AppCommon {
      */
     public static void saveCircleStaticData(final Context context) {
         final String allCircleJsonPath = FileManager.getDataDir() + FileManager.file_allCircle;
-        final String allCircleJson = readFile(allCircleJsonPath);
+        final String allCircleJson = FileManager.readFile(allCircleJsonPath);
         if (TextUtils.isEmpty(allCircleJson)) {
             CircleSqlite circleSqlite = new CircleSqlite(context);
             String allCircleJsonByAssets = FileManager.getFromAssets(context, FileManager.file_allCircle);
@@ -837,7 +851,7 @@ public class AppCommon {
                                                     dataStr = dataStr.replace(replaceValue,"");
                                                 }
                                             }
-                                            byte[] dataByte = Base64Utils.decode(dataStr);
+                                            byte[] dataByte = Base64.decode(dataStr.getBytes(), Base64.DEFAULT);
                                             dataStr = new String(dataByte);
                                             ArrayList<Map<String,String>> dataArr = StringManager.getListMapByJson(dataStr);
                                             int totalWeight=0;
@@ -848,7 +862,7 @@ public class AppCommon {
                                             }
                                             if (totalWeight < 1) {
                                                 //清空之前的数据
-                                                FileManager.scynSaveFile(FileManager.getDataDir() + FileManager.file_randPromotionConfig, text, false);
+                                                FileManager.asyncSaveFile(FileManager.getDataDir() + FileManager.file_randPromotionConfig, text, false);
                                                 return ;
                                             }
                                             java.util.Random r = new java.util.Random();
@@ -863,7 +877,7 @@ public class AppCommon {
                                                 }
                                                 tempWeight += weight;
                                             }
-                                            FileManager.scynSaveFile(FileManager.getDataDir() + FileManager.file_randPromotionConfig, text, false);
+                                            FileManager.asyncSaveFile(FileManager.getDataDir() + FileManager.file_randPromotionConfig, text, false);
                                         }
                                     }
 

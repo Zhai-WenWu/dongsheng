@@ -26,8 +26,8 @@ import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.FileManager;
-import acore.tools.IObserver;
-import acore.tools.ObserverManager;
+import acore.observer.IObserver;
+import acore.observer.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -135,8 +135,6 @@ public class DetailDishWeb extends BaseAppCompatActivity implements IObserver {
         if(Tools.isShowTitle()){
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
-//        String colors = Tools.getColorStr(this, R.color.common_top_bg);
-//        Tools.setStatusBarColor(this, Color.parseColor(colors));
 
         setCommonStyle();
         dishActivityViewControl= new DishActivityViewControlNew(this);

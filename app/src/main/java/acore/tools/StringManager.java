@@ -68,7 +68,8 @@ public class StringManager extends UtilString {
     //用户发贴发菜谱用户日志
     public final static String api_uploadUserLog = "https://crash.xiangha.com/crash/report2";
     //获取广告信息
-    public final static String api_adData_old = apiUrl + "main6/ads/getBasicList";
+    public final static String api_adData_old = apiUrl + "main8/open/getOpenScreenList";
+    public final static String api_reportNumber = apiUrl + "main8/open/reportNumber";
     public final static String api_adData = apiUrl + "main7/open/getAdConfig";
     public final static String api_appData = apiUrl + urlSection.get("home5") + "getAppData";
     public final static String api_activityList = apiUrl + urlSection.get("home5") + "getActivityList";
@@ -82,13 +83,12 @@ public class StringManager extends UtilString {
     public final static String api_getWebRule = apiUrl + urlSection.get("home5") + "getWebRule";
 
     public final static String api_scoreStore = appWebUrl + "app5/scoreStore";//积分商城
+    public final static String api_dailyTask = appWebUrl + "app5/dailyTask";//每日任务
     public final static String api_scoreList = appWebUrl + "app5/scoreList";//积分乐园《是否带有Tab选择靠服务器的版本判断》
     public final static String api_integralInfo = appWebUrl + "app5/customerScore";//积份规则
     public final static String api_exchangeList = appWebUrl + "app5/orderList";//兑换记录
     public final static String api_commodityDetail = appWebUrl + "app5/itemInfo";//物品详情
     public final static String api_approveGourmet = appWebUrl + "approve/index";//申请认证
-    public final static String api_artcle = appWebUrl + "article/index";//有奖征文
-    public final static String api_joinHand = appWebUrl + "joinHand/index";//合作
     public final static String api_jifenDraw = appWebUrl + "app5/jifenDraw";//抽奖
     public final static String api_aboutus = apiUrl + urlSection.get("home5") + "aboutus";//关于我们
     //	/** 香哈协议 */
@@ -119,14 +119,11 @@ public class StringManager extends UtilString {
     public final static String api_getDishInfo = apiUrl + urlSection.get("caipu5") + "getDishInfo";
     public final static String api_getRecommendDish = apiUrl + urlSection.get("caipu5") + "getVideoRecommend";
     public final static String api_getVideoClassifyDish = apiUrl + urlSection.get("caipu5") + "getVideoDishTagInfo";
-    public final static String api_setDishInfo = apiUrl + urlSection.get("caipu3") + "setDishInfo";
     public final static String api_getMenuData = apiUrl + urlSection.get("caipu5") + "getTopic";
 
     public final static String api_getDishList = apiUrl + urlSection.get("caipu5") + "getDishList";
     public final static String api_getIngreList = apiUrl + urlSection.get("shicai5") + "getIngreList";
     public final static String api_uploadImg = apiUrl + "upload/imgs";
-    public final static String api_uploadVideo = apiUrl + "upload/videos";
-
 
     public final static String api_getUSerData = apiUrl + urlSection.get("home5") + "getUserData";//根据类型获取用户数据//ok
     public final static String api_getUserInfoByCode = apiUrl + urlSection.get("user6") + "getUserInfoByCode";//根据类型获取用户数据//ok
@@ -138,17 +135,13 @@ public class StringManager extends UtilString {
     public final static String api_getTaskCount = apiUrl + "home5/getTaskCount"; //积分商城页面获取任务数量，带有用户积分
 
     public final static String api_getFriendList = apiUrl + urlSection.get("home5") + "getFriendList";
-    public final static String api_phoneNumCheck = apiUrl + urlSection.get("user6") + "phoneNumCheck";
     public final static String api_phoneLogin = apiUrl + urlSection.get("user6") + "phoneLogin";
-    public final static String api_findPwd = apiUrl + urlSection.get("user6") + "findPwd";
     public final static String api_phoneBind = apiUrl + urlSection.get("user6") + "phoneBind";
     public final static String api_setUserData = apiUrl + urlSection.get("home5") + "setUserData";
 
     public final static String api_uploadDish = apiUrl + urlSection.get("caipu3") + "uploadDish";
     public final static String api_deleteDish = apiUrl + urlSection.get("caipu5") + "deleteDish";
-    public final static String api_getQuanListUrl = apiUrl + urlSection.get("quan5") + "getSubjectList";
     public final static String api_quanTopUrl = apiUrl + urlSection.get("quan5") + "getUserTop";
-    public final static String api_quanSubjectInfo = apiUrl + urlSection.get("quan5") + "getSubjectInfo";
     public final static String api_quanSetSubject = apiUrl + urlSection.get("quan5") + "setSubjectData";
     public final static String api_getCheckIngore = apiUrl + urlSection.get("home5") + "checkIngore";
     //----------生活圈新api------------
@@ -164,7 +157,6 @@ public class StringManager extends UtilString {
     //发现圈子
     public final static String api_circleFind = apiUrl + urlSection.get("quan6") + "getList";
     //关注某个圈子
-    public final static String api_circleApply = apiUrl + urlSection.get("quan6") + "apply";
     public final static String api_circleGetInfo = apiUrl + urlSection.get("quan6") + "getInfo";
     //圈子成员列表
     public final static String api_circleCustomerList = apiUrl + urlSection.get("quan6") + "customerList";
@@ -180,42 +172,30 @@ public class StringManager extends UtilString {
     //成员操作
     public final static String api_circleCustomerPower = apiUrl + urlSection.get("quan6") + "customerPower";
 
-    //新的美食圈最新页面
-    public final static String api_getNewSubjectList = apiUrl + urlSection.get("quan5") + "getNewSubjectList";
     //管理员推荐
     public final static String api_setSubjectRecommend = apiUrl + urlSection.get("quan5") + "setSubjectRecommend";
-    //获取活动浮标
-    public final static String api_getActivityBuoy = apiUrl + urlSection.get("home5") + "getActivityBuoy";//活动浮标
     public final static String api_setAppUrl = apiUrl + urlSection.get("home5") + "setAppUrl";
     public final static String api_message = apiUrl + urlSection.get("home5") + "getNewsInfo";
     public final static String api_nousList = apiUrl + urlSection.get("zhishi5") + "getNousList";
     public final static String api_nousInfo = apiUrl + urlSection.get("zhishi5") + "nousInfo";
 
-    public final static String api_getHealthTest = apiUrl + urlSection.get("shicai5") + "getHealthTest";
     public final static String api_setHealthTest = apiUrl + urlSection.get("shicai5") + "setHealthTest";
 
-    public final static String api_getCommonData = apiUrl + urlSection.get("home5") + "commonData";
     public final static String api_getDialogInfo = apiUrl + urlSection.get("home5") + "getDialogInfo";
     public final static String api_sendDialog = apiUrl + urlSection.get("home5") + "sendDialog";
-    public final static String api_getThirdData = apiUrl + urlSection.get("home5") + "getThirdData";
-    public final static String api_getChangeTime = apiUrl + urlSection.get("home5") + "getChangeTime";
 
     //邀请好友验证码请求
     public final static String api_inviteCheck = apiUrl + urlSection.get("home5") + "inviteCheck";
     public final static String api_parseInvitationCode = apiUrl + urlSection.get("home5") + "parseInvitationCode";
     public final static String api_inviteCustomer = apiUrl + urlSection.get("home5") + "inviteCustomer";
     //美食圈模板
-    public final static String api_getSubjectClassifyList = apiUrl + urlSection.get("quan5") + "getSubjectClassifyList";
-    public final static String api_getSubjectListByClassify = apiUrl + urlSection.get("quan5") + "getSubjectListByClassify";//详细列表
     public final static String api_changeSubjectClassify = apiUrl + urlSection.get("quan5") + "changeSubjectClassify";//修改贴子模块
     public final static String api_addJingHua = apiUrl + urlSection.get("quan5") + "addJingHua";//加精
 
     //乐视获取videoUrl的接口
     public static final String api_getVideoUrl = "http://api.letvcloud.com/getplayurl.php";
     public final static String api_homeTodayGood = apiUrl + "main6/index/todayGood";
-    public final static String api_homeDish = apiUrl + "main6/index/indexTodayGood";
     public final static String api_homeTodayGoodShare = wwwUrl + "caipu/youzhi";
-    public final static String api_homeGetTieList = apiUrl + "main6/index/getTieList";
     public final static String api_monitoring = "https://stat.xiangha.com/s4.gif";
 
     //钱包会员
@@ -230,10 +210,7 @@ public class StringManager extends UtilString {
 
 
     //广告统计
-//    public final static String api_monitoring_5 = "https://stat.xiangha.com/s5.gif"; //广告统计
-//    public final static String api_monitoring_9 = "https://stat.xiangha.com/s9.gif"; //广告统计
     public final static String api_clickAds = apiUrl + "main6/ads/clickAds"; //广告统计,用于加积分
-    public final static String api_myQuanV2 = apiUrl + urlSection.get("quan6") + "myQuanV2";//修改贴子模块
     //菜谱详情页
     public final static String api_getDishInfoNew = apiUrl + urlSection.get("caipu6") + "info";
     public final static String api_getDishTopInfo = apiUrl + "main7/dish/topInfo";
@@ -243,8 +220,6 @@ public class StringManager extends UtilString {
     public final static String api_getDishLikeHate = apiUrl + "main7/dish/likeHate";
     public final static String api_addCollection = apiUrl + "main7/dish/addCollection";
     public final static String api_askButtonStatus = apiUrl + "main7/dish/askButtonStatus";
-    public final static String api_authorInfo = apiUrl + "main7/dish/authorInfo";
-    public final static String api_basicInfo = apiUrl + "main7/dish/basicInfo";
     public final static String api_getVideoList = apiUrl + "main7/school/getVideoList";
     public final static String api_adsNumber = apiUrl + "main7/open/adsNumber";
 
@@ -258,14 +233,10 @@ public class StringManager extends UtilString {
     public static final String API_GETINFOSWITCHLIST = apiUrl + urlSection.get("home5") + "getInfoSwitchList";
     public static final String API_SETINFOSWITCH = apiUrl + urlSection.get("home5") + "setInfoSwitch";
 
-
-    //登录模块
-    public final static String api_customerNickNameCheck = apiUrl + urlSection.get("home5") + "customerNickNameCheck";
     public final static String api_compareVerCode = apiUrl + urlSection.get("user6") + "compareVerCode";
     public final static String api_getActivityInfo = apiUrl + urlSection.get("other6") + "getActivityInfo"; //获取活动入口
     public final static String api_getUserPowers = apiUrl + urlSection.get("user6") + "permissions"; //获取用户权限按钮
     public final static String api_getUserInfo = apiUrl + urlSection.get("home5") + "getUser"; //用户登录
-    public final static String api_appmenu = apiUrl + urlSection.get("user6") + "appmenu"; //我的界面
     public final static String api_smsReport = defaultProtocol + "crash.xiangha.com/sms/report"; //验证0码获取错误
     public final static String api_setSecret = apiUrl + urlSection.get("user6") + "modifyPassword"; //设置，修改密码
     public final static String api_getThirdBind = apiUrl + urlSection.get("user6") + "thirdPartyList"; //获取第三方账号绑定
@@ -275,6 +246,7 @@ public class StringManager extends UtilString {
     public final static String api_checkPhoneRegisterState = apiUrl + urlSection.get("auth6") + "checkPhoneIsRegistered"; //手机号是否注册
     public final static String api_checkEmailRegisterState = apiUrl + urlSection.get("auth6") + "checkEmailIsRegistered"; //邮箱是否注册
     public final static String api_modifyPhone = apiUrl + urlSection.get("user6") + "modifyPhone"; //注册手机号
+    public final static String api_addTask = apiUrl + "main7/user/addTask";
     public final static String api_sendVoiceVerify = apiUrl + "main7/voiceVerify/send"; //获取语音验证码
 
     /***
@@ -295,7 +267,6 @@ public class StringManager extends UtilString {
      */
     public final static String API_STATISTIC_S9 = "https://stat.xiangha.com/s9.gif"; //无埋点统计
     public final static String API_STATISTIC_S9_GXH = "https://stat.xiangha.com/s9_gxh.gif"; //无埋点统计
-    public final static String API_CHECK_LOG = apiUrl + "Main7/Open/checkLog";
 
     /*文章*/
     public final static String api_getArticleClass = apiUrl + "main7/article/getArticleClass"; //文章分类
@@ -329,9 +300,6 @@ public class StringManager extends UtilString {
     public final static String API_USERHOME_ARTICLE = apiUrl + "main7/article/articleList";//文章列表
     public final static String API_USERHOME_VIDEO = apiUrl + "main8/shortVideo/shortVideoList";//视频列表
     public final static String API_USERHOME_ANSWER = apiUrl + "main7/qa/qaList";//问答列表
-
-    public final static String api_applyVideoPower = appWebUrl + "deal/applyVideoPower.html";//申请视频权限
-    public final static String api_applyArticlePower = appWebUrl + "deal/applyArticlePower.html";//申请视频权限
     public final static String api_article = mUrl + "articleVideo/getArticleSource/";//文章详情页m
 
     /*付费问答*/
@@ -345,8 +313,6 @@ public class StringManager extends UtilString {
     public final static String API_QA_QASETTING = appWebUrl + "qa/ansSet";//问答设置
     public final static String API_QA_QAARBITRATION = appWebUrl + "qa/arbitrateList?fullScreen=2";//问答仲裁
 
-    public final static String API_RAND_PROMOTION = apiUrl + "main7/open/getRandPromotion";//随机推广
-
     public final static String API_TEMPLATE_AUTOLOADTEMPLATE = apiUrl + "main7/template/autoloadTemplate";//多模版控制
     public final static String API_TEMPLATE_GETTEMPLATENAME = apiUrl + "main7/template/getTemplateName";//获取单个模版
     //main8
@@ -355,7 +321,7 @@ public class StringManager extends UtilString {
     public final static String API_SET_FAVORITE_STATUS = apiUrl + "main8/favorites/setFavorites";//设置收藏状态
 
     //菜谱详情页面
-    public final static String API_GETDISHBURDENBYCODE = apiUrl + "main7/dish/getDishBurdenByCode";//用料信息
+    public final static String API_GETDISHBURDENBYCODE = apiUrl + "main8/dish/getDishBurdenByCode";//用料信息
     public final static String API_GETBELOWBURDENBANNER = apiUrl + "main7/dish/getBelowBurdenBanner";//用料下方banner
 
     public final static String API_MAIN8_SHARE_CONF = apiUrl + "main8/dish/getDishShareByCode";//获取菜谱分享配置
@@ -382,7 +348,7 @@ public class StringManager extends UtilString {
 
     public final static String API_AD_GETADDATA = apiUrl + "main7/open/getAdData";//获取广告数据
 
-    public final static String API_DISH_RECOMMEND = apiUrl + "main6/caipu/info";//菜谱详情页的相关推荐
+    public final static String API_DISH_RECOMMEND = apiUrl + "main8/dish/getDishRecomByCode";//菜谱详情页的相关推荐
 
     public final static String API_SEARCH_COURSE_DISH = apiUrl + "main8/search/byCourseDishV1";//搜索名厨课菜谱
     public final static String API_SEARCH_RECOM_LABEL = apiUrl + "main8/search/recomLabel";//搜索名厨课菜谱

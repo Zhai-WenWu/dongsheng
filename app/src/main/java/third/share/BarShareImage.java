@@ -11,8 +11,6 @@ package third.share;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import acore.tools.IObserver;
-import acore.tools.ObserverManager;
 import third.share.activity.ShareImageActivity;
 
 /**

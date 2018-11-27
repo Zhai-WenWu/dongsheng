@@ -1,6 +1,5 @@
 package amodule._common.widget.baseWidget;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;

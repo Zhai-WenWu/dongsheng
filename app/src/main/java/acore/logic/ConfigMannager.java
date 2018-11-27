@@ -12,8 +12,6 @@ import acore.tools.StringManager;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
 
-import static xh.basic.tool.UtilFile.readFile;
-
 /**
  * Description :
  * PackageName : acore.logic
@@ -82,7 +80,7 @@ public class ConfigMannager {
      */
     public static String getConfigByLocal(String key) {
         String data = "";
-        String configData = readFile(getConfigPath());
+        String configData = FileManager.readFile(getConfigPath());
         if (TextUtils.isEmpty(key)) {
             return configData;
         }
@@ -95,7 +93,7 @@ public class ConfigMannager {
 
     @Nullable
     public static Map<String, String> getConfigMapByLocal() {
-        String configData = readFile(getConfigPath());
+        String configData = FileManager.readFile(getConfigPath());
         if (TextUtils.isEmpty(configData)) {
             return null;
         }

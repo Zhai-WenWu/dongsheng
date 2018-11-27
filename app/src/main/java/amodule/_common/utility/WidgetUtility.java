@@ -1,22 +1,10 @@
 package amodule._common.utility;
 
-import android.content.Intent;
-import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import java.util.Map;
-
-import acore.logic.XHClick;
-import acore.override.helper.XHActivityManager;
-import acore.tools.StringManager;
-import aplug.web.FullScreenWeb;
-import aplug.web.ShowWeb;
-import third.mall.activity.CommodDetailActivity;
 
 /**
  * Created by sll on 2017/11/17.
@@ -77,18 +65,4 @@ public class WidgetUtility {
         }
     }
 
-    /**
-     * 解析颜色
-     * @param colorStr
-     * @return 不符合规则的返回透明色
-     */
-    public static int parseColor(String colorStr){
-        int color = Color.parseColor("#00FFFFFE");
-        if(!TextUtils.isEmpty(colorStr)
-                && colorStr.startsWith("#")
-                && (colorStr.length() == 7 || colorStr.length() == 9)){
-            color = Color.parseColor(colorStr);
-        }
-        return color;
-    }
 }

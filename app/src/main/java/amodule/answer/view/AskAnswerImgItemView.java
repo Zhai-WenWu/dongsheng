@@ -27,8 +27,6 @@ import aplug.basic.LoadImage;
 
 public class AskAnswerImgItemView extends RelativeLayout {
 
-    private Context mContext;
-
     private ImageView mImg;
     private ImageView mVideoBtn;
     private ImageView mDelImg;
@@ -51,10 +49,7 @@ public class AskAnswerImgItemView extends RelativeLayout {
     }
 
     private void initView(Context context) {
-        mContext = context;
-        if (mContext == null)
-            return;
-        LayoutInflater.from(mContext).inflate(R.layout.ask_answer_img_itemview, this, true);
+        LayoutInflater.from(context).inflate(R.layout.ask_answer_img_itemview, this, true);
         mRootView = (RelativeLayout) findViewById(R.id.ask_itemview);
         mImg = (ImageView) findViewById(R.id.img);
         mVideoBtn = (ImageView) findViewById(R.id.video_btn);
@@ -178,7 +173,7 @@ public class AskAnswerImgItemView extends RelativeLayout {
     };
 
     public boolean isVideo() {
-        return mDataMap == null ? false : !TextUtils.isEmpty(mDataMap.get("videoPath"));
+        return mDataMap != null && !TextUtils.isEmpty(mDataMap.get("videoPath"));
     }
 
     public int getPosition() {

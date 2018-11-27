@@ -214,8 +214,7 @@ public class TemplateWebViewControl {
 
     private void handler(String data,String path,String requestMethod,String readStr,String version_sign){
         if (!TextUtils.isEmpty(data)) {
-            File file = FileManager.saveFileToCompletePath(path, data, false);
-            if (file != null)
+            if (FileManager.saveFileToCompletePath(path, data, false))
                 FileManager.saveShared(XHApplication.in(), requestMethod, "version_sign", String.valueOf(version_sign));
             if (mouldCallBack != null && !isCallBack) {
                 Log.i(Main.TAG,"服务端返回数据222::"+requestMethod);

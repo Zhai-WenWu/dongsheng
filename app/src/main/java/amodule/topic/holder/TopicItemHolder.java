@@ -21,6 +21,7 @@ import org.eclipse.jetty.util.security.Constraint;
 
 import acore.logic.AppCommon;
 import acore.logic.XHClick;
+import acore.tools.ColorUtil;
 import acore.tools.FileManager;
 import acore.tools.ToolsDevice;
 import acore.widget.rvlistview.holder.RvBaseViewHolder;
@@ -62,9 +63,9 @@ public class TopicItemHolder extends RvBaseViewHolder<TopicItemModel> implements
             LabelModel labelModel = data.getLabelModel();
             if (labelModel != null && !TextUtils.isEmpty(labelModel.getTitle())) {
                 mLabel.setText(labelModel.getTitle());
-                mLabel.setTextColor(Color.parseColor(labelModel.getColor()));
+                mLabel.setTextColor(ColorUtil.parseColor(labelModel.getColor()));
                 GradientDrawable drawable = new GradientDrawable();
-                drawable.setColor(Color.parseColor(labelModel.getBgColor()));
+                drawable.setColor(ColorUtil.parseColor(labelModel.getBgColor()));
                 drawable.setCornerRadius(itemView.getResources().getDimensionPixelSize(R.dimen.dp_2));
                 mLabel.setBackground(drawable);
                 mLabel.setVisibility(View.VISIBLE);

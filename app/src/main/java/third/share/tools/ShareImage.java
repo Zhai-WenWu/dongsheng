@@ -19,7 +19,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import acore.tools.ObserverManager;
+import acore.observer.ObserverManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import cn.sharesdk.framework.Platform;

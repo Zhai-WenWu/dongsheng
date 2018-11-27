@@ -11,6 +11,7 @@
         android:layout_height="@dimen/dp_42"
         android:gravity="center"
         android:textColor="#fffffe"
+        android:textSize="@dimen/dp_14"
         />
 
 

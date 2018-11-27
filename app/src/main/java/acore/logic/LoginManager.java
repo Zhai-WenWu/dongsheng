@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.webkit.CookieManager;
 
@@ -28,9 +29,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import acore.override.XHApplication;
 import acore.override.activity.base.WebActivity;
 import acore.override.helper.XHActivityManager;
-import acore.tools.ChannelUtil;
+import acore.tools.ChannelManager;
 import acore.tools.FileManager;
-import acore.tools.ObserverManager;
+import acore.observer.ObserverManager;
 import acore.tools.StringManager;
 import amodule.answer.db.AskAnswerSQLite;
 import amodule.dish.db.DataOperate;
@@ -50,7 +51,6 @@ import third.mall.aplug.MallStringManager;
 import third.push.umeng.UMPushServer;
 import third.push.xg.XGPushServer;
 import xh.basic.internet.UtilInternet;
-import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilLog;
 
 import static acore.logic.ConfigMannager.KEY_VIVOAD;
@@ -79,7 +79,7 @@ public class LoginManager {
     @SuppressWarnings("unchecked")
     public static void loginByAuto(final Activity act) {
         //获取用户本地信息
-        userInfo = (Map<String, String>) UtilFile.loadShared(act, FileManager.xmlFile_userInfo, "");
+        userInfo = (Map<String, String>) FileManager.loadShared(act, FileManager.xmlFile_userInfo, "");
         int length = userInfo.size();
         if(length == 0){
             //			logout(act);
@@ -190,7 +190,7 @@ public class LoginManager {
                     new UMPushServer(mAct).addAlias(userInfo.get("code"));
                     //清除数据
                     userInfo = new HashMap<>();
-                    UtilFile.delShared(mAct, FileManager.xmlFile_userInfo, "");
+                    FileManager.delShared(mAct, FileManager.xmlFile_userInfo, "");
                     //清空消息数角标
                     MessageTipController.newInstance().setQuanMessage(0);
                     MessageTipController.newInstance().setQiyvMessage(0);
@@ -265,7 +265,7 @@ public class LoginManager {
      */
     public static void modifyUserInfo(Context context, String key, String value) {
         userInfo.put(key, value);
-        UtilFile.saveShared(context, FileManager.xmlFile_userInfo, userInfo);
+        FileManager.saveShared(context, FileManager.xmlFile_userInfo, userInfo);
     }
 
 	/**
@@ -300,11 +300,12 @@ public class LoginManager {
 				userInfo.put("maturity_time", TextUtils.isEmpty(vipMap.get("maturity_time")) ? "" : vipMap.get("maturity_time"));
 				userInfo.put("email", TextUtils.isEmpty(map.get("email")) ? "" : map.get("email"));
 				userInfo.put("regTime", TextUtils.isEmpty(map.get("regTime")) ? "" : map.get("regTime"));
+				userInfo.put("shortVideoNum",TextUtils.isEmpty(map.get("shortVideoNum"))?"":map.get("shortVideoNum"));
 				UtilLog.print("d", "是否是管理员: " + map.get("isManager"));
 				new UMPushServer(mAct).addAlias(map.get("code"));
 				if(map.containsKey("sex"))userInfo.put("sex",map.get("sex"));
 				//储存用户信息
-				UtilFile.saveShared(mAct, FileManager.xmlFile_userInfo, userInfo);
+				FileManager.saveShared(mAct, FileManager.xmlFile_userInfo, userInfo);
 			}
 		}
 	}
@@ -404,6 +405,7 @@ public class LoginManager {
             return mIsShowAd;
         }
         mIsShowAd = !(isVIP() || isGourmet());
+        Log.i("isShowAd", "isShowAd: " + mIsShowAd);
         return mIsShowAd;
     }
 
@@ -413,7 +415,7 @@ public class LoginManager {
      */
     private synchronized static boolean isVIVOShowAd() {
         boolean ret = true;
-        if("developer.vivo.com.cn".equals(ChannelUtil.getChannel(XHApplication.in()))) {
+        if("developer.vivo.com.cn".equals(ChannelManager.getInstance().getChannel(XHApplication.in()))) {
             String showAD = ConfigMannager.getConfigByLocal(KEY_VIVOAD);//release 2表示显示发布，显示广告，1不显示广告
             if (showAD != null && !TextUtils.isEmpty(showAD) && "1".equals(StringManager.getFirstMap(showAD).get("release"))) {
                 ret = false;
@@ -682,7 +684,7 @@ public class LoginManager {
             synchronized (LoginManager.class) {
                 if (!mInitIsLogin.get()) {
                     mInitIsLogin.set(true);
-                    userInfo = (Map<String, String>) UtilFile.loadShared(XHApplication.in(), FileManager.xmlFile_userInfo, "");
+                    userInfo = (Map<String, String>) FileManager.loadShared(XHApplication.in(), FileManager.xmlFile_userInfo, "");
                 }
             }
         }
@@ -696,7 +698,7 @@ public class LoginManager {
 
     public static String getUserRegTime (Context context) {
         String regTime = "";
-        Object obj = UtilFile.loadShared(context, FileManager.xmlFile_userInfo, "regTime");
+        Object obj = FileManager.loadShared(context, FileManager.xmlFile_userInfo, "regTime");
         if (obj != null)
             regTime = obj.toString();
         return regTime;

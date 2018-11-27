@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.Set;
 
 import acore.tools.Tools;
-import acore.tools.UploadImg;
+import amodule.upload.UploadImg;
 import amodule.article.upload.CommentUpload;
 import amodule.comment.activity.PublishCommentActivity;
 import aplug.basic.InternetCallback;

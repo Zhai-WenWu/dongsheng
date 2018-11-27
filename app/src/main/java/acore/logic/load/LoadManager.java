@@ -25,7 +25,6 @@ import acore.tools.LogManager;
 import acore.tools.Tools;
 import acore.widget.DownRefreshList;
 import acore.widget.LayoutScroll;
-import acore.widget.ScrollLinearListLayout;
 import acore.widget.rvlistview.RvListView;
 import acore.widget.rvlistview.adapter.RvBaseAdapter;
 import amodule.answer.view.UploadingView;
@@ -347,28 +346,6 @@ public class LoadManager {
 			}
 		}
 		setLoading(loadMoreListener, showProgressbar);
-	}
-
-	/**
-	 * 专门提供于ScrollLinearListLayout使用的加载
-	 * 传入ScrollLinearListLayout对象设置自动加载
-	 *
-	 * @param scrollLinearListLayout
-	 * @param listView
-	 * @param adapter
-	 * @param hasMore
-	 * @param clicker
-	 */
-	public void setLoading(ScrollLinearListLayout scrollLinearListLayout, ListView listView,
-						   BaseAdapter adapter, boolean hasMore, OnClickListener clicker) {
-		if (listView.getAdapter() == null) {
-			if (hasMore) {
-				Button loadMore = mLoadMore.newLoadMoreBtn(listView, clicker);
-				AutoLoadMore.setAutoMoreListen(scrollLinearListLayout, listView, loadMore, clicker);
-			}
-			listView.setAdapter(adapter);
-		}
-		setLoading(clicker);
 	}
 
     public void loading(Object key, boolean isBlankSpace) {

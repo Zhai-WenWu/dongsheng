@@ -26,6 +26,7 @@ import java.util.Map;
 
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
+import acore.tools.ColorUtil;
 import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
 import acore.widget.multifunction.CommentBuilder;
@@ -133,7 +134,7 @@ public class ViewCommentItem extends LinearLayout {
                 }
             });
             if(!TextUtils.isEmpty(cusstomMap.get("name_color")))
-                userName.setTextColor(Color.parseColor(cusstomMap.get("name_color")));
+                userName.setTextColor(ColorUtil.parseColor(cusstomMap.get("name_color")));
             AppCommon.setVip((Activity) mContext, userVip, cusstomMap.get("is_member"), AppCommon.VipFrom.COMMENT, new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -169,12 +170,12 @@ public class ViewCommentItem extends LinearLayout {
             }).start();
         }
         else {
-            commentContentParent.setBackgroundColor(Color.parseColor("#00fffae3"));
+            commentContentParent.setBackgroundColor(Color.TRANSPARENT);
         }
-        int chooseBackColro = Color.parseColor("#fffde3");
+        int chooseBackColor = Color.parseColor("#fffde3");
         ArrayList<Map<String, String>> contentArray = StringManager.getListMapByJson(content);
         for(Map<String, String> contentMap:contentArray) {
-            addCotentView(contentMap,isAnchor ? chooseBackColro : normalBackColor,chooseBackColro);
+            addCotentView(contentMap,isAnchor ? chooseBackColor : normalBackColor,chooseBackColor);
         }
     }
 
@@ -381,7 +382,7 @@ public class ViewCommentItem extends LinearLayout {
                 replayMap.put("is_anchor","1");
                 isReset = true;
             }
-            else view.setBackgroundColor(Color.parseColor("#00fffae3"));
+            else view.setBackgroundColor(Color.TRANSPARENT);
 
             String newUName = uName.length() > 6 ? uName.subSequence(0, 5) + "..." : uName;
             MultifunctionTextView.MultifunctionText multifunctionText = new MultifunctionTextView.MultifunctionText();
