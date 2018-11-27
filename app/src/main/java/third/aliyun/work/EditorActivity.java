@@ -87,7 +87,6 @@ public class EditorActivity extends AppCompatActivity implements
     public static final String KEY_VIDEO_PARAM = "video_param";
     public static final String KEY_PROJECT_JSON_PATH = "project_json_path";
     public static final String KEY_TEMP_FILE_LIST = "temp_file_list";
-    public static final String EXTRA_SHOW_GUIDE = "show_guide";
 
     private LinearLayout mBottomLinear;
     private SurfaceView mSurfaceView;
@@ -120,7 +119,6 @@ public class EditorActivity extends AppCompatActivity implements
     private String videoPath;
     private boolean isCoverFullSreen= true;
     private ProgressBar progressBar;
-    private boolean isShowGuide;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,7 +142,6 @@ public class EditorActivity extends AppCompatActivity implements
             videoPath = intent.getStringExtra("videoPath");
         }
         mTempFilePaths = intent.getStringArrayListExtra(KEY_TEMP_FILE_LIST);
-        isShowGuide = intent.getBooleanExtra(EXTRA_SHOW_GUIDE,false);
         initView();
         initListView();
         add2Control();
@@ -184,7 +181,6 @@ public class EditorActivity extends AppCompatActivity implements
         findViewById(R.id.progressBar_layout).setOnClickListener(v->{});
         ((ImageView)findViewById(R.id.leftImgBtn)).setImageResource(R.drawable.z_z_topbar_ico_back_white);
 
-        findViewById(R.id.guide_view).setVisibility(isShowGuide?View.VISIBLE:View.GONE);
     }
 
     private void initGlSurfaceView() {
@@ -355,7 +351,6 @@ public class EditorActivity extends AppCompatActivity implements
         aliyun_next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                findViewById(R.id.guide_view).setVisibility(View.GONE);
                 Log.i("xianghaTag","mUri.getPath():::"+mUri.getPath());
                 isShowEdit(true);
                 onPause();

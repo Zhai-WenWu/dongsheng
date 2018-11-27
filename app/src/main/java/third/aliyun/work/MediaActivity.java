@@ -18,8 +18,6 @@ import acore.tools.Tools;
 import third.aliyun.edit.util.Common;
 import third.aliyun.views.MediaSelectView;
 
-import static third.aliyun.work.EditorActivity.EXTRA_SHOW_GUIDE;
-
 /**
  * 视频选择
  */
@@ -41,7 +39,6 @@ public class MediaActivity extends Activity {
 
     private int requestWidth,requestHeight;
     private MediaSelectView mediaSelectView;
-    private boolean isShowGuide;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -91,7 +88,6 @@ public class MediaActivity extends Activity {
         } catch (Exception e) {
             requestHeight = 0;
         }
-        isShowGuide = getIntent().getBooleanExtra(EXTRA_SHOW_GUIDE,false);
     }
 
     private void init() {
@@ -111,7 +107,6 @@ public class MediaActivity extends Activity {
             intent.putExtra(CropKey.VIDEO_BITRATE, mBitrate);
             intent.putExtra(CropKey.VIDEO_FRAMERATE, frameRate);
             intent.putExtra(CropKey.ACTION, CropKey.ACTION_TRANSCODE);//是否真裁剪
-            intent.putExtra(EXTRA_SHOW_GUIDE,isShowGuide);
             startActivityForResult(intent, REQUEST_CODE_VIDEO_CROP);
         });
         initTitle();

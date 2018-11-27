@@ -67,7 +67,6 @@ import third.aliyun.widget.SizeChangedNotifier;
 import third.aliyun.widget.VideoSliceSeekBar;
 import third.aliyun.widget.VideoTrimFrameLayout;
 
-import static third.aliyun.work.EditorActivity.EXTRA_SHOW_GUIDE;
 import static third.aliyun.work.MediaActivity.resolutions;
 
 
@@ -145,7 +144,6 @@ public class AliyunVideoCrop extends Activity implements TextureView.SurfaceText
     private MediaInfo mCurrMediaInfo;
     private String corp_durtion= Tools.getStringToId(R.string.aliyun_corp_durtion);
     private int maxVideoDuration = 20000;
-    private boolean isShowGuide;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -189,7 +187,6 @@ public class AliyunVideoCrop extends Activity implements TextureView.SurfaceText
         frameRate = getIntent().getIntExtra(AliyunSnapVideoParam.VIDEO_FRAMERATE, 25);
         cropDuration = getIntent().getIntExtra(AliyunSnapVideoParam.MIN_CROP_DURATION, 3000);
         isUseGPU = getIntent().getBooleanExtra(AliyunSnapVideoParam.CROP_USE_GPU, false);
-        isShowGuide = getIntent().getBooleanExtra(EXTRA_SHOW_GUIDE,false);
         mOutputResolution = resolutions[2];
         mVideoParam = new AliyunVideoParam.Builder()
                 .frameRate(frameRate)
@@ -265,7 +262,6 @@ public class AliyunVideoCrop extends Activity implements TextureView.SurfaceText
                     intent.putExtra("video_param", mVideoParam);
                     intent.putExtra("project_json_path", projectJsonPath);
                     intent.putExtra("videoPath", outputPath);
-                    intent.putExtra(EXTRA_SHOW_GUIDE, isShowGuide);
                     startActivity(intent);
                 }
             }

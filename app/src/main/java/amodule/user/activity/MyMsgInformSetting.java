@@ -28,9 +28,7 @@ import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
 import acore.widget.SwitchView;
 import amodule.user.datacontroller.MsgSettingDataController;
-import aplug.basic.DefaultInternetCallback;
 import aplug.basic.InternetCallback;
-import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import third.push.xg.XGTagManager;
 
@@ -106,19 +104,14 @@ public class MyMsgInformSetting extends BaseActivity implements View.OnClickList
 			checkStatusChanged();
 		}
 
-		if (mResumeFromPermission) {
+		if (mResumeFromPermission && mGotoClosePermission) {
 			mResumeFromPermission = false;
-			if(mGotoClosePermission){
-				mGotoClosePermission = false;
-				XHClick.mapStat(this, "a_set_push", "去关闭跳转到设置", mNewMsgOpen ? "未关闭" : "关闭成功");
-			}
+			mGotoClosePermission = false;
+			XHClick.mapStat(this, "a_set_push", "去关闭跳转到设置", mNewMsgOpen ? "未关闭" : "关闭成功");
 		}
 		if (mResumeFromClickBtn) {
 			mResumeFromClickBtn = false;
 			XHClick.mapStat(this, "a_set_push", "关闭状态下，点击“设置”去开启", mNewMsgOpen ? "开启成功" : "开启失败");
-			if(mNewMsgOpen){
-				ReqEncyptInternet.in().doEncypt(StringManager.api_addTask,"channel=taskAutoNotify",new DefaultInternetCallback());
-			}
 		}
 	}
 
@@ -349,10 +342,9 @@ public class MyMsgInformSetting extends BaseActivity implements View.OnClickList
 		switch (v.getId()) {
 			case R.id.msg_new:
 				mNeedCheckStatus = true;
-				if (!mNewMsgOpen) {
-					mResumeFromClickBtn = true;
+				if (!mNewMsgOpen)
 					startOpenNotify();
-				} else {
+				else {
 					showDialog();
 					mGotoClosePermission = true;
 					XHClick.mapStat(this, "a_set_push", "开启状态下点击去关闭推送", "");
