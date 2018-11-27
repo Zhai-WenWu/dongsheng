@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import acore.logic.XHClick;
-import acore.tools.ObserverManager;
+import acore.observer.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;

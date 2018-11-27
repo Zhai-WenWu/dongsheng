@@ -77,4 +77,5 @@
     <string name="hide_bottom_view_on_scroll_behavior" translatable="false">amodule.topic.style.HideBottomViewOnScrollBehavior</string>
     <string name="vip_bind_phone">会员绑定手机号</string>
     <string name="vip_bind_phone_tip">为保障你的账号安全，请务必绑定手机号</string>
+    <string name="title_activity_client_debug">ClientDebug</string>
 </resources>

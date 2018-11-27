@@ -32,6 +32,7 @@ import acore.logic.ConfigMannager;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.logic.load.LoadManager;
+import acore.tools.ColorUtil;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -186,7 +187,7 @@ public class DetailDishViewManager {
         bar_title_1 = (RelativeLayout) mAct.findViewById(R.id.a_dish_detail_new_title);
         String colors = Tools.getColorStr(mAct, R.color.common_top_bg);
         bar_title_1.setBackgroundResource(R.color.common_top_bg);
-        Tools.setStatusBarColor(mAct, Color.parseColor(colors));
+        Tools.setStatusBarColor(mAct, ColorUtil.parseColor(colors));
     }
     /**
      * 处理预先加载数据

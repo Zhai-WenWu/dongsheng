@@ -28,8 +28,8 @@ import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;
-import acore.tools.IObserver;
-import acore.tools.ObserverManager;
+import acore.observer.IObserver;
+import acore.observer.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.LayoutScroll;
@@ -65,7 +65,7 @@ import third.share.BarShare;
 import xh.basic.internet.UtilInternet;
 import xh.basic.tool.UtilString;
 
-import static acore.tools.ObserverManager.NOTIFY_SAVE_VIDEO_DRAF;
+import static acore.observer.ObserverManager.NOTIFY_SAVE_VIDEO_DRAF;
 import static amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver.ACTION_ATT;
 import static amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver.ACTION_DEL;
 import static amodule.user.Broadcast.UploadStateChangeBroadcasterReceiver.DATA_TYPE;
@@ -278,6 +278,9 @@ public class FriendHome extends BaseActivity implements IObserver {
                         Map<String, String> map = list.get(i);
                         if (TYPE_VIDEO.equals(map.get("type"))) {
                             mTabs.get(0).put("num", map.get("num"));
+                            if(LoginManager.isSlef(userCode)){
+                                LoginManager.userInfo.put("shortVideoNum",map.get("num"));
+                            }
                         } else if (TYPE_ARTICLE.equals(map.get("type"))) {
                             mTabs.get(3).put("num", map.get("num"));
                         }
@@ -725,6 +728,10 @@ public class FriendHome extends BaseActivity implements IObserver {
             tv.setText(num1 + "");
         else
             tv.setText(0 + "");
+        if(LoginManager.isSlef(userCode)
+                || (LoginManager.isLogin() && TextUtils.isEmpty(userCode))){
+            LoginManager.userInfo.put("shortVideoNum",tv.getText().toString());
+        }
         TextView tv2 = view2.findViewById(R.id.tab_data);
         int num2 = Integer.parseInt(tv2.getText().toString());
         if (isDel)

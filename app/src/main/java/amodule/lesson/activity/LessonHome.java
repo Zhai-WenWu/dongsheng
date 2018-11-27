@@ -8,12 +8,9 @@ import android.widget.Button;
 
 import com.xiangha.R;
 
-import acore.logic.XHClick;
-import acore.logic.load.LoadManager;
-import acore.override.activity.base.BaseAppCompatActivity;
 import acore.override.activity.mian.MainBaseActivity;
-import acore.tools.IObserver;
-import acore.tools.ObserverManager;
+import acore.observer.IObserver;
+import acore.observer.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
 import amodule.lesson.adapter.LessonHomeAdapter;
@@ -23,9 +20,8 @@ import amodule.main.Main;
 import amodule.main.delegate.ISetMessageTip;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
-import aplug.basic.ReqInternet;
 
-import static acore.tools.ObserverManager.NOTIFY_VIPSTATE_CHANGED;
+import static acore.observer.ObserverManager.NOTIFY_VIPSTATE_CHANGED;
 
 public class LessonHome extends MainBaseActivity implements IObserver, ISetMessageTip {
 

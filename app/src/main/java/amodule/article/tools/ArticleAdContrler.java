@@ -50,15 +50,15 @@ import static third.ad.tools.AdPlayIdConfig.ARTICLE_RECM_2;
  */
 
 public class ArticleAdContrler {
-    protected XHAllAdControl xhAllAdControlBootom, xhAllAdControlList;
-    protected ArrayList<Map<String, String>> adRcomDataArray = new ArrayList<>();
-    protected SparseArray<Boolean> adInsteredArray = new SparseArray<>();
-    public final int ARTICLE_BOTTOM = 101;
+    XHAllAdControl xhAllAdControlBootom, xhAllAdControlList;
+    ArrayList<Map<String, String>> adRcomDataArray = new ArrayList<>();
+    SparseArray<Boolean> adInsteredArray = new SparseArray<>();
+    final int ARTICLE_BOTTOM = 101;
     //广告跟随相关推荐的数据位置
-    protected final int[] adPositionInList = {0, 2};
+    private final int[] adPositionInList = {0, 2};
     //adPosition 的 index 值
-    public final int ARTICLE_RECOMMEND_1 = 0;
-    public final int ARTICLE_RECOMMEND_2 = 1;
+    private final int ARTICLE_RECOMMEND_1 = 0;
+    private final int ARTICLE_RECOMMEND_2 = 1;
 
     private String mAdType;
 

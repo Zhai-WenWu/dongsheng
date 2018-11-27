@@ -4,7 +4,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 
-import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilImage;
 import xh.basic.tool.UtilLog;
 import xh.basic.tool.UtilString;
@@ -23,7 +22,6 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import aplug.basic.LoadImage;
-
 import com.xiangha.R;
 
 public class ImgManager extends UtilImage {
@@ -43,7 +41,6 @@ public class ImgManager extends UtilImage {
         BitmapFactory.decodeFile(path, options);
         int wi = options.outWidth;
         int hei = options.outHeight;
-        // //Log.i("FRJ","wi:" + wi + "  hei:" + hei);
         return !(wi / hei >= scale || hei / wi >= scale);
     }
 
@@ -56,7 +53,8 @@ public class ImgManager extends UtilImage {
         if (imgUrl.length() == 0)
             return;
         String name = UtilString.toMD5(imgUrl, false);
-        UtilFile.delDirectoryOrFile(UtilFile.getSDDir() + LoadImage.SAVE_LONG + "/" + name, 0);
+
+        FileManager.delDirectoryOrFile(FileManager.getSDDir() + LoadImage.SAVE_LONG + "/" + name, 0);
     }
 
     /**
@@ -70,7 +68,7 @@ public class ImgManager extends UtilImage {
             return;
         String name = UtilString.toMD5(imgUrl, false);
         // 图片不存在则下载
-        if (UtilFile.ifFileModifyByCompletePath(UtilFile.getSDDir() + type + "/" + name, -1) == null) {
+        if (FileManager.ifFileModifyByCompletePath(FileManager.getSDDir() + type + "/" + name, -1) == null) {
             LoadImage.with(XHApplication.in())
                     .load(imgUrl)
                     .setSaveType(type)
@@ -94,8 +92,8 @@ public class ImgManager extends UtilImage {
         if (TextUtils.isEmpty(imgUrl) || null == imageView)
             return;
         String name = UtilString.toMD5(imgUrl, false);
-        final String imagePath = UtilFile.getSDDir() + type + "/" + name;
-        if (UtilFile.ifFileModifyByCompletePath(imagePath, -1) == null) {
+        final String imagePath = FileManager.getSDDir() + type + "/" + name;
+        if (FileManager.ifFileModifyByCompletePath(imagePath, -1) == null) {
             LoadImage.with(XHApplication.in())
                     .load(imgUrl)
                     .setSaveType(type)

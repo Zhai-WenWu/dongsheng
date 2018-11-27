@@ -20,6 +20,7 @@ import java.util.Map;
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
+import acore.tools.ColorUtil;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import amodule.dish.activity.DetailDish;
@@ -96,12 +97,11 @@ public class DishHoverViewControl implements View.OnClickListener{
         this.mapQA= mapQA;
         int roundRadius = Tools.getDimen(mAct,R.dimen.dp_3); // 8dp 圆角半径
         String bgColor=mapQA.containsKey("bgColor")&&!TextUtils.isEmpty(mapQA.get("bgColor"))?mapQA.get("bgColor"):"#f23030";
-        int fillColor = Color.parseColor(bgColor);//内部填充颜色
         GradientDrawable gd = new GradientDrawable();//创建drawable
-        gd.setColor(Color.parseColor(bgColor));
+        gd.setColor(ColorUtil.parseColor(bgColor));//内部填充颜色
         gd.setCornerRadius(roundRadius);
         mHoverTv.setBackgroundDrawable(gd);
-        mHoverTv.setTextColor(Color.parseColor(mapQA.containsKey("color")&&!TextUtils.isEmpty(mapQA.get("color"))?mapQA.get("color"):"#fffffe"));
+        mHoverTv.setTextColor(ColorUtil.parseColor(mapQA.containsKey("color")&&!TextUtils.isEmpty(mapQA.get("color"))?mapQA.get("color"):"#fffffe"));
         mHoverTv.setText(mapQA.get("text"));
         XHClick.mapStat(mAct, DetailDish.tongjiId_detail, "向作者提问按钮状态", mapQA.get("text"));
 

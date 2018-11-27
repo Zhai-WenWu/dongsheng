@@ -27,8 +27,8 @@ import java.util.Map;
 
 import acore.logic.XHClick;
 import acore.tools.FileManager;
-import acore.tools.IObserver;
-import acore.tools.ObserverManager;
+import acore.observer.IObserver;
+import acore.observer.ObserverManager;
 import acore.tools.Tools;
 import acore.widget.LayoutScroll;
 import acore.widget.PagerSlidingTabStrip;
@@ -39,7 +39,6 @@ import third.mall.aplug.MallCommon;
 import third.mall.bean.OrderBean;
 import third.mall.fragment.MallOrderFragment;
 import third.mall.override.MallOrderBaseActivity;
-import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilString;
 
 /**
@@ -146,10 +145,10 @@ public class MyOrderActivity extends MallOrderBaseActivity implements OnClickLis
 	}
 
 	private void initFileData() {
-		Object msg = UtilFile.loadShared(this, FileManager.MALL_ORDERLIST, FileManager.MALL_ORDERLIST);
+		Object msg = FileManager.loadShared(this, FileManager.MALL_ORDERLIST, FileManager.MALL_ORDERLIST);
 		ArrayList<Map<String, String>> listMapByJson = UtilString.getListMapByJson(msg);
 		if(listMapByJson.size() <= 0){
-			String asset_msg=UtilFile.getFromAssets(this, FileManager.MALL_ORDERLIST);
+			String asset_msg=FileManager.getFromAssets(this, FileManager.MALL_ORDERLIST);
 			listMapByJson= UtilString.getListMapByJson(asset_msg);
 		}
 		if (listMapByJson.size() > 0) {

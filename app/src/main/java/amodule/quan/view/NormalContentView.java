@@ -14,7 +14,7 @@ import java.util.Map;
 import acore.logic.AppCommon;
 import acore.tools.StringManager;
 import amodule.quan.tool.NormarlContentData;
-import xh.windowview.BottomDialog;
+import com.xh.windowview.BottomDialog;
 
 import static third.ad.scrollerAd.XHScrollerAdParent.ADKEY_GDT;
 import static third.ad.scrollerAd.XHScrollerAdParent.ID_AD_ICON_GDT;

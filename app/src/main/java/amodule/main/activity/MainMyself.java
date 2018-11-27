@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.load.model.GlideUrl;
@@ -23,14 +24,16 @@ import java.util.Map;
 
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
+import acore.logic.VersionControl;
 import acore.logic.XHClick;
 import acore.logic.stat.StatModel;
 import acore.logic.stat.StatisticsManager;
 import acore.override.activity.mian.MainBaseActivity;
+import acore.tools.ColorUtil;
 import acore.tools.FileManager;
-import acore.tools.IObserver;
+import acore.observer.IObserver;
 import acore.tools.LogManager;
-import acore.tools.ObserverManager;
+import acore.observer.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -73,11 +76,11 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
     private ImageView headerBg;
     private LinearLayout gourp1, gourp2, gourp3;
     private String[] name1 = {"我的订单"},
-            name2 = {"我的会员", "设备已开通会员，需绑定手机号", "我的收藏", "浏览历史", "我的问答"},
-            name3 = {"邀请好友", "反馈帮助", "设置"};
+            name2 = {"我的会员", "设备已开通会员，需绑定手机号","任务中心", "我的收藏", "浏览历史", "我的问答"},
+            name3 = {"邀请好友", "反馈帮助","设置"};
     private String[] clickTag1 = {"order"},
-            clickTag2 = {"vip", "yiyuan", "myFavorite", "hitstory", "qa"},
-            clickTag3 = {"invitation", "helpe", "setting"};
+            clickTag2 = {"vip", "yiyuan","taskCenter", "myFavorite", "hitstory", "qa"},
+            clickTag3 = {"invitation", "helpe","setting"};
 
     private final String tongjiId = "a_mine";
 
@@ -265,9 +268,15 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
             moneyHint.setVisibility(View.VISIBLE);
         }
 
-        qaInfo = (TextView) gourp2.getChildAt(4).findViewById(R.id.text_right_myself);
-        qaNewHint = (TextView) gourp2.getChildAt(4).findViewById(R.id.my_new_info);
-        qaIcon = (ImageView) gourp2.getChildAt(4).findViewById(R.id.ico_right_myself);
+        boolean taskCenterIsOnce = VersionControl.isCurrentVersionOnce(this,"taskCenter");
+        if(taskCenterIsOnce){
+            gourp2.getChildAt(2).findViewById(R.id.my_new_info).setVisibility(View.VISIBLE);
+            gourp2.getChildAt(2).findViewById(R.id.ico_right_myself).setVisibility(View.GONE);
+        }
+
+        qaInfo = (TextView) gourp2.getChildAt(5).findViewById(R.id.text_right_myself);
+        qaNewHint = (TextView) gourp2.getChildAt(5).findViewById(R.id.my_new_info);
+        qaIcon = (ImageView) gourp2.getChildAt(5).findViewById(R.id.ico_right_myself);
         if (isShowQA == null || TextUtils.isEmpty(String.valueOf(isShowQA))) {
             notifyQAItemChanged(0, true, false);
         }
@@ -357,6 +366,7 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
                     followNum.setText(listMap.get("followNum"));
 
                     scoreNum.setText(listMap.get("scoreNum"));
+                    scoreIcon.setVisibility("2".equals(listMap.get("isHaveExpire"))?View.VISIBLE:View.GONE);
                     couponNum.setText(listMap.get("coupon"));
 
                     String vip = listMap.get("vip");
@@ -375,8 +385,8 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
                                 vipInfo.setVisibility(View.VISIBLE);
                                 vipIcon.setVisibility(View.GONE);
                                 String vipDataColor = vipMap.get("color");
-                                if (!TextUtils.isEmpty(vipDataColor)) {
-                                    vipInfo.setTextColor(Color.parseColor(vipDataColor));
+                                if(!TextUtils.isEmpty(vipDataColor)){
+                                    vipInfo.setTextColor(ColorUtil.parseColor(vipDataColor));
                                 }
                             }
                         }
@@ -556,10 +566,9 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
                     break;
                 case R.id.ll_score:
                     XHClick.track(getApplicationContext(), "点击我的页面的积分");
-                    XHClick.mapStat(this, tongjiId, "列表", "积分商城");
-//			AppCommon.openUrl(this, StringManager.api_scoreStore + "?code=" + LoginManager.userInfo.get("code"), true);
-                    Intent scoreStore = new Intent(MainMyself.this, ScoreStore.class);
-                    startActivity(scoreStore);
+                    XHClick.mapStat(this, tongjiId,"列表", "积分商城");
+                    String url = "FullScreenWeb.app?url=" + StringManager.replaceUrl(StringManager.api_scoreStore);
+			        AppCommon.openUrl(url, true);
                     break;
                 case R.id.ll_coupon:
                     XHClick.mapStat(this, tongjiId, "列表", "优惠券");
@@ -578,6 +587,7 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
                 case "order": //订单
                 case "coupon": //优惠券
                 case "money": //钱包
+                case "taskCenter"://任务中心
                     isOption = true;
                     XHClick.mapStat(this, tongjiId, "头部", "登录");
                     Intent intent = new Intent(MainMyself.this, LoginByAccout.class);
@@ -601,15 +611,22 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
                     }
                     StatisticsManager.saveData(StatModel.createBtnClickModel(MainMyself.class.getSimpleName(), "会员绑定提示", "立即绑定"));
                     break;
+                case "taskCenter"://任务中心
+                    VersionControl.recordCurrentVersionOnce(this,"taskCenter");
+                    gourp2.getChildAt(2).findViewById(R.id.my_new_info).setVisibility(View.GONE);
+                    gourp2.getChildAt(2).findViewById(R.id.ico_right_myself).setVisibility(View.VISIBLE);
+                    String url = "FullScreenWeb.app?url=" + StringManager.replaceUrl(StringManager.api_dailyTask);
+                    AppCommon.openUrl(url,false);
+                    break;
                 case "qa"://我的问答
                     FileManager.saveShared(this, FileManager.xmlFile_appInfo, "isShowQA", "2");
                     notifyQAItemChanged(0, false, true);
                     startActivity(new Intent(MainMyself.this, QAMsgListActivity.class));
                     break;
                 case "hitstory"://浏览记录
-                    XHClick.mapStat(this, tongjiId, "列表", "看过");
-                    gourp2.getChildAt(3).findViewById(R.id.my_new_info).setVisibility(View.GONE);
-                    gourp2.getChildAt(3).findViewById(R.id.ico_right_myself).setVisibility(View.VISIBLE);
+                    XHClick.mapStat(this, tongjiId,"列表","看过");
+                    gourp2.getChildAt(4).findViewById(R.id.my_new_info).setVisibility(View.GONE);
+                    gourp2.getChildAt(4).findViewById(R.id.ico_right_myself).setVisibility(View.VISIBLE);
                     Intent intent_history = new Intent(MainMyself.this, BrowseHistory.class);
                     startActivity(intent_history);
                     break;

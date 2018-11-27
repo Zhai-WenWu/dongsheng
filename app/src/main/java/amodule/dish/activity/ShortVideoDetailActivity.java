@@ -37,8 +37,8 @@ import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.FileManager;
-import acore.tools.IObserver;
-import acore.tools.ObserverManager;
+import acore.observer.IObserver;
+import acore.observer.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -64,8 +64,8 @@ import aplug.basic.ReqInternet;
 import third.ad.scrollerAd.XHAllAdControl;
 import third.ad.tools.AdPlayIdConfig;
 
-import static acore.tools.ObserverManager.NOTIFY_LOGIN;
-import static acore.tools.ObserverManager.NOTIFY_SHARE;
+import static acore.observer.ObserverManager.NOTIFY_LOGIN;
+import static acore.observer.ObserverManager.NOTIFY_SHARE;
 
 public class ShortVideoDetailActivity extends BaseAppCompatActivity implements IObserver {
 
@@ -491,8 +491,6 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
         mAdapter.notifyDataSetChanged();
     }
 
-    boolean initAdOver = false;
-
     private void initAd() {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
@@ -516,9 +514,7 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
                 }
                 for (int i = 0; i < adIdList.size(); i++) {
                     String adId = adIdList.get(i);
-                    if (map.containsKey(adId) && !TextUtils.isEmpty(map.get(adId)) && adPositionMap.get(adId) != null
-                            && (!AdPlayIdConfig.hasShown(adId) || initAdOver)
-                            ) {
+                    if (map.containsKey(adId) && !TextUtils.isEmpty(map.get(adId)) && adPositionMap.get(adId) != null) {
                         Map<String, String> adMap = StringManager.getFirstMap(map.get(adId));
                         Log.i("tzy", "initAd: " + adMap.toString());
                         ShortVideoDetailADModule adModule = new ShortVideoDetailADModule();
@@ -549,7 +545,6 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
                 if (mAdapter != null) {
                     mAdapter.setADData(mAdData);
                 }
-                initAdOver = true;
             }
         }, this, "search_list", false);
     }

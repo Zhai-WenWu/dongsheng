@@ -6,7 +6,6 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -14,23 +13,18 @@ import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.xiangha.R;
 
-import java.net.URLEncoder;
 
-import acore.logic.AppCommon;
 import acore.logic.LoginManager;
-import acore.logic.SpecialOrder;
 import acore.override.XHApplication;
 import acore.override.activity.base.BaseActivity;
-import acore.tools.ChannelUtil;
+import acore.tools.ChannelManager;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import third.mall.aplug.MallStringManager;
-import xh.basic.tool.UtilFile;
 
 public class ChangeUrl extends BaseActivity {
 
@@ -52,14 +46,7 @@ public class ChangeUrl extends BaseActivity {
     private EditText mMallPortEt;
     private Switch mMallSwitchBtn;
 
-    private Switch mStatShowBtn;
-
     private Switch mRequsetFailTipSwitch, ds_from_switch;
-
-    private EditText mInputEdit;
-    private Button mGotoBtn;
-    private EditText mInputEdit2;
-    private Button mGotoBtn2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +57,7 @@ public class ChangeUrl extends BaseActivity {
         initData();
         loadManager.hideProgressBar();
         if (LoginManager.isLogin() && LoginManager.isManager()) {
-            Tools.showToast(XHApplication.in(), ChannelUtil.getChannel(this));
+            Tools.showToast(XHApplication.in(), ChannelManager.getInstance().getChannel(this));
         }
     }
 
@@ -93,9 +80,9 @@ public class ChangeUrl extends BaseActivity {
                     }
                     String newDomain = mXHDomain + tempPort;
                     StringManager.changeUrl(mProtocol, newDomain);
-                    UtilFile.saveShared(ChangeUrl.this, FileManager.xmlFile_appInfo, FileManager.xmlKey_domain, newDomain);
+                    FileManager.saveShared(ChangeUrl.this, FileManager.xmlFile_appInfo, FileManager.xmlKey_domain, newDomain);
                 }
-                UtilFile.saveShared(ChangeUrl.this, FileManager.xmlFile_appInfo, FileManager.xmlKey_protocol, mProtocol);
+                FileManager.saveShared(ChangeUrl.this, FileManager.xmlFile_appInfo, FileManager.xmlKey_protocol, mProtocol);
                 String tempMallData = mMallDomain + mMallPort;
                 if (!tempMallData.equals(mInitMallData) || protocolChanged) {//电商
                     if (!TextUtils.isEmpty(mMallDomain) && mMallTestDomain.equals(mMallDomain) && TextUtils.isEmpty(mMallPort)) {
@@ -108,7 +95,7 @@ public class ChangeUrl extends BaseActivity {
                     }
                     String newDomain = mMallDomain + tempPort;
                     MallStringManager.changeUrl(mProtocol, newDomain);
-                    UtilFile.saveShared(ChangeUrl.this, FileManager.xmlFile_appInfo, FileManager.xmlKey_mall_domain, newDomain);
+                    FileManager.saveShared(ChangeUrl.this, FileManager.xmlFile_appInfo, FileManager.xmlKey_mall_domain, newDomain);
                 }
                 ChangeUrl.this.finish();
             }
@@ -210,43 +197,6 @@ public class ChangeUrl extends BaseActivity {
                 FileManager.saveShared(ChangeUrl.this, FileManager.xmlFile_appInfo, FileManager.xmlKey_ds_from_show, isChecked ? "2" : "1");
             }
         });
-        mStatShowBtn.setOnCheckedChangeListener((buttonView, isChecked) -> SpecialOrder.switchStatLayoutVisibility(ChangeUrl.this));
-
-        OnClickListener l = new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                String inputStr = null;
-                switch (v.getId()) {
-                    case R.id.goto_btn:
-                        inputStr = mInputEdit.getText().toString();
-                        if (TextUtils.isEmpty(inputStr)) {
-                            Toast.makeText(ChangeUrl.this, "输入内容为空", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                        if (!inputStr.startsWith(AppCommon.XH_PROTOCOL))
-                            inputStr = AppCommon.XH_PROTOCOL + inputStr;
-                        break;
-                    case R.id.goto_btn2:
-                        inputStr = mInputEdit2.getText().toString();
-                        if (TextUtils.isEmpty(inputStr)) {
-                            Toast.makeText(ChangeUrl.this, "输入内容为空", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                        final String fixedStr = "UIWebView.app?url=";
-                        if (!inputStr.startsWith(fixedStr))
-                            inputStr = fixedStr + URLEncoder.encode(inputStr);
-                        else {
-                            inputStr = fixedStr + URLEncoder.encode(inputStr.substring(fixedStr.length()));
-                        }
-                        break;
-                }
-                AppCommon.openUrl(ChangeUrl.this, inputStr, true);
-            }
-        };
-
-        mGotoBtn.setOnClickListener(l);
-        mGotoBtn2.setOnClickListener(l);
     }
 
     private void initView() {
@@ -263,16 +213,12 @@ public class ChangeUrl extends BaseActivity {
         mRequsetFailTipSwitch = (Switch) findViewById(R.id.request_fail_tip_switch);
         ds_from_switch = (Switch) findViewById(R.id.ds_from_switch);
         mStatShowBtn = findViewById(R.id.stat_show_switch);
-        ((TextView) findViewById(R.id.text_channel)).setText("渠道号:  " + ChannelUtil.getChannel(this));
+        ((TextView) findViewById(R.id.text_channel)).setText("渠道号:  " + ChannelManager.getInstance().getChannel(this));
 
-        mInputEdit = (EditText) findViewById(R.id.edit_text);
-        mGotoBtn = (Button) findViewById(R.id.goto_btn);
-        mInputEdit2 = (EditText) findViewById(R.id.edit_text2);
-        mGotoBtn2 = (Button) findViewById(R.id.goto_btn2);
     }
 
     private void initData() {
-        String protocol = (String) UtilFile.loadShared(ChangeUrl.this, FileManager.xmlFile_appInfo, FileManager.xmlKey_protocol);
+        String protocol = (String) FileManager.loadShared(ChangeUrl.this, FileManager.xmlFile_appInfo, FileManager.xmlKey_protocol);
         if (!TextUtils.isEmpty(protocol)) {
             mInitProtocol = protocol;
             if (protocol.contains("http://"))
@@ -281,7 +227,7 @@ public class ChangeUrl extends BaseActivity {
                 mProtocolBtn1.setChecked(true);
         } else
             mProtocolBtn1.setChecked(true);
-        String xhDomain = (String) UtilFile.loadShared(ChangeUrl.this, FileManager.xmlFile_appInfo, FileManager.xmlKey_domain);
+        String xhDomain = (String) FileManager.loadShared(ChangeUrl.this, FileManager.xmlFile_appInfo, FileManager.xmlKey_domain);
         if (!TextUtils.isEmpty(xhDomain)) {
             if (xhDomain.contains(mXHTestDomain + ":")) {
                 String str[] = xhDomain.split(":");
@@ -302,7 +248,7 @@ public class ChangeUrl extends BaseActivity {
             mXHSwitchBtn.setChecked(false);
         }
         mInitXHData = mProtocol + mXHDomain + mXHPort;
-        String mallDomain = (String) UtilFile.loadShared(ChangeUrl.this, FileManager.xmlFile_appInfo, FileManager.xmlKey_mall_domain);
+        String mallDomain = (String) FileManager.loadShared(ChangeUrl.this, FileManager.xmlFile_appInfo, FileManager.xmlKey_mall_domain);
         if (!TextUtils.isEmpty(mallDomain)) {
             if (mallDomain.contains(mMallTestDomain + ":")) {
                 String str[] = mallDomain.split(":");
@@ -328,8 +274,6 @@ public class ChangeUrl extends BaseActivity {
         //电商来源提示
         String ds_form = FileManager.loadShared(this, FileManager.xmlFile_appInfo, FileManager.xmlKey_ds_from_show).toString();
         ds_from_switch.setChecked("2".equals(ds_form));
-        //统计数据提示框
-        mStatShowBtn.setChecked(SpecialOrder.isOpenSwitchStatLayout(this));
     }
 
     @Override

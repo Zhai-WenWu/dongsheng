@@ -35,6 +35,7 @@ import acore.logic.XHClick;
 import acore.logic.load.LoadManager;
 import acore.notification.controller.NotificationSettingController;
 import acore.override.XHApplication;
+import acore.tools.ColorUtil;
 import acore.tools.LogManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -155,7 +156,7 @@ public class BaseActivity extends AppCompatActivity {
 			getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 		}
 		String colors = Tools.getColorStr(this, R.color.common_top_bg);
-		Tools.setStatusBarColor(this, Color.parseColor(colors));
+		Tools.setStatusBarColor(this, ColorUtil.parseColor(colors));
 		setCommonStyle();
 
 	}

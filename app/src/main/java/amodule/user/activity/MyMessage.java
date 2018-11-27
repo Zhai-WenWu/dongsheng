@@ -23,9 +23,8 @@ import acore.logic.MessageTipController;
 import acore.logic.XHClick;
 import acore.notification.controller.NotificationSettingController;
 import acore.override.activity.base.BaseAppCompatActivity;
-import acore.tools.FileManager;
-import acore.tools.IObserver;
-import acore.tools.ObserverManager;
+import acore.observer.IObserver;
+import acore.observer.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
 import acore.widget.DownRefreshList;
@@ -41,9 +40,9 @@ import xh.basic.internet.UtilInternet;
 
 import static acore.notification.controller.NotificationSettingController.pushSetMessage;
 import static acore.notification.controller.NotificationSettingController.push_show_message;
-import static acore.tools.ObserverManager.NOTIFY_LOGIN;
-import static acore.tools.ObserverManager.NOTIFY_LOGOUT;
-import static acore.tools.ObserverManager.NOTIFY_MESSAGE_REFRESH;
+import static acore.observer.ObserverManager.NOTIFY_LOGIN;
+import static acore.observer.ObserverManager.NOTIFY_LOGOUT;
+import static acore.observer.ObserverManager.NOTIFY_MESSAGE_REFRESH;
 
 public class MyMessage extends BaseAppCompatActivity implements OnClickListener, IObserver {
     public static final String KEY = "MyMessage";

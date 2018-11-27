@@ -23,6 +23,7 @@ import java.util.Map;
 
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
+import acore.tools.ColorUtil;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -91,7 +92,7 @@ public class ArticleCommentBar extends RelativeLayout implements View.OnClickLis
             public void afterTextChanged(Editable s) {
                 boolean hasText = s.length() > 0;
                 sendComment.setEnabled(hasText);
-                sendComment.setTextColor(Color.parseColor(hasText?"#333333":"#CCCCCC"));
+                sendComment.setTextColor(ColorUtil.parseColor(hasText?"#333333":"#CCCCCC"));
             }
         });
     }

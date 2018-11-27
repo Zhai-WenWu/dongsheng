@@ -6,15 +6,14 @@ import java.util.Random;
 
 import acore.logic.load.LoadManager;
 import acore.tools.LogManager;
-import acore.tools.ObserverManager;
+import acore.observer.ObserverManager;
 import acore.tools.StringManager;
-import amodule.main.Main;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
 import aplug.basic.XHInternetCallBack;
 import third.qiyu.QiYvHelper;
 
-import static acore.tools.ObserverManager.NOTIFY_MESSAGE_REFRESH;
+import static acore.observer.ObserverManager.NOTIFY_MESSAGE_REFRESH;
 
 /**
  * Description :

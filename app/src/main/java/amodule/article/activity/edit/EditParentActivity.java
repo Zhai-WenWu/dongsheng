@@ -84,7 +84,6 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
     public static final int DATA_TYPE_VIDEO = 101;
 
     protected EditText editTitle;
-    private TextView nestStep;
     private EditBottomControler editBottomControler;
     protected TextAndImageMixLayout mixLayout;
     private LinearLayout contentLayout;
@@ -164,7 +163,7 @@ public abstract class EditParentActivity extends BaseActivity implements View.On
         TextView titleView = (TextView) findViewById(R.id.title);
         titleView.setText(title);
 
-        nestStep = (TextView) findViewById(R.id.nextStep);
+        TextView nestStep = findViewById(R.id.nextStep);
         int dp_20 = (int) this.getResources().getDimension(R.dimen.dp_20);
         nestStep.setPadding(dp_20, 0, dp_20, 0);
         nestStep.setVisibility(View.VISIBLE);
