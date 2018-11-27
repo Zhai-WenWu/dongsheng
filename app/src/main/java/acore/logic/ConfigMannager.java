@@ -12,8 +12,6 @@ import acore.tools.StringManager;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
 
-import static xh.basic.tool.UtilFile.readFile;
-
 /**
  * Description :
  * PackageName : acore.logic
@@ -40,6 +38,7 @@ public class ConfigMannager {
     public static final String KEY_NEW_AD_CONFIG = "newAdConfig";
     public static final String KEY_VIP_GUIDE_STATUS = "vipGuideStatus";
     public static final String KEY_HOME_FUN_NAV_STAT = "homeFunNavStat";
+    public static final String KEY_DEVICE_VIP_GUIDE = "deviceVipGuide";
 
     /**
      * 保存config
@@ -82,7 +81,7 @@ public class ConfigMannager {
      */
     public static String getConfigByLocal(String key) {
         String data = "";
-        String configData = readFile(getConfigPath());
+        String configData = FileManager.readFile(getConfigPath());
         if (TextUtils.isEmpty(key)) {
             return configData;
         }
@@ -95,7 +94,7 @@ public class ConfigMannager {
 
     @Nullable
     public static Map<String, String> getConfigMapByLocal() {
-        String configData = readFile(getConfigPath());
+        String configData = FileManager.readFile(getConfigPath());
         if (TextUtils.isEmpty(configData)) {
             return null;
         }

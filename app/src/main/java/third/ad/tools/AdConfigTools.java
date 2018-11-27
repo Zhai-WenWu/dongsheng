@@ -8,12 +8,14 @@ import java.util.Map;
 import acore.override.XHApplication;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
+import acore.tools.Tools;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import third.ad.db.XHAdSqlite;
 import third.ad.db.bean.AdBean;
 
+import static third.ad.db.XHAdSqlite.TABLE_ADCONFIG;
 import static third.ad.tools.AdPlayIdConfig.FULL_SRCEEN_ACTIVITY;
 
 public class AdConfigTools extends BaseAdConfigTools {
@@ -23,6 +25,11 @@ public class AdConfigTools extends BaseAdConfigTools {
 
     private AdConfigTools() {
         super();
+        XHAdSqlite adSqlite = XHAdSqlite.newInstance(XHApplication.in());
+        if(adSqlite.adConfigIsEmpty()){
+            String assetAdConfigData = FileManager.getFromAssets(XHApplication.in(),"adconfig.json");
+            adSqlite.updateConfig(assetAdConfigData);
+        }
     }
 
     public static AdConfigTools getInstance() {

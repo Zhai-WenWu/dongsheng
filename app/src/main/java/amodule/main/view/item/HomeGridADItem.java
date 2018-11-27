@@ -11,14 +11,24 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.BitmapRequestBuilder;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.xiangha.R;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.Map;
 
+import acore.override.XHApplication;
 import acore.tools.FileManager;
+import acore.tools.ImgManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import aplug.basic.LoadImage;
+import aplug.basic.RSBlurBitmapTransformation;
 import aplug.basic.SubAnimTarget;
 import third.ad.scrollerAd.XHScrollerAdParent;
 

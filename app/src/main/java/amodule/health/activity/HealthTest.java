@@ -35,7 +35,6 @@ import amodule.health.adapter.HealthTestAdapter;
 import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
-import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilString;
 
 public class HealthTest extends BaseActivity {
@@ -97,14 +96,14 @@ public class HealthTest extends BaseActivity {
 	private void initData() {
 		screenWidth = ToolsDevice.getWindowPx(this).widthPixels;
 		screenHight = ToolsDevice.getWindowPx(this).heightPixels;
-		String answer_map = UtilFile.readFile(UtilFile.getDataDir() + FileManager.file_constitution);
+		String answer_map = FileManager.readFile(FileManager.getDataDir() + FileManager.file_constitution);
 		answer_map = answer_map.replace("{", "").replace("}", "");
 		if (!answer_map.equals(""))
 			mapParams = UtilString.getMapByString(answer_map,",", "=");
 		else
 			mapParams = new LinkedHashMap<>();
 		// 数据加载
-		String json = UtilFile.getFromAssets(HealthTest.this, FileManager.file_healthQuestion);
+		String json = FileManager.getFromAssets(HealthTest.this, FileManager.file_healthQuestion);
 		if (!json.equals("")) {
 			ArrayList<Map<String, String>> list = UtilString.getListMapByJson(json);
 			for (int i = 0; i < list.size(); i++) {
@@ -347,8 +346,8 @@ public class HealthTest extends BaseActivity {
 		else{
 			mapParams.put(id, answer);
 		}
-		UtilFile.delDirectoryOrFile(UtilFile.getDataDir() + FileManager.file_constitution);
-		UtilFile.saveFileToCompletePath(UtilFile.getDataDir() + FileManager.file_constitution, mapParams.toString(), false);
+		FileManager.delete(FileManager.getDataDir() + FileManager.file_constitution);
+		FileManager.saveFileToCompletePath(FileManager.getDataDir() + FileManager.file_constitution, mapParams.toString(), false);
 	}
 
 	private void setSexFemale() {
@@ -381,7 +380,7 @@ public class HealthTest extends BaseActivity {
 
 	private void onRefresh() {
 		loadManager.showProgressBar();
-		UtilFile.delDirectoryOrFile(UtilFile.getDataDir() + FileManager.file_constitution);
+		FileManager.delete(FileManager.getDataDir() + FileManager.file_constitution);
 		if(health_test_table.getChildCount()>0)
 			health_test_table.removeAllViews();
 		testList.clear();
@@ -427,7 +426,7 @@ public class HealthTest extends BaseActivity {
 					@Override
 					public void loaded(int flag, String url, Object returnObj) {
 						if(flag > 1){
-							UtilFile.saveFileToCompletePath(UtilFile.getDataDir() + FileManager.file_healthResult, returnObj.toString(), false);
+							FileManager.saveFileToCompletePath(FileManager.getDataDir() + FileManager.file_healthResult, returnObj.toString(), false);
 							Intent intent = new Intent(HealthTest.this, MyPhysique.class);
 							intent.putExtra("params", returnObj.toString());
 							startActivity(intent);

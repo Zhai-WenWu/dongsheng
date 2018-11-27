@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -14,7 +13,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.amap.api.location.AMapLocation;
-import com.amap.api.services.geocoder.RegeocodeResult;
 import com.quze.videorecordlib.VideoRecorderCommon;
 import com.xh.manager.DialogManager;
 import com.xh.manager.ViewManager;
@@ -23,7 +21,6 @@ import com.xh.view.TitleMessageView;
 import com.xiangha.R;
 
 import org.json.JSONArray;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -33,7 +30,7 @@ import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.override.activity.base.BaseActivity;
-import acore.tools.ObserverManager;
+import acore.observer.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -51,9 +48,8 @@ import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import third.aliyun.work.AliyunCommon;
 import third.location.LocationHelper;
-import third.qiyu.GlideImageLoader;
 
-import static acore.tools.ObserverManager.NOTIFY_SAVE_VIDEO_DRAF;
+import static acore.observer.ObserverManager.NOTIFY_SAVE_VIDEO_DRAF;
 
 /**
  * 视频发布页面

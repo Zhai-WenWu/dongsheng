@@ -179,7 +179,7 @@ public class DesktopLayout extends RelativeLayout {
                     textView.setTextColor(Color.parseColor("#ffffff"));
                 }
                 JSONObject jsonObject = new JSONObject(data);
-                textView.setTextSize(6);
+                textView.setTextSize(12);
                 textView.setText(Uri.decode(jsonObject.toString(4)));
             } catch (JSONException e) {
                 textView.setText(Uri.decode(data));
@@ -238,8 +238,8 @@ public class DesktopLayout extends RelativeLayout {
         mLayout.gravity = Gravity.TOP | Gravity.LEFT;
 
         // 设置窗体宽度和高度
-        mLayout.width = (int) (ToolsDevice.getWindowPx(getContext()).widthPixels * 1 / 3f);
-        mLayout.height = (int) (ToolsDevice.getWindowPx(getContext()).heightPixels * 1 / 3f);
+        mLayout.width = (int) (ToolsDevice.getWindowPx(getContext()).widthPixels * 2 / 3f);
+        mLayout.height = (int) (ToolsDevice.getWindowPx(getContext()).heightPixels * 1 / 2f);
 
     }
 

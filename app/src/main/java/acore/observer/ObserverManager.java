@@ -1,4 +1,4 @@
-package acore.tools;
+package acore.observer;
 
 import android.text.TextUtils;
 

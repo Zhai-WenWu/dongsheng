@@ -40,7 +40,7 @@ import acore.logic.polling.AppHandlerAsyncPolling;
 import acore.logic.polling.IHandleMessage;
 import acore.logic.polling.PollingConfig;
 import acore.override.XHApplication;
-import acore.tools.ChannelUtil;
+import acore.tools.ChannelManager;
 import acore.tools.FileManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -266,7 +266,7 @@ public class MainInitDataControl {
         new Thread(() -> {
             Object userCountStatics = FileManager.loadShared(XHApplication.in(), FileManager.xmlFile_appInfo, "userCount");
             if (!"2".equals(userCountStatics)) {
-                String channel = ChannelUtil.getChannel(XHApplication.in());
+                String channel = ChannelManager.getInstance().getChannel(XHApplication.in());
                 if (channel.contains(".")) {
                     String[] channels = channel.split("\\.");
                     channel = channels[channels.length - 1];
@@ -333,15 +333,15 @@ public class MainInitDataControl {
                 super.run();
                 // 删除老版文件
                 if (FileManager.ifFileModifyByCompletePath(FileManager.getDataDir() + "indexData.xh", -1) != null) {
-                    FileManager.delDirectoryOrFile(FileManager.getDataDir() + "indexData.xh");
-                    FileManager.delDirectoryOrFile(FileManager.getSDDir() + "dish");
+                    FileManager.delete(FileManager.getDataDir() + "indexData.xh");
+                    FileManager.delete(FileManager.getSDDir() + "dish");
                 }
                 // 改老版的购物单文件到数据库中
                 final String json = FileManager.readFile(FileManager.getDataDir() + FileManager.file_buyBurden);
                 if (json.length() > 0) {
                     new Thread(() -> {
-                        saveDataInDB(json, context);
-                        FileManager.delDirectoryOrFile(FileManager.getDataDir() + FileManager.file_buyBurden);
+                        saveDataInDB(json,context);
+                        FileManager.delete(FileManager.getDataDir() + FileManager.file_buyBurden);
                     }).start();
                 }
                 // 245版32以后，数据库字段更新
@@ -361,7 +361,7 @@ public class MainInitDataControl {
                     }
                 }
                 //清理sd的xiangha文件夹，老版有杂物
-                FileManager.delDirectoryOrFile(FileManager.getSDDir());
+                FileManager.delete(FileManager.getSDDir());
             }
         }.start();
     }

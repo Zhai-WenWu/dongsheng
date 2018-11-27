@@ -116,7 +116,7 @@ public class LoginbyEmail extends BaseLoginActivity implements View.OnClickListe
                                             XHClick.mapStat(LoginbyEmail.this, PHONE_TAG,"邮箱登录", "登录失败");
                                             XHClick.mapStat(LoginbyEmail.this, PHONE_TAG,"邮箱登录", "失败原因：账号或密码错");
                                         }
-                                    });
+                                    }, null);
                         }
 
                         @Override

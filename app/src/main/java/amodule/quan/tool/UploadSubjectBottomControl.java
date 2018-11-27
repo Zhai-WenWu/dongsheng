@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.xiangha.R;
 
-import acore.tools.AgreementManager;
+import amodule.dish.tools.AgreementManager;
 import acore.tools.Tools;
 import amodule.quan.activity.upload.UploadSubjectNew;
 import amodule.user.activity.BrowseHistory;

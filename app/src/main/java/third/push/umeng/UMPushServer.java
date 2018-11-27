@@ -30,6 +30,7 @@ public class UMPushServer {
 	}
 
 	public void register(){
+
 		//注册推送服务--可在子线程执行，已验证没有问题
 		new Thread(new Runnable() {
 			@Override

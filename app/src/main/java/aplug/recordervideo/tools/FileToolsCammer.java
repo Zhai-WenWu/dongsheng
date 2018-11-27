@@ -263,7 +263,7 @@ public class FileToolsCammer {
                 Bitmap bitmap = ToolsCammer.getFrameAtTime(videoPath);
                 FileManager.saveImgToCompletePath(bitmap, imgPath, Bitmap.CompressFormat.JPEG);
             }else if(imageFile.lastModified() < videoFile.lastModified()){
-                FileManager.delDirectoryOrFile(imgPath);
+                FileManager.delete(imgPath);
                 Bitmap bitmap = ToolsCammer.getFrameAtTime(videoPath);
                 FileManager.saveImgToCompletePath(bitmap, imgPath, Bitmap.CompressFormat.JPEG);
             }
@@ -306,7 +306,7 @@ public class FileToolsCammer {
             e.printStackTrace();
         }
         //删除过度文件
-        FileManager.delDirectoryOrFile(path);
+        FileManager.delete(path);
     }
 
     public interface OnCammerFileListener{

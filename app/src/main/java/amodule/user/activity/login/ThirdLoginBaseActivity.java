@@ -82,7 +82,7 @@ public class ThirdLoginBaseActivity extends BaseLoginActivity {
                                     //统计
                                     statisticsData(platform, "登录失败");
                                 }
-                            });
+                            }, null);
                     break;
                 case EMPOWER_ERROR:
                     Tools.showToast(ThirdLoginBaseActivity.this, "登录失败");

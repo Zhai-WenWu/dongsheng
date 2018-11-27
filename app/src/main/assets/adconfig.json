@@ -1,0 +1,185 @@
+[{
+  "adPosition": "kaiping",
+  "adPositionId": "72",
+  "adConfig": [{
+    "data": "72",
+    "open": "2",
+    "type": "personal"
+  }, {
+    "data": "adid=6010803614672710",
+    "open": "2",
+    "type": "gdt"
+  }, {
+    "data": "adid=4770791",
+    "open": "2",
+    "type": "baidu"
+  }]
+}, {
+  "adPosition": "sy_jiazuo1",
+  "adPositionId": "79",
+  "adConfig": [{
+    "data": "79",
+    "open": "1",
+    "type": "personal"
+  }, {
+    "data": "adid=6080712158205202",
+    "open": "2",
+    "type": "gdt"
+  }]
+}, {
+  "adPosition": "sy_jiazuo2",
+  "adPositionId": "123",
+  "adConfig": [{
+    "data": "123",
+    "open": "1",
+    "type": "personal"
+  }, {
+    "data": "adid=6080712158205202",
+    "open": "2",
+    "type": "gdt"
+  }]
+}, {
+  "adPosition": "sy_jiazuo3",
+  "adPositionId": "124",
+  "adConfig": [{
+    "data": "124",
+    "open": "1",
+    "type": "personal"
+  }, {
+    "data": "adid=6080712158205202",
+    "open": "2",
+    "type": "gdt"
+  }]
+}, {
+  "adPosition": "sy_jiazuo4",
+  "adPositionId": "125",
+  "adConfig": [{
+    "data": "125",
+    "open": "1",
+    "type": "personal"
+  }, {
+    "data": "adid=6080712158205202",
+    "open": "2",
+    "type": "gdt"
+  }]
+}, {
+  "adPosition": "sy_jiazuo5",
+  "adPositionId": "126",
+  "adConfig": [{
+    "data": "126",
+    "open": "1",
+    "type": "personal"
+  }, {
+    "data": "adid=6080712158205202",
+    "open": "2",
+    "type": "gdt"
+  }]
+}, {
+  "adPosition": "sy_jiazuo6",
+  "adPositionId": "127",
+  "adConfig": [{
+    "data": "127",
+    "open": "1",
+    "type": "personal"
+  }, {
+    "data": "adid=6080712158205202",
+    "open": "2",
+    "type": "gdt"
+  }]
+}, {
+  "adPosition": "ss_liebiao0",
+  "adPositionId": "128",
+  "adConfig": [{
+    "data": "128",
+    "open": "2",
+    "type": "personal"
+  }, {
+    "data": "adid=7030619158703284",
+    "open": "1",
+    "type": "gdt"
+  }]
+}, {
+  "adPosition": "ss_liebiao1",
+  "adPositionId": "129",
+  "adConfig": [{
+    "data": "129",
+    "open": "2",
+    "type": "personal"
+  }, {
+    "data": "adid=7030619158703284",
+    "open": "2",
+    "type": "gdt"
+  }]
+}, {
+  "adPosition": "ss_liebiao2",
+  "adPositionId": "130",
+  "adConfig": [{
+    "data": "130",
+    "open": "2",
+    "type": "personal"
+  }, {
+    "data": "adid=7030619158703284",
+    "open": "2",
+    "type": "gdt"
+  }]
+}, {
+  "adPosition": "ss_liebiao3",
+  "adPositionId": "131",
+  "adConfig": [{
+    "data": "131",
+    "open": "2",
+    "type": "personal"
+  }, {
+    "data": "adid=7030619158703284",
+    "open": "2",
+    "type": "gdt"
+  }]
+}, {
+  "adPosition": "ss_liebiao4",
+  "adPositionId": "132",
+  "adConfig": [{
+    "data": "132",
+    "open": "2",
+    "type": "personal"
+  }, {
+    "data": "adid=7030619158703284",
+    "open": "2",
+    "type": "gdt"
+  }]
+}, {
+  "adPosition": "ss_liebiao5",
+  "adPositionId": "133",
+  "adConfig": [{
+    "data": "133",
+    "open": "2",
+    "type": "personal"
+  }, {
+    "data": "adid=7030619158703284",
+    "open": "2",
+    "type": "gdt"
+  }]
+}, {
+  "adPosition": "ss_liebiao6",
+  "adPositionId": "134",
+  "adConfig": [{
+    "data": "134",
+    "open": "2",
+    "type": "personal"
+  }, {
+    "data": "adid=7030619158703284",
+    "open": "2",
+    "type": "gdt"
+  }]
+}, {
+  "adPosition": "cpxq_buzhou",
+  "adPositionId": "135",
+  "adConfig": [{
+    "data": "135",
+    "open": "2",
+    "type": "personal"
+  }, {
+    "data": "adid=5060516450290266",
+    "open": "2",
+    "type": "gdt"
+  }]
+}]

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -53,13 +54,14 @@ import acore.logic.XHClick;
 import acore.logic.polling.AppHandlerAsyncPolling;
 import acore.logic.polling.IHandleMessage;
 import acore.logic.stat.StatisticsManager;
+import acore.observer.IObserver;
+import acore.observer.ObserverManager;
 import acore.override.XHApplication;
 import acore.override.activity.mian.MainBaseActivity;
-import acore.tools.ChannelUtil;
+import acore.tools.ChannelManager;
+import acore.tools.ColorUtil;
 import acore.tools.FileManager;
-import acore.tools.IObserver;
 import acore.tools.LogManager;
-import acore.tools.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.XiangHaTabHost;
@@ -91,10 +93,10 @@ import third.push.localpush.LocalPushDataManager;
 import third.push.localpush.LocalPushManager;
 import third.push.xg.XGTagManager;
 import third.qiyu.QiYvHelper;
-import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilLog;
 
 import static android.content.Intent.FLAG_ACTIVITY_NO_USER_ACTION;
+import static com.popdialog.db.FullSrceenDB.DB_NAME;
 import static com.xiangha.R.id.iv_itemIsFine;
 
 @SuppressWarnings("deprecation")
@@ -164,6 +166,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
         ActivityMethodManager.isAppShow= true;
         mainInitDataControl = new MainInitDataControl();
         mainInitDataControl.setIHandleMessage(this);
+        Log.i("isShowAd", "Main:init: ");
         welcomeControls= LoginManager.isShowAd()?new WelcomeControls(this,callBack):
                 new WelcomeControls(this,1,callBack);
         LogManager.printStartTime("zhangyujian","main::oncreate::");
@@ -260,7 +263,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
         //VIP：A1DGHJVJ938H
         StatConfig.setAppKey(LoginManager.isVIPLocal()?"A1DGHJVJ938H":"Aqc1150004142");
         StatConfig.setDebugEnable(false);
-        StatConfig.setInstallChannel(this, ChannelUtil.getChannel(this));
+        StatConfig.setInstallChannel(this, ChannelManager.getInstance().getChannel(this));
         StatConfig.setSendPeriodMinutes(1);//设置发送策略：每一分钟发送一次
         StatService.setContext(this.getApplication());
     }
@@ -307,7 +310,7 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
     @SuppressLint("HandlerLeak")
     private void initUI() {
         String colors = Tools.getColorStr(Main.this, R.color.common_top_bg);
-        Tools.setStatusBarColor(Main.this, Color.parseColor(colors));
+        Tools.setStatusBarColor(Main.this, ColorUtil.parseColor(colors));
 
         tabHost = findViewById(R.id.xiangha_tabhost);
         tabHost.setup(mLocalActivityManager);
@@ -549,16 +552,20 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
                 } catch (Exception e) {
                 }
                 // 关闭时发送页面停留时间统计
-//                if (act != null){
-//                    new FullSrceenDB(act).clearExpireAllData();
-//                }
+                if (act != null){
+                    try{
+                        new FullSrceenDB(act).clearExpireAllData();
+                    }catch (Exception e){
+                        FileManager.delDirectoryOrFile(Environment.getDataDirectory() + "/data/com.xiangha/databases/" + DB_NAME);
+                    }
+                }
                 // 关闭页面停留时间统计计时器
                 XHClick.closeHandler();
                 VersionOp.getInstance().onDesotry();
                 StatisticsManager.closeHandler();
                 AppHandlerAsyncPolling.getInstance().destroyPolling();
                 System.exit(0);
-                UtilFile.saveShared(this, FileManager.MALL_STAT, FileManager.MALL_STAT, "");
+                FileManager.saveShared(this, FileManager.MALL_STAT, FileManager.MALL_STAT, "");
             }
         } else {
             // 先设置MainIndex界面的搜索列表不显示
@@ -770,9 +777,9 @@ public class Main extends Activity implements OnClickListener, IObserver, ISetMe
             QiYvHelper.getInstance().destroyQiYvHelper();
         ClingPresenter.getInstance().onDestroy(this);
         GlobalVariableConfig.restoreConf();
-        String notifyStatistics = (String) UtilFile.loadShared(this, FileManager.notification_permission, "statistics");
+        String notifyStatistics = (String) FileManager.loadShared(this, FileManager.notification_permission, "statistics");
         if (!TextUtils.equals(notifyStatistics, "2")) {
-            UtilFile.saveShared(this, FileManager.notification_permission, "statistics", "2");
+            FileManager.saveShared(this, FileManager.notification_permission, "statistics", "2");
             boolean open = PushManager.isNotificationEnabled(XHApplication.in());
             XHClick.mapStat(XHApplication.in(), "a_open_push", open ? "开启了系统通知权限" : "未开启系统通知权限", "");
         }

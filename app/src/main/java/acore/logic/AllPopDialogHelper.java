@@ -120,9 +120,9 @@ public class AllPopDialogHelper {
      */
     private void initialize() {
         allPopDialogControler.setmGetCurrentActiivtyCallback(() -> {
-            if (Main.allMain != null
+            if(Main.allMain != null
                     && Main.allMain.allTab != null
-                    && Main.allMain.allTab.get(MainHomePage.KEY) != null) {
+                    && Main.allMain.allTab.get(MainHomePage.KEY) != null){
                 return Main.allMain.allTab.get(MainHomePage.KEY);
             }
             return XHActivityManager.getInstance().getCurrentActivity();
@@ -193,14 +193,15 @@ public class AllPopDialogHelper {
         allPopDialogControler.setOnFullScreenStatusCallback(new FullSrceenDialogControl.OnFullScreenStatusCallback() {
             @Override
             public void onPreShow(FullScreenModule module) {
-                StatisticsManager.saveData(StatModel.createSpecialActionModel(XHActivityManager.getInstance().getCurrentActivity().getClass().getName(), "", "",
-                        "DropDownBox_ShouldHaveBeenShown", "", "", module.getStatJson()));
+
+                StatisticsManager.saveData(StatModel.createSpecialActionModel(XHActivityManager.getInstance().getCurrentActivity().getClass().getSimpleName(),"","",
+                        "DropDownBox_ShouldHaveBeenShown","","",module.getStatJson()));
             }
 
             @Override
             public void onShow(FullScreenModule module) {
-                StatisticsManager.saveData(StatModel.createSpecialActionModel(XHActivityManager.getInstance().getCurrentActivity().getClass().getName(), "", "",
-                        "DropDownBox_ActuallySucceedShow", "", "", module.getStatJson()));
+                StatisticsManager.saveData(StatModel.createSpecialActionModel(XHActivityManager.getInstance().getCurrentActivity().getClass().getSimpleName(),"","",
+                        "DropDownBox_ActuallySucceedShow","","",module.getStatJson()));
                 log("FullScreen :: 展示");
                 AdConfigTools.getInstance().reportAdclick("3",module.getLogJson());
                 FileManager.saveShared(XHActivityManager.getInstance().getCurrentActivity(), INERVAL_XML, KEY_INERVAL_COUNT, "0");
@@ -209,8 +210,9 @@ public class AllPopDialogHelper {
 
             @Override
             public void onClickImage(FullScreenModule module) {
-                StatisticsManager.saveData(StatModel.createSpecialActionModel(XHActivityManager.getInstance().getCurrentActivity().getClass().getName(), "", "",
-                        "DropDownBox_Click", "", "", module.getStatJson()));
+                StatisticsManager.saveData(StatModel.createSpecialActionModel(XHActivityManager.getInstance().getCurrentActivity().getClass().getSimpleName(),"","",
+                        "DropDownBox_Click","","",module.getStatJson()));
+
                 log("FullScreen :: 点击图片");
                 AdConfigTools.getInstance().reportAdclick("2",module.getLogJson());
                 XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), "ad_click_index", "全屏", "xh");//统计
@@ -219,8 +221,9 @@ public class AllPopDialogHelper {
 
             @Override
             public void onClickClose(FullScreenModule module) {
-                StatisticsManager.saveData(StatModel.createSpecialActionModel(XHActivityManager.getInstance().getCurrentActivity().getClass().getName(), "", "",
-                        "DropDownBox_Close", "", "", module.getStatJson()));
+                StatisticsManager.saveData(StatModel.createSpecialActionModel(XHActivityManager.getInstance().getCurrentActivity().getClass().getSimpleName(),"","",
+                        "DropDownBox_Close","","",module.getStatJson()));
+
                 log("FullScreen :: 点击关闭");
                 AdConfigTools.getInstance().reportAdclick("1",module.getLogJson());
                 XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), "a_fullcereen_ad", "手动关闭", "");
@@ -305,10 +308,10 @@ public class AllPopDialogHelper {
                 onStartCallback -> VersionOp.getInstance().isShow("", new BaseDialogControl.OnPopDialogCallback() {
                     @Override
                     public void onCanShow() {
-                        log("VersionUpdata :: onCanShow");
+                        log( "VersionUpdata :: onCanShow");
                         log("VersionUpdata :: versionOp.isMustUpdata:" + VersionOp.getInstance().isMustUpdata);
                         if (VersionOp.getInstance().isMustUpdata) {
-                            log("强制升级");
+                            log( "强制升级");
                             VersionOp.getInstance().show();
                         } else {
                             if (onStartCallback != null) {
@@ -319,7 +322,7 @@ public class AllPopDialogHelper {
 
                     @Override
                     public void onNextShow() {
-                        log("去执行导流");
+
                         if (onStartCallback != null) {
                             onStartCallback.onStart();
                         }
@@ -327,11 +330,11 @@ public class AllPopDialogHelper {
                 }),
                 () -> {
                     if (VersionOp.getInstance().isNeedUpdata) {
-                        log("普通升级");
+                        log( "普通升级");
                         VersionOp.getInstance().show();
                         return true;
                     }
-                    log("不需要升级");
+                    log( "不需要升级");
                     return false;
                 }
         );

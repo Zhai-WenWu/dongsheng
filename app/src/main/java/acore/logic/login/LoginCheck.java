@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import acore.override.XHApplication;
-import xh.basic.tool.UtilFile;
+import acore.tools.FileManager;
 
 /**
  * Created by ：fei_teng on 2017/2/15 16:45.
@@ -39,16 +39,16 @@ public class LoginCheck {
         infoMap.put(AREA_CODE, zoneCode);
         infoMap.put(PHONE_NUMBER, phoneNum);
         infoMap.put(MAIL_BOX, mailbox);
-        UtilFile.saveShared(context, LAST_ACCOUT_INFO, infoMap);
+        FileManager.saveShared(context, LAST_ACCOUT_INFO, infoMap);
     }
 
     public static AccountInfoBean getLastLoginAccout(Context context) {
 
         AccountInfoBean infoBean = new AccountInfoBean();
-        infoBean.setAccoutType((String) UtilFile.loadShared(context, LAST_ACCOUT_INFO, ACCOUT_TYPE));
-        infoBean.setAreaCode((String) UtilFile.loadShared(context, LAST_ACCOUT_INFO, AREA_CODE));
-        infoBean.setPhoneNum((String) UtilFile.loadShared(context, LAST_ACCOUT_INFO, PHONE_NUMBER));
-        infoBean.setMailBox((String) UtilFile.loadShared(context, LAST_ACCOUT_INFO, MAIL_BOX));
+        infoBean.setAccoutType((String) FileManager.loadShared(context, LAST_ACCOUT_INFO, ACCOUT_TYPE));
+        infoBean.setAreaCode((String) FileManager.loadShared(context, LAST_ACCOUT_INFO, AREA_CODE));
+        infoBean.setPhoneNum((String) FileManager.loadShared(context, LAST_ACCOUT_INFO, PHONE_NUMBER));
+        infoBean.setMailBox((String) FileManager.loadShared(context, LAST_ACCOUT_INFO, MAIL_BOX));
 
         return infoBean;
     }

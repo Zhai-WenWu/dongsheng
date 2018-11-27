@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/shadow_layout"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_home_content_shadow">
+
+    <acore.widget.rcwidget.RCConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFF9EC"
+        app:clip_background="true"
+        app:round_corner="@dimen/dp_3">
+
+        <acore.widget.rcwidget.RCImageView
+            android:id="@+id/lesson_img"
+            android:layout_width="@dimen/dp_130"
+            android:layout_height="@dimen/dp_115"
+            android:background="@drawable/i_nopic"
+            app:clip_background="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:round_corner="@dimen/dp_3"/>
+
+        <acore.widget.TagTextView
+            android:id="@+id/video_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_16"
+            android:layout_marginRight="@dimen/dp_2"
+            android:layout_marginBottom="@dimen/dp_2"
+            android:drawableLeft="@drawable/icon_play"
+            android:drawablePadding="@dimen/dp_3"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:paddingLeft="@dimen/dp_5"
+            android:paddingRight="@dimen/dp_5"
+            android:textColor="#FFFFFF"
+            android:textSize="@dimen/dp_10"
+            app:backgroundColor="#70000000"
+            app:drawableLeftHeight="@dimen/dp_6"
+            app:drawableLeftWidth="@dimen/dp_5"
+            app:layout_constraintBottom_toBottomOf="@+id/lesson_img"
+            app:layout_constraintRight_toRightOf="@+id/lesson_img"
+            app:radius="@dimen/dp_10"
+            tools:text="1:20"/>
+
+        <LinearLayout
+            android:id="@+id/lesson_title_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dp_15"
+            android:layout_marginTop="@dimen/dp_15"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toEndOf="@+id/lesson_img"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/lesson_img">
+
+            <ImageView
+                android:id="@+id/vip"
+                android:layout_width="@dimen/dp_28"
+                android:layout_height="@dimen/dp_16"
+                android:layout_marginRight="@dimen/dp_5"
+                android:scaleType="fitXY"
+                android:src="@drawable/vip"
+                android:visibility="visible"/>
+
+            <TextView
+                android:id="@+id/lesson_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:textColor="@color/common_text"
+                android:textSize="@dimen/sp_17"
+                android:textStyle="bold"
+                tools:text="鱼香茄子鱼香茄子鱼香茄子鱼香茄子"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/lesson_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dp_15"
+            android:layout_marginTop="@dimen/dp_6"
+            android:layout_marginRight="@dimen/dp_15"
+            android:lines="1"
+            android:text="精品名厨菜-会员专享"
+            android:textColor="#FFEF9304"
+            android:textSize="@dimen/sp_12"
+            app:layout_constraintStart_toEndOf="@+id/lesson_img"
+            app:layout_constraintTop_toBottomOf="@+id/lesson_title_layout"/>
+
+        <TextView
+            android:id="@+id/lesson_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dp_15"
+            android:layout_marginTop="@dimen/dp_6"
+            android:layout_marginRight="@dimen/dp_15"
+            android:lines="1"
+            android:text="名厨:涛哥的菜"
+            android:textColor="#FF999999"
+            android:textSize="@dimen/sp_12"
+            app:layout_constraintStart_toEndOf="@+id/lesson_img"
+            app:layout_constraintTop_toBottomOf="@+id/lesson_desc"/>
+
+        <TextView
+            android:id="@+id/lesson_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dp_15"
+            android:layout_marginTop="@dimen/dp_6"
+            android:textColor="#FF666666"
+            android:textSize="@dimen/sp_12"
+            app:layout_constraintStart_toEndOf="@+id/lesson_img"
+            app:layout_constraintTop_toBottomOf="@+id/lesson_name"
+            tools:text="8977人学   好评度99%"
+            />
+
+    </acore.widget.rcwidget.RCConstraintLayout>
+
+</RelativeLayout>

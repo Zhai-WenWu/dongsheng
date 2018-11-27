@@ -41,7 +41,8 @@ import aplug.recordervideo.tools.FileToolsCammer;
  * 选择视频列表页
  */
 public class ArticleVideoSelectorActivity extends BaseActivity implements View.OnClickListener{
-    public static final String EXTRA_UNSELECT_VIDEO = "extraUnselectVideo";   private final int SELECTED_VIDEO = 1;
+    public static final String EXTRA_UNSELECT_VIDEO = "extraUnselectVideo";
+    private final int SELECTED_VIDEO = 1;
 
     private Button mCancelBtn;
     private ImageView mBackImg;

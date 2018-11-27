@@ -76,7 +76,7 @@ public class BaiduAdTools {
         BaiduNative baiduNative = new BaiduNative(context, adid, new BaiduNative.BaiduNativeNetworkListener() {
             @Override
             public void onNativeLoad(List<NativeResponse> list) {
-                Log.i("tzy", "onNativeLoad: ");
+//                Log.i("tzy", "onNativeLoad: ");
                 if(null != callback)
                     callback.onNativeLoad(list);
             }

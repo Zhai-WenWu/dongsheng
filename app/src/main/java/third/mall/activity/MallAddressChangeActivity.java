@@ -80,7 +80,7 @@ public class MallAddressChangeActivity extends MallBaseActivity implements OnCli
 	private void initData() {
 		adapter= new AdapterAddressChange(this,now_address_id,address_list, ListData, R.layout.view_mall_addresschange_item, null, null);
 		loadManager.showProgressBar();
-		loadManager.setLoading(address_list, adapter, true, new OnClickListener() {
+		loadManager.setLoading(address_list, adapter, false, new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -91,6 +91,9 @@ public class MallAddressChangeActivity extends MallBaseActivity implements OnCli
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				if(ListData == null || ListData.isEmpty() || position >= ListData.size()){
+					return;
+				}
 				now_address_id=ListData.get(position).get("address_id");
 				MallAddressChangeActivity.this.finish();
 			}
@@ -98,18 +101,18 @@ public class MallAddressChangeActivity extends MallBaseActivity implements OnCli
 	}
 	
 	private void setRequest(final boolean isFirst){
-		ListData.clear();
 		loadManager.loading(address_list,ListData.isEmpty());
 		url=MallStringManager.mall_getShippingAddress;
 		MallReqInternet.in().doGet(url, new MallInternetCallback() {
 			@Override
 			public void loadstat(int flag, String url, Object msg, Object... stat) {
 
-				loadManager.loadOver(flag);
+				loadManager.loaded(address_list);
 				if(flag>=UtilInternet.REQ_OK_STRING){
 					if(stat!=null&&stat.length>0&& !TextUtils.isEmpty((String)stat[0])){
 						mall_stat_statistic=(String) stat[0];
 					}
+					ListData.clear();
 					ArrayList<Map<String, String>> listMapByJson = UtilString.getListMapByJson(msg);
 					for (int i = 0; i < listMapByJson.size(); i++) {
 						ListData.add(listMapByJson.get(i));
@@ -143,7 +146,7 @@ public class MallAddressChangeActivity extends MallBaseActivity implements OnCli
 						});
 					}
 				}
-				loadManager.hideProgressBar();
+				loadManager.loadOver(flag,address_list);
 			
 			}
 		});
