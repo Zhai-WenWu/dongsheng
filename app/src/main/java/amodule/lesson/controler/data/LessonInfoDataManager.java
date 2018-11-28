@@ -14,7 +14,7 @@ import java.util.Map;
 
 import acore.logic.XHClick;
 import acore.override.activity.base.BaseAppCompatActivity;
-import acore.tools.ObserverManager;
+import acore.observer.ObserverManager;
 import acore.tools.StringManager;
 import amodule.lesson.activity.LessonInfo;
 import amodule.lesson.adapter.LessonInfoAdapter;
@@ -22,7 +22,7 @@ import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 
-import static acore.tools.ObserverManager.NOTIFY_LESSON_VIPBUTTON;
+import static acore.observer.ObserverManager.NOTIFY_LESSON_VIPBUTTON;
 import static acore.tools.StringManager.API_SCHOOL_COMMENTCHAPTERS;
 import static acore.tools.StringManager.API_SCHOOL_COMMENTINFO;
 import static acore.tools.StringManager.API_SCHOOL_COURSEINTRODUCEINFO;

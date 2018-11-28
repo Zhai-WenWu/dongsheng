@@ -2,6 +2,7 @@ package amodule.search.avtivity;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -11,17 +12,24 @@ import android.widget.EditText;
 import com.xiangha.R;
 
 import acore.override.activity.base.BaseActivity;
-import acore.tools.ChannelUtil;
+import acore.tools.ChannelManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
+import amodule.main.Main;
 import amodule.search.data.SearchConstant;
 import amodule.search.view.GlobalSearchView;
 
 public class HomeSearch extends BaseActivity {
 
     public static final String STATISTICS_ID = "a_search430";
+    public static final String EXTRA_JSONDATA = "jsonData";
+    public static final String EXTRA_IS_NOW_SEARCH = "isNowSearch";
+    public static int startCount = 0;
+    public static boolean isShowDefault;
     private int limitSearchType;
     private String searchKey;
+    private String jsonData;
+    private boolean isNowSearch = false;
     private GlobalSearchView globalSearchView;
 
 
@@ -29,12 +37,14 @@ public class HomeSearch extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
+        startCount++;
+        Log.i("tzy", "HomeSearch::onCreate: " + startCount);
         long startTime = System.currentTimeMillis();
         initActivity("", 2, 0, 0, R.layout.a_search_global);
         initData();
         initView();
 //        SearchResultAdDataProvider.getInstance().getAdData();
-        Log.i("tzy","onCreate :: time = " + (System.currentTimeMillis() - startTime) + "ms.");
+        Log.i("tzy", "onCreate :: time = " + (System.currentTimeMillis() - startTime) + "ms.");
     }
 
     private void initData() {
@@ -42,16 +52,25 @@ public class HomeSearch extends BaseActivity {
         if (bundle != null) {
             limitSearchType = bundle.getInt(SearchConstant.SEARCH_TYPE, SearchConstant.SEARCH_CAIPU);
             searchKey = bundle.getString("s");
+            jsonData = bundle.getString(EXTRA_JSONDATA);
+            isNowSearch = !TextUtils.equals("1",bundle.getString(EXTRA_IS_NOW_SEARCH));
+        }
+        if(startCount != 1){
+            level = 3;
         }
 
-        Log.i("渠道号"," "+ ChannelUtil.getChannel(this));
+        Log.i("渠道号", " " + ChannelManager.getInstance().getChannel(this));
     }
 
     private void initView() {
 
         initTitle();
-        globalSearchView = (GlobalSearchView) findViewById(R.id.bar_search_global);
-        globalSearchView.init(this,searchKey, limitSearchType);
+        globalSearchView = findViewById(R.id.bar_search_global);
+        if (TextUtils.isEmpty(jsonData)) {
+            globalSearchView.init(this, searchKey, limitSearchType,isNowSearch);
+        } else {
+            globalSearchView.init(this, jsonData);
+        }
     }
 
     private void initTitle() {
@@ -67,21 +86,37 @@ public class HomeSearch extends BaseActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-//        SearchResultAdDataProvider.getInstance().getXhAllAdControl().releaseView();
-        System.gc();
-    }
-
-
-    @Override
-    public void onBackPressed() {
-
-        if (!globalSearchView.hideSecondLevelView()) {
-            super.onBackPressed();
+    protected void onResume() {
+        super.onResume();
+        if(level == 2 && isShowDefault){
+            isShowDefault = false;
+            globalSearchView.showDefaultSearchView();
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        startCount--;
+        Log.i("tzy", "HomeSearch::onDestroy: " + startCount);
+        System.gc();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+
+    @Override
+    public void finish() {
+        if(startCount > 7){
+            Main.colse_level = 3;
+            isShowDefault = true;
+        }
+        Log.i("tzy", "HomeSearch::finish: " + startCount);
+        Log.i("tzy", "HomeSearch::finish:colse_level=" + Main.colse_level);
+        super.finish();
+    }
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {

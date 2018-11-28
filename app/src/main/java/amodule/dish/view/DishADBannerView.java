@@ -55,6 +55,7 @@ public class DishADBannerView extends ItemBaseView {
         xhAllAdControl.start((isRefresh, map) -> {
             if(map.containsKey(DISH_YONGLIAO)){
                 BannerAd bannerAd = new BannerAd(XHActivityManager.getInstance().getCurrentActivity(), xhAllAdControl, img_banner);
+                bannerAd.marginLeft = bannerAd.marginRight = Tools.getDimen(getContext(),R.dimen.dp_20);
                 bannerAd.setOnBannerListener(new BannerAd.OnBannerListener() {
                     @Override
                     public void onShowAd() {

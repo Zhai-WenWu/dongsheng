@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                style="@style/layout">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/layout">
+
+    <amodule.search.view.SearchHorizonLayout
+        android:id="@+id/search_horizon_layout"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_42"/>
 
     <cn.srain.cube.views.ptr.PtrClassicFrameLayout
         xmlns:cube_ptr="http://schemas.android.com/apk/res-auto"
         android:id="@+id/refresh_list_view_frame"
+        android:layout_below="@+id/search_horizon_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         cube_ptr:ptr_duration_to_close="200"
@@ -20,10 +28,10 @@
             android:layout_height="match_parent"
             android:background="@android:color/transparent"
             android:cacheColorHint="@android:color/transparent"
+            android:layerType="software"
             android:listSelector="@android:color/transparent"
             android:paddingLeft="0dp"
-            android:paddingRight="0dp"
-            android:layerType="software"/>
+            android:paddingRight="0dp"/>
 
     </cn.srain.cube.views.ptr.PtrClassicFrameLayout>
 
@@ -34,16 +42,4 @@
         android:layout_height="match_parent"
         android:gravity="center_horizontal"/>
 
-    <amodule.search.view.CaidanResultView
-        android:id="@+id/caidan_result"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"/>
-
-    <amodule.search.view.ZhishiResultView
-        android:id="@+id/zhishi_result"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"/>
-
-</FrameLayout>
+</RelativeLayout>

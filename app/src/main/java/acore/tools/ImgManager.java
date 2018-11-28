@@ -1,10 +1,15 @@
 package acore.tools;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
-import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilImage;
 import xh.basic.tool.UtilLog;
 import xh.basic.tool.UtilString;
@@ -13,6 +18,8 @@ import acore.override.XHApplication;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.BitmapRegionDecoder;
+import android.graphics.Rect;
 import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
@@ -24,28 +31,10 @@ import android.widget.ImageView;
 
 import aplug.basic.LoadImage;
 
+import com.bumptech.glide.Glide;
 import com.xiangha.R;
 
 public class ImgManager extends UtilImage {
-
-    /**
-     * 判断图片是否长宽成比
-     *
-     * @param path  : 图片路径
-     * @param scale : 比例
-     *
-     * @return
-     */
-    public static boolean isQualified(String path, int scale) {
-        // 配置bitmap，防止内存溢出
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(path, options);
-        int wi = options.outWidth;
-        int hei = options.outHeight;
-        // //Log.i("FRJ","wi:" + wi + "  hei:" + hei);
-        return !(wi / hei >= scale || hei / wi >= scale);
-    }
 
     /**
      * 删除长期存储图片
@@ -56,7 +45,7 @@ public class ImgManager extends UtilImage {
         if (imgUrl.length() == 0)
             return;
         String name = UtilString.toMD5(imgUrl, false);
-        UtilFile.delDirectoryOrFile(UtilFile.getSDDir() + LoadImage.SAVE_LONG + "/" + name, 0);
+        FileManager.delDirectoryOrFile(FileManager.getSDDir() + LoadImage.SAVE_LONG + "/" + name, 0);
     }
 
     /**
@@ -70,7 +59,7 @@ public class ImgManager extends UtilImage {
             return;
         String name = UtilString.toMD5(imgUrl, false);
         // 图片不存在则下载
-        if (UtilFile.ifFileModifyByCompletePath(UtilFile.getSDDir() + type + "/" + name, -1) == null) {
+        if (FileManager.ifFileModifyByCompletePath(FileManager.getSDDir() + type + "/" + name, -1) == null) {
             LoadImage.with(XHApplication.in())
                     .load(imgUrl)
                     .setSaveType(type)
@@ -94,8 +83,8 @@ public class ImgManager extends UtilImage {
         if (TextUtils.isEmpty(imgUrl) || null == imageView)
             return;
         String name = UtilString.toMD5(imgUrl, false);
-        final String imagePath = UtilFile.getSDDir() + type + "/" + name;
-        if (UtilFile.ifFileModifyByCompletePath(imagePath, -1) == null) {
+        final String imagePath = FileManager.getSDDir() + type + "/" + name;
+        if (FileManager.ifFileModifyByCompletePath(imagePath, -1) == null) {
             LoadImage.with(XHApplication.in())
                     .load(imgUrl)
                     .setSaveType(type)
@@ -220,45 +209,109 @@ public class ImgManager extends UtilImage {
         return RSBlur(context,source,radius,1/8f);
     }
 
-    @Nullable
     public static Bitmap RSBlur(Context context,Bitmap source,int radius,float scale){
-        if(source == null){
+
+        Log.i("tzy","origin size:"+source.getWidth()+"*"+source.getHeight());
+        int width = Math.round(source.getWidth() * scale);
+        int height = Math.round(source.getHeight() * scale);
+
+        Bitmap inputBmp = Bitmap.createScaledBitmap(source,width,height,false);
+
+        RenderScript renderScript =  RenderScript.create(context);
+
+        Log.i("tzy","scale size:"+inputBmp.getWidth()+"*"+inputBmp.getHeight());
+
+        // Allocate memory for Renderscript to work with
+
+        final Allocation input = Allocation.createFromBitmap(renderScript,inputBmp);
+        final Allocation output = Allocation.createTyped(renderScript,input.getType());
+
+        // Load up an instance of the specific script that we want to use.
+        ScriptIntrinsicBlur scriptIntrinsicBlur = ScriptIntrinsicBlur.create(renderScript, Element.U8_4(renderScript));
+        scriptIntrinsicBlur.setInput(input);
+
+        // Set the blur radius
+        scriptIntrinsicBlur.setRadius(radius);
+
+        // Start the ScriptIntrinisicBlur
+        scriptIntrinsicBlur.forEach(output);
+
+        // Copy the output to the blurred bitmap
+        output.copyTo(inputBmp);
+
+
+        renderScript.destroy();
+        return inputBmp;
+    }
+
+
+    public static void tailorImageByUrl(Context context, String url, int imgWidth, int imgHeight, int tailorHeight, OnResourceCallback callback) {
+        if (context == null || TextUtils.isEmpty(url) || tailorHeight <= 0) {
+            if (callback != null) {
+                callback.onResource(null);
+            }
+            return;
+        }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    File file = Glide.with(context).load(url).downloadOnly(imgWidth, imgHeight).get();
+                    if (callback != null) {
+                        callback.onResource(tailorImage(file, tailorHeight));
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+    private static ArrayList<Bitmap> tailorImage(File file, int tailorHeight) {
+        if (file == null && !file.exists()) {
             return null;
         }
-        try{
-            Log.i("tzy","origin size:"+source.getWidth()+"*"+source.getHeight());
-            int width = Math.round(source.getWidth() * scale);
-            int height = Math.round(source.getHeight() * scale);
+        ArrayList<Bitmap> bitmaps = new ArrayList<>();
+        BufferedInputStream bis = null;
+        try {
+            bis = new BufferedInputStream(new FileInputStream(file), 1024);
+            BitmapRegionDecoder brd = BitmapRegionDecoder.newInstance(bis, true);
+            final int imgWidth = brd.getWidth();
+            final int imgHeight = brd.getHeight();
+            final int count = (int) Math.ceil(imgHeight * 1.00 / tailorHeight);
+            BitmapFactory.Options bfo = new BitmapFactory.Options();
+            Rect rect = new Rect();
+            int top = 0;
+            int bottom = 0;
+            for (int i = 0; i < count; i ++) {
+                top = tailorHeight * i;
+                bottom = top + tailorHeight;
+                bottom = bottom >  imgHeight ? imgHeight : bottom;
+                rect.set(0, top, imgWidth, bottom);
+                Bitmap bitmap = brd.decodeRegion(rect, bfo);
+                if (bitmaps == null) {
+                    bitmaps = new ArrayList<>();
+                }
+                bitmaps.add(bitmap);
+            }
 
-            Bitmap inputBmp = Bitmap.createScaledBitmap(source,width,height,false);
-
-            RenderScript renderScript =  RenderScript.create(context);
-
-            Log.i("tzy","scale size:"+inputBmp.getWidth()+"*"+inputBmp.getHeight());
-
-            // Allocate memory for Renderscript to work with
-
-            final Allocation input = Allocation.createFromBitmap(renderScript,inputBmp);
-            final Allocation output = Allocation.createTyped(renderScript,input.getType());
-
-            // Load up an instance of the specific script that we want to use.
-            ScriptIntrinsicBlur scriptIntrinsicBlur = ScriptIntrinsicBlur.create(renderScript, Element.U8_4(renderScript));
-            scriptIntrinsicBlur.setInput(input);
-
-            // Set the blur radius
-            scriptIntrinsicBlur.setRadius(radius);
-
-            // Start the ScriptIntrinisicBlur
-            scriptIntrinsicBlur.forEach(output);
-
-            // Copy the output to the blurred bitmap
-            output.copyTo(inputBmp);
-
-
-            renderScript.destroy();
-            return inputBmp;
-        }catch (Exception e){
-            return source;
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (bis != null) {
+                try {
+                    bis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
+        return bitmaps;
+    }
+
+    public interface OnResourceCallback {
+        void onResource (ArrayList<Bitmap> bitmaps);
     }
 }

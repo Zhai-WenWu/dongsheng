@@ -503,7 +503,7 @@ public class RvListView extends RecyclerView {
             return isShowFooterView() ? 1 : 0;
         }
 
-        private int getPositionOffset() {
+        public int getPositionOffset() {
             return getHeaderViewHolderCount();
         }
 

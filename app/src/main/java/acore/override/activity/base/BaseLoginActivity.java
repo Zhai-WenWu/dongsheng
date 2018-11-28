@@ -19,9 +19,7 @@ import com.tencent.bugly.crashreport.CrashReport;
 import com.xh.manager.DialogManager;
 import com.xh.manager.ViewManager;
 import com.xh.view.HButtonView;
-import com.xh.view.MessageView;
 import com.xh.view.TitleMessageView;
-import com.xh.view.TitleView;
 import com.xiangha.R;
 
 import org.json.JSONObject;
@@ -34,9 +32,7 @@ import acore.logic.XHClick;
 import acore.logic.login.AccountInfoBean;
 import acore.logic.login.LoginCheck;
 import acore.tools.LogManager;
-import acore.tools.ObserverManager;
 import acore.tools.StringManager;
-import acore.tools.SyntaxTools;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.main.Main;
@@ -51,6 +47,8 @@ import amodule.user.activity.login.LoginbyEmail;
 import amodule.user.activity.login.LostSecret;
 import amodule.user.activity.login.SetPersonalInfo;
 import amodule.user.activity.login.SetSecretActivity;
+import amodule.vip.DeviceVipManager;
+import amodule.vip.IStat;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
@@ -162,18 +160,18 @@ public class BaseLoginActivity extends BaseActivity {
      * @param pwd      密码
      */
     public void loginByAccout(final BaseLoginActivity mAct, String loginType, final String zoneCode,
-                              String accout, String pwd, final BaseLoginCallback callback) {
+                              String accout, String pwd, final BaseLoginCallback callback, IStat statImpl) {
         String param = new StringBuffer().append("type=pwdLogin")
                 .append("&devCode=").append(XGPushServer.getXGToken(mAct))
                 .append("&p1=").append(accout)
                 .append("&p2=").append(pwd)
                 .append("&phoneZone=").append(zoneCode)
                 .toString();
-        userLogin(mAct, loginType, param, zoneCode, accout, callback);
+        userLogin(mAct, loginType, param, zoneCode, accout, callback, statImpl);
     }
 
     public void userLogin(final BaseLoginActivity mAct, final String loginType, String param, final String zoneCode,
-                          final String phoneNum, final BaseLoginCallback callback) {
+                          final String phoneNum, final BaseLoginCallback callback, IStat statImpl) {
         loadManager.showProgressBar();
         ReqInternet.in().doPost(StringManager.api_getUserInfo, param, new InternetCallback() {
             @Override
@@ -183,10 +181,8 @@ public class BaseLoginActivity extends BaseActivity {
                     ArrayList<Map<String, String>> maps = StringManager.getListMapByJson(returnObj);
                     if (maps != null && maps.size() > 0) {
                         err_count_secret = 0;
-                        LoginManager.loginSuccess(mAct, returnObj.toString());
+                        LoginManager.loginSuccess(mAct, returnObj.toString(), statImpl);
                         callback.onSuccess();
-                        if (LoginManager.isAutoBindYiYuanVIP())
-                            LoginManager.bindYiYuanVIP(mAct);
                         if (EMAIL_LOGIN_TYPE.equals(loginType) || PHONE_LOGIN_TYPE.equals(loginType)) {
                             if (TextUtils.isEmpty(zoneCode)) {
                                 LoginCheck.saveLastLoginAccoutInfo(mAct, AccountInfoBean.ACCOUT_MAILBOX, "", "", phoneNum);
@@ -197,10 +193,10 @@ public class BaseLoginActivity extends BaseActivity {
                     } else {
                         onSercretError(loginType, zoneCode, phoneNum);
                         callback.onFalse(flag);
-                        LoginManager.loginFail(returnObj);
+                        LoginManager.loginFail(flag, returnObj);
                     }
                 } else {
-                    LoginManager.loginFail(returnObj);
+                    LoginManager.loginFail(flag, returnObj);
                     onSercretError(loginType, zoneCode, phoneNum);
                     callback.onFalse(flag);
                 }
@@ -256,7 +252,7 @@ public class BaseLoginActivity extends BaseActivity {
      * @param identifyCode 验证码
      */
     protected void logInByIdentify(final Activity mAct, final String countryCode, final String phoneNum,
-                                   String identifyCode, final BaseLoginCallback callback) {
+                                   String identifyCode, final BaseLoginCallback callback, IStat statImpl) {
         String param = new StringBuffer().append("phoneNum=").append(phoneNum)
                 .append("&zone=").append(countryCode)
                 .append("&verCode=").append(identifyCode)
@@ -267,13 +263,13 @@ public class BaseLoginActivity extends BaseActivity {
             public void loaded(int flag, String url, Object returnObj) {
                 loadManager.hideProgressBar();
                 if (flag >= ReqInternet.REQ_OK_STRING) {
-                    LoginManager.loginSuccess(mAct, returnObj);
+                    LoginManager.loginSuccess(mAct, returnObj, statImpl);
                     callback.onSuccess();
                     LoginCheck.saveLastLoginAccoutInfo(mAct, AccountInfoBean.ACCOUT_PHONE,
                             countryCode, phoneNum, "");
                 } else {
                     callback.onFalse(flag);
-                    LoginManager.loginFail(returnObj);
+                    LoginManager.loginFail(flag, returnObj);
                 }
             }
         });
@@ -379,7 +375,7 @@ public class BaseLoginActivity extends BaseActivity {
         eventHandler = new EventHandler() {
             @Override
             public void afterEvent(final int event, final int result, final Object data) {
-                SyntaxTools.runOnUiThread(new Runnable() {
+                BaseLoginActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         if (result == SMSSDK.RESULT_COMPLETE) {
@@ -477,7 +473,7 @@ public class BaseLoginActivity extends BaseActivity {
      * @param pwd      密码
      */
     public void modifySecret(final Context context, String zoneCode, String phoneNum,
-                             String pwd, final BaseLoginCallback callback) {
+                             String pwd, final BaseLoginCallback callback, IStat statImpl) {
         String param = "password=" + pwd + "&zone=" + zoneCode + "&phone=" + phoneNum;
         loadManager.showProgressBar();
         ReqInternet.in().doPost(StringManager.api_setSecret, param, new InternetCallback() {
@@ -485,10 +481,10 @@ public class BaseLoginActivity extends BaseActivity {
             public void loaded(int flag, String url, Object returnObj) {
                 loadManager.hideProgressBar();
                 if (flag >= ReqInternet.REQ_OK_STRING) {
-                    LoginManager.loginSuccess((Activity) context, returnObj);
+                    LoginManager.loginSuccess((Activity) context, returnObj, statImpl);
                     callback.onSuccess();
                 } else {
-                    LoginManager.loginFail(returnObj);
+                    LoginManager.loginFail(flag, returnObj);
                     callback.onFalse(flag);
                     Log.i("modifySecret", returnObj.toString());
                 }
@@ -656,7 +652,8 @@ public class BaseLoginActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        LoginManager.setAutoBindYiYuanVIP(false);
+        DeviceVipManager.setAutoBindDeviceVip(false);
+//        DeviceVipManager.setShowBindVipDialogEnable(true);
         try{
             if (eventHandler != null){
                 SMSSDK.unregisterEventHandler(eventHandler);

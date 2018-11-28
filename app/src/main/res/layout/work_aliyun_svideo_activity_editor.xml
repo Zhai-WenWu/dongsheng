@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_editor"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -82,12 +85,12 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_75"
-        android:paddingTop="@dimen/dp_30"
         android:background="@drawable/bg_shape_back_60_270">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <include
+                android:layout_marginTop="@dimen/dp_30"
                 layout="@layout/a_bar_item_back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
@@ -97,13 +100,26 @@
                 android:layout_width="@dimen/dp_70"
                 android:layout_height="@dimen/dp_25"
                 android:layout_alignParentRight="true"
+                android:layout_marginTop="@dimen/dp_40"
                 android:layout_marginRight="@dimen/dp_20"
                 android:background="@drawable/bg_circle_f6496c_6"
                 android:gravity="center"
-                android:layout_centerVertical="true"
                 android:text="下一步"
                 android:textColor="#fffffe"
                 android:textSize="@dimen/dp_13" />
+
+            <ImageView
+                android:id="@+id/guide_view"
+                android:src="@drawable/icon_edit_guide"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/dp_10"
+                android:layout_marginTop="@dimen/dp_18"
+                android:scaleType="fitEnd"
+                android:visibility="gone"
+                tools:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dp_18"/>
+
         </RelativeLayout>
     </RelativeLayout>
 

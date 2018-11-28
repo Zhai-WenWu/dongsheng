@@ -11,14 +11,24 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.BitmapRequestBuilder;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.xiangha.R;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.Map;
 
+import acore.override.XHApplication;
 import acore.tools.FileManager;
+import acore.tools.ImgManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import aplug.basic.LoadImage;
+import aplug.basic.RSBlurBitmapTransformation;
 import aplug.basic.SubAnimTarget;
 import third.ad.scrollerAd.XHScrollerAdParent;
 
@@ -37,7 +47,7 @@ public class HomeGridADItem extends HomeItem {
     private int[] mXhWH = new int[]{800, 1200};// w * h
     private int[] mGdtHeightWH = new int[]{800, 1200};//gdt 高图
     private int[] mGdtWidthWH = new int[]{1280, 720};//gdt 宽图
-    private int[] mBaiduWidthWH = new int[]{280, 200};
+    private int[] mBaiduWidthWH = new int[]{1280, 720};
     private int mRecyclerViewPaddingL, mRecyclerViewPaddingR;
 
     private String mAdClass;
@@ -79,10 +89,25 @@ public class HomeGridADItem extends HomeItem {
             if (!TextUtils.isEmpty(imgUrl)) {
                 int imgMaxW = (mScreenWidth - mRecyclerViewPaddingL - mRecyclerViewPaddingR)/ 2 - mAdContainer.getPaddingLeft() - mAdContainer.getPaddingRight();
                 int fixedW = 0, fixedH = 0;
+                boolean xhHasWHTemp = false;
                 switch (mAdClass) {
                     case XHScrollerAdParent.ADKEY_BANNER:
-                        fixedW = mXhWH[0];
-                        fixedH = mXhWH[1];
+                        int index = imgUrl.lastIndexOf("?");
+                        if (index > -1) {
+                            String[] whStr = imgUrl.substring(index + 1).split("_");
+                            if (whStr.length == 2) {
+                                int originalW = Tools.parseIntOfThrow(whStr[0], 0);
+                                int originalH = Tools.parseIntOfThrow(whStr[1], 0);
+                                if (originalW != 0 && originalH != 0) {
+                                    fixedH = imgMaxW * originalH / originalW;
+                                    fixedW = imgMaxW;
+                                    xhHasWHTemp = true;
+                                }
+                            }
+                        }
+                        int tempH = imgMaxW * mXhWH[1] / mXhWH[0];
+                        fixedW = fixedW > 0 ? fixedW : mXhWH[0];
+                        fixedH = fixedH > tempH ? tempH : fixedH;
                         break;
                     case XHScrollerAdParent.ADKEY_GDT:
                         fixedW = isGdtHeightImg ? mGdtHeightWH[0] : mGdtWidthWH[0];
@@ -93,6 +118,7 @@ public class HomeGridADItem extends HomeItem {
                         fixedH = mBaiduWidthWH[1];
                         break;
                 }
+                final boolean xhHasWH = xhHasWHTemp;
                 final int computeH = imgMaxW * fixedH / fixedW;
                 final int computeW = imgMaxW;
                 ViewGroup.LayoutParams lp = mImg.getLayoutParams();
@@ -104,6 +130,10 @@ public class HomeGridADItem extends HomeItem {
                     builder.into(new SubAnimTarget(mImg) {
                         @Override
                         protected void setResource(Bitmap bitmap) {
+                            if (xhHasWH) {
+                                mImg.setImageBitmap(bitmap);
+                                return;
+                            }
                             int dstH = 0, dstW = 0;
                             if (bitmap != null) {
                                 if (!isGdtHeightImg) {
@@ -113,9 +143,6 @@ public class HomeGridADItem extends HomeItem {
                                     dstW = imgMaxW;
                                     int imgH = 0;
                                     switch (mAdClass) {
-                                        case XHScrollerAdParent.ADKEY_BANNER:
-                                            imgH = dstH > computeH ? computeH : dstH;
-                                            break;
                                         case XHScrollerAdParent.ADKEY_GDT:
                                             imgH = dstH;
                                             break;
@@ -143,7 +170,7 @@ public class HomeGridADItem extends HomeItem {
         if (headerBuilder != null) {
             headerBuilder.into(mAdHeaderImg);
         }
-        mGDTIconImg.setVisibility("sdk_gdt".equals(mDataMap.get("adClass")) ? View.VISIBLE : View.GONE);
+        mGDTIconImg.setVisibility(XHScrollerAdParent.ADKEY_GDT.equals(mAdClass) ? View.VISIBLE : View.GONE);
         String adName = mDataMap.get("name");
         mAdName.setText(!TextUtils.isEmpty(adName) ? adName : "");
         String content = mDataMap.get("content");

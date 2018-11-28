@@ -66,6 +66,7 @@ public class WelcomeControls {
     private int mOriginalWidth = 1700;
     private int mOriginalHeight = 2060;
     private View mWelcomeView;
+    private boolean isShowSkipContainer = false;
 
     public WelcomeControls(@NonNull Activity act, WelcomeCallBack callBack) {
         this(act, DEFAULT_TIME, callBack);
@@ -97,6 +98,7 @@ public class WelcomeControls {
             imageW = fixedH * mOriginalWidth / mOriginalHeight;
         }
         ImageView welcomeImg = mWelcomeView.findViewById(R.id.image_self);
+        Glide.with(activity).load(R.drawable.welcome_big).dontAnimate().into(welcomeImg);
         ViewGroup.LayoutParams params = welcomeImg.getLayoutParams();
         params.width = imageW;
         params.height = imageH;
@@ -146,8 +148,8 @@ public class WelcomeControls {
 
     private void initAd() {
         if ("true".equals(FileManager.loadShared(activity, FileManager.xmlFile_appInfo, "once").toString())) {
-            mAdTime = 3;
-            return;
+            mAdTime = DEFAULT_TIME;
+//            return;
         }
         //设置广点通广告回调
         WelcomeAdTools.getInstance().setmGdtCallback(
@@ -312,8 +314,11 @@ public class WelcomeControls {
                 });
     }
 
-
     private void showSkipContainer() {
+        if(isShowSkipContainer){
+            return;
+        }
+        isShowSkipContainer = true;
         activity.findViewById(R.id.ad_linear).setVisibility(View.VISIBLE);
         activity.findViewById(R.id.line_1).setVisibility(canShowVipLead ? View.VISIBLE : View.GONE);
         textLead.setVisibility(canShowVipLead ? View.VISIBLE : View.GONE);

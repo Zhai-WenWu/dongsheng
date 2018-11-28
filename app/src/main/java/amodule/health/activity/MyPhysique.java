@@ -31,7 +31,6 @@ import aplug.basic.ReqInternet;
 import third.push.xg.XGPushServer;
 import third.share.BarShare;
 import xh.basic.internet.UtilInternet;
-import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilString;
 
 public class MyPhysique extends BaseActivity {
@@ -181,8 +180,8 @@ public class MyPhysique extends BaseActivity {
 
 	// 再一次测试
 	public void testAgain(View view) {
-		UtilFile.delDirectoryOrFile(UtilFile.getDataDir() + FileManager.file_healthResult);
-		UtilFile.delDirectoryOrFile(UtilFile.getDataDir() + FileManager.file_constitution);
+		FileManager.delete(FileManager.getDataDir() + FileManager.file_healthResult);
+		FileManager.delete(FileManager.getDataDir() + FileManager.file_constitution);
 		Intent intent = new Intent(this, HealthTest.class);
 		startActivity(intent);
 		finish();

@@ -5,40 +5,33 @@ import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
-import android.support.constraint.ConstraintSet;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.BitmapRequestBuilder;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.xiangha.R;
 
-import org.eclipse.jetty.util.security.Constraint;
-
-import acore.logic.AppCommon;
-import acore.logic.XHClick;
+import acore.logic.stat.RvBaseViewHolderStat;
+import acore.tools.ColorUtil;
 import acore.tools.FileManager;
 import acore.tools.ToolsDevice;
-import acore.widget.rvlistview.holder.RvBaseViewHolder;
-import amodule.dish.activity.ShortVideoDetailActivity;
-import amodule.topic.activity.TopicInfoActivity;
 import amodule.topic.model.ImageModel;
 import amodule.topic.model.LabelModel;
 import amodule.topic.model.TopicItemModel;
 import amodule.topic.model.VideoModel;
 import aplug.basic.LoadImage;
 
-public class TopicItemHolder extends RvBaseViewHolder<TopicItemModel> implements View.OnClickListener {
+public class TopicItemHolder extends RvBaseViewHolderStat<TopicItemModel> {
     private TopicItemModel mTopicItemModel;
 
     private ImageView mImg;
     private TextView mLabel;
+    private ImageView mRanking;
+
     public TopicItemHolder(@NonNull View topicItemView) {
-        super(topicItemView);
+        super(topicItemView, topicItemView.getContext().getClass().getSimpleName());
         int originalW = 124;
         int originalH = 165;
         int screenW = ToolsDevice.getWindowPx(itemView.getContext()).widthPixels;
@@ -52,25 +45,66 @@ public class TopicItemHolder extends RvBaseViewHolder<TopicItemModel> implements
     private void initView() {
         mImg = itemView.findViewById(R.id.img);
         mLabel = itemView.findViewById(R.id.label);
-        itemView.setOnClickListener(this);
+        mRanking = itemView.findViewById(R.id.iv_hot_ranking);
     }
 
     @Override
-    public void bindData(int position, @Nullable TopicItemModel data) {
+    public boolean isShown(TopicItemModel data) {
+        return data.getIsShow();
+    }
+
+    @Override
+    public void hasShown(TopicItemModel data) {
+        data.setIsShow(true);
+    }
+
+    @Override
+    public String getStatJson(TopicItemModel data) {
+        return data.getStatJson();
+    }
+
+    @Override
+    public void overrideBindData(int position, @Nullable TopicItemModel data) {
         mTopicItemModel = data;
         if (data != null) {
             LabelModel labelModel = data.getLabelModel();
             if (labelModel != null && !TextUtils.isEmpty(labelModel.getTitle())) {
                 mLabel.setText(labelModel.getTitle());
-                mLabel.setTextColor(Color.parseColor(labelModel.getColor()));
+                mLabel.setTextColor(ColorUtil.parseColor(labelModel.getColor()));
                 GradientDrawable drawable = new GradientDrawable();
-                drawable.setColor(Color.parseColor(labelModel.getBgColor()));
+                drawable.setColor(ColorUtil.parseColor(labelModel.getBgColor()));
                 drawable.setCornerRadius(itemView.getResources().getDimensionPixelSize(R.dimen.dp_2));
                 mLabel.setBackground(drawable);
                 mLabel.setVisibility(View.VISIBLE);
             } else {
                 mLabel.setVisibility(View.GONE);
             }
+
+            if (data.getIsHot()) {
+                switch (data.getHotNo()) {
+                    case 1:
+                        mRanking.setImageResource(R.drawable.topic_item_no1);
+                        mLabel.setVisibility(View.GONE);
+                        mRanking.setVisibility(View.VISIBLE);
+                        break;
+                    case 2:
+                        mRanking.setImageResource(R.drawable.topic_item_no2);
+                        mLabel.setVisibility(View.GONE);
+                        mRanking.setVisibility(View.VISIBLE);
+                        break;
+                    case 3:
+                        mRanking.setImageResource(R.drawable.topic_item_no3);
+                        mLabel.setVisibility(View.GONE);
+                        mRanking.setVisibility(View.VISIBLE);
+                        break;
+                    default:
+                        mRanking.setVisibility(View.GONE);
+                        break;
+                }
+            } else {
+                mRanking.setVisibility(View.GONE);
+            }
+
             ImageModel imageModel = data.getImageModel();
             VideoModel videoModel = data.getVideoModel();
             if (imageModel != null && !TextUtils.isEmpty(imageModel.getImageUrl())) {
@@ -100,14 +134,6 @@ public class TopicItemHolder extends RvBaseViewHolder<TopicItemModel> implements
                 .build();
         if (builder != null) {
             builder.into(view);
-        }
-    }
-
-    @Override
-    public void onClick(View v) {
-        if (mTopicItemModel != null) {
-            AppCommon.openUrl(mTopicItemModel.getGotoUrl(), true);
-            XHClick.mapStat(itemView.getContext(), ShortVideoDetailActivity.STA_ID, "用户内容", "内容详情点击量");
         }
     }
 }

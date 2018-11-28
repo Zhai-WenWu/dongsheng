@@ -38,12 +38,11 @@ import xh.basic.internet.UtilInternet;
 
 public class QAReportActivity extends BaseActivity {
 
-    private MsgScrollView mReportScrooView;
+    private MsgScrollView mReportScrollView;
     private LinearLayout mReportContainer;
     private TextView mAdminDesc;
     private LinearLayout mAdminContainer;
     private ImageView mReportInfo;
-    private TextView mName;
     private TextView mBlackText;
     private Button mCommitBtn;
     private RelativeLayout mBlackListContainer;
@@ -104,16 +103,16 @@ public class QAReportActivity extends BaseActivity {
     }
 
     private void initView() {
-        mReportScrooView = (MsgScrollView) findViewById(R.id.report_scrollview);
+        mReportScrollView = (MsgScrollView) findViewById(R.id.report_scrollview);
         mReportContainer = (LinearLayout) findViewById(R.id.report_container);
         mAdminDesc = (TextView) findViewById(R.id.admin_report_desc);
         mAdminContainer = (LinearLayout) findViewById(R.id.admin_report_container);
         mReportInfo = (ImageView) findViewById(R.id.icon_report);
         mCommitBtn = (Button) findViewById(R.id.report_commit);
-        mName = (TextView) findViewById(R.id.title);
         mBlackText = (TextView) findViewById(R.id.blacklist_text);
+        TextView name = findViewById(R.id.title);
         if (!TextUtils.isEmpty(mReportName))
-            mName.setText("举报 " + mReportName);
+            name.setText("举报 " + mReportName);
         mBlackListContainer = (RelativeLayout) findViewById(R.id.blacklist_container);
         mBlackListSwitchBtn = (ImageView) findViewById(R.id.black_switch_btn);
     }
@@ -273,7 +272,7 @@ public class QAReportActivity extends BaseActivity {
             showContainer = true;
         }
         if (showContainer)
-            mReportScrooView.setVisibility(View.VISIBLE);
+            mReportScrollView.setVisibility(View.VISIBLE);
     }
 
     /**

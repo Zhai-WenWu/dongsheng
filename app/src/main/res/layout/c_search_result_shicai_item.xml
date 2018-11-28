@@ -36,7 +36,6 @@
             app:stroke_width="1px"
             android:layout_width="@dimen/dp_28"
             android:layout_height="@dimen/dp_28"
-            android:layout_marginRight="@dimen/dp_10"
             android:background="@drawable/i_nopic"
             android:clickable="false"
             android:focusable="false"

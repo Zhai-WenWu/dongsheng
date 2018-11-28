@@ -16,6 +16,7 @@ public class StatModel implements Serializable {
     public static final String EVENT_STAY = "stay";
     public static final String EVENT_LIST_SHOW = "show";
     public static final String EVENT_BTN_CLICK = "btnC";
+    public static final String EVENT_BTN_CLICK_DETAIL = "btnCD";
     public static final String EVENT_LIST_CLICK = "listC";
     public static final String EVENT_VIDEO_VIEW = "vv";
     public static final String EVENT_SPECIAL_ACTION = "act";
@@ -52,6 +53,14 @@ public class StatModel implements Serializable {
         return new StatModel(EVENT_BTN_CLICK, p, m, EMPTY, pos, btn, s1, EMPTY, EMPTY, EMPTY, EMPTY);
     }
 
+    public static StatModel createBtnClickDetailModel(String p, String m, String btn,String s1,String s2) {
+        return createBtnClickDetailModel(p, m, "0", btn, s1, s2, EMPTY);
+    }
+
+    public static StatModel createBtnClickDetailModel(String p, String m, String pos, String btn, String s1,String s2,String s3) {
+        return new StatModel(EVENT_BTN_CLICK_DETAIL, p, m, EMPTY, pos, btn, s1, s2, s3, EMPTY, EMPTY);
+    }
+
     public static StatModel createListClickModel(String p, String m, String pos, String s1, String statJson) {
         return new StatModel(EVENT_LIST_CLICK, p, m, statJson, pos, EMPTY, s1, EMPTY, EMPTY, EMPTY, EMPTY);
     }
@@ -61,7 +70,7 @@ public class StatModel implements Serializable {
     }
 
     public static StatModel createSpecialActionModel(String p, String m, String pos, String btn, String s1, String n1, String statJson) {
-        return new StatModel(EVENT_VIDEO_VIEW, p, m, statJson, pos, btn, s1, EMPTY, EMPTY, n1, EMPTY);
+        return new StatModel(EVENT_SPECIAL_ACTION, p, m, statJson, pos, btn, s1, EMPTY, EMPTY, n1, EMPTY);
     }
 
     public static StatModel createADShowModel(String p,String m,String statJson,String s2,String s3,String n1,String n2){

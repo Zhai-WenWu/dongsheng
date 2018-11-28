@@ -17,6 +17,7 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -37,6 +38,8 @@ import com.xh.manager.ViewManager;
 import com.xh.view.HButtonView;
 import com.xh.view.TitleMessageView;
 import com.xiangha.R;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -156,6 +159,8 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
     private float duration;
     private CommentDialog mCommentDialog;
 
+    private View mGuideView;
+
     private OnPlayPauseClickListener mOnPlayPauseListener;
     private OnSeekBarTrackingTouchListener mOnSeekBarTrackingTouchListener;
     private int position;
@@ -163,6 +168,7 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
 
     private Handler mMainHandler;
     private boolean isCompleteCallback = true;
+    private TextView mHavePrizeText;
 
     public ShortVideoItemView(Context context) {
         this(context, null);
@@ -192,6 +198,7 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
         mLayoutAddress = findViewById(R.id.layout_address_inner);
         mAddressText = findViewById(R.id.text_address);
         mTopicText = findViewById(R.id.text_topic);
+        mHavePrizeText = findViewById(R.id.tv_have_prize);
         mTitleText = findViewById(R.id.text_title);
         mBottomLayout = findViewById(R.id.layout_bottom_info);
         mBottomProgress = findViewById(R.id.bottom_progressbar);
@@ -205,6 +212,7 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
         mBottomGoodLayout = findViewById(R.id.layout_bottom_good);
         mGoodImg = mBottomGoodLayout.findViewById(R.id.image1);
         mGoodText = mBottomGoodLayout.findViewById(R.id.text1);
+        mGuideView = findViewById(R.id.guide_view);
 
         mPlayerView = findViewById(R.id.short_video);
 
@@ -356,6 +364,11 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
         mPlayerView.setOnProgressChangedCallback((progress, secProgress, currentTime, totalTime) -> {
 
 //                Log.e("TAG_Player", "onProgressChanged: progress = " + progress + "  currentTime = " + currentTime);
+            Log.i("tzy", "addListener: currentTime"+currentTime);
+            if(totalTime - currentTime > 0 && totalTime - currentTime <= 5000){
+                Log.i("tzy", "addListener: 看过视频了");
+                todayWatchVideo();
+            }
             duration = totalTime;
             if (progress == 0 && currentTime == 0) {
                 if (mNeedChangePauseToStartEnable) {
@@ -402,8 +415,11 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
         }
     }
 
-    /** 开始播放入口 */
+    /**
+     * 开始播放入口
+     */
     public void prepareAsync() {
+//        isRequesting = false;
         mInnerPlayState = INNER_PLAY_STATE_START;
         mNeedChangePauseToStartEnable = true;
         if (TextUtils.isEmpty(mVideoUrl)) {
@@ -428,7 +444,9 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
         mPlayerView.changePlayBtnState(false);
     }
 
-    /** 暂停 */
+    /**
+     * 暂停
+     */
     public void pauseVideo() {
         mInnerPlayState = INNER_PLAY_STATE_PAUSE;
         mPlayerView.onVideoPause();
@@ -439,7 +457,7 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
     private void statisticsVideoView() {
         try {
             String tag = getTag(STAT_TAG) != null ? (String) getTag(STAT_TAG) : getClass().getSimpleName();
-            if(duration == 0){
+            if (duration == 0) {
                 duration = mPlayerView.getDuration();
             }
             float total = (playNum * duration + mPlayerView.getCurrentPositionWhenPlaying()) / 1000f;
@@ -576,6 +594,7 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
         } else {
             mLayoutTopic.setVisibility(View.GONE);
         }
+        setActivityIcon();
         mAddressClickUrl = mData.getAddressModel().getGotoUrl();
         String address = mData.getAddressModel().getAddress();
         if (!TextUtils.isEmpty(address)) {
@@ -584,6 +603,17 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
         } else {
             mLayoutAddress.setVisibility(View.GONE);
         }
+
+        String dateStr = (String) FileManager.loadShared(getContext(),FileManager.xmlFile_appInfo,"videoCommentGuide");
+        String todayStr = Tools.getAssignTime("yyyyMMdd",0);
+        boolean todayOnce = !TextUtils.equals(dateStr,todayStr);
+        mGuideView.setVisibility(todayOnce?VISIBLE:GONE);
+        FileManager.saveShared(getContext(),FileManager.xmlFile_appInfo,"videoCommentGuide",todayStr);
+    }
+
+    private void setActivityIcon() {
+        String activityType = mData.getTopicModel().getActivityType();
+        mHavePrizeText.setVisibility("1".equals(activityType) || "2".equals(activityType) ? VISIBLE : GONE);
     }
 
     public void setPos(int pos) {
@@ -677,10 +707,12 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
                     break;
                 case R.id.layout_bottom_comment:
                     showComments();
+                    mGuideView.setVisibility(GONE);
                     XHClick.mapStat(getContext(), ShortVideoDetailActivity.STA_ID, "评论", "评论按钮点击量");
                     break;
                 case R.id.layout_bottom_info:
                     showCommentEdit();
+                    mGuideView.setVisibility(GONE);
                     XHClick.mapStat(getContext(), ShortVideoDetailActivity.STA_ID, "评论", "说点什么点击量");
                     break;
             }
@@ -969,7 +1001,9 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
         mOnSeekBarTrackingTouchListener = onSeekBarTrackingTouchListener;
     }
 
-    /** 发评论 */
+    /**
+     * 发评论
+     */
     private void sendComment(String content) {
         if (!LoginManager.isLogin()) {
             getContext().startActivity(new Intent(getContext(), LoginByAccout.class));
@@ -1093,6 +1127,10 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
         mCommentNumText.setText(mData.getCommentNum());
     }
 
+    public void updateActivityType() {
+        setActivityIcon();
+    }
+
     public interface AttentionResultCallback {
         void onResult(boolean success);
     }
@@ -1127,6 +1165,30 @@ public class ShortVideoItemView extends BaseItemView implements SeekBar.OnSeekBa
 
     public void setPlayCompleteCallBack(RvVericalVideoItemAdapter.PlayCompleteCallBack completeCallBack) {
         this.playCompleteCallBack = completeCallBack;
+    }
+
+    boolean isRequesting = false;
+    private void todayWatchVideo(){
+        if(isRequesting || !LoginManager.isLogin()){
+            return;
+        }
+        isRequesting = true;
+        final String key = "watchVideo_" + LoginManager.userInfo.get("code");
+        String dateStr = (String) FileManager.loadShared(getContext(),FileManager.xmlFile_task,key);
+        String todayStr = Tools.getAssignTime("yyyyMMdd",0);
+        boolean todayOnce = !TextUtils.equals(dateStr,todayStr);
+        if(todayOnce){
+            ReqEncyptInternet.in().doEncypt(StringManager.api_addTask,"channel=taskSeeShortVideo&type_id="+mData.getCode(),
+                    new DefaultInternetCallback(){
+                        @Override
+                        public void loaded(int i, String s, Object o) {
+                            super.loaded(i, s, o);
+                            if(i>=ReqEncyptInternet.REQ_OK_STRING){
+                                FileManager.saveShared(getContext(),FileManager.xmlFile_task,key,todayStr);
+                            }
+                        }
+                    });
+        }
     }
 }
 //1062

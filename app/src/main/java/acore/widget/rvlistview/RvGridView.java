@@ -20,6 +20,7 @@ import com.xiangha.R;
 public class RvGridView extends RvListView {
 
     protected int spanCount;
+    protected IsFillRowCallback mIsFillRowCallback;
     public RvGridView(Context context) {
         this(context,null);
     }
@@ -61,11 +62,27 @@ public class RvGridView extends RvListView {
         if(mAdapter != null){
             if(VIEW_TYPE_HEADER == mAdapter.getItemViewType(position)
                     ||VIEW_TYPE_FOOTER == mAdapter.getItemViewType(position)
-                    ||VIEW_TYPE_EMPTY == mAdapter.getItemViewType(position)){
+                    ||VIEW_TYPE_EMPTY == mAdapter.getItemViewType(position)
+                    || (mIsFillRowCallback != null && mIsFillRowCallback.isFillRowCallback(position - mAdapter.getPositionOffset()))){
                 return spanCount;
             }
         }
         return 1;
     }
 
+    public void setIsFillRowCallback(IsFillRowCallback mIsFillRowCallback) {
+        this.mIsFillRowCallback = mIsFillRowCallback;
+    }
+
+    public interface IsFillRowCallback{
+        boolean isFillRowCallback(int position);
+    }
+
+    public int getSpanCount() {
+        return spanCount;
+    }
+
+    public void setSpanCount(int spanCount) {
+        this.spanCount = spanCount;
+    }
 }

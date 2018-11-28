@@ -187,7 +187,7 @@ public class LoginByPassword extends ThirdLoginBaseActivity implements View.OnCl
                                             XHClick.mapStat(LoginByPassword.this, PHONE_TAG, "手机号登录", "登录失败");
                                             XHClick.mapStat(LoginByPassword.this, PHONE_TAG, "手机号登录", "失败原因：账号或密码错");
                                         }
-                                    });
+                                    }, null);
                         }
 
                         @Override

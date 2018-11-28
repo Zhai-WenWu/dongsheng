@@ -1,56 +1,84 @@
 package amodule.topic.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
-import android.text.Spannable;
+import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
-import android.text.method.LinkMovementMethod;
-import android.text.style.ForegroundColorSpan;
+import android.util.ArrayMap;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewStub;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.popdialog.util.ToolsDevice;
 import com.xiangha.R;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 
-import acore.tools.FileManager;
+import java.util.ArrayList;
+import java.util.Map;
+
+import acore.logic.AppCommon;
+import acore.logic.stat.StatModel;
+import acore.logic.stat.StatisticsManager;
+import acore.override.helper.XHActivityManager;
 import acore.tools.ImgManager;
+import acore.tools.StringManager;
+import acore.tools.Tools;
+import amodule.dish.activity.ListDish;
+import amodule.search.view.MultiTagView;
+import amodule.topic.activity.TopicInfoActivity;
 import amodule.topic.style.CustomClickableSpan;
+import amodule.user.activity.FriendHome;
+import anet.channel.util.StringUtils;
 import aplug.basic.LoadImage;
-import aplug.basic.SubBitmapTarget;
-import xh.basic.tool.UtilImage;
+import third.aliyun.work.AliyunCommon;
+
+import static com.umeng.a.j.f;
 
 public class TopicHeaderView extends RelativeLayout {
 
     private CustomClickableSpan mCustomClickableSpan;
 
     private ImageView mUserRearImg;
-    private ImageView mUserFrontImg;
-    private TextView mTopicUser;
-    private ImageView mTopicAttention;
     private TextView mTopicInfo;
     private TextView mTopicNum;
     private View mShadePanel;
+    private TextView mBottomLinkTv;
+    private Map<String, String> mLink;
+    private Map<String, String> mActivityInfo;
+    private String mContent;
+    private String mNum;
+    private TextView mActivityTv;
+    private Context mContext;
+    private RelativeLayout containerLayout;
+    private MultiTagView mSocialiteTable;
+    private ArrayList<Map<String, String>> userList;
+    private ArrayList<Map<String, String>> userNameList;
+    private Map<String, String> user;
+    private WebView mUserRearWeb;
+    private ViewStub mLongImgViewstub;
+
     public TopicHeaderView(Context context) {
         super(context);
         initView(context);
@@ -67,124 +95,213 @@ public class TopicHeaderView extends RelativeLayout {
     }
 
     private void initView(Context context) {
+        this.mContext = context;
         LayoutInflater.from(context).inflate(R.layout.topic_header_layout, this, true);
         mUserRearImg = findViewById(R.id.user_rear_img);
-        mUserFrontImg = findViewById(R.id.user_front_img);
-        mTopicUser = findViewById(R.id.topic_user);
-        mTopicAttention = findViewById(R.id.topic_attention);
         mTopicInfo = findViewById(R.id.topic_info);
         mTopicNum = findViewById(R.id.topic_num);
+        mBottomLinkTv = findViewById(R.id.tv_bottom_link);
+        mBottomLinkTv.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG); //下划线
         mShadePanel = findViewById(R.id.shade);
+        mActivityTv = findViewById(R.id.activity_btn);
+        containerLayout = findViewById(R.id.rl_container);
+        containerLayout.setPadding(containerLayout.getPaddingLeft(),containerLayout.getPaddingTop() + Tools.getStatusBarHeight(getContext()),containerLayout.getPaddingRight(),containerLayout.getPaddingBottom());
+        mSocialiteTable = findViewById(R.id.socialite_table);
+        mLongImgViewstub = findViewById(R.id.long_img_viewstub);
+        mSocialiteTable.setPressColor("#00000000");
+        mSocialiteTable.setNormalCorlor("#00000000");
+        mSocialiteTable.setFromTopic(true);
+
     }
 
-    public void showUserImage(String url, OnClickListener listener) {
-        if (TextUtils.isEmpty(url)) {
-            hideTopicImage();
-            return;
+    public void initData(Map<String, String> infoMap) {
+        String image = infoMap.get("image");
+        if (!TextUtils.isEmpty(image) && image != "null") {
+            Glide.with(mContext).load(image).downloadOnly(new SimpleTarget<File>() {
+                @Override
+                public void onResourceReady(File file, GlideAnimation<? super File> glideAnimation) {
+                    try {
+                        InputStream is = new FileInputStream(file);
+                        Bitmap bitmap = BitmapFactory.decodeStream(is);
+                        bitmap = ImgManager.RSBlur(getContext(), bitmap, 10);
+                        mUserRearImg.setImageBitmap(bitmap);
+                        mShadePanel.setVisibility(View.VISIBLE);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
         }
-        mUserFrontImg.setOnClickListener(listener);
-        mUserFrontImg.setTag(R.string.tag, url);
-        Glide.with(getContext()).load(url).downloadOnly(new SimpleTarget<File>() {
 
-            @Override
-            public void onLoadFailed(Exception e, Drawable drawable) {
-                super.onLoadFailed(e, drawable);
-                hideTopicImage();
+        //参与人数
+        mNum = infoMap.get("num");
+        if (!TextUtils.isEmpty(mNum)) {
+            SpannableStringBuilder ss = new SpannableStringBuilder();
+            ss.append(mNum).append("人参与");
+            mTopicNum.setText(ss);
+        } else {
+            mTopicNum.setVisibility(GONE);
+        }
+
+        //话题content
+        mContent = infoMap.get("content");
+        if (!TextUtils.isEmpty(mContent)) {
+            mTopicInfo.setText(mContent);
+        } else {
+            mTopicInfo.setVisibility(GONE);
+        }
+
+        //社交达人
+        user = StringManager.getFirstMap(infoMap.get("users"));
+        userList = StringManager.getListMapByJson(user.get("info"));
+        userNameList = new ArrayList<>();
+        ArrayMap<String, String> textMap = new ArrayMap<>();
+        textMap.put("hot", user.get("text") + "：");
+        userNameList.add(textMap);
+
+        int size = userList.size();
+        if (size > 0) {
+            for (int i = 0; i < size; i++) {
+                ArrayMap<String, String> map = new ArrayMap<>();
+                if (size == 1) {
+                    map.put("hot", "@" + userList.get(i).get("nickName"));//@一个人没顿号
+                } else {
+                    if (i < size - 1) {
+                        map.put("hot", "@" + userList.get(i).get("nickName") + "、");
+                    } else {
+                        map.put("hot", "@" + userList.get(i).get("nickName"));//最后一个人没顿号
+                    }
+                }
+                userNameList.add(map);
             }
 
-            @Override
-            public void onResourceReady(File file, GlideAnimation<? super File> glideAnimation) {
-                try {
-                    InputStream is = new FileInputStream(file);
-                    Bitmap bitmap = BitmapFactory.decodeStream(is);
-                    mUserFrontImg.setVisibility(View.VISIBLE);
-                    mUserFrontImg.setImageBitmap(bitmap);
-                    bitmap = ImgManager.RSBlur(getContext(),bitmap,10);
-                    if(bitmap != null){
-                        mUserRearImg.setImageBitmap(bitmap);
+            mSocialiteTable.addTags(userNameList, new MultiTagView.MutilTagViewCallBack() {
+                @Override
+                public void onClick(int tagIndexr) {
+                    if (tagIndexr > 0) {
+                        StatisticsManager.saveData(StatModel.createBtnClickDetailModel("TopicInfoActivity", "TopicInfoActivity", "new_topic_gather", infoMap.get("name"), "@好友"));
+                        Intent intent = new Intent(mContext, FriendHome.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putString("code", userList.get(tagIndexr - 1).get("code"));
+                        intent.putExtras(bundle);
+                        mContext.startActivity(intent);
                     }
                     mShadePanel.setVisibility(View.VISIBLE);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    hideTopicImage();
                 }
+            });
+        } else {
+            mSocialiteTable.setVisibility(GONE);
+        }
+
+        //底部查看活动详情链接
+        mLink = StringManager.getFirstMap(infoMap.get("link"));
+        if (mLink != null) {
+            String text = mLink.get("text");
+            if (!TextUtils.isEmpty(text)) {
+                mBottomLinkTv.setText(mLink.get("text"));
+            } else {
+                mBottomLinkTv.setVisibility(GONE);
+            }
+
+        } else {
+            mBottomLinkTv.setVisibility(GONE);
+        }
+
+        mBottomLinkTv.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                StatisticsManager.saveData(StatModel.createBtnClickDetailModel("TopicInfoActivity", "TopicInfoActivity", "new_topic_gather", infoMap.get("name"), "链接"));
+                AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), mLink.get("url"), true);
             }
         });
+
     }
 
-    public void showTopicUser(String userName, OnClickListener listener) {
-        if (TextUtils.isEmpty(userName)) {
-            hideTopicUser();
-            return;
+    public void showTopicData(String mActivityType, String mTopicCode, Map<String, String> infoMap) {
+        switch (mActivityType) {
+
+            case "0":
+                mActivityTv.setVisibility(GONE);
+                initData(infoMap);
+
+                break;
+            case "1":
+                initData(infoMap);
+
+                setWrapContentNotOfBackground(mActivityTv);
+
+                //详情链接
+                mActivityInfo = StringManager.getFirstMap(infoMap.get("activityInfo"));
+                if (mActivityInfo != null) {
+                    String text = mActivityInfo.get("text");
+                    if (!TextUtils.isEmpty(text)) {
+                        mActivityTv.setText(mActivityInfo.get("text"));
+                    } else {
+                        mActivityTv.setVisibility(GONE);
+                    }
+                } else {
+                    mActivityTv.setVisibility(GONE);
+                }
+
+                mActivityTv.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        StatisticsManager.saveData(StatModel.createBtnClickDetailModel("TopicInfoActivity", "TopicInfoActivity", "new_topic_gather", infoMap.get("name"), "活动按钮"));
+                        AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), mActivityInfo.get("url"), true);
+                    }
+                });
+
+                break;
+            case "2":
+                mShadePanel.setVisibility(GONE);
+                containerLayout.setVisibility(GONE);
+                Map<String, String> activityInfo = StringManager.getFirstMap(infoMap.get("activityInfo"));
+                String url = activityInfo.get("url");
+                String imageWidth = activityInfo.get("imageWidth");
+                String imageHeight = activityInfo.get("imageHeight");
+                int w = Integer.parseInt(imageWidth);
+                int h = Integer.parseInt(imageHeight);
+                int widthPixels = ToolsDevice.getWindowPx(mContext).widthPixels;
+                float f = (float) widthPixels / w;
+                int viewHeight = (int) (f * h);
+
+                if (viewHeight > 4000) {
+                    if (mLongImgViewstub.getParent() != null) {
+                        mLongImgViewstub.inflate();
+                    }
+                    mUserRearWeb = findViewById(R.id.user_rear_web);
+                    ViewGroup.LayoutParams webLayoutParams = mUserRearWeb.getLayoutParams();
+                    webLayoutParams.height = viewHeight;
+                    mUserRearWeb.setLayoutParams(webLayoutParams);
+                    mUserRearWeb.setInitialScale((int) (ToolsDevice.getWindowPx(mContext).widthPixels / 500f * 100));
+                    mUserRearWeb.loadUrl(url);
+                } else {
+                    ViewGroup.LayoutParams layoutParams = mUserRearImg.getLayoutParams();
+                    layoutParams.height = viewHeight;
+                    mUserRearImg.setLayoutParams(layoutParams);
+                    LoadImage.with(mContext).load(url).setPlaceholderId(R.color.transparent).build().into(mUserRearImg);
+                }
+
+
+                break;
         }
-        mTopicUser.setVisibility(View.VISIBLE);
-        SpannableStringBuilder ssb = new SpannableStringBuilder(userName);
-        if (mCustomClickableSpan == null) {
-            mCustomClickableSpan = new CustomClickableSpan();
-            mCustomClickableSpan.setTextColor(Color.parseColor("#ffd914"));
-            mCustomClickableSpan.setHasUnderline(false);
-        }
-        mCustomClickableSpan.setOnClickListener(listener);
-        ssb.setSpan(mCustomClickableSpan, 0, userName.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        ssb.append(" 创建的话题");
-        mTopicUser.setMovementMethod(LinkMovementMethod.getInstance());
-        mTopicUser.setText(ssb);
-        requestLayout();
+
     }
 
-    public void showTopicAttention(boolean attentioned, OnClickListener listener){
-        mTopicAttention.setVisibility(View.VISIBLE);
-        mTopicAttention.setOnClickListener(listener);
-        mTopicAttention.setEnabled(!attentioned);
-        requestLayout();
-    }
+    public void setWrapContentNotOfBackground(View view) {
+        Drawable drawable = view.getBackground();
+        view.setBackground(null);
 
-    public void setAttentionEnable(boolean enable) {
-        mTopicAttention.setEnabled(enable);
-        requestLayout();
+        view.post(() -> {
+            int width = view.getWidth();
+            int height = view.getHeight();
+            if (width <= 480) {
+                width = 480;
+            }
+            view.setBackground(drawable);
+            ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+            layoutParams.width = width;
+            layoutParams.height = height;
+        });
     }
-
-    public void showTopicInfo(String info) {
-        if (TextUtils.isEmpty(info)) {
-            hideTopicInfo();
-            return;
-        }
-        mTopicInfo.setVisibility(View.VISIBLE);
-        mTopicInfo.setText(info);
-        requestLayout();
-    }
-
-    public void showTopicNum(String numStr) {
-        if (TextUtils.isEmpty(numStr)) {
-            hideTopicNum();
-            return;
-        }
-        mTopicNum.setVisibility(View.VISIBLE);
-        SpannableStringBuilder ss = new SpannableStringBuilder("— ");
-        ss.append(numStr).append(" 人参与 —");
-        ss.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.white)), 2, numStr.length() + 2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        mTopicNum.setText(ss);
-        requestLayout();
-    }
-
-    public void hideTopicImage() {
-        mUserFrontImg.setVisibility(View.GONE);
-    }
-
-    public void hideTopicUser() {
-        mTopicUser.setVisibility(View.GONE);
-    }
-
-    public void hideTopicAttention() {
-        mTopicAttention.setVisibility(View.GONE);
-    }
-
-    public void hideTopicInfo() {
-        mTopicInfo.setVisibility(View.GONE);
-    }
-
-    public void hideTopicNum() {
-        mTopicNum.setVisibility(View.GONE);
-    }
-
 }

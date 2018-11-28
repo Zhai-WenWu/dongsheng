@@ -62,7 +62,6 @@ public class PushPraserService {
             MsgSettingDataController controller = new MsgSettingDataController();
             if (!controller.checkOpenByType(type, null))
                 return;
-
             //创建NotificationData
             NotificationData data = new NotificationData();
             data.setContent(msgAlert);

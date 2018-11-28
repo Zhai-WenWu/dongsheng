@@ -2,6 +2,8 @@ package amodule.dish.view;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +21,6 @@ import java.util.Map;
 import acore.logic.load.LoadManager;
 import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
-import acore.tools.SyntaxTools;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.dish.activity.DetailDish;
@@ -175,14 +176,15 @@ public class TimeView {
 
 
                 if (currentPage == 1 && arrayList != null && arrayList.size() > 0) {
-                    SyntaxTools.runOnUiThread(new Runnable() {
+                    final Handler mainHandler = new Handler(Looper.getMainLooper());
+                    mainHandler.post(new Runnable() {
                         @Override
                         public void run() {
                             adDataControl.getDishAdData(mAct, new DishAdDataControl.DishAdDataControlCallback() {
                                 @Override
                                 public void onGetDataComplete(boolean isRefresh) {
-                                    adDataControl.addAdDataToList(isRefresh,arrayList);
-                                    SyntaxTools.runOnUiThread(new Runnable() {
+                                    adDataControl.addAdDataToList(isRefresh, arrayList);
+                                    mainHandler.post(new Runnable() {
                                         @Override
                                         public void run() {
                                             adapter.setAdControl(adDataControl.xhAllAdControl);

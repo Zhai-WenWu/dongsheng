@@ -1,17 +1,15 @@
-/**
- * @author Jerry
- * 2012-12-30 上午10:17:48
- * Copyright: Copyright (c) xiangha.com 2011
- */
 package acore.tools;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.graphics.Bitmap;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -19,18 +17,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.List;
 import java.util.Locale;
 
 import acore.logic.VersionOp;
 import acore.override.XHApplication;
 import xh.basic.tool.UtilFile;
+import xh.basic.tool.UtilImage;
 import xh.basic.tool.UtilLog;
 
 public class FileManager extends UtilFile{
@@ -44,6 +41,8 @@ public class FileManager extends UtilFile{
 	public static final String file_constitution = "constitution.xh";
 	public static final String file_buyBurden = "buyBurden.xh";
 	public static final String file_searchHis = "searchHis.xh";
+	public static final String file_topicSearchHis = "fileTopicSearchHis.xh";
+	public static final String file_topicSearchCode = "fileTopicSearchCode.xh";
 	public static final String file_historyCode = "historyCode.xh";
 	public static final String file_healthQuestion = "healthQuestion";
 	public static final String file_healthResult = "healthResult.xh";
@@ -57,6 +56,8 @@ public class FileManager extends UtilFile{
 	public static final String file_randPromotionConfig = "randPromotionConfig";
 	public static final String xmlFile_userInfo = "common";
 	public static final String xmlFile_appInfo = "appInfo2";
+	public static final String xmlFile_task = "task";
+
 	public static final String xmlFile_localPushTag = "localPushTag";
 	public static final String xmlFile_adIsShow = "adIsShow";
 	public static final String xmlKey_XGToken = "token";
@@ -66,7 +67,6 @@ public class FileManager extends UtilFile{
 	public static final String xmlKey_mall_domain = "mall_domain";
 	public static final String xmlKey_request_tip = "requesttip";
 	public static final String xmlKey_device = "device";
-	public static final String xmlKey_device_statictis = "device_statictis";
 	public static final String xmlKey_downDishLimit = "downDishLimit";
 	public static final String xmlKey_upFavorTime = "upFavorTime";
 	public static final String xmlKey_startTime = "startTime";
@@ -126,8 +126,56 @@ public class FileManager extends UtilFile{
 	public static final String xhmKey_shortVideoGuidanceShow = "shortVideoGuidanceShow";
 	public static final String key_header_mode = "header_mode";
 	public static final String video_corp_show_hint = "videoCorp_show_hint";
-
 	public static final String xmlKey_device_statistics = "deviceStatistics";
+
+	private FileManager() {
+		throw new UnsupportedOperationException("u can't instantiate me...");
+	}
+
+	/**
+	 * 删除SD卡上时间较早的文件
+	 * @param completePath 完整路径
+	 * @param keep 文件夹内只保留
+	 *            (keep~keep*2)个文件
+	 */
+	public static void delDirectoryOrFile(String completePath, int keep) {
+		if(isSpace(completePath)){
+			return ;
+		}
+		File file = new File(completePath);
+		if (file.isDirectory()) {
+			File[] files = file.listFiles();
+			if (files != null && files.length - keep * 2 > 0) {
+				if (keep > 0) {
+					System.setProperty("java.util.Arrays.useLegacyMergeSort", "true");
+					try {
+						Arrays.sort(files, new Comparator<Object>() {
+							@Override
+							public int compare(Object object1, Object object2) {
+								File file1 = (File) object1;
+								File file2 = (File) object2;
+								long result = file1.lastModified() - file2.lastModified();
+								if (result < 0) {
+									return -1;
+								} else if (result > 0) {
+									return 1;
+								} else {
+									return 0;
+								}
+							}
+						});
+					} catch (Exception e) {
+						UtilLog.reportError("文件排序错误", e);
+					}
+				}
+				for (int i = 0; i < files.length - keep; i++) {
+					files[i].delete();
+				}
+			}
+		} else if (file.isFile()) {
+			file.delete();
+		}
+	}
 
 	public static String getSDLongDir(){
 		return getSDDir()+save_long+"/";
@@ -250,6 +298,36 @@ public class FileManager extends UtilFile{
             return tmpFile;
         }
     }
+
+	/**
+	 * 保存图片到sd卡
+	 * @param bitmap
+	 * @param completePath : 完整路径
+	 * @param format
+	 */
+	public static void saveImgToCompletePath(Bitmap bitmap, String completePath, Bitmap.CompressFormat format) {
+		if(isSpace(completePath)){
+			return;
+		}
+		File file = new File(completePath);
+		try {
+			File parentFile = file.getParentFile();
+			if(parentFile == null){
+				throw new NullPointerException("path = " + completePath);
+			}
+			if (!parentFile.exists())
+				parentFile.mkdirs();
+			BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
+			bitmap.compress(format, 100, bos);
+		} catch (Exception e) {
+			byte[] theByte = UtilImage.bitmapToByte(bitmap, format, 0);
+			if (theByte != null) {
+				saveFileToCompletePath(getSDDir() + file.getAbsolutePath(), new ByteArrayInputStream(theByte),
+						false);
+			}
+			e.printStackTrace();
+		}
+	}
 	 
     /**
 	 * 异步保存文件，子线程中
@@ -257,7 +335,7 @@ public class FileManager extends UtilFile{
 	 * @param content 内容
 	 * @param append 是否可以追加
 	 */
-	public static void scynSaveFile(final String filePath,final String content,final boolean append){
+	public static void asyncSaveFile(final String filePath, final String content, final boolean append){
 		new Thread(() -> saveFileToCompletePath(filePath,content,append)).start();
 	}
 
@@ -267,11 +345,11 @@ public class FileManager extends UtilFile{
 	 * @param content 内容
 	 * @param append 是否可以追加
 	 */
-	public static void scynSaveFile(final String filePath, final InputStream content, final boolean append){
+	public static void asyncSaveFile(final String filePath, final InputStream content, final boolean append){
 		new Thread(() -> saveFileToCompletePath(filePath,content,append)).start();
 	}
 
-	public static void scynSaveSharePreference(Context context, String xmlName, @NonNull String key, @NonNull String value) {
+	public static void saveSharePreference(Context context, String xmlName, @NonNull String key, @NonNull String value) {
 		if(context == null || TextUtils.isEmpty(xmlName)) return;
 		SharedPreferences preferences = context.getSharedPreferences(xmlName, 0);
 		Editor editor = preferences.edit();
@@ -284,7 +362,7 @@ public class FileManager extends UtilFile{
 	public static final int SIZETYPE_MB = 3;//获取文件大小单位为MB的double值
 	public static final int SIZETYPE_GB = 4;//获取文件大小单位为GB的double值
 
-	public static long getFileOrFolerSize(String filePath){
+	public static long getFileOrFolderSize(String filePath){
 		if(TextUtils.isEmpty(filePath)) return 0;
 		File file = new File(filePath);
 		long size = 0;
@@ -300,7 +378,7 @@ public class FileManager extends UtilFile{
 		return size;
 	}
 
-	public static String getFileOrFolerSize(String filePath,int sizeType){
+	public static String getFileOrFolderSize(String filePath, int sizeType){
 		if(TextUtils.isEmpty(filePath)) return "";
 		File file = new File(filePath);
 		long size = 0;
@@ -313,11 +391,11 @@ public class FileManager extends UtilFile{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return FormetFileSize(size,sizeType);
+		return formatFileSize(size,sizeType);
 	}
 
 	public static String getAutoFileOrFilesSize(String filePath){
-		return getFileOrFolerSize(filePath,0);
+		return getFileOrFolderSize(filePath,0);
 	}
 
 	public static long getFileSize2(String filePath) throws IOException {
@@ -365,7 +443,7 @@ public class FileManager extends UtilFile{
 	 * @param sizeType
 	 * @return
 	 */
-	public static String FormetFileSize(long fileS, int sizeType) {
+	public static String formatFileSize(long fileS, int sizeType) {
 		DecimalFormat df = new DecimalFormat("#.00");
 		String fileSizeString = "0B";
 		switch (sizeType) {
@@ -382,7 +460,7 @@ public class FileManager extends UtilFile{
 				fileSizeString = Double.valueOf(df.format((double) fileS / 1073741824)) + "GB";
 				break;
 			default:
-				fileSizeString = FormetFileSize(fileS);
+				fileSizeString = formatFileSize(fileS);
 				break;
 		}
 		return fileSizeString;
@@ -394,7 +472,7 @@ public class FileManager extends UtilFile{
 	 * @param fileS
 	 * @return
 	 */
-	public static String FormetFileSize(long fileS) {
+	public static String formatFileSize(long fileS) {
 		DecimalFormat df = new DecimalFormat("#.00");
 		String fileSizeString = "";
 		String wrongSize = "0B";
@@ -412,6 +490,5 @@ public class FileManager extends UtilFile{
 		}
 		return fileSizeString;
 	}
-
 
 }

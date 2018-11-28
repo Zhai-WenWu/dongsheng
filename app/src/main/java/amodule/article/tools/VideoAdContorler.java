@@ -29,8 +29,7 @@ import static third.ad.tools.AdPlayIdConfig.ARTICLE_RECM_1;
 
 public class VideoAdContorler extends ArticleAdContrler {
     //广告跟随相关推荐的数据位置
-    public final int ARTICLE_BOTTOM = 101;
-    public final int ARTICLE_RECOMMEND = 0;
+    private final int ARTICLE_RECOMMEND = 0;
 
     public VideoAdContorler(Activity activity) {
         super(activity);

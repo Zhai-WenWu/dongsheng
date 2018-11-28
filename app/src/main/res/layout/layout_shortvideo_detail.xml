@@ -61,7 +61,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_100"
         android:background="@drawable/gradient_black_short_video_top"/>
-    
+
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_240"
@@ -294,7 +294,6 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/dp_10"
         android:paddingLeft="@dimen/dp_20"
-        android:paddingRight="@dimen/dp_20"
         app:layout_constraintBottom_toTopOf="@+id/line_bottom"
         app:layout_constraintBottom_toBottomOf="parent">
 
@@ -347,37 +346,60 @@
             app:layout_constraintStart_toEndOf="@+id/layout_topic">
 
 
-        <LinearLayout
-            android:id="@+id/layout_address_inner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="@drawable/bg_round2_4c000000"
-            android:gravity="center_vertical">
-
-            <ImageView
-                android:id="@+id/icon_address"
-                android:layout_width="@dimen/dp_12"
-                android:layout_height="@dimen/dp_12"
-                android:src="@drawable/icon_address"
-                android:scaleType="centerInside"
-                android:layout_marginLeft="@dimen/dp_5"/>
-
-            <TextView
-                android:id="@+id/text_address"
+            <LinearLayout
+                android:id="@+id/layout_address_inner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:lines="1"
-                android:paddingTop="@dimen/dp_2"
-                android:paddingBottom="@dimen/dp_2"
-                android:textColor="@color/c_white_text"
-                android:textSize="@dimen/sp_12"
-                android:layout_marginRight="@dimen/dp_5"
-                android:layout_marginLeft="@dimen/dp_2"/>
+                android:orientation="horizontal"
+                android:background="@drawable/bg_round2_4c000000"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:id="@+id/icon_address"
+                    android:layout_width="@dimen/dp_12"
+                    android:layout_height="@dimen/dp_12"
+                    android:src="@drawable/icon_address"
+                    android:scaleType="centerInside"
+                    android:layout_marginLeft="@dimen/dp_5"/>
+
+                <TextView
+                    android:id="@+id/text_address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:lines="1"
+                    android:paddingTop="@dimen/dp_2"
+                    android:paddingBottom="@dimen/dp_2"
+                    android:textColor="@color/c_white_text"
+                    android:textSize="@dimen/sp_12"
+                    android:layout_marginRight="@dimen/dp_5"
+                    android:layout_marginLeft="@dimen/dp_2"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 
-        </LinearLayout>
+        <android.support.v4.widget.Space
+            android:id="@+id/space"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintEnd_toEndOf="@+id/layout_topic"
+            app:layout_constraintBottom_toBottomOf="@+id/layout_topic"
+            android:layout_marginBottom="@dimen/dp_10"
+            android:layout_marginEnd="@dimen/dp_20"/>
+
+
+        <TextView
+            android:id="@+id/tv_have_prize"
+            android:layout_width="@dimen/dp_40"
+            android:layout_height="@dimen/dp_18"
+            app:layout_constraintStart_toEndOf="@+id/space"
+            app:layout_constraintBottom_toTopOf="@+id/space"
+            android:background="@drawable/bg_round9_fa273b"
+            android:gravity="center"
+            android:text="有奖"
+            android:visibility="gone"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_12" />
 
         <TextView
             android:id="@+id/text_title"
@@ -409,7 +431,9 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_marginBottom="@dimen/dp_30"
+                android:layout_marginRight="@dimen/dp_20"
                 android:gravity="center_horizontal"
+                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintBottom_toTopOf="@+id/layout_bottom_share">
                 <ImageView
                     android:id="@+id/image1"
@@ -443,7 +467,9 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:gravity="center_horizontal"
+                app:layout_constraintRight_toRightOf="parent"
                 android:layout_marginBottom="@dimen/dp_30"
+                android:layout_marginRight="@dimen/dp_20"
                 app:layout_constraintBottom_toTopOf="@+id/layout_bottom_comment">
                 <ImageView
                     android:id="@+id/image2"
@@ -477,6 +503,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:gravity="center_horizontal"
+                android:layout_marginRight="@dimen/dp_20"
+                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent">
                 <ImageView
                     android:id="@+id/image3"
@@ -503,6 +531,19 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent" />
             </LinearLayout>
+
+            <ImageView
+                android:id="@+id/guide_view"
+                android:src="@drawable/icon_comment_guide"
+                app:layout_constraintBottom_toTopOf="@+id/layout_bottom_comment"
+                app:layout_constraintRight_toRightOf="parent"
+                android:visibility="gone"
+                tools:visibility="visible"
+                android:scaleType="fitEnd"
+                android:layout_marginBottom="@dimen/dp_3"
+                android:layout_marginRight="@dimen/dp_12"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dp_20"/>
 
         </android.support.constraint.ConstraintLayout>
 
@@ -538,7 +579,7 @@
         android:paddingTop="@dimen/dp_9"
         android:paddingBottom="@dimen/dp_9"
         android:clickable="true">
-        
+
         <ImageView
             android:id="@+id/comment_hint_img"
             android:layout_width="@dimen/dp_13"

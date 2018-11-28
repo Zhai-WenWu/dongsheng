@@ -22,7 +22,6 @@ import acore.tools.Tools;
 import acore.widget.DownRefreshList;
 import acore.widget.DownRefreshList.OnRefreshListener;
 import acore.widget.LayoutScroll;
-import acore.widget.ScrollLinearListLayout;
 import acore.widget.rvlistview.RvListView;
 
 import static android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
@@ -102,22 +101,6 @@ public class AutoLoadMore {
 		}
 		list.addFooterView (loadMore);
 		list.setOnScrollListener(getListViewScrollListener(loadMore, clicker, true,null));
-	}
-
-	/**
-	 * 适用于ScrollLinearListLayout的loadMore设置
-	 *
-	 * @param scrollLinearListLayout
-	 * @param list
-	 * @param loadMore
-	 * @param clicker
-	 */
-	public static void setAutoMoreListen (ScrollLinearListLayout scrollLinearListLayout, final ListView list, final Button loadMore, final OnClickListener clicker) {
-		if(list.getFooterViewsCount() > 0){
-			list.removeFooterView(loadMore);
-		}
-		list.addFooterView (loadMore);
-		scrollLinearListLayout.addOnScrollListener(getListViewScrollListener(loadMore, clicker, true,null));
 	}
 
 	@NonNull

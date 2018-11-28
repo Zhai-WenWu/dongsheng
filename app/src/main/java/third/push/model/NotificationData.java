@@ -18,7 +18,7 @@ public class NotificationData {
 	public String imgUrl = "";
 
 	public int notificationId = 0;
-	public int iconResId = R.drawable.ic_launcher;
+	public int iconResId = R.drawable.ic_notification;
 	public String ticktext = "";
 	public String title = "";
 	public String content = "";

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+
+    <TextView
+        android:id="@+id/text"
+        style="@style/myTab2Text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/num"
+        app:layout_constraintVertical_chainStyle="packed"
+        android:textColor="#040000"
+        android:text="美食记"/>
+
+    <TextView
+        android:id="@+id/num"
+        style="@style/myTab2Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text"
+        android:textColor="#666666"
+        android:text="0"/>
+
+    <TextView
+        android:id="@+id/hint"
+        android:layout_width="@dimen/dp_6"
+        android:layout_height="@dimen/dp_6"
+        app:layout_constraintRight_toRightOf="@+id/text"
+        app:layout_constraintLeft_toRightOf="@+id/text"
+        app:layout_constraintTop_toTopOf="@+id/text"
+        app:layout_constraintBottom_toTopOf="@+id/text"
+        android:layout_marginLeft="@dimen/dp_1"
+        android:layout_marginTop="@dimen/dp_1"
+        android:background="@drawable/btn_circle_red"
+        android:textColor="#FFFFFF"
+        android:textSize="@dimen/sp_10"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/score_icon"
+        android:src="@drawable/icon_pasted"
+        app:layout_constraintTop_toTopOf="@id/text"
+        app:layout_constraintLeft_toRightOf="@id/text"
+        android:layout_marginLeft="@dimen/dp_1"
+        android:layout_marginTop="@dimen/dp_2"
+        android:layout_width="@dimen/dp_28"
+        android:layout_height="@dimen/dp_14"
+        android:visibility="gone"
+        tools:visibility="visible"/>
+
+</android.support.constraint.ConstraintLayout>

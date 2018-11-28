@@ -39,7 +39,6 @@ import amodule.quan.activity.upload.UploadSubjectNew;
 import amodule.user.activity.login.LoginByAccout;
 import aplug.recordervideo.activity.RecorderActivity;
 import aplug.recordervideo.tools.ToolsCammer;
-import xh.windowview.XhDialog;
 
 /**
  * Title:MainChangeSend.java

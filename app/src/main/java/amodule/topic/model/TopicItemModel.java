@@ -1,13 +1,18 @@
 package amodule.topic.model;
 
+import android.graphics.Bitmap;
+
 /**
  * 话题列表item数据
  */
 public class TopicItemModel {
 
+    public static final int TAB_HOT = 1;
+    public static final int TAB_NEW = 2;
     private String mVideoCode;//视频code
     private String mVideoName;//视频名称、描述
     private boolean mIsEssence;//是否精选
+    private boolean mIsHot;//是否热度排序
     private boolean mIsFav;//是否收藏
     private boolean mIsLike;//是否点赞
     private String mFavNum;//收藏量
@@ -20,6 +25,54 @@ public class TopicItemModel {
     private CustomerModel mCustomerModel;
     private AddressModel mAddressModel;
     private LabelModel mLabelModel;
+    private Bitmap mBitmap;
+    private int imageWidth,imageHieght;
+    private boolean isShow;
+    private int mItemType;//1,活动二图片2,tab3,视频列表
+    //statJson	String	{"type":"7","code":"647470"}
+    private String statJson;
+    private int mTabTag;
+    private int mHotNo;
+
+    public int getHotNo() {
+        return mHotNo;
+    }
+
+    public void setHotNo(int mHotNo) {
+        this.mHotNo = mHotNo;
+    }
+
+    public Bitmap getBitmap() {
+        return mBitmap;
+    }
+
+    public void setBitmap(Bitmap bitmap) {
+        this.mBitmap = bitmap;
+    }
+
+    public String getStatJson() {
+        return statJson;
+    }
+
+    public void setStatJson(String statJson) {
+        this.statJson = statJson;
+    }
+
+    public boolean getIsShow() {
+        return isShow;
+    }
+
+    public void setIsShow(boolean show) {
+        isShow = show;
+    }
+
+    public boolean getIsHot() {
+        return mIsHot;
+    }
+
+    public void setIsHot(boolean mIsHot) {
+        this.mIsHot = mIsHot;
+    }
 
     public String getVideoCode() {
         return mVideoCode;
@@ -139,5 +192,37 @@ public class TopicItemModel {
 
     public void setGotoUrl(String gotoUrl) {
         mGotoUrl = gotoUrl;
+    }
+
+    public int getItemType() {
+        return mItemType;
+    }
+
+    public void setItemType(int itemType) {
+        this.mItemType = itemType;
+    }
+
+    public void setTabTag(int tabTag) {
+        this.mTabTag = tabTag;
+    }
+
+    public int getTabTag() {
+        return mTabTag;
+    }
+
+    public int getImageWidth() {
+        return imageWidth;
+    }
+
+    public void setImageWidth(int imageWidth) {
+        this.imageWidth = imageWidth;
+    }
+
+    public int getImageHieght() {
+        return imageHieght;
+    }
+
+    public void setImageHieght(int imageHieght) {
+        this.imageHieght = imageHieght;
     }
 }

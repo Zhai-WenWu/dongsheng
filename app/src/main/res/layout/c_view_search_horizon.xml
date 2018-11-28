@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dp_42"
+    android:background="#FFFFFF">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/search_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingLeft="@dimen/dp_10"
+        android:paddingRight="@dimen/dp_20"/>
+
+    <ImageView
+        android:id="@+id/icon_refresh_bg"
+        android:layout_width="@dimen/dp_34"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/bg_search_horizon"
+        android:visibility="gone"/>
+
+    <ImageView
+        android:id="@+id/icon_refresh"
+        android:layout_width="@dimen/dp_24"
+        android:layout_height="@dimen/dp_24"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/dp_5"
+        android:padding="@dimen/dp_5"
+        android:src="@drawable/icon_search_refresh"
+        android:visibility="gone"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#E5E5E5"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_alignParentBottom="true"
+        android:background="#E5E5E5"/>
+
+</RelativeLayout>

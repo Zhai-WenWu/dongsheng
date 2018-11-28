@@ -31,7 +31,6 @@ public class VideoInfoView extends ItemBaseView {
     private TextView title, content, playCount, commetnCount, report, dateText;
     private ImageView arrow;
 
-    private String contentText = "";
     private Map<String, String> dataMap = new HashMap<>();
 
     public VideoInfoView(Context context) {
@@ -90,7 +89,7 @@ public class VideoInfoView extends ItemBaseView {
                 stringBuilder.append(map.get("html"));
             }
         }
-        contentText = RichParser.fromHtml(stringBuilder.toString()).toString().trim();
+        String contentText = RichParser.fromHtml(stringBuilder.toString()).toString().trim();
         if(!TextUtils.isEmpty(contentText)){
             arrow.setVisibility(VISIBLE);
             content.setText(contentText);

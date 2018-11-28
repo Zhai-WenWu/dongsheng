@@ -1,5 +1,6 @@
 package amodule.search.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -13,8 +14,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.BitmapRequestBuilder;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.xiangha.R;
@@ -28,7 +27,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import acore.logic.XHClick;
 import acore.logic.stat.StatModel;
@@ -51,25 +49,18 @@ public class AdapterCaipuSearch extends BaseAdapter {
     public static final String MODULE_NAME = "菜谱搜索列表";
     private final BaseActivity mActivity;
     private SearchResultAdDataProvider mSearchResultAdDataProvider;
-    private CopyOnWriteArrayList<Map<String, String>> mListCaipuData = new CopyOnWriteArrayList<>();
-    private CopyOnWriteArrayList<Map<String, String>> mListShicaiData = new CopyOnWriteArrayList<>();
-    private int shicaiInsertPos;
-    private final CopyOnWriteArrayList<Map<String, String>> adDdata = new CopyOnWriteArrayList<>();
+    private CopyOnWriteArrayList<Map<String, String>> mListDishData = new CopyOnWriteArrayList<>();
+    private CopyOnWriteArrayList<Map<String, String>> mListIngreData = new CopyOnWriteArrayList<>();
+    private final CopyOnWriteArrayList<Map<String, String>> adData = new CopyOnWriteArrayList<>();
 
-    private int imgResource = R.drawable.i_nopic;
-    private int imgWidth = 0, imgHeight = 0;// 以像素为单位
-    private boolean imgZoom = false; // 是否允许图片拉伸来适应设置的宽或高
-    private ImageView.ScaleType scaleType = ImageView.ScaleType.CENTER_CROP;
+    private int ingreInsertPos = 0;
     private View mParent;
     private static final int TAG_ID = R.string.tag;
     private List<Integer> listPosUsed;
-    private List<Integer> adPosList = new ArrayList<Integer>() {
-    };
+    private List<Integer> adPosList = new ArrayList<>();
     private String searchKey;
     private int adNum;
     private XHAllAdControl xhAllAdControl;
-    private AtomicBoolean topAdHasData = new AtomicBoolean(false);
-
 
     public AdapterCaipuSearch(BaseActivity mActivity, ViewGroup mParent) {
         this.mActivity = mActivity;
@@ -79,16 +70,13 @@ public class AdapterCaipuSearch extends BaseAdapter {
             mSearchResultAdDataProvider = new SearchResultAdDataProvider(mActivity);
         }
         mSearchResultAdDataProvider.getAdData();
-        mSearchResultAdDataProvider.setAutoRefreshCallback(new SearchResultAdDataProvider.OnAutoRefreshCallback() {
-            @Override
-            public void autoRefresh() {
-                Log.i("tzy", "mSearchResultAdDataProvider::autoRefresh: ");
-                CopyOnWriteArrayList<Map<String, String>> listCaipuData = new CopyOnWriteArrayList<>();
-                listCaipuData.addAll(mListCaipuData);
-                CopyOnWriteArrayList<Map<String, String>> listShicaiData = new CopyOnWriteArrayList<>();
-                listShicaiData.addAll(mListShicaiData);
-                refresh(true, listCaipuData, listShicaiData);
-            }
+        mSearchResultAdDataProvider.setAutoRefreshCallback(() -> {
+            Log.i("tzy", "mSearchResultAdDataProvider::autoRefresh: ");
+            CopyOnWriteArrayList<Map<String, String>> listDishData = new CopyOnWriteArrayList<>();
+            listDishData.addAll(mListDishData);
+            CopyOnWriteArrayList<Map<String, String>> listShicaiData = new CopyOnWriteArrayList<>();
+            listShicaiData.addAll(mListIngreData);
+            refresh(true, listDishData, listShicaiData);
         });
     }
 
@@ -102,23 +90,22 @@ public class AdapterCaipuSearch extends BaseAdapter {
      * 绝对保证此方法在主线程中执行
      *
      * @param isRefresh
-     * @param listCaipuData
+     * @param listDishData
      * @param listShicaiData
      *
      * @return
      */
-    public synchronized int refresh(boolean isRefresh, CopyOnWriteArrayList<Map<String, String>> listCaipuData,
+    public synchronized int refresh(boolean isRefresh, CopyOnWriteArrayList<Map<String, String>> listDishData,
                                     CopyOnWriteArrayList<Map<String, String>> listShicaiData) {
         int adCanInsert = 0;
-        this.mListCaipuData.clear();
-        this.mListShicaiData.clear();
+        this.mListDishData.clear();
+        this.mListIngreData.clear();
 
-        mListCaipuData.addAll(listCaipuData);
-        mListShicaiData.addAll(listShicaiData);
+        mListDishData.addAll(listDishData);
+        mListIngreData.addAll(listShicaiData);
 
         getAdDataInfo(isRefresh);
-        if ((adDdata != null && adDdata.size() > 0)
-                || isRefresh) {
+        if (!adData.isEmpty() || isRefresh) {
             adCanInsert = generateAdPos(isRefresh);
         }
 
@@ -128,64 +115,51 @@ public class AdapterCaipuSearch extends BaseAdapter {
     }
 
     private void computeInsertPos() {
-
-        shicaiInsertPos = -1;
+        ingreInsertPos = mListIngreData.isEmpty() ? -1 : 0;
         listPosUsed.clear();
 
         for (int pos : adPosList) {
             addToInsertList(pos);
         }
-
-        if (mListShicaiData != null && mListShicaiData.size() > 0) {
-            shicaiInsertPos = addToInsertList(0);
-        }
     }
 
-
-    private int addToInsertList(int pos) {
-        int value = 0;
+    private void addToInsertList(int pos) {
         if (pos < 0)
-            return -1;
+            return;
         if (listPosUsed.size() == 0) {
-            if (pos > mListCaipuData.size())
-                pos = mListCaipuData.size();
+            if (pos > mListDishData.size())
+                pos = mListDishData.size();
             listPosUsed.add(pos);
-            value = pos;
         } else {
             int beforeInsert = 0;
             for (int index = 0; index < listPosUsed.size(); index++) {
-                int curentScanPos = listPosUsed.get(index);
-                if (pos < curentScanPos) {
+                int currentScanPos = listPosUsed.get(index);
+                if (pos < currentScanPos) {
                     listPosUsed.add(pos);
-                    value = pos;
                     break;
-                } else if (pos == curentScanPos) {
+                } else if (pos == currentScanPos) {
                     if (index == listPosUsed.size() - 1) {
                         listPosUsed.add(++pos);
-                        value = pos;
                         break;
                     }
                     pos++;
                 } else {
                     beforeInsert++;
                     if (index == listPosUsed.size() - 1) {
-                        if (pos > mListCaipuData.size() + beforeInsert) {
-                            pos = mListCaipuData.size() + beforeInsert;
+                        if (pos > mListDishData.size() + beforeInsert) {
+                            pos = mListDishData.size() + beforeInsert;
                         }
                         listPosUsed.add(pos);
-                        value = pos;
                         break;
                     }
                 }
             }
         }
-
-        return value;
     }
 
     @Override
     public int getCount() {
-        return mListCaipuData.size() + mListShicaiData.size() + adNum;
+        return mListDishData.size() + mListIngreData.size() + adNum;
     }
 
     @Override
@@ -202,12 +176,12 @@ public class AdapterCaipuSearch extends BaseAdapter {
     public View getView(int pos, View convertView, ViewGroup parent) {
 
         View view;
-        if (adDdata.size() > 0 && adPosList.contains(pos)) {
+        if (adData.size() > 0 && adPosList.contains(pos)) {
             view = createAdView(pos);
-        } else if (shicaiInsertPos > -1 && pos == shicaiInsertPos) {
+        } else if (ingreInsertPos > -1 && pos == ingreInsertPos) {
             view = createShicaiView(pos);
         } else {
-            view = createCaipuView(pos, getCaipuDataIndex(pos), convertView);
+            view = createDishView(pos, getDishDataIndex(pos), convertView);
         }
 
         if (view == null) {
@@ -218,75 +192,76 @@ public class AdapterCaipuSearch extends BaseAdapter {
     }
 
 
-    private int getCaipuDataIndex(int pos) {
+    private int getDishDataIndex(int pos) {
 
-        int caipuDataIndex = pos;
+        int DishDataIndex = pos;
         for (int index : listPosUsed) {
             if (pos > index && index > -1)
-                caipuDataIndex--;
+                DishDataIndex--;
         }
-        return caipuDataIndex;
+        return DishDataIndex;
     }
 
 
-    private View createCaipuView(int pos, int dataIndex, View convertView) {
+    @SuppressLint("InflateParams")
+    private View createDishView(int pos, int dataIndex, View convertView) {
 
-        if (mListCaipuData == null || mListCaipuData.size() < dataIndex + 1) {
+        if (mListDishData == null || mListDishData.size() < dataIndex + 1) {
             return null;
         }
 
-        final Map<String, String> caipuMap = mListCaipuData.get(dataIndex);
-        if (caipuMap == null || caipuMap.size() < 1) {
+        final Map<String, String> dishMap = mListDishData.get(dataIndex);
+        if (dishMap == null || dishMap.size() < 1) {
             return null;
         }
 
-        CaipuViewHolder viewHolder;
+        DishViewHolder viewHolder;
         if (null == convertView || convertView.getTag() == null) {
-            viewHolder = new CaipuViewHolder();
+            viewHolder = new DishViewHolder();
             convertView = LayoutInflater.from(mActivity).inflate(R.layout.c_search_result_caipu_item, null);
             viewHolder.iv_caipuCover = convertView.findViewById(R.id.iv_caipuCover);
-            viewHolder.tv_caipu_name = (TextView) convertView.findViewById(R.id.tv_caipu_name);
-            viewHolder.tv_caipu_decrip = (TextView) convertView.findViewById(R.id.tv_caipu_decrip);
-            viewHolder.tv_caipu_firsttime = (TextView) convertView.findViewById(R.id.tv_caipu_firsttime);
-            viewHolder.tv_caipu_observed = (TextView) convertView.findViewById(R.id.tv_caipu_observed);
-            viewHolder.tv_caipu_collected = (TextView) convertView.findViewById(R.id.tv_caipu_collected);
-            viewHolder.tv_caipu_origin = (TextView) convertView.findViewById(R.id.tv_caipu_origin);
-            viewHolder.tv_duration = (TextView) convertView.findViewById(R.id.video_duration);
-            viewHolder.vip = (ImageView) convertView.findViewById(R.id.search_vip);
+            viewHolder.tv_caipu_name = convertView.findViewById(R.id.tv_caipu_name);
+            viewHolder.tv_caipu_decrip = convertView.findViewById(R.id.tv_caipu_decrip);
+            viewHolder.tv_caipu_firsttime = convertView.findViewById(R.id.tv_caipu_firsttime);
+            viewHolder.tv_caipu_observed = convertView.findViewById(R.id.tv_caipu_observed);
+            viewHolder.tv_caipu_collected = convertView.findViewById(R.id.tv_caipu_collected);
+            viewHolder.tv_caipu_origin = convertView.findViewById(R.id.tv_caipu_origin);
+            viewHolder.tv_duration = convertView.findViewById(R.id.video_duration);
+            viewHolder.vip = convertView.findViewById(R.id.search_vip);
             convertView.setTag(viewHolder);
         } else {
-            viewHolder = (CaipuViewHolder) convertView.getTag();
+            viewHolder = (DishViewHolder) convertView.getTag();
         }
 
         // 图片保存等级
-        setViewImage(viewHolder.iv_caipuCover,caipuMap.get("img"));
-        setViewText(viewHolder.tv_caipu_name, caipuMap.get("name"),View.INVISIBLE);
-        setViewText(viewHolder.tv_caipu_decrip, caipuMap.get("burdens"),View.INVISIBLE);
-        setViewText(viewHolder.tv_caipu_firsttime, caipuMap.get("dishAddTime"));
-        setViewText(viewHolder.tv_caipu_observed, caipuMap.get("allClick"));
-        setViewText(viewHolder.tv_caipu_collected, caipuMap.get("favorites"));
-        setViewText(viewHolder.tv_caipu_origin, caipuMap.get("cusNickName"),View.INVISIBLE);
-        setViewText(viewHolder.tv_duration, caipuMap.get("duration"));
+        setViewImage(viewHolder.iv_caipuCover,dishMap.get("img"));
+        setViewText(viewHolder.tv_caipu_name, dishMap.get("name"),View.INVISIBLE);
+        setViewText(viewHolder.tv_caipu_decrip, dishMap.get("burdens"),View.INVISIBLE);
+        setViewText(viewHolder.tv_caipu_firsttime, dishMap.get("dishAddTime"));
+        setViewText(viewHolder.tv_caipu_observed, dishMap.get("allClick"));
+        setViewText(viewHolder.tv_caipu_collected, dishMap.get("favorites"));
+        setViewText(viewHolder.tv_caipu_origin, dishMap.get("cusNickName"),View.INVISIBLE);
+        setViewText(viewHolder.tv_duration, dishMap.get("duration"));
 
-        boolean vipShow = "2".equals(caipuMap.get("isVip"));
+        boolean vipShow = "2".equals(dishMap.get("isVip"));
         viewHolder.vip.setVisibility(vipShow ? View.VISIBLE : View.GONE);
 
         convertView.setOnClickListener(v -> {
             XHClick.mapStat(mActivity, "a_search_result", "菜谱结果页", "点击菜谱");
             Intent intent = new Intent(mActivity, DetailDish.class);
-            intent.putExtra("code", caipuMap.get("code"))
-                    .putExtra("name", caipuMap.get("name"))
-                    .putExtra("dishInfo", getDishInfo(caipuMap))
-                    .putExtra("img", handleImg(caipuMap));
+            intent.putExtra("code", dishMap.get("code"))
+                    .putExtra("name", dishMap.get("name"))
+                    .putExtra("dishInfo", getDishInfo(dishMap))
+                    .putExtra("img", handleImg(dishMap));
             mActivity.startActivity(intent);
             //点击统计
-            StatisticsManager.saveData(StatModel.createListClickModel(mActivity.getClass().getSimpleName(), MODULE_NAME, String.valueOf(pos + 1), searchKey, caipuMap.get(STAT_DATA)));
+            StatisticsManager.saveData(StatModel.createListClickModel(mActivity.getClass().getSimpleName(), MODULE_NAME, String.valueOf(pos + 1), searchKey, dishMap.get(STAT_DATA)));
         });
 
         //展示统计
-        if (!TextUtils.equals(TRUE_VALUE, caipuMap.get(IS_STAT))) {
-            caipuMap.put(IS_STAT, TRUE_VALUE);
-            StatisticsManager.saveData(StatModel.createListShowModel(mActivity.getClass().getSimpleName(), MODULE_NAME, String.valueOf(pos + 1), searchKey, caipuMap.get(STAT_DATA)));
+        if (!TextUtils.equals(TRUE_VALUE, dishMap.get(IS_STAT))) {
+            dishMap.put(IS_STAT, TRUE_VALUE);
+            StatisticsManager.saveData(StatModel.createListShowModel(mActivity.getClass().getSimpleName(), MODULE_NAME, String.valueOf(pos + 1), searchKey, dishMap.get(STAT_DATA)));
         }
         return convertView;
     }
@@ -322,15 +297,16 @@ public class AdapterCaipuSearch extends BaseAdapter {
         return img;
     }
 
+    @SuppressLint("InflateParams")
     private View createShicaiView(int pos) {
         View view = null;
-        if (mListShicaiData == null || mListShicaiData.size() < 1)
+        if (mListIngreData == null || mListIngreData.size() < 1)
             return view;
-        final Map<String, String> shicaiMap = mListShicaiData.get(0);
+        final Map<String, String> shicaiMap = mListIngreData.get(0);
         view = LayoutInflater.from(mActivity).inflate(R.layout.c_search_result_shicai_item, null);
 
-        ImageView cover_img = (ImageView) view.findViewById(R.id.iv_shicaiCover);
-        TextView tv_shicai_name = (TextView) view.findViewById(R.id.tv_shicai_name);
+        ImageView cover_img = view.findViewById(R.id.iv_shicaiCover);
+        TextView tv_shicai_name = view.findViewById(R.id.tv_shicai_name);
 
         setViewImage(cover_img, shicaiMap.get("imgShow"));
         setViewText(tv_shicai_name, shicaiMap.get("name"));
@@ -374,6 +350,7 @@ public class AdapterCaipuSearch extends BaseAdapter {
     private void setViewImage(final ImageView v, String value) {
         v.setVisibility(View.VISIBLE);
         // 异步请求网络图片
+        int imgResource = R.drawable.i_nopic;
         if (value.indexOf("http") == 0) {
             if (value.length() < 10)
                 return;
@@ -393,7 +370,11 @@ public class AdapterCaipuSearch extends BaseAdapter {
         else if (value.indexOf("ico") == 0) {
             InputStream is = v.getResources().openRawResource(Integer.parseInt(value.replace("ico", "")));
             Bitmap bitmap = UtilImage.inputStreamTobitmap(is);
-            UtilImage.setImgViewByWH(v, bitmap, imgWidth, imgHeight, imgZoom);
+            int imgWidth = 0;
+            // 以像素为单位
+            int imgHeight = 0;
+            // 是否允许图片拉伸来适应设置的宽或高
+            UtilImage.setImgViewByWH(v, bitmap, imgWidth, imgHeight, false);
         }
         // 隐藏
         else if (value.equals("hide") || value.length() == 0)
@@ -424,16 +405,15 @@ public class AdapterCaipuSearch extends BaseAdapter {
                     img = v;
                 if (img != null && bitmap != null) {
                     // 图片圆角和宽高适应
-                    v.setScaleType(scaleType);
+                    v.setScaleType(ImageView.ScaleType.CENTER_CROP);
                     v.setImageBitmap(bitmap);
-//                    UtilImage.setImgViewByWH(v, bitmap, imgWidth, imgHeight, imgZoom);
                 }
             }
         };
     }
 
 
-    class CaipuViewHolder {
+    class DishViewHolder {
         ImageView iv_caipuCover;
         TextView tv_caipu_name;
         TextView tv_caipu_decrip;
@@ -447,32 +427,31 @@ public class AdapterCaipuSearch extends BaseAdapter {
 
     private View createAdView(int pos) {
         View view = null;
-        if (pos == 0) {
-            if (adDdata.get(0) != null)
-                view = SearchResultAdViewGenerater.generateTopAdView(mActivity, xhAllAdControl, adDdata.get(0));
-        } else {
-            int adIndex = -1;
-            int[] adPos = new int[]{2, 8, 15, 23, 32, 42};
-            for (int i = 0; i < adPos.length; i++) {
-                if (pos == adPos[i]) {
-                    adIndex = i;
-                    break;
-                }
-            }
-            if (adIndex > -1 && adDdata != null && adIndex < adDdata.size()) {
-                if (adDdata.get(adIndex) != null) {
-                    final Map<String, String> dataMap = adDdata.get(adIndex);
-                    view = SearchResultAdViewGenerater.generateListAdView(mActivity, xhAllAdControl, dataMap, adIndex);
-                    if (listPosUsed.contains(pos + 1)) {
-                        view.findViewById(R.id.v_ad_item_tail).setVisibility(View.VISIBLE);
-                    } else {
-                        view.findViewById(R.id.v_ad_item_tail).setVisibility(View.GONE);
-                    }
-                }
+        int adIndex = -1;
+        int[] adPos = getAdPos();
+        for (int i = 0; i < adPos.length; i++) {
+            if (pos == adPos[i]) {
+                adIndex = i;
+                break;
             }
         }
-
+        if (adIndex > -1 && adIndex < adData.size()) {
+            if (adData.get(adIndex) != null) {
+                final Map<String, String> dataMap = adData.get(adIndex);
+                view = SearchResultAdViewGenerater.generateListAdView(mActivity, xhAllAdControl, dataMap, adIndex);
+            }
+        }
         return view;
+    }
+
+    private int[] getAdPos() {
+        int[] adPos = new int[]{0,3,9,16,24,33,43};
+        if(mListIngreData != null && !mListIngreData.isEmpty()){
+            for(int i=0;i<adPos.length;i++){
+                adPos[i]++;
+            }
+        }
+        return adPos;
     }
 
     private class InsertPosList extends ArrayList implements Comparator<Integer> {
@@ -492,36 +471,11 @@ public class AdapterCaipuSearch extends BaseAdapter {
      */
     private int generateAdPos(boolean isRefresh) {
         adPosList.clear();
-        int adPos[] = new int[]{2, 8, 15, 23, 32, 42};
-        if ((mListShicaiData == null || mListShicaiData.size() == 0) && topAdHasData.get()) {
-            if (adDdata.size() > 0) {
-                if (!adDdata.get(0).isEmpty()) {
-                    if (isRefresh && adDdata.size() > 1) {
-                        adDdata.remove(1);
-                    }
-                    adPos = new int[]{0, 8, 15, 23, 32, 42};
-                } else {
-                    if (topAdHasData.get()) {
-                        topAdHasData.set(false);
-                    }
-                    if (isRefresh && adDdata.size() > 0) {
-                        adDdata.remove(0);
-                    }
-                    adPos = new int[]{2, 8, 15, 23, 32, 42};
-                }
-            }
-        } else {
-            if (topAdHasData.get()) {
-                topAdHasData.set(false);
-            }
-            if (isRefresh && adDdata.size() > 0) {
-                adDdata.remove(0);
-            }
-            adPos = new int[]{2, 8, 15, 23, 32, 42};
-        }
-//        Log.i("tzy", "generateAdPos: adDdata.size()=" + adDdata.size());
-        for (int i = 0; i < adDdata.size() && i < adPos.length; i++) {
-            if (adDdata.get(i) != null && !adDdata.get(i).isEmpty()) {
+        //0,4,10,17,25,34,44
+        int adPos[] = getAdPos();
+//        Log.i("tzy", "generateAdPos: adData.size()=" + adData.size());
+        for (int i = 0; i < adData.size() && i < adPos.length; i++) {
+            if (adData.get(i) != null && !adData.get(i).isEmpty()) {
                 adPosList.add(adPos[i]);
             }
         }
@@ -534,7 +488,7 @@ public class AdapterCaipuSearch extends BaseAdapter {
 
     private int computeAdNumCanInsert(List<Integer> origin) {
         int adNum = 0;
-        int num = mListCaipuData.size() + mListShicaiData.size();
+        int num = mListDishData.size() + mListIngreData.size();
         if (num == 0)
             return 0;
         for (int i = 0; i < origin.size(); i++) {
@@ -550,25 +504,23 @@ public class AdapterCaipuSearch extends BaseAdapter {
 
     public void clearAdList() {
         adNum = 0;
+        adData.clear();
         if (adPosList != null)
             adPosList.clear();
-        if (adDdata != null)
-            adDdata.clear();
     }
 
-    private Map<String, String> AdTypeData = new HashMap<>();//获取到数据集合
+    private Map<String, String> adTypeData = new HashMap<>();//获取到数据集合
 
     private void getAdDataInfo(boolean isRefresh) {
         if (mSearchResultAdDataProvider == null) {
             mSearchResultAdDataProvider = new SearchResultAdDataProvider(mActivity);
         }
         xhAllAdControl = mSearchResultAdDataProvider.getXhAllAdControl();
-        topAdHasData = mSearchResultAdDataProvider.HasTopAdData();
-        if (adDdata.isEmpty() || isRefresh) {
-            adDdata.clear();
-            adDdata.addAll(mSearchResultAdDataProvider.getAdDataList());
-            AdTypeData.clear();
-            AdTypeData.putAll(xhAllAdControl.getAdTypeData());
+        if (adData.isEmpty() || isRefresh) {
+            adData.clear();
+            adData.addAll(mSearchResultAdDataProvider.getAdDataList());
+            adTypeData.clear();
+            adTypeData.putAll(xhAllAdControl.getAdTypeData());
         }
     }
 

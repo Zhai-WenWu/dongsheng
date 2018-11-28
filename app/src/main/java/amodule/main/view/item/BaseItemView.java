@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.load.model.GlideUrl;
@@ -87,6 +88,23 @@ public class BaseItemView extends RelativeLayout {
     protected boolean viewIsVisible(View view) {
         return view == null ? false : view.getVisibility() == View.VISIBLE;
     }
+
+    protected void setViewText(final TextView v,String text){
+        if(v == null){
+            return;
+        }
+        v.setText(text == null ? "" : text);
+    }
+
+    protected void setViewTextAndVisibility(final TextView v,String text){
+        if(v == null){
+            return;
+        }
+        v.setText(text == null ? "" : text);
+        v.setVisibility(TextUtils.isEmpty(text) ? GONE : VISIBLE);
+    }
+
+
 
     protected void setViewImage(final ImageView v, String value) {
         if(null == v) return;

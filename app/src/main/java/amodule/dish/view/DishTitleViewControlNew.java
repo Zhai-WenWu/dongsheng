@@ -35,7 +35,7 @@ import third.share.BarShare;
 import third.share.activity.ShareActivityDialog;
 import third.share.tools.ShareTools;
 import third.video.VideoPlayerController;
-import xh.windowview.BottomDialog;
+import com.xh.windowview.BottomDialog;
 
 import static amodule.dish.activity.DetailDishWeb.tongjiId;
 

@@ -12,6 +12,15 @@ public class TopicModel {
     private String mColor;
     private String mBgColor;
     private String mGotoUrl;
+    private String mActivityType;
+
+    public String getActivityType() {
+        return mActivityType;
+    }
+
+    public void setActivityType(String mActivityType) {
+        this.mActivityType = mActivityType;
+    }
 
     public String getCode() {
         return mCode;

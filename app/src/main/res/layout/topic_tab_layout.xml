@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dp_44"
+    android:background="@color/black"
+    android:orientation="horizontal">
+
+    <FrameLayout
+        android:id="@+id/fl_hot"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/tv_hot_tab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="最热"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_16" />
+
+        <View
+            android:id="@+id/view_hot_tab_bottom"
+            android:layout_width="@dimen/dp_18"
+            android:layout_height="3dp"
+            android:layout_gravity="center_horizontal|bottom"
+            android:background="@drawable/bg_round9_fa273b" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/fl_new"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/tv_new_tab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="最新"
+            android:textColor="@color/c_777777"
+            android:textSize="@dimen/sp_16" />
+
+        <View
+            android:id="@+id/view_new_tab_bottom"
+            android:layout_width="@dimen/dp_18"
+            android:layout_height="3dp"
+            android:layout_gravity="center_horizontal|bottom"
+            android:background="@drawable/bg_round9_fa273b"
+            android:visibility="gone" />
+
+    </FrameLayout>
+
+
+</LinearLayout>

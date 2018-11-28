@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.multidex.MultiDex;
 import android.text.TextUtils;
 import android.util.Log;
+import android.webkit.WebView;
 
 import com.aliyun.common.httpfinal.QupaiHttpFinal;
 import com.baidu.mobads.AdView;
@@ -22,7 +23,7 @@ import java.util.Map;
 import acore.logic.AllPopDialogHelper;
 import acore.logic.ConfigMannager;
 import acore.override.helper.XHActivityManager;
-import acore.tools.ChannelUtil;
+import acore.tools.ChannelManager;
 import acore.tools.FileManager;
 import acore.tools.LogManager;
 import acore.tools.StringManager;
@@ -30,6 +31,7 @@ import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import aplug.basic.LoadImage;
 import aplug.basic.XHConf;
+import aplug.service.CoreService;
 import third.location.LocationHelper;
 import third.push.xg.XGPushServer;
 
@@ -59,6 +61,7 @@ public class XHApplication extends MobApplication {
 
         startTime = System.currentTimeMillis();
         loadLibs();
+        WebView.setWebContentsDebuggingEnabled(Tools.isDebug(this));
         QupaiHttpFinal.getInstance().initOkHttpFinal();
         LogManager.printStartTime("zhangyujian","XhApplication::11111.oncreate::");
         boolean isOnce = TextUtils.isEmpty(FileManager.loadShared(this,FileManager.xmlFile_appInfo,"once").toString());
@@ -90,7 +93,7 @@ public class XHApplication extends MobApplication {
         new XGPushServer(mAppApplication).initPush();
 
         //设置umeng的appId,和渠道名
-        String channel = ChannelUtil.getChannel(this);
+        String channel = ChannelManager.getInstance().getChannel(this);
         MobclickAgent.UMAnalyticsConfig config = new MobclickAgent.UMAnalyticsConfig(this, "545aeac6fd98c565c20004ad", channel);
         MobclickAgent.startWithConfigure(config);
         LogManager.printStartTime("zhangyujian","XhApplication:0000:initData::");
@@ -169,7 +172,7 @@ public class XHApplication extends MobApplication {
             @Override
             public void run() {
                 CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(context);
-                strategy.setAppChannel(ChannelUtil.getChannel(context));
+                strategy.setAppChannel(ChannelManager.getInstance().getChannel(context));
                 strategy.setAppReportDelay(5 * 1000);
                 //		测试阶段建议设置成true，发布时设置为false
                 //测试APP id = "4146e8557a";

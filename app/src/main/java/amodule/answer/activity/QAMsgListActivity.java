@@ -18,9 +18,9 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import acore.override.activity.base.BaseFragmentActivity;
-import acore.tools.IObserver;
+import acore.observer.IObserver;
 import acore.tools.LogManager;
-import acore.tools.ObserverManager;
+import acore.observer.ObserverManager;
 import acore.tools.StringManager;
 import aplug.basic.XHConf;
 import aplug.basic.XHInternetCallBack;

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/recomment_topic_item"
+        android:layout_width="wrap_content"
+        android:textSize="@dimen/sp_14"
+        android:textColor="@color/c_444444"
+        android:layout_marginBottom="@dimen/dp_12"
+        android:layout_marginTop="@dimen/dp_12"
+        android:layout_height="wrap_content" />
+</LinearLayout>

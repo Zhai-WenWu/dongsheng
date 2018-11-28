@@ -1,16 +1,21 @@
 package third.ad.tools;
 
+import android.util.Log;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import acore.override.XHApplication;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
+import acore.tools.Tools;
 import aplug.basic.InternetCallback;
+import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import third.ad.db.XHAdSqlite;
 import third.ad.db.bean.AdBean;
 
+import static third.ad.db.XHAdSqlite.TABLE_ADCONFIG;
 import static third.ad.tools.AdPlayIdConfig.FULL_SRCEEN_ACTIVITY;
 
 public class AdConfigTools extends BaseAdConfigTools {
@@ -20,6 +25,11 @@ public class AdConfigTools extends BaseAdConfigTools {
 
     private AdConfigTools() {
         super();
+        XHAdSqlite adSqlite = XHAdSqlite.newInstance(XHApplication.in());
+        if(adSqlite.adConfigIsEmpty()){
+            String assetAdConfigData = FileManager.getFromAssets(XHApplication.in(),"adconfig.json");
+            adSqlite.updateConfig(assetAdConfigData);
+        }
     }
 
     public static AdConfigTools getInstance() {
@@ -39,16 +49,11 @@ public class AdConfigTools extends BaseAdConfigTools {
 
     public void getAdConfigInfo(InternetCallback callback) {
         //使用老接口更新全屏广告数据
-        ReqInternet.in().doGet(StringManager.api_adData_old, new InternetCallback() {
+        ReqEncyptInternet.in().doGetEncypt(StringManager.api_adData_old, new InternetCallback() {
             @Override
             public void loaded(int flag, String url, Object returnObj) {
                 if (flag >= ReqInternet.REQ_OK_STRING) {
                     //更新全屏广告数据
-                    Map<String, String> map = StringManager.getFirstMap(returnObj);
-                    if (map.containsKey(FULL_SRCEEN_ACTIVITY)) {
-                        final String path = FileManager.getDataDir() + FULL_SRCEEN_ACTIVITY + ".xh";
-                        FileManager.saveFileToCompletePath(path, map.get(FULL_SRCEEN_ACTIVITY), false);
-                    }
                     isLoadOver = true;
                     if (callback != null) {
                         callback.loaded(ReqInternet.REQ_OK_STRING, url, returnObj);

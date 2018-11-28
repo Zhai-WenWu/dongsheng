@@ -32,6 +32,7 @@ import acore.logic.ConfigMannager;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.logic.load.LoadManager;
+import acore.tools.ColorUtil;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -49,6 +50,7 @@ import amodule.dish.view.DishRecommedAndAdView;
 import amodule.dish.view.DishRelatedRecommendView;
 import amodule.dish.view.DishTitleViewControl;
 import amodule.dish.view.DishVipView;
+import amodule.vip.DeviceVipManager;
 import third.video.VideoPlayerController;
 
 import static acore.logic.ConfigMannager.KEY_CAIPUVIP;
@@ -185,7 +187,7 @@ public class DetailDishViewManager {
         bar_title_1 = (RelativeLayout) mAct.findViewById(R.id.a_dish_detail_new_title);
         String colors = Tools.getColorStr(mAct, R.color.common_top_bg);
         bar_title_1.setBackgroundResource(R.color.common_top_bg);
-        Tools.setStatusBarColor(mAct, Color.parseColor(colors));
+        Tools.setStatusBarColor(mAct, ColorUtil.parseColor(colors));
     }
     /**
      * 处理预先加载数据
@@ -222,11 +224,11 @@ public class DetailDishViewManager {
                 configMap.put("title",configMap.get("renewTitle"));
             isShowByUser = !LoginManager.isVIP() || isFastExpiry;
         }else{
-            boolean isFastExpiry = LoginManager.getTempVipMaturityDay() <= delayDay
-                    && LoginManager.getTempVipMaturityDay() >= 0;
+            boolean isFastExpiry = DeviceVipManager.getDeviceVipMaturityDay() <= delayDay
+                    && DeviceVipManager.getDeviceVipMaturityDay() >= 0;
             if(isFastExpiry)
                 configMap.put("title",configMap.get("renewTitle"));
-            isShowByUser = !LoginManager.isTempVip() || isFastExpiry;
+            isShowByUser = !DeviceVipManager.isDeviceVip() || isFastExpiry;
         }
         configMap.put("isShow", isShowByConfig && isShowByUser ? "2" : "1");
         handlerVipView(configMap);

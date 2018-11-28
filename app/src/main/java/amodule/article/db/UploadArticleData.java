@@ -22,19 +22,19 @@ import aplug.basic.ReqEncyptInternet;
 
 public class UploadArticleData {
     // --数据库字段名;
-    public static String article_id = "id";
-    public static String article_title = "title";
-    public static String article_classCode = "classCode";
-    public static String article_content = "content";
-    public static String article_isOriginal = "food"; //是否原创 1-转载 2-原创
-    public static String article_repAddress = "repAddress"; //转载地址
-    public static String article_img = "img"; //首图
-    public static String article_imgs = "imgs"; //图片集合
-    public static String article_videos = "videos"; //视频集合
-    public static String article_code = "code";  //文章code
-    public static String article_imgUrl = "imgUrl";  //图片url
-    public static String article_uploadType = "uploadType";  //上传类型包括：后台发布、发布中
-    public static String article_extraDataJson = "extraDataJson";//额外数据
+    static String article_id = "id";
+    static String article_title = "title";
+    static String article_classCode = "classCode";
+    static String article_content = "content";
+    static String article_isOriginal = "food"; //是否原创 1-转载 2-原创
+    static String article_repAddress = "repAddress"; //转载地址
+    static String article_img = "img"; //首图
+    static String article_imgs = "imgs"; //图片集合
+    static String article_videos = "videos"; //视频集合
+    static String article_code = "code";  //文章code
+    static String article_imgUrl = "imgUrl";  //图片url
+    static String article_uploadType = "uploadType";  //上传类型包括：后台发布、发布中
+    static String article_extraDataJson = "extraDataJson";//额外数据
 
     private int id = -1;
     private String code;

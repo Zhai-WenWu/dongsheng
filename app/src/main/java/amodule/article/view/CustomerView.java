@@ -19,6 +19,7 @@ import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.view.ItemBaseView;
+import acore.tools.ColorUtil;
 import amodule._common.conf.GlobalAttentionModule;
 import amodule._common.conf.GlobalVariableConfig;
 import amodule.article.activity.ArticleDetailActivity;
@@ -160,12 +161,12 @@ public class CustomerView extends ItemBaseView {
                 follow_rela.setBackgroundResource(R.drawable.bg_follow);
                 follow_rela.setClickable(true);
                 follow_tv.setText("关注");
-                follow_tv.setTextColor(Color.parseColor("#f23030"));
+                follow_tv.setTextColor(ColorUtil.parseColor("#f23030"));
             } else {
-                follow_rela.setBackgroundColor(Color.parseColor("#fffffe"));
+                follow_rela.setBackgroundColor(ColorUtil.parseColor("#fffffe"));
                 follow_rela.setClickable(false);
                 follow_tv.setText("已关注");
-                follow_tv.setTextColor(Color.parseColor("#999999"));
+                follow_tv.setTextColor(ColorUtil.parseColor("#999999"));
             }
         } else follow_rela.setVisibility(GONE);
     }

@@ -23,8 +23,8 @@ import acore.logic.FavoriteHelper;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.activity.base.BaseAppCompatActivity;
-import acore.tools.IObserver;
-import acore.tools.ObserverManager;
+import acore.observer.IObserver;
+import acore.observer.ObserverManager;
 import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
 import acore.widget.LayoutScroll;
@@ -41,9 +41,9 @@ import aplug.basic.ReqEncyptInternet;
 import aplug.basic.ReqInternet;
 import cn.srain.cube.views.ptr.PtrClassicFrameLayout;
 
-import static acore.tools.ObserverManager.NOTIFY_FAVORITE;
-import static acore.tools.ObserverManager.NOTIFY_LOGIN;
-import static acore.tools.ObserverManager.NOTIFY_LOGOUT;
+import static acore.observer.ObserverManager.NOTIFY_FAVORITE;
+import static acore.observer.ObserverManager.NOTIFY_LOGIN;
+import static acore.observer.ObserverManager.NOTIFY_LOGOUT;
 
 /**
  * 我的收藏页面改版

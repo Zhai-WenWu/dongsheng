@@ -188,7 +188,7 @@
                         android:layout_toRightOf="@+id/topic_img"
                         android:layout_marginLeft="@dimen/dp_8"
                         android:textColor="#999999"
-                        android:text="添加话题"
+                        android:text="点击添加话题"
                         android:textSize="@dimen/dp_16" />
 
                     <ImageView
