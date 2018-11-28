@@ -116,9 +116,6 @@ public class CircleFind extends BaseActivity{
 					}
 					loadCount = listReturn.size();
 					adapter.notifyDataSetChanged();
-					// 如果是重新加载的,选中第一个tab.
-					if (isForward)
-						mLvSur.setSelection(1);
 				}
 //				if (everyPage == 0)
 //					everyPage = loadCount;
