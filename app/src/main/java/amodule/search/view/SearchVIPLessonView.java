@@ -129,7 +129,6 @@ public class SearchVIPLessonView extends RelativeLayout {
             return;
         }
         this.searchKey = searchKey;
-        setVisibility(View.GONE);
         String params = "keywords=" + searchKey;
         ReqEncyptInternet.in().doEncypt(StringManager.API_SEARCH_COURSE_DISH, params, new InternetCallback() {
             @Override

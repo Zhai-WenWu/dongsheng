@@ -189,8 +189,6 @@ public class CaipuSearchResultView extends LinearLayout {
         currentCaipuPage = 0;
         actIn = new AtomicInteger(2);
         ll_noData.setVisibility(View.GONE);
-        mSearchList.setVisibility(INVISIBLE);
-        mAdapter.clearAdList();
         mAdapter.notifyDataSetChanged();
     }
 
