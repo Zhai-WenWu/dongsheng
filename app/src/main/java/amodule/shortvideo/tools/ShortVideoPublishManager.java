@@ -3,8 +3,15 @@ package amodule.shortvideo.tools;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.annimon.stream.Stream;
+import com.annimon.stream.function.Consumer;
+import com.annimon.stream.function.Predicate;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import acore.override.XHApplication;
 import acore.tools.StringManager;
@@ -84,13 +91,47 @@ public class ShortVideoPublishManager {
     }
 
     /**
-     * 设置短视频回调
+     * 添加回调
      * @param callBack
      */
-    public void setShortVideoUploadCallBack(ShortVideoUploadCallBack callBack){
-        this.shortVideoUploadCallBack= callBack;
+    public void addShortVideoUploadCallBack(ShortVideoUploadCallBack callBack){
+        checkCallbacksNonNull();
+        if(callBack != null && !mShortVideoUploadCallBacks.contains(callBack)){
+            mShortVideoUploadCallBacks.add(callBack);
+        }
     }
-    public ShortVideoUploadCallBack shortVideoUploadCallBack;
+
+    private void checkCallbacksNonNull() {
+        if(mShortVideoUploadCallBacks == null){
+            mShortVideoUploadCallBacks = new ArrayList<>();
+        }
+    }
+
+    private List<ShortVideoUploadCallBack> mShortVideoUploadCallBacks = new ArrayList<>();
+
+    private void notifySucces(int sqlId, Object msg){
+        checkCallbacksNonNull();
+        Stream.of(mShortVideoUploadCallBacks)
+                .filter(value -> value != null)
+                .forEach(value -> value.onSuccess(sqlId, msg));
+        mShortVideoUploadCallBacks.clear();
+    }
+
+    private void notifyProgress(int progress,int sqlId){
+        checkCallbacksNonNull();
+        Stream.of(mShortVideoUploadCallBacks)
+                .filter(value -> value != null)
+                .forEach(value -> value.onProgress(progress, sqlId));
+    }
+
+    private void notifyFailed(int sqlId){
+        checkCallbacksNonNull();
+        Stream.of(mShortVideoUploadCallBacks)
+                .filter(value -> value != null)
+                .forEach(value -> value.onFailed(sqlId));
+        mShortVideoUploadCallBacks.clear();
+    }
+
     public interface ShortVideoUploadCallBack{
         public void onSuccess(int sqlId,Object msg);
         public void onProgress(int progress,int sqlId);
@@ -117,14 +158,10 @@ public class ShortVideoPublishManager {
             public void loaded(int flag, String url, Object msg) {
                 if(flag >= ReqEncyptInternet.REQ_OK_STRING){
                     UploadState(UploadDishData.UPLOAD_SUCCESS);
-                    if(shortVideoUploadCallBack!=null){
-                        shortVideoUploadCallBack.onSuccess(Integer.parseInt(shortVideoPublishBean.getId()),msg);
-                    }
+                    notifySucces(Integer.parseInt(shortVideoPublishBean.getId()),msg);
                 }else{
                     UploadState(UploadDishData.UPLOAD_FAIL);
-                    if(shortVideoUploadCallBack!=null){
-                        shortVideoUploadCallBack.onFailed(Integer.parseInt(shortVideoPublishBean.getId()));
-                    }
+                    notifyFailed(Integer.parseInt(shortVideoPublishBean.getId()));
                 }
             }
         });
@@ -143,9 +180,7 @@ public class ShortVideoPublishManager {
         breakPointControl.start(new UploadListNetCallBack() {
             @Override
             public void onProgress(double progress, String uniqueId) {
-                if(shortVideoUploadCallBack!=null){
-                    shortVideoUploadCallBack.onProgress((int) (progress*90),Integer.parseInt(shortVideoPublishBean.getId()));
-                }
+                notifyProgress((int) (progress*90),Integer.parseInt(shortVideoPublishBean.getId()));
             }
             @Override
             public void onSuccess(String url, String uniqueId, JSONObject jsonObject) {
@@ -157,9 +192,7 @@ public class ShortVideoPublishManager {
             @Override
             public void onFaild(String faild, String uniqueId) {
                 UploadState(UploadDishData.UPLOAD_FAIL);
-                if(shortVideoUploadCallBack!=null){
-                    shortVideoUploadCallBack.onFailed(Integer.parseInt(shortVideoPublishBean.getId()));
-                }
+                notifyFailed(Integer.parseInt(shortVideoPublishBean.getId()));
             }
             @Override
             public void onLastUploadOver(boolean flag, String responseStr) {
@@ -176,9 +209,7 @@ public class ShortVideoPublishManager {
         breakPointControl.start(new UploadListNetCallBack() {
             @Override
             public void onProgress(double progress, String uniqueId) {
-                if(shortVideoUploadCallBack!=null){
-                    shortVideoUploadCallBack.onProgress(99 ,Integer.parseInt(shortVideoPublishBean.getId()));
-                }
+                notifyProgress(99 ,Integer.parseInt(shortVideoPublishBean.getId()));
             }
             @Override
             public void onSuccess(String url, String uniqueId, JSONObject jsonObject) {
@@ -190,9 +221,7 @@ public class ShortVideoPublishManager {
             @Override
             public void onFaild(String faild, String uniqueId) {
                 UploadState(UploadDishData.UPLOAD_FAIL);
-                if(shortVideoUploadCallBack!=null){
-                    shortVideoUploadCallBack.onFailed(Integer.parseInt(shortVideoPublishBean.getId()));
-                }
+                notifyFailed(Integer.parseInt(shortVideoPublishBean.getId()));
             }
             @Override
             public void onLastUploadOver(boolean flag, String responseStr) {

@@ -153,7 +153,7 @@ public class FriendHome extends BaseActivity implements IObserver {
 
     private void registePublishCallback() {
         if (LoginManager.isSlef(userCode)) {
-            ShortVideoPublishManager.getInstance().setShortVideoUploadCallBack(new ShortVideoPublishManager.ShortVideoUploadCallBack() {
+            ShortVideoPublishManager.getInstance().addShortVideoUploadCallBack(new ShortVideoPublishManager.ShortVideoUploadCallBack() {
                 @Override
                 public void onSuccess(int id, Object msg) {
                     mProgressLayout.setVisibility(View.GONE);
