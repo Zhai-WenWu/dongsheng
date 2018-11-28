@@ -121,17 +121,12 @@ public class LocalPushManager {
             intent.putExtra("type", data.type);
             intent.putExtra("url", data.url);
             intent.putExtra("value", data.value);
-            intent.putExtra("channel", data.channel);
             intent.setClass(context, Main.class);
             LogManager.reportError("推送通知无法解析，默认开欢迎页：" + data.url, null);
         }
         intent.putExtra("from", "notify");
         intent.setAction(Intent.ACTION_VIEW);
         intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK);
-        //添加umeng统计数据
-        if (!TextUtils.isEmpty(data.umengMessage)) {
-            intent.putExtra("umengMessage", data.umengMessage);
-        }
         //开启点击统计
         intent.putExtra(XHClick.KEY_NOTIFY_CLICK, 1);
         UUID uuid = UUID.randomUUID();

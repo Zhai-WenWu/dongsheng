@@ -139,37 +139,31 @@
 }
 #Umeng在线参数 end
 
-#Umeng Push
--dontwarn com.taobao.**
--dontwarn anet.channel.**
--dontwarn anetwork.channel.**
--dontwarn org.android.**
--dontwarn org.apache.thrift.**
--dontwarn com.xiaomi.**
--dontwarn com.huawei.**
-
--keepattributes *Annotation*
-
--keep class com.taobao.** {*;}
--keep class org.android.** {*;}
--keep class anet.channel.** {*;}
--keep class com.umeng.** {*;}
--keep class com.xiaomi.** {*;}
--keep class com.huawei.** {*;}
--keep class org.apache.thrift.** {*;}
-
--keep public class **.R$*{
-   public static final int *;
-}
-#Umeng Push end
-
 -keep class com.yixia.** {*;}
 
 #XG 
 -keep public class * extends android.app.Service
 -keep public class * extends android.content.BroadcastReceiver
--keep class com.tencent.android.tpush.**  {* ;}
--keep class com.tencent.mid.**  {* ;}
+-keep class com.tencent.android.tpush.** {* ;}
+-keep class com.tencent.mid.** {* ;}
+-keep class com.qq.taf.jce.** {*;}
+-keep class com.tencent.bigdata.** {* ;}
+
+#华为通道
+-ignorewarning
+-keepattributes *Annotation*
+-keepattributes Exceptions
+-keepattributes InnerClasses
+-keepattributes Signature
+-keepattributes SourceFile,LineNumberTable
+-keep class com.hianalytics.android.**{*;}
+-keep class com.huawei.updatesdk.**{*;}
+-keep class com.huawei.hms.**{*;}
+
+#小米通道
+-keep class com.xiaomi.**{*;}
+-keep public class * extends com.xiaomi.mipush.sdk.PushMessageReceiver
+
 #XG end
 
 #避免警告 start

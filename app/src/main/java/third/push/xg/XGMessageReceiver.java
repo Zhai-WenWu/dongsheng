@@ -23,7 +23,6 @@ import third.push.PushPraserService;
  */
 @SuppressLint({ "NewApi", "SimpleDateFormat" })
 public class XGMessageReceiver extends XGPushBaseReceiver {
-	public static final String LogTag = "TPushReceiver";
 	private boolean isShow = false ;//发布是改成false
 
 	private void show(Context context, String text) {
@@ -43,12 +42,11 @@ public class XGMessageReceiver extends XGPushBaseReceiver {
 		String content =message.getContent();
 		//开启PushPraserService
 		Intent serviceIntent = new Intent();
-		serviceIntent.setClass(context,PushPraserService.class);
 		serviceIntent.putExtra("title",message.getTitle());
 		serviceIntent.putExtra("text",content);
 		serviceIntent.putExtra("custom",extrajson);
 		serviceIntent.putExtra("channel",PushPraserService.TYPE_XG);
-		context.startService(serviceIntent);
+		new PushPraserService().handleData(context,serviceIntent);
 	}
 
 	@SuppressLint("SimpleDateFormat")

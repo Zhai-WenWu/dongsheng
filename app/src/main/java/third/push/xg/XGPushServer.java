@@ -3,6 +3,7 @@ package third.push.xg;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.tencent.android.tpush.XGIOperateCallback;
 import com.tencent.android.tpush.XGPushConfig;
@@ -13,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import acore.logic.XHClick;
+import acore.tools.ChannelUtil;
 import acore.tools.FileManager;
 import acore.tools.LogManager;
 
@@ -23,6 +25,7 @@ import acore.tools.LogManager;
  */
 @SuppressLint("SimpleDateFormat")
 public class XGPushServer {
+	public static final String TAG = "XINGE";
 	public Context mContext;
 	public static String returnFlag = "";
 
@@ -44,21 +47,13 @@ public class XGPushServer {
 		if(TextUtils.isEmpty(userID)){
 			userID = "*";
 		}
-		XGPushConfig.enableDebug(mContext, false);
-//		try {
-//		StatConfig.setAppKey(mContext, "Z5F1L87AHYA");
-//		// 开启信鸽Pro
-//		XGPro.enableXGPro(mContext, false);
-//		// 开启MTA debug，发布时一定要删除本行或设置为false
-//		StatConfig.setDebugEnable(true);
-//	} catch (Exception err) {
-//		Log.e("TPush", "开启信鸽Pro失败", err);
-//		Toast.makeText(mContext, "开启信鸽Pro失败", Toast.LENGTH_SHRT).show();
-//	}
-		XGPushManager.registerPush(mContext.getApplicationContext(), userID, new XGIOperateCallback() {
+		XGPushConfig.enableDebug(mContext, true);
+		XGPushConfig.setInstallChannel(mContext,ChannelUtil.getChannel(mContext));
+		XGPushManager.registerPush(mContext.getApplicationContext(), new XGIOperateCallback() {
 
 			@Override
 			public void onSuccess(Object obj, int flag) {
+				Log.i(TAG, "onSuccess: token=" + obj);
 				XHClick.onEvent(mContext,"xg_register","成功");
 				saveXGToken(obj);
 			}
@@ -69,6 +64,10 @@ public class XGPushServer {
 				registerFail(obj, errCode, msg);
 			}
 		});
+		XGPushConfig.enableOtherPush(mContext, true);
+		XGPushConfig.setHuaweiDebug(true);
+		XGPushConfig.setMiPushAppId(mContext, "2882303761517138495");
+		XGPushConfig.setMiPushAppKey(mContext, "5711713867495");
 		return returnFlag;
 	}
 

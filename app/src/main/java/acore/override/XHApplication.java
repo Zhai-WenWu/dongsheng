@@ -13,6 +13,7 @@ import com.aliyun.common.httpfinal.QupaiHttpFinal;
 import com.baidu.mobads.AdView;
 import com.baidu.mobads.AppActivity;
 import com.mob.MobApplication;
+import com.tencent.android.otherPush.StubAppUtils;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.analytics.MobclickAgent;
 import com.xiangha.R;
@@ -32,7 +33,6 @@ import aplug.basic.LoadImage;
 import aplug.basic.XHConf;
 import aplug.service.CoreService;
 import third.location.LocationHelper;
-import third.push.umeng.UMPushServer;
 import third.push.xg.XGPushServer;
 
 import static acore.logic.ConfigMannager.KEY_BAIDUAPPID;
@@ -53,6 +53,7 @@ public class XHApplication extends MobApplication {
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         MultiDex.install(this);
+        StubAppUtils.attachBaseContext(base);
     }
     @Override
     public void onCreate() {
@@ -74,10 +75,6 @@ public class XHApplication extends MobApplication {
         }
         LogManager.printStartTime("zhangyujian","XhApplication::222222.oncreate::");
 
-        //初始化umeng推送
-        initUmengPush();
-        new XGPushServer(this).initPush();
-
         String processName = Tools.getProcessName(this);
         Log.i("zhangyujian", "进程名字::" + processName);
         if (processName != null && processName.equals(ToolsDevice.getPackageName(this))) {//多进程多初始化，只对xiangha进程进行初始化
@@ -91,6 +88,10 @@ public class XHApplication extends MobApplication {
      * ---150毫秒耗时
      */
     private void initData() {
+
+        //初始化xg推送
+        new XGPushServer(mAppApplication).initPush();
+
         //设置umeng的appId,和渠道名
         String channel = ChannelManager.getInstance().getChannel(this);
         MobclickAgent.UMAnalyticsConfig config = new MobclickAgent.UMAnalyticsConfig(this, "545aeac6fd98c565c20004ad", channel);
@@ -155,14 +156,6 @@ public class XHApplication extends MobApplication {
         mAppApplication = null;
         super.onTerminate();
         //整体摧毁的时候调用这个方法
-    }
-
-    private void initUmengPush() {
-        try {
-            new UMPushServer(this).register();
-        } catch (Exception e) {
-            //防止
-        }
     }
 
     private void startLocation() {

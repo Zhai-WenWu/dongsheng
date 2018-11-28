@@ -76,10 +76,7 @@ public class NotificationManager {
             }
         }
         //统计
-        if (data.type == XHClick.NOTIFY_A
-                || data.type == XHClick.NOTIFY_SELF) {
-            XHClick.statisticsPush(context, XHClick.STATE_CREATENOTIFY, Build.VERSION.SDK_INT);
-        }
+        XHClick.statisticsPush(context, XHClick.STATE_CREATENOTIFY, Build.VERSION.SDK_INT);
         boolean headerUp = checkAppForeground();
         if (data.hasImage())
             showNotifyWithImg(context, data, headerUp);
@@ -148,17 +145,12 @@ public class NotificationManager {
             intent.putExtra("type", data.type);
             intent.putExtra("url", data.url);
             intent.putExtra("value", data.value);
-            intent.putExtra("channel", data.channel);
             intent.setClass(context, Main.class);
             LogManager.reportError("推送通知无法解析，默认开欢迎页：" + data.url, null);
         }
         intent.putExtra("from", "notify");
         intent.setAction(Intent.ACTION_VIEW);
         intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK);
-        //添加umeng统计数据
-        if (!TextUtils.isEmpty(data.umengMessage)) {
-            intent.putExtra("umengMessage", data.umengMessage);
-        }
         //开启点击统计
         intent.putExtra(XHClick.KEY_NOTIFY_CLICK, 1);
         return PendingIntent.getActivity(context, data.notificationId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
@@ -175,14 +167,10 @@ public class NotificationManager {
     private PendingIntent getDismissPendingIntent(Context context, NotificationData data) {
         Intent deleteIntent = new Intent();
         deleteIntent.setClass(context, DismissNotificationBroadcast.class);
-        if (!TextUtils.isEmpty(data.umengMessage)) {
-            deleteIntent.putExtra("umengMessage", data.umengMessage);
-        }
         //添加统计数据
         deleteIntent.putExtra("type", data.type);
         deleteIntent.putExtra("url", data.url);
         deleteIntent.putExtra("value", data.value);
-        deleteIntent.putExtra("channel", data.channel);
         PendingIntent deletePendingIntent = PendingIntent.getBroadcast(context,
                 (int) (System.currentTimeMillis() + 1),
                 deleteIntent, PendingIntent.FLAG_CANCEL_CURRENT);
@@ -229,12 +217,8 @@ public class NotificationManager {
     private Notification getNotification(Context context, NotificationCompat.Builder builder, NotificationData data) {
         Notification notification = builder.getNotification();
         //设置dimiss intent
-        if (PushPraserService.TYPE_UMENG.equals(data.channel)
-                && !TextUtils.isEmpty(data.umengMessage)) {
-            LogManager.print("d", "Push_start");
-            PendingIntent dismissPendingIntent = getDismissPendingIntent(context, data);
-            notification.deleteIntent = dismissPendingIntent;
-        }
+        PendingIntent dismissPendingIntent = getDismissPendingIntent(context, data);
+        notification.deleteIntent = dismissPendingIntent;
 
         String msgSing = (String) FileManager.loadShared(context, FileManager.msgInform, FileManager.informSing);
         String msgShork = (String) FileManager.loadShared(context, FileManager.msgInform, FileManager.informShork);
