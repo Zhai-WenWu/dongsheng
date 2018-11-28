@@ -1,6 +1,7 @@
 package third.mall.widget;
 
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
@@ -17,6 +18,7 @@ import com.xiangha.R;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 
 /**
@@ -77,6 +79,7 @@ public class ScrollViewContainer extends RelativeLayout {
     public ScrollviewContaninerInter scrollviewinterface;
     private Context context;
 
+    @SuppressLint("HandlerLeak")
     private Handler handler = new Handler() {
 
         @Override
@@ -250,12 +253,12 @@ public class ScrollViewContainer extends RelativeLayout {
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         try {
-            int dp_49 = (int) context.getResources().getDimension(R.dimen.dp_49);
             topView.layout(0, (int) mMoveLen, mViewWidth,
                     topView.getMeasuredHeight() + (int) mMoveLen);
+            Log.i("zyj", "onLayout: mMoveLen="+mMoveLen);
             bottomView.layout(0, topView.getMeasuredHeight() + (int) mMoveLen,
-                    mViewWidth, topView.getMeasuredHeight() + (int) mMoveLen
-                            + bottomView.getMeasuredHeight() + dp_49);
+                    mViewWidth,
+                    topView.getMeasuredHeight() + (int) mMoveLen + bottomView.getMeasuredHeight());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -268,7 +271,6 @@ public class ScrollViewContainer extends RelativeLayout {
         if (!isMeasured) {
             isMeasured = true;
 
-            mViewHeight = getMeasuredHeight();
             mViewWidth = getMeasuredWidth();
 
             topView = getChildAt(0);
@@ -277,6 +279,7 @@ public class ScrollViewContainer extends RelativeLayout {
             bottomView.setOnTouchListener(bottomViewTouchListener);
             topView.setOnTouchListener(topViewTouchListener);
         }
+        mViewHeight = getMeasuredHeight();
     }
 
     private OnTouchListener topViewTouchListener = new OnTouchListener() {
@@ -385,7 +388,7 @@ public class ScrollViewContainer extends RelativeLayout {
             case "1"://滚动到第一视图
                 if(0!=mCurrentViewIndex) {
                     if (vt == null) vt = VelocityTracker.obtain();
-                    mMoveLen = -ToolsDevice.getWindowPx(context).heightPixels;
+                    mMoveLen = -ToolsDevice.getWindowPx(context).heightPixels + Tools.getDimen(context,R.dimen.dp_49);
                     state = AUTO_DOWN;
                     mTimer.schedule(1);
                 }
@@ -394,7 +397,7 @@ public class ScrollViewContainer extends RelativeLayout {
                 if(1!=mCurrentViewIndex) {
                     if (vt == null) vt = VelocityTracker.obtain();
                     if(OneViewheight>0){
-                        mMoveLen=-OneViewheight;
+                        mMoveLen=-OneViewheight-Tools.getDimen(context,R.dimen.dp_49);
                     }else mMoveLen = -1;
                     state = AUTO_UP;
                     mTimer.schedule(1);
