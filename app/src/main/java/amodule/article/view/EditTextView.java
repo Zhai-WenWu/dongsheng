@@ -143,25 +143,18 @@ public class EditTextView extends BaseView {
             }
 
             @Override
-            public void onSelectLink(String url, String desc) {
+            public void onSelectLink(String url, String desc, final int startIndex,final int endIndex) {
                 if (isDialogShow) return;
                 isDialogShow = true;
-                final int start = mRichText.getSelectionStart();
-                final int end = mRichText.getSelectionEnd();
                 final InputUrlDialog dialog = new InputUrlDialog(getContext());
                 dialog.setDescDefault(desc);
                 dialog.setUrl(url);
-                dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        isDialogShow = false;
-                    }
-                });
+                dialog.setOnDismissListener(dialog1 -> isDialogShow = false);
                 dialog.setOnReturnResultCallback(
                         new InputUrlDialog.OnReturnResultCallback() {
                             @Override
                             public void onSure(String url, String desc) {
-                                mRichText.link(url, start, end);
+                                mRichText.link(url, startIndex, endIndex);
                                 dialog.dismiss();
                             }
 

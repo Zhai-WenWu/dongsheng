@@ -1337,7 +1337,7 @@ public class RichText extends EditText implements TextWatcher {
         for (CharacterStyle span : spans) {
             if (span instanceof RichURLSpan) {
                 if (((RichURLSpan)span).getURL().equals(url) && onSelectContainsType != null) {
-                    onSelectContainsType.onSelectLink(url, desc);
+                    onSelectContainsType.onSelectLink(url, desc, startIndex, endIndex);
                     this.setSelection(endIndex + 1 <= textLength ? endIndex + 1 : textLength );
                     return true;
                 }
@@ -1407,7 +1407,7 @@ public class RichText extends EditText implements TextWatcher {
 
         public void onSelectUnderline(boolean isSelected);
 
-        public void onSelectLink(String url, String desc);
+        public void onSelectLink(String url, String desc, int startIndex,int endIndex);
 
         public void onSelecrCenter(boolean isSelected);
     }
