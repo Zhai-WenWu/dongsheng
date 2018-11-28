@@ -21,11 +21,10 @@ import java.util.Map;
 
 import acore.logic.ConfigMannager;
 import acore.logic.LoginManager;
-import acore.override.XHApplication;
 import acore.override.helper.XHActivityManager;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
-import third.ad.db.XHAdSqlite;
+import amodule.main.Main;
 import third.ad.db.bean.AdBean;
 import third.ad.db.bean.XHSelfNativeData;
 
@@ -67,6 +66,8 @@ public class WelcomeAdTools {
     private XHBannerCallback mXHBannerCallback;
     private BaiduCallback mBaiduCallback;
     private boolean isTwoShow = false;
+
+    private long mRecordTime;
 
     private WelcomeAdTools() {
         String splashConfigDataStr = ConfigMannager.getConfigByLocal(CONFIGKEY);
@@ -313,6 +314,18 @@ public class WelcomeAdTools {
         if (map_link.containsKey("adid"))
             adid = map_link.get("adid");
         return adid;
+    }
+
+    public void recordTime() {
+        mRecordTime = System.currentTimeMillis();
+    }
+
+    public void resetTime() {
+        mRecordTime = 0;
+    }
+
+    public boolean checkTwiceSplashEnable() {
+        return mRecordTime > 0 && System.currentTimeMillis() - mRecordTime >= splashmins * 1000 && !Main.isShowWelcomeDialog;
     }
 
     public interface GdtCallback {

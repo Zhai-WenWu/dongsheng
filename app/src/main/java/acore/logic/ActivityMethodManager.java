@@ -28,7 +28,6 @@ import amodule.main.Main;
 import amodule.main.activity.MainHomePage;
 import amodule.other.listener.HomeKeyListener;
 import amodule.other.listener.HomeKeyListener.OnHomePressedListener;
-import aplug.basic.DefaultInternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import third.ad.XHAdAutoRefresh;
 import third.ad.tools.AdConfigTools;
@@ -90,23 +89,10 @@ public class ActivityMethodManager {
             }
         }
 
-        //判断是否显示
-        String switchTimeStr = FileManager.loadShared(mAct, FileManager.xmlFile_appInfo, "switchTime").toString();
-        Log.i("tzy", "switchTimeStr");
-        if (!TextUtils.isEmpty(switchTimeStr)) {
-            //清空切换时间
-            FileManager.saveShared(mAct, FileManager.xmlFile_appInfo, "switchTime", "");
-            long switchTime = Long.parseLong(switchTimeStr);
-            long currentTime = System.currentTimeMillis();
-            final long MIN = WelcomeAdTools.getInstance().getSplashmins() * 1000;
-            long intervalTime = currentTime - switchTime;
-            Log.i("tzy", "" + intervalTime);
-            if (intervalTime >= MIN && !Main.isShowWelcomeDialog) {
-                Log.i("tzy", "二次开屏");
-                //请求广告位
-                AdConfigTools.getInstance().getAdConfigInfo();
-                mAct.startActivity(new Intent(mAct, Welcome.class));
-            }
+        if (WelcomeAdTools.getInstance().checkTwiceSplashEnable()) {
+            WelcomeAdTools.getInstance().resetTime();
+            AdConfigTools.getInstance().getAdConfigInfo();
+            mAct.startActivity(new Intent(mAct, Welcome.class));
         }
 
         registerHomeListener();
@@ -181,7 +167,7 @@ public class ActivityMethodManager {
                     AdConfigTools.getInstance().getAdConfigInfo();
                     // 进行点击Home键的处理
                     Log.i("zhangyujian", "HomeKeyListener111");
-                    FileManager.saveShared(mAct, FileManager.xmlFile_appInfo, "switchTime", String.valueOf(System.currentTimeMillis()));
+                    WelcomeAdTools.getInstance().recordTime();
                     WelcomeAdTools.getInstance().handlerAdData(true);
                     if(ActivityMethodManager.isAppShow) {
                         ActivityMethodManager.isAppShow = false;

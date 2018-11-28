@@ -2,6 +2,7 @@ package amodule.main.Tools;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
@@ -16,7 +17,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.BitmapRequestBuilder;
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.xiangha.R;
@@ -30,7 +30,6 @@ import acore.tools.FileManager;
 import acore.tools.LogManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
-import acore.tools.ToolsDevice;
 import amodule.main.Main;
 import aplug.basic.InternetCallback;
 import aplug.basic.LoadImage;
@@ -41,7 +40,6 @@ import third.ad.scrollerAd.XHScrollerSelf;
 import third.ad.tools.AdConfigTools;
 import third.ad.tools.AdPlayIdConfig;
 import third.ad.tools.WelcomeAdTools;
-import xh.basic.tool.UtilImage;
 
 import static android.os.Looper.getMainLooper;
 import static third.ad.tools.AdPlayIdConfig.WELCOME;
@@ -98,10 +96,16 @@ public class WelcomeControls {
             imageW = fixedH * mOriginalWidth / mOriginalHeight;
         }
         ImageView welcomeImg = mWelcomeView.findViewById(R.id.image_self);
-        Glide.with(activity).load(R.drawable.welcome_big).dontAnimate().into(welcomeImg);
+        Bitmap bitmap = BitmapFactory.decodeResource(act.getResources(), R.drawable.welcome_big);
         ViewGroup.LayoutParams params = welcomeImg.getLayoutParams();
         params.width = imageW;
         params.height = imageH;
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, imageW, imageH, true);
+        welcomeImg.setImageBitmap(scaledBitmap);
+        if (scaledBitmap != bitmap) {
+            bitmap.recycle();
+            bitmap = null;
+        }
         mWelcomeView.setVisibility(View.VISIBLE);
     }
 
@@ -351,7 +355,7 @@ public class WelcomeControls {
     /**
      * 关闭dialog
      */
-    public void closeDialog() {
+    private void closeDialog() {
         if(!Main.isShowWelcomeDialog){
             return;
         }
