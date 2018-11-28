@@ -12,6 +12,7 @@ import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -66,28 +67,22 @@ public class  ShowWeb extends WebActivity implements IObserver {
 	private String code="";//code--首页使用功能
 	private String module_type="";
 	private String userCode = "";
+	private boolean hardwareAccelerated;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
 		initExtras();
 		initActivity("", 3, 0, R.layout.c_view_bar_nouse_title, R.layout.xh_webview);
 		initTitleView();
 		initWeb();
 		initCommentBar();
 		if(mCommonBottomView!=null){
-			if(setShowCommonBottomView())
-				mCommonBottomView.setVisibility(View.VISIBLE);
-			else
-				mCommonBottomView.setVisibility(View.GONE);
+			mCommonBottomView.setVisibility(setShowCommonBottomView()?View.VISIBLE:View.GONE);
 		}
 		setTitle();
 		// 设置加载
-		loadManager.setLoading(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				loadData();
-			}
-		});
+		loadManager.setLoading(v -> loadData());
 		MallCommon common= new MallCommon(this);
 		common.setStatisticStat(url);
 		ObserverManager.getInstance().registerObserver(this,ObserverManager.NOTIFY_LOGIN,
@@ -103,6 +98,7 @@ public class  ShowWeb extends WebActivity implements IObserver {
 			data_type = bundle.getString("data_type");
 			code= bundle.getString("code");
 			module_type= bundle.getString("module_type");
+			hardwareAccelerated = !TextUtils.equals("1",bundle.getString("hardware"));
 			JSAction.loadAction = bundle.getString("doJs") != null ? bundle.getString("doJs") : "";
 
 		}
@@ -111,6 +107,10 @@ public class  ShowWeb extends WebActivity implements IObserver {
 	protected void initWeb(){
 		webViewManager = new WebviewManager(this,loadManager,true);
 		webview = webViewManager.createWebView(R.id.XHWebview);
+		//关闭加速
+		if(!hardwareAccelerated){
+			webview.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+		}
 		webview.setOnWebNumChangeCallback(new XHWebView.OnWebNumChangeCallback() {
 			@Override
 			public void onChange(int num) {
