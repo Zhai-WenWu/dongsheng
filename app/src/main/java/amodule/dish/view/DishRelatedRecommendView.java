@@ -50,6 +50,7 @@ public class DishRelatedRecommendView extends LinearLayout {
             mContentLayout.addView(itemView);
             p ++;
         }
+        setVisibility(entity.isEmpty() ? GONE : VISIBLE);
     }
 
     public void setOnItemClickCallback(DishGridDialog.OnItemClickCallback callback) {
