@@ -11,16 +11,12 @@ import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.util.ArrayMap;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
-import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -30,11 +26,9 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.popdialog.util.ToolsDevice;
 import com.xiangha.R;
 
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -45,16 +39,10 @@ import acore.override.helper.XHActivityManager;
 import acore.tools.ImgManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
-import amodule.dish.activity.ListDish;
 import amodule.search.view.MultiTagView;
-import amodule.topic.activity.TopicInfoActivity;
 import amodule.topic.style.CustomClickableSpan;
 import amodule.user.activity.FriendHome;
-import anet.channel.util.StringUtils;
 import aplug.basic.LoadImage;
-import third.aliyun.work.AliyunCommon;
-
-import static com.umeng.a.j.f;
 
 public class TopicHeaderView extends RelativeLayout {
 

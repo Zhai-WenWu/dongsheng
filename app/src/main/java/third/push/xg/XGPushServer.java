@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import acore.logic.XHClick;
-import acore.tools.ChannelUtil;
+import acore.tools.ChannelManager;
 import acore.tools.FileManager;
 import acore.tools.LogManager;
 
@@ -48,7 +48,7 @@ public class XGPushServer {
 			userID = "*";
 		}
 		XGPushConfig.enableDebug(mContext, true);
-		XGPushConfig.setInstallChannel(mContext,ChannelUtil.getChannel(mContext));
+		XGPushConfig.setInstallChannel(mContext,ChannelManager.getInstance().getChannel(mContext));
 		XGPushManager.registerPush(mContext.getApplicationContext(), new XGIOperateCallback() {
 
 			@Override
