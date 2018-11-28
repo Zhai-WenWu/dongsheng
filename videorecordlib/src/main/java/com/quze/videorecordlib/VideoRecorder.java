@@ -803,9 +803,10 @@ public class VideoRecorder extends AppCompatActivity implements View.OnClickList
             VideoRecorderCommon.instance().statictisEvent("a_preshoot","本地上传按钮","");
         } else if (v == mRecordBtn) {
             if (!isRecording) {
-                if (!checkIfStartRecording()) {
+                if (!checkIfStartRecording() || isOverTime()) {
                     return;
                 }
+
                 mRecordBtn.setHovered(true);
                 startRecording();
                 VideoRecorderCommon.instance().statictisEvent("a_preshoot","开拍按钮","");
@@ -833,6 +834,14 @@ public class VideoRecorder extends AppCompatActivity implements View.OnClickList
             return;
         }
         mRecorder.finishRecording();
+    }
+
+    private boolean isOverTime(){
+        if(mClipManager != null && mClipManager.getDuration() >= mClipManager.getMaxDuration()){
+            Toast.makeText(this, "最长只能录制" + (mMaxDuration/1000) + "s", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        return false;
     }
 
     /** 显示删除对话框 */
@@ -1169,7 +1178,7 @@ public class VideoRecorder extends AppCompatActivity implements View.OnClickList
             if (mRecordMode == AliyunSnapVideoParam.RECORD_MODE_TOUCH) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     if (!isRecording) {
-                        if (!checkIfStartRecording()) {
+                        if (!checkIfStartRecording() || isOverTime()) {
                             return false;
                         }
                         mRecordBtn.setHovered(true);
@@ -1182,7 +1191,7 @@ public class VideoRecorder extends AppCompatActivity implements View.OnClickList
                 }
             } else if (mRecordMode == AliyunSnapVideoParam.RECORD_MODE_PRESS) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    if (!checkIfStartRecording()) {
+                    if (!checkIfStartRecording() || isOverTime()) {
                         return false;
                     }
                     mRecordBtn.setSelected(true);
@@ -1194,7 +1203,7 @@ public class VideoRecorder extends AppCompatActivity implements View.OnClickList
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     mDownTime = System.currentTimeMillis();
                     if (!isRecording) {
-                        if (!checkIfStartRecording()) {
+                        if (!checkIfStartRecording() || isOverTime()) {
                             return false;
                         }
                         mRecordBtn.setPressed(true);
