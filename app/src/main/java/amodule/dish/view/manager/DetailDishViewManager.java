@@ -46,7 +46,7 @@ import amodule.dish.view.DishHoverViewControl;
 import amodule.dish.view.DishIngreDataShow;
 import amodule.dish.view.DishModuleScrollView;
 import amodule.dish.view.DishQAView;
-import amodule.dish.view.DishRecommedAndAdView;
+import amodule.dish.view.DishRecommedAndAdvView;
 import amodule.dish.view.DishRelatedRecommendView;
 import amodule.dish.view.DishTitleViewControl;
 import amodule.dish.view.DishVipView;
@@ -80,7 +80,7 @@ public class DetailDishViewManager {
     public DishVipView dishVipView;
     public DishAboutView dishAboutView;
     public DishIngreDataShow dishIngreDataShow;
-    public DishRecommedAndAdView dishRecommedAndAdView;
+    public DishRecommedAndAdvView dishRecommedAndAdvView;
     public DishExplainView dishExplainView;
     public DishADBannerView dishADBannerView;
     public DishQAView dishQAView;
@@ -162,16 +162,16 @@ public class DetailDishViewManager {
         //foot
         dishExplainView = new DishExplainView(mAct);
         dishExplainView.setVisibility(View.GONE);
-        dishRecommedAndAdView= new DishRecommedAndAdView(mAct);
-        dishRecommedAndAdView.setVisibility(View.GONE);
-        dishRelatedRecommendView = dishRecommedAndAdView.findViewById(R.id.related_recommend);
+        dishRecommedAndAdvView = new DishRecommedAndAdvView(mAct);
+        dishRecommedAndAdvView.setVisibility(View.GONE);
+        dishRelatedRecommendView = dishRecommedAndAdvView.findViewById(R.id.related_recommend);
         dishRelatedRecommendView.setVisibility(View.GONE);
         layoutFooter.addView(dishExplainView);
         layoutFooter.addView(dishQAView);
         RelativeLayout layout= new RelativeLayout(mAct);
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,Tools.getDimen(mAct,R.dimen.dp_60));
         layout.setLayoutParams(layoutParams);
-        layoutFooter.addView(dishRecommedAndAdView);
+        layoutFooter.addView(dishRecommedAndAdvView);
         layoutFooter.addView(layout);
         listView.addHeaderView(dishHeaderViewNew);
         listView.addHeaderView(layoutHeader);
@@ -435,7 +435,7 @@ public class DetailDishViewManager {
             }else {
                 dishRelatedRecommendView.setVisibility(View.VISIBLE);
                 dishRelatedRecommendView.setData(list);
-                dishRecommedAndAdView.setVisibility(View.VISIBLE);
+                dishRecommedAndAdvView.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -447,11 +447,11 @@ public class DetailDishViewManager {
     public void handlerRecommedAndAd(ArrayList<Map<String, String>> list,String code,String name){
         if(list==null)return;
         Map<String,String> temp=list.get(0);
-        if(dishRecommedAndAdView!=null&&list!=null&&!TextUtils.isEmpty(temp.get("list"))
+        if(dishRecommedAndAdvView !=null&&list!=null&&!TextUtils.isEmpty(temp.get("list"))
                 &&!"[]".equals(temp.get("list"))&&!"{}".equals(temp.get("list"))){
-            dishRecommedAndAdView.setVisibility(View.VISIBLE);
-            dishRecommedAndAdView.initData(code,name);
-            dishRecommedAndAdView.initUserDish(list);
+            dishRecommedAndAdvView.setVisibility(View.VISIBLE);
+            dishRecommedAndAdvView.initData(code,name);
+            dishRecommedAndAdvView.initUserDish(list);
         }
     }
     /**

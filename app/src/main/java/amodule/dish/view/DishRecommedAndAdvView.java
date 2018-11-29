@@ -46,20 +46,20 @@ import static xh.basic.tool.UtilString.getListMapByJson;
  * Created by Administrator on 2017/11/16.
  */
 
-public class DishRecommedAndAdView extends ItemBaseView implements View.OnClickListener{
+public class DishRecommedAndAdvView extends ItemBaseView implements View.OnClickListener{
     private LinearLayout userDishLayout;
     private RelativeLayout mRecomentLayout;
     private TextView mRecommentNum,mRelevantTv;
     private String code,mDishName;
-    public DishRecommedAndAdView(Context context) {
+    public DishRecommedAndAdvView(Context context) {
         super(context, R.layout.a_dish_detail_recommend);
     }
 
-    public DishRecommedAndAdView(Context context, AttributeSet attrs) {
+    public DishRecommedAndAdvView(Context context, AttributeSet attrs) {
         super(context, attrs,  R.layout.a_dish_detail_recommend);
     }
 
-    public DishRecommedAndAdView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public DishRecommedAndAdvView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr,  R.layout.a_dish_detail_recommend);
     }
 
