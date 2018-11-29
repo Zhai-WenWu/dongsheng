@@ -197,34 +197,36 @@ public class AllPopDialogHelper {
         allPopDialogControler.setOnFullScreenStatusCallback(new FullSrceenDialogControl.OnFullScreenStatusCallback() {
             @Override
             public void onPreShow(FullScreenModule module) {
-                StatisticsManager.saveData(StatModel.createSpecialActionModel(XHActivityManager.getInstance().getCurrentActivity().getClass().getSimpleName(),"","",
-                        "DropDownBox_ShouldHaveBeenShown","","",module.getStatJson()));
+                statFullScreen(module,"DropDownBox_ShouldHaveBeenShown","","", "");
             }
 
             @Override
             public void onShow(FullScreenModule module) {
-                StatisticsManager.saveData(StatModel.createSpecialActionModel(XHActivityManager.getInstance().getCurrentActivity().getClass().getSimpleName(),"","",
-                        "DropDownBox_ActuallySucceedShow","","",module.getStatJson()));
                 log("FullScreen :: 展示");
                 FileManager.saveShared(XHActivityManager.getInstance().getCurrentActivity(), INERVAL_XML, KEY_INERVAL_COUNT, "0");
-                XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), "ad_show_index", "全屏", "xh");//统计
+                statFullScreen(module,"DropDownBox_ActuallySucceedShow","ad_show_index","全屏", "xh");
             }
 
             @Override
             public void onClickImage(FullScreenModule module) {
-                StatisticsManager.saveData(StatModel.createSpecialActionModel(XHActivityManager.getInstance().getCurrentActivity().getClass().getSimpleName(),"","",
-                        "DropDownBox_Click","","",module.getStatJson()));
                 log("FullScreen :: 点击图片");
-                XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), "ad_click_index", "全屏", "xh");//统计
                 AppCommon.openUrl(XHActivityManager.getInstance().getCurrentActivity(), module.getUrl(), true);
+                statFullScreen(module,"DropDownBox_Click","ad_click_index","全屏", "xh");
             }
 
             @Override
             public void onClickClose(FullScreenModule module) {
-                StatisticsManager.saveData(StatModel.createSpecialActionModel(XHActivityManager.getInstance().getCurrentActivity().getClass().getSimpleName(),"","",
-                        "DropDownBox_Close","","",module.getStatJson()));
                 log("FullScreen :: 点击关闭");
-                XHClick.mapStat(XHActivityManager.getInstance().getCurrentActivity(), "a_fullcereen_ad", "手动关闭", "");
+                statFullScreen(module,"DropDownBox_Close","a_fullcereen_ad","手动关闭", "");
+            }
+
+            private void statFullScreen(FullScreenModule module,String btn,String eventID,String twoLevel, String threeLevel) {
+                final Activity activity = XHActivityManager.getInstance().getCurrentActivity();
+                if(activity != null){
+                    StatisticsManager.saveData(StatModel.createSpecialActionModel(activity.getClass().getSimpleName(),"","",
+                            btn,"","",module.getStatJson()));
+                    XHClick.mapStat(activity, eventID, twoLevel, threeLevel);
+                }
             }
         });
         allPopDialogControler.setOnLoadImageCallback((imageUrl, callback) -> {
