@@ -24,12 +24,14 @@ public class Util {
                 MediaStore.Video.Media.TITLE, MediaStore.Video.Media.MIME_TYPE
         };
         //首先检索SDcard上所有的video
-        Cursor cursor = context.getContentResolver().query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, mediaColumns, null, null, null);
         String filePath = "";
-        if (cursor.moveToFirst()) {
-            filePath = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA));
+        Cursor cursor = context.getContentResolver().query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, mediaColumns, null, null, null);
+        if(cursor != null){
+            if (cursor.moveToFirst()) {
+                filePath = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA));
+            }
+            cursor.close();
         }
-        cursor.close();
         if (TextUtils.isEmpty(filePath)) {
             return null;
         } else {
