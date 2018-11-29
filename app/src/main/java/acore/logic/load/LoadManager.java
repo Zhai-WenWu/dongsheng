@@ -398,7 +398,7 @@ public class LoadManager {
         Button loadMoreBtn = getSingleLoadMore(key);
         if (loadMoreBtn != null) {
             loadMoreBtn.setText(LOADFAILED);
-            loadMoreBtn.setEnabled(false);
+            loadMoreBtn.setEnabled(true);
             loadMoreBtn.setVisibility(View.VISIBLE);
         }
     }
