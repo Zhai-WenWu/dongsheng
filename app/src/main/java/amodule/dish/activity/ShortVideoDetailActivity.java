@@ -246,7 +246,7 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
             @Override
             public void videoComplete(int position,boolean hasDialogShow) {
                 if (position >= 0 && position + 1 < mDatas.size()) {
-                    String playMode = mDatas.get(position + 1).getPlayMode();
+                    String playMode = mDatas.get(position).getPlayMode();
                     if ("2".equals(playMode) && "wifi".equals(ToolsDevice.getNetWorkType(ShortVideoDetailActivity.this))
                             && hasDialogShow) {
                         recyclerView.smoothScrollToPosition(position + 1);
@@ -523,7 +523,7 @@ public class ShortVideoDetailActivity extends BaseAppCompatActivity implements I
                         adModule.adType = adMap.get("type");
                         adModule.adRealPosition = Tools.parseIntOfThrow(adMap.get("index"));
                         //数据
-                        adModule.setPlayMode("2");
+                        adModule.setPlayMode("1");
                         adModule.setName(adMap.get("desc"));
                         adModule.setLikeNum(String.valueOf(Tools.getRandom(500, 1001)));
                         adModule.setShareNum(String.valueOf(Tools.getRandom(50, 201)));
