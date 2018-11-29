@@ -164,7 +164,7 @@ public class DetailDishViewManager {
         dishExplainView.setVisibility(View.GONE);
         dishRecommedAndAdView= new DishRecommedAndAdView(mAct);
         dishRecommedAndAdView.setVisibility(View.GONE);
-        dishRelatedRecommendView = (DishRelatedRecommendView) dishRecommedAndAdView.findViewById(R.id.related_recommend);
+        dishRelatedRecommendView = dishRecommedAndAdView.findViewById(R.id.related_recommend);
         dishRelatedRecommendView.setVisibility(View.GONE);
         layoutFooter.addView(dishExplainView);
         layoutFooter.addView(dishQAView);
@@ -432,7 +432,6 @@ public class DetailDishViewManager {
         if (dishRelatedRecommendView != null) {
             if (list == null || list.isEmpty()) {
                 dishRelatedRecommendView.setVisibility(View.GONE);
-                dishRecommedAndAdView.setVisibility(View.GONE);
             }else {
                 dishRelatedRecommendView.setVisibility(View.VISIBLE);
                 dishRelatedRecommendView.setData(list);
