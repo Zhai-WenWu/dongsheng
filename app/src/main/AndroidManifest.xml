@@ -290,7 +290,7 @@
         <activity
             android:name="amodule.main.activity.MainHomePage"
             android:configChanges="orientation|keyboardHidden"
-            android:hardwareAccelerated="true"
+            android:hardwareAccelerated="false"
             android:keepScreenOn="true"
             android:screenOrientation="portrait"
             android:theme="@style/titleTheme"
