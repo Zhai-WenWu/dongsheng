@@ -12,7 +12,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.bumptech.glide.BitmapRequestBuilder;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.xiangha.R;
 
@@ -139,18 +141,20 @@ public class VideoShowView extends BaseView implements View.OnClickListener {
      * @param imgUrl ：第一帧图片路径
      */
     private void setVideoImage(final boolean isCut, final String imgUrl){
-        LoadImage.with(getContext())
+        BitmapRequestBuilder<GlideUrl, Bitmap> builder = LoadImage.with(getContext())
                 .load(imgUrl)
-                .build()
-                .skipMemoryCache(true)
+                .build();
+        if (builder == null)
+            return;
+        builder.skipMemoryCache(true)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .into(new SubBitmapTarget() {
                     @Override
                     public void onResourceReady(final Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
                         if (bitmap != null) {
-                            if(isCut){
-                                handlerCutImage(bitmap,imgUrl);
-                            }else {
+                            if (isCut) {
+                                handlerCutImage(bitmap, imgUrl);
+                            } else {
                                 if (isWrapContent) {
                                     int newWaith = ToolsDevice.getWindowPx(getContext()).widthPixels - (int) getContext().getResources().getDimension(R.dimen.dp_20) * 2;
                                     UtilImage.setImgViewByWH(coverImage, bitmap, newWaith, 0, false);
