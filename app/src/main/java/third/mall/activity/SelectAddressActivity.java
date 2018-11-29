@@ -76,49 +76,41 @@ public class SelectAddressActivity extends MallBaseActivity implements OnClickLi
 	}
 	
 	private void initData() {
-		listMapByJson_all= new ArrayList<Map<String,String>>();
-		simple= new AdapterSimple(address_list, listMapByJson_all, R.layout.a_mall_select_address_item, new String[]{"name"}, new int[]{R.id.address_tv_item});
+		listMapByJson_all= new ArrayList<>();
+		simple= new AdapterSimple(address_list, listMapByJson_all, R.layout.a_mall_select_address_item,
+				new String[]{"name"},
+				new int[]{R.id.address_tv_item});
 		address_list.setAdapter(simple);
 		mall_index=provinceUrl;
-		address_list.setOnItemClickListener(new OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
-				select_tv.setVisibility(View.VISIBLE);
-				String param="";
-				if(state){
-					return;
-				}
-				
-				String index= select_tv.getText().toString();
-				index+=listMapByJson_all.get(position).get("name");
-				select_tv.setText(index);
-				index_code= listMapByJson_all.get(position).get("code");
-				
-				if(mall_index.equals(provinceUrl)){
-					mall_index=cityUrl;
-					param= "province_id=";
-				}else if(mall_index.equals(cityUrl)){
-					mall_index=countyUrl;
-					param= "city_id=";
-				}else if(mall_index.equals(countyUrl)){
-					mall_index=townsUrl;
-					param= "county_id=";
-				}else if(mall_index.equals(townsUrl)){
-					setDataForReult(listMapByJson_all.get(position).get("code"));
-				}
-				
-				param+=listMapByJson_all.get(position).get("code");
-				setRequestData(param);
+		address_list.setOnItemClickListener((parent, view, position, id) -> {
+			select_tv.setVisibility(View.VISIBLE);
+			String param="";
+			if(state){
+				return;
 			}
-		});
-		loadManager.setLoading(new OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				setRequestData("");
+			String index= select_tv.getText().toString();
+			index+=listMapByJson_all.get(position).get("name");
+			select_tv.setText(index);
+			index_code= listMapByJson_all.get(position).get("code");
+
+			if(mall_index.equals(provinceUrl)){
+				mall_index=cityUrl;
+				param= "province_id=";
+			}else if(mall_index.equals(cityUrl)){
+				mall_index=countyUrl;
+				param= "city_id=";
+			}else if(mall_index.equals(countyUrl)){
+				mall_index=townsUrl;
+				param= "county_id=";
+			}else if(mall_index.equals(townsUrl)){
+				setDataForReult(listMapByJson_all.get(position).get("code"));
 			}
+
+			param+=listMapByJson_all.get(position).get("code");
+			setRequestData(param);
 		});
+		loadManager.setLoading(v -> setRequestData(""));
 	}
 	private void setRequestData(String param) {
 		state=true;
@@ -132,6 +124,7 @@ public class SelectAddressActivity extends MallBaseActivity implements OnClickLi
 			@Override
 			public void loadstat(int flag, String url, Object msg, Object... stat) {
 				listMapByJson_all.clear();
+				simple.notifyDataSetChanged();
 				state=false;
 				loadManager.loadOver(flag);
 				if(flag>=UtilInternet.REQ_OK_STRING){
@@ -139,16 +132,13 @@ public class SelectAddressActivity extends MallBaseActivity implements OnClickLi
 						mall_stat_statistic=(String) stat[0];
 					}
 					ArrayList<Map<String, String>> listMapByJson = UtilString.getListMapByJson(msg);
-					for (int i = 0; i < listMapByJson.size(); i++) {
-						listMapByJson_all.add(listMapByJson.get(i));
-					}
-					if(mall_index.equals(townsUrl)&&listMapByJson_all.size()==0){
+					listMapByJson_all.addAll(listMapByJson);
+					if(mall_index.equals(townsUrl) && listMapByJson_all.isEmpty()){
 						setDataForReult(index_code);
 					}
-					simple.notifyDataSetChanged();
 				}
+				simple.notifyDataSetChanged();
 				loadManager.hideProgressBar();
-			
 			}
 		});
 	}

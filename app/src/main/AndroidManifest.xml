@@ -1165,6 +1165,7 @@
             android:name="third.mall.activity.SelectAddressActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
+            android:hardwareAccelerated="true"
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity

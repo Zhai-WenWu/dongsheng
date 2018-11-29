@@ -13,12 +13,11 @@
         android:textColor="#333333"
         android:layout_marginLeft="@dimen/dp_15"
         android:layout_marginRight="@dimen/dp_15"
-        android:text="zhangyujian"
         android:textSize="@dimen/sp_15" />
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_0.5"
+        android:layout_height="1dp"
         android:layout_alignParentBottom="true"
         android:background="#e1e2e4" />
 
