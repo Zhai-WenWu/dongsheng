@@ -54,6 +54,8 @@ import aplug.web.FullScreenWeb;
 import aplug.web.ShowWeb;
 import third.ad.scrollerAd.XHAllAdControl;
 import third.aliyun.work.AliyunCommon;
+import third.mall.MainMall;
+import third.mall.aplug.MallCommon;
 import xh.basic.tool.UtilFile;
 import xh.basic.tool.UtilString;
 import com.xh.windowview.BottomDialog;
@@ -212,7 +214,10 @@ public class AppCommon {
                     intent = new Intent(act, ShowWeb.class);
                     intent.putExtras(bundle);
                 }
-            } else if (!url.contains(".app") || url.indexOf("aboutus") == 0) {
+            } else if(!TextUtils.isEmpty(MallCommon.ds_home_url) && TextUtils.equals(MallCommon.ds_home_url,url)){
+                intent = new Intent(act, MainMall.class);
+                intent.putExtras(bundle);
+            }else if (!url.contains(".app") || url.indexOf("aboutus") == 0) {
                 intent = new Intent(act, ShowWeb.class);
                 intent.putExtras(bundle);
             }

@@ -16,6 +16,7 @@ import com.xiangha.R;
 
 import java.util.Map;
 
+import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.override.activity.base.BaseAppCompatActivity;
@@ -44,7 +45,7 @@ import xh.basic.tool.UtilFile;
  *
  */
 public class MainMall extends BaseAppCompatActivity implements OnClickListener{
-//	public static final String KEY = "MainMall";
+	public static final String KEY = "MainMall";
 
 	// 加载管理
 	private TextView mall_news_num;
@@ -218,7 +219,20 @@ public class MainMall extends BaseAppCompatActivity implements OnClickListener{
 		}
 		super.finish();
 	}
-	
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		if(intent != null){
+			String url = intent.getStringExtra("url");
+			if(!TextUtils.isEmpty(MallCommon.ds_home_url) && TextUtils.equals(MallCommon.ds_home_url,url)){
+				loadData();
+			}else if(!TextUtils.isEmpty(url)){
+				AppCommon.openUrl(url,true);
+			}
+		}
+	}
+
 	@Override
 	protected void onDestroy() {
 		if(webview != null){
