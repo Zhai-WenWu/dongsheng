@@ -161,7 +161,6 @@
                 android:textColor="@color/c_white_text"
                 android:textSize="@dimen/sp_15"
                 android:textStyle="bold"
-                app:layout_constraintLeft_toRightOf=""
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/image_user_header"
                 app:layout_constraintTop_toTopOf="parent"/>
