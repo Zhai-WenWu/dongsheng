@@ -187,22 +187,15 @@ public class Feedback extends BaseActivity implements OnClickListener {
                     // 向上加载
                     for (int i = 0; i < listReturn.size(); i++) {
                         Map<String, String> mapReturn = listReturn.get(i);
-                        if (mapReturn != null
-                                && mapReturn.get("img").equals(""))
-                            mapReturn.put("img", "hide");
-                        mapReturn.put("progress_img", "hide");
-                        mapReturn.put("progress_text", "hide");
-                        mapReturn.put("author", mapReturn.get("author") + "");
-//						if(mapReturn.get("author").equals("1") && i % 3 == 0 && mapReturn.get("type").equals("1")){
-//							mapReturn.put("url", "dishInfo.app?code=77620866");
-//							mapReturn.put("title", "菜谱：测试"+i);
-//						}
-//						if(i % 4 == 0){
-//							mapReturn.put("url", "http://www.baidu.com");
-//							mapReturn.put("type", "3");
-//							mapReturn.put("title", "用外部浏览器打开。。。");
-//						}
-                        contentList.add(0, mapReturn);
+                        if(mapReturn != null){
+                            if (TextUtils.isEmpty(mapReturn.get("img"))){
+                                mapReturn.put("img", "hide");
+                            }
+                            mapReturn.put("progress_img", "hide");
+                            mapReturn.put("progress_text", "hide");
+                            mapReturn.put("author", mapReturn.get("author") + "");
+                            contentList.add(0, mapReturn);
+                        }
                     }
                     if (!TextUtils.isEmpty(backData)) {
                         sendFeekback(backData);
