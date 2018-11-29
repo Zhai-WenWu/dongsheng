@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:paddingLeft="@dimen/dp_5"
     android:paddingRight="@dimen/dp_5">
 
@@ -9,6 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
+        tools:text="我问"
         android:textColor="@color/circle_tab_text_color"
         android:gravity="center"
         android:singleLine="true" />
@@ -23,9 +27,10 @@
         android:layout_toRightOf="@+id/psts_tab_title"
         android:layout_alignParentTop="true"
         android:layout_marginTop="@dimen/dp_7"
-        android:background="@drawable/tv_circle_white"
+        android:background="@drawable/bg_round_red20"
         android:gravity="center_horizontal|center_vertical"
-        android:textColor="#f23030"
+        android:textColor="#FFFFFF"
         android:textSize="@dimen/sp_10"
+        tools:visibility="visible"
         android:visibility="invisible"/>
 </RelativeLayout>
