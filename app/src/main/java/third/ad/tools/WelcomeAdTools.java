@@ -50,7 +50,7 @@ public class WelcomeAdTools {
     /**
      * 切换最短时间
      */
-    private int splashmins = 80;
+    private int splashmins = 5;
 
     //广告处理
     private ArrayList<Map<String, String>> mAdData = new ArrayList<>();
@@ -76,6 +76,8 @@ public class WelcomeAdTools {
         }
         Map<String, String> data = StringManager.getFirstMap(splashConfigDataStr);
         splashmins = Integer.parseInt(data.get("againTime"));
+
+        splashmins = 5;
     }
 
     public static synchronized WelcomeAdTools getInstance() {

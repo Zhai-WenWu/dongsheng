@@ -2,7 +2,6 @@ package amodule.main.Tools;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
@@ -96,16 +95,9 @@ public class WelcomeControls {
             imageW = fixedH * mOriginalWidth / mOriginalHeight;
         }
         ImageView welcomeImg = mWelcomeView.findViewById(R.id.image_self);
-        Bitmap bitmap = BitmapFactory.decodeResource(act.getResources(), R.drawable.welcome_big);
         ViewGroup.LayoutParams params = welcomeImg.getLayoutParams();
         params.width = imageW;
         params.height = imageH;
-        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, imageW, imageH, true);
-        welcomeImg.setImageBitmap(scaledBitmap);
-        if (scaledBitmap != bitmap) {
-            bitmap.recycle();
-            bitmap = null;
-        }
         mWelcomeView.setVisibility(View.VISIBLE);
     }
 

@@ -19,7 +19,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="@dimen/dp_120" />
+            android:layout_marginBottom="@dimen/dp_120"
+            android:src="@drawable/welcome_big"/>
 
         <ImageView
             android:id="@+id/image"

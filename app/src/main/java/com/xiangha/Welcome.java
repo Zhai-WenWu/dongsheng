@@ -2,6 +2,7 @@ package com.xiangha;
 
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -27,7 +28,7 @@ import acore.logic.XHClick;
 import acore.override.XHApplication;
 import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
-import acore.tools.ToolsDevice;
+import acore.tools.Tools;
 import aplug.basic.InternetCallback;
 import aplug.basic.LoadImage;
 import aplug.basic.ReqInternet;
@@ -36,7 +37,6 @@ import third.ad.db.bean.XHSelfNativeData;
 import third.ad.tools.AdConfigTools;
 import third.ad.tools.AdPlayIdConfig;
 import third.ad.tools.WelcomeAdTools;
-import xh.basic.tool.UtilImage;
 
 import static amodule.main.Tools.WelcomeControls.DEFAULT_TIME;
 import static third.ad.scrollerAd.XHScrollerSelf.showSureDownload;
@@ -51,6 +51,9 @@ public class Welcome extends BaseActivity {
     private final long mAdIntervalTime = 1000;
 
     private RelativeLayout mADLayout;
+
+    private int mOriginalWidth = 1700;
+    private int mOriginalHeight = 2060;
 
     private String tongjiId = "a_ad";
     private boolean isclose = false;
@@ -88,6 +91,22 @@ public class Welcome extends BaseActivity {
         mADLayout = (RelativeLayout) findViewById(R.id.ad_layout);
         textSkip = (TextView) findViewById(R.id.ad_skip);
         textLead = (TextView) findViewById(R.id.ad_vip_lead);
+        int imageW, imageH;
+        int fixedW = Tools.getPhoneWidth();
+        int fixedH = Tools.getPhoneHeight() - getResources().getDimensionPixelSize(R.dimen.dp_105);
+        double proportionFixed = fixedH / fixedW;
+        double proportionOriginal = mOriginalHeight / mOriginalWidth;
+        if (proportionFixed > proportionOriginal) {
+            imageW = fixedW;
+            imageH = fixedW * mOriginalHeight / mOriginalWidth;
+        } else {
+            imageH = fixedH;
+            imageW = fixedH * mOriginalWidth / mOriginalHeight;
+        }
+        ImageView welcomeImg = findViewById(R.id.image_self);
+        ViewGroup.LayoutParams params = welcomeImg.getLayoutParams();
+        params.width = imageW;
+        params.height = imageH;
         textLead.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
