@@ -59,6 +59,7 @@ public class CircleFragment extends Fragment {
     private BaseAppCompatActivity mActivity;
     /** 是否加载完成 */
     private boolean LoadOver = false;
+    private boolean adLoadOver,dataLoadOver;
     private LoadManager mLoadManager = null;
     /**
      * 圈子列表的头部局
@@ -103,7 +104,6 @@ public class CircleFragment extends Fragment {
     public CircleFragment() {
         super();
     }
-    private boolean isLoadAd= true;//是否加载广告
     private QuanAdvertControl quanAdvertControl;
     //对视频的处理
     private LinearLayout video_layout;
@@ -235,8 +235,9 @@ public class CircleFragment extends Fragment {
                     new OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            adLoadOver = false;
+                            dataLoadOver = false;
                             getData(true);
-                            isLoadAd=true;
                             quanAdvertControl.getAdData(mActivity);
                         }
                     }, new OnClickListener() {
@@ -295,10 +296,13 @@ public class CircleFragment extends Fragment {
             @Override
             public void dataBack(boolean isRefresh) {
                 index_size=0;
-                if (mPlateData != null)
-                    mListData =quanAdvertControl.getAdvertAndQuanData(isRefresh,mListData, mPlateData.getCid(), mPlateData.getMid(), index_size);
-                mAdapter.notifyDataSetChanged();
-                index_size=mListData.size();
+                adLoadOver = true;
+                if(adLoadOver && dataLoadOver){
+                    if (mPlateData != null)
+                        mListData = quanAdvertControl.getAdvertAndQuanData(isRefresh,mListData, mPlateData.getCid(), mPlateData.getMid(), index_size);
+                    mAdapter.notifyDataSetChanged();
+                    index_size=mListData.size();
+                }
             }
         });
         mAdapter.setQuanAdvertControl(quanAdvertControl);
@@ -455,9 +459,11 @@ public class CircleFragment extends Fragment {
                         }
                     }
                 }
-                int size= mListData.size();
-                mListData =quanAdvertControl.getAdvertAndQuanData(mListData, mPlateData.getCid(), mPlateData.getMid(), index_size);
-                if(size<mListData.size())isLoadAd=false;
+                dataLoadOver = true;
+                if(adLoadOver && dataLoadOver){
+                    int size= mListData.size();
+                    mListData = quanAdvertControl.getAdvertAndQuanData(mListData, mPlateData.getCid(), mPlateData.getMid(), index_size);
+                }
                 index_size = mListData.size();
                 if (mEveryPageNum == 0) {
                     mEveryPageNum = loadCount;
