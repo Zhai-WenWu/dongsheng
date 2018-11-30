@@ -366,7 +366,7 @@
                     android:id="@+id/text_address"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:lines="1"
+                    android:singleLine="true"
                     android:paddingTop="@dimen/dp_2"
                     android:paddingBottom="@dimen/dp_2"
                     android:textColor="@color/c_white_text"
