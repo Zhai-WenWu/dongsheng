@@ -50,7 +50,7 @@
             android:paddingEnd="0dp"
             android:background="@null"
             android:progressDrawable="@drawable/aliyun_svideo_music_seekbar_drawable_no"
-            android:thumb="@drawable/aliyun_svideo_seekbar_thum"/>
+            android:thumb="@null"/>
         </RelativeLayout>
     </RelativeLayout>
 </LinearLayout>
