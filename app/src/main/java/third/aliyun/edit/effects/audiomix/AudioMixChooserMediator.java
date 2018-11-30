@@ -123,6 +123,7 @@ public class AudioMixChooserMediator extends BaseChooser implements OnItemClickL
         ArrayList<MusicBean> musicBeanArrayList=MusicSQL.getInstance().queryAllShowData();
         if(musicBeanArrayList != null){
             MusicBean empty = new MusicBean();
+            mMusicList.clear();
             mMusicList.add(0,empty);
             mMusicList.addAll(musicBeanArrayList);
         }
