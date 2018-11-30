@@ -2,6 +2,7 @@ package cn.srain.cube.views.ptr;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.os.Looper;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
@@ -614,7 +615,15 @@ public class PtrFrameLayout extends ViewGroup {
         if (DEBUG) {
             PtrCLog.i(LOG_TAG, "refreshComplete");
         }
+        //Add main thread judgment.
+        if(Thread.currentThread() != Looper.getMainLooper().getThread()){
+            post(this::innerRefreshComplete);
+        }else{
+            innerRefreshComplete();
+        }
+    }
 
+     private void innerRefreshComplete() {
         if (mRefreshCompleteHook != null) {
             mRefreshCompleteHook.reset();
         }
