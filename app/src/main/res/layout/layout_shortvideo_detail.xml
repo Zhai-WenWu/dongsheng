@@ -539,11 +539,11 @@
                 app:layout_constraintRight_toRightOf="parent"
                 android:visibility="gone"
                 tools:visibility="visible"
-                android:scaleType="fitEnd"
                 android:layout_marginBottom="@dimen/dp_3"
                 android:layout_marginRight="@dimen/dp_12"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/dp_20"/>
+                android:layout_height="@dimen/dp_20"
+                android:adjustViewBounds="true"/>
 
         </android.support.constraint.ConstraintLayout>
 
