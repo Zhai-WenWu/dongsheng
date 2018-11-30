@@ -65,7 +65,7 @@ public class XHScrollerGdt extends XHScrollerAdParent {
             xhAdDataCallBack.onFail(XHScrollerAdParent.ADKEY_GDT);
         }
         GdtAdTools.newInstance().getNativeData(null, nativeADDataRef,
-                GdtAdTools.newInstance().new AddAdView() {
+                GdtAdTools.newInstance().new AddGgView() {
                     @Override
                     public void addAdView(String title, String desc, String iconUrl,
                                           String imageUrl, View.OnClickListener clickListener) {

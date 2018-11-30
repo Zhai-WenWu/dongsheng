@@ -415,7 +415,7 @@ public class VideoDetailActivity extends BaseAppCompatActivity {
                 mCommentBar.doComment("抢沙发");
             }
         });
-        detailAdapter.setOnGetBigAdView(new ArticleDetailAdapter.OnGetBigAdView() {
+        detailAdapter.setOnGetBigGgView(new ArticleDetailAdapter.OnGetBigGgView() {
             @Override
             public View getBigAdView(final Map<String, String> map) {
                 View adView = mVideoAdContorler.getBigAdView(map);

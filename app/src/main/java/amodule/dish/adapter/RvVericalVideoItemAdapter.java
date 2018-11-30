@@ -13,15 +13,13 @@ import com.xiangha.R;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import acore.widget.rvlistview.adapter.BaseAdapter;
 import acore.widget.rvlistview.holder.RvBaseViewHolder;
 import amodule.dish.video.module.ShortVideoDetailADModule;
 import amodule.dish.video.module.ShortVideoDetailModule;
-import amodule.dish.view.ShortVideoADItemView;
+import amodule.dish.view.ShortVideoGgItemView;
 import amodule.dish.view.ShortVideoItemView;
-import third.ad.tools.AdPlayIdConfig;
 
 import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
 
@@ -51,7 +49,7 @@ public class RvVericalVideoItemAdapter extends BaseAdapter<ShortVideoDetailModul
             return new ItemViewHolder(view);
         } else if (viewType == VIEW_AD) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_short_video_ad_parent, parent, false);
-            return new ADItemViewHolder(view);
+            return new GgItemViewHolder(view);
         } else {
             return null;
         }
@@ -226,11 +224,11 @@ public class RvVericalVideoItemAdapter extends BaseAdapter<ShortVideoDetailModul
         }
     }
 
-    public class ADItemViewHolder extends ItemViewHolder {
-        private ShortVideoADItemView shortVideoItemView;
+    public class GgItemViewHolder extends ItemViewHolder {
+        private ShortVideoGgItemView shortVideoItemView;
         public ShortVideoDetailADModule data;
 
-        public ADItemViewHolder(@NonNull View itemView) {
+        public GgItemViewHolder(@NonNull View itemView) {
             super(itemView);
         }
 
@@ -347,17 +345,17 @@ public class RvVericalVideoItemAdapter extends BaseAdapter<ShortVideoDetailModul
     public void setADData(List<ShortVideoDetailADModule> ADData) {
         mADData = ADData;
     }
-    private ShortVideoADItemView.OnADShowCallback mOnADShowCallback;
-    public void setOnADShowCallback(ShortVideoADItemView.OnADShowCallback onADShowCallback) {
+    private ShortVideoGgItemView.OnADShowCallback mOnADShowCallback;
+    public void setOnADShowCallback(ShortVideoGgItemView.OnADShowCallback onADShowCallback) {
         mOnADShowCallback = onADShowCallback;
     }
-    private ShortVideoADItemView.OnADClickCallback mOnADClickCallback;
-    public void setOnADClickCallback(ShortVideoADItemView.OnADClickCallback onADClickCallback) {
+    private ShortVideoGgItemView.OnADClickCallback mOnADClickCallback;
+    public void setOnADClickCallback(ShortVideoGgItemView.OnADClickCallback onADClickCallback) {
         mOnADClickCallback = onADClickCallback;
     }
 
-    private ShortVideoADItemView.OnAdHintClickListener mOnAdHintClickListener;
-    public void setOnAdHintClickListener(ShortVideoADItemView.OnAdHintClickListener onAdHintClickListener) {
+    private ShortVideoGgItemView.OnAdHintClickListener mOnAdHintClickListener;
+    public void setOnAdHintClickListener(ShortVideoGgItemView.OnAdHintClickListener onAdHintClickListener) {
         mOnAdHintClickListener = onAdHintClickListener;
     }
 }

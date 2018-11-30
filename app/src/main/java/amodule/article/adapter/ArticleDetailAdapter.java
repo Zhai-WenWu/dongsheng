@@ -244,8 +244,8 @@ public class ArticleDetailAdapter extends BaseAdapter {
     private View getBigAdView(Map<String, String> map) {
         RelativeLayout layout = new RelativeLayout(context);
         View view = new View(context);
-        if (mOnGetBigAdView != null)
-            view = mOnGetBigAdView.getBigAdView(map);
+        if (mOnGetBigGgView != null)
+            view = mOnGetBigGgView.getBigAdView(map);
         if (view == null)
             return layout;
         layout.addView(view);
@@ -265,14 +265,14 @@ public class ArticleDetailAdapter extends BaseAdapter {
         this.mOnADCallback = mOnADCallback;
     }
 
-    private OnGetBigAdView mOnGetBigAdView;
+    private OnGetBigGgView mOnGetBigGgView;
 
-    public interface OnGetBigAdView {
+    public interface OnGetBigGgView {
         public View getBigAdView(Map<String, String> map);
     }
 
-    public void setOnGetBigAdView(OnGetBigAdView mOnGetBigAdView) {
-        this.mOnGetBigAdView = mOnGetBigAdView;
+    public void setOnGetBigGgView(OnGetBigGgView mOnGetBigGgView) {
+        this.mOnGetBigGgView = mOnGetBigGgView;
     }
 
     private OnRabSofaCallback onRabSofaCallback;

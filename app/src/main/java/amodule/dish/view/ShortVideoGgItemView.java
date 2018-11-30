@@ -39,7 +39,7 @@ import static third.ad.scrollerAd.XHScrollerAdParent.ADKEY_GDT;
 /**
  * 短视频itemView
  */
-public class ShortVideoADItemView extends BaseItemView implements View.OnClickListener, SeekBar.OnSeekBarChangeListener {
+public class ShortVideoGgItemView extends BaseItemView implements View.OnClickListener, SeekBar.OnSeekBarChangeListener {
 
     private Context context;
     private ImageView mThumbImg;
@@ -55,11 +55,11 @@ public class ShortVideoADItemView extends BaseItemView implements View.OnClickLi
 
     private int position;
 
-    public ShortVideoADItemView(Context context) {
+    public ShortVideoGgItemView(Context context) {
         this(context, null);
     }
 
-    public ShortVideoADItemView(Context context, AttributeSet attrs) {
+    public ShortVideoGgItemView(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
         LayoutInflater.from(context).inflate(R.layout.item_short_video_ad_view, this, true);

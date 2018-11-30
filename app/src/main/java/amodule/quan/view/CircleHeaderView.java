@@ -30,7 +30,7 @@ import acore.logic.LoginManager;
 import acore.logic.XHClick;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
-import acore.widget.AutoScrollADView;
+import acore.widget.AutoScrollGgView;
 import amodule.main.view.circle.CircleHeaderAllQuan;
 import amodule.main.view.circle.CircleHeaderRecUser;
 import amodule.quan.db.SubjectData;
@@ -203,24 +203,24 @@ public class CircleHeaderView extends LinearLayout {
     private void createnewSticky(List<Map<String, String>> jsonList) {
         LinearLayout layout = createViewLayout(STICKY_NEW_TAG);
         float height = Tools.getDimen(getContext(), R.dimen.dp_56);
-        AutoScrollADView.ADViewAdapter adapter = new AutoScrollADView.ADViewAdapter(jsonList);
-        adapter.setOnItemClickListener(new AutoScrollADView.ADViewAdapter.OnItemClickListener() {
+        AutoScrollGgView.GgViewAdapter adapter = new AutoScrollGgView.GgViewAdapter(jsonList);
+        adapter.setOnItemClickListener(new AutoScrollGgView.GgViewAdapter.OnItemClickListener() {
             @Override
             public void onClick(View view, Map<String, String> data) {
                 XHClick.mapStat(context,stiaticID,"公告","");
                 AppCommon.openUrl(context,data.get("url"),true);
             }
         });
-        final AutoScrollADView autoScrollADView = new AutoScrollADView(getContext());
-        autoScrollADView.setStiaticID(stiaticID);
-        autoScrollADView.setmAdverHeight(height);
-        autoScrollADView.setAdapter(adapter);
+        final AutoScrollGgView autoScrollGgView = new AutoScrollGgView(getContext());
+        autoScrollGgView.setStiaticID(stiaticID);
+        autoScrollGgView.setmAdverHeight(height);
+        autoScrollGgView.setAdapter(adapter);
         layout.setVisibility(VISIBLE);
-        layout.addView(autoScrollADView, ViewGroup.LayoutParams.MATCH_PARENT, (int) height);
+        layout.addView(autoScrollGgView, ViewGroup.LayoutParams.MATCH_PARENT, (int) height);
         View lineView = new View(getContext());
         lineView.setBackgroundColor(Color.parseColor(getResources().getString(R.color.common_bg)));
         layout.addView(lineView, ViewGroup.LayoutParams.MATCH_PARENT, Tools.getDimen(getContext(), R.dimen.dp_1));
-        autoScrollADView.start();
+        autoScrollGgView.start();
     }
 
     // *******************************************新公告置顶end*************************************************

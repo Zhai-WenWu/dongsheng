@@ -33,28 +33,28 @@ import static third.ad.scrollerAd.XHScrollerAdParent.ID_AD_ICON_GDT;
 /**
  * 处理数据的小贴士下的广告
  */
-public class DishAdDataViewNew extends ItemBaseView {
+public class DishGgDataViewNew extends ItemBaseView {
     private XHAllAdControl xhAllAdControl;
 
     private Map<String, String> adDataMap = new HashMap<>();
     RelativeLayout root_layout;
 
-    public DishAdDataViewNew(Context context, int layoutId) {
+    public DishGgDataViewNew(Context context, int layoutId) {
         super(context, layoutId);
     }
 
-    public DishAdDataViewNew(Context context, AttributeSet attrs, int layoutId) {
+    public DishGgDataViewNew(Context context, AttributeSet attrs, int layoutId) {
         super(context, attrs, layoutId);
     }
 
-    public DishAdDataViewNew(Context context, AttributeSet attrs, int defStyleAttr, int layoutId) {
+    public DishGgDataViewNew(Context context, AttributeSet attrs, int defStyleAttr, int layoutId) {
         super(context, attrs, defStyleAttr, layoutId);
     }
 
     @Override
     public void init() {
         root_layout = (RelativeLayout) findViewById(R.id.root_layout);
-        DishAdDataViewNew.this.setVisibility(View.GONE);
+        DishGgDataViewNew.this.setVisibility(View.GONE);
     }
 
     /**
@@ -63,7 +63,7 @@ public class DishAdDataViewNew extends ItemBaseView {
      * @param activity
      */
     public void getRequest(final Activity activity, final ViewGroup parentView) {
-        DishAdDataViewNew.this.setVisibility(View.GONE);
+        DishGgDataViewNew.this.setVisibility(View.GONE);
         ArrayList<String> list = new ArrayList<>();
         list.add(AdPlayIdConfig.DISH_TIESHI);
         xhAllAdControl = new XHAllAdControl(list, new XHAllAdControl.XHBackIdsDataCallBack() {
@@ -73,20 +73,20 @@ public class DishAdDataViewNew extends ItemBaseView {
                 String data = map.get(AdPlayIdConfig.DISH_TIESHI);
                 Log.i("xianghaTag", AdPlayIdConfig.DISH_TIESHI + " : " + data);
                 adDataMap = StringManager.getFirstMap(data);
-                DishAdDataViewNew.this.setVisibility(View.VISIBLE);
+                DishGgDataViewNew.this.setVisibility(View.VISIBLE);
                 if (adDataMap.containsKey("type")) {
                     switch (adDataMap.get("type")) {
                         case AdPlayIdConfig.ADTYPE_GDT:
                         case AdPlayIdConfig.ADTYPE_BAIDU:
                         case AdPlayIdConfig.ADTYPE_BANNER:
-                            DishAdDataViewNew.this.setVisibility(View.VISIBLE);
+                            DishGgDataViewNew.this.setVisibility(View.VISIBLE);
                             setBigPicADData(adDataMap, parentView);
                             break;
                         default:
-                            DishAdDataViewNew.this.setVisibility(View.GONE);
+                            DishGgDataViewNew.this.setVisibility(View.GONE);
                             break;
                     }
-                } else DishAdDataViewNew.this.setVisibility(View.GONE);
+                } else DishGgDataViewNew.this.setVisibility(View.GONE);
             }
         }, activity, "result_tip");
         xhAllAdControl.registerRefreshCallback();
@@ -215,7 +215,7 @@ public class DishAdDataViewNew extends ItemBaseView {
         view.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                AppCommon.setAdHintClick((Activity) DishAdDataViewNew.this.getContext(), v, xhAllAdControl, 0, "");
+                AppCommon.setAdHintClick((Activity) DishGgDataViewNew.this.getContext(), v, xhAllAdControl, 0, "");
             }
         });
     }
@@ -224,10 +224,10 @@ public class DishAdDataViewNew extends ItemBaseView {
      * 设置广告点击事件
      */
     private void exposureAdData() {
-        DishAdDataViewNew.this.setOnClickListener(new OnClickListener() {
+        DishGgDataViewNew.this.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                xhAllAdControl.onAdClick(DishAdDataViewNew.this, 0, "");
+                xhAllAdControl.onAdClick(DishGgDataViewNew.this, 0, "");
             }
         });
     }
@@ -249,9 +249,9 @@ public class DishAdDataViewNew extends ItemBaseView {
             findViewById(id).setVisibility(id == showId ? View.VISIBLE : View.GONE);
         }
         Log.i("xianghaTag", "addView");
-        if (DishAdDataViewNew.this != null && context != null)
+        if (DishGgDataViewNew.this != null && context != null)
             parentView.removeAllViews();
-        parentView.addView(DishAdDataViewNew.this);
+        parentView.addView(DishGgDataViewNew.this);
     }
 
     boolean canAdBind = true;

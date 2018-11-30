@@ -37,7 +37,7 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import amodule.dish.activity.DetailDish;
-import amodule.dish.view.DishADBannerView;
+import amodule.dish.view.DishGgBannerView;
 import amodule.dish.view.DishAboutView;
 import amodule.dish.view.DishExplainView;
 import amodule.dish.view.DishGridDialog;
@@ -46,7 +46,7 @@ import amodule.dish.view.DishHoverViewControl;
 import amodule.dish.view.DishIngreDataShow;
 import amodule.dish.view.DishModuleScrollView;
 import amodule.dish.view.DishQAView;
-import amodule.dish.view.DishRecommedAndAdvView;
+import amodule.dish.view.DishRecommedAndGgView;
 import amodule.dish.view.DishRelatedRecommendView;
 import amodule.dish.view.DishTitleViewControl;
 import amodule.dish.view.DishVipView;
@@ -80,9 +80,9 @@ public class DetailDishViewManager {
     public DishVipView dishVipView;
     public DishAboutView dishAboutView;
     public DishIngreDataShow dishIngreDataShow;
-    public DishRecommedAndAdvView dishRecommedAndAdvView;
+    public DishRecommedAndGgView mDishRecommedAndGgView;
     public DishExplainView dishExplainView;
-    public DishADBannerView dishADBannerView;
+    public DishGgBannerView mDishGgBannerView;
     public DishQAView dishQAView;
     public DishRelatedRecommendView dishRelatedRecommendView;
     public DishModuleScrollView dishModuleScrollView;
@@ -130,14 +130,14 @@ public class DetailDishViewManager {
         dishIngreDataShow= new DishIngreDataShow(mAct);
         dishIngreDataShow.setVisibility(View.GONE);
         //banner
-        dishADBannerView= new DishADBannerView(mAct);
-        dishADBannerView.setVisibility(View.GONE);
+        mDishGgBannerView = new DishGgBannerView(mAct);
+        mDishGgBannerView.setVisibility(View.GONE);
         //小技巧
         dishModuleScrollView= new DishModuleScrollView(mAct);
         dishModuleScrollView.setVisibility(View.GONE);
         layoutHeader.addView(dishVipView);
         layoutHeader.addView(dishAboutView);
-        layoutHeader.addView(dishADBannerView);
+        layoutHeader.addView(mDishGgBannerView);
         //处理特殊逻辑判断
         linearLayoutOne= new LinearLayout(mAct);
         RelativeLayout.LayoutParams layoutParamsOne = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -162,16 +162,16 @@ public class DetailDishViewManager {
         //foot
         dishExplainView = new DishExplainView(mAct);
         dishExplainView.setVisibility(View.GONE);
-        dishRecommedAndAdvView = new DishRecommedAndAdvView(mAct);
-        dishRecommedAndAdvView.setVisibility(View.GONE);
-        dishRelatedRecommendView = dishRecommedAndAdvView.findViewById(R.id.related_recommend);
+        mDishRecommedAndGgView = new DishRecommedAndGgView(mAct);
+        mDishRecommedAndGgView.setVisibility(View.GONE);
+        dishRelatedRecommendView = mDishRecommedAndGgView.findViewById(R.id.related_recommend);
         dishRelatedRecommendView.setVisibility(View.GONE);
         layoutFooter.addView(dishExplainView);
         layoutFooter.addView(dishQAView);
         RelativeLayout layout= new RelativeLayout(mAct);
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,Tools.getDimen(mAct,R.dimen.dp_60));
         layout.setLayoutParams(layoutParams);
-        layoutFooter.addView(dishRecommedAndAdvView);
+        layoutFooter.addView(mDishRecommedAndGgView);
         layoutFooter.addView(layout);
         listView.addHeaderView(dishHeaderViewNew);
         listView.addHeaderView(layoutHeader);
@@ -435,7 +435,7 @@ public class DetailDishViewManager {
             }else {
                 dishRelatedRecommendView.setVisibility(View.VISIBLE);
                 dishRelatedRecommendView.setData(list);
-                dishRecommedAndAdvView.setVisibility(View.VISIBLE);
+                mDishRecommedAndGgView.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -447,11 +447,11 @@ public class DetailDishViewManager {
     public void handlerRecommedAndAd(ArrayList<Map<String, String>> list,String code,String name){
         if(list==null)return;
         Map<String,String> temp=list.get(0);
-        if(dishRecommedAndAdvView !=null&&list!=null&&!TextUtils.isEmpty(temp.get("list"))
+        if(mDishRecommedAndGgView !=null&&list!=null&&!TextUtils.isEmpty(temp.get("list"))
                 &&!"[]".equals(temp.get("list"))&&!"{}".equals(temp.get("list"))){
-            dishRecommedAndAdvView.setVisibility(View.VISIBLE);
-            dishRecommedAndAdvView.initData(code,name);
-            dishRecommedAndAdvView.initUserDish(list);
+            mDishRecommedAndGgView.setVisibility(View.VISIBLE);
+            mDishRecommedAndGgView.initData(code,name);
+            mDishRecommedAndGgView.initUserDish(list);
         }
     }
     /**
@@ -499,7 +499,7 @@ public class DetailDishViewManager {
                 }
                 boolean visibleToUser = onBannerViewVisibleToUser();
                 if(visibleToUser){
-                    dishADBannerView.onAdShow();
+                    mDishGgBannerView.onAdShow();
                 }
             }
         });
@@ -568,10 +568,10 @@ public class DetailDishViewManager {
     }
 
     private boolean adBannerOnScreen() {
-        if (dishADBannerView != null && dishADBannerView.getVisibility() == View.VISIBLE) {
-            int bannerViewHeight = dishADBannerView.getHeight();
+        if (mDishGgBannerView != null && mDishGgBannerView.getVisibility() == View.VISIBLE) {
+            int bannerViewHeight = mDishGgBannerView.getHeight();
             int[] location = new int[2];
-            dishADBannerView.getLocationOnScreen(location);
+            mDishGgBannerView.getLocationOnScreen(location);
             if ((location[1] + bannerViewHeight > Tools.getStatusBarHeight(mAct)
                     && location[1] < Tools.getScreenHeight() - ToolsDevice.dp2px(mAct, 57))) {
                 return true;

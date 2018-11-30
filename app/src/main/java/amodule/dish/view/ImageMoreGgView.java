@@ -31,7 +31,7 @@ import static third.ad.scrollerAd.XHScrollerAdParent.ID_AD_ICON_GDT;
  * 图片预览单个view
  * Created by XiangHa on 2016/8/16.
  */
-public class ImageMoreAdView extends ImageMoreView implements View.OnClickListener {
+public class ImageMoreGgView extends ImageMoreView implements View.OnClickListener {
 
     private final XHAllAdControl mXhadControl;
     private Activity mAct;
@@ -51,7 +51,7 @@ public class ImageMoreAdView extends ImageMoreView implements View.OnClickListen
      * @param adPlayId : 广告位id
      * @param adPlayKey ：广告类型
      */
-    public ImageMoreAdView(XHAllAdControl xhadControl, Activity con, List<? extends Object> data, String adPlayId, String adPlayKey){
+    public ImageMoreGgView(XHAllAdControl xhadControl, Activity con, List<? extends Object> data, String adPlayId, String adPlayKey){
         mXhadControl = xhadControl;
         mAct = con;
         mData = data;

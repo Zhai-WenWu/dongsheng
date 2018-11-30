@@ -34,7 +34,7 @@ public class HomeSecondRecyclerAdapter extends HomeAdapter {
                 viewHolder = new HomeSecondItemViewHolder(new HomeSecondRecipeItem(mContext));
                 break;
             case mADType:
-                viewHolder = new HomeSecondItemADViewHolder(new HomeSecondADItem(mContext));
+                viewHolder = new HomeSecondItemGgViewHolder(new HomeSecondADItem(mContext));
                 break;
         }
         return viewHolder;
@@ -69,10 +69,10 @@ public class HomeSecondRecyclerAdapter extends HomeAdapter {
         return TextUtils.equals("ad", data.get("adstyle")) ? mADType : type_tagImage;
     }
 
-    public class HomeSecondItemADViewHolder extends RvBaseViewHolder<Map<String, String>> {
+    public class HomeSecondItemGgViewHolder extends RvBaseViewHolder<Map<String, String>> {
 
         private HomeSecondADItem mItemView;
-        public HomeSecondItemADViewHolder(@NonNull HomeSecondADItem itemView) {
+        public HomeSecondItemGgViewHolder(@NonNull HomeSecondADItem itemView) {
             super(itemView);
             mItemView = itemView;
         }

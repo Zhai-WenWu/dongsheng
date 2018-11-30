@@ -56,7 +56,7 @@ public class DishFootControl implements View.OnClickListener{
     private RelativeLayout mRecomentLayout;
     private TextView mRecommentNum,mRelevantTv;
 
-    private DishAdDataViewNew dishAdDataView;
+    private DishGgDataViewNew dishAdDataView;
 
     private String code,mDishName,authorCode;
 
@@ -83,7 +83,7 @@ public class DishFootControl implements View.OnClickListener{
         mRecommentNum = (TextView) mAct.findViewById(R.id.a_dish_detail_new_tv_num);
         mRelevantTv = (TextView) mAct.findViewById(R.id.a_dish_detail_new_relevantTv);
 
-        dishAdDataView = new DishAdDataViewNew(mAct,R.layout.view_dish_tips_ad_layout_new);
+        dishAdDataView = new DishGgDataViewNew(mAct,R.layout.view_dish_tips_ad_layout_new);
         dishAdDataView.getRequest(mAct, mAdLayout);
         mRecomentLayout.setOnClickListener(this);
         mRelevantTv.setOnClickListener(this);
@@ -446,12 +446,12 @@ public class DishFootControl implements View.OnClickListener{
         //判断当前view是否在
         for (int i = 0; i < mAdLayout.getChildCount(); i++) {
             View dishAdDataView = mAdLayout.getChildAt(i);
-            if (dishAdDataView != null && dishAdDataView instanceof DishAdDataViewNew) {
+            if (dishAdDataView != null && dishAdDataView instanceof DishGgDataViewNew) {
                 int[] viewLocation = new int[2];
                 dishAdDataView.getLocationOnScreen(viewLocation);
                 if ((viewLocation[1] > Tools.getStatusBarHeight(mAct)
                         && viewLocation[1] < Tools.getScreenHeight() - ToolsDevice.dp2px(mAct, 57))) {
-                    ((DishAdDataViewNew) dishAdDataView).onListScroll();
+                    ((DishGgDataViewNew) dishAdDataView).onListScroll();
                 }
             }
         }

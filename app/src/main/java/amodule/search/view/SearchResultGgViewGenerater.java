@@ -27,7 +27,7 @@ import static third.ad.scrollerAd.XHScrollerAdParent.ID_AD_ICON_GDT;
  * Created by ：fei_teng on 2017/3/16 16:12.
  */
 
-public class SearchResultAdViewGenerater {
+public class SearchResultGgViewGenerater {
 
     /**
      * 搜索结果页，列表广告

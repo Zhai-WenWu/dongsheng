@@ -20,7 +20,7 @@ import acore.logic.XHClick;
 import acore.override.activity.base.BaseActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
-import amodule.dish.view.ImageMoreAdView;
+import amodule.dish.view.ImageMoreGgView;
 import amodule.dish.view.ImageMoreCommenView;
 import amodule.dish.view.ImageMoreView;
 import amodule.dish.view.MoreImageViewPager;
@@ -104,7 +104,7 @@ public class MoreImageShow extends BaseActivity{
             getAdData();
     }
 
-    private ImageMoreAdView mImageMoreAdView;
+    private ImageMoreGgView mImageMoreGgView;
 
     private void getAdData(){
 
@@ -122,21 +122,21 @@ public class MoreImageShow extends BaseActivity{
                         if (!TextUtils.isEmpty(adStr)) {
                             ArrayList<Map<String, String>> adList = StringManager.getListMapByJson(adStr);
                             if (adList != null && adList.size() > 0) {
-                                if(mImageMoreAdView == null){
-                                    mImageMoreAdView = new ImageMoreAdView(xhAllAdControl,MoreImageShow.this,adList,AdPlayIdConfig.DETAIL_DISH_MAKE,"ad");
-                                    classContainter.add(mImageMoreAdView);
+                                if(mImageMoreGgView == null){
+                                    mImageMoreGgView = new ImageMoreGgView(xhAllAdControl,MoreImageShow.this,adList,AdPlayIdConfig.DETAIL_DISH_MAKE,"ad");
+                                    classContainter.add(mImageMoreGgView);
                                 }else{
-                                    classContainter.remove(mImageMoreAdView);
-                                    mImageMoreAdView = new ImageMoreAdView(xhAllAdControl,MoreImageShow.this,adList,AdPlayIdConfig.DETAIL_DISH_MAKE,"ad");
-                                    classContainter.add(mImageMoreAdView);
+                                    classContainter.remove(mImageMoreGgView);
+                                    mImageMoreGgView = new ImageMoreGgView(xhAllAdControl,MoreImageShow.this,adList,AdPlayIdConfig.DETAIL_DISH_MAKE,"ad");
+                                    classContainter.add(mImageMoreGgView);
                                 }
                                 myAdapter.notifyDataSetChanged();
                             }
-                        }else if(mImageMoreAdView != null){
+                        }else if(mImageMoreGgView != null){
                             viewPager.setCurrentItem(classContainter.size() - 2);
-                            classContainter.remove(mImageMoreAdView);
+                            classContainter.remove(mImageMoreGgView);
                             myAdapter.notifyDataSetChanged();
-                            mImageMoreAdView = null;
+                            mImageMoreGgView = null;
                         }
                     }
                 }

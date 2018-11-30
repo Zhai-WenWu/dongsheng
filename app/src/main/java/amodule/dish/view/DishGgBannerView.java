@@ -24,18 +24,18 @@ import static third.ad.tools.AdPlayIdConfig.DISH_YONGLIAO;
  * 用料上方广告处理——————api
  */
 
-public class DishADBannerView extends ItemBaseView {
+public class DishGgBannerView extends ItemBaseView {
     private ImageView img_banner;
     private XHAllAdControl xhAllAdControl;
-    public DishADBannerView(Context context) {
+    public DishGgBannerView(Context context) {
         super(context,  R.layout.view_dish_ad);
     }
 
-    public DishADBannerView(Context context, AttributeSet attrs) {
+    public DishGgBannerView(Context context, AttributeSet attrs) {
         super(context, attrs, R.layout.view_dish_ad);
     }
 
-    public DishADBannerView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public DishGgBannerView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr, R.layout.view_dish_ad);
     }
     @Override

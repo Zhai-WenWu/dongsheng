@@ -176,7 +176,7 @@ public class GdtAdTools {
      * @param nativeADDataRef
      * @param callback
      */
-    public void getNativeData(View view, final NativeADDataRef nativeADDataRef, final AddAdView callback) {
+    public void getNativeData(View view, final NativeADDataRef nativeADDataRef, final AddGgView callback) {
         if(nativeADDataRef == null){
             return;
         }
@@ -214,7 +214,7 @@ public class GdtAdTools {
     /**
      * 信息流广告获取内容时的灰度接口
      */
-    public abstract class AddAdView {
+    public abstract class AddGgView {
         public abstract void addAdView(String title, String desc, String iconUrl, String imageUrl, OnClickListener clickListener);
 
         public void onClick() {

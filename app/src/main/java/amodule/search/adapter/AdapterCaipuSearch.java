@@ -35,7 +35,7 @@ import acore.override.activity.base.BaseActivity;
 import amodule.dish.activity.DetailDish;
 import amodule.health.activity.DetailIngre;
 import amodule.search.view.SearchResultAdDataProvider;
-import amodule.search.view.SearchResultAdViewGenerater;
+import amodule.search.view.SearchResultGgViewGenerater;
 import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
 import third.ad.scrollerAd.XHAllAdControl;
@@ -438,7 +438,7 @@ public class AdapterCaipuSearch extends BaseAdapter {
         if (adIndex > -1 && adIndex < adData.size()) {
             if (adData.get(adIndex) != null) {
                 final Map<String, String> dataMap = adData.get(adIndex);
-                view = SearchResultAdViewGenerater.generateListAdView(mActivity, xhAllAdControl, dataMap, adIndex);
+                view = SearchResultGgViewGenerater.generateListAdView(mActivity, xhAllAdControl, dataMap, adIndex);
             }
         }
         return view;

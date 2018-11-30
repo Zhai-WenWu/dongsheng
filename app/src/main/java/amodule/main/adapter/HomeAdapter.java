@@ -86,7 +86,7 @@ public class HomeAdapter extends RvBaseAdapter<Map<String, String>> {
             case type_gridImage://网格
                 return new StaggeredGridImageViewHolder(new HomeStaggeredGridItem(mContext),parent);
             case type_gridADImage://网格广告
-                return new GridADImageViewHolder(new HomeGridADItem(mContext),parent);
+                return new GridGgImageViewHolder(new HomeGridADItem(mContext),parent);
             case type_tagImage://大图
                 return new ViewDishViewHolder(new HomeRecipeItem(mContext),parent);
             case type_levelImage://蒙版
@@ -310,9 +310,9 @@ public class HomeAdapter extends RvBaseAdapter<Map<String, String>> {
     /**
      * 网格广告
      */
-    public class GridADImageViewHolder extends RvMapViewHolderStat {
+    public class GridGgImageViewHolder extends RvMapViewHolderStat {
         public HomeGridADItem view;
-        public GridADImageViewHolder(HomeGridADItem view,View parent) {
+        public GridGgImageViewHolder(HomeGridADItem view, View parent) {
             super(view,parent);
             this.view = view;
         }

@@ -21,7 +21,7 @@ import acore.override.view.ItemBaseView;
  */
 public class DishExplainView extends ItemBaseView {
     private LinearLayout mAdLayout;
-    private DishAdDataViewNew dishAdDataView;
+    private DishGgDataViewNew dishAdDataView;
 
     public DishExplainView(Context context) {
         super(context, R.layout.view_dish_explain);
@@ -41,7 +41,7 @@ public class DishExplainView extends ItemBaseView {
         findViewById(R.id.tv_explain).setVisibility(View.GONE);
         findViewById(R.id.explain_content_tv).setVisibility(View.GONE);
         mAdLayout = (LinearLayout) findViewById(R.id.a_dish_detail_ad);
-        dishAdDataView = new DishAdDataViewNew(context, R.layout.view_dish_tips_ad_layout_distance);
+        dishAdDataView = new DishGgDataViewNew(context, R.layout.view_dish_tips_ad_layout_distance);
         setAdData();
     }
 
