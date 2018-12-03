@@ -98,7 +98,7 @@
         android:layout_height="@dimen/dp_56"
         android:visibility="invisible"
         android:layout_gravity="center_horizontal|bottom"
-        android:layout_marginBottom="@dimen/dp_60"
+        android:layout_marginBottom="@dimen/dp_30"
         android:scaleType="centerCrop"
         android:src="@drawable/img_joinin" />
 
