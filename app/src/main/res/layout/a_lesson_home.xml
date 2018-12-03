@@ -59,4 +59,10 @@
 
     </cn.srain.cube.views.ptr.PtrClassicFrameLayout>
 
+    <Button
+        android:onClick="startCourseIntroduce"
+        android:layout_marginTop="@dimen/dp_49"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
 </RelativeLayout>

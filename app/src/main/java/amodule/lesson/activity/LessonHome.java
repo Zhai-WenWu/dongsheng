@@ -1,5 +1,6 @@
 package amodule.lesson.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -219,5 +220,10 @@ public class LessonHome extends MainBaseActivity implements IObserver, ISetMessa
     public void setMessageTip(int tipCournt) {
         if (mViewController != null)
             mViewController.setMessageTip(tipCournt);
+    }
+
+    //TODO
+    public void startCourseIntroduce(View view){
+        startActivity(new Intent(this,CourseIntroduce.class));
     }
 }
