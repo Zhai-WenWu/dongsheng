@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+
+    <RadioButton
+        android:id="@+id/rb_abstract_move"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@color/transparent"
+        android:button="@null"
+        android:checked="true"
+        android:gravity="center"
+        android:text="简介"
+        android:textColor="@color/cuouse_radiobutton_textcolor"
+        android:textSize="@dimen/sp_16" />
+
+    <RadioButton
+        android:id="@+id/rb_video_move"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@color/transparent"
+        android:button="@null"
+        android:gravity="center"
+        android:text="视频详解"
+        android:textColor="@color/cuouse_radiobutton_textcolor" />
+
+    <RadioButton
+        android:id="@+id/rb_ask_move"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@color/transparent"
+        android:button="@null"
+        android:gravity="center"
+        android:text="常见问答"
+        android:textColor="@color/cuouse_radiobutton_textcolor" />
+</RadioGroup>

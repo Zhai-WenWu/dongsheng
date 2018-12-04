@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <!--标题栏-->
+    <TextView
+        android:id="@+id/tv_course_title"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:text="鱼香肉丝鱼香肉丝鱼香肉丝鱼鱼香肉丝"
+        android:textColor="@color/ysf_grey_666666"
+        android:textSize="@dimen/sp_14" />
+
+    <TextView
+        android:id="@+id/tv_course_subtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/ysf_grey_666666"
+        android:textSize="@dimen/sp_14" />
+</LinearLayout>

@@ -376,6 +376,7 @@ public class StringManager extends UtilString {
 
     //名厨菜更新时间
     public static final String API_COURSE_UPDATE = apiUrl + "main8/school/getRotationData";
+    public final static String API_COURSE_CHAPTERDESC = apiUrl + "/main9/school/chapterDesc";
 
     //替换url
     public final static String replaceUrl(String url) {

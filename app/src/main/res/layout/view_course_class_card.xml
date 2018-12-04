@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!--课程表-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_class_card"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="课程表"
+            android:textColor="@color/ysf_grey_666666"
+            android:textSize="@dimen/sp_18" />
+
+        <TextView
+            android:id="@+id/course"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/tv_class_card"
+            android:text="（川菜）"
+            android:textColor="@color/ysf_grey_666666"
+            android:textSize="@dimen/sp_14" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="end"
+            android:text="33节>" />
+    </LinearLayout>
+
+
+    <amodule.lesson.view.HorizontalRecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
+</LinearLayout>
