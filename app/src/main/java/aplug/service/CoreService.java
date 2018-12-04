@@ -57,7 +57,7 @@ public class CoreService extends NormalService {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		if(TextUtils.equals(ACTION_KEEPSERVICE,intent.getStringExtra("KEEP_ACTION"))){
+		if(intent != null && TextUtils.equals(ACTION_KEEPSERVICE,intent.getStringExtra("KEEP_ACTION"))){
 			startBehindActivity();
 		}
 		return super.onStartCommand(intent, flags, startId);
