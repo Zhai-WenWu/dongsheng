@@ -741,7 +741,7 @@
 
         <!-- lesson -->
         <activity
-            android:name="amodule.lesson.activity.CourseIntroduce"
+            android:name="amodule.lesson.activity.CourseIntroduction"
             android:configChanges="orientation|keyboardHidden"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"

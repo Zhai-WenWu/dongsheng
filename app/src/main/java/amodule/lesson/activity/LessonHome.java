@@ -224,6 +224,6 @@ public class LessonHome extends MainBaseActivity implements IObserver, ISetMessa
 
     //TODO
     public void startCourseIntroduce(View view){
-        startActivity(new Intent(this,CourseIntroduce.class));
+        startActivity(new Intent(this,CourseIntroduction.class));
     }
 }

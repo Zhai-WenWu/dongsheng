@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="@dimen/dp_20"
+    android:paddingTop="@dimen/dp_30"
+    android:paddingRight="@dimen/dp_20">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dp_28"
+        android:includeFontPadding="true"
+        android:textColor="@color/common_text"
+        android:textSize="@dimen/sp_20"
+        android:textStyle="bold"
+        tools:text="课程简介"/>
+
+    <TextView
+        android:id="@+id/desc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_32"
+        android:textColor="#3e3e3e"
+        android:textSize="@dimen/sp_16"
+        tools:text="一款网红奶酪面包，柔滑的奶酪馅填充到松软的面包中，红玉香甜的味道让人爱不释扣，赶快做起来吧！"/>
+
+</FrameLayout>

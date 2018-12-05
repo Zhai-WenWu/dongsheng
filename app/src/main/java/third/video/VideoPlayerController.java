@@ -217,7 +217,10 @@ public class VideoPlayerController {
             mImageView.setLayoutParams(params);
             mPraentViewGroup.addView(mImageView);
             this.view_dish=mImageView;
-            mImageView.setOnClickListener(v -> setOnClick());
+            mImageView.setOnClickListener(v -> {
+                isUserClick = true;
+                setOnClick();
+            });
         }
         String temp= (String) FileManager.loadShared(context,FileManager.SHOW_NO_WIFI,FileManager.SHOW_NO_WIFI);
         if(!TextUtils.isEmpty(temp)&&"1".equals(temp))

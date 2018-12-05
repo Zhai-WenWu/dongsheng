@@ -215,7 +215,9 @@ public abstract class InternetCallback extends XHInternetCallBack {
 		// 配置cookie
 //		header.put("Cookie", cookie);
 		header.put("XH-Client-Data",getCookieStr());
-        if(!TextUtils.isEmpty(url)&&(url.contains("main7")||url.contains("Main7")||url.contains("main8"))&&!TextUtils.isEmpty(encryptparams)){
+        if(!TextUtils.isEmpty(url)
+				&&(url.contains("main7")||url.contains("Main7")||url.contains("main8")||url.contains("main9"))
+				&&!TextUtils.isEmpty(encryptparams)){
 			encryptparams=encryptparams.replaceAll("\\n","");
 			header.put("xh-parameter", encryptparams);
         }
