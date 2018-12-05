@@ -22,11 +22,14 @@ import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.rvlistview.RvListView;
 import amodule.lesson.adapter.CourseVideoContentAdapter;
+import amodule.lesson.controler.data.CourseDataController;
 import amodule.lesson.view.CourseDetailAskView;
 import amodule.lesson.view.CourseDetailClassCardView;
 import amodule.lesson.view.CourseDetailIntroductionView;
 import amodule.lesson.view.CourseDetailRadioButtonView;
 import amodule.lesson.view.CourseDetailTitleView;
+import aplug.basic.InternetCallback;
+import aplug.basic.ReqInternet;
 
 /**
  * Description :
@@ -36,8 +39,10 @@ import amodule.lesson.view.CourseDetailTitleView;
  */
 public class CourseDetail extends BaseAppCompatActivity {
 
-    private Map<String, String> mInfoMap;
     private RvListView mCourseList;
+    private ArrayList<String> mVideoContentList;
+    private CourseDetailTitleView courseDetailTitleView;
+    private Map<String, String> mTopInfoMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,50 +56,67 @@ public class CourseDetail extends BaseAppCompatActivity {
         loadManager = new LoadManager(this, rl);
         rl = (RelativeLayout) findViewById(R.id.activityLayout);
         mCourseList = findViewById(R.id.course_list);
-        ArrayList<String> strings = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            strings.add("i");
-        }
-        mCourseList.setAdapter(new CourseVideoContentAdapter(this, strings));
+        mVideoContentList = new ArrayList<>();
+        mCourseList.setAdapter(new CourseVideoContentAdapter(this, mVideoContentList));
     }
 
     private void loadInfo() {
+        CourseDataController.loadChapterTopData("", new InternetCallback() {
+            @Override
+            public void loaded(int i, String s, Object o) {
+                if (i >= ReqInternet.REQ_OK_STRING) {
+                    mTopInfoMap = StringManager.getFirstMap(o);
+                    CourseDataController.loadCourseListData("", "", new InternetCallback() {
+                        @Override
+                        public void loaded(int i, String s, Object o) {
+                            if (i >= ReqInternet.REQ_OK_STRING) {
+                                Map<String, String> mCourseListMap = StringManager.getFirstMap(o);
+                                initCourseListData(mCourseListMap);
+                            }
+                        }
+                    });
+                }
+            }
 
-        mInfoMap = StringManager.getFirstMap(Json.o1);
-        initData();
-//        ReqEncyptInternet.in().doGetEncypt(StringManager.API_COURSE_CHAPTERDESC, "code=" + "1000", new InternetCallback() {
-//
-//            @Override
-//            public void loaded(int i, String s, Object o) {
-//                if (i >= ReqInternet.REQ_OK_STRING) {
-//                    mInfoMap = StringManager.getFirstMap(o);
-//                    initData();
-//                }
-//            }
-//
-//        });
+        });
     }
 
 
-    private void initData() {
+    private void initCourseListData(Map<String, String> courseListMap) {
         //标题
-        CourseDetailTitleView courseDetailTitleView = new CourseDetailTitleView(this);
-        int height = Tools.getMeasureHeight(courseDetailTitleView);
+        courseDetailTitleView = new CourseDetailTitleView(this);
+        courseDetailTitleView.setTitleData(mTopInfoMap.get("name"));
+        courseDetailTitleView.setSubTitleData(courseListMap.get("subTitle"));
         mCourseList.addHeaderView(courseDetailTitleView);
 
-        //课程表
+        //课程横划
         CourseDetailClassCardView courseDetailClassCardView = new CourseDetailClassCardView(this);
         TextView mClassNumTv = courseDetailClassCardView.findViewById(R.id.tv_class_num);
         mCourseList.addHeaderView(courseDetailClassCardView);
         mClassNumTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //课程页
                 startActivity(new Intent(CourseDetail.this, CourseList.class));
             }
         });
 
+        CourseDataController.loadChapterDescData("", new InternetCallback() {
+            @Override
+            public void loaded(int i, String s, Object o) {
+                if (i >= ReqInternet.REQ_OK_STRING) {
+                    Map<String, String> mDescoMap = StringManager.getFirstMap(o);
+                    initDescData(mDescoMap);
+                }
+            }
+
+        });
+    }
+
+
+    private void initDescData(Map<String, String> descoMap) {
         //简介
-        Map<String, String> desc = StringManager.getFirstMap(mInfoMap.get("desc"));
+        Map<String, String> desc = StringManager.getFirstMap(descoMap.get("desc"));
         if (desc != null && desc.size() > 0) {
             CourseDetailIntroductionView courseDetailClassView = new CourseDetailIntroductionView(this, desc);
             mCourseList.addHeaderView(courseDetailClassView);

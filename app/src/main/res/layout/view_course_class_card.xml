@@ -31,6 +31,7 @@
 
     <acore.widget.rvlistview.RvHorizatolListView
         android:id="@+id/rvHorizatolListView"
+        android:layout_marginTop="@dimen/dp_15"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

@@ -11,10 +11,15 @@ import android.widget.TextView;
 
 import com.xiangha.R;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ClassCardExListAdapter extends BaseExpandableListAdapter {
     private Activity mActivity;
-    public String[] groupStrings = {"西游记", "水浒传", "三国演义", "红楼梦", "黑客帝国", "后天", "2013", "源代码", "速度与激情"};
-    //    public String[][] childStrings = {
+    //    public String[] groupList = {"西游记", "水浒传", "三国演义", "红楼梦", "黑客帝国", "后天", "2013", "源代码", "速度与激情"};
+    private List<String> groupList = new ArrayList<>();
+    private List<List<String>> childList = new ArrayList<>();
+    //    public String[][] childList = {
 //            {"唐三藏", "孙悟空", "猪八戒", "沙和尚"},
 //            {"宋江", "林冲", "李逵", "鲁智深"},
 //            {"曹操", "刘备", "孙权", "诸葛亮", "周瑜"},
@@ -25,17 +30,17 @@ public class ClassCardExListAdapter extends BaseExpandableListAdapter {
 //            {"宋江", "林冲", "李逵", "鲁智深"},
 //            {"贾宝玉", "林黛玉", "薛宝钗", "王熙凤"}
 //    };
-    public String[][] childStrings = {
-            {"宋江", "林冲", "李逵", "鲁智深"},
-            {},
-            {},
-            {"宋江", "林冲", "李逵", "鲁智深"},
-            {},
-            {},
-            {},
-            {"宋江", "林冲", "李逵", "鲁智深"},
-            {}
-    };
+//    public String[][] childList = {
+//            {"宋江", "林冲", "李逵", "鲁智深"},
+//            {},
+//            {},
+//            {"宋江", "林冲", "李逵", "鲁智深"},
+//            {},
+//            {},
+//            {},
+//            {"宋江", "林冲", "李逵", "鲁智深"},
+//            {}
+//    };
 
     public ClassCardExListAdapter(Activity activity) {
         this.mActivity = activity;
@@ -44,25 +49,25 @@ public class ClassCardExListAdapter extends BaseExpandableListAdapter {
     //        获取分组的个数
     @Override
     public int getGroupCount() {
-        return groupStrings.length;
+        return groupList.size();
     }
 
     //        获取指定分组中的子选项的个数
     @Override
     public int getChildrenCount(int groupPosition) {
-        return childStrings[groupPosition].length;
+        return childList.get(groupPosition).size();
     }
 
     //        获取指定的分组数据
     @Override
     public Object getGroup(int groupPosition) {
-        return groupStrings[groupPosition];
+        return groupList.get(groupPosition);
     }
 
     //        获取指定分组中的指定子选项数据
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        return childStrings[groupPosition][childPosition];
+        return childList.get(groupPosition).get(childPosition);
     }
 
     //        获取指定分组的ID, 这个ID必须是唯一的
@@ -98,7 +103,7 @@ public class ClassCardExListAdapter extends BaseExpandableListAdapter {
         } else {
             groupViewHolder = (GroupViewHolder) convertView.getTag();
         }
-        groupViewHolder.tvTitle.setText(groupStrings[groupPosition]);
+        groupViewHolder.tvTitle.setText(groupList.get(groupPosition));
 
         if (getChildrenCount(groupPosition) > 0) {
             groupViewHolder.ivRight.setVisibility(View.VISIBLE);
@@ -134,7 +139,7 @@ public class ClassCardExListAdapter extends BaseExpandableListAdapter {
         } else {
             convertView.setBackgroundColor(mActivity.getResources().getColor(R.color.c_f5f7fa));
         }
-        childViewHolder.tvTitle.setText(childStrings[groupPosition][childPosition]);
+        childViewHolder.tvTitle.setText(childList.get(groupPosition).get(childPosition));
         return convertView;
     }
 

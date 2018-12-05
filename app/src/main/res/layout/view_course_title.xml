@@ -10,7 +10,6 @@
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:maxLines="2"
-        android:text="鱼肉丝鱼肉丝鱼肉丝鱼肉丝鱼肉丝鱼肉丝鱼肉丝鱼肉丝鱼肉丝鱼肉丝鱼肉丝鱼肉丝鱼肉丝鱼肉丝鱼肉丝鱼肉丝鱼肉丝鱼肉丝鱼肉丝"
         android:textColor="@color/ysf_grey_666666"
         android:textSize="@dimen/sp_14" />
 
@@ -19,6 +18,5 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/ysf_grey_666666"
-        android:text="agoasd"
         android:textSize="@dimen/sp_14" />
 </LinearLayout>

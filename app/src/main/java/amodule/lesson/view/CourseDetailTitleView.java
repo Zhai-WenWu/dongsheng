@@ -14,10 +14,13 @@ import android.widget.TextView;
 
 import com.xiangha.R;
 
+import java.util.Map;
+
 public class CourseDetailTitleView extends RelativeLayout {
 
     private TextView mCourseTitleTv;
     private TextView mCourseSubtitleTv;
+    private Map<String, String> mData;
 
     public CourseDetailTitleView(Context context) {
         this(context, null);
@@ -29,18 +32,17 @@ public class CourseDetailTitleView extends RelativeLayout {
 
     public CourseDetailTitleView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        View view = LayoutInflater.from(context).inflate(R.layout.view_course_title, this, true);
         mCourseTitleTv = findViewById(R.id.tv_course_title);
         mCourseSubtitleTv = findViewById(R.id.tv_course_subtitle);
-        initData();
     }
 
-    private void initData() {
+    public void setTitleData(String titleData) {
+        mCourseTitleTv.setText(titleData);
+    }
+
+    public void setSubTitleData(String subTitleData) {
         StringBuilder stringBuilder = new StringBuilder("VIP·共");
-        stringBuilder.append("33");
-        stringBuilder.append("节·");
-        stringBuilder.append("23");
-        stringBuilder.append("人学");
+        stringBuilder.append(subTitleData);
         SpannableString spannableString = new SpannableString(stringBuilder);
         ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.parseColor("#fa273b"));
         spannableString.setSpan(colorSpan, 0, 3, Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
