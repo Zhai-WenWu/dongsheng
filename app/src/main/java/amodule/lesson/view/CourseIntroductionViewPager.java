@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -197,6 +198,31 @@ public class CourseIntroductionViewPager extends RelativeLayout {
         }
         return ret;
     }
+
+    public void onResume(){
+        if (null != mVideoPlayerController && mViewPager != null
+                && mViewPager.getCurrentItem() == mVideoPosition && videoCanResume()) {
+            mVideoPlayerController.onResume();
+        }
+    }
+
+    protected void onPause() {
+        if (mVideoPlayerController != null && mViewPager != null
+                && mViewPager.getCurrentItem() == mVideoPosition && videoCanPause()) {
+            mVideoPlayerController.onPause();
+        }
+    }
+
+    protected void onDestroy() {
+        if (mVideoPlayerController != null)
+            mVideoPlayerController.onDestroy();
+        System.gc();
+    }
+
+    public boolean onBackPressed() {
+        return null != mVideoPlayerController && mVideoPlayerController.onBackPressed();
+    }
+
 
     /**
      * 加载图片

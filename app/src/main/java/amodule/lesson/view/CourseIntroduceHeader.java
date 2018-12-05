@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -73,11 +74,11 @@ public class CourseIntroduceHeader extends RelativeLayout {
             Map<String,String> map = new HashMap<>();
             images.add(map);
         }
-        Stream.of(images).forEach(value -> {
+        for(Map<String,String> value:images){
             value.put(TYPE_KEY, TYPE_IMAGE);
             value.put("img",value.remove(""));
             value.put("img","http://s3.cdn.xiangha.com/caipu/201801/2309/230946169944.jpg/MjgweDIyMA");
-        });
+        }
         Map<String,String> videoMap = StringManager.getFirstMap(data.get("adVideo"));
 //        if(!videoMap.isEmpty()){
             videoMap.put(TYPE_KEY,TYPE_VIDEO);
@@ -87,10 +88,29 @@ public class CourseIntroduceHeader extends RelativeLayout {
 //        }
         mViewPager.setData(images);
         //TODO 设置标题数据
-//        mCourseName.setText(checkStrNull(data.get("name")));
-//        mChapterText.setText(checkStrNull(data.get("chapterText")));
-//        mLessonText.setText(checkStrNull(data.get("lessonText")));
-//        mDurationText.setText(checkStrNull(data.get("duration")));
+        mCourseName.setText(checkStrNull(data.get("name")));
+        mChapterText.setText(checkStrNull(data.get("chapterText")));
+        mLessonText.setText(checkStrNull(data.get("lessonText")));
+        mDurationText.setText(checkStrNull(data.get("duration")));
+    }
+
+    public void onResume() {
+        if (mViewPager != null)
+            mViewPager.onResume();
+    }
+
+    public void onPause() {
+        if (mViewPager != null)
+            mViewPager.onPause();
+    }
+
+    public void onDestroy() {
+        if (mViewPager != null)
+            mViewPager.onDestroy();
+    }
+
+    public boolean onBackPressed() {
+        return mViewPager != null && mViewPager.onBackPressed();
     }
 
     private String checkStrNull(String text) {
