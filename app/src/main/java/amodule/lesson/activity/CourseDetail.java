@@ -1,5 +1,6 @@
 package amodule.lesson.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.xiangha.R;
 
@@ -21,6 +23,7 @@ import acore.tools.Tools;
 import acore.widget.rvlistview.RvListView;
 import amodule.lesson.adapter.CourseVideoContentAdapter;
 import amodule.lesson.view.CourseDetailAskView;
+import amodule.lesson.view.CourseDetailClassCardView;
 import amodule.lesson.view.CourseDetailIntroductionView;
 import amodule.lesson.view.CourseDetailRadioButtonView;
 import amodule.lesson.view.CourseDetailTitleView;
@@ -35,9 +38,6 @@ public class CourseDetail extends BaseAppCompatActivity {
 
     private Map<String, String> mInfoMap;
     private RvListView mCourseList;
-    private CourseDetailRadioButtonView radioButtonMotionless;
-    private int titleHeight;
-    private CourseDetailRadioButtonView radioButtonMove;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +56,6 @@ public class CourseDetail extends BaseAppCompatActivity {
             strings.add("i");
         }
         mCourseList.setAdapter(new CourseVideoContentAdapter(this, strings));
-        radioButtonMotionless = findViewById(R.id.radiobutton_move);
     }
 
     private void loadInfo() {
@@ -84,10 +83,15 @@ public class CourseDetail extends BaseAppCompatActivity {
         mCourseList.addHeaderView(courseDetailTitleView);
 
         //课程表
-        // TODO: 2018/12/4
-
-        //tab按钮
-        initTabView();
+        CourseDetailClassCardView courseDetailClassCardView = new CourseDetailClassCardView(this);
+        TextView mClassNumTv = courseDetailClassCardView.findViewById(R.id.tv_class_num);
+        mCourseList.addHeaderView(courseDetailClassCardView);
+        mClassNumTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(CourseDetail.this, CourseList.class));
+            }
+        });
 
         //简介
         Map<String, String> desc = StringManager.getFirstMap(mInfoMap.get("desc"));
@@ -99,74 +103,6 @@ public class CourseDetail extends BaseAppCompatActivity {
         //问答
         CourseDetailAskView courseDetailAskView = new CourseDetailAskView(this);
         mCourseList.addFooterView(courseDetailAskView);
-    }
-
-
-    private void initTabView() {
-        radioButtonMove = new CourseDetailRadioButtonView(this);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, 40, 1.0f);
-        for (int i = 0; i < 3; i++) {
-            RadioButton radioButton = new RadioButton(this);
-            radioButton.setGravity(Gravity.CENTER);
-            radioButton.setId(i);
-            radioButton.setButtonDrawable(null);
-            radioButton.setText("btn" + i);
-            //@color/cuouse_radiobutton_textcolor
-            radioButton.setTextColor(getResources().getColor(R.color.cuouse_radiobutton_textcolor));
-            radioButton.setTextSize(16);
-            radioButton.setBackgroundColor(getResources().getColor(R.color.transparent));
-//            if (i == 0)
-//                radioButton.setChecked(true);
-            radioButtonMove.getView().addView(radioButton, lp);
-
-
-            RadioButton radioButton1 = new RadioButton(this);
-            radioButton1.setGravity(Gravity.CENTER);
-            radioButton1.setId(i);
-            radioButton1.setButtonDrawable(null);
-            radioButton1.setText("btn" + i);
-            radioButton1.setTextColor(getResources().getColor(R.color.cuouse_radiobutton_textcolor));
-            radioButton1.setTextSize(16);
-            radioButton1.setBackgroundColor(getResources().getColor(R.color.transparent));
-//            if (i == 0)
-//                radioButton1.setChecked(true);
-            radioButtonMotionless.getView().addView(radioButton1, lp);
-            RadioButton child = (RadioButton) radioButtonMove.getView().getChildAt(0);
-            child.setChecked(true);
-        }
-
-        mCourseList.addHeaderView(radioButtonMove);
-
-        radioButtonMotionless.addOnCheckedChangedListener(new CourseDetailRadioButtonView.OnCheckedChangedListener() {
-            @Override
-            public void onClickChange(int checkedId) {
-                radioButtonMove.setClickIndex(checkedId);
-            }
-        });
-
-        radioButtonMove.addOnCheckedChangedListener(new CourseDetailRadioButtonView.OnCheckedChangedListener() {
-            @Override
-            public void onClickChange(int checkedId) {
-                radioButtonMotionless.setClickIndex(checkedId);
-                // TODO: 2018/12/4 定位
-                Log.i("radioButtonMove", checkedId + "");
-            }
-        });
-
-        mCourseList.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-//                    Log.i("logi", "top = " + radioButtonMove.getTop() + "   scrollY = " + scrollY);
-                if (mCourseList.computeVerticalScrollOffset() > radioButtonMove.getTop()) {
-                    radioButtonMotionless.setVisibility(View.VISIBLE);
-                } else {
-                    radioButtonMotionless.setVisibility(View.GONE);
-                }
-
-            }
-        });
-
     }
 
 

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/dp_200"
+    android:layout_height="@dimen/dp_60">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:background="@drawable/bg_circle_f5f7fa_10"
+        android:text="第1章 6月宝宝 (20节)"
+        android:textColor="@color/c_3e3e3e"
+        android:textSize="@dimen/sp_16" />
+
+</FrameLayout>

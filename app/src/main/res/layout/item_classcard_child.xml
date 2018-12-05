@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dp_50"
+    android:background="@color/c_f5f7fa"
+    android:paddingEnd="@dimen/dp_20"
+    android:orientation="vertical"
+    android:paddingStart="@dimen/dp_20">
+
+    <View
+        android:layout_width="match_parent"
+        android:background="@color/ysf_grey_e0e0e0"
+        android:layout_height="@dimen/dp_0.5"/>
+
+    <TextView
+        android:id="@+id/tv_child_title"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:drawablePadding="@dimen/dp_14"
+        android:drawableStart="@drawable/class_card_item_play"
+        android:gravity="center_vertical"
+        android:text="第2章 7月宝宝辅食"
+        android:textColor="@color/ysf_grey_666666"
+        android:textSize="@dimen/sp_14" />
+
+
+</LinearLayout>
