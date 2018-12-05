@@ -24,6 +24,7 @@ import acore.logic.LoginManager;
 import acore.override.helper.XHActivityManager;
 import acore.tools.FileManager;
 import acore.tools.StringManager;
+import acore.tools.Tools;
 import amodule.main.Main;
 import third.ad.db.bean.AdBean;
 import third.ad.db.bean.XHSelfNativeData;
@@ -50,7 +51,7 @@ public class WelcomeAdTools {
     /**
      * 切换最短时间
      */
-    private int splashmins = 5;
+    private int splashmins = 80;
 
     //广告处理
     private ArrayList<Map<String, String>> mAdData = new ArrayList<>();
@@ -75,9 +76,7 @@ public class WelcomeAdTools {
             return;
         }
         Map<String, String> data = StringManager.getFirstMap(splashConfigDataStr);
-        splashmins = Integer.parseInt(data.get("againTime"));
-
-        splashmins = 5;
+        splashmins = Tools.parseIntOfThrow(data.get("againTime"), splashmins);
     }
 
     public static synchronized WelcomeAdTools getInstance() {
