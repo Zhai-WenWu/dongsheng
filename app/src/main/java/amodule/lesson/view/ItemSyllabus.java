@@ -10,16 +10,16 @@ import java.util.Map;
 import acore.override.view.ItemBaseView;
 import amodule.dish.view.DishSkillView;
 
-class ClassCardItemView extends ItemBaseView {
-    public ClassCardItemView(Context context) {
+class ItemSyllabus extends ItemBaseView {
+    public ItemSyllabus(Context context) {
         super(context, R.layout.class_card_scroll_view);
     }
 
-    public ClassCardItemView(Context context, AttributeSet attrs) {
+    public ItemSyllabus(Context context, AttributeSet attrs) {
         super(context, attrs, R.layout.class_card_scroll_view);
     }
 
-    public ClassCardItemView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ItemSyllabus(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr, R.layout.class_card_scroll_view);
     }
 

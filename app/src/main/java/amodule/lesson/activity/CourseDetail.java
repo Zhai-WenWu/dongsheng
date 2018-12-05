@@ -2,12 +2,7 @@ package amodule.lesson.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -19,15 +14,13 @@ import java.util.Map;
 import acore.logic.load.LoadManager;
 import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.StringManager;
-import acore.tools.Tools;
 import acore.widget.rvlistview.RvListView;
 import amodule.lesson.adapter.CourseVideoContentAdapter;
 import amodule.lesson.controler.data.CourseDataController;
-import amodule.lesson.view.CourseDetailAskView;
-import amodule.lesson.view.CourseDetailClassCardView;
-import amodule.lesson.view.CourseDetailIntroductionView;
-import amodule.lesson.view.CourseDetailRadioButtonView;
-import amodule.lesson.view.CourseDetailTitleView;
+import amodule.lesson.view.StudyAskView;
+import amodule.lesson.view.StudySyllabusView;
+import amodule.lesson.view.StudylIntroductionView;
+import amodule.lesson.view.StudyTitleView;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
 
@@ -41,7 +34,7 @@ public class CourseDetail extends BaseAppCompatActivity {
 
     private RvListView mCourseList;
     private ArrayList<String> mVideoContentList;
-    private CourseDetailTitleView courseDetailTitleView;
+    private StudyTitleView studyTitleView;
     private Map<String, String> mTopInfoMap;
 
     @Override
@@ -84,15 +77,15 @@ public class CourseDetail extends BaseAppCompatActivity {
 
     private void initCourseListData(Map<String, String> courseListMap) {
         //标题
-        courseDetailTitleView = new CourseDetailTitleView(this);
-        courseDetailTitleView.setTitleData(mTopInfoMap.get("name"));
-        courseDetailTitleView.setSubTitleData(courseListMap.get("subTitle"));
-        mCourseList.addHeaderView(courseDetailTitleView);
+        studyTitleView = new StudyTitleView(this);
+        studyTitleView.setTitleData(mTopInfoMap.get("name"));
+        studyTitleView.setSubTitleData(courseListMap.get("subTitle"));
+        mCourseList.addHeaderView(studyTitleView);
 
         //课程横划
-        CourseDetailClassCardView courseDetailClassCardView = new CourseDetailClassCardView(this);
-        TextView mClassNumTv = courseDetailClassCardView.findViewById(R.id.tv_class_num);
-        mCourseList.addHeaderView(courseDetailClassCardView);
+        StudySyllabusView studySyllabusView = new StudySyllabusView(this);
+        TextView mClassNumTv = studySyllabusView.findViewById(R.id.tv_class_num);
+        mCourseList.addHeaderView(studySyllabusView);
         mClassNumTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -118,13 +111,13 @@ public class CourseDetail extends BaseAppCompatActivity {
         //简介
         Map<String, String> desc = StringManager.getFirstMap(descoMap.get("desc"));
         if (desc != null && desc.size() > 0) {
-            CourseDetailIntroductionView courseDetailClassView = new CourseDetailIntroductionView(this, desc);
+            StudylIntroductionView courseDetailClassView = new StudylIntroductionView(this, desc);
             mCourseList.addHeaderView(courseDetailClassView);
         }
 
         //问答
-        CourseDetailAskView courseDetailAskView = new CourseDetailAskView(this);
-        mCourseList.addFooterView(courseDetailAskView);
+        StudyAskView studyAskView = new StudyAskView(this);
+        mCourseList.addFooterView(studyAskView);
     }
 
 

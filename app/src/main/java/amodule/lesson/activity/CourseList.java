@@ -13,7 +13,7 @@ import java.util.Map;
 
 import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.StringManager;
-import amodule.lesson.adapter.ClassCardExListAdapter;
+import amodule.lesson.adapter.SyllabusAdapter;
 import amodule.lesson.controler.data.CourseDataController;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
@@ -26,7 +26,7 @@ import aplug.basic.ReqInternet;
  */
 public class CourseList extends BaseAppCompatActivity {
 
-    private ClassCardExListAdapter mClassCardExListAdapter;
+    private SyllabusAdapter mSyllabusAdapter;
     private List<String> groupList = new ArrayList<>();
     private List<List<String>> childList = new ArrayList<>();
     private ExpandableListView mExList;
@@ -41,12 +41,12 @@ public class CourseList extends BaseAppCompatActivity {
 
     private void initView() {
         mExList = findViewById(R.id.expand_list);
-        mClassCardExListAdapter = new ClassCardExListAdapter(this);
-        mExList.setAdapter(mClassCardExListAdapter);
+        mSyllabusAdapter = new SyllabusAdapter(this);
+        mExList.setAdapter(mSyllabusAdapter);
     }
 
     private void initData() {
-        CourseDataController.loadCourseListData("", "", new InternetCallback() {
+        CourseDataController.loadCourseListData("0", "1", new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
                 if (i >= ReqInternet.REQ_OK_STRING) {
@@ -58,19 +58,24 @@ public class CourseList extends BaseAppCompatActivity {
     }
 
     private void initCourseListData(Map<String, String> mCourseListMap) {
-        Map<String, String> info = StringManager.getFirstMap("info");
+        ArrayList<Map<String, String>> info = StringManager.getListMapByJson(mCourseListMap.get("info"));
+//        ArrayList<Map<String, String>> info = new ArrayList<>();
+//        info.add(info1.get(0));
         if (info.size() == 1) {//只有一章
             initOne(info);
         } else {//多章
             initMore(info);
         }
+        mSyllabusAdapter.setChildList(childList);
+        mSyllabusAdapter.setGroupList(groupList);
+        mSyllabusAdapter.notifyDataSetChanged();
     }
 
     /**
      * @param info 只有一章
      */
-    private void initOne(Map<String, String> info) {
-        ArrayList<Map<String, String>> lessonList = StringManager.getListMapByJson(info.get("lessonList"));
+    private void initOne(ArrayList<Map<String, String>> info) {
+        ArrayList<Map<String, String>> lessonList = StringManager.getListMapByJson(info.get(0).get("lessonList"));
         ArrayList<String> strings = new ArrayList<>();
         for (Map<String, String> map : lessonList) {
             groupList.add(map.get("title"));
@@ -91,10 +96,10 @@ public class CourseList extends BaseAppCompatActivity {
     /**
      * @param info 多章
      */
-    private void initMore(Map<String, String> info) {
-        ArrayList<Map<String, String>> lessonList = StringManager.getListMapByJson(info.get("lessonList"));
+    private void initMore(ArrayList<Map<String, String>> info) {
         for (int i = 0; i < info.size(); i++) {
-            groupList.add(info.get("title"));
+            groupList.add(info.get(i).get("title"));
+            ArrayList<Map<String, String>> lessonList = StringManager.getListMapByJson(info.get(i).get("lessonList"));
             ArrayList<String> strings = new ArrayList<>();
             for (Map<String, String> map : lessonList) {
                 strings.add(map.get("title"));

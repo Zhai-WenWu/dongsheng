@@ -12,16 +12,16 @@ import com.xiangha.R;
 
 import java.util.Map;
 
-public class CourseDetailIntroductionView extends RelativeLayout {
-    public CourseDetailIntroductionView(Context context, Map<String, String> desc) {
+public class StudylIntroductionView extends RelativeLayout {
+    public StudylIntroductionView(Context context, Map<String, String> desc) {
         this(context, null, desc);
     }
 
-    public CourseDetailIntroductionView(Context context, @Nullable AttributeSet attrs, Map<String, String> desc) {
+    public StudylIntroductionView(Context context, @Nullable AttributeSet attrs, Map<String, String> desc) {
         this(context, attrs, 0, desc);
     }
 
-    public CourseDetailIntroductionView(Context context, @Nullable AttributeSet attrs, int defStyleAttr, Map<String, String> desc) {
+    public StudylIntroductionView(Context context, @Nullable AttributeSet attrs, int defStyleAttr, Map<String, String> desc) {
         super(context, attrs, defStyleAttr);
         View view = LayoutInflater.from(context).inflate(R.layout.view_course_abstract_class, this, true);
         TextView subTitleTv = view.findViewById(R.id.tv_subtitle);

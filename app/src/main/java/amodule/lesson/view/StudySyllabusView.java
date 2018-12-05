@@ -22,23 +22,22 @@ import acore.tools.Tools;
 import acore.widget.rvlistview.RvHorizatolListView;
 import acore.widget.rvlistview.adapter.RvBaseAdapter;
 import acore.widget.rvlistview.holder.RvBaseViewHolder;
-import amodule.dish.view.DishSkillView;
 
-public class CourseDetailClassCardView extends RelativeLayout {
+public class StudySyllabusView extends RelativeLayout {
 
     private final Context mContext;
     private RvHorizatolListView rvHorizatolListView;
     private View view;
 
-    public CourseDetailClassCardView(Context context) {
+    public StudySyllabusView(Context context) {
         this(context, null);
     }
 
-    public CourseDetailClassCardView(Context context, @Nullable AttributeSet attrs) {
+    public StudySyllabusView(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public CourseDetailClassCardView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public StudySyllabusView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.mContext = context;
         view = LayoutInflater.from(context).inflate(R.layout.view_course_class_card, this, true);
@@ -75,7 +74,7 @@ public class CourseDetailClassCardView extends RelativeLayout {
 
         @Override
         public RvBaseViewHolder<Map<String, String>> onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new ViewHolder(new ClassCardItemView(mContext));
+            return new ViewHolder(new ItemSyllabus(mContext));
         }
 
         @Override
@@ -85,9 +84,9 @@ public class CourseDetailClassCardView extends RelativeLayout {
     }
 
     public class ViewHolder extends RvBaseViewHolder<Map<String, String>> {
-        private ClassCardItemView view;
+        private ItemSyllabus view;
 
-        public ViewHolder(@NonNull ClassCardItemView itemView) {
+        public ViewHolder(@NonNull ItemSyllabus itemView) {
             super(itemView);
             this.view = itemView;
         }

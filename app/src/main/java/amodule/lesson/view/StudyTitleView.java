@@ -7,8 +7,6 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -16,21 +14,21 @@ import com.xiangha.R;
 
 import java.util.Map;
 
-public class CourseDetailTitleView extends RelativeLayout {
+public class StudyTitleView extends RelativeLayout {
 
     private TextView mCourseTitleTv;
     private TextView mCourseSubtitleTv;
     private Map<String, String> mData;
 
-    public CourseDetailTitleView(Context context) {
+    public StudyTitleView(Context context) {
         this(context, null);
     }
 
-    public CourseDetailTitleView(Context context, @Nullable AttributeSet attrs) {
+    public StudyTitleView(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public CourseDetailTitleView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public StudyTitleView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mCourseTitleTv = findViewById(R.id.tv_course_title);
         mCourseSubtitleTv = findViewById(R.id.tv_course_subtitle);

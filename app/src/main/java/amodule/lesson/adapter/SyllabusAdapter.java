@@ -14,35 +14,21 @@ import com.xiangha.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ClassCardExListAdapter extends BaseExpandableListAdapter {
+public class SyllabusAdapter extends BaseExpandableListAdapter {
     private Activity mActivity;
     //    public String[] groupList = {"西游记", "水浒传", "三国演义", "红楼梦", "黑客帝国", "后天", "2013", "源代码", "速度与激情"};
     private List<String> groupList = new ArrayList<>();
     private List<List<String>> childList = new ArrayList<>();
-    //    public String[][] childList = {
-//            {"唐三藏", "孙悟空", "猪八戒", "沙和尚"},
-//            {"宋江", "林冲", "李逵", "鲁智深"},
-//            {"曹操", "刘备", "孙权", "诸葛亮", "周瑜"},
-//            {"宋江", "林冲", "李逵", "鲁智深"},
-//            {"宋江", "林冲", "李逵", "鲁智深"},
-//            {"宋江", "林冲", "李逵", "鲁智深"},
-//            {"宋江", "林冲", "李逵", "鲁智深"},
-//            {"宋江", "林冲", "李逵", "鲁智深"},
-//            {"贾宝玉", "林黛玉", "薛宝钗", "王熙凤"}
-//    };
-//    public String[][] childList = {
-//            {"宋江", "林冲", "李逵", "鲁智深"},
-//            {},
-//            {},
-//            {"宋江", "林冲", "李逵", "鲁智深"},
-//            {},
-//            {},
-//            {},
-//            {"宋江", "林冲", "李逵", "鲁智深"},
-//            {}
-//    };
 
-    public ClassCardExListAdapter(Activity activity) {
+    public void setGroupList(List<String> groupList) {
+        this.groupList = groupList;
+    }
+
+    public void setChildList(List<List<String>> childList) {
+        this.childList = childList;
+    }
+
+    public SyllabusAdapter(Activity activity) {
         this.mActivity = activity;
     }
 
