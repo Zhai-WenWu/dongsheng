@@ -153,14 +153,12 @@ public class CourseDetail extends BaseAppCompatActivity {
             }
         });
 
-        View emptyView = new View(this);
         mCourseList.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                emptyView.scrollBy(0,dy);
 //                    Log.i("logi", "top = " + radioButtonMove.getTop() + "   scrollY = " + scrollY);
-                if (emptyView.getScrollY() > radioButtonMove.getTop()) {
+                if (mCourseList.computeVerticalScrollOffset() > radioButtonMove.getTop()) {
                     radioButtonMotionless.setVisibility(View.VISIBLE);
                 } else {
                     radioButtonMotionless.setVisibility(View.GONE);

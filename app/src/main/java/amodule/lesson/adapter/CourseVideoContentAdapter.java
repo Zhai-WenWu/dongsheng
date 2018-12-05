@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.xiangha.R;
@@ -33,15 +34,41 @@ public class CourseVideoContentAdapter extends RvBaseAdapter {
     }
 
     class VideoViewHolder extends RvBaseViewHolder {
-        TextView textView;
+        TextView tilteTv;
+        TextView subtilteTv;
+        ImageView img;
 
         public VideoViewHolder(@NonNull View itemView) {
             super(itemView);
+            tilteTv = itemView.findViewById(R.id.tv_title);
+            subtilteTv = itemView.findViewById(R.id.tv_subtitle);
+            img = itemView.findViewById(R.id.iv_img);
         }
 
         @Override
         public void bindData(int position, @Nullable Object data) {
-
+            switch (position) {
+                case 1:
+                    tilteTv.setVisibility(View.GONE);
+                    subtilteTv.setVisibility(View.VISIBLE);
+                    img.setVisibility(View.GONE);
+                    break;
+                case 0:
+                    tilteTv.setVisibility(View.VISIBLE);
+                    subtilteTv.setVisibility(View.VISIBLE);
+                    img.setVisibility(View.GONE);
+                    break;
+                case 2:
+                    tilteTv.setVisibility(View.GONE);
+                    subtilteTv.setVisibility(View.VISIBLE);
+                    img.setVisibility(View.VISIBLE);
+                    break;
+                case 3:
+                    tilteTv.setVisibility(View.GONE);
+                    subtilteTv.setVisibility(View.GONE);
+                    img.setVisibility(View.VISIBLE);
+                    break;
+            }
         }
 
     }
