@@ -378,6 +378,13 @@ public class StringManager extends UtilString {
     public static final String API_COURSE_UPDATE = apiUrl + "main8/school/getRotationData";
     public final static String API_COURSE_CHAPTERDESC = apiUrl + "/main9/school/chapterDesc";
 
+    //单课付费
+    public static final String API_COURSE_TOP = apiUrl + "main9/school/courseTop";
+    public static final String API_COURSE_DESC = apiUrl + "main9/school/courseDesc";
+    public static final String API_CHAPTER_TOP = apiUrl + "main9/school/chapterTop";
+    public static final String API_CHAPTER_DESC = apiUrl + "main9/school/chapterDesc";
+    public static final String API_SYLLABUS = apiUrl + "main9/school/syllabus";
+
     //替换url
     public final static String replaceUrl(String url) {
         if (defaultDomain != domain || defaultProtocol != protocol) {
