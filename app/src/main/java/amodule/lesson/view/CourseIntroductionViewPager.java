@@ -3,18 +3,18 @@ package amodule.lesson.view;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.BitmapRequestBuilder;
@@ -46,13 +46,14 @@ public class CourseIntroductionViewPager extends RelativeLayout {
     public static final String TYPE_VIDEO = "video";
 
     private ViewPager mViewPager;
-    private LinearLayout mPointLayout;
+    private FrameLayout mPointLayout;
 
     private VideoPlayerController mVideoPlayerController;
 
     private int mInitPlayState = -2;
     private boolean mHasInitPlayStateOnPagerSelected;
     private int mVideoPosition = -1;
+    private int mCurrSelectPos = 0;
     private String mVideoUrl;
 
     public CourseIntroductionViewPager(Context context) {
@@ -99,17 +100,16 @@ public class CourseIntroductionViewPager extends RelativeLayout {
                 setImageView(iv, images.get(i).get("img"), false);
             }
             views.add(topView);
+            addPointView(i);
         }
-        for(int i=0;i<views.size();i++){
-            ImageView point = new ImageView(getContext());
-            point.setImageResource(R.drawable.bg_course_introduction_point);
-            mPointLayout.addView(point);
-        }
+        addPointView(views.size());
+        selectPoint(mCurrSelectPos);
         mViewPager.setAdapter(new Adapter(views));
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
                 selectPoint(position);
+                mCurrSelectPos = position;
                 if (mVideoPlayerController != null) {
                     if (mVideoPosition != position) {
                         if (Math.abs(position - mVideoPosition) == 1 && !mHasInitPlayStateOnPagerSelected) {
@@ -138,19 +138,30 @@ public class CourseIntroductionViewPager extends RelativeLayout {
             public void onPageScrollStateChanged(int arg0) {
             }
         });
-
         if (mVideoPlayerController != null && "wifi".equals(ToolsDevice.getNetWorkSimpleType(getContext()))) {
             mVideoPlayerController.setOnClick();
         }
     }
 
     private void selectPoint(int position){
-        if(position >=0 && mPointLayout != null && mPointLayout.getChildCount() > position){
-            for(int i=0;i<mPointLayout.getChildCount();i++){
-                mPointLayout.getChildAt(i).setSelected(false);
-            }
+        if (mPointLayout == null) {
+            return;
+        }
+        int effectiveCount = mPointLayout.getChildCount() - 1;
+        if(position >=0 && effectiveCount > position && effectiveCount > mCurrSelectPos){
+            mPointLayout.getChildAt(mCurrSelectPos).setSelected(false);
             mPointLayout.getChildAt(position).setSelected(true);
         }
+    }
+
+    private void addPointView(int index) {
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.image_course_introduction_point, null);
+        int viewWidth = getResources().getDimensionPixelSize(R.dimen.dp_14);
+        int viewHeight = getResources().getDimensionPixelSize(R.dimen.dp_4);
+        FrameLayout.LayoutParams rlp = new FrameLayout.LayoutParams(viewWidth, viewHeight);
+        rlp.leftMargin = index * (viewWidth - viewHeight);
+        rlp.gravity = Gravity.CENTER_VERTICAL;
+        mPointLayout.addView(view, rlp);
     }
 
     private boolean videoCanPause() {
