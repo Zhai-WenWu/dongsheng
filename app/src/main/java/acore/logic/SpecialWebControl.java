@@ -80,7 +80,7 @@ public class SpecialWebControl {
                         createWeb(context, parent, url, keyUrl, type, name, maxCount);
                     }
                 } catch (Exception ignored) {
-                }
+                } catch (Error error) {}
             }
         }
     }
