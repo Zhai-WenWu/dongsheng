@@ -21,6 +21,7 @@ import java.util.Map;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.rvlistview.RvHorizatolListView;
+import acore.widget.rvlistview.RvListView;
 import acore.widget.rvlistview.adapter.RvBaseAdapter;
 import acore.widget.rvlistview.holder.RvBaseViewHolder;
 
@@ -65,11 +66,17 @@ public class StudySyllabusView extends RelativeLayout {
                 }
             }
         });
+
+        rvHorizatolListView.setOnItemClickListener(new RvListView.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
+                onSyllabusSelect.onSelect(position);
+            }
+        });
     }
 
-    public void setData(Map<String, String> data) {
-        ArrayList<Map<String, String>> info = StringManager.getListMapByJson(data.get("info"));
-        mapList = StringManager.getListMapByJson(info.get(0).get("lessonList"));
+    public void setData(Map<String, String> lessonListMap) {
+        mapList = StringManager.getListMapByJson(lessonListMap.get("lessonList"));
         syllabusAdapter.setData(mapList);
         syllabusAdapter.notifyDataSetChanged();
     }
@@ -103,5 +110,15 @@ public class StudySyllabusView extends RelativeLayout {
         public void bindData(int position, @Nullable Map<String, String> data) {
             view.setData(data, position);
         }
+    }
+
+    public OnSyllabusSelect onSyllabusSelect;
+
+    public void setOnSyllabusSelect(OnSyllabusSelect onSyllabusSelect) {
+        this.onSyllabusSelect = onSyllabusSelect;
+    }
+
+    public interface OnSyllabusSelect {
+        void onSelect(int position);
     }
 }

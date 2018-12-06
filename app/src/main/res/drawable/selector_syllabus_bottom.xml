@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_selected="true" android:drawable="@drawable/bg_circle_f5f7fab_bottom_10"/>
+    <item android:state_selected="false"  android:drawable="@drawable/bg_circle_f5f7fa_bottom_10"/>
+    <item  android:drawable="@drawable/bg_circle_f5f7fa_bottom_10"/>
+</selector>

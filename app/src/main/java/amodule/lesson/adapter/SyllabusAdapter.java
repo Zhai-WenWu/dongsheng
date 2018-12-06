@@ -19,6 +19,8 @@ public class SyllabusAdapter extends BaseExpandableListAdapter {
     //    public String[] groupList = {"西游记", "水浒传", "三国演义", "红楼梦", "黑客帝国", "后天", "2013", "源代码", "速度与激情"};
     private List<String> groupList = new ArrayList<>();
     private List<List<String>> childList = new ArrayList<>();
+    private int mChildSelectIndex;
+    private int mGroupSelectIndex;
 
     public void setGroupList(List<String> groupList) {
         this.groupList = groupList;
@@ -30,6 +32,11 @@ public class SyllabusAdapter extends BaseExpandableListAdapter {
 
     public SyllabusAdapter(Activity activity) {
         this.mActivity = activity;
+    }
+
+    public void setSelectIndex(int groupSelectNum, int childSelectNum) {
+        this.mChildSelectIndex = childSelectNum;
+        this.mGroupSelectIndex = groupSelectNum;
     }
 
     //        获取分组的个数
@@ -102,6 +109,7 @@ public class SyllabusAdapter extends BaseExpandableListAdapter {
                 groupViewHolder.llGroup.setBackgroundResource(R.drawable.bg_circle_f5f7fa_10);
             }
         } else {
+            groupViewHolder.llGroup.setBackgroundResource(R.drawable.bg_circle_f5f7fab_top_10);
             groupViewHolder.ivRight.setVisibility(View.GONE);
             groupViewHolder.tvRight.setVisibility(View.GONE);
         }
@@ -120,11 +128,28 @@ public class SyllabusAdapter extends BaseExpandableListAdapter {
         } else {
             childViewHolder = (ChildViewHolder) convertView.getTag();
         }
+
+
         if (childPosition == getChildrenCount(groupPosition) - 1) {
-            convertView.setBackgroundResource(R.drawable.bg_circle_f5f7fa_bottom_10);
+            if (childPosition == mChildSelectIndex && groupPosition == mGroupSelectIndex) {
+                convertView.setBackgroundResource(R.drawable.bg_circle_f5f7fab_bottom_10);
+            } else {
+                convertView.setBackgroundResource(R.drawable.bg_circle_f5f7fa_bottom_10);
+            }
+//            convertView.setBackgroundResource(R.drawable.selector_syllabus_bottom);
         } else {
-            convertView.setBackgroundColor(mActivity.getResources().getColor(R.color.c_f5f7fa));
+            if (childPosition == mChildSelectIndex && groupPosition == mGroupSelectIndex) {
+                convertView.setBackgroundColor(mActivity.getResources().getColor(R.color.c_ffbe03));
+            } else {//c_ffbe03
+                convertView.setBackgroundColor(mActivity.getResources().getColor(R.color.c_f5f7fa));
+
+            }
         }
+//        if (childPosition == mChildSelectIndex && groupPosition == mGroupSelectIndex) {
+//            convertView.setSelected(true);
+//        } else {
+//            convertView.setSelected(false);
+//        }
         childViewHolder.tvTitle.setText(childList.get(groupPosition).get(childPosition));
         return convertView;
     }

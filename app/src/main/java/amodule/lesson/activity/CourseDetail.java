@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.ArrayMap;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -32,19 +33,30 @@ import aplug.basic.ReqInternet;
  * e_mail : ztanzeyu@gmail.com
  */
 public class CourseDetail extends BaseAppCompatActivity {
-
+    public static final String EXTRA_CODE = "code";
+    public static final String EXTRA_TYPE = "type";
     private RvListView mCourseList;
-    private ArrayList<String> mVideoContentList;
-    private StudyTitleView studyTitleView;
     private Map<String, String> mTopInfoMap;
     private CourseVideoContentAdapter mVideoDetailAdapter;
     private ArrayList<Map<String, String>> videoList;
+    private String mCode = "0";
+    private String mType = "1";
+    private StudyAskView studyAskView;
+    private StudyTitleView studyTitleView;
+    private StudySyllabusView studySyllabusView;
+    private StudylIntroductionView studylIntroductionView;
+    private final int SELECT_COURSE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initActivity("", 2, 0, R.layout.c_view_bar_title, R.layout.a_course_detail);
         initView();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         loadInfo();
     }
 
@@ -55,15 +67,19 @@ public class CourseDetail extends BaseAppCompatActivity {
         videoList = new ArrayList<>();
         mVideoDetailAdapter = new CourseVideoContentAdapter(this, videoList);
         mCourseList.setAdapter(mVideoDetailAdapter);
+        loadManager.loading(mCourseList, true);
     }
 
     private void loadInfo() {
-        CourseDataController.loadChapterTopData("0", new InternetCallback() {
+//        mCode = getIntent().getStringExtra(EXTRA_CODE);
+//        mType = getIntent().getStringExtra(EXTRA_TYPE);
+        loadManager.loading(mCourseList, true);
+        CourseDataController.loadChapterTopData(mCode, new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
                 if (i >= ReqInternet.REQ_OK_STRING) {
                     mTopInfoMap = StringManager.getFirstMap(o);
-                    CourseDataController.loadCourseListData("0", "1", new InternetCallback() {
+                    CourseDataController.loadCourseListData(mCode, mType, new InternetCallback() {
                         @Override
                         public void loaded(int i, String s, Object o) {
                             if (i >= ReqInternet.REQ_OK_STRING) {
@@ -87,19 +103,32 @@ public class CourseDetail extends BaseAppCompatActivity {
         mCourseList.addHeaderView(studyTitleView);
 
         //课程横划
-        StudySyllabusView studySyllabusView = new StudySyllabusView(this);
-        studySyllabusView.setData(courseListMap);
-        TextView mClassNumTv = studySyllabusView.findViewById(R.id.tv_class_num);
+        studySyllabusView = new StudySyllabusView(this);
+        ArrayList<Map<String, String>> info = StringManager.getListMapByJson(courseListMap.get("chapterList"));
+        Map<String, String> lessonListMap = info.get(0);//第几章
+        studySyllabusView.setData(lessonListMap);
         mCourseList.addHeaderView(studySyllabusView);
+        //课程横划点击回调
+        studySyllabusView.setOnSyllabusSelect(new StudySyllabusView.OnSyllabusSelect() {
+            @Override
+            public void onSelect(int position) {
+                Intent intent = new Intent(CourseDetail.this, CourseDetail.class);
+                startActivity(intent);
+                finish();
+                overridePendingTransition(0, 0);
+            }
+        });
+        TextView mClassNumTv = studySyllabusView.findViewById(R.id.tv_class_num);
         mClassNumTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //课程页
-                startActivity(new Intent(CourseDetail.this, CourseList.class));
+                Intent intent = new Intent(CourseDetail.this, CourseList.class);
+                startActivityForResult(intent, SELECT_COURSE);
             }
         });
 
-        CourseDataController.loadChapterDescData("0", new InternetCallback() {
+        CourseDataController.loadChapterDescData(mCode, new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
                 if (i >= ReqInternet.REQ_OK_STRING) {
@@ -112,20 +141,35 @@ public class CourseDetail extends BaseAppCompatActivity {
     }
 
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && data != null) {
+            switch (requestCode) {
+                case SELECT_COURSE:
+                    mVideoDetailAdapter.getData().clear();
+                    mCode = data.getStringExtra("code");
+                    loadInfo();
+                    break;
+            }
+        }
+    }
+
+
     private void initDescData(Map<String, String> descoMap) {
         //简介
         Map<String, String> desc = StringManager.getFirstMap(descoMap.get("desc"));
-        StudylIntroductionView courseDetailClassView = new StudylIntroductionView(this);
+        studylIntroductionView = new StudylIntroductionView(this);
         if (desc != null) {
-            courseDetailClassView.setData(desc);
-            mCourseList.addHeaderView(courseDetailClassView);
+            studylIntroductionView.setData(desc);
+            mCourseList.addHeaderView(studylIntroductionView);
         }
 
         //视频内容
         Map<String, String> videoDetail = StringManager.getFirstMap(descoMap.get("videoDetail"));
         if (videoDetail != null) {
             String videoTitle = videoDetail.get("title");
-            courseDetailClassView.setVideoTitle(videoTitle);
+            studylIntroductionView.setVideoTitle(videoTitle);
             ArrayList<Map<String, String>> infoList = StringManager.getListMapByJson(videoDetail.get("info"));
             for (Map<String, String> info : infoList) {
                 ArrayList<Map<String, String>> vidList = StringManager.getListMapByJson(info.get("info"));
@@ -142,11 +186,14 @@ public class CourseDetail extends BaseAppCompatActivity {
                 }
             }
             mVideoDetailAdapter.setData(videoList);
+            mVideoDetailAdapter.notifyDataSetChanged();
         }
 
         //问答
-        StudyAskView studyAskView = new StudyAskView(this);
+        studyAskView = new StudyAskView(this);
         mCourseList.addFooterView(studyAskView);
+
+        loadManager.loaded(mCourseList);
     }
 
 
