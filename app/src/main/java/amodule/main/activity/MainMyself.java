@@ -198,6 +198,7 @@ public class MainMyself extends MainBaseActivity implements OnClickListener, IOb
 
     // 重置用户个人信息
     private void resetData() {
+        scoreIcon.setVisibility(View.GONE);
         goManagerInfo.setVisibility(View.GONE);
         subjectNum.setText("0");
         dishNum.setText("0");

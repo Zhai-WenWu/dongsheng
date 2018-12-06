@@ -72,15 +72,15 @@ public class SpecialWebControl {
                 int maxCount = 2;
                 try {
                     maxCount = Integer.parseInt(urlMap.get("num"));
-                } catch (Exception ignored) {
-                }
-                if (!TextUtils.isEmpty(url)) {
-                    String keyUrl = url;
-                    if (!TextUtils.isEmpty(code)) {
-                        keyUrl = url.replace("{code}", code);
+                    if (!TextUtils.isEmpty(url)) {
+                        String keyUrl = url;
+                        if (!TextUtils.isEmpty(code)) {
+                            keyUrl = url.replace("{code}", code);
+                        }
+                        createWeb(context, parent, url, keyUrl, type, name, maxCount);
                     }
-                    createWeb(context, parent, url, keyUrl, type, name, maxCount);
-                }
+                } catch (Exception ignored) {
+                } catch (Error error) {}
             }
         }
     }
