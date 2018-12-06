@@ -29,12 +29,14 @@ import static com.umeng.a.j.g;
 public class CourseList extends BaseAppCompatActivity {
     public static final String EXTRA_GROUP = "group";
     public static final String EXTRA_CHILD = "child";
+    public static final String EXTRA_FROM_STUDY = "from";
     private SyllabusAdapter mSyllabusAdapter;
     private List<String> mGroupList = new ArrayList<>();
     private List<List<String>> mChildList = new ArrayList<>();
     private ExpandableListView mExList;
     private int mGroupSelectIndex = 2;
     private int mChildSelectIndex = 2;
+    private boolean isFromStudy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +55,7 @@ public class CourseList extends BaseAppCompatActivity {
     private void initData() {
 //        mGroupSelectIndex = getIntent().getIntExtra(EXTRA_GROUP, 0);
 //        mChildSelectIndex = getIntent().getIntExtra(EXTRA_CHILD, 0);
-
+        isFromStudy = getIntent().getBooleanExtra(EXTRA_FROM_STUDY, false);
         loadManager.loading(mExList, true);
         CourseDataController.loadCourseListData("0", "1", new InternetCallback() {
             @Override
@@ -100,10 +102,7 @@ public class CourseList extends BaseAppCompatActivity {
         mExList.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
             public boolean onGroupClick(ExpandableListView expandableListView, View view, int i, long l) {
-                Intent intent = new Intent();
-                intent.putExtra("code", lessonList.get(i).get("code"));
-                setResult(RESULT_OK, intent);
-                finish();
+                clickItem(lessonList.get(i).get("code"));
                 return false;
             }
         });
@@ -128,14 +127,23 @@ public class CourseList extends BaseAppCompatActivity {
         mExList.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                Intent intent = new Intent();
                 ArrayList<Map<String, String>> lessonList = StringManager.getListMapByJson(info.get(groupPosition).get("lessonList"));
-                intent.putExtra("code", lessonList.get(childPosition).get("code"));
-                setResult(RESULT_OK, intent);
-                finish();
+                clickItem(lessonList.get(childPosition).get("code"));
                 return true;
             }
         });
     }
 
+
+    private void clickItem(String code) {
+        if (isFromStudy) {
+            Intent intent = new Intent();
+            intent.putExtra("code", code);
+            setResult(RESULT_OK, intent);
+            finish();
+        } else {
+            Intent it = new Intent(this, CourseDetail.class);
+            startActivity(it);
+        }
+    }
 }

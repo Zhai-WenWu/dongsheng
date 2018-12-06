@@ -124,6 +124,7 @@ public class CourseDetail extends BaseAppCompatActivity {
             public void onClick(View v) {
                 //课程页
                 Intent intent = new Intent(CourseDetail.this, CourseList.class);
+                intent.putExtra(CourseList.EXTRA_FROM_STUDY,true);
                 startActivityForResult(intent, SELECT_COURSE);
             }
         });
