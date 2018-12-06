@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:orientation="vertical"
     android:paddingLeft="@dimen/dp_20"
     android:paddingTop="@dimen/dp_30"
     android:paddingRight="@dimen/dp_20">
@@ -22,9 +23,9 @@
         android:id="@+id/desc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dp_32"
+        android:layout_marginTop="@dimen/dp_4"
         android:textColor="#3e3e3e"
         android:textSize="@dimen/sp_16"
         tools:text="一款网红奶酪面包，柔滑的奶酪馅填充到松软的面包中，红玉香甜的味道让人爱不释扣，赶快做起来吧！"/>
 
-</FrameLayout>
+</LinearLayout>

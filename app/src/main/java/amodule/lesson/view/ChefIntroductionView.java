@@ -1,20 +1,33 @@
 package amodule.lesson.view;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.xiangha.R;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import acore.logic.AppCommon;
+import acore.tools.ColorUtil;
+import acore.tools.StringManager;
+import acore.tools.Tools;
 import acore.widget.OverlayViewPager;
+import acore.widget.TagTextView;
+import acore.widget.banner.SLooperViewPager;
 
 /**
  * Description :
@@ -24,7 +37,8 @@ import acore.widget.OverlayViewPager;
  */
 public class ChefIntroductionView extends FrameLayout {
     final int LAYOUT_ID = R.layout.view_chef_introduction;
-    private OverlayViewPager mOverlayViewPager;
+    private SLooperViewPager mOverlayViewPager;
+    private TextView mTitle,mSubTitle;
     public ChefIntroductionView(@NonNull Context context) {
         super(context);
         initialize(context, null, 0);
@@ -43,25 +57,96 @@ public class ChefIntroductionView extends FrameLayout {
     private void initialize(Context context, AttributeSet attrs, int defStyleAttr) {
         LayoutInflater.from(context).inflate(LAYOUT_ID, this);
         mOverlayViewPager = findViewById(R.id.overlay_view);
-        //TODO
-        List<View> views = new ArrayList<>();
-        for(int i=0;i<5;i++){
-            View view = LayoutInflater.from(getContext()).inflate(R.layout.item_chef_introduction,null);
-            views.add(view);
-        }
-        OverlayAdapter adapter = new OverlayAdapter();
-        adapter.setData(views);
-        mOverlayViewPager.init(adapter);
-
+        mTitle = findViewById(R.id.title);
+        mSubTitle = findViewById(R.id.sub_title);
     }
 
-    class OverlayAdapter extends OverlayViewPager.Adapter<View>{
+    public void setData(Map<String, String> data) {
+        if (data == null || data.isEmpty()) {
+            setVisibility(GONE);
+            return;
+        }
+        //title
+        setTitleData(data);
+        //设置名厨介绍
+        List<Map<String,String>> authorList = StringManager.getListMapByJson(data.get("info"));
+        if(authorList.isEmpty()){
+            setVisibility(GONE);
+            return;
+        }
+        OverlayAdapter adapter = new OverlayAdapter();
+        adapter.setData(authorList);
+        mOverlayViewPager.setOffscreenPageLimit(2);
+        mOverlayViewPager.setAdapter(adapter);
+        mOverlayViewPager.setPageTransformer(true, OverlayViewPager.CardPageTransformer.getBuild()//建造者模式
+                .setViewType(OverlayViewPager.PageTransformerConfig.LEFT)
+                .setTranslationOffset(Tools.getDimen(getContext(),R.dimen.dp_30))
+                .setScaleOffset(Tools.getDimen(getContext(),R.dimen.dp_20))
+                .create(mOverlayViewPager));
+        setVisibility(VISIBLE);
+    }
+
+    @NonNull
+    private View createPagerView() {
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.item_chef_introduction, null);
+        return view;
+    }
+
+    private void setDataToView(Map<String, String> chefData, View view) {
+        //设置头像
+        ImageView chefImageView = view.findViewById(R.id.chef_image);
+        String chefImageUrl = chefData.get("img");
+        if(!TextUtils.isEmpty(chefImageUrl)){
+//            Glide.with(getContext()).load(chefImageUrl).into(chefImageView);
+        }
+        //设置用户名
+        TextView chefNameView = view.findViewById(R.id.chef_name);
+        chefNameView.setText(checkStrNull(chefData.get("nickName")));
+        //设置标签
+        TagTextView chefTagView = view.findViewById(R.id.chef_tag);
+        Map<String,String> tagMap = StringManager.getFirstMap(chefData.get("tag"));
+        if(!TextUtils.isEmpty(tagMap.get("title"))){
+            chefTagView.setBackgroundColor(ColorUtil.parseColor(tagMap.get("bgColor"),ColorUtil.parseColor("#EBB54E")));
+            chefTagView.setTextColor(ColorUtil.parseColor(tagMap.get("color"),Color.WHITE));
+            chefTagView.setText(checkStrNull(tagMap.get("title")));
+            chefTagView.setVisibility(VISIBLE);
+        }else{
+            chefTagView.setVisibility(GONE);
+        }
+        //设置简介
+        TextView chef_desc = view.findViewById(R.id.chef_desc);
+    }
+
+    private void setTitleData(Map<String, String> data) {
+        mSubTitle.setText(checkStrNull(data.get("title")));
+        Map<String,String> comProblemMap = StringManager.getFirstMap(data.get("comProblem"));
+        String subTitleStr = comProblemMap.get("text");
+        if(TextUtils.isEmpty(subTitleStr)){
+            findViewById(R.id.sub_title_layout).setVisibility(GONE);
+        }else{
+            mSubTitle.setText(subTitleStr);
+            mSubTitle.setOnClickListener(v -> AppCommon.openUrl(comProblemMap.get("url"),true));
+            findViewById(R.id.sub_title_layout).setVisibility(VISIBLE);
+        }
+    }
+
+    private String checkStrNull(String text) {
+        return TextUtils.isEmpty(text) ? "" : text;
+    }
+
+    class OverlayAdapter extends OverlayViewPager.Adapter<Map<String,String>>{
 
         @Override
         public Object overWriteInstantiateItem(ViewGroup container, int position) {
-            View view = LayoutInflater.from(getContext()).inflate(R.layout.item_chef_introduction,null);
+            View view = createPagerView();
+            setDataToView(getmData().get(position),view);
             container.addView(view);
             return view;
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            super.destroyItem(container, position, object);
         }
     }
 }

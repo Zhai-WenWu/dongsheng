@@ -79,7 +79,7 @@ public class NetInfoModule {
     }
 
     private void registerReceiver() {
-        if(mContext!=null && isCreate) {
+        if(mContext!=null && isCreate && !mConnectivityBroadcastReceiver.isRegistered() && !isRegister) {
             if(Build.VERSION.SDK_INT>=17&&mContext instanceof Activity && ((Activity) mContext).isDestroyed()){
                 return;
             }

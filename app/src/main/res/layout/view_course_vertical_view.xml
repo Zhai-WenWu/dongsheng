@@ -1,44 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     android:paddingLeft="@dimen/dp_20"
-    android:paddingRight="@dimen/dp_20"
-    android:paddingBottom="@dimen/dp_38"
     android:paddingTop="@dimen/dp_30"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:paddingRight="@dimen/dp_20"
+    android:paddingBottom="@dimen/dp_38">
 
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/dp_28"
+        android:layout_height="wrap_content"
         android:includeFontPadding="true"
         android:textColor="@color/common_text"
         android:textSize="@dimen/sp_20"
         android:textStyle="bold"
         tools:text="课程简介"/>
-    
+
     <acore.widget.rcwidget.RCConstraintLayout
-        android:background="@drawable/bg_home_content_shadow"
-        app:round_corner="@dimen/dp_5"
-        android:layout_marginTop="@dimen/dp_40"
+        android:id="@+id/shadow_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_home_content_shadow"
+        app:round_corner="@dimen/dp_10">
 
         <android.support.v7.widget.LinearLayoutCompat
             android:id="@+id/course_list_layout"
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            app:showDividers="middle"
-            app:dividerPadding="@dimen/dp_15"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
             app:divider="@drawable/line_course_vertical"
-            android:layout_height="wrap_content">
+            app:dividerPadding="@dimen/dp_15"
+            app:showDividers="middle">
 
         </android.support.v7.widget.LinearLayoutCompat>
 
     </acore.widget.rcwidget.RCConstraintLayout>
 
-
-</FrameLayout>
+</LinearLayout>

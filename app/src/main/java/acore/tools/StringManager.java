@@ -381,8 +381,8 @@ public class StringManager extends UtilString {
     //单课付费
     public static final String API_COURSE_TOP = apiUrl + "main9/school/courseTop";
     public static final String API_COURSE_DESC = apiUrl + "main9/school/courseDesc";
-    public static final String API_CHAPTER_TOP = apiUrl + "main9/school/lessonTop";
-    public static final String API_CHAPTER_DESC = apiUrl + "main9/school/lessonDesc";
+    public static final String API_LESSON_TOP = apiUrl + "main9/school/lessonTop";
+    public static final String API_LESSON_DESC = apiUrl + "main9/school/lessonDesc";
     public static final String API_SYLLABUS = apiUrl + "main9/school/syllabus";
 
     //替换url

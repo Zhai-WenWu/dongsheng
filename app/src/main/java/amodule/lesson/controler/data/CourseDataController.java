@@ -8,8 +8,8 @@ import java.util.LinkedHashMap;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 
-import static acore.tools.StringManager.API_CHAPTER_DESC;
-import static acore.tools.StringManager.API_CHAPTER_TOP;
+import static acore.tools.StringManager.API_LESSON_DESC;
+import static acore.tools.StringManager.API_LESSON_TOP;
 import static acore.tools.StringManager.API_COURSE_DESC;
 import static acore.tools.StringManager.API_COURSE_TOP;
 import static acore.tools.StringManager.API_SYLLABUS;
@@ -63,12 +63,12 @@ public class CourseDataController {
      */
     public static void loadChapterTopData(String code, @NonNull InternetCallback callback){
         if(TextUtils.isEmpty(code)){
-            callback.loaded(ReqEncyptInternet.REQ_FAILD,API_CHAPTER_TOP,"");
+            callback.loaded(ReqEncyptInternet.REQ_FAILD, API_LESSON_TOP,"");
             return;
         }
         LinkedHashMap<String,String> params = new LinkedHashMap<>();
         params.put("code",code);
-        ReqEncyptInternet.in().doGetEncypt(API_CHAPTER_TOP,params,callback);
+        ReqEncyptInternet.in().doGetEncypt(API_LESSON_TOP,params,callback);
     }
 
     /**
@@ -78,12 +78,12 @@ public class CourseDataController {
      */
     public static void loadChapterDescData(String code, @NonNull InternetCallback callback){
         if(TextUtils.isEmpty(code)){
-            callback.loaded(ReqEncyptInternet.REQ_FAILD,API_CHAPTER_DESC,"");
+            callback.loaded(ReqEncyptInternet.REQ_FAILD, API_LESSON_DESC,"");
             return;
         }
         LinkedHashMap<String,String> params = new LinkedHashMap<>();
         params.put("code",code);
-        ReqEncyptInternet.in().doGetEncypt(API_CHAPTER_DESC,params,callback);
+        ReqEncyptInternet.in().doGetEncypt(API_LESSON_DESC,params,callback);
     }
 
     /**

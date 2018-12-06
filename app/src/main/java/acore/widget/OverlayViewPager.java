@@ -41,9 +41,9 @@ public class OverlayViewPager extends ViewPager {
         if (overlayPagerAdapter == null || overlayPagerAdapter.getmData() == null)
             return;
 
+        setOffscreenPageLimit(2);
         setAdapter(overlayPagerAdapter);
         setCurrentItem(getStartPageIndex(overlayPagerAdapter.getmData().size(), overlayPagerAdapter));
-        setOffscreenPageLimit(2);
         setPageTransformer(true, CardPageTransformer.getBuild()//建造者模式
                 .setViewType(PageTransformerConfig.LEFT)
                 .setTranslationOffset(20)
@@ -97,7 +97,7 @@ public class OverlayViewPager extends ViewPager {
 
         @Override
         public int getCount() {
-            return Integer.MAX_VALUE;
+            return mData.size();
         }
 
 

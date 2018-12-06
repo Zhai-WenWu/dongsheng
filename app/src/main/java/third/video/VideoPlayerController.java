@@ -392,6 +392,7 @@ public class VideoPlayerController {
                     removeTipView();
                 }else {
                     if(isUserClick){
+                        isUserClick = false;
                         removeDishView();
                         hideVideoImage();
                         if(isWifi){

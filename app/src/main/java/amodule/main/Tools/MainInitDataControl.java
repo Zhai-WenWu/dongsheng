@@ -35,6 +35,7 @@ import acore.logic.ConfigMannager;
 import acore.logic.LoginManager;
 import acore.logic.MessageTipController;
 import acore.logic.VersionOp;
+import acore.logic.VipWebPreloadControl;
 import acore.logic.XHClick;
 import acore.logic.polling.AppHandlerAsyncPolling;
 import acore.logic.polling.IHandleMessage;
@@ -191,6 +192,7 @@ public class MainInitDataControl {
 
         PollingConfig.COURSE_GUIDANCE.registerIHandleMessage(mIHandleMessage);
         AppHandlerAsyncPolling.getInstance().startPollingImmediately(PollingConfig.COURSE_GUIDANCE);
+        VipWebPreloadControl.getInstance().vipWebDelayed(100);
         Log.i("zhangyujian", "iniMainAfter::时间:" + (endTime - startTime));
     }
 
