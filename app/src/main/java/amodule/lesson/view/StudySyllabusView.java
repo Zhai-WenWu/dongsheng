@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.rvlistview.RvHorizatolListView;
 import acore.widget.rvlistview.adapter.RvBaseAdapter;
@@ -28,6 +29,8 @@ public class StudySyllabusView extends RelativeLayout {
     private final Context mContext;
     private RvHorizatolListView rvHorizatolListView;
     private View view;
+    private SyllabusAdapter syllabusAdapter;
+    private ArrayList<Map<String, String>> mapList;
 
     public StudySyllabusView(Context context) {
         this(context, null);
@@ -45,12 +48,10 @@ public class StudySyllabusView extends RelativeLayout {
     }
 
     private void initView() {
-        ArrayList<Map<String, String>> mapList = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            mapList.add(new ArrayMap<>());
-        }
+        mapList = new ArrayList<>();
         rvHorizatolListView = (RvHorizatolListView) view.findViewById(R.id.rvHorizatolListView);
-        rvHorizatolListView.setAdapter(new AdapterModuleScroll(mContext, mapList));
+        syllabusAdapter = new SyllabusAdapter(mContext, mapList);
+        rvHorizatolListView.setAdapter(syllabusAdapter);
         int padding = Tools.getDimen(getContext(), R.dimen.dp_10);
         rvHorizatolListView.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
@@ -66,9 +67,16 @@ public class StudySyllabusView extends RelativeLayout {
         });
     }
 
-    public class AdapterModuleScroll extends RvBaseAdapter<Map<String, String>> {
+    public void setData(Map<String, String> data) {
+        ArrayList<Map<String, String>> info = StringManager.getListMapByJson(data.get("info"));
+        mapList = StringManager.getListMapByJson(info.get(0).get("lessonList"));
+        syllabusAdapter.setData(mapList);
+        syllabusAdapter.notifyDataSetChanged();
+    }
 
-        public AdapterModuleScroll(Context context, @Nullable List<Map<String, String>> data) {
+    public class SyllabusAdapter extends RvBaseAdapter<Map<String, String>> {
+
+        public SyllabusAdapter(Context context, @Nullable List<Map<String, String>> data) {
             super(context, data);
         }
 

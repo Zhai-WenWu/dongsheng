@@ -2,6 +2,8 @@ package amodule.lesson.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.View;
+import android.widget.TextView;
 
 import com.xiangha.R;
 
@@ -24,5 +26,7 @@ class ItemSyllabus extends ItemBaseView {
     }
 
     public void setData(Map<String, String> data, int position) {
+        TextView SyllabusTv = findViewById(R.id.tv_syllabus);
+        SyllabusTv.setText(data.get("title"));
     }
 }

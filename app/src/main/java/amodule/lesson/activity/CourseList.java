@@ -46,9 +46,11 @@ public class CourseList extends BaseAppCompatActivity {
     }
 
     private void initData() {
+        loadManager.loading(mExList, true);
         CourseDataController.loadCourseListData("0", "1", new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
+                loadManager.loaded(mExList);
                 if (i >= ReqInternet.REQ_OK_STRING) {
                     Map<String, String> mCourseListMap = StringManager.getFirstMap(o);
                     initCourseListData(mCourseListMap);

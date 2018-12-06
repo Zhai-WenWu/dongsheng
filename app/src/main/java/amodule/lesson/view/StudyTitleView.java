@@ -7,6 +7,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -30,6 +31,7 @@ public class StudyTitleView extends RelativeLayout {
 
     public StudyTitleView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        LayoutInflater.from(context).inflate(R.layout.view_course_title,this,true);
         mCourseTitleTv = findViewById(R.id.tv_course_title);
         mCourseSubtitleTv = findViewById(R.id.tv_course_subtitle);
     }

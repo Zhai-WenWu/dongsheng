@@ -406,9 +406,9 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
         view_class.init("课程收费", "", false, true, new LeftAndRightTextView.LeftAndRightTextViewCallback() {
             @Override
             public void onClick() {
-//                Intent it = new Intent(Setting.this, CourseDetail.class);
-//                startActivity(it);
-                startActivity(new Intent(Setting.this, CourseList.class));
+                Intent it = new Intent(Setting.this, CourseDetail.class);
+                startActivity(it);
+//                startActivity(new Intent(Setting.this, CourseList.class));
             }
 
         });
