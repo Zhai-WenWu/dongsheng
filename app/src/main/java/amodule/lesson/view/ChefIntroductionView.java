@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -25,9 +27,11 @@ import acore.logic.AppCommon;
 import acore.tools.ColorUtil;
 import acore.tools.StringManager;
 import acore.tools.Tools;
+import acore.tools.ToolsDevice;
 import acore.widget.OverlayViewPager;
 import acore.widget.TagTextView;
 import acore.widget.banner.SLooperViewPager;
+import acore.widget.rcwidget.RCConstraintLayout;
 
 /**
  * Description :
@@ -80,8 +84,8 @@ public class ChefIntroductionView extends FrameLayout {
         mOverlayViewPager.setAdapter(adapter);
         mOverlayViewPager.setPageTransformer(true, OverlayViewPager.CardPageTransformer.getBuild()//建造者模式
                 .setViewType(OverlayViewPager.PageTransformerConfig.LEFT)
-                .setTranslationOffset(Tools.getDimen(getContext(),R.dimen.dp_30))
-                .setScaleOffset(Tools.getDimen(getContext(),R.dimen.dp_20))
+                .setTranslationOffset(Tools.getDimen(getContext(),R.dimen.dp_20))
+                .setScaleOffset(Tools.getDimen(getContext(),R.dimen.dp_40))
                 .create(mOverlayViewPager));
         setVisibility(VISIBLE);
     }
@@ -89,6 +93,13 @@ public class ChefIntroductionView extends FrameLayout {
     @NonNull
     private View createPagerView() {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.item_chef_introduction, null);
+        RelativeLayout root = view.findViewById(R.id.root);
+        RCConstraintLayout shadowLayout = view.findViewById(R.id.shadow_layout);
+        shadowLayout.getLayoutParams().height = (int) (ToolsDevice.getWindowPx(getContext()).widthPixels / 322f * 176);
+        root.setLayoutParams(new ViewPager.LayoutParams());
+        root.getLayoutParams().height = (int) (ToolsDevice.getWindowPx(getContext()).widthPixels / 322f * 176) + shadowLayout.getPaddingTop() + shadowLayout.getPaddingBottom();
+        root.setPadding(root.getPaddingLeft() - shadowLayout.getPaddingLeft(),0,
+                root.getPaddingRight() - shadowLayout.getPaddingRight(),0);
         return view;
     }
 
@@ -97,7 +108,7 @@ public class ChefIntroductionView extends FrameLayout {
         ImageView chefImageView = view.findViewById(R.id.chef_image);
         String chefImageUrl = chefData.get("img");
         if(!TextUtils.isEmpty(chefImageUrl)){
-//            Glide.with(getContext()).load(chefImageUrl).into(chefImageView);
+            Glide.with(getContext()).load(chefImageUrl).into(chefImageView);
         }
         //设置用户名
         TextView chefNameView = view.findViewById(R.id.chef_name);
@@ -115,6 +126,7 @@ public class ChefIntroductionView extends FrameLayout {
         }
         //设置简介
         TextView chef_desc = view.findViewById(R.id.chef_desc);
+        chef_desc.setText(checkStrNull(chefData.get("info")));
     }
 
     private void setTitleData(Map<String, String> data) {

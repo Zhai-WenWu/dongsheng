@@ -6,13 +6,14 @@
     android:orientation="horizontal"
     android:gravity="center"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/dp_60">
+    android:layout_height="@dimen/dp_60"
+    tools:ignore="MissingDefaultResource">
 
     <TextView
         android:id="@+id/see_all"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="查看全部 (xx节)"
+        tools:text="查看全部 (xx节)"
         android:textColor="#999999"
         android:textSize="@dimen/dp_14"
         />

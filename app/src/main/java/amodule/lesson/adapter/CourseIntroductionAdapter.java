@@ -19,8 +19,8 @@ import amodule.lesson.view.ItemCourseIntroduce;
  * Created by mrtrying on 2018/12/4 18:20.
  * e_mail : ztanzeyu@gmail.com
  */
-public class CourseIntroductionAdatper extends RvBaseAdapter<Map<String,String>> {
-    public CourseIntroductionAdatper(Context context, @Nullable List<Map<String, String>> data) {
+public class CourseIntroductionAdapter extends RvBaseAdapter<Map<String,String>> {
+    public CourseIntroductionAdapter(Context context, @Nullable List<Map<String, String>> data) {
         super(context, data);
     }
 

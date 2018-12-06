@@ -1,29 +1,25 @@
-package amodule.lesson.view;
+package amodule.lesson.view.introduction;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.annimon.stream.Stream;
-import com.annimon.stream.function.Consumer;
 import com.xiangha.R;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
 
-import static amodule.lesson.view.CourseIntroductionViewPager.TYPE_IMAGE;
-import static amodule.lesson.view.CourseIntroductionViewPager.TYPE_KEY;
-import static amodule.lesson.view.CourseIntroductionViewPager.TYPE_VIDEO;
+import static amodule.lesson.view.introduction.CourseIntroductionViewPager.TYPE_IMAGE;
+import static amodule.lesson.view.introduction.CourseIntroductionViewPager.TYPE_KEY;
+import static amodule.lesson.view.introduction.CourseIntroductionViewPager.TYPE_VIDEO;
 
 /**
  * Description :
@@ -35,6 +31,8 @@ public class CourseIntroduceHeader extends RelativeLayout {
     final int LAYOUT_ID = R.layout.view_course_introduce_header;
     private CourseIntroductionViewPager mViewPager;
     private TextView mCourseName, mChapterText, mLessonText, mDurationText;
+
+    private int videoHeight=0;
 
     public CourseIntroduceHeader(Context context) {
         super(context);
@@ -53,9 +51,9 @@ public class CourseIntroduceHeader extends RelativeLayout {
 
     private void initialize(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         LayoutInflater.from(context).inflate(LAYOUT_ID, this);
-        //TODO
         mViewPager = findViewById(R.id.course_viewpager);
-        mViewPager.getLayoutParams().height = (int) (ToolsDevice.getWindowPx(context).widthPixels / 375f * 300);
+        videoHeight = (int) (ToolsDevice.getWindowPx(context).widthPixels / 375f * 300);
+        mViewPager.getLayoutParams().height = videoHeight;
         mCourseName = findViewById(R.id.course_name);
         mChapterText = findViewById(R.id.chapter_text);
         mLessonText = findViewById(R.id.lesson_text);
@@ -63,31 +61,21 @@ public class CourseIntroduceHeader extends RelativeLayout {
     }
 
     public void setData(Map<String, String> data) {
-        //TODO
-//        if (data == null) {
-//            return;
-//        }
-        //设置viewpager数据
-
-        List<Map<String, String>> images = StringManager.getListMapByJson(data.get("images"));
-        for(int i=0;i<5;i++){
-            Map<String,String> map = new HashMap<>();
-            images.add(map);
+        if (data == null) {
+            return;
         }
+        //设置viewpager数据
+        List<Map<String, String>> images = StringManager.getListMapByJson(data.get("images"));
         for(Map<String,String> value:images){
             value.put(TYPE_KEY, TYPE_IMAGE);
             value.put("img",value.remove(""));
-            value.put("img","http://s3.cdn.xiangha.com/caipu/201801/2309/230946169944.jpg/MjgweDIyMA");
         }
         Map<String,String> videoMap = StringManager.getFirstMap(data.get("adVideo"));
-//        if(!videoMap.isEmpty()){
+        if(!videoMap.isEmpty()){
             videoMap.put(TYPE_KEY,TYPE_VIDEO);
-            videoMap.put("img","http://s3.cdn.xiangha.com/caipu/201801/2309/230946169944.jpg/MjgweDIyMA");
-            videoMap.put("url","http://221.228.226.23/11/t/j/v/b/tjvbwspwhqdmgouolposcsfafpedmb/sh.yinyuetai.com/691201536EE4912BF7E4F1E2C67B8119.mp4");
             images.add(0,videoMap);
-//        }
+        }
         mViewPager.setData(images);
-        //TODO 设置标题数据
         mCourseName.setText(checkStrNull(data.get("name")));
         mChapterText.setText(checkStrNull(data.get("chapterText")));
         mLessonText.setText(checkStrNull(data.get("lessonText")));
@@ -115,5 +103,9 @@ public class CourseIntroduceHeader extends RelativeLayout {
 
     private String checkStrNull(String text) {
         return TextUtils.isEmpty(text) ? "" : text;
+    }
+
+    public int getVideoHeight() {
+        return videoHeight;
     }
 }

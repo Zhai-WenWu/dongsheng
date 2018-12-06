@@ -1,4 +1,4 @@
-package amodule.lesson.view;
+package amodule.lesson.view.introduction;
 
 import android.content.Context;
 import android.graphics.Rect;
@@ -21,9 +21,14 @@ import java.util.List;
 import java.util.Map;
 
 import acore.logic.stat.StatisticsManager;
+import acore.logic.stat.intefaces.OnClickListenerStat;
+import acore.logic.stat.intefaces.OnItemClickListenerRvStat;
+import acore.tools.ColorUtil;
 import acore.tools.StringManager;
 import acore.tools.Tools;
+import acore.tools.ToolsDevice;
 import acore.widget.rvlistview.RvHorizatolListView;
+import acore.widget.rvlistview.RvListView;
 import acore.widget.rvlistview.adapter.RvBaseAdapter;
 import acore.widget.rvlistview.holder.RvBaseViewHolder;
 
@@ -35,10 +40,12 @@ import acore.widget.rvlistview.holder.RvBaseViewHolder;
  */
 public class CourseHorizontalView extends FrameLayout {
     final int LAYOUT_ID = R.layout.view_course_horizontal;
+    final String MOUDLE_NAME = "横滑课程表";
     private TextView mTitleText,mSubTitleText;
     private RvHorizatolListView mRvHorizatolListView;
     private Adapter mAdapter;
     private List<Map<String,String>> mData= new ArrayList<>();
+    private OnItemClickCallback mOnItemClickCallback;
     public CourseHorizontalView(@NonNull Context context) {
         super(context);
         initialize(context,null,0);
@@ -68,16 +75,62 @@ public class CourseHorizontalView extends FrameLayout {
         });
         mAdapter = new Adapter(context,mData);
         mRvHorizatolListView.setAdapter(mAdapter);
-        Log.i("tzy", "initialize: ");
+        mRvHorizatolListView.setOnItemClickListener(new OnItemClickListenerRvStat(MOUDLE_NAME) {
+            @Override
+            public void onItemClicked(View view, RecyclerView.ViewHolder holder, int position) {
+                handleOnItemClickCallback(position,mData.get(position));
+            }
+
+            @Override
+            protected String getStatData(int position) {
+                return null;
+            }
+        });
     }
 
     public void setData(Map<String,String> data){
+        if(data == null || data.isEmpty()){
+            setVisibility(GONE);
+            return;
+        }
         mTitleText.setText(checkStrNull(data.get("title")));
         mSubTitleText.setText(checkStrNull(data.get("subTitle")));
-        List<Map<String,String>> tempData = StringManager.getListMapByJson(data.get("info"));
+        List<Map<String,String>> lessonList = StringManager.getListMapByJson(data.get("chapterList"));
+        if(!lessonList.isEmpty()){
+            //如果只有一章，则显示课的数据列表
+            int lessonNum = Tools.parseIntOfThrow(data.get("chapterNum"),1);
+            if(lessonNum == 1){
+                lessonList = StringManager.getListMapByJson(lessonList.get(0).get("lessonList"));
+            }
+        }
+        if(lessonList.isEmpty()){
+            setVisibility(GONE);
+            return;
+        }
         mData.clear();
-        mData.addAll(tempData);
+        mData.addAll(lessonList);
         mAdapter.notifyDataSetChanged();
+    }
+
+    public void setSubTitleOnClickListener(OnClickListener listener){
+        mSubTitleText.setOnClickListener(new OnClickListenerStat(MOUDLE_NAME) {
+            @Override
+            public void onClicked(View v) {
+                if(listener != null){
+                    listener.onClick(v);
+                }
+            }
+        });
+    }
+
+    public void setOnItemClickListener( OnItemClickCallback callback){
+        mOnItemClickCallback = callback;
+    }
+
+    private void handleOnItemClickCallback(int position,Map<String,String> data){
+        if(mOnItemClickCallback != null){
+            mOnItemClickCallback.onItemClick(position, data);
+        }
     }
 
     private String checkStrNull(String text) {
@@ -85,20 +138,39 @@ public class CourseHorizontalView extends FrameLayout {
     }
 
     class Adapter extends RvBaseAdapter<Map<String,String>>{
+        private int currentPosition=-1;
+        int itemWidth,itemHeight;
 
         public Adapter(Context context, @Nullable List<Map<String, String>> data) {
             super(context, data);
+            itemWidth = (ToolsDevice.getWindowPx(context).widthPixels - Tools.getDimen(context,R.dimen.dp_50))/2;
+            itemHeight = (int) (itemWidth / 163f * 85);
         }
 
         @Override
-        public RvBaseViewHolder<Map<String, String>> onCreateViewHolder(ViewGroup parent, int viewType) {
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View itemView = LayoutInflater.from(mContext).inflate(R.layout.view_course_horizontal_item,parent,false);
+            itemView.getLayoutParams().width = itemWidth;
+            itemView.getLayoutParams().height = itemHeight;
             return new ViewHolder(itemView);
+        }
+
+        @Override
+        public void onBindViewHolder(RvBaseViewHolder<Map<String, String>> holder, int position) {
+            super.onBindViewHolder(holder, position);
+            if(holder instanceof ViewHolder){
+                ((ViewHolder) holder).select(currentPosition==position);
+            }
         }
 
         @Override
         public int getItemViewType(int position) {
             return 0;
+        }
+
+        public void setCurrentPosition(int currentPosition) {
+            this.currentPosition = currentPosition;
+            notifyDataSetChanged();
         }
     }
 
@@ -111,6 +183,17 @@ public class CourseHorizontalView extends FrameLayout {
         @Override
         public void bindData(int position, @Nullable Map<String, String> data) {
             TextView title = findViewById(R.id.text);
+            title.setText(data.get("title"));
         }
+
+        public void select(boolean selected){
+            TextView title = findViewById(R.id.text);
+            title.setTextColor(ColorUtil.parseColor(selected?"#DEA73E":"#3E3E3E"));
+            title.setBackgroundResource(selected?R.drawable.bg_course_horizontal_item_selected:R.drawable.bg_course_horizontal_item);
+        }
+    }
+
+    interface OnItemClickCallback{
+        void onItemClick(int position,Map<String,String> data);
     }
 }

@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    tools:ignore="MissingDefaultResource">
 
-    <amodule.lesson.view.CourseIntroductionViewPager
+    <amodule.lesson.view.introduction.CourseIntroductionViewPager
         android:id="@+id/course_viewpager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
@@ -25,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:includeFontPadding="true"
-            android:text="宝宝6-12个月辅食大全"
+            tools:text="宝宝6-12个月辅食大全"
             android:textColor="#333333"
             android:textSize="@dimen/sp_28"/>
 
@@ -40,7 +42,7 @@
                 android:id="@+id/chapter_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="共7章"
+                tools:text="共7章"
                 android:textColor="#3e3e3e"
                 android:textSize="@dimen/sp_14"/>
 
@@ -48,7 +50,7 @@
                 android:id="@+id/lesson_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="30节"
+                tools:text="30节"
                 android:textColor="#3e3e3e"
                 android:textSize="@dimen/sp_14"/>
 
@@ -56,15 +58,13 @@
                 android:id="@+id/duration_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="总时长3小时"
+                tools:text="总时长3小时"
                 android:textColor="#3e3e3e"
                 android:textSize="@dimen/sp_14"/>
 
         </LinearLayout>
 
-
     </LinearLayout>
-
 
     <View
         android:layout_width="match_parent"

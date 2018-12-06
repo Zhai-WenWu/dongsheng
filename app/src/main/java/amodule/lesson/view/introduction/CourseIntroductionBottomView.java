@@ -1,4 +1,4 @@
-package amodule.lesson.view;
+package amodule.lesson.view.introduction;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -11,6 +11,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.xiangha.R;
+
+import java.util.Map;
 
 import acore.logic.stat.intefaces.OnClickListenerStat;
 import acore.widget.TagTextView;
@@ -28,6 +30,7 @@ public class CourseIntroductionBottomView extends RelativeLayout {
     private TextView mFavText;
     private TagTextView mVipButton;
     private LinearLayout mUploadButton;
+
     public CourseIntroductionBottomView(Context context) {
         super(context);
         initialize(context, null, 0);
@@ -44,41 +47,67 @@ public class CourseIntroductionBottomView extends RelativeLayout {
     }
 
     private void initialize(Context context, AttributeSet attrs, int defStyleAttr) {
-        LayoutInflater.from(context).inflate(LAYOUT_ID,this);
+        LayoutInflater.from(context).inflate(LAYOUT_ID, this);
         mFavIcon = findViewById(R.id.fav_icon);
         switchFavStatus(false);
         mFavText = findViewById(R.id.fav_text);
         mVipButton = findViewById(R.id.vip_button);
         mUploadButton = findViewById(R.id.upload_button);
 
-        OnClickListener favClick = new OnClickListenerStat(getContext(),MOUDLE_NAME,"收藏") {
+        OnClickListener favClick = new OnClickListenerStat(getContext(), MOUDLE_NAME, "收藏") {
             @Override
             public void onClicked(View v) {
+                if (mFavClick != null) {
+                    mFavClick.onClick(v);
+                }
                 switchFavStatus(!mFavIcon.isSelected());
             }
         };
         mFavIcon.setOnClickListener(favClick);
         mFavText.setOnClickListener(favClick);
-
-        mVipButton.setOnClickListener(new OnClickListenerStat(MOUDLE_NAME) {
-            @Override
-            public void onClicked(View v) {
-                //TODO
-                Toast.makeText(context, "VIP Button", Toast.LENGTH_SHORT).show();
-            }
-        });
-        mUploadButton.setOnClickListener(new OnClickListenerStat(getContext(),MOUDLE_NAME,"上传作品") {
-            @Override
-            public void onClicked(View v) {
-                //TODO
-                Toast.makeText(context, "上传作品", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     private void switchFavStatus(boolean b) {
         mFavIcon.setSelected(b);
     }
 
+    public void setData(Map<String, String> data) {
 
+    }
+
+    private OnClickListener mFavClick;
+
+    public void setFavClickListener(OnClickListener listener) {
+        mFavClick = listener;
+    }
+
+    public void showVipButton(boolean isVisibility) {
+        mVipButton.setVisibility(isVisibility ? VISIBLE : GONE);
+    }
+
+    public void showUploadButton(boolean isVisibility) {
+        mUploadButton.setVisibility(isVisibility ? VISIBLE : GONE);
+    }
+
+    public void setVIPClickListener(OnClickListener listener) {
+        mVipButton.setOnClickListener(new OnClickListenerStat(MOUDLE_NAME) {
+            @Override
+            public void onClicked(View v) {
+                if (listener != null) {
+                    listener.onClick(v);
+                }
+            }
+        });
+    }
+
+    public void setUploadClickListener(OnClickListener listener) {
+        mUploadButton.setOnClickListener(new OnClickListenerStat(getContext(), MOUDLE_NAME, "上传作品") {
+            @Override
+            public void onClicked(View v) {
+                if (listener != null) {
+                    listener.onClick(v);
+                }
+            }
+        });
+    }
 }

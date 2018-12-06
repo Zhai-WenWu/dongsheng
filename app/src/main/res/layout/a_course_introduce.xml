@@ -2,9 +2,16 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activityLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <amodule.lesson.view.introduction.CourseIntroductionBottomView
+        android:id="@+id/course_bottom_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_56"
+        android:layout_alignParentBottom="true"/>
 
     <acore.widget.rvlistview.RvListView
         android:id="@+id/rv_list_view"
@@ -14,43 +21,75 @@
         android:background="#FFFFFF"/>
 
     <RelativeLayout
+        android:id="@+id/top_bar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#33000000">
+        android:layout_height="@dimen/dp_49">
 
         <RelativeLayout
+            android:id="@+id/top_bar_black"
             android:layout_width="match_parent"
             android:layout_height="@dimen/topbar_height">
 
             <ImageView
-                android:id="@+id/back"
+                android:id="@+id/back_white"
                 android:layout_width="@dimen/dp_34"
                 android:layout_height="@dimen/dp_34"
-                android:tag="返回"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/dp_10"
                 android:padding="@dimen/dp_10"
-                android:src="@drawable/icon_course_back"/>
+                android:src="@drawable/icon__course_back_white"
+                android:tag="返回"/>
 
             <ImageView
-                android:id="@+id/share_icon"
-                android:tag="分享"
+                android:id="@+id/share_icon_white"
                 android:layout_width="@dimen/dp_40"
                 android:layout_height="@dimen/dp_38"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/dp_10"
                 android:padding="@dimen/dp_10"
-                android:src="@drawable/icon_course_share"/>
+                android:src="@drawable/icon_course_share_white"
+                android:tag="分享"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/top_bar_white"
+            android:background="#FFFFFF"
+            tools:visibility="visible"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/topbar_height">
+
+            <ImageView
+                android:id="@+id/back_black"
+                android:layout_width="@dimen/dp_34"
+                android:layout_height="@dimen/dp_34"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:padding="@dimen/dp_10"
+                android:src="@drawable/icon_course_back"
+                android:tag="返回"/>
+
+            <ImageView
+                android:id="@+id/share_icon_black"
+                android:layout_width="@dimen/dp_40"
+                android:layout_height="@dimen/dp_38"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/dp_10"
+                android:padding="@dimen/dp_10"
+                android:src="@drawable/icon_course_share"
+                android:tag="分享"/>
 
         </RelativeLayout>
 
     </RelativeLayout>
 
-    <amodule.lesson.view.CourseIntroductionBottomView
-        android:id="@+id/course_bottom_layout"
+    <View
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_56"
-        android:layout_alignParentBottom="true"/>
+        android:layout_height="@dimen/dp_4"
+        android:layout_above="@id/course_bottom_layout"
+        android:background="@drawable/bg_course_bottom_shadow"/>
 
 </RelativeLayout>

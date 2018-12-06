@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="@dimen/dp_200"
-    android:layout_height="@dimen/dp_60">
+    android:layout_width="@dimen/dp_163"
+    android:layout_height="@dimen/dp_85">
 
     <TextView
         android:id="@+id/text"
@@ -14,7 +14,7 @@
         android:ellipsize="end"
         android:lineSpacingExtra="@dimen/dp_2"
         android:lineSpacingMultiplier="1"
-        android:text="第1章 6月宝宝 (20节)第1宝 (20节)第1章 6月宝宝 (20节)"
+        android:text="第1章 6月宝宝"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/bg_course_horizontal_item"

@@ -10,7 +10,7 @@
     android:paddingLeft="@dimen/dp_20"
     android:paddingTop="@dimen/dp_30"
     android:paddingRight="@dimen/dp_20"
-    android:paddingBottom="@dimen/dp_38">
+    tools:ignore="MissingDefaultResource">
 
     <TextView
         android:id="@+id/title"

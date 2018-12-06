@@ -4,6 +4,6 @@
 
     <size android:width="@dimen/dp_4" android:height="@dimen/dp_4"/>
     <padding android:left="@dimen/dp_4" android:right="@dimen/dp_4"/>
-    <solid android:color="#FFFFFF"/>
+    <solid android:color="#33000000"/>
 
 </shape>

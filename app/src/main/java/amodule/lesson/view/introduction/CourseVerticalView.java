@@ -1,4 +1,4 @@
-package amodule.lesson.view;
+package amodule.lesson.view.introduction;
 
 import android.content.Context;
 import android.content.Intent;
@@ -36,6 +36,8 @@ public class CourseVerticalView extends FrameLayout {
     final int LAYOUT_ID = R.layout.view_course_vertical_view;
     private TextView mTitleText;
     private LinearLayoutCompat mLinearLayoutCompat;
+    private boolean isOneLesson =false;
+
     public CourseVerticalView(@NonNull Context context) {
         super(context);
         initialize(context, null, 0);
@@ -60,9 +62,9 @@ public class CourseVerticalView extends FrameLayout {
         root.setPadding(root.getPaddingLeft() - shadow_layout.getPaddingLeft(),
                 root.getPaddingTop(),
                 root.getPaddingRight() - shadow_layout.getPaddingRight(),
-                root.getPaddingBottom() - shadow_layout.getPaddingBottom());
-        mTitleText.setPadding(shadow_layout.getPaddingLeft(),0,
-                0, Tools.getDimen(context,R.dimen.dp_12) - shadow_layout.getPaddingTop());
+                shadow_layout.getPaddingBottom());
+        mTitleText.setPadding(shadow_layout.getPaddingLeft(), 0,
+                0, Tools.getDimen(context, R.dimen.dp_12) - shadow_layout.getPaddingTop());
     }
 
     public void setData(Map<String, String> data) {
@@ -72,42 +74,54 @@ public class CourseVerticalView extends FrameLayout {
         }
         mTitleText.setText(checkStrNull(data.get("title")));
         //课程数据设置
-        List<Map<String, String>> courseList = StringManager.getListMapByJson(data.get("info"));
-        if (courseList.isEmpty()) {
-            setVisibility(GONE);
-            return;
+        List<Map<String, String>> lessonList = StringManager.getListMapByJson(data.get("chapterList"));
+        if(!lessonList.isEmpty()){
+            //如果只有一章，则显示课的数据列表
+            int lessonNum = Tools.parseIntOfThrow(data.get("chapterNum"),1);
+            if(lessonNum == 1){
+                lessonList = StringManager.getListMapByJson(lessonList.get(0).get("lessonList"));
+                isOneLesson = lessonList.size() <= 1;
+            }
         }
         if (mLinearLayoutCompat != null) {
             mLinearLayoutCompat.removeAllViews();
         }
+        if(isOneLesson){
+            setVisibility(GONE);
+            return;
+        }
         //缺少章节数
-        for (Map<String, String> value : courseList) {
+        boolean hasFooter = lessonList.size() > 4;
+        final int length = hasFooter ? 4 : lessonList.size();
+        for (int i = 0; i < length; i++) {
+            Map<String, String> value = lessonList.get(i);
             createCourseItem(value, mLinearLayoutCompat);
         }
-        if (courseList.size() > 4) {
-            addFooterView();
+        if (hasFooter) {
+            addFooterView(data, mLinearLayoutCompat);
         }
 
         setVisibility(VISIBLE);
     }
 
-    private void addFooterView() {
-        View footView = LayoutInflater.from(getContext()).inflate(R.layout.view_course_vertical_footer, mLinearLayoutCompat,false);
-        footView.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getContext().startActivity(new Intent(getContext(), CourseList.class));
+    private void addFooterView(Map<String, String> data, LinearLayoutCompat parent) {
+        String num = data.get("num");
+        View footView = LayoutInflater.from(getContext()).inflate(R.layout.view_course_vertical_footer, parent, false);
+        footView.setOnClickListener(v -> {
+            if(mFooterClickListener != null){
+                mFooterClickListener.onClick(v);
             }
         });
-        mLinearLayoutCompat.addView(footView);
+        parent.addView(footView);
+        TextView see_all = footView.findViewById(R.id.see_all);
+        see_all.setText(TextUtils.isEmpty(num) ? "查看全部" : "查看全部 (" + num + "节)");
     }
 
-    @Nullable
     private void createCourseItem(Map<String, String> data, LinearLayoutCompat parent) {
-        if(data == null || data.isEmpty()){
+        if (data == null || data.isEmpty()) {
             return;
         }
-        View itemView = LayoutInflater.from(getContext()).inflate(R.layout.view_course_vertical_item, mLinearLayoutCompat,false);
+        View itemView = LayoutInflater.from(getContext()).inflate(R.layout.view_course_vertical_item, parent, false);
         TextView titleText = itemView.findViewById(R.id.title);
         titleText.setText(data.get("title"));
         TextView subTitleText = itemView.findViewById(R.id.sub_title);
@@ -115,7 +129,17 @@ public class CourseVerticalView extends FrameLayout {
         parent.addView(itemView);
     }
 
+    @Override
+    public void setVisibility(int visibility){
+        super.setVisibility(isOneLesson ? GONE : visibility);
+    }
+
     private String checkStrNull(String text) {
         return TextUtils.isEmpty(text) ? "" : text;
+    }
+
+    OnClickListener mFooterClickListener;
+    public void setFooterOnClickListener(OnClickListener listener){
+        mFooterClickListener = listener;
     }
 }

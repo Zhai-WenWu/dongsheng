@@ -1,4 +1,4 @@
-package amodule.lesson.view;
+package amodule.lesson.view.introduction;
 
 import android.app.Activity;
 import android.content.Context;
@@ -9,13 +9,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.BitmapRequestBuilder;
@@ -28,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import aplug.basic.LoadImage;
 import aplug.basic.SubBitmapTarget;
@@ -47,7 +46,7 @@ public class CourseIntroductionViewPager extends RelativeLayout {
     public static final String TYPE_VIDEO = "video";
 
     private ViewPager mViewPager;
-    private FrameLayout mPointLayout;
+    private LinearLayout mPointLayout;
 
     private VideoPlayerController mVideoPlayerController;
 
@@ -56,6 +55,7 @@ public class CourseIntroductionViewPager extends RelativeLayout {
     private int mVideoPosition = -1;
     private int mCurrSelectPos = 0;
     private String mVideoUrl;
+    private int unselectedWidth,selectedWidth;
 
     public CourseIntroductionViewPager(Context context) {
         super(context);
@@ -76,6 +76,8 @@ public class CourseIntroductionViewPager extends RelativeLayout {
         LayoutInflater.from(context).inflate(LAYOUT_ID,this);
         mViewPager = findViewById(R.id.viewpager);
         mPointLayout = findViewById(R.id.point_linear);
+        selectedWidth=Tools.getDimen(context,R.dimen.dp_14);
+        unselectedWidth=Tools.getDimen(context,R.dimen.dp_4);
     }
 
     public void setData(List<Map<String,String>> images){
@@ -101,7 +103,6 @@ public class CourseIntroductionViewPager extends RelativeLayout {
                 setImageView(iv, images.get(i).get("img"), false);
             }
             views.add(topView);
-            addPointView(i);
         }
         addPointView(views.size());
         selectPoint(mCurrSelectPos);
@@ -109,8 +110,8 @@ public class CourseIntroductionViewPager extends RelativeLayout {
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                selectPoint(position);
                 mCurrSelectPos = position;
+                selectPoint(mCurrSelectPos);
                 if (mVideoPlayerController != null) {
                     if (mVideoPosition != position) {
                         if (Math.abs(position - mVideoPosition) == 1 && !mHasInitPlayStateOnPagerSelected) {
@@ -148,21 +149,28 @@ public class CourseIntroductionViewPager extends RelativeLayout {
         if (mPointLayout == null) {
             return;
         }
-        int effectiveCount = mPointLayout.getChildCount() - 1;
-        if(position >=0 && effectiveCount > position && effectiveCount > mCurrSelectPos){
-            mPointLayout.getChildAt(mCurrSelectPos).setSelected(false);
-            mPointLayout.getChildAt(position).setSelected(true);
+        int length = mPointLayout.getChildCount();
+        for(int i =0;i<length;i++){
+            setPointViewWidth(i,unselectedWidth);
         }
+        setPointViewWidth(position,selectedWidth);
     }
 
-    private void addPointView(int index) {
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.image_course_introduction_point, null);
-        int viewWidth = getResources().getDimensionPixelSize(R.dimen.dp_14);
-        int viewHeight = getResources().getDimensionPixelSize(R.dimen.dp_4);
-        FrameLayout.LayoutParams rlp = new FrameLayout.LayoutParams(viewWidth, viewHeight);
-        rlp.leftMargin = index * (viewWidth - viewHeight);
-        rlp.gravity = Gravity.CENTER_VERTICAL;
-        mPointLayout.addView(view, rlp);
+    private void setPointViewWidth(int i,int width) {
+        View childView = mPointLayout.getChildAt(i);
+        ImageView point = childView.findViewById(R.id.point);
+        point.getLayoutParams().width = width;
+        point.requestLayout();
+    }
+
+    private void addPointView(int pointSize) {
+        if(mPointLayout.getChildCount() > 0){
+            mPointLayout.removeAllViews();
+        }
+        for(int i=0;i<pointSize;i++){
+            View view = LayoutInflater.from(getContext()).inflate(R.layout.image_course_introduction_point, null);
+            mPointLayout.addView(view);
+        }
     }
 
     private boolean videoCanPause() {
