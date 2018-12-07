@@ -16,6 +16,6 @@ public class StudyIntroduct extends BaseAppCompatActivity {
         setContentView(introductionView);
 
         String extra = getIntent().getStringExtra(EXTRA_DESC);
-        introductionView.setData(StringManager.getFirstMap(extra));
+        introductionView.setData(extra);
     }
 }

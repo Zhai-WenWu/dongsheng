@@ -24,21 +24,14 @@
             android:id="@+id/title"
             style="@style/top_title_singleText"
             android:layout_width="wrap_content"
+            android:layout_centerInParent="true"
             android:gravity="center"
             android:text="课程简介"
-            android:layout_centerInParent="true"
             android:textColor="@color/white"
             android:textSize="@dimen/sp_18" />
 
 
     </RelativeLayout>
-
-    <TextView
-        android:id="@+id/tv_introduct_subtitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/ysf_black_333333"
-        android:textSize="@dimen/sp_20" />
 
     <TextView
         android:id="@+id/tv_info"
@@ -47,10 +40,4 @@
         android:textColor="@color/ysf_grey_666666"
         android:textSize="@dimen/sp_14" />
 
-    <TextView
-        android:id="@+id/tv_video_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/ysf_black_333333"
-        android:textSize="@dimen/sp_20" />
 </LinearLayout>
