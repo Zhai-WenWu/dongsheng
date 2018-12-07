@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -135,10 +134,12 @@ public class CourseIntroduction extends BaseAppCompatActivity {
         mCourseHorizontalView = new CourseHorizontalView(this);
         mCourseHorizontalView.setLayoutParams(params);
         mRvListView.addHeaderView(mCourseHorizontalView);
+        mCourseHorizontalView.setVisibility(View.GONE);
 
         mChefIntroductionView = new ChefIntroductionView(this);
         mChefIntroductionView.setLayoutParams(params);
         mRvListView.addHeaderView(mChefIntroductionView);
+        mChefIntroductionView.setVisibility(View.GONE);
 
         mCourseVerticalView = new CourseVerticalView(this);
         mCourseVerticalView.setLayoutParams(params);

@@ -15,7 +15,7 @@
         android:textSize="@dimen/sp_20"
         android:textStyle="bold"
         android:layout_marginLeft="@dimen/dp_20"
-        android:text="名厨简介"/>
+        tools:text="名厨简介"/>
 
     <LinearLayout
         android:id="@+id/sub_title_layout"
@@ -32,7 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_height="@dimen/dp_20"
             android:layout_marginRight="@dimen/dp_3"
-            android:text="常见问题"
+            tools:text="常见问题"
             android:textColor="#999999"
             android:textSize="@dimen/sp_14"/>
 
