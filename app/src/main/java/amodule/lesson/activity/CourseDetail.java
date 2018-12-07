@@ -2,9 +2,8 @@ package amodule.lesson.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.ArrayMap;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -12,16 +11,16 @@ import android.widget.TextView;
 import com.xiangha.R;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
-import acore.logic.load.LoadManager;
 import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.StringManager;
-import acore.tools.Tools;
 import amodule.lesson.controler.data.CourseDataController;
 import amodule.lesson.view.StudySyllabusView;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
+import third.video.VideoPlayerController;
 
 /**
  * Description :
@@ -29,89 +28,111 @@ import aplug.basic.ReqInternet;
  * Created by mrtrying on 2018/12/3 15:27.
  * e_mail : ztanzeyu@gmail.com
  */
-public class CourseDetail extends BaseAppCompatActivity implements View.OnClickListener {
+public class CourseDetail extends BaseAppCompatActivity{
     public static final String EXTRA_CODE = "code";
     public static final String EXTRA_TYPE = "type";
     public static final String EXTRA_GROUP = "group";
     public static final String EXTRA_CHILD = "child";
-    private ArrayList<Map<String, String>> videoList;
+    //    private RvListView mCourseList;
+    private StudySyllabusView mStudySyllabusView;
+    private LinearLayout mBottomLableLayout;
+    private Map<String, String> mTopInfoMap;
+    private VideoPlayerController mVideoPlayerController;
     private String mCode = "0";
     private String mChapterCode = "0";
     private String mType = "1";
-    private String desc;
-    private StudySyllabusView mStudySyllabusView;
     private final int SELECT_COURSE = 1;
-    private Intent intent;
-    private int mGroupSelectIndex = 0;//章索引
-    private int mChildSelectIndex = -1;//节索引
-    private LinearLayout mButtomLayout;
+    private int mGroupSelectIndex = 0;
+    private int mChildSelectIndex = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initExtraData();
         initActivity("", 2, 0, R.layout.c_view_bar_title, R.layout.a_course_detail);
         initView();
-        loadInfo();
+    }
+
+    private void initExtraData() {
+//        mCode = getIntent().getStringExtra(EXTRA_CODE);
+//        mType = getIntent().getStringExtra(EXTRA_TYPE);
     }
 
     private void initView() {
-        loadManager = new LoadManager(this, rl);
-        rl = (RelativeLayout) findViewById(R.id.activityLayout);
+        mBottomLableLayout = findViewById(R.id.ll_bottom);
         mStudySyllabusView = findViewById(R.id.view_syllabus);
-        Button mainPointsBt = findViewById(R.id.bt_main_points);
-        Button askBt = findViewById(R.id.bt_ask);
-        Button introductBt = findViewById(R.id.bt_introduct);
-        mButtomLayout = findViewById(R.id.ll_buttom);
-        mainPointsBt.setOnClickListener(this);
-        askBt.setOnClickListener(this);
-        introductBt.setOnClickListener(this);
 
-        videoList = new ArrayList<>();
+        RelativeLayout videoLayout = findViewById(R.id.video_layout);
+        // TODO: 2018/12/7
+        mVideoPlayerController = new VideoPlayerController(this, videoLayout, "https://ws1.sinaimg.cn/large/0065oQSqgy1fxno2dvxusj30sf10nqcm.jpg");
+        mVideoPlayerController.setVideoUrl("http://221.228.226.23/11/t/j/v/b/tjvbwspwhqdmgouolposcsfafpedmb/sh.yinyuetai.com/691201536EE4912BF7E4F1E2C67B8119.mp4");
+        loadManager.setLoading(v -> loadInfo());
     }
 
     private void loadInfo() {
-//        mCode = getIntent().getStringExtra(EXTRA_CODE);
-//        mType = getIntent().getStringExtra(EXTRA_TYPE);
-        CourseDataController.loadChapterInfoData(mCode, mChapterCode, new InternetCallback() {
+        CourseDataController.loadLessonInfoData(mCode, new InternetCallback() {
             @Override
-            public void loaded(int i, String s, Object o) {
-                if (i >= ReqInternet.REQ_OK_STRING) {
-                    Map<String, String> mLessonInfoMap = StringManager.getFirstMap(o);
-                    initInfoData(mLessonInfoMap);
+            public void loaded(int flag, String s, Object o) {
+                if (flag >= ReqInternet.REQ_OK_STRING) {
+                    mTopInfoMap = StringManager.getFirstMap(o);
+                    List<Map<String, String>> labelDataList = StringManager.getListMapByJson(mTopInfoMap.get("labelData"));
+                    if (mBottomLableLayout != null && mBottomLableLayout.getChildCount() > 0) {
+                        mBottomLableLayout.removeAllViews();
+                    }
+                    for (int i = 0; i < labelDataList.size(); i++) {
+                        View lableView = createLableView(labelDataList.get(i), mBottomLableLayout);
+                        mBottomLableLayout.addView(lableView);
+                    }
+                    loadCourseList();
                 }
             }
 
         });
+    }
 
+    private View createLableView(Map<String, String> stringStringMap, LinearLayout parent) {
+        View view = LayoutInflater.from(this).inflate(R.layout.view_study_bottom_lable_item, parent, false);
+        TextView textView = view.findViewById(R.id.label_text);
+        String title = stringStringMap.get("title");
+        textView.setText(title);
+        // TODO: 2018/12/7
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (title){
+                    case "学习要点":
+                        Intent StudyPointIntent = new Intent(CourseDetail.this, StudyPoint.class);
+                        startActivity(StudyPointIntent);
+                        break;
+                    case "常见问题":
+                        Intent StudyAskIntent = new Intent(CourseDetail.this, StudyAsk.class);
+                        startActivity(StudyAskIntent);
+                        break;
+                    case "课程简介":
+                        Intent StudyIntroductionIntent = new Intent(CourseDetail.this, StudyIntroduction.class);
+                        StudyIntroductionIntent.putExtra(StudyIntroduction.EXTRA_TITLE, title);
+                        StudyIntroductionIntent.putExtra(StudyIntroduction.EXTRA_DESC, mTopInfoMap.get("info") + "这是描述");
+                        startActivity(StudyIntroductionIntent);
+                        break;
+                }
+            }
+        });
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) view.getLayoutParams();
+        params.width = 0;
+        params.weight = 1;
+        return view;
+    }
+
+    private void loadCourseList() {
         CourseDataController.loadCourseListData(mCode, mType, new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
                 if (i >= ReqInternet.REQ_OK_STRING) {
-                    Map<String, String> mCourseListMap = StringManager.getFirstMap(o);
-                    initCourseListData(mCourseListMap);
+                    Map<String, String> resultMap = StringManager.getFirstMap(o);
+                    initCourseListData(resultMap);
                 }
             }
         });
-
-        CourseDataController.loadChapterPointData(mCode, new InternetCallback() {
-            @Override
-            public void loaded(int i, String s, Object o) {
-                if (i >= ReqInternet.REQ_OK_STRING) {
-                    Map<String, String> mDescoMap = StringManager.getFirstMap(o);
-                    initPointData(mDescoMap);
-                }
-            }
-
-        });
-    }
-
-    private void initInfoData(Map<String, String> lessonInfoMap) {
-        desc = lessonInfoMap.get("desc");
-//        ArrayList<Map<String, String>> labelList = StringManager.getListMapByJson(lessonInfoMap.get("labelData"));
-//        for (Map<String, String> label :labelList) {
-//            Button button = new Button(this);
-//            button.setText(label.get("title"));
-//        }
     }
 
     private void initCourseListData(Map<String, String> courseListMap) {
@@ -143,26 +164,6 @@ public class CourseDetail extends BaseAppCompatActivity implements View.OnClickL
 
     }
 
-    private void initPointData(Map<String, String> pointMap) {
-        //学习要点
-        ArrayList<Map<String, String>> infoList = StringManager.getListMapByJson(pointMap.get("info"));
-        for (Map<String, String> info : infoList) {
-            ArrayList<Map<String, String>> vidList = StringManager.getListMapByJson(info.get("info"));
-            boolean isFirstItem = true;
-            for (Map<String, String> vidInfo : vidList) {
-                Map<String, String> stringMap = new ArrayMap<>();
-                if (isFirstItem) {
-                    stringMap.put("subTitle", info.get("subTitle"));
-                    isFirstItem = false;
-                }
-                stringMap.put("content", vidInfo.get("content"));
-                stringMap.put("img", vidInfo.get("img"));
-                videoList.add(stringMap);
-            }
-        }
-
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -179,23 +180,34 @@ public class CourseDetail extends BaseAppCompatActivity implements View.OnClickL
     }
 
     @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.bt_main_points:
-                intent = new Intent(this, StudyPoint.class);
-                intent.putExtra(StudyIntroduct.EXTRA_DESC, Tools.list2Json(videoList));
-                startActivity(intent);
-                break;
-            case R.id.bt_ask:
-                intent = new Intent(this, StudyAsk.class);
-//                intent.putExtra(StudyIntroduct.EXTRA_DESC, Tools.list2Json(videoList));
-                startActivity(intent);
-                break;
-            case R.id.bt_introduct:
-                intent = new Intent(this, StudyIntroduct.class);
-                intent.putExtra(StudyIntroduct.EXTRA_DESC, desc);
-                startActivity(intent);
-                break;
+    protected void onResume() {
+        super.onResume();
+        if (mVideoPlayerController != null) {
+            mVideoPlayerController.onResume();
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mVideoPlayerController != null) {
+            mVideoPlayerController.onPause();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mVideoPlayerController != null) {
+            mVideoPlayerController.onDestroy();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mVideoPlayerController != null && mVideoPlayerController.onBackPressed()) {
+            return;
+        }
+        super.onBackPressed();
     }
 }

@@ -761,7 +761,7 @@
             android:theme="@style/titleTheme"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name="amodule.lesson.activity.StudyIntroduct"
+            android:name="amodule.lesson.activity.StudyIntroduction"
             android:configChanges="orientation|keyboardHidden"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"

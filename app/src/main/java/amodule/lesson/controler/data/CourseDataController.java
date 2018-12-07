@@ -8,10 +8,10 @@ import java.util.LinkedHashMap;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 
-import static acore.tools.StringManager.API_LESSON_POINT;
 import static acore.tools.StringManager.API_LESSON_INFO;
 import static acore.tools.StringManager.API_COURSE_DESC;
 import static acore.tools.StringManager.API_COURSE_TOP;
+import static acore.tools.StringManager.API_LESSON_POINT;
 import static acore.tools.StringManager.API_SYLLABUS;
 
 /**
@@ -58,29 +58,28 @@ public class CourseDataController {
      * @param code
      * @param callback
      */
-    public static void loadChapterInfoData(String code, String chapterCode, @NonNull InternetCallback callback) {
-        if (TextUtils.isEmpty(code)) {
-            callback.loaded(ReqEncyptInternet.REQ_FAILD, API_LESSON_INFO, "");
+    public static void loadLessonInfoData(String code, @NonNull InternetCallback callback){
+        if(TextUtils.isEmpty(code)){
+            callback.loaded(ReqEncyptInternet.REQ_FAILD, API_LESSON_INFO,"");
             return;
         }
-        LinkedHashMap<String, String> params = new LinkedHashMap<>();
-        params.put("code", code);
-        params.put("chapterCode", chapterCode);
-        ReqEncyptInternet.in().doGetEncypt(API_LESSON_INFO, params, callback);
+        LinkedHashMap<String,String> params = new LinkedHashMap<>();
+        params.put("code",code);
+        ReqEncyptInternet.in().doGetEncypt(API_LESSON_INFO,params,callback);
     }
 
     /**
      * @param code
      * @param callback
      */
-    public static void loadChapterPointData(String code, @NonNull InternetCallback callback) {
-        if (TextUtils.isEmpty(code)) {
-            callback.loaded(ReqEncyptInternet.REQ_FAILD, API_LESSON_POINT, "");
+    public static void loadLessonPointData(String code, @NonNull InternetCallback callback){
+        if(TextUtils.isEmpty(code)){
+            callback.loaded(ReqEncyptInternet.REQ_FAILD, API_LESSON_POINT,"");
             return;
         }
-        LinkedHashMap<String, String> params = new LinkedHashMap<>();
-        params.put("code", code);
-        ReqEncyptInternet.in().doGetEncypt(API_LESSON_POINT, params, callback);
+        LinkedHashMap<String,String> params = new LinkedHashMap<>();
+        params.put("code",code);
+        ReqEncyptInternet.in().doGetEncypt(API_LESSON_POINT,params,callback);
     }
 
     /**

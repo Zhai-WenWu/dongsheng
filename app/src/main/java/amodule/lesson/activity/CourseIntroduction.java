@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import acore.logic.stat.intefaces.OnClickListenerStat;
 import acore.override.activity.base.BaseAppCompatActivity;
@@ -38,7 +37,6 @@ import amodule.lesson.view.introduction.CourseHorizontalView;
 import amodule.lesson.view.introduction.CourseIntroduceHeader;
 import amodule.lesson.view.introduction.CourseIntroductionBottomView;
 import amodule.lesson.view.introduction.CourseVerticalView;
-import amodule.main.Main;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import third.share.BarShare;
@@ -51,7 +49,7 @@ import third.share.BarShare;
  */
 public class CourseIntroduction extends BaseAppCompatActivity {
 
-    public static final String EXTRA_CEODE = "code";
+    public static final String EXTRA_CODE = "code";
 
     private RelativeLayout mTopBarWhite,mTopBarBlack;
     private ImageView mShareIconWhite,mShareIconBlack;
@@ -61,12 +59,12 @@ public class CourseIntroduction extends BaseAppCompatActivity {
     private CourseVerticalView mCourseVerticalView;
     private CourseIntroductionBottomView mBottomView;
     private RvListView mRvListView;
-    private CourseIntroductionAdapter mAdatper;
+    private CourseIntroductionAdapter mAdapter;
 
     private List<Map<String, String>> mData = new ArrayList<>();
     private Map<String, String> shareMap = new HashMap<>();
     private String mCode;
-    private boolean canStudy = false;
+//TODO    private boolean canStudy = false;
     private int topbarHeight;
 
     @Override
@@ -86,7 +84,7 @@ public class CourseIntroduction extends BaseAppCompatActivity {
         if (intent == null) {
             return;
         }
-        mCode = intent.getStringExtra(EXTRA_CEODE);
+        mCode = intent.getStringExtra(EXTRA_CODE);
         mCode = "123";
     }
 
@@ -95,16 +93,14 @@ public class CourseIntroduction extends BaseAppCompatActivity {
         initTitle();
         mBottomView = findViewById(R.id.course_bottom_layout);
         mRvListView = findViewById(R.id.rv_list_view);
-        mAdatper = new CourseIntroductionAdapter(this, mData);
-        mRvListView.setAdapter(mAdatper);
+        mAdapter = new CourseIntroductionAdapter(this, mData);
+        mRvListView.setAdapter(mAdapter);
 
         mRvListView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 offsetHeight += dy;
-                Log.i("tzy", "onScrolled: " + offsetHeight);
-                Log.i("tzy", "onScrolled:getVideoHeight " + mCourseIntroduceHeader.getVideoHeight());
                 float offset = mCourseIntroduceHeader.getVideoHeight() - topbarHeight;
                 float alpha = offsetHeight > offset ? 1 : offsetHeight/offset;
                 if(alpha == 0){
@@ -116,8 +112,12 @@ public class CourseIntroduction extends BaseAppCompatActivity {
                     }
                 }else{
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                                |View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                                    |View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+                        }else{
+                            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+                        }
                         String colorStr = "#"+Integer.toHexString((int) (alpha*255)).toUpperCase() + "FFFFFF";
                         getWindow().setStatusBarColor(ColorUtil.parseColor(colorStr));
                     }
@@ -254,7 +254,7 @@ public class CourseIntroduction extends BaseAppCompatActivity {
                     mChefIntroductionView.setData(StringManager.getFirstMap(resultMap.remove("chefDesc")));
                     List<Map<String,String>> recomInfo = StringManager.getListMapByJson(resultMap.get("recomInfo"));
                     mData.addAll(recomInfo);
-                    mAdatper.notifyDataSetChanged();
+                    mAdapter.notifyDataSetChanged();
                 }
             }
         });
