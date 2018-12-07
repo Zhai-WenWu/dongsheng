@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import acore.logic.AppCommon;
 import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.StringManager;
 import amodule.lesson.controler.data.CourseDataController;
@@ -95,26 +96,26 @@ public class CourseDetail extends BaseAppCompatActivity{
         TextView textView = view.findViewById(R.id.label_text);
         String title = stringStringMap.get("title");
         textView.setText(title);
+        view.setOnClickListener(v -> {
+            AppCommon.openUrl(stringStringMap.get("url"),true);
+        });
         // TODO: 2018/12/7
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switch (title){
-                    case "学习要点":
-                        Intent StudyPointIntent = new Intent(CourseDetail.this, StudyPoint.class);
-                        startActivity(StudyPointIntent);
-                        break;
-                    case "常见问题":
-                        Intent StudyAskIntent = new Intent(CourseDetail.this, StudyAsk.class);
-                        startActivity(StudyAskIntent);
-                        break;
-                    case "课程简介":
-                        Intent StudyIntroductionIntent = new Intent(CourseDetail.this, StudyIntroduction.class);
-                        StudyIntroductionIntent.putExtra(StudyIntroduction.EXTRA_TITLE, title);
-                        StudyIntroductionIntent.putExtra(StudyIntroduction.EXTRA_DESC, mTopInfoMap.get("info") + "这是描述");
-                        startActivity(StudyIntroductionIntent);
-                        break;
-                }
+        view.setOnClickListener(v -> {
+            switch (title){
+                case "学习要点":
+                    Intent StudyPointIntent = new Intent(CourseDetail.this, StudyPoint.class);
+                    startActivity(StudyPointIntent);
+                    break;
+                case "常见问题":
+                    Intent StudyAskIntent = new Intent(CourseDetail.this, StudyAsk.class);
+                    startActivity(StudyAskIntent);
+                    break;
+                case "课程简介":
+                    Intent StudyIntroductionIntent = new Intent(CourseDetail.this, StudyIntroduction.class);
+                    StudyIntroductionIntent.putExtra(StudyIntroduction.EXTRA_TITLE, title);
+                    StudyIntroductionIntent.putExtra(StudyIntroduction.EXTRA_DESC, mTopInfoMap.get("desc") + "这是描述");
+                    startActivity(StudyIntroductionIntent);
+                    break;
             }
         });
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) view.getLayoutParams();

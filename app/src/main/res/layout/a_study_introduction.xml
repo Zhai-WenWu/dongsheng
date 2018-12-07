@@ -21,8 +21,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="#333333"
-                android:text="asdasdasd"
-                android:textSize="@dimen/sp_16"/>
+                android:lineSpacingExtra="@dimen/dp_2"
+                android:lineSpacingMultiplier="1"
+                android:textSize="@dimen/sp_17"/>
 
         </LinearLayout>
 
