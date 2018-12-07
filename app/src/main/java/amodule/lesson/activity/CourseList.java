@@ -34,8 +34,8 @@ public class CourseList extends BaseAppCompatActivity {
     private List<String> mGroupList = new ArrayList<>();
     private List<List<String>> mChildList = new ArrayList<>();
     private ExpandableListView mExList;
-    private int mGroupSelectIndex = 2;
-    private int mChildSelectIndex = 2;
+    private int mGroupSelectIndex = 0;
+    private int mChildSelectIndex = -1;
     private boolean isFromStudy;
 
     @Override
@@ -53,8 +53,8 @@ public class CourseList extends BaseAppCompatActivity {
     }
 
     private void initData() {
-//        mGroupSelectIndex = getIntent().getIntExtra(EXTRA_GROUP, 0);
-//        mChildSelectIndex = getIntent().getIntExtra(EXTRA_CHILD, 0);
+        mGroupSelectIndex = getIntent().getIntExtra(EXTRA_GROUP, 0);
+        mChildSelectIndex = getIntent().getIntExtra(EXTRA_CHILD, -1);
         isFromStudy = getIntent().getBooleanExtra(EXTRA_FROM_STUDY, false);
         loadManager.loading(mExList, true);
         CourseDataController.loadCourseListData("0", "1", new InternetCallback() {
@@ -128,6 +128,8 @@ public class CourseList extends BaseAppCompatActivity {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                 ArrayList<Map<String, String>> lessonList = StringManager.getListMapByJson(info.get(groupPosition).get("lessonList"));
+                mSyllabusAdapter.setSelectIndex(groupPosition, childPosition);
+                mSyllabusAdapter.notifyDataSetChanged();
                 clickItem(lessonList.get(childPosition).get("code"));
                 return true;
             }
@@ -136,6 +138,7 @@ public class CourseList extends BaseAppCompatActivity {
 
 
     private void clickItem(String code) {
+
         if (isFromStudy) {
             Intent intent = new Intent();
             intent.putExtra("code", code);
