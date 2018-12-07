@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.ArrayMap;
 import android.view.View;
-import android.widget.LinearLayout;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -16,6 +16,7 @@ import java.util.Map;
 import acore.logic.load.LoadManager;
 import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.StringManager;
+import acore.tools.Tools;
 import acore.widget.rvlistview.RvListView;
 import amodule.lesson.adapter.CourseVideoContentAdapter;
 import amodule.lesson.controler.data.CourseDataController;
@@ -32,10 +33,10 @@ import aplug.basic.ReqInternet;
  * Created by mrtrying on 2018/12/3 15:27.
  * e_mail : ztanzeyu@gmail.com
  */
-public class CourseDetail extends BaseAppCompatActivity {
+public class CourseDetail extends BaseAppCompatActivity implements View.OnClickListener {
     public static final String EXTRA_CODE = "code";
     public static final String EXTRA_TYPE = "type";
-    private RvListView mCourseList;
+//    private RvListView mCourseList;
     private Map<String, String> mTopInfoMap;
     private CourseVideoContentAdapter mVideoDetailAdapter;
     private ArrayList<Map<String, String>> videoList;
@@ -46,6 +47,8 @@ public class CourseDetail extends BaseAppCompatActivity {
     private StudySyllabusView studySyllabusView;
     private StudylIntroductionView studylIntroductionView;
     private final int SELECT_COURSE = 1;
+    private Intent intent;
+    private Map<String, String> desc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,17 +66,21 @@ public class CourseDetail extends BaseAppCompatActivity {
     private void initView() {
         loadManager = new LoadManager(this, rl);
         rl = (RelativeLayout) findViewById(R.id.activityLayout);
-        mCourseList = findViewById(R.id.course_list);
+        studySyllabusView = findViewById(R.id.view_syllabus);
+        Button mainPointsBt = findViewById(R.id.bt_main_points);
+        Button askBt = findViewById(R.id.bt_ask);
+        Button introductBt = findViewById(R.id.bt_introduct);
+        mainPointsBt.setOnClickListener(this);
+        askBt.setOnClickListener(this);
+        introductBt.setOnClickListener(this);
+
         videoList = new ArrayList<>();
         mVideoDetailAdapter = new CourseVideoContentAdapter(this, videoList);
-        mCourseList.setAdapter(mVideoDetailAdapter);
-        loadManager.loading(mCourseList, true);
     }
 
     private void loadInfo() {
 //        mCode = getIntent().getStringExtra(EXTRA_CODE);
 //        mType = getIntent().getStringExtra(EXTRA_TYPE);
-        loadManager.loading(mCourseList, true);
         CourseDataController.loadChapterTopData(mCode, new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
@@ -97,17 +104,16 @@ public class CourseDetail extends BaseAppCompatActivity {
 
     private void initCourseListData(Map<String, String> courseListMap) {
         //标题
-        studyTitleView = new StudyTitleView(this);
-        studyTitleView.setTitleData(mTopInfoMap.get("name"));
-        studyTitleView.setSubTitleData(courseListMap.get("subTitle"));
-        mCourseList.addHeaderView(studyTitleView);
+//        studyTitleView = new StudyTitleView(this);
+//        studyTitleView.setTitleData(mTopInfoMap.get("name"));
+//        studyTitleView.setSubTitleData(courseListMap.get("subTitle"));
+//        mCourseList.addHeaderView(studyTitleView);
 
         //课程横划
-        studySyllabusView = new StudySyllabusView(this);
         ArrayList<Map<String, String>> info = StringManager.getListMapByJson(courseListMap.get("chapterList"));
         Map<String, String> lessonListMap = info.get(0);//第几章
         studySyllabusView.setData(lessonListMap);
-        mCourseList.addHeaderView(studySyllabusView);
+//        mCourseList.addHeaderView(studySyllabusView);
         //课程横划点击回调
         studySyllabusView.setOnSyllabusSelect(new StudySyllabusView.OnSyllabusSelect() {
             @Override
@@ -124,7 +130,7 @@ public class CourseDetail extends BaseAppCompatActivity {
             public void onClick(View v) {
                 //课程页
                 Intent intent = new Intent(CourseDetail.this, CourseList.class);
-                intent.putExtra(CourseList.EXTRA_FROM_STUDY,true);
+                intent.putExtra(CourseList.EXTRA_FROM_STUDY, true);
                 startActivityForResult(intent, SELECT_COURSE);
             }
         });
@@ -159,12 +165,12 @@ public class CourseDetail extends BaseAppCompatActivity {
 
     private void initDescData(Map<String, String> descoMap) {
         //简介
-        Map<String, String> desc = StringManager.getFirstMap(descoMap.get("desc"));
-        studylIntroductionView = new StudylIntroductionView(this);
-        if (desc != null) {
-            studylIntroductionView.setData(desc);
-            mCourseList.addHeaderView(studylIntroductionView);
-        }
+        desc = StringManager.getFirstMap(descoMap.get("desc"));
+//        studylIntroductionView = new StudylIntroductionView(this);
+//        if (desc != null) {
+//            studylIntroductionView.setData(desc);
+//            mCourseList.addHeaderView(studylIntroductionView);
+//        }
 
         //视频内容
         Map<String, String> videoDetail = StringManager.getFirstMap(descoMap.get("videoDetail"));
@@ -190,12 +196,31 @@ public class CourseDetail extends BaseAppCompatActivity {
             mVideoDetailAdapter.notifyDataSetChanged();
         }
 
-        //问答
-        studyAskView = new StudyAskView(this);
-        mCourseList.addFooterView(studyAskView);
+//        //问答
+//        studyAskView = new StudyAskView(this);
+//        mCourseList.addFooterView(studyAskView);
 
-        loadManager.loaded(mCourseList);
     }
 
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.bt_main_points:
+                intent = new Intent(this, StudyPoint.class);
+                intent.putExtra(StudyIntroduct.EXTRA_DESC, Tools.list2Json(videoList));
+                startActivity(intent);
+                break;
+            case R.id.bt_ask:
+                intent = new Intent(this, StudyAsk.class);
+//                intent.putExtra(StudyIntroduct.EXTRA_DESC, Tools.list2Json(videoList));
+                startActivity(intent);
+                break;
+            case R.id.bt_introduct:
+                intent = new Intent(this, StudyIntroduct.class);
+                intent.putExtra(StudyIntroduct.EXTRA_DESC, Tools.map2Json(desc));
+                startActivity(intent);
+                break;
+        }
+    }
 }

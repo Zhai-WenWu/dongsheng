@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?><!--常见问题-->
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:id="@+id/title_layout"
@@ -31,11 +31,8 @@
 
     </RelativeLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="常见问题"
-        android:textColor="@color/ysf_grey_666666"
-        android:textSize="@dimen/sp_14" />
-
+    <acore.widget.rvlistview.RvListView
+        android:id="@+id/course_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </LinearLayout>
