@@ -25,7 +25,12 @@ class ItemSyllabus extends ItemBaseView {
         super(context, attrs, defStyleAttr, R.layout.class_card_scroll_view);
     }
 
-    public void setData(Map<String, String> data, int position) {
+    public void setData(Map<String, String> data, int position, int selectIndex) {
+        if (position == selectIndex){
+            setSelected(true);
+        }else {
+            setSelected(false);
+        }
         TextView SyllabusTv = findViewById(R.id.tv_syllabus);
         SyllabusTv.setText(data.get("title"));
     }

@@ -17,8 +17,6 @@ import acore.logic.load.LoadManager;
 import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
-import acore.widget.rvlistview.RvListView;
-import amodule.lesson.adapter.CourseVideoContentAdapter;
 import amodule.lesson.controler.data.CourseDataController;
 import amodule.lesson.view.StudyAskView;
 import amodule.lesson.view.StudySyllabusView;
@@ -36,11 +34,13 @@ import aplug.basic.ReqInternet;
 public class CourseDetail extends BaseAppCompatActivity implements View.OnClickListener {
     public static final String EXTRA_CODE = "code";
     public static final String EXTRA_TYPE = "type";
-//    private RvListView mCourseList;
+    public static final String EXTRA_GROUP = "group";
+    public static final String EXTRA_CHILD = "child";
+    //    private RvListView mCourseList;
     private Map<String, String> mTopInfoMap;
-    private CourseVideoContentAdapter mVideoDetailAdapter;
     private ArrayList<Map<String, String>> videoList;
     private String mCode = "0";
+    private String mChapterCode = "0";
     private String mType = "1";
     private StudyAskView studyAskView;
     private StudyTitleView studyTitleView;
@@ -49,17 +49,14 @@ public class CourseDetail extends BaseAppCompatActivity implements View.OnClickL
     private final int SELECT_COURSE = 1;
     private Intent intent;
     private Map<String, String> desc;
+    private int mGroupSelectIndex = 0;
+    private int mChildSelectIndex = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initActivity("", 2, 0, R.layout.c_view_bar_title, R.layout.a_course_detail);
         initView();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
         loadInfo();
     }
 
@@ -75,26 +72,37 @@ public class CourseDetail extends BaseAppCompatActivity implements View.OnClickL
         introductBt.setOnClickListener(this);
 
         videoList = new ArrayList<>();
-        mVideoDetailAdapter = new CourseVideoContentAdapter(this, videoList);
     }
 
     private void loadInfo() {
 //        mCode = getIntent().getStringExtra(EXTRA_CODE);
 //        mType = getIntent().getStringExtra(EXTRA_TYPE);
-        CourseDataController.loadChapterTopData(mCode, new InternetCallback() {
+        CourseDataController.loadChapterInfoData(mCode, mChapterCode, new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
                 if (i >= ReqInternet.REQ_OK_STRING) {
                     mTopInfoMap = StringManager.getFirstMap(o);
-                    CourseDataController.loadCourseListData(mCode, mType, new InternetCallback() {
-                        @Override
-                        public void loaded(int i, String s, Object o) {
-                            if (i >= ReqInternet.REQ_OK_STRING) {
-                                Map<String, String> mCourseListMap = StringManager.getFirstMap(o);
-                                initCourseListData(mCourseListMap);
-                            }
-                        }
-                    });
+                }
+            }
+
+        });
+
+        CourseDataController.loadCourseListData(mCode, mType, new InternetCallback() {
+            @Override
+            public void loaded(int i, String s, Object o) {
+                if (i >= ReqInternet.REQ_OK_STRING) {
+                    Map<String, String> mCourseListMap = StringManager.getFirstMap(o);
+                    initCourseListData(mCourseListMap);
+                }
+            }
+        });
+
+        CourseDataController.loadChapterPointData(mCode, new InternetCallback() {
+            @Override
+            public void loaded(int i, String s, Object o) {
+                if (i >= ReqInternet.REQ_OK_STRING) {
+                    Map<String, String> mDescoMap = StringManager.getFirstMap(o);
+                    initDescData(mDescoMap);
                 }
             }
 
@@ -103,17 +111,11 @@ public class CourseDetail extends BaseAppCompatActivity implements View.OnClickL
 
 
     private void initCourseListData(Map<String, String> courseListMap) {
-        //标题
-//        studyTitleView = new StudyTitleView(this);
-//        studyTitleView.setTitleData(mTopInfoMap.get("name"));
-//        studyTitleView.setSubTitleData(courseListMap.get("subTitle"));
-//        mCourseList.addHeaderView(studyTitleView);
 
         //课程横划
         ArrayList<Map<String, String>> info = StringManager.getListMapByJson(courseListMap.get("chapterList"));
-        Map<String, String> lessonListMap = info.get(0);//第几章
-        studySyllabusView.setData(lessonListMap);
-//        mCourseList.addHeaderView(studySyllabusView);
+        Map<String, String> lessonListMap = info.get(mGroupSelectIndex);//第几章
+        studySyllabusView.setData(lessonListMap, mChildSelectIndex);
         //课程横划点击回调
         studySyllabusView.setOnSyllabusSelect(new StudySyllabusView.OnSyllabusSelect() {
             @Override
@@ -130,21 +132,13 @@ public class CourseDetail extends BaseAppCompatActivity implements View.OnClickL
             public void onClick(View v) {
                 //课程页
                 Intent intent = new Intent(CourseDetail.this, CourseList.class);
+                intent.putExtra(CourseDetail.EXTRA_GROUP, mGroupSelectIndex);
+                intent.putExtra(CourseDetail.EXTRA_CHILD, mChildSelectIndex);
                 intent.putExtra(CourseList.EXTRA_FROM_STUDY, true);
                 startActivityForResult(intent, SELECT_COURSE);
             }
         });
 
-        CourseDataController.loadChapterDescData(mCode, new InternetCallback() {
-            @Override
-            public void loaded(int i, String s, Object o) {
-                if (i >= ReqInternet.REQ_OK_STRING) {
-                    Map<String, String> mDescoMap = StringManager.getFirstMap(o);
-                    initDescData(mDescoMap);
-                }
-            }
-
-        });
     }
 
 
@@ -154,8 +148,9 @@ public class CourseDetail extends BaseAppCompatActivity implements View.OnClickL
         if (resultCode == RESULT_OK && data != null) {
             switch (requestCode) {
                 case SELECT_COURSE:
-                    mVideoDetailAdapter.getData().clear();
-                    mCode = data.getStringExtra("code");
+//                    mCode = data.getStringExtra("code");
+                    mGroupSelectIndex = data.getIntExtra(EXTRA_GROUP, 0);
+                    mChildSelectIndex = data.getIntExtra(EXTRA_CHILD, -1);
                     loadInfo();
                     break;
             }
@@ -166,11 +161,6 @@ public class CourseDetail extends BaseAppCompatActivity implements View.OnClickL
     private void initDescData(Map<String, String> descoMap) {
         //简介
         desc = StringManager.getFirstMap(descoMap.get("desc"));
-//        studylIntroductionView = new StudylIntroductionView(this);
-//        if (desc != null) {
-//            studylIntroductionView.setData(desc);
-//            mCourseList.addHeaderView(studylIntroductionView);
-//        }
 
         //视频内容
         Map<String, String> videoDetail = StringManager.getFirstMap(descoMap.get("videoDetail"));
@@ -192,13 +182,7 @@ public class CourseDetail extends BaseAppCompatActivity implements View.OnClickL
                     videoList.add(stringMap);
                 }
             }
-            mVideoDetailAdapter.setData(videoList);
-            mVideoDetailAdapter.notifyDataSetChanged();
         }
-
-//        //问答
-//        studyAskView = new StudyAskView(this);
-//        mCourseList.addFooterView(studyAskView);
 
     }
 

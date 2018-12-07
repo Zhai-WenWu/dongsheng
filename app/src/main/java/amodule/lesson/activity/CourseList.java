@@ -102,6 +102,8 @@ public class CourseList extends BaseAppCompatActivity {
         mExList.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
             public boolean onGroupClick(ExpandableListView expandableListView, View view, int i, long l) {
+                mGroupSelectIndex = i;
+                mChildSelectIndex = -1;
                 clickItem(lessonList.get(i).get("code"));
                 return false;
             }
@@ -128,8 +130,8 @@ public class CourseList extends BaseAppCompatActivity {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                 ArrayList<Map<String, String>> lessonList = StringManager.getListMapByJson(info.get(groupPosition).get("lessonList"));
-                mSyllabusAdapter.setSelectIndex(groupPosition, childPosition);
-                mSyllabusAdapter.notifyDataSetChanged();
+                mGroupSelectIndex = groupPosition;
+                mChildSelectIndex = childPosition;
                 clickItem(lessonList.get(childPosition).get("code"));
                 return true;
             }
@@ -138,10 +140,13 @@ public class CourseList extends BaseAppCompatActivity {
 
 
     private void clickItem(String code) {
-
+        mSyllabusAdapter.setSelectIndex(mGroupSelectIndex, mChildSelectIndex);
+        mSyllabusAdapter.notifyDataSetChanged();
         if (isFromStudy) {
             Intent intent = new Intent();
             intent.putExtra("code", code);
+            intent.putExtra(CourseDetail.EXTRA_GROUP,mGroupSelectIndex);
+            intent.putExtra(CourseDetail.EXTRA_CHILD,mChildSelectIndex);
             setResult(RESULT_OK, intent);
             finish();
         } else {
