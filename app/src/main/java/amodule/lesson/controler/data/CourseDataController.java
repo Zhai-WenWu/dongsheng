@@ -8,8 +8,8 @@ import java.util.LinkedHashMap;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 
-import static acore.tools.StringManager.API_LESSON_DESC;
-import static acore.tools.StringManager.API_LESSON_TOP;
+import static acore.tools.StringManager.API_LESSON_POINT;
+import static acore.tools.StringManager.API_LESSON_INFO;
 import static acore.tools.StringManager.API_COURSE_DESC;
 import static acore.tools.StringManager.API_COURSE_TOP;
 import static acore.tools.StringManager.API_SYLLABUS;
@@ -22,84 +22,80 @@ import static acore.tools.StringManager.API_SYLLABUS;
  */
 public class CourseDataController {
 
-    private CourseDataController(){
+    private CourseDataController() {
         throw new IllegalArgumentException("You can't invoke this method.");
     }
 
     /**
-     *
      * @param code
      * @param callback
      */
-    public static void loadCourseTopData(String code, @NonNull InternetCallback callback){
-        if(TextUtils.isEmpty(code)){
-            callback.loaded(ReqEncyptInternet.REQ_FAILD,API_COURSE_TOP,"");
+    public static void loadCourseTopData(String code, @NonNull InternetCallback callback) {
+        if (TextUtils.isEmpty(code)) {
+            callback.loaded(ReqEncyptInternet.REQ_FAILD, API_COURSE_TOP, "");
             return;
         }
-        LinkedHashMap<String,String> params = new LinkedHashMap<>();
-        params.put("code",code);
-        ReqEncyptInternet.in().doGetEncypt(API_COURSE_TOP,params,callback);
+        LinkedHashMap<String, String> params = new LinkedHashMap<>();
+        params.put("code", code);
+        ReqEncyptInternet.in().doGetEncypt(API_COURSE_TOP, params, callback);
     }
 
     /**
-     *
      * @param code
      * @param callback
      */
-    public static void loadCourseDescData(String code, @NonNull InternetCallback callback){
-        if(TextUtils.isEmpty(code)){
-            callback.loaded(ReqEncyptInternet.REQ_FAILD,API_COURSE_DESC,"");
+    public static void loadCourseDescData(String code, @NonNull InternetCallback callback) {
+        if (TextUtils.isEmpty(code)) {
+            callback.loaded(ReqEncyptInternet.REQ_FAILD, API_COURSE_DESC, "");
             return;
         }
-        LinkedHashMap<String,String> params = new LinkedHashMap<>();
-        params.put("code",code);
-        ReqEncyptInternet.in().doGetEncypt(API_COURSE_DESC,params,callback);
+        LinkedHashMap<String, String> params = new LinkedHashMap<>();
+        params.put("code", code);
+        ReqEncyptInternet.in().doGetEncypt(API_COURSE_DESC, params, callback);
     }
 
     /**
-     *
      * @param code
      * @param callback
      */
-    public static void loadChapterTopData(String code, @NonNull InternetCallback callback){
-        if(TextUtils.isEmpty(code)){
-            callback.loaded(ReqEncyptInternet.REQ_FAILD, API_LESSON_TOP,"");
+    public static void loadChapterInfoData(String code, String chapterCode, @NonNull InternetCallback callback) {
+        if (TextUtils.isEmpty(code)) {
+            callback.loaded(ReqEncyptInternet.REQ_FAILD, API_LESSON_INFO, "");
             return;
         }
-        LinkedHashMap<String,String> params = new LinkedHashMap<>();
-        params.put("code",code);
-        ReqEncyptInternet.in().doGetEncypt(API_LESSON_TOP,params,callback);
+        LinkedHashMap<String, String> params = new LinkedHashMap<>();
+        params.put("code", code);
+        params.put("chapterCode", chapterCode);
+        ReqEncyptInternet.in().doGetEncypt(API_LESSON_INFO, params, callback);
     }
 
     /**
-     *
      * @param code
      * @param callback
      */
-    public static void loadChapterDescData(String code, @NonNull InternetCallback callback){
-        if(TextUtils.isEmpty(code)){
-            callback.loaded(ReqEncyptInternet.REQ_FAILD, API_LESSON_DESC,"");
+    public static void loadChapterPointData(String code, @NonNull InternetCallback callback) {
+        if (TextUtils.isEmpty(code)) {
+            callback.loaded(ReqEncyptInternet.REQ_FAILD, API_LESSON_POINT, "");
             return;
         }
-        LinkedHashMap<String,String> params = new LinkedHashMap<>();
-        params.put("code",code);
-        ReqEncyptInternet.in().doGetEncypt(API_LESSON_DESC,params,callback);
+        LinkedHashMap<String, String> params = new LinkedHashMap<>();
+        params.put("code", code);
+        ReqEncyptInternet.in().doGetEncypt(API_LESSON_POINT, params, callback);
     }
 
     /**
-     *
      * @param code
      * @param type
      * @param callback
      */
-    public static void loadCourseListData(String code,String type,@NonNull InternetCallback callback){
-        if(TextUtils.isEmpty(code) || TextUtils.isEmpty(type)){
-            callback.loaded(ReqEncyptInternet.REQ_FAILD,API_SYLLABUS,"");
+    public static void loadCourseListData(String code, String type, @NonNull InternetCallback callback) {
+        if (TextUtils.isEmpty(code) || TextUtils.isEmpty(type)) {
+            callback.loaded(ReqEncyptInternet.REQ_FAILD, API_SYLLABUS, "");
             return;
         }
-        LinkedHashMap<String,String> params = new LinkedHashMap<>();
-        params.put("code",code);
-        params.put("type",type);
-        ReqEncyptInternet.in().doGetEncypt(API_SYLLABUS,params,callback);
+        LinkedHashMap<String, String> params = new LinkedHashMap<>();
+        params.put("code", code);
+        params.put("type", type);
+        ReqEncyptInternet.in().doGetEncypt(API_SYLLABUS, params, callback);
     }
 }

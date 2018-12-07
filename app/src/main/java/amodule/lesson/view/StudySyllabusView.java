@@ -32,6 +32,7 @@ public class StudySyllabusView extends RelativeLayout {
     private View view;
     private SyllabusAdapter syllabusAdapter;
     private ArrayList<Map<String, String>> mapList;
+    private int mSelectIndex;
 
     public StudySyllabusView(Context context) {
         this(context, null);
@@ -75,13 +76,17 @@ public class StudySyllabusView extends RelativeLayout {
         });
     }
 
-    public void setData(Map<String, String> lessonListMap) {
+    public void setData(Map<String, String> lessonListMap, int selectIndex) {
         mapList = StringManager.getListMapByJson(lessonListMap.get("lessonList"));
         syllabusAdapter.setData(mapList);
+//        syllabusAdapter.setSelectIndex(selectIndex);
+        this.mSelectIndex = selectIndex;
         syllabusAdapter.notifyDataSetChanged();
+        rvHorizatolListView.scrollToPosition(mSelectIndex);
     }
 
     public class SyllabusAdapter extends RvBaseAdapter<Map<String, String>> {
+
 
         public SyllabusAdapter(Context context, @Nullable List<Map<String, String>> data) {
             super(context, data);
@@ -96,6 +101,7 @@ public class StudySyllabusView extends RelativeLayout {
         public int getItemViewType(int position) {
             return 0;
         }
+
     }
 
     public class ViewHolder extends RvBaseViewHolder<Map<String, String>> {
@@ -108,7 +114,7 @@ public class StudySyllabusView extends RelativeLayout {
 
         @Override
         public void bindData(int position, @Nullable Map<String, String> data) {
-            view.setData(data, position);
+            view.setData(data,position, mSelectIndex);
         }
     }
 
