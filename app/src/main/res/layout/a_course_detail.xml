@@ -15,10 +15,40 @@
         android:scaleType="fitXY"
         android:textSize="@dimen/sp_24" />
 
-    <acore.widget.rvlistview.RvListView
-        android:id="@+id/course_list"
+    <amodule.lesson.view.StudySyllabusView
+        android:id="@+id/view_syllabus"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/iv_image_and_video" />
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/ll_buttom" />
+
+    <LinearLayout
+        android:id="@+id/ll_buttom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/bt_main_points"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="学习要点" />
+
+        <Button
+            android:id="@+id/bt_ask"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="常见问题" />
+
+        <Button
+            android:id="@+id/bt_introduct"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="课程简介" />
+
+    </LinearLayout>
 
 </RelativeLayout>
