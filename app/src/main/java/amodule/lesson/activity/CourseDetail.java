@@ -28,7 +28,7 @@ import third.video.VideoPlayerController;
  * Created by mrtrying on 2018/12/3 15:27.
  * e_mail : ztanzeyu@gmail.com
  */
-public class CourseDetail extends BaseAppCompatActivity{
+public class CourseDetail extends BaseAppCompatActivity {
     public static final String EXTRA_CODE = "code";
     public static final String EXTRA_TYPE = "type";
     public static final String EXTRA_GROUP = "group";
@@ -83,10 +83,22 @@ public class CourseDetail extends BaseAppCompatActivity{
                         View lableView = createLableView(labelDataList.get(i), mBottomLableLayout);
                         mBottomLableLayout.addView(lableView);
                     }
-                    loadCourseList();
+                    loadCourseListData();
                 }
             }
+        });
+    }
 
+    private void loadCourseListData() {
+        CourseDataController.loadCourseListData(mCode, mType, new InternetCallback() {
+            @Override
+            public void loaded(int i, String s, Object o) {
+                if (i >= ReqInternet.REQ_OK_STRING) {
+                    Map<String, String> resultMap = StringManager.getFirstMap(o);
+                    initCourseListData(resultMap);
+                    loadManager.loadOver(i);
+                }
+            }
         });
     }
 
@@ -99,19 +111,22 @@ public class CourseDetail extends BaseAppCompatActivity{
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                switch (title){
+                switch (title) {
                     case "学习要点":
                         Intent StudyPointIntent = new Intent(CourseDetail.this, StudyPoint.class);
+                        StudyPointIntent.putExtra(StudyPoint.EXTRA_CODE, mCode);
+                        StudyPointIntent.putExtra(StudyIntroduction.EXTRA_TITLE, title);
                         startActivity(StudyPointIntent);
                         break;
                     case "常见问题":
                         Intent StudyAskIntent = new Intent(CourseDetail.this, StudyAsk.class);
+                        StudyAskIntent.putExtra(StudyIntroduction.EXTRA_TITLE, title);
                         startActivity(StudyAskIntent);
                         break;
                     case "课程简介":
                         Intent StudyIntroductionIntent = new Intent(CourseDetail.this, StudyIntroduction.class);
                         StudyIntroductionIntent.putExtra(StudyIntroduction.EXTRA_TITLE, title);
-                        StudyIntroductionIntent.putExtra(StudyIntroduction.EXTRA_DESC, mTopInfoMap.get("info") + "这是描述");
+                        StudyIntroductionIntent.putExtra(StudyIntroduction.EXTRA_DESC, mTopInfoMap.get("desc"));
                         startActivity(StudyIntroductionIntent);
                         break;
                 }
@@ -121,18 +136,6 @@ public class CourseDetail extends BaseAppCompatActivity{
         params.width = 0;
         params.weight = 1;
         return view;
-    }
-
-    private void loadCourseList() {
-        CourseDataController.loadCourseListData(mCode, mType, new InternetCallback() {
-            @Override
-            public void loaded(int i, String s, Object o) {
-                if (i >= ReqInternet.REQ_OK_STRING) {
-                    Map<String, String> resultMap = StringManager.getFirstMap(o);
-                    initCourseListData(resultMap);
-                }
-            }
-        });
     }
 
     private void initCourseListData(Map<String, String> courseListMap) {

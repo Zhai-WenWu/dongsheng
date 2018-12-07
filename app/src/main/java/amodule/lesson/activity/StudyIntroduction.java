@@ -7,9 +7,6 @@ import android.widget.TextView;
 import com.xiangha.R;
 
 import acore.override.activity.base.BaseAppCompatActivity;
-import acore.tools.StringManager;
-import acore.tools.Tools;
-import amodule.lesson.view.StudylIntroductionView;
 
 public class StudyIntroduction extends BaseAppCompatActivity {
     public static final String EXTRA_TITLE = "title";
