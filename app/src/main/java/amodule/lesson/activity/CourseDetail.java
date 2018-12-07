@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.ArrayMap;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -18,10 +19,7 @@ import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import amodule.lesson.controler.data.CourseDataController;
-import amodule.lesson.view.StudyAskView;
 import amodule.lesson.view.StudySyllabusView;
-import amodule.lesson.view.StudylIntroductionView;
-import amodule.lesson.view.StudyTitleView;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
 
@@ -36,21 +34,17 @@ public class CourseDetail extends BaseAppCompatActivity implements View.OnClickL
     public static final String EXTRA_TYPE = "type";
     public static final String EXTRA_GROUP = "group";
     public static final String EXTRA_CHILD = "child";
-    //    private RvListView mCourseList;
-    private Map<String, String> mTopInfoMap;
     private ArrayList<Map<String, String>> videoList;
     private String mCode = "0";
     private String mChapterCode = "0";
     private String mType = "1";
-    private StudyAskView studyAskView;
-    private StudyTitleView studyTitleView;
-    private StudySyllabusView studySyllabusView;
-    private StudylIntroductionView studylIntroductionView;
+    private String desc;
+    private StudySyllabusView mStudySyllabusView;
     private final int SELECT_COURSE = 1;
     private Intent intent;
-    private Map<String, String> desc;
-    private int mGroupSelectIndex = 0;
-    private int mChildSelectIndex = -1;
+    private int mGroupSelectIndex = 0;//章索引
+    private int mChildSelectIndex = -1;//节索引
+    private LinearLayout mButtomLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,10 +57,11 @@ public class CourseDetail extends BaseAppCompatActivity implements View.OnClickL
     private void initView() {
         loadManager = new LoadManager(this, rl);
         rl = (RelativeLayout) findViewById(R.id.activityLayout);
-        studySyllabusView = findViewById(R.id.view_syllabus);
+        mStudySyllabusView = findViewById(R.id.view_syllabus);
         Button mainPointsBt = findViewById(R.id.bt_main_points);
         Button askBt = findViewById(R.id.bt_ask);
         Button introductBt = findViewById(R.id.bt_introduct);
+        mButtomLayout = findViewById(R.id.ll_buttom);
         mainPointsBt.setOnClickListener(this);
         askBt.setOnClickListener(this);
         introductBt.setOnClickListener(this);
@@ -81,7 +76,8 @@ public class CourseDetail extends BaseAppCompatActivity implements View.OnClickL
             @Override
             public void loaded(int i, String s, Object o) {
                 if (i >= ReqInternet.REQ_OK_STRING) {
-                    mTopInfoMap = StringManager.getFirstMap(o);
+                    Map<String, String> mLessonInfoMap = StringManager.getFirstMap(o);
+                    initInfoData(mLessonInfoMap);
                 }
             }
 
@@ -102,31 +98,37 @@ public class CourseDetail extends BaseAppCompatActivity implements View.OnClickL
             public void loaded(int i, String s, Object o) {
                 if (i >= ReqInternet.REQ_OK_STRING) {
                     Map<String, String> mDescoMap = StringManager.getFirstMap(o);
-                    initDescData(mDescoMap);
+                    initPointData(mDescoMap);
                 }
             }
 
         });
     }
 
+    private void initInfoData(Map<String, String> lessonInfoMap) {
+        desc = lessonInfoMap.get("desc");
+//        ArrayList<Map<String, String>> labelList = StringManager.getListMapByJson(lessonInfoMap.get("labelData"));
+//        for (Map<String, String> label :labelList) {
+//            Button button = new Button(this);
+//            button.setText(label.get("title"));
+//        }
+    }
 
     private void initCourseListData(Map<String, String> courseListMap) {
-
         //课程横划
         ArrayList<Map<String, String>> info = StringManager.getListMapByJson(courseListMap.get("chapterList"));
         Map<String, String> lessonListMap = info.get(mGroupSelectIndex);//第几章
-        studySyllabusView.setData(lessonListMap, mChildSelectIndex);
+        mStudySyllabusView.setData(lessonListMap, mChildSelectIndex);
         //课程横划点击回调
-        studySyllabusView.setOnSyllabusSelect(new StudySyllabusView.OnSyllabusSelect() {
+        mStudySyllabusView.setOnSyllabusSelect(new StudySyllabusView.OnSyllabusSelect() {
             @Override
             public void onSelect(int position) {
-                Intent intent = new Intent(CourseDetail.this, CourseDetail.class);
-                startActivity(intent);
-                finish();
-                overridePendingTransition(0, 0);
+//                    mCode = data.getStringExtra("code");
+                mChildSelectIndex = position;
+                loadInfo();
             }
         });
-        TextView mClassNumTv = studySyllabusView.findViewById(R.id.tv_class_num);
+        TextView mClassNumTv = mStudySyllabusView.findViewById(R.id.tv_class_num);
         mClassNumTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -141,6 +143,25 @@ public class CourseDetail extends BaseAppCompatActivity implements View.OnClickL
 
     }
 
+    private void initPointData(Map<String, String> pointMap) {
+        //学习要点
+        ArrayList<Map<String, String>> infoList = StringManager.getListMapByJson(pointMap.get("info"));
+        for (Map<String, String> info : infoList) {
+            ArrayList<Map<String, String>> vidList = StringManager.getListMapByJson(info.get("info"));
+            boolean isFirstItem = true;
+            for (Map<String, String> vidInfo : vidList) {
+                Map<String, String> stringMap = new ArrayMap<>();
+                if (isFirstItem) {
+                    stringMap.put("subTitle", info.get("subTitle"));
+                    isFirstItem = false;
+                }
+                stringMap.put("content", vidInfo.get("content"));
+                stringMap.put("img", vidInfo.get("img"));
+                videoList.add(stringMap);
+            }
+        }
+
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -157,36 +178,6 @@ public class CourseDetail extends BaseAppCompatActivity implements View.OnClickL
         }
     }
 
-
-    private void initDescData(Map<String, String> descoMap) {
-        //简介
-        desc = StringManager.getFirstMap(descoMap.get("desc"));
-
-        //视频内容
-        Map<String, String> videoDetail = StringManager.getFirstMap(descoMap.get("videoDetail"));
-        if (videoDetail != null) {
-            String videoTitle = videoDetail.get("title");
-            studylIntroductionView.setVideoTitle(videoTitle);
-            ArrayList<Map<String, String>> infoList = StringManager.getListMapByJson(videoDetail.get("info"));
-            for (Map<String, String> info : infoList) {
-                ArrayList<Map<String, String>> vidList = StringManager.getListMapByJson(info.get("info"));
-                boolean isFirstItem = true;
-                for (Map<String, String> vidInfo : vidList) {
-                    Map<String, String> stringMap = new ArrayMap<>();
-                    if (isFirstItem) {
-                        stringMap.put("subTitle", info.get("subTitle"));
-                        isFirstItem = false;
-                    }
-                    stringMap.put("content", vidInfo.get("content"));
-                    stringMap.put("img", vidInfo.get("img"));
-                    videoList.add(stringMap);
-                }
-            }
-        }
-
-    }
-
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -202,7 +193,7 @@ public class CourseDetail extends BaseAppCompatActivity implements View.OnClickL
                 break;
             case R.id.bt_introduct:
                 intent = new Intent(this, StudyIntroduct.class);
-                intent.putExtra(StudyIntroduct.EXTRA_DESC, Tools.map2Json(desc));
+                intent.putExtra(StudyIntroduct.EXTRA_DESC, desc);
                 startActivity(intent);
                 break;
         }

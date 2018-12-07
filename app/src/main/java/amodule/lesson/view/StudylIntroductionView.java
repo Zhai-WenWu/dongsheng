@@ -17,9 +17,7 @@ import java.util.Map;
 
 public class StudylIntroductionView extends RelativeLayout {
 
-    private TextView subTitleTv;
     private TextView infoTv;
-    private TextView videoTitleTv;
 
     public StudylIntroductionView(Context context) {
         this(context, null);
@@ -32,21 +30,18 @@ public class StudylIntroductionView extends RelativeLayout {
     public StudylIntroductionView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         View view = LayoutInflater.from(context).inflate(R.layout.view_course_abstract_class, this, true);
-        subTitleTv = view.findViewById(R.id.tv_introduct_subtitle);
         infoTv = view.findViewById(R.id.tv_info);
-        videoTitleTv = view.findViewById(R.id.tv_video_title);
     }
 
-    public void setData(Map<String, String> desc) {
-        subTitleTv.setText(desc.get("title"));
-        infoTv.setText(desc.get("info"));
+    public void setData(String desc) {
+        infoTv.setText(desc);
     }
 
     public void setVideoTitle(String videoTitle) {
         if (!TextUtils.isEmpty(videoTitle)) {
-            videoTitleTv.setText(videoTitle);
+            infoTv.setText(videoTitle);
         } else {
-            videoTitleTv.setVisibility(GONE);
+            infoTv.setVisibility(GONE);
         }
     }
 }
