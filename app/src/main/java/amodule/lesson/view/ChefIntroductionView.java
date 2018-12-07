@@ -1,5 +1,6 @@
 package amodule.lesson.view;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
@@ -7,7 +8,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +19,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.xiangha.R;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -92,6 +91,7 @@ public class ChefIntroductionView extends FrameLayout {
 
     @NonNull
     private View createPagerView() {
+        @SuppressLint("InflateParams")
         View view = LayoutInflater.from(getContext()).inflate(R.layout.item_chef_introduction, null);
         RelativeLayout root = view.findViewById(R.id.root);
         RCConstraintLayout shadowLayout = view.findViewById(R.id.shadow_layout);
@@ -130,7 +130,7 @@ public class ChefIntroductionView extends FrameLayout {
     }
 
     private void setTitleData(Map<String, String> data) {
-        mSubTitle.setText(checkStrNull(data.get("title")));
+        mTitle.setText(checkStrNull(data.get("title")));
         Map<String,String> comProblemMap = StringManager.getFirstMap(data.get("comProblem"));
         String subTitleStr = comProblemMap.get("text");
         if(TextUtils.isEmpty(subTitleStr)){

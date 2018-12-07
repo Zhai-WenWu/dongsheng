@@ -2,7 +2,6 @@ package amodule.lesson.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ExpandableListView;
 
 import com.xiangha.R;
@@ -17,8 +16,6 @@ import amodule.lesson.adapter.SyllabusAdapter;
 import amodule.lesson.controler.data.CourseDataController;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
-
-import static com.umeng.a.j.g;
 
 /**
  * Description :
@@ -99,14 +96,11 @@ public class CourseList extends BaseAppCompatActivity {
         }
 
         //设置分组项的点击监听事件
-        mExList.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
-            @Override
-            public boolean onGroupClick(ExpandableListView expandableListView, View view, int i, long l) {
-                mGroupSelectIndex = i;
-                mChildSelectIndex = -1;
-                clickItem(lessonList.get(i).get("code"));
-                return false;
-            }
+        mExList.setOnGroupClickListener((expandableListView, view, i, l) -> {
+            mGroupSelectIndex = i;
+            mChildSelectIndex = -1;
+            clickItem(lessonList.get(i).get("code"));
+            return false;
         });
 
     }
@@ -126,15 +120,12 @@ public class CourseList extends BaseAppCompatActivity {
         }
 
         //设置子选项点击监听事件
-        mExList.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-            @Override
-            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                ArrayList<Map<String, String>> lessonList = StringManager.getListMapByJson(info.get(groupPosition).get("lessonList"));
-                mGroupSelectIndex = groupPosition;
-                mChildSelectIndex = childPosition;
-                clickItem(lessonList.get(childPosition).get("code"));
-                return true;
-            }
+        mExList.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
+            ArrayList<Map<String, String>> lessonList = StringManager.getListMapByJson(info.get(groupPosition).get("lessonList"));
+            mGroupSelectIndex = groupPosition;
+            mChildSelectIndex = childPosition;
+            clickItem(lessonList.get(childPosition).get("code"));
+            return true;
         });
     }
 

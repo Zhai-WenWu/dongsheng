@@ -142,25 +142,19 @@ public class CourseDetail extends BaseAppCompatActivity{
         Map<String, String> lessonListMap = info.get(mGroupSelectIndex);//第几章
         mStudySyllabusView.setData(lessonListMap, mChildSelectIndex);
         //课程横划点击回调
-        mStudySyllabusView.setOnSyllabusSelect(new StudySyllabusView.OnSyllabusSelect() {
-            @Override
-            public void onSelect(int position) {
+        mStudySyllabusView.setOnSyllabusSelect(position -> {
 //                    mCode = data.getStringExtra("code");
-                mChildSelectIndex = position;
-                loadInfo();
-            }
+            mChildSelectIndex = position;
+            loadInfo();
         });
         TextView mClassNumTv = mStudySyllabusView.findViewById(R.id.tv_class_num);
-        mClassNumTv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //课程页
-                Intent intent = new Intent(CourseDetail.this, CourseList.class);
-                intent.putExtra(CourseDetail.EXTRA_GROUP, mGroupSelectIndex);
-                intent.putExtra(CourseDetail.EXTRA_CHILD, mChildSelectIndex);
-                intent.putExtra(CourseList.EXTRA_FROM_STUDY, true);
-                startActivityForResult(intent, SELECT_COURSE);
-            }
+        mClassNumTv.setOnClickListener(v -> {
+            //课程页
+            Intent intent = new Intent(CourseDetail.this, CourseList.class);
+            intent.putExtra(CourseDetail.EXTRA_GROUP, mGroupSelectIndex);
+            intent.putExtra(CourseDetail.EXTRA_CHILD, mChildSelectIndex);
+            intent.putExtra(CourseList.EXTRA_FROM_STUDY, true);
+            startActivityForResult(intent, SELECT_COURSE);
         });
 
     }
