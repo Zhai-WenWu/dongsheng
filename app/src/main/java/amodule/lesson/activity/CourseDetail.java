@@ -63,7 +63,7 @@ public class CourseDetail extends BaseAppCompatActivity {
 
     private void initExtraData() {
         mChapterCode = getIntent().getStringExtra(EXTRA_CHAPTER_CODE);
-        mCode = getIntent().getStringExtra(EXTRA_CODE);
+//        mCode = getIntent().getStringExtra(EXTRA_CODE);
         mGroupSelectIndex = getIntent().getIntExtra(EXTRA_GROUP, 0);
         mChildSelectIndex = getIntent().getIntExtra(EXTRA_CHILD, -1);
     }
