@@ -97,7 +97,7 @@ public class CourseHorizontalView extends FrameLayout {
             return;
         }
         mTitleText.setText(checkStrNull(data.get("title")));
-        mSubTitleText.setText(checkStrNull(data.get("subTitle")));
+//        mSubTitleText.setText(checkStrNull(data.get("subTitle")));
         List<Map<String,String>> lessonList = StringManager.getListMapByJson(data.get("chapterList"));
         if(!lessonList.isEmpty()){
             //如果只有一章，则显示课的数据列表

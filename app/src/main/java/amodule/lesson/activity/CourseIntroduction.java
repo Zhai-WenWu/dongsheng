@@ -50,8 +50,8 @@ public class CourseIntroduction extends BaseAppCompatActivity {
 
     public static final String EXTRA_CODE = "code";
 
-    private RelativeLayout mTopBarWhite,mTopBarBlack;
-    private ImageView mShareIconWhite,mShareIconBlack;
+    private RelativeLayout mTopBarWhite, mTopBarBlack;
+    private ImageView mShareIconWhite, mShareIconBlack;
     private CourseIntroduceHeader mCourseIntroduceHeader;
     private ChefIntroductionView mChefIntroductionView;
     private CourseHorizontalView mCourseHorizontalView;
@@ -63,6 +63,7 @@ public class CourseIntroduction extends BaseAppCompatActivity {
     private List<Map<String, String>> mData = new ArrayList<>();
     private Map<String, String> shareMap = new HashMap<>();
     private String mCode;
+    private String num;
     private boolean canStudy = false;
     private int topbarHeight;
 
@@ -88,6 +89,7 @@ public class CourseIntroduction extends BaseAppCompatActivity {
     }
 
     int offsetHeight = 0;
+
     private void initUI() {
         initTitle();
         mBottomView = findViewById(R.id.course_bottom_layout);
@@ -101,23 +103,23 @@ public class CourseIntroduction extends BaseAppCompatActivity {
                 super.onScrolled(recyclerView, dx, dy);
                 offsetHeight += dy;
                 float offset = mCourseIntroduceHeader.getVideoHeight() - topbarHeight;
-                float alpha = offsetHeight > offset ? 1 : offsetHeight/offset;
-                if(alpha == 0){
+                float alpha = offsetHeight > offset ? 1 : offsetHeight / offset;
+                if (alpha == 0) {
                     mTopBarWhite.setVisibility(View.VISIBLE);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                                |View.SYSTEM_UI_FLAG_VISIBLE);
+                                | View.SYSTEM_UI_FLAG_VISIBLE);
                         getWindow().setStatusBarColor(Color.TRANSPARENT);
                     }
-                }else{
+                } else {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                                    |View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-                        }else{
+                                    | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+                        } else {
                             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
                         }
-                        String colorStr = "#"+Integer.toHexString((int) (alpha*255)).toUpperCase() + "FFFFFF";
+                        String colorStr = "#" + Integer.toHexString((int) (alpha * 255)).toUpperCase() + "FFFFFF";
                         getWindow().setStatusBarColor(ColorUtil.parseColor(colorStr));
                     }
                 }
@@ -144,9 +146,10 @@ public class CourseIntroduction extends BaseAppCompatActivity {
         mCourseVerticalView = new CourseVerticalView(this);
         mCourseVerticalView.setLayoutParams(params);
         mRvListView.addFooterView(mCourseVerticalView);
+        mCourseVerticalView.setVisibility(View.GONE);
 
         View holdView = new View(this);
-        holdView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,Tools.getDimen(this,R.dimen.dp_38)));
+        holdView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, Tools.getDimen(this, R.dimen.dp_38)));
         mRvListView.addFooterView(holdView);
 
         setListener();
@@ -158,19 +161,19 @@ public class CourseIntroduction extends BaseAppCompatActivity {
         mCourseHorizontalView.setSubTitleOnClickListener(startCourseListListener);
         mCourseVerticalView.setOnItemClickCallback((position, data) -> startActivity(new Intent(CourseIntroduction.this, CourseList.class)));
         mCourseHorizontalView.setOnItemClickListener((position, data) -> {
-            if(!canStudy){
+            if (!canStudy) {
                 return;
             }
-            Intent intent = new Intent(CourseIntroduction.this,CourseDetail.class);
+            Intent intent = new Intent(CourseIntroduction.this, CourseDetail.class);
             String chapterCode = data.get("chapterCode");
-            if(!TextUtils.isEmpty(chapterCode)){
-                intent.putExtra(CourseDetail.EXTRA_CHAPTER_CODE,chapterCode);
-            }else{
+            if (!TextUtils.isEmpty(chapterCode)) {
+                intent.putExtra(CourseDetail.EXTRA_CHAPTER_CODE, chapterCode);
+            } else {
                 return;
             }
             String lessonCode = data.get("lessonCode");
-            if(!TextUtils.isEmpty(lessonCode)){
-                intent.putExtra(CourseDetail.EXTRA_CODE,lessonCode);
+            if (!TextUtils.isEmpty(lessonCode)) {
+                intent.putExtra(CourseDetail.EXTRA_CODE, lessonCode);
             }
             startActivity(intent);
         });
@@ -178,7 +181,7 @@ public class CourseIntroduction extends BaseAppCompatActivity {
 
         mBottomView.setFavClickListener(v -> {
             //收藏请求
-            Toast.makeText(CourseIntroduction.this,"收藏",Toast.LENGTH_SHORT).show();
+            Toast.makeText(CourseIntroduction.this, "收藏", Toast.LENGTH_SHORT).show();
         });
         mBottomView.setVIPClickListener(v -> {
             // TODO: 2018/12/10
@@ -192,18 +195,18 @@ public class CourseIntroduction extends BaseAppCompatActivity {
         });
     }
 
-    private void switchCanStudy(){
+    private void switchCanStudy() {
         scrollToTop();
         mBottomView.showVipButton(!canStudy);
         mBottomView.showUploadButton(canStudy);
-        mCourseHorizontalView.setVisibility(canStudy?View.VISIBLE:View.GONE);
-        mCourseVerticalView.setVisibility(canStudy?View.GONE:View.VISIBLE);
+        mCourseHorizontalView.setVisibility(canStudy ? View.VISIBLE : View.GONE);
+        mCourseVerticalView.setVisibility(canStudy ? View.GONE : View.VISIBLE);
     }
 
     private void scrollToTop() {
         LinearLayoutManager mLayoutManager = (LinearLayoutManager) mRvListView.getLayoutManager();
         mLayoutManager.scrollToPositionWithOffset(0, 0);
-        offsetHeight=0;
+        offsetHeight = 0;
     }
 
     private void initTitle() {
@@ -213,9 +216,9 @@ public class CourseIntroduction extends BaseAppCompatActivity {
         mTopBarWhite = findViewById(R.id.top_bar_white);
         RelativeLayout topBar = findViewById(R.id.top_bar);
         int statusBarHeight = Tools.getStatusBarHeight(this);
-        topbarHeight = statusBarHeight + Tools.getDimen(this,R.dimen.topbar_height);
+        topbarHeight = statusBarHeight + Tools.getDimen(this, R.dimen.topbar_height);
         topBar.getLayoutParams().height = topbarHeight;
-        topBar.setPadding(0,statusBarHeight,0,0);
+        topBar.setPadding(0, statusBarHeight, 0, 0);
 
         findViewById(R.id.back_black).setOnClickListener(getBackBtnAction());
         findViewById(R.id.back_white).setOnClickListener(getBackBtnAction());
@@ -253,9 +256,13 @@ public class CourseIntroduction extends BaseAppCompatActivity {
             public void loaded(int flag, String s, Object o) {
                 if (flag >= ReqEncyptInternet.REQ_OK_STRING) {
                     Map<String, String> resultMap = StringManager.getFirstMap(o);
+                    num = resultMap.get("num");
+                    mCourseVerticalView.setLessonNum(num);
+                    mCourseHorizontalView.setLessonNum(num);
                     //获取权限数据
-                    Map<String,String> powerData = StringManager.getFirstMap(resultMap.get("power"));
-                    canStudy = TextUtils.equals("2",powerData.get("isStudy"));
+                    Map<String, String> powerData = StringManager.getFirstMap(resultMap.get("power"));
+                    canStudy = TextUtils.equals("2", powerData.get("isStudy"));
+                    switchCanStudy();
                     //设置头部数据
                     mCourseIntroduceHeader.setData(resultMap);
                     //设置分项数据
@@ -271,13 +278,13 @@ public class CourseIntroduction extends BaseAppCompatActivity {
         });
     }
 
-    /**设置分享按钮显示隐藏*/
+    /** 设置分享按钮显示隐藏 */
     private void setShareVisibility() {
         mShareIconWhite.setVisibility(shareMap.isEmpty() ? View.GONE : View.VISIBLE);
         mShareIconBlack.setVisibility(shareMap.isEmpty() ? View.GONE : View.VISIBLE);
     }
 
-    /**加载课程描述数据*/
+    /** 加载课程描述数据 */
     private void loadCourseDescData() {
         CourseDataController.loadCourseDescData(mCode, new InternetCallback() {
             @Override
@@ -285,7 +292,7 @@ public class CourseIntroduction extends BaseAppCompatActivity {
                 if (flag >= ReqEncyptInternet.REQ_OK_STRING) {
                     Map<String, String> resultMap = StringManager.getFirstMap(o);
                     mChefIntroductionView.setData(StringManager.getFirstMap(resultMap.remove("chefDesc")));
-                    List<Map<String,String>> recomInfo = StringManager.getListMapByJson(resultMap.get("recomInfo"));
+                    List<Map<String, String>> recomInfo = StringManager.getListMapByJson(resultMap.get("recomInfo"));
                     mData.addAll(recomInfo);
                     mAdapter.notifyDataSetChanged();
                 }
@@ -294,7 +301,7 @@ public class CourseIntroduction extends BaseAppCompatActivity {
 
     }
 
-    /**加载课程表数据*/
+    /** 加载课程表数据 */
     private void loadCourseListData() {
         CourseDataController.loadCourseListData(mCode, "1", new InternetCallback() {
             @Override
