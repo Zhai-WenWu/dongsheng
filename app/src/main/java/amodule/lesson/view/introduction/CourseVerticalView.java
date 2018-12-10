@@ -1,30 +1,26 @@
 package amodule.lesson.view.introduction;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.annimon.stream.Stream;
-import com.annimon.stream.function.Consumer;
 import com.xiangha.R;
 
 import java.util.List;
 import java.util.Map;
 
+import acore.logic.stat.intefaces.OnClickListenerStat;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.rcwidget.RCConstraintLayout;
-import amodule.lesson.activity.CourseList;
 
 /**
  * Description :
@@ -36,7 +32,8 @@ public class CourseVerticalView extends FrameLayout {
     final int LAYOUT_ID = R.layout.view_course_vertical_view;
     private TextView mTitleText;
     private LinearLayoutCompat mLinearLayoutCompat;
-    private boolean isOneLesson =false;
+    private boolean isOneLesson = false;
+    private String lessonNum;
 
     public CourseVerticalView(@NonNull Context context) {
         super(context);
@@ -54,7 +51,8 @@ public class CourseVerticalView extends FrameLayout {
     }
 
     private void initialize(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        LayoutInflater.from(context).inflate(LAYOUT_ID, this);
+        View view = LayoutInflater.from(context).inflate(LAYOUT_ID, this, false);
+        addView(view);
         mTitleText = findViewById(R.id.title);
         mLinearLayoutCompat = findViewById(R.id.course_list_layout);
         RCConstraintLayout shadow_layout = findViewById(R.id.shadow_layout);
@@ -75,10 +73,10 @@ public class CourseVerticalView extends FrameLayout {
         mTitleText.setText(checkStrNull(data.get("title")));
         //课程数据设置
         List<Map<String, String>> lessonList = StringManager.getListMapByJson(data.get("chapterList"));
-        if(!lessonList.isEmpty()){
+        if (!lessonList.isEmpty()) {
             //如果只有一章，则显示课的数据列表
-            int lessonNum = Tools.parseIntOfThrow(data.get("chapterNum"),1);
-            if(lessonNum == 1){
+            int lessonNum = Tools.parseIntOfThrow(data.get("chapterNum"), 1);
+            if (lessonNum == 1) {
                 lessonList = StringManager.getListMapByJson(lessonList.get(0).get("lessonList"));
                 isOneLesson = lessonList.size() <= 1;
             }
@@ -86,7 +84,7 @@ public class CourseVerticalView extends FrameLayout {
         if (mLinearLayoutCompat != null) {
             mLinearLayoutCompat.removeAllViews();
         }
-        if(isOneLesson){
+        if (isOneLesson) {
             setVisibility(GONE);
             return;
         }
@@ -95,7 +93,7 @@ public class CourseVerticalView extends FrameLayout {
         final int length = hasFooter ? 4 : lessonList.size();
         for (int i = 0; i < length; i++) {
             Map<String, String> value = lessonList.get(i);
-            createCourseItem(value, mLinearLayoutCompat);
+            createCourseItem(i, value, mLinearLayoutCompat);
         }
         if (hasFooter) {
             addFooterView(data, mLinearLayoutCompat);
@@ -105,19 +103,18 @@ public class CourseVerticalView extends FrameLayout {
     }
 
     private void addFooterView(Map<String, String> data, LinearLayoutCompat parent) {
-        String num = data.get("num");
         View footView = LayoutInflater.from(getContext()).inflate(R.layout.view_course_vertical_footer, parent, false);
         footView.setOnClickListener(v -> {
-            if(mFooterClickListener != null){
+            if (mFooterClickListener != null) {
                 mFooterClickListener.onClick(v);
             }
         });
         parent.addView(footView);
         TextView see_all = footView.findViewById(R.id.see_all);
-        see_all.setText(TextUtils.isEmpty(num) ? "查看全部" : "查看全部 (" + num + "节)");
+        see_all.setText(TextUtils.isEmpty(lessonNum) ? "查看全部" : "查看全部 (" + lessonNum + "节)");
     }
 
-    private void createCourseItem(Map<String, String> data, LinearLayoutCompat parent) {
+    private void createCourseItem(int position, Map<String, String> data, LinearLayoutCompat parent) {
         if (data == null || data.isEmpty()) {
             return;
         }
@@ -126,11 +123,23 @@ public class CourseVerticalView extends FrameLayout {
         titleText.setText(data.get("title"));
         TextView subTitleText = itemView.findViewById(R.id.sub_title);
         subTitleText.setText(data.get("subTitle"));
+        itemView.setOnClickListener(new OnClickListenerStat() {
+            @Override
+            public void onClicked(View v) {
+                if (mOnItemClickCallback != null) {
+                    mOnItemClickCallback.onItemClick(position, data);
+                }
+            }
+        });
         parent.addView(itemView);
     }
 
+    public void setLessonNum(String lessonNum) {
+        this.lessonNum = lessonNum;
+    }
+
     @Override
-    public void setVisibility(int visibility){
+    public void setVisibility(int visibility) {
         super.setVisibility(isOneLesson ? GONE : visibility);
     }
 
@@ -139,7 +148,18 @@ public class CourseVerticalView extends FrameLayout {
     }
 
     OnClickListener mFooterClickListener;
-    public void setFooterOnClickListener(OnClickListener listener){
+
+    public void setFooterOnClickListener(OnClickListener listener) {
         mFooterClickListener = listener;
+    }
+
+    OnItemClickCallback mOnItemClickCallback;
+
+    public void setOnItemClickCallback(OnItemClickCallback onItemClickCallback) {
+        mOnItemClickCallback = onItemClickCallback;
+    }
+
+    public interface OnItemClickCallback {
+        void onItemClick(int position, Map<String, String> data);
     }
 }

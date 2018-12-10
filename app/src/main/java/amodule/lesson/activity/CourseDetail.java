@@ -29,8 +29,8 @@ import third.video.VideoPlayerController;
  * e_mail : ztanzeyu@gmail.com
  */
 public class CourseDetail extends BaseAppCompatActivity {
+    public static final String EXTRA_CHAPTER_CODE = "chapterCode";
     public static final String EXTRA_CODE = "code";
-    public static final String EXTRA_TYPE = "type";
     public static final String EXTRA_GROUP = "group";
     public static final String EXTRA_CHILD = "child";
     //    private RvListView mCourseList;
@@ -40,7 +40,6 @@ public class CourseDetail extends BaseAppCompatActivity {
     private VideoPlayerController mVideoPlayerController;
     private String mCode = "0";
     private String mChapterCode = "0";
-    private String mType = "1";
     private final int SELECT_COURSE = 1;
     private int mGroupSelectIndex = 0;
     private int mChildSelectIndex = -1;
@@ -54,8 +53,8 @@ public class CourseDetail extends BaseAppCompatActivity {
     }
 
     private void initExtraData() {
-//        mCode = getIntent().getStringExtra(EXTRA_CODE);
-//        mType = getIntent().getStringExtra(EXTRA_TYPE);
+        mChapterCode = getIntent().getStringExtra(EXTRA_CHAPTER_CODE);
+        mCode = getIntent().getStringExtra(EXTRA_CODE);
         mGroupSelectIndex = getIntent().getIntExtra(EXTRA_GROUP, 0);
         mChildSelectIndex = getIntent().getIntExtra(EXTRA_CHILD, -1);
     }
@@ -72,7 +71,7 @@ public class CourseDetail extends BaseAppCompatActivity {
     }
 
     private void loadInfo() {
-        CourseDataController.loadLessonInfoData(mCode, new InternetCallback() {
+        CourseDataController.loadLessonInfoData(mChapterCode,mCode, new InternetCallback() {
             @Override
             public void loaded(int flag, String s, Object o) {
                 if (flag >= ReqInternet.REQ_OK_STRING) {
@@ -92,7 +91,7 @@ public class CourseDetail extends BaseAppCompatActivity {
     }
 
     private void loadCourseListData() {
-        CourseDataController.loadCourseListData(mCode, mType, new InternetCallback() {
+        CourseDataController.loadCourseListData(mCode, "2", new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
                 if (i >= ReqInternet.REQ_OK_STRING) {

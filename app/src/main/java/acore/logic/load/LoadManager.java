@@ -95,6 +95,24 @@ public class LoadManager {
 		}
 	}
 
+	public void setLoad(final View.OnClickListener clicker){
+		setLoad(clicker,true);
+	}
+
+	public void setLoad(final View.OnClickListener clicker, boolean isBlanker){
+		if (isBlanker) showProgressBar();
+		mLoadProgress.setFailClickListener(v -> {
+			hideLoadFaildBar();
+			showProgressBar();
+			if(clicker != null){
+				clicker.onClick(v);
+			}
+		});
+		if(clicker != null){
+			clicker.onClick(null);
+		}
+	}
+
 	/**
 	 * 确保有token
 	 *

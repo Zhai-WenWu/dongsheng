@@ -1,5 +1,7 @@
 package amodule.lesson.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.ArrayMap;
 
@@ -25,6 +27,10 @@ public class StudyPoint extends BaseAppCompatActivity {
     private String mCode;
     private String titleStr;
 
+    public static void startActivity(Context context){
+        context.startActivity(new Intent(context,StudyPoint.class));
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,7 +39,10 @@ public class StudyPoint extends BaseAppCompatActivity {
         mCourseList = findViewById(R.id.course_list);
         mVideoDetailAdapter = new CourseVideoContentAdapter(this, videoList);
         mCourseList.setAdapter(mVideoDetailAdapter);
-//        CourseDataController.loadLessonPointData(getIntent().getStringExtra(EXTRA_CODE), new InternetCallback() {
+        loadManager.setLoad(v->loadLessonPointData());
+    }
+
+    private void loadLessonPointData() {
         CourseDataController.loadLessonPointData("0", new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
