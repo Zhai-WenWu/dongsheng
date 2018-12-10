@@ -82,7 +82,7 @@ public class ChefIntroductionView extends FrameLayout {
         adapter.setData(authorList);
         mOverlayViewPager.setOffscreenPageLimit(2);
         mOverlayViewPager.setAdapter(adapter);
-        mOverlayViewPager.setPageTransformer(false,
+        mOverlayViewPager.setPageTransformer(true,
                 new CardPageTransformer(Tools.getDimen(getContext(),R.dimen.dp_40),Tools.getDimen(getContext(),R.dimen.dp_20)));
         setVisibility(VISIBLE);
     }
@@ -97,7 +97,7 @@ public class ChefIntroductionView extends FrameLayout {
         root.setLayoutParams(new ViewPager.LayoutParams());
         root.getLayoutParams().height = (int) (ToolsDevice.getWindowPx(getContext()).widthPixels / 322f * 176) + shadowLayout.getPaddingTop() + shadowLayout.getPaddingBottom();
         root.setPadding(root.getPaddingLeft() - shadowLayout.getPaddingLeft(),0,
-                root.getPaddingRight() - shadowLayout.getPaddingRight(),0);
+                root.getPaddingRight(),0);
         return view;
     }
 

@@ -59,10 +59,25 @@
 
     </cn.srain.cube.views.ptr.PtrClassicFrameLayout>
 
-    <Button
-        android:onClick="startCourseIntroduce"
-        android:layout_marginTop="@dimen/dp_49"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:onClick="startCourseIntroduce"
+            android:layout_marginTop="@dimen/dp_49"
+            android:text="介绍"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:onClick="startLessonPoint"
+            android:layout_marginTop="@dimen/dp_49"
+            android:text="要点"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
 
 </RelativeLayout>

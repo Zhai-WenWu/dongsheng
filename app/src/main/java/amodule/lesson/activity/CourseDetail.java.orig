@@ -47,7 +47,11 @@ public class CourseDetail extends BaseAppCompatActivity {
     private Map<String, String> mTopInfoMap;
     private VideoPlayerController mVideoPlayerController;
     private String mCode = "0";
+<<<<<<< HEAD
+    private String mType = "1";
+=======
     private String mChapterCode = "0";
+>>>>>>> ebad5eb7ad238ce239b8ea46bb09a1a1a2b6b8f1
     private final int SELECT_COURSE = 1;
     private int mGroupSelectIndex = 0;
     private int mChildSelectIndex = -1;
@@ -62,8 +66,12 @@ public class CourseDetail extends BaseAppCompatActivity {
     }
 
     private void initExtraData() {
+<<<<<<< HEAD
+//        mCode = getIntent().getStringExtra(EXTRA_CODE);
+=======
         mChapterCode = getIntent().getStringExtra(EXTRA_CHAPTER_CODE);
         mCode = getIntent().getStringExtra(EXTRA_CODE);
+>>>>>>> ebad5eb7ad238ce239b8ea46bb09a1a1a2b6b8f1
         mGroupSelectIndex = getIntent().getIntExtra(EXTRA_GROUP, 0);
         mChildSelectIndex = getIntent().getIntExtra(EXTRA_CHILD, -1);
     }

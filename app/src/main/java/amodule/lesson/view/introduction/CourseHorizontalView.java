@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.annimon.stream.Stream;
+import com.annimon.stream.function.Consumer;
 import com.xiangha.R;
 
 import java.util.ArrayList;
@@ -46,6 +48,7 @@ public class CourseHorizontalView extends FrameLayout {
     private Adapter mAdapter;
     private List<Map<String,String>> mData= new ArrayList<>();
     private OnItemClickCallback mOnItemClickCallback;
+    private String lessonNum;
     public CourseHorizontalView(@NonNull Context context) {
         super(context);
         initialize(context,null,0);
@@ -100,7 +103,14 @@ public class CourseHorizontalView extends FrameLayout {
             //如果只有一章，则显示课的数据列表
             int lessonNum = Tools.parseIntOfThrow(data.get("chapterNum"),1);
             if(lessonNum == 1){
+                String chapterCode = lessonList.get(0).get("code");
                 lessonList = StringManager.getListMapByJson(lessonList.get(0).get("lessonList"));
+                Stream.of(lessonList).forEach(value -> {
+                    value.put("chapterCode",chapterCode);
+                    value.put("lessonCode",value.get("code"));
+                });
+            }else{
+                Stream.of(lessonList).forEach(value -> value.put("chapterCode",value.get("code")));
             }
         }
         if(lessonList.isEmpty()){
@@ -110,6 +120,11 @@ public class CourseHorizontalView extends FrameLayout {
         mData.clear();
         mData.addAll(lessonList);
         mAdapter.notifyDataSetChanged();
+    }
+
+    public void setLessonNum(String lessonNum){
+        this.lessonNum = lessonNum;
+        mSubTitleText.setText(checkStrNull(lessonNum));
     }
 
     public void setSubTitleOnClickListener(OnClickListener listener){
@@ -193,7 +208,7 @@ public class CourseHorizontalView extends FrameLayout {
         }
     }
 
-    interface OnItemClickCallback{
+    public interface OnItemClickCallback{
         void onItemClick(int position,Map<String,String> data);
     }
 }

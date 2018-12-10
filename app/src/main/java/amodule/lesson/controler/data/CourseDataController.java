@@ -58,12 +58,13 @@ public class CourseDataController {
      * @param code
      * @param callback
      */
-    public static void loadLessonInfoData(String code, @NonNull InternetCallback callback){
+    public static void loadLessonInfoData(String chapterCode,String code, @NonNull InternetCallback callback){
         if(TextUtils.isEmpty(code)){
             callback.loaded(ReqEncyptInternet.REQ_FAILD, API_LESSON_INFO,"");
             return;
         }
         LinkedHashMap<String,String> params = new LinkedHashMap<>();
+        params.put("chapterCode",code);
         params.put("code",code);
         ReqEncyptInternet.in().doGetEncypt(API_LESSON_INFO,params,callback);
     }

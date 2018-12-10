@@ -63,7 +63,7 @@ public class CourseIntroduction extends BaseAppCompatActivity {
     private List<Map<String, String>> mData = new ArrayList<>();
     private Map<String, String> shareMap = new HashMap<>();
     private String mCode;
-//TODO    private boolean canStudy = false;
+    private boolean canStudy = false;
     private int topbarHeight;
 
     @Override
@@ -156,25 +156,48 @@ public class CourseIntroduction extends BaseAppCompatActivity {
         View.OnClickListener startCourseListListener = v -> startActivity(new Intent(CourseIntroduction.this, CourseList.class));
         mCourseVerticalView.setFooterOnClickListener(startCourseListListener);
         mCourseHorizontalView.setSubTitleOnClickListener(startCourseListListener);
+        mCourseVerticalView.setOnItemClickCallback((position, data) -> startActivity(new Intent(CourseIntroduction.this, CourseList.class)));
+        mCourseHorizontalView.setOnItemClickListener((position, data) -> {
+            if(!canStudy){
+                return;
+            }
+            Intent intent = new Intent(CourseIntroduction.this,CourseDetail.class);
+            String chapterCode = data.get("chapterCode");
+            if(!TextUtils.isEmpty(chapterCode)){
+                intent.putExtra(CourseDetail.EXTRA_CHAPTER_CODE,chapterCode);
+            }else{
+                return;
+            }
+            String lessonCode = data.get("lessonCode");
+            if(!TextUtils.isEmpty(lessonCode)){
+                intent.putExtra(CourseDetail.EXTRA_CODE,lessonCode);
+            }
+            startActivity(intent);
+        });
+
 
         mBottomView.setFavClickListener(v -> {
             //收藏请求
             Toast.makeText(CourseIntroduction.this,"收藏",Toast.LENGTH_SHORT).show();
         });
         mBottomView.setVIPClickListener(v -> {
-            mBottomView.showVipButton(false);
-            mBottomView.showUploadButton(true);
-            scrollToTop();
-            mCourseHorizontalView.setVisibility(View.VISIBLE);
-            mCourseVerticalView.setVisibility(View.GONE);
+            // TODO: 2018/12/10
+            canStudy = true;
+            switchCanStudy();
         });
         mBottomView.setUploadClickListener(v -> {
-            mBottomView.showVipButton(true);
-            mBottomView.showUploadButton(false);
-            scrollToTop();
-            mCourseHorizontalView.setVisibility(View.GONE);
-            mCourseVerticalView.setVisibility(View.VISIBLE);
+            // TODO: 2018/12/10
+            canStudy = false;
+            switchCanStudy();
         });
+    }
+
+    private void switchCanStudy(){
+        scrollToTop();
+        mBottomView.showVipButton(!canStudy);
+        mBottomView.showUploadButton(canStudy);
+        mCourseHorizontalView.setVisibility(canStudy?View.VISIBLE:View.GONE);
+        mCourseVerticalView.setVisibility(canStudy?View.GONE:View.VISIBLE);
     }
 
     private void scrollToTop() {
@@ -216,7 +239,7 @@ public class CourseIntroduction extends BaseAppCompatActivity {
     }
 
     private void setLoad() {
-        loadManager.setLoading(v -> loadCourseTopData());
+        loadManager.setLoad(v -> loadCourseTopData());
     }
 
     private void loadCourseTopData() {
@@ -230,10 +253,17 @@ public class CourseIntroduction extends BaseAppCompatActivity {
             public void loaded(int flag, String s, Object o) {
                 if (flag >= ReqEncyptInternet.REQ_OK_STRING) {
                     Map<String, String> resultMap = StringManager.getFirstMap(o);
+                    //获取权限数据
+                    Map<String,String> powerData = StringManager.getFirstMap(resultMap.get("power"));
+                    canStudy = TextUtils.equals("2",powerData.get("isStudy"));
+                    //设置头部数据
                     mCourseIntroduceHeader.setData(resultMap);
+                    //设置分项数据
                     shareMap = StringManager.getFirstMap(resultMap.get("shareData"));
                     setShareVisibility();
+                    //加载课程描述
                     loadCourseDescData();
+                    //加载课程表
                     loadCourseListData();
                 }
                 loadManager.loadOver(flag);
@@ -241,11 +271,13 @@ public class CourseIntroduction extends BaseAppCompatActivity {
         });
     }
 
+    /**设置分享按钮显示隐藏*/
     private void setShareVisibility() {
         mShareIconWhite.setVisibility(shareMap.isEmpty() ? View.GONE : View.VISIBLE);
         mShareIconBlack.setVisibility(shareMap.isEmpty() ? View.GONE : View.VISIBLE);
     }
 
+    /**加载课程描述数据*/
     private void loadCourseDescData() {
         CourseDataController.loadCourseDescData(mCode, new InternetCallback() {
             @Override
@@ -262,6 +294,7 @@ public class CourseIntroduction extends BaseAppCompatActivity {
 
     }
 
+    /**加载课程表数据*/
     private void loadCourseListData() {
         CourseDataController.loadCourseListData(mCode, "1", new InternetCallback() {
             @Override
@@ -307,9 +340,7 @@ public class CourseIntroduction extends BaseAppCompatActivity {
         super.onBackPressed();
     }
 
-    /**
-     * 全透状态栏
-     */
+    /** 全透状态栏 */
     protected void setStatusBarFullTransparent() {
         if (Build.VERSION.SDK_INT >= 21) {//21表示5.0
             Window window = getWindow();
