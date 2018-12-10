@@ -41,8 +41,9 @@ import amodule.topic.adapter.OverlayBaseAdapter;
  */
 public class ChefIntroductionView extends FrameLayout {
     final int LAYOUT_ID = R.layout.view_chef_introduction;
-    private SLooperViewPager mOverlayViewPager;
+    private SLooperViewPager mSLooperViewPager;
     private TextView mTitle,mSubTitle;
+    private List<Map<String,String>> authorList;
     public ChefIntroductionView(@NonNull Context context) {
         super(context);
         initialize(context, null, 0);
@@ -60,7 +61,7 @@ public class ChefIntroductionView extends FrameLayout {
 
     private void initialize(Context context, AttributeSet attrs, int defStyleAttr) {
         LayoutInflater.from(context).inflate(LAYOUT_ID, this);
-        mOverlayViewPager = findViewById(R.id.overlay_view);
+        mSLooperViewPager = findViewById(R.id.overlay_view);
         mTitle = findViewById(R.id.title);
         mSubTitle = findViewById(R.id.sub_title);
     }
@@ -73,17 +74,17 @@ public class ChefIntroductionView extends FrameLayout {
         //title
         setTitleData(data);
         //设置名厨介绍
-        List<Map<String,String>> authorList = StringManager.getListMapByJson(data.get("info"));
+        authorList = StringManager.getListMapByJson(data.get("info"));
         if(authorList.isEmpty()){
             setVisibility(GONE);
             return;
         }
         OverlayAdapter adapter = new OverlayAdapter();
         adapter.setData(authorList);
-        mOverlayViewPager.setOffscreenPageLimit(2);
-        mOverlayViewPager.setAdapter(adapter);
-        mOverlayViewPager.setPageTransformer(true,
-                new CardPageTransformer(Tools.getDimen(getContext(),R.dimen.dp_40),Tools.getDimen(getContext(),R.dimen.dp_20)));
+        mSLooperViewPager.setOffscreenPageLimit(5);
+        mSLooperViewPager.setAdapter(adapter);
+        mSLooperViewPager.setPageTransformer(true,
+                new CardPageTransformer(Tools.getDimen(getContext(),R.dimen.dp_20),Tools.getDimen(getContext(),R.dimen.dp_10)));
         setVisibility(VISIBLE);
     }
 
@@ -97,7 +98,7 @@ public class ChefIntroductionView extends FrameLayout {
         root.setLayoutParams(new ViewPager.LayoutParams());
         root.getLayoutParams().height = (int) (ToolsDevice.getWindowPx(getContext()).widthPixels / 322f * 176) + shadowLayout.getPaddingTop() + shadowLayout.getPaddingBottom();
         root.setPadding(root.getPaddingLeft() - shadowLayout.getPaddingLeft(),0,
-                root.getPaddingRight(),0);
+                authorList.size() == 1 ? Tools.getDimen(getContext(),R.dimen.dp_20) - shadowLayout.getPaddingRight() : root.getPaddingRight() - shadowLayout.getPaddingRight(),0);
         return view;
     }
 

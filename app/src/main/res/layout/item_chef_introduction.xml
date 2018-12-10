@@ -5,9 +5,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root"
     android:paddingLeft="@dimen/dp_20"
-    android:paddingRight="@dimen/dp_40"
+    android:paddingRight="@dimen/dp_30"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    tools:ignore="MissingDefaultResource">
 
     <acore.widget.rcwidget.RCConstraintLayout
         android:id="@+id/shadow_layout"

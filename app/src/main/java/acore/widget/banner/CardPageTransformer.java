@@ -1,6 +1,7 @@
 package acore.widget.banner;
 
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 
 /**
@@ -19,6 +20,7 @@ public class CardPageTransformer implements ViewPager.PageTransformer {
 
     public void transformPage(View view, float position) {
         int pageWidth = view.getWidth();
+        int pageHeight = view.getHeight();
 
         if (position < -1) { // [-Infinity,-1)
             // This page is way off-screen to the left.
@@ -33,15 +35,30 @@ public class CardPageTransformer implements ViewPager.PageTransformer {
         } else if (position <= 1) { // (0,1]
             // Fade the page out.
 
-            // Counteract the default slide transition
-            view.setTranslationX(pageWidth * -position + mTranslationOffset * position);
-
             // Scale the page down (between MIN_SCALE and 1)
-            float scaleFactor = (view.getWidth() - mScaleOffset * position) / (float) (view.getWidth());
+            float scaleFactor = (pageHeight - mScaleOffset * position) / (float) (pageHeight);
             view.setScaleX(scaleFactor);
             view.setScaleY(scaleFactor);
 
-        } else { // (1,+Infinity]
+            float offsetX = (1 - scaleFactor) * pageWidth / 2;
+
+            // Counteract the default slide transition
+            view.setTranslationX(pageWidth * -position + mTranslationOffset * position + offsetX);
+        } else if(position <= 2){
+
+            // Fade the page out.
+
+            // Scale the page down (between MIN_SCALE and 1)
+            float scaleFactor = (pageHeight - mScaleOffset) / (float) (pageHeight);
+            view.setScaleX(scaleFactor);
+            view.setScaleY(scaleFactor);
+
+            float offsetX = (1 - scaleFactor) * pageWidth / 2;
+
+            // Counteract the default slide transition
+            view.setTranslationX(pageWidth * -position + mTranslationOffset + offsetX);
+            Log.i("tzy", "transformPage: " + view.getTranslationX());
+        } else { // (2,+Infinity]
             // This page is way off-screen to the right.
             view.setScaleX(0);
             view.setScaleY(0);
