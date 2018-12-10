@@ -27,11 +27,11 @@ import acore.tools.ColorUtil;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
-import acore.widget.OverlayViewPager;
 import acore.widget.TagTextView;
 import acore.widget.banner.CardPageTransformer;
 import acore.widget.banner.SLooperViewPager;
 import acore.widget.rcwidget.RCConstraintLayout;
+import amodule.topic.adapter.OverlayBaseAdapter;
 
 /**
  * Description :
@@ -144,7 +144,7 @@ public class ChefIntroductionView extends FrameLayout {
         return TextUtils.isEmpty(text) ? "" : text;
     }
 
-    class OverlayAdapter extends OverlayViewPager.Adapter<Map<String,String>>{
+    class OverlayAdapter extends OverlayBaseAdapter<Map<String,String>> {
 
         @Override
         public Object overWriteInstantiateItem(ViewGroup container, int position) {
