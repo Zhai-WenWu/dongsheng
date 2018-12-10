@@ -29,6 +29,7 @@ import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import acore.widget.OverlayViewPager;
 import acore.widget.TagTextView;
+import acore.widget.banner.CardPageTransformer;
 import acore.widget.banner.SLooperViewPager;
 import acore.widget.rcwidget.RCConstraintLayout;
 
@@ -81,11 +82,8 @@ public class ChefIntroductionView extends FrameLayout {
         adapter.setData(authorList);
         mOverlayViewPager.setOffscreenPageLimit(2);
         mOverlayViewPager.setAdapter(adapter);
-        mOverlayViewPager.setPageTransformer(true, OverlayViewPager.CardPageTransformer.getBuild()//建造者模式
-                .setViewType(OverlayViewPager.PageTransformerConfig.LEFT)
-                .setTranslationOffset(Tools.getDimen(getContext(),R.dimen.dp_20))
-                .setScaleOffset(Tools.getDimen(getContext(),R.dimen.dp_40))
-                .create(mOverlayViewPager));
+        mOverlayViewPager.setPageTransformer(false,
+                new CardPageTransformer(Tools.getDimen(getContext(),R.dimen.dp_40),Tools.getDimen(getContext(),R.dimen.dp_20)));
         setVisibility(VISIBLE);
     }
 
