@@ -50,7 +50,7 @@ public class CourseIntroduction extends BaseAppCompatActivity {
 
     public static final String EXTRA_CODE = "code";
 
-    private RelativeLayout mTopBarWhite, mTopBarBlack;
+    private RelativeLayout mTopBarWhite;
     private ImageView mShareIconWhite, mShareIconBlack;
     private CourseIntroduceHeader mCourseIntroduceHeader;
     private ChefIntroductionView mChefIntroductionView;
@@ -119,7 +119,7 @@ public class CourseIntroduction extends BaseAppCompatActivity {
                         } else {
                             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
                         }
-                        String colorStr = "#" + Integer.toHexString((int) (alpha * 255)).toUpperCase() + "FFFFFF";
+                        String colorStr = String.format("#%sFFFFFF", Integer.toHexString((int) (alpha * 255)).toUpperCase());
                         getWindow().setStatusBarColor(ColorUtil.parseColor(colorStr));
                     }
                 }
@@ -212,7 +212,6 @@ public class CourseIntroduction extends BaseAppCompatActivity {
     private void initTitle() {
         setStatusBarFullTransparent();
         setFitSystemWindow(false);
-        mTopBarBlack = findViewById(R.id.top_bar_black);
         mTopBarWhite = findViewById(R.id.top_bar_white);
         RelativeLayout topBar = findViewById(R.id.top_bar);
         int statusBarHeight = Tools.getStatusBarHeight(this);

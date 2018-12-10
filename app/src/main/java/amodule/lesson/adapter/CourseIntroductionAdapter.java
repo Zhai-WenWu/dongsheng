@@ -26,7 +26,9 @@ public class CourseIntroductionAdapter extends RvBaseAdapter<Map<String,String>>
 
     @Override
     public RvBaseViewHolder<Map<String, String>> onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ItemViewHolder(new ItemCourseIntroduce(mContext));
+        ItemCourseIntroduce itemView = new ItemCourseIntroduce(mContext);
+        itemView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT));
+        return new ItemViewHolder(itemView);
     }
 
     @Override

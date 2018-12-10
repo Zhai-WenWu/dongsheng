@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -41,7 +42,8 @@ public class ItemCourseIntroduce extends FrameLayout {
     }
 
     private void initialize(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        LayoutInflater.from(context).inflate(LAYOUT_ID,this);
+        View view = LayoutInflater.from(context).inflate(LAYOUT_ID,this,false);
+        addView(view);
         mTitleText = findViewById(R.id.title);
         mDescText = findViewById(R.id.desc);
     }
