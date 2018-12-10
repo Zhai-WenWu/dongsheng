@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.xiangha.R;
 
@@ -33,6 +34,8 @@ public class StudySyllabusView extends RelativeLayout {
     private SyllabusAdapter syllabusAdapter;
     private ArrayList<Map<String, String>> mapList;
     private int mSelectIndex;
+    private TextView classNumTv;
+    private TextView titleTv;
 
     public StudySyllabusView(Context context) {
         this(context, null);
@@ -52,6 +55,8 @@ public class StudySyllabusView extends RelativeLayout {
     private void initView() {
         mapList = new ArrayList<>();
         rvHorizatolListView = (RvHorizatolListView) view.findViewById(R.id.rvHorizatolListView);
+        classNumTv = findViewById(R.id.tv_class_num);
+        titleTv = findViewById(R.id.tv_title);
         syllabusAdapter = new SyllabusAdapter(mContext, mapList);
         rvHorizatolListView.setAdapter(syllabusAdapter);
         int padding = Tools.getDimen(getContext(), R.dimen.dp_10);
@@ -76,13 +81,30 @@ public class StudySyllabusView extends RelativeLayout {
         });
     }
 
-    public void setData(Map<String, String> lessonListMap, int selectIndex) {
+    public void setData(Map<String, String> courseListMap, int groupIndex, int childIndex) {
+        ArrayList<Map<String, String>> info = StringManager.getListMapByJson(courseListMap.get("chapterList"));
+        Map<String, String> lessonListMap = info.get(groupIndex);//第几章
         mapList = StringManager.getListMapByJson(lessonListMap.get("lessonList"));
         syllabusAdapter.setData(mapList);
-//        syllabusAdapter.setSelectIndex(selectIndex);
-        this.mSelectIndex = selectIndex;
+        this.mSelectIndex = childIndex;
         syllabusAdapter.notifyDataSetChanged();
         rvHorizatolListView.scrollToPosition(mSelectIndex);
+
+        int size = mapList.size();
+        StringBuilder stringBuilder = new StringBuilder(String.valueOf(size) + "讲");
+        if (size > 3) {
+            stringBuilder.append(">");
+            classNumTv.setEnabled(true);
+        } else {
+            classNumTv.setEnabled(false);
+        }
+        if (size > 1) {
+            setVisibility(VISIBLE);
+        } else {
+            setVisibility(GONE);
+        }
+        classNumTv.setText(stringBuilder);
+        titleTv.setText(courseListMap.get("title"));
     }
 
     public class SyllabusAdapter extends RvBaseAdapter<Map<String, String>> {
@@ -114,7 +136,7 @@ public class StudySyllabusView extends RelativeLayout {
 
         @Override
         public void bindData(int position, @Nullable Map<String, String> data) {
-            view.setData(data,position, mSelectIndex);
+            view.setData(data, position, mSelectIndex);
         }
     }
 

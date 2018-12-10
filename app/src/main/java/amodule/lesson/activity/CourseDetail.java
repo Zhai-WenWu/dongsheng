@@ -2,24 +2,32 @@ package amodule.lesson.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.mob.tools.RxMob;
 import com.xiangha.R;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import acore.logic.stat.intefaces.OnClickListenerStat;
 import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.StringManager;
+import acore.tools.ToolsDevice;
 import amodule.lesson.controler.data.CourseDataController;
 import amodule.lesson.view.StudySyllabusView;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
+import third.share.BarShare;
 import third.video.VideoPlayerController;
 
 /**
@@ -30,7 +38,6 @@ import third.video.VideoPlayerController;
  */
 public class CourseDetail extends BaseAppCompatActivity {
     public static final String EXTRA_CODE = "code";
-    public static final String EXTRA_TYPE = "type";
     public static final String EXTRA_GROUP = "group";
     public static final String EXTRA_CHILD = "child";
     //    private RvListView mCourseList;
@@ -39,11 +46,11 @@ public class CourseDetail extends BaseAppCompatActivity {
     private Map<String, String> mTopInfoMap;
     private VideoPlayerController mVideoPlayerController;
     private String mCode = "0";
-    private String mChapterCode = "0";
     private String mType = "1";
     private final int SELECT_COURSE = 1;
     private int mGroupSelectIndex = 0;
     private int mChildSelectIndex = -1;
+    private Map<String, String> shareMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +62,6 @@ public class CourseDetail extends BaseAppCompatActivity {
 
     private void initExtraData() {
 //        mCode = getIntent().getStringExtra(EXTRA_CODE);
-//        mType = getIntent().getStringExtra(EXTRA_TYPE);
         mGroupSelectIndex = getIntent().getIntExtra(EXTRA_GROUP, 0);
         mChildSelectIndex = getIntent().getIntExtra(EXTRA_CHILD, -1);
     }
@@ -63,6 +69,19 @@ public class CourseDetail extends BaseAppCompatActivity {
     private void initView() {
         mBottomLableLayout = findViewById(R.id.ll_bottom);
         mStudySyllabusView = findViewById(R.id.view_syllabus);
+        LinearLayout topAnimalLayout = findViewById(R.id.ll_top_animal);
+
+        new Handler().postDelayed(new Runnable() {
+            public void run() {
+                topAnimalLayout.setVisibility(View.GONE);
+                TranslateAnimation mShowAction = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
+                        Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
+                        0.0f, Animation.RELATIVE_TO_SELF, -1.0f);
+                mShowAction.setDuration(500);
+                topAnimalLayout.clearAnimation();
+                topAnimalLayout.setAnimation(mShowAction);
+            }
+        }, 5000);
 
         RelativeLayout videoLayout = findViewById(R.id.video_layout);
         // TODO: 2018/12/7
@@ -71,12 +90,37 @@ public class CourseDetail extends BaseAppCompatActivity {
         loadManager.setLoading(v -> loadInfo());
     }
 
+
+    public void initTitle() {
+        ImageView shareBtn = findViewById(R.id.rightImgBtn2);
+        shareBtn.setVisibility(View.VISIBLE);
+        TextView titleV = (TextView) findViewById(R.id.title);
+        titleV.setMaxWidth(ToolsDevice.getWindowPx(this).widthPixels - ToolsDevice.dp2px(this, 45 + 40));
+        titleV.setText(mTopInfoMap.get("name"));
+        shareMap = StringManager.getFirstMap(mTopInfoMap.get("shareData"));
+        OnClickListenerStat shareClick = new OnClickListenerStat() {
+            @Override
+            public void onClicked(View v) {
+                doShare();
+            }
+        };
+        shareBtn.setOnClickListener(shareClick);
+    }
+
+    private void doShare() {
+        barShare = new BarShare(this, "", "");
+        barShare.setShare(BarShare.IMG_TYPE_WEB, shareMap.get("title"), shareMap.get("content"),
+                shareMap.get("img"), shareMap.get("url"));
+        barShare.openShare();
+    }
+
     private void loadInfo() {
         CourseDataController.loadLessonInfoData(mCode, new InternetCallback() {
             @Override
             public void loaded(int flag, String s, Object o) {
                 if (flag >= ReqInternet.REQ_OK_STRING) {
                     mTopInfoMap = StringManager.getFirstMap(o);
+                    initTitle();
                     List<Map<String, String>> labelDataList = StringManager.getListMapByJson(mTopInfoMap.get("labelData"));
                     if (mBottomLableLayout != null && mBottomLableLayout.getChildCount() > 0) {
                         mBottomLableLayout.removeAllViews();
@@ -142,9 +186,7 @@ public class CourseDetail extends BaseAppCompatActivity {
 
     private void initCourseListData(Map<String, String> courseListMap) {
         //课程横划
-        ArrayList<Map<String, String>> info = StringManager.getListMapByJson(courseListMap.get("chapterList"));
-        Map<String, String> lessonListMap = info.get(mGroupSelectIndex);//第几章
-        mStudySyllabusView.setData(lessonListMap, mChildSelectIndex);
+        mStudySyllabusView.setData(courseListMap, mGroupSelectIndex, mChildSelectIndex);
         //课程横划点击回调
         mStudySyllabusView.setOnSyllabusSelect(new StudySyllabusView.OnSyllabusSelect() {
             @Override

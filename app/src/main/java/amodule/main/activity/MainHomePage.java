@@ -1,5 +1,6 @@
 package amodule.main.activity;
 
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.PixelFormat;
 import android.net.ConnectivityManager;
@@ -32,6 +33,8 @@ import amodule.home.HomeDataControler;
 import amodule.home.HomeViewControler;
 import amodule.home.delegate.IVipGuideModuleCallback;
 import amodule.home.module.HomeVipGuideModule;
+import amodule.lesson.activity.CourseDetail;
+import amodule.lesson.activity.CourseIntroduction;
 import amodule.main.Main;
 import amodule.main.adapter.HomeAdapter;
 import amodule.main.delegate.ISetMessageTip;
@@ -76,6 +79,12 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
         super.onCreate(savedInstanceState);
         mViewContrloer = new HomeViewControler(this);
         setContentView(R.layout.a_home_page);
+        findViewById(R.id.bt).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainHomePage.this, CourseDetail.class));
+            }
+        });
         getWindow().setFormat(PixelFormat.TRANSLUCENT);
         setActivity();
         //初始化

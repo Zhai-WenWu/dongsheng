@@ -188,11 +188,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
-                <amodule.user.view.LeftAndRightTextView
-                    android:id="@+id/view_class"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
 
             </LinearLayout>
 

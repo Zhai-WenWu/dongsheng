@@ -37,8 +37,6 @@ import acore.tools.FileManager;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
-import amodule.lesson.activity.CourseDetail;
-import amodule.lesson.activity.CourseList;
 import amodule.main.Main;
 import amodule.other.activity.ClientDebug;
 import amodule.other.activity.Comment;
@@ -398,17 +396,6 @@ public class Setting extends BaseLoginActivity implements View.OnClickListener {
             @Override
             public void onClick() {
                 toActivityPage();
-            }
-
-        });
-
-        LeftAndRightTextView view_class = findViewById(R.id.view_class);
-        view_class.init("课程收费", "", false, true, new LeftAndRightTextView.LeftAndRightTextViewCallback() {
-            @Override
-            public void onClick() {
-                Intent it = new Intent(Setting.this, CourseDetail.class);
-                startActivity(it);
-//                startActivity(new Intent(Setting.this, CourseList.class));
             }
 
         });
