@@ -3,9 +3,12 @@ package amodule.lesson.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.view.ViewPager;
+import android.util.ArrayMap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
@@ -23,9 +26,14 @@ import java.util.Map;
 import acore.logic.stat.intefaces.OnClickListenerStat;
 import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.StringManager;
+import acore.tools.Tools;
 import acore.tools.ToolsDevice;
+import amodule.lesson.adapter.VerticalAdapter;
 import amodule.lesson.controler.data.CourseDataController;
+import amodule.lesson.view.StudyFirstPager;
+import amodule.lesson.view.StudySecondPager;
 import amodule.lesson.view.StudySyllabusView;
+import amodule.lesson.view.VerticalViewPager;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
 import third.share.BarShare;
@@ -43,8 +51,8 @@ public class CourseDetail extends BaseAppCompatActivity {
     public static final String EXTRA_GROUP = "group";
     public static final String EXTRA_CHILD = "child";
     //    private RvListView mCourseList;
-    private StudySyllabusView mStudySyllabusView;
-    private LinearLayout mBottomLableLayout;
+//    private StudySyllabusView mStudySyllabusView;
+//    private LinearLayout mBottomLableLayout;
     private Map<String, String> mTopInfoMap;
     private VideoPlayerController mVideoPlayerController;
     private String mCode = "0";
@@ -53,6 +61,11 @@ public class CourseDetail extends BaseAppCompatActivity {
     private int mGroupSelectIndex = 0;
     private int mChildSelectIndex = -1;
     private Map<String, String> shareMap;
+    private VerticalViewPager viewPager;
+    private Map<String, Map<String, String>> mData = new ArrayMap<>();
+    private VerticalAdapter mVerticalAdapter;
+    private StudyFirstPager studyFirstPager;
+    private StudySecondPager studySecondPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,35 +83,19 @@ public class CourseDetail extends BaseAppCompatActivity {
     }
 
     private void initView() {
-        mBottomLableLayout = findViewById(R.id.ll_bottom);
-        mStudySyllabusView = findViewById(R.id.view_syllabus);
-        RelativeLayout videoLayout = findViewById(R.id.video_layout);
-        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) videoLayout.getLayoutParams();
-        int type = 0;
-        int H;
-        switch (type) {
-            case 0://长方形
-                double i = ((double) 211) / 375;
-                int DW = ToolsDevice.getWindowPx(this).widthPixels;
-                H = (int) (DW * i);
-                layoutParams.height = H;
-                break;
-            case 1://正方形
-                H = ToolsDevice.getWindowPx(this).widthPixels;
-                layoutParams.height = H;
-                layoutParams.addRule(RelativeLayout.BELOW,R.id.top_bar_black);
-                break;
-            case 2://全屏
-                layoutParams.addRule(RelativeLayout.BELOW,R.id.top_bar_black);
-                layoutParams.addRule(RelativeLayout.ABOVE,R.id.ll_bottom);
-                mStudySyllabusView.setChangeTvColer(true);
-                break;
-        }
-        videoLayout.setLayoutParams(layoutParams);
-
-        // TODO: 2018/12/7
-        mVideoPlayerController = new VideoPlayerController(this, videoLayout, "https://ws1.sinaimg.cn/large/0065oQSqgy1fxno2dvxusj30sf10nqcm.jpg");
-        mVideoPlayerController.setVideoUrl("http://221.228.226.23/11/t/j/v/b/tjvbwspwhqdmgouolposcsfafpedmb/sh.yinyuetai.com/691201536EE4912BF7E4F1E2C67B8119.mp4");
+        studyFirstPager = new StudyFirstPager(CourseDetail.this);
+        studySecondPager = new StudySecondPager(CourseDetail.this);
+        viewPager = findViewById(R.id.viewpager);
+        int bottomBtnHeight = Tools.getDimen(this, R.dimen.dp_49);
+        viewPager.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                int viewpagerHeight = viewPager.getHeight();
+                double i = ((double) bottomBtnHeight) / viewpagerHeight;
+                viewPager.setScale(i);
+            }
+        });
+        mVerticalAdapter = new VerticalAdapter(this);
         loadManager.setLoading(v -> loadInfo());
     }
 
@@ -138,15 +135,8 @@ public class CourseDetail extends BaseAppCompatActivity {
             public void loaded(int flag, String s, Object o) {
                 if (flag >= ReqInternet.REQ_OK_STRING) {
                     mTopInfoMap = StringManager.getFirstMap(o);
+                    mData.put("lessonInfo", mTopInfoMap);
                     initTitle();
-                    List<Map<String, String>> labelDataList = StringManager.getListMapByJson(mTopInfoMap.get("labelData"));
-                    if (mBottomLableLayout != null && mBottomLableLayout.getChildCount() > 0) {
-                        mBottomLableLayout.removeAllViews();
-                    }
-                    for (int i = 0; i < labelDataList.size(); i++) {
-                        View lableView = createLableView(labelDataList.get(i), mBottomLableLayout, i);
-                        mBottomLableLayout.addView(lableView);
-                    }
                     loadCourseListData();
                 }
             }
@@ -159,55 +149,26 @@ public class CourseDetail extends BaseAppCompatActivity {
             public void loaded(int i, String s, Object o) {
                 if (i >= ReqInternet.REQ_OK_STRING) {
                     Map<String, String> resultMap = StringManager.getFirstMap(o);
-                    initCourseListData(resultMap);
+                    mData.put("syllabusInfo", resultMap);
+                    viewPager.setAdapter(mVerticalAdapter);
+                    mVerticalAdapter.setData(mData);
+
+                    studyFirstPager.initData(mData,mGroupSelectIndex,mChildSelectIndex);
+                    studySecondPager.initData(mData);
+
+                    mVerticalAdapter.setView(studyFirstPager, studySecondPager);
+                    mVerticalAdapter.notifyDataSetChanged();
                     loadManager.loadOver(i);
+                    initCourseListData(studyFirstPager);
                 }
             }
         });
     }
 
-    private View createLableView(Map<String, String> stringStringMap, LinearLayout parent, int i) {
-        View view = LayoutInflater.from(this).inflate(R.layout.view_study_bottom_lable_item, parent, false);
-        if (i == 0) {
-            view.findViewById(R.id.lable_line).setVisibility(View.GONE);
-        }
-        TextView textView = view.findViewById(R.id.label_text);
-        String title = stringStringMap.get("title");
-        textView.setText(title);
-        // TODO: 2018/12/7
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switch (title) {
-                    case "学习要点":
-                        Intent StudyPointIntent = new Intent(CourseDetail.this, StudyPoint.class);
-                        StudyPointIntent.putExtra(StudyPoint.EXTRA_CODE, mCode);
-                        StudyPointIntent.putExtra(StudyIntroduction.EXTRA_TITLE, title);
-                        startActivity(StudyPointIntent);
-                        break;
-                    case "常见问题":
-                        Intent StudyAskIntent = new Intent(CourseDetail.this, StudyAsk.class);
-                        StudyAskIntent.putExtra(StudyIntroduction.EXTRA_TITLE, title);
-                        startActivity(StudyAskIntent);
-                        break;
-                    case "课程简介":
-                        Intent StudyIntroductionIntent = new Intent(CourseDetail.this, StudyIntroduction.class);
-                        StudyIntroductionIntent.putExtra(StudyIntroduction.EXTRA_TITLE, title);
-                        StudyIntroductionIntent.putExtra(StudyIntroduction.EXTRA_DESC, mTopInfoMap.get("desc"));
-                        startActivity(StudyIntroductionIntent);
-                        break;
-                }
-            }
-        });
-        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) view.getLayoutParams();
-        params.width = 0;
-        params.weight = 1;
-        return view;
-    }
 
-    private void initCourseListData(Map<String, String> courseListMap) {
+    private void initCourseListData(StudyFirstPager studyFirstPager) {
         //课程横划
-        mStudySyllabusView.setData(courseListMap, mGroupSelectIndex, mChildSelectIndex);
+        StudySyllabusView mStudySyllabusView = studyFirstPager.findViewById(R.id.view_syllabus);
         //课程横划点击回调
         mStudySyllabusView.setOnSyllabusSelect(new StudySyllabusView.OnSyllabusSelect() {
             @Override
