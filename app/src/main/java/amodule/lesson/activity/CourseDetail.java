@@ -72,26 +72,30 @@ public class CourseDetail extends BaseAppCompatActivity {
     private void initView() {
         mBottomLableLayout = findViewById(R.id.ll_bottom);
         mStudySyllabusView = findViewById(R.id.view_syllabus);
-        LinearLayout topAnimalLayout = findViewById(R.id.ll_top_animal);
-        new Handler().postDelayed(new Runnable() {
-            public void run() {
-                topAnimalLayout.setVisibility(View.GONE);
-                TranslateAnimation mShowAction = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
-                        Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
-                        0.0f, Animation.RELATIVE_TO_SELF, -1.0f);
-                mShowAction.setDuration(500);
-                topAnimalLayout.clearAnimation();
-                topAnimalLayout.setAnimation(mShowAction);
-            }
-        }, 5000);
-
         RelativeLayout videoLayout = findViewById(R.id.video_layout);
-        ViewGroup.LayoutParams layoutParams = videoLayout.getLayoutParams();
-        double i = ((double) 211) / 375;
-        int DW = ToolsDevice.getWindowPx(this).widthPixels;
-        int H = (int) (DW * i);
-        layoutParams.height = H;
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) videoLayout.getLayoutParams();
+        int type = 0;
+        int H;
+        switch (type) {
+            case 0://长方形
+                double i = ((double) 211) / 375;
+                int DW = ToolsDevice.getWindowPx(this).widthPixels;
+                H = (int) (DW * i);
+                layoutParams.height = H;
+                break;
+            case 1://正方形
+                H = ToolsDevice.getWindowPx(this).widthPixels;
+                layoutParams.height = H;
+                layoutParams.addRule(RelativeLayout.BELOW,R.id.top_bar_black);
+                break;
+            case 2://全屏
+                layoutParams.addRule(RelativeLayout.BELOW,R.id.top_bar_black);
+                layoutParams.addRule(RelativeLayout.ABOVE,R.id.ll_bottom);
+                mStudySyllabusView.setChangeTvColer(true);
+                break;
+        }
         videoLayout.setLayoutParams(layoutParams);
+
         // TODO: 2018/12/7
         mVideoPlayerController = new VideoPlayerController(this, videoLayout, "https://ws1.sinaimg.cn/large/0065oQSqgy1fxno2dvxusj30sf10nqcm.jpg");
         mVideoPlayerController.setVideoUrl("http://221.228.226.23/11/t/j/v/b/tjvbwspwhqdmgouolposcsfafpedmb/sh.yinyuetai.com/691201536EE4912BF7E4F1E2C67B8119.mp4");

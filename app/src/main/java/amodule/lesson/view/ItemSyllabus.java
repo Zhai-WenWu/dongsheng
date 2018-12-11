@@ -13,6 +13,9 @@ import acore.override.view.ItemBaseView;
 import amodule.dish.view.DishSkillView;
 
 class ItemSyllabus extends ItemBaseView {
+
+    private TextView syllabusTv;
+
     public ItemSyllabus(Context context) {
         super(context, R.layout.class_card_scroll_view);
     }
@@ -26,12 +29,16 @@ class ItemSyllabus extends ItemBaseView {
     }
 
     public void setData(Map<String, String> data, int position, int selectIndex) {
-        if (position == selectIndex){
+        if (position == selectIndex) {
             setSelected(true);
-        }else {
+        } else {
             setSelected(false);
         }
-        TextView SyllabusTv = findViewById(R.id.tv_syllabus);
-        SyllabusTv.setText(data.get("title"));
+        syllabusTv = findViewById(R.id.tv_syllabus);
+        syllabusTv.setText(data.get("title"));
+    }
+
+    public void setTextColer() {
+        syllabusTv.setTextColor(getResources().getColor(R.color.white));
     }
 }

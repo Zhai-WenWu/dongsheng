@@ -36,6 +36,11 @@ public class StudySyllabusView extends RelativeLayout {
     private int mSelectIndex;
     private TextView classNumTv;
     private TextView titleTv;
+    private boolean changeTvColer;
+
+    public void setChangeTvColer(boolean changeTvColer) {
+        this.changeTvColer = changeTvColer;
+    }
 
     public StudySyllabusView(Context context) {
         this(context, null);
@@ -137,6 +142,9 @@ public class StudySyllabusView extends RelativeLayout {
         @Override
         public void bindData(int position, @Nullable Map<String, String> data) {
             view.setData(data, position, mSelectIndex);
+            if (changeTvColer){
+                view.setTextColer();
+            }
         }
     }
 

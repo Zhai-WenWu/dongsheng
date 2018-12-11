@@ -6,30 +6,6 @@
     android:background="@color/c_13161e">
 
     <RelativeLayout
-        android:id="@+id/video_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/top_bar_black"
-        android:layout_above="@+id/ll_bottom"
-        android:layout_centerInParent="true" />
-
-    <LinearLayout
-        android:id="@+id/ll_top_animal"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_48"
-        android:layout_below="@+id/top_bar_black"
-        android:background="@color/ysf_black_333333"
-        android:gravity="center">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="你正在使用vip特权"
-            android:textColor="@color/white"
-            android:textSize="@dimen/dp_18" />
-    </LinearLayout>
-
-    <RelativeLayout
         android:id="@+id/top_bar_black"
         android:layout_width="match_parent"
         android:layout_height="@dimen/topbar_height"
@@ -66,6 +42,13 @@
 
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/video_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
+
+
     <amodule.lesson.view.StudySyllabusView
         android:id="@+id/view_syllabus"
         android:layout_width="match_parent"
@@ -77,8 +60,8 @@
         android:id="@+id/ll_bottom"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_49"
-        android:gravity="center_vertical"
         android:layout_alignParentBottom="true"
+        android:gravity="center_vertical"
         android:orientation="horizontal" />
 
 </RelativeLayout>
