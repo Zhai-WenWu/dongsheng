@@ -31,6 +31,7 @@ import acore.widget.TagTextView;
 import acore.widget.banner.CardPageTransformer;
 import acore.widget.banner.SLooperViewPager;
 import acore.widget.rcwidget.RCConstraintLayout;
+import acore.widget.rcwidget.RCRelativeLayout;
 import amodule.topic.adapter.OverlayBaseAdapter;
 
 /**
@@ -93,7 +94,7 @@ public class ChefIntroductionView extends FrameLayout {
         @SuppressLint("InflateParams")
         View view = LayoutInflater.from(getContext()).inflate(R.layout.item_chef_introduction, null);
         RelativeLayout root = view.findViewById(R.id.root);
-        RCConstraintLayout shadowLayout = view.findViewById(R.id.shadow_layout);
+        RCRelativeLayout shadowLayout = view.findViewById(R.id.shadow_layout);
         shadowLayout.getLayoutParams().height = (int) (ToolsDevice.getWindowPx(getContext()).widthPixels / 322f * 176);
         root.setLayoutParams(new ViewPager.LayoutParams());
         root.getLayoutParams().height = (int) (ToolsDevice.getWindowPx(getContext()).widthPixels / 322f * 176) + shadowLayout.getPaddingTop() + shadowLayout.getPaddingBottom();
