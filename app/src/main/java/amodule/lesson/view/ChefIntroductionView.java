@@ -84,7 +84,7 @@ public class ChefIntroductionView extends FrameLayout {
         mSLooperViewPager.setOffscreenPageLimit(5);
         mSLooperViewPager.setAdapter(adapter);
         mSLooperViewPager.setPageTransformer(true,
-                new CardPageTransformer(Tools.getDimen(getContext(),R.dimen.dp_20),Tools.getDimen(getContext(),R.dimen.dp_10)));
+                new CardPageTransformer(Tools.getDimen(getContext(),R.dimen.dp_16),Tools.getDimen(getContext(),R.dimen.dp_7)));
         setVisibility(VISIBLE);
     }
 
