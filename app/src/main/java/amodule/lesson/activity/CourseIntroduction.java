@@ -264,6 +264,9 @@ public class CourseIntroduction extends BaseAppCompatActivity {
                     switchCanStudy();
                     //设置头部数据
                     mCourseIntroduceHeader.setData(resultMap);
+                    //设置vip button数据
+                    Map<String,String> vipButtonData = StringManager.getFirstMap(resultMap.get("vipButton"));
+                    mBottomView.setVipButtonData(vipButtonData);
                     //设置分项数据
                     shareMap = StringManager.getFirstMap(resultMap.get("shareData"));
                     setShareVisibility();

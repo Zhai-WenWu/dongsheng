@@ -1,6 +1,8 @@
 package amodule.lesson.view.introduction;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +16,9 @@ import com.xiangha.R;
 
 import java.util.Map;
 
+import acore.logic.AppCommon;
 import acore.logic.stat.intefaces.OnClickListenerStat;
+import acore.tools.ColorUtil;
 import acore.widget.TagTextView;
 
 /**
@@ -71,8 +75,21 @@ public class CourseIntroductionBottomView extends RelativeLayout {
         mFavIcon.setSelected(b);
     }
 
-    public void setData(Map<String, String> data) {
-
+    String vipUrl;
+    public void setVipButtonData(Map<String, String> data) {
+        if(data == null || data.isEmpty()){
+            return;
+        }
+        vipUrl = data.get("url");
+        if(!TextUtils.isEmpty(data.get("text"))){
+            mVipButton.setText(data.get("text"));
+        }
+        if(!TextUtils.isEmpty(data.get("color"))){
+            mVipButton.setTextColor(ColorUtil.parseColor(data.get("color"),Color.WHITE));
+        }
+        if(!TextUtils.isEmpty(data.get("bgColor"))){
+            mVipButton.setBackgroundColor(ColorUtil.parseColor(data.get("bgColor"),ColorUtil.parseColor("#FA273B")));
+        }
     }
 
     private OnClickListener mFavClick;
@@ -93,6 +110,7 @@ public class CourseIntroductionBottomView extends RelativeLayout {
         mVipButton.setOnClickListener(new OnClickListenerStat(MOUDLE_NAME) {
             @Override
             public void onClicked(View v) {
+                AppCommon.openUrl(vipUrl,true);
                 if (listener != null) {
                     listener.onClick(v);
                 }
