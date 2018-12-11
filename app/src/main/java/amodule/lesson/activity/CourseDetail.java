@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
@@ -57,7 +58,7 @@ public class CourseDetail extends BaseAppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initExtraData();
-        initActivity("", 2, 0, R.layout.c_view_bar_title, R.layout.a_course_detail);
+        initActivity("", 2, 0, 0, R.layout.a_course_detail);
         initView();
     }
 
@@ -72,7 +73,6 @@ public class CourseDetail extends BaseAppCompatActivity {
         mBottomLableLayout = findViewById(R.id.ll_bottom);
         mStudySyllabusView = findViewById(R.id.view_syllabus);
         LinearLayout topAnimalLayout = findViewById(R.id.ll_top_animal);
-
         new Handler().postDelayed(new Runnable() {
             public void run() {
                 topAnimalLayout.setVisibility(View.GONE);
@@ -86,6 +86,12 @@ public class CourseDetail extends BaseAppCompatActivity {
         }, 5000);
 
         RelativeLayout videoLayout = findViewById(R.id.video_layout);
+        ViewGroup.LayoutParams layoutParams = videoLayout.getLayoutParams();
+        double i = ((double) 211) / 375;
+        int DW = ToolsDevice.getWindowPx(this).widthPixels;
+        int H = (int) (DW * i);
+        layoutParams.height = H;
+        videoLayout.setLayoutParams(layoutParams);
         // TODO: 2018/12/7
         mVideoPlayerController = new VideoPlayerController(this, videoLayout, "https://ws1.sinaimg.cn/large/0065oQSqgy1fxno2dvxusj30sf10nqcm.jpg");
         mVideoPlayerController.setVideoUrl("http://221.228.226.23/11/t/j/v/b/tjvbwspwhqdmgouolposcsfafpedmb/sh.yinyuetai.com/691201536EE4912BF7E4F1E2C67B8119.mp4");
@@ -94,7 +100,7 @@ public class CourseDetail extends BaseAppCompatActivity {
 
 
     public void initTitle() {
-        ImageView shareBtn = findViewById(R.id.rightImgBtn2);
+        ImageView shareBtn = findViewById(R.id.share_icon_white);
         shareBtn.setVisibility(View.VISIBLE);
         TextView titleV = (TextView) findViewById(R.id.title);
         titleV.setMaxWidth(ToolsDevice.getWindowPx(this).widthPixels - ToolsDevice.dp2px(this, 45 + 40));
@@ -107,6 +113,12 @@ public class CourseDetail extends BaseAppCompatActivity {
             }
         };
         shareBtn.setOnClickListener(shareClick);
+        findViewById(R.id.back_white).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     private void doShare() {
@@ -117,7 +129,7 @@ public class CourseDetail extends BaseAppCompatActivity {
     }
 
     private void loadInfo() {
-        CourseDataController.loadLessonInfoData(mChapterCode,mCode, new InternetCallback() {
+        CourseDataController.loadLessonInfoData(mChapterCode, mCode, new InternetCallback() {
             @Override
             public void loaded(int flag, String s, Object o) {
                 if (flag >= ReqInternet.REQ_OK_STRING) {
@@ -128,7 +140,7 @@ public class CourseDetail extends BaseAppCompatActivity {
                         mBottomLableLayout.removeAllViews();
                     }
                     for (int i = 0; i < labelDataList.size(); i++) {
-                        View lableView = createLableView(labelDataList.get(i), mBottomLableLayout);
+                        View lableView = createLableView(labelDataList.get(i), mBottomLableLayout, i);
                         mBottomLableLayout.addView(lableView);
                     }
                     loadCourseListData();
@@ -150,8 +162,11 @@ public class CourseDetail extends BaseAppCompatActivity {
         });
     }
 
-    private View createLableView(Map<String, String> stringStringMap, LinearLayout parent) {
+    private View createLableView(Map<String, String> stringStringMap, LinearLayout parent, int i) {
         View view = LayoutInflater.from(this).inflate(R.layout.view_study_bottom_lable_item, parent, false);
+        if (i == 0) {
+            view.findViewById(R.id.lable_line).setVisibility(View.GONE);
+        }
         TextView textView = view.findViewById(R.id.label_text);
         String title = stringStringMap.get("title");
         textView.setText(title);
