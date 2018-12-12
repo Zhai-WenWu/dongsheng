@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.xiangha.R;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +32,7 @@ import acore.widget.TagTextView;
 import acore.widget.banner.CardPageTransformer;
 import acore.widget.banner.SLooperViewPager;
 import acore.widget.rcwidget.RCConstraintLayout;
+import acore.widget.rcwidget.RCRelativeLayout;
 import amodule.topic.adapter.OverlayBaseAdapter;
 
 /**
@@ -79,6 +81,7 @@ public class ChefIntroductionView extends FrameLayout {
             setVisibility(GONE);
             return;
         }
+        mViewMap.clear();
         OverlayAdapter adapter = new OverlayAdapter();
         adapter.setData(authorList);
         mSLooperViewPager.setOffscreenPageLimit(5);
@@ -93,7 +96,7 @@ public class ChefIntroductionView extends FrameLayout {
         @SuppressLint("InflateParams")
         View view = LayoutInflater.from(getContext()).inflate(R.layout.item_chef_introduction, null);
         RelativeLayout root = view.findViewById(R.id.root);
-        RCConstraintLayout shadowLayout = view.findViewById(R.id.shadow_layout);
+        RCRelativeLayout shadowLayout = view.findViewById(R.id.shadow_layout);
         shadowLayout.getLayoutParams().height = (int) (ToolsDevice.getWindowPx(getContext()).widthPixels / 322f * 176);
         root.setLayoutParams(new ViewPager.LayoutParams());
         root.getLayoutParams().height = (int) (ToolsDevice.getWindowPx(getContext()).widthPixels / 322f * 176) + shadowLayout.getPaddingTop() + shadowLayout.getPaddingBottom();
@@ -144,13 +147,18 @@ public class ChefIntroductionView extends FrameLayout {
     private String checkStrNull(String text) {
         return TextUtils.isEmpty(text) ? "" : text;
     }
-
+    Map<Integer,View> mViewMap = new HashMap<>();
     class OverlayAdapter extends OverlayBaseAdapter<Map<String,String>> {
 
         @Override
         public Object overWriteInstantiateItem(ViewGroup container, int position) {
-            View view = createPagerView();
-            setDataToView(getmData().get(position),view);
+            View view;
+            if(position != 0 && position != getCount() - 1 && mViewMap.containsKey(position)){
+                view = mViewMap.get(position);
+            }else{
+                view = createPagerView();
+                setDataToView(getmData().get(position),view);
+            }
             container.addView(view);
             return view;
         }
