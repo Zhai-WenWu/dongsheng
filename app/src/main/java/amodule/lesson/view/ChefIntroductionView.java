@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.xiangha.R;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -80,6 +81,7 @@ public class ChefIntroductionView extends FrameLayout {
             setVisibility(GONE);
             return;
         }
+        mViewMap.clear();
         OverlayAdapter adapter = new OverlayAdapter();
         adapter.setData(authorList);
         mSLooperViewPager.setOffscreenPageLimit(5);
@@ -145,13 +147,18 @@ public class ChefIntroductionView extends FrameLayout {
     private String checkStrNull(String text) {
         return TextUtils.isEmpty(text) ? "" : text;
     }
-
+    Map<Integer,View> mViewMap = new HashMap<>();
     class OverlayAdapter extends OverlayBaseAdapter<Map<String,String>> {
 
         @Override
         public Object overWriteInstantiateItem(ViewGroup container, int position) {
-            View view = createPagerView();
-            setDataToView(getmData().get(position),view);
+            View view;
+            if(position != 0 && position != getCount() - 1 && mViewMap.containsKey(position)){
+                view = mViewMap.get(position);
+            }else{
+                view = createPagerView();
+                setDataToView(getmData().get(position),view);
+            }
             container.addView(view);
             return view;
         }

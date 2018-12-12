@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_home_content_shadow"
-        app:round_corner="@dimen/dp_5">
+        app:round_corner="@dimen/dp_15">
 
         <RelativeLayout
             android:id="@+id/chef_top_layout"
