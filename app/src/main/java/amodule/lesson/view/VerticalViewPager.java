@@ -8,7 +8,22 @@ import android.view.MotionEvent;
 import android.view.View;
 
 public class VerticalViewPager extends ViewPager {
-    private double mScale;
+
+    private double transform;
+    public int showPosition;
+    private float mDownPosX;
+    private float mDownPosY;
+    private float deltaY;
+    int dealtX = 0;
+    int dealtY = 0;
+    int lastX = 0;
+    int lastY = 0;
+    boolean intercepted;
+    private boolean mWebScrollTop;
+
+    public int getShowPosition() {
+        return showPosition;
+    }
 
     public VerticalViewPager(Context context) {
         super(context);
@@ -23,18 +38,46 @@ public class VerticalViewPager extends ViewPager {
     private void init() {
         setPageTransformer(true, new VerticalPageTransformer());
         setOverScrollMode(OVER_SCROLL_NEVER);
+        addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                showPosition = position;
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     public void setScale(double scale) {
-        this.mScale = scale;
+        transform = (1 - scale);
+    }
+
+    public void setWebScrollTop(boolean webScrollTop) {
+        this.mWebScrollTop = webScrollTop;
     }
 
     private class VerticalPageTransformer implements ViewPager.PageTransformer {
 
         @Override
         public void transformPage(View view, float position) {
-            if (position > -(1 - mScale)) {
+
+            if ((position > -transform && position < 0) || position > (1 - transform)) {
                 float yPosition = position * view.getHeight();
+                view.setTranslationY(yPosition);
+            } else if (position > 0 && position <= 1 - transform) {
+                float yPosition = (float) ((1 - transform) * view.getHeight());
+                view.setTranslationY(yPosition);
+            } else if (position <= -transform) {
+                float yPosition = (float) (-transform * view.getHeight());
                 view.setTranslationY(yPosition);
             }
             view.setTranslationX(view.getWidth() * -position);
@@ -55,7 +98,26 @@ public class VerticalViewPager extends ViewPager {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        boolean intercepted = super.onInterceptTouchEvent(swapXY(ev));
+        super.onInterceptTouchEvent(swapXY(ev));
+        int y = (int) ev.getX();
+        int x = (int) ev.getY();
+
+        switch (ev.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                dealtX = x;
+                dealtY = y;
+                intercepted = false;
+                break;
+            case MotionEvent.ACTION_MOVE:
+                lastX = Math.abs(x - dealtX);
+                lastY = Math.abs(y - dealtY);
+                if (lastX >= lastY && !mWebScrollTop) {
+                    intercepted = false;
+                } else {
+                    intercepted = true;
+                }
+                break;
+        }
         swapXY(ev);
         return intercepted;
     }

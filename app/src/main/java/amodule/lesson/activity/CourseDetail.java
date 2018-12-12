@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.util.ArrayMap;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +37,7 @@ import amodule.lesson.view.StudySyllabusView;
 import amodule.lesson.view.VerticalViewPager;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
+import aplug.web.view.XHWebView;
 import third.share.BarShare;
 import third.video.VideoPlayerController;
 
@@ -83,9 +85,17 @@ public class CourseDetail extends BaseAppCompatActivity {
     }
 
     private void initView() {
+        viewPager = findViewById(R.id.viewpager);
         studyFirstPager = new StudyFirstPager(CourseDetail.this);
         studySecondPager = new StudySecondPager(CourseDetail.this);
-        viewPager = findViewById(R.id.viewpager);
+        studyFirstPager.setOnClickBottomView(new StudyFirstPager.OnClickBottomView() {
+            @Override
+            public void clickView(int i) {
+                viewPager.setCurrentItem(1, true);
+                studySecondPager.setSelect(i);
+            }
+        });
+
         int bottomBtnHeight = Tools.getDimen(this, R.dimen.dp_49);
         viewPager.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -117,9 +127,26 @@ public class CourseDetail extends BaseAppCompatActivity {
         findViewById(R.id.back_white).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                int showPosition = viewPager.getShowPosition();
+                if (showPosition > 0) {
+                    viewPager.setCurrentItem(0, true);
+                } else {
+                    finish();
+                }
             }
         });
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (viewPager.getShowPosition() > 0) {
+                viewPager.setCurrentItem(0, true);
+            } else {
+                finish();
+            }
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     private void doShare() {
@@ -153,7 +180,7 @@ public class CourseDetail extends BaseAppCompatActivity {
                     viewPager.setAdapter(mVerticalAdapter);
                     mVerticalAdapter.setData(mData);
 
-                    studyFirstPager.initData(mData,mGroupSelectIndex,mChildSelectIndex);
+                    studyFirstPager.initData(mData, mGroupSelectIndex, mChildSelectIndex);
                     studySecondPager.initData(mData);
 
                     mVerticalAdapter.setView(studyFirstPager, studySecondPager);

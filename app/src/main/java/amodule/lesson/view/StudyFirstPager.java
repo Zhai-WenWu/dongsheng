@@ -2,7 +2,6 @@ package amodule.lesson.view;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,9 +16,6 @@ import java.util.Map;
 
 import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
-import amodule.lesson.activity.CourseDetail;
-import amodule.lesson.activity.CourseList;
-import amodule.lesson.adapter.VerticalAdapter;
 import third.video.VideoPlayerController;
 
 public class StudyFirstPager extends RelativeLayout {
@@ -27,10 +23,12 @@ public class StudyFirstPager extends RelativeLayout {
     private StudySyllabusView mStudySyllabusView;
     private LinearLayout mBottomLableLayout;
     private VideoPlayerController mVideoPlayerController;
-    private int mGroupSelectIndex = 0;
-    private int mChildSelectIndex = -1;
+    //    private int mGroupSelectIndex = 0;
+//    private int mChildSelectIndex = -1;
     private Activity mActivity;
     private RelativeLayout videoLayout;
+    private int mGroupSelectIndex;
+    private int mChildSelectIndex;
 
     public StudyFirstPager(Context context) {
         this(context, null);
@@ -61,14 +59,13 @@ public class StudyFirstPager extends RelativeLayout {
                 int DW = ToolsDevice.getWindowPx(mActivity).widthPixels;
                 H = (int) (DW * i);
                 layoutParams.height = H;
+                layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
                 break;
             case 1://正方形
                 H = ToolsDevice.getWindowPx(mActivity).widthPixels;
                 layoutParams.height = H;
-                layoutParams.addRule(RelativeLayout.BELOW, R.id.top_bar_black);
                 break;
             case 2://全屏
-                layoutParams.addRule(RelativeLayout.BELOW, R.id.top_bar_black);
                 layoutParams.addRule(RelativeLayout.ABOVE, R.id.ll_bottom);
                 mStudySyllabusView.setChangeTvColer(true);
                 break;
@@ -88,35 +85,10 @@ public class StudyFirstPager extends RelativeLayout {
             View lableView = createLableView(labelDataList.get(i), mBottomLableLayout, i);
             mBottomLableLayout.addView(lableView);
         }
-        initCourseListData(mData.get("syllabusInfo"));
+//        initCourseListData(mData.get("syllabusInfo"));
+        mStudySyllabusView.setData(mData.get("syllabusInfo"), mGroupSelectIndex, mChildSelectIndex);
     }
 
-    private void initCourseListData(Map<String, String> courseListMap) {
-        //课程横划
-        mStudySyllabusView.setData(courseListMap, mGroupSelectIndex, mChildSelectIndex);
-        //课程横划点击回调
-        mStudySyllabusView.setOnSyllabusSelect(new StudySyllabusView.OnSyllabusSelect() {
-            @Override
-            public void onSelect(int position) {
-//                    mCode = data.getStringExtra("code");
-                mChildSelectIndex = position;
-//                loadInfo();
-            }
-        });
-        TextView mClassNumTv = mStudySyllabusView.findViewById(R.id.tv_class_num);
-        mClassNumTv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //课程页
-                Intent intent = new Intent(mActivity, CourseList.class);
-                intent.putExtra(CourseDetail.EXTRA_GROUP, mGroupSelectIndex);
-                intent.putExtra(CourseDetail.EXTRA_CHILD, mChildSelectIndex);
-                intent.putExtra(CourseList.EXTRA_FROM_STUDY, true);
-//                startActivityForResult(intent, SELECT_COURSE);
-            }
-        });
-
-    }
 
     private View createLableView(Map<String, String> stringStringMap, LinearLayout parent, int i) {
         View view = LayoutInflater.from(mActivity).inflate(R.layout.view_study_bottom_lable_item, parent, false);
@@ -130,6 +102,7 @@ public class StudyFirstPager extends RelativeLayout {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                onClickBottomView.clickView(i);
                 switch (title) {
                     case "学习要点":
 //                        Intent StudyPointIntent = new Intent(CourseDetail.this, StudyPoint.class);
@@ -157,4 +130,13 @@ public class StudyFirstPager extends RelativeLayout {
         return view;
     }
 
+    private OnClickBottomView onClickBottomView;
+
+    public void setOnClickBottomView(OnClickBottomView onClickBottomView) {
+        this.onClickBottomView = onClickBottomView;
+    }
+
+    public interface OnClickBottomView {
+        void clickView(int i);
+    }
 }
