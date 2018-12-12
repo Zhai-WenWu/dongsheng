@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@drawable/bg_circle_fdf8ed_10" android:state_selected="true" />
-    <item android:drawable="@drawable/bg_circle_f5f7fa_10" />
+    <item android:drawable="@drawable/bg_circle_14ffffff_10" android:state_selected="true" />
+    <item android:drawable="@drawable/bg_circle_33ffffff_10" />
 </selector>
