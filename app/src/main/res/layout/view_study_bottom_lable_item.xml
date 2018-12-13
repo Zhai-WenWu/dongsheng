@@ -8,6 +8,7 @@
     <View
         android:id="@+id/lable_line"
         android:layout_width="@dimen/dp_0.5"
+        android:alpha="0.2"
         android:layout_height="@dimen/dp_14"
         android:background="@color/white" />
     <TextView

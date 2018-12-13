@@ -2,8 +2,8 @@ package amodule.lesson.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.util.ArrayMap;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.webkit.WebView;
@@ -44,9 +44,6 @@ public class CourseDetail extends BaseAppCompatActivity {
     public static final String EXTRA_CODE = "code";
     public static final String EXTRA_GROUP = "group";
     public static final String EXTRA_CHILD = "child";
-    //    private RvListView mCourseList;
-//    private StudySyllabusView mStudySyllabusView;
-//    private LinearLayout mBottomLableLayout;
     private Map<String, String> mTopInfoMap;
     private VideoPlayerController mVideoPlayerController;
     private String mCode = "0";
@@ -81,13 +78,50 @@ public class CourseDetail extends BaseAppCompatActivity {
         viewPager = findViewById(R.id.viewpager);
         studyFirstPager = new StudyFirstPager(CourseDetail.this);
         studySecondPager = new StudySecondPager(CourseDetail.this);
-        mFirstPageBottomBtn = studyFirstPager.getmBtnLayout();
-        //底部按钮点击回调
+        mFirstPageBottomBtn = studyFirstPager.getBtnLayout();
+        //底部按钮绑定
         studyFirstPager.setOnClickBottomView(new StudyFirstPager.OnClickBottomView() {
             @Override
             public void clickView(int i) {
+                for (int j = 0; j < mFirstPageBottomBtn.getChildCount(); j++) {
+                    if (j == i)
+                        continue;
+                    mFirstPageBottomBtn.getChildAt(j).findViewById(R.id.hor_line).setVisibility(View.GONE);
+                }
+                mFirstPageBottomBtn.getChildAt(i).findViewById(R.id.hor_line).setVisibility(View.VISIBLE);
                 viewPager.setCurrentItem(1, true);
                 studySecondPager.setSelect(i);
+            }
+        });
+        studySecondPager.getViewPager().addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                for (int j = 0; j < mFirstPageBottomBtn.getChildCount(); j++) {
+                    if (j == position)
+                        continue;
+                    mFirstPageBottomBtn.getChildAt(j).findViewById(R.id.hor_line).setVisibility(View.GONE);
+                }
+                mFirstPageBottomBtn.getChildAt(position).findViewById(R.id.hor_line).setVisibility(View.VISIBLE);
+                viewPager.setCurrentItem(1, true);
+                studySecondPager.setSelect(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
+
+        //视频播放完成回调
+        studyFirstPager.setOnVideoFinish(new StudyFirstPager.OnVideoFinish() {
+            @Override
+            public void videoFinish() {
+                viewPager.setCurrentItem(0);
+                loadInfo();
             }
         });
 
@@ -138,6 +172,7 @@ public class CourseDetail extends BaseAppCompatActivity {
         titleBottomTv.setMaxWidth(ToolsDevice.getWindowPx(this).widthPixels - ToolsDevice.dp2px(this, 45 + 40));
         titleBottomTv.setText(mTopInfoMap.get("name"));
         shareMap = StringManager.getFirstMap(mTopInfoMap.get("shareData"));
+        //返回按钮控制
         OnClickListenerStat shareClick = new OnClickListenerStat() {
             @Override
             public void onClicked(View v) {
@@ -182,18 +217,6 @@ public class CourseDetail extends BaseAppCompatActivity {
         });
     }
 
-    @Override
-    public boolean onKeyUp(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (viewPager.getShowPosition() > 0) {
-                viewPager.setCurrentItem(0, true);
-            } else {
-                finish();
-            }
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
     private void doShare() {
         barShare = new BarShare(this, "", "");
         barShare.setShare(BarShare.IMG_TYPE_WEB, shareMap.get("title"), shareMap.get("content"),
@@ -226,6 +249,7 @@ public class CourseDetail extends BaseAppCompatActivity {
                     mVerticalAdapter.setData(mData);
 
                     studyFirstPager.initData(mData, mGroupSelectIndex, mChildSelectIndex);
+                    mVideoPlayerController = studyFirstPager.getVideoPlayerController();
                     studySecondPager.initData(mData);
 
                     mVerticalAdapter.setView(studyFirstPager, studySecondPager);
@@ -309,6 +333,9 @@ public class CourseDetail extends BaseAppCompatActivity {
         if (mVideoPlayerController != null && mVideoPlayerController.onBackPressed()) {
             return;
         }
-        super.onBackPressed();
+        if (viewPager.getShowPosition() > 0) {
+            viewPager.setCurrentItem(0, true);
+        } else
+            super.onBackPressed();
     }
 }

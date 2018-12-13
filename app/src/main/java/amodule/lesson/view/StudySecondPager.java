@@ -27,6 +27,10 @@ public class StudySecondPager extends RelativeLayout {
     private ViewPager mViewPager;
     private SecondPagerWebAdapter secondPagerWebAdapter;
 
+    public ViewPager getViewPager() {
+        return mViewPager;
+    }
+
     public StudySecondPager(Context context) {
         this(context, null);
     }

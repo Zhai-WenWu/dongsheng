@@ -3,6 +3,7 @@ package amodule.lesson.view;
 import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -31,12 +32,16 @@ public class StudyFirstPager extends RelativeLayout {
     private int mGroupSelectIndex;
     private int mChildSelectIndex;
 
-    public LinearLayout getmBtnLayout() {
+    public LinearLayout getBtnLayout() {
         return mBtnLayout;
     }
 
     public StudyFirstPager(Context context) {
         this(context, null);
+    }
+
+    public VideoPlayerController getVideoPlayerController() {
+        return mVideoPlayerController;
     }
 
     public StudyFirstPager(Context context, AttributeSet attrs) {
@@ -81,7 +86,12 @@ public class StudyFirstPager extends RelativeLayout {
         // TODO: 2018/12/7
         mVideoPlayerController = new VideoPlayerController(mActivity, videoLayout, "https://ws1.sinaimg.cn/large/0065oQSqgy1fxno2dvxusj30sf10nqcm.jpg");
         mVideoPlayerController.setVideoUrl("http://221.228.226.23/11/t/j/v/b/tjvbwspwhqdmgouolposcsfafpedmb/sh.yinyuetai.com/691201536EE4912BF7E4F1E2C67B8119.mp4");
-
+        mVideoPlayerController.setOnPlayingCompletionListener(new VideoPlayerController.OnPlayingCompletionListener() {
+            @Override
+            public void onPlayingCompletion() {
+                onVideoFinish.videoFinish();
+            }
+        });
 
         List<Map<String, String>> labelDataList = StringManager.getListMapByJson(mData.get("lessonInfo").get("labelData"));
         if (mBtnLayout != null && mBtnLayout.getChildCount() > 0) {
@@ -91,25 +101,31 @@ public class StudyFirstPager extends RelativeLayout {
             mBtnBottomLayout.removeAllViews();
         }
         for (int i = 0; i < labelDataList.size(); i++) {
-            View lableView = createLableView(labelDataList.get(i), mBtnLayout, i,false);
+            View lableView = createLableView(labelDataList.get(i), mBtnLayout, i, true);
             mBtnLayout.addView(lableView);
-            View lableViewBottom = createLableView(labelDataList.get(i), mBtnBottomLayout, i,true);
+            View lableViewBottom = createLableView(labelDataList.get(i), mBtnBottomLayout, i, false);
             mBtnBottomLayout.addView(lableViewBottom);
         }
-//        initCourseListData(mData.get("syllabusInfo"));
         mStudySyllabusView.setData(mData.get("syllabusInfo"), mGroupSelectIndex, mChildSelectIndex);
     }
 
 
     private View createLableView(Map<String, String> stringStringMap, LinearLayout parent, int i, boolean isTop) {
-        View view = LayoutInflater.from(mActivity).inflate(R.layout.view_study_bottom_lable_item, parent, false);
-        if (i == 0) {
-            view.findViewById(R.id.lable_line).setVisibility(View.GONE);
+        View view;
+        if (isTop) {
+            view = LayoutInflater.from(mActivity).inflate(R.layout.view_study_top_lable_item, parent, false);
+            View horLine = findViewById(R.id.hor_line);
+            if (i != 0 && horLine != null) {
+                horLine.setVisibility(VISIBLE);
+            }
+        } else {
+            view = LayoutInflater.from(mActivity).inflate(R.layout.view_study_bottom_lable_item, parent, false);
+            View verLine = view.findViewById(R.id.lable_line);
+            if (i == 0 && verLine != null) {
+                verLine.setVisibility(View.GONE);
+            }
         }
         TextView textView = view.findViewById(R.id.label_text);
-        if (!isTop){
-            textView.setTextColor(getResources().getColor(R.color.ysf_black_333333));
-        }
         String title = stringStringMap.get("title");
         textView.setText(title);
         // TODO: 2018/12/7
@@ -152,5 +168,15 @@ public class StudyFirstPager extends RelativeLayout {
 
     public interface OnClickBottomView {
         void clickView(int i);
+    }
+
+    private OnVideoFinish onVideoFinish;
+
+    public void setOnVideoFinish(OnVideoFinish onVideoFinish) {
+        this.onVideoFinish = onVideoFinish;
+    }
+
+    public interface OnVideoFinish {
+        void videoFinish();
     }
 }
