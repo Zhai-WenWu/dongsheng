@@ -312,6 +312,7 @@ public class CourseIntroduction extends BaseAppCompatActivity {
                     Map<String, String> resultMap = StringManager.getFirstMap(o);
                     mCourseVerticalView.setData(resultMap);
                     mCourseHorizontalView.setData(resultMap);
+                    mCourseHorizontalView.setCurrentPosition(1);
                 }
             }
         });

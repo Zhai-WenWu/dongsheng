@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -10,14 +10,13 @@
 
     <TextView
         android:id="@+id/title"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginRight="@dimen/dp_90"
+        android:layout_centerVertical="true"
         android:ellipsize="end"
         android:includeFontPadding="false"
         android:textColor="@color/common_text"
-        android:textSize="@dimen/sp_16"
+        android:textSize="@dimen/dp_16"
         android:textStyle="bold"
         tools:text="课程简介"/>
 
@@ -25,10 +24,31 @@
         android:id="@+id/sub_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="right|center_vertical"
-        android:text="20节"
+        android:layout_toRightOf="@id/title"
+        android:layout_centerVertical="true"
+        tools:text="（20节）"
+        android:textColor="@color/common_text"
+        android:textSize="@dimen/dp_14"
+        />
+
+    <TextView
+        android:id="@+id/sub_title_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        tools:text="00:30"
         android:textColor="#999999"
         android:textSize="@dimen/dp_14"
         />
 
-</FrameLayout>
+    <ImageView
+        android:id="@+id/right_arrow"
+        android:layout_width="@dimen/dp_7"
+        android:layout_height="@dimen/dp_12"
+        android:src="@drawable/icon_arrow_course"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        />
+
+</RelativeLayout>

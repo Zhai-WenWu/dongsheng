@@ -28,8 +28,9 @@
             android:layout_height="wrap_content"
             android:includeFontPadding="true"
             tools:text="宝宝6-12个月辅食大全"
+            android:textStyle="bold"
             android:textColor="#333333"
-            android:textSize="@dimen/sp_28"/>
+            android:textSize="@dimen/dp_27"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -67,8 +68,9 @@
     </LinearLayout>
 
     <View
+        android:id="@+id/line"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_5"
+        android:layout_height="@dimen/dp_10"
         android:background="#F9FAFC"/>
 
 </LinearLayout>

@@ -9,9 +9,12 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.annimon.stream.Stream;
+import com.annimon.stream.function.Consumer;
 import com.xiangha.R;
 
 import java.util.List;
@@ -79,6 +82,7 @@ public class CourseVerticalView extends FrameLayout {
             if (lessonNum == 1) {
                 lessonList = StringManager.getListMapByJson(lessonList.get(0).get("lessonList"));
                 isOneLesson = lessonList.size() <= 1;
+                Stream.of(lessonList).forEach(value -> value.put("subTitleRight",value.remove("subTitle")));
             }
         }
         if (mLinearLayoutCompat != null) {
@@ -111,7 +115,7 @@ public class CourseVerticalView extends FrameLayout {
         });
         parent.addView(footView);
         TextView see_all = footView.findViewById(R.id.see_all);
-        see_all.setText(TextUtils.isEmpty(lessonNum) ? "查看全部" : "查看全部 (" + lessonNum + "节)");
+        see_all.setText(TextUtils.isEmpty(lessonNum) ? "查看全部 " : "查看全部（" + lessonNum + "节）");
     }
 
     private void createCourseItem(int position, Map<String, String> data, LinearLayoutCompat parent) {
@@ -123,6 +127,10 @@ public class CourseVerticalView extends FrameLayout {
         titleText.setText(data.get("title"));
         TextView subTitleText = itemView.findViewById(R.id.sub_title);
         subTitleText.setText(data.get("subTitle"));
+        TextView subTitleRightText = itemView.findViewById(R.id.sub_title_right);
+        subTitleRightText.setText(data.get("subTitleRight"));
+        ImageView right_arrow = itemView.findViewById(R.id.right_arrow);
+        right_arrow.setVisibility(TextUtils.isEmpty(data.get("subTitleRight"))?VISIBLE:GONE);
         itemView.setOnClickListener(new OnClickListenerStat() {
             @Override
             public void onClicked(View v) {

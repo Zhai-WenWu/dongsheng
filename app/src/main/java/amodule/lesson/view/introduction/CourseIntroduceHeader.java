@@ -1,5 +1,6 @@
 package amodule.lesson.view.introduction;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -60,6 +61,7 @@ public class CourseIntroduceHeader extends RelativeLayout {
         mDurationText = findViewById(R.id.duration_text);
     }
 
+    @SuppressLint("SetTextI18n")
     public void setData(Map<String, String> data) {
         if (data == null) {
             return;
@@ -78,8 +80,13 @@ public class CourseIntroduceHeader extends RelativeLayout {
         mViewPager.setData(images);
         mCourseName.setText(checkStrNull(data.get("name")));
         mChapterText.setText(checkStrNull(data.get("chapterText")));
-        mLessonText.setText(checkStrNull(data.get("lessonText")));
-        mDurationText.setText(checkStrNull(data.get("duration")));
+        if(!TextUtils.isEmpty(data.get("lessonText"))){
+            mLessonText.setText("·" + data.get("lessonText"));
+        }
+        if(!TextUtils.isEmpty(data.get("duration"))){
+            mDurationText.setText("·" + data.get("duration"));
+        }
+        findViewById(R.id.line).setVisibility(VISIBLE);
     }
 
     public void onResume() {

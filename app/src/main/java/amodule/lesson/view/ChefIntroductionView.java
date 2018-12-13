@@ -46,6 +46,7 @@ public class ChefIntroductionView extends FrameLayout {
     private SLooperViewPager mSLooperViewPager;
     private TextView mTitle,mSubTitle;
     private List<Map<String,String>> authorList;
+    private int viewpageHeight;
     public ChefIntroductionView(@NonNull Context context) {
         super(context);
         initialize(context, null, 0);
@@ -62,6 +63,7 @@ public class ChefIntroductionView extends FrameLayout {
     }
 
     private void initialize(Context context, AttributeSet attrs, int defStyleAttr) {
+        setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         LayoutInflater.from(context).inflate(LAYOUT_ID, this);
         mSLooperViewPager = findViewById(R.id.overlay_view);
         mTitle = findViewById(R.id.title);
@@ -81,27 +83,35 @@ public class ChefIntroductionView extends FrameLayout {
             setVisibility(GONE);
             return;
         }
+        authorList.get(0).put("showTip","2");
         mViewMap.clear();
         OverlayAdapter adapter = new OverlayAdapter();
         adapter.setData(authorList);
         mSLooperViewPager.setOffscreenPageLimit(5);
         mSLooperViewPager.setAdapter(adapter);
         mSLooperViewPager.setPageTransformer(true,
-                new CardPageTransformer(Tools.getDimen(getContext(),R.dimen.dp_16),Tools.getDimen(getContext(),R.dimen.dp_7)));
+                new CardPageTransformer(Tools.getDimen(getContext(),R.dimen.dp_26),Tools.getDimen(getContext(),R.dimen.dp_7)));
+
+        mSLooperViewPager.setCurrentItem(0);
         setVisibility(VISIBLE);
     }
 
     @NonNull
     private View createPagerView() {
         @SuppressLint("InflateParams")
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.item_chef_introduction, null);
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.item_chef_introduction, mSLooperViewPager,false);
         RelativeLayout root = view.findViewById(R.id.root);
         RCRelativeLayout shadowLayout = view.findViewById(R.id.shadow_layout);
-        shadowLayout.getLayoutParams().height = (int) (ToolsDevice.getWindowPx(getContext()).widthPixels / 322f * 176);
-        root.setLayoutParams(new ViewPager.LayoutParams());
-        root.getLayoutParams().height = (int) (ToolsDevice.getWindowPx(getContext()).widthPixels / 322f * 176) + shadowLayout.getPaddingTop() + shadowLayout.getPaddingBottom();
+//        shadowLayout.getLayoutParams().height = (int) (ToolsDevice.getWindowPx(getContext()).widthPixels / 322f * 160);
+//        root.setLayoutParams(new ViewPager.LayoutParams());
+//        root.getLayoutParams().height = (int) (ToolsDevice.getWindowPx(getContext()).widthPixels / 322f * 160) + shadowLayout.getPaddingTop() + shadowLayout.getPaddingBottom();
         root.setPadding(root.getPaddingLeft() - shadowLayout.getPaddingLeft(),0,
                 authorList.size() == 1 ? Tools.getDimen(getContext(),R.dimen.dp_20) - shadowLayout.getPaddingRight() : root.getPaddingRight() - shadowLayout.getPaddingRight(),0);
+        setPadding(0,0,0,Tools.getDimen(getContext(),R.dimen.dp_15) - shadowLayout.getPaddingBottom());
+        if(viewpageHeight == 0){
+            viewpageHeight = Tools.getMeasureHeight(view);
+            mSLooperViewPager.getLayoutParams().height = viewpageHeight;
+        }
         return view;
     }
 
@@ -129,6 +139,8 @@ public class ChefIntroductionView extends FrameLayout {
         //设置简介
         TextView chef_desc = view.findViewById(R.id.chef_desc);
         chef_desc.setText(checkStrNull(chefData.get("info")));
+        ImageView tipIcon = view.findViewById(R.id.tip);
+        tipIcon.setVisibility(TextUtils.equals("2", chefData.get("showTip"))?VISIBLE:GONE);
     }
 
     private void setTitleData(Map<String, String> data) {

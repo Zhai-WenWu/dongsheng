@@ -47,7 +47,7 @@
         android:id="@+id/overlay_view"
         android:layout_below="@id/title"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_170"
+        android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dp_15"/>
 
 </RelativeLayout>

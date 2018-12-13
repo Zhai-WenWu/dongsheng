@@ -32,18 +32,20 @@
 
             <ImageView
                 android:id="@+id/back_white"
-                android:layout_width="@dimen/dp_34"
-                android:layout_height="@dimen/dp_34"
+                android:layout_width="@dimen/dp_28"
+                android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/dp_10"
-                android:padding="@dimen/dp_10"
+                android:paddingLeft="@dimen/dp_10"
+                android:paddingRight="@dimen/dp_10"
                 android:src="@drawable/icon__course_back_white"
+                android:scaleType="centerInside"
                 android:tag="返回"/>
 
             <ImageView
                 android:id="@+id/share_icon_white"
-                android:layout_width="@dimen/dp_40"
-                android:layout_height="@dimen/dp_38"
+                android:layout_width="@dimen/dp_38"
+                android:layout_height="@dimen/dp_36"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/dp_10"
@@ -63,18 +65,20 @@
 
             <ImageView
                 android:id="@+id/back_black"
-                android:layout_width="@dimen/dp_34"
-                android:layout_height="@dimen/dp_34"
+                android:layout_width="@dimen/dp_28"
+                android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/dp_10"
-                android:padding="@dimen/dp_10"
+                android:paddingLeft="@dimen/dp_10"
+                android:paddingRight="@dimen/dp_10"
                 android:src="@drawable/icon_course_back"
+                android:scaleType="centerInside"
                 android:tag="返回"/>
 
             <ImageView
                 android:id="@+id/share_icon_black"
-                android:layout_width="@dimen/dp_40"
-                android:layout_height="@dimen/dp_38"
+                android:layout_width="@dimen/dp_38"
+                android:layout_height="@dimen/dp_36"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/dp_10"
@@ -88,8 +92,8 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_4"
+        android:layout_height="@dimen/dp_0.5"
         android:layout_above="@id/course_bottom_layout"
-        android:background="@drawable/bg_course_bottom_shadow"/>
+        android:background="#F1F1F1"/>
 
 </RelativeLayout>

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -145,6 +146,14 @@ public class CourseHorizontalView extends FrameLayout {
     private void handleOnItemClickCallback(int position,Map<String,String> data){
         if(mOnItemClickCallback != null){
             mOnItemClickCallback.onItemClick(position, data);
+        }
+    }
+
+    public void setCurrentPosition(int currentPosition) {
+        if(mAdapter != null){
+            mAdapter.setCurrentPosition(currentPosition);
+            LinearLayoutManager layoutManager = (LinearLayoutManager) mRvHorizatolListView.getLayoutManager();
+            layoutManager.scrollToPositionWithOffset(0, 0);
         }
     }
 
