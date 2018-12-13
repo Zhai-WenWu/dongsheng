@@ -6,13 +6,11 @@
     android:background="@color/c_13161e">
 
     <RelativeLayout
-        android:id="@+id/top_bar_black"
         android:layout_width="match_parent"
         android:layout_height="@dimen/topbar_height"
         android:background="@color/c_13161e">
 
         <ImageView
-            android:id="@+id/back_white"
             android:layout_width="@dimen/dp_34"
             android:layout_height="@dimen/dp_34"
             android:layout_centerVertical="true"
@@ -22,7 +20,7 @@
             android:tag="返回" />
 
         <TextView
-            android:id="@+id/title"
+            android:id="@+id/title_bottom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
@@ -30,7 +28,6 @@
             android:textSize="@dimen/dp_18" />
 
         <ImageView
-            android:id="@+id/share_icon_white"
             android:layout_width="@dimen/dp_40"
             android:layout_height="@dimen/dp_38"
             android:layout_alignParentRight="true"
@@ -42,31 +39,47 @@
 
     </RelativeLayout>
 
-    <!--<RelativeLayout-->
-        <!--android:id="@+id/video_layout"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_centerInParent="true" />-->
+    <RelativeLayout
+        android:id="@+id/top_bar_white"
+        android:layout_width="match_parent"
+        android:alpha="0"
+        android:layout_height="@dimen/topbar_height"
+        android:background="@color/white">
 
+        <ImageView
+            android:id="@+id/back_white"
+            android:layout_width="@dimen/dp_34"
+            android:layout_height="@dimen/dp_34"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:padding="@dimen/dp_10"
+            android:src="@drawable/icon_course_back"
+            android:tag="返回" />
 
-    <!--<amodule.lesson.view.StudySyllabusView-->
-        <!--android:id="@+id/view_syllabus"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_above="@+id/ll_bottom"-->
-        <!--android:layout_marginBottom="@dimen/dp_30" />-->
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="@color/ysf_black_333333"
+            android:textSize="@dimen/dp_18" />
 
-    <!--<LinearLayout-->
-        <!--android:id="@+id/ll_bottom"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="@dimen/dp_49"-->
-        <!--android:layout_alignParentBottom="true"-->
-        <!--android:gravity="center_vertical"-->
-        <!--android:orientation="horizontal" />-->
+        <ImageView
+            android:id="@+id/share_icon_white"
+            android:layout_width="@dimen/dp_40"
+            android:layout_height="@dimen/dp_38"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/dp_10"
+            android:padding="@dimen/dp_10"
+            android:src="@drawable/icon_course_share"
+            android:tag="分享" />
+
+    </RelativeLayout>
 
     <amodule.lesson.view.VerticalViewPager
         android:id="@+id/viewpager"
-        android:layout_below="@+id/top_bar_black"
+        android:layout_below="@+id/top_bar_white"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

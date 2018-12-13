@@ -21,7 +21,8 @@ import third.video.VideoPlayerController;
 public class StudyFirstPager extends RelativeLayout {
 
     private StudySyllabusView mStudySyllabusView;
-    private LinearLayout mBottomLableLayout;
+    private LinearLayout mBtnLayout;
+    private LinearLayout mBtnBottomLayout;
     private VideoPlayerController mVideoPlayerController;
     //    private int mGroupSelectIndex = 0;
 //    private int mChildSelectIndex = -1;
@@ -29,6 +30,10 @@ public class StudyFirstPager extends RelativeLayout {
     private RelativeLayout videoLayout;
     private int mGroupSelectIndex;
     private int mChildSelectIndex;
+
+    public LinearLayout getmBtnLayout() {
+        return mBtnLayout;
+    }
 
     public StudyFirstPager(Context context) {
         this(context, null);
@@ -42,7 +47,8 @@ public class StudyFirstPager extends RelativeLayout {
         super(context, attrs, defStyleAttr);
         this.mActivity = (Activity) context;
         LayoutInflater.from(context).inflate(R.layout.view_first_pager, this, true);
-        mBottomLableLayout = findViewById(R.id.ll_bottom);
+        mBtnLayout = findViewById(R.id.ll_btn_top);
+        mBtnBottomLayout = findViewById(R.id.ll_btn_bottom);
         mStudySyllabusView = findViewById(R.id.view_syllabus);
         videoLayout = findViewById(R.id.video_layout);
     }
@@ -66,7 +72,7 @@ public class StudyFirstPager extends RelativeLayout {
                 layoutParams.height = H;
                 break;
             case 2://全屏
-                layoutParams.addRule(RelativeLayout.ABOVE, R.id.ll_bottom);
+                layoutParams.addRule(RelativeLayout.ABOVE, R.id.ll_btn_top);
                 mStudySyllabusView.setChangeTvColer(true);
                 break;
         }
@@ -78,24 +84,32 @@ public class StudyFirstPager extends RelativeLayout {
 
 
         List<Map<String, String>> labelDataList = StringManager.getListMapByJson(mData.get("lessonInfo").get("labelData"));
-        if (mBottomLableLayout != null && mBottomLableLayout.getChildCount() > 0) {
-            mBottomLableLayout.removeAllViews();
+        if (mBtnLayout != null && mBtnLayout.getChildCount() > 0) {
+            mBtnLayout.removeAllViews();
+        }
+        if (mBtnBottomLayout != null && mBtnBottomLayout.getChildCount() > 0) {
+            mBtnBottomLayout.removeAllViews();
         }
         for (int i = 0; i < labelDataList.size(); i++) {
-            View lableView = createLableView(labelDataList.get(i), mBottomLableLayout, i);
-            mBottomLableLayout.addView(lableView);
+            View lableView = createLableView(labelDataList.get(i), mBtnLayout, i,false);
+            mBtnLayout.addView(lableView);
+            View lableViewBottom = createLableView(labelDataList.get(i), mBtnBottomLayout, i,true);
+            mBtnBottomLayout.addView(lableViewBottom);
         }
 //        initCourseListData(mData.get("syllabusInfo"));
         mStudySyllabusView.setData(mData.get("syllabusInfo"), mGroupSelectIndex, mChildSelectIndex);
     }
 
 
-    private View createLableView(Map<String, String> stringStringMap, LinearLayout parent, int i) {
+    private View createLableView(Map<String, String> stringStringMap, LinearLayout parent, int i, boolean isTop) {
         View view = LayoutInflater.from(mActivity).inflate(R.layout.view_study_bottom_lable_item, parent, false);
         if (i == 0) {
             view.findViewById(R.id.lable_line).setVisibility(View.GONE);
         }
         TextView textView = view.findViewById(R.id.label_text);
+        if (!isTop){
+            textView.setTextColor(getResources().getColor(R.color.ysf_black_333333));
+        }
         String title = stringStringMap.get("title");
         textView.setText(title);
         // TODO: 2018/12/7

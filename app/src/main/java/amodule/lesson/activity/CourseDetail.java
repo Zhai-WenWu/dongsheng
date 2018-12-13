@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.webkit.WebView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.xiangha.R;
@@ -58,6 +60,7 @@ public class CourseDetail extends BaseAppCompatActivity {
     private VerticalAdapter mVerticalAdapter;
     private StudyFirstPager studyFirstPager;
     private StudySecondPager studySecondPager;
+    private LinearLayout mFirstPageBottomBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +81,8 @@ public class CourseDetail extends BaseAppCompatActivity {
         viewPager = findViewById(R.id.viewpager);
         studyFirstPager = new StudyFirstPager(CourseDetail.this);
         studySecondPager = new StudySecondPager(CourseDetail.this);
+        mFirstPageBottomBtn = studyFirstPager.getmBtnLayout();
+        //底部按钮点击回调
         studyFirstPager.setOnClickBottomView(new StudyFirstPager.OnClickBottomView() {
             @Override
             public void clickView(int i) {
@@ -86,11 +91,12 @@ public class CourseDetail extends BaseAppCompatActivity {
             }
         });
 
+        //滑动冲突解决
         boolean[] canScroll = new boolean[1];
         canScroll[0] = true;
         studySecondPager.getSecondPagerWebAdapter().setmScrollInterface(new XHWebView.ScrollInterface() {
             @Override
-            public void onSChanged(WebView webView,int l, int t, int oldl, int oldt) {
+            public void onSChanged(WebView webView, int l, int t, int oldl, int oldt) {
                 if (webView.getScrollY() == 0) {
                     canScroll[0] = true;
                 } else {
@@ -98,15 +104,14 @@ public class CourseDetail extends BaseAppCompatActivity {
                 }
             }
         });
-
-        viewPager.setOnCanScroll(new VerticalViewPager.OnCanScroll() {
+        viewPager.setWebScrollTop(new VerticalViewPager.OnWebScrollTop() {
             @Override
             public boolean canScroll() {
                 return canScroll[0];
             }
         });
 
-
+        //底部按钮悬浮展示
         int bottomBtnHeight = Tools.getDimen(this, R.dimen.dp_49);
         viewPager.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -116,17 +121,22 @@ public class CourseDetail extends BaseAppCompatActivity {
                 viewPager.setScale(i);
             }
         });
+
         mVerticalAdapter = new VerticalAdapter(this);
         loadManager.setLoading(v -> loadInfo());
     }
 
 
     public void initTitle() {
+        RelativeLayout topBarWhite = findViewById(R.id.top_bar_white);
         ImageView shareBtn = findViewById(R.id.share_icon_white);
         shareBtn.setVisibility(View.VISIBLE);
-        TextView titleV = (TextView) findViewById(R.id.title);
-        titleV.setMaxWidth(ToolsDevice.getWindowPx(this).widthPixels - ToolsDevice.dp2px(this, 45 + 40));
-        titleV.setText(mTopInfoMap.get("name"));
+        TextView titleTv = (TextView) findViewById(R.id.title);
+        TextView titleBottomTv = (TextView) findViewById(R.id.title_bottom);
+        titleTv.setMaxWidth(ToolsDevice.getWindowPx(this).widthPixels - ToolsDevice.dp2px(this, 45 + 40));
+        titleTv.setText(mTopInfoMap.get("name"));
+        titleBottomTv.setMaxWidth(ToolsDevice.getWindowPx(this).widthPixels - ToolsDevice.dp2px(this, 45 + 40));
+        titleBottomTv.setText(mTopInfoMap.get("name"));
         shareMap = StringManager.getFirstMap(mTopInfoMap.get("shareData"));
         OnClickListenerStat shareClick = new OnClickListenerStat() {
             @Override
@@ -138,11 +148,35 @@ public class CourseDetail extends BaseAppCompatActivity {
         findViewById(R.id.back_white).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int showPosition = viewPager.getShowPosition();
-                if (showPosition > 0) {
+                if (viewPager.getShowPosition() > 0) {
                     viewPager.setCurrentItem(0, true);
                 } else {
                     finish();
+                }
+            }
+        });
+
+        //title渐变
+        viewPager.setScrollDistance(new VerticalViewPager.OnScrollDistance() {
+            @Override
+            public void scrollDistance(float distance) {
+                if (distance > 0 && distance < 1) {
+                    topBarWhite.setAlpha(distance);
+                    mFirstPageBottomBtn.setAlpha(distance);
+                }
+            }
+
+            @Override
+            public void scrollEnd(int state) {
+                if (state == 0) {
+                    int showPosition = viewPager.getShowPosition();
+                    if (showPosition == 0) {
+                        topBarWhite.setAlpha(0);
+                        mFirstPageBottomBtn.setAlpha(0);
+                    } else if (showPosition == 1) {
+                        topBarWhite.setAlpha(1);
+                        mFirstPageBottomBtn.setAlpha(1);
+                    }
                 }
             }
         });

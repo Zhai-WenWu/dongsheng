@@ -19,7 +19,6 @@ public class VerticalViewPager extends ViewPager {
     int lastX = 0;
     int lastY = 0;
     boolean intercepted;
-    private boolean mWebScrollTop;
 
     public int getShowPosition() {
         return showPosition;
@@ -42,7 +41,7 @@ public class VerticalViewPager extends ViewPager {
 
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
+                mOnScrollDistance.scrollDistance(positionOffset);
             }
 
             @Override
@@ -52,7 +51,7 @@ public class VerticalViewPager extends ViewPager {
 
             @Override
             public void onPageScrollStateChanged(int state) {
-
+                mOnScrollDistance.scrollEnd(state);
             }
         });
     }
@@ -61,15 +60,10 @@ public class VerticalViewPager extends ViewPager {
         transform = (1 - scale);
     }
 
-    public void setWebScrollTop(boolean webScrollTop) {
-        this.mWebScrollTop = webScrollTop;
-    }
-
     private class VerticalPageTransformer implements ViewPager.PageTransformer {
 
         @Override
         public void transformPage(View view, float position) {
-
             if ((position > -transform && position < 0) || position > (1 - transform)) {
                 float yPosition = position * view.getHeight();
                 view.setTranslationY(yPosition);
@@ -90,9 +84,7 @@ public class VerticalViewPager extends ViewPager {
 
         float newX = (ev.getY() / height) * width;
         float newY = (ev.getX() / width) * height;
-
         ev.setLocation(newX, newY);
-
         return ev;
     }
 
@@ -112,8 +104,7 @@ public class VerticalViewPager extends ViewPager {
                 lastX = Math.abs(x - dealtX);
                 lastY = Math.abs(y - dealtY);
                 int y2 = y - dealtY;
-                Log.i("zww", "getShowPosition()" + getShowPosition());
-                if (lastY > lastX && ((getShowPosition() == 0) || getShowPosition() == 1 && y2 > 0 && mOnCanScroll != null && mOnCanScroll.canScroll())) {
+                if (lastY > lastX && ((getShowPosition() == 0) || getShowPosition() == 1 && y2 > 0 && mOnWebScrollTop != null && mOnWebScrollTop.canScroll())) {
                     intercepted = true;
                 } else {
                     intercepted = false;
@@ -129,14 +120,25 @@ public class VerticalViewPager extends ViewPager {
         return super.onTouchEvent(swapXY(ev));
     }
 
-    private OnCanScroll mOnCanScroll;
+    private OnWebScrollTop mOnWebScrollTop;
 
-    public void setOnCanScroll(OnCanScroll mOnCanScroll) {
-        this.mOnCanScroll = mOnCanScroll;
+    public void setWebScrollTop(OnWebScrollTop mOnWebScrollTop) {
+        this.mOnWebScrollTop = mOnWebScrollTop;
     }
 
-    public interface OnCanScroll {
+    public interface OnWebScrollTop {
         boolean canScroll();
+    }
+
+    private OnScrollDistance mOnScrollDistance;
+
+    public void setScrollDistance(OnScrollDistance onScrollDistance) {
+        this.mOnScrollDistance = onScrollDistance;
+    }
+
+    public interface OnScrollDistance {
+        void scrollDistance(float distance);
+        void scrollEnd(int state);
     }
 
 }
