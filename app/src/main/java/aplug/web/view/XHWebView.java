@@ -3,7 +3,6 @@ package aplug.web.view;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.webkit.WebView;
 
 
@@ -108,26 +107,19 @@ public class XHWebView extends WebView {
     protected void onScrollChanged(int l, int t, int oldl, int oldt) {
         super.onScrollChanged(l, t, oldl, oldt);
 
-        float webcontent = getContentHeight() * getScale();// webview的高度
-        float webnow = getHeight() + getScrollY();// 当前webview的高度
-        if (getScrollY() == 0) {
-            scrollChanged.scrollTop();
-        } else {
-            scrollChanged.scroll();
-        }
+        scrollInterface.onSChanged(this,l, t, oldl, oldt);
 
     }
 
-    ScrollChanged scrollChanged;
+    ScrollInterface scrollInterface;
 
-    public void setScrollChanged(ScrollChanged scrollChanged) {
-        this.scrollChanged = scrollChanged;
+    public void setScrollChanged(ScrollInterface scrollChanged) {
+        scrollInterface = scrollChanged;
     }
 
-    public interface ScrollChanged {
-        void scrollTop();
+    public interface ScrollInterface {
 
-        void scroll();
+        public void onSChanged(WebView webView,int l, int t, int oldl, int oldt);
     }
 
 }

@@ -2,26 +2,16 @@ package amodule.lesson.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.v4.view.ViewPager;
 import android.util.ArrayMap;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
+import android.webkit.WebView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.mob.tools.RxMob;
 import com.xiangha.R;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import acore.logic.stat.intefaces.OnClickListenerStat;
@@ -95,6 +85,27 @@ public class CourseDetail extends BaseAppCompatActivity {
                 studySecondPager.setSelect(i);
             }
         });
+
+        boolean[] canScroll = new boolean[1];
+        canScroll[0] = true;
+        studySecondPager.getSecondPagerWebAdapter().setmScrollInterface(new XHWebView.ScrollInterface() {
+            @Override
+            public void onSChanged(WebView webView,int l, int t, int oldl, int oldt) {
+                if (webView.getScrollY() == 0) {
+                    canScroll[0] = true;
+                } else {
+                    canScroll[0] = false;
+                }
+            }
+        });
+
+        viewPager.setOnCanScroll(new VerticalViewPager.OnCanScroll() {
+            @Override
+            public boolean canScroll() {
+                return canScroll[0];
+            }
+        });
+
 
         int bottomBtnHeight = Tools.getDimen(this, R.dimen.dp_49);
         viewPager.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {

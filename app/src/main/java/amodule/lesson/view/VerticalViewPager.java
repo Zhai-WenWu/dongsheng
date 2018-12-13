@@ -111,10 +111,24 @@ public class VerticalViewPager extends ViewPager {
             case MotionEvent.ACTION_MOVE:
                 lastX = Math.abs(x - dealtX);
                 lastY = Math.abs(y - dealtY);
-                if (lastX >= lastY && !mWebScrollTop) {
-                    intercepted = false;
-                } else {
-                    intercepted = true;
+                int y2 = y - dealtY;
+                Log.i("zww", "getShowPosition()" + getShowPosition());
+                if (getShowPosition() == 0) {//第一页
+                    if (lastY > lastX) {//第1页纵向滑动拦截
+                        intercepted = true;
+                    }else {
+                        intercepted = false;
+                    }
+                } else if (getShowPosition() == 1) {//第2页
+                    if (lastX > lastY) {//第2页横向滑动不拦截
+                        intercepted = false;
+                    } else {//第2页纵向滑动
+                        if (y2 > 0&& mOnCanScroll != null && mOnCanScroll.canScroll()) {//web到顶继续下滑
+                            intercepted = true;
+                        } else {
+                            intercepted = false;
+                        }
+                    }
                 }
                 break;
         }
@@ -125,6 +139,16 @@ public class VerticalViewPager extends ViewPager {
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
         return super.onTouchEvent(swapXY(ev));
+    }
+
+    private OnCanScroll mOnCanScroll;
+
+    public void setOnCanScroll(OnCanScroll mOnCanScroll) {
+        this.mOnCanScroll = mOnCanScroll;
+    }
+
+    public interface OnCanScroll {
+        boolean canScroll();
     }
 
 }
