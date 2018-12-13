@@ -1446,4 +1446,12 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
     public void setOnSeekToOverCallback(OnSeekToOverCallback onSeekToOverCallback) {
         mOnSeekToOverCallback = onSeekToOverCallback;
     }
+
+    public void setBottomContainerBottomMargin(int bottomMargin){
+        if(mBottomContainer != null){
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mBottomContainer.getLayoutParams();
+            layoutParams.bottomMargin = bottomMargin;
+            mBottomContainer.setLayoutParams(layoutParams);
+        }
+    }
 }
