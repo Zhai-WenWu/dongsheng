@@ -2,6 +2,7 @@ package amodule.lesson.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.widget.ExpandableListView;
 
 import com.xiangha.R;
@@ -71,7 +72,7 @@ public class CourseList extends BaseAppCompatActivity {
         ArrayList<Map<String, String>> info = StringManager.getListMapByJson(mCourseListMap.get("chapterList"));
 //        ArrayList<Map<String, String>> info = new ArrayList<>();
 //        info.add(info1.get(0));
-        if (chapterNum.equals("1")) {//只有一章
+        if (TextUtils.equals("1",chapterNum)) {//只有一章
             initOne(info);
         } else {//多章
             initMore(info);
