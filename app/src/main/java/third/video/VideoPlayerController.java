@@ -755,6 +755,12 @@ public class VideoPlayerController {
         }
     }
 
+    public void setBottomContainerBottomMargin(int bottomMargin){
+        if(videoPlayer != null){
+            videoPlayer.setBottomContainerBottomMargin(bottomMargin);
+        }
+    }
+
     //是否显示广告
     private boolean isShowAd=false;
 
