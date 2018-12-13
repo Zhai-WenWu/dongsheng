@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import acore.tools.StringManager;
+import acore.tools.Tools;
 import acore.tools.ToolsDevice;
 import third.video.VideoPlayerController;
 
@@ -25,12 +26,10 @@ public class StudyFirstPager extends RelativeLayout {
     private LinearLayout mBtnLayout;
     private LinearLayout mBtnBottomLayout;
     private VideoPlayerController mVideoPlayerController;
-    //    private int mGroupSelectIndex = 0;
-//    private int mChildSelectIndex = -1;
     private Activity mActivity;
     private RelativeLayout videoLayout;
-    private int mGroupSelectIndex;
     private int mChildSelectIndex;
+    private RelativeLayout mVideoRv;
 
     public LinearLayout getBtnLayout() {
         return mBtnLayout;
@@ -56,36 +55,39 @@ public class StudyFirstPager extends RelativeLayout {
         mBtnBottomLayout = findViewById(R.id.ll_btn_bottom);
         mStudySyllabusView = findViewById(R.id.view_syllabus);
         videoLayout = findViewById(R.id.video_layout);
+        mVideoRv = findViewById(R.id.rv_video);
     }
 
-    public void initData(Map<String, Map<String, String>> mData, int groupSelectIndex, int childSelectIndex) {
-        this.mGroupSelectIndex = groupSelectIndex;
+    public void initData(Map<String, Map<String, String>> mData, int childSelectIndex) {
         this.mChildSelectIndex = childSelectIndex;
+        Map<String, String> video = StringManager.getFirstMap(mData.get("lessonInfo").get("video"));
+        mVideoPlayerController = new VideoPlayerController(mActivity, videoLayout, video.get("img"));
+        int urlWidth = Integer.parseInt(video.get("width"));
+        int urlHeight = Integer.parseInt(video.get("height"));
+        String ratio = video.get("ratio");
+        int DW = ToolsDevice.getWindowPx(mActivity).widthPixels;
+
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) videoLayout.getLayoutParams();
-        int type = 0;
-        int H;
-        switch (type) {
-            case 0://长方形
-                double i = ((double) 211) / 375;
-                int DW = ToolsDevice.getWindowPx(mActivity).widthPixels;
-                H = (int) (DW * i);
-                layoutParams.height = H;
-                layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
-                break;
-            case 1://正方形
-                H = ToolsDevice.getWindowPx(mActivity).widthPixels;
-                layoutParams.height = H;
-                break;
-            case 2://全屏
-                layoutParams.addRule(RelativeLayout.ABOVE, R.id.ll_btn_top);
-                mStudySyllabusView.setChangeTvColer(true);
-                break;
-        }
+//        if (ratio.equals("1:1") || urlHeight == urlWidth) {//正方形
+//            layoutParams.height = DW;
+//        } else if (urlHeight < urlWidth) {//长方形
+//            double scale = ((double) 9) / 16;
+//            layoutParams.height = (int) (DW * scale);
+//            mVideoPlayerController.hideFullScreen();
+//            layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+//        } else {//全屏幕
+//            layoutParams.addRule(RelativeLayout.ABOVE, R.id.ll_btn_top);
+//            mStudySyllabusView.setChangeTvColer(true);
+//            mVideoPlayerController.hideFullScreen();
+//            mVideoPlayerController.setBottomContainerBottomMargin(Tools.getDimen(mActivity, R.dimen.dp_145));
+//        }
+        layoutParams.addRule(RelativeLayout.ABOVE, R.id.ll_btn_top);
+        mStudySyllabusView.setChangeTvColer(true);
+        mVideoPlayerController.hideFullScreen();
+        mVideoPlayerController.setBottomContainerBottomMargin(Tools.getDimen(mActivity, R.dimen.dp_145));
         videoLayout.setLayoutParams(layoutParams);
 
-        // TODO: 2018/12/7
-        mVideoPlayerController = new VideoPlayerController(mActivity, videoLayout, "https://ws1.sinaimg.cn/large/0065oQSqgy1fxno2dvxusj30sf10nqcm.jpg");
-        mVideoPlayerController.setVideoUrl("http://221.228.226.23/11/t/j/v/b/tjvbwspwhqdmgouolposcsfafpedmb/sh.yinyuetai.com/691201536EE4912BF7E4F1E2C67B8119.mp4");
+        mVideoPlayerController.setVideoUrl(video.get("url"));
         mVideoPlayerController.setOnPlayingCompletionListener(new VideoPlayerController.OnPlayingCompletionListener() {
             @Override
             public void onPlayingCompletion() {
@@ -106,11 +108,12 @@ public class StudyFirstPager extends RelativeLayout {
             View lableViewBottom = createLableView(labelDataList.get(i), mBtnBottomLayout, i, false);
             mBtnBottomLayout.addView(lableViewBottom);
         }
-        mStudySyllabusView.setData(mData.get("syllabusInfo"), mGroupSelectIndex, mChildSelectIndex);
+        mStudySyllabusView.setData(mData.get("syllabusInfo"), mChildSelectIndex);
     }
 
 
-    private View createLableView(Map<String, String> stringStringMap, LinearLayout parent, int i, boolean isTop) {
+    private View createLableView(Map<String, String> stringStringMap, LinearLayout parent,
+                                 int i, boolean isTop) {
         View view;
         if (isTop) {
             view = LayoutInflater.from(mActivity).inflate(R.layout.view_study_top_lable_item, parent, false);
@@ -128,30 +131,10 @@ public class StudyFirstPager extends RelativeLayout {
         TextView textView = view.findViewById(R.id.label_text);
         String title = stringStringMap.get("title");
         textView.setText(title);
-        // TODO: 2018/12/7
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onClickBottomView.clickView(i);
-                switch (title) {
-                    case "学习要点":
-//                        Intent StudyPointIntent = new Intent(CourseDetail.this, StudyPoint.class);
-//                        StudyPointIntent.putExtra(StudyPoint.EXTRA_CODE, mCode);
-//                        StudyPointIntent.putExtra(StudyIntroduction.EXTRA_TITLE, title);
-//                        startActivity(StudyPointIntent);
-                        break;
-                    case "常见问题":
-//                        Intent StudyAskIntent = new Intent(CourseDetail.this, StudyAsk.class);
-//                        StudyAskIntent.putExtra(StudyIntroduction.EXTRA_TITLE, title);
-//                        startActivity(StudyAskIntent);
-                        break;
-                    case "课程简介":
-//                        Intent StudyIntroductionIntent = new Intent(CourseDetail.this, StudyIntroduction.class);
-//                        StudyIntroductionIntent.putExtra(StudyIntroduction.EXTRA_TITLE, title);
-//                        StudyIntroductionIntent.putExtra(StudyIntroduction.EXTRA_DESC, mTopInfoMap.get("desc"));
-//                        startActivity(StudyIntroductionIntent);
-                        break;
-                }
             }
         });
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) view.getLayoutParams();

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.util.ArrayMap;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -81,14 +80,14 @@ public class StudySyllabusView extends RelativeLayout {
         rvHorizatolListView.setOnItemClickListener(new RvListView.OnItemClickListener() {
             @Override
             public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
-                onSyllabusSelect.onSelect(position);
+                onSyllabusSelect.onSelect(position,mapList.get(position).get("code"));
             }
         });
     }
 
-    public void setData(Map<String, String> courseListMap, int groupIndex, int childIndex) {
+    public void setData(Map<String, String> courseListMap, int childIndex) {
         ArrayList<Map<String, String>> info = StringManager.getListMapByJson(courseListMap.get("chapterList"));
-        Map<String, String> lessonListMap = info.get(groupIndex);//第几章
+        Map<String, String> lessonListMap = info.get(0);//第几章
         mapList = StringManager.getListMapByJson(lessonListMap.get("lessonList"));
         syllabusAdapter.setData(mapList);
         this.mSelectIndex = childIndex;
@@ -97,17 +96,17 @@ public class StudySyllabusView extends RelativeLayout {
 
         int size = mapList.size();
         StringBuilder stringBuilder = new StringBuilder(String.valueOf(size) + "讲");
-        if (size > 3) {
-            stringBuilder.append(">");
-            classNumTv.setEnabled(true);
-        } else {
-            classNumTv.setEnabled(false);
-        }
-        if (size > 1) {
-            setVisibility(VISIBLE);
-        } else {
-            setVisibility(GONE);
-        }
+//        if (size > 3) {
+//            stringBuilder.append(">");
+//            classNumTv.setEnabled(true);
+//        } else {
+//            classNumTv.setEnabled(false);
+//        }
+//        if (size > 1) {
+//            setVisibility(VISIBLE);
+//        } else {
+//            setVisibility(GONE);
+//        }
         classNumTv.setText(stringBuilder);
         titleTv.setText(courseListMap.get("title"));
     }
@@ -155,6 +154,6 @@ public class StudySyllabusView extends RelativeLayout {
     }
 
     public interface OnSyllabusSelect {
-        void onSelect(int position);
+        void onSelect(int position, String code);
     }
 }

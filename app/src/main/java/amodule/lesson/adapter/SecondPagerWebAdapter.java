@@ -18,8 +18,7 @@ import aplug.web.view.XHWebView;
 
 public class SecondPagerWebAdapter extends PagerAdapter {
     private Activity mActivity;
-    private List<String> mData = new ArrayList<>();
-    public ViewHolder viewHolder;
+    private List<String> mData;
 
     public SecondPagerWebAdapter(Context activity) {
         this.mActivity = (Activity) activity;
@@ -31,12 +30,7 @@ public class SecondPagerWebAdapter extends PagerAdapter {
 
     @Override
     public int getCount() {
-//        return mData.size() > 0 ? mData.size() : 0;
-        return 3;
-    }
-
-    public ViewHolder getViewHolder() {
-        return viewHolder;
+        return mData != null && mData.size() > 0 ? mData.size() : 0;
     }
 
     @Override
@@ -46,29 +40,20 @@ public class SecondPagerWebAdapter extends PagerAdapter {
 
     @Override
     public final Object instantiateItem(ViewGroup container, int position) {
-        View convertView = null;
-        if (mData.size() == 0) {
-            convertView = mActivity.getLayoutInflater().inflate(R.layout.item_course_web, container, false);
-            XHWebView mWebView = convertView.findViewById(R.id.webview);
-            viewHolder = new ViewHolder();
-            viewHolder.mWebView = mWebView;
-            convertView.setTag(viewHolder);
-        } else {
-            viewHolder = (ViewHolder) convertView.getTag();
-        }
-
-        String url = "https://www.baidu.com/";
-        viewHolder.mWebView.loadUrl(url);
-        viewHolder.mWebView.setWebViewClient(new WebViewClient());
-        viewHolder.mWebView.setScrollChanged(new XHWebView.ScrollInterface() {
+        View convertView = mActivity.getLayoutInflater().inflate(R.layout.item_course_web, container, false);
+        XHWebView mWebView = convertView.findViewById(R.id.webview);
+        String url = mData.get(position);
+//        mWebView.loadUrl(url);
+        mWebView.loadUrl("https://www.baidu.com/");
+        mWebView.setWebViewClient(new WebViewClient());
+        mWebView.setScrollChanged(new XHWebView.ScrollInterface() {
             @Override
-            public void onSChanged(WebView webView,int l, int t, int oldl, int oldt) {
-                if(mScrollInterface !=null){
-                    mScrollInterface.onSChanged(webView,l, t, oldl, oldt);
+            public void onSChanged(WebView webView, int l, int t, int oldl, int oldt) {
+                if (mScrollInterface != null) {
+                    mScrollInterface.onSChanged(webView, l, t, oldl, oldt);
                 }
             }
         });
-        ViewHolder finalViewHolder = viewHolder;
         container.addView(convertView);
 
         return convertView;
@@ -86,12 +71,4 @@ public class SecondPagerWebAdapter extends PagerAdapter {
         container.removeView((View) object);
     }
 
-
-    public class ViewHolder {
-        public XHWebView mWebView;
-
-        public XHWebView getmWebView() {
-            return mWebView;
-        }
-    }
 }

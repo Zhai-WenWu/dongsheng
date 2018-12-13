@@ -1452,6 +1452,8 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mBottomContainer.getLayoutParams();
             layoutParams.bottomMargin = bottomMargin;
             mBottomContainer.setLayoutParams(layoutParams);
+            mBottomContainer.requestLayout();
+            mBottomContainer.invalidate();
         }
     }
 }

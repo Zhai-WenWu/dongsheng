@@ -5,6 +5,7 @@
     android:orientation="vertical">
 
     <RelativeLayout
+        android:id="@+id/rv_video"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/ll_btn_top">
@@ -23,6 +24,13 @@
             android:layout_marginBottom="@dimen/dp_30" />
 
     </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:background="@color/black"
+        android:layout_above="@+id/ll_btn_top"
+        android:alpha="0.2"
+        android:layout_height="@dimen/dp_145"/>
 
     <LinearLayout
         android:id="@+id/ll_btn_bottom"

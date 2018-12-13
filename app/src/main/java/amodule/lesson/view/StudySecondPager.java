@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import acore.tools.StringManager;
 import amodule.lesson.adapter.SecondPagerWebAdapter;
 import aplug.web.view.XHWebView;
 
@@ -26,6 +27,7 @@ public class StudySecondPager extends RelativeLayout {
     private XHWebView mWebView;
     private ViewPager mViewPager;
     private SecondPagerWebAdapter secondPagerWebAdapter;
+    private List<String> mDataList = new ArrayList<>();
 
     public ViewPager getViewPager() {
         return mViewPager;
@@ -50,8 +52,12 @@ public class StudySecondPager extends RelativeLayout {
     }
 
     public void initData(Map<String, Map<String, String>> mData) {
-//        mViewPager.setOffscreenPageLimit(2);
-//        mViewPager.setAdapter(secondPagerWebAdapter);
+        List<Map<String, String>> labelDataList = StringManager.getListMapByJson(mData.get("lessonInfo").get("labelData"));
+        for (Map<String, String> label : labelDataList) {
+            mDataList.add(label.get("url"));
+        }
+        secondPagerWebAdapter.setData(mDataList);
+        secondPagerWebAdapter.notifyDataSetChanged();
     }
 
     public void setSelect(int currentItem) {

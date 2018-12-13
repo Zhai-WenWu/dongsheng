@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.xiangha.R;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 import acore.logic.stat.intefaces.OnClickListenerStat;
@@ -68,10 +69,9 @@ public class CourseDetail extends BaseAppCompatActivity {
     }
 
     private void initExtraData() {
-        mChapterCode = getIntent().getStringExtra(EXTRA_CHAPTER_CODE);
+//        mChapterCode = getIntent().getStringExtra(EXTRA_CHAPTER_CODE);
 //        mCode = getIntent().getStringExtra(EXTRA_CODE);
-        mGroupSelectIndex = getIntent().getIntExtra(EXTRA_GROUP, 0);
-        mChildSelectIndex = getIntent().getIntExtra(EXTRA_CHILD, -1);
+//        mGroupSelectIndex = getIntent().getIntExtra(EXTRA_GROUP, 0);
     }
 
     private void initView() {
@@ -244,11 +244,20 @@ public class CourseDetail extends BaseAppCompatActivity {
             public void loaded(int i, String s, Object o) {
                 if (i >= ReqInternet.REQ_OK_STRING) {
                     Map<String, String> resultMap = StringManager.getFirstMap(o);
+                    Map<String, String> lesson = StringManager.getListMapByJson(resultMap.get("chapterList")).get(0);
+                    ArrayList<Map<String, String>> lessonList = StringManager.getListMapByJson(lesson.get("chapterList"));
+                    for (int j = 0; j < lessonList.size(); j++) {
+                        if (lessonList.get(i).get("code").equals(mCode)) {
+                            mChildSelectIndex = i;
+                        }
+                    }
+
+
                     mData.put("syllabusInfo", resultMap);
                     viewPager.setAdapter(mVerticalAdapter);
                     mVerticalAdapter.setData(mData);
 
-                    studyFirstPager.initData(mData, mGroupSelectIndex, mChildSelectIndex);
+                    studyFirstPager.initData(mData, mChildSelectIndex);
                     mVideoPlayerController = studyFirstPager.getVideoPlayerController();
                     studySecondPager.initData(mData);
 
@@ -268,8 +277,8 @@ public class CourseDetail extends BaseAppCompatActivity {
         //课程横划点击回调
         mStudySyllabusView.setOnSyllabusSelect(new StudySyllabusView.OnSyllabusSelect() {
             @Override
-            public void onSelect(int position) {
-//                    mCode = data.getStringExtra("code");
+            public void onSelect(int position, String code) {
+                mCode = code;
                 mChildSelectIndex = position;
                 loadInfo();
             }
@@ -280,9 +289,12 @@ public class CourseDetail extends BaseAppCompatActivity {
             public void onClick(View v) {
                 //课程页
                 Intent intent = new Intent(CourseDetail.this, CourseList.class);
-                intent.putExtra(CourseDetail.EXTRA_GROUP, mGroupSelectIndex);
-                intent.putExtra(CourseDetail.EXTRA_CHILD, mChildSelectIndex);
+//                intent.putExtra(CourseDetail.EXTRA_GROUP, mGroupSelectIndex);
+//                intent.putExtra(CourseDetail.EXTRA_CHILD, mChildSelectIndex);
                 intent.putExtra(CourseList.EXTRA_FROM_STUDY, true);
+                // TODO: 2018/12/13  
+                intent.putExtra(CourseList.EXTRA_CODE, mCode);
+                intent.putExtra(CourseList.EXTRA_TYPE, "2");
                 startActivityForResult(intent, SELECT_COURSE);
             }
         });
@@ -295,8 +307,7 @@ public class CourseDetail extends BaseAppCompatActivity {
         if (resultCode == RESULT_OK && data != null) {
             switch (requestCode) {
                 case SELECT_COURSE:
-//                    mCode = data.getStringExtra("code");
-                    mGroupSelectIndex = data.getIntExtra(EXTRA_GROUP, 0);
+                    mCode = data.getStringExtra("code");
                     mChildSelectIndex = data.getIntExtra(EXTRA_CHILD, -1);
                     loadInfo();
                     break;

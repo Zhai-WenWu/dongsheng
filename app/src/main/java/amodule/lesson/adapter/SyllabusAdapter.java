@@ -16,7 +16,6 @@ import java.util.List;
 
 public class SyllabusAdapter extends BaseExpandableListAdapter {
     private Activity mActivity;
-    //    public String[] groupList = {"西游记", "水浒传", "三国演义", "红楼梦", "黑客帝国", "后天", "2013", "源代码", "速度与激情"};
     private List<String> groupList = new ArrayList<>();
     private List<List<String>> childList = new ArrayList<>();
     private int mChildSelectIndex;
