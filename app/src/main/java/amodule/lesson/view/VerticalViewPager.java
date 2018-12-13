@@ -111,10 +111,12 @@ public class VerticalViewPager extends ViewPager {
             case MotionEvent.ACTION_MOVE:
                 lastX = Math.abs(x - dealtX);
                 lastY = Math.abs(y - dealtY);
-                if (lastX >= lastY && !mWebScrollTop) {
-                    intercepted = false;
-                } else {
+                int y2 = y - dealtY;
+                Log.i("zww", "getShowPosition()" + getShowPosition());
+                if (lastY > lastX && ((getShowPosition() == 0) || getShowPosition() == 1 && y2 > 0 && mOnCanScroll != null && mOnCanScroll.canScroll())) {
                     intercepted = true;
+                } else {
+                    intercepted = false;
                 }
                 break;
         }
@@ -125,6 +127,16 @@ public class VerticalViewPager extends ViewPager {
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
         return super.onTouchEvent(swapXY(ev));
+    }
+
+    private OnCanScroll mOnCanScroll;
+
+    public void setOnCanScroll(OnCanScroll mOnCanScroll) {
+        this.mOnCanScroll = mOnCanScroll;
+    }
+
+    public interface OnCanScroll {
+        boolean canScroll();
     }
 
 }
