@@ -61,6 +61,7 @@ public class CourseDetail extends BaseAppCompatActivity {
     private StudySecondPager studySecondPager;
     private LinearLayout mFirstPageBottomBtn;
     private boolean mLoadAgain;
+    private int mSecondSelectTndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +107,7 @@ public class CourseDetail extends BaseAppCompatActivity {
             }
         });
         studySecondPager.getViewPager().addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
@@ -113,6 +115,7 @@ public class CourseDetail extends BaseAppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
+                mSecondSelectTndex = position;
                 for (int j = 0; j < mFirstPageBottomBtn.getChildCount(); j++) {
                     if (j == position)
                         continue;
@@ -120,7 +123,6 @@ public class CourseDetail extends BaseAppCompatActivity {
                 }
                 mFirstPageBottomBtn.getChildAt(position).findViewById(R.id.hor_line).setVisibility(View.VISIBLE);
                 viewPager.setCurrentItem(1, true);
-                studySecondPager.setSelect(position);
             }
 
             @Override
@@ -138,22 +140,24 @@ public class CourseDetail extends BaseAppCompatActivity {
         });
 
         //滑动冲突解决
-        boolean[] canScroll = new boolean[1];
-        canScroll[0] = true;
+        boolean[] canScroll = new boolean[3];
+        for (int i = 0; i < canScroll.length; i++) {
+            canScroll[i] = true;
+        }
         studySecondPager.getSecondPagerWebAdapter().setmScrollInterface(new XHWebView.ScrollInterface() {
             @Override
             public void onSChanged(WebView webView, int l, int t, int oldl, int oldt) {
                 if (webView.getScrollY() == 0) {
-                    canScroll[0] = true;
+                    canScroll[mSecondSelectTndex] = true;
                 } else {
-                    canScroll[0] = false;
+                    canScroll[mSecondSelectTndex] = false;
                 }
             }
         });
         viewPager.setWebScrollTop(new VerticalViewPager.OnWebScrollTop() {
             @Override
             public boolean canScroll() {
-                return canScroll[0];
+                return canScroll[mSecondSelectTndex];
             }
         });
 
