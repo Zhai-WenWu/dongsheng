@@ -45,7 +45,8 @@ public class CourseDetail extends BaseAppCompatActivity {
     public static final String EXTRA_CODE = "code";
     public static final String EXTRA_GROUP = "group";
     public static final String EXTRA_CHILD = "child";
-    private Map<String, String> mTopInfoMap;
+    private Map<String, String> mLessonInfo;
+    private Map<String, String> mSyllabusInfo;
     private VideoPlayerController mVideoPlayerController;
     private String mCode = "0";
     private String mChapterCode = "0";
@@ -59,6 +60,7 @@ public class CourseDetail extends BaseAppCompatActivity {
     private StudyFirstPager studyFirstPager;
     private StudySecondPager studySecondPager;
     private LinearLayout mFirstPageBottomBtn;
+    private boolean mLoadAgain;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +81,16 @@ public class CourseDetail extends BaseAppCompatActivity {
         studyFirstPager = new StudyFirstPager(CourseDetail.this);
         studySecondPager = new StudySecondPager(CourseDetail.this);
         mFirstPageBottomBtn = studyFirstPager.getBtnLayout();
+        mVerticalAdapter = new VerticalAdapter();
+        viewPager.setAdapter(mVerticalAdapter);
+        initCallBack();
+        loadManager.setLoading(v -> loadLessonInfo());
+    }
+
+    /**
+     * 回调处理
+     */
+    private void initCallBack() {
         //底部按钮绑定
         studyFirstPager.setOnClickBottomView(new StudyFirstPager.OnClickBottomView() {
             @Override
@@ -121,7 +133,7 @@ public class CourseDetail extends BaseAppCompatActivity {
             @Override
             public void videoFinish() {
                 viewPager.setCurrentItem(0);
-                loadInfo();
+                loadAgain();
             }
         });
 
@@ -155,12 +167,12 @@ public class CourseDetail extends BaseAppCompatActivity {
                 viewPager.setScale(i);
             }
         });
-
-        mVerticalAdapter = new VerticalAdapter(this);
-        loadManager.setLoading(v -> loadInfo());
     }
 
 
+    /**
+     * 标题栏
+     */
     public void initTitle() {
         RelativeLayout topBarWhite = findViewById(R.id.top_bar_white);
         ImageView shareBtn = findViewById(R.id.share_icon_white);
@@ -168,10 +180,10 @@ public class CourseDetail extends BaseAppCompatActivity {
         TextView titleTv = (TextView) findViewById(R.id.title);
         TextView titleBottomTv = (TextView) findViewById(R.id.title_bottom);
         titleTv.setMaxWidth(ToolsDevice.getWindowPx(this).widthPixels - ToolsDevice.dp2px(this, 45 + 40));
-        titleTv.setText(mTopInfoMap.get("name"));
+        titleTv.setText(mLessonInfo.get("name"));
         titleBottomTv.setMaxWidth(ToolsDevice.getWindowPx(this).widthPixels - ToolsDevice.dp2px(this, 45 + 40));
-        titleBottomTv.setText(mTopInfoMap.get("name"));
-        shareMap = StringManager.getFirstMap(mTopInfoMap.get("shareData"));
+        titleBottomTv.setText(mLessonInfo.get("name"));
+        shareMap = StringManager.getFirstMap(mLessonInfo.get("shareData"));
         //返回按钮控制
         OnClickListenerStat shareClick = new OnClickListenerStat() {
             @Override
@@ -217,6 +229,9 @@ public class CourseDetail extends BaseAppCompatActivity {
         });
     }
 
+    /**
+     * 分享
+     */
     private void doShare() {
         barShare = new BarShare(this, "", "");
         barShare.setShare(BarShare.IMG_TYPE_WEB, shareMap.get("title"), shareMap.get("content"),
@@ -224,27 +239,40 @@ public class CourseDetail extends BaseAppCompatActivity {
         barShare.openShare();
     }
 
-    private void loadInfo() {
+    /**
+     * 学习页数据请求
+     */
+    private void loadLessonInfo() {
         CourseDataController.loadLessonInfoData(mChapterCode, mCode, new InternetCallback() {
             @Override
             public void loaded(int flag, String s, Object o) {
                 if (flag >= ReqInternet.REQ_OK_STRING) {
-                    mTopInfoMap = StringManager.getFirstMap(o);
-                    mData.put("lessonInfo", mTopInfoMap);
+                    mLessonInfo = StringManager.getFirstMap(o);
+                    mData.put("lessonInfo", mLessonInfo);
                     initTitle();
-                    loadCourseListData();
+                    loadManager.loadOver(flag);
+                    if (mLoadAgain){
+                        initSyllabusData();
+                    }else {
+                        loadSyllabusInfo();
+                    }
+                    mLoadAgain = false;
                 }
             }
         });
     }
 
-    private void loadCourseListData() {
+    /**
+     * 课程表数据请求
+     */
+    private void loadSyllabusInfo() {
         CourseDataController.loadCourseListData(mCode, "2", new InternetCallback() {
+
             @Override
             public void loaded(int i, String s, Object o) {
                 if (i >= ReqInternet.REQ_OK_STRING) {
-                    Map<String, String> resultMap = StringManager.getFirstMap(o);
-                    Map<String, String> lesson = StringManager.getListMapByJson(resultMap.get("chapterList")).get(0);
+                    mSyllabusInfo = StringManager.getFirstMap(o);
+                    Map<String, String> lesson = StringManager.getListMapByJson(mSyllabusInfo.get("chapterList")).get(0);
                     ArrayList<Map<String, String>> lessonList = StringManager.getListMapByJson(lesson.get("chapterList"));
                     for (int j = 0; j < lessonList.size(); j++) {
                         if (lessonList.get(i).get("code").equals(mCode)) {
@@ -252,26 +280,25 @@ public class CourseDetail extends BaseAppCompatActivity {
                         }
                     }
 
-
-                    mData.put("syllabusInfo", resultMap);
-                    viewPager.setAdapter(mVerticalAdapter);
-                    mVerticalAdapter.setData(mData);
-
-                    studyFirstPager.initData(mData, mChildSelectIndex);
-                    mVideoPlayerController = studyFirstPager.getVideoPlayerController();
-                    studySecondPager.initData(mData);
-
-                    mVerticalAdapter.setView(studyFirstPager, studySecondPager);
-                    mVerticalAdapter.notifyDataSetChanged();
-                    loadManager.loadOver(i);
-                    initCourseListData(studyFirstPager);
+                    initSyllabusData();
                 }
             }
         });
     }
 
 
-    private void initCourseListData(StudyFirstPager studyFirstPager) {
+    /**
+     * 数据填充
+     */
+    private void initSyllabusData() {
+        mData.put("syllabusInfo", mSyllabusInfo);
+        studyFirstPager.initData(mData, mChildSelectIndex);
+        mVideoPlayerController = studyFirstPager.getVideoPlayerController();
+        studySecondPager.initData(mData);
+
+        mVerticalAdapter.setView(studyFirstPager, studySecondPager);
+        mVerticalAdapter.notifyDataSetChanged();
+
         //课程横划
         StudySyllabusView mStudySyllabusView = studyFirstPager.findViewById(R.id.view_syllabus);
         //课程横划点击回调
@@ -280,7 +307,7 @@ public class CourseDetail extends BaseAppCompatActivity {
             public void onSelect(int position, String code) {
                 mCode = code;
                 mChildSelectIndex = position;
-                loadInfo();
+                loadAgain();
             }
         });
         TextView mClassNumTv = mStudySyllabusView.findViewById(R.id.tv_class_num);
@@ -309,10 +336,19 @@ public class CourseDetail extends BaseAppCompatActivity {
                 case SELECT_COURSE:
                     mCode = data.getStringExtra("code");
                     mChildSelectIndex = data.getIntExtra(EXTRA_CHILD, -1);
-                    loadInfo();
+                    loadAgain();
                     break;
             }
         }
+    }
+
+    /**
+     * 重新请求学习页数据
+     */
+    private void loadAgain() {
+        mData.clear();
+        mLoadAgain = true;
+        loadManager.setLoading(v -> loadLessonInfo());
     }
 
     @Override

@@ -13,23 +13,13 @@ import amodule.lesson.view.StudyFirstPager;
 import amodule.lesson.view.StudySecondPager;
 
 public class VerticalAdapter extends PagerAdapter {
-    private Activity mActivity;
-    private Map<String, Map<String, String>> mData = new ArrayMap<>();
     private StudyFirstPager mStudyFirstPager;
     private StudySecondPager mStudySecondPager;
 
-    public VerticalAdapter(Activity activity) {
-        this.mActivity = activity;
-        mStudySecondPager = new StudySecondPager(mActivity);
-    }
-
-    public void setData(Map<String, Map<String, String>> data) {
-        mData = data;
-    }
 
     @Override
     public int getCount() {
-        return mData.size() > 0 ? 2 : 0;
+        return mStudyFirstPager != null && mStudySecondPager != null ? 2 : 0;
     }
 
 
