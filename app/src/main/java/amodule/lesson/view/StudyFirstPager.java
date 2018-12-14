@@ -30,6 +30,7 @@ public class StudyFirstPager extends RelativeLayout {
     private RelativeLayout videoLayout;
     private int mChildSelectIndex;
     private RelativeLayout mVideoRv;
+    private View mAlphaView;
 
     public LinearLayout getBtnLayout() {
         return mBtnLayout;
@@ -56,6 +57,7 @@ public class StudyFirstPager extends RelativeLayout {
         mStudySyllabusView = findViewById(R.id.view_syllabus);
         videoLayout = findViewById(R.id.video_layout);
         mVideoRv = findViewById(R.id.rv_video);
+        mAlphaView = findViewById(R.id.view_alpha);
     }
 
     public void initData(Map<String, Map<String, String>> mData, int childSelectIndex) {
@@ -68,24 +70,22 @@ public class StudyFirstPager extends RelativeLayout {
         int DW = ToolsDevice.getWindowPx(mActivity).widthPixels;
 
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) videoLayout.getLayoutParams();
-//        if (ratio.equals("1:1") || urlHeight == urlWidth) {//正方形
-//            layoutParams.height = DW;
-//        } else if (urlHeight < urlWidth) {//长方形
-//            double scale = ((double) 9) / 16;
-//            layoutParams.height = (int) (DW * scale);
-//            mVideoPlayerController.hideFullScreen();
-//            layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
-//        } else {//全屏幕
-//            layoutParams.addRule(RelativeLayout.ABOVE, R.id.ll_btn_top);
-//            mStudySyllabusView.setChangeTvColer(true);
-//            mVideoPlayerController.hideFullScreen();
-//            mVideoPlayerController.setBottomContainerBottomMargin(Tools.getDimen(mActivity, R.dimen.dp_145));
-//        }
-        layoutParams.addRule(RelativeLayout.ABOVE, R.id.ll_btn_top);
-        mStudySyllabusView.setChangeTvColer(true);
-        mVideoPlayerController.hideFullScreen();
-        mVideoPlayerController.setBottomContainerBottomMargin(Tools.getDimen(mActivity, R.dimen.dp_145));
-        videoLayout.setLayoutParams(layoutParams);
+        if (ratio.equals("1:1") || urlHeight == urlWidth) {//正方形
+            mAlphaView.setVisibility(GONE);
+            layoutParams.height = DW;
+        } else if (urlHeight < urlWidth) {//长方形
+            mAlphaView.setVisibility(GONE);
+            double scale = ((double) 9) / 16;
+            layoutParams.height = (int) (DW * scale);
+            mVideoPlayerController.hideFullScreen();
+            layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+        } else {//全屏幕
+            mAlphaView.setVisibility(VISIBLE);
+            layoutParams.addRule(RelativeLayout.ABOVE, R.id.ll_btn_top);
+            mStudySyllabusView.setChangeTvColer(true);
+            mVideoPlayerController.hideFullScreen();
+            mVideoPlayerController.setBottomContainerBottomMargin(Tools.getDimen(mActivity, R.dimen.dp_145));
+        }
 
         mVideoPlayerController.setVideoUrl(video.get("url"));
         mVideoPlayerController.setOnPlayingCompletionListener(new VideoPlayerController.OnPlayingCompletionListener() {
