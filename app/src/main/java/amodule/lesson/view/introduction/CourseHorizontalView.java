@@ -44,20 +44,21 @@ import acore.widget.rvlistview.holder.RvBaseViewHolder;
 public class CourseHorizontalView extends FrameLayout {
     final int LAYOUT_ID = R.layout.view_course_horizontal;
     final String MOUDLE_NAME = "横滑课程表";
-    private TextView mTitleText,mSubTitleText;
+    private TextView mTitleText, mSubTitleText;
     private RvHorizatolListView mRvHorizatolListView;
     private Adapter mAdapter;
-    private List<Map<String,String>> mData= new ArrayList<>();
+    private List<Map<String, String>> mData = new ArrayList<>();
     private OnItemClickCallback mOnItemClickCallback;
     private String lessonNum;
+
     public CourseHorizontalView(@NonNull Context context) {
         super(context);
-        initialize(context,null,0);
+        initialize(context, null, 0);
     }
 
     public CourseHorizontalView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        initialize(context, attrs,0);
+        initialize(context, attrs, 0);
     }
 
     public CourseHorizontalView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
@@ -70,19 +71,19 @@ public class CourseHorizontalView extends FrameLayout {
         mTitleText = findViewById(R.id.title);
         mSubTitleText = findViewById(R.id.sub_title);
         mRvHorizatolListView = findViewById(R.id.rv_list_view);
-        int dp10 = Tools.getDimen(context,R.dimen.dp_10);
+        int dp10 = Tools.getDimen(context, R.dimen.dp_10);
         mRvHorizatolListView.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
             public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
                 outRect.right = dp10;
             }
         });
-        mAdapter = new Adapter(context,mData);
+        mAdapter = new Adapter(context, mData);
         mRvHorizatolListView.setAdapter(mAdapter);
         mRvHorizatolListView.setOnItemClickListener(new OnItemClickListenerRvStat(MOUDLE_NAME) {
             @Override
             public void onItemClicked(View view, RecyclerView.ViewHolder holder, int position) {
-                handleOnItemClickCallback(position,mData.get(position));
+                handleOnItemClickCallback(position, mData.get(position));
             }
 
             @Override
@@ -92,29 +93,29 @@ public class CourseHorizontalView extends FrameLayout {
         });
     }
 
-    public void setData(Map<String,String> data){
-        if(data == null || data.isEmpty()){
+    public void setData(Map<String, String> data) {
+        if (data == null || data.isEmpty()) {
             setVisibility(GONE);
             return;
         }
         mTitleText.setText(checkStrNull(data.get("title")));
 //        mSubTitleText.setText(checkStrNull(data.get("subTitle")));
-        List<Map<String,String>> lessonList = StringManager.getListMapByJson(data.get("chapterList"));
-        if(!lessonList.isEmpty()){
+        List<Map<String, String>> lessonList = StringManager.getListMapByJson(data.get("chapterList"));
+        if (!lessonList.isEmpty()) {
             //如果只有一章，则显示课的数据列表
-            int lessonNum = Tools.parseIntOfThrow(data.get("chapterNum"),1);
-            if(lessonNum == 1){
+            int lessonNum = Tools.parseIntOfThrow(data.get("chapterNum"), 1);
+            if (lessonNum == 1) {
                 String chapterCode = lessonList.get(0).get("code");
                 lessonList = StringManager.getListMapByJson(lessonList.get(0).get("lessonList"));
                 Stream.of(lessonList).forEach(value -> {
-                    value.put("chapterCode",chapterCode);
-                    value.put("lessonCode",value.get("code"));
+                    value.put("chapterCode", chapterCode);
+                    value.put("lessonCode", value.get("code"));
                 });
-            }else{
-                Stream.of(lessonList).forEach(value -> value.put("chapterCode",value.get("code")));
+            } else {
+                Stream.of(lessonList).forEach(value -> value.put("chapterCode", value.get("code")));
             }
         }
-        if(lessonList.isEmpty()){
+        if (lessonList.isEmpty()) {
             setVisibility(GONE);
             return;
         }
@@ -123,34 +124,34 @@ public class CourseHorizontalView extends FrameLayout {
         mAdapter.notifyDataSetChanged();
     }
 
-    public void setLessonNum(String lessonNum){
+    public void setLessonNum(String lessonNum) {
         this.lessonNum = lessonNum;
         mSubTitleText.setText(checkStrNull(lessonNum));
     }
 
-    public void setSubTitleOnClickListener(OnClickListener listener){
+    public void setSubTitleOnClickListener(OnClickListener listener) {
         mSubTitleText.setOnClickListener(new OnClickListenerStat(MOUDLE_NAME) {
             @Override
             public void onClicked(View v) {
-                if(listener != null){
+                if (listener != null) {
                     listener.onClick(v);
                 }
             }
         });
     }
 
-    public void setOnItemClickListener( OnItemClickCallback callback){
+    public void setOnItemClickListener(OnItemClickCallback callback) {
         mOnItemClickCallback = callback;
     }
 
-    private void handleOnItemClickCallback(int position,Map<String,String> data){
-        if(mOnItemClickCallback != null){
+    private void handleOnItemClickCallback(int position, Map<String, String> data) {
+        if (mOnItemClickCallback != null) {
             mOnItemClickCallback.onItemClick(position, data);
         }
     }
 
     public void setCurrentPosition(int currentPosition) {
-        if(mAdapter != null){
+        if (mAdapter != null) {
             mAdapter.setCurrentPosition(currentPosition);
             LinearLayoutManager layoutManager = (LinearLayoutManager) mRvHorizatolListView.getLayoutManager();
             layoutManager.scrollToPositionWithOffset(0, 0);
@@ -161,19 +162,19 @@ public class CourseHorizontalView extends FrameLayout {
         return TextUtils.isEmpty(text) ? "" : text;
     }
 
-    class Adapter extends RvBaseAdapter<Map<String,String>>{
-        private int currentPosition=-1;
-        int itemWidth,itemHeight;
+    class Adapter extends RvBaseAdapter<Map<String, String>> {
+        private int currentPosition = -1;
+        int itemWidth, itemHeight;
 
         public Adapter(Context context, @Nullable List<Map<String, String>> data) {
             super(context, data);
-            itemWidth = (ToolsDevice.getWindowPx(context).widthPixels - Tools.getDimen(context,R.dimen.dp_50))/2;
+            itemWidth = (ToolsDevice.getWindowPx(context).widthPixels - Tools.getDimen(context, R.dimen.dp_50)) / 2;
             itemHeight = (int) (itemWidth / 163f * 85);
         }
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View itemView = LayoutInflater.from(mContext).inflate(R.layout.view_course_horizontal_item,parent,false);
+            View itemView = LayoutInflater.from(mContext).inflate(R.layout.view_course_horizontal_item, parent, false);
             itemView.getLayoutParams().width = itemWidth;
             itemView.getLayoutParams().height = itemHeight;
             return new ViewHolder(itemView);
@@ -182,8 +183,8 @@ public class CourseHorizontalView extends FrameLayout {
         @Override
         public void onBindViewHolder(RvBaseViewHolder<Map<String, String>> holder, int position) {
             super.onBindViewHolder(holder, position);
-            if(holder instanceof ViewHolder){
-                ((ViewHolder) holder).select(currentPosition==position);
+            if (holder instanceof ViewHolder) {
+                ((ViewHolder) holder).select(currentPosition == position);
             }
         }
 
@@ -192,13 +193,13 @@ public class CourseHorizontalView extends FrameLayout {
             return 0;
         }
 
-        public void setCurrentPosition(int currentPosition) {
+        void setCurrentPosition(int currentPosition) {
             this.currentPosition = currentPosition;
             notifyDataSetChanged();
         }
     }
 
-    class ViewHolder extends RvBaseViewHolder<Map<String,String>>{
+    class ViewHolder extends RvBaseViewHolder<Map<String, String>> {
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -206,18 +207,22 @@ public class CourseHorizontalView extends FrameLayout {
 
         @Override
         public void bindData(int position, @Nullable Map<String, String> data) {
+            if (data == null || data.isEmpty()) {
+                itemView.setVisibility(GONE);
+                return;
+            }
             TextView title = findViewById(R.id.text);
             title.setText(data.get("title"));
         }
 
-        public void select(boolean selected){
+        public void select(boolean selected) {
             TextView title = findViewById(R.id.text);
-            title.setTextColor(ColorUtil.parseColor(selected?"#DEA73E":"#3E3E3E"));
-            title.setBackgroundResource(selected?R.drawable.bg_course_horizontal_item_selected:R.drawable.bg_course_horizontal_item);
+            title.setTextColor(ColorUtil.parseColor(selected ? "#DEA73E" : "#3E3E3E"));
+            title.setBackgroundResource(selected ? R.drawable.bg_course_horizontal_item_selected : R.drawable.bg_course_horizontal_item);
         }
     }
 
-    public interface OnItemClickCallback{
-        void onItemClick(int position,Map<String,String> data);
+    public interface OnItemClickCallback {
+        void onItemClick(int position, Map<String, String> data);
     }
 }

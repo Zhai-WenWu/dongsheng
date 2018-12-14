@@ -5,7 +5,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -27,11 +26,9 @@ import acore.logic.AppCommon;
 import acore.tools.ColorUtil;
 import acore.tools.StringManager;
 import acore.tools.Tools;
-import acore.tools.ToolsDevice;
 import acore.widget.TagTextView;
 import acore.widget.banner.CardPageTransformer;
 import acore.widget.banner.SLooperViewPager;
-import acore.widget.rcwidget.RCConstraintLayout;
 import acore.widget.rcwidget.RCRelativeLayout;
 import amodule.topic.adapter.OverlayBaseAdapter;
 
@@ -46,7 +43,7 @@ public class ChefIntroductionView extends FrameLayout {
     private SLooperViewPager mSLooperViewPager;
     private TextView mTitle,mSubTitle;
     private List<Map<String,String>> authorList;
-    private int viewpageHeight;
+    private int mViewPageHeight;
     public ChefIntroductionView(@NonNull Context context) {
         super(context);
         initialize(context, null, 0);
@@ -102,15 +99,12 @@ public class ChefIntroductionView extends FrameLayout {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.item_chef_introduction, mSLooperViewPager,false);
         RelativeLayout root = view.findViewById(R.id.root);
         RCRelativeLayout shadowLayout = view.findViewById(R.id.shadow_layout);
-//        shadowLayout.getLayoutParams().height = (int) (ToolsDevice.getWindowPx(getContext()).widthPixels / 322f * 160);
-//        root.setLayoutParams(new ViewPager.LayoutParams());
-//        root.getLayoutParams().height = (int) (ToolsDevice.getWindowPx(getContext()).widthPixels / 322f * 160) + shadowLayout.getPaddingTop() + shadowLayout.getPaddingBottom();
         root.setPadding(root.getPaddingLeft() - shadowLayout.getPaddingLeft(),0,
                 authorList.size() == 1 ? Tools.getDimen(getContext(),R.dimen.dp_20) - shadowLayout.getPaddingRight() : root.getPaddingRight() - shadowLayout.getPaddingRight(),0);
         setPadding(0,0,0,Tools.getDimen(getContext(),R.dimen.dp_15) - shadowLayout.getPaddingBottom());
-        if(viewpageHeight == 0){
-            viewpageHeight = Tools.getMeasureHeight(view);
-            mSLooperViewPager.getLayoutParams().height = viewpageHeight;
+        if(mViewPageHeight == 0){
+            mViewPageHeight = Tools.getMeasureHeight(view);
+            mSLooperViewPager.getLayoutParams().height = mViewPageHeight;
         }
         return view;
     }
