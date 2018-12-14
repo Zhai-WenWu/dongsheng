@@ -145,6 +145,7 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
         mClingBtn = (ImageView) findViewById(R.id.cling);
 
         mLoadingProgressBar = findViewById(R.id.loading);
+        mBottomContainerLayout = findViewById(R.id.layout_bottom_layout);
 
         if (mThumbImageViewLayout != null) {
             mThumbImageViewLayout.setVisibility(GONE);
@@ -1447,13 +1448,10 @@ public class StandardGSYVideoPlayer extends GSYVideoPlayer {
         mOnSeekToOverCallback = onSeekToOverCallback;
     }
 
+    RelativeLayout mBottomContainerLayout;//layout_bottom_layout
     public void setBottomContainerBottomMargin(int bottomMargin){
-        if(mBottomContainer != null){
-            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mBottomContainer.getLayoutParams();
-            layoutParams.bottomMargin = bottomMargin;
-            mBottomContainer.setLayoutParams(layoutParams);
-            mBottomContainer.requestLayout();
-            mBottomContainer.invalidate();
+        if(mBottomContainerLayout != null){
+            mBottomContainerLayout.setPadding(mBottomContainerLayout.getPaddingLeft(),mBottomContainerLayout.getPaddingTop(),mBottomContainerLayout.getPaddingRight(),bottomMargin);
         }
     }
 }
