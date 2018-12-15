@@ -315,9 +315,9 @@ public class CourseDetail extends BaseAppCompatActivity {
             }
         });
         TextView mClassNumTv = mStudySyllabusView.findViewById(R.id.tv_class_num);
-        mClassNumTv.setOnClickListener(new View.OnClickListener() {
+        mClassNumTv.setOnClickListener(new OnClickListenerStat(StudySyllabusView.MOUDEL_NAME) {
             @Override
-            public void onClick(View v) {
+            public void onClicked(View v) {
                 //课程页
                 Intent intent = new Intent(CourseDetail.this, CourseList.class);
 //                intent.putExtra(CourseDetail.EXTRA_GROUP, mGroupSelectIndex);

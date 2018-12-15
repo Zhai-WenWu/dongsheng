@@ -5,6 +5,7 @@ import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import acore.logic.stat.RvBaseViewHolderStat;
+import acore.logic.stat.intefaces.OnItemClickListenerRvStat;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.widget.rvlistview.RvHorizatolListView;
@@ -26,7 +29,7 @@ import acore.widget.rvlistview.adapter.RvBaseAdapter;
 import acore.widget.rvlistview.holder.RvBaseViewHolder;
 
 public class StudySyllabusView extends RelativeLayout {
-
+    public static final String MOUDEL_NAME = "横滑课程表";
     private final Context mContext;
     private RvHorizatolListView rvHorizatolListView;
     private View view;
@@ -77,9 +80,14 @@ public class StudySyllabusView extends RelativeLayout {
             }
         });
 
-        rvHorizatolListView.setOnItemClickListener(new RvListView.OnItemClickListener() {
+        rvHorizatolListView.setOnItemClickListener(new OnItemClickListenerRvStat(MOUDEL_NAME) {
             @Override
-            public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
+            protected String getStatData(int position) {
+                return mapList.get(position).get("statJson");
+            }
+
+            @Override
+            public void onItemClicked(View view, RecyclerView.ViewHolder holder, int position) {
                 onSyllabusSelect.onSelect(position,mapList.get(position).get("code"));
             }
         });
@@ -130,16 +138,31 @@ public class StudySyllabusView extends RelativeLayout {
 
     }
 
-    public class ViewHolder extends RvBaseViewHolder<Map<String, String>> {
+    public class ViewHolder extends RvBaseViewHolderStat<Map<String, String>> {
         private ItemSyllabus view;
 
         public ViewHolder(@NonNull ItemSyllabus itemView) {
-            super(itemView);
+            super(itemView,MOUDEL_NAME);
             this.view = itemView;
         }
 
         @Override
-        public void bindData(int position, @Nullable Map<String, String> data) {
+        public boolean isShown(Map<String, String> data) {
+            return TextUtils.equals("2",data.get("isShow"));
+        }
+
+        @Override
+        public void hasShown(Map<String, String> data) {
+            data.put("isShow","2");
+        }
+
+        @Override
+        public String getStatJson(Map<String, String> data) {
+            return data.get("statJson");
+        }
+
+        @Override
+        public void overrideBindData(int position, @Nullable Map<String, String> data) {
             view.setData(data, position, mSelectIndex);
             if (changeTvColer){
                 view.setTextColer();
