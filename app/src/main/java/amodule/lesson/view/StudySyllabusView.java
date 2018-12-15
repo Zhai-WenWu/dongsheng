@@ -40,6 +40,10 @@ public class StudySyllabusView extends RelativeLayout {
     private TextView titleTv;
     private boolean changeTvColer;
 
+    public TextView getClassNumTv() {
+        return classNumTv;
+    }
+
     public void setChangeTvColer(boolean changeTvColer) {
         this.changeTvColer = changeTvColer;
     }

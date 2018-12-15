@@ -37,7 +37,8 @@ public class VerticalViewPager extends ViewPager {
 
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                mOnScrollDistance.scrollDistance(positionOffset);
+                if (mOnScrollDistance != null)
+                    mOnScrollDistance.scrollDistance(positionOffset);
             }
 
             @Override
@@ -47,7 +48,8 @@ public class VerticalViewPager extends ViewPager {
 
             @Override
             public void onPageScrollStateChanged(int state) {
-                mOnScrollDistance.scrollEnd(state);
+                if (mOnScrollDistance != null)
+                    mOnScrollDistance.scrollEnd(state);
             }
         });
     }

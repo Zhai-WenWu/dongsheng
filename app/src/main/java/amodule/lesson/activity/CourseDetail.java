@@ -22,6 +22,7 @@ import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
+import amodule.lesson.adapter.SecondPagerWebAdapter;
 import amodule.lesson.adapter.VerticalAdapter;
 import amodule.lesson.controler.data.CourseDataController;
 import amodule.lesson.view.StudyFirstPager;
@@ -144,16 +145,14 @@ public class CourseDetail extends BaseAppCompatActivity {
         for (int i = 0; i < canScroll.length; i++) {
             canScroll[i] = true;
         }
-        studySecondPager.getSecondPagerWebAdapter().setmScrollInterface(new XHWebView.ScrollInterface() {
+
+        studySecondPager.getSecondPagerWebAdapter().setOnSecondPagerScrollTopListener(new SecondPagerWebAdapter.OnSecondPagerScrollTopListener() {
             @Override
-            public void onSChanged(WebView webView, int l, int t, int oldl, int oldt) {
-                if (webView.getScrollY() == 0) {
-                    canScroll[mSecondSelectTndex] = true;
-                } else {
-                    canScroll[mSecondSelectTndex] = false;
-                }
+            public void onScrollToTop(boolean isScroolTop) {
+                canScroll[mSecondSelectTndex] = isScroolTop;
             }
         });
+
         viewPager.setWebScrollTop(new VerticalViewPager.OnWebScrollTop() {
             @Override
             public boolean canScroll() {
@@ -255,9 +254,9 @@ public class CourseDetail extends BaseAppCompatActivity {
                     mData.put("lessonInfo", mLessonInfo);
                     initTitle();
                     loadManager.loadOver(flag);
-                    if (mLoadAgain){
+                    if (mLoadAgain) {
                         initSyllabusData();
-                    }else {
+                    } else {
                         loadSyllabusInfo();
                     }
                     mLoadAgain = false;
@@ -304,7 +303,7 @@ public class CourseDetail extends BaseAppCompatActivity {
         mVerticalAdapter.notifyDataSetChanged();
 
         //课程横划
-        StudySyllabusView mStudySyllabusView = studyFirstPager.findViewById(R.id.view_syllabus);
+        StudySyllabusView mStudySyllabusView = studyFirstPager.getStudySyllabusView();
         //课程横划点击回调
         mStudySyllabusView.setOnSyllabusSelect(new StudySyllabusView.OnSyllabusSelect() {
             @Override
@@ -314,7 +313,7 @@ public class CourseDetail extends BaseAppCompatActivity {
                 loadAgain();
             }
         });
-        TextView mClassNumTv = mStudySyllabusView.findViewById(R.id.tv_class_num);
+        TextView mClassNumTv = mStudySyllabusView.getClassNumTv();
         mClassNumTv.setOnClickListener(new OnClickListenerStat(StudySyllabusView.MOUDEL_NAME) {
             @Override
             public void onClicked(View v) {

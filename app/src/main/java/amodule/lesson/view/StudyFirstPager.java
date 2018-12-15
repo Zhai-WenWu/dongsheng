@@ -32,6 +32,10 @@ public class StudyFirstPager extends RelativeLayout {
     private RelativeLayout mVideoRv;
     private View mAlphaView;
 
+    public StudySyllabusView getStudySyllabusView() {
+        return mStudySyllabusView;
+    }
+
     public LinearLayout getBtnLayout() {
         return mBtnLayout;
     }
