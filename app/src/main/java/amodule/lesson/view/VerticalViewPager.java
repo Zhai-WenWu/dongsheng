@@ -14,6 +14,7 @@ public class VerticalViewPager extends ViewPager {
 
     private double transform;
     private int showPosition;
+    public int scrollState;
 
     public int getShowPosition() {
         return showPosition;
@@ -48,6 +49,7 @@ public class VerticalViewPager extends ViewPager {
 
             @Override
             public void onPageScrollStateChanged(int state) {
+                scrollState = state;
                 if (mOnScrollDistance != null)
                     mOnScrollDistance.scrollEnd(state);
             }
@@ -105,7 +107,11 @@ public class VerticalViewPager extends ViewPager {
             case MotionEvent.ACTION_DOWN:
                 downX = evX;
                 downY = evY;
-                intercepted = false;
+                if (scrollState==0){
+                    intercepted = false;
+                }else {
+                    intercepted = true;
+                }
                 break;
             case MotionEvent.ACTION_MOVE:
                 distanceX = Math.abs(evX - downX);
