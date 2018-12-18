@@ -98,6 +98,9 @@ public class VerticalViewPager extends ViewPager {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
+        if (getShowPosition() == 1 && mOnWebScrollTop != null && !mOnWebScrollTop.canScroll()) {
+            return false;
+        }
         super.onInterceptTouchEvent(swapXY(ev));
         swapXY(ev);
         evX = (int) ev.getX();
