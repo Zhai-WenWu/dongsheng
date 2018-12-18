@@ -111,11 +111,11 @@ public class SyllabusAdapter extends BaseExpandableListAdapter {
             convertView.setBackgroundResource(R.drawable.bg_circle_f5f7fa_10);
             groupViewHolder.ivRight.setVisibility(View.GONE);
             groupViewHolder.tvRight.setVisibility(View.GONE);
-//            if (groupPosition == mGroupSelectIndex) {
-//                convertView.setBackgroundResource(R.drawable.bg_circle_f5f7fab_10);
-//            } else {
-//                convertView.setBackgroundResource(R.drawable.bg_circle_f5f7fa_10);
-//            }
+            if (groupPosition == mGroupSelectIndex) {
+                convertView.setBackgroundResource(R.drawable.bg_circle_f5f7fab_10);
+            } else {
+                convertView.setBackgroundResource(R.drawable.bg_circle_f5f7fa_10);
+            }
 
         }
         return convertView;
@@ -136,15 +136,17 @@ public class SyllabusAdapter extends BaseExpandableListAdapter {
 
 
         if (childPosition == getChildrenCount(groupPosition) - 1) {
-//            if (childPosition == mChildSelectIndex && groupPosition == mGroupSelectIndex) {
-//                convertView.setBackgroundResource(R.drawable.bg_circle_f5f7fab_bottom_10);
-//            } else {
-            convertView.setBackgroundResource(R.drawable.bg_circle_f5f7fa_bottom_10);
+            if (childPosition == mChildSelectIndex && groupPosition == mGroupSelectIndex) {
+                convertView.setBackgroundResource(R.drawable.bg_circle_f5f7fab_bottom_10);
+            } else {
+                convertView.setBackgroundResource(R.drawable.bg_circle_f5f7fa_bottom_10);
+            }
         } else {
-//            if (childPosition == mChildSelectIndex && groupPosition == mGroupSelectIndex) {
-//                convertView.setBackgroundColor(mActivity.getResources().getColor(R.color.c_ffbe03));
-//            } else {//c_ffbe03
-            convertView.setBackgroundColor(mActivity.getResources().getColor(R.color.c_f5f7fa));
+            if (childPosition == mChildSelectIndex && groupPosition == mGroupSelectIndex) {
+                convertView.setBackgroundColor(mActivity.getResources().getColor(R.color.c_ffbe03));
+            } else {//c_ffbe03
+                convertView.setBackgroundColor(mActivity.getResources().getColor(R.color.c_f5f7fa));
+            }
 
         }
         childViewHolder.tvTitle.setText(childList.get(groupPosition).get(childPosition));

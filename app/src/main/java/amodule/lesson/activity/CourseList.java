@@ -34,8 +34,8 @@ public class CourseList extends BaseAppCompatActivity {
     private List<String> mGroupList = new ArrayList<>();
     private List<List<String>> mChildList = new ArrayList<>();
     private ExpandableListView mExList;
-    //    private int mGroupSelectIndex = 0;
-    private int mChildSelectIndex = -1;
+    private int mGroupSelectIndex = 2;
+    private int mChildSelectIndex = 5;
     private boolean isFromStudy;
 
     @Override
@@ -53,13 +53,11 @@ public class CourseList extends BaseAppCompatActivity {
     }
 
     private void initData() {
-//        mGroupSelectIndex = getIntent().getIntExtra(EXTRA_GROUP, 0);
-//        mChildSelectIndex = getIntent().getIntExtra(EXTRA_CHILD, -1);
-        String mCode = getIntent().getStringExtra(EXTRA_CODE);
-        String mType = getIntent().getStringExtra(EXTRA_TYPE);
+//        String mCode = getIntent().getStringExtra(EXTRA_CODE);
+//        String mType = getIntent().getStringExtra(EXTRA_TYPE);
         isFromStudy = getIntent().getBooleanExtra(EXTRA_FROM_STUDY, false);
         loadManager.loading(mExList, true);
-        CourseDataController.loadCourseListData(mCode, mType, new InternetCallback() {
+        CourseDataController.loadCourseListData("88", "1", new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
                 loadManager.loaded(mExList);
@@ -73,18 +71,44 @@ public class CourseList extends BaseAppCompatActivity {
 
     private void initCourseListData(Map<String, String> mCourseListMap) {
         String chapterNum = mCourseListMap.get("chapterNum");
+        Map<String, String> playHistory = StringManager.getFirstMap("playHistory");
+        String chapterCode = playHistory.get("chapterCode");
+        String lessonCode = playHistory.get("lessonCode");
         ArrayList<Map<String, String>> info = StringManager.getListMapByJson(mCourseListMap.get("chapterList"));
+
+
         if (TextUtils.equals("1", chapterNum)) {//只有一章
+            mGroupSelectIndex = 0;
+            ArrayList<Map<String, String>> lessonList = StringManager.getListMapByJson(info.get(0).get("lessonList"));
+            for (int j = 0; j < lessonList.size(); j++) {
+                if (TextUtils.equals(lessonCode, lessonList.get(j).get("code"))) {
+                    mChildSelectIndex = j;
+                    break;
+                }
+            }
             initOne(info);
         } else {//多章
+            for (int i = 0; i < info.size(); i++) {
+                if (TextUtils.equals(chapterCode, info.get(i).get("code"))) {
+                    mGroupSelectIndex = i;
+                    ArrayList<Map<String, String>> lessonList = StringManager.getListMapByJson(info.get(i).get("lessonList"));
+                    for (int j = 0; j < lessonList.size(); j++) {
+                        if (TextUtils.equals(lessonCode, lessonList.get(j).get("code"))) {
+                            mChildSelectIndex = j;
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
             initMore(info);
         }
         mSyllabusAdapter.setChildList(mChildList);
         mSyllabusAdapter.setGroupList(mGroupList);
         mSyllabusAdapter.notifyDataSetChanged();
-//        mSyllabusAdapter.setSelectIndex(mGroupSelectIndex, mChildSelectIndex);
+        mSyllabusAdapter.setSelectIndex(mGroupSelectIndex, mChildSelectIndex);
 
-        mExList.expandGroup(0);
+        mExList.expandGroup(mGroupSelectIndex);
     }
 
     /**
@@ -100,7 +124,6 @@ public class CourseList extends BaseAppCompatActivity {
 
         //设置分组项的点击监听事件
         mExList.setOnGroupClickListener((expandableListView, view, i, l) -> {
-//            mGroupSelectIndex = i;
             mChildSelectIndex = -1;
             clickItem(lessonList.get(i).get("code"));
             return false;
@@ -125,7 +148,7 @@ public class CourseList extends BaseAppCompatActivity {
         //设置子选项点击监听事件
         mExList.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
             ArrayList<Map<String, String>> lessonList = StringManager.getListMapByJson(info.get(groupPosition).get("lessonList"));
-//            mGroupSelectIndex = groupPosition;
+            mGroupSelectIndex = groupPosition;
             mChildSelectIndex = childPosition;
             clickItem(lessonList.get(childPosition).get("code"));
             return true;
@@ -134,20 +157,16 @@ public class CourseList extends BaseAppCompatActivity {
 
 
     private void clickItem(String code) {
-//        mSyllabusAdapter.setSelectIndex(mGroupSelectIndex, mChildSelectIndex);
+        mSyllabusAdapter.setSelectIndex(mGroupSelectIndex, mChildSelectIndex);
         mSyllabusAdapter.notifyDataSetChanged();
         if (isFromStudy) {
             Intent intent = new Intent();
             intent.putExtra("code", code);
-//            intent.putExtra(CourseDetail.EXTRA_GROUP,mGroupSelectIndex);
-            intent.putExtra(CourseDetail.EXTRA_CHILD,mChildSelectIndex);
             setResult(RESULT_OK, intent);
             finish();
         } else {
             Intent it = new Intent(this, CourseDetail.class);
             it.putExtra("code", code);
-//            it.putExtra(CourseDetail.EXTRA_GROUP,mGroupSelectIndex);
-            it.putExtra(CourseDetail.EXTRA_CHILD,mChildSelectIndex);
             startActivity(it);
         }
     }
