@@ -51,6 +51,7 @@ public class VerticalViewPager extends ViewPager {
             @Override
             public void onPageScrollStateChanged(int state) {
                 scrollState = state;
+                Log.i("zww", "state: " + state);
                 if (mOnScrollDistance != null)
                     mOnScrollDistance.scrollEnd(state);
             }
@@ -111,11 +112,7 @@ public class VerticalViewPager extends ViewPager {
             case MotionEvent.ACTION_DOWN:
                 downX = evX;
                 downY = evY;
-                if (scrollState == 0) {
-                    intercepted = false;
-                } else {
-                    intercepted = true;
-                }
+                intercepted = false;
                 break;
             case MotionEvent.ACTION_MOVE:
                 distanceX = Math.abs(evX - downX);
@@ -130,16 +127,21 @@ public class VerticalViewPager extends ViewPager {
     }
 
     private int eventY;
+    private int eventX;
+
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         eventY = (int) event.getY();
+        eventX = (int) event.getX();
         switch (event.getAction()) {
             case MotionEvent.ACTION_UP:
-                if (getShowPosition() == 0 && downY - eventY > 200) {
-                    setCurrentItem(1);
-                } else if (getShowPosition() == 1 && downY - eventY < -200) {
-                    setCurrentItem(0);
+                if (Math.abs(evX - downX) > 0) {
+                    if (getShowPosition() == 0) {
+                        setCurrentItem(1);
+                    } else if (getShowPosition() == 1) {
+                        setCurrentItem(0);
+                    }
                 }
                 return true;
         }
