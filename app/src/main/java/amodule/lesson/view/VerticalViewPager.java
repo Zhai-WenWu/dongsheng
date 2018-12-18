@@ -3,6 +3,7 @@ package amodule.lesson.view;
 import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
@@ -110,9 +111,9 @@ public class VerticalViewPager extends ViewPager {
             case MotionEvent.ACTION_DOWN:
                 downX = evX;
                 downY = evY;
-                if (scrollState==0){
+                if (scrollState == 0) {
                     intercepted = false;
-                }else {
+                } else {
                     intercepted = true;
                 }
                 break;
@@ -120,10 +121,8 @@ public class VerticalViewPager extends ViewPager {
                 distanceX = Math.abs(evX - downX);
                 distanceY = Math.abs(evY - downY);
                 int distance = evY - downY;
-                if (distanceY > distanceX && ((getShowPosition() == 0) || getShowPosition() == 1 && distance > 0 && mOnWebScrollTop != null && mOnWebScrollTop.canScroll())) {
-                    intercepted = true;
-                } else {
-                    intercepted = false;
+                if (distanceY > distanceX && (getShowPosition() == 0 || (getShowPosition() == 1 && distance > 0))) {
+                    return true;
                 }
                 break;
         }
@@ -137,14 +136,12 @@ public class VerticalViewPager extends ViewPager {
         eventY = (int) event.getY();
         switch (event.getAction()) {
             case MotionEvent.ACTION_UP:
-                if (Math.abs(downY - eventY) > 200) {
-                    if (getShowPosition() == 0) {
-                        setCurrentItem(1);
-                    } else if (getShowPosition() == 1) {
-                        setCurrentItem(0);
-                    }
-                    return true;
+                if (getShowPosition() == 0 && downY - eventY > 200) {
+                    setCurrentItem(1);
+                } else if (getShowPosition() == 1 && downY - eventY < -200) {
+                    setCurrentItem(0);
                 }
+                return true;
         }
         return super.onTouchEvent(swapXY(event));
     }
