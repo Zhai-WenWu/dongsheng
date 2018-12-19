@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import acore.logic.load.LoadManager;
 import acore.tools.StringManager;
 import amodule.lesson.adapter.SecondPagerAdapter;
 import aplug.web.view.XHWebView;
@@ -26,6 +27,7 @@ public class StudySecondPager extends RelativeLayout {
     private SecondPagerAdapter secondPagerAdapter;
     private List<String> mDataList = new ArrayList<>();
     private SecondPagerCommentView mSecondPagerCommentView;
+    private LoadManager mLoadManager;
 
     public ViewPager getViewPager() {
         return mViewPager;

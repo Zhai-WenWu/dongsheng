@@ -37,7 +37,6 @@
             android:id="@+id/comment_user_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="@dimen/dp_3"
             android:text="米西"
             android:textSize="@dimen/sp_14" />
 
@@ -47,7 +46,7 @@
             android:layout_height="@dimen/dp_21"
             android:layout_centerVertical="true"
             android:gravity="center"
-            android:paddingLeft="@dimen/dp_1"
+            android:paddingLeft="@dimen/dp_4"
             android:paddingRight="@dimen/dp_3" />
 
     </LinearLayout>
@@ -58,26 +57,22 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/ll_user_name"
         android:layout_marginStart="@dimen/dp_11"
-        android:layout_marginTop="@dimen/dp_0.5"
         android:layout_toEndOf="@+id/commend_user_icon"
         android:orientation="vertical"
-        android:paddingRight="@dimen/dp_20"
-        android:paddingTop="@dimen/dp_17">
+        android:paddingRight="@dimen/dp_20">
 
         <LinearLayout
             android:id="@+id/comment_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_6"
-            android:orientation="vertical"
-            android:paddingLeft="@dimen/dp_3">
+            android:orientation="vertical">
 
         </LinearLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_23"
-            android:layout_marginTop="@dimen/dp_10">
+            android:layout_marginTop="@dimen/dp_2">
 
             <TextView
                 android:id="@+id/comment_time"
