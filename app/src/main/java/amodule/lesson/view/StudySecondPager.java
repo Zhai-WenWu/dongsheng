@@ -5,9 +5,6 @@ import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.webkit.WebResourceRequest;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.RelativeLayout;
 
 import com.xiangha.R;
@@ -17,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import acore.tools.StringManager;
-import amodule.lesson.adapter.SecondPagerWebAdapter;
+import amodule.lesson.adapter.SecondPagerAdapter;
 import aplug.web.view.XHWebView;
 
 public class StudySecondPager extends RelativeLayout {
@@ -26,8 +23,9 @@ public class StudySecondPager extends RelativeLayout {
     private View view;
     private XHWebView mWebView;
     private ViewPager mViewPager;
-    private SecondPagerWebAdapter secondPagerWebAdapter;
+    private SecondPagerAdapter secondPagerAdapter;
     private List<String> mDataList = new ArrayList<>();
+    private SecondPagerCommentView mSecondPagerCommentView;
 
     public ViewPager getViewPager() {
         return mViewPager;
@@ -44,11 +42,12 @@ public class StudySecondPager extends RelativeLayout {
     public StudySecondPager(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.mContext = context;
-        secondPagerWebAdapter = new SecondPagerWebAdapter(mContext);
+        mSecondPagerCommentView = new SecondPagerCommentView(mContext);
+        secondPagerAdapter = new SecondPagerAdapter(mContext, mSecondPagerCommentView);
         view = LayoutInflater.from(context).inflate(R.layout.view_second_pager, this, true);
         mViewPager = findViewById(R.id.viewpager);
         mViewPager.setOffscreenPageLimit(2);
-        mViewPager.setAdapter(secondPagerWebAdapter);
+        mViewPager.setAdapter(secondPagerAdapter);
     }
 
     public void initData(Map<String, Map<String, String>> mData) {
@@ -56,15 +55,15 @@ public class StudySecondPager extends RelativeLayout {
         for (Map<String, String> label : labelDataList) {
             mDataList.add(label.get("url"));
         }
-        secondPagerWebAdapter.setData(mDataList);
-        secondPagerWebAdapter.notifyDataSetChanged();
+        secondPagerAdapter.setData(mDataList);
+        secondPagerAdapter.notifyDataSetChanged();
     }
 
     public void setSelect(int currentItem) {
         mViewPager.setCurrentItem(currentItem);
     }
 
-    public SecondPagerWebAdapter getSecondPagerWebAdapter() {
-        return secondPagerWebAdapter;
+    public SecondPagerAdapter getSecondPagerAdapter() {
+        return secondPagerAdapter;
     }
 }

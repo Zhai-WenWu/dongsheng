@@ -6,7 +6,6 @@ import android.support.v4.view.ViewPager;
 import android.util.ArrayMap;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -22,7 +21,7 @@ import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
-import amodule.lesson.adapter.SecondPagerWebAdapter;
+import amodule.lesson.adapter.SecondPagerAdapter;
 import amodule.lesson.adapter.VerticalAdapter;
 import amodule.lesson.controler.data.CourseDataController;
 import amodule.lesson.view.StudyFirstPager;
@@ -31,7 +30,6 @@ import amodule.lesson.view.StudySyllabusView;
 import amodule.lesson.view.VerticalViewPager;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
-import aplug.web.view.XHWebView;
 import third.share.BarShare;
 import third.video.VideoPlayerController;
 
@@ -146,7 +144,7 @@ public class CourseDetail extends BaseAppCompatActivity {
             canScroll[i] = true;
         }
 
-        studySecondPager.getSecondPagerWebAdapter().setOnSecondPagerScrollTopListener(new SecondPagerWebAdapter.OnSecondPagerScrollTopListener() {
+        studySecondPager.getSecondPagerAdapter().setOnSecondPagerScrollTopListener(new SecondPagerAdapter.OnSecondPagerScrollTopListener() {
             @Override
             public void onScrollToTop(boolean isScroolTop) {
                 canScroll[mSecondSelectTndex] = isScroolTop;

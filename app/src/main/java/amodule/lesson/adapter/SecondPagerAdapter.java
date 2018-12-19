@@ -31,10 +31,11 @@ import acore.widget.rvlistview.RvListView;
 import amodule.comment.CommentListSave;
 import amodule.comment.view.ViewCommentItem;
 import amodule.lesson.view.CourseCommentItem;
+import amodule.lesson.view.SecondPagerCommentView;
 import amodule.user.activity.login.LoginByAccout;
 import aplug.web.view.XHWebView;
 
-public class SecondPagerWebAdapter extends PagerAdapter {
+public class SecondPagerAdapter extends PagerAdapter {
     private Activity mActivity;
     private List<String> mData;
     private ArrayList<Map<String, String>> mCommentList;
@@ -45,9 +46,11 @@ public class SecondPagerWebAdapter extends PagerAdapter {
     private DownRefreshList listView;
     private String mReplayText;
     private String mCommentText;
+    private SecondPagerCommentView mSecondPagerCommentView;
 
-    public SecondPagerWebAdapter(Context activity) {
+    public SecondPagerAdapter(Context activity, SecondPagerCommentView secondPagerCommentView) {
         this.mActivity = (Activity) activity;
+        this.mSecondPagerCommentView = secondPagerCommentView;
     }
 
     public void setData(List<String> data) {
@@ -89,21 +92,9 @@ public class SecondPagerWebAdapter extends PagerAdapter {
             container.addView(convertView);
             return convertView;
         } else {
-            convertView = mActivity.getLayoutInflater().inflate(R.layout.item_course_list, container, false);
-            DownRefreshList listView = convertView.findViewById(R.id.comment_listview);
-            initList(listView);
-            TextView writeCommentTv = convertView.findViewById(R.id.commend_write_tv);
 
-            writeCommentTv.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    currentUrl = StringManager.api_addForum;
-                    mKeyboardDialogOptionFrom = KEYBOARD_OPTION_COMMENT;
-                    showCommentEdit();
-                }
-            });
-
-            listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            listView = mSecondPagerCommentView.getListView();
+            mSecondPagerCommentView.getListView().setOnScrollListener(new AbsListView.OnScrollListener() {
                 @Override
                 public void onScrollStateChanged(AbsListView view, int scrollState) {
 
@@ -111,11 +102,6 @@ public class SecondPagerWebAdapter extends PagerAdapter {
 
                 @Override
                 public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-//                    if (firstVisibleItem == 1) {
-//                        onSecondPagerScrollTopListener.onScrollToTop(true);
-//                    } else {
-//                        onSecondPagerScrollTopListener.onScrollToTop(false);
-//                    }
                     if (listView.canScrollVertically(-1)) {
                         onSecondPagerScrollTopListener.onScrollToTop(false);
                     } else {
@@ -123,76 +109,12 @@ public class SecondPagerWebAdapter extends PagerAdapter {
                     }
                 }
             });
-            container.addView(convertView);
-            return convertView;
+            container.addView(mSecondPagerCommentView);
+            return mSecondPagerCommentView;
         }
 
     }
 
-    private void initList(DownRefreshList listView) {
-        mCommentList = CommentListSave.mList;
-        AdapterSimple adapterSimple = new AdapterSimple(listView, mCommentList, R.layout.a_course_comment_item, new String[]{}, new int[]{}) {
-            @Override
-            public View getView(final int position, View convertView, ViewGroup parent) {
-                View view = super.getView(position, convertView, parent);
-                CourseCommentItem viewCommentItem = (CourseCommentItem) view.findViewById(R.id.comment_item);
-
-//                    viewCommentItem.setCommentItemListener(getCommentItenListener(viewCommentItem,position));
-//                    viewCommentItem.setUserInforListenr(getUserInforListener());
-                viewCommentItem.setData(mCommentList.get(position));
-                return view;
-            }
-        };
-        listView.setAdapter(adapterSimple);
-        adapterSimple.notifyDataSetChanged();
-    }
-
-    private void showCommentEdit() {
-        KeyboardDialog keyboardDialog = new KeyboardDialog(mActivity);
-        keyboardDialog.init(R.layout.course_comment_keyboard_layout);
-        keyboardDialog.setTextLength(50);
-        if (mKeyboardDialogOptionFrom == KEYBOARD_OPTION_REPLAY) {
-            keyboardDialog.setContentStr(mReplayText);
-            if (TextUtils.isEmpty(mReplayText)) {
-                keyboardDialog.setHintStr("回复:.....");
-            }
-        } else if (mKeyboardDialogOptionFrom == KEYBOARD_OPTION_COMMENT) {
-            keyboardDialog.setContentStr(mCommentText);
-        }
-        keyboardDialog.setOnSendClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                keyboardDialog.cancel();
-                String sendText = keyboardDialog.getText();
-                if (LoginManager.isLogin()) {
-                    keyboardDialog.setContentStr(null);
-                }
-                sendData(sendText);
-            }
-        });
-        keyboardDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                String finalStr = keyboardDialog.getText();
-                if (mKeyboardDialogOptionFrom == KEYBOARD_OPTION_COMMENT) {
-                    mCommentText = finalStr;
-                } else if (mKeyboardDialogOptionFrom == KEYBOARD_OPTION_REPLAY) {
-                    mReplayText = finalStr;
-                }
-            }
-        });
-        keyboardDialog.show();
-    }
-
-
-    private void sendData(String sendText) {
-        if (!LoginManager.isLogin()) {
-            Intent intent = new Intent(mActivity, LoginByAccout.class);
-            mActivity.startActivity(intent);
-            return;
-        }
-    }
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
