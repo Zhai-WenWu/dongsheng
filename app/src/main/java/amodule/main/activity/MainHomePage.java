@@ -82,7 +82,7 @@ public class MainHomePage extends MainBaseActivity implements IObserver,ISetMess
         findViewById(R.id.bt).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainHomePage.this, CourseList.class));
+                startActivity(new Intent(MainHomePage.this, CourseDetail.class));
             }
         });
         getWindow().setFormat(PixelFormat.TRANSLUCENT);

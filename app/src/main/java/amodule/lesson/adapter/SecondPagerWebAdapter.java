@@ -2,25 +2,49 @@ package amodule.lesson.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.util.ArrayMap;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.AbsListView;
+import android.widget.TextView;
 
 import com.xiangha.R;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import acore.logic.LoginManager;
+import acore.override.adapter.AdapterSimple;
+import acore.tools.StringManager;
+import acore.widget.DownRefreshList;
+import acore.widget.KeyboardDialog;
 import acore.widget.rvlistview.RvListView;
+import amodule.comment.CommentListSave;
+import amodule.comment.view.ViewCommentItem;
+import amodule.lesson.view.CourseCommentItem;
+import amodule.user.activity.login.LoginByAccout;
 import aplug.web.view.XHWebView;
 
 public class SecondPagerWebAdapter extends PagerAdapter {
     private Activity mActivity;
     private List<String> mData;
+    private ArrayList<Map<String, String>> mCommentList;
+    private final int KEYBOARD_OPTION_COMMENT = 1;
+    private final int KEYBOARD_OPTION_REPLAY = 2;
+    private String currentUrl;
+    private int mKeyboardDialogOptionFrom = KEYBOARD_OPTION_COMMENT;
+    private DownRefreshList listView;
+    private String mReplayText;
+    private String mCommentText;
 
     public SecondPagerWebAdapter(Context activity) {
         this.mActivity = (Activity) activity;
@@ -47,8 +71,8 @@ public class SecondPagerWebAdapter extends PagerAdapter {
             convertView = mActivity.getLayoutInflater().inflate(R.layout.item_course_web, container, false);
             XHWebView mWebView = convertView.findViewById(R.id.webview);
             String url = mData.get(position);
-//        mWebView.loadUrl(url);
-            mWebView.loadUrl("https://www.baidu.com/");
+            mWebView.loadUrl(url);
+//            mWebView.loadUrl("https://www.baidu.com/");
             mWebView.setWebViewClient(new WebViewClient());
             mWebView.setScrollChanged(new XHWebView.ScrollInterface() {
                 @Override
@@ -66,16 +90,32 @@ public class SecondPagerWebAdapter extends PagerAdapter {
             return convertView;
         } else {
             convertView = mActivity.getLayoutInflater().inflate(R.layout.item_course_list, container, false);
-            RvListView listView = convertView.findViewById(R.id.rv_list);
-            ArrayList<Integer> askList = new ArrayList<>();
-            for (int i = 0; i < 20; i++) {
-                askList.add(i);
-            }
-            listView.setAdapter(new StudyAskAdapter(mActivity, askList));
-            listView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            DownRefreshList listView = convertView.findViewById(R.id.comment_listview);
+            initList(listView);
+            TextView writeCommentTv = convertView.findViewById(R.id.commend_write_tv);
+
+            writeCommentTv.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                    super.onScrolled(recyclerView, dx, dy);
+                public void onClick(View v) {
+                    currentUrl = StringManager.api_addForum;
+                    mKeyboardDialogOptionFrom = KEYBOARD_OPTION_COMMENT;
+                    showCommentEdit();
+                }
+            });
+
+            listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+                }
+
+                @Override
+                public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+//                    if (firstVisibleItem == 1) {
+//                        onSecondPagerScrollTopListener.onScrollToTop(true);
+//                    } else {
+//                        onSecondPagerScrollTopListener.onScrollToTop(false);
+//                    }
                     if (listView.canScrollVertically(-1)) {
                         onSecondPagerScrollTopListener.onScrollToTop(false);
                     } else {
@@ -87,6 +127,71 @@ public class SecondPagerWebAdapter extends PagerAdapter {
             return convertView;
         }
 
+    }
+
+    private void initList(DownRefreshList listView) {
+        mCommentList = CommentListSave.mList;
+        AdapterSimple adapterSimple = new AdapterSimple(listView, mCommentList, R.layout.a_course_comment_item, new String[]{}, new int[]{}) {
+            @Override
+            public View getView(final int position, View convertView, ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+                CourseCommentItem viewCommentItem = (CourseCommentItem) view.findViewById(R.id.comment_item);
+
+//                    viewCommentItem.setCommentItemListener(getCommentItenListener(viewCommentItem,position));
+//                    viewCommentItem.setUserInforListenr(getUserInforListener());
+                viewCommentItem.setData(mCommentList.get(position));
+                return view;
+            }
+        };
+        listView.setAdapter(adapterSimple);
+        adapterSimple.notifyDataSetChanged();
+    }
+
+    private void showCommentEdit() {
+        KeyboardDialog keyboardDialog = new KeyboardDialog(mActivity);
+        keyboardDialog.init(R.layout.course_comment_keyboard_layout);
+        keyboardDialog.setTextLength(50);
+        if (mKeyboardDialogOptionFrom == KEYBOARD_OPTION_REPLAY) {
+            keyboardDialog.setContentStr(mReplayText);
+            if (TextUtils.isEmpty(mReplayText)) {
+                keyboardDialog.setHintStr("回复:.....");
+            }
+        } else if (mKeyboardDialogOptionFrom == KEYBOARD_OPTION_COMMENT) {
+            keyboardDialog.setContentStr(mCommentText);
+        }
+        keyboardDialog.setOnSendClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                keyboardDialog.cancel();
+                String sendText = keyboardDialog.getText();
+                if (LoginManager.isLogin()) {
+                    keyboardDialog.setContentStr(null);
+                }
+                sendData(sendText);
+            }
+        });
+        keyboardDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                String finalStr = keyboardDialog.getText();
+                if (mKeyboardDialogOptionFrom == KEYBOARD_OPTION_COMMENT) {
+                    mCommentText = finalStr;
+                } else if (mKeyboardDialogOptionFrom == KEYBOARD_OPTION_REPLAY) {
+                    mReplayText = finalStr;
+                }
+            }
+        });
+        keyboardDialog.show();
+    }
+
+
+    private void sendData(String sendText) {
+        if (!LoginManager.isLogin()) {
+            Intent intent = new Intent(mActivity, LoginByAccout.class);
+            mActivity.startActivity(intent);
+            return;
+        }
     }
 
     @Override

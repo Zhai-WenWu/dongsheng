@@ -25,6 +25,7 @@ import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
 
 public class KeyboardDialog extends Dialog implements View.OnClickListener {
+    private Context mContext;
     private int mMaxLength = Integer.MAX_VALUE;
     private View mRootView;
     private EditText mEditText;
@@ -36,24 +37,27 @@ public class KeyboardDialog extends Dialog implements View.OnClickListener {
 
     private View.OnClickListener mOnSendClickListener;
     private int phoneHeight;
-    private boolean isAlearyShow= false;
+    private boolean isAlearyShow = false;
+
     public KeyboardDialog(@NonNull Context context) {
         this(context, R.style.dialog_keyboard);
     }
 
     public KeyboardDialog(@NonNull Context context, int themeResId) {
         super(context, themeResId);
+        this.mContext = context;
         getWindow().setWindowAnimations(0);
-        init(context);
+        init(0);
     }
 
     protected KeyboardDialog(@NonNull Context context, boolean cancelable, @Nullable OnCancelListener cancelListener) {
         super(context, cancelable, cancelListener);
-        init(context);
+        init(0);
     }
 
-    private void init(Context context) {
-        mRootView = LayoutInflater.from(context).inflate(R.layout.keyboard_layout, null);
+    public void init(int layoutId) {
+        layoutId = layoutId > 0 ? layoutId : R.layout.keyboard_layout;
+        mRootView = LayoutInflater.from(mContext).inflate(layoutId, null);
         phoneHeight = ToolsDevice.getWindowPx(getContext()).heightPixels;
         setContentView(mRootView);
         Window win = getWindow();
@@ -79,6 +83,7 @@ public class KeyboardDialog extends Dialog implements View.OnClickListener {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s != null && s.length() > mMaxLength) {
@@ -97,18 +102,18 @@ public class KeyboardDialog extends Dialog implements View.OnClickListener {
         mRootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                if(KeyboardDialog.this.isShowing()&&getContext()!=null) {
+                if (KeyboardDialog.this.isShowing() && getContext() != null) {
                     int[] location = new int[2];
                     mEditText.getLocationInWindow(location); //获取在当前窗口内的绝对坐标
                     mEditText.getLocationOnScreen(location);//获取在整个屏幕内的绝对坐标
                     int y = location[1];
-                    if(isAlearyShow) {
+                    if (isAlearyShow) {
                         if (phoneHeight - y < 300) {
                             KeyboardDialog.this.dismiss();
                         }
-                    }else{
-                        if(phoneHeight - y>300){
-                            isAlearyShow=true;
+                    } else {
+                        if (phoneHeight - y > 300) {
+                            isAlearyShow = true;
                         }
                     }
                 }
@@ -141,6 +146,7 @@ public class KeyboardDialog extends Dialog implements View.OnClickListener {
     public void setContentStr(String contentStr) {
         mFinalStr = contentStr;
     }
+
     public String getText() {
         return mFinalStr;
     }

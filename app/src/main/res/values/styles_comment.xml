@@ -10,4 +10,15 @@
         <item name="android:paddingLeft">@dimen/dp_3</item>
         <item name="android:paddingRight">@dimen/dp_3</item>
     </style>
+
+    <style name="course_comment_time">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:textSize">@dimen/sp_12</item>
+        <item name="android:textColor">#bbbbbb</item>
+        <item name="android:gravity">bottom</item>
+        <item name="android:paddingLeft">@dimen/dp_3</item>
+        <item name="android:paddingRight">@dimen/dp_3</item>
+    </style>
 </resources>

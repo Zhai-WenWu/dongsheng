@@ -126,6 +126,7 @@ public class CommentDialog extends Dialog implements View.OnClickListener {
         commend_write_tv = rootView.findViewById(R.id.commend_write_tv);
         commend_write_tv.setOnClickListener(this);
         downRefreshList = rootView.findViewById(R.id.comment_listview);
+        CommentListSave.saveList(listArray);
         adapterSimple = new AdapterSimple(downRefreshList, listArray, R.layout.a_comment_item, new String[]{}, new int[]{}) {
             @Override
             public View getView(final int position, View convertView, ViewGroup parent) {

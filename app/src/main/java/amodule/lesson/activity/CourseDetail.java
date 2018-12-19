@@ -49,7 +49,7 @@ public class CourseDetail extends BaseAppCompatActivity {
     private Map<String, String> mLessonInfo;
     private Map<String, String> mSyllabusInfo;
     private VideoPlayerController mVideoPlayerController;
-    private String mCode = "0";
+    private String mCode = "88";
     private String mChapterCode = "0";
     private final int SELECT_COURSE = 1;
     private int mGroupSelectIndex = 0;
