@@ -136,7 +136,7 @@ public class VerticalViewPager extends ViewPager {
         eventX = (int) event.getX();
         switch (event.getAction()) {
             case MotionEvent.ACTION_UP:
-                if (Math.abs(evX - downX) > 0) {
+                if (Math.abs(evX - downX) > 0 || scrollState == 1) {
                     if (getShowPosition() == 0) {
                         setCurrentItem(1);
                     } else if (getShowPosition() == 1) {
