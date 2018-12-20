@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -104,7 +105,8 @@ public class StudySyllabusView extends RelativeLayout {
         syllabusAdapter.setData(mapList);
         this.mSelectIndex = childIndex;
         syllabusAdapter.notifyDataSetChanged();
-        rvHorizatolListView.scrollToPosition(mSelectIndex);
+        LinearLayoutManager mLayoutManager =(LinearLayoutManager) rvHorizatolListView.getLayoutManager();
+        mLayoutManager.scrollToPositionWithOffset(mSelectIndex, 0);
 
         int size = mapList.size();
         StringBuilder stringBuilder = new StringBuilder(String.valueOf(size) + "讲");

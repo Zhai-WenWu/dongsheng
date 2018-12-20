@@ -34,8 +34,8 @@ public class CourseList extends BaseAppCompatActivity {
     private List<String> mGroupList = new ArrayList<>();
     private List<List<String>> mChildList = new ArrayList<>();
     private ExpandableListView mExList;
-    private int mGroupSelectIndex = 2;
-    private int mChildSelectIndex = 5;
+    private int mGroupSelectIndex = 0;
+    private int mChildSelectIndex = -1;
     private boolean isFromStudy;
 
     @Override
@@ -113,7 +113,6 @@ public class CourseList extends BaseAppCompatActivity {
      * @param info 只有一章
      */
     private void initOne(ArrayList<Map<String, String>> info) {
-        mChildSelectIndex = -1;
         ArrayList<Map<String, String>> lessonList = StringManager.getListMapByJson(info.get(0).get("lessonList"));
         ArrayList<String> child = new ArrayList<>();
         for (Map<String, String> map : lessonList) {
@@ -124,6 +123,7 @@ public class CourseList extends BaseAppCompatActivity {
         //设置分组项的点击监听事件
         mExList.setOnGroupClickListener((expandableListView, view, i, l) -> {
             mGroupSelectIndex = i;
+            mChildSelectIndex = i;
             clickItem(lessonList.get(i).get("code"));
             return false;
         });
@@ -161,11 +161,13 @@ public class CourseList extends BaseAppCompatActivity {
         if (isFromStudy) {
             Intent intent = new Intent();
             intent.putExtra("code", code);
+            intent.putExtra(CourseDetail.EXTRA_CHILD,mChildSelectIndex);
             setResult(RESULT_OK, intent);
             finish();
         } else {
             Intent it = new Intent(this, CourseDetail.class);
             it.putExtra("code", code);
+            it.putExtra(CourseDetail.EXTRA_CHILD,mChildSelectIndex);
             startActivity(it);
         }
     }
