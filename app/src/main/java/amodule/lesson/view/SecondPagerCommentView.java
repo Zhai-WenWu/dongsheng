@@ -21,22 +21,25 @@ import com.xh.view.HButtonView;
 import com.xh.view.TitleMessageView;
 import com.xiangha.R;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
-import acore.logic.XHClick;
 import acore.logic.load.LoadManager;
+import acore.override.XHApplication;
 import acore.override.adapter.AdapterSimple;
 import acore.tools.StringManager;
+import acore.tools.Tools;
 import acore.widget.DownRefreshList;
 import acore.widget.KeyboardDialog;
 import amodule.article.activity.ReportActivity;
 import amodule.comment.CommentDialog;
-import amodule.comment.CommentListSave;
-import amodule.comment.view.ViewCommentItem;
 import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
@@ -47,7 +50,6 @@ import static xh.basic.tool.UtilString.getListMapByJson;
 
 public class SecondPagerCommentView extends RelativeLayout {
     private Context mContext;
-    private Activity mActivity;
     private List<String> mData;
     private ArrayList<Map<String, String>> listArray = new ArrayList<>();
     private final int KEYBOARD_OPTION_COMMENT = 1;
@@ -69,7 +71,6 @@ public class SecondPagerCommentView extends RelativeLayout {
     private TextView commend_write_tv;
     private LinearLayout titleLayout;
     private TextView titleTv;
-    private TextView comment_allNum;
     private ImageView close_img;
 
     private View mCommentHintView;
@@ -106,8 +107,10 @@ public class SecondPagerCommentView extends RelativeLayout {
     }
 
     public void initView() {
+        commentIdStrBuffer = new StringBuffer();
         View view = LayoutInflater.from(mContext).inflate(R.layout.item_course_list, this, true);
         downRefreshList = view.findViewById(R.id.comment_listview);
+        downRefreshList.setRefreshEnable(false);
         mContentView = view.findViewById(R.id.activityLayout);
         mCommentHintView = view.findViewById(R.id.commend_hind);
         mLoadManager = new LoadManager(mContext, mContentView);
@@ -121,7 +124,6 @@ public class SecondPagerCommentView extends RelativeLayout {
             }
         });
 
-//        mCommentList = CommentListSave.mList;
         adapterSimple = new AdapterSimple(downRefreshList, listArray, R.layout.a_course_comment_item, new String[]{}, new int[]{}) {
             @Override
             public View getView(final int position, View convertView, ViewGroup parent) {
@@ -139,11 +141,6 @@ public class SecondPagerCommentView extends RelativeLayout {
             public void onClick(View arg0) {
                 getCommentData(false);
             }
-        }, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getCommentData(true);
-            }
         });
     }
 
@@ -154,10 +151,10 @@ public class SecondPagerCommentView extends RelativeLayout {
         if (mKeyboardDialogOptionFrom == KEYBOARD_OPTION_REPLAY) {
             keyboardDialog.setContentStr(mReplayText);
             if (TextUtils.isEmpty(mReplayText)) {
-                keyboardDialog.setHintStr("回复:.....");
+                keyboardDialog.setHintStr("回复" + mCurrentReplayName);
             }
         } else if (mKeyboardDialogOptionFrom == KEYBOARD_OPTION_COMMENT) {
-            keyboardDialog.setContentStr(mCommentText);
+            keyboardDialog.setHintStr("写评论...");
         }
         keyboardDialog.setOnSendClickListener(new View.OnClickListener() {
             @Override
@@ -185,12 +182,98 @@ public class SecondPagerCommentView extends RelativeLayout {
         keyboardDialog.show();
     }
 
-    private void sendData(String sendText) {
+    private synchronized void sendData(String sendText) {
+        if (isSend || TextUtils.isEmpty(sendText)) return;
         if (!LoginManager.isLogin()) {
             Intent intent = new Intent(mContext, LoginByAccout.class);
             mContext.startActivity(intent);
             return;
         }
+        isSend = true;
+
+        String newParams;
+        isAddForm = false;
+        if (StringManager.api_addForum.equals(currentUrl)) {
+            isAddForm = true;
+            JSONArray jsonArray = new JSONArray();
+            try {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("text", sendText);
+                jsonArray.put(jsonObject);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            newParams = "type=" + type + "&code=" + code + "&content=" + jsonArray.toString();
+        } else {
+            newParams = "type=" + type + "&code=" + code + currentParams + "&content=" + sendText;
+        }
+        newParams += "&commentIds=" + commentIdStrBuffer;
+        Log.i("commentReplay", "sendData() newParams:" + newParams);
+        ReqEncyptInternet.in().doEncypt(currentUrl, newParams, new InternetCallback() {
+            @Override
+            public void loaded(int flag, String s, Object o) {
+                Log.i("commentReplay", "sendData() flag:" + flag + "   o:" + o);
+                if (flag >= ReqInternet.REQ_OK_STRING) {
+                    if (isAddForm) {
+                        ArrayList<Map<String, String>> arrayList = getListMapByJson(o);
+                        Log.i("commentReplay", "sendData() arrayList:" + arrayList.size());
+                        if (arrayList.size() > 0) {
+                            Map<String, String> map = arrayList.get(0);
+                            if (commentIdStrBuffer.length() != 0) commentIdStrBuffer.append(",");
+                            commentIdStrBuffer.append(map.get("comment_id"));
+                            listArray.add(0, arrayList.get(0));
+                            if (listArray.size() == 1)
+                                changeDataChange();
+                        }
+                        adapterSimple.notifyDataSetChanged();
+                        downRefreshList.setSelection(0);
+                    } else {
+                        Log.i("commentReplay", "sendData() replayIndex:" + replayIndex);
+                        Map<String, String> map = listArray.get(replayIndex);
+                        String replay = map.get("replay");
+                        Log.i("commentReplay", "sendData() replay:" + replay);
+                        if (!TextUtils.isEmpty(replay)) {
+                            JSONArray jsonArray = new JSONArray();
+                            JSONObject jsonObject;
+                            Map<String, String> replayMap;
+                            ArrayList<Map<String, String>> arrayList = StringManager.getListMapByJson(replay);
+                            ArrayList<Map<String, String>> newList = StringManager.getListMapByJson(o);
+                            arrayList.addAll(newList);
+                            try {
+                                for (int i = 0; i < arrayList.size(); i++) {
+                                    jsonObject = new JSONObject();
+                                    replayMap = arrayList.get(i);
+                                    for (String key : replayMap.keySet()) {
+                                        jsonObject.put(key, replayMap.get(key));
+                                    }
+                                    jsonArray.put(jsonObject);
+                                }
+                            } catch (JSONException exception) {
+                                exception.printStackTrace();
+                            }
+                            map.put("replay", jsonArray.toString());
+                            Log.i("commentReplay", "sendData() jsonArray:" + jsonArray.toString());
+                            adapterSimple.notifyDataSetChanged();
+                        }
+                    }
+
+                    try {
+                        mCommentsNum = Integer.parseInt(mCommentsNumStr);
+                    } catch (Exception e) {
+                        mCommentsNum = -1;
+                    }
+                    if (mCommentsNum != -1) {
+                        mCommentsNum++;
+                        mCommentsNumStr = String.valueOf(mCommentsNum);
+                    }
+                    if (mCommentOptionSuccCallback != null)
+                        mCommentOptionSuccCallback.onSendSucc();
+                } else {
+                    Tools.showToast(XHApplication.in(), String.valueOf(o));
+                }
+                isSend = false;
+            }
+        });
     }
 
     private void getCommentData(final boolean isForward) {
@@ -411,7 +494,6 @@ public class SecondPagerCommentView extends RelativeLayout {
                                                         mCommentsNum = Math.max(mCommentsNum, 0);
                                                         mCommentsNumStr = String.valueOf(mCommentsNum);
                                                     }
-                                                    setCommentsNum();
                                                     if (listArray.size() == 0) {
                                                         upDropPage = 1;
                                                         gotoCommentId = null;
@@ -499,9 +581,6 @@ public class SecondPagerCommentView extends RelativeLayout {
         };
     }
 
-    private void setCommentsNum() {
-        comment_allNum.setText("全部评论(" + (mCommentsNum == -1 ? mCommentsNumStr : mCommentsNum) + ")");
-    }
 
     public DownRefreshList getListView() {
         return downRefreshList;

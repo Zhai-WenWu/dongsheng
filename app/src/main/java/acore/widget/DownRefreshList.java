@@ -126,6 +126,11 @@ public class DownRefreshList extends ListView implements OnScrollListener {
 		onRefreshComplete();
 	}
 
+	public void setRefreshEnable(boolean refreshEnable) {
+		if (!refreshEnable && getHeaderViewsCount() > 0)
+			removeHeaderView(headView);
+	}
+
 	@Override
 	public void onScroll(AbsListView arg0, int firstVisiableItem, int arg2,// 滚动事件
 			int arg3) {

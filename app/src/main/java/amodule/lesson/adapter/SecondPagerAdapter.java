@@ -2,19 +2,13 @@ package amodule.lesson.adapter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
-import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
-import android.util.ArrayMap;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.AbsListView;
-import android.widget.TextView;
 
 import com.xiangha.R;
 
@@ -22,17 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import acore.logic.LoginManager;
-import acore.override.adapter.AdapterSimple;
-import acore.tools.StringManager;
 import acore.widget.DownRefreshList;
-import acore.widget.KeyboardDialog;
-import acore.widget.rvlistview.RvListView;
-import amodule.comment.CommentListSave;
-import amodule.comment.view.ViewCommentItem;
-import amodule.lesson.view.CourseCommentItem;
 import amodule.lesson.view.SecondPagerCommentView;
-import amodule.user.activity.login.LoginByAccout;
 import aplug.web.view.XHWebView;
 
 public class SecondPagerAdapter extends PagerAdapter {
@@ -94,7 +79,7 @@ public class SecondPagerAdapter extends PagerAdapter {
         } else {
 
             listView = mSecondPagerCommentView.getListView();
-            mSecondPagerCommentView.getListView().setOnScrollListener(new AbsListView.OnScrollListener() {
+            listView.setOnScrollListener(new AbsListView.OnScrollListener() {
                 @Override
                 public void onScrollStateChanged(AbsListView view, int scrollState) {
 

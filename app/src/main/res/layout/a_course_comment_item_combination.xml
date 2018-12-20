@@ -112,7 +112,7 @@
                 android:paddingLeft="@dimen/dp_5"
                 android:paddingRight="@dimen/dp_2"
                 android:paddingTop="@dimen/dp_3"
-                android:src="@drawable/i_comment_praise" />
+                android:src="@drawable/i_study_comment_praise" />
         </RelativeLayout>
 
         <ImageView
