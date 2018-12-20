@@ -53,11 +53,11 @@ public class CourseList extends BaseAppCompatActivity {
     }
 
     private void initData() {
-//        String mCode = getIntent().getStringExtra(EXTRA_CODE);
-//        String mType = getIntent().getStringExtra(EXTRA_TYPE);
+        String mCode = getIntent().getStringExtra(EXTRA_CODE);
         isFromStudy = getIntent().getBooleanExtra(EXTRA_FROM_STUDY, false);
+        String type = isFromStudy ? "2" : "1";
         loadManager.loading(mExList, true);
-        CourseDataController.loadCourseListData("88", "1", new InternetCallback() {
+        CourseDataController.loadCourseListData(mCode, type, new InternetCallback() {
             @Override
             public void loaded(int i, String s, Object o) {
                 loadManager.loaded(mExList);
@@ -76,13 +76,11 @@ public class CourseList extends BaseAppCompatActivity {
         String lessonCode = playHistory.get("lessonCode");
         ArrayList<Map<String, String>> info = StringManager.getListMapByJson(mCourseListMap.get("chapterList"));
 
-
         if (TextUtils.equals("1", chapterNum)) {//只有一章
-            mGroupSelectIndex = 0;
             ArrayList<Map<String, String>> lessonList = StringManager.getListMapByJson(info.get(0).get("lessonList"));
             for (int j = 0; j < lessonList.size(); j++) {
                 if (TextUtils.equals(lessonCode, lessonList.get(j).get("code"))) {
-                    mChildSelectIndex = j;
+                    mGroupSelectIndex = j;
                     break;
                 }
             }
@@ -91,6 +89,7 @@ public class CourseList extends BaseAppCompatActivity {
             for (int i = 0; i < info.size(); i++) {
                 if (TextUtils.equals(chapterCode, info.get(i).get("code"))) {
                     mGroupSelectIndex = i;
+                    mExList.expandGroup(mGroupSelectIndex);
                     ArrayList<Map<String, String>> lessonList = StringManager.getListMapByJson(info.get(i).get("lessonList"));
                     for (int j = 0; j < lessonList.size(); j++) {
                         if (TextUtils.equals(lessonCode, lessonList.get(j).get("code"))) {
@@ -105,16 +104,16 @@ public class CourseList extends BaseAppCompatActivity {
         }
         mSyllabusAdapter.setChildList(mChildList);
         mSyllabusAdapter.setGroupList(mGroupList);
-        mSyllabusAdapter.notifyDataSetChanged();
         mSyllabusAdapter.setSelectIndex(mGroupSelectIndex, mChildSelectIndex);
+        mSyllabusAdapter.notifyDataSetChanged();
 
-        mExList.expandGroup(mGroupSelectIndex);
     }
 
     /**
      * @param info 只有一章
      */
     private void initOne(ArrayList<Map<String, String>> info) {
+        mChildSelectIndex = -1;
         ArrayList<Map<String, String>> lessonList = StringManager.getListMapByJson(info.get(0).get("lessonList"));
         ArrayList<String> child = new ArrayList<>();
         for (Map<String, String> map : lessonList) {
@@ -124,7 +123,7 @@ public class CourseList extends BaseAppCompatActivity {
 
         //设置分组项的点击监听事件
         mExList.setOnGroupClickListener((expandableListView, view, i, l) -> {
-            mChildSelectIndex = -1;
+            mGroupSelectIndex = i;
             clickItem(lessonList.get(i).get("code"));
             return false;
         });

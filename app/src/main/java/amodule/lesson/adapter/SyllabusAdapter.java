@@ -96,10 +96,11 @@ public class SyllabusAdapter extends BaseExpandableListAdapter {
             groupViewHolder = (GroupViewHolder) convertView.getTag();
         }
         groupViewHolder.tvTitle.setText(groupList.get(groupPosition));
-
-        if (getChildrenCount(groupPosition) > 0) {
+        int childrenCount = getChildrenCount(groupPosition);
+        if (childrenCount > 0) {
             groupViewHolder.ivRight.setVisibility(View.VISIBLE);
             groupViewHolder.tvRight.setVisibility(View.VISIBLE);
+            groupViewHolder.tvRight.setText(childrenCount + "节");
             if (isExpanded) {
                 groupViewHolder.ivRight.setImageDrawable(mActivity.getResources().getDrawable(R.drawable.class_card_group_close));
                 groupViewHolder.llGroup.setBackgroundResource(R.drawable.bg_circle_f5f7fa_top_10);
@@ -108,16 +109,16 @@ public class SyllabusAdapter extends BaseExpandableListAdapter {
                 groupViewHolder.llGroup.setBackgroundResource(R.drawable.bg_circle_f5f7fa_10);
             }
         } else {
-            convertView.setBackgroundResource(R.drawable.bg_circle_f5f7fa_10);
             groupViewHolder.ivRight.setVisibility(View.GONE);
             groupViewHolder.tvRight.setVisibility(View.GONE);
-            if (groupPosition == mGroupSelectIndex) {
-                convertView.setBackgroundResource(R.drawable.bg_circle_f5f7fab_10);
-            } else {
-                convertView.setBackgroundResource(R.drawable.bg_circle_f5f7fa_10);
-            }
-
+            groupViewHolder.llGroup.setBackgroundResource(R.drawable.bg_circle_f5f7fa_10);
         }
+        if (mGroupSelectIndex == groupPosition) {
+            groupViewHolder.tvTitle.setTextColor(mActivity.getResources().getColor(R.color.color_fa273b));
+        } else {
+            groupViewHolder.tvTitle.setTextColor(mActivity.getResources().getColor(R.color.c_3e3e3e));
+        }
+
         return convertView;
     }
 
@@ -134,22 +135,19 @@ public class SyllabusAdapter extends BaseExpandableListAdapter {
             childViewHolder = (ChildViewHolder) convertView.getTag();
         }
 
-
         if (childPosition == getChildrenCount(groupPosition) - 1) {
-            if (childPosition == mChildSelectIndex && groupPosition == mGroupSelectIndex) {
-                convertView.setBackgroundResource(R.drawable.bg_circle_f5f7fab_bottom_10);
-            } else {
-                convertView.setBackgroundResource(R.drawable.bg_circle_f5f7fa_bottom_10);
-            }
+            convertView.setBackgroundResource(R.drawable.bg_circle_f5f7fa_bottom_10);
         } else {
-            if (childPosition == mChildSelectIndex && groupPosition == mGroupSelectIndex) {
-                convertView.setBackgroundColor(mActivity.getResources().getColor(R.color.c_ffbe03));
-            } else {//c_ffbe03
-                convertView.setBackgroundColor(mActivity.getResources().getColor(R.color.c_f5f7fa));
-            }
-
+            convertView.setBackgroundColor(mActivity.getResources().getColor(R.color.c_f5f7fa));
         }
         childViewHolder.tvTitle.setText(childList.get(groupPosition).get(childPosition));
+        if (groupPosition == mGroupSelectIndex && childPosition == mChildSelectIndex) {
+            childViewHolder.tvTitle.setTextColor(mActivity.getResources().getColor(R.color.color_fa273b));
+            childViewHolder.tvTitle.setCompoundDrawables(mActivity.getResources().getDrawable(R.drawable.class_card_item_playing), null, null, null);
+        } else {
+            childViewHolder.tvTitle.setTextColor(mActivity.getResources().getColor(R.color.c_3e3e3e));
+            childViewHolder.tvTitle.setCompoundDrawables(mActivity.getResources().getDrawable(R.drawable.class_card_item_play), null, null, null);
+        }
         return convertView;
     }
 

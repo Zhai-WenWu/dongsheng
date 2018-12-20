@@ -320,7 +320,6 @@ public class CourseDetail extends BaseAppCompatActivity {
 //                intent.putExtra(CourseDetail.EXTRA_GROUP, mGroupSelectIndex);
 //                intent.putExtra(CourseDetail.EXTRA_CHILD, mChildSelectIndex);
                 intent.putExtra(CourseList.EXTRA_FROM_STUDY, true);
-                // TODO: 2018/12/13  
                 intent.putExtra(CourseList.EXTRA_CODE, mCode);
                 intent.putExtra(CourseList.EXTRA_TYPE, "2");
                 startActivityForResult(intent, SELECT_COURSE);

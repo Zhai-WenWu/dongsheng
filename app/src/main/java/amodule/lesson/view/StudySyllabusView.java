@@ -92,7 +92,7 @@ public class StudySyllabusView extends RelativeLayout {
 
             @Override
             public void onItemClicked(View view, RecyclerView.ViewHolder holder, int position) {
-                onSyllabusSelect.onSelect(position,mapList.get(position).get("code"));
+                onSyllabusSelect.onSelect(position, mapList.get(position).get("code"));
             }
         });
     }
@@ -108,17 +108,12 @@ public class StudySyllabusView extends RelativeLayout {
 
         int size = mapList.size();
         StringBuilder stringBuilder = new StringBuilder(String.valueOf(size) + "讲");
-//        if (size > 3) {
-//            stringBuilder.append(">");
-//            classNumTv.setEnabled(true);
-//        } else {
-//            classNumTv.setEnabled(false);
-//        }
-//        if (size > 1) {
-//            setVisibility(VISIBLE);
-//        } else {
-//            setVisibility(GONE);
-//        }
+        if (size > 3) {
+            stringBuilder.append(">");
+            classNumTv.setEnabled(true);
+        } else {
+            classNumTv.setEnabled(false);
+        }
         classNumTv.setText(stringBuilder);
         titleTv.setText(courseListMap.get("title"));
     }
@@ -146,18 +141,18 @@ public class StudySyllabusView extends RelativeLayout {
         private ItemSyllabus view;
 
         public ViewHolder(@NonNull ItemSyllabus itemView) {
-            super(itemView,MOUDEL_NAME);
+            super(itemView, MOUDEL_NAME);
             this.view = itemView;
         }
 
         @Override
         public boolean isShown(Map<String, String> data) {
-            return TextUtils.equals("2",data.get("isShow"));
+            return TextUtils.equals("2", data.get("isShow"));
         }
 
         @Override
         public void hasShown(Map<String, String> data) {
-            data.put("isShow","2");
+            data.put("isShow", "2");
         }
 
         @Override
@@ -168,7 +163,7 @@ public class StudySyllabusView extends RelativeLayout {
         @Override
         public void overrideBindData(int position, @Nullable Map<String, String> data) {
             view.setData(data, position, mSelectIndex);
-            if (changeTvColer){
+            if (changeTvColer) {
                 view.setTextColer();
             }
         }
