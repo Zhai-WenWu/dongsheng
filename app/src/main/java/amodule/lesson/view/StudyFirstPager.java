@@ -2,6 +2,7 @@ package amodule.lesson.view;
 
 import android.app.Activity;
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,6 +32,7 @@ public class StudyFirstPager extends RelativeLayout {
     private int mChildSelectIndex;
     private RelativeLayout mVideoRv;
     private View mAlphaView;
+    private int commentIndex;
 
     public StudySyllabusView getStudySyllabusView() {
         return mStudySyllabusView;
@@ -38,6 +40,10 @@ public class StudyFirstPager extends RelativeLayout {
 
     public LinearLayout getBtnLayout() {
         return mBtnLayout;
+    }
+
+    public int getCommentIndex() {
+        return commentIndex;
     }
 
     public StudyFirstPager(Context context) {
@@ -134,6 +140,8 @@ public class StudyFirstPager extends RelativeLayout {
         }
         TextView textView = view.findViewById(R.id.label_text);
         String title = stringStringMap.get("title");
+        if (TextUtils.equals("讨论区", title))
+            commentIndex = i;
         textView.setText(title);
         view.setOnClickListener(new View.OnClickListener() {
             @Override

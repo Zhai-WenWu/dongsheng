@@ -23,14 +23,8 @@ import aplug.web.view.XHWebView;
 public class SecondPagerAdapter extends PagerAdapter {
     private Activity mActivity;
     private List<String> mData;
-    private ArrayList<Map<String, String>> mCommentList;
-    private final int KEYBOARD_OPTION_COMMENT = 1;
-    private final int KEYBOARD_OPTION_REPLAY = 2;
-    private String currentUrl;
-    private int mKeyboardDialogOptionFrom = KEYBOARD_OPTION_COMMENT;
     private DownRefreshList listView;
-    private String mReplayText;
-    private String mCommentText;
+    private int mCommentIndex;
     private SecondPagerCommentView mSecondPagerCommentView;
 
     public SecondPagerAdapter(Context activity, SecondPagerCommentView secondPagerCommentView) {
@@ -38,8 +32,9 @@ public class SecondPagerAdapter extends PagerAdapter {
         this.mSecondPagerCommentView = secondPagerCommentView;
     }
 
-    public void setData(List<String> data) {
+    public void setData(List<String> data, int commentIndex) {
         mData = data;
+        mCommentIndex = commentIndex;
     }
 
     @Override
@@ -55,7 +50,7 @@ public class SecondPagerAdapter extends PagerAdapter {
     @Override
     public final Object instantiateItem(ViewGroup container, int position) {
         View convertView;
-        if (position != 1) {
+        if (position != mCommentIndex) {
             convertView = mActivity.getLayoutInflater().inflate(R.layout.item_course_web, container, false);
             XHWebView mWebView = convertView.findViewById(R.id.webview);
             String url = mData.get(position);

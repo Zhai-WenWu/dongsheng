@@ -25,8 +25,6 @@ import aplug.basic.ReqInternet;
  * e_mail : ztanzeyu@gmail.com
  */
 public class CourseList extends BaseAppCompatActivity {
-    public static final String EXTRA_GROUP = "group";
-    public static final String EXTRA_CHILD = "child";
     public static final String EXTRA_FROM_STUDY = "from";
     public static final String EXTRA_CODE = "code";
     public static final String EXTRA_TYPE = "type";

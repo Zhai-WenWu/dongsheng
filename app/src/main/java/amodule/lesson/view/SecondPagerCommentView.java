@@ -56,7 +56,6 @@ public class SecondPagerCommentView extends RelativeLayout {
     private final int KEYBOARD_OPTION_REPLAY = 2;
     private int mKeyboardDialogOptionFrom = KEYBOARD_OPTION_COMMENT;
     private String mReplayText;
-    private String mCommentText;
     private RelativeLayout mContentView;
     private LoadManager mLoadManager;
     private String type = "7";
@@ -154,7 +153,10 @@ public class SecondPagerCommentView extends RelativeLayout {
                 keyboardDialog.setHintStr("回复" + mCurrentReplayName);
             }
         } else if (mKeyboardDialogOptionFrom == KEYBOARD_OPTION_COMMENT) {
-            keyboardDialog.setHintStr("写评论...");
+            keyboardDialog.setContentStr(mSendText);
+            if (TextUtils.isEmpty(mSendText)) {
+                keyboardDialog.setHintStr("写评论...");
+            }
         }
         keyboardDialog.setOnSendClickListener(new View.OnClickListener() {
             @Override
@@ -173,7 +175,7 @@ public class SecondPagerCommentView extends RelativeLayout {
             public void onDismiss(DialogInterface dialog) {
                 String finalStr = keyboardDialog.getText();
                 if (mKeyboardDialogOptionFrom == KEYBOARD_OPTION_COMMENT) {
-                    mCommentText = finalStr;
+                    mSendText = finalStr;
                 } else if (mKeyboardDialogOptionFrom == KEYBOARD_OPTION_REPLAY) {
                     mReplayText = finalStr;
                 }

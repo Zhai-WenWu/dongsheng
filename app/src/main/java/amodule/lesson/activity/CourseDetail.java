@@ -42,7 +42,6 @@ import third.video.VideoPlayerController;
 public class CourseDetail extends BaseAppCompatActivity {
     public static final String EXTRA_CHAPTER_CODE = "chapterCode";
     public static final String EXTRA_CODE = "code";
-    public static final String EXTRA_GROUP = "group";
     public static final String EXTRA_CHILD = "child";
     private Map<String, String> mLessonInfo;
     private Map<String, String> mSyllabusInfo;
@@ -50,7 +49,6 @@ public class CourseDetail extends BaseAppCompatActivity {
     private String mCode = "88";
     private String mChapterCode = "0";
     private final int SELECT_COURSE = 1;
-    private int mGroupSelectIndex = 0;
     private int mChildSelectIndex = -1;
     private Map<String, String> shareMap;
     private VerticalViewPager viewPager;
@@ -295,7 +293,7 @@ public class CourseDetail extends BaseAppCompatActivity {
         mData.put("syllabusInfo", mSyllabusInfo);
         studyFirstPager.initData(mData, mChildSelectIndex);
         mVideoPlayerController = studyFirstPager.getVideoPlayerController();
-        studySecondPager.initData(mData);
+        studySecondPager.initData(mData,studyFirstPager.getCommentIndex());
 
         mVerticalAdapter.setView(studyFirstPager, studySecondPager);
         mVerticalAdapter.notifyDataSetChanged();
