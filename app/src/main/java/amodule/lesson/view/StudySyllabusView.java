@@ -40,6 +40,7 @@ public class StudySyllabusView extends RelativeLayout {
     private TextView classNumTv;
     private TextView titleTv;
     private boolean changeTvColer;
+    private boolean listNeedScroll = true;
 
     public TextView getClassNumTv() {
         return classNumTv;
@@ -86,6 +87,7 @@ public class StudySyllabusView extends RelativeLayout {
         });
 
         rvHorizatolListView.setOnItemClickListener(new OnItemClickListenerRvStat(MOUDEL_NAME) {
+
             @Override
             protected String getStatData(int position) {
                 return mapList.get(position).get("statJson");
@@ -93,6 +95,7 @@ public class StudySyllabusView extends RelativeLayout {
 
             @Override
             public void onItemClicked(View view, RecyclerView.ViewHolder holder, int position) {
+                listNeedScroll = false;
                 onSyllabusSelect.onSelect(position, mapList.get(position).get("code"));
             }
         });
@@ -105,9 +108,10 @@ public class StudySyllabusView extends RelativeLayout {
         syllabusAdapter.setData(mapList);
         this.mSelectIndex = childIndex;
         syllabusAdapter.notifyDataSetChanged();
-        LinearLayoutManager mLayoutManager =(LinearLayoutManager) rvHorizatolListView.getLayoutManager();
-        mLayoutManager.scrollToPositionWithOffset(mSelectIndex, 0);
-
+        LinearLayoutManager mLayoutManager = (LinearLayoutManager) rvHorizatolListView.getLayoutManager();
+        if (listNeedScroll)
+            mLayoutManager.scrollToPositionWithOffset(mSelectIndex, 0);
+        listNeedScroll = true;
         int size = mapList.size();
         StringBuilder stringBuilder = new StringBuilder(String.valueOf(size) + "讲");
         if (size > 3) {

@@ -139,10 +139,9 @@ public class StudyFirstPager extends RelativeLayout {
             }
         }
         TextView textView = view.findViewById(R.id.label_text);
-        String title = stringStringMap.get("title");
-        if (TextUtils.equals("讨论区", title))
+        if (TextUtils.equals("2", stringStringMap.get("pageType")))
             commentIndex = i;
-        textView.setText(title);
+        textView.setText(stringStringMap.get("title"));
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

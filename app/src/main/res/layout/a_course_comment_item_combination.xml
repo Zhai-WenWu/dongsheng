@@ -44,10 +44,17 @@
             android:id="@+id/comment_user_vip"
             android:layout_width="@dimen/dp_19"
             android:layout_height="@dimen/dp_21"
-            android:layout_centerVertical="true"
             android:gravity="center"
             android:paddingLeft="@dimen/dp_4"
             android:paddingRight="@dimen/dp_3" />
+
+        <ImageView
+            android:id="@+id/iv_author"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_14"
+            android:scaleType="centerInside"
+            android:visibility="gone"
+            android:src="@drawable/i_course_author" />
 
     </LinearLayout>
 
@@ -129,11 +136,11 @@
             android:id="@+id/comment_item_replay_cotent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_11"
             android:background="#efefef"
             android:orientation="vertical"
             android:paddingBottom="@dimen/dp_11"
             android:paddingTop="@dimen/dp_11"
-            android:layout_marginTop="@dimen/dp_11"
             android:visibility="visible" />
 
         <TextView

@@ -178,9 +178,7 @@ public class CourseDetail extends BaseAppCompatActivity {
         shareBtn.setVisibility(View.VISIBLE);
         TextView titleTv = (TextView) findViewById(R.id.title);
         TextView titleBottomTv = (TextView) findViewById(R.id.title_bottom);
-        titleTv.setMaxWidth(ToolsDevice.getWindowPx(this).widthPixels - ToolsDevice.dp2px(this, 45 + 40));
         titleTv.setText(mLessonInfo.get("name"));
-        titleBottomTv.setMaxWidth(ToolsDevice.getWindowPx(this).widthPixels - ToolsDevice.dp2px(this, 45 + 40));
         titleBottomTv.setText(mLessonInfo.get("name"));
         shareMap = StringManager.getFirstMap(mLessonInfo.get("shareData"));
         //返回按钮控制

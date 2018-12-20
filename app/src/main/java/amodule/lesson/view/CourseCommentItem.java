@@ -60,6 +60,7 @@ public class CourseCommentItem extends LinearLayout {
      * 控制评论item是否有长按删除或举报功能
      */
     public boolean isHaveLongClickRight = true;
+    private ImageView authorImg;
 
     public CourseCommentItem(Context context) {
         super(context);
@@ -90,6 +91,7 @@ public class CourseCommentItem extends LinearLayout {
         commentContent = (LinearLayout) findViewById(R.id.comment_content);
         commentReplayImg = (ImageView) findViewById(R.id.comment_item_replay_cotent_img);
         commentReplay = (LinearLayout) findViewById(R.id.comment_item_replay_cotent);
+        authorImg = findViewById(R.id.iv_author);
     }
 
     public void setData(Map<String, String> map) {
@@ -136,6 +138,12 @@ public class CourseCommentItem extends LinearLayout {
             });
             if (!TextUtils.isEmpty(cusstomMap.get("name_color")))
                 userName.setTextColor(ColorUtil.parseColor(cusstomMap.get("name_color")));
+            if (TextUtils.equals("2", cusstomMap.get("is_author"))) {
+                authorImg.setVisibility(VISIBLE);
+            } else {
+                authorImg.setVisibility(GONE);
+            }
+
             AppCommon.setVip((Activity) mContext, userVip, cusstomMap.get("is_member"), AppCommon.VipFrom.COMMENT, new OnClickListener() {
                 @Override
                 public void onClick(View v) {
