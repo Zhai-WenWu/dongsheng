@@ -188,8 +188,11 @@ public class CourseDetail extends BaseAppCompatActivity {
                 doShare();
             }
         };
+        shareBtn.setTag("分享");
         shareBtn.setOnClickListener(shareClick);
-        findViewById(R.id.back_white).setOnClickListener(new OnClickListenerStat() {
+        ImageView back = findViewById(R.id.back_white);
+        back.setTag("返回");
+        back.setOnClickListener(new OnClickListenerStat() {
             @Override
             public void onClicked(View v) {
                 if (viewPager.getShowPosition() > 0) {
