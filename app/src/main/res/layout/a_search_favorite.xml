@@ -56,7 +56,7 @@
                     android:layout_toRightOf="@+id/a_home_search_icon"
                     android:background="@drawable/bg_round_transparent"
                     android:gravity="center_vertical"
-                    android:hint="搜菜谱/文章/视频/帖子..."
+                    android:hint="搜菜谱/课程/文章/视频/帖子..."
                     android:imeOptions="actionSearch"
                     android:inputType="textPhonetic"
                     android:maxLength="15"
