@@ -132,6 +132,7 @@ public class CourseList extends BaseAppCompatActivity {
         mExList.setOnGroupClickListener((expandableListView, view, i, l) -> {
             mGroupSelectIndex = i;
             mChildSelectIndex = i;
+            StatisticsManager.saveData(StatModel.createListClickModel(getClass().getSimpleName(), "", "1" + String.valueOf(i + 1), "", mStatJsonList.get(0).get(i).getStat()));
             clickItem(lessonList.get(i).get("code"));
             return false;
         });
@@ -162,7 +163,7 @@ public class CourseList extends BaseAppCompatActivity {
             ArrayList<Map<String, String>> lessonList = StringManager.getListMapByJson(info.get(groupPosition).get("lessonList"));
             mGroupSelectIndex = groupPosition;
             mChildSelectIndex = childPosition;
-            StatisticsManager.saveData(StatModel.createListClickModel(getClass().getSimpleName(), "", String.valueOf(groupPosition + 1), "",mStatJsonList.get(groupPosition).get(childPosition).getStat()));
+            StatisticsManager.saveData(StatModel.createListClickModel(getClass().getSimpleName(), "", String.valueOf(groupPosition + 1), "", mStatJsonList.get(groupPosition).get(childPosition).getStat()));
             clickItem(lessonList.get(childPosition).get("code"));
             return true;
         });
