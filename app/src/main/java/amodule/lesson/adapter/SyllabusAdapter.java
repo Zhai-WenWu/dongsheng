@@ -14,12 +14,18 @@ import com.xiangha.R;
 import java.util.ArrayList;
 import java.util.List;
 
+import acore.logic.stat.StatModel;
+import acore.logic.stat.StatisticsManager;
+import amodule.lesson.model.SyllabusStatModel;
+
 public class SyllabusAdapter extends BaseExpandableListAdapter {
     private Activity mActivity;
     private List<String> groupList = new ArrayList<>();
     private List<List<String>> childList = new ArrayList<>();
     private int mChildSelectIndex;
     private int mGroupSelectIndex;
+    private List<List<SyllabusStatModel>> mStatJsonList;
+    private String activityName;
 
     public void setGroupList(List<String> groupList) {
         this.groupList = groupList;
@@ -34,6 +40,7 @@ public class SyllabusAdapter extends BaseExpandableListAdapter {
     }
 
     public void setSelectIndex(int groupSelectNum, int childSelectNum) {
+        activityName = mActivity.getClass().getSimpleName();
         this.mChildSelectIndex = childSelectNum;
         this.mGroupSelectIndex = groupSelectNum;
     }
@@ -109,6 +116,11 @@ public class SyllabusAdapter extends BaseExpandableListAdapter {
                 groupViewHolder.llGroup.setBackgroundResource(R.drawable.bg_circle_f5f7fa_10);
             }
         } else {
+            SyllabusStatModel syllabusStatModel = mStatJsonList.get(0).get(groupPosition);
+            if (!syllabusStatModel.isShow()) {
+                StatisticsManager.saveData(StatModel.createListShowModel(activityName, "", "1" + String.valueOf(groupPosition + 1), "", syllabusStatModel.getStat()));
+                syllabusStatModel.setShow(true);
+            }
             groupViewHolder.ivRight.setVisibility(View.GONE);
             groupViewHolder.tvRight.setVisibility(View.GONE);
             groupViewHolder.llGroup.setBackgroundResource(R.drawable.bg_circle_f5f7fa_10);
@@ -135,12 +147,19 @@ public class SyllabusAdapter extends BaseExpandableListAdapter {
             childViewHolder = (ChildViewHolder) convertView.getTag();
         }
 
+        childViewHolder.tvTitle.setText(childList.get(groupPosition).get(childPosition));
+        SyllabusStatModel syllabusStatModel = mStatJsonList.get(groupPosition).get(childPosition);
+        if (!syllabusStatModel.isShow()) {
+            StatisticsManager.saveData(StatModel.createListShowModel(activityName, "", String.valueOf(groupPosition + 1) + String.valueOf(childPosition + 1), "", syllabusStatModel.getStat()));
+            syllabusStatModel.setShow(true);
+        }
+
         if (childPosition == getChildrenCount(groupPosition) - 1) {
             convertView.setBackgroundResource(R.drawable.bg_circle_f5f7fa_bottom_10);
         } else {
             convertView.setBackgroundColor(mActivity.getResources().getColor(R.color.c_f5f7fa));
         }
-        childViewHolder.tvTitle.setText(childList.get(groupPosition).get(childPosition));
+
         if (groupPosition == mGroupSelectIndex && childPosition == mChildSelectIndex) {
             childViewHolder.tvTitle.setTextColor(mActivity.getResources().getColor(R.color.color_fa273b));
             childViewHolder.tvTitle.setCompoundDrawables(mActivity.getResources().getDrawable(R.drawable.class_card_item_playing), null, null, null);
@@ -155,6 +174,10 @@ public class SyllabusAdapter extends BaseExpandableListAdapter {
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return true;
+    }
+
+    public void setStatData(List<List<SyllabusStatModel>> statJsonList) {
+        this.mStatJsonList = statJsonList;
     }
 
     class GroupViewHolder {

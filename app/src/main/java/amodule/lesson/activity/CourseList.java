@@ -11,10 +11,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import acore.logic.stat.StatModel;
+import acore.logic.stat.StatisticsManager;
 import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.StringManager;
 import amodule.lesson.adapter.SyllabusAdapter;
 import amodule.lesson.controler.data.CourseDataController;
+import amodule.lesson.model.SyllabusStatModel;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqInternet;
 
@@ -31,6 +34,7 @@ public class CourseList extends BaseAppCompatActivity {
     private SyllabusAdapter mSyllabusAdapter;
     private List<String> mGroupList = new ArrayList<>();
     private List<List<String>> mChildList = new ArrayList<>();
+    private List<List<SyllabusStatModel>> mStatJsonList = new ArrayList<>();
     private ExpandableListView mExList;
     private int mGroupSelectIndex = 0;
     private int mChildSelectIndex = -1;
@@ -102,6 +106,7 @@ public class CourseList extends BaseAppCompatActivity {
         }
         mSyllabusAdapter.setChildList(mChildList);
         mSyllabusAdapter.setGroupList(mGroupList);
+        mSyllabusAdapter.setStatData(mStatJsonList);
         mSyllabusAdapter.setSelectIndex(mGroupSelectIndex, mChildSelectIndex);
         mSyllabusAdapter.notifyDataSetChanged();
 
@@ -113,10 +118,15 @@ public class CourseList extends BaseAppCompatActivity {
     private void initOne(ArrayList<Map<String, String>> info) {
         ArrayList<Map<String, String>> lessonList = StringManager.getListMapByJson(info.get(0).get("lessonList"));
         ArrayList<String> child = new ArrayList<>();
+        ArrayList<SyllabusStatModel> statJson = new ArrayList<>();
         for (Map<String, String> map : lessonList) {
+            SyllabusStatModel syllabusStatModel = new SyllabusStatModel();
+            syllabusStatModel.setStat(map.get("statJson"));
+            statJson.add(syllabusStatModel);
             mGroupList.add(map.get("title"));
             mChildList.add(child);
         }
+        mStatJsonList.add(statJson);
 
         //设置分组项的点击监听事件
         mExList.setOnGroupClickListener((expandableListView, view, i, l) -> {
@@ -136,10 +146,15 @@ public class CourseList extends BaseAppCompatActivity {
             mGroupList.add(info.get(i).get("title"));
             ArrayList<Map<String, String>> lessonList = StringManager.getListMapByJson(info.get(i).get("lessonList"));
             ArrayList<String> strings = new ArrayList<>();
+            ArrayList<SyllabusStatModel> statJson = new ArrayList<>();
             for (Map<String, String> map : lessonList) {
+                SyllabusStatModel syllabusStatModel = new SyllabusStatModel();
+                syllabusStatModel.setStat(map.get("statJson"));
+                statJson.add(syllabusStatModel);
                 strings.add(map.get("title"));
             }
             mChildList.add(strings);
+            mStatJsonList.add(statJson);
         }
 
         //设置子选项点击监听事件
@@ -147,6 +162,7 @@ public class CourseList extends BaseAppCompatActivity {
             ArrayList<Map<String, String>> lessonList = StringManager.getListMapByJson(info.get(groupPosition).get("lessonList"));
             mGroupSelectIndex = groupPosition;
             mChildSelectIndex = childPosition;
+            StatisticsManager.saveData(StatModel.createListClickModel(getClass().getSimpleName(), "", String.valueOf(groupPosition + 1), "",mStatJsonList.get(groupPosition).get(childPosition).getStat()));
             clickItem(lessonList.get(childPosition).get("code"));
             return true;
         });
@@ -159,13 +175,13 @@ public class CourseList extends BaseAppCompatActivity {
         if (isFromStudy) {
             Intent intent = new Intent();
             intent.putExtra("code", code);
-            intent.putExtra(CourseDetail.EXTRA_CHILD,mChildSelectIndex);
+            intent.putExtra(CourseDetail.EXTRA_CHILD, mChildSelectIndex);
             setResult(RESULT_OK, intent);
             finish();
         } else {
             Intent it = new Intent(this, CourseDetail.class);
             it.putExtra("code", code);
-            it.putExtra(CourseDetail.EXTRA_CHILD,mChildSelectIndex);
+            it.putExtra(CourseDetail.EXTRA_CHILD, mChildSelectIndex);
             startActivity(it);
         }
     }
