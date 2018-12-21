@@ -26,6 +26,7 @@ import java.util.Map;
 
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
+import acore.logic.stat.intefaces.OnClickListenerStat;
 import acore.tools.ColorUtil;
 import acore.tools.StringManager;
 import acore.tools.ToolsDevice;
@@ -114,9 +115,9 @@ public class CourseCommentItem extends LinearLayout {
 //            String headerImg = "http://s1.cdn.xiangha.com/i/201703/2421/58d525620302f.jpg/MTAweDEwMA";
 //            setUserImage(userIcon,headerImg);
             setUserImage(userIcon, cusstomMap.get("header_img"));
-            userIcon.setOnClickListener(new OnClickListener() {
+            userIcon.setOnClickListener(new OnClickListenerStat() {
                 @Override
-                public void onClick(View v) {
+                public void onClicked(View v) {
                     if (mUserListener != null) mUserListener.onCommentUserIconClick();
                     goFriendHome(cusstomMap.get("ucode"));
                 }
@@ -128,9 +129,9 @@ public class CourseCommentItem extends LinearLayout {
             if (TextUtils.isEmpty(nickName)) nickName = "";
             final String commentUserName = nickName;
             userName.setText(nickName.length() < 6 ? nickName : nickName.subSequence(0, 5) + "...");
-            userName.setOnClickListener(new OnClickListener() {
+            userName.setOnClickListener(new OnClickListenerStat() {
                 @Override
-                public void onClick(View v) {
+                public void onClicked(View v) {
                     if (mUserListener != null)
                         mUserListener.onCommentUserNameClick(commentUserName);
                     goFriendHome(cusstomMap.get("ucode"));
@@ -144,9 +145,9 @@ public class CourseCommentItem extends LinearLayout {
                 authorImg.setVisibility(GONE);
             }
 
-            AppCommon.setVip((Activity) mContext, userVip, cusstomMap.get("is_member"), AppCommon.VipFrom.COMMENT, new OnClickListener() {
+            AppCommon.setVip((Activity) mContext, userVip, cusstomMap.get("is_member"), AppCommon.VipFrom.COMMENT, new OnClickListenerStat() {
                 @Override
-                public void onClick(View v) {
+                public void onClicked(View v) {
                     if (mUserListener != null) mUserListener.onCommentUserVipClick();
                 }
             });
@@ -207,9 +208,9 @@ public class CourseCommentItem extends LinearLayout {
                 if (isHaveLongClickRight) {
                     String ucode = cusstomMap.get("ucode");
                     final boolean isReport = TextUtils.isEmpty(ucode) || !ucode.equals(LoginManager.userInfo.get("code"));
-                    contentText.setRightClicker(isReport ? "举报" : "删除", new OnClickListener() {
+                    contentText.setRightClicker(isReport ? "举报" : "删除", new OnClickListenerStat() {
                         @Override
-                        public void onClick(View v) {
+                        public void onClicked(View v) {
                             if (mListener != null) {
                                 if (isReport)
                                     mListener.onReportCommentClick(comment_id, cusstomMap.get("ucode"), cusstomMap.get("nick_name"), text, "点击长按后的评论举报按钮");
@@ -239,9 +240,9 @@ public class CourseCommentItem extends LinearLayout {
                         if (isHaveLongClickRight) {
                             String ucode = cusstomMap.get("ucode");
                             final boolean isReport = TextUtils.isEmpty(ucode) || !ucode.equals(LoginManager.userInfo.get("code"));
-                            contentText.setRightClicker(isReport ? "举报" : "删除", new OnClickListener() {
+                            contentText.setRightClicker(isReport ? "举报" : "删除", new OnClickListenerStat() {
                                 @Override
-                                public void onClick(View v) {
+                                public void onClicked(View v) {
                                     if (mListener != null) {
                                         if (isReport)
                                             mListener.onReportCommentClick(comment_id, cusstomMap.get("ucode"), cusstomMap.get("nick_name"), text, "点击长按后的评论举报按钮");
@@ -257,9 +258,9 @@ public class CourseCommentItem extends LinearLayout {
                 multifunctionText.addStyle(showBuilder.getContent(), showBuilder.build());
                 contentText.setText(multifunctionText);
             }
-            contentText.setOnClickListener(new OnClickListener() {
+            contentText.setOnClickListener(new OnClickListenerStat() {
                 @Override
-                public void onClick(View v) {
+                public void onClicked(View v) {
                     String ucode = cusstomMap.get("ucode");
                     boolean isMyselft = !TextUtils.isEmpty(ucode) && ucode.equals(LoginManager.userInfo.get("code"));
                     if (mListener != null && !isShowContentClick)
@@ -274,27 +275,27 @@ public class CourseCommentItem extends LinearLayout {
             case 3:
                 ImageView imageView3 = (ImageView) view.findViewById(R.id.commend_cotent_img3);
                 setImg(imageView3, contentArray.get(2).get(""));
-                imageView3.setOnClickListener(new OnClickListener() {
+                imageView3.setOnClickListener(new OnClickListenerStat() {
                     @Override
-                    public void onClick(View v) {
+                    public void onClicked(View v) {
                         showImg(imgs, 2);
                     }
                 });
             case 2:
                 ImageView imageView2 = (ImageView) view.findViewById(R.id.commend_cotent_img2);
                 setImg(imageView2, contentArray.get(1).get(""));
-                imageView2.setOnClickListener(new OnClickListener() {
+                imageView2.setOnClickListener(new OnClickListenerStat() {
                     @Override
-                    public void onClick(View v) {
+                    public void onClicked(View v) {
                         showImg(imgs, 1);
                     }
                 });
             case 1:
                 ImageView imageView1 = (ImageView) view.findViewById(R.id.commend_cotent_img1);
                 setImg(imageView1, contentArray.get(0).get(""));
-                imageView1.setOnClickListener(new OnClickListener() {
+                imageView1.setOnClickListener(new OnClickListenerStat() {
                     @Override
-                    public void onClick(View v) {
+                    public void onClicked(View v) {
                         showImg(imgs, 0);
                     }
                 });
@@ -344,9 +345,9 @@ public class CourseCommentItem extends LinearLayout {
             replayContentShow = (TextView) findViewById(R.id.comment_item_replay_cotent_show);
             replayContentShow.setVisibility(View.VISIBLE);
             replayContentShow.setText("展现" + replay_num + "条回复 >");
-            replayContentShow.setOnClickListener(new OnClickListener() {
+            replayContentShow.setOnClickListener(new OnClickListenerStat() {
                 @Override
-                public void onClick(View v) {
+                public void onClicked(View v) {
                     replayContentShow.setVisibility(View.GONE);
                     if (mListener != null) mListener.onShowAllReplayClick(comment_id);
                     ;
@@ -453,9 +454,9 @@ public class CourseCommentItem extends LinearLayout {
             if (isHaveLongClickRight) {
                 final int replayIndex = index;
                 final boolean isReport = TextUtils.isEmpty(ucode) || !ucode.equals(LoginManager.userInfo.get("code"));
-                replayTv.setRightClicker(isReport ? "举报" : "删除", new OnClickListener() {
+                replayTv.setRightClicker(isReport ? "举报" : "删除", new OnClickListenerStat() {
                     @Override
-                    public void onClick(View v) {
+                    public void onClicked(View v) {
                         if (mListener != null) {
                             if (isReport)
                                 mListener.onReportReplayClick(comment_id, replayMap.get("replay_id"), ucode, uName, content);
@@ -498,9 +499,9 @@ public class CourseCommentItem extends LinearLayout {
         commentTime.setText(dataMap.get("create_time"));
         commentPraiseNum.setText(dataMap.get("fabulous_num"));
         commentPraise.setImageResource("2".equals(dataMap.get("is_fabulous")) ? R.drawable.i_study_comment_praise_ok : R.drawable.i_study_comment_praise);
-        commentPraise.setOnClickListener(new OnClickListener() {
+        commentPraise.setOnClickListener(new OnClickListenerStat() {
             @Override
-            public void onClick(View v) {
+            public void onClicked(View v) {
                 if (mListener != null) mListener.onPraiseClick(comment_id);
             }
         });
@@ -508,9 +509,9 @@ public class CourseCommentItem extends LinearLayout {
         final boolean isDelete = "2".equals(is_del_report);
         View commentReplay = findViewById(R.id.comment_replay);
 //        commentReplay.setVisibility(isDelete ? View.GONE : View.VISIBLE);
-        commentReplay.setOnClickListener(new OnClickListener() {
+        commentReplay.setOnClickListener(new OnClickListenerStat() {
             @Override
-            public void onClick(View v) {
+            public void onClicked(View v) {
                 String ucode = cusstomMap.get("ucode");
                 final boolean isMyselft = !TextUtils.isEmpty(ucode) && ucode.equals(LoginManager.userInfo.get("code"));
                 if (!isDelete && mListener != null)
@@ -518,9 +519,9 @@ public class CourseCommentItem extends LinearLayout {
             }
         });
         commentDelete.setText(isDelete ? "删除" : "举报");
-        commentDelete.setOnClickListener(new OnClickListener() {
+        commentDelete.setOnClickListener(new OnClickListenerStat() {
             @Override
-            public void onClick(View v) {
+            public void onClicked(View v) {
                 if (mListener != null) {
                     if (isDelete)
                         mListener.onDeleteCommentClick(comment_id, "点击评论删除按钮");

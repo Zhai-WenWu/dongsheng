@@ -12,12 +12,10 @@ import android.widget.AbsListView;
 
 import com.xiangha.R;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import acore.widget.DownRefreshList;
-import amodule.lesson.view.SecondPagerCommentView;
+import amodule.lesson.view.CourseCommentView;
 import aplug.web.view.XHWebView;
 
 public class SecondPagerAdapter extends PagerAdapter {
@@ -25,11 +23,11 @@ public class SecondPagerAdapter extends PagerAdapter {
     private List<String> mData;
     private DownRefreshList listView;
     private int mCommentIndex;
-    private SecondPagerCommentView mSecondPagerCommentView;
+    private CourseCommentView mCourseCommentView;
 
-    public SecondPagerAdapter(Context activity, SecondPagerCommentView secondPagerCommentView) {
+    public SecondPagerAdapter(Context activity, CourseCommentView courseCommentView) {
         this.mActivity = (Activity) activity;
-        this.mSecondPagerCommentView = secondPagerCommentView;
+        this.mCourseCommentView = courseCommentView;
     }
 
     public void setData(List<String> data, int commentIndex) {
@@ -73,7 +71,7 @@ public class SecondPagerAdapter extends PagerAdapter {
             return convertView;
         } else {
 
-            listView = mSecondPagerCommentView.getListView();
+            listView = mCourseCommentView.getListView();
             listView.setOnScrollListener(new AbsListView.OnScrollListener() {
                 @Override
                 public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -89,8 +87,8 @@ public class SecondPagerAdapter extends PagerAdapter {
                     }
                 }
             });
-            container.addView(mSecondPagerCommentView);
-            return mSecondPagerCommentView;
+            container.addView(mCourseCommentView);
+            return mCourseCommentView;
         }
 
     }

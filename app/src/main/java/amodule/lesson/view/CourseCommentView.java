@@ -32,6 +32,7 @@ import java.util.Map;
 import acore.logic.AppCommon;
 import acore.logic.LoginManager;
 import acore.logic.load.LoadManager;
+import acore.logic.stat.intefaces.OnClickListenerStat;
 import acore.override.XHApplication;
 import acore.override.adapter.AdapterSimple;
 import acore.tools.StringManager;
@@ -48,7 +49,7 @@ import xh.basic.internet.UtilInternet;
 
 import static xh.basic.tool.UtilString.getListMapByJson;
 
-public class SecondPagerCommentView extends RelativeLayout {
+public class CourseCommentView extends RelativeLayout {
     private Context mContext;
     private List<String> mData;
     private ArrayList<Map<String, String>> listArray = new ArrayList<>();
@@ -63,7 +64,7 @@ public class SecondPagerCommentView extends RelativeLayout {
 
     private DownRefreshList downRefreshList;
     private AdapterSimple adapterSimple;
-    private String code = "88";
+    private String code;
     private int currentPage = 0, everyPage = 0;
     private int dropPage = 1, upDropPage = 1, downDropPage = 1, slide = 1, from = 1, source = 1;
 
@@ -92,16 +93,16 @@ public class SecondPagerCommentView extends RelativeLayout {
     private String mCommentsNumStr;
 
     private CommentDialog.CommentOptionSuccCallback mCommentOptionSuccCallback;
+    private String mChapterCode;
 
 
-    public SecondPagerCommentView(Context context) {
+    public CourseCommentView(Context context) {
         this(context, null);
     }
 
-    public SecondPagerCommentView(Context context, AttributeSet attrs) {
+    public CourseCommentView(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.mContext = context;
-        initView();
 //        getCommentData(true);
     }
 
@@ -114,9 +115,9 @@ public class SecondPagerCommentView extends RelativeLayout {
         mCommentHintView = view.findViewById(R.id.commend_hind);
         mLoadManager = new LoadManager(mContext, mContentView);
         TextView writeCommentTv = view.findViewById(R.id.commend_write_tv);
-        writeCommentTv.setOnClickListener(new View.OnClickListener() {
+        writeCommentTv.setOnClickListener(new OnClickListenerStat() {
             @Override
-            public void onClick(View v) {
+            public void onClicked(View v) {
                 String currentUrl = StringManager.api_addForum;
                 mKeyboardDialogOptionFrom = KEYBOARD_OPTION_COMMENT;
                 showCommentEdit();
@@ -135,9 +136,9 @@ public class SecondPagerCommentView extends RelativeLayout {
             }
         };
         mLoadManager.showProgressBar();
-        mLoadManager.setLoading(downRefreshList, adapterSimple, true, new View.OnClickListener() {
+        mLoadManager.setLoading(downRefreshList, adapterSimple, true, new OnClickListenerStat() {
             @Override
-            public void onClick(View arg0) {
+            public void onClicked(View v) {
                 getCommentData(false);
             }
         });
@@ -158,9 +159,9 @@ public class SecondPagerCommentView extends RelativeLayout {
                 keyboardDialog.setHintStr("写评论...");
             }
         }
-        keyboardDialog.setOnSendClickListener(new View.OnClickListener() {
+        keyboardDialog.setOnSendClickListener(new OnClickListenerStat() {
             @Override
-            public void onClick(View v) {
+            public void onClicked(View v) {
                 keyboardDialog.cancel();
                 String sendText = keyboardDialog.getText();
                 if (LoginManager.isLogin()) {
@@ -209,7 +210,7 @@ public class SecondPagerCommentView extends RelativeLayout {
         } else {
             newParams = "type=" + type + "&code=" + code + currentParams + "&content=" + sendText;
         }
-        newParams += "&commentIds=" + commentIdStrBuffer;
+        newParams += "&commentIds=" + commentIdStrBuffer + "&firstCode=" + mChapterCode;
         Log.i("commentReplay", "sendData() newParams:" + newParams);
         ReqEncyptInternet.in().doEncypt(currentUrl, newParams, new InternetCallback() {
             @Override
@@ -343,9 +344,9 @@ public class SecondPagerCommentView extends RelativeLayout {
                                     titleLayout.setVisibility(View.VISIBLE);
                                     titleTv.setText(title);
                                     if (!TextUtils.isEmpty(clickUrl)) {
-                                        titleLayout.setOnClickListener(new View.OnClickListener() {
+                                        titleLayout.setOnClickListener(new OnClickListenerStat() {
                                             @Override
-                                            public void onClick(View v) {
+                                            public void onClicked(View v) {
                                                 AppCommon.openUrl((Activity) mContext, clickUrl, true);
                                             }
                                         });
@@ -470,15 +471,15 @@ public class SecondPagerCommentView extends RelativeLayout {
                 dialogManager.createDialog(new ViewManager(dialogManager)
                         .setView(new TitleMessageView(mContext).setText("确认删除我的评论？"))
                         .setView(new HButtonView(mContext)
-                                .setNegativeText("取消", new View.OnClickListener() {
+                                .setNegativeText("取消", new OnClickListenerStat() {
                                     @Override
-                                    public void onClick(View v) {
+                                    public void onClicked(View v) {
                                         dialogManager.cancel();
                                     }
                                 })
-                                .setPositiveText("确认", new View.OnClickListener() {
+                                .setPositiveText("确认", new OnClickListenerStat() {
                                     @Override
-                                    public void onClick(View v) {
+                                    public void onClicked(View v) {
                                         String params = "type=" + type + "&code=" + code + "&commentId=" + comment_id;
                                         ReqEncyptInternet.in().doEncypt(StringManager.api_delForum, params, new InternetCallback() {
                                             @Override
@@ -523,7 +524,7 @@ public class SecondPagerCommentView extends RelativeLayout {
                 }
 //                XHClick.mapStat(mContext, contentTongjiId, "点赞", "");
 //                XHClick.mapStat(mContext, likeTongjiId, likeTwoLeven, "");
-                String params = "type=" + type + "&code=" + code + "&commentId=" + comment_id;
+                String params = "type=" + type + "&code=" + code + "&commentId=" + comment_id + "&firstCode=" + mChapterCode;
                 ReqEncyptInternet.in().doEncypt(StringManager.api_likeForum, params, new InternetCallback() {
                     @Override
                     public void loaded(int i, String s, Object o) {
@@ -586,5 +587,11 @@ public class SecondPagerCommentView extends RelativeLayout {
 
     public DownRefreshList getListView() {
         return downRefreshList;
+    }
+
+    public void setCode(String code, String chapterCode) {
+        this.code = code;
+        this.mChapterCode = chapterCode;
+        initView();
     }
 }

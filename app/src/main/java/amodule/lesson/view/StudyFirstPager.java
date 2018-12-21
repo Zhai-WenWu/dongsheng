@@ -16,6 +16,7 @@ import com.xiangha.R;
 import java.util.List;
 import java.util.Map;
 
+import acore.logic.stat.intefaces.OnClickListenerStat;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
@@ -142,9 +143,9 @@ public class StudyFirstPager extends RelativeLayout {
         if (TextUtils.equals("2", stringStringMap.get("pageType")))
             commentIndex = i;
         textView.setText(stringStringMap.get("title"));
-        view.setOnClickListener(new View.OnClickListener() {
+        view.setOnClickListener(new OnClickListenerStat() {
             @Override
-            public void onClick(View v) {
+            public void onClicked(View v) {
                 onClickBottomView.clickView(i);
             }
         });

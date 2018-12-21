@@ -47,7 +47,7 @@ public class CourseDetail extends BaseAppCompatActivity {
     private Map<String, String> mSyllabusInfo;
     private VideoPlayerController mVideoPlayerController;
     private String mCode = "88";
-    private String mChapterCode = "0";
+    private String mChapterCode = "88";
     private final int SELECT_COURSE = 1;
     private int mChildSelectIndex = -1;
     private Map<String, String> shareMap;
@@ -189,9 +189,9 @@ public class CourseDetail extends BaseAppCompatActivity {
             }
         };
         shareBtn.setOnClickListener(shareClick);
-        findViewById(R.id.back_white).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.back_white).setOnClickListener(new OnClickListenerStat() {
             @Override
-            public void onClick(View v) {
+            public void onClicked(View v) {
                 if (viewPager.getShowPosition() > 0) {
                     viewPager.setCurrentItem(0, true);
                 } else {
@@ -246,6 +246,8 @@ public class CourseDetail extends BaseAppCompatActivity {
                 if (flag >= ReqInternet.REQ_OK_STRING) {
                     mLessonInfo = StringManager.getFirstMap(o);
                     mData.put("lessonInfo", mLessonInfo);
+                    mChapterCode = mLessonInfo.get("chapterCode");
+                    mCode = mLessonInfo.get("courseCode");
                     initTitle();
                     loadManager.loadOver(flag);
                     if (mLoadAgain) {
@@ -291,7 +293,7 @@ public class CourseDetail extends BaseAppCompatActivity {
         mData.put("syllabusInfo", mSyllabusInfo);
         studyFirstPager.initData(mData, mChildSelectIndex);
         mVideoPlayerController = studyFirstPager.getVideoPlayerController();
-        studySecondPager.initData(mData,studyFirstPager.getCommentIndex());
+        studySecondPager.initData(mData, studyFirstPager.getCommentIndex(), mCode, mChapterCode);
 
         mVerticalAdapter.setView(studyFirstPager, studySecondPager);
         mVerticalAdapter.notifyDataSetChanged();

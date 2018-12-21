@@ -21,7 +21,7 @@ public class StudySecondPager extends RelativeLayout {
     private ViewPager mViewPager;
     private SecondPagerAdapter secondPagerAdapter;
     private List<String> mDataList = new ArrayList<>();
-    private SecondPagerCommentView mSecondPagerCommentView;
+    private CourseCommentView mCourseCommentView;
 
     public ViewPager getViewPager() {
         return mViewPager;
@@ -38,15 +38,17 @@ public class StudySecondPager extends RelativeLayout {
     public StudySecondPager(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.mContext = context;
-        mSecondPagerCommentView = new SecondPagerCommentView(mContext);
-        secondPagerAdapter = new SecondPagerAdapter(mContext, mSecondPagerCommentView);
         LayoutInflater.from(context).inflate(R.layout.view_second_pager, this, true);
         mViewPager = findViewById(R.id.viewpager);
         mViewPager.setOffscreenPageLimit(2);
+        mCourseCommentView = new CourseCommentView(mContext);
+        secondPagerAdapter = new SecondPagerAdapter(mContext, mCourseCommentView);
         mViewPager.setAdapter(secondPagerAdapter);
     }
 
-    public void initData(Map<String, Map<String, String>> mData, int commentIndex) {
+    public void initData(Map<String, Map<String, String>> mData, int commentIndex, String mCode, String mChapterCode) {
+        mCourseCommentView.setCode(mCode, mChapterCode);
+        secondPagerAdapter.notifyDataSetChanged();
         List<Map<String, String>> labelDataList = StringManager.getListMapByJson(mData.get("lessonInfo").get("labelData"));
         for (Map<String, String> label : labelDataList) {
             mDataList.add(label.get("url"));
