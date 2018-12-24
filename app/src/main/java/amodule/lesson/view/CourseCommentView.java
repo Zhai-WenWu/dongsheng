@@ -594,4 +594,5 @@ public class CourseCommentView extends RelativeLayout {
         this.mChapterCode = chapterCode;
         initView();
     }
+
 }

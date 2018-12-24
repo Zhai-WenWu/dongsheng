@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activityLayout"
@@ -11,14 +10,14 @@
         android:id="@+id/course_bottom_layout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_56"
-        android:layout_alignParentBottom="true"/>
+        android:layout_alignParentBottom="true" />
 
     <acore.widget.rvlistview.RvListView
         android:id="@+id/rv_list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/course_bottom_layout"
-        android:background="#FFFFFF"/>
+        android:background="#FFFFFF" />
 
     <RelativeLayout
         android:id="@+id/top_bar"
@@ -28,7 +27,8 @@
         <RelativeLayout
             android:id="@+id/top_bar_black"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/topbar_height">
+            android:layout_height="match_parent"
+            android:gravity="center_vertical">
 
             <ImageView
                 android:id="@+id/back_white"
@@ -38,9 +38,9 @@
                 android:layout_marginLeft="@dimen/dp_10"
                 android:paddingLeft="@dimen/dp_10"
                 android:paddingRight="@dimen/dp_10"
-                android:src="@drawable/icon__course_back_white"
                 android:scaleType="centerInside"
-                android:tag="返回"/>
+                android:src="@drawable/icon__course_back_white"
+                android:tag="返回" />
 
             <ImageView
                 android:id="@+id/share_icon_white"
@@ -51,17 +51,18 @@
                 android:layout_marginRight="@dimen/dp_10"
                 android:padding="@dimen/dp_10"
                 android:src="@drawable/icon_course_share_white"
-                android:tag="分享"/>
+                android:tag="分享" />
 
         </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/top_bar_white"
-            android:background="#FFFFFF"
-            tools:visibility="visible"
-            android:visibility="gone"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/topbar_height">
+            android:layout_height="match_parent"
+            android:background="#FFFFFF"
+            android:gravity="center_vertical"
+            android:visibility="gone"
+            tools:visibility="visible">
 
             <ImageView
                 android:id="@+id/back_black"
@@ -71,9 +72,9 @@
                 android:layout_marginLeft="@dimen/dp_10"
                 android:paddingLeft="@dimen/dp_10"
                 android:paddingRight="@dimen/dp_10"
-                android:src="@drawable/icon_course_back"
                 android:scaleType="centerInside"
-                android:tag="返回"/>
+                android:src="@drawable/icon_course_back"
+                android:tag="返回" />
 
             <ImageView
                 android:id="@+id/share_icon_black"
@@ -84,7 +85,7 @@
                 android:layout_marginRight="@dimen/dp_10"
                 android:padding="@dimen/dp_10"
                 android:src="@drawable/icon_course_share"
-                android:tag="分享"/>
+                android:tag="分享" />
 
         </RelativeLayout>
 
@@ -94,6 +95,6 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_0.5"
         android:layout_above="@id/course_bottom_layout"
-        android:background="#F1F1F1"/>
+        android:background="#F1F1F1" />
 
 </RelativeLayout>

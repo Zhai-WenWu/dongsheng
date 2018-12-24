@@ -83,11 +83,23 @@
 
     </RelativeLayout>
 
+    <LinearLayout
+        android:id="@+id/ll_tab"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_49"
+        android:background="@color/white"
+        android:visibility="gone"
+        android:layout_below="@+id/top_bar_white"
+        android:gravity="center_vertical"
+        android:orientation="horizontal" />
+
     <amodule.lesson.view.VerticalViewPager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/top_bar_white" />
+
+
 
 
 </RelativeLayout>
