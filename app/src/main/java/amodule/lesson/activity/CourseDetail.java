@@ -92,21 +92,6 @@ public class CourseDetail extends BaseAppCompatActivity {
         loadManager.setLoading(v -> loadLessonInfo());
     }
 
-    private void createLableView(List<Map<String, String>> stringStringMap) {
-        for (int i = 0; i < stringStringMap.size(); i++) {
-            View view = LayoutInflater.from(this).inflate(R.layout.view_study_top_lable_item, mTabLayout, false);
-            View horLine = view.findViewById(R.id.hor_line);
-            if (TextUtils.equals("2", stringStringMap.get(i).get("pageType")))
-                horLine.setVisibility(View.VISIBLE);
-            TextView textView = view.findViewById(R.id.label_text);
-            textView.setText(stringStringMap.get(i).get("title"));
-            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) view.getLayoutParams();
-            params.width = 0;
-            params.weight = 1;
-            mTabLayout.addView(view);
-        }
-    }
-
     /**
      * 回调处理
      */
@@ -232,6 +217,7 @@ public class CourseDetail extends BaseAppCompatActivity {
                 if (distance > 0 && distance < 1) {
                     topBarWhite.setAlpha(distance);
                     mFirstPageBottomBtn.setAlpha(distance);
+                    mTabLayout.setVisibility(View.GONE);
                 }
             }
 
@@ -243,6 +229,7 @@ public class CourseDetail extends BaseAppCompatActivity {
                         topBarWhite.setAlpha(0);
                         mFirstPageBottomBtn.setAlpha(0);
                     } else if (showPosition == 1) {
+                        mTabLayout.setVisibility(View.VISIBLE);
                         topBarWhite.setAlpha(1);
                         mFirstPageBottomBtn.setAlpha(1);
                     }
@@ -275,12 +262,6 @@ public class CourseDetail extends BaseAppCompatActivity {
                     mCode = mLessonInfo.get("courseCode");
                     initTitle();
                     createLableView(StringManager.getListMapByJson(mData.get("lessonInfo").get("labelData")));
-                    studySecondPager.getCourseCommentView().setOnDialogStateChange(new CourseCommentView.OnDialogStateChange() {
-                        @Override
-                        public void dialogShow(boolean isShow) {
-                            mTabLayout.setVisibility(isShow ? View.VISIBLE : View.GONE);
-                        }
-                    });
                     loadManager.loadOver(flag);
                     if (mLoadAgain) {
                         initSyllabusData();
@@ -291,6 +272,21 @@ public class CourseDetail extends BaseAppCompatActivity {
                 }
             }
         });
+    }
+
+    private void createLableView(List<Map<String, String>> stringStringMap) {
+        for (int i = 0; i < stringStringMap.size(); i++) {
+            View view = LayoutInflater.from(this).inflate(R.layout.view_study_top_lable_item, mTabLayout, false);
+            View horLine = view.findViewById(R.id.hor_line);
+            if (TextUtils.equals("2", stringStringMap.get(i).get("pageType")))
+                horLine.setVisibility(View.VISIBLE);
+            TextView textView = view.findViewById(R.id.label_text);
+            textView.setText(stringStringMap.get(i).get("title"));
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) view.getLayoutParams();
+            params.width = 0;
+            params.weight = 1;
+            mTabLayout.addView(view);
+        }
     }
 
     /**

@@ -174,9 +174,6 @@ public class CourseCommentView extends RelativeLayout {
 
             @Override
             public void onDismiss(DialogInterface dialog) {
-                if (mOnDialogStateChange!=null){
-                    mOnDialogStateChange.dialogShow(false);
-                }
                 String finalStr = keyboardDialog.getText();
                 if (mKeyboardDialogOptionFrom == KEYBOARD_OPTION_COMMENT) {
                     mSendText = finalStr;
@@ -185,9 +182,6 @@ public class CourseCommentView extends RelativeLayout {
                 }
             }
         });
-        if (mOnDialogStateChange!=null){
-            mOnDialogStateChange.dialogShow(true);
-        }
         keyboardDialog.show();
     }
 
@@ -599,16 +593,6 @@ public class CourseCommentView extends RelativeLayout {
         this.code = code;
         this.mChapterCode = chapterCode;
         initView();
-    }
-
-    OnDialogStateChange mOnDialogStateChange;
-
-    public void setOnDialogStateChange(OnDialogStateChange onDialogStateChange) {
-        mOnDialogStateChange = onDialogStateChange;
-    }
-
-    public interface OnDialogStateChange {
-        void dialogShow(boolean isShow);
     }
 
 }

@@ -23,10 +23,6 @@ public class StudySecondPager extends RelativeLayout {
     private List<String> mDataList = new ArrayList<>();
     private CourseCommentView mCourseCommentView;
 
-    public CourseCommentView getCourseCommentView() {
-        return mCourseCommentView;
-    }
-
     public ViewPager getViewPager() {
         return mViewPager;
     }
