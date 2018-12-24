@@ -181,8 +181,10 @@ public class CourseList extends BaseAppCompatActivity {
             finish();
         } else {
             Intent it = new Intent(this, CourseDetail.class);
-            it.putExtra(CourseDetail.EXTRA_CODE, lessonCode);
-            it.putExtra(CourseDetail.EXTRA_CHAPTER_CODE, chapterCode);
+//            it.putExtra(CourseDetail.EXTRA_CODE, lessonCode);
+//            it.putExtra(CourseDetail.EXTRA_CHAPTER_CODE, chapterCode);
+            it.putExtra(CourseDetail.EXTRA_CODE, "88");
+            it.putExtra(CourseDetail.EXTRA_CHAPTER_CODE, "88");
             it.putExtra(CourseDetail.EXTRA_CHILD, mChildSelectIndex);
             startActivity(it);
         }

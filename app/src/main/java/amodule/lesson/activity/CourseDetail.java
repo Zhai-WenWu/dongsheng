@@ -3,9 +3,12 @@ package amodule.lesson.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.util.ArrayMap;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -14,6 +17,7 @@ import android.widget.TextView;
 import com.xiangha.R;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import acore.logic.stat.intefaces.OnClickListenerStat;
@@ -21,9 +25,11 @@ import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.StringManager;
 import acore.tools.Tools;
 import acore.tools.ToolsDevice;
+import acore.widget.KeyboardDialog;
 import amodule.lesson.adapter.SecondPagerAdapter;
 import amodule.lesson.adapter.VerticalAdapter;
 import amodule.lesson.controler.data.CourseDataController;
+import amodule.lesson.view.CourseCommentView;
 import amodule.lesson.view.StudyFirstPager;
 import amodule.lesson.view.StudySecondPager;
 import amodule.lesson.view.StudySyllabusView;
@@ -59,6 +65,7 @@ public class CourseDetail extends BaseAppCompatActivity {
     private LinearLayout mFirstPageBottomBtn;
     private boolean mLoadAgain;
     private int mSecondSelectTndex;
+    private LinearLayout mTabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +82,7 @@ public class CourseDetail extends BaseAppCompatActivity {
 
     private void initView() {
         viewPager = findViewById(R.id.viewpager);
+        mTabLayout = findViewById(R.id.ll_tab);
         studyFirstPager = new StudyFirstPager(CourseDetail.this);
         studySecondPager = new StudySecondPager(CourseDetail.this);
         mFirstPageBottomBtn = studyFirstPager.getBtnLayout();
@@ -82,6 +90,21 @@ public class CourseDetail extends BaseAppCompatActivity {
         viewPager.setAdapter(mVerticalAdapter);
         initCallBack();
         loadManager.setLoading(v -> loadLessonInfo());
+    }
+
+    private void createLableView(List<Map<String, String>> stringStringMap) {
+        for (int i = 0; i < stringStringMap.size(); i++) {
+            View view = LayoutInflater.from(this).inflate(R.layout.view_study_top_lable_item, mTabLayout, false);
+            View horLine = view.findViewById(R.id.hor_line);
+            if (TextUtils.equals("2", stringStringMap.get(i).get("pageType")))
+                horLine.setVisibility(View.VISIBLE);
+            TextView textView = view.findViewById(R.id.label_text);
+            textView.setText(stringStringMap.get(i).get("title"));
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) view.getLayoutParams();
+            params.width = 0;
+            params.weight = 1;
+            mTabLayout.addView(view);
+        }
     }
 
     /**
@@ -251,6 +274,13 @@ public class CourseDetail extends BaseAppCompatActivity {
                     mChapterCode = mLessonInfo.get("chapterCode");
                     mCode = mLessonInfo.get("courseCode");
                     initTitle();
+                    createLableView(StringManager.getListMapByJson(mData.get("lessonInfo").get("labelData")));
+                    studySecondPager.getCourseCommentView().setOnDialogStateChange(new CourseCommentView.OnDialogStateChange() {
+                        @Override
+                        public void dialogShow(boolean isShow) {
+                            mTabLayout.setVisibility(isShow ? View.VISIBLE : View.GONE);
+                        }
+                    });
                     loadManager.loadOver(flag);
                     if (mLoadAgain) {
                         initSyllabusData();
@@ -322,7 +352,6 @@ public class CourseDetail extends BaseAppCompatActivity {
                 startActivityForResult(intent, SELECT_COURSE);
             }
         });
-
     }
 
     @Override
