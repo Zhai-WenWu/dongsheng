@@ -30,7 +30,6 @@ import aplug.basic.ReqInternet;
 public class CourseList extends BaseAppCompatActivity {
     public static final String EXTRA_FROM_STUDY = "from";
     public static final String EXTRA_CODE = "code";
-    public static final String EXTRA_TYPE = "type";
     private SyllabusAdapter mSyllabusAdapter;
     private List<String> mGroupList = new ArrayList<>();
     private List<List<String>> mChildList = new ArrayList<>();
@@ -133,7 +132,7 @@ public class CourseList extends BaseAppCompatActivity {
             mGroupSelectIndex = i;
             mChildSelectIndex = i;
             StatisticsManager.saveData(StatModel.createListClickModel(getClass().getSimpleName(), "", "1" + String.valueOf(i + 1), "", mStatJsonList.get(0).get(i).getStat()));
-            clickItem(lessonList.get(i).get("code"));
+            clickItem(lessonList.get(i).get("code"), info.get(0).get("code"));
             return false;
         });
 
@@ -164,24 +163,26 @@ public class CourseList extends BaseAppCompatActivity {
             mGroupSelectIndex = groupPosition;
             mChildSelectIndex = childPosition;
             StatisticsManager.saveData(StatModel.createListClickModel(getClass().getSimpleName(), "", String.valueOf(groupPosition + 1), "", mStatJsonList.get(groupPosition).get(childPosition).getStat()));
-            clickItem(lessonList.get(childPosition).get("code"));
+            clickItem(lessonList.get(childPosition).get("code"), info.get(groupPosition).get("code"));
             return true;
         });
     }
 
 
-    private void clickItem(String code) {
+    private void clickItem(String lessonCode, String chapterCode) {
         mSyllabusAdapter.setSelectIndex(mGroupSelectIndex, mChildSelectIndex);
         mSyllabusAdapter.notifyDataSetChanged();
         if (isFromStudy) {
             Intent intent = new Intent();
-            intent.putExtra("code", code);
+            intent.putExtra(CourseDetail.EXTRA_CHAPTER_CODE, chapterCode);
+            intent.putExtra(CourseDetail.EXTRA_CODE, lessonCode);
             intent.putExtra(CourseDetail.EXTRA_CHILD, mChildSelectIndex);
             setResult(RESULT_OK, intent);
             finish();
         } else {
             Intent it = new Intent(this, CourseDetail.class);
-            it.putExtra("code", code);
+            it.putExtra(CourseDetail.EXTRA_CODE, lessonCode);
+            it.putExtra(CourseDetail.EXTRA_CHAPTER_CODE, chapterCode);
             it.putExtra(CourseDetail.EXTRA_CHILD, mChildSelectIndex);
             startActivity(it);
         }

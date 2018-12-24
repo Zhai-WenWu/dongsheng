@@ -46,8 +46,8 @@ public class CourseDetail extends BaseAppCompatActivity {
     private Map<String, String> mLessonInfo;
     private Map<String, String> mSyllabusInfo;
     private VideoPlayerController mVideoPlayerController;
-    private String mCode = "88";
-    private String mChapterCode = "88";
+    private String mCode = "0";
+    private String mChapterCode = "0";
     private final int SELECT_COURSE = 1;
     private int mChildSelectIndex = -1;
     private Map<String, String> shareMap;
@@ -69,9 +69,8 @@ public class CourseDetail extends BaseAppCompatActivity {
     }
 
     private void initExtraData() {
-//        mChapterCode = getIntent().getStringExtra(EXTRA_CHAPTER_CODE);
-//        mCode = getIntent().getStringExtra(EXTRA_CODE);
-//        mGroupSelectIndex = getIntent().getIntExtra(EXTRA_GROUP, 0);
+        mChapterCode = getIntent().getStringExtra(EXTRA_CHAPTER_CODE);
+        mCode = getIntent().getStringExtra(EXTRA_CODE);
     }
 
     private void initView() {
@@ -318,11 +317,8 @@ public class CourseDetail extends BaseAppCompatActivity {
             public void onClicked(View v) {
                 //课程页
                 Intent intent = new Intent(CourseDetail.this, CourseList.class);
-//                intent.putExtra(CourseDetail.EXTRA_GROUP, mGroupSelectIndex);
-//                intent.putExtra(CourseDetail.EXTRA_CHILD, mChildSelectIndex);
                 intent.putExtra(CourseList.EXTRA_FROM_STUDY, true);
                 intent.putExtra(CourseList.EXTRA_CODE, mCode);
-                intent.putExtra(CourseList.EXTRA_TYPE, "2");
                 startActivityForResult(intent, SELECT_COURSE);
             }
         });
@@ -335,7 +331,7 @@ public class CourseDetail extends BaseAppCompatActivity {
         if (resultCode == RESULT_OK && data != null) {
             switch (requestCode) {
                 case SELECT_COURSE:
-                    mCode = data.getStringExtra("code");
+                    mCode = data.getStringExtra(EXTRA_CHILD);
                     mChildSelectIndex = data.getIntExtra(EXTRA_CHILD, -1);
                     loadAgain();
                     break;
