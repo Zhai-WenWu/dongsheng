@@ -23,12 +23,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import acore.logic.FavoriteHelper;
+import acore.logic.LoginManager;
+import acore.logic.XHClick;
 import acore.logic.stat.intefaces.OnClickListenerStat;
 import acore.override.activity.base.BaseAppCompatActivity;
 import acore.tools.ColorUtil;
 import acore.tools.StringManager;
 import acore.tools.Tools;
+import acore.tools.ToolsDevice;
 import acore.widget.rvlistview.RvListView;
+import amodule._common.conf.FavoriteTypeEnum;
+import amodule._common.conf.GlobalFavoriteModule;
+import amodule._common.conf.GlobalVariableConfig;
+import amodule.article.activity.VideoDetailActivity;
 import amodule.lesson.adapter.CourseIntroductionAdapter;
 import amodule.lesson.controler.data.CourseDataController;
 import amodule.lesson.view.ChefIntroductionView;
@@ -36,6 +44,7 @@ import amodule.lesson.view.introduction.CourseHorizontalView;
 import amodule.lesson.view.introduction.CourseIntroduceHeader;
 import amodule.lesson.view.introduction.CourseIntroductionBottomView;
 import amodule.lesson.view.introduction.CourseVerticalView;
+import amodule.user.activity.login.LoginByAccout;
 import aplug.basic.InternetCallback;
 import aplug.basic.ReqEncyptInternet;
 import third.share.BarShare;
@@ -66,6 +75,7 @@ public class CourseIntroduction extends BaseAppCompatActivity {
     private String num;
     private boolean canStudy = false;
     private int topbarHeight;
+    private boolean isFav = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +87,8 @@ public class CourseIntroduction extends BaseAppCompatActivity {
         initUI();
         //设置加载
         setLoad();
+        //请求收藏状态数据
+        requestFavoriteState();
     }
 
     private void initExtraData() {
@@ -180,8 +192,13 @@ public class CourseIntroduction extends BaseAppCompatActivity {
 
 
         mBottomView.setFavClickListener(v -> {
+            if(LoginManager.isLogin()){
+                handlerFavorite();
+            }else{
+                startActivity(new Intent(CourseIntroduction.this,LoginByAccout.class));
+            }
             //收藏请求
-            Toast.makeText(CourseIntroduction.this, "收藏", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(CourseIntroduction.this, "收藏", Toast.LENGTH_SHORT).show();
         });
         mBottomView.setVIPClickListener(v -> {
             // TODO: 2018/12/10
@@ -202,6 +219,51 @@ public class CourseIntroduction extends BaseAppCompatActivity {
         mCourseHorizontalView.setVisibility(canStudy ? View.VISIBLE : View.GONE);
         mCourseVerticalView.setVisibility(canStudy ? View.GONE : View.VISIBLE);
     }
+
+    private void requestFavoriteState(){
+        FavoriteHelper.instance().getFavoriteStatus(this, mCode, FavoriteTypeEnum.TYPE_VIDEO,
+                new FavoriteHelper.FavoriteStatusCallback() {
+                    @Override
+                    public void onSuccess(boolean state) {
+                        //处理收藏状态
+                        isFav = state;
+                        mBottomView.switchFavStatus(isFav);
+                    }
+
+                    @Override
+                    public void onFailed() {
+                        mBottomView.switchFavStatus(false);
+                    }
+                });
+    }
+
+
+    private void handlerFavorite(){
+        statistics(isFav?"取消收藏":"收藏","");
+        FavoriteHelper.instance().setFavoriteStatus(this, mCode, "", FavoriteTypeEnum.TYPE_VIDEO,
+                new FavoriteHelper.FavoriteStatusCallback() {
+                    @Override
+                    public void onSuccess(boolean state) {
+                        isFav = state;
+
+                        mBottomView.switchFavStatus(isFav);
+
+//                        rightButtonFav.setImageResource(isFav?R.drawable.z_caipu_xiangqing_topbar_ico_fav_active:R.drawable.z_caipu_xiangqing_topbar_ico_fav);
+
+                        GlobalFavoriteModule module = new GlobalFavoriteModule();
+                        module.setFavCode(mCode);
+                        module.setFav(state);
+                        module.setFavType(FavoriteTypeEnum.TYPE_VIDEO);
+                        GlobalVariableConfig.handleFavoriteModule(module);
+                    }
+
+                    @Override
+                    public void onFailed() {
+                    }
+                });
+    }
+
+
 
     private void scrollToTop() {
         LinearLayoutManager mLayoutManager = (LinearLayoutManager) mRvListView.getLayoutManager();
@@ -384,5 +446,10 @@ public class CourseIntroduction extends BaseAppCompatActivity {
             contentViewGroup = ((ViewGroup) findViewById(android.R.id.content)).getChildAt(0);
         }
         contentViewGroup.setFitsSystemWindows(fitSystemWindow);
+    }
+
+
+    private void statistics(String twoLevel, String threeLevel) {
+//        XHClick.mapStat(this, "a_ShortVideoDetail", twoLevel, threeLevel);
     }
 }

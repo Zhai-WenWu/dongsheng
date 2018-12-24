@@ -64,31 +64,32 @@ public class CourseIntroductionBottomView extends RelativeLayout {
                 if (mFavClick != null) {
                     mFavClick.onClick(v);
                 }
-                switchFavStatus(!mFavIcon.isSelected());
+//                switchFavStatus(!mFavIcon.isSelected());
             }
         };
         mFavIcon.setOnClickListener(favClick);
         mFavText.setOnClickListener(favClick);
     }
 
-    private void switchFavStatus(boolean b) {
+    public void switchFavStatus(boolean b) {
         mFavIcon.setSelected(b);
     }
 
     String vipUrl;
+
     public void setVipButtonData(Map<String, String> data) {
-        if(data == null || data.isEmpty()){
+        if (data == null || data.isEmpty()) {
             return;
         }
         vipUrl = data.get("url");
-        if(!TextUtils.isEmpty(data.get("text"))){
+        if (!TextUtils.isEmpty(data.get("text"))) {
             mVipButton.setText(data.get("text"));
         }
-        if(!TextUtils.isEmpty(data.get("color"))){
-            mVipButton.setTextColor(ColorUtil.parseColor(data.get("color"),Color.WHITE));
+        if (!TextUtils.isEmpty(data.get("color"))) {
+            mVipButton.setTextColor(ColorUtil.parseColor(data.get("color"), Color.WHITE));
         }
-        if(!TextUtils.isEmpty(data.get("bgColor"))){
-            mVipButton.setBackgroundColor(ColorUtil.parseColor(data.get("bgColor"),ColorUtil.parseColor("#FA273B")));
+        if (!TextUtils.isEmpty(data.get("bgColor"))) {
+            mVipButton.setBackgroundColor(ColorUtil.parseColor(data.get("bgColor"), ColorUtil.parseColor("#FA273B")));
         }
     }
 
@@ -110,7 +111,7 @@ public class CourseIntroductionBottomView extends RelativeLayout {
         mVipButton.setOnClickListener(new OnClickListenerStat(MOUDLE_NAME) {
             @Override
             public void onClicked(View v) {
-                AppCommon.openUrl(vipUrl,true);
+                AppCommon.openUrl(vipUrl, true);
                 if (listener != null) {
                     listener.onClick(v);
                 }
