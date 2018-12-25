@@ -116,6 +116,11 @@ public class SyllabusAdapter extends BaseExpandableListAdapter {
                 groupViewHolder.llGroup.setBackgroundResource(R.drawable.bg_circle_f5f7fa_10);
             }
         } else {
+            if (mGroupSelectIndex == groupPosition) {
+                groupViewHolder.tvTitle.setTextColor(mActivity.getResources().getColor(R.color.color_fa273b));
+            } else {
+                groupViewHolder.tvTitle.setTextColor(mActivity.getResources().getColor(R.color.c_3e3e3e));
+            }
             SyllabusStatModel syllabusStatModel = mStatJsonList.get(0).get(groupPosition);
             if (!syllabusStatModel.isShow()) {
                 StatisticsManager.saveData(StatModel.createListShowModel(activityName, "", "1" + String.valueOf(groupPosition + 1), "", syllabusStatModel.getStat()));
@@ -124,11 +129,6 @@ public class SyllabusAdapter extends BaseExpandableListAdapter {
             groupViewHolder.ivRight.setVisibility(View.GONE);
             groupViewHolder.tvRight.setVisibility(View.GONE);
             groupViewHolder.llGroup.setBackgroundResource(R.drawable.bg_circle_f5f7fa_10);
-        }
-        if (mGroupSelectIndex == groupPosition) {
-            groupViewHolder.tvTitle.setTextColor(mActivity.getResources().getColor(R.color.color_fa273b));
-        } else {
-            groupViewHolder.tvTitle.setTextColor(mActivity.getResources().getColor(R.color.c_3e3e3e));
         }
 
         return convertView;

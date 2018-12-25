@@ -25,10 +25,6 @@ public class SecondPagerAdapter extends PagerAdapter {
     private int mCommentIndex;
     private CourseCommentView mCourseCommentView;
 
-    public CourseCommentView getCourseCommentView() {
-        return mCourseCommentView;
-    }
-
     public SecondPagerAdapter(Context activity, CourseCommentView courseCommentView) {
         this.mActivity = (Activity) activity;
         this.mCourseCommentView = courseCommentView;

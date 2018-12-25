@@ -75,7 +75,7 @@ public class CourseList extends BaseAppCompatActivity {
 
     private void initCourseListData(Map<String, String> mCourseListMap) {
         String chapterNum = mCourseListMap.get("chapterNum");
-        Map<String, String> playHistory = StringManager.getFirstMap("playHistory");
+        Map<String, String> playHistory = StringManager.getFirstMap(mCourseListMap.get("playHistory"));
         String chapterCode = playHistory.get("chapterCode");
         String lessonCode = playHistory.get("lessonCode");
         ArrayList<Map<String, String>> info = StringManager.getListMapByJson(mCourseListMap.get("chapterList"));
@@ -93,7 +93,6 @@ public class CourseList extends BaseAppCompatActivity {
             for (int i = 0; i < info.size(); i++) {
                 if (TextUtils.equals(chapterCode, info.get(i).get("code"))) {
                     mGroupSelectIndex = i;
-                    mExList.expandGroup(mGroupSelectIndex);
                     ArrayList<Map<String, String>> lessonList = StringManager.getListMapByJson(info.get(i).get("lessonList"));
                     for (int j = 0; j < lessonList.size(); j++) {
                         if (TextUtils.equals(lessonCode, lessonList.get(j).get("code"))) {
@@ -111,7 +110,7 @@ public class CourseList extends BaseAppCompatActivity {
         mSyllabusAdapter.setStatData(mStatJsonList);
         mSyllabusAdapter.setSelectIndex(mGroupSelectIndex, mChildSelectIndex);
         mSyllabusAdapter.notifyDataSetChanged();
-
+        mExList.expandGroup(mGroupSelectIndex);
     }
 
     /**
@@ -173,8 +172,10 @@ public class CourseList extends BaseAppCompatActivity {
 
 
     private void clickItem(String lessonCode, String chapterCode) {
-        mSyllabusAdapter.setSelectIndex(mGroupSelectIndex, mChildSelectIndex);
-        mSyllabusAdapter.notifyDataSetChanged();
+        if (canStudy || isFromStudy) {
+            mSyllabusAdapter.setSelectIndex(mGroupSelectIndex, mChildSelectIndex);
+            mSyllabusAdapter.notifyDataSetChanged();
+        }
         if (isFromStudy) {
             Intent intent = new Intent();
             intent.putExtra(CourseDetail.EXTRA_CHAPTER_CODE, chapterCode);

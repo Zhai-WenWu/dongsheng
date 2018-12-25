@@ -99,7 +99,7 @@ public class CourseIntroduction extends BaseAppCompatActivity {
             return;
         }
         mCode = intent.getStringExtra(EXTRA_CODE);
-        mCode = "123";
+        mCode = "81";
     }
 
     int offsetHeight = 0;

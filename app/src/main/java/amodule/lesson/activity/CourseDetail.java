@@ -258,8 +258,8 @@ public class CourseDetail extends BaseAppCompatActivity {
                 if (flag >= ReqInternet.REQ_OK_STRING) {
                     mLessonInfo = StringManager.getFirstMap(o);
                     mData.put("lessonInfo", mLessonInfo);
-                    mChapterCode = mLessonInfo.get("chapterCode");
-                    mCode = mLessonInfo.get("courseCode");
+//                    mChapterCode = mLessonInfo.get("chapterCode");
+//                    mCode = mLessonInfo.get("courseCode");
                     initTitle();
                     createLableView(StringManager.getListMapByJson(mData.get("lessonInfo").get("labelData")));
                     loadManager.loadOver(flag);
@@ -293,17 +293,17 @@ public class CourseDetail extends BaseAppCompatActivity {
      * 课程表数据请求
      */
     private void loadSyllabusInfo() {
-        CourseDataController.loadCourseListData(mCode, "2", new InternetCallback() {
+        CourseDataController.loadCourseListData(mChapterCode, "2", new InternetCallback() {
 
             @Override
             public void loaded(int i, String s, Object o) {
                 if (i >= ReqInternet.REQ_OK_STRING) {
                     mSyllabusInfo = StringManager.getFirstMap(o);
                     Map<String, String> lesson = StringManager.getListMapByJson(mSyllabusInfo.get("chapterList")).get(0);
-                    ArrayList<Map<String, String>> lessonList = StringManager.getListMapByJson(lesson.get("chapterList"));
+                    ArrayList<Map<String, String>> lessonList = StringManager.getListMapByJson(lesson.get("lessonList"));
                     for (int j = 0; j < lessonList.size(); j++) {
-                        if (lessonList.get(i).get("code").equals(mCode)) {
-                            mChildSelectIndex = i;
+                        if (lessonList.get(j).get("code").equals(mCode)) {
+                            mChildSelectIndex = j;
                         }
                     }
 
@@ -344,7 +344,7 @@ public class CourseDetail extends BaseAppCompatActivity {
                 //课程页
                 Intent intent = new Intent(CourseDetail.this, CourseList.class);
                 intent.putExtra(CourseList.EXTRA_FROM_STUDY, true);
-                intent.putExtra(CourseList.EXTRA_CODE, mCode);
+                intent.putExtra(CourseList.EXTRA_CODE, mChapterCode);
                 startActivityForResult(intent, SELECT_COURSE);
             }
         });

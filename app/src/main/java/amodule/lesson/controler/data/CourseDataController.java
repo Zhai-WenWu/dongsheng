@@ -64,7 +64,7 @@ public class CourseDataController {
             return;
         }
         LinkedHashMap<String,String> params = new LinkedHashMap<>();
-        params.put("chapterCode",code);
+        params.put("chapterCode",chapterCode);
         params.put("code",code);
         ReqEncyptInternet.in().doGetEncypt(API_LESSON_INFO,params,callback);
     }
