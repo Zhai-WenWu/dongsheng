@@ -30,6 +30,7 @@ import aplug.basic.ReqInternet;
 public class CourseList extends BaseAppCompatActivity {
     public static final String EXTRA_FROM_STUDY = "from";
     public static final String EXTRA_CODE = "code";
+    public static final String EXTRA_ISSTUDY = "isStudy";
     private SyllabusAdapter mSyllabusAdapter;
     private List<String> mGroupList = new ArrayList<>();
     private List<List<String>> mChildList = new ArrayList<>();
@@ -38,6 +39,7 @@ public class CourseList extends BaseAppCompatActivity {
     private int mGroupSelectIndex = 0;
     private int mChildSelectIndex = -1;
     private boolean isFromStudy;
+    private boolean canStudy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +57,7 @@ public class CourseList extends BaseAppCompatActivity {
 
     private void initData() {
         String mCode = getIntent().getStringExtra(EXTRA_CODE);
+        canStudy = getIntent().getBooleanExtra(EXTRA_ISSTUDY, false);
         isFromStudy = getIntent().getBooleanExtra(EXTRA_FROM_STUDY, false);
         String type = isFromStudy ? "2" : "1";
         loadManager.loading(mExList, true);
@@ -180,11 +183,11 @@ public class CourseList extends BaseAppCompatActivity {
             setResult(RESULT_OK, intent);
             finish();
         } else {
+            if (!canStudy)
+                return;
             Intent it = new Intent(this, CourseDetail.class);
-//            it.putExtra(CourseDetail.EXTRA_CODE, lessonCode);
-//            it.putExtra(CourseDetail.EXTRA_CHAPTER_CODE, chapterCode);
-            it.putExtra(CourseDetail.EXTRA_CODE, "88");
-            it.putExtra(CourseDetail.EXTRA_CHAPTER_CODE, "88");
+            it.putExtra(CourseDetail.EXTRA_CODE, lessonCode);
+            it.putExtra(CourseDetail.EXTRA_CHAPTER_CODE, chapterCode);
             it.putExtra(CourseDetail.EXTRA_CHILD, mChildSelectIndex);
             startActivity(it);
         }

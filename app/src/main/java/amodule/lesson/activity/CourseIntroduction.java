@@ -76,6 +76,8 @@ public class CourseIntroduction extends BaseAppCompatActivity {
     private boolean canStudy = false;
     private int topbarHeight;
     private boolean isFav = false;
+    private String mHistoryLessonCode;
+    private String mHistoryChapterCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -168,22 +170,28 @@ public class CourseIntroduction extends BaseAppCompatActivity {
     }
 
     private void setListener() {
-        View.OnClickListener startCourseListListener = v -> startActivity(new Intent(CourseIntroduction.this, CourseList.class).putExtra(CourseList.EXTRA_CODE, "88"));
+        View.OnClickListener startCourseListListener = v -> startActivity(new Intent(CourseIntroduction.this, CourseList.class).putExtra(CourseList.EXTRA_CODE, mCode).putExtra(CourseList.EXTRA_ISSTUDY, canStudy));
         mCourseVerticalView.setFooterOnClickListener(startCourseListListener);
         mCourseHorizontalView.setSubTitleOnClickListener(startCourseListListener);
-        mCourseVerticalView.setOnItemClickCallback((position, data) -> startActivity(new Intent(CourseIntroduction.this, CourseList.class).putExtra(CourseList.EXTRA_CODE, "88")));
+        mCourseVerticalView.setOnItemClickCallback((position, data) -> startActivity(new Intent(CourseIntroduction.this, CourseList.class).putExtra(CourseList.EXTRA_CODE, mCode).putExtra(CourseList.EXTRA_ISSTUDY, canStudy)));
         mCourseHorizontalView.setOnItemClickListener((position, data) -> {
             if (!canStudy) {
                 return;
             }
             Intent intent = new Intent(CourseIntroduction.this, CourseDetail.class);
-            String chapterCode = data.get("chapterCode");
+            String chapterCode = data.get("code");
+            String lessonCode;
             if (!TextUtils.isEmpty(chapterCode)) {
                 intent.putExtra(CourseDetail.EXTRA_CHAPTER_CODE, chapterCode);
+                if (TextUtils.equals(chapterCode, mHistoryChapterCode)) {
+                    lessonCode = mHistoryLessonCode;
+                } else {
+                    lessonCode = StringManager.getListMapByJson(data.get("lessonList")).get(0).get("code");
+                }
             } else {
                 return;
             }
-            String lessonCode = data.get("lessonCode");
+
             if (!TextUtils.isEmpty(lessonCode)) {
                 intent.putExtra(CourseDetail.EXTRA_CODE, lessonCode);
             }
@@ -192,10 +200,10 @@ public class CourseIntroduction extends BaseAppCompatActivity {
 
 
         mBottomView.setFavClickListener(v -> {
-            if(LoginManager.isLogin()){
+            if (LoginManager.isLogin()) {
                 handlerFavorite();
-            }else{
-                startActivity(new Intent(CourseIntroduction.this,LoginByAccout.class));
+            } else {
+                startActivity(new Intent(CourseIntroduction.this, LoginByAccout.class));
             }
             //收藏请求
 //            Toast.makeText(CourseIntroduction.this, "收藏", Toast.LENGTH_SHORT).show();
@@ -220,7 +228,7 @@ public class CourseIntroduction extends BaseAppCompatActivity {
         mCourseVerticalView.setVisibility(canStudy ? View.GONE : View.VISIBLE);
     }
 
-    private void requestFavoriteState(){
+    private void requestFavoriteState() {
         FavoriteHelper.instance().getFavoriteStatus(this, mCode, FavoriteTypeEnum.TYPE_VIDEO,
                 new FavoriteHelper.FavoriteStatusCallback() {
                     @Override
@@ -238,8 +246,8 @@ public class CourseIntroduction extends BaseAppCompatActivity {
     }
 
 
-    private void handlerFavorite(){
-        statistics(isFav?"取消收藏":"收藏","");
+    private void handlerFavorite() {
+        statistics(isFav ? "取消收藏" : "收藏", "");
         FavoriteHelper.instance().setFavoriteStatus(this, mCode, "", FavoriteTypeEnum.TYPE_VIDEO,
                 new FavoriteHelper.FavoriteStatusCallback() {
                     @Override
@@ -262,7 +270,6 @@ public class CourseIntroduction extends BaseAppCompatActivity {
                     }
                 });
     }
-
 
 
     private void scrollToTop() {
@@ -381,6 +388,8 @@ public class CourseIntroduction extends BaseAppCompatActivity {
             public void loaded(int flag, String s, Object o) {
                 if (flag >= ReqEncyptInternet.REQ_OK_STRING) {
                     Map<String, String> resultMap = StringManager.getFirstMap(o);
+                    mHistoryLessonCode = StringManager.getFirstMap(resultMap.get("playHistory")).get("lessonCode");
+                    mHistoryChapterCode = StringManager.getFirstMap(resultMap.get("playHistory")).get("chapterCode");
                     mCourseVerticalView.setData(resultMap);
                     mCourseHorizontalView.setData(resultMap);
                 }
@@ -432,7 +441,7 @@ public class CourseIntroduction extends BaseAppCompatActivity {
 //            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
 //            window.setStatusBarColor(Color.TRANSPARENT);
 //        } else
-            if (Build.VERSION.SDK_INT >= 19) {//19表示4.4
+        if (Build.VERSION.SDK_INT >= 19) {//19表示4.4
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             //虚拟键盘也透明
             //getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
