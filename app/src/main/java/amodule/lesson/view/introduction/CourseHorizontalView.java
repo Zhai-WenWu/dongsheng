@@ -106,9 +106,9 @@ public class CourseHorizontalView extends FrameLayout {
         if (!chapterList.isEmpty()) {
             //如果只有一章，则显示课的数据列表
             int lessonNum = Tools.parseIntOfThrow(data.get("chapterNum"), 1);
+            ArrayList<Map<String, String>> lessonList = StringManager.getListMapByJson(chapterList.get(0).get("lessonList"));
             if (lessonNum == 1) {
                 String chapterCode = chapterList.get(0).get("code");
-                ArrayList<Map<String, String>> lessonList = StringManager.getListMapByJson(chapterList.get(0).get("lessonList"));
                 for (int i = 0; i < lessonList.size(); i++) {
                     if (TextUtils.equals(historyLessonCode, lessonList.get(i).get("code"))) {
                         setCurrentPosition(i);
