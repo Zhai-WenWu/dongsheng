@@ -159,6 +159,9 @@ public class CourseHorizontalView extends FrameLayout {
     }
 
     private void handleOnItemClickCallback(int position, Map<String, String> data) {
+        setCurrentPosition(position);
+        mAdapter.notifyItemChanged(position);
+        mRvHorizatolListView.scrollToPosition(position);
         if (mOnItemClickCallback != null) {
             mOnItemClickCallback.onItemClick(position, data);
         }
