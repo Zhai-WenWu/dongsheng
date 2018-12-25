@@ -356,7 +356,7 @@ public class CourseDetail extends BaseAppCompatActivity {
         if (resultCode == RESULT_OK && data != null) {
             switch (requestCode) {
                 case SELECT_COURSE:
-                    mCode = data.getStringExtra(EXTRA_CHILD);
+                    mCode = data.getStringExtra(EXTRA_CODE);
                     mChildSelectIndex = data.getIntExtra(EXTRA_CHILD, -1);
                     loadAgain();
                     break;
