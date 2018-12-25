@@ -25,8 +25,12 @@ public class SecondPagerAdapter extends PagerAdapter {
     private int mCommentIndex;
     private CourseCommentView mCourseCommentView;
 
-    public SecondPagerAdapter(Context activity, CourseCommentView courseCommentView) {
+    public SecondPagerAdapter(Context activity) {
         this.mActivity = (Activity) activity;
+    }
+
+
+    public void initCommentView(CourseCommentView courseCommentView) {
         this.mCourseCommentView = courseCommentView;
     }
 
@@ -70,23 +74,26 @@ public class SecondPagerAdapter extends PagerAdapter {
             container.addView(convertView);
             return convertView;
         } else {
-
             listView = mCourseCommentView.getListView();
-            listView.setOnScrollListener(new AbsListView.OnScrollListener() {
-                @Override
-                public void onScrollStateChanged(AbsListView view, int scrollState) {
+            if (listView != null) {
+                listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+                    @Override
+                    public void onScrollStateChanged(AbsListView view, int scrollState) {
 
-                }
-
-                @Override
-                public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                    if (listView.canScrollVertically(-1)) {
-                        onSecondPagerScrollTopListener.onScrollToTop(false);
-                    } else {
-                        onSecondPagerScrollTopListener.onScrollToTop(true);
                     }
-                }
-            });
+
+                    @Override
+                    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                        if (onSecondPagerScrollTopListener != null) {
+                            if (listView.canScrollVertically(-1)) {
+                                onSecondPagerScrollTopListener.onScrollToTop(false);
+                            } else {
+                                onSecondPagerScrollTopListener.onScrollToTop(true);
+                            }
+                        }
+                    }
+                });
+            }
             container.addView(mCourseCommentView);
             return mCourseCommentView;
         }

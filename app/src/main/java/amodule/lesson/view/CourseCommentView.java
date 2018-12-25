@@ -368,6 +368,7 @@ public class CourseCommentView extends RelativeLayout {
     }
 
     private void changeDataChange() {
+        onLoadFinish.loadFinish();
         Log.i("commentActivity", "changeDataChange() size:" + listArray.size());
         if (listArray.size() == 0) {
             downRefreshList.setVisibility(View.GONE);
@@ -593,6 +594,16 @@ public class CourseCommentView extends RelativeLayout {
         this.code = code;
         this.mChapterCode = chapterCode;
         initView();
+    }
+
+    private OnLoadFinish  onLoadFinish;
+
+    public void setOnLoadFinish(OnLoadFinish onLoadFinish) {
+        this.onLoadFinish = onLoadFinish;
+    }
+
+    public interface OnLoadFinish{
+        void loadFinish();
     }
 
 }

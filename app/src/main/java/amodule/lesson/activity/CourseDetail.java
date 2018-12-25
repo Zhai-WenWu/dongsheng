@@ -275,6 +275,7 @@ public class CourseDetail extends BaseAppCompatActivity {
     }
 
     private void createLableView(List<Map<String, String>> stringStringMap) {
+        mTabLayout.removeAllViews();
         for (int i = 0; i < stringStringMap.size(); i++) {
             View view = LayoutInflater.from(this).inflate(R.layout.view_study_top_lable_item, mTabLayout, false);
             View horLine = view.findViewById(R.id.hor_line);
