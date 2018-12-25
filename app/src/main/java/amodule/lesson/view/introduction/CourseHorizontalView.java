@@ -98,29 +98,43 @@ public class CourseHorizontalView extends FrameLayout {
             setVisibility(GONE);
             return;
         }
+        String historyLessonCode = StringManager.getFirstMap(data.get("playHistory")).get("lessonCode");
+        String historyChapterCode = StringManager.getFirstMap(data.get("playHistory")).get("chapterCode");
         mTitleText.setText(checkStrNull(data.get("title")));
 //        mSubTitleText.setText(checkStrNull(data.get("subTitle")));
-        List<Map<String, String>> lessonList = StringManager.getListMapByJson(data.get("chapterList"));
-        if (!lessonList.isEmpty()) {
+        List<Map<String, String>> chapterList = StringManager.getListMapByJson(data.get("chapterList"));
+        if (!chapterList.isEmpty()) {
             //如果只有一章，则显示课的数据列表
             int lessonNum = Tools.parseIntOfThrow(data.get("chapterNum"), 1);
             if (lessonNum == 1) {
-                String chapterCode = lessonList.get(0).get("code");
-                lessonList = StringManager.getListMapByJson(lessonList.get(0).get("lessonList"));
+                String chapterCode = chapterList.get(0).get("code");
+                ArrayList<Map<String, String>> lessonList = StringManager.getListMapByJson(chapterList.get(0).get("lessonList"));
+                for (int i = 0; i < lessonList.size(); i++) {
+                    if (TextUtils.equals(historyLessonCode, lessonList.get(i).get("code"))) {
+                        setCurrentPosition(i);
+                        break;
+                    }
+                }
                 Stream.of(lessonList).forEach(value -> {
                     value.put("chapterCode", chapterCode);
                     value.put("lessonCode", value.get("code"));
                 });
             } else {
-                Stream.of(lessonList).forEach(value -> value.put("chapterCode", value.get("code")));
+                for (int i = 0; i < chapterList.size(); i++) {
+                    if (TextUtils.equals(historyChapterCode, chapterList.get(i).get("code"))) {
+                        setCurrentPosition(i);
+                        break;
+                    }
+                }
+                Stream.of(chapterList).forEach(value -> value.put("chapterCode", value.get("code")));
             }
         }
-        if (lessonList.isEmpty()) {
+        if (chapterList.isEmpty()) {
             setVisibility(GONE);
             return;
         }
         mData.clear();
-        mData.addAll(lessonList);
+        mData.addAll(chapterList);
         mAdapter.notifyDataSetChanged();
     }
 
