@@ -78,8 +78,9 @@ public class CourseVerticalView extends FrameLayout {
         List<Map<String, String>> lessonList = StringManager.getListMapByJson(data.get("chapterList"));
         if (!lessonList.isEmpty()) {
             //如果只有一章，则显示课的数据列表
-            int lessonNum = Tools.parseIntOfThrow(data.get("chapterNum"), 1);
-            if (lessonNum == 1) {
+            int chapterNum = Tools.parseIntOfThrow(data.get("chapterNum"), 1);
+            lessonNum = String.valueOf(chapterNum);
+            if (chapterNum == 1) {
                 lessonList = StringManager.getListMapByJson(lessonList.get(0).get("lessonList"));
                 isOneLesson = lessonList.size() <= 1;
                 Stream.of(lessonList).forEach(value -> value.put("subTitleRight",value.remove("subTitle")));
