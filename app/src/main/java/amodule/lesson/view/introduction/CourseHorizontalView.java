@@ -114,6 +114,8 @@ public class CourseHorizontalView extends FrameLayout {
             } else {
                 Stream.of(lessonList).forEach(value -> value.put("chapterCode", value.get("code")));
             }
+            mSubTitleText.setText(lessonNum == 1 ? checkStrNull(lessonList.get(0).get("subTitle")) : checkStrNull(data.get("chapterNum")));
+
         }
         if (lessonList.isEmpty()) {
             setVisibility(GONE);
