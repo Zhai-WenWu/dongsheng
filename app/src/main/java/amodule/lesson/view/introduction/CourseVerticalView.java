@@ -37,6 +37,7 @@ public class CourseVerticalView extends FrameLayout {
     private LinearLayoutCompat mLinearLayoutCompat;
     private boolean isOneLesson = false;
     private String lessonNum;
+    private boolean syllabusItemCanClick;
 
     public CourseVerticalView(@NonNull Context context) {
         super(context);
@@ -82,6 +83,7 @@ public class CourseVerticalView extends FrameLayout {
             lessonNum = String.valueOf(chapterNum);
             if (chapterNum == 1) {
                 lessonList = StringManager.getListMapByJson(lessonList.get(0).get("lessonList"));
+                syllabusItemCanClick = lessonList.size() > 4;
                 isOneLesson = lessonList.size() <= 1;
                 Stream.of(lessonList).forEach(value -> value.put("subTitleRight",value.remove("subTitle")));
             }
@@ -135,7 +137,7 @@ public class CourseVerticalView extends FrameLayout {
         itemView.setOnClickListener(new OnClickListenerStat() {
             @Override
             public void onClicked(View v) {
-                if (mOnItemClickCallback != null) {
+                if (mOnItemClickCallback != null&&syllabusItemCanClick) {
                     mOnItemClickCallback.onItemClick(position, data);
                 }
             }
